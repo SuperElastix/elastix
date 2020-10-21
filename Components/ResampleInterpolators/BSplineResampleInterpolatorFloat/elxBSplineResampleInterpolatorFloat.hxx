@@ -28,10 +28,9 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BSplineResampleInterpolatorFloat< TElastix >
-::BeforeRegistration( void )
+BSplineResampleInterpolatorFloat<TElastix>::BeforeRegistration(void)
 {
   /** BSplineResampleInterpolator specific.*/
 
@@ -39,11 +38,10 @@ BSplineResampleInterpolatorFloat< TElastix >
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  this->m_Configuration->ReadParameter( splineOrder,
-    "FinalBSplineInterpolationOrder", 0 );
+  this->m_Configuration->ReadParameter(splineOrder, "FinalBSplineInterpolationOrder", 0);
 
   /** Set the splineOrder in the superclass. */
-  this->SetSplineOrder( splineOrder );
+  this->SetSplineOrder(splineOrder);
 
 } // end BeforeRegistration()
 
@@ -52,10 +50,9 @@ BSplineResampleInterpolatorFloat< TElastix >
  * ******************* ReadFromFile  ****************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BSplineResampleInterpolatorFloat< TElastix >
-::ReadFromFile( void )
+BSplineResampleInterpolatorFloat<TElastix>::ReadFromFile(void)
 {
   /** Call ReadFromFile of the ResamplerBase. */
   this->Superclass2::ReadFromFile();
@@ -66,11 +63,10 @@ BSplineResampleInterpolatorFloat< TElastix >
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  this->m_Configuration->ReadParameter( splineOrder,
-    "FinalBSplineInterpolationOrder", 0 );
+  this->m_Configuration->ReadParameter(splineOrder, "FinalBSplineInterpolationOrder", 0);
 
   /** Set the splineOrder in the superclass. */
-  this->SetSplineOrder( splineOrder );
+  this->SetSplineOrder(splineOrder);
 
 } // end ReadFromFile()
 
@@ -79,10 +75,9 @@ BSplineResampleInterpolatorFloat< TElastix >
  * ******************* WriteToFile ******************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BSplineResampleInterpolatorFloat< TElastix >
-::WriteToFile( void ) const
+BSplineResampleInterpolatorFloat<TElastix>::WriteToFile(void) const
 {
   /** Call WriteTiFile of the ResamplerBase. */
   this->Superclass2::WriteToFile();
@@ -90,8 +85,7 @@ BSplineResampleInterpolatorFloat< TElastix >
   /** The BSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
-  xout[ "transpar" ] << "(FinalBSplineInterpolationOrder "
-                     << this->GetSplineOrder() << ")" << std::endl;
+  xout["transpar"] << "(FinalBSplineInterpolationOrder " << this->GetSplineOrder() << ")" << std::endl;
 
 } // end WriteToFile()
 

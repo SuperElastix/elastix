@@ -18,4 +18,4 @@
 
 #include "elxRandomSamplerSparseMask.h"
 
-elxInstallMacro( RandomSamplerSparseMask );
+elxInstallMacro(RandomSamplerSparseMask);

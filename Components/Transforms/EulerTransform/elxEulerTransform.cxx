@@ -18,4 +18,4 @@
 
 #include "elxEulerTransform.h"
 
-elxInstallMacro( EulerTransformElastix );
+elxInstallMacro(EulerTransformElastix);

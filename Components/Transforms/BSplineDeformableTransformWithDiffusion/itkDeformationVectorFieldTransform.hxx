@@ -30,31 +30,29 @@ namespace itk
  * *********************** Constructor **************************
  */
 
-template< class TScalarType, unsigned int NDimensions >
-DeformationVectorFieldTransform< TScalarType, NDimensions >
-::DeformationVectorFieldTransform()
+template <class TScalarType, unsigned int NDimensions>
+DeformationVectorFieldTransform<TScalarType, NDimensions>::DeformationVectorFieldTransform()
 {
   /** Initialize m_Images. */
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
-    this->m_Images[ i ] = nullptr;
+    this->m_Images[i] = nullptr;
   }
 
 } // end Constructor
 
 
 /**
-* *********************** Destructor ***************************
-*/
+ * *********************** Destructor ***************************
+ */
 
-template< class TScalarType, unsigned int NDimensions >
-DeformationVectorFieldTransform< TScalarType, NDimensions >
-::~DeformationVectorFieldTransform()
+template <class TScalarType, unsigned int NDimensions>
+DeformationVectorFieldTransform<TScalarType, NDimensions>::~DeformationVectorFieldTransform()
 {
   /** Initialize m_Images. */
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
-    this->m_Images[ i ] = nullptr;
+    this->m_Images[i] = nullptr;
   }
 } // end Destructor
 
@@ -67,53 +65,52 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
  * image as input.
  */
 
-template< class TScalarType, unsigned int NDimensions >
+template <class TScalarType, unsigned int NDimensions>
 void
-DeformationVectorFieldTransform< TScalarType, NDimensions >
-::SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage )
+DeformationVectorFieldTransform<TScalarType, NDimensions>::SetCoefficientVectorImage(
+  const CoefficientVectorImageType * vecImage)
 {
   /** Typedef's for iterators. */
-  typedef ImageRegionConstIterator< CoefficientVectorImageType > VectorIteratorType;
-  typedef ImageRegionIterator< CoefficientImageType >            IteratorType;
+  typedef ImageRegionConstIterator<CoefficientVectorImageType> VectorIteratorType;
+  typedef ImageRegionIterator<CoefficientImageType>            IteratorType;
 
   /** Create array of images representing the B-spline
    * coefficients in each dimension.
    */
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
-    this->m_Images[ i ] = CoefficientImageType::New();
-    this->m_Images[ i ]->SetRegions( vecImage->GetLargestPossibleRegion() );
-    this->m_Images[ i ]->SetOrigin( vecImage->GetOrigin() );
-    this->m_Images[ i ]->SetSpacing( vecImage->GetSpacing() );
-    this->m_Images[ i ]->Allocate();
+    this->m_Images[i] = CoefficientImageType::New();
+    this->m_Images[i]->SetRegions(vecImage->GetLargestPossibleRegion());
+    this->m_Images[i]->SetOrigin(vecImage->GetOrigin());
+    this->m_Images[i]->SetSpacing(vecImage->GetSpacing());
+    this->m_Images[i]->Allocate();
   }
 
   /** Setup the iterators. */
-  VectorIteratorType vecit( vecImage, vecImage->GetLargestPossibleRegion() );
+  VectorIteratorType vecit(vecImage, vecImage->GetLargestPossibleRegion());
   vecit.GoToBegin();
-  IteratorType it[ SpaceDimension ];
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  IteratorType it[SpaceDimension];
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
-    it[ i ] = IteratorType( this->m_Images[ i ],
-      this->m_Images[ i ]->GetLargestPossibleRegion() );
-    it[ i ].GoToBegin();
+    it[i] = IteratorType(this->m_Images[i], this->m_Images[i]->GetLargestPossibleRegion());
+    it[i].GoToBegin();
   }
 
   /** Copy one element of a vector to an image. */
   CoefficientVectorPixelType vect;
-  while( !vecit.IsAtEnd() )
+  while (!vecit.IsAtEnd())
   {
     vect = vecit.Get();
-    for( unsigned int i = 0; i < SpaceDimension; i++ )
+    for (unsigned int i = 0; i < SpaceDimension; i++)
     {
-      it[ i ].Set( static_cast< CoefficientPixelType >( vect[ i ] ) );
-      ++it[ i ];
+      it[i].Set(static_cast<CoefficientPixelType>(vect[i]));
+      ++it[i];
     }
     ++vecit;
   }
 
   /** Put it in the Superclass. */
-  this->SetCoefficientImages( this->m_Images );
+  this->SetCoefficientImages(this->m_Images);
 
 } // end SetCoefficientVectorImage()
 
@@ -125,23 +122,22 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
  *
  */
 
-template< class TScalarType, unsigned int NDimensions >
+template <class TScalarType, unsigned int NDimensions>
 void
-DeformationVectorFieldTransform< TScalarType, NDimensions >
-::GetCoefficientVectorImage( CoefficientVectorImagePointer & vecImage ) const
+DeformationVectorFieldTransform<TScalarType, NDimensions>::GetCoefficientVectorImage(
+  CoefficientVectorImagePointer & vecImage) const
 {
   /** Typedef for the combiner. */
-  typedef ComposeImageFilter<
-    CoefficientImageType, CoefficientVectorImageType >      ScalarImageCombineType;
+  typedef ComposeImageFilter<CoefficientImageType, CoefficientVectorImageType> ScalarImageCombineType;
 
   /** Get a handle to the series of coefficient images. */
   const CoefficientImagePointer * coefImage = this->GetCoefficientImages();
 
   /** Combine the coefficient images to a vector image. */
   typename ScalarImageCombineType::Pointer combiner = ScalarImageCombineType::New();
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
-    combiner->SetInput( i, coefImage[ i ] );
+    combiner->SetInput(i, coefImage[i]);
   }
   vecImage = combiner->GetOutput();
   vecImage->Update();

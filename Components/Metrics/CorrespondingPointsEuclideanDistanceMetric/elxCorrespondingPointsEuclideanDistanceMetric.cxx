@@ -18,4 +18,4 @@
 
 #include "elxCorrespondingPointsEuclideanDistanceMetric.h"
 
-elxInstallMacro( CorrespondingPointsEuclideanDistanceMetric );
+elxInstallMacro(CorrespondingPointsEuclideanDistanceMetric);

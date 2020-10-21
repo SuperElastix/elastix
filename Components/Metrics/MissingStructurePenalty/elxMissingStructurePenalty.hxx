@@ -28,9 +28,8 @@ namespace elastix
  * ******************* Constructor *******************
  */
 
-template< class TElastix >
-MissingStructurePenalty< TElastix >
-::MissingStructurePenalty()
+template <class TElastix>
+MissingStructurePenalty<TElastix>::MissingStructurePenalty()
 {
   this->m_NumberOfMeshes = 0;
 }
@@ -40,43 +39,46 @@ MissingStructurePenalty< TElastix >
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-MissingStructurePenalty< TElastix >
-::Initialize( void )
+MissingStructurePenalty<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of MissingStructurePenalty metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+  elxout << "Initialization of MissingStructurePenalty metric took: " << static_cast<long>(timer.GetMean() * 1000)
+         << " ms." << std::endl;
 } // end Initialize()
 
 
 /**
-* ***************** BeforeAllBase ***********************
-*/
+ * ***************** BeforeAllBase ***********************
+ */
 
-template< class TElastix >
+template <class TElastix>
 int
-MissingStructurePenalty< TElastix >
-::BeforeAllBase( void )
+MissingStructurePenalty<TElastix>::BeforeAllBase(void)
 {
   this->Superclass2::BeforeAllBase();
 
   /** Check if the current configuration uses this metric. */
   unsigned int count = 0;
-  for( unsigned int i = 0; i < this->m_Configuration
-    ->CountNumberOfParameterEntries( "Metric" ); ++i )
+  for (unsigned int i = 0; i < this->m_Configuration->CountNumberOfParameterEntries("Metric"); ++i)
   {
     std::string metricName = "";
-    this->m_Configuration->ReadParameter( metricName, "Metric", i );
-    if( metricName == "MissingStructurePenalty" ) { count++; }
+    this->m_Configuration->ReadParameter(metricName, "Metric", i);
+    if (metricName == "MissingStructurePenalty")
+    {
+      count++;
+    }
   }
-  if( count == 0 ) { return 0; }
+  if (count == 0)
+  {
+    return 0;
+  }
 
-  //if ( count == 1 )
+  // if ( count == 1 )
   //{
   //  /** Check for appearance of "-fmesh". */
 
@@ -89,21 +91,21 @@ MissingStructurePenalty< TElastix >
   //  }
   //}
 
-  std::string componentLabel( this->GetComponentLabel() );
-  std::string metricNumber = componentLabel.substr( 6, 2 ); // strip "Metric" keep number
+  std::string componentLabel(this->GetComponentLabel());
+  std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
   /** Check Command line options and print them to the log file. */
   elxout << "Command line options from MissingStructurePenalty (" << componentLabel << "):" << std::endl;
-  std::string check( "" );
+  std::string check("");
 
   this->m_NumberOfMeshes = 0;
 
-  for( char ch = 'A'; ch <= 'Z'; ch++ )
+  for (char ch = 'A'; ch <= 'Z'; ch++)
   {
-    std::ostringstream fmeshArgument( "-fmesh", std::ios_base::ate );
+    std::ostringstream fmeshArgument("-fmesh", std::ios_base::ate);
     fmeshArgument << ch << metricNumber;
-    check = this->m_Configuration->GetCommandLineArgument( fmeshArgument.str() );
-    if( check.empty() )
+    check = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str());
+    if (check.empty())
     {
       break;
     }
@@ -111,9 +113,7 @@ MissingStructurePenalty< TElastix >
     {
       elxout << fmeshArgument.str() << "\t" << check << std::endl;
       this->m_NumberOfMeshes++;
-
     }
-
   }
   /** Return a value. */
   return 0;
@@ -125,49 +125,48 @@ MissingStructurePenalty< TElastix >
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-MissingStructurePenalty< TElastix >
-::BeforeRegistration( void )
+MissingStructurePenalty<TElastix>::BeforeRegistration(void)
 {
-  std::string componentLabel( this->GetComponentLabel() );
-  std::string metricNumber = componentLabel.substr( 6, 2 ); // strip "Metric" keep number
+  std::string componentLabel(this->GetComponentLabel());
+  std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
   elxout << "MissingStructurePenalty" << metricNumber << " BeforeRegistration " << std::endl;
 
   FixedMeshContainerPointer meshPointerContainer = FixedMeshContainerType::New();
-  meshPointerContainer->Reserve( this->m_NumberOfMeshes );
-  //meshPointerContainer->CreateIndex(this->m_NumberOfMeshes-1);
+  meshPointerContainer->Reserve(this->m_NumberOfMeshes);
+  // meshPointerContainer->CreateIndex(this->m_NumberOfMeshes-1);
   unsigned int meshNumber;
   char         ch;
-  for( meshNumber = 0, ch = 'A'; meshNumber < this->m_NumberOfMeshes; ++meshNumber, ++ch )
+  for (meshNumber = 0, ch = 'A'; meshNumber < this->m_NumberOfMeshes; ++meshNumber, ++ch)
   {
-    std::ostringstream fmeshArgument( "-fmesh", std::ios_base::ate );
+    std::ostringstream fmeshArgument("-fmesh", std::ios_base::ate);
     fmeshArgument << ch << metricNumber;
-    std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
+    std::string                fixedMeshName = this->GetConfiguration()->GetCommandLineArgument(fmeshArgument.str());
     typename MeshType::Pointer fixedMesh; // default-constructed (null)
-    if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
+    if (itksys::SystemTools::GetFilenameLastExtension(fixedMeshName) == ".txt")
     {
-      this->ReadTransformixPoints( fixedMeshName, fixedMesh );
+      this->ReadTransformixPoints(fixedMeshName, fixedMesh);
     }
     else
     {
-      this->ReadMesh( fixedMeshName, fixedMesh );
+      this->ReadMesh(fixedMeshName, fixedMesh);
     }
 
-    meshPointerContainer->SetElement( meshNumber, dynamic_cast<  MeshType * >( fixedMesh.GetPointer() ) );
-
+    meshPointerContainer->SetElement(meshNumber, dynamic_cast<MeshType *>(fixedMesh.GetPointer()));
   }
 
-  this->SetFixedMeshContainer( meshPointerContainer );
+  this->SetFixedMeshContainer(meshPointerContainer);
 
   typename PointSetType::Pointer dummyPointSet = PointSetType::New();
-  this->SetFixedPointSet( dummyPointSet );  // TODO solve dirty hack
-  this->SetMovingPointSet( dummyPointSet ); // TODO solve dirty hack
+  this->SetFixedPointSet(dummyPointSet);  // TODO solve dirty hack
+  this->SetMovingPointSet(dummyPointSet); // TODO solve dirty hack
   // itkCombinationImageToImageMetric.hxx checks if metric base class is ImageMetricType or PointSetMetricType.
   // This class is derived from SingleValuedPointSetToPointSetMetric which needs a moving pointset.
   // Without interfering with some general elastix files, this hack gives me the functionality that I needed.
-  // TODO: make itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving pointset.
+  // TODO: make itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving
+  // pointset.
 
 } // end BeforeRegistration()
 
@@ -176,10 +175,9 @@ MissingStructurePenalty< TElastix >
  * ***************** AfterEachIteration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-MissingStructurePenalty< TElastix >
-::AfterEachIteration( void )
+MissingStructurePenalty<TElastix>::AfterEachIteration(void)
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -189,44 +187,38 @@ MissingStructurePenalty< TElastix >
 
   /** Decide whether or not to write the result image this iteration. */
   bool writeResultMeshThisIteration = false;
-  this->m_Configuration->ReadParameter( writeResultMeshThisIteration,
-    "WriteResultMeshAfterEachIteration", "", level, 0, false );
+  this->m_Configuration->ReadParameter(
+    writeResultMeshThisIteration, "WriteResultMeshAfterEachIteration", "", level, 0, false);
 
   /** Writing result mesh. */
-  if( writeResultMeshThisIteration )
+  if (writeResultMeshThisIteration)
   {
-    std::string componentLabel( this->GetComponentLabel() );
-    std::string metricNumber = componentLabel.substr( 6, 2 ); // strip "Metric" keep number
+    std::string componentLabel(this->GetComponentLabel());
+    std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
     /** Create a name for the final result. */
     std::string resultMeshFormat = "vtk";
-    this->m_Configuration->ReadParameter( resultMeshFormat,
-      "ResultMeshFormat", 0, false );
+    this->m_Configuration->ReadParameter(resultMeshFormat, "ResultMeshFormat", 0, false);
     char ch = 'A';
-    for( MeshIdType meshId = 0; meshId < this->m_NumberOfMeshes; ++meshId, ++ch )
+    for (MeshIdType meshId = 0; meshId < this->m_NumberOfMeshes; ++meshId, ++ch)
     {
 
-      std::ostringstream makeFileName( "" );
-      makeFileName
-        << this->m_Configuration->GetCommandLineArgument( "-out" )
-        << "resultmesh" << ch << metricNumber
-        << "." << this->m_Configuration->GetElastixLevel()
-        << ".R" << level
-        << ".It" << std::setfill( '0' ) << std::setw( 7 ) << iter
-        << "." << resultMeshFormat;
+      std::ostringstream makeFileName("");
+      makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "resultmesh" << ch << metricNumber << "."
+                   << this->m_Configuration->GetElastixLevel() << ".R" << level << ".It" << std::setfill('0')
+                   << std::setw(7) << iter << "." << resultMeshFormat;
 
       try
       {
-        this->WriteResultMesh( makeFileName.str().c_str(), meshId );
+        this->WriteResultMesh(makeFileName.str().c_str(), meshId);
       }
-      catch( itk::ExceptionObject & excp )
+      catch (itk::ExceptionObject & excp)
       {
-        xl::xout[ "error" ] << "Exception caught: " << std::endl;
-        xl::xout[ "error" ] << excp
-                            << "Resuming elastix." << std::endl;
+        xl::xout["error"] << "Exception caught: " << std::endl;
+        xl::xout["error"] << excp << "Resuming elastix." << std::endl;
       }
     } // end for
-  } // end if
+  }   // end if
 
 } // end AfterEachIteration()
 
@@ -235,53 +227,46 @@ MissingStructurePenalty< TElastix >
  * ***************** AfterEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-MissingStructurePenalty< TElastix >
-::AfterEachResolution( void )
+MissingStructurePenalty<TElastix>::AfterEachResolution(void)
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Decide whether or not to write the result mesh this resolution. */
   bool writeResultMeshThisResolution = false;
-  this->m_Configuration->ReadParameter( writeResultMeshThisResolution,
-    "WriteResultMeshAfterEachResolution", "", level, 0, false );
+  this->m_Configuration->ReadParameter(
+    writeResultMeshThisResolution, "WriteResultMeshAfterEachResolution", "", level, 0, false);
 
   /** Writing result mesh. */
-  if( writeResultMeshThisResolution )
+  if (writeResultMeshThisResolution)
   {
-    std::string componentLabel( this->GetComponentLabel() );
-    std::string metricNumber = componentLabel.substr( 6, 2 ); // strip "Metric" keep number
+    std::string componentLabel(this->GetComponentLabel());
+    std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
     /** Create a name for the final result. */
     std::string resultMeshFormat = "vtk";
-    this->m_Configuration->ReadParameter( resultMeshFormat,
-      "ResultMeshFormat", 0, false );
+    this->m_Configuration->ReadParameter(resultMeshFormat, "ResultMeshFormat", 0, false);
     char ch = 'A';
-    for( MeshIdType meshId = 0; meshId < this->m_NumberOfMeshes; ++meshId, ++ch )
+    for (MeshIdType meshId = 0; meshId < this->m_NumberOfMeshes; ++meshId, ++ch)
     {
 
-      std::ostringstream makeFileName( "" );
-      makeFileName
-        << this->m_Configuration->GetCommandLineArgument( "-out" )
-        << "resultmesh" << ch << metricNumber
-        << "." << this->m_Configuration->GetElastixLevel()
-        << ".R" << level
-        << "." << resultMeshFormat;
+      std::ostringstream makeFileName("");
+      makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "resultmesh" << ch << metricNumber << "."
+                   << this->m_Configuration->GetElastixLevel() << ".R" << level << "." << resultMeshFormat;
 
       try
       {
-        this->WriteResultMesh( makeFileName.str().c_str(), meshId );
+        this->WriteResultMesh(makeFileName.str().c_str(), meshId);
       }
-      catch( itk::ExceptionObject & excp )
+      catch (itk::ExceptionObject & excp)
       {
-        xl::xout[ "error" ] << "Exception caught: " << std::endl;
-        xl::xout[ "error" ] << excp
-                            << "Resuming elastix." << std::endl;
+        xl::xout["error"] << "Exception caught: " << std::endl;
+        xl::xout["error"] << excp << "Resuming elastix." << std::endl;
       }
     } // end for
-  } // end if
+  }   // end if
 
 } // end AfterEachResolution()
 
@@ -290,27 +275,24 @@ MissingStructurePenalty< TElastix >
  * ************** ReadMesh *********************
  */
 
-template< class TElastix >
+template <class TElastix>
 unsigned int
-MissingStructurePenalty< TElastix >
-::ReadMesh(
-  const std::string & meshFileName,
-  typename MeshType::Pointer & mesh )
+MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename MeshType::Pointer & mesh)
 {
-  typedef itk::MeshFileReader< MeshType > MeshReaderType;
+  typedef itk::MeshFileReader<MeshType> MeshReaderType;
 
   /** Read the input mesh. */
   typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
-  meshReader->SetFileName( meshFileName.c_str() );
+  meshReader->SetFileName(meshFileName.c_str());
   elxout << "  Reading input mesh file: " << meshFileName << std::endl;
   try
   {
     meshReader->UpdateLargestPossibleRegion();
   }
-  catch( itk::ExceptionObject & err )
+  catch (itk::ExceptionObject & err)
   {
-    xl::xout[ "error" ] << "  Error while opening input mesh file." << std::endl;
-    xl::xout[ "error" ] << err << std::endl;
+    xl::xout["error"] << "  Error while opening input mesh file." << std::endl;
+    xl::xout["error"] << err << std::endl;
   }
 
   /** Some user-feedback. */
@@ -326,13 +308,12 @@ MissingStructurePenalty< TElastix >
  * ******************* WriteResultMesh ********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-MissingStructurePenalty< TElastix >
-::WriteResultMesh( const char * filename, MeshIdType meshId )
+MissingStructurePenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
 {
   /** Typedef's for writing the output mesh. */
-  typedef itk::MeshFileWriter< MeshType > MeshWriterType;
+  typedef itk::MeshFileWriter<MeshType> MeshWriterType;
 
   /** Create writer. */
   typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
@@ -341,68 +322,69 @@ MissingStructurePenalty< TElastix >
 
   /** Set the points of the latest transformation. */
   const MappedMeshContainerPointer mappedMeshContainer = this->GetModifiableMappedMeshContainer();
-  FixedMeshPointer                 mappedMesh          = mappedMeshContainer->ElementAt( meshId );
+  FixedMeshPointer                 mappedMesh = mappedMeshContainer->ElementAt(meshId);
 
-  /** Use pointer to the mesh data of fixedMesh; const_cast are assumed since outputMesh will only be used for writing the output*/
-  FixedMeshConstPointer fixedMesh        = this->GetFixedMeshContainer()->ElementAt( meshId );
-  bool                  tempSetPointData = ( mappedMesh->GetPointData() == nullptr );
-  bool                  tempSetCells     = ( mappedMesh->GetCells() == nullptr );
-  bool                  tempSetCellData  = ( mappedMesh->GetCellData() == nullptr );
+  /** Use pointer to the mesh data of fixedMesh; const_cast are assumed since outputMesh will only be used for writing
+   * the output*/
+  FixedMeshConstPointer fixedMesh = this->GetFixedMeshContainer()->ElementAt(meshId);
+  bool                  tempSetPointData = (mappedMesh->GetPointData() == nullptr);
+  bool                  tempSetCells = (mappedMesh->GetCells() == nullptr);
+  bool                  tempSetCellData = (mappedMesh->GetCellData() == nullptr);
 
-  if( tempSetPointData )
+  if (tempSetPointData)
   {
     // temporarily set pointdata
-    mappedMesh->SetPointData( const_cast< typename MeshType::PointDataContainer * >( fixedMesh->GetPointData() ) );
+    mappedMesh->SetPointData(const_cast<typename MeshType::PointDataContainer *>(fixedMesh->GetPointData()));
   }
 
-  if( tempSetCells )
+  if (tempSetCells)
   {
     // temporarily set cells
-    mappedMesh->SetCells( const_cast< typename MeshType::CellsContainer * >( fixedMesh->GetCells() ) );
+    mappedMesh->SetCells(const_cast<typename MeshType::CellsContainer *>(fixedMesh->GetCells()));
   }
-  if( tempSetCellData )
+  if (tempSetCellData)
   {
     // temporarily set celldata
-    mappedMesh->SetCellData( const_cast< typename MeshType::CellDataContainer * >( fixedMesh->GetCellData() ) );
+    mappedMesh->SetCellData(const_cast<typename MeshType::CellDataContainer *>(fixedMesh->GetCellData()));
   }
 
   mappedMesh->Modified();
   mappedMesh->Update();
 
-  meshWriter->SetInput( mappedMesh );
-  meshWriter->SetFileName( filename );
+  meshWriter->SetInput(mappedMesh);
+  meshWriter->SetFileName(filename);
 
   try
   {
     meshWriter->Update();
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
     /** Add information to the exception. */
-    excp.SetLocation( "MissingStructurePenalty - WriteResultMesh()" );
+    excp.SetLocation("MissingStructurePenalty - WriteResultMesh()");
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while writing mapped mesh.\n";
-    excp.SetDescription( err_str );
+    excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
     throw excp;
   }
 
-  if( tempSetPointData )
+  if (tempSetPointData)
   {
     // restore pointdata as undefined
-    mappedMesh->SetPointData( nullptr );
+    mappedMesh->SetPointData(nullptr);
   }
 
-  if( tempSetCells )
+  if (tempSetCells)
   {
     // restore cells as undefined
-    mappedMesh->SetCells( nullptr );
+    mappedMesh->SetCells(nullptr);
   }
-  if( tempSetCellData )
+  if (tempSetCellData)
   {
     // restore celldata as undefined
-    mappedMesh->SetCellData( nullptr );
+    mappedMesh->SetCellData(nullptr);
   }
 
 } // end WriteResultMesh()
@@ -412,12 +394,10 @@ MissingStructurePenalty< TElastix >
  * ******************* ReadTransformixPoints ********************
  */
 
-template< class TElastix >
+template <class TElastix>
 unsigned int
-MissingStructurePenalty< TElastix >
-::ReadTransformixPoints(
-  const std::string & filename,
-  typename MeshType::Pointer & mesh )   //const
+MissingStructurePenalty<TElastix>::ReadTransformixPoints(const std::string &          filename,
+                                                         typename MeshType::Pointer & mesh) // const
 {
   /*
   FB: Majority of the code is copied from elxTransformBase.hxx: TransformPointsSomePoints()
@@ -425,31 +405,26 @@ Function to read 2d structures by reading elastix point files (transformix forma
 the sequence of points to form a 2d connected polydata contour.
   */
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType          FixedImageRegionType;
-  typedef typename FixedImageType::PointType           FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType         FixedImageSpacingType;
-  typedef typename FixedImageType::IndexType           FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType          MovingImageIndexType;
-  typedef
-    itk::ContinuousIndex< double, FixedImageDimension >   FixedImageContinuousIndexType;
-  typedef
-    itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
-  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
+  typedef typename FixedImageType::RegionType                FixedImageRegionType;
+  typedef typename FixedImageType::PointType                 FixedImageOriginType;
+  typedef typename FixedImageType::SpacingType               FixedImageSpacingType;
+  typedef typename FixedImageType::IndexType                 FixedImageIndexType;
+  typedef typename FixedImageIndexType::IndexValueType       FixedImageIndexValueType;
+  typedef typename MovingImageType::IndexType                MovingImageIndexType;
+  typedef itk::ContinuousIndex<double, FixedImageDimension>  FixedImageContinuousIndexType;
+  typedef itk::ContinuousIndex<double, MovingImageDimension> MovingImageContinuousIndexType;
+  typedef typename FixedImageType::DirectionType             FixedImageDirectionType;
 
   typedef unsigned char DummyIPPPixelType;
-  typedef itk::DefaultStaticMeshTraits<
-    DummyIPPPixelType, FixedImageDimension,
-    FixedImageDimension, CoordRepType >                  MeshTraitsType;
-  typedef itk::PointSet< DummyIPPPixelType,
-    FixedImageDimension, MeshTraitsType >                PointSetType;
-  typedef itk::TransformixInputPointFileReader<
-    PointSetType >                                      IPPReaderType;
-  typedef itk::Vector< float, FixedImageDimension > DeformationVectorType;
+  typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>
+                                                                                MeshTraitsType;
+  typedef itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType> PointSetType;
+  typedef itk::TransformixInputPointFileReader<PointSetType>                    IPPReaderType;
+  typedef itk::Vector<float, FixedImageDimension>                               DeformationVectorType;
 
   /** Construct an ipp-file reader. */
   typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
-  ippReader->SetFileName( filename.c_str() );
+  ippReader->SetFileName(filename.c_str());
 
   /** Read the input points. */
   elxout << "  Reading input point file: " << filename << std::endl;
@@ -457,14 +432,14 @@ the sequence of points to form a 2d connected polydata contour.
   {
     ippReader->Update();
   }
-  catch( itk::ExceptionObject & err )
+  catch (itk::ExceptionObject & err)
   {
-    xl::xout[ "error" ] << "  Error while opening input point file." << std::endl;
-    xl::xout[ "error" ] << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file." << std::endl;
+    xl::xout["error"] << err << std::endl;
   }
 
   /** Some user-feedback. */
-  if( ippReader->GetPointsAreIndices() )
+  if (ippReader->GetPointsAreIndices())
   {
     elxout << "  Input points are specified as image indices." << std::endl;
   }
@@ -479,107 +454,100 @@ the sequence of points to form a 2d connected polydata contour.
   typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
 
   /** Create the storage classes. */
-  std::vector< FixedImageIndexType > inputindexvec(  nrofpoints );
-  //MeshType::PointsContainerPointer inputpointvec = MeshType::PointsContainer
-  //inputpointvec->Reserve(nrofpoints);
-  std::vector< InputPointType > inputpointvec(  nrofpoints );
-  //std::vector< OutputPointType >        outputpointvec( nrofpoints );
-  std::vector< FixedImageIndexType >   outputindexfixedvec( nrofpoints );
-  std::vector< MovingImageIndexType >  outputindexmovingvec( nrofpoints );
-  std::vector< DeformationVectorType > deformationvec( nrofpoints );
+  std::vector<FixedImageIndexType> inputindexvec(nrofpoints);
+  // MeshType::PointsContainerPointer inputpointvec = MeshType::PointsContainer
+  // inputpointvec->Reserve(nrofpoints);
+  std::vector<InputPointType> inputpointvec(nrofpoints);
+  // std::vector< OutputPointType >        outputpointvec( nrofpoints );
+  std::vector<FixedImageIndexType>   outputindexfixedvec(nrofpoints);
+  std::vector<MovingImageIndexType>  outputindexmovingvec(nrofpoints);
+  std::vector<DeformationVectorType> deformationvec(nrofpoints);
 
   /** Make a temporary image with the right region info,
-  * which we can use to convert between points and indices.
-  * By taking the image from the resampler output, the UseDirectionCosines
-  * parameter is automatically taken into account. */
-  FixedImageRegionType region;
-  FixedImageOriginType origin
-    = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
-  FixedImageSpacingType spacing
-    = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
-  FixedImageDirectionType direction
-    = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
-  region.SetIndex(
-    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
-  region.SetSize(
-    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
+   * which we can use to convert between points and indices.
+   * By taking the image from the resampler output, the UseDirectionCosines
+   * parameter is automatically taken into account. */
+  FixedImageRegionType    region;
+  FixedImageOriginType    origin = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
+  FixedImageSpacingType   spacing = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
+  FixedImageDirectionType direction = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
+  region.SetIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
+  region.SetSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
 
   typename FixedImageType::Pointer dummyImage = FixedImageType::New();
-  dummyImage->SetRegions( region );
-  dummyImage->SetOrigin( origin );
-  dummyImage->SetSpacing( spacing );
-  dummyImage->SetDirection( direction );
+  dummyImage->SetRegions(region);
+  dummyImage->SetOrigin(origin);
+  dummyImage->SetSpacing(spacing);
+  dummyImage->SetDirection(direction);
 
   /** Temp vars */
-  FixedImageContinuousIndexType  fixedcindex;
+  FixedImageContinuousIndexType fixedcindex;
 
   /** Also output moving image indices if a moving image was supplied. */
-  bool alsoMovingIndices = false;
+  bool                              alsoMovingIndices = false;
   typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
-  if( movingImage.IsNotNull() )
+  if (movingImage.IsNotNull())
   {
     alsoMovingIndices = true;
   }
 
   /** Read the input points, as index or as point. */
-  if( !( ippReader->GetPointsAreIndices() ) )
+  if (!(ippReader->GetPointsAreIndices()))
   {
-    for( unsigned int j = 0; j < nrofpoints; j++ )
+    for (unsigned int j = 0; j < nrofpoints; j++)
     {
       /** Compute index of nearest voxel in fixed image. */
-      InputPointType point; point.Fill( 0.0f );
-      inputPointSet->GetPoint( j, &point );
-      inputpointvec[ j ] = point;
-      dummyImage->TransformPhysicalPointToContinuousIndex(
-        point, fixedcindex );
-      for( unsigned int i = 0; i < FixedImageDimension; i++ )
+      InputPointType point;
+      point.Fill(0.0f);
+      inputPointSet->GetPoint(j, &point);
+      inputpointvec[j] = point;
+      dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
+      for (unsigned int i = 0; i < FixedImageDimension; i++)
       {
-        inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
-          vnl_math::rnd( fixedcindex[ i ] ) );
+        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(fixedcindex[i]));
       }
     }
   }
-  else   //so: inputasindex
+  else // so: inputasindex
   {
-    for( unsigned int j = 0; j < nrofpoints; j++ )
+    for (unsigned int j = 0; j < nrofpoints; j++)
     {
       /** The read point from the inutPointSet is actually an index
-      * Cast to the proper type.
-      */
-      InputPointType point; point.Fill( 0.0f );
-      inputPointSet->GetPoint( j, &point );
-      for( unsigned int i = 0; i < FixedImageDimension; i++ )
+       * Cast to the proper type.
+       */
+      InputPointType point;
+      point.Fill(0.0f);
+      inputPointSet->GetPoint(j, &point);
+      for (unsigned int i = 0; i < FixedImageDimension; i++)
       {
-        inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
-          vnl_math::rnd( point[ i ] ) );
+        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(point[i]));
       }
       /** Compute the input point in physical coordinates. */
-      dummyImage->TransformIndexToPhysicalPoint(
-        inputindexvec[ j ], inputpointvec[ j ] );
+      dummyImage->TransformIndexToPhysicalPoint(inputindexvec[j], inputpointvec[j]);
     }
   }
   /** FB: create a mesh containing the points**/
   mesh = MeshType::New();
-  mesh->SetPoints( inputPointSet->GetPoints() );
-  //MeshType::PointsContainer * meshpointset = dynamic_cast<MeshType::PointsContainer *>(inputpointvec);
+  mesh->SetPoints(inputPointSet->GetPoints());
+  // MeshType::PointsContainer * meshpointset = dynamic_cast<MeshType::PointsContainer *>(inputpointvec);
 
   /** FB: make connected mesh (polygon) for data that is 2d by assuming the sequence of points being connected**/
-  if( FixedImageDimension == 2 )
+  if (FixedImageDimension == 2)
   {
     typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
-    typedef itk::LineCell< typename MeshType::CellType > LineType;
+    typedef itk::LineCell<typename MeshType::CellType>   LineType;
 
-    for( unsigned int i = 0; i < nrofpoints; ++i )
+    for (unsigned int i = 0; i < nrofpoints; ++i)
     {
 
       // Create a link to the previous point in the column (below the current point)
       CellAutoPointer line;
-      line.TakeOwnership(  new LineType  );
+      line.TakeOwnership(new LineType);
 
-      line->SetPointId( 0, i ); // line between points 0 and 1
-      line->SetPointId( 1, ( i + 1 ) % nrofpoints );
-      //std::cout << "Linked point: " << MeshIndex << " and " << MeshIndex - 1 << std::endl;
-      mesh->SetCell( i, line );
+      line->SetPointId(0, i); // line between points 0 and 1
+      line->SetPointId(1, (i + 1) % nrofpoints);
+      // std::cout << "Linked point: " << MeshIndex << " and " << MeshIndex - 1 << std::endl;
+      mesh->SetCell(i, line);
     }
   }
   return nrofpoints;

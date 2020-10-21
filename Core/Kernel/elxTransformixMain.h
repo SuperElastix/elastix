@@ -38,18 +38,17 @@ namespace elastix
 class TransformixMain : public ElastixMain
 {
 public:
-
   /** Standard itk. */
-  typedef TransformixMain                 Self;
-  typedef ElastixMain                     Superclass;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef TransformixMain               Self;
+  typedef ElastixMain                   Superclass;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformixMain, ElastixMain );
+  itkTypeMacro(TransformixMain, ElastixMain);
 
   /** Typedef's from Superclass. */
 
@@ -88,35 +87,38 @@ public:
   typedef Superclass::ParameterMapType ParameterMapType;
 
   /** Overwrite Run() from base-class. */
-  int Run( void ) override;
+  int
+  Run(void) override;
 
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
-  int Run( const ArgumentMapType & argmap ) override;
+  int
+  Run(const ArgumentMapType & argmap) override;
 
-  int Run( const ArgumentMapType & argmap, const ParameterMapType & inputMap ) override;
+  int
+  Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap) override;
 
   /** Run version for using transformix as library. */
-  virtual int Run( const ArgumentMapType & argmap, const std::vector< ParameterMapType > & inputMaps );
+  virtual int
+  Run(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps);
 
   /** Get and Set input- and outputImage. */
-  virtual void SetInputImageContainer(
-    DataObjectContainerType * inputImageContainer );
+  virtual void
+  SetInputImageContainer(DataObjectContainerType * inputImageContainer);
 
 protected:
-
-  TransformixMain(){}
+  TransformixMain() {}
   ~TransformixMain() override;
 
   /** InitDBIndex sets m_DBIndex to the value obtained
    * from the ComponentDatabase.
    */
-  int InitDBIndex( void ) override;
+  int
+  InitDBIndex(void) override;
 
 private:
-
-  TransformixMain( const Self & ); // purposely not implemented
-  void operator=( const Self & );  // purposely not implemented
-
+  TransformixMain(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix

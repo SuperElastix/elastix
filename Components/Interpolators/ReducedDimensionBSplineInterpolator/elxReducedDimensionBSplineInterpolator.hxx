@@ -28,31 +28,28 @@ namespace elastix
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ReducedDimensionBSplineInterpolator< TElastix >
-::BeforeEachResolution( void )
+ReducedDimensionBSplineInterpolator<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level
-    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Read the desired spline order from the parameter file. */
   unsigned int splineOrder = 1;
-  this->GetConfiguration()->ReadParameter( splineOrder,
-    "BSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(
+    splineOrder, "BSplineInterpolationOrder", this->GetComponentLabel(), level, 0);
 
   /** Check. */
-  if( splineOrder == 0 )
+  if (splineOrder == 0)
   {
-    elx::xout[ "warning" ] << "WARNING: the BSplineInterpolationOrder is set to 0.\n"
-                           << "         It is not possible to take derivatives with this setting.\n"
-                           << "         Make sure you use a derivative free optimizer."
-                           << std::endl;
+    elx::xout["warning"] << "WARNING: the BSplineInterpolationOrder is set to 0.\n"
+                         << "         It is not possible to take derivatives with this setting.\n"
+                         << "         Make sure you use a derivative free optimizer." << std::endl;
   }
 
   /** Set the splineOrder. */
-  this->SetSplineOrder( splineOrder );
+  this->SetSplineOrder(splineOrder);
 
 } // end BeforeEachResolution()
 

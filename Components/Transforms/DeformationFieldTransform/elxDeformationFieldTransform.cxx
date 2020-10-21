@@ -18,4 +18,4 @@
 
 #include "elxDeformationFieldTransform.h"
 
-elxInstallMacro( DeformationFieldTransform );
+elxInstallMacro(DeformationFieldTransform);

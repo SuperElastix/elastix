@@ -39,34 +39,28 @@ namespace itk
  *
  * \ingroup Functions ImageInterpolators
  */
-template< class TCoordRep    = float,
-unsigned int VSpaceDimension = 2,
-unsigned int VSplineOrder    = 3 >
-class BSplineInterpolationWeightFunction2 :
-  public BSplineInterpolationWeightFunctionBase<
-  TCoordRep, VSpaceDimension, VSplineOrder >
+template <class TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+class BSplineInterpolationWeightFunction2
+  : public BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef BSplineInterpolationWeightFunction2       Self;
-  typedef BSplineInterpolationWeightFunctionBase<
-    TCoordRep, VSpaceDimension, VSplineOrder >      Superclass;
-  typedef SmartPointer< Self >                      Pointer;
-  typedef SmartPointer< const Self >                ConstPointer;
+  typedef BSplineInterpolationWeightFunction2                                              Self;
+  typedef BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder> Superclass;
+  typedef SmartPointer<Self>                                                               Pointer;
+  typedef SmartPointer<const Self>                                                         ConstPointer;
 
   /** New macro for creation of through the object factory.*/
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineInterpolationWeightFunction2,
-    BSplineInterpolationWeightFunctionBase );
+  itkTypeMacro(BSplineInterpolationWeightFunction2, BSplineInterpolationWeightFunctionBase);
 
   /** Space dimension. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, VSpaceDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, VSpaceDimension);
 
   /** Spline order. */
-  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
+  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::WeightsType         WeightsType;
@@ -75,39 +69,36 @@ public:
   typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
 
 protected:
-
   BSplineInterpolationWeightFunction2();
   ~BSplineInterpolationWeightFunction2() override {}
 
   /** Interpolation kernel types. */
-  typedef typename Superclass::KernelType           KernelType;
-  typedef typename Superclass::DerivativeKernelType DerivativeKernelType;
-  typedef typename Superclass
-    ::SecondOrderDerivativeKernelType SecondOrderDerivativeKernelType;
-  typedef typename Superclass::TableType       TableType;
-  typedef typename Superclass::OneDWeightsType OneDWeightsType;
-  typedef typename Superclass::WeightArrayType WeightArrayType;
+  typedef typename Superclass::KernelType                       KernelType;
+  typedef typename Superclass::DerivativeKernelType             DerivativeKernelType;
+  typedef typename Superclass ::SecondOrderDerivativeKernelType SecondOrderDerivativeKernelType;
+  typedef typename Superclass::TableType                        TableType;
+  typedef typename Superclass::OneDWeightsType                  OneDWeightsType;
+  typedef typename Superclass::WeightArrayType                  WeightArrayType;
 
   /* Compute the 1D weights, which are:
    * [ \beta^3( x[i] - startIndex[i] ), \beta^3( x[i] - startIndex[i] - 1 ),
    * \beta^3( x[i] - startIndex[i] - 2 ), \beta^3( x[i] - startIndex[i] - 3 ) ]
    */
-  void Compute1DWeights(
-    const ContinuousIndexType & index,
-    const IndexType & startIndex,
-    OneDWeightsType & weights1D ) const override;
+  void
+  Compute1DWeights(const ContinuousIndexType & index,
+                   const IndexType &           startIndex,
+                   OneDWeightsType &           weights1D) const override;
 
 private:
-
-  BSplineInterpolationWeightFunction2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                      // purposely not implemented
-
+  BSplineInterpolationWeightFunction2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBSplineInterpolationWeightFunction2.hxx"
+#  include "itkBSplineInterpolationWeightFunction2.hxx"
 #endif
 
 #endif

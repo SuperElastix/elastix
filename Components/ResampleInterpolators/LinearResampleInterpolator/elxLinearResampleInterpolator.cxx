@@ -18,4 +18,4 @@
 
 #include "elxLinearResampleInterpolator.h"
 
-elxInstallMacro( LinearResampleInterpolator );
+elxInstallMacro(LinearResampleInterpolator);

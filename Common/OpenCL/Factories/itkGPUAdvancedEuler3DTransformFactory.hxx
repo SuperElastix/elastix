@@ -22,33 +22,32 @@
 
 namespace itk
 {
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedEuler3DTransformFactory2< NDimensions >::RegisterOneFactory()
+GPUAdvancedEuler3DTransformFactory2<NDimensions>::RegisterOneFactory()
 {
-  typedef GPUAdvancedEuler3DTransformFactory2< NDimensions > GPUTransformFactoryType;
-  typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  typedef GPUAdvancedEuler3DTransformFactory2<NDimensions> GPUTransformFactoryType;
+  typename GPUTransformFactoryType::Pointer                factory = GPUTransformFactoryType::New();
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
-GPUAdvancedEuler3DTransformFactory2< NDimensions >::GPUAdvancedEuler3DTransformFactory2()
+template <typename NDimensions>
+GPUAdvancedEuler3DTransformFactory2<NDimensions>::GPUAdvancedEuler3DTransformFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedEuler3DTransformFactory2< NDimensions >
-::Register3D()
+GPUAdvancedEuler3DTransformFactory2<NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::Visit< RealTypeList > visitor;
-  visitor( *this );
+  typelist::Visit<RealTypeList> visitor;
+  visitor(*this);
 }
 
 

@@ -29,11 +29,10 @@ namespace itk
  * ************************* Constructor *********************
  */
 
-template< class TTransform, class TFixedImage, class TMovingImage >
-TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
-::TranslationTransformInitializer()
+template <class TTransform, class TFixedImage, class TMovingImage>
+TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::TranslationTransformInitializer()
 {
-  this->m_FixedCalculator  = FixedImageCalculatorType::New();
+  this->m_FixedCalculator = FixedImageCalculatorType::New();
   this->m_MovingCalculator = MovingImageCalculatorType::New();
 }
 
@@ -42,82 +41,79 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
  * ************************* InitializeTransform *********************
  */
 
-template< class TTransform, class TFixedImage, class TMovingImage >
+template <class TTransform, class TFixedImage, class TMovingImage>
 void
-TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
-::InitializeTransform( void ) const
+TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::InitializeTransform(void) const
 {
   // Sanity check
-  if( !this->m_FixedImage )
+  if (!this->m_FixedImage)
   {
-    itkExceptionMacro( "Fixed Image has not been set" );
+    itkExceptionMacro("Fixed Image has not been set");
     return;
   }
-  if( !this->m_MovingImage )
+  if (!this->m_MovingImage)
   {
-    itkExceptionMacro( "Moving Image has not been set" );
+    itkExceptionMacro("Moving Image has not been set");
     return;
   }
-  if( !this->m_Transform )
+  if (!this->m_Transform)
   {
-    itkExceptionMacro( "Transform has not been set" );
+    itkExceptionMacro("Transform has not been set");
     return;
   }
 
   // If images come from filters, then update those filters.
-  if( this->m_FixedImage->GetSource() )
+  if (this->m_FixedImage->GetSource())
   {
     this->m_FixedImage->GetSource()->Update();
   }
-  if( this->m_MovingImage->GetSource() )
+  if (this->m_MovingImage->GetSource())
   {
     this->m_MovingImage->GetSource()->Update();
   }
 
   OutputVectorType translationVector;
 
-  typedef ImageMaskSpatialObject< InputSpaceDimension >  FixedMaskSpatialObjectType;
-  typedef ImageMaskSpatialObject< OutputSpaceDimension > MovingMaskSpatialObjectType;
+  typedef ImageMaskSpatialObject<InputSpaceDimension>  FixedMaskSpatialObjectType;
+  typedef ImageMaskSpatialObject<OutputSpaceDimension> MovingMaskSpatialObjectType;
 
-  if( this->m_UseMoments )
+  if (this->m_UseMoments)
   {
     // Convert the masks to spatial objects
     typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject; // default-constructed (null)
-    if( this->m_FixedMask )
+    if (this->m_FixedMask)
     {
       fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
-      fixedMaskAsSpatialObject->SetImage( this->m_FixedMask );
+      fixedMaskAsSpatialObject->SetImage(this->m_FixedMask);
       fixedMaskAsSpatialObject->Update();
     }
 
     typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject; // default-constructed (null)
-    if( this->m_MovingMask )
+    if (this->m_MovingMask)
     {
       movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
-      movingMaskAsSpatialObject->SetImage( this->m_MovingMask );
+      movingMaskAsSpatialObject->SetImage(this->m_MovingMask);
       movingMaskAsSpatialObject->Update();
     }
 
     // Compute the image moments
-    this->m_FixedCalculator->SetImage( this->m_FixedImage );
-    this->m_FixedCalculator->SetSpatialObjectMask( fixedMaskAsSpatialObject );
+    this->m_FixedCalculator->SetImage(this->m_FixedImage);
+    this->m_FixedCalculator->SetSpatialObjectMask(fixedMaskAsSpatialObject);
     this->m_FixedCalculator->Compute();
 
-    this->m_MovingCalculator->SetImage( this->m_MovingImage );
-    this->m_MovingCalculator->SetSpatialObjectMask( movingMaskAsSpatialObject );
+    this->m_MovingCalculator->SetImage(this->m_MovingImage);
+    this->m_MovingCalculator->SetSpatialObjectMask(movingMaskAsSpatialObject);
     this->m_MovingCalculator->Compute();
 
     // Get the center of gravities
-    typename FixedImageCalculatorType::VectorType fixedCenter
-      = this->m_FixedCalculator->GetCenterOfGravity();
+    typename FixedImageCalculatorType::VectorType fixedCenter = this->m_FixedCalculator->GetCenterOfGravity();
 
-    typename MovingImageCalculatorType::VectorType movingCenter
-      = this->m_MovingCalculator->GetCenterOfGravity();
+    typename MovingImageCalculatorType::VectorType movingCenter = this->m_MovingCalculator->GetCenterOfGravity();
 
     // Compute the difference between the centers
-    for( unsigned int i = 0; i < InputSpaceDimension; i++ )
+    for (unsigned int i = 0; i < InputSpaceDimension; i++)
     {
-      translationVector[ i ] = movingCenter[ i ] - fixedCenter[ i ];
+      translationVector[i] = movingCenter[i] - fixedCenter[i];
     }
   }
   else
@@ -128,55 +124,51 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
 
     // Get fixed image (mask) information
     typedef typename FixedImageType::RegionType FixedRegionType;
-    FixedRegionType fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
-    if( this->m_FixedMask )
+    FixedRegionType                             fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
+    if (this->m_FixedMask)
     {
-      typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
-        = FixedMaskSpatialObjectType::New();
-      fixedMaskAsSpatialObject->SetImage( this->m_FixedMask );
+      typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
+      fixedMaskAsSpatialObject->SetImage(this->m_FixedMask);
       fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the fixed image (mask bounding box) in physical units
-    ContinuousIndex< double, InputSpaceDimension > fixedCenterCI;
-    for( unsigned int k = 0; k < InputSpaceDimension; k++ )
+    ContinuousIndex<double, InputSpaceDimension> fixedCenterCI;
+    for (unsigned int k = 0; k < InputSpaceDimension; k++)
     {
-      fixedCenterCI[ k ] = fixedRegion.GetIndex()[ k ] + fixedRegion.GetSize()[ k ] / 2.0;
+      fixedCenterCI[k] = fixedRegion.GetIndex()[k] + fixedRegion.GetSize()[k] / 2.0;
     }
     typename TransformType::InputPointType centerFixed;
-    this->m_FixedImage->TransformContinuousIndexToPhysicalPoint(
-      fixedCenterCI, centerFixed );
+    this->m_FixedImage->TransformContinuousIndexToPhysicalPoint(fixedCenterCI, centerFixed);
 
     // Get moving image (mask) information
     typedef typename MovingImageType::RegionType MovingRegionType;
-    MovingRegionType movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
-    if( this->m_MovingMask )
+    MovingRegionType                             movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
+    if (this->m_MovingMask)
     {
-      typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
-        = MovingMaskSpatialObjectType::New();
-      movingMaskAsSpatialObject->SetImage( this->m_MovingMask );
+      typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
+      movingMaskAsSpatialObject->SetImage(this->m_MovingMask);
       movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the moving image (mask bounding box) in physical units
-    ContinuousIndex< double, InputSpaceDimension > movingCenterCI;
-    for( unsigned int k = 0; k < InputSpaceDimension; k++ )
+    ContinuousIndex<double, InputSpaceDimension> movingCenterCI;
+    for (unsigned int k = 0; k < InputSpaceDimension; k++)
     {
-      movingCenterCI[ k ] = movingRegion.GetIndex()[ k ] + movingRegion.GetSize()[ k ] / 2.0;
+      movingCenterCI[k] = movingRegion.GetIndex()[k] + movingRegion.GetSize()[k] / 2.0;
     }
     typename TransformType::InputPointType centerMoving;
-    this->m_MovingImage->TransformContinuousIndexToPhysicalPoint(
-      movingCenterCI, centerMoving );
+    this->m_MovingImage->TransformContinuousIndexToPhysicalPoint(movingCenterCI, centerMoving);
 
     // Compute the difference between the centers
-    for( unsigned int i = 0; i < InputSpaceDimension; i++ )
+    for (unsigned int i = 0; i < InputSpaceDimension; i++)
     {
-      translationVector[ i ] = centerMoving[ i ] - centerFixed[ i ];
+      translationVector[i] = centerMoving[i] - centerFixed[i];
     }
   }
 
   // Initialize the transform
-  this->m_Transform->SetOffset( translationVector );
+  this->m_Transform->SetOffset(translationVector);
 
 } // end InitializeTransform()
 
@@ -185,17 +177,17 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
  * ************************* PrintSelf *********************
  */
 
-template< class TTransform, class TFixedImage, class TMovingImage >
+template <class TTransform, class TFixedImage, class TMovingImage>
 void
-TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
-::PrintSelf( std::ostream & os, Indent indent ) const
+TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::PrintSelf(std::ostream & os,
+                                                                                  Indent         indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
   os << indent << "Transform   = " << std::endl;
-  if( this->m_Transform )
+  if (this->m_Transform)
   {
-    os << indent << this->m_Transform  << std::endl;
+    os << indent << this->m_Transform << std::endl;
   }
   else
   {
@@ -203,9 +195,9 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
   }
 
   os << indent << "FixedImage   = " << std::endl;
-  if( this->m_FixedImage )
+  if (this->m_FixedImage)
   {
-    os << indent << this->m_FixedImage  << std::endl;
+    os << indent << this->m_FixedImage << std::endl;
   }
   else
   {
@@ -213,9 +205,9 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
   }
 
   os << indent << "MovingImage   = " << std::endl;
-  if( this->m_MovingImage )
+  if (this->m_MovingImage)
   {
-    os << indent << this->m_MovingImage  << std::endl;
+    os << indent << this->m_MovingImage << std::endl;
   }
   else
   {
@@ -223,9 +215,9 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
   }
 
   os << indent << "MovingMomentCalculator   = " << std::endl;
-  if( this->m_MovingCalculator )
+  if (this->m_MovingCalculator)
   {
-    os << indent << this->m_MovingCalculator  << std::endl;
+    os << indent << this->m_MovingCalculator << std::endl;
   }
   else
   {
@@ -233,9 +225,9 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
   }
 
   os << indent << "FixedMomentCalculator   = " << std::endl;
-  if( this->m_FixedCalculator )
+  if (this->m_FixedCalculator)
   {
-    os << indent << this->m_FixedCalculator  << std::endl;
+    os << indent << this->m_FixedCalculator << std::endl;
   }
   else
   {
@@ -245,6 +237,6 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
 } // end PrintSelf()
 
 
-}  // namespace itk
+} // namespace itk
 
 #endif /* __itkTranslationTransformInitializer_hxx */

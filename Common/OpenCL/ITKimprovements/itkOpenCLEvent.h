@@ -92,7 +92,6 @@ class OpenCLUserEvent;
 class ITKOpenCL_EXPORT OpenCLEvent
 {
 public:
-
   /** Standard class typedefs. */
   typedef OpenCLEvent Self;
 
@@ -102,11 +101,11 @@ public:
   /** Constructs an OpenCL event object from the identifier id.
    * This class takes over ownership of id and will release it in
    * the destructor. */
-  OpenCLEvent( const cl_event id );
+  OpenCLEvent(const cl_event id);
 
   /** Constructs a copy of other. The \c{clRetainEvent()} function
    * will be called to update the reference count on GetEventId(). */
-  OpenCLEvent( const OpenCLEvent & other );
+  OpenCLEvent(const OpenCLEvent & other);
 
   /** Releases this OpenCL event object by calling \c{clReleaseEvent()}. */
   ~OpenCLEvent();
@@ -114,52 +113,84 @@ public:
   /** Assigns other to this OpenCL event object. The current GetEventId() will
    * be released with \c{clReleaseEvent()}, and the new GetEventId() will be
    * retained with \c{clRetainEvent()}. */
-  OpenCLEvent & operator=( const OpenCLEvent & other );
+  OpenCLEvent &
+  operator=(const OpenCLEvent & other);
 
   /** Returns true if this OpenCL event object is null, false otherwise. */
-  bool IsNull() const { return this->m_Id == 0; }
+  bool
+  IsNull() const
+  {
+    return this->m_Id == 0;
+  }
 
   /** Returns the OpenCL identifier for this event. */
-  cl_event GetEventId() const { return this->m_Id; }
+  cl_event
+  GetEventId() const
+  {
+    return this->m_Id;
+  }
 
   /** Returns true if the command associated with this OpenCL event has been
    * queued for execution on the host, but has not yet been submitted to
    * the device yet.
    * \sa IsSubmitted(), IsRunning(), IsComplete(), IsError(), GetStatus() */
-  bool IsQueued() const { return GetStatus() == CL_QUEUED; }
+  bool
+  IsQueued() const
+  {
+    return GetStatus() == CL_QUEUED;
+  }
 
   /** Returns true if the command associated with this OpenCL event has been
    * submitted for execution on the device yet, but is not yet running.
    * \sa IsQueued(), IsRunning(), IsComplete(), IsError(), GetStatus() */
-  bool IsSubmitted() const { return GetStatus() == CL_SUBMITTED; }
+  bool
+  IsSubmitted() const
+  {
+    return GetStatus() == CL_SUBMITTED;
+  }
 
   /** Returns true if the command associated with this OpenCL event is
    * running on the device, but has not yet finished.
    * \sa IsQueued(), IsSubmitted(), IsComplete(), IsError(), GetStatus() */
-  bool IsRunning() const { return GetStatus() == CL_RUNNING; }
+  bool
+  IsRunning() const
+  {
+    return GetStatus() == CL_RUNNING;
+  }
 
   /** Returns true if the command associated with this OpenCL event
    * has completed execution on the device.
    * \sa IsQueued(), IsSubmitted(), IsRunning(), IsError(), GetStatus() */
-  bool IsComplete() const { return GetStatus() == CL_COMPLETE; }
+  bool
+  IsComplete() const
+  {
+    return GetStatus() == CL_COMPLETE;
+  }
 
   /** Returns true if an error has occurred on this OpenCL event.
    * \sa IsQueued(), IsSubmitted(), IsRunning(), IsComplete(), GetStatus() */
-  bool IsError() const { return GetStatus() < 0; }
+  bool
+  IsError() const
+  {
+    return GetStatus() < 0;
+  }
 
   /** Returns the status of this event, which is an error code or one
    * of \c{CL_QUEUED}, \c{CL_SUBMITTED}, \c{CL_RUNNING} or \c{CL_COMPLETE}.
    * \sa IsQueued(), IsSubmitted(), IsRunning(), IsComplete(), IsError() */
-  cl_int GetStatus() const;
+  cl_int
+  GetStatus() const;
 
   /** Returns the type of command that generated this event. */
-  cl_command_type GetCommandType() const;
+  cl_command_type
+  GetCommandType() const;
 
   /** Waits for this event to be signaled as finished. The calling thread
    * is blocked until the event is signaled. This function returns immediately
    * if the event is null.
    * \sa IsComplete(), OpenCLEventList::WaitForFinished() */
-  cl_int WaitForFinished();
+  cl_int
+  WaitForFinished();
 
   /** Registers a user callback function for a specific command execution status.
    * If the execution of a command is terminated, the command-queue associated
@@ -169,36 +200,38 @@ public:
    * this context) are now considered to be implementation defined. The user
    * registered callback function specified when context is created can be used
    * to report appropriate error information. */
-  cl_int SetCallback( cl_int type,
-    void ( CL_CALLBACK * pfn_notify )( cl_event, cl_int, void * ),
-    void * user_data = nullptr );
+  cl_int
+  SetCallback(cl_int type, void(CL_CALLBACK * pfn_notify)(cl_event, cl_int, void *), void * user_data = nullptr);
 
   /** Returns the device time in nanoseconds when the command was queued for
    * execution on the host. The return value is only valid if the command has
    * finished execution and profiling was enabled on the command queue.
    * \sa GetSubmitTime(), GetRunTime(), GetFinishTime(), IsQueued() */
-  cl_ulong GetQueueTime() const;
+  cl_ulong
+  GetQueueTime() const;
 
   /** Returns the device time in nanoseconds when the command was submitted by
    * the host for execution on the device. The return value is only valid if
    * the command has finished execution and profiling was enabled on the command queue.
    * \sa GetQueueTime(), GetRunTime(), GetFinishTime(), IsSubmitted() */
-  cl_ulong GetSubmitTime() const;
+  cl_ulong
+  GetSubmitTime() const;
 
   /** Returns the device time in nanoseconds when the command started
    * running on the device. The return value is only valid if the command
    * has finished execution and profiling was enabled on the command queue.
    * \sa GetQueueTime(), GetSubmitTime(), GetFinishTime(), IsRunning() */
-  cl_ulong GetRunTime() const;
+  cl_ulong
+  GetRunTime() const;
 
   /** Returns the device time in nanoseconds when the command finished running
    * on the device. The return value is only valid if the command has finished
    * execution and profiling was enabled on the command queue.
    * \sa GetQueueTime(), GetSubmitTime(), GetRunTime(), IsComplete() */
-  cl_ulong GetFinishTime() const;
+  cl_ulong
+  GetFinishTime() const;
 
 private:
-
   cl_event m_Id;
 
   /** friends from OpenCL core */
@@ -206,147 +239,164 @@ private:
 };
 
 /** Operator ==
-* Returns true if \a lhs OpenCL event is the same as \a rhs, false otherwise.
-* \sa operator!= */
-bool ITKOpenCL_EXPORT operator==( const OpenCLEvent & lhs, const OpenCLEvent & rhs );
+ * Returns true if \a lhs OpenCL event is the same as \a rhs, false otherwise.
+ * \sa operator!= */
+bool ITKOpenCL_EXPORT
+     operator==(const OpenCLEvent & lhs, const OpenCLEvent & rhs);
 
 /** Operator !=
-* Returns true if \a lhs OpenCL event is not the same as \a rhs, false otherwise.
-* \sa operator== */
-bool ITKOpenCL_EXPORT operator!=( const OpenCLEvent & lhs, const OpenCLEvent & rhs );
+ * Returns true if \a lhs OpenCL event is not the same as \a rhs, false otherwise.
+ * \sa operator== */
+bool ITKOpenCL_EXPORT
+     operator!=(const OpenCLEvent & lhs, const OpenCLEvent & rhs);
 
 /** Stream out operator for OpenCLEvent */
-template< typename charT, typename traits >
-inline
-std::basic_ostream< charT, traits > &
-operator<<( std::basic_ostream< charT, traits > & strm,
-  const OpenCLEvent & event )
+template <typename charT, typename traits>
+inline std::basic_ostream<charT, traits> &
+operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLEvent & event)
 {
   const cl_event id = event.GetEventId();
 
-  if( !id )
+  if (!id)
   {
     strm << "OpenCLEvent()";
     return strm;
   }
 
   const cl_command_type command = event.GetCommandType();
-  const cl_int          status  = event.GetStatus();
+  const cl_int          status = event.GetStatus();
 
   // Get command name, check for clGetEventInfo() specification
   const char * commandName;
-  switch( command )
+  switch (command)
   {
     case CL_COMMAND_NDRANGE_KERNEL:
-      commandName = "clEnqueueNDRangeKernel"; break;
+      commandName = "clEnqueueNDRangeKernel";
+      break;
     case CL_COMMAND_TASK:
-      commandName = "clEnqueueTask"; break;
+      commandName = "clEnqueueTask";
+      break;
     case CL_COMMAND_NATIVE_KERNEL:
-      commandName = "clEnqueueNativeKernel"; break;
+      commandName = "clEnqueueNativeKernel";
+      break;
     case CL_COMMAND_READ_BUFFER:
-      commandName = "clEnqueueReadBuffer"; break;
+      commandName = "clEnqueueReadBuffer";
+      break;
     case CL_COMMAND_WRITE_BUFFER:
-      commandName = "clEnqueueWriteBuffer"; break;
+      commandName = "clEnqueueWriteBuffer";
+      break;
     case CL_COMMAND_COPY_BUFFER:
-      commandName = "clEnqueueCopyBuffer"; break;
+      commandName = "clEnqueueCopyBuffer";
+      break;
     case CL_COMMAND_READ_IMAGE:
-      commandName = "clEnqueueReadImage"; break;
+      commandName = "clEnqueueReadImage";
+      break;
     case CL_COMMAND_WRITE_IMAGE:
-      commandName = "clEnqueueWriteImage"; break;
+      commandName = "clEnqueueWriteImage";
+      break;
     case CL_COMMAND_COPY_IMAGE:
-      commandName = "clEnqueueCopyImage"; break;
+      commandName = "clEnqueueCopyImage";
+      break;
     case CL_COMMAND_COPY_IMAGE_TO_BUFFER:
-      commandName = "clEnqueueCopyImageToBuffer"; break;
+      commandName = "clEnqueueCopyImageToBuffer";
+      break;
     case CL_COMMAND_COPY_BUFFER_TO_IMAGE:
-      commandName = "clEnqueueCopyBufferToImage"; break;
+      commandName = "clEnqueueCopyBufferToImage";
+      break;
     case CL_COMMAND_MAP_BUFFER:
-      commandName = "clEnqueueMapBuffer"; break;
+      commandName = "clEnqueueMapBuffer";
+      break;
     case CL_COMMAND_MAP_IMAGE:
-      commandName = "clEnqueueMapImage"; break;
+      commandName = "clEnqueueMapImage";
+      break;
     case CL_COMMAND_UNMAP_MEM_OBJECT:
-      commandName = "clEnqueueUnmapMemObject"; break;
+      commandName = "clEnqueueUnmapMemObject";
+      break;
     case CL_COMMAND_MARKER:
-      commandName = "clEnqueueMarker"; break;
+      commandName = "clEnqueueMarker";
+      break;
     case CL_COMMAND_ACQUIRE_GL_OBJECTS:
-      commandName = "clEnqueueAcquireGLObjects"; break;
+      commandName = "clEnqueueAcquireGLObjects";
+      break;
     case CL_COMMAND_RELEASE_GL_OBJECTS:
-      commandName = "clEnqueueReleaseGLObjects"; break;
+      commandName = "clEnqueueReleaseGLObjects";
+      break;
     // OpenCL 1.1 event types.
     case CL_COMMAND_READ_BUFFER_RECT:
-      commandName = "clEnqueueReadBufferRect"; break;
+      commandName = "clEnqueueReadBufferRect";
+      break;
     case CL_COMMAND_WRITE_BUFFER_RECT:
-      commandName = "clEnqueueWriteBufferRect"; break;
+      commandName = "clEnqueueWriteBufferRect";
+      break;
     case CL_COMMAND_COPY_BUFFER_RECT:
-      commandName = "clEnqueueCopyBufferRect"; break;
+      commandName = "clEnqueueCopyBufferRect";
+      break;
     case CL_COMMAND_USER:
-      commandName = "clCreateUserEvent"; break;
+      commandName = "clCreateUserEvent";
+      break;
     // OpenCL 1.2 event types.
     case CL_COMMAND_BARRIER:
-      commandName = "clEnqueueBarrierWithWaitList"; break;
+      commandName = "clEnqueueBarrierWithWaitList";
+      break;
     case CL_COMMAND_MIGRATE_MEM_OBJECTS:
-      commandName = "clEnqueueFillImage"; break;
+      commandName = "clEnqueueFillImage";
+      break;
     case CL_COMMAND_FILL_BUFFER:
-      commandName = "clEnqueueFillBuffer"; break;
+      commandName = "clEnqueueFillBuffer";
+      break;
     case CL_COMMAND_FILL_IMAGE:
-      commandName = "clEnqueueFillImage"; break;
+      commandName = "clEnqueueFillImage";
+      break;
     default:
-      commandName = "Unknown"; break;
+      commandName = "Unknown";
+      break;
   }
 
   // Get command status
   const char * statusName;
-  switch( status )
+  switch (status)
   {
     case CL_COMPLETE:
-      statusName = "completed"; break;
+      statusName = "completed";
+      break;
     case CL_RUNNING:
-      statusName = "running"; break;
+      statusName = "running";
+      break;
     case CL_SUBMITTED:
-      statusName = "submitted"; break;
+      statusName = "submitted";
+      break;
     case CL_QUEUED:
-      statusName = "queued"; break;
+      statusName = "queued";
+      break;
     default:
-      statusName = "Unknown"; break;
+      statusName = "Unknown";
+      break;
   }
-  if( status != CL_COMPLETE )
+  if (status != CL_COMPLETE)
   {
     // Command is not complete : no profiling information available yet.
-    strm << "OpenCLEvent(id:" << reinterpret_cast< long >( id )
-         << " command:" << commandName
-         << " status:" << statusName
+    strm << "OpenCLEvent(id:" << reinterpret_cast<long>(id) << " command:" << commandName << " status:" << statusName
          << ")";
   }
   else
   {
     cl_ulong queueTime, runTime, finishTime;
-    if( clGetEventProfilingInfo
-        ( id, CL_PROFILING_COMMAND_QUEUED,
-      sizeof( queueTime ), &queueTime, 0 ) != CL_SUCCESS
-      || clGetEventProfilingInfo
-        ( id, CL_PROFILING_COMMAND_START,
-      sizeof( runTime ), &runTime, 0 ) != CL_SUCCESS
-      || clGetEventProfilingInfo
-        ( id, CL_PROFILING_COMMAND_END,
-      sizeof( finishTime ), &finishTime, 0 ) != CL_SUCCESS )
+    if (clGetEventProfilingInfo(id, CL_PROFILING_COMMAND_QUEUED, sizeof(queueTime), &queueTime, 0) != CL_SUCCESS ||
+        clGetEventProfilingInfo(id, CL_PROFILING_COMMAND_START, sizeof(runTime), &runTime, 0) != CL_SUCCESS ||
+        clGetEventProfilingInfo(id, CL_PROFILING_COMMAND_END, sizeof(finishTime), &finishTime, 0) != CL_SUCCESS)
     {
       // Profiling information is not available, probably
       // because it was not enabled on the command queue.
-      strm << "OpenCLEvent(id:" << reinterpret_cast< long >( id )
-           << " command:" << commandName
-           << " status:" << statusName
+      strm << "OpenCLEvent(id:" << reinterpret_cast<long>(id) << " command:" << commandName << " status:" << statusName
            << ")";
     }
     else
     {
       // Include profiling information in the debug output.
-      const double fullDuration = ( finishTime - queueTime ) / 1000000.0f;
-      const double runDuration  = ( finishTime - runTime ) / 1000000.0f;
-      strm << "OpenCLEvent(id:" << reinterpret_cast< long >( id )
-           << " command:" << commandName
-           << " status:" << statusName
-           << " full-time:" << fullDuration
-           << " ms running-time:" << runDuration
-           << "ms)";
+      const double fullDuration = (finishTime - queueTime) / 1000000.0f;
+      const double runDuration = (finishTime - runTime) / 1000000.0f;
+      strm << "OpenCLEvent(id:" << reinterpret_cast<long>(id) << " command:" << commandName << " status:" << statusName
+           << " full-time:" << fullDuration << " ms running-time:" << runDuration << "ms)";
     }
   }
 

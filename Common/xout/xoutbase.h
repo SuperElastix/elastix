@@ -20,8 +20,8 @@
 
 /** Get rid of warnings about too long variable names.*/
 #ifdef _MSC_VER
-#pragma warning ( disable : 4786 )
-#pragma warning ( disable : 4503 )
+#  pragma warning(disable : 4786)
+#  pragma warning(disable : 4503)
 #endif
 
 #include <iostream>
@@ -43,26 +43,25 @@ using namespace std;
  * \ingroup xout
  */
 
-template< class charT, class traits = char_traits< charT > >
+template <class charT, class traits = char_traits<charT>>
 class xoutbase
 {
 public:
-
   /** Typedef's.*/
   typedef xoutbase Self;
 
-  typedef traits                         traits_type;
-  typedef charT                          char_type;
-  typedef typename traits::int_type      int_type;
-  typedef typename traits::pos_type      pos_type;
-  typedef typename traits::off_type      off_type;
-  typedef basic_ostream< charT, traits > ostream_type;
-  typedef basic_ios< charT, traits >     ios_type;
+  typedef traits                       traits_type;
+  typedef charT                        char_type;
+  typedef typename traits::int_type    int_type;
+  typedef typename traits::pos_type    pos_type;
+  typedef typename traits::off_type    off_type;
+  typedef basic_ostream<charT, traits> ostream_type;
+  typedef basic_ios<charT, traits>     ios_type;
 
-  typedef std::map< std::string, ostream_type * > CStreamMapType;
-  typedef std::map< std::string, Self * >         XStreamMapType;
-  typedef typename CStreamMapType::value_type     CStreamMapEntryType;
-  typedef typename XStreamMapType::value_type     XStreamMapEntryType;
+  typedef std::map<std::string, ostream_type *> CStreamMapType;
+  typedef std::map<std::string, Self *>         XStreamMapType;
+  typedef typename CStreamMapType::value_type   CStreamMapEntryType;
+  typedef typename XStreamMapType::value_type   XStreamMapEntryType;
 
   /** Constructors */
   xoutbase() = default;
@@ -72,7 +71,7 @@ public:
 
   /** The operator [] simply calls this->SelectXCell(cellname).
    * It returns an x-cell */
-  inline Self & operator[]( const char * cellname );
+  inline Self & operator[](const char * cellname);
 
   /**
    * the << operator. A templated member function, and some overloads.
@@ -88,67 +87,88 @@ public:
       return this->SendToTargets(_arg);
     }*/
 
-  template< class T >
-  Self & operator<<( const T & _arg )
+  template <class T>
+  Self &
+  operator<<(const T & _arg)
   {
-    return this->SendToTargets( _arg );
+    return this->SendToTargets(_arg);
   }
 
 
-  Self & operator<<( ostream_type & (* pf)( ostream_type  & ) )
+  Self &
+  operator<<(ostream_type & (*pf)(ostream_type &))
   {
-    return this->SendToTargets( pf );
+    return this->SendToTargets(pf);
   }
 
 
-  Self & operator<<( ios_type & (* pf)( ios_type & ) )
+  Self &
+  operator<<(ios_type & (*pf)(ios_type &))
   {
-    return this->SendToTargets( pf );
+    return this->SendToTargets(pf);
   }
 
 
-  Self & operator<<( ios_base & (* pf)( ios_base & ) )
+  Self &
+  operator<<(ios_base & (*pf)(ios_base &))
   {
-    return this->SendToTargets( pf );
+    return this->SendToTargets(pf);
   }
 
 
-  virtual void WriteBufferedData( void );
+  virtual void
+  WriteBufferedData(void);
 
   /**
    * Methods to Add and Remove target cells. They return 0 when successful.
    */
-  virtual int AddTargetCell( const char * name, ostream_type * cell );
+  virtual int
+  AddTargetCell(const char * name, ostream_type * cell);
 
-  virtual int AddTargetCell( const char * name, Self * cell );
+  virtual int
+  AddTargetCell(const char * name, Self * cell);
 
-  virtual int AddTargetCell( const char * /** name */ ){ return 1; }
-  virtual int RemoveTargetCell( const char * name );
+  virtual int
+  AddTargetCell(const char * /** name */)
+  {
+    return 1;
+  }
+  virtual int
+  RemoveTargetCell(const char * name);
 
-  virtual void SetTargetCells( const CStreamMapType & cellmap );
+  virtual void
+  SetTargetCells(const CStreamMapType & cellmap);
 
-  virtual void SetTargetCells( const XStreamMapType & cellmap );
+  virtual void
+  SetTargetCells(const XStreamMapType & cellmap);
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
-  virtual int AddOutput( const char * name, ostream_type * output );
+  virtual int
+  AddOutput(const char * name, ostream_type * output);
 
-  virtual int AddOutput( const char * name, Self * output );
+  virtual int
+  AddOutput(const char * name, Self * output);
 
-  virtual int RemoveOutput( const char * name );
+  virtual int
+  RemoveOutput(const char * name);
 
-  virtual void SetOutputs( const CStreamMapType & outputmap );
+  virtual void
+  SetOutputs(const CStreamMapType & outputmap);
 
-  virtual void SetOutputs( const XStreamMapType & outputmap );
+  virtual void
+  SetOutputs(const XStreamMapType & outputmap);
 
   /** Get the output maps. */
-  virtual const CStreamMapType & GetCOutputs( void );
+  virtual const CStreamMapType &
+  GetCOutputs(void);
 
-  virtual const XStreamMapType & GetXOutputs( void );
+  virtual const XStreamMapType &
+  GetXOutputs(void);
 
 protected:
-
   /** Returns a target cell. */
-  virtual Self & SelectXCell( const char * name );
+  virtual Self &
+  SelectXCell(const char * name);
 
   /** Maps that contain the outputs. */
   CStreamMapType m_COutputs;
@@ -159,24 +179,24 @@ protected:
   CStreamMapType m_CTargetCells;
   XStreamMapType m_XTargetCells;
 
-  template< class T >
-  Self & SendToTargets( const T & _arg )
+  template <class T>
+  Self &
+  SendToTargets(const T & _arg)
   {
     /** Send input to the target c-streams. */
-    for( const auto& cell : m_CTargetCells )
+    for (const auto & cell : m_CTargetCells)
     {
-      *( cell.second ) << _arg;
+      *(cell.second) << _arg;
     }
 
     /** Send input to the target xout-objects. */
-    for( const auto& cell :m_XTargetCells )
+    for (const auto & cell : m_XTargetCells)
     {
-      *( cell.second ) << _arg;
+      *(cell.second) << _arg;
     }
 
     return *this;
   } // end SendToTargets
-
 };
 
 } // end namespace xoutlibrary

@@ -17,7 +17,7 @@
  *=========================================================================*/
 
 
- // First include the header file to be tested:
+// First include the header file to be tested:
 #include <elxElastixFilter.h>
 #include <itkImage.h>
 #include <itkImageRegionRange.h>
@@ -43,43 +43,42 @@ GTEST_TEST(ElastixFilter, Translation)
   using RegionRangeType = itk::Experimental::ImageRegionRange<ImageType>;
 
   const OffsetType translationOffset{ { 1, -2 } };
-  const auto regionSize = SizeType::Filled(2);
-  const SizeType imageSize{ { 5, 6 } };
-  const IndexType fixedImageRegionIndex{ { 1, 3 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  const RegionType fixedImageRegion{ fixedImageRegionIndex, regionSize };
+  const RegionType      fixedImageRegion{ fixedImageRegionIndex, regionSize };
   const RegionRangeType fixedImageRegionRange{ *fixedImage, fixedImageRegion };
   std::fill(std::begin(fixedImageRegionRange), std::end(fixedImageRegionRange), 1.0f);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  const RegionType movingImageRegion{ fixedImageRegionIndex + translationOffset, regionSize };
+  const RegionType      movingImageRegion{ fixedImageRegionIndex + translationOffset, regionSize };
   const RegionRangeType movingImageRegionRange{ *movingImage, movingImageRegion };
   std::fill(std::begin(movingImageRegionRange), std::end(movingImageRegionRange), 1.0f);
 
   const auto parameterObject = elastix::ParameterObject::New();
 
-  const std::pair<std::string, std::string> parameterArray[] =
-  {
+  const std::pair<std::string, std::string> parameterArray[] = {
     // Parameters in alphabetic order:
-    { "FixedImageDimension", std::to_string(ImageDimension)},
+    { "FixedImageDimension", std::to_string(ImageDimension) },
     { "ImageSampler", "Full" },
     { "MaximumNumberOfIterations", "2" },
     { "Metric", "AdvancedNormalizedCorrelation" },
-    { "MovingImageDimension", std::to_string(ImageDimension)},
+    { "MovingImageDimension", std::to_string(ImageDimension) },
     { "Optimizer", "AdaptiveStochasticGradientDescent" },
     { "Transform", "TranslationTransform" }
   };
 
-  std::map < std::string, std::vector< std::string > > parameterMap;
+  std::map<std::string, std::vector<std::string>> parameterMap;
 
-  for (const auto& pair : parameterArray)
+  for (const auto & pair : parameterArray)
   {
-    const auto result = parameterMap.insert({ pair.first, {pair.second} });
+    const auto result = parameterMap.insert({ pair.first, { pair.second } });
 
     ASSERT_EQ(std::make_pair(pair, result.second), std::make_pair(pair, true));
   }
@@ -94,17 +93,17 @@ GTEST_TEST(ElastixFilter, Translation)
   filter->SetParameterObject(parameterObject);
   filter->Update();
 
-  const auto transformParameterObject = filter->GetTransformParameterObject();
-  const auto& transformParameterMaps = transformParameterObject->GetParameterMap();
+  const auto   transformParameterObject = filter->GetTransformParameterObject();
+  const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
 
   ASSERT_TRUE(!transformParameterMaps.empty());
   EXPECT_EQ(transformParameterMaps.size(), 1);
 
-  const auto& transformParameterMap = transformParameterMaps.front();
-  const auto found = transformParameterMap.find("TransformParameters");
+  const auto & transformParameterMap = transformParameterMaps.front();
+  const auto   found = transformParameterMap.find("TransformParameters");
   ASSERT_NE(found, transformParameterMap.cend());
 
-  const auto& transformParameters = found->second;
+  const auto & transformParameters = found->second;
   ASSERT_EQ(transformParameters.size(), ImageDimension);
 
   for (unsigned i{}; i < ImageDimension; ++i)

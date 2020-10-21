@@ -21,6 +21,6 @@
 
 #include "elxFixedRecursivePyramid.h"
 
-//nothing
+// nothing
 
 #endif //#ifndef __elxFixedRecursivePyramid_hxx

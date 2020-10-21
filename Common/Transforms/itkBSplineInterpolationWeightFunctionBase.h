@@ -31,22 +31,20 @@ namespace itk
 {
 
 /** Recursive template to retrieve the number of Bspline weights at compile time. */
-template< unsigned int SplineOrder, unsigned int Dimension >
+template <unsigned int SplineOrder, unsigned int Dimension>
 class GetConstNumberOfWeightsHack
 {
 public:
-
-  typedef GetConstNumberOfWeightsHack< SplineOrder, Dimension - 1 > OneDimensionLess;
-  itkStaticConstMacro( Value, unsigned long, ( SplineOrder + 1 ) * OneDimensionLess::Value );
+  typedef GetConstNumberOfWeightsHack<SplineOrder, Dimension - 1> OneDimensionLess;
+  itkStaticConstMacro(Value, unsigned long, (SplineOrder + 1) * OneDimensionLess::Value);
 };
 
 /** Partial template specialization to terminate the recursive loop. */
-template< unsigned int SplineOrder >
-class GetConstNumberOfWeightsHack< SplineOrder, 0 >
+template <unsigned int SplineOrder>
+class GetConstNumberOfWeightsHack<SplineOrder, 0>
 {
 public:
-
-  itkStaticConstMacro( Value, unsigned long, 1 );
+  itkStaticConstMacro(Value, unsigned long, 1);
 };
 
 /** \class BSplineInterpolationWeightFunctionBase
@@ -65,49 +63,44 @@ public:
  *
  * \ingroup Functions ImageInterpolators
  */
-template< class TCoordRep    = float,
-unsigned int VSpaceDimension = 2,
-unsigned int VSplineOrder    = 3 >
-class BSplineInterpolationWeightFunctionBase :
-  public FunctionBase< ContinuousIndex< TCoordRep, VSpaceDimension >, Array< double > >
+template <class TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+class BSplineInterpolationWeightFunctionBase
+  : public FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>, Array<double>>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef BSplineInterpolationWeightFunctionBase Self;
-  typedef FunctionBase<
-    ContinuousIndex< TCoordRep, VSpaceDimension >,
-    Array< double > >                               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef BSplineInterpolationWeightFunctionBase                                   Self;
+  typedef FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>, Array<double>> Superclass;
+  typedef SmartPointer<Self>                                                       Pointer;
+  typedef SmartPointer<const Self>                                                 ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineInterpolationWeightFunctionBase, FunctionBase );
+  itkTypeMacro(BSplineInterpolationWeightFunctionBase, FunctionBase);
 
   /** Space dimension. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, VSpaceDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, VSpaceDimension);
 
   /** Spline order. */
-  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
+  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** The number of weights as a static const. */
-  typedef GetConstNumberOfWeightsHack<
-    itkGetStaticConstMacro( SplineOrder ),
-    itkGetStaticConstMacro( SpaceDimension ) > GetConstNumberOfWeightsHackType;
-  itkStaticConstMacro( NumberOfWeights, unsigned long, GetConstNumberOfWeightsHackType::Value );
+  typedef GetConstNumberOfWeightsHack<itkGetStaticConstMacro(SplineOrder), itkGetStaticConstMacro(SpaceDimension)>
+    GetConstNumberOfWeightsHackType;
+  itkStaticConstMacro(NumberOfWeights, unsigned long, GetConstNumberOfWeightsHackType::Value);
 
   /** OutputType typedef support. */
-  typedef Array< double > WeightsType;
+  typedef Array<double> WeightsType;
 
   /** Index and size typedef support. */
-  typedef Index< VSpaceDimension > IndexType;
-  typedef Size< VSpaceDimension >  SizeType;
+  typedef Index<VSpaceDimension> IndexType;
+  typedef Size<VSpaceDimension>  SizeType;
 
   /** ContinuousIndex typedef support. */
-  typedef ContinuousIndex< TCoordRep, VSpaceDimension > ContinuousIndexType;
+  typedef ContinuousIndex<TCoordRep, VSpaceDimension> ContinuousIndexType;
 
   /** Evaluate the weights at specified ContinousIndex position. */
-  WeightsType Evaluate( const ContinuousIndexType & index ) const override;
+  WeightsType
+  Evaluate(const ContinuousIndexType & index) const override;
 
   /** Evaluate the weights at specified ContinousIndex position.
    * The weights are returned in the user specified container.
@@ -116,52 +109,51 @@ public:
    * On return, startIndex contains the start index of the
    * support region over which the weights are defined.
    */
-  virtual void Evaluate( const ContinuousIndexType & cindex,
-    const IndexType & startIndex, WeightsType & weights ) const;
+  virtual void
+  Evaluate(const ContinuousIndexType & cindex, const IndexType & startIndex, WeightsType & weights) const;
 
   /** Compute the start index of the support region. */
-  void ComputeStartIndex( const ContinuousIndexType & index,
-    IndexType & startIndex ) const;
+  void
+  ComputeStartIndex(const ContinuousIndexType & index, IndexType & startIndex) const;
 
   /** Get support region size. */
-  itkGetConstReferenceMacro( SupportSize, SizeType );
+  itkGetConstReferenceMacro(SupportSize, SizeType);
 
   /** Get number of weights. */
-  itkGetConstMacro( NumberOfWeights, unsigned long );
+  itkGetConstMacro(NumberOfWeights, unsigned long);
 
 protected:
-
   BSplineInterpolationWeightFunctionBase();
   ~BSplineInterpolationWeightFunctionBase() override {}
 
   /** Interpolation kernel types. */
-  typedef BSplineKernelFunction2< Self::SplineOrder >                      KernelType;
-  typedef typename KernelType::Pointer                                     KernelPointer;
-  typedef BSplineDerivativeKernelFunction< Self::SplineOrder >             DerivativeKernelType;
-  typedef typename DerivativeKernelType::Pointer                           DerivativeKernelPointer;
-  typedef BSplineSecondOrderDerivativeKernelFunction2< Self::SplineOrder > SecondOrderDerivativeKernelType;
-  typedef typename SecondOrderDerivativeKernelType::Pointer                SecondOrderDerivativeKernelPointer;
-  typedef typename KernelType::WeightArrayType                             WeightArrayType;
+  typedef BSplineKernelFunction2<Self::SplineOrder>                      KernelType;
+  typedef typename KernelType::Pointer                                   KernelPointer;
+  typedef BSplineDerivativeKernelFunction<Self::SplineOrder>             DerivativeKernelType;
+  typedef typename DerivativeKernelType::Pointer                         DerivativeKernelPointer;
+  typedef BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder> SecondOrderDerivativeKernelType;
+  typedef typename SecondOrderDerivativeKernelType::Pointer              SecondOrderDerivativeKernelPointer;
+  typedef typename KernelType::WeightArrayType                           WeightArrayType;
 
   /** Lookup table type. */
-  typedef Array2D< unsigned long > TableType;
+  typedef Array2D<unsigned long> TableType;
 
   /** Typedef for intermediary 1D weights.
    * The Matrix is at least twice as fast as std::vector< vnl_vector< double > >,
    * probably because of the fixed size at compile time.
    */
-  typedef Matrix< double,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SplineOrder ) + 1 > OneDWeightsType;
+  typedef Matrix<double, itkGetStaticConstMacro(SpaceDimension), itkGetStaticConstMacro(SplineOrder) + 1>
+    OneDWeightsType;
 
   /** Compute the 1D weights. */
-  virtual void Compute1DWeights(
-    const ContinuousIndexType & index,
-    const IndexType & startIndex,
-    OneDWeightsType & weights1D ) const = 0;
+  virtual void
+  Compute1DWeights(const ContinuousIndexType & index,
+                   const IndexType &           startIndex,
+                   OneDWeightsType &           weights1D) const = 0;
 
   /** Print the member variables. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
   unsigned long m_NumberOfWeights;
@@ -169,30 +161,31 @@ protected:
   TableType     m_OffsetToIndexTable;
 
   /** Interpolation kernels. */
-  typename KernelType::Pointer m_Kernel;
-  typename DerivativeKernelType::Pointer m_DerivativeKernel;
+  typename KernelType::Pointer                      m_Kernel;
+  typename DerivativeKernelType::Pointer            m_DerivativeKernel;
   typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
 
 private:
-
-  BSplineInterpolationWeightFunctionBase( const Self & ); // purposely not implemented
-  void operator=( const Self & );                         // purposely not implemented
+  BSplineInterpolationWeightFunctionBase(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Function to initialize the support region. */
-  void InitializeSupport( void );
+  void
+  InitializeSupport(void);
 
   /** Function to initialize the offset table.
    * The offset table is a convenience table, just to
    * keep track where is what.
    */
-  void InitializeOffsetToIndexTable( void );
-
+  void
+  InitializeOffsetToIndexTable(void);
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBSplineInterpolationWeightFunctionBase.hxx"
+#  include "itkBSplineInterpolationWeightFunctionBase.hxx"
 #endif
 
 #endif

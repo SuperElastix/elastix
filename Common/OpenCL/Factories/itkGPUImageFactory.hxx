@@ -22,84 +22,80 @@
 
 namespace itk
 {
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUImageFactory2< TTypeList, NDimensions >
-::RegisterOneFactory()
+GPUImageFactory2<TTypeList, NDimensions>::RegisterOneFactory()
 {
-  typedef GPUImageFactory2< TTypeList, NDimensions > GPUImageFactoryType;
-  typename GPUImageFactoryType::Pointer factory = GPUImageFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  typedef GPUImageFactory2<TTypeList, NDimensions> GPUImageFactoryType;
+  typename GPUImageFactoryType::Pointer            factory = GPUImageFactoryType::New();
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions >
-GPUImageFactory2< TTypeList, NDimensions >::GPUImageFactory2()
+template <typename TTypeList, typename NDimensions>
+GPUImageFactory2<TTypeList, NDimensions>::GPUImageFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUImageFactory2< TTypeList, NDimensions >
-::Register1D()
+GPUImageFactory2<TTypeList, NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< TTypeList, 1 > visitor0;
-  visitor0( *this );
+  typelist::VisitDimension<TTypeList, 1> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float
-  const bool hasFloat = typelist::HasType< TTypeList, float >::Type;
-  if( !hasFloat )
+  const bool hasFloat = typelist::HasType<TTypeList, float>::Type;
+  if (!hasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::VisitDimension< FloatTypeList, 1 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
+    typelist::VisitDimension<FloatTypeList, 1>  visitor1;
+    visitor1(*this);
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUImageFactory2< TTypeList, NDimensions >
-::Register2D()
+GPUImageFactory2<TTypeList, NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< TTypeList, 2 > visitor0;
-  visitor0( *this );
+  typelist::VisitDimension<TTypeList, 2> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float
-  const bool hasFloat = typelist::HasType< TTypeList, float >::Type;
-  if( !hasFloat )
+  const bool hasFloat = typelist::HasType<TTypeList, float>::Type;
+  if (!hasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::VisitDimension< FloatTypeList, 2 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
+    typelist::VisitDimension<FloatTypeList, 2>  visitor1;
+    visitor1(*this);
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUImageFactory2< TTypeList, NDimensions >
-::Register3D()
+GPUImageFactory2<TTypeList, NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< TTypeList, 3 > visitor0;
-  visitor0( *this );
+  typelist::VisitDimension<TTypeList, 3> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float
-  const bool hasFloat = typelist::HasType< TTypeList, float >::Type;
-  if( !hasFloat )
+  const bool hasFloat = typelist::HasType<TTypeList, float>::Type;
+  if (!hasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::VisitDimension< FloatTypeList, 3 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
+    typelist::VisitDimension<FloatTypeList, 3>  visitor1;
+    visitor1(*this);
   }
 }
 

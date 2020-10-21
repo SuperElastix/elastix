@@ -31,12 +31,10 @@ unsigned int ANNBinaryTreeCreator::m_NumberOfANNBinaryTrees = 0;
  */
 
 ANNBinaryTreeCreator::ANNkDTreeType *
-ANNBinaryTreeCreator::CreateANNkDTree(
-  ANNPointArrayType pa, int n, int d, int bs,
-  ANNSplitRuleType split )
+ANNBinaryTreeCreator::CreateANNkDTree(ANNPointArrayType pa, int n, int d, int bs, ANNSplitRuleType split)
 {
   IncreaseReferenceCount();
-  return new ANNkd_tree( pa, n, d, bs, split );
+  return new ANNkd_tree(pa, n, d, bs, split);
 } // end CreateANNkDTree
 
 
@@ -45,12 +43,15 @@ ANNBinaryTreeCreator::CreateANNkDTree(
  */
 
 ANNBinaryTreeCreator::ANNbdTreeType *
-ANNBinaryTreeCreator::CreateANNbdTree(
-  ANNPointArrayType pa, int n, int d, int bs,
-  ANNSplitRuleType split, ANNShrinkRuleType shrink )
+ANNBinaryTreeCreator::CreateANNbdTree(ANNPointArrayType pa,
+                                      int               n,
+                                      int               d,
+                                      int               bs,
+                                      ANNSplitRuleType  split,
+                                      ANNShrinkRuleType shrink)
 {
   IncreaseReferenceCount();
-  return new ANNbd_tree( pa, n, d, bs, split, shrink );
+  return new ANNbd_tree(pa, n, d, bs, split, shrink);
 } // end CreateANNbdTree
 
 
@@ -59,11 +60,10 @@ ANNBinaryTreeCreator::CreateANNbdTree(
  */
 
 ANNBinaryTreeCreator::ANNBruteForceTreeType *
-ANNBinaryTreeCreator::CreateANNBruteForceTree(
-  ANNPointArrayType pa, int n, int d )
+ANNBinaryTreeCreator::CreateANNBruteForceTree(ANNPointArrayType pa, int n, int d)
 {
   IncreaseReferenceCount();
-  return new ANNbruteForce( pa, n, d );
+  return new ANNbruteForce(pa, n, d);
 } // end CreateANNBruteForceTree
 
 
@@ -72,9 +72,9 @@ ANNBinaryTreeCreator::CreateANNBruteForceTree(
  */
 
 void
-ANNBinaryTreeCreator::DeleteANNkDTree( ANNkDTreeType * & tree )
+ANNBinaryTreeCreator::DeleteANNkDTree(ANNkDTreeType *& tree)
 {
-  if( tree )
+  if (tree)
   {
     delete tree;
     tree = nullptr;
@@ -88,9 +88,9 @@ ANNBinaryTreeCreator::DeleteANNkDTree( ANNkDTreeType * & tree )
  */
 
 void
-ANNBinaryTreeCreator::DeleteANNBruteForceTree( ANNBruteForceTreeType * & tree )
+ANNBinaryTreeCreator::DeleteANNBruteForceTree(ANNBruteForceTreeType *& tree)
 {
-  if( tree )
+  if (tree)
   {
     delete tree;
     tree = nullptr;
@@ -104,7 +104,7 @@ ANNBinaryTreeCreator::DeleteANNBruteForceTree( ANNBruteForceTreeType * & tree )
  */
 
 void
-ANNBinaryTreeCreator::IncreaseReferenceCount( void )
+ANNBinaryTreeCreator::IncreaseReferenceCount(void)
 {
   m_NumberOfANNBinaryTrees++;
 } // end IncreaseReferenceCount
@@ -115,10 +115,10 @@ ANNBinaryTreeCreator::IncreaseReferenceCount( void )
  */
 
 void
-ANNBinaryTreeCreator::DecreaseReferenceCount( void )
+ANNBinaryTreeCreator::DecreaseReferenceCount(void)
 {
   m_NumberOfANNBinaryTrees--;
-  if( m_NumberOfANNBinaryTrees == 0 )
+  if (m_NumberOfANNBinaryTrees == 0)
   {
     annClose();
   }

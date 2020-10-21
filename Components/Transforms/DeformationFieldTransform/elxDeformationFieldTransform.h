@@ -40,9 +40,9 @@ namespace elastix
  * The transform parameters necessary for transformix, additionally defined by this class, are:
  * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
  *    example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
- * \transformparameter DeformationFieldInterpolationOrder: The interpolation order used for interpolating the deformation field:\n
- *    example: <tt>(DeformationFieldInterpolationOrder 0)</tt>\n
- *    The default value is 0. Choose from the allowed values 0 or 1.
+ * \transformparameter DeformationFieldInterpolationOrder: The interpolation order used for interpolating the
+ * deformation field:\n example: <tt>(DeformationFieldInterpolationOrder 0)</tt>\n The default value is 0. Choose from
+ * the allowed values 0 or 1.
  *
  *
  * \sa DeformationFieldInterpolatingTransform
@@ -50,50 +50,46 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template< class TElastix >
-class DeformationFieldTransform :
-  public
-  itk::AdvancedCombinationTransform<
-  typename elx::TransformBase< TElastix >::CoordRepType,
-  elx::TransformBase< TElastix >::FixedImageDimension >,
-  public
-  TransformBase< TElastix >
+template <class TElastix>
+class DeformationFieldTransform
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef DeformationFieldTransform Self;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::DeformationFieldInterpolatingTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension,
-    float >                                             DeformationFieldInterpolatingTransformType;
+  typedef itk::DeformationFieldInterpolatingTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                      elx::TransformBase<TElastix>::FixedImageDimension,
+                                                      float>
+    DeformationFieldInterpolatingTransformType;
 
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension > Superclass1;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+    Superclass1;
 
-  typedef elx::TransformBase< TElastix > Superclass2;
+  typedef elx::TransformBase<TElastix> Superclass2;
 
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( DeformationFieldTransform, itk::AdvancedCombinationTransform );
+  itkTypeMacro(DeformationFieldTransform, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "DeformationFieldTransform")</tt>\n
    */
-  elxClassNameMacro( "DeformationFieldTransform" );
+  elxClassNameMacro("DeformationFieldTransform");
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
@@ -113,8 +109,7 @@ public:
   typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldType       DeformationFieldType;
   typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldVectorType DeformationFieldVectorType;
 
-  typedef typename DeformationFieldInterpolatingTransformType::Pointer
-    DeformationFieldInterpolatingTransformPointer;
+  typedef typename DeformationFieldInterpolatingTransformType::Pointer DeformationFieldInterpolatingTransformPointer;
 
   /** Typedef's from TransformBase. */
   typedef typename Superclass2::ElastixType              ElastixType;
@@ -130,24 +125,25 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
 protected:
-
   /** The constructor. */
   DeformationFieldTransform();
   /** The destructor. */
   ~DeformationFieldTransform() override {}
 
 private:
-
   /** The private constructor. */
-  DeformationFieldTransform( const Self & );  // purposely not implemented
+  DeformationFieldTransform(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );             // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   typedef typename DeformationFieldType::DirectionType DirectionType;
 
@@ -157,13 +153,12 @@ private:
 
   /** Original direction cosines; stored to facilitate UseDirectionCosines option. */
   DirectionType m_OriginalDeformationFieldDirection;
-
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxDeformationFieldTransform.hxx"
+#  include "elxDeformationFieldTransform.hxx"
 #endif
 
 #endif // end #ifndef __elxDeformationFieldTransform_H__

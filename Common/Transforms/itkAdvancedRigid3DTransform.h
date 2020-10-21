@@ -62,60 +62,53 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TScalarType = double >
+template <class TScalarType = double>
 // type for scalars (float or double)
-class AdvancedRigid3DTransform :
-  public AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3 >
+class AdvancedRigid3DTransform : public AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AdvancedRigid3DTransform                               Self;
-  typedef AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3 > Superclass;
-  typedef SmartPointer< Self >                                   Pointer;
-  typedef SmartPointer< const Self >                             ConstPointer;
+  typedef AdvancedRigid3DTransform                             Self;
+  typedef AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3> Superclass;
+  typedef SmartPointer<Self>                                   Pointer;
+  typedef SmartPointer<const Self>                             ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedRigid3DTransform, AdvancedMatrixOffsetTransformBase );
+  itkTypeMacro(AdvancedRigid3DTransform, AdvancedMatrixOffsetTransformBase);
 
   /** New macro for creation of through a Smart Pointer */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Dimension of the space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( ParametersDimension, unsigned int, 12 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(ParametersDimension, unsigned int, 12);
 
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::JacobianType           JacobianType;
-  typedef typename Superclass::ScalarType             ScalarType;
-  typedef typename Superclass::InputVectorType        InputVectorType;
-  typedef typename Superclass::OutputVectorType       OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType
-    InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType
-    OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
-  typedef typename Superclass::InputPointType      InputPointType;
-  typedef typename Superclass::OutputPointType     OutputPointType;
-  typedef typename Superclass::MatrixType          MatrixType;
-  typedef typename Superclass::InverseMatrixType   InverseMatrixType;
-  typedef typename Superclass::CenterType          CenterType;
-  typedef typename Superclass::TranslationType     TranslationType;
-  typedef typename Superclass::OffsetType          OffsetType;
+  typedef typename Superclass::ParametersType            ParametersType;
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass::JacobianType              JacobianType;
+  typedef typename Superclass::ScalarType                ScalarType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::MatrixType                MatrixType;
+  typedef typename Superclass::InverseMatrixType         InverseMatrixType;
+  typedef typename Superclass::CenterType                CenterType;
+  typedef typename Superclass::TranslationType           TranslationType;
+  typedef typename Superclass::OffsetType                OffsetType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** Set the transformation from a container of parameters
    * This is typically used by optimizers.
@@ -127,14 +120,16 @@ public:
    *
    * \sa Transform::SetParameters()
    * \sa Transform::SetFixedParameters() */
-  void SetParameters( const ParametersType & parameters ) override;
+  void
+  SetParameters(const ParametersType & parameters) override;
 
   /** Directly set the rotation matrix of the transform.
    * \warning The input matrix must be orthogonal to within a specified tolerance,
    * else an exception is thrown.
    *
    * \sa AdvancedMatrixOffsetTransformBase::SetMatrix() */
-  void SetMatrix( const MatrixType & matrix ) override;
+  void
+  SetMatrix(const MatrixType & matrix) override;
 
   /**
    * Get rotation Matrix from an AdvancedRigid3DTransform
@@ -144,8 +139,11 @@ public:
    *
    * \deprecated Use GetMatrix instead
    **/
-  const MatrixType & GetRotationMatrix()
-  { return this->GetMatrix(); }
+  const MatrixType &
+  GetRotationMatrix()
+  {
+    return this->GetMatrix();
+  }
 
   /**
    * Set the rotation Matrix of a Rigid3D Transform
@@ -157,8 +155,11 @@ public:
    * \deprecated Use SetMatrix instead
    *
    **/
-  virtual void SetRotationMatrix( const MatrixType & matrix )
-  { this->SetMatrix( matrix ); }
+  virtual void
+  SetRotationMatrix(const MatrixType & matrix)
+  {
+    this->SetMatrix(matrix);
+  }
 
   /**
    * Compose the transformation with a translation
@@ -167,7 +168,8 @@ public:
    * origin.  The translation is precomposed with self if pre is
    * true, and postcomposed otherwise.
    **/
-  void Translate( const OffsetType & offset, bool pre = false );
+  void
+  Translate(const OffsetType & offset, bool pre = false);
 
   /**
    * Back transform by an affine transformation
@@ -180,48 +182,47 @@ public:
    *   transform using the result.
    *
    **/
-  InputPointType      BackTransform( const OutputPointType
-    & point ) const;
+  InputPointType
+  BackTransform(const OutputPointType & point) const;
 
-  InputVectorType     BackTransform( const OutputVectorType
-    & vector ) const;
+  InputVectorType
+  BackTransform(const OutputVectorType & vector) const;
 
-  InputVnlVectorType  BackTransform( const OutputVnlVectorType
-    & vector ) const;
+  InputVnlVectorType
+  BackTransform(const OutputVnlVectorType & vector) const;
 
-  InputCovariantVectorType BackTransform( const OutputCovariantVectorType
-    & vector ) const;
+  InputCovariantVectorType
+  BackTransform(const OutputCovariantVectorType & vector) const;
 
   /**
    * Utility function to test if a matrix is orthogonal within a specified
    * tolerance
    */
-  bool MatrixIsOrthogonal( const MatrixType & matrix, double tol = 1e-10 );
+  bool
+  MatrixIsOrthogonal(const MatrixType & matrix, double tol = 1e-10);
 
 protected:
-
-  AdvancedRigid3DTransform( unsigned int paramDim );
-  AdvancedRigid3DTransform( const MatrixType & matrix,
-    const OutputVectorType & offset );
+  AdvancedRigid3DTransform(unsigned int paramDim);
+  AdvancedRigid3DTransform(const MatrixType & matrix, const OutputVectorType & offset);
   AdvancedRigid3DTransform();
   ~AdvancedRigid3DTransform() override;
 
   /**
    * Print contents of an AdvancedRigid3DTransform
    **/
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
-  AdvancedRigid3DTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );           // purposely not implemented
-
+  AdvancedRigid3DTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedRigid3DTransform.hxx"
+#  include "itkAdvancedRigid3DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedRigid3DTransform_h */

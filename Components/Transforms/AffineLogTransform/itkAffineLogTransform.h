@@ -29,29 +29,27 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TScalarType = double, unsigned int Dimension = 2 > // Data type for scalars (float or double)
-class AffineLogTransform :
-  public AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >
+template <class TScalarType = double, unsigned int Dimension = 2> // Data type for scalars (float or double)
+class AffineLogTransform : public AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AffineLogTransform                                                     Self;
-  typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension > Superclass;
-  typedef SmartPointer< Self >                                                   Pointer;
-  typedef SmartPointer< const Self >                                             ConstPointer;
+  typedef AffineLogTransform                                                   Self;
+  typedef AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension> Superclass;
+  typedef SmartPointer<Self>                                                   Pointer;
+  typedef SmartPointer<const Self>                                             ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AffineLogTransform, AdvancedMatrixOffsetTransformBase );
+  itkTypeMacro(AffineLogTransform, AdvancedMatrixOffsetTransformBase);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, Dimension );
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, Dimension );
-  itkStaticConstMacro( ParametersDimension, unsigned int, ( Dimension + 1 ) * Dimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, Dimension);
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, Dimension);
+  itkStaticConstMacro(ParametersDimension, unsigned int, (Dimension + 1) * Dimension);
 
   typedef typename Superclass::ParametersType            ParametersType;
   typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
@@ -72,58 +70,54 @@ public:
   typedef typename Superclass::OffsetType                OffsetType;
   typedef typename Superclass::ScalarType                AngleType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
-  typedef FixedArray< ScalarType > ScalarArrayType;
+  typedef FixedArray<ScalarType> ScalarArrayType;
 
-  void SetParameters( const ParametersType & parameters ) override;
+  void
+  SetParameters(const ParametersType & parameters) override;
 
-  const ParametersType & GetParameters( void ) const override;
+  const ParametersType &
+  GetParameters(void) const override;
 
   /** Compute the Jacobian of the transformation. */
-  void GetJacobian(
-    const InputPointType &,
-    JacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
-  void SetIdentity( void ) override;
+  void
+  SetIdentity(void) override;
 
 protected:
-
   AffineLogTransform();
-  AffineLogTransform( const MatrixType & matrix,
-    const OutputPointType & offset );
-  AffineLogTransform( unsigned int outputSpaceDims,
-    unsigned int paramsSpaceDims );
+  AffineLogTransform(const MatrixType & matrix, const OutputPointType & offset);
+  AffineLogTransform(unsigned int outputSpaceDims, unsigned int paramsSpaceDims);
 
-  ~AffineLogTransform() override{}
+  ~AffineLogTransform() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
-  virtual void PrecomputeJacobianOfSpatialJacobian( void );
+  virtual void
+  PrecomputeJacobianOfSpatialJacobian(void);
 
 private:
-
-  AffineLogTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );     // purposely not implemented
+  AffineLogTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   MatrixType m_MatrixLogDomain;
-
 };
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAffineLogTransform.hxx"
+#  include "itkAffineLogTransform.hxx"
 #endif
 
 #endif /* __itkAffineLogTransform_h */

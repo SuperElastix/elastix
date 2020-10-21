@@ -29,23 +29,23 @@ namespace elastix
  * *********************** SetElastix ***************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BaseComponentSE< TElastix >::SetElastix( TElastix * const _arg )
+BaseComponentSE<TElastix>::SetElastix(TElastix * const _arg)
 {
   /** If this->m_Elastix is not set, then set it. */
-  if( this->m_Elastix != _arg )
+  if (this->m_Elastix != _arg)
   {
     this->m_Elastix = _arg;
 
-    if( _arg != nullptr )
+    if (_arg != nullptr)
     {
       this->m_Configuration = _arg->GetConfiguration();
-      this->m_Registration  = _arg->GetElxRegistrationBase();
+      this->m_Registration = _arg->GetElxRegistrationBase();
     }
 
-    const auto thisasobject = dynamic_cast< itk::Object * >( this );
-    if( thisasobject != nullptr )
+    const auto thisasobject = dynamic_cast<itk::Object *>(this);
+    if (thisasobject != nullptr)
     {
       thisasobject->Modified();
     }
@@ -60,17 +60,17 @@ BaseComponentSE< TElastix >::SetElastix( TElastix * const _arg )
  * Added for transformix.
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BaseComponentSE< TElastix >::SetConfiguration( ConfigurationType * const _arg )
+BaseComponentSE<TElastix>::SetConfiguration(ConfigurationType * const _arg)
 {
   /** If this->m_Configuration is not set, then set it.*/
-  if( this->m_Configuration != _arg )
+  if (this->m_Configuration != _arg)
   {
     this->m_Configuration = _arg;
 
-    const auto thisasobject = dynamic_cast< itk::Object * >( this );
-    if( thisasobject != nullptr )
+    const auto thisasobject = dynamic_cast<itk::Object *>(this);
+    if (thisasobject != nullptr)
     {
       thisasobject->Modified();
     }

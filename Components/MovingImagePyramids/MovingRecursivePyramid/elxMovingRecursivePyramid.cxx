@@ -18,4 +18,4 @@
 
 #include "elxMovingRecursivePyramid.h"
 
-elxInstallMacro( MovingRecursivePyramid );
+elxInstallMacro(MovingRecursivePyramid);

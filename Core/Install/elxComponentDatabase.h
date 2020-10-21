@@ -49,19 +49,17 @@ namespace elastix
  * \ingroup Install
  */
 
-class ComponentDatabase :
-  public itk::Object
+class ComponentDatabase : public itk::Object
 {
 public:
-
   /** Standard.*/
-  typedef ComponentDatabase               Self;
-  typedef itk::Object                     Superclass;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef ComponentDatabase             Self;
+  typedef itk::Object                   Superclass;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
-  itkNewMacro( Self );
-  itkTypeMacro( ComponentDatabase, Object );
+  itkNewMacro(Self);
+  itkTypeMacro(ComponentDatabase, Object);
 
   /** The Index is the number of the ElastixTypedef<number>::ElastixType.*/
   typedef unsigned int IndexType;
@@ -73,77 +71,62 @@ public:
   /** PtrToCreator is a pointer to a function which
    * outputs an ObjectPointer and has no input arguments.
    */
-  typedef ObjectPointer (* PtrToCreator)( void );
-  typedef std::string      ComponentDescriptionType;
-  typedef std::pair<
-    ComponentDescriptionType,
-    IndexType >                        CreatorMapKeyType;
-  typedef PtrToCreator CreatorMapValueType;
-  typedef std::map<
-    CreatorMapKeyType,
-    CreatorMapValueType >              CreatorMapType;
-  typedef CreatorMapType::value_type CreatorMapEntryType;
+  typedef ObjectPointer (*PtrToCreator)(void);
+  typedef std::string                                      ComponentDescriptionType;
+  typedef std::pair<ComponentDescriptionType, IndexType>   CreatorMapKeyType;
+  typedef PtrToCreator                                     CreatorMapValueType;
+  typedef std::map<CreatorMapKeyType, CreatorMapValueType> CreatorMapType;
+  typedef CreatorMapType::value_type                       CreatorMapEntryType;
 
   /** Typedefs for the IndexMap.*/
 
   /** The ImageTypeDescription contains the pixeltype (as a string)
    * and the dimension (unsigned int).
    */
-  typedef std::string  PixelTypeDescriptionType;
-  typedef unsigned int ImageDimensionType;
-  typedef std::pair<
-    PixelTypeDescriptionType,
-    ImageDimensionType >   ImageTypeDescriptionType;
+  typedef std::string                                             PixelTypeDescriptionType;
+  typedef unsigned int                                            ImageDimensionType;
+  typedef std::pair<PixelTypeDescriptionType, ImageDimensionType> ImageTypeDescriptionType;
 
   /** This pair contains the ImageTypeDescription of the FixedImageType
    * and the MovingImageType.
    */
-  typedef std::pair<
-    ImageTypeDescriptionType,
-    ImageTypeDescriptionType >         IndexMapKeyType;
-  typedef IndexType IndexMapValueType;
-  typedef std::map<
-    IndexMapKeyType,
-    IndexMapValueType >                IndexMapType;
-  typedef IndexMapType::value_type IndexMapEntryType;
+  typedef std::pair<ImageTypeDescriptionType, ImageTypeDescriptionType> IndexMapKeyType;
+  typedef IndexType                                                     IndexMapValueType;
+  typedef std::map<IndexMapKeyType, IndexMapValueType>                  IndexMapType;
+  typedef IndexMapType::value_type                                      IndexMapEntryType;
 
   /** Functions to set an entry in a map.*/
-  int SetCreator(
-    const ComponentDescriptionType & name,
-    IndexType i,
-    PtrToCreator creator );
+  int
+  SetCreator(const ComponentDescriptionType & name, IndexType i, PtrToCreator creator);
 
-  int SetIndex(
-    const PixelTypeDescriptionType & fixedPixelType,
-    ImageDimensionType fixedDimension,
-    const PixelTypeDescriptionType & movingPixelType,
-    ImageDimensionType movingDimension,
-    IndexType i );
+  int
+  SetIndex(const PixelTypeDescriptionType & fixedPixelType,
+           ImageDimensionType               fixedDimension,
+           const PixelTypeDescriptionType & movingPixelType,
+           ImageDimensionType               movingDimension,
+           IndexType                        i);
 
   /** Functions to get an entry in a map */
-  PtrToCreator GetCreator(
-    const ComponentDescriptionType & name,
-    IndexType i ) const;
+  PtrToCreator
+  GetCreator(const ComponentDescriptionType & name, IndexType i) const;
 
-  IndexType GetIndex(
-    const PixelTypeDescriptionType & fixedPixelType,
-    ImageDimensionType fixedDimension,
-    const PixelTypeDescriptionType & movingPixelType,
-    ImageDimensionType movingDimension ) const;
+  IndexType
+  GetIndex(const PixelTypeDescriptionType & fixedPixelType,
+           ImageDimensionType               fixedDimension,
+           const PixelTypeDescriptionType & movingPixelType,
+           ImageDimensionType               movingDimension) const;
 
 protected:
-
-  ComponentDatabase(){}
-  ~ComponentDatabase() override{}
+  ComponentDatabase() {}
+  ~ComponentDatabase() override {}
 
 private:
-
   CreatorMapType CreatorMap;
   IndexMapType   IndexMap;
 
-  ComponentDatabase( const Self & ); // purposely not implemented
-  void operator=( const Self & );    // purposely not implemented
-
+  ComponentDatabase(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix

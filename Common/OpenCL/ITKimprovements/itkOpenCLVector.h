@@ -48,11 +48,10 @@ namespace itk
  *
  * \ingroup OpenCL
  */
-template< typename T >
+template <typename T>
 class OpenCLVector : public OpenCLVectorBase
 {
 public:
-
   /** Standard class typedefs. */
   typedef OpenCLVector Self;
 
@@ -64,7 +63,7 @@ public:
    * contents are not duplicated, modifications to this vector
    * will also affect \a other.
    * \sa operator=() */
-  OpenCLVector( const OpenCLVector< T > & other );
+  OpenCLVector(const OpenCLVector<T> & other);
 
   /** Destroys this vector reference. If this is the last reference
    * to the underlying data, the vector will be unmapped and deallocated. */
@@ -73,55 +72,69 @@ public:
   /** Assigns the \a other vector reference to this object.
    * The vector's contents are not duplicated, modifications to
    * this vector will also affect \a other. */
-  OpenCLVector< T > & operator=( const OpenCLVector< T > & other );
+  OpenCLVector<T> &
+  operator=(const OpenCLVector<T> & other);
 
   /** Returns true if this vector is null, false otherwise. */
-  bool IsNull() const;
+  bool
+  IsNull() const;
 
   /** Releases the contents of this OpenCL vector. If not explicitly
    * released, the contents will be implicitly released when the
    * vector is destroyed. */
-  void Release();
+  void
+  Release();
 
   /** Returns true if this OpenCL vector is empty, false otherwise. */
-  bool IsEmpty() const { return this->m_Size == 0; }
+  bool
+  IsEmpty() const
+  {
+    return this->m_Size == 0;
+  }
 
   /** Returns the number of elements of type T in this OpenCL vector. */
-  std::size_t GetSize() const { return this->m_Size; }
+  std::size_t
+  GetSize() const
+  {
+    return this->m_Size;
+  }
 
   /** Returns a reference to the element at \a index in this OpenCL vector.
    * The vector will be copied to host memory if necessary. */
-  T & operator[]( const std::size_t index );
+  T & operator[](const std::size_t index);
 
   /** Returns a const reference to the element at \a index in this
    * OpenCL vector. The vector will be copied to host memory
    * if necessary. */
-  const T & operator[]( const std::size_t index ) const;
+  const T & operator[](const std::size_t index) const;
 
   /** Reads the \a count elements starting \a offset in this vector
    * into \a data.
    * \sa Write() */
-  void Read( T * data, const std::size_t count, const std::size_t offset = 0 );
+  void
+  Read(T * data, const std::size_t count, const std::size_t offset = 0);
 
   /** Writes the \a count elements from \a data to \a offset in this vector.
    * \sa Read() */
-  void Write( const T * data, const std::size_t count, const std::size_t offset = 0 );
+  void
+  Write(const T * data, const std::size_t count, const std::size_t offset = 0);
 
   /** Writes the contents of \a data to \a offset in this vector. */
-  void Write( const Vector< T > & data, const std::size_t offset = 0 );
+  void
+  Write(const Vector<T> & data, const std::size_t offset = 0);
 
   /** Returns the OpenCL context that was used to create this vector. */
-  OpenCLContext * GetContext() const;
+  OpenCLContext *
+  GetContext() const;
 
   /** Returns the OpenCL buffer handle for this vector. */
-  OpenCLBuffer GetBuffer() const;
+  OpenCLBuffer
+  GetBuffer() const;
 
 private:
-
   /** Constructs an OpenCL vector object of \a size
    * and associates it with \a context. */
-  OpenCLVector( OpenCLContext * context,
-    const OpenCLMemoryObject::Access access, const std::size_t size );
+  OpenCLVector(OpenCLContext * context, const OpenCLMemoryObject::Access access, const std::size_t size);
 
   /** friends from OpenCL core */
   friend class OpenCLContext;
@@ -129,13 +142,11 @@ private:
 
 //------------------------------------------------------------------------------
 /** Stream out operator for OpenCLVector */
-template< typename charT, typename traits, typename dataType >
-inline
-std::basic_ostream< charT, traits > &
-operator<<( std::basic_ostream< charT, traits > & strm,
-  const OpenCLVector< dataType > & vector )
+template <typename charT, typename traits, typename dataType>
+inline std::basic_ostream<charT, traits> &
+operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLVector<dataType> & vector)
 {
-  if( vector.IsNull() )
+  if (vector.IsNull())
   {
     strm << "OpenCLVector(null)";
     return strm;
@@ -143,8 +154,7 @@ operator<<( std::basic_ostream< charT, traits > & strm,
 
   const char indent = ' ';
 
-  strm << "OpenCLVector" << std::endl
-       << indent << "Size: " << vector.GetSize() << std::endl;
+  strm << "OpenCLVector" << std::endl << indent << "Size: " << vector.GetSize() << std::endl;
 
   strm << std::endl;
 
@@ -155,7 +165,7 @@ operator<<( std::basic_ostream< charT, traits > & strm,
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkOpenCLVector.hxx"
+#  include "itkOpenCLVector.hxx"
 #endif
 
 #endif /* __itkOpenCLVector_h */

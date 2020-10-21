@@ -27,11 +27,11 @@ namespace itk
 OpenCLVersion
 OpenCLPlatform::GetOpenCLVersion() const
 {
-  if( !this->m_Version )
+  if (!this->m_Version)
   {
-    this->m_Version = opencl_version_flags( opencl_get_platform_info_string( this->m_Id, CL_PLATFORM_VERSION ) );
+    this->m_Version = opencl_version_flags(opencl_get_platform_info_string(this->m_Id, CL_PLATFORM_VERSION));
   }
-  return OpenCLVersion( this->m_Version );
+  return OpenCLVersion(this->m_Version);
 }
 
 
@@ -39,7 +39,7 @@ OpenCLPlatform::GetOpenCLVersion() const
 std::string
 OpenCLPlatform::GetVersion() const
 {
-  return opencl_get_platform_info_string( this->m_Id, CL_PLATFORM_VERSION );
+  return opencl_get_platform_info_string(this->m_Id, CL_PLATFORM_VERSION);
 }
 
 
@@ -47,7 +47,7 @@ OpenCLPlatform::GetVersion() const
 bool
 OpenCLPlatform::IsFullProfile() const
 {
-  return opencl_is_platform( this->m_Id, CL_PLATFORM_PROFILE, "FULL_PROFILE" );
+  return opencl_is_platform(this->m_Id, CL_PLATFORM_PROFILE, "FULL_PROFILE");
 }
 
 
@@ -55,7 +55,7 @@ OpenCLPlatform::IsFullProfile() const
 bool
 OpenCLPlatform::IsEmbeddedProfile() const
 {
-  return opencl_is_platform( this->m_Id, CL_PLATFORM_PROFILE, "EMBEDDED_PROFILE" );
+  return opencl_is_platform(this->m_Id, CL_PLATFORM_PROFILE, "EMBEDDED_PROFILE");
 }
 
 
@@ -63,7 +63,7 @@ OpenCLPlatform::IsEmbeddedProfile() const
 std::string
 OpenCLPlatform::GetProfile() const
 {
-  return opencl_get_platform_info_string( this->m_Id, CL_PLATFORM_PROFILE );
+  return opencl_get_platform_info_string(this->m_Id, CL_PLATFORM_PROFILE);
 }
 
 
@@ -71,7 +71,7 @@ OpenCLPlatform::GetProfile() const
 std::string
 OpenCLPlatform::GetName() const
 {
-  return opencl_get_platform_info_string( this->m_Id, CL_PLATFORM_NAME );
+  return opencl_get_platform_info_string(this->m_Id, CL_PLATFORM_NAME);
 }
 
 
@@ -79,7 +79,7 @@ OpenCLPlatform::GetName() const
 std::string
 OpenCLPlatform::GetVendor() const
 {
-  return opencl_get_platform_info_string( this->m_Id, CL_PLATFORM_VENDOR );
+  return opencl_get_platform_info_string(this->m_Id, CL_PLATFORM_VENDOR);
 }
 
 
@@ -87,20 +87,20 @@ OpenCLPlatform::GetVendor() const
 OpenCLPlatform::VendorType
 OpenCLPlatform::GetVendorType() const
 {
-  const std::string vendorName = opencl_simplified( this->GetVendor() );
-  if( vendorName.compare( 0, 20, "Intel(R) Corporation" ) == 0 )
+  const std::string vendorName = opencl_simplified(this->GetVendor());
+  if (vendorName.compare(0, 20, "Intel(R) Corporation") == 0)
   {
     return OpenCLPlatform::Intel;
   }
-  else if( vendorName.compare( 0, 18, "NVIDIA Corporation" ) == 0 )
+  else if (vendorName.compare(0, 18, "NVIDIA Corporation") == 0)
   {
     return OpenCLPlatform::NVidia;
   }
-  else if( vendorName.compare( 0, 28, "Advanced Micro Devices, Inc." ) == 0 )
+  else if (vendorName.compare(0, 28, "Advanced Micro Devices, Inc.") == 0)
   {
     return OpenCLPlatform::AMD;
   }
-  else if( vendorName.compare( 0, 3, "IBM" ) == 0 )
+  else if (vendorName.compare(0, 3, "IBM") == 0)
   {
     return OpenCLPlatform::IBM;
   }
@@ -115,63 +115,63 @@ OpenCLPlatform::GetVendorType() const
 std::string
 OpenCLPlatform::GetExtensionSuffix() const
 {
-  return opencl_get_platform_info_string( this->m_Id, CL_PLATFORM_ICD_SUFFIX_KHR );
+  return opencl_get_platform_info_string(this->m_Id, CL_PLATFORM_ICD_SUFFIX_KHR);
 }
 
 
 //------------------------------------------------------------------------------
-std::list< std::string > OpenCLPlatform::GetExtensions() const
+std::list<std::string>
+OpenCLPlatform::GetExtensions() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
-    return std::list< std::string >();
+    return std::list<std::string>();
   }
 
-  const std::string extensions = opencl_simplified(
-    opencl_get_platform_info_string( this->m_Id, CL_PLATFORM_EXTENSIONS ) );
-  if( !extensions.empty() )
+  const std::string extensions = opencl_simplified(opencl_get_platform_info_string(this->m_Id, CL_PLATFORM_EXTENSIONS));
+  if (!extensions.empty())
   {
-    return opencl_split_string( extensions, ' ' );
+    return opencl_split_string(extensions, ' ');
   }
   else
   {
-    return std::list< std::string >();
+    return std::list<std::string>();
   }
 }
 
 
 //------------------------------------------------------------------------------
 bool
-OpenCLPlatform::HasExtension( const std::string & name ) const
+OpenCLPlatform::HasExtension(const std::string & name) const
 {
   std::size_t size;
 
-  if( !this->m_Id || clGetPlatformInfo( this->m_Id, CL_PLATFORM_EXTENSIONS,
-    0, 0, &size ) != CL_SUCCESS )
+  if (!this->m_Id || clGetPlatformInfo(this->m_Id, CL_PLATFORM_EXTENSIONS, 0, 0, &size) != CL_SUCCESS)
   {
     return false;
   }
-  std::string buffer( size, '\0' );
-  clGetPlatformInfo( this->m_Id, CL_PLATFORM_EXTENSIONS, size, &buffer[ 0 ], &size );
-  return opencl_has_extension( buffer, name );
+  std::string buffer(size, '\0');
+  clGetPlatformInfo(this->m_Id, CL_PLATFORM_EXTENSIONS, size, &buffer[0], &size);
+  return opencl_has_extension(buffer, name);
 }
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLPlatform > OpenCLPlatform::GetAllPlatforms()
+std::list<OpenCLPlatform>
+OpenCLPlatform::GetAllPlatforms()
 {
   cl_uint size;
 
-  if( clGetPlatformIDs( 0, 0, &size ) != CL_SUCCESS )
+  if (clGetPlatformIDs(0, 0, &size) != CL_SUCCESS)
   {
-    return std::list< OpenCLPlatform >();
+    return std::list<OpenCLPlatform>();
   }
-  std::vector< cl_platform_id > buffer( size );
-  clGetPlatformIDs( size, &buffer[ 0 ], &size );
-  std::list< OpenCLPlatform > platforms;
-  for( std::size_t index = 0; index < buffer.size(); ++index )
+  std::vector<cl_platform_id> buffer(size);
+  clGetPlatformIDs(size, &buffer[0], &size);
+  std::list<OpenCLPlatform> platforms;
+  for (std::size_t index = 0; index < buffer.size(); ++index)
   {
-    platforms.push_back( OpenCLPlatform( buffer[ index ] ) );
+    platforms.push_back(OpenCLPlatform(buffer[index]));
   }
   return platforms;
 }
@@ -179,55 +179,54 @@ std::list< OpenCLPlatform > OpenCLPlatform::GetAllPlatforms()
 
 //------------------------------------------------------------------------------
 OpenCLPlatform
-OpenCLPlatform::GetPlatform( const OpenCLPlatform::VendorType vendor )
+OpenCLPlatform::GetPlatform(const OpenCLPlatform::VendorType vendor)
 {
-  const std::list< OpenCLPlatform > platforms = OpenCLPlatform::GetAllPlatforms();
+  const std::list<OpenCLPlatform> platforms = OpenCLPlatform::GetAllPlatforms();
 
-  if( platforms.empty() )
+  if (platforms.empty())
   {
     return OpenCLPlatform();
   }
 
   cl_platform_id platformID = 0;
 
-  for( std::list< itk::OpenCLPlatform >::const_iterator platform = platforms.begin();
-    platform != platforms.end(); ++platform )
+  for (std::list<itk::OpenCLPlatform>::const_iterator platform = platforms.begin(); platform != platforms.end();
+       ++platform)
   {
-    const std::string vendorName = opencl_simplified( ( *platform ).GetVendor() );
+    const std::string vendorName = opencl_simplified((*platform).GetVendor());
 
-    if( ( vendorName.compare( 0, 20, "Intel(R) Corporation" ) == 0 ) && ( vendor == OpenCLPlatform::Intel ) )
+    if ((vendorName.compare(0, 20, "Intel(R) Corporation") == 0) && (vendor == OpenCLPlatform::Intel))
     {
-      platformID = ( *platform ).GetPlatformId();
+      platformID = (*platform).GetPlatformId();
       break;
     }
-    else if( ( vendorName.compare( 0, 18, "NVIDIA Corporation" ) == 0 ) && ( vendor == OpenCLPlatform::NVidia ) )
+    else if ((vendorName.compare(0, 18, "NVIDIA Corporation") == 0) && (vendor == OpenCLPlatform::NVidia))
     {
-      platformID = ( *platform ).GetPlatformId();
+      platformID = (*platform).GetPlatformId();
       break;
     }
-    else if( ( vendorName.compare( 0, 28,
-      "Advanced Micro Devices, Inc." ) == 0 ) && ( vendor == OpenCLPlatform::AMD ) )
+    else if ((vendorName.compare(0, 28, "Advanced Micro Devices, Inc.") == 0) && (vendor == OpenCLPlatform::AMD))
     {
-      platformID = ( *platform ).GetPlatformId();
+      platformID = (*platform).GetPlatformId();
       break;
     }
-    else if( ( vendorName.compare( 0, 3, "IBM" ) == 0 ) && ( vendor == OpenCLPlatform::IBM ) )
+    else if ((vendorName.compare(0, 3, "IBM") == 0) && (vendor == OpenCLPlatform::IBM))
     {
-      platformID = ( *platform ).GetPlatformId();
+      platformID = (*platform).GetPlatformId();
       break;
     }
   }
 
-  return OpenCLPlatform( platformID );
+  return OpenCLPlatform(platformID);
 }
 
 
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLPlatform & lhs, const OpenCLPlatform & rhs )
+operator==(const OpenCLPlatform & lhs, const OpenCLPlatform & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
@@ -238,9 +237,9 @@ operator==( const OpenCLPlatform & lhs, const OpenCLPlatform & rhs )
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLPlatform & lhs, const OpenCLPlatform & rhs )
+operator!=(const OpenCLPlatform & lhs, const OpenCLPlatform & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

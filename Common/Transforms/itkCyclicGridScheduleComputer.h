@@ -37,58 +37,52 @@ namespace itk
  * \ingroup Transforms
  */
 
-template< typename TTransformScalarType, unsigned int VImageDimension >
-class CyclicGridScheduleComputer :
-  public GridScheduleComputer< TTransformScalarType, VImageDimension >
+template <typename TTransformScalarType, unsigned int VImageDimension>
+class CyclicGridScheduleComputer : public GridScheduleComputer<TTransformScalarType, VImageDimension>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef CyclicGridScheduleComputer Self;
-  typedef GridScheduleComputer<
-    TTransformScalarType, VImageDimension >  Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef CyclicGridScheduleComputer                                  Self;
+  typedef GridScheduleComputer<TTransformScalarType, VImageDimension> Superclass;
+  typedef SmartPointer<Self>                                          Pointer;
+  typedef SmartPointer<const Self>                                    ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( CyclicGridScheduleComputer, GridScheduleComputer );
+  itkTypeMacro(CyclicGridScheduleComputer, GridScheduleComputer);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( Dimension, unsigned int, VImageDimension );
+  itkStaticConstMacro(Dimension, unsigned int, VImageDimension);
 
   /** Typedef's. */
-  typedef TTransformScalarType TransformScalarType;
-  typedef ImageBase<
-    itkGetStaticConstMacro( Dimension ) >       ImageBaseType;
-  typedef typename ImageBaseType::PointType     PointType;
-  typedef typename ImageBaseType::PointType     OriginType;
-  typedef typename ImageBaseType::SpacingType   SpacingType;
-  typedef typename ImageBaseType::DirectionType DirectionType;
-  typedef typename ImageBaseType::SizeType      SizeType;
-  typedef typename ImageBaseType::SizeValueType SizeValueType;
-  typedef typename ImageBaseType::RegionType    RegionType;
-  typedef SpacingType                           GridSpacingFactorType;
-  typedef std::vector< OriginType >             VectorOriginType;
-  typedef std::vector< SpacingType >            VectorSpacingType;
-  typedef std::vector< RegionType >             VectorRegionType;
-  typedef std::vector< GridSpacingFactorType >  VectorGridSpacingFactorType;
+  typedef TTransformScalarType                         TransformScalarType;
+  typedef ImageBase<itkGetStaticConstMacro(Dimension)> ImageBaseType;
+  typedef typename ImageBaseType::PointType            PointType;
+  typedef typename ImageBaseType::PointType            OriginType;
+  typedef typename ImageBaseType::SpacingType          SpacingType;
+  typedef typename ImageBaseType::DirectionType        DirectionType;
+  typedef typename ImageBaseType::SizeType             SizeType;
+  typedef typename ImageBaseType::SizeValueType        SizeValueType;
+  typedef typename ImageBaseType::RegionType           RegionType;
+  typedef SpacingType                                  GridSpacingFactorType;
+  typedef std::vector<OriginType>                      VectorOriginType;
+  typedef std::vector<SpacingType>                     VectorSpacingType;
+  typedef std::vector<RegionType>                      VectorRegionType;
+  typedef std::vector<GridSpacingFactorType>           VectorGridSpacingFactorType;
 
   /** Typedefs for the initial transform. */
-  typedef Transform<
-    TransformScalarType,
-    itkGetStaticConstMacro( Dimension ),
-    itkGetStaticConstMacro( Dimension ) >       TransformType;
+  typedef Transform<TransformScalarType, itkGetStaticConstMacro(Dimension), itkGetStaticConstMacro(Dimension)>
+                                               TransformType;
   typedef typename TransformType::Pointer      TransformPointer;
   typedef typename TransformType::ConstPointer TransformConstPointer;
 
   /** Compute the B-spline grid. */
-  void ComputeBSplineGrid( void ) override;
+  void
+  ComputeBSplineGrid(void) override;
 
 protected:
-
   /** The constructor. */
   CyclicGridScheduleComputer();
 
@@ -96,16 +90,15 @@ protected:
   ~CyclicGridScheduleComputer() override {}
 
 private:
-
-  CyclicGridScheduleComputer( const Self & ); // purposely not implemented
-  void operator=( const Self & );             // purposely not implemented
-
+  CyclicGridScheduleComputer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCyclicGridScheduleComputer.hxx"
+#  include "itkCyclicGridScheduleComputer.hxx"
 #endif
 
 #endif // end #ifndef __itkCyclicGridScheduleComputer_h__

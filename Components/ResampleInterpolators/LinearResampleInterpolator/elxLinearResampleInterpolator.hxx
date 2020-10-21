@@ -21,6 +21,6 @@
 
 #include "elxLinearResampleInterpolator.h"
 
-//nothing
+// nothing
 
 #endif // end #ifndef __elxLinearResampleInterpolator_hxx

@@ -34,71 +34,94 @@ namespace elastix
 class ParameterObject : public itk::DataObject
 {
 public:
+  typedef ParameterObject               Self;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
+  itkNewMacro(Self);
+  itkTypeMacro(ParameterObject, itk::DataObject);
 
-  typedef ParameterObject                 Self;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
-  itkNewMacro( Self );
-  itkTypeMacro( ParameterObject, itk::DataObject );
-
-  typedef std::string                                            ParameterKeyType;
-  typedef std::string                                            ParameterValueType;
-  typedef std::vector< ParameterValueType >                      ParameterValueVectorType;
-  typedef ParameterValueVectorType::iterator                     ParameterValueVectorIterator;
-  typedef std::map< ParameterKeyType, ParameterValueVectorType > ParameterMapType;
-  typedef ParameterMapType::iterator                             ParameterMapIterator;
-  typedef ParameterMapType::const_iterator                       ParameterMapConstIterator;
-  typedef std::vector< ParameterMapType >                        ParameterMapVectorType;
-  typedef std::string                                            ParameterFileNameType;
-  typedef std::vector< ParameterFileNameType >                   ParameterFileNameVectorType;
-  typedef ParameterFileNameVectorType::iterator                  ParameterFileNameVectorIterator;
-  typedef ParameterFileNameVectorType::const_iterator            ParameterFileNameVectorConstIterator;
-  typedef itk::ParameterFileParser                               ParameterFileParserType;
-  typedef ParameterFileParserType::Pointer                       ParameterFileParserPointer;
+  typedef std::string                                          ParameterKeyType;
+  typedef std::string                                          ParameterValueType;
+  typedef std::vector<ParameterValueType>                      ParameterValueVectorType;
+  typedef ParameterValueVectorType::iterator                   ParameterValueVectorIterator;
+  typedef std::map<ParameterKeyType, ParameterValueVectorType> ParameterMapType;
+  typedef ParameterMapType::iterator                           ParameterMapIterator;
+  typedef ParameterMapType::const_iterator                     ParameterMapConstIterator;
+  typedef std::vector<ParameterMapType>                        ParameterMapVectorType;
+  typedef std::string                                          ParameterFileNameType;
+  typedef std::vector<ParameterFileNameType>                   ParameterFileNameVectorType;
+  typedef ParameterFileNameVectorType::iterator                ParameterFileNameVectorIterator;
+  typedef ParameterFileNameVectorType::const_iterator          ParameterFileNameVectorConstIterator;
+  typedef itk::ParameterFileParser                             ParameterFileParserType;
+  typedef ParameterFileParserType::Pointer                     ParameterFileParserPointer;
 
   /* Set/Get/Add parameter map or vector of parameter maps. */
   // TODO: Use itkSetMacro for ParameterMapVectorType
-  void SetParameterMap( const ParameterMapType & parameterMap );
-  void SetParameterMap( const unsigned int& index, const ParameterMapType & parameterMap );
-  void SetParameterMap( const ParameterMapVectorType & parameterMap );
-  void AddParameterMap( const ParameterMapType & parameterMap );
-  const ParameterMapType& GetParameterMap( const unsigned int& index ) const;
-  itkGetConstReferenceMacro( ParameterMap, ParameterMapVectorType );
-  unsigned int GetNumberOfParameterMaps() const { return static_cast< unsigned int >(this->m_ParameterMap.size()); }
+  void
+  SetParameterMap(const ParameterMapType & parameterMap);
+  void
+  SetParameterMap(const unsigned int & index, const ParameterMapType & parameterMap);
+  void
+  SetParameterMap(const ParameterMapVectorType & parameterMap);
+  void
+  AddParameterMap(const ParameterMapType & parameterMap);
+  const ParameterMapType &
+  GetParameterMap(const unsigned int & index) const;
+  itkGetConstReferenceMacro(ParameterMap, ParameterMapVectorType);
+  unsigned int
+  GetNumberOfParameterMaps() const
+  {
+    return static_cast<unsigned int>(this->m_ParameterMap.size());
+  }
 
-  void SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueType& value );
-  void SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueVectorType& value );
-  void SetParameter( const ParameterKeyType& key, const ParameterValueType& value );
-  void SetParameter( const ParameterKeyType& key, const ParameterValueVectorType& value );
-  const ParameterValueVectorType& GetParameter( const unsigned int& index, const ParameterKeyType& key);
-  void RemoveParameter( const unsigned int& index, const ParameterKeyType& key );
-  void RemoveParameter( const ParameterKeyType& key );
+  void
+  SetParameter(const unsigned int & index, const ParameterKeyType & key, const ParameterValueType & value);
+  void
+  SetParameter(const unsigned int & index, const ParameterKeyType & key, const ParameterValueVectorType & value);
+  void
+  SetParameter(const ParameterKeyType & key, const ParameterValueType & value);
+  void
+  SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value);
+  const ParameterValueVectorType &
+  GetParameter(const unsigned int & index, const ParameterKeyType & key);
+  void
+  RemoveParameter(const unsigned int & index, const ParameterKeyType & key);
+  void
+  RemoveParameter(const ParameterKeyType & key);
 
   /* Read/Write parameter file or multiple parameter files to/from disk. */
-  void ReadParameterFile( const ParameterFileNameType & parameterFileName );
-  void ReadParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
-  void AddParameterFile( const ParameterFileNameType & parameterFileName );
-  void WriteParameterFile( void );
-  void WriteParameterFile( const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName );
-  void WriteParameterFile( const ParameterFileNameType & parameterFileName );
-  void WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
-  void WriteParameterFile( const ParameterMapVectorType & parameterMapVector, const ParameterFileNameVectorType & parameterFileNameVector );
+  void
+  ReadParameterFile(const ParameterFileNameType & parameterFileName);
+  void
+  ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector);
+  void
+  AddParameterFile(const ParameterFileNameType & parameterFileName);
+  void
+  WriteParameterFile(void);
+  void
+  WriteParameterFile(const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName);
+  void
+  WriteParameterFile(const ParameterFileNameType & parameterFileName);
+  void
+  WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector);
+  void
+  WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
+                     const ParameterFileNameVectorType & parameterFileNameVector);
 
   /* Get preconfigured parameter maps. */
-  static const ParameterMapType GetDefaultParameterMap( const std::string & transformName,
-    const unsigned int & numberOfResolutions = 4u,
-    const double & finalGridSpacingInPhysicalUnits = 10.0 );
+  static const ParameterMapType
+  GetDefaultParameterMap(const std::string &  transformName,
+                         const unsigned int & numberOfResolutions = 4u,
+                         const double &       finalGridSpacingInPhysicalUnits = 10.0);
 
 protected:
-
-  void PrintSelf( std::ostream & os, itk::Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, itk::Indent indent) const override;
 
 private:
-
   ParameterMapVectorType m_ParameterMap;
-
 };
 
-} // namespace elx
+} // namespace elastix
 
 #endif // elxParameterObject_h

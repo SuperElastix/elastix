@@ -28,7 +28,7 @@
 
 namespace elastix
 {
-//using namespace itk; not here because itk::ImageSamplerBase exists also.
+// using namespace itk; not here because itk::ImageSamplerBase exists also.
 
 /**
  * \class ImageSamplerBase
@@ -40,17 +40,16 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template< class TElastix >
-class ImageSamplerBase : public BaseComponentSE< TElastix >
+template <class TElastix>
+class ImageSamplerBase : public BaseComponentSE<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageSamplerBase            Self;
-  typedef BaseComponentSE< TElastix > Superclass;
+  typedef ImageSamplerBase          Self;
+  typedef BaseComponentSE<TElastix> Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageSamplerBase, BaseComponentSE );
+  itkTypeMacro(ImageSamplerBase, BaseComponentSE);
 
   /** Typedefs inherited from Elastix. */
   typedef typename Superclass::ElastixType          ElastixType;
@@ -64,19 +63,21 @@ public:
   typedef typename ElastixType::FixedImageType InputImageType;
 
   /** ITKBaseType. */
-  typedef itk::ImageSamplerBase< InputImageType > ITKBaseType;
+  typedef itk::ImageSamplerBase<InputImageType> ITKBaseType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
+  virtual ITKBaseType *
+  GetAsITKBaseType(void)
   {
-    return dynamic_cast< ITKBaseType * >( this );
+    return dynamic_cast<ITKBaseType *>(this);
   }
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  virtual const ITKBaseType *
+  GetAsITKBaseType(void) const
   {
-    return dynamic_cast< const ITKBaseType * >( this );
+    return dynamic_cast<const ITKBaseType *>(this);
   }
 
 
@@ -84,28 +85,27 @@ public:
    * \li Give a warning when NewSamplesEveryIteration is specified,
    * but the sampler is ignoring it.
    */
-  void BeforeEachResolutionBase( void ) override;
+  void
+  BeforeEachResolutionBase(void) override;
 
 protected:
-
   /** The constructor. */
   ImageSamplerBase() {}
   /** The destructor. */
   ~ImageSamplerBase() override {}
 
 private:
-
   /** The private constructor. */
-  ImageSamplerBase( const Self & );   // purposely not implemented
+  ImageSamplerBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );     // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxImageSamplerBase.hxx"
+#  include "elxImageSamplerBase.hxx"
 #endif
 
 #endif // end #ifndef __elxImageSamplerBase_h

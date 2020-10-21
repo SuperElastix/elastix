@@ -26,11 +26,12 @@
 namespace itk
 {
 /** Method that is used to create OpenCL context within elastix and transformix. */
-bool CreateOpenCLContext( std::string & errorMessage,
-  const std::string openCLDeviceType, const int openCLDeviceID );
+bool
+CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceType, const int openCLDeviceID);
 
 /** Method that is used to create OpenCL logger within elastix and transformix. */
-void CreateOpenCLLogger( const std::string & prefixFileName, const std::string & outputDirectory );
+void
+CreateOpenCLLogger(const std::string & prefixFileName, const std::string & outputDirectory);
 
 } // end namespace itk
 

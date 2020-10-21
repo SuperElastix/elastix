@@ -40,97 +40,90 @@ typedef struct
 } GPUTranslationTransformBase3D;
 
 //------------------------------------------------------------------------------
-template< unsigned int ImageDimension >
-struct SpaceDimensionToType {};
+template <unsigned int ImageDimension>
+struct SpaceDimensionToType
+{};
 
 //----------------------------------------------------------------------------
 // Offset
-template< typename TScalarType, unsigned int SpaceDimension >
+template <typename TScalarType, unsigned int SpaceDimension>
 void
-SetOffset1( const itk::Vector< TScalarType, SpaceDimension > &,
-  cl_float &, SpaceDimensionToType< SpaceDimension > )
+SetOffset1(const itk::Vector<TScalarType, SpaceDimension> &, cl_float &, SpaceDimensionToType<SpaceDimension>)
 {}
 
-template< typename TScalarType, unsigned int SpaceDimension >
+template <typename TScalarType, unsigned int SpaceDimension>
 void
-SetOffset2( const itk::Vector< TScalarType, SpaceDimension > &,
-  cl_float2 &, SpaceDimensionToType< SpaceDimension > )
+SetOffset2(const itk::Vector<TScalarType, SpaceDimension> &, cl_float2 &, SpaceDimensionToType<SpaceDimension>)
 {}
 
-template< typename TScalarType, unsigned int SpaceDimension >
+template <typename TScalarType, unsigned int SpaceDimension>
 void
-SetOffset3( const itk::Vector< TScalarType, SpaceDimension > &,
-  cl_float4 &, SpaceDimensionToType< SpaceDimension > )
+SetOffset3(const itk::Vector<TScalarType, SpaceDimension> &, cl_float4 &, SpaceDimensionToType<SpaceDimension>)
 {}
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetOffset1( const itk::Vector< TScalarType, 1 > & offset,
-  cl_float & ocloffset, SpaceDimensionToType< 1 > )
+SetOffset1(const itk::Vector<TScalarType, 1> & offset, cl_float & ocloffset, SpaceDimensionToType<1>)
 {
-  ocloffset = offset[ 0 ];
+  ocloffset = offset[0];
 }
 
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetOffset2( const itk::Vector< TScalarType, 2 > & offset,
-  cl_float2 & ocloffset, SpaceDimensionToType< 2 > )
+SetOffset2(const itk::Vector<TScalarType, 2> & offset, cl_float2 & ocloffset, SpaceDimensionToType<2>)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 2; i++ )
+  for (unsigned int i = 0; i < 2; i++)
   {
-    ocloffset.s[ id++ ] = offset[ i ];
+    ocloffset.s[id++] = offset[i];
   }
 }
 
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetOffset3( const itk::Vector< TScalarType, 3 > & offset,
-  cl_float4 & ocloffset, SpaceDimensionToType< 3 > )
+SetOffset3(const itk::Vector<TScalarType, 3> & offset, cl_float4 & ocloffset, SpaceDimensionToType<3>)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 3; i++ )
+  for (unsigned int i = 0; i < 3; i++)
   {
-    ocloffset.s[ id++ ] = offset[ i ];
+    ocloffset.s[id++] = offset[i];
   }
-  ocloffset.s[ 3 ] = 0.0;
+  ocloffset.s[3] = 0.0;
 }
 
 
-} // end of ITKGPUTranslationTransformBase namespace
+} // namespace ITKGPUTranslationTransformBase
 
 //------------------------------------------------------------------------------
 namespace itk
 {
-template< typename TScalarType, unsigned int NDimensions >
-GPUTranslationTransformBase< TScalarType, NDimensions >
-::GPUTranslationTransformBase()
+template <typename TScalarType, unsigned int NDimensions>
+GPUTranslationTransformBase<TScalarType, NDimensions>::GPUTranslationTransformBase()
 {
   // Add GPUTranslationTransformBase source
-  const std::string sourcePath(
-  GPUTranslationTransformBaseKernel::GetOpenCLSource() );
-  m_Sources.push_back( sourcePath );
+  const std::string sourcePath(GPUTranslationTransformBaseKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath);
 
   this->m_ParametersDataManager->Initialize();
-  this->m_ParametersDataManager->SetBufferFlag( CL_MEM_READ_ONLY );
+  this->m_ParametersDataManager->SetBufferFlag(CL_MEM_READ_ONLY);
 
   using namespace ITKGPUTranslationTransformBase;
   const unsigned int Dimension = SpaceDimension;
 
-  switch( Dimension )
+  switch (Dimension)
   {
     case 1:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUTranslationTransformBase1D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUTranslationTransformBase1D));
       break;
     case 2:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUTranslationTransformBase2D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUTranslationTransformBase2D));
       break;
     case 3:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUTranslationTransformBase3D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUTranslationTransformBase3D));
       break;
     default:
       break;
@@ -141,43 +134,42 @@ GPUTranslationTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 GPUDataManager::Pointer
-GPUTranslationTransformBase< TScalarType, NDimensions >
-::GetParametersDataManager( void ) const
+GPUTranslationTransformBase<TScalarType, NDimensions>::GetParametersDataManager(void) const
 {
   using namespace ITKGPUTranslationTransformBase;
-  const SpaceDimensionToType< SpaceDimension > dim = {};
-  const unsigned int                           Dimension = SpaceDimension;
+  const SpaceDimensionToType<SpaceDimension> dim = {};
+  const unsigned int                         Dimension = SpaceDimension;
 
-  switch( Dimension )
+  switch (Dimension)
   {
     case 1:
     {
       GPUTranslationTransformBase1D translationBase;
-      SetOffset1< ScalarType >( GetCPUOffset(), translationBase.offset, dim );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &translationBase );
+      SetOffset1<ScalarType>(GetCPUOffset(), translationBase.offset, dim);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&translationBase);
     }
     break;
     case 2:
     {
       GPUTranslationTransformBase2D translationBase;
-      SetOffset2< ScalarType >( GetCPUOffset(), translationBase.offset, dim );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &translationBase );
+      SetOffset2<ScalarType>(GetCPUOffset(), translationBase.offset, dim);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&translationBase);
     }
     break;
     case 3:
     {
       GPUTranslationTransformBase3D translationBase;
-      SetOffset3< ScalarType >( GetCPUOffset(), translationBase.offset, dim );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &translationBase );
+      SetOffset3<ScalarType>(GetCPUOffset(), translationBase.offset, dim);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&translationBase);
     }
     break;
     default:
       break;
   }
 
-  this->m_ParametersDataManager->SetGPUDirtyFlag( true );
+  this->m_ParametersDataManager->SetGPUDirtyFlag(true);
   this->m_ParametersDataManager->UpdateGPUBuffer();
 
   return this->m_ParametersDataManager;
@@ -185,12 +177,11 @@ GPUTranslationTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUTranslationTransformBase< TScalarType, NDimensions >
-::GetSourceCode( std::string & source ) const
+GPUTranslationTransformBase<TScalarType, NDimensions>::GetSourceCode(std::string & source) const
 {
-  if( this->m_Sources.size() == 0 )
+  if (this->m_Sources.size() == 0)
   {
     return false;
   }
@@ -198,9 +189,9 @@ GPUTranslationTransformBase< TScalarType, NDimensions >
   // Create the final source code
   std::ostringstream sources;
   // Add other sources
-  for( std::size_t i = 0; i < this->m_Sources.size(); i++ )
+  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
   {
-    sources << this->m_Sources[ i ] << std::endl;
+    sources << this->m_Sources[i] << std::endl;
   }
   source = sources.str();
   return true;

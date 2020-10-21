@@ -18,4 +18,4 @@
 
 #include "elxCMAEvolutionStrategy.h"
 
-elxInstallMacro( CMAEvolutionStrategy );
+elxInstallMacro(CMAEvolutionStrategy);

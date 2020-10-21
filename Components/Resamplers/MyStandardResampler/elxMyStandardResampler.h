@@ -35,31 +35,30 @@ namespace elastix
  * \ingroup Resamplers
  */
 
-template< class TElastix >
-class MyStandardResampler :
-  public ResamplerBase< TElastix >::ITKBaseType,
-  public ResamplerBase< TElastix >
+template <class TElastix>
+class MyStandardResampler
+  : public ResamplerBase<TElastix>::ITKBaseType
+  , public ResamplerBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef MyStandardResampler                             Self;
-  typedef typename ResamplerBase< TElastix >::ITKBaseType Superclass1;
-  typedef ResamplerBase< TElastix >                       Superclass2;
-  typedef itk::SmartPointer< Self >                       Pointer;
-  typedef itk::SmartPointer< const Self >                 ConstPointer;
+  typedef MyStandardResampler                           Self;
+  typedef typename ResamplerBase<TElastix>::ITKBaseType Superclass1;
+  typedef ResamplerBase<TElastix>                       Superclass2;
+  typedef itk::SmartPointer<Self>                       Pointer;
+  typedef itk::SmartPointer<const Self>                 ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MyStandardResampler, ResampleImageFilter );
+  itkTypeMacro(MyStandardResampler, ResampleImageFilter);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific resampler. \n
    * example: <tt>(Resampler "DefaultResampler")</tt>\n
    */
-  elxClassNameMacro( "DefaultResampler" );
+  elxClassNameMacro("DefaultResampler");
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass1::InputImageType          InputImageType;
@@ -90,25 +89,23 @@ public:
   /* Nothing to add. In the baseclass already everything is done what should be done. */
 
 protected:
-
   /** The constructor. */
   MyStandardResampler() {}
   /** The destructor. */
   ~MyStandardResampler() override {}
 
 private:
-
   /** The private constructor. */
-  MyStandardResampler( const Self & );  // purposely not implemented
+  MyStandardResampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );       // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMyStandardResampler.hxx"
+#  include "elxMyStandardResampler.hxx"
 #endif
 
 #endif // end #ifndef __elxMyStandardResampler_h

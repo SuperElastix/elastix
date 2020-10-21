@@ -27,7 +27,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUShrinkImageFilter */
-itkGPUKernelClassMacro( GPUShrinkImageFilterKernel );
+itkGPUKernelClassMacro(GPUShrinkImageFilterKernel);
 
 /** \class GPUShrinkImageFilter
  * \brief GPU version of ShrinkImageFilter.
@@ -40,25 +40,23 @@ itkGPUKernelClassMacro( GPUShrinkImageFilterKernel );
  *
  * \ingroup GPUCommon
  */
-template< typename TInputImage, typename TOutputImage >
-class ITK_EXPORT GPUShrinkImageFilter :
-  public         GPUImageToImageFilter< TInputImage, TOutputImage,
-  ShrinkImageFilter< TInputImage, TOutputImage > >
+template <typename TInputImage, typename TOutputImage>
+class ITK_EXPORT GPUShrinkImageFilter
+  : public GPUImageToImageFilter<TInputImage, TOutputImage, ShrinkImageFilter<TInputImage, TOutputImage>>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUShrinkImageFilter                                              Self;
-  typedef ShrinkImageFilter< TInputImage, TOutputImage >                    CPUSuperclass;
-  typedef GPUImageToImageFilter< TInputImage, TOutputImage, CPUSuperclass > GPUSuperclass;
-  typedef SmartPointer< Self >                                              Pointer;
-  typedef SmartPointer< const Self >                                        ConstPointer;
+  typedef GPUShrinkImageFilter                                            Self;
+  typedef ShrinkImageFilter<TInputImage, TOutputImage>                    CPUSuperclass;
+  typedef GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass> GPUSuperclass;
+  typedef SmartPointer<Self>                                              Pointer;
+  typedef SmartPointer<const Self>                                        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUShrinkImageFilter, GPUSuperclass );
+  itkTypeMacro(GPUShrinkImageFilter, GPUSuperclass);
 
   /** Superclass typedefs. */
   typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
@@ -77,23 +75,22 @@ public:
   typedef typename CPUSuperclass::OutputOffsetType  OutputOffsetType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
-  itkStaticConstMacro( OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
 protected:
-
   GPUShrinkImageFilter();
-  ~GPUShrinkImageFilter(){}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  ~GPUShrinkImageFilter() {}
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  virtual void GPUGenerateData();
+  virtual void
+  GPUGenerateData();
 
 private:
-
-  GPUShrinkImageFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & );       // purposely not implemented
+  GPUShrinkImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;
@@ -102,7 +99,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUShrinkImageFilter.hxx"
+#  include "itkGPUShrinkImageFilter.hxx"
 #endif
 
 #endif /* __itkGPUShrinkImageFilter_h */

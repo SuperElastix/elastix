@@ -52,21 +52,20 @@ namespace itk
  * \ingroup Numerics Optimizers
  */
 
-class PreconditionedGradientDescentOptimizer :
-  public ScaledSingleValuedNonLinearOptimizer
+class PreconditionedGradientDescentOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
   /** Standard class typedefs. */
-  typedef PreconditionedGradientDescentOptimizer               Self;
-  typedef ScaledSingleValuedNonLinearOptimizer    Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef PreconditionedGradientDescentOptimizer Self;
+  typedef ScaledSingleValuedNonLinearOptimizer   Superclass;
+  typedef SmartPointer<Self>                     Pointer;
+  typedef SmartPointer<const Self>               ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PreconditionedGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer );
+  itkTypeMacro(PreconditionedGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -78,65 +77,72 @@ public:
   typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
 
   /** Some typedefs for computing the SelfHessian */
-  typedef DerivativeType::ValueType                       PreconditionValueType;
-  //typedef Array2D<PreconditionValueType>                  PreconditionType;
-  //typedef vnl_symmetric_eigensystem<
+  typedef DerivativeType::ValueType PreconditionValueType;
+  // typedef Array2D<PreconditionValueType>                  PreconditionType;
+  // typedef vnl_symmetric_eigensystem<
   //  PreconditionValueType >                               EigenSystemType;
-  typedef vnl_sparse_matrix< PreconditionValueType >      PreconditionType;
+  typedef vnl_sparse_matrix<PreconditionValueType> PreconditionType;
 
   /** Codes of stopping conditions
    * The MinimumStepSize stopcondition never occurs, but may
    * be implemented in inheriting classes.
    */
-  typedef enum {
+  typedef enum
+  {
     MaximumNumberOfIterations,
     MetricError,
-    MinimumStepSize } StopConditionType;
+    MinimumStepSize
+  } StopConditionType;
 
   /** Advance one step following the gradient direction. */
-  virtual void AdvanceOneStep( void );
+  virtual void
+  AdvanceOneStep(void);
 
   /** Start optimization. */
-  virtual void StartOptimization( void );
+  virtual void
+  StartOptimization(void);
 
   /** Resume previously stopped optimization with current parameters
-    * \sa StopOptimization.
-    */
-  virtual void ResumeOptimization( void );
+   * \sa StopOptimization.
+   */
+  virtual void
+  ResumeOptimization(void);
 
   /** Stop optimization and pass on exception. */
-  virtual void MetricErrorResponse( ExceptionObject & err );
+  virtual void
+  MetricErrorResponse(ExceptionObject & err);
 
   /** Stop optimization.
    * \sa ResumeOptimization */
-  virtual void StopOptimization( void );
+  virtual void
+  StopOptimization(void);
 
   /** Set the learning rate. */
-  itkSetMacro( LearningRate, double );
+  itkSetMacro(LearningRate, double);
 
   /** Get the learning rate. */
-  itkGetConstReferenceMacro( LearningRate, double);
+  itkGetConstReferenceMacro(LearningRate, double);
 
   /** Set the number of iterations. */
-  itkSetMacro( NumberOfIterations, unsigned long );
+  itkSetMacro(NumberOfIterations, unsigned long);
 
   /** Get the number of iterations. */
-  itkGetConstReferenceMacro( NumberOfIterations, unsigned long );
+  itkGetConstReferenceMacro(NumberOfIterations, unsigned long);
 
   /** Get the current iteration number. */
-  itkGetConstMacro( CurrentIteration, unsigned int );
+  itkGetConstMacro(CurrentIteration, unsigned int);
 
   /** Get the current value. */
-  itkGetConstReferenceMacro( Value, double );
+  itkGetConstReferenceMacro(Value, double);
 
   /** Get Stop condition. */
-  itkGetConstReferenceMacro( StopCondition, StopConditionType );
+  itkGetConstReferenceMacro(StopCondition, StopConditionType);
 
   /** Get current gradient. */
-  itkGetConstReferenceMacro( Gradient, DerivativeType );
+  itkGetConstReferenceMacro(Gradient, DerivativeType);
 
   /** Get current search direction */
-  itkGetConstReferenceMacro( SearchDirection, DerivativeType );
+  itkGetConstReferenceMacro(SearchDirection, DerivativeType);
 
   /** Set the preconditioning matrix, whose inverse actually will be used to precondition.
    * On setting the precondition matrix, an eigensystem is computed immediately, the
@@ -144,59 +150,63 @@ public:
    * (in the EigenSystem).
    * NB: this function destroys the input matrix, to save memory.
    */
-  virtual void SetPreconditionMatrix( PreconditionType & precondition );
+  virtual void
+  SetPreconditionMatrix(PreconditionType & precondition);
 
   /** Temporary functions, for debugging */
-  const cholmod_common * GetCholmodCommon( void ) const
+  const cholmod_common *
+  GetCholmodCommon(void) const
   {
     return this->m_CholmodCommon;
   }
 
 
-  const cholmod_factor * GetCholmodFactor( void ) const
+  const cholmod_factor *
+  GetCholmodFactor(void) const
   {
     return this->m_CholmodFactor;
   }
 
   /** P = P + diagonalWeight * max(eigenvalue) * Identity */
-  itkSetMacro( DiagonalWeight, double );
-  itkGetConstMacro( DiagonalWeight, double );
+  itkSetMacro(DiagonalWeight, double);
+  itkGetConstMacro(DiagonalWeight, double);
 
   /** Threshold for elements of cost function derivative; default 1e-10 */
-  itkSetMacro( MinimumGradientElementMagnitude, double );
-  itkGetConstMacro( MinimumGradientElementMagnitude, double );
+  itkSetMacro(MinimumGradientElementMagnitude, double);
+  itkGetConstMacro(MinimumGradientElementMagnitude, double);
 
   /** Get estimated condition number; only valid after calling
    * SetPreconditionMatrix */
-  itkGetConstMacro( ConditionNumber, double );
+  itkGetConstMacro(ConditionNumber, double);
 
   /** Get largestEigenValue; only valid after calling
    * SetPreconditionMatrix */
-  itkGetConstMacro( LargestEigenValue, double );
+  itkGetConstMacro(LargestEigenValue, double);
 
   /** Get sparsity of selfhessian; only valid after calling
    * SetPreconditionMatrix; Takes into account that only upper half
    * of the matrix is stored. 1 = dense, 0 = all elements zero.
    */
-  itkGetConstMacro( Sparsity, double );
+  itkGetConstMacro(Sparsity, double);
 
 protected:
   PreconditionedGradientDescentOptimizer();
   virtual ~PreconditionedGradientDescentOptimizer();
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const;
 
   /** Cholmod index type: define at central place */
   typedef int CInt; // change to UF_long if using cholmod_l;
 
   // made protected so subclass can access
-  DerivativeType                m_Gradient;
-  double                        m_LearningRate;
-  StopConditionType             m_StopCondition;
-  DerivativeType                m_SearchDirection;
-  double                        m_LargestEigenValue;
-  double                        m_ConditionNumber;
-  double                        m_Sparsity;
+  DerivativeType    m_Gradient;
+  double            m_LearningRate;
+  StopConditionType m_StopCondition;
+  DerivativeType    m_SearchDirection;
+  double            m_LargestEigenValue;
+  double            m_ConditionNumber;
+  double            m_Sparsity;
 
   cholmod_common * m_CholmodCommon;
   cholmod_factor * m_CholmodFactor;
@@ -206,22 +216,22 @@ protected:
    * Matlab notation: x = L'\(L\g) = Pg = searchDirection
    * The last argument can be used to also solve different systems, like L x = g.
    */
-  virtual void CholmodSolve( const DerivativeType & gradient,
-    DerivativeType & searchDirection, int solveType = CHOLMOD_A );
+  virtual void
+  CholmodSolve(const DerivativeType & gradient, DerivativeType & searchDirection, int solveType = CHOLMOD_A);
 
 private:
-  PreconditionedGradientDescentOptimizer(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+  PreconditionedGradientDescentOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  bool                          m_Stop;
-  double                        m_Value;
+  bool   m_Stop;
+  double m_Value;
 
-  unsigned long                 m_NumberOfIterations;
-  unsigned long                 m_CurrentIteration;
+  unsigned long m_NumberOfIterations;
+  unsigned long m_CurrentIteration;
 
-  double                        m_DiagonalWeight;
-  double                        m_MinimumGradientElementMagnitude;
-
+  double m_DiagonalWeight;
+  double m_MinimumGradientElementMagnitude;
 };
 
 } // end namespace itk

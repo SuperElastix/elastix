@@ -36,23 +36,21 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageRandomCoordinateSampler :
-  public ImageRandomSamplerBase< TInputImage >
+template <class TInputImage>
+class ImageRandomCoordinateSampler : public ImageRandomSamplerBase<TInputImage>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageRandomCoordinateSampler          Self;
-  typedef ImageRandomSamplerBase< TInputImage > Superclass;
-  typedef SmartPointer< Self >                  Pointer;
-  typedef SmartPointer< const Self >            ConstPointer;
+  typedef ImageRandomCoordinateSampler        Self;
+  typedef ImageRandomSamplerBase<TInputImage> Superclass;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageRandomCoordinateSampler, ImageRandomSamplerBase );
+  itkTypeMacro(ImageRandomCoordinateSampler, ImageRandomSamplerBase);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -75,38 +73,34 @@ public:
   typedef typename Superclass::ImageSampleValueType         ImageSampleValueType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    Superclass::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** This image sampler samples the image on physical coordinates and thus
    * needs an interpolator. */
-  typedef double CoordRepType;
-  typedef InterpolateImageFunction<
-    InputImageType, CoordRepType >                            InterpolatorType;
-  typedef typename InterpolatorType::Pointer InterpolatorPointer;
-  typedef BSplineInterpolateImageFunction<
-    InputImageType, CoordRepType, double >                    DefaultInterpolatorType;
+  typedef double                                                                CoordRepType;
+  typedef InterpolateImageFunction<InputImageType, CoordRepType>                InterpolatorType;
+  typedef typename InterpolatorType::Pointer                                    InterpolatorPointer;
+  typedef BSplineInterpolateImageFunction<InputImageType, CoordRepType, double> DefaultInterpolatorType;
 
   /** The random number generator used to generate random coordinates. */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
   typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
 
   /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
-  itkSetObjectMacro( Interpolator, InterpolatorType );
-  itkGetModifiableObjectMacro( Interpolator, InterpolatorType );
+  itkSetObjectMacro(Interpolator, InterpolatorType);
+  itkGetModifiableObjectMacro(Interpolator, InterpolatorType);
 
   /** Set/Get the sample region size (in mm). Only needed when UseRandomSampleRegion==true;
    * default: filled with ones.  */
-  itkSetMacro( SampleRegionSize, InputImageSpacingType );
-  itkGetConstReferenceMacro( SampleRegionSize, InputImageSpacingType );
+  itkSetMacro(SampleRegionSize, InputImageSpacingType);
+  itkGetConstReferenceMacro(SampleRegionSize, InputImageSpacingType);
 
   /** Set/Get whether to use randomly selected sample regions, or just the whole image
    * Default: false. */
-  itkGetConstMacro( UseRandomSampleRegion, bool );
-  itkSetMacro( UseRandomSampleRegion, bool );
+  itkGetConstMacro(UseRandomSampleRegion, bool);
+  itkSetMacro(UseRandomSampleRegion, bool);
 
 protected:
-
   typedef typename InterpolatorType::ContinuousIndexType InputImageContinuousIndexType;
 
   /** The constructor. */
@@ -115,54 +109,55 @@ protected:
   ~ImageRandomCoordinateSampler() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Function that does the work. */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
   /** Multi-threaded functionality that does the work. */
-  void BeforeThreadedGenerateData( void ) override;
+  void
+  BeforeThreadedGenerateData(void) override;
 
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void
+  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
 
   /** Generate a point randomly in a bounding box. */
-  virtual void GenerateRandomCoordinate(
-    const InputImageContinuousIndexType & smallestContIndex,
-    const InputImageContinuousIndexType & largestContIndex,
-    InputImageContinuousIndexType &       randomContIndex );
+  virtual void
+  GenerateRandomCoordinate(const InputImageContinuousIndexType & smallestContIndex,
+                           const InputImageContinuousIndexType & largestContIndex,
+                           InputImageContinuousIndexType &       randomContIndex);
 
   InterpolatorPointer    m_Interpolator;
   RandomGeneratorPointer m_RandomGenerator;
   InputImageSpacingType  m_SampleRegionSize;
 
   /** Generate the two corners of a sampling region, given the two corners
-  * of an image. If UseRandomSampleRegion=false, the smallesPoint and largestPoint
-  * are just copies of the smallestImagePoint and largestImagePoint
-  * Otherwise, the midpoint of the sample region is randomly selected and
-  * the two corners are computed using the SampleRegionSize */
-  virtual void GenerateSampleRegion(
-    const InputImageContinuousIndexType & smallestImageContIndex,
-    const InputImageContinuousIndexType & largestImageContIndex,
-    InputImageContinuousIndexType & smallestContIndex,
-    InputImageContinuousIndexType & largestContIndex );
+   * of an image. If UseRandomSampleRegion=false, the smallesPoint and largestPoint
+   * are just copies of the smallestImagePoint and largestImagePoint
+   * Otherwise, the midpoint of the sample region is randomly selected and
+   * the two corners are computed using the SampleRegionSize */
+  virtual void
+  GenerateSampleRegion(const InputImageContinuousIndexType & smallestImageContIndex,
+                       const InputImageContinuousIndexType & largestImageContIndex,
+                       InputImageContinuousIndexType &       smallestContIndex,
+                       InputImageContinuousIndexType &       largestContIndex);
 
 private:
-
   /** The private constructor. */
-  ImageRandomCoordinateSampler( const Self & );   // purposely not implemented
+  ImageRandomCoordinateSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                 // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   bool m_UseRandomSampleRegion;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomCoordinateSampler.hxx"
+#  include "itkImageRandomCoordinateSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomCoordinateSampler_h

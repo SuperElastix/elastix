@@ -24,64 +24,58 @@
 
 namespace itk
 {
-template< typename TInputImage, typename TCoordRep, typename TCoefficientType >
-GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
-::GPUBSplineInterpolateImageFunction()
+template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
+GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GPUBSplineInterpolateImageFunction()
 {
   // Create GPU coefficients image
-  this->m_GPUCoefficients          = GPUCoefficientImageType::New();
+  this->m_GPUCoefficients = GPUCoefficientImageType::New();
   this->m_GPUCoefficientsImageBase = GPUDataManager::New();
 
   // Add GPUImageFunction implementation
-  const std::string sourcePath0(
-  GPUImageFunctionKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath0 );
+  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath0);
 
   // Add GPUBSplineInterpolateImageFunction implementation
-  const std::string sourcePath1(
-  GPUBSplineInterpolateImageFunctionKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath1 );
+  const std::string sourcePath1(GPUBSplineInterpolateImageFunctionKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath1);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep, typename TCoefficientType >
+template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
 void
-GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
-::SetInputImage( const TInputImage * inputData )
+GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::SetInputImage(
+  const TInputImage * inputData)
 {
-  Superclass::SetInputImage( inputData );
-  m_GPUCoefficients->Graft( this->m_Coefficients );
+  Superclass::SetInputImage(inputData);
+  m_GPUCoefficients->Graft(this->m_Coefficients);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep, typename TCoefficientType >
-const typename GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >::GPUCoefficientImagePointer
-GPUBSplineInterpolateImageFunction<  TInputImage, TCoordRep, TCoefficientType >
-::GetGPUCoefficients() const
+template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
+const typename GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GPUCoefficientImagePointer
+GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GetGPUCoefficients() const
 {
   return this->m_GPUCoefficients;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep, typename TCoefficientType >
-const typename GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >::GPUDataManagerPointer
-GPUBSplineInterpolateImageFunction<  TInputImage, TCoordRep, TCoefficientType >
-::GetGPUCoefficientsImageBase() const
+template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
+const typename GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GPUDataManagerPointer
+GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GetGPUCoefficientsImageBase() const
 {
   return this->m_GPUCoefficientsImageBase;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep, typename TCoefficientType >
+template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
 bool
-GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
-::GetSourceCode( std::string & source ) const
+GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GetSourceCode(std::string & source) const
 {
-  if( this->m_Sources.size() == 0 )
+  if (this->m_Sources.size() == 0)
   {
     return false;
   }
@@ -90,9 +84,9 @@ GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
   std::ostringstream sources;
 
   // Add other sources
-  for( std::size_t i = 0; i < this->m_Sources.size(); i++ )
+  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
   {
-    sources << this->m_Sources[ i ] << std::endl;
+    sources << this->m_Sources[i] << std::endl;
   }
 
   source = sources.str();
@@ -101,12 +95,12 @@ GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep, typename TCoefficientType >
+template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
 void
-GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::PrintSelf(std::ostream & os,
+                                                                                        Indent         indent) const
 {
-  GPUSuperclass::PrintSelf( os, indent );
+  GPUSuperclass::PrintSelf(os, indent);
 }
 
 

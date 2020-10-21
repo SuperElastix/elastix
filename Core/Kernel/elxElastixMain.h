@@ -51,7 +51,8 @@ namespace elastix
  * The method takes a logfile name as its input argument.
  * It returns 0 if everything went ok. 1 otherwise.
  */
-extern int xoutSetup( const char * logfilename, bool setupLogging, bool setupCout );
+extern int
+xoutSetup(const char * logfilename, bool setupLogging, bool setupCout);
 
 
 /** Manages setting up and closing the "xout" output streams.
@@ -62,16 +63,15 @@ public:
   ITK_DISALLOW_COPY_AND_ASSIGN(xoutManager);
 
   /** This explicit constructor does set up the "xout" output streams. */
-  explicit xoutManager( const std::string & logfilename, const bool setupLogging, const bool setupCout );
+  explicit xoutManager(const std::string & logfilename, const bool setupLogging, const bool setupCout);
 
-  /** The default-constructor only just constructs a manager object */ 
+  /** The default-constructor only just constructs a manager object */
   xoutManager() = default;
 
   /** The destructor closes the "xout" output streams. */
   ~xoutManager() = default;
 
 private:
-
   struct Guard
   {
     ITK_DISALLOW_COPY_AND_ASSIGN(Guard);
@@ -127,18 +127,17 @@ private:
 class ElastixMain : public itk::Object
 {
 public:
-
   /** Standard itk. */
-  typedef ElastixMain                     Self;
-  typedef itk::Object                     Superclass;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef ElastixMain                   Self;
+  typedef itk::Object                   Superclass;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ElastixMain, Object );
+  itkTypeMacro(ElastixMain, Object);
 
   /** Typedef's.*/
 
@@ -178,142 +177,156 @@ public:
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
 
   /** Set/Get functions for the description of the image type. */
-  itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
-  itkSetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
-  itkSetMacro( FixedImageDimension,   ImageDimensionType );
-  itkSetMacro( MovingImageDimension,  ImageDimensionType );
-  itkGetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
-  itkGetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
-  itkGetMacro( FixedImageDimension,   ImageDimensionType );
-  itkGetMacro( MovingImageDimension,  ImageDimensionType );
+  itkSetMacro(FixedImagePixelType, PixelTypeDescriptionType);
+  itkSetMacro(MovingImagePixelType, PixelTypeDescriptionType);
+  itkSetMacro(FixedImageDimension, ImageDimensionType);
+  itkSetMacro(MovingImageDimension, ImageDimensionType);
+  itkGetMacro(FixedImagePixelType, PixelTypeDescriptionType);
+  itkGetMacro(MovingImagePixelType, PixelTypeDescriptionType);
+  itkGetMacro(FixedImageDimension, ImageDimensionType);
+  itkGetMacro(MovingImageDimension, ImageDimensionType);
 
   /** Set/Get functions for the fixed and moving images
    * (if these are not used, elastix tries to read them from disk,
    * according to the command line parameters).
    */
-  itkSetObjectMacro( FixedImageContainer,  DataObjectContainerType );
-  itkSetObjectMacro( MovingImageContainer, DataObjectContainerType );
-  itkGetModifiableObjectMacro( FixedImageContainer,  DataObjectContainerType );
-  itkGetModifiableObjectMacro( MovingImageContainer, DataObjectContainerType );
+  itkSetObjectMacro(FixedImageContainer, DataObjectContainerType);
+  itkSetObjectMacro(MovingImageContainer, DataObjectContainerType);
+  itkGetModifiableObjectMacro(FixedImageContainer, DataObjectContainerType);
+  itkGetModifiableObjectMacro(MovingImageContainer, DataObjectContainerType);
 
   /** Set/Get functions for the fixed and moving masks
    * (if these are not used, elastix tries to read them from disk,
    * according to the command line parameters).
    */
-  itkSetObjectMacro( FixedMaskContainer, DataObjectContainerType );
-  itkSetObjectMacro( MovingMaskContainer, DataObjectContainerType );
-  itkGetModifiableObjectMacro( FixedMaskContainer, DataObjectContainerType );
-  itkGetModifiableObjectMacro( MovingMaskContainer, DataObjectContainerType );
+  itkSetObjectMacro(FixedMaskContainer, DataObjectContainerType);
+  itkSetObjectMacro(MovingMaskContainer, DataObjectContainerType);
+  itkGetModifiableObjectMacro(FixedMaskContainer, DataObjectContainerType);
+  itkGetModifiableObjectMacro(MovingMaskContainer, DataObjectContainerType);
 
   /** Set/Get functions for the result images
    * (if these are not used, elastix tries to read them from disk,
    * according to the command line parameters).
    */
-  itkSetObjectMacro( ResultImageContainer, DataObjectContainerType );
-  itkGetModifiableObjectMacro( ResultImageContainer, DataObjectContainerType );
+  itkSetObjectMacro(ResultImageContainer, DataObjectContainerType);
+  itkGetModifiableObjectMacro(ResultImageContainer, DataObjectContainerType);
 
-  itkSetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
-  itkGetModifiableObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
+  itkSetObjectMacro(ResultDeformationFieldContainer, DataObjectContainerType);
+  itkGetModifiableObjectMacro(ResultDeformationFieldContainer, DataObjectContainerType);
 
   /** Set/Get the configuration object. */
-  itkSetObjectMacro( Configuration, ConfigurationType );
-  itkGetModifiableObjectMacro( Configuration, ConfigurationType );
+  itkSetObjectMacro(Configuration, ConfigurationType);
+  itkGetModifiableObjectMacro(Configuration, ConfigurationType);
 
   /** Functions to get pointers to the elastix components.
    * The components are returned as Object::Pointer.
    * Before calling this functions, call run().
    */
-  itkGetModifiableObjectMacro( Elastix, ObjectType );
+  itkGetModifiableObjectMacro(Elastix, ObjectType);
 
   /** Convenience function that returns the elastix component as
    * a pointer to an ElastixBaseType. Use only after having called run()!
    */
-  virtual ElastixBaseType * GetElastixBase( void ) const;
+  virtual ElastixBaseType *
+  GetElastixBase(void) const;
 
   /** Get the final transform (the result of running elastix).
    * You may pass this as an InitialTransform in an other instantiation
    * of ElastixMain.
    * Only valid after calling Run()!
    */
-  itkGetModifiableObjectMacro( FinalTransform, ObjectType );
+  itkGetModifiableObjectMacro(FinalTransform, ObjectType);
 
   /** Set/Get the initial transform
    * the type is ObjectType, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    */
-  itkSetObjectMacro( InitialTransform, ObjectType );
-  itkGetModifiableObjectMacro( InitialTransform, ObjectType );
+  itkSetObjectMacro(InitialTransform, ObjectType);
+  itkGetModifiableObjectMacro(InitialTransform, ObjectType);
 
   /** Set/Get the original fixed image direction as a flat array
    * (d11 d21 d31 d21 d22 etc ) */
-  virtual void SetOriginalFixedImageDirectionFlat(
-    const FlatDirectionCosinesType & arg );
+  virtual void
+  SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg);
 
-  virtual const FlatDirectionCosinesType & GetOriginalFixedImageDirectionFlat( void ) const;
+  virtual const FlatDirectionCosinesType &
+  GetOriginalFixedImageDirectionFlat(void) const;
 
   /** Get and Set the elastix level. */
-  void SetElastixLevel( unsigned int level );
+  void
+  SetElastixLevel(unsigned int level);
 
-  unsigned int GetElastixLevel( void );
+  unsigned int
+  GetElastixLevel(void);
 
   /** Get and Set the total number of elastix levels. */
-  void SetTotalNumberOfElastixLevels( unsigned int levels );
+  void
+  SetTotalNumberOfElastixLevels(unsigned int levels);
 
-  unsigned int GetTotalNumberOfElastixLevels( void );
+  unsigned int
+  GetTotalNumberOfElastixLevels(void);
 
   /** Returns the Index that is used in elx::ComponentDatabase. */
-  itkGetConstMacro( DBIndex, DBIndexType );
+  itkGetConstMacro(DBIndex, DBIndexType);
 
   /** Enter the command line parameters, which were given by the user,
    * if elastix.exe is used to do a registration.
    * The Configuration object will be initialized in this way.
    */
-  virtual void EnterCommandLineArguments( const ArgumentMapType & argmap );
+  virtual void
+  EnterCommandLineArguments(const ArgumentMapType & argmap);
 
-  virtual void EnterCommandLineArguments( const ArgumentMapType & argmap,
-    const ParameterMapType & inputMap );
+  virtual void
+  EnterCommandLineArguments(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
 
   // Version used when elastix is used as a library.
-  virtual void EnterCommandLineArguments( const ArgumentMapType & argmap,
-    const std::vector< ParameterMapType > & inputMaps );
+  virtual void
+  EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps);
 
   /** Start the registration
    * run() without command line parameters; it assumes that
    * EnterCommandLineParameters has been invoked already, or that
    * m_Configuration is initialized in a different way.
    */
-  virtual int Run( void );
+  virtual int
+  Run(void);
 
   /** Start the registration
    * this version of 'run' first calls this->EnterCommandLineParameters(argc,argv)
    * and then calls run().
    */
-  virtual int Run( const ArgumentMapType & argmap );
+  virtual int
+  Run(const ArgumentMapType & argmap);
 
-  virtual int Run( const ArgumentMapType & argmap, const ParameterMapType & inputMap );
+  virtual int
+  Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
 
   /** Set process priority, which is read from the command line arguments.
    * Syntax:
    * -priority \<high, belownormal\>
    */
-  virtual void SetProcessPriority( void ) const;
+  virtual void
+  SetProcessPriority(void) const;
 
   /** Set maximum number of threads, which is read from the command line arguments.
    * Syntax:
    * -threads \<int\>
    */
-  virtual void SetMaximumNumberOfThreads( void ) const;
+  virtual void
+  SetMaximumNumberOfThreads(void) const;
 
   /** Functions to get/set the ComponentDatabase. */
-  static ComponentDatabase * GetComponentDatabase( void )
+  static ComponentDatabase *
+  GetComponentDatabase(void)
   {
     return s_CDB.GetPointer();
   }
 
 
-  static void SetComponentDatabase( ComponentDatabase * arg )
+  static void
+  SetComponentDatabase(ComponentDatabase * arg)
   {
-    if( s_CDB != arg )
+    if (s_CDB != arg)
     {
       s_CDB = arg;
     }
@@ -321,12 +334,13 @@ public:
 
 
   /** GetTransformParametersMap */
-  virtual ParameterMapType GetTransformParametersMap( void ) const;
+  virtual ParameterMapType
+  GetTransformParametersMap(void) const;
 
-  static void UnloadComponents( void );
+  static void
+  UnloadComponents(void);
 
 protected:
-
   ElastixMain();
   ~ElastixMain() override;
 
@@ -339,7 +353,7 @@ protected:
   ConfigurationPointer m_Configuration;
 
   /** A vector of configuration objects, needed when transformix is used as library. */
-  std::vector< ConfigurationPointer > m_Configurations;
+  std::vector<ConfigurationPointer> m_Configurations;
 
   /** Description of the ImageTypes. */
   PixelTypeDescriptionType m_FixedImagePixelType;
@@ -371,18 +385,21 @@ protected:
 
   static ComponentDatabasePointer s_CDB;
   static ComponentLoaderPointer   s_ComponentLoader;
-  virtual int LoadComponents( void );
+  virtual int
+  LoadComponents(void);
 
   /** InitDBIndex sets m_DBIndex by asking the ImageTypes
    * from the Configuration object and obtaining the corresponding
    * DB index from the ComponentDatabase.
    */
-  virtual int InitDBIndex( void );
+  virtual int
+  InitDBIndex(void);
 
   /** Create a component. Make sure InitDBIndex has been called before.
    * The input is a string, e.g. "MattesMutualInformation".
    */
-  virtual ObjectPointer CreateComponent( const ComponentDescriptionType & name );
+  virtual ObjectPointer
+  CreateComponent(const ComponentDescriptionType & name);
 
   /** Create components. Reads from the configuration object (using the provided key)
    * the names of the components to create and store their instantiations in the
@@ -399,21 +416,20 @@ protected:
    * ( !mandatoryComponent && defaultComponentName != "" ) == true
    *
    */
-  virtual ObjectContainerPointer CreateComponents(
-    const ComponentDescriptionType & key,
-    const ComponentDescriptionType & defaultComponentName,
-    int & errorcode,
-    bool mandatoryComponent = true );
+  virtual ObjectContainerPointer
+  CreateComponents(const ComponentDescriptionType & key,
+                   const ComponentDescriptionType & defaultComponentName,
+                   int &                            errorcode,
+                   bool                             mandatoryComponent = true);
 
   /** Helper function to obtain information from images on disk. */
-  void GetImageInformationFromFile( const std::string & filename,
-    ImageDimensionType & imageDimension ) const;
+  void
+  GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const;
 
 private:
-
-  ElastixMain( const Self & );     // purposely not implemented
-  void operator=( const Self & );  // purposely not implemented
-
+  ElastixMain(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix

@@ -49,39 +49,33 @@ namespace elastix
  * \ingroup Registrations
  */
 
-template< class TElastix >
-class MultiResolutionRegistrationWithFeatures :
-  public
-  itk::MultiResolutionImageRegistrationMethodWithFeatures<
-  typename RegistrationBase< TElastix >::FixedImageType,
-  typename RegistrationBase< TElastix >::MovingImageType >,
-  public
-  RegistrationBase< TElastix >
+template <class TElastix>
+class MultiResolutionRegistrationWithFeatures
+  : public itk::MultiResolutionImageRegistrationMethodWithFeatures<typename RegistrationBase<TElastix>::FixedImageType,
+                                                                   typename RegistrationBase<TElastix>::MovingImageType>
+  , public RegistrationBase<TElastix>
 {
 public:
-
   /** Standard ITK: Self */
   typedef MultiResolutionRegistrationWithFeatures Self;
-  typedef itk::MultiResolutionImageRegistrationMethodWithFeatures<
-    typename RegistrationBase< TElastix >::FixedImageType,
-    typename RegistrationBase< TElastix >::MovingImageType >
-    Superclass1;
-  typedef RegistrationBase< TElastix >    Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::MultiResolutionImageRegistrationMethodWithFeatures<typename RegistrationBase<TElastix>::FixedImageType,
+                                                                  typename RegistrationBase<TElastix>::MovingImageType>
+                                        Superclass1;
+  typedef RegistrationBase<TElastix>    Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionRegistrationWithFeatures,
-    MultiResolutionImageRegistrationMethodWithFeatures );
+  itkTypeMacro(MultiResolutionRegistrationWithFeatures, MultiResolutionImageRegistrationMethodWithFeatures);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific registration framework. \n
    * example: <tt>(Registration "MultiResolutionRegistrationWithFeatures")</tt>\n
    */
-  elxClassNameMacro( "MultiResolutionRegistrationWithFeatures" );
+  elxClassNameMacro("MultiResolutionRegistrationWithFeatures");
 
   /** Typedef's inherited from Superclass1. */
 
@@ -124,8 +118,8 @@ public:
   typedef typename Superclass1::ParametersType ParametersType;
 
   /** The CombinationMetric type, which is used internally by the Superclass1 */
-  //typedef typename Superclass1::CombinationMetricType     CombinationMetricType;
-  //typedef typename Superclass1::CombinationMetricPointer  CombinationMetricPointer;
+  // typedef typename Superclass1::CombinationMetricType     CombinationMetricType;
+  // typedef typename Superclass1::CombinationMetricPointer  CombinationMetricPointer;
 
   /** Typedef's from Elastix. */
   typedef typename Superclass2::ElastixType             ElastixType;
@@ -138,10 +132,10 @@ public:
   typedef typename Superclass2::UseMaskErosionArrayType UseMaskErosionArrayType;
 
   /** Get the dimension of the fixed image. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, Superclass2::FixedImageDimension);
 
   /** Get the dimension of the moving image. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, Superclass2::MovingImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, Superclass2::MovingImageDimension);
 
   /** Execute stuff before the actual registration:
    * \li Connect all components to the registration framework.
@@ -149,18 +143,19 @@ public:
    * \li Set the fixed image regions.
    * \li Add the sub metric columns to the iteration info object.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion.
    * \li Set the metric weights.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
-  MultiResolutionRegistrationWithFeatures(){}
+  MultiResolutionRegistrationWithFeatures() {}
 
   /** The destructor. */
   ~MultiResolutionRegistrationWithFeatures() override {}
@@ -177,32 +172,36 @@ protected:
   typedef typename Superclass2::MovingMaskSpatialObjectPointer MovingMaskSpatialObjectPointer;
 
   /** Function to update masks. */
-  void UpdateFixedMasks( unsigned int level );
+  void
+  UpdateFixedMasks(unsigned int level);
 
-  void UpdateMovingMasks( unsigned int level );
+  void
+  UpdateMovingMasks(unsigned int level);
 
   /** Read the components from m_Elastix and set them in the Registration class. */
-  virtual void GetAndSetComponents( void );
+  virtual void
+  GetAndSetComponents(void);
 
   /** Set the fixed image regions. */
-  virtual void GetAndSetFixedImageRegions( void );
+  virtual void
+  GetAndSetFixedImageRegions(void);
 
   /** Create and set the fixed image interpolators. */
-  virtual void GetAndSetFixedImageInterpolators( void );
+  virtual void
+  GetAndSetFixedImageInterpolators(void);
 
 private:
-
   /** The private constructor. */
-  MultiResolutionRegistrationWithFeatures( const Self & );  // purposely not implemented
+  MultiResolutionRegistrationWithFeatures(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMultiResolutionRegistrationWithFeatures.hxx"
+#  include "elxMultiResolutionRegistrationWithFeatures.hxx"
 #endif
 
 #endif // end #ifndef __elxMultiResolutionRegistrationWithFeatures_H__

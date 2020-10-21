@@ -51,25 +51,23 @@ namespace itk
  * \ingroup RegistrationFilters
  */
 
-template< typename TFixedImage, typename TMovingImage >
-class MultiResolutionImageRegistrationMethodWithFeatures :
-  public MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
+template <typename TFixedImage, typename TMovingImage>
+class MultiResolutionImageRegistrationMethodWithFeatures
+  : public MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef MultiResolutionImageRegistrationMethodWithFeatures Self;
-  typedef MultiInputMultiResolutionImageRegistrationMethodBase<
-    TFixedImage, TMovingImage >                               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef MultiResolutionImageRegistrationMethodWithFeatures                              Self;
+  typedef MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage> Superclass;
+  typedef SmartPointer<Self>                                                              Pointer;
+  typedef SmartPointer<const Self>                                                        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionImageRegistrationMethodWithFeatures,
-    MultiInputMultiResolutionImageRegistrationMethodBase );
+  itkTypeMacro(MultiResolutionImageRegistrationMethodWithFeatures,
+               MultiInputMultiResolutionImageRegistrationMethodBase);
 
   /**  Superclass types */
   typedef typename Superclass::FixedImageType              FixedImageType;
@@ -79,32 +77,29 @@ public:
   typedef typename Superclass::MovingImageType             MovingImageType;
   typedef typename Superclass::MovingImageConstPointer     MovingImageConstPointer;
 
-  typedef typename Superclass::MetricType               MetricType;
-  typedef typename Superclass::MetricPointer            MetricPointer;
-  typedef typename Superclass::TransformType            TransformType;
-  typedef typename Superclass::TransformPointer         TransformPointer;
-  typedef typename Superclass::InterpolatorType         InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer      InterpolatorPointer;
-  typedef typename Superclass::OptimizerType            OptimizerType;
-  typedef typename OptimizerType::Pointer               OptimizerPointer;
-  typedef typename Superclass::FixedImagePyramidType    FixedImagePyramidType;
-  typedef typename Superclass::FixedImagePyramidPointer FixedImagePyramidPointer;
-  typedef typename Superclass::MovingImagePyramidType   MovingImagePyramidType;
-  typedef typename
-    Superclass::MovingImagePyramidPointer MovingImagePyramidPointer;
+  typedef typename Superclass::MetricType                MetricType;
+  typedef typename Superclass::MetricPointer             MetricPointer;
+  typedef typename Superclass::TransformType             TransformType;
+  typedef typename Superclass::TransformPointer          TransformPointer;
+  typedef typename Superclass::InterpolatorType          InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer       InterpolatorPointer;
+  typedef typename Superclass::OptimizerType             OptimizerType;
+  typedef typename OptimizerType::Pointer                OptimizerPointer;
+  typedef typename Superclass::FixedImagePyramidType     FixedImagePyramidType;
+  typedef typename Superclass::FixedImagePyramidPointer  FixedImagePyramidPointer;
+  typedef typename Superclass::MovingImagePyramidType    MovingImagePyramidType;
+  typedef typename Superclass::MovingImagePyramidPointer MovingImagePyramidPointer;
 
-  typedef typename Superclass::TransformOutputType    TransformOutputType;
-  typedef typename Superclass::TransformOutputPointer TransformOutputPointer;
-  typedef typename
-    Superclass::TransformOutputConstPointer TransformOutputConstPointer;
+  typedef typename Superclass::TransformOutputType         TransformOutputType;
+  typedef typename Superclass::TransformOutputPointer      TransformOutputPointer;
+  typedef typename Superclass::TransformOutputConstPointer TransformOutputConstPointer;
 
   typedef typename Superclass::ParametersType    ParametersType;
   typedef typename Superclass::DataObjectPointer DataObjectPointer;
 
 protected:
-
   /** Constructor. */
-  MultiResolutionImageRegistrationMethodWithFeatures(){}
+  MultiResolutionImageRegistrationMethodWithFeatures() {}
 
   /** Destructor. */
   ~MultiResolutionImageRegistrationMethodWithFeatures() override {}
@@ -112,19 +107,19 @@ protected:
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
-  void CheckPyramids( void ) override;
+  void
+  CheckPyramids(void) override;
 
 private:
-
-  MultiResolutionImageRegistrationMethodWithFeatures( const Self & ); // purposely not implemented
-  void operator=( const Self & );                                     // purposely not implemented
-
+  MultiResolutionImageRegistrationMethodWithFeatures(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiResolutionImageRegistrationMethodWithFeatures.hxx"
+#  include "itkMultiResolutionImageRegistrationMethodWithFeatures.hxx"
 #endif
 
 #endif // end #ifndef __itkMultiResolutionImageRegistrationMethodWithFeatures_h

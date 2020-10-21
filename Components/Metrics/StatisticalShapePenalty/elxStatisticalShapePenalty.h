@@ -54,36 +54,33 @@ using namespace itk;
  * \ingroup Metrics
  */
 
-template< class TElastix >
-class StatisticalShapePenalty :
-  public StatisticalShapePointPenalty<
-  typename MetricBase< TElastix >::FixedPointSetType,
-  typename MetricBase< TElastix >::MovingPointSetType >,
-  public MetricBase< TElastix >
+template <class TElastix>
+class StatisticalShapePenalty
+  : public StatisticalShapePointPenalty<typename MetricBase<TElastix>::FixedPointSetType,
+                                        typename MetricBase<TElastix>::MovingPointSetType>
+  , public MetricBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef StatisticalShapePenalty Self;
-  typedef StatisticalShapePointPenalty<
-    typename MetricBase< TElastix >::FixedPointSetType,
-    typename MetricBase< TElastix >::MovingPointSetType > Superclass1;
-  typedef MetricBase< TElastix >     Superclass2;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef StatisticalShapePointPenalty<typename MetricBase<TElastix>::FixedPointSetType,
+                                       typename MetricBase<TElastix>::MovingPointSetType>
+                                   Superclass1;
+  typedef MetricBase<TElastix>     Superclass2;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StatisticalShapePenalty,
-    StatisticalShapePointPenalty );
+  itkTypeMacro(StatisticalShapePenalty, StatisticalShapePointPenalty);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
    * example: <tt>(Metric "StatisticalShapePenalty")</tt>\n
    */
-  elxClassNameMacro( "StatisticalShapePenalty" );
+  elxClassNameMacro("StatisticalShapePenalty");
 
   /** Typedefs from the superclass. */
   typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
@@ -92,14 +89,14 @@ public:
   typedef typename Superclass1::MovingPointSetType           MovingPointSetType;
   typedef typename Superclass1::MovingPointSetConstPointer   MovingPointSetConstPointer;
 
-//  typedef typename Superclass1::FixedImageRegionType       FixedImageRegionType;
+  //  typedef typename Superclass1::FixedImageRegionType       FixedImageRegionType;
   typedef typename Superclass1::TransformType           TransformType;
   typedef typename Superclass1::TransformPointer        TransformPointer;
   typedef typename Superclass1::InputPointType          InputPointType;
   typedef typename Superclass1::OutputPointType         OutputPointType;
   typedef typename Superclass1::TransformParametersType TransformParametersType;
   typedef typename Superclass1::TransformJacobianType   TransformJacobianType;
-//  typedef typename Superclass1::RealType                   RealType;
+  //  typedef typename Superclass1::RealType                   RealType;
   typedef typename Superclass1::FixedImageMaskType     FixedImageMaskType;
   typedef typename Superclass1::FixedImageMaskPointer  FixedImageMaskPointer;
   typedef typename Superclass1::MovingImageMaskType    MovingImageMaskType;
@@ -109,7 +106,7 @@ public:
   typedef typename Superclass1::ParametersType         ParametersType;
 
   typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector< CoordRepType >             VnlVectorType;
+  typedef vnl_vector<CoordRepType>               VnlVectorType;
 
   /** Other typedef's. */
   typedef itk::Object ObjectType;
@@ -118,10 +115,9 @@ public:
     itkGetStaticConstMacro( FixedImageDimension ),
     itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;
     */
-  typedef itk::AdvancedCombinationTransform< CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;
-  typedef typename
-    CombinationTransformType::InitialTransformType InitialTransformType;
+  typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
+                                                                  CombinationTransformType;
+  typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
 
   /** Typedefs inherited from elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -135,12 +131,10 @@ public:
   typedef typename Superclass2::MovingImageType      MovingImageType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
    * assumes that the fixed and moving image are of the same type.
@@ -151,50 +145,53 @@ public:
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
    */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
   /** Function to read the corresponding points. */
-  unsigned int ReadLandmarks(
-    const std::string & landmarkFileName,
-    typename PointSetType::Pointer & pointSet,
-    const typename ImageType::ConstPointer image );
+  unsigned int
+  ReadLandmarks(const std::string &                    landmarkFileName,
+                typename PointSetType::Pointer &       pointSet,
+                const typename ImageType::ConstPointer image);
 
-  unsigned int ReadShape(
-    const std::string & ShapeFileName,
-    typename PointSetType::Pointer & pointSet,
-    const typename ImageType::ConstPointer image );
+  unsigned int
+  ReadShape(const std::string &                    ShapeFileName,
+            typename PointSetType::Pointer &       pointSet,
+            const typename ImageType::ConstPointer image);
 
   /** Overwrite to silence warning. */
-  void SelectNewSamples( void ) override{}
+  void
+  SelectNewSamples(void) override
+  {}
 
 protected:
-
   /** The constructor. */
-  StatisticalShapePenalty(){}
+  StatisticalShapePenalty() {}
   /** The destructor. */
   ~StatisticalShapePenalty() override {}
 
 private:
-
   /** The private constructor. */
-  StatisticalShapePenalty( const Self & ); // purposely not implemented
+  StatisticalShapePenalty(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );          // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxStatisticalShapePenalty.hxx"
+#  include "elxStatisticalShapePenalty.hxx"
 #endif
 
 #endif // end #ifndef __elxStatisticalShapePenalty_H__

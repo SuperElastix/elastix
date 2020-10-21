@@ -46,42 +46,39 @@ namespace elastix
  * \ingroup Interpolators
  */
 
-template< class TElastix >
-class BSplineInterpolator :
-  public
-  itk::BSplineInterpolateImageFunction<
-  typename InterpolatorBase< TElastix >::InputImageType,
-  typename InterpolatorBase< TElastix >::CoordRepType,
-  double >,        //CoefficientType
-  public
-  InterpolatorBase< TElastix >
+template <class TElastix>
+class BSplineInterpolator
+  : public itk::BSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                typename InterpolatorBase<TElastix>::CoordRepType,
+                                                double>
+  , // CoefficientType
+    public InterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef BSplineInterpolator Self;
-  typedef itk::BSplineInterpolateImageFunction<
-    typename InterpolatorBase< TElastix >::InputImageType,
-    typename InterpolatorBase< TElastix >::CoordRepType,
-    double >                                  Superclass1;
-  typedef InterpolatorBase< TElastix >    Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::BSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                               typename InterpolatorBase<TElastix>::CoordRepType,
+                                               double>
+                                        Superclass1;
+  typedef InterpolatorBase<TElastix>    Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineInterpolator, itk::BSplineInterpolateImageFunction );
+  itkTypeMacro(BSplineInterpolator, itk::BSplineInterpolateImageFunction);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n
    * example: <tt>(Interpolator "BSplineInterpolator")</tt>\n
    */
-  elxClassNameMacro( "BSplineInterpolator" );
+  elxClassNameMacro("BSplineInterpolator");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::OutputType               OutputType;
@@ -108,28 +105,27 @@ public:
   /** Execute stuff before each new pyramid resolution:
    * \li Set the spline order.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
   BSplineInterpolator() {}
   /** The destructor. */
   ~BSplineInterpolator() override {}
 
 private:
-
   /** The private constructor. */
-  BSplineInterpolator( const Self & );  // purposely not implemented
+  BSplineInterpolator(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );       // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxBSplineInterpolator.hxx"
+#  include "elxBSplineInterpolator.hxx"
 #endif
 
 #endif // end #ifndef __elxBSplineInterpolator_h

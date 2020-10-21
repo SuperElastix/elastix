@@ -37,19 +37,16 @@ namespace itk
  * \ingroup Numerics Optimizers
  */
 
-class GenericConjugateGradientOptimizer :
-  public ScaledSingleValuedNonLinearOptimizer
+class GenericConjugateGradientOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-
   typedef GenericConjugateGradientOptimizer    Self;
   typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  typedef SmartPointer<Self>                   Pointer;
+  typedef SmartPointer<const Self>             ConstPointer;
 
-  itkNewMacro( Self );
-  itkTypeMacro( GenericConjugateGradientOptimizer,
-    ScaledSingleValuedNonLinearOptimizer );
+  itkNewMacro(Self);
+  itkTypeMacro(GenericConjugateGradientOptimizer, ScaledSingleValuedNonLinearOptimizer);
 
   typedef Superclass::ParametersType         ParametersType;
   typedef Superclass::DerivativeType         DerivativeType;
@@ -63,15 +60,14 @@ public:
 
   /** Typedef for a function that computes \f$\beta\f$, given the previousGradient,
    * the current gradient, and the previous search direction */
-  typedef double (Self::* ComputeBetaFunctionType
-  )( const DerivativeType &,
-    const DerivativeType &,
-    const ParametersType & );
-  typedef std::string BetaDefinitionType;
-  typedef std::map< BetaDefinitionType,
-    ComputeBetaFunctionType >                   BetaDefinitionMapType;
+  typedef double (Self::*ComputeBetaFunctionType)(const DerivativeType &,
+                                                  const DerivativeType &,
+                                                  const ParametersType &);
+  typedef std::string                                           BetaDefinitionType;
+  typedef std::map<BetaDefinitionType, ComputeBetaFunctionType> BetaDefinitionMapType;
 
-  typedef enum {
+  typedef enum
+  {
     MetricError,
     LineSearchError,
     MaximumNumberOfIterations,
@@ -79,30 +75,32 @@ public:
     ValueTolerance,
     InfiniteBeta,
     Unknown
-  }                                   StopConditionType;
+  } StopConditionType;
 
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
-  virtual void ResumeOptimization( void );
+  virtual void
+  ResumeOptimization(void);
 
-  virtual void StopOptimization( void );
+  virtual void
+  StopOptimization(void);
 
   /** Get information about optimization process: */
-  itkGetConstMacro( CurrentIteration, unsigned long );
-  itkGetConstMacro( CurrentValue, MeasureType );
-  itkGetConstReferenceMacro( CurrentGradient, DerivativeType );
-  itkGetConstMacro( InLineSearch, bool );
-  itkGetConstReferenceMacro( StopCondition, StopConditionType );
-  itkGetConstMacro( CurrentStepLength, double );
+  itkGetConstMacro(CurrentIteration, unsigned long);
+  itkGetConstMacro(CurrentValue, MeasureType);
+  itkGetConstReferenceMacro(CurrentGradient, DerivativeType);
+  itkGetConstMacro(InLineSearch, bool);
+  itkGetConstReferenceMacro(StopCondition, StopConditionType);
+  itkGetConstMacro(CurrentStepLength, double);
 
   /** Setting: the line search optimizer */
-  itkSetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
-  itkGetModifiableObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
+  itkSetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
+  itkGetModifiableObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
 
   /** Setting: the maximum number of iterations */
-  itkGetConstMacro( MaximumNumberOfIterations, unsigned long );
-  itkSetClampMacro( MaximumNumberOfIterations, unsigned long,
-    1, NumericTraits< unsigned long >::max() );
+  itkGetConstMacro(MaximumNumberOfIterations, unsigned long);
+  itkSetClampMacro(MaximumNumberOfIterations, unsigned long, 1, NumericTraits<unsigned long>::max());
 
   /** Setting: the mininum gradient magnitude. By default 1e-5.
    *
@@ -110,37 +108,39 @@ public:
    * \f$ \|CurrentGradient\| <
    *   GradientMagnitudeTolerance * \max(1, \|CurrentPosition\| ) \f$
    */
-  itkGetConstMacro( GradientMagnitudeTolerance, double );
-  itkSetMacro( GradientMagnitudeTolerance, double )
+  itkGetConstMacro(GradientMagnitudeTolerance, double);
+  itkSetMacro(GradientMagnitudeTolerance, double)
 
-  /** Setting: a stopping criterion, the value tolerance. By default 1e-5.
-   *
-   * The optimizer stops when
-   * \f[ 2.0 * | f_k - f_{k-1} | \le
-   *   ValueTolerance * ( |f_k| + |f_{k-1}| + 1e-20 ) \f]
-   * is satisfied MaxNrOfItWithoutImprovement times in a row.
-   */
-  itkGetConstMacro( ValueTolerance, double );
-  itkSetMacro( ValueTolerance, double );
+    /** Setting: a stopping criterion, the value tolerance. By default 1e-5.
+     *
+     * The optimizer stops when
+     * \f[ 2.0 * | f_k - f_{k-1} | \le
+     *   ValueTolerance * ( |f_k| + |f_{k-1}| + 1e-20 ) \f]
+     * is satisfied MaxNrOfItWithoutImprovement times in a row.
+     */
+    itkGetConstMacro(ValueTolerance, double);
+  itkSetMacro(ValueTolerance, double);
 
   /** Setting: the maximum number of iterations in a row that
    * satisfy the value tolerance criterion. By default (if never set)
    * equal to the number of parameters. */
-  virtual void SetMaxNrOfItWithoutImprovement( unsigned long arg );
+  virtual void
+  SetMaxNrOfItWithoutImprovement(unsigned long arg);
 
-  itkGetConstMacro( MaxNrOfItWithoutImprovement, unsigned long );
+  itkGetConstMacro(MaxNrOfItWithoutImprovement, unsigned long);
 
   /** Setting: the definition of \f$\beta\f$, by default "DaiYuanHestenesStiefel" */
-  virtual void SetBetaDefinition( const BetaDefinitionType & arg );
+  virtual void
+  SetBetaDefinition(const BetaDefinitionType & arg);
 
-  itkGetConstReferenceMacro( BetaDefinition, BetaDefinitionType );
+  itkGetConstReferenceMacro(BetaDefinition, BetaDefinitionType);
 
 protected:
-
   GenericConjugateGradientOptimizer();
-  ~GenericConjugateGradientOptimizer() override{}
+  ~GenericConjugateGradientOptimizer() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   DerivativeType    m_CurrentGradient;
   MeasureType       m_CurrentValue;
@@ -155,7 +155,7 @@ protected:
 
   /** Is true when the LineSearchOptimizer has been started. */
   bool m_InLineSearch;
-  itkSetMacro( InLineSearch, bool );
+  itkSetMacro(InLineSearch, bool);
 
   /** Flag that says if the previous gradient and search direction are known.
    * Typically 'true' at the start of optimization, or when a stopped optimisation
@@ -175,9 +175,8 @@ protected:
    * pointer to a method that computes \f$\beta\f$.
    * Called in the constructor of this class, and possibly by subclasses.
    */
-  virtual void AddBetaDefinition(
-    const BetaDefinitionType & name,
-    ComputeBetaFunctionType function );
+  virtual void
+  AddBetaDefinition(const BetaDefinitionType & name, ComputeBetaFunctionType function);
 
   /**
    * Compute the search direction:
@@ -189,76 +188,73 @@ protected:
    * On calling, searchDir should equal \f$d_{k-1}\f$. On return searchDir
    * equals \f$d_{k}\f$.
    */
-  virtual void ComputeSearchDirection(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    ParametersType & searchDir );
+  virtual void
+  ComputeSearchDirection(const DerivativeType & previousGradient,
+                         const DerivativeType & gradient,
+                         ParametersType &       searchDir);
 
   /** Perform a line search along the search direction. On calling, \f$x, f\f$, and \f$g\f$ should
    * contain the current position, the cost function value at this position, and
    * the derivative. On return the step, \f$x\f$ (new position), \f$f\f$ (value at \f$x\f$), and \f$g\f$
    * (derivative at \f$x\f$) are updated. */
-  virtual void LineSearch(
-    const ParametersType searchDir,
-    double & step,
-    ParametersType & x,
-    MeasureType & f,
-    DerivativeType & g );
+  virtual void
+  LineSearch(const ParametersType searchDir, double & step, ParametersType & x, MeasureType & f, DerivativeType & g);
 
   /** Check if convergence has occured;
    * The firstLineSearchDone bool allows the implementation of TestConvergence to
    * decide to skip a few convergence checks when no line search has performed yet
    * (so, before the actual optimisation begins)  */
-  virtual bool TestConvergence( bool firstLineSearchDone );
+  virtual bool
+  TestConvergence(bool firstLineSearchDone);
 
   /** Compute \f$\beta\f$ according to the user set \f$\beta\f$-definition */
-  virtual double ComputeBeta(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    const ParametersType & previousSearchDir );
+  virtual double
+  ComputeBeta(const DerivativeType & previousGradient,
+              const DerivativeType & gradient,
+              const ParametersType & previousSearchDir);
 
   /** Different definitions of \f$\beta\f$ */
 
   /** "SteepestDescent: beta=0 */
-  double ComputeBetaSD(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    const ParametersType & previousSearchDir );
+  double
+  ComputeBetaSD(const DerivativeType & previousGradient,
+                const DerivativeType & gradient,
+                const ParametersType & previousSearchDir);
 
   /** "FletcherReeves" */
-  double ComputeBetaFR(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    const ParametersType & previousSearchDir );
+  double
+  ComputeBetaFR(const DerivativeType & previousGradient,
+                const DerivativeType & gradient,
+                const ParametersType & previousSearchDir);
 
   /** "PolakRibiere" */
-  double ComputeBetaPR(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    const ParametersType & previousSearchDir );
+  double
+  ComputeBetaPR(const DerivativeType & previousGradient,
+                const DerivativeType & gradient,
+                const ParametersType & previousSearchDir);
 
   /** "DaiYuan" */
-  double ComputeBetaDY(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    const ParametersType & previousSearchDir );
+  double
+  ComputeBetaDY(const DerivativeType & previousGradient,
+                const DerivativeType & gradient,
+                const ParametersType & previousSearchDir);
 
   /** "HestenesStiefel" */
-  double ComputeBetaHS(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    const ParametersType & previousSearchDir );
+  double
+  ComputeBetaHS(const DerivativeType & previousGradient,
+                const DerivativeType & gradient,
+                const ParametersType & previousSearchDir);
 
   /** "DaiYuanHestenesStiefel" */
-  double ComputeBetaDYHS(
-    const DerivativeType & previousGradient,
-    const DerivativeType & gradient,
-    const ParametersType & previousSearchDir );
+  double
+  ComputeBetaDYHS(const DerivativeType & previousGradient,
+                  const DerivativeType & gradient,
+                  const ParametersType & previousSearchDir);
 
 private:
-
-  GenericConjugateGradientOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );                    // purposely not implemented
+  GenericConjugateGradientOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   unsigned long m_MaximumNumberOfIterations;
   double        m_ValueTolerance;
@@ -266,7 +262,6 @@ private:
   unsigned long m_MaxNrOfItWithoutImprovement;
 
   LineSearchOptimizerPointer m_LineSearchOptimizer;
-
 };
 
 } // end namespace itk

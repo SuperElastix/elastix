@@ -79,75 +79,62 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template< class TScalarType,
-unsigned int NInputDimensions  = 3,
-unsigned int NOutputDimensions = 3 >
-class AdvancedTransform :
-  public Transform< TScalarType, NInputDimensions, NOutputDimensions >
+template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
+class AdvancedTransform : public Transform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AdvancedTransform Self;
-  typedef Transform< TScalarType,
-    NInputDimensions,
-    NOutputDimensions >               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef AdvancedTransform                                           Self;
+  typedef Transform<TScalarType, NInputDimensions, NOutputDimensions> Superclass;
+  typedef SmartPointer<Self>                                          Pointer;
+  typedef SmartPointer<const Self>                                    ConstPointer;
 
   /** New method for creating an object using a factory. */
-  //itkNewMacro( Self );
+  // itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedTransform, Transform );
+  itkTypeMacro(AdvancedTransform, Transform);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, NInputDimensions );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, NOutputDimensions );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, NInputDimensions);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, NOutputDimensions);
 
   /** Typedefs from the Superclass. */
-  typedef typename Superclass::ScalarType             ScalarType;
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::FixedParametersType    FixedParametersType;
-  typedef typename Superclass::ParametersValueType    ParametersValueType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::DerivativeType         DerivativeType;
-  typedef typename Superclass::JacobianType           JacobianType;
-  typedef typename Superclass::InputVectorType        InputVectorType;
-  typedef typename Superclass::OutputVectorType       OutputVectorType;
-  typedef typename Superclass
-    ::InputCovariantVectorType InputCovariantVectorType;
-  typedef typename Superclass
-    ::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
-  typedef typename Superclass::InputPointType      InputPointType;
-  typedef typename Superclass::OutputPointType     OutputPointType;
+  typedef typename Superclass::ScalarType                 ScalarType;
+  typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::FixedParametersType        FixedParametersType;
+  typedef typename Superclass::ParametersValueType        ParametersValueType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
+  typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::JacobianType               JacobianType;
+  typedef typename Superclass::InputVectorType            InputVectorType;
+  typedef typename Superclass::OutputVectorType           OutputVectorType;
+  typedef typename Superclass ::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass ::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
+  typedef typename Superclass::InputPointType             InputPointType;
+  typedef typename Superclass::OutputPointType            OutputPointType;
 
   typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
 
   /** Transform typedefs for the from Superclass. */
-  typedef Transform< TScalarType,
-    NInputDimensions,
-    NOutputDimensions >                             TransformType;
-  typedef typename TransformType::Pointer      TransformTypePointer;
-  typedef typename TransformType::ConstPointer TransformTypeConstPointer;
+  typedef Transform<TScalarType, NInputDimensions, NOutputDimensions> TransformType;
+  typedef typename TransformType::Pointer                             TransformTypePointer;
+  typedef typename TransformType::ConstPointer                        TransformTypeConstPointer;
 
   /** Types for the (Spatial)Jacobian/Hessian.
    * Using an itk::FixedArray instead of an std::vector gives a performance
    * gain for the SpatialHessianType.
    */
-  typedef std::vector< unsigned long > NonZeroJacobianIndicesType;
-  typedef Matrix< ScalarType,
-    OutputSpaceDimension, InputSpaceDimension >     SpatialJacobianType;
-  typedef std::vector< SpatialJacobianType > JacobianOfSpatialJacobianType;
+  typedef std::vector<unsigned long>                                    NonZeroJacobianIndicesType;
+  typedef Matrix<ScalarType, OutputSpaceDimension, InputSpaceDimension> SpatialJacobianType;
+  typedef std::vector<SpatialJacobianType>                              JacobianOfSpatialJacobianType;
   // \todo: think about the SpatialHessian type, should be a 3D native type
-  typedef FixedArray<
-    Matrix< ScalarType,
-    InputSpaceDimension, InputSpaceDimension >,
-    OutputSpaceDimension >                          SpatialHessianType;
-  typedef std::vector< SpatialHessianType >                JacobianOfSpatialHessianType;
+  typedef FixedArray<Matrix<ScalarType, InputSpaceDimension, InputSpaceDimension>, OutputSpaceDimension>
+                                                           SpatialHessianType;
+  typedef std::vector<SpatialHessianType>                  JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType InternalMatrixType;
 
   /** Typedef for the moving image gradient type.
@@ -159,11 +146,12 @@ public:
   typedef typename MovingImageGradientType::ValueType MovingImageGradientValueType;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
-  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
+  virtual NumberOfParametersType
+  GetNumberOfNonZeroJacobianIndices(void) const;
 
   /** Whether the advanced transform has nonzero matrices. */
-  itkGetConstMacro( HasNonZeroSpatialHessian, bool );
-  itkGetConstMacro( HasNonZeroJacobianOfSpatialHessian, bool );
+  itkGetConstMacro(HasNonZeroSpatialHessian, bool);
+  itkGetConstMacro(HasNonZeroJacobianOfSpatialHessian, bool);
 
   /** This returns a sparse version of the Jacobian of the transformation.
    *
@@ -191,19 +179,19 @@ public:
    * with \f$m\f$ the number of parameters, i.e. the size of \f$\mu\f$, and \f$d\f$
    * the dimension of the image.
    */
-  virtual void GetJacobian(
-    const InputPointType & ipp,
-    JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
+  virtual void
+  GetJacobian(const InputPointType &       ipp,
+              JacobianType &               j,
+              NonZeroJacobianIndicesType & nonZeroJacobianIndices) const = 0;
 
   /** Compute the inner product of the Jacobian with the moving image gradient.
    * The Jacobian is (partially) constructed inside this function, but not returned.
    */
-  virtual void EvaluateJacobianWithImageGradientProduct(
-    const InputPointType & ipp,
-    const MovingImageGradientType & movingImageGradient,
-    DerivativeType & imageJacobian,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+  virtual void
+  EvaluateJacobianWithImageGradientProduct(const InputPointType &          ipp,
+                                           const MovingImageGradientType & movingImageGradient,
+                                           DerivativeType &                imageJacobian,
+                                           NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const;
 
   /** Compute the spatial Jacobian of the transformation.
    *
@@ -231,15 +219,15 @@ public:
    * with \f$m\f$ the number of parameters, i.e. the size of \f$\mu\f$, and \f$d\f$
    * the dimension of the image.
    */
-  virtual void GetSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj ) const = 0;
+  virtual void
+  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const = 0;
 
   /** Override some pure virtual ITK4 functions. */
-  void ComputeJacobianWithRespectToParameters(
-    const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const override
+  void
+  ComputeJacobianWithRespectToParameters(const InputPointType & itkNotUsed(p),
+                                         JacobianType &         itkNotUsed(j)) const override
   {
-    itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
+    itkExceptionMacro(<< "This ITK4 function is currently not used in elastix.");
   }
 
 
@@ -259,9 +247,8 @@ public:
    * \f]
    * with i the i-th component of the transformation.
    */
-  virtual void GetSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh ) const = 0;
+  virtual void
+  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const = 0;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation.
    *
@@ -269,19 +256,19 @@ public:
    * Jacobian to the transformation parameters \f$\mu\f$, evaluated at
    * a point \f$p\f$.
    */
-  virtual void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
+  virtual void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const = 0;
 
   /** Compute both the spatial Jacobian and the Jacobian of the
    * spatial Jacobian of the transformation.
    */
-  virtual void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
+  virtual void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               SpatialJacobianType &           sj,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const = 0;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation.
    *
@@ -289,40 +276,38 @@ public:
    * Hessian to the transformation parameters \f$\mu\f$, evaluated at
    * a point \f$p\f$.
    */
-  virtual void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
+  virtual void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const = 0;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  virtual void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
+  virtual void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              SpatialHessianType &           sh,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const = 0;
 
 protected:
-
   AdvancedTransform();
-  AdvancedTransform( NumberOfParametersType numberOfParameters );
+  AdvancedTransform(NumberOfParametersType numberOfParameters);
   ~AdvancedTransform() override {}
 
   bool m_HasNonZeroSpatialHessian;
   bool m_HasNonZeroJacobianOfSpatialHessian;
 
 private:
-
-  AdvancedTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );    // purposely not implemented
-
+  AdvancedTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedTransform.hxx"
+#  include "itkAdvancedTransform.hxx"
 #endif
 
 #endif

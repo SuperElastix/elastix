@@ -18,4 +18,4 @@
 
 #include "elxMultiResolutionRegistrationWithFeatures.h"
 
-elxInstallMacro( MultiResolutionRegistrationWithFeatures );
+elxInstallMacro(MultiResolutionRegistrationWithFeatures);

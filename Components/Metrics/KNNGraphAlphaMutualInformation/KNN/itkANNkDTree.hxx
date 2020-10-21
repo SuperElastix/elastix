@@ -28,13 +28,12 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template< class TListSample >
-ANNkDTree< TListSample >
-::ANNkDTree()
+template <class TListSample>
+ANNkDTree<TListSample>::ANNkDTree()
 {
-  this->m_ANNTree       = nullptr;
+  this->m_ANNTree = nullptr;
   this->m_SplittingRule = ANN_KD_SL_MIDPT;
-  this->m_BucketSize    = 1;
+  this->m_BucketSize = 1;
 
 } // end Constructor()
 
@@ -43,11 +42,10 @@ ANNkDTree< TListSample >
  * ************************ Destructor *************************
  */
 
-template< class TListSample >
-ANNkDTree< TListSample >
-::~ANNkDTree()
+template <class TListSample>
+ANNkDTree<TListSample>::~ANNkDTree()
 {
-  ANNBinaryTreeCreator::DeleteANNkDTree( this->m_ANNTree );
+  ANNBinaryTreeCreator::DeleteANNkDTree(this->m_ANNTree);
 
 } // end Destructor()
 
@@ -56,38 +54,37 @@ ANNkDTree< TListSample >
  * ************************ SetSplittingRule *************************
  */
 
-template< class TListSample >
+template <class TListSample>
 void
-ANNkDTree< TListSample >
-::SetSplittingRule( std::string rule )
+ANNkDTree<TListSample>::SetSplittingRule(std::string rule)
 {
-  if( rule == "ANN_KD_STD" )
+  if (rule == "ANN_KD_STD")
   {
     this->m_SplittingRule = ANN_KD_STD;
   }
-  else if( rule == "ANN_KD_MIDPT" )
+  else if (rule == "ANN_KD_MIDPT")
   {
     this->m_SplittingRule = ANN_KD_MIDPT;
   }
-  else if( rule == "ANN_KD_FAIR" )
+  else if (rule == "ANN_KD_FAIR")
   {
     this->m_SplittingRule = ANN_KD_FAIR;
   }
-  else if( rule == "ANN_KD_SL_MIDPT" )
+  else if (rule == "ANN_KD_SL_MIDPT")
   {
     this->m_SplittingRule = ANN_KD_SL_MIDPT;
   }
-  else if( rule == "ANN_KD_SL_FAIR" )
+  else if (rule == "ANN_KD_SL_FAIR")
   {
     this->m_SplittingRule = ANN_KD_SL_FAIR;
   }
-  else if( rule == "ANN_KD_SUGGEST" )
+  else if (rule == "ANN_KD_SUGGEST")
   {
     this->m_SplittingRule = ANN_KD_SUGGEST;
   }
   else
   {
-    itkWarningMacro( << "WARNING: No such spliting rule." );
+    itkWarningMacro(<< "WARNING: No such spliting rule.");
   }
 
 } // end SetSplittingRule()
@@ -97,12 +94,11 @@ ANNkDTree< TListSample >
  * ************************ GetSplittingRule *************************
  */
 
-template< class TListSample >
+template <class TListSample>
 std::string
-ANNkDTree< TListSample >
-::GetSplittingRule( void )
+ANNkDTree<TListSample>::GetSplittingRule(void)
 {
-  switch( this->m_SplittingRule )
+  switch (this->m_SplittingRule)
   {
     case ANN_KD_STD:
       return "ANN_KD_STD";
@@ -125,19 +121,18 @@ ANNkDTree< TListSample >
  * ************************ GenerateTree *************************
  */
 
-template< class TListSample >
+template <class TListSample>
 void
-ANNkDTree< TListSample >
-::GenerateTree( void )
+ANNkDTree<TListSample>::GenerateTree(void)
 {
-  int dim = static_cast< int >( this->GetDataDimension() );
-  int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
-  int bcs = static_cast< int >( this->m_BucketSize );
+  int dim = static_cast<int>(this->GetDataDimension());
+  int nop = static_cast<int>(this->GetActualNumberOfDataPoints());
+  int bcs = static_cast<int>(this->m_BucketSize);
 
-  ANNBinaryTreeCreator::DeleteANNkDTree( this->m_ANNTree );
+  ANNBinaryTreeCreator::DeleteANNkDTree(this->m_ANNTree);
 
   this->m_ANNTree = ANNBinaryTreeCreator::CreateANNkDTree(
-    this->GetSample()->GetInternalContainer(), nop, dim, bcs, this->m_SplittingRule );
+    this->GetSample()->GetInternalContainer(), nop, dim, bcs, this->m_SplittingRule);
 
 } // end GenerateTree()
 
@@ -146,12 +141,11 @@ ANNkDTree< TListSample >
  * ************************ PrintSelf *************************
  */
 
-template< class TListSample >
+template <class TListSample>
 void
-ANNkDTree< TListSample >
-::PrintSelf( std::ostream & os, Indent indent ) const
+ANNkDTree<TListSample>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
   os << indent << "ANNTree: " << this->m_ANNTree << std::endl;
   os << indent << "SplittingRule: " << this->m_SplittingRule << std::endl;

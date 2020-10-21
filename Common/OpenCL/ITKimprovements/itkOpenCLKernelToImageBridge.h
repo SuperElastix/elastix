@@ -38,11 +38,10 @@ namespace itk
  *
  * \ingroup OpenCL
  */
-template< typename TImage >
+template <typename TImage>
 class ITK_EXPORT OpenCLKernelToImageBridge
 {
 public:
-
   /** Standard class typedefs. */
   typedef OpenCLKernelToImageBridge Self;
 
@@ -53,40 +52,51 @@ public:
   typedef typename ImageType::PixelType    ImagePixelType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro( ImageDimension, unsigned int, TImage::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** Run-time type information (and related methods). */
-  virtual const char * GetNameOfClass() const { return "OpenCLKernelToImageBridge"; }
+  virtual const char *
+  GetNameOfClass() const
+  {
+    return "OpenCLKernelToImageBridge";
+  }
 
-  static void SetImageDataManager( OpenCLKernel & kernel, const cl_uint argumentIndex,
-    const typename GPUDataManager::Pointer imageDataManager, const bool updateCPU );
+  static void
+  SetImageDataManager(OpenCLKernel &                         kernel,
+                      const cl_uint                          argumentIndex,
+                      const typename GPUDataManager::Pointer imageDataManager,
+                      const bool                             updateCPU);
 
-  static void SetImage( OpenCLKernel & kernel, const cl_uint argumentIndex,
-    const typename ImageType::Pointer & image, const bool updateCPU );
+  static void
+  SetImage(OpenCLKernel &                      kernel,
+           const cl_uint                       argumentIndex,
+           const typename ImageType::Pointer & image,
+           const bool                          updateCPU);
 
-  static void SetImageMetaData( OpenCLKernel & kernel, const cl_uint argumentIndex,
-    const typename ImageType::Pointer & image,
-    typename GPUDataManager::Pointer & imageMetaDataManager );
+  static void
+  SetImageMetaData(OpenCLKernel &                      kernel,
+                   const cl_uint                       argumentIndex,
+                   const typename ImageType::Pointer & image,
+                   typename GPUDataManager::Pointer &  imageMetaDataManager);
 
-  static void SetDirection( OpenCLKernel & kernel, const cl_uint argumentIndex,
-    const typename ImageType::DirectionType & direction );
+  static void
+  SetDirection(OpenCLKernel & kernel, const cl_uint argumentIndex, const typename ImageType::DirectionType & direction);
 
-  static void SetSize( OpenCLKernel & kernel, const cl_uint argumentIndex,
-    const typename ImageType::SizeType & size );
+  static void
+  SetSize(OpenCLKernel & kernel, const cl_uint argumentIndex, const typename ImageType::SizeType & size);
 
-  static void SetOrigin( OpenCLKernel & kernel, const cl_uint argumentIndex,
-    const typename ImageType::PointType & origin );
+  static void
+  SetOrigin(OpenCLKernel & kernel, const cl_uint argumentIndex, const typename ImageType::PointType & origin);
 
 protected:
-
   OpenCLKernelToImageBridge();
   virtual ~OpenCLKernelToImageBridge() {}
 
 private:
-
-  OpenCLKernelToImageBridge( const Self & other );   // purposely not
-                                                     // implemented
-  const Self & operator=( const Self & );            // purposely not
+  OpenCLKernelToImageBridge(const Self & other); // purposely not
+                                                 // implemented
+  const Self &
+  operator=(const Self &); // purposely not
 
   // implemented
 };
@@ -94,7 +104,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkOpenCLKernelToImageBridge.hxx"
+#  include "itkOpenCLKernelToImageBridge.hxx"
 #endif
 
 #endif /* __itkOpenCLKernelToImageBridge_h */

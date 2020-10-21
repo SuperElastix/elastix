@@ -44,34 +44,32 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template< class TElastix >
-class OpenCLFixedGenericPyramid :
-  public FixedGenericPyramid< TElastix >
+template <class TElastix>
+class OpenCLFixedGenericPyramid : public FixedGenericPyramid<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef OpenCLFixedGenericPyramid                             Self;
-  typedef FixedGenericPyramid< TElastix >                       Superclass;
-  typedef typename FixedGenericPyramid< TElastix >::Superclass1 Superclass1;
-  typedef typename FixedGenericPyramid< TElastix >::Superclass2 Superclass2;
-  typedef itk::SmartPointer< Self >                             Pointer;
-  typedef itk::SmartPointer< const Self >                       ConstPointer;
+  typedef OpenCLFixedGenericPyramid                           Self;
+  typedef FixedGenericPyramid<TElastix>                       Superclass;
+  typedef typename FixedGenericPyramid<TElastix>::Superclass1 Superclass1;
+  typedef typename FixedGenericPyramid<TElastix>::Superclass2 Superclass2;
+  typedef itk::SmartPointer<Self>                             Pointer;
+  typedef itk::SmartPointer<const Self>                       ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( OpenCLFixedGenericPyramid, FixedGenericPyramid );
+  itkTypeMacro(OpenCLFixedGenericPyramid, FixedGenericPyramid);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific pyramid. \n
    * example: <tt>(FixedImagePyramid "OpenCLFixedGenericImagePyramid")</tt>\n
    */
-  elxClassNameMacro( "OpenCLFixedGenericImagePyramid" );
+  elxClassNameMacro("OpenCLFixedGenericImagePyramid");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::InputImageType             InputImageType;
@@ -83,30 +81,29 @@ public:
   typedef typename itk::ObjectFactoryBase::Pointer ObjectFactoryBasePointer;
 
   /** GPU Typedefs for GPU image and GPU filter. */
-  typedef itk::GPUImage< InputImagePixelType, InputImageType::ImageDimension >
-    GPUInputImageType;
-  typedef typename GPUInputImageType::Pointer GPUInputImagePointer;
-  typedef itk::GPUImage< OutputImagePixelType, OutputImageType::ImageDimension >
-    GPUOutputImageType;
+  typedef itk::GPUImage<InputImagePixelType, InputImageType::ImageDimension>   GPUInputImageType;
+  typedef typename GPUInputImageType::Pointer                                  GPUInputImagePointer;
+  typedef itk::GPUImage<OutputImagePixelType, OutputImageType::ImageDimension> GPUOutputImageType;
 
-  typedef itk::GenericMultiResolutionPyramidImageFilter<
-    GPUInputImageType,
-    GPUOutputImageType, float > GPUPyramidType;
-  typedef typename GPUPyramidType::Pointer GPUPyramidPointer;
+  typedef itk::GenericMultiResolutionPyramidImageFilter<GPUInputImageType, GPUOutputImageType, float> GPUPyramidType;
+  typedef typename GPUPyramidType::Pointer                                                            GPUPyramidPointer;
 
   /** Do some things before registration. */
-  virtual void BeforeRegistration( void );
+  virtual void
+  BeforeRegistration(void);
 
   /** Function to read parameters from a file. */
-  virtual void ReadFromFile( void );
+  virtual void
+  ReadFromFile(void);
 
 protected:
-
   /** This method performs all configuration for GPU pyramid. */
-  void BeforeGenerateData( void );
+  void
+  BeforeGenerateData(void);
 
   /** Executes GPU pyramid. */
-  virtual void GenerateData( void );
+  virtual void
+  GenerateData(void);
 
   /** The constructor. */
   OpenCLFixedGenericPyramid();
@@ -114,35 +111,39 @@ protected:
   virtual ~OpenCLFixedGenericPyramid() {}
 
 private:
-
   /** The private constructor. */
-  OpenCLFixedGenericPyramid( const Self & ); // purposely not implemented
+  OpenCLFixedGenericPyramid(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & ); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Register/Unregister factories. */
-  void RegisterFactories( void );
+  void
+  RegisterFactories(void);
 
-  void UnregisterFactories( void );
+  void
+  UnregisterFactories(void);
 
   /** Helper method to report switching to CPU mode. */
-  void SwitchingToCPUAndReport( const bool configError );
+  void
+  SwitchingToCPUAndReport(const bool configError);
 
   /** Helper method to report to elastix log. */
-  void ReportToLog( void );
+  void
+  ReportToLog(void);
 
-  GPUPyramidPointer                       m_GPUPyramid;
-  bool                                    m_GPUPyramidReady;
-  bool                                    m_GPUPyramidCreated;
-  bool                                    m_ContextCreated;
-  bool                                    m_UseOpenCL;
-  std::vector< ObjectFactoryBasePointer > m_Factories;
+  GPUPyramidPointer                     m_GPUPyramid;
+  bool                                  m_GPUPyramidReady;
+  bool                                  m_GPUPyramidCreated;
+  bool                                  m_ContextCreated;
+  bool                                  m_UseOpenCL;
+  std::vector<ObjectFactoryBasePointer> m_Factories;
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxOpenCLFixedGenericPyramid.hxx"
+#  include "elxOpenCLFixedGenericPyramid.hxx"
 #endif
 
 #endif // end #ifndef __elxOpenCLOpenCLFixedGenericPyramid_h

@@ -39,109 +39,113 @@ namespace itk
 class ScaledSingleValuedCostFunction : public SingleValuedCostFunction
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef ScaledSingleValuedCostFunction Self;
   typedef SingleValuedCostFunction       Superclass;
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  typedef SmartPointer<Self>             Pointer;
+  typedef SmartPointer<const Self>       ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ScaledSingleValuedCostFunction, SingleValuedCostFunction );
+  itkTypeMacro(ScaledSingleValuedCostFunction, SingleValuedCostFunction);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType    MeasureType;
   typedef Superclass::DerivativeType DerivativeType;
   typedef Superclass::ParametersType ParametersType;
   // temporary, untill it is fixed in the ITK4
-  //typedef IdentifierType NumberOfParametersType; // temp, copied from itk::TransformBase
+  // typedef IdentifierType NumberOfParametersType; // temp, copied from itk::TransformBase
   typedef unsigned int        NumberOfParametersType; // temp, copied from itk::CostFunction
   typedef Superclass::Pointer SingleValuedCostFunctionPointer;
 
-  typedef Array< double > ScalesType;
+  typedef Array<double> ScalesType;
 
   /** Divide the parameters by the scales and call the GetValue routine
    * of the unscaled cost function.
    */
-  MeasureType GetValue( const ParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const ParametersType & parameters) const override;
 
   /** Divide the parameters by the scales, call the GetDerivative routine
    * of the unscaled cost function and divide the resulting derivative by
    * the scales.
    */
-  void GetDerivative(
-    const ParametersType & parameters,
-    DerivativeType & derivative ) const override;
+  void
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Same procedure as in GetValue and GetDerivative. */
-  void GetValueAndDerivative(
-    const ParametersType & parameters,
-    MeasureType & value,
-    DerivativeType & derivative ) const override;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
   /** Ask the UnscaledCostFunction how many parameters it has. */
-  NumberOfParametersType GetNumberOfParameters( void ) const override;
+  NumberOfParametersType
+  GetNumberOfParameters(void) const override;
 
   /** Set the cost function that needs scaling. */
-  itkSetObjectMacro( UnscaledCostFunction, Superclass );
+  itkSetObjectMacro(UnscaledCostFunction, Superclass);
   /** Get the cost function that needs scaling. */
-  itkGetModifiableObjectMacro( UnscaledCostFunction, Superclass );
+  itkGetModifiableObjectMacro(UnscaledCostFunction, Superclass);
 
   /** Set the scales. Also computes the squared scales, just in case users
    * call GetSquaredScales (for compatibility with the ITK convention). */
-  virtual void SetScales( const ScalesType & scales );
+  virtual void
+  SetScales(const ScalesType & scales);
 
   /** Get the scales. */
-  itkGetConstReferenceMacro( Scales, ScalesType );
+  itkGetConstReferenceMacro(Scales, ScalesType);
 
   /** The ITK convention is to use the squared scales. This function
    * takes the square root of the input scales and sets them as the
    * the actual scales */
-  virtual void SetSquaredScales( const ScalesType & squaredScales );
+  virtual void
+  SetSquaredScales(const ScalesType & squaredScales);
 
   /** The ITK convention is to use the squared scales. This function
    * returns the squared actual scales. */
-  itkGetConstReferenceMacro( SquaredScales, ScalesType );
+  itkGetConstReferenceMacro(SquaredScales, ScalesType);
 
   /** Set the flag to use scales or not. */
-  itkSetMacro( UseScales, bool );
+  itkSetMacro(UseScales, bool);
 
   /** Get the flag to use scales or not. */
-  itkGetConstMacro( UseScales, bool );
+  itkGetConstMacro(UseScales, bool);
 
   /** Set the flag to negate the cost function or not. */
-  itkBooleanMacro( NegateCostFunction );
+  itkBooleanMacro(NegateCostFunction);
 
   /** Set the flag to negate the cost function or not. */
-  itkSetMacro( NegateCostFunction, bool );
+  itkSetMacro(NegateCostFunction, bool);
   /** Get the flag to negate the cost function or not. */
-  itkGetConstMacro( NegateCostFunction, bool );
+  itkGetConstMacro(NegateCostFunction, bool);
 
   /** Convert the parameters from scaled to unscaled: x = y/s. */
-  virtual void ConvertScaledToUnscaledParameters( ParametersType & parameters ) const;
+  virtual void
+  ConvertScaledToUnscaledParameters(ParametersType & parameters) const;
 
   /** Convert the parameters from unscaled to scaled: y = x*s. */
-  virtual void ConvertUnscaledToScaledParameters( ParametersType & parameters ) const;
+  virtual void
+  ConvertUnscaledToScaledParameters(ParametersType & parameters) const;
 
 protected:
-
   /** The constructor. */
   ScaledSingleValuedCostFunction();
   /** The destructor. */
   ~ScaledSingleValuedCostFunction() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
   /** The private constructor. */
-  ScaledSingleValuedCostFunction( const Self & );   // purposely not implemented
+  ScaledSingleValuedCostFunction(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                   // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Member variables. */
   ScalesType                      m_Scales;
@@ -149,9 +153,8 @@ private:
   SingleValuedCostFunctionPointer m_UnscaledCostFunction;
   bool                            m_UseScales;
   bool                            m_NegateCostFunction;
-
 };
 
-} //end namespace itk
+} // end namespace itk
 
 #endif // #ifndef __itkScaledSingleValuedCostFunction_h

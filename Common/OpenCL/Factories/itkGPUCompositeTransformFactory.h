@@ -33,69 +33,74 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
-class GPUCompositeTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename NDimensions>
+class GPUCompositeTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
-  typedef GPUCompositeTransformFactory2       Self;
-  typedef GPUObjectFactoryBase< NDimensions > Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUCompositeTransformFactory2     Self;
+  typedef GPUObjectFactoryBase<NDimensions> Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUCompositeTransform"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUCompositeTransform";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUCompositeTransformFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUCompositeTransformFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TType, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
-    this->RegisterOverride(
-      typeid( CompositeTransform< TType, VImageDimension > ).name(),
-      typeid( GPUCompositeTransform< TType, VImageDimension > ).name(),
-      "GPU CompositeTransform override", true,
-      CreateObjectFunction< GPUCompositeTransform< TType, VImageDimension > >::New()
-      );
+    this->RegisterOverride(typeid(CompositeTransform<TType, VImageDimension>).name(),
+                           typeid(GPUCompositeTransform<TType, VImageDimension>).name(),
+                           "GPU CompositeTransform override",
+                           true,
+                           CreateObjectFunction<GPUCompositeTransform<TType, VImageDimension>>::New());
   }
 
 
 protected:
-
   GPUCompositeTransformFactory2();
   virtual ~GPUCompositeTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList< float, double >::Type RealTypeList;
+  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUCompositeTransformFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                // purposely not implemented
-
+  GPUCompositeTransformFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUCompositeTransformFactory.hxx"
+#  include "itkGPUCompositeTransformFactory.hxx"
 #endif
 
 #endif /* __itkGPUCompositeTransformFactory_h */

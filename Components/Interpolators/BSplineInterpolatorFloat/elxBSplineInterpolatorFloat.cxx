@@ -18,4 +18,4 @@
 
 #include "elxBSplineInterpolatorFloat.h"
 
-elxInstallMacro( BSplineInterpolatorFloat );
+elxInstallMacro(BSplineInterpolatorFloat);

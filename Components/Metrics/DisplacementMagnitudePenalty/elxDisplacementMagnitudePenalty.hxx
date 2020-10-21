@@ -28,17 +28,16 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-DisplacementMagnitudePenalty< TElastix >
-::Initialize( void )
+DisplacementMagnitudePenalty<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of DisplacementMagnitude metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+  elxout << "Initialization of DisplacementMagnitude metric took: " << static_cast<long>(timer.GetMean() * 1000)
+         << " ms." << std::endl;
 
 } // end Initialize()
 

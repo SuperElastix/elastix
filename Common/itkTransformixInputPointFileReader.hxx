@@ -28,11 +28,10 @@ namespace itk
  * **************** Constructor ***************
  */
 
-template< class TOutputMesh >
-TransformixInputPointFileReader< TOutputMesh >
-::TransformixInputPointFileReader()
+template <class TOutputMesh>
+TransformixInputPointFileReader<TOutputMesh>::TransformixInputPointFileReader()
 {
-  this->m_NumberOfPoints   = 0;
+  this->m_NumberOfPoints = 0;
   this->m_PointsAreIndices = false;
 } // end constructor
 
@@ -41,11 +40,10 @@ TransformixInputPointFileReader< TOutputMesh >
  * **************** Destructor ***************
  */
 
-template< class TOutputMesh >
-TransformixInputPointFileReader< TOutputMesh >
-::~TransformixInputPointFileReader()
+template <class TOutputMesh>
+TransformixInputPointFileReader<TOutputMesh>::~TransformixInputPointFileReader()
 {
-  if( this->m_Reader.is_open() )
+  if (this->m_Reader.is_open())
   {
     this->m_Reader.close();
   }
@@ -56,33 +54,32 @@ TransformixInputPointFileReader< TOutputMesh >
  * ***************GenerateOutputInformation ***********
  */
 
-template< class TOutputMesh >
+template <class TOutputMesh>
 void
-TransformixInputPointFileReader< TOutputMesh >
-::GenerateOutputInformation( void )
+TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation(void)
 {
   this->Superclass::GenerateOutputInformation();
 
   /** The superclass tests already if it's a valid file; so just open it and
-  * assume it goes alright */
-  if( this->m_Reader.is_open() )
+   * assume it goes alright */
+  if (this->m_Reader.is_open())
   {
     this->m_Reader.close();
   }
-  this->m_Reader.open( this->m_FileName.c_str() );
+  this->m_Reader.open(this->m_FileName.c_str());
 
   /** Read the first entry */
   std::string indexOrPoint;
   this->m_Reader >> indexOrPoint;
 
   /** Set the IsIndex bool and the number of points.*/
-  if( indexOrPoint == "point" )
+  if (indexOrPoint == "point")
   {
     /** Input points are specified in world coordinates. */
     this->m_PointsAreIndices = false;
     this->m_Reader >> this->m_NumberOfPoints;
   }
-  else if( indexOrPoint == "index" )
+  else if (indexOrPoint == "index")
   {
     /** Input points are specified as image indices. */
     this->m_PointsAreIndices = true;
@@ -92,7 +89,7 @@ TransformixInputPointFileReader< TOutputMesh >
   {
     /** Input points are assumed to be specified as image indices. */
     this->m_PointsAreIndices = true;
-    this->m_NumberOfPoints   = atoi( indexOrPoint.c_str() );
+    this->m_NumberOfPoints = atoi(indexOrPoint.c_str());
   }
 
   /** Leave the file open for the generate data method */
@@ -104,60 +101,55 @@ TransformixInputPointFileReader< TOutputMesh >
  * ***************GenerateData ***********
  */
 
-template< class TOutputMesh >
+template <class TOutputMesh>
 void
-TransformixInputPointFileReader< TOutputMesh >
-::GenerateData( void )
+TransformixInputPointFileReader<TOutputMesh>::GenerateData(void)
 {
   typedef typename OutputMeshType::PointsContainer PointsContainerType;
   typedef typename PointsContainerType::Pointer    PointsContainerPointer;
   typedef typename OutputMeshType::PointType       PointType;
-  const unsigned int dimension = OutputMeshType::PointDimension;
+  const unsigned int                               dimension = OutputMeshType::PointDimension;
 
   OutputMeshPointer      output = this->GetOutput();
   PointsContainerPointer points = PointsContainerType::New();
 
   /** Read the file */
-  if( this->m_Reader.is_open() )
+  if (this->m_Reader.is_open())
   {
-    for( unsigned int i = 0; i < this->m_NumberOfPoints; ++i )
+    for (unsigned int i = 0; i < this->m_NumberOfPoints; ++i)
     {
       // read point from textfile
       PointType point;
-      for( unsigned int j = 0; j < dimension; j++ )
+      for (unsigned int j = 0; j < dimension; j++)
       {
-        if( !this->m_Reader.eof() )
+        if (!this->m_Reader.eof())
         {
-          this->m_Reader >> point[ j ];
+          this->m_Reader >> point[j];
         }
         else
         {
           std::ostringstream msg;
-          msg << "The file is not large enough. "
-              << std::endl << "Filename: " << this->m_FileName
-              << std::endl;
-          MeshFileReaderException e( __FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION );
+          msg << "The file is not large enough. " << std::endl << "Filename: " << this->m_FileName << std::endl;
+          MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
           throw e;
           return;
         }
       }
-      points->push_back( point );
+      points->push_back(point);
     }
   }
   else
   {
     std::ostringstream msg;
-    msg << "The file has unexpectedly been closed. "
-        << std::endl << "Filename: " << this->m_FileName
-        << std::endl;
-    MeshFileReaderException e( __FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION );
+    msg << "The file has unexpectedly been closed. " << std::endl << "Filename: " << this->m_FileName << std::endl;
+    MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
     throw e;
     return;
   }
 
   /** set in output */
   output->Initialize();
-  output->SetPoints( points );
+  output->SetPoints(points);
 
   /** Close the reader */
   this->m_Reader.close();
@@ -166,7 +158,7 @@ TransformixInputPointFileReader< TOutputMesh >
    * requested region. This action prevents useless re-executions of
    * the pipeline.
    * (I copied this from the BinaryMaskToNarrowBandPointSetFilter) */
-  output->SetBufferedRegion( output->GetRequestedRegion() );
+  output->SetBufferedRegion(output->GetRequestedRegion());
 
 } // end GenerateData()
 

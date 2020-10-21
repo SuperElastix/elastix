@@ -48,25 +48,23 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TScalarType,         // Data type for scalars (float or double)
-unsigned int NDimensions = 3 >
+template <class TScalarType, // Data type for scalars (float or double)
+          unsigned int NDimensions = 3>
 // Number of dimensions
-class ThinPlateR2LogRSplineKernelTransform2 :
-  public KernelTransform2<   TScalarType, NDimensions >
+class ThinPlateR2LogRSplineKernelTransform2 : public KernelTransform2<TScalarType, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef ThinPlateR2LogRSplineKernelTransform2           Self;
-  typedef KernelTransform2<    TScalarType, NDimensions > Superclass;
-  typedef SmartPointer< Self >                            Pointer;
-  typedef SmartPointer< const Self >                      ConstPointer;
+  typedef ThinPlateR2LogRSplineKernelTransform2      Self;
+  typedef KernelTransform2<TScalarType, NDimensions> Superclass;
+  typedef SmartPointer<Self>                         Pointer;
+  typedef SmartPointer<const Self>                   ConstPointer;
 
   /** New macro for creation of through a Smart Pointer */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ThinPlateR2LogRSplineKernelTransform2, KernelTransform2 );
+  itkTypeMacro(ThinPlateR2LogRSplineKernelTransform2, KernelTransform2);
 
   /** Scalar type. */
   typedef typename Superclass::ScalarType ScalarType;
@@ -78,7 +76,7 @@ public:
   typedef typename Superclass::JacobianType JacobianType;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass::SpaceDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass::SpaceDimension);
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
@@ -91,11 +89,7 @@ public:
   typedef typename Superclass::PointsIterator            PointsIterator;
 
 protected:
-
-  ThinPlateR2LogRSplineKernelTransform2()
-  {
-    this->m_FastComputationPossible = true;
-  }
+  ThinPlateR2LogRSplineKernelTransform2() { this->m_FastComputationPossible = true; }
 
 
   ~ThinPlateR2LogRSplineKernelTransform2() override {}
@@ -112,24 +106,24 @@ protected:
    * r(x) = Euclidean norm = sqrt[x1^2 + x2^2 + x3^2]
    * \f[ r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 }  \f]
    * I = identity matrix. */
-  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const override;
+  void
+  ComputeG(const InputVectorType & x, GMatrixType & GMatrix) const override;
 
   /** Compute the contribution of the landmarks weighted by the kernel funcion
       to the global deformation of the space  */
-  void ComputeDeformationContribution( const InputPointType & inputPoint,
-    OutputPointType & result ) const override;
+  void
+  ComputeDeformationContribution(const InputPointType & inputPoint, OutputPointType & result) const override;
 
 private:
-
-  ThinPlateR2LogRSplineKernelTransform2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                        // purposely not implemented
-
+  ThinPlateR2LogRSplineKernelTransform2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkThinPlateR2LogRSplineKernelTransform2.hxx"
+#  include "itkThinPlateR2LogRSplineKernelTransform2.hxx"
 #endif
 
 #endif // __itkThinPlateR2LogRSplineKernelTransform2_h

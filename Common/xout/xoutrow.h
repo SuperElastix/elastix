@@ -40,13 +40,12 @@ using namespace std;
  * \ingroup xout
  */
 
-template< class charT, class traits = char_traits< charT > >
-class xoutrow : public xoutbase< charT, traits >
+template <class charT, class traits = char_traits<charT>>
+class xoutrow : public xoutbase<charT, traits>
 {
 public:
-
-  typedef xoutrow                   Self;
-  typedef xoutbase< charT, traits > Superclass;
+  typedef xoutrow                 Self;
+  typedef xoutbase<charT, traits> Superclass;
 
   /** Typedefs of Superclass */
   using typename Superclass::ostream_type;
@@ -55,7 +54,7 @@ public:
 
 
   /** Extra typedefs */
-  typedef xoutcell< charT, traits > XOutCellType;
+  typedef xoutcell<charT, traits> XOutCellType;
 
   /** Constructor */
   xoutrow() = default;
@@ -66,51 +65,59 @@ public:
   /** Write the buffered cell data in a row to the outputs,
    * separated by tabs.
    */
-  void WriteBufferedData( void ) override;
+  void
+  WriteBufferedData(void) override;
 
   /** Writes the names of the target cells to the outputs;
    * This method can also be executed by selecting the
    * "WriteHeaders" target: xout["WriteHeaders"]
    */
-  virtual void WriteHeaders( void );
+  virtual void
+  WriteHeaders(void);
 
   /** This method adds an xoutcell to the map of Targets. */
-  int AddTargetCell( const char * name ) override;
+  int
+  AddTargetCell(const char * name) override;
 
   /** This method removes an xoutcell to the map of Targets. */
-  int RemoveTargetCell( const char * name ) override;
+  int
+  RemoveTargetCell(const char * name) override;
 
   /** Method to set all targets at once. The outputs of these targets
    * are not set automatically, so make sure to do it yourself.
    */
-  void SetTargetCells( const XStreamMapType & cellmap ) override;
+  void
+  SetTargetCells(const XStreamMapType & cellmap) override;
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).
    * In addition to the behaviour of the Superclass's methods, these functions
    * set the outputs of the TargetCells as well.
    */
-  int AddOutput( const char * name, ostream_type * output ) override;
+  int
+  AddOutput(const char * name, ostream_type * output) override;
 
-  int AddOutput( const char * name, Superclass * output ) override;
+  int
+  AddOutput(const char * name, Superclass * output) override;
 
-  int RemoveOutput( const char * name ) override;
+  int
+  RemoveOutput(const char * name) override;
 
-  void SetOutputs( const CStreamMapType & outputmap ) override;
+  void
+  SetOutputs(const CStreamMapType & outputmap) override;
 
-  void SetOutputs( const XStreamMapType & outputmap ) override;
+  void
+  SetOutputs(const XStreamMapType & outputmap) override;
 
 protected:
-
   /** Returns a target cell.
    * Extension: if input = "WriteHeaders" it calls
    * this->WriteHeaders() and returns 'this'.
    */
-  Superclass & SelectXCell( const char * name ) override;
+  Superclass &
+  SelectXCell(const char * name) override;
 
 private:
-
-  std::map< std::string, std::unique_ptr<xoutbase<charT, traits>> > m_CellMap;
-
+  std::map<std::string, std::unique_ptr<xoutbase<charT, traits>>> m_CellMap;
 };
 
 } // end namespace xoutlibrary

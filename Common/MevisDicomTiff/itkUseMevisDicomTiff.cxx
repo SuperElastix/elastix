@@ -23,18 +23,18 @@
 /** avoid dependencies when not using mevis dicom tiff.
  * Also in CMakeList, only include the .cxx files when needed. */
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
-  #include "itkMevisDicomTiffImageIOFactory.h"
-  #include "itkObjectFactoryBase.h"
+#  include "itkMevisDicomTiffImageIOFactory.h"
+#  include "itkObjectFactoryBase.h"
 #endif
 
 /** Function that registers the Mevis DicomTiff IO factory.
  *  Call this in your program, before you load/write any images. */
 void
-RegisterMevisDicomTiff( void )
+RegisterMevisDicomTiff(void)
 {
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
-  itk::ObjectFactoryBase::RegisterFactory( itk::MevisDicomTiffImageIOFactory::New(),
-    itk::ObjectFactoryBase::INSERT_AT_FRONT );
+  itk::ObjectFactoryBase::RegisterFactory(itk::MevisDicomTiffImageIOFactory::New(),
+                                          itk::ObjectFactoryBase::INSERT_AT_FRONT);
 #endif
 }
 

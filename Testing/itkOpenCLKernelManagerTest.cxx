@@ -19,18 +19,18 @@
 #include "itkTestHelper.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-  context->Create( itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice );
-  if( !context->IsCreated() )
+  context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
+  if (!context->IsCreated())
   {
     itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
   itk::OpenCLKernelManager::Pointer kernelManager = itk::OpenCLKernelManager::New();
-  if( kernelManager.IsNull() )
+  if (kernelManager.IsNull())
   {
     itk::ReleaseContext();
     return EXIT_FAILURE;

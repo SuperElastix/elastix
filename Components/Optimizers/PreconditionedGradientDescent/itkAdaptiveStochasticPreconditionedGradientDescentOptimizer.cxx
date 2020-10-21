@@ -28,8 +28,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-AdaptiveStochasticPreconditionedGradientDescentOptimizer
-::AdaptiveStochasticPreconditionedGradientDescentOptimizer()
+AdaptiveStochasticPreconditionedGradientDescentOptimizer ::AdaptiveStochasticPreconditionedGradientDescentOptimizer()
 {
   this->m_UseAdaptiveStepSizes = true;
   this->m_SigmoidMax = 1.0;
@@ -43,31 +42,28 @@ AdaptiveStochasticPreconditionedGradientDescentOptimizer
  */
 
 void
-AdaptiveStochasticPreconditionedGradientDescentOptimizer
-::UpdateCurrentTime( void )
+AdaptiveStochasticPreconditionedGradientDescentOptimizer ::UpdateCurrentTime(void)
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 
-  if( this->m_UseAdaptiveStepSizes )
+  if (this->m_UseAdaptiveStepSizes)
   {
-    if( this->GetCurrentIteration() > 0 )
+    if (this->GetCurrentIteration() > 0)
     {
       /** Make sigmoid function
        * Compute beta such that sigmoid(0)=0
        * We assume Max>0, min<0 */
       SigmoidType sigmoid;
-      sigmoid.SetOutputMaximum( this->GetSigmoidMax() );
-      sigmoid.SetOutputMinimum( this->GetSigmoidMin() );
-      sigmoid.SetAlpha( this->GetSigmoidScale() );
-      const double beta = this->GetSigmoidScale() *
-        std::log( - this->GetSigmoidMax() / this->GetSigmoidMin() );
-      sigmoid.SetBeta( beta );
+      sigmoid.SetOutputMaximum(this->GetSigmoidMax());
+      sigmoid.SetOutputMinimum(this->GetSigmoidMin());
+      sigmoid.SetAlpha(this->GetSigmoidScale());
+      const double beta = this->GetSigmoidScale() * std::log(-this->GetSigmoidMax() / this->GetSigmoidMin());
+      sigmoid.SetBeta(beta);
 
       /** Formula (2) in Cruz */
-      const double inprod = inner_product(
-        this->m_PreviousSearchDirection, this->GetGradient() );
+      const double inprod = inner_product(this->m_PreviousSearchDirection, this->GetGradient());
       this->m_CurrentTime += sigmoid(-inprod);
-      this->m_CurrentTime = std::max( 0.0, this->m_CurrentTime );
+      this->m_CurrentTime = std::max(0.0, this->m_CurrentTime);
     }
 
     /** Save for next iteration */
@@ -78,7 +74,7 @@ AdaptiveStochasticPreconditionedGradientDescentOptimizer
     /** Almost Robbins-Monro: time = time + E_0.
      * If you want the parameter estimation but no adaptive stuff,
      * this may be use useful:  */
-    this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() ) / 2.0;
+    this->m_CurrentTime += (this->GetSigmoidMax() + this->GetSigmoidMin()) / 2.0;
   }
 
 } // end UpdateCurrentTime()

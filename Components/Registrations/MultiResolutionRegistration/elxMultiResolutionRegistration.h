@@ -41,34 +41,30 @@ namespace elastix
  * \ingroup Registrations
  */
 
-template< class TElastix >
-class MultiResolutionRegistration :
-  public
-  RegistrationBase< TElastix >::ITKBaseType,
-  public
-  RegistrationBase< TElastix >
+template <class TElastix>
+class MultiResolutionRegistration
+  : public RegistrationBase<TElastix>::ITKBaseType
+  , public RegistrationBase<TElastix>
 {
 public:
-
   /** Standard ITK. */
-  typedef MultiResolutionRegistration Self;
-  typedef typename RegistrationBase< TElastix >
-    ::ITKBaseType Superclass1;
-  typedef RegistrationBase< TElastix >    Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef MultiResolutionRegistration                      Self;
+  typedef typename RegistrationBase<TElastix>::ITKBaseType Superclass1;
+  typedef RegistrationBase<TElastix>                       Superclass2;
+  typedef itk::SmartPointer<Self>                          Pointer;
+  typedef itk::SmartPointer<const Self>                    ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiResolutionRegistration, MultiResolutionImageRegistrationMethod );
+  itkTypeMacro(MultiResolutionRegistration, MultiResolutionImageRegistrationMethod);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific registration framework. \n
    * example: <tt>(Registration "MultiResolutionRegistration")</tt>\n
    */
-  elxClassNameMacro( "MultiResolutionRegistration" );
+  elxClassNameMacro("MultiResolutionRegistration");
 
   /** Typedef's inherited from Superclass1. */
 
@@ -120,24 +116,25 @@ public:
   typedef typename Superclass2::UseMaskErosionArrayType UseMaskErosionArrayType;
 
   /** Get the dimension of the fixed image. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, Superclass2::FixedImageDimension);
   /** Get the dimension of the moving image. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, Superclass2::MovingImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, Superclass2::MovingImageDimension);
 
   /** Execute stuff before the actual registration:
    * \li Connect all components to the registration framework.
    * \li Set the number of resolution levels.
    * \li Set the fixed image region. */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion. */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
-  MultiResolutionRegistration(){}
+  MultiResolutionRegistration() {}
   /** The destructor. */
   ~MultiResolutionRegistration() override {}
 
@@ -153,24 +150,25 @@ protected:
   typedef typename Superclass2::MovingMaskSpatialObjectPointer MovingMaskSpatialObjectPointer;
 
   /** Function to update fixed and moving masks. */
-  void UpdateMasks( unsigned int level );
+  void
+  UpdateMasks(unsigned int level);
 
   /** Read the components from m_Elastix and set them in the Registration class. */
-  virtual void SetComponents( void );
+  virtual void
+  SetComponents(void);
 
 private:
-
   /** The private constructor. */
-  MultiResolutionRegistration( const Self & );  // purposely not implemented
+  MultiResolutionRegistration(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMultiResolutionRegistration.hxx"
+#  include "elxMultiResolutionRegistration.hxx"
 #endif
 
 #endif // end #ifndef __elxMultiResolutionRegistration_H__

@@ -79,33 +79,30 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template< class TElastix >
-class SimultaneousPerturbation :
-  public
-  itk::SPSAOptimizer,
-  public
-  OptimizerBase< TElastix >
+template <class TElastix>
+class SimultaneousPerturbation
+  : public itk::SPSAOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
-  typedef SimultaneousPerturbation        Self;
-  typedef SPSAOptimizer                   Superclass1;
-  typedef OptimizerBase< TElastix >       Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef SimultaneousPerturbation      Self;
+  typedef SPSAOptimizer                 Superclass1;
+  typedef OptimizerBase<TElastix>       Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( SimultaneousPerturbation, SPSAOptimizer );
+  itkTypeMacro(SimultaneousPerturbation, SPSAOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer. \n
    * example: <tt>(Optimizer "SimultaneousPerturbation")</tt>\n
    */
-  elxClassNameMacro( "SimultaneousPerturbation" );
+  elxClassNameMacro("SimultaneousPerturbation");
 
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType    CostFunctionType;
@@ -124,40 +121,44 @@ public:
   typedef typename Superclass1::ParametersType ParametersType;
 
   /** Methods that take care of setting parameters and printing progress information.*/
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
   /** Override the SetInitialPosition.
    * Override the implementation in itkOptimizer.h, to
    * ensure that the scales array and the parameters
    * array have the same size. */
-  void SetInitialPosition( const ParametersType & param ) override;
+  void
+  SetInitialPosition(const ParametersType & param) override;
 
 protected:
-
   SimultaneousPerturbation();
   ~SimultaneousPerturbation() override {}
 
   bool m_ShowMetricValues;
 
 private:
-
-  SimultaneousPerturbation( const Self & );     // purposely not implemented
-  void operator=( const Self & );               // purposely not implemented
-
+  SimultaneousPerturbation(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxSimultaneousPerturbation.hxx"
+#  include "elxSimultaneousPerturbation.hxx"
 #endif
 
 #endif // end #ifndef __elxSimultaneousPerturbation_h

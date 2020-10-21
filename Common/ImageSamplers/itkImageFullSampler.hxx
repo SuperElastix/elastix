@@ -29,102 +29,98 @@ namespace itk
  * ******************* GenerateData *******************
  */
 
-template< class TInputImage >
+template <class TInputImage>
 void
-ImageFullSampler< TInputImage >
-::GenerateData( void )
+ImageFullSampler<TInputImage>::GenerateData(void)
 {
   /** If desired we exercise a multi-threaded version. */
-  if( this->m_UseMultiThread )
+  if (this->m_UseMultiThread)
   {
     /** Calls ThreadedGenerateData(). */
     return Superclass::GenerateData();
   }
 
   /** Get handles to the input image, output sample container, and the mask. */
-  InputImageConstPointer inputImage = this->GetInput();
+  InputImageConstPointer                     inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  typename MaskType::ConstPointer mask                       = this->GetMask();
+  typename MaskType::ConstPointer            mask = this->GetMask();
 
   /** Clear the container. */
   sampleContainer->Initialize();
 
   /** Set up a region iterator within the user specified image region. */
-  typedef ImageRegionConstIteratorWithIndex< InputImageType > InputImageIterator;
-  InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
+  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
+  InputImageIterator                                        iter(inputImage, this->GetCroppedInputImageRegion());
 
   /** Fill the sample container. */
-  if( mask.IsNull() )
+  if (mask.IsNull())
   {
     /** Try to reserve memory. If no mask is used this can raise std
      * exceptions when the input image is large.
      */
     try
     {
-      sampleContainer->Reserve( this->GetCroppedInputImageRegion()
-        .GetNumberOfPixels() );
+      sampleContainer->Reserve(this->GetCroppedInputImageRegion().GetNumberOfPixels());
     }
-    catch( std::exception & excp )
+    catch (std::exception & excp)
     {
       std::string message = "std: ";
       message += excp.what();
       message += "\nERROR: failed to allocate memory for the sample container.";
       const char * message2 = message.c_str();
-      itkExceptionMacro( << message2 );
+      itkExceptionMacro(<< message2);
     }
-    catch( ... )
+    catch (...)
     {
-      itkExceptionMacro( << "ERROR: failed to allocate memory for the sample container." );
+      itkExceptionMacro(<< "ERROR: failed to allocate memory for the sample container.");
     }
 
     /** Simply loop over the image and store all samples in the container. */
     ImageSampleType tempSample;
     unsigned long   ind = 0;
-    for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter, ++ind )
+    for (iter.GoToBegin(); !iter.IsAtEnd(); ++iter, ++ind)
     {
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point */
-      inputImage->TransformIndexToPhysicalPoint( index,
-        tempSample.m_ImageCoordinates );
+      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
       /** Get sampled image value */
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container */
-      sampleContainer->SetElement( ind, tempSample );
+      sampleContainer->SetElement(ind, tempSample);
 
     } // end for
-  } // end if no mask
+  }   // end if no mask
   else
   {
-    if( mask->GetSource() )
+    if (mask->GetSource())
     {
       mask->GetSource()->Update();
     }
 
     /** Loop over the image and check if the points falls within the mask. */
     ImageSampleType tempSample;
-    for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter )
+    for (iter.GoToBegin(); !iter.IsAtEnd(); ++iter)
     {
       /** Get sampled index. */
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point. */
-      inputImage->TransformIndexToPhysicalPoint( index,
-        tempSample.m_ImageCoordinates );
+      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
-      if( mask->IsInsideInWorldSpace( tempSample.m_ImageCoordinates ) )
+      if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
       {
         /** Get sampled image value. */
         tempSample.m_ImageValue = iter.Get();
 
         /** Store in container. */
-        sampleContainer->push_back( tempSample );
+        sampleContainer->push_back(tempSample);
 
       } // end if
-    } // end for
+    }   // end for
   }     // end else (if mask exists)
 
 } // end GenerateData()
@@ -134,95 +130,92 @@ ImageFullSampler< TInputImage >
  * ******************* ThreadedGenerateData *******************
  */
 
-template< class TInputImage >
+template <class TInputImage>
 void
-ImageFullSampler< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType & inputRegionForThread,
-  ThreadIdType threadId )
+ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType & inputRegionForThread,
+                                                    ThreadIdType                 threadId)
 {
   /** Get handles to the input image, mask and the output. */
-  InputImageConstPointer inputImage = this->GetInput();
+  InputImageConstPointer          inputImage = this->GetInput();
   typename MaskType::ConstPointer mask = this->GetMask();
-  ImageSampleContainerPointer & sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[ threadId ];
+  ImageSampleContainerPointer &   sampleContainerThisThread // & ???
+    = this->m_ThreaderSampleContainer[threadId];
 
   /** Set up a region iterator within the user specified image region. */
-  typedef ImageRegionConstIteratorWithIndex< InputImageType > InputImageIterator;
-  //InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
-  InputImageIterator iter( inputImage, inputRegionForThread );
+  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
+  // InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
+  InputImageIterator iter(inputImage, inputRegionForThread);
 
   /** Fill the sample container. */
   const unsigned long chunkSize = inputRegionForThread.GetNumberOfPixels();
-  if( mask.IsNull() )
+  if (mask.IsNull())
   {
     /** Try to reserve memory. If no mask is used this can raise std
      * exceptions when the input image is large.
      */
     try
     {
-      sampleContainerThisThread->Reserve( chunkSize );
+      sampleContainerThisThread->Reserve(chunkSize);
     }
-    catch( std::exception & excp )
+    catch (std::exception & excp)
     {
       std::string message = "std: ";
       message += excp.what();
       message += "\nERROR: failed to allocate memory for the sample container.";
       const char * message2 = message.c_str();
-      itkExceptionMacro( << message2 );
+      itkExceptionMacro(<< message2);
     }
-    catch( ... )
+    catch (...)
     {
-      itkExceptionMacro( << "ERROR: failed to allocate memory for the sample container." );
+      itkExceptionMacro(<< "ERROR: failed to allocate memory for the sample container.");
     }
 
     /** Simply loop over the image and store all samples in the container. */
     ImageSampleType tempSample;
     unsigned long   ind = 0;
-    for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter, ++ind )
+    for (iter.GoToBegin(); !iter.IsAtEnd(); ++iter, ++ind)
     {
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point */
-      inputImage->TransformIndexToPhysicalPoint( index,
-        tempSample.m_ImageCoordinates );
+      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
       /** Get sampled image value */
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container. */
-      sampleContainerThisThread->SetElement( ind, tempSample );
+      sampleContainerThisThread->SetElement(ind, tempSample);
 
     } // end for
-  } // end if no mask
+  }   // end if no mask
   else
   {
-    if( mask->GetSource() )
+    if (mask->GetSource())
     {
       mask->GetSource()->Update();
     }
 
     /** Loop over the image and check if the points falls within the mask. */
     ImageSampleType tempSample;
-    for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter )
+    for (iter.GoToBegin(); !iter.IsAtEnd(); ++iter)
     {
       /** Get sampled index. */
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point. */
-      inputImage->TransformIndexToPhysicalPoint( index,
-        tempSample.m_ImageCoordinates );
+      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
-      if( mask->IsInsideInWorldSpace( tempSample.m_ImageCoordinates ) )
+      if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
       {
         /** Get sampled image value. */
         tempSample.m_ImageValue = iter.Get();
 
         /**  Store in container. */
-        sampleContainerThisThread->push_back( tempSample );
+        sampleContainerThisThread->push_back(tempSample);
 
       } // end if
-    } // end for
+    }   // end for
   }     // end else (if mask exists)
 
 } // end ThreadedGenerateData()
@@ -232,12 +225,11 @@ ImageFullSampler< TInputImage >
  * ******************* PrintSelf *******************
  */
 
-template< class TInputImage >
+template <class TInputImage>
 void
-ImageFullSampler< TInputImage >
-::PrintSelf( std::ostream & os, Indent indent ) const
+ImageFullSampler<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 } // end PrintSelf()
 
 

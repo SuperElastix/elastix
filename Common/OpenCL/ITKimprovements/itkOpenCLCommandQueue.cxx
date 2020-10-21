@@ -20,12 +20,13 @@
 
 namespace itk
 {
-OpenCLCommandQueue::OpenCLCommandQueue( const OpenCLCommandQueue & other ) :
-  m_Context( other.m_Context ), m_Id( other.m_Id )
+OpenCLCommandQueue::OpenCLCommandQueue(const OpenCLCommandQueue & other)
+  : m_Context(other.m_Context)
+  , m_Id(other.m_Id)
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clRetainCommandQueue( this->m_Id );
+    clRetainCommandQueue(this->m_Id);
   }
 }
 
@@ -33,25 +34,25 @@ OpenCLCommandQueue::OpenCLCommandQueue( const OpenCLCommandQueue & other ) :
 //------------------------------------------------------------------------------
 OpenCLCommandQueue::~OpenCLCommandQueue()
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clReleaseCommandQueue( this->m_Id );
+    clReleaseCommandQueue(this->m_Id);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLCommandQueue &
-OpenCLCommandQueue::operator=( const OpenCLCommandQueue & other )
+OpenCLCommandQueue::operator=(const OpenCLCommandQueue & other)
 {
   this->m_Context = other.m_Context;
-  if( other.m_Id )
+  if (other.m_Id)
   {
-    clRetainCommandQueue( other.m_Id );
+    clRetainCommandQueue(other.m_Id);
   }
-  if( this->m_Id )
+  if (this->m_Id)
   {
-    clReleaseCommandQueue( this->m_Id );
+    clReleaseCommandQueue(this->m_Id);
   }
   this->m_Id = other.m_Id;
   return *this;
@@ -62,17 +63,16 @@ OpenCLCommandQueue::operator=( const OpenCLCommandQueue & other )
 bool
 OpenCLCommandQueue::IsOutOfOrder() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return false;
   }
   cl_command_queue_properties props = 0;
-  if( clGetCommandQueueInfo( this->m_Id, CL_QUEUE_PROPERTIES,
-    sizeof( props ), &props, 0 ) != CL_SUCCESS )
+  if (clGetCommandQueueInfo(this->m_Id, CL_QUEUE_PROPERTIES, sizeof(props), &props, 0) != CL_SUCCESS)
   {
     return false;
   }
-  return ( props & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE ) != 0;
+  return (props & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE) != 0;
 }
 
 
@@ -80,26 +80,25 @@ OpenCLCommandQueue::IsOutOfOrder() const
 bool
 OpenCLCommandQueue::IsProfilingEnabled() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return false;
   }
   cl_command_queue_properties props = 0;
-  if( clGetCommandQueueInfo( this->m_Id, CL_QUEUE_PROPERTIES,
-    sizeof( props ), &props, 0 ) != CL_SUCCESS )
+  if (clGetCommandQueueInfo(this->m_Id, CL_QUEUE_PROPERTIES, sizeof(props), &props, 0) != CL_SUCCESS)
   {
     return false;
   }
-  return ( props & CL_QUEUE_PROFILING_ENABLE ) != 0;
+  return (props & CL_QUEUE_PROFILING_ENABLE) != 0;
 }
 
 
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs )
+operator==(const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
@@ -110,9 +109,9 @@ operator==( const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs )
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs )
+operator!=(const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

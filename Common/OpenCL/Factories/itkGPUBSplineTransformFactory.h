@@ -33,86 +33,89 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
-class GPUBSplineTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename NDimensions>
+class GPUBSplineTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
-  typedef GPUBSplineTransformFactory2         Self;
-  typedef GPUObjectFactoryBase< NDimensions > Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUBSplineTransformFactory2       Self;
+  typedef GPUObjectFactoryBase<NDimensions> Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUBSplineTransform"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUBSplineTransform";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUBSplineTransformFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUBSplineTransformFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TType, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
     // Override for spline order equal 1
-    this->RegisterOverride(
-      typeid( BSplineTransform< TType, VImageDimension, 1 > ).name(),
-      typeid( GPUBSplineTransform< TType, VImageDimension, 1 > ).name(),
-      "GPU BSplineTransform override", true,
-      CreateObjectFunction< GPUBSplineTransform< TType, VImageDimension, 1 > >::New()
-      );
+    this->RegisterOverride(typeid(BSplineTransform<TType, VImageDimension, 1>).name(),
+                           typeid(GPUBSplineTransform<TType, VImageDimension, 1>).name(),
+                           "GPU BSplineTransform override",
+                           true,
+                           CreateObjectFunction<GPUBSplineTransform<TType, VImageDimension, 1>>::New());
 
     // Override for spline order equal 2
-    this->RegisterOverride(
-      typeid( BSplineTransform< TType, VImageDimension, 2 > ).name(),
-      typeid( GPUBSplineTransform< TType, VImageDimension, 2 > ).name(),
-      "GPU BSplineTransform override", true,
-      CreateObjectFunction< GPUBSplineTransform< TType, VImageDimension, 2 > >::New()
-      );
+    this->RegisterOverride(typeid(BSplineTransform<TType, VImageDimension, 2>).name(),
+                           typeid(GPUBSplineTransform<TType, VImageDimension, 2>).name(),
+                           "GPU BSplineTransform override",
+                           true,
+                           CreateObjectFunction<GPUBSplineTransform<TType, VImageDimension, 2>>::New());
 
     // Override for spline order equal 3
-    this->RegisterOverride(
-      typeid( BSplineTransform< TType, VImageDimension, 3 > ).name(),
-      typeid( GPUBSplineTransform< TType, VImageDimension, 3 > ).name(),
-      "GPU BSplineTransform override", true,
-      CreateObjectFunction< GPUBSplineTransform< TType, VImageDimension, 3 > >::New()
-      );
+    this->RegisterOverride(typeid(BSplineTransform<TType, VImageDimension, 3>).name(),
+                           typeid(GPUBSplineTransform<TType, VImageDimension, 3>).name(),
+                           "GPU BSplineTransform override",
+                           true,
+                           CreateObjectFunction<GPUBSplineTransform<TType, VImageDimension, 3>>::New());
   }
 
 
 protected:
-
   GPUBSplineTransformFactory2();
   virtual ~GPUBSplineTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList< float, double >::Type RealTypeList;
+  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUBSplineTransformFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );              // purposely not implemented
-
+  GPUBSplineTransformFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUBSplineTransformFactory.hxx"
+#  include "itkGPUBSplineTransformFactory.hxx"
 #endif
 
 #endif /* __itkGPUBSplineTransformFactory_h */

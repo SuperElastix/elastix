@@ -32,8 +32,8 @@
 #include <fstream>
 #include <itksys/SystemTools.hxx>
 
-#if defined( _WIN32 )
-#include <io.h>
+#if defined(_WIN32)
+#  include <io.h>
 #endif
 
 // ITK includes
@@ -54,24 +54,23 @@
 // Definition of the OCLImageDims
 struct OCLImageDims
 {
-  itkStaticConstMacro( Support1D, bool, false );
-  itkStaticConstMacro( Support2D, bool, false );
-  itkStaticConstMacro( Support3D, bool, true );
+  itkStaticConstMacro(Support1D, bool, false);
+  itkStaticConstMacro(Support2D, bool, false);
+  itkStaticConstMacro(Support3D, bool, true);
 };
 
-#define ITK_OPENCL_COMPARE( actual, expected )                                    \
-  if( !itk::Compare( actual, expected, #actual, #expected, __FILE__, __LINE__ ) ) \
-    itkGenericExceptionMacro( << "Compared values are not the same" )             \
+#define ITK_OPENCL_COMPARE(actual, expected)                                                                           \
+  if (!itk::Compare(actual, expected, #actual, #expected, __FILE__, __LINE__))                                         \
+  itkGenericExceptionMacro(<< "Compared values are not the same")
 
 namespace itk
 {
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 inline bool
-Compare( T const & t1, T const & t2, const char * actual, const char * expected,
-  const char * file, int line )
+Compare(T const & t1, T const & t2, const char * actual, const char * expected, const char * file, int line)
 {
-  return ( t1 == t2 ) ? true : false;
+  return (t1 == t2) ? true : false;
 }
 
 
@@ -82,13 +81,13 @@ CreateContext()
   // Create and check OpenCL context
   OpenCLContext::Pointer context = OpenCLContext::GetInstance();
 
-#if defined( OPENCL_USE_INTEL_CPU ) || defined( OPENCL_USE_AMD_CPU )
-  context->Create( OpenCLContext::DevelopmentSingleMaximumFlopsDevice );
+#if defined(OPENCL_USE_INTEL_CPU) || defined(OPENCL_USE_AMD_CPU)
+  context->Create(OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
 #else
-  context->Create( OpenCLContext::SingleMaximumFlopsDevice );
+  context->Create(OpenCLContext::SingleMaximumFlopsDevice);
 #endif
 
-  if( !context->IsCreated() )
+  if (!context->IsCreated())
   {
     std::cerr << "OpenCL-enabled device is not present." << std::endl;
     return false;
@@ -103,7 +102,7 @@ void
 ReleaseContext()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-  if( context->IsCreated() )
+  if (context->IsCreated())
   {
     context->Release();
   }
@@ -112,12 +111,12 @@ ReleaseContext()
 
 //------------------------------------------------------------------------------
 void
-CreateOpenCLLogger( const std::string & prefixFileName )
+CreateOpenCLLogger(const std::string & prefixFileName)
 {
   /** Create the OpenCL logger */
   OpenCLLogger::Pointer logger = OpenCLLogger::GetInstance();
-  logger->SetLogFileNamePrefix( prefixFileName );
-  logger->SetOutputDirectory( OpenCLKernelsDebugDirectory );
+  logger->SetLogFileNamePrefix(prefixFileName);
+  logger->SetOutputDirectory(OpenCLKernelsDebugDirectory);
 }
 
 
@@ -126,10 +125,10 @@ void
 SetupForDebugging()
 {
   TestOutputWindow::Pointer tow = TestOutputWindow::New();
-  OutputWindow::SetInstance( tow );
+  OutputWindow::SetInstance(tow);
 
-#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
-  Object::SetGlobalWarningDisplay( true );
+#if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
+  Object::SetGlobalWarningDisplay(true);
   std::cout << "INFO: test called Object::SetGlobalWarningDisplay(true)\n";
 #endif
 }
@@ -137,10 +136,10 @@ SetupForDebugging()
 
 //------------------------------------------------------------------------------
 void
-ITKObjectEnableWarnings( Object * object )
+ITKObjectEnableWarnings(Object * object)
 {
-#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
-  object->SetDebug( true );
+#if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
+  object->SetDebug(true);
   std::cout << "INFO: " << object->GetNameOfClass() << " called SetDebug(true);\n";
 #endif
 }
@@ -151,19 +150,19 @@ ITKObjectEnableWarnings( Object * object )
 const std::string
 GetCurrentDate()
 {
-  time_t    now = time( 0 );
+  time_t    now = time(0);
   struct tm tstruct;
-  char      buf[ 80 ];
+  char      buf[80];
 
-#if !defined( _WIN32 ) || defined( __CYGWIN__ )
-  tstruct = *localtime( &now );
+#if !defined(_WIN32) || defined(__CYGWIN__)
+  tstruct = *localtime(&now);
 #else
-  localtime_s( &tstruct, &now );
+  localtime_s(&tstruct, &now);
 #endif
 
   // Visit http://www.cplusplus.com/reference/clibrary/ctime/strftime/
   // for more information about date/time format
-  strftime( buf, sizeof( buf ), "%m-%d-%y", &tstruct );
+  strftime(buf, sizeof(buf), "%m-%d-%y", &tstruct);
 
   return buf;
 }
@@ -174,31 +173,37 @@ GetCurrentDate()
 const std::string
 GetLogFileName()
 {
-  OpenCLContext::Pointer context    = OpenCLContext::GetInstance();
-  std::string            fileName   = "CPUGPULog-" + itk::GetCurrentDate() + "-";
+  OpenCLContext::Pointer context = OpenCLContext::GetInstance();
+  std::string            fileName = "CPUGPULog-" + itk::GetCurrentDate() + "-";
   std::string            deviceName = context->GetDefaultDevice().GetName();
-  std::replace( deviceName.begin(), deviceName.end(), ' ', '-' ); // replace spaces
-  deviceName.erase( deviceName.end() - 1, deviceName.end() );     // remove end of line
+  std::replace(deviceName.begin(), deviceName.end(), ' ', '-'); // replace spaces
+  deviceName.erase(deviceName.end() - 1, deviceName.end());     // remove end of line
 
-  switch( context->GetDefaultDevice().GetDeviceType() )
+  switch (context->GetDefaultDevice().GetDeviceType())
   {
     case OpenCLDevice::Default:
-      fileName.append( "Default" ); break;
+      fileName.append("Default");
+      break;
     case OpenCLDevice::CPU:
-      fileName.append( "CPU" ); break;
+      fileName.append("CPU");
+      break;
     case OpenCLDevice::GPU:
-      fileName.append( "GPU" ); break;
+      fileName.append("GPU");
+      break;
     case OpenCLDevice::Accelerator:
-      fileName.append( "Accelerator" ); break;
+      fileName.append("Accelerator");
+      break;
     case OpenCLDevice::All:
-      fileName.append( "All" ); break;
+      fileName.append("All");
+      break;
     default:
-      fileName.append( "Unknown" ); break;
+      fileName.append("Unknown");
+      break;
   }
 
-  fileName.append( "-" );
-  fileName.append( deviceName );
-  fileName.append( ".txt" );
+  fileName.append("-");
+  fileName.append(deviceName);
+  fileName.append(".txt");
 
   return fileName;
 }
@@ -206,29 +211,26 @@ GetLogFileName()
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE
-template< class TScalarType, class CPUImageType, class GPUImageType >
+template <class TScalarType, class CPUImageType, class GPUImageType>
 TScalarType
-ComputeRMSE( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
-  TScalarType & rmsRelative )
+ComputeRMSE(const CPUImageType * cpuImage, const GPUImageType * gpuImage, TScalarType & rmsRelative)
 {
-  ImageRegionConstIterator< CPUImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  ImageRegionConstIterator< GPUImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
+  ImageRegionConstIterator<CPUImageType> cit(cpuImage, cpuImage->GetLargestPossibleRegion());
+  ImageRegionConstIterator<GPUImageType> git(gpuImage, gpuImage->GetLargestPossibleRegion());
 
-  TScalarType rmse          = 0.0;
+  TScalarType rmse = 0.0;
   TScalarType sumCPUSquared = 0.0;
 
-  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  for (cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git)
   {
-    TScalarType cpu = static_cast< TScalarType >( cit.Get() );
-    TScalarType err = cpu - static_cast< TScalarType >( git.Get() );
-    rmse          += err * err;
+    TScalarType cpu = static_cast<TScalarType>(cit.Get());
+    TScalarType err = cpu - static_cast<TScalarType>(git.Get());
+    rmse += err * err;
     sumCPUSquared += cpu * cpu;
   }
 
-  rmse        = std::sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
-  rmsRelative = rmse / std::sqrt( sumCPUSquared / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  rmse = std::sqrt(rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels());
+  rmsRelative = rmse / std::sqrt(sumCPUSquared / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels());
 
   return rmse;
 } // end ComputeRMSE()
@@ -236,65 +238,65 @@ ComputeRMSE( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE
-template< class TScalarType, class CPUImageType, class GPUImageType >
+template <class TScalarType, class CPUImageType, class GPUImageType>
 TScalarType
-ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
-  const float & threshold )
+ComputeRMSE2(const CPUImageType * cpuImage, const GPUImageType * gpuImage, const float & threshold)
 {
-  ImageRegionConstIterator< CPUImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  ImageRegionConstIterator< GPUImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
+  ImageRegionConstIterator<CPUImageType> cit(cpuImage, cpuImage->GetLargestPossibleRegion());
+  ImageRegionConstIterator<GPUImageType> git(gpuImage, gpuImage->GetLargestPossibleRegion());
 
   TScalarType rmse = 0.0;
 
-  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  for (cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git)
   {
-    TScalarType err = static_cast< TScalarType >( cit.Get() ) - static_cast< TScalarType >( git.Get() );
-    if( err > threshold )
+    TScalarType err = static_cast<TScalarType>(cit.Get()) - static_cast<TScalarType>(git.Get());
+    if (err > threshold)
     {
       rmse += err * err;
     }
   }
-  rmse = std::sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  rmse = std::sqrt(rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels());
   return rmse;
 } // end ComputeRMSE2()
 
 
 //------------------------------------------------------------------------------
 // Helper function to get test result from output images
-template< class TScalarType, class CPUImageType, class GPUImageType >
+template <class TScalarType, class CPUImageType, class GPUImageType>
 void
-GetTestOutputResult(
-  const CPUImageType * cpuImage, const GPUImageType * gpuImage,
-  const float allowedRMSerror, TScalarType & rmsError, TScalarType & rmsRelative,
-  bool & testPassed,
-  const bool skipCPU, const bool skipGPU,
-  const TimeProbe::TimeStampType cpuTime,
-  const TimeProbe::TimeStampType gpuTime,
-  const bool updateExceptionCPU, const bool updateExceptionGPU )
+GetTestOutputResult(const CPUImageType *           cpuImage,
+                    const GPUImageType *           gpuImage,
+                    const float                    allowedRMSerror,
+                    TScalarType &                  rmsError,
+                    TScalarType &                  rmsRelative,
+                    bool &                         testPassed,
+                    const bool                     skipCPU,
+                    const bool                     skipGPU,
+                    const TimeProbe::TimeStampType cpuTime,
+                    const TimeProbe::TimeStampType gpuTime,
+                    const bool                     updateExceptionCPU,
+                    const bool                     updateExceptionGPU)
 {
-  rmsError    = 0.0;
+  rmsError = 0.0;
   rmsRelative = 0.0;
-  testPassed  = true;
-  if( updateExceptionCPU || updateExceptionGPU )
+  testPassed = true;
+  if (updateExceptionCPU || updateExceptionGPU)
   {
     testPassed = false;
   }
   else
   {
-    if( !skipCPU && !skipGPU && cpuImage && gpuImage )
+    if (!skipCPU && !skipGPU && cpuImage && gpuImage)
     {
-      rmsError = ComputeRMSE< TScalarType, CPUImageType, GPUImageType >
-          ( cpuImage, gpuImage, rmsRelative );
+      rmsError = ComputeRMSE<TScalarType, CPUImageType, GPUImageType>(cpuImage, gpuImage, rmsRelative);
 
-      std::cout << ", speed up " << ( cpuTime / gpuTime ) << std::endl;
-      std::cout << std::fixed << std::setprecision( 8 );
+      std::cout << ", speed up " << (cpuTime / gpuTime) << std::endl;
+      std::cout << std::fixed << std::setprecision(8);
       std::cout << "Maximum allowed RMS Error: " << allowedRMSerror << std::endl;
       std::cout << "Computed real   RMS Error: " << rmsError << std::endl;
       std::cout << "Computed real  nRMS Error: " << rmsRelative << std::endl;
 
-      testPassed = ( rmsError <= allowedRMSerror );
+      testPassed = (rmsError <= allowedRMSerror);
     }
   }
 }
@@ -302,47 +304,50 @@ GetTestOutputResult(
 
 //------------------------------------------------------------------------------
 // Helper function to get test result from filters
-template< class TScalarType,
-class ImageToImageFilterType, class OutputImage >
+template <class TScalarType, class ImageToImageFilterType, class OutputImage>
 void
-GetTestFilterResult(
-  typename ImageToImageFilterType::Pointer & cpuFilter,
-  typename ImageToImageFilterType::Pointer & gpuFilter,
-  const float allowedRMSerror, TScalarType & rmsError, TScalarType & rmsRelative,
-  bool & testPassed, const bool skipCPU, const bool skipGPU,
-  const TimeProbe::TimeStampType cpuTime,
-  const TimeProbe::TimeStampType gpuTime,
-  const bool updateExceptionCPU, const bool updateExceptionGPU,
-  const unsigned int outputindex = 0 )
+GetTestFilterResult(typename ImageToImageFilterType::Pointer & cpuFilter,
+                    typename ImageToImageFilterType::Pointer & gpuFilter,
+                    const float                                allowedRMSerror,
+                    TScalarType &                              rmsError,
+                    TScalarType &                              rmsRelative,
+                    bool &                                     testPassed,
+                    const bool                                 skipCPU,
+                    const bool                                 skipGPU,
+                    const TimeProbe::TimeStampType             cpuTime,
+                    const TimeProbe::TimeStampType             gpuTime,
+                    const bool                                 updateExceptionCPU,
+                    const bool                                 updateExceptionGPU,
+                    const unsigned int                         outputindex = 0)
 {
-  rmsError   = 0.0;
+  rmsError = 0.0;
   testPassed = true;
-  if( updateExceptionCPU || updateExceptionGPU )
+  if (updateExceptionCPU || updateExceptionGPU)
   {
     testPassed = false;
   }
   else
   {
-    if( !skipCPU && !skipGPU && cpuFilter.IsNotNull() && gpuFilter.IsNotNull() )
+    if (!skipCPU && !skipGPU && cpuFilter.IsNotNull() && gpuFilter.IsNotNull())
     {
-      if( outputindex == 0 )
+      if (outputindex == 0)
       {
-        rmsError = ComputeRMSE< TScalarType, OutputImage, OutputImage >
-            ( cpuFilter->GetOutput(), gpuFilter->GetOutput(), rmsRelative );
+        rmsError = ComputeRMSE<TScalarType, OutputImage, OutputImage>(
+          cpuFilter->GetOutput(), gpuFilter->GetOutput(), rmsRelative);
       }
       else
       {
-        rmsError = ComputeRMSE< TScalarType, OutputImage, OutputImage >
-            ( cpuFilter->GetOutput( outputindex ), gpuFilter->GetOutput( outputindex ), rmsRelative );
+        rmsError = ComputeRMSE<TScalarType, OutputImage, OutputImage>(
+          cpuFilter->GetOutput(outputindex), gpuFilter->GetOutput(outputindex), rmsRelative);
       }
 
-      std::cout << ", speed up " << ( cpuTime / gpuTime ) << std::endl;
-      std::cout << std::fixed << std::setprecision( 8 );
+      std::cout << ", speed up " << (cpuTime / gpuTime) << std::endl;
+      std::cout << std::fixed << std::setprecision(8);
       std::cout << "Maximum allowed RMS Error: " << allowedRMSerror << std::endl;
       std::cout << "Computed real   RMS Error: " << rmsError << std::endl;
       std::cout << "Computed real  nRMS Error: " << rmsRelative << std::endl;
 
-      testPassed = ( rmsError <= allowedRMSerror );
+      testPassed = (rmsError <= allowedRMSerror);
     }
   }
 }
@@ -350,82 +355,79 @@ GetTestFilterResult(
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE with masks
-template< class TScalarType, class CPUImageType, class GPUImageType, class MaskImageType >
+template <class TScalarType, class CPUImageType, class GPUImageType, class MaskImageType>
 TScalarType
-ComputeRMSE( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
-  const MaskImageType * cpuImageMask, const MaskImageType * gpuImageMask,
-  TScalarType & rmsRelative )
+ComputeRMSE(const CPUImageType *  cpuImage,
+            const GPUImageType *  gpuImage,
+            const MaskImageType * cpuImageMask,
+            const MaskImageType * gpuImageMask,
+            TScalarType &         rmsRelative)
 {
-  ImageRegionConstIterator< CPUImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  ImageRegionConstIterator< GPUImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
+  ImageRegionConstIterator<CPUImageType> cit(cpuImage, cpuImage->GetLargestPossibleRegion());
+  ImageRegionConstIterator<GPUImageType> git(gpuImage, gpuImage->GetLargestPossibleRegion());
 
-  ImageRegionConstIterator< MaskImageType > mcit(
-    cpuImageMask, cpuImageMask->GetLargestPossibleRegion() );
-  ImageRegionConstIterator< MaskImageType > mgit(
-    gpuImageMask, gpuImageMask->GetLargestPossibleRegion() );
+  ImageRegionConstIterator<MaskImageType> mcit(cpuImageMask, cpuImageMask->GetLargestPossibleRegion());
+  ImageRegionConstIterator<MaskImageType> mgit(gpuImageMask, gpuImageMask->GetLargestPossibleRegion());
 
-  TScalarType rmse          = 0.0;
+  TScalarType rmse = 0.0;
   TScalarType sumCPUSquared = 0.0;
-  std::size_t count         = 0;
-  for( cit.GoToBegin(), git.GoToBegin(), mcit.GoToBegin(), mgit.GoToBegin();
-    !cit.IsAtEnd(); ++cit, ++git, ++mcit, ++mgit )
+  std::size_t count = 0;
+  for (cit.GoToBegin(), git.GoToBegin(), mcit.GoToBegin(), mgit.GoToBegin(); !cit.IsAtEnd();
+       ++cit, ++git, ++mcit, ++mgit)
   {
-    if( ( mcit.Get() == NumericTraits< typename MaskImageType::PixelType >::OneValue() )
-      && ( mgit.Get() == NumericTraits< typename MaskImageType::PixelType >::OneValue() ) )
+    if ((mcit.Get() == NumericTraits<typename MaskImageType::PixelType>::OneValue()) &&
+        (mgit.Get() == NumericTraits<typename MaskImageType::PixelType>::OneValue()))
     {
-      TScalarType cpu = static_cast< TScalarType >( cit.Get() );
-      TScalarType err = cpu - static_cast< TScalarType >( git.Get() );
-      rmse          += err * err;
+      TScalarType cpu = static_cast<TScalarType>(cit.Get());
+      TScalarType err = cpu - static_cast<TScalarType>(git.Get());
+      rmse += err * err;
       sumCPUSquared += cpu * cpu;
       count++;
     }
   }
 
-  if( count == 0 )
+  if (count == 0)
   {
     rmsRelative = 0.0;
     return 0.0;
   }
 
-  rmse        = std::sqrt( rmse / count );
-  rmsRelative = rmse / std::sqrt( sumCPUSquared / count );
+  rmse = std::sqrt(rmse / count);
+  rmsRelative = rmse / std::sqrt(sumCPUSquared / count);
   return rmse;
 } // end ComputeRMSE()
 
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE with masks and threshold
-template< class TScalarType, class CPUImageType, class GPUImageType, class MaskImageType >
+template <class TScalarType, class CPUImageType, class GPUImageType, class MaskImageType>
 TScalarType
-ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
-  const MaskImageType * cpuImageMask, const MaskImageType * gpuImageMask,
-  const float threshold, TScalarType & rmsRelative )
+ComputeRMSE2(const CPUImageType *  cpuImage,
+             const GPUImageType *  gpuImage,
+             const MaskImageType * cpuImageMask,
+             const MaskImageType * gpuImageMask,
+             const float           threshold,
+             TScalarType &         rmsRelative)
 {
-  ImageRegionConstIterator< CPUImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  ImageRegionConstIterator< GPUImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
+  ImageRegionConstIterator<CPUImageType> cit(cpuImage, cpuImage->GetLargestPossibleRegion());
+  ImageRegionConstIterator<GPUImageType> git(gpuImage, gpuImage->GetLargestPossibleRegion());
 
-  ImageRegionConstIterator< MaskImageType > mcit(
-    cpuImageMask, cpuImageMask->GetLargestPossibleRegion() );
-  ImageRegionConstIterator< MaskImageType > mgit(
-    gpuImageMask, gpuImageMask->GetLargestPossibleRegion() );
+  ImageRegionConstIterator<MaskImageType> mcit(cpuImageMask, cpuImageMask->GetLargestPossibleRegion());
+  ImageRegionConstIterator<MaskImageType> mgit(gpuImageMask, gpuImageMask->GetLargestPossibleRegion());
 
-  TScalarType rmse          = 0.0;
+  TScalarType rmse = 0.0;
   TScalarType sumCPUSquared = 0.0;
-  std::size_t count         = 0;
-  for( cit.GoToBegin(), git.GoToBegin(), mcit.GoToBegin(), mgit.GoToBegin();
-    !cit.IsAtEnd(); ++cit, ++git, ++mcit, ++mgit )
+  std::size_t count = 0;
+  for (cit.GoToBegin(), git.GoToBegin(), mcit.GoToBegin(), mgit.GoToBegin(); !cit.IsAtEnd();
+       ++cit, ++git, ++mcit, ++mgit)
   {
-    if( mcit.Get() == NumericTraits< typename MaskImageType::PixelType >::One
-      && mgit.Get() == NumericTraits< typename MaskImageType::PixelType >::OneValue() )
+    if (mcit.Get() == NumericTraits<typename MaskImageType::PixelType>::One &&
+        mgit.Get() == NumericTraits<typename MaskImageType::PixelType>::OneValue())
     {
       ++count;
-      TScalarType cpu = static_cast< TScalarType >( cit.Get() );
-      TScalarType err = cpu - static_cast< TScalarType >( git.Get() );
-      if( vnl_math_abs( err ) > threshold )
+      TScalarType cpu = static_cast<TScalarType>(cit.Get());
+      TScalarType err = cpu - static_cast<TScalarType>(git.Get());
+      if (vnl_math_abs(err) > threshold)
       {
         rmse += err * err;
       }
@@ -433,60 +435,62 @@ ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
     }
   }
 
-  if( count == 0 )
+  if (count == 0)
   {
     rmsRelative = 0.0;
     return 0.0;
   }
 
-  rmse        = std::sqrt( rmse / count );
-  rmsRelative = rmse / std::sqrt( sumCPUSquared / count );
+  rmse = std::sqrt(rmse / count);
+  rmsRelative = rmse / std::sqrt(sumCPUSquared / count);
   return rmse;
 } // end ComputeRMSE()
 
 
 //----------------------------------------------------------------------------
 // Write log file in Microsoft Excel semicolon separated format.
-template< class ImageType >
+template <class ImageType>
 void
-WriteLog(
-  const std::string & filename,
-  const unsigned int dim,
-  const typename ImageType::SizeType & imagesize,
-  const double rmsError,
-  const double rmsRelative,
-  const bool testPassed,
-  const bool exceptionGPU,
-  const unsigned int numThreads,
-  const unsigned int runTimes,
-  const std::string & filterName,
-  const TimeProbe::TimeStampType cpuTime,
-  const TimeProbe::TimeStampType gpuTime,
-  const std::string & comments = "" )
+WriteLog(const std::string &                  filename,
+         const unsigned int                   dim,
+         const typename ImageType::SizeType & imagesize,
+         const double                         rmsError,
+         const double                         rmsRelative,
+         const bool                           testPassed,
+         const bool                           exceptionGPU,
+         const unsigned int                   numThreads,
+         const unsigned int                   runTimes,
+         const std::string &                  filterName,
+         const TimeProbe::TimeStampType       cpuTime,
+         const TimeProbe::TimeStampType       gpuTime,
+         const std::string &                  comments = "")
 {
-  const std::string s( " ; " );   // separator
+  const std::string s(" ; "); // separator
   std::ofstream     fout;
-  const bool        fileExists = itksys::SystemTools::FileExists( filename.c_str() );
+  const bool        fileExists = itksys::SystemTools::FileExists(filename.c_str());
 
-  fout.open( filename.c_str(), std::ios_base::app );
+  fout.open(filename.c_str(), std::ios_base::app);
   // If file does not exist, then print table header
-  if( !fileExists )
+  if (!fileExists)
   {
-    fout << "Filter Name" << s << "Dimension" << s << "Image Size"
-         << s << "CPU(" << numThreads << ") (s)" << s << "GPU (s)" << s << "CPU/GPU Speed Ratio"
-         << s << "RMS Error" << s << "RMS Relative" << s << "Test Passed" << s << "Run Times" << s << "Comments" << std::endl;
+    fout << "Filter Name" << s << "Dimension" << s << "Image Size" << s << "CPU(" << numThreads << ") (s)" << s
+         << "GPU (s)" << s << "CPU/GPU Speed Ratio" << s << "RMS Error" << s << "RMS Relative" << s << "Test Passed"
+         << s << "Run Times" << s << "Comments" << std::endl;
   }
 
   fout << filterName << s << dim << s;
-  for( unsigned int i = 0; i < dim; i++ )
+  for (unsigned int i = 0; i < dim; i++)
   {
-    fout << imagesize.GetSize()[ i ];
-    if( i < dim - 1 ) { fout << "x"; }
+    fout << imagesize.GetSize()[i];
+    if (i < dim - 1)
+    {
+      fout << "x";
+    }
   }
 
   fout << s << cpuTime << s;
 
-  if( !exceptionGPU )
+  if (!exceptionGPU)
   {
     fout << gpuTime << s;
   }
@@ -495,11 +499,11 @@ WriteLog(
     fout << "na" << s;
   }
 
-  if( !exceptionGPU )
+  if (!exceptionGPU)
   {
-    if( gpuTime != 0.0 )
+    if (gpuTime != 0.0)
     {
-      fout << ( cpuTime / gpuTime ) << s;
+      fout << (cpuTime / gpuTime) << s;
     }
     else
     {
@@ -513,10 +517,10 @@ WriteLog(
 
   fout << rmsError << s;
   fout << rmsRelative << s;
-  fout << ( testPassed ? "Yes" : "No" ) << s;
+  fout << (testPassed ? "Yes" : "No") << s;
   fout << runTimes << s;
 
-  if( comments.size() > 0 )
+  if (comments.size() > 0)
   {
     fout << comments;
   }
@@ -532,6 +536,6 @@ WriteLog(
 }
 
 
-}
+} // namespace itk
 
 #endif // end #ifndef __itkTestHelper_h

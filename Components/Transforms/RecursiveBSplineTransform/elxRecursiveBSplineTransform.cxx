@@ -18,4 +18,4 @@
 
 #include "elxRecursiveBSplineTransform.h"
 
-elxInstallMacro( RecursiveBSplineTransform );
+elxInstallMacro(RecursiveBSplineTransform);

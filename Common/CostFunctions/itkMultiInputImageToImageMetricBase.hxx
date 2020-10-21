@@ -28,73 +28,67 @@
  */
 
 /** Macro for setting objects. */
-#define itkImplementationSetObjectMacro( _name, _type ) \
-  template< class TFixedImage, class TMovingImage > \
-  void \
-  MultiInputImageToImageMetricBase< TFixedImage, TMovingImage > \
-  ::Set##_name( _type * _arg, unsigned int pos ) \
-  { \
-    if( this->m_##_name##Vector.size() < pos + 1 ) \
-    { \
-      this->m_##_name##Vector.resize( pos + 1 ); \
-      this->m_NumberOf##_name##s = pos + 1; \
-    } \
-    if( pos == 0 ) \
-    { \
-      this->Superclass::Set##_name( _arg ); \
-    } \
-    if( this->m_##_name##Vector[ pos ] != _arg ) \
-    { \
-      this->m_##_name##Vector[ pos ] = _arg; \
-      this->Modified(); \
-    } \
+#define itkImplementationSetObjectMacro(_name, _type)                                                                  \
+  template <class TFixedImage, class TMovingImage>                                                                     \
+  void MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Set##_name(_type * _arg, unsigned int pos)         \
+  {                                                                                                                    \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
+    {                                                                                                                  \
+      this->m_##_name##Vector.resize(pos + 1);                                                                         \
+      this->m_NumberOf##_name##s = pos + 1;                                                                            \
+    }                                                                                                                  \
+    if (pos == 0)                                                                                                      \
+    {                                                                                                                  \
+      this->Superclass::Set##_name(_arg);                                                                              \
+    }                                                                                                                  \
+    if (this->m_##_name##Vector[pos] != _arg)                                                                          \
+    {                                                                                                                  \
+      this->m_##_name##Vector[pos] = _arg;                                                                             \
+      this->Modified();                                                                                                \
+    }                                                                                                                  \
   } // comments for allowing ; after calling the macro
 
 /** Macro for setting objects. */
-#define itkImplementationSetObjectMacro2( _name, _type ) \
-  template< class TFixedImage, class TMovingImage > \
-  void \
-  MultiInputImageToImageMetricBase< TFixedImage, TMovingImage > \
-  ::Set##_name( _type * _arg, unsigned int pos ) \
-  { \
-    if( this->m_##_name##Vector.size() < pos + 1 ) \
-    { \
-      this->m_##_name##Vector.resize( pos + 1 ); \
-      this->m_NumberOf##_name##s = pos + 1; \
-    } \
-    if( this->m_##_name##Vector[ pos ] != _arg ) \
-    { \
-      this->m_##_name##Vector[ pos ] = _arg; \
-      this->Modified(); \
-    } \
+#define itkImplementationSetObjectMacro2(_name, _type)                                                                 \
+  template <class TFixedImage, class TMovingImage>                                                                     \
+  void MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Set##_name(_type * _arg, unsigned int pos)         \
+  {                                                                                                                    \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
+    {                                                                                                                  \
+      this->m_##_name##Vector.resize(pos + 1);                                                                         \
+      this->m_NumberOf##_name##s = pos + 1;                                                                            \
+    }                                                                                                                  \
+    if (this->m_##_name##Vector[pos] != _arg)                                                                          \
+    {                                                                                                                  \
+      this->m_##_name##Vector[pos] = _arg;                                                                             \
+      this->Modified();                                                                                                \
+    }                                                                                                                  \
   } // comments for allowing ; after calling the macro
 
 /** Macro for getting objects. */
-#define itkImplementationGetObjectMacro( _name, _type ) \
-  template< class TFixedImage, class TMovingImage > \
-  typename MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >::_type   \
-  * MultiInputImageToImageMetricBase< TFixedImage, TMovingImage > \
-  ::Get##_name( unsigned int pos ) const \
-  { \
-    if( this->m_##_name##Vector.size() < pos + 1 ) \
-    { \
-      return 0; \
-    } \
-    return this->m_##_name##Vector[ pos ]; \
+#define itkImplementationGetObjectMacro(_name, _type)                                                                  \
+  template <class TFixedImage, class TMovingImage>                                                                     \
+  typename MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::_type *                                        \
+    MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const                    \
+  {                                                                                                                    \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
+    {                                                                                                                  \
+      return 0;                                                                                                        \
+    }                                                                                                                  \
+    return this->m_##_name##Vector[pos];                                                                               \
   } // comments for allowing ; after calling the macro
 
 /** Macro for getting const objects. */
-#define itkImplementationGetConstObjectMacro( _name, _type ) \
-  template< class TFixedImage, class TMovingImage > \
-  const typename MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >::_type   \
-  * MultiInputImageToImageMetricBase< TFixedImage, TMovingImage > \
-  ::Get##_name( unsigned int pos ) const \
-  { \
-    if( this->m_##_name##Vector.size() < pos + 1 ) \
-    { \
-      return 0; \
-    } \
-    return this->m_##_name##Vector[ pos ]; \
+#define itkImplementationGetConstObjectMacro(_name, _type)                                                             \
+  template <class TFixedImage, class TMovingImage>                                                                     \
+  const typename MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::_type *                                  \
+    MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const                    \
+  {                                                                                                                    \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
+    {                                                                                                                  \
+      return 0;                                                                                                        \
+    }                                                                                                                  \
+    return this->m_##_name##Vector[pos];                                                                               \
   } // comments for allowing ; after calling the macro
 
 namespace itk
@@ -104,16 +98,15 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template< class TFixedImage, class TMovingImage >
-MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::MultiInputImageToImageMetricBase()
+template <class TFixedImage, class TMovingImage>
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::MultiInputImageToImageMetricBase()
 {
-  this->m_NumberOfFixedImages             = 0;
-  this->m_NumberOfFixedImageMasks         = 0;
-  this->m_NumberOfFixedImageRegions       = 0;
-  this->m_NumberOfMovingImages            = 0;
-  this->m_NumberOfMovingImageMasks        = 0;
-  this->m_NumberOfInterpolators           = 0;
+  this->m_NumberOfFixedImages = 0;
+  this->m_NumberOfFixedImageMasks = 0;
+  this->m_NumberOfFixedImageRegions = 0;
+  this->m_NumberOfMovingImages = 0;
+  this->m_NumberOfMovingImageMasks = 0;
+  this->m_NumberOfInterpolators = 0;
   this->m_NumberOfFixedImageInterpolators = 0;
 
   this->m_InterpolatorsAreBSpline = false;
@@ -122,43 +115,43 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 
 
 /** Set components. */
-itkImplementationSetObjectMacro( FixedImage, const FixedImageType );
-itkImplementationSetObjectMacro( FixedImageMask, FixedImageMaskType );
-itkImplementationSetObjectMacro( MovingImage, const MovingImageType );
-itkImplementationSetObjectMacro( MovingImageMask, MovingImageMaskType );
-itkImplementationSetObjectMacro( Interpolator, InterpolatorType );
-itkImplementationSetObjectMacro2( FixedImageInterpolator, FixedImageInterpolatorType );
+itkImplementationSetObjectMacro(FixedImage, const FixedImageType);
+itkImplementationSetObjectMacro(FixedImageMask, FixedImageMaskType);
+itkImplementationSetObjectMacro(MovingImage, const MovingImageType);
+itkImplementationSetObjectMacro(MovingImageMask, MovingImageMaskType);
+itkImplementationSetObjectMacro(Interpolator, InterpolatorType);
+itkImplementationSetObjectMacro2(FixedImageInterpolator, FixedImageInterpolatorType);
 
 /** Get components. */
-itkImplementationGetConstObjectMacro( FixedImage, FixedImageType );
-itkImplementationGetObjectMacro( FixedImageMask, FixedImageMaskType );
-itkImplementationGetConstObjectMacro( MovingImage, MovingImageType );
-itkImplementationGetObjectMacro( MovingImageMask, MovingImageMaskType );
-itkImplementationGetObjectMacro( Interpolator, InterpolatorType );
-itkImplementationGetObjectMacro( FixedImageInterpolator, FixedImageInterpolatorType );
+itkImplementationGetConstObjectMacro(FixedImage, FixedImageType);
+itkImplementationGetObjectMacro(FixedImageMask, FixedImageMaskType);
+itkImplementationGetConstObjectMacro(MovingImage, MovingImageType);
+itkImplementationGetObjectMacro(MovingImageMask, MovingImageMaskType);
+itkImplementationGetObjectMacro(Interpolator, InterpolatorType);
+itkImplementationGetObjectMacro(FixedImageInterpolator, FixedImageInterpolatorType);
 
 
 /**
  * ************************ SetFixedImageRegion *************************
  */
 
-template< class TFixedImage, class TMovingImage >
+template <class TFixedImage, class TMovingImage>
 void
-MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos )
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::SetFixedImageRegion(const FixedImageRegionType _arg,
+                                                                                 unsigned int               pos)
 {
-  if( this->m_FixedImageRegionVector.size() < pos + 1 )
+  if (this->m_FixedImageRegionVector.size() < pos + 1)
   {
-    this->m_FixedImageRegionVector.resize( pos + 1 );
+    this->m_FixedImageRegionVector.resize(pos + 1);
     this->m_NumberOfFixedImageRegions = pos + 1;
   }
-  if( pos == 0 )
+  if (pos == 0)
   {
-    this->Superclass::SetFixedImageRegion( _arg );
+    this->Superclass::SetFixedImageRegion(_arg);
   }
-  if( this->m_FixedImageRegionVector[ pos ] != _arg )
+  if (this->m_FixedImageRegionVector[pos] != _arg)
   {
-    this->m_FixedImageRegionVector[ pos ] = _arg;
+    this->m_FixedImageRegionVector[pos] = _arg;
     this->Modified();
   }
 
@@ -169,18 +162,16 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
  * ************************ GetFixedImageRegion *************************
  */
 
-template< class TFixedImage, class TMovingImage >
-const typename MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::FixedImageRegionType
-& MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::GetFixedImageRegion( unsigned int pos ) const
+template <class TFixedImage, class TMovingImage>
+const typename MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::FixedImageRegionType &
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::GetFixedImageRegion(unsigned int pos) const
 {
-  if( this->m_FixedImageRegionVector.size() < pos )
+  if (this->m_FixedImageRegionVector.size() < pos)
   {
     return this->m_DummyFixedImageRegion;
   }
 
-  return this->m_FixedImageRegionVector[ pos ];
+  return this->m_FixedImageRegionVector[pos];
 
 } // end GetFixedImageRegion()
 
@@ -189,35 +180,33 @@ const typename MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
  * ****************** CheckForBSplineInterpolators **********************
  */
 
-template< class TFixedImage, class TMovingImage >
+template <class TFixedImage, class TMovingImage>
 void
-MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::CheckForBSplineInterpolators( void )
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInterpolators(void)
 {
   /** Check if the interpolators are of type BSplineInterpolateImageFunction.
    * If so, we can make use of its EvaluateDerivatives method.
    * Otherwise, an exception is thrown.
    */
   this->m_InterpolatorsAreBSpline = true;
-  this->m_BSplineInterpolatorVector.resize( this->m_NumberOfMovingImages );
+  this->m_BSplineInterpolatorVector.resize(this->m_NumberOfMovingImages);
 
-  for( unsigned int i = 0; i < this->m_NumberOfMovingImages; ++i )
+  for (unsigned int i = 0; i < this->m_NumberOfMovingImages; ++i)
   {
-    BSplineInterpolatorType * testPtr
-      = dynamic_cast< BSplineInterpolatorType * >(
-      this->m_InterpolatorVector[ i ].GetPointer() );
+    BSplineInterpolatorType * testPtr =
+      dynamic_cast<BSplineInterpolatorType *>(this->m_InterpolatorVector[i].GetPointer());
 
-    if( testPtr )
+    if (testPtr)
     {
-      this->m_InterpolatorsAreBSpline       &= true;
-      this->m_BSplineInterpolatorVector[ i ] = testPtr;
-      itkDebugMacro( << "Interpolator " << i << " is B-spline." );
+      this->m_InterpolatorsAreBSpline &= true;
+      this->m_BSplineInterpolatorVector[i] = testPtr;
+      itkDebugMacro(<< "Interpolator " << i << " is B-spline.");
     }
     else
     {
       this->m_InterpolatorsAreBSpline &= false;
-      itkDebugMacro( << "Interpolator " << i << " is NOT B-spline." );
-      itkExceptionMacro( << "Interpolator " << i << " is NOT B-spline." );
+      itkDebugMacro(<< "Interpolator " << i << " is NOT B-spline.");
+      itkExceptionMacro(<< "Interpolator " << i << " is NOT B-spline.");
     }
   } // end for-loop
 
@@ -228,21 +217,20 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
  * ****************** Initialize **********************
  */
 
-template< class TFixedImage, class TMovingImage >
+template <class TFixedImage, class TMovingImage>
 void
-MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::Initialize( void )
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Initialize(void)
 {
   /** Connect the interpolators. */
-  for( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
+  for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
   {
-    this->m_InterpolatorVector[ i ]->SetInputImage( this->m_MovingImageVector[ i ] );
+    this->m_InterpolatorVector[i]->SetInputImage(this->m_MovingImageVector[i]);
   }
 
   /** Connect the fixed image interpolators. */
-  for( unsigned int i = 0; i < this->GetNumberOfFixedImageInterpolators(); ++i )
+  for (unsigned int i = 0; i < this->GetNumberOfFixedImageInterpolators(); ++i)
   {
-    this->m_FixedImageInterpolatorVector[ i ]->SetInputImage( this->m_FixedImageVector[ i ] );
+    this->m_FixedImageInterpolatorVector[i]->SetInputImage(this->m_FixedImageVector[i]);
   }
 
   /** Check for B-spline interpolators. */
@@ -258,35 +246,34 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
  * ********************* InitializeImageSampler ****************************
  */
 
-template< class TFixedImage, class TMovingImage >
+template <class TFixedImage, class TMovingImage>
 void
-MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::InitializeImageSampler( void )
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::InitializeImageSampler(void)
 {
-  if( this->GetUseImageSampler() )
+  if (this->GetUseImageSampler())
   {
     /** Check if the ImageSampler is set. */
-    if( !this->m_ImageSampler )
+    if (!this->m_ImageSampler)
     {
-      itkExceptionMacro( << "ImageSampler is not present" );
+      itkExceptionMacro(<< "ImageSampler is not present");
     }
 
     /** Initialize the Image Sampler: set the fixed images. */
-    for( unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i)
     {
-      this->m_ImageSampler->SetInput( i, this->m_FixedImageVector[ i ] );
+      this->m_ImageSampler->SetInput(i, this->m_FixedImageVector[i]);
     }
 
     /** Initialize the Image Sampler: set the fixed image masks. */
-    for( unsigned int i = 0; i < this->GetNumberOfFixedImageMasks(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfFixedImageMasks(); ++i)
     {
-      this->m_ImageSampler->SetMask( this->m_FixedImageMaskVector[ i ], i );
+      this->m_ImageSampler->SetMask(this->m_FixedImageMaskVector[i], i);
     }
 
     /** Initialize the Image Sampler: set the fixed image regions. */
-    for( unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i)
     {
-      this->m_ImageSampler->SetInputImageRegion( this->m_FixedImageRegionVector[ i ], i );
+      this->m_ImageSampler->SetInputImageRegion(this->m_FixedImageRegionVector[i], i);
     }
   }
 
@@ -297,27 +284,28 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
  * ******************* EvaluateMovingImageValueAndDerivative ******************
  */
 
-template< class TFixedImage, class TMovingImage >
+template <class TFixedImage, class TMovingImage>
 bool
-MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::EvaluateMovingImageValueAndDerivative(
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::EvaluateMovingImageValueAndDerivative(
   const MovingImagePointType & mappedPoint,
-  RealType & movingImageValue,
-  MovingImageDerivativeType * gradient ) const
+  RealType &                   movingImageValue,
+  MovingImageDerivativeType *  gradient) const
 {
   /** Check if the mapped point is inside the moving image buffers of the feature images. */
   bool sampleOk = true;
-  for( unsigned int i = 1; i < this->GetNumberOfInterpolators(); ++i )
+  for (unsigned int i = 1; i < this->GetNumberOfInterpolators(); ++i)
   {
-    sampleOk &= this->GetInterpolator( i )->IsInsideBuffer( mappedPoint );
+    sampleOk &= this->GetInterpolator(i)->IsInsideBuffer(mappedPoint);
 
     /** If not inside this buffer we can quit. */
-    if( !sampleOk ) { return false; }
+    if (!sampleOk)
+    {
+      return false;
+    }
   }
 
   /** Compute value and possibly derivative of the moving image. */
-  return this->Superclass::EvaluateMovingImageValueAndDerivative(
-    mappedPoint, movingImageValue, gradient );
+  return this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, gradient);
 
 } // end EvaluateMovingImageValueAndDerivative()
 
@@ -326,10 +314,10 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
  * ************************ IsInsideMovingMask *************************
  */
 
-template< class TFixedImage, class TMovingImage >
+template <class TFixedImage, class TMovingImage>
 bool
-MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::IsInsideMovingMask( const MovingImagePointType & mappedPoint ) const
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::IsInsideMovingMask(
+  const MovingImagePointType & mappedPoint) const
 {
   /** If no moving image masks are present 'true' is returned,
    * meaning that this sample is taken into account. Otherwise, the
@@ -337,16 +325,16 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
    * all masks.
    */
   bool inside = true;
-  for( unsigned int i = 0; i < this->GetNumberOfMovingImageMasks(); ++i )
+  for (unsigned int i = 0; i < this->GetNumberOfMovingImageMasks(); ++i)
   {
-    MovingImageMaskPointer movingImageMask = this->GetMovingImageMask( i );
-    if( movingImageMask.IsNotNull() )
+    MovingImageMaskPointer movingImageMask = this->GetMovingImageMask(i);
+    if (movingImageMask.IsNotNull())
     {
-      inside &= movingImageMask->IsInsideInWorldSpace( mappedPoint );
+      inside &= movingImageMask->IsInsideInWorldSpace(mappedPoint);
     }
 
     /** If the point falls outside one mask, we can skip the rest. */
-    if( !inside )
+    if (!inside)
     {
       return false;
     }

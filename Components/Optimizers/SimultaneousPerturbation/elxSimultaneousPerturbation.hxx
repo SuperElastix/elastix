@@ -31,9 +31,8 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template< class TElastix >
-SimultaneousPerturbation< TElastix >
-::SimultaneousPerturbation()
+template <class TElastix>
+SimultaneousPerturbation<TElastix>::SimultaneousPerturbation()
 {
   this->m_ShowMetricValues = false;
 } // end Constructor
@@ -43,14 +42,13 @@ SimultaneousPerturbation< TElastix >
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-SimultaneousPerturbation< TElastix >::BeforeRegistration( void )
+SimultaneousPerturbation<TElastix>::BeforeRegistration(void)
 {
-  std::string showMetricValues( "false" );
-  this->GetConfiguration()->ReadParameter(
-    showMetricValues, "ShowMetricValues", 0 );
-  if( showMetricValues == "false" )
+  std::string showMetricValues("false");
+  this->GetConfiguration()->ReadParameter(showMetricValues, "ShowMetricValues", 0);
+  if (showMetricValues == "false")
   {
     this->m_ShowMetricValues = false;
   }
@@ -60,14 +58,14 @@ SimultaneousPerturbation< TElastix >::BeforeRegistration( void )
   }
 
   /** Add the target cell "stepsize" to xout["iteration"].*/
-  xout[ "iteration" ].AddTargetCell( "2:Metric" );
-  xout[ "iteration" ].AddTargetCell( "3:Gain a_k" );
-  xout[ "iteration" ].AddTargetCell( "4:||Gradient||" );
+  xout["iteration"].AddTargetCell("2:Metric");
+  xout["iteration"].AddTargetCell("3:Gain a_k");
+  xout["iteration"].AddTargetCell("4:||Gradient||");
 
   /** Format the metric and stepsize as floats */
-  xl::xout[ "iteration" ][ "2:Metric" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "3:Gain a_k" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3:Gain a_k"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 
 } // end BeforeRegistration
 
@@ -76,48 +74,46 @@ SimultaneousPerturbation< TElastix >::BeforeRegistration( void )
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-SimultaneousPerturbation< TElastix >
-::BeforeEachResolution( void )
+SimultaneousPerturbation<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast< unsigned int >(
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Set the maximumNumberOfIterations.*/
   unsigned int maximumNumberOfIterations = 500;
-  this->m_Configuration->ReadParameter( maximumNumberOfIterations,
-    "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
-  this->SetMaximumNumberOfIterations( maximumNumberOfIterations );
+  this->m_Configuration->ReadParameter(
+    maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
+  this->SetMaximumNumberOfIterations(maximumNumberOfIterations);
 
   /** Set the number of perturbation used to construct a gradient estimate g_k. */
   unsigned int numberOfPerturbations = 1;
-  this->m_Configuration->ReadParameter( numberOfPerturbations,
-    "NumberOfPerturbations", this->GetComponentLabel(), level, 0 );
-  this->SetNumberOfPerturbations( numberOfPerturbations );
+  this->m_Configuration->ReadParameter(
+    numberOfPerturbations, "NumberOfPerturbations", this->GetComponentLabel(), level, 0);
+  this->SetNumberOfPerturbations(numberOfPerturbations);
 
   /** \todo call the GuessParameters function */
-  double a     = 400.0;
-  double c     = 1.0;
-  double A     = 50.0;
+  double a = 400.0;
+  double c = 1.0;
+  double A = 50.0;
   double alpha = 0.602;
   double gamma = 0.101;
 
-  this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( c, "SP_c", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( A, "SP_A", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0);
 
-  this->Seta( a );
-  this->Setc( c );
-  this->SetA( A );
-  this->SetAlpha( alpha );
-  this->SetGamma( gamma );
+  this->Seta(a);
+  this->Setc(c);
+  this->SetA(A);
+  this->SetAlpha(alpha);
+  this->SetGamma(gamma);
 
   /** Ignore the build-in stop criterion; it's quite ad hoc. */
-  this->SetTolerance( 0.0 );
+  this->SetTolerance(0.0);
 
 } // end BeforeEachResolution
 
@@ -126,30 +122,29 @@ SimultaneousPerturbation< TElastix >
  * ***************** AfterEachIteration *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-SimultaneousPerturbation< TElastix >
-::AfterEachIteration( void )
+SimultaneousPerturbation<TElastix>::AfterEachIteration(void)
 {
   /** Print some information */
 
-  if( this->m_ShowMetricValues )
+  if (this->m_ShowMetricValues)
   {
-    xl::xout[ "iteration" ][ "2:Metric" ] << this->GetValue();
+    xl::xout["iteration"]["2:Metric"] << this->GetValue();
   }
   else
   {
-    xl::xout[ "iteration" ][ "2:Metric" ] << "---";
+    xl::xout["iteration"]["2:Metric"] << "---";
   }
 
-  xl::xout[ "iteration" ][ "3:Gain a_k" ] << this->GetLearningRate();
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << this->GetGradientMagnitude();
+  xl::xout["iteration"]["3:Gain a_k"] << this->GetLearningRate();
+  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
 
   /** Select new spatial samples for the computation of the metric
    * \todo You may also choose to select new samples upon every evaluation
    * of the metric value
    */
-  if( this->GetNewSamplesEveryIteration() )
+  if (this->GetNewSamplesEveryIteration())
   {
     this->SelectNewSamples();
   }
@@ -161,10 +156,9 @@ SimultaneousPerturbation< TElastix >
  * ***************** AfterEachResolution *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-SimultaneousPerturbation< TElastix >
-::AfterEachResolution( void )
+SimultaneousPerturbation<TElastix>::AfterEachResolution(void)
 {
 
   /**
@@ -173,7 +167,7 @@ SimultaneousPerturbation< TElastix >
    */
   std::string stopcondition;
 
-  switch( this->GetStopCondition() )
+  switch (this->GetStopCondition())
   {
 
     case StopConditionSPSAOptimizerEnum::MaximumNumberOfIterations:
@@ -187,7 +181,6 @@ SimultaneousPerturbation< TElastix >
     default:
       stopcondition = "Unknown";
       break;
-
   }
   /** Print the stopping condition */
 
@@ -200,20 +193,15 @@ SimultaneousPerturbation< TElastix >
  * ******************* AfterRegistration ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-SimultaneousPerturbation< TElastix >
-::AfterRegistration( void )
+SimultaneousPerturbation<TElastix>::AfterRegistration(void)
 {
   /** Print the best metric value */
   double bestValue;
 
   bestValue = this->GetValue();
-  elxout
-    << std::endl
-    << "Final metric value  = "
-    << bestValue
-    << std::endl;
+  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
 
 } // end AfterRegistration
 
@@ -222,10 +210,9 @@ SimultaneousPerturbation< TElastix >
  * ******************* SetInitialPosition ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-SimultaneousPerturbation< TElastix >
-::SetInitialPosition( const ParametersType & param )
+SimultaneousPerturbation<TElastix>::SetInitialPosition(const ParametersType & param)
 {
   /** Override the implementation in itkOptimizer.h, to
    * ensure that the scales array and the parameters
@@ -233,17 +220,17 @@ SimultaneousPerturbation< TElastix >
    */
 
   /** Call the Superclass' implementation. */
-  this->Superclass1::SetInitialPosition( param );
+  this->Superclass1::SetInitialPosition(param);
 
   /** Set the scales array to the same size if the size has been changed */
-  ScalesType   scales    = this->GetScales();
+  ScalesType   scales = this->GetScales();
   unsigned int paramsize = param.Size();
 
-  if( ( scales.Size() ) != paramsize )
+  if ((scales.Size()) != paramsize)
   {
-    ScalesType newscales( paramsize );
-    newscales.Fill( 1.0 );
-    this->SetScales( newscales );
+    ScalesType newscales(paramsize);
+    newscales.Fill(1.0);
+    this->SetScales(newscales);
   }
 
   /** \todo to optimizerbase? */

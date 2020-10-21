@@ -59,32 +59,25 @@ void
 PrintAllRegisteredFactories()
 {
   // List all registered factories
-  std::list< itk::ObjectFactoryBase * > factories
-    = itk::ObjectFactoryBase::GetRegisteredFactories();
+  std::list<itk::ObjectFactoryBase *> factories = itk::ObjectFactoryBase::GetRegisteredFactories();
 
   std::cout << "----- Registered factories -----" << std::endl;
-  for( std::list< itk::ObjectFactoryBase * >::iterator
-    f = factories.begin();
-    f != factories.end(); ++f )
+  for (std::list<itk::ObjectFactoryBase *>::iterator f = factories.begin(); f != factories.end(); ++f)
   {
-    std::cout << "  Factory version: "
-              << ( *f )->GetITKSourceVersion() << std::endl
-              << "  Factory description: "
-              << ( *f )->GetDescription() << std::endl;
+    std::cout << "  Factory version: " << (*f)->GetITKSourceVersion() << std::endl
+              << "  Factory description: " << (*f)->GetDescription() << std::endl;
 
-    std::list< std::string > overrides    = ( *f )->GetClassOverrideNames();
-    std::list< std::string > names        = ( *f )->GetClassOverrideWithNames();
-    std::list< std::string > descriptions = ( *f )->GetClassOverrideDescriptions();
-    std::list< bool >        enableflags  = ( *f )->GetEnableFlags();
+    std::list<std::string> overrides = (*f)->GetClassOverrideNames();
+    std::list<std::string> names = (*f)->GetClassOverrideWithNames();
+    std::list<std::string> descriptions = (*f)->GetClassOverrideDescriptions();
+    std::list<bool>        enableflags = (*f)->GetEnableFlags();
 
-    std::list< std::string >::const_iterator n = names.begin();
-    std::list< std::string >::const_iterator d = descriptions.begin();
-    std::list< bool >::const_iterator        e = enableflags.begin();
-    for( std::list< std::string >::const_iterator o = overrides.begin();
-      o != overrides.end(); ++o, ++n, ++d, ++e )
+    std::list<std::string>::const_iterator n = names.begin();
+    std::list<std::string>::const_iterator d = descriptions.begin();
+    std::list<bool>::const_iterator        e = enableflags.begin();
+    for (std::list<std::string>::const_iterator o = overrides.begin(); o != overrides.end(); ++o, ++n, ++d, ++e)
     {
-      std::cout << "    Override " << *o
-                << " with " << *n << std::endl
+      std::cout << "    Override " << *o << " with " << *n << std::endl
                 << "      described as \"" << *d << "\"" << std::endl
                 << "      enabled " << *e << std::endl;
     }
@@ -95,25 +88,22 @@ PrintAllRegisteredFactories()
 //------------------------------------------------------------------------------
 // Helper function to validate factories registration
 bool
-IsRegistered(
-  const std::size_t expectedNumberOfFactories,
-  const std::size_t expectedNumberOfOverrides )
+IsRegistered(const std::size_t expectedNumberOfFactories, const std::size_t expectedNumberOfOverrides)
 {
-  std::list< itk::ObjectFactoryBase * > factories
-    = itk::ObjectFactoryBase::GetRegisteredFactories();
+  std::list<itk::ObjectFactoryBase *> factories = itk::ObjectFactoryBase::GetRegisteredFactories();
 
-  if( factories.size() != expectedNumberOfFactories )
+  if (factories.size() != expectedNumberOfFactories)
   {
-    std::cerr << "ERROR: Expected number of factories=" << expectedNumberOfFactories
-              << ", actual=" << factories.size() << std::endl;
+    std::cerr << "ERROR: Expected number of factories=" << expectedNumberOfFactories << ", actual=" << factories.size()
+              << std::endl;
     return false;
   }
 
-  std::list< std::string > overrides = factories.front()->GetClassOverrideNames();
-  if( overrides.size() != expectedNumberOfOverrides )
+  std::list<std::string> overrides = factories.front()->GetClassOverrideNames();
+  if (overrides.size() != expectedNumberOfOverrides)
   {
-    std::cerr << "ERROR: Expected number of overrides=" << expectedNumberOfOverrides
-              << ", actual=" << overrides.size() << std::endl;
+    std::cerr << "ERROR: Expected number of overrides=" << expectedNumberOfOverrides << ", actual=" << overrides.size()
+              << std::endl;
     return false;
   }
 
@@ -128,28 +118,27 @@ IsRegistered(
 // on the CMake configuration, we need it fixed for tests.
 struct OCLDims
 {
-  itkStaticConstMacro( Support1D, bool, false );
-  itkStaticConstMacro( Support2D, bool, true );
-  itkStaticConstMacro( Support3D, bool, true );
+  itkStaticConstMacro(Support1D, bool, false);
+  itkStaticConstMacro(Support2D, bool, true);
+  itkStaticConstMacro(Support3D, bool, true);
 };
 
 // Define the most common elastix OpenCL image types,
 // We can't use OpenCLImageTypes types directly from
 // elxOpenCLSupportedImageTypes.h because they may change depending
 // on CMake configuration, we need fixed list for tests.
-typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
+typedef typelist::MakeTypeList<short, float>::Type OCLImageTypes;
 
 //------------------------------------------------------------------------------
 bool
 TestGPUFactories()
 {
   // Register one factory
-  itk::GPUImageFactory2< itk::OpenCLDefaultImageTypes, itk::OpenCLDefaultImageDimentions >
-  ::RegisterOneFactory();
+  itk::GPUImageFactory2<itk::OpenCLDefaultImageTypes, itk::OpenCLDefaultImageDimentions>::RegisterOneFactory();
 
   // Print all default registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 24 ) )
+  if (!IsRegistered(1, 24))
   {
     return false;
   }
@@ -165,12 +154,11 @@ bool
 TestGPUFilterFactories()
 {
   // Register one factory
-  itk::GPUBSplineDecompositionImageFilterFactory2< OCLImageTypes, OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUBSplineDecompositionImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 32 ) )
+  if (!IsRegistered(1, 32))
   {
     return false;
   }
@@ -179,12 +167,11 @@ TestGPUFilterFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUCastImageFilterFactory2< OCLImageTypes, OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUCastImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 48 ) )
+  if (!IsRegistered(1, 48))
   {
     return false;
   }
@@ -193,12 +180,11 @@ TestGPUFilterFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPURecursiveGaussianImageFilterFactory2< OCLImageTypes, OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPURecursiveGaussianImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 32 ) )
+  if (!IsRegistered(1, 32))
   {
     return false;
   }
@@ -207,12 +193,11 @@ TestGPUFilterFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUResampleImageFilterFactory2< OCLImageTypes, OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUResampleImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 64 ) )
+  if (!IsRegistered(1, 64))
   {
     return false;
   }
@@ -221,12 +206,11 @@ TestGPUFilterFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUShrinkImageFilterFactory2< OCLImageTypes, OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUShrinkImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 32 ) )
+  if (!IsRegistered(1, 32))
   {
     return false;
   }
@@ -242,12 +226,11 @@ bool
 TestGPUInterpolatorFactories()
 {
   // Register one factory
-  itk::GPULinearInterpolateImageFunctionFactory2< OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPULinearInterpolateImageFunctionFactory2<OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 16 ) )
+  if (!IsRegistered(1, 16))
   {
     return false;
   }
@@ -256,12 +239,11 @@ TestGPUInterpolatorFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUNearestNeighborInterpolateImageFunctionFactory2< OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUNearestNeighborInterpolateImageFunctionFactory2<OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 16 ) )
+  if (!IsRegistered(1, 16))
   {
     return false;
   }
@@ -270,12 +252,11 @@ TestGPUInterpolatorFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUBSplineInterpolateImageFunctionFactory2< OCLImageTypes, OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUBSplineInterpolateImageFunctionFactory2<OCLImageTypes, OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 16 ) )
+  if (!IsRegistered(1, 16))
   {
     return false;
   }
@@ -292,12 +273,11 @@ bool
 TestGPUTransformFactories()
 {
   // Register one factory
-  itk::GPUAffineTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAffineTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 4 ) )
+  if (!IsRegistered(1, 4))
   {
     return false;
   }
@@ -306,12 +286,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUBSplineTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUBSplineTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 12 ) )
+  if (!IsRegistered(1, 12))
   {
     return false;
   }
@@ -320,12 +299,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUCompositeTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUCompositeTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 4 ) )
+  if (!IsRegistered(1, 4))
   {
     return false;
   }
@@ -334,12 +312,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUEuler2DTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUEuler2DTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 2 ) )
+  if (!IsRegistered(1, 2))
   {
     return false;
   }
@@ -348,12 +325,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUEuler3DTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUEuler3DTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 2 ) )
+  if (!IsRegistered(1, 2))
   {
     return false;
   }
@@ -362,12 +338,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUIdentityTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUIdentityTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 4 ) )
+  if (!IsRegistered(1, 4))
   {
     return false;
   }
@@ -376,12 +351,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUSimilarity2DTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUSimilarity2DTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 2 ) )
+  if (!IsRegistered(1, 2))
   {
     return false;
   }
@@ -390,12 +364,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUSimilarity3DTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUSimilarity3DTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 2 ) )
+  if (!IsRegistered(1, 2))
   {
     return false;
   }
@@ -404,12 +377,11 @@ TestGPUTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUTranslationTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUTranslationTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 4 ) )
+  if (!IsRegistered(1, 4))
   {
     return false;
   }
@@ -425,12 +397,11 @@ bool
 TestGPUAdvancedTransformFactories()
 {
   // Register one factory
-  itk::GPUAdvancedMatrixOffsetTransformBaseFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAdvancedMatrixOffsetTransformBaseFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 4 ) )
+  if (!IsRegistered(1, 4))
   {
     return false;
   }
@@ -439,12 +410,11 @@ TestGPUAdvancedTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUAdvancedBSplineDeformableTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAdvancedBSplineDeformableTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 12 ) )
+  if (!IsRegistered(1, 12))
   {
     return false;
   }
@@ -453,12 +423,11 @@ TestGPUAdvancedTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUAdvancedCombinationTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAdvancedCombinationTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 4 ) )
+  if (!IsRegistered(1, 4))
   {
     return false;
   }
@@ -467,26 +436,25 @@ TestGPUAdvancedTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  //itk::GPUAdvancedEuler2DTransformFactory< OCLImageDims2 >
+  // itk::GPUAdvancedEuler2DTransformFactory< OCLImageDims2 >
   //::RegisterOneFactory();
 
   //// Print all elastix registered factories
-  //PrintAllRegisteredFactories();
-  //if( !IsRegistered( 1, 2 ) )
+  // PrintAllRegisteredFactories();
+  // if( !IsRegistered( 1, 2 ) )
   //{
   //  return false;
   //}
 
   //// Unregister all
-  //itk::ObjectFactoryBase::UnRegisterAllFactories();
+  // itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUAdvancedEuler3DTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAdvancedEuler3DTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 2 ) )
+  if (!IsRegistered(1, 2))
   {
     return false;
   }
@@ -495,12 +463,11 @@ TestGPUAdvancedTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUAdvancedSimilarity2DTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAdvancedSimilarity2DTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 2 ) )
+  if (!IsRegistered(1, 2))
   {
     return false;
   }
@@ -509,12 +476,11 @@ TestGPUAdvancedTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUAdvancedSimilarity3DTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAdvancedSimilarity3DTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 2 ) )
+  if (!IsRegistered(1, 2))
   {
     return false;
   }
@@ -523,12 +489,11 @@ TestGPUAdvancedTransformFactories()
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
   // Register one factory
-  itk::GPUAdvancedTranslationTransformFactory2< OCLDims >
-  ::RegisterOneFactory();
+  itk::GPUAdvancedTranslationTransformFactory2<OCLDims>::RegisterOneFactory();
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if( !IsRegistered( 1, 4 ) )
+  if (!IsRegistered(1, 4))
   {
     return false;
   }
@@ -542,13 +507,13 @@ TestGPUAdvancedTransformFactories()
 //------------------------------------------------------------------------------
 // This test validates GPU factory create process
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   // Setup for debugging
   itk::SetupForDebugging();
 
   // Create and check OpenCL context
-  if( !itk::CreateContext() )
+  if (!itk::CreateContext())
   {
     return EXIT_FAILURE;
   }
@@ -556,27 +521,27 @@ main( int argc, char * argv[] )
   // ITK creates some factories unregister them
   itk::ObjectFactoryBase::UnRegisterAllFactories();
 
-  if( !TestGPUFactories() )
+  if (!TestGPUFactories())
   {
     return EXIT_FAILURE;
   }
 
-  if( !TestGPUFilterFactories() )
+  if (!TestGPUFilterFactories())
   {
     return EXIT_FAILURE;
   }
 
-  if( !TestGPUInterpolatorFactories() )
+  if (!TestGPUInterpolatorFactories())
   {
     return EXIT_FAILURE;
   }
 
-  if( !TestGPUTransformFactories() )
+  if (!TestGPUTransformFactories())
   {
     return EXIT_FAILURE;
   }
 
-  if( !TestGPUAdvancedTransformFactories() )
+  if (!TestGPUAdvancedTransformFactories())
   {
     return EXIT_FAILURE;
   }

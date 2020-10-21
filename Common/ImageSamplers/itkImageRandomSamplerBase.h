@@ -32,23 +32,21 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageRandomSamplerBase :
-  public ImageSamplerBase< TInputImage >
+template <class TInputImage>
+class ImageRandomSamplerBase : public ImageSamplerBase<TInputImage>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageRandomSamplerBase          Self;
-  typedef ImageSamplerBase< TInputImage > Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef ImageRandomSamplerBase        Self;
+  typedef ImageSamplerBase<TInputImage> Superclass;
+  typedef SmartPointer<Self>            Pointer;
+  typedef SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageRandomSamplerBase, ImageSamplerBase );
+  itkTypeMacro(ImageRandomSamplerBase, ImageSamplerBase);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -65,11 +63,9 @@ public:
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    Superclass::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
 protected:
-
   /** The constructor. */
   ImageRandomSamplerBase();
 
@@ -77,27 +73,28 @@ protected:
   ~ImageRandomSamplerBase() override {}
 
   /** Multi-threaded function that does the work. */
-  void BeforeThreadedGenerateData( void ) override;
+  void
+  BeforeThreadedGenerateData(void) override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variable used when threading. */
-  std::vector< double > m_RandomNumberList;
+  std::vector<double> m_RandomNumberList;
 
 private:
-
   /** The private constructor. */
-  ImageRandomSamplerBase( const Self & );     // purposely not implemented
+  ImageRandomSamplerBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );             // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomSamplerBase.hxx"
+#  include "itkImageRandomSamplerBase.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomSamplerBase_h

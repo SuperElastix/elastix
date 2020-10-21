@@ -30,12 +30,12 @@ OpenCLLogger::Pointer OpenCLLogger::m_Instance = nullptr;
 OpenCLLogger::Pointer
 OpenCLLogger::GetInstance()
 {
-  if( !OpenCLLogger::m_Instance )
+  if (!OpenCLLogger::m_Instance)
   {
     // Try the factory first
-    OpenCLLogger::m_Instance = ObjectFactory< Self >::Create();
+    OpenCLLogger::m_Instance = ObjectFactory<Self>::Create();
     // if the factory did not provide one, then create it here
-    if( !OpenCLLogger::m_Instance )
+    if (!OpenCLLogger::m_Instance)
     {
       // For the windows OS, use a special output window
       OpenCLLogger::m_Instance = new OpenCLLogger;
@@ -58,11 +58,11 @@ OpenCLLogger::New()
 
 
 //------------------------------------------------------------------------------
-OpenCLLogger::OpenCLLogger() :
-  m_FileName( "_opencl.log" )
+OpenCLLogger::OpenCLLogger()
+  : m_FileName("_opencl.log")
 {
   this->m_FileStream = nullptr;
-  this->m_Created    = false;
+  this->m_Created = false;
 }
 
 
@@ -73,7 +73,7 @@ OpenCLLogger::~OpenCLLogger()
   // still performs extra flush in the destructor and setting it with null
   // not possible due to SetStream() implementation.
 
-  //if( this->m_FileStream != NULL )
+  // if( this->m_FileStream != NULL )
   //{
   //  delete this->m_FileStream;
   //  this->m_FileStream = NULL;
@@ -86,47 +86,47 @@ void
 OpenCLLogger::Initialize()
 {
   // Construct log filename
-  const std::string forward_slash( "/" );
+  const std::string forward_slash("/");
   std::string       logFileName = this->m_OutputDirectory;
-  const std::size_t found       = logFileName.find_last_not_of( forward_slash );
-  if( found == std::string::npos )
+  const std::size_t found = logFileName.find_last_not_of(forward_slash);
+  if (found == std::string::npos)
   {
-    logFileName.append( "/" );
-    logFileName.append( this->m_FileName );
+    logFileName.append("/");
+    logFileName.append(this->m_FileName);
   }
   else
   {
-    logFileName.append( this->m_FileName );
+    logFileName.append(this->m_FileName);
   }
 
   // Create file stream
-  this->m_FileStream = new std::ofstream( logFileName.c_str(), std::ios::out );
-  if( this->m_FileStream->fail() )
+  this->m_FileStream = new std::ofstream(logFileName.c_str(), std::ios::out);
+  if (this->m_FileStream->fail())
   {
-    itkExceptionMacro( << "Unable to open file: " << logFileName );
+    itkExceptionMacro(<< "Unable to open file: " << logFileName);
     delete this->m_FileStream;
     this->m_FileStream = nullptr;
-    this->m_Created    = false;
+    this->m_Created = false;
     return;
   }
 
   // Create an ITK Logger
   LoggerBaseEnums::TimeStampFormat timeStampFormat = LoggerBaseEnums::TimeStampFormat::HUMANREADABLE;
-  this->SetTimeStampFormat( timeStampFormat );
+  this->SetTimeStampFormat(timeStampFormat);
   const std::string humanReadableFormat = "%b %d %Y %H:%M:%S";
-  this->SetHumanReadableFormat( humanReadableFormat );
+  this->SetHumanReadableFormat(humanReadableFormat);
 
   // Setting the logger
-  this->SetName( "OpenCLLogger" );
-  this->SetPriorityLevel( LoggerBase::PriorityLevelEnum::INFO );
-  this->SetLevelForFlushing( LoggerBase::PriorityLevelEnum::CRITICAL );
+  this->SetName("OpenCLLogger");
+  this->SetPriorityLevel(LoggerBase::PriorityLevelEnum::INFO);
+  this->SetLevelForFlushing(LoggerBase::PriorityLevelEnum::CRITICAL);
 
   // Create StdStreamLogOutput
   this->m_Stream = StdStreamLogOutput::New();
-  this->m_Stream->SetStream( *this->m_FileStream );
+  this->m_Stream->SetStream(*this->m_FileStream);
 
   // Add to logger
-  this->AddLogOutput( this->m_Stream );
+  this->AddLogOutput(this->m_Stream);
 
   this->m_Created = true;
 }
@@ -134,9 +134,9 @@ OpenCLLogger::Initialize()
 
 //------------------------------------------------------------------------------
 void
-OpenCLLogger::SetLogFileNamePrefix( const std::string & prefix )
+OpenCLLogger::SetLogFileNamePrefix(const std::string & prefix)
 {
-  this->m_FileName.insert( 0, prefix );
+  this->m_FileName.insert(0, prefix);
 }
 
 
@@ -150,22 +150,22 @@ OpenCLLogger::IsCreated() const
 
 //------------------------------------------------------------------------------
 void
-OpenCLLogger::Write( PriorityLevelEnum level, std::string const & content )
+OpenCLLogger::Write(PriorityLevelEnum level, std::string const & content)
 {
-  if( this->m_Stream.IsNull() )
+  if (this->m_Stream.IsNull())
   {
     this->Initialize();
   }
 
-  if( !this->IsCreated() )
+  if (!this->IsCreated())
   {
     return;
   }
 
   std::ostringstream message;
   message << "OpenCL compile error: " << std::endl << content;
-  Superclass::Write( level, message.str().c_str() );
+  Superclass::Write(level, message.str().c_str());
 }
 
 
-}
+} // namespace itk

@@ -28,17 +28,16 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-GradientDifferenceMetric< TElastix >
-::Initialize( void )
+GradientDifferenceMetric<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of GradientDifference metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+  elxout << "Initialization of GradientDifference metric took: " << static_cast<long>(timer.GetMean() * 1000) << " ms."
+         << std::endl;
 
 } // end Initialize()
 
@@ -47,21 +46,20 @@ GradientDifferenceMetric< TElastix >
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-GradientDifferenceMetric< TElastix >
-::BeforeRegistration( void )
+GradientDifferenceMetric<TElastix>::BeforeRegistration(void)
 {
 
-  if( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
+  if (this->m_Elastix->GetFixedImage()->GetImageDimension() != 3)
   {
-    itkExceptionMacro( << "FixedImage must be 3D" );
+    itkExceptionMacro(<< "FixedImage must be 3D");
   }
-  if( this->m_Elastix->GetFixedImage()->GetImageDimension() == 3 )
+  if (this->m_Elastix->GetFixedImage()->GetImageDimension() == 3)
   {
-    if( this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[ 2 ] != 1 )
+    if (this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[2] != 1)
     {
-      itkExceptionMacro( << "Metric can only be used for 2D-3D registration. FixedImageSize[2] must be 1" );
+      itkExceptionMacro(<< "Metric can only be used for 2D-3D registration. FixedImageSize[2] must be 1");
     }
   }
 
@@ -72,14 +70,13 @@ GradientDifferenceMetric< TElastix >
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-GradientDifferenceMetric< TElastix >
-::BeforeEachResolution( void )
+GradientDifferenceMetric<TElastix>::BeforeEachResolution(void)
 {
-  typedef typename elastix::OptimizerBase< TElastix >::ITKBaseType::ScalesType ScalesType;
+  typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType ScalesType;
   ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
-  this->SetScales( scales );
+  this->SetScales(scales);
 
 } // end BeforeEachResolution()
 

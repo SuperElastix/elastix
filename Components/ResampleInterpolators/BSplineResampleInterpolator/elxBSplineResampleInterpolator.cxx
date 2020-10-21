@@ -18,4 +18,4 @@
 
 #include "elxBSplineResampleInterpolator.h"
 
-elxInstallMacro( BSplineResampleInterpolator );
+elxInstallMacro(BSplineResampleInterpolator);

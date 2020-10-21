@@ -27,10 +27,9 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BSplineResampleInterpolator< TElastix >
-::BeforeRegistration( void )
+BSplineResampleInterpolator<TElastix>::BeforeRegistration(void)
 {
   /** BSplineResampleInterpolator specific. */
 
@@ -38,11 +37,10 @@ BSplineResampleInterpolator< TElastix >
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  this->m_Configuration->ReadParameter( splineOrder,
-    "FinalBSplineInterpolationOrder", 0 );
+  this->m_Configuration->ReadParameter(splineOrder, "FinalBSplineInterpolationOrder", 0);
 
   /** Set the splineOrder in the superclass. */
-  this->SetSplineOrder( splineOrder );
+  this->SetSplineOrder(splineOrder);
 
 } // end BeforeRegistration()
 
@@ -51,10 +49,9 @@ BSplineResampleInterpolator< TElastix >
  * ******************* ReadFromFile  ****************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BSplineResampleInterpolator< TElastix >
-::ReadFromFile( void )
+BSplineResampleInterpolator<TElastix>::ReadFromFile(void)
 {
   /** Call ReadFromFile of the ResamplerBase. */
   this->Superclass2::ReadFromFile();
@@ -65,11 +62,10 @@ BSplineResampleInterpolator< TElastix >
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  this->m_Configuration->ReadParameter( splineOrder,
-    "FinalBSplineInterpolationOrder", 0 );
+  this->m_Configuration->ReadParameter(splineOrder, "FinalBSplineInterpolationOrder", 0);
 
   /** Set the splineOrder in the superclass. */
-  this->SetSplineOrder( splineOrder );
+  this->SetSplineOrder(splineOrder);
 
 } // end ReadFromFile()
 
@@ -78,10 +74,9 @@ BSplineResampleInterpolator< TElastix >
  * ******************* WriteToFile ******************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BSplineResampleInterpolator< TElastix >
-::WriteToFile( void ) const
+BSplineResampleInterpolator<TElastix>::WriteToFile(void) const
 {
   /** Call WriteToFile of the ResamplerBase. */
   this->Superclass2::WriteToFile();
@@ -89,8 +84,7 @@ BSplineResampleInterpolator< TElastix >
   /** The BSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
-  xout[ "transpar" ] << "(FinalBSplineInterpolationOrder "
-                     << this->GetSplineOrder() << ")" << std::endl;
+  xout["transpar"] << "(FinalBSplineInterpolationOrder " << this->GetSplineOrder() << ")" << std::endl;
 
 } // end WriteToFile()
 
@@ -99,25 +93,25 @@ BSplineResampleInterpolator< TElastix >
  * ******************* CreateTransformParametersMap ******************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-BSplineResampleInterpolator< TElastix >
-::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
+BSplineResampleInterpolator<TElastix>::CreateTransformParametersMap(ParameterMapType * paramsMap) const
 {
-  std::ostringstream         tmpStream;
-  std::string                parameterName;
-  std::vector< std::string > parameterValues;
+  std::ostringstream       tmpStream;
+  std::string              parameterName;
+  std::vector<std::string> parameterValues;
 
   /** Call CreateTransformParametersMap of the ResamplerBase. */
-  this->Superclass2::CreateTransformParametersMap( paramsMap );
+  this->Superclass2::CreateTransformParametersMap(paramsMap);
 
   /** The BSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
   parameterName = "FinalBSplineInterpolationOrder";
-  tmpStream.str( "" ); tmpStream << this->GetSplineOrder();
-  parameterValues.push_back( tmpStream.str() );
-  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  tmpStream.str("");
+  tmpStream << this->GetSplineOrder();
+  parameterValues.push_back(tmpStream.str());
+  paramsMap->insert(make_pair(parameterName, parameterValues));
   parameterValues.clear();
 
 } // end CreateTransformParametersMap()

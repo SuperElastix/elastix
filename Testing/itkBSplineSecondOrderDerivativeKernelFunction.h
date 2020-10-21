@@ -39,60 +39,54 @@ namespace itk
  *
  * \ingroup Functions
  */
-template< unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineSecondOrderDerivativeKernelFunction : public KernelFunctionBase< double >
+template <unsigned int VSplineOrder = 3>
+class ITK_EXPORT BSplineSecondOrderDerivativeKernelFunction : public KernelFunctionBase<double>
 {
 public:
-
   /** Standard class typedefs. */
   typedef BSplineSecondOrderDerivativeKernelFunction Self;
-  typedef KernelFunctionBase< double >               Superclass;
-  typedef SmartPointer< Self >                       Pointer;
+  typedef KernelFunctionBase<double>                 Superclass;
+  typedef SmartPointer<Self>                         Pointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineSecondOrderDerivativeKernelFunction, KernelFunctionBase );
+  itkTypeMacro(BSplineSecondOrderDerivativeKernelFunction, KernelFunctionBase);
 
   /** Enum of for spline order. */
-  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
+  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Evaluate the function. */
-  inline double Evaluate( const double & u ) const override
+  inline double
+  Evaluate(const double & u) const override
   {
-    return ( m_KernelFunction->Evaluate( u + 1.0 )
-           - 2.0 * m_KernelFunction->Evaluate( u )
-           + m_KernelFunction->Evaluate( u - 1.0 ) );
+    return (m_KernelFunction->Evaluate(u + 1.0) - 2.0 * m_KernelFunction->Evaluate(u) +
+            m_KernelFunction->Evaluate(u - 1.0));
   }
 
 
 protected:
+  typedef BSplineKernelFunction<itkGetStaticConstMacro(SplineOrder) - 2> KernelType;
 
-  typedef BSplineKernelFunction< itkGetStaticConstMacro( SplineOrder ) - 2 >
-    KernelType;
+  BSplineSecondOrderDerivativeKernelFunction() { m_KernelFunction = KernelType::New(); }
 
-  BSplineSecondOrderDerivativeKernelFunction()
+
+  ~BSplineSecondOrderDerivativeKernelFunction() override {}
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override
   {
-    m_KernelFunction = KernelType::New();
-  }
-
-
-  ~BSplineSecondOrderDerivativeKernelFunction() override{}
-  void PrintSelf( std::ostream & os, Indent indent ) const override
-  {
-    Superclass::PrintSelf( os, indent );
-    os << indent  << "Spline Order: " << SplineOrder << std::endl;
+    Superclass::PrintSelf(os, indent);
+    os << indent << "Spline Order: " << SplineOrder << std::endl;
   }
 
 
 private:
-
-  BSplineSecondOrderDerivativeKernelFunction( const Self & ); //purposely not implemented
-  void operator=( const Self & );                             //purposely not implemented
+  BSplineSecondOrderDerivativeKernelFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   typename KernelType::Pointer m_KernelFunction;
-
 };
 
 } // end namespace itk

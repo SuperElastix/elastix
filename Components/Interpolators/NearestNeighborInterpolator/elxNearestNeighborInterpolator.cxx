@@ -18,4 +18,4 @@
 
 #include "elxNearestNeighborInterpolator.h"
 
-elxInstallMacro( NearestNeighborInterpolator );
+elxInstallMacro(NearestNeighborInterpolator);

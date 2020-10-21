@@ -31,42 +31,42 @@ namespace itk
 class ITK_EXPORT MevisDicomTiffImageIOFactory : public ObjectFactoryBase
 {
 public:
-
   /** Standard class typedefs. */
   typedef MevisDicomTiffImageIOFactory Self;
   typedef ObjectFactoryBase            Superclass;
-  typedef SmartPointer< Self >         Pointer;
-  typedef SmartPointer< const Self >   ConstPointer;
+  typedef SmartPointer<Self>           Pointer;
+  typedef SmartPointer<const Self>     ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char * GetITKSourceVersion( void ) const;
+  virtual const char *
+  GetITKSourceVersion(void) const;
 
-  virtual const char * GetDescription( void ) const;
+  virtual const char *
+  GetDescription(void) const;
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MevisDicomTiffImageIOFactory, ObjectFactoryBase );
+  itkTypeMacro(MevisDicomTiffImageIOFactory, ObjectFactoryBase);
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory( void )
+  static void
+  RegisterOneFactory(void)
   {
     MevisDicomTiffImageIOFactory::Pointer metaFactory = MevisDicomTiffImageIOFactory::New();
-    ObjectFactoryBase::RegisterFactory( metaFactory );
+    ObjectFactoryBase::RegisterFactory(metaFactory);
   }
 
 
 protected:
-
   MevisDicomTiffImageIOFactory();
   ~MevisDicomTiffImageIOFactory();
 
 private:
-
-  MevisDicomTiffImageIOFactory( const Self & ); //purposely not implemented
-  void operator=( const Self & );               //purposely not implemented
-
+  MevisDicomTiffImageIOFactory(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 // end class MevisDicomTiffImageIOFactory

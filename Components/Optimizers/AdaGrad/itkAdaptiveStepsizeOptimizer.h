@@ -68,23 +68,20 @@ namespace itk
  * \ingroup Optimizers
  */
 
-class AdaptiveStepsizeOptimizer :
-  public StandardGradientDescentOptimizer
+class AdaptiveStepsizeOptimizer : public StandardGradientDescentOptimizer
 {
 public:
-
   /** Standard ITK.*/
-  typedef AdaptiveStepsizeOptimizer       Self;
-  typedef StandardGradientDescentOptimizer  Superclass;
-  typedef SmartPointer< Self >              Pointer;
-  typedef SmartPointer< const Self >        ConstPointer;
+  typedef AdaptiveStepsizeOptimizer        Self;
+  typedef StandardGradientDescentOptimizer Superclass;
+  typedef SmartPointer<Self>               Pointer;
+  typedef SmartPointer<const Self>         ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdaptiveStepsizeOptimizer,
-    StandardGradientDescentOptimizer );
+  itkTypeMacro(AdaptiveStepsizeOptimizer, StandardGradientDescentOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -97,40 +94,40 @@ public:
   typedef Superclass::StopConditionType         StopConditionType;
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true */
-  itkSetMacro( UseAdaptiveStepSizes, bool );
-  itkGetConstMacro( UseAdaptiveStepSizes, bool );
+  itkSetMacro(UseAdaptiveStepSizes, bool);
+  itkGetConstMacro(UseAdaptiveStepSizes, bool);
 
   /** Set/Get the maximum of the sigmoid.
-  * Should be >0. Default: 1.0 */
-  itkSetMacro( SigmoidMax, double );
-  itkGetConstMacro( SigmoidMax, double );
+   * Should be >0. Default: 1.0 */
+  itkSetMacro(SigmoidMax, double);
+  itkGetConstMacro(SigmoidMax, double);
 
   /** Set/Get the maximum of the sigmoid.
-  * Should be <0. Default: -0.8 */
-  itkSetMacro( SigmoidMin, double );
-  itkGetConstMacro( SigmoidMin, double );
+   * Should be <0. Default: -0.8 */
+  itkSetMacro(SigmoidMin, double);
+  itkGetConstMacro(SigmoidMin, double);
 
   /** Set/Get the scaling of the sigmoid width. Large values
-  * cause a more wide sigmoid. Default: 1e-8. Should be >0. */
-  itkSetMacro( SigmoidScale, double );
-  itkGetConstMacro( SigmoidScale, double );
+   * cause a more wide sigmoid. Default: 1e-8. Should be >0. */
+  itkSetMacro(SigmoidScale, double);
+  itkGetConstMacro(SigmoidScale, double);
 
   /** Get current gradient. */
-  itkGetConstReferenceMacro( PreconditionVector, ParametersType );
+  itkGetConstReferenceMacro(PreconditionVector, ParametersType);
 
 protected:
-
   AdaptiveStepsizeOptimizer();
   ~AdaptiveStepsizeOptimizer() override {}
 
   /** Function to update the current time
-  * If UseAdaptiveStepSizes is false this function just increments
-  * the CurrentTime by \f$E_0 = (sigmoid_{max} + sigmoid_{min})/2\f$.
-  * Else, the CurrentTime is updated according to:\n
-  * time = max[ 0, time + sigmoid( -gradient*previousgradient) ]\n
-  * In that case, also the m_PreviousGradient is updated.
-  */
-  void UpdateCurrentTime( void ) override;
+   * If UseAdaptiveStepSizes is false this function just increments
+   * the CurrentTime by \f$E_0 = (sigmoid_{max} + sigmoid_{min})/2\f$.
+   * Else, the CurrentTime is updated according to:\n
+   * time = max[ 0, time + sigmoid( -gradient*previousgradient) ]\n
+   * In that case, also the m_PreviousGradient is updated.
+   */
+  void
+  UpdateCurrentTime(void) override;
 
   /** The PreviousGradient, necessary for the CruzAcceleration */
   DerivativeType m_PreviousSearchDirection;
@@ -138,16 +135,15 @@ protected:
   std::string    m_StepSizeStrategy;
 
 private:
-
-  AdaptiveStepsizeOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );            // purposely not implemented
+  AdaptiveStepsizeOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Settings */
   bool   m_UseAdaptiveStepSizes;
   double m_SigmoidMax;
   double m_SigmoidMin;
   double m_SigmoidScale;
-
 };
 
 } // end namespace itk

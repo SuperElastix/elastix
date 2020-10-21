@@ -44,42 +44,39 @@ namespace elastix
  * \ingroup Interpolators
  */
 
-template< class TElastix >
-class ReducedDimensionBSplineInterpolator :
-  public
-  itk::ReducedDimensionBSplineInterpolateImageFunction<
-  typename InterpolatorBase< TElastix >::InputImageType,
-  typename InterpolatorBase< TElastix >::CoordRepType,
-  double >,        //CoefficientType
-  public
-  InterpolatorBase< TElastix >
+template <class TElastix>
+class ReducedDimensionBSplineInterpolator
+  : public itk::ReducedDimensionBSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                                typename InterpolatorBase<TElastix>::CoordRepType,
+                                                                double>
+  , // CoefficientType
+    public InterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef ReducedDimensionBSplineInterpolator Self;
-  typedef itk::ReducedDimensionBSplineInterpolateImageFunction<
-    typename InterpolatorBase< TElastix >::InputImageType,
-    typename InterpolatorBase< TElastix >::CoordRepType,
-    double >                                  Superclass1;
-  typedef InterpolatorBase< TElastix >    Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::ReducedDimensionBSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                               typename InterpolatorBase<TElastix>::CoordRepType,
+                                                               double>
+                                        Superclass1;
+  typedef InterpolatorBase<TElastix>    Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ReducedDimensionBSplineInterpolator, ReducedDimensionBSplineInterpolateImageFunction );
+  itkTypeMacro(ReducedDimensionBSplineInterpolator, ReducedDimensionBSplineInterpolateImageFunction);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n
    * example: <tt>(Interpolator "ReducedDimensionBSplineInterpolator")</tt>\n
    */
-  elxClassNameMacro( "ReducedDimensionBSplineInterpolator" );
+  elxClassNameMacro("ReducedDimensionBSplineInterpolator");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::OutputType               OutputType;
@@ -106,28 +103,27 @@ public:
   /** Execute stuff before each new pyramid resolution:
    * \li Set the spline order.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
   ReducedDimensionBSplineInterpolator() {}
   /** The destructor. */
   ~ReducedDimensionBSplineInterpolator() override {}
 
 private:
-
   /** The private constructor. */
-  ReducedDimensionBSplineInterpolator( const Self & );  // purposely not implemented
+  ReducedDimensionBSplineInterpolator(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );       // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxReducedDimensionBSplineInterpolator.hxx"
+#  include "elxReducedDimensionBSplineInterpolator.hxx"
 #endif
 
 #endif // end #ifndef __elxReducedDimensionBSplineInterpolator_h

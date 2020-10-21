@@ -46,47 +46,45 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template< class TElastix >
-class TranslationTransformElastix :
-  public itk::AdvancedCombinationTransform<
-  typename elx::TransformBase< TElastix >::CoordRepType,
-  elx::TransformBase< TElastix >::FixedImageDimension >,
-  public elx::TransformBase< TElastix >
+template <class TElastix>
+class TranslationTransformElastix
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public elx::TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef TranslationTransformElastix Self;
 
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >   Superclass1;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+    Superclass1;
 
-  typedef elx::TransformBase< TElastix > Superclass2;
+  typedef elx::TransformBase<TElastix> Superclass2;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::AdvancedTranslationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >   TranslationTransformType;
+  typedef itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+    TranslationTransformType;
 
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TranslationTransformElastix, itk::AdvancedCombinationTransform );
+  itkTypeMacro(TranslationTransformElastix, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "TranslationTransform")</tt>\n
    */
-  elxClassNameMacro( "TranslationTransform" );
+  elxClassNameMacro("TranslationTransform");
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
@@ -116,17 +114,16 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Extra typedefs */
-  typedef itk::TranslationTransformInitializer<
-    TranslationTransformType,
-    FixedImageType,
-    MovingImageType >                                      TransformInitializerType;
+  typedef itk::TranslationTransformInitializer<TranslationTransformType, FixedImageType, MovingImageType>
+                                                     TransformInitializerType;
   typedef typename TransformInitializerType::Pointer TransformInitializerPointer;
   typedef typename TranslationTransformType::Pointer TranslationTransformPointer;
 
   /** Execute stuff before the actual registration:
    * \li Call InitializeTransform.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Initialize Transform.
    * \li Set all parameters to zero.
@@ -134,10 +131,10 @@ public:
    *  the initial translation between fixed and moving image is guessed,
    *  if the user has set (AutomaticTransformInitialization "true").
    */
-  virtual void InitializeTransform( void );
+  virtual void
+  InitializeTransform(void);
 
 protected:
-
   /** The constructor. */
   TranslationTransformElastix();
   /** The destructor. */
@@ -146,18 +143,17 @@ protected:
   TranslationTransformPointer m_TranslationTransform;
 
 private:
-
   /** The private constructor. */
-  TranslationTransformElastix( const Self & );  // purposely not implemented
+  TranslationTransformElastix(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxTranslationTransform.hxx"
+#  include "elxTranslationTransform.hxx"
 #endif
 
 #endif // end #ifndef __elxTranslationTransform_H_

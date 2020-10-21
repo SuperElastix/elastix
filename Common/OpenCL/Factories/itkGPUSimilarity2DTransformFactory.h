@@ -33,63 +33,66 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
-class GPUSimilarity2DTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename NDimensions>
+class GPUSimilarity2DTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
-  typedef GPUSimilarity2DTransformFactory2    Self;
-  typedef GPUObjectFactoryBase< NDimensions > Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUSimilarity2DTransformFactory2  Self;
+  typedef GPUObjectFactoryBase<NDimensions> Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUSimilarity2DTransform"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUSimilarity2DTransform";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUSimilarity2DTransformFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUSimilarity2DTransformFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType >
-  void operator()( void )
+  template <typename TType>
+  void
+  operator()(void)
   {
-    this->RegisterOverride(
-      typeid( Similarity2DTransform< TType > ).name(),
-      typeid( GPUSimilarity2DTransform< TType > ).name(),
-      "GPU Similarity2DTransform override", true,
-      CreateObjectFunction< GPUSimilarity2DTransform< TType > >::New()
-      );
+    this->RegisterOverride(typeid(Similarity2DTransform<TType>).name(),
+                           typeid(GPUSimilarity2DTransform<TType>).name(),
+                           "GPU Similarity2DTransform override",
+                           true,
+                           CreateObjectFunction<GPUSimilarity2DTransform<TType>>::New());
   }
 
 
 protected:
-
   GPUSimilarity2DTransformFactory2();
   virtual ~GPUSimilarity2DTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList< float, double >::Type RealTypeList;
+  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
 private:
-
-  GPUSimilarity2DTransformFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                   // purposely not implemented
-
+  GPUSimilarity2DTransformFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUSimilarity2DTransformFactory.hxx"
+#  include "itkGPUSimilarity2DTransformFactory.hxx"
 #endif
 
 #endif /* __itkGPUSimilarity2DTransformFactory_h */

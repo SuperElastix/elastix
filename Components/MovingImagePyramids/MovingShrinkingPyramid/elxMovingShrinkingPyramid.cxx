@@ -18,4 +18,4 @@
 
 #include "elxMovingShrinkingPyramid.h"
 
-elxInstallMacro( MovingShrinkingPyramid );
+elxInstallMacro(MovingShrinkingPyramid);

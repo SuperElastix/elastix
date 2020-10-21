@@ -36,30 +36,32 @@ namespace itk
  * \ingroup Functions
  * \ingroup ITKCommon
  */
-template< typename TRealValueType = double >
-class KernelFunctionBase2 : public KernelFunctionBase< TRealValueType >
+template <typename TRealValueType = double>
+class KernelFunctionBase2 : public KernelFunctionBase<TRealValueType>
 {
 public:
   /** Standard class typedefs. */
-  typedef KernelFunctionBase2                   Self;
-  typedef KernelFunctionBase< TRealValueType >  Superclass;
-  typedef SmartPointer< Self >                  Pointer;
-  typedef SmartPointer< const Self >            ConstPointer;
+  typedef KernelFunctionBase2                Self;
+  typedef KernelFunctionBase<TRealValueType> Superclass;
+  typedef SmartPointer<Self>                 Pointer;
+  typedef SmartPointer<const Self>           ConstPointer;
 
-  typedef TRealValueType                        RealType;
+  typedef TRealValueType RealType;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( KernelFunctionBase2, KernelFunctionBase );
+  itkTypeMacro(KernelFunctionBase2, KernelFunctionBase);
 
   /** Evaluate the function. Subclasses must implement this. */
-  TRealValueType Evaluate( const TRealValueType & u ) const override = 0;
+  TRealValueType
+  Evaluate(const TRealValueType & u) const override = 0;
 
   /** Evaluate the function. Subclasses must implement this. */
-  virtual void Evaluate( const TRealValueType & u, TRealValueType * weights ) const = 0;
+  virtual void
+  Evaluate(const TRealValueType & u, TRealValueType * weights) const = 0;
 
 protected:
-  KernelFunctionBase2() {};
-  ~KernelFunctionBase2() override {};
+  KernelFunctionBase2(){};
+  ~KernelFunctionBase2() override{};
 };
 } // end namespace itk
 

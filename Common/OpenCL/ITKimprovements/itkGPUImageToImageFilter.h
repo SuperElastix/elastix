@@ -59,23 +59,23 @@ namespace itk
  *
  * \ingroup ITKGPUCommon
  */
-template< typename TInputImage, typename TOutputImage, typename TParentImageFilter
-  = ImageToImageFilter< TInputImage, TOutputImage > >
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TParentImageFilter = ImageToImageFilter<TInputImage, TOutputImage>>
 class ITKOpenCL_EXPORT GPUImageToImageFilter : public TParentImageFilter
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUImageToImageFilter      Self;
-  typedef TParentImageFilter         Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUImageToImageFilter    Self;
+  typedef TParentImageFilter       Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUImageToImageFilter, TParentImageFilter );
+  itkTypeMacro(GPUImageToImageFilter, TParentImageFilter);
 
   /** Superclass typedefs. */
   typedef typename Superclass::DataObjectIdentifierType DataObjectIdentifierType;
@@ -91,38 +91,44 @@ public:
   typedef TOutputImage                          OutputImageType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
-  itkStaticConstMacro( OutputImageDimension, unsigned int, TOutputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   // macro to set if GPU is used
-  itkSetMacro( GPUEnabled, bool );
-  itkGetConstMacro( GPUEnabled, bool );
-  itkBooleanMacro( GPUEnabled );
+  itkSetMacro(GPUEnabled, bool);
+  itkGetConstMacro(GPUEnabled, bool);
+  itkBooleanMacro(GPUEnabled);
 
-  virtual void GraftOutput( DataObject * graft );
+  virtual void
+  GraftOutput(DataObject * graft);
 
-  virtual void GraftOutput( const DataObjectIdentifierType & key, DataObject * graft );
+  virtual void
+  GraftOutput(const DataObjectIdentifierType & key, DataObject * graft);
 
-  virtual void SetNumberOfWorkUnits( ThreadIdType _arg );
+  virtual void
+  SetNumberOfWorkUnits(ThreadIdType _arg);
 
 protected:
-
   GPUImageToImageFilter();
   ~GPUImageToImageFilter() {}
 
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const;
 
-  virtual void GenerateData();
+  virtual void
+  GenerateData();
 
-  virtual void GPUGenerateData() {}
+  virtual void
+  GPUGenerateData()
+  {}
 
   // GPU kernel manager
   typename OpenCLKernelManager::Pointer m_GPUKernelManager;
 
 private:
-
-  GPUImageToImageFilter( const Self & );   // purposely not implemented
-  void operator=( const Self & );          // purposely not implemented
+  GPUImageToImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   bool m_GPUEnabled;
 };
@@ -130,7 +136,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUImageToImageFilter.hxx"
+#  include "itkGPUImageToImageFilter.hxx"
 #endif
 
 #endif

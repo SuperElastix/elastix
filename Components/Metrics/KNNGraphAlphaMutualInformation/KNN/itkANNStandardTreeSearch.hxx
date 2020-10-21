@@ -27,9 +27,8 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template< class TBinaryTree >
-ANNStandardTreeSearch< TBinaryTree >
-::ANNStandardTreeSearch()
+template <class TBinaryTree>
+ANNStandardTreeSearch<TBinaryTree>::ANNStandardTreeSearch()
 {
   this->m_ErrorBound = 0.0;
 } // end Constructor
@@ -39,56 +38,54 @@ ANNStandardTreeSearch< TBinaryTree >
  * ************************ Destructor *************************
  */
 
-template< class TBinaryTree >
-ANNStandardTreeSearch< TBinaryTree >
-::~ANNStandardTreeSearch()
-{}  // end Destructor
+template <class TBinaryTree>
+ANNStandardTreeSearch<TBinaryTree>::~ANNStandardTreeSearch()
+{} // end Destructor
 
 /**
  * ************************ Search *************************
  */
 
-template< class TBinaryTree >
+template <class TBinaryTree>
 void
-ANNStandardTreeSearch< TBinaryTree >
-::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
-  DistanceArrayType & dists )
+ANNStandardTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
+                                           IndexArrayType &              ind,
+                                           DistanceArrayType &           dists)
 {
   /** Get k , dim and eps. */
-  int    k   = static_cast< int >( this->m_KNearestNeighbors );
-  int    dim = static_cast< int >( this->m_DataDimension );
+  int    k = static_cast<int>(this->m_KNearestNeighbors);
+  int    dim = static_cast<int>(this->m_DataDimension);
   double eps = this->m_ErrorBound;
 
   /** Allocate memory for ANN indices and distances arrays. */
   ANNIndexArrayType ANNIndices;
-  ANNIndices = new ANNIndexType[ k ];
+  ANNIndices = new ANNIndexType[k];
 
   ANNDistanceArrayType ANNDistances;
-  ANNDistances = new ANNDistanceType[ k ];
+  ANNDistances = new ANNDistanceType[k];
 
   /** Alocate memory for ANN query point and copy qp to it. */
-  ANNPointType ANNQueryPoint = annAllocPt( dim );
-  for( int i = 0; i < dim; i++ )
+  ANNPointType ANNQueryPoint = annAllocPt(dim);
+  for (int i = 0; i < dim; i++)
   {
-    ANNQueryPoint[ i ] = qp[ i ];
+    ANNQueryPoint[i] = qp[i];
   }
 
   /** The actual ANN search. */
-  //this->m_BinaryTree->GetANNTree()->annkSearch(
-  //ANNQueryPoint, k, ANNIndices, ANNDistances, eps );
-  this->m_BinaryTreeAsITKANNType->GetANNTree()->annkSearch(
-    ANNQueryPoint, k, ANNIndices, ANNDistances, eps );
+  // this->m_BinaryTree->GetANNTree()->annkSearch(
+  // ANNQueryPoint, k, ANNIndices, ANNDistances, eps );
+  this->m_BinaryTreeAsITKANNType->GetANNTree()->annkSearch(ANNQueryPoint, k, ANNIndices, ANNDistances, eps);
 
   /** Set the ANNIndices and ANNDistances in the corresponding itk::Array's.
    * Memory management is transfered to these itk::Array's, which have SmartPointers
    * and therefore don't have to be regarded anymore. No deallocation of
    * ANNIndices and ANNDistances is needed now.
    */
-  ind.SetData( ANNIndices, k, true );
-  dists.SetData( ANNDistances, k, true );
+  ind.SetData(ANNIndices, k, true);
+  dists.SetData(ANNDistances, k, true);
 
   /** Deallocate the temporary ANNQueryPoint. */
-  annDeallocPt( ANNQueryPoint );
+  annDeallocPt(ANNQueryPoint);
 
 } // end Search
 

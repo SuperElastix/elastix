@@ -29,13 +29,12 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-LineSearchOptimizer
-::LineSearchOptimizer()
+LineSearchOptimizer ::LineSearchOptimizer()
 {
-  this->m_CurrentStepLength         = NumericTraits< double >::Zero;
-  this->m_MinimumStepLength         = NumericTraits< double >::Zero;
-  this->m_MaximumStepLength         = NumericTraits< double >::max();
-  this->m_InitialStepLengthEstimate = NumericTraits< double >::One;
+  this->m_CurrentStepLength = NumericTraits<double>::Zero;
+  this->m_MinimumStepLength = NumericTraits<double>::Zero;
+  this->m_MaximumStepLength = NumericTraits<double>::max();
+  this->m_InitialStepLengthEstimate = NumericTraits<double>::One;
 
 } // end Constructor
 
@@ -50,23 +49,22 @@ LineSearchOptimizer
  */
 
 void
-LineSearchOptimizer
-::SetCurrentStepLength( double step )
+LineSearchOptimizer ::SetCurrentStepLength(double step)
 {
-  itkDebugMacro( "Setting current step length to " << step );
+  itkDebugMacro("Setting current step length to " << step);
 
   this->m_CurrentStepLength = step;
 
-  ParametersType         newPosition        =  this->GetInitialPosition();
+  ParametersType         newPosition = this->GetInitialPosition();
   const unsigned int     numberOfParameters = newPosition.GetSize();
-  const ParametersType & LSD                = this->GetLineSearchDirection();
+  const ParametersType & LSD = this->GetLineSearchDirection();
 
-  for( unsigned int i = 0; i < numberOfParameters; ++i )
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
-    newPosition[ i ] += ( step * LSD[ i ] );
+    newPosition[i] += (step * LSD[i]);
   }
 
-  this->SetCurrentPosition( newPosition );
+  this->SetCurrentPosition(newPosition);
 
 } // end SetCurrentStepLength()
 
@@ -78,11 +76,10 @@ LineSearchOptimizer
  */
 
 double
-LineSearchOptimizer
-::DirectionalDerivative( const DerivativeType & derivative ) const
+LineSearchOptimizer ::DirectionalDerivative(const DerivativeType & derivative) const
 {
   /** Easy, thanks to the functions defined in vnl_vector.h */
-  return inner_product( derivative, this->GetLineSearchDirection() );
+  return inner_product(derivative, this->GetLineSearchDirection());
 
 } // end DirectionalDerivative()
 
@@ -92,22 +89,16 @@ LineSearchOptimizer
  */
 
 void
-LineSearchOptimizer
-::PrintSelf( std::ostream & os, Indent indent ) const
+LineSearchOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
 {
   /** Call the superclass' PrintSelf. */
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
-  os << indent << "CurrentStepLength: "
-     << this->m_CurrentStepLength << std::endl;
-  os << indent << "MinimumStepLength: "
-     << this->m_MinimumStepLength << std::endl;
-  os << indent << "MaximumStepLength: "
-     << this->m_MaximumStepLength << std::endl;
-  os << indent << "InitialStepLengthEstimate: "
-     << this->m_InitialStepLengthEstimate << std::endl;
-  os << indent << "LineSearchDirection: "
-     << this->m_LineSearchDirection << std::endl;
+  os << indent << "CurrentStepLength: " << this->m_CurrentStepLength << std::endl;
+  os << indent << "MinimumStepLength: " << this->m_MinimumStepLength << std::endl;
+  os << indent << "MaximumStepLength: " << this->m_MaximumStepLength << std::endl;
+  os << indent << "InitialStepLengthEstimate: " << this->m_InitialStepLengthEstimate << std::endl;
+  os << indent << "LineSearchDirection: " << this->m_LineSearchDirection << std::endl;
 
 } // end PrintSelf()
 

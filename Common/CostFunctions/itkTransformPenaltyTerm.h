@@ -41,21 +41,18 @@ namespace itk
  * \ingroup Metrics
  */
 
-template< class TFixedImage, class TScalarType = double >
-class TransformPenaltyTerm :
-  public AdvancedImageToImageMetric< TFixedImage, TFixedImage >
+template <class TFixedImage, class TScalarType = double>
+class TransformPenaltyTerm : public AdvancedImageToImageMetric<TFixedImage, TFixedImage>
 {
 public:
-
   /** Standard ITK stuff. */
-  typedef TransformPenaltyTerm        Self;
-  typedef AdvancedImageToImageMetric<
-    TFixedImage, TFixedImage >        Superclass;
-  typedef SmartPointer< Self >        Pointer;
-  typedef SmartPointer< const Self >  ConstPointer;
+  typedef TransformPenaltyTerm                                 Self;
+  typedef AdvancedImageToImageMetric<TFixedImage, TFixedImage> Superclass;
+  typedef SmartPointer<Self>                                   Pointer;
+  typedef SmartPointer<const Self>                             ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformPenaltyTerm, AdvancedImageToImageMetric );
+  itkTypeMacro(TransformPenaltyTerm, AdvancedImageToImageMetric);
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
@@ -68,8 +65,8 @@ public:
   typedef typename Superclass::FixedImageConstPointer       FixedImageConstPointer;
   typedef typename Superclass::FixedImageRegionType         FixedImageRegionType;
   // these not: use advanced transform below
-  //typedef typename Superclass::TransformType              TransformType;
-  //typedef typename Superclass::TransformPointer           TransformPointer;
+  // typedef typename Superclass::TransformType              TransformType;
+  // typedef typename Superclass::TransformPointer           TransformPointer;
   typedef typename Superclass::InputPointType              InputPointType;
   typedef typename Superclass::OutputPointType             OutputPointType;
   typedef typename Superclass::TransformParametersType     TransformParametersType;
@@ -97,13 +94,13 @@ public:
   typedef typename Superclass::ThreadInfoType              ThreadInfoType;
 
   /** Typedef's for the B-spline transform. */
-  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
-  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
-  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
-  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
-  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
-  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
-  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
+  typedef typename Superclass::CombinationTransformType      CombinationTransformType;
+  typedef typename Superclass::BSplineOrder1TransformType    BSplineOrder1TransformType;
+  typedef typename Superclass::BSplineOrder1TransformPointer BSplineOrder1TransformPointer;
+  typedef typename Superclass::BSplineOrder2TransformType    BSplineOrder2TransformType;
+  typedef typename Superclass::BSplineOrder2TransformPointer BSplineOrder2TransformPointer;
+  typedef typename Superclass::BSplineOrder3TransformType    BSplineOrder3TransformType;
+  typedef typename Superclass::BSplineOrder3TransformPointer BSplineOrder3TransformPointer;
 
   /** Template parameters. FixedImageType has already been taken from superclass. */
   typedef TScalarType ScalarType; // \todo: not really meaningful name.
@@ -117,10 +114,9 @@ public:
   typedef typename TransformType::InternalMatrixType            InternalMatrixType;
 
   /** Define the dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
 protected:
-
   /** Typedefs for indices and points. */
   typedef typename Superclass::FixedImageIndexType            FixedImageIndexType;
   typedef typename Superclass::FixedImageIndexValueType       FixedImageIndexValueType;
@@ -131,27 +127,27 @@ protected:
   typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
 
   /** The constructor. */
-  TransformPenaltyTerm(){}
+  TransformPenaltyTerm() {}
 
   /** The destructor. */
   ~TransformPenaltyTerm() override {}
 
   /** A function to check if the transform is B-spline, for speedup. */
-  virtual bool CheckForBSplineTransform2( BSplineOrder3TransformPointer & bspline ) const;
+  virtual bool
+  CheckForBSplineTransform2(BSplineOrder3TransformPointer & bspline) const;
 
 private:
-
   /** The private constructor. */
-  TransformPenaltyTerm( const Self & );  // purposely not implemented
+  TransformPenaltyTerm(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );        // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformPenaltyTerm.hxx"
+#  include "itkTransformPenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkTransformPenaltyTerm_h

@@ -53,59 +53,57 @@
 
 namespace elastix
 {
-template< class TElastix >
-class TranslationStackTransform :
-  public itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >,
-  public elx::TransformBase< TElastix >
+template <class TElastix>
+class TranslationStackTransform
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public elx::TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef TranslationStackTransform                       Self;
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension > Superclass1;
-  typedef elx::TransformBase< TElastix >                  Superclass2;
-  typedef itk::SmartPointer< Self >                       Pointer;
-  typedef itk::SmartPointer< const Self >                 ConstPointer;
+  typedef TranslationStackTransform Self;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+                                        Superclass1;
+  typedef elx::TransformBase<TElastix>  Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TranslationStackTransform, itk::AdvancedCombinationTransform );
+  itkTypeMacro(TranslationStackTransform, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "TranslationStackTransform")</tt>\n
    */
-  elxClassNameMacro( "TranslationStackTransform" );
+  elxClassNameMacro("TranslationStackTransform");
 
   /** (Reduced) dimension of the fixed image. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
-  itkStaticConstMacro( ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
+  itkStaticConstMacro(ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1);
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::AdvancedTranslationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ) >               TranslationTransformType;
+  typedef itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            itkGetStaticConstMacro(SpaceDimension)>
+                                                     TranslationTransformType;
   typedef typename TranslationTransformType::Pointer TranslationTransformPointer;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
-  typedef itk::AdvancedTranslationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( ReducedSpaceDimension ) >                  ReducedDimensionTranslationTransformType;
+  typedef itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            itkGetStaticConstMacro(ReducedSpaceDimension)>
+                                                                     ReducedDimensionTranslationTransformType;
   typedef typename ReducedDimensionTranslationTransformType::Pointer ReducedDimensionTranslationTransformPointer;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SpaceDimension ) >                TranslationStackTransformType;
+  typedef itk::StackTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                              itkGetStaticConstMacro(SpaceDimension),
+                              itkGetStaticConstMacro(SpaceDimension)>
+                                                          TranslationStackTransformType;
   typedef typename TranslationStackTransformType::Pointer TranslationStackTransformPointer;
 
   /** Typedefs inherited from the superclass. */
@@ -133,20 +131,24 @@ public:
    * \li Set initial sub transforms.
    * \li Create initial registration parameters.
    */
-  int BeforeAll( void ) override;
+  int
+  BeforeAll(void) override;
 
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  virtual void InitializeTransform( void );
+  virtual void
+  InitializeTransform(void);
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
 protected:
-
   /** The constructor. */
   TranslationStackTransform();
 
@@ -154,10 +156,10 @@ protected:
   ~TranslationStackTransform() override {}
 
 private:
-
   /** The private constructor and copy constructor. */
-  TranslationStackTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );            // purposely not implemented
+  TranslationStackTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** The Translation stack transform. */
   TranslationStackTransformPointer m_TranslationStackTransform;
@@ -169,15 +171,15 @@ private:
   unsigned int m_NumberOfSubTransforms;
   double       m_StackOrigin, m_StackSpacing;
 
-  unsigned int InitializeTranslationTransform();
-
+  unsigned int
+  InitializeTranslationTransform();
 };
 
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxTranslationStackTransform.hxx"
+#  include "elxTranslationStackTransform.hxx"
 #endif
 
 #endif // end #ifndef __elxTranslationStackTransform_h

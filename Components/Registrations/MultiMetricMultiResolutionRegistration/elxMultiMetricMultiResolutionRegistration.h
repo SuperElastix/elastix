@@ -91,42 +91,37 @@ namespace elastix
  * \ingroup Registrations
  */
 
-template< class TElastix >
-class MultiMetricMultiResolutionRegistration :
-  public
-  itk::MultiMetricMultiResolutionImageRegistrationMethod<
-  typename RegistrationBase< TElastix >::FixedImageType,
-  typename RegistrationBase< TElastix >::MovingImageType >,
-  public RegistrationBase< TElastix >
+template <class TElastix>
+class MultiMetricMultiResolutionRegistration
+  : public itk::MultiMetricMultiResolutionImageRegistrationMethod<typename RegistrationBase<TElastix>::FixedImageType,
+                                                                  typename RegistrationBase<TElastix>::MovingImageType>
+  , public RegistrationBase<TElastix>
 {
 public:
-
   /** Standard ITK: Self */
   typedef MultiMetricMultiResolutionRegistration Self;
 
   /** Standard ITK: Superclasses. */
-  typedef itk::MultiMetricMultiResolutionImageRegistrationMethod<
-    typename RegistrationBase< TElastix >::FixedImageType,
-    typename RegistrationBase< TElastix >::MovingImageType >
-    Superclass1;
-  typedef RegistrationBase< TElastix > Superclass2;
+  typedef itk::MultiMetricMultiResolutionImageRegistrationMethod<typename RegistrationBase<TElastix>::FixedImageType,
+                                                                 typename RegistrationBase<TElastix>::MovingImageType>
+                                     Superclass1;
+  typedef RegistrationBase<TElastix> Superclass2;
 
   /** Standard ITK: SmartPointers */
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiMetricMultiResolutionRegistration,
-    MultiMetricMultiResolutionImageRegistrationMethod );
+  itkTypeMacro(MultiMetricMultiResolutionRegistration, MultiMetricMultiResolutionImageRegistrationMethod);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific registration framework. \n
    * example: <tt>(Registration "MultiMetricMultiResolutionRegistration")</tt>\n
    */
-  elxClassNameMacro( "MultiMetricMultiResolutionRegistration" );
+  elxClassNameMacro("MultiMetricMultiResolutionRegistration");
 
   /** Typedef's inherited from Superclass1. */
 
@@ -183,9 +178,9 @@ public:
   typedef typename Superclass2::UseMaskErosionArrayType UseMaskErosionArrayType;
 
   /** Get the dimension of the fixed image. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, Superclass2::FixedImageDimension);
   /** Get the dimension of the moving image. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, Superclass2::MovingImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, Superclass2::MovingImageDimension);
 
   /** Execute stuff before the actual registration:
    * \li Connect all components to the registration framework.
@@ -193,21 +188,23 @@ public:
    * \li Set the fixed image regions.
    * \li Add the sub metric columns to the iteration info object.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion.
    * \li Set the metric weights.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
   /** Execute stuff after each iteration
    * \li Print the latest computed submetric values to screen.
    */
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
 protected:
-
   /** The constructor. */
   MultiMetricMultiResolutionRegistration();
   /** The destructor. */
@@ -225,28 +222,30 @@ protected:
   typedef typename Superclass2::MovingMaskSpatialObjectPointer MovingMaskSpatialObjectPointer;
 
   /** Function to update masks. */
-  void UpdateFixedMasks( unsigned int level );
+  void
+  UpdateFixedMasks(unsigned int level);
 
-  void UpdateMovingMasks( unsigned int level );
+  void
+  UpdateMovingMasks(unsigned int level);
 
   /** Read the components from m_Elastix and set them in the Registration class. */
-  virtual void SetComponents( void );
+  virtual void
+  SetComponents(void);
 
   bool m_ShowExactMetricValue;
 
 private:
-
   /** The private constructor. */
-  MultiMetricMultiResolutionRegistration( const Self & );  // purposely not implemented
+  MultiMetricMultiResolutionRegistration(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );              // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMultiMetricMultiResolutionRegistration.hxx"
+#  include "elxMultiMetricMultiResolutionRegistration.hxx"
 #endif
 
 #endif // end #ifndef __elxMultiMetricMultiResolutionRegistration_H__

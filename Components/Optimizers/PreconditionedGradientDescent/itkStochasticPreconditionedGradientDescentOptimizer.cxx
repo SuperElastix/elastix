@@ -27,8 +27,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-StochasticPreconditionedGradientDescentOptimizer
-::StochasticPreconditionedGradientDescentOptimizer()
+StochasticPreconditionedGradientDescentOptimizer ::StochasticPreconditionedGradientDescentOptimizer()
 {
   this->m_Param_a = 1.0;
   this->m_Param_A = 1.0;
@@ -45,8 +44,7 @@ StochasticPreconditionedGradientDescentOptimizer
  */
 
 void
-StochasticPreconditionedGradientDescentOptimizer
-::StartOptimization(void)
+StochasticPreconditionedGradientDescentOptimizer ::StartOptimization(void)
 {
   this->m_CurrentTime = this->m_InitialTime;
   this->Superclass::StartOptimization();
@@ -58,11 +56,10 @@ StochasticPreconditionedGradientDescentOptimizer
  */
 
 void
-StochasticPreconditionedGradientDescentOptimizer
-::AdvanceOneStep(void)
+StochasticPreconditionedGradientDescentOptimizer ::AdvanceOneStep(void)
 {
 
-  this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
+  this->SetLearningRate(this->Compute_a(this->m_CurrentTime));
 
   this->Superclass::AdvanceOneStep();
 
@@ -76,11 +73,9 @@ StochasticPreconditionedGradientDescentOptimizer
  */
 
 double
-StochasticPreconditionedGradientDescentOptimizer
-::Compute_a( double k ) const
+StochasticPreconditionedGradientDescentOptimizer ::Compute_a(double k) const
 {
-  return static_cast<double>(
-    this->m_Param_a / std::pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+  return static_cast<double>(this->m_Param_a / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
 } // end Compute_a()
 
@@ -90,8 +85,7 @@ StochasticPreconditionedGradientDescentOptimizer
  */
 
 void
-StochasticPreconditionedGradientDescentOptimizer
-::UpdateCurrentTime( void )
+StochasticPreconditionedGradientDescentOptimizer ::UpdateCurrentTime(void)
 {
   /** Simply Robbins-Monro: time = iteration number. */
   this->m_CurrentTime += 1.0;

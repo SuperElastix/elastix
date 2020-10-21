@@ -26,43 +26,45 @@
 
 namespace itk
 {
-class InvalidImageMomentsError:public ExceptionObject
+class InvalidImageMomentsError : public ExceptionObject
 {
 public:
   /**
    * Constructor. Needed to ensure the exception object can be copied.
    */
-  InvalidImageMomentsError(const char *file, unsigned int lineNumber):ExceptionObject(file,
-                                                                                      lineNumber) { this->
-                                                                                                    SetDescription(
-                                                                                                      "No valid image moments are available."); }
+  InvalidImageMomentsError(const char * file, unsigned int lineNumber)
+    : ExceptionObject(file, lineNumber)
+  {
+    this->SetDescription("No valid image moments are available.");
+  }
 
   /**
    * Constructor. Needed to ensure the exception object can be copied.
    */
-  InvalidImageMomentsError(const std::string & file, unsigned int lineNumber):ExceptionObject(file,
-                                                                                              lineNumber) { this->
-                                                                                                            SetDescription(
-                                                                                                              "No valid image moments are available."); }
+  InvalidImageMomentsError(const std::string & file, unsigned int lineNumber)
+    : ExceptionObject(file, lineNumber)
+  {
+    this->SetDescription("No valid image moments are available.");
+  }
 
   itkTypeMacro(InvalidImageMomentsError, ExceptionObject);
 };
 
 //----------------------------------------------------------------------
 // Construct without computing moments
-template< typename TImage >
-AdvancedImageMomentsCalculator< TImage >::AdvancedImageMomentsCalculator(void)
+template <typename TImage>
+AdvancedImageMomentsCalculator<TImage>::AdvancedImageMomentsCalculator(void)
 {
   m_Valid = false;
   m_Image = nullptr;
   m_SpatialObjectMask = nullptr;
-  m_M0 = NumericTraits< ScalarType >::ZeroValue();
-  m_M1.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  m_M2.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-  m_Cg.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  m_Cm.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-  m_Pm.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  m_Pa.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
+  m_M0 = NumericTraits<ScalarType>::ZeroValue();
+  m_M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  m_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  m_Pm.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  m_Pa.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
 
   /** Threading related variables. */
   this->m_UseMultiThread = true;
@@ -81,31 +83,29 @@ AdvancedImageMomentsCalculator< TImage >::AdvancedImageMomentsCalculator(void)
 
 //----------------------------------------------------------------------
 // Destructor
-template< typename TImage >
-AdvancedImageMomentsCalculator< TImage >::
-~AdvancedImageMomentsCalculator()
+template <typename TImage>
+AdvancedImageMomentsCalculator<TImage>::~AdvancedImageMomentsCalculator()
 {
   delete[] this->m_ComputePerThreadVariables;
 }
 
 /**
-* ************************* InitializeThreadingParameters ************************
-*/
+ * ************************* InitializeThreadingParameters ************************
+ */
 
-template< typename TImage >
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::InitializeThreadingParameters(void)
+AdvancedImageMomentsCalculator<TImage>::InitializeThreadingParameters(void)
 {
   /** Resize and initialize the threading related parameters.
-  * The SetSize() functions do not resize the data when this is not
-  * needed, which saves valuable re-allocation time.
-  *
-  * This function is only to be called at the start of each resolution.
-  * Re-initialization of the potentially large vectors is performed after
-  * each iteration, in the accumulate functions, in a multi-threaded fashion.
-  * This has performance benefits for larger vector sizes.
-  */
+   * The SetSize() functions do not resize the data when this is not
+   * needed, which saves valuable re-allocation time.
+   *
+   * This function is only to be called at the start of each resolution.
+   * Re-initialization of the potentially large vectors is performed after
+   * each iteration, in the accumulate functions, in a multi-threaded fashion.
+   * This has performance benefits for larger vector sizes.
+   */
   const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
@@ -119,27 +119,25 @@ AdvancedImageMomentsCalculator< TImage >
   /** Some initialization. */
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    this->m_ComputePerThreadVariables[i].st_M0 = NumericTraits< ScalarType >::Zero;
-    this->m_ComputePerThreadVariables[i].st_M1 = NumericTraits< typename VectorType::ValueType >::Zero;
-    this->m_ComputePerThreadVariables[i].st_M2.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-    this->m_ComputePerThreadVariables[i].st_Cg = NumericTraits< typename VectorType::ValueType >::Zero;
-    this->m_ComputePerThreadVariables[i].st_Cm.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-    this->m_ComputePerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
+    this->m_ComputePerThreadVariables[i].st_M0 = NumericTraits<ScalarType>::Zero;
+    this->m_ComputePerThreadVariables[i].st_M1 = NumericTraits<typename VectorType::ValueType>::Zero;
+    this->m_ComputePerThreadVariables[i].st_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+    this->m_ComputePerThreadVariables[i].st_Cg = NumericTraits<typename VectorType::ValueType>::Zero;
+    this->m_ComputePerThreadVariables[i].st_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+    this->m_ComputePerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
   }
 
 } // end InitializeThreadingParameters()
 
 //----------------------------------------------------------------------
 // Compute moments for a new or modified image
-template< typename TImage >
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::ComputeSingleThreaded()
+AdvancedImageMomentsCalculator<TImage>::ComputeSingleThreaded()
 {
-  if ( this->m_CenterOfGravityUsesLowerThreshold )
+  if (this->m_CenterOfGravityUsesLowerThreshold)
   {
-    typename BinaryThresholdImageFilterType::Pointer thresholdFilter
-      = BinaryThresholdImageFilterType::New();
+    typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
     thresholdFilter->SetInput(this->m_Image);
     thresholdFilter->SetLowerThreshold(this->m_LowerThresholdForCenterGravity);
     thresholdFilter->SetInsideValue(1);
@@ -148,69 +146,65 @@ AdvancedImageMomentsCalculator< TImage >
     this->SetImage(thresholdFilter->GetOutput());
   }
 
-  m_M0 = NumericTraits< ScalarType >::ZeroValue();
-  m_M1.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  m_M2.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-  m_Cg.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  m_Cm.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
+  m_M0 = NumericTraits<ScalarType>::ZeroValue();
+  m_M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  m_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
 
   typedef typename ImageType::IndexType IndexType;
 
-  if ( !m_Image )
-    {
+  if (!m_Image)
+  {
     return;
-    }
+  }
 
-  ImageRegionConstIteratorWithIndex< ImageType > it( m_Image,
-                                                     m_Image->GetRequestedRegion() );
+  ImageRegionConstIteratorWithIndex<ImageType> it(m_Image, m_Image->GetRequestedRegion());
 
-  while ( !it.IsAtEnd() )
-    {
+  while (!it.IsAtEnd())
+  {
     double value = it.Value();
 
     IndexType indexPosition = it.GetIndex();
 
-    Point< double, ImageDimension > physicalPosition;
+    Point<double, ImageDimension> physicalPosition;
     m_Image->TransformIndexToPhysicalPoint(indexPosition, physicalPosition);
 
-    if ( m_SpatialObjectMask.IsNull()
-         || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition) )
-      {
+    if (m_SpatialObjectMask.IsNull() || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition))
+    {
       m_M0 += value;
 
-      for ( unsigned int i = 0; i < ImageDimension; i++ )
+      for (unsigned int i = 0; i < ImageDimension; i++)
+      {
+        m_M1[i] += static_cast<double>(indexPosition[i]) * value;
+        for (unsigned int j = 0; j < ImageDimension; j++)
         {
-        m_M1[i] += static_cast< double >( indexPosition[i] ) * value;
-        for ( unsigned int j = 0; j < ImageDimension; j++ )
-          {
-          double weight = value * static_cast< double >( indexPosition[i] )
-                          * static_cast< double >( indexPosition[j] );
+          double weight = value * static_cast<double>(indexPosition[i]) * static_cast<double>(indexPosition[j]);
           m_M2[i][j] += weight;
-          }
-        }
-
-      for ( unsigned int i = 0; i < ImageDimension; i++ )
-        {
-        m_Cg[i] += physicalPosition[i] * value;
-        for ( unsigned int j = 0; j < ImageDimension; j++ )
-          {
-          double weight = value * physicalPosition[i] * physicalPosition[j];
-          m_Cm[i][j] += weight;
-          }
         }
       }
 
-    ++it;
+      for (unsigned int i = 0; i < ImageDimension; i++)
+      {
+        m_Cg[i] += physicalPosition[i] * value;
+        for (unsigned int j = 0; j < ImageDimension; j++)
+        {
+          double weight = value * physicalPosition[i] * physicalPosition[j];
+          m_Cm[i][j] += weight;
+        }
+      }
     }
+
+    ++it;
+  }
   DoPostProcessing();
 }
 
 //----------------------------------------------------------------------
 // Compute moments for a new or modified image
-template< typename TImage >
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::Compute()
+AdvancedImageMomentsCalculator<TImage>::Compute()
 {
   /** Option for now to still use the single threaded code. */
   if (!this->m_UseMultiThread)
@@ -233,18 +227,17 @@ AdvancedImageMomentsCalculator< TImage >
 } // end Compute()
 
 /**
-* *********************** BeforeThreadedCompute***************
-*/
-template< typename TImage >
+ * *********************** BeforeThreadedCompute***************
+ */
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::BeforeThreadedCompute()
+AdvancedImageMomentsCalculator<TImage>::BeforeThreadedCompute()
 {
-  m_M0 = NumericTraits< ScalarType >::ZeroValue();
-  m_M1.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  m_M2.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-  m_Cg.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  m_Cm.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
+  m_M0 = NumericTraits<ScalarType>::ZeroValue();
+  m_M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  m_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
 
   typedef typename ImageType::IndexType IndexType;
 
@@ -253,10 +246,9 @@ AdvancedImageMomentsCalculator< TImage >
     return;
   }
 
-  if ( this->m_CenterOfGravityUsesLowerThreshold )
+  if (this->m_CenterOfGravityUsesLowerThreshold)
   {
-    typename BinaryThresholdImageFilterType::Pointer thresholdFilter
-      = BinaryThresholdImageFilterType::New();
+    typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
     thresholdFilter->SetInput(this->m_Image);
     thresholdFilter->SetLowerThreshold(this->m_LowerThresholdForCenterGravity);
     thresholdFilter->SetInsideValue(1);
@@ -269,17 +261,16 @@ AdvancedImageMomentsCalculator< TImage >
 } // end BeforeThreadedCompute()
 
 /**
-* *********************** LaunchComputeThreaderCallback***************
-*/
+ * *********************** LaunchComputeThreaderCallback***************
+ */
 
-template< typename TImage >
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::LaunchComputeThreaderCallback(void) const
+AdvancedImageMomentsCalculator<TImage>::LaunchComputeThreaderCallback(void) const
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback,
-    const_cast< void * >(static_cast< const void * >(&this->m_ThreaderParameters)));
+                                    const_cast<void *>(static_cast<const void *>(&this->m_ThreaderParameters)));
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();
@@ -287,19 +278,17 @@ AdvancedImageMomentsCalculator< TImage >
 } // end LaunchComputeThreaderCallback()
 
 /**
-* ************ ComputeThreaderCallback ****************************
-*/
+ * ************ ComputeThreaderCallback ****************************
+ */
 
-template< typename TImage >
+template <typename TImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
-AdvancedImageMomentsCalculator< TImage >
-::ComputeThreaderCallback(void * arg)
+AdvancedImageMomentsCalculator<TImage>::ComputeThreaderCallback(void * arg)
 {
   /** Get the current thread id and user data. */
-  ThreadInfoType *             infoStruct = static_cast< ThreadInfoType * >(arg);
+  ThreadInfoType *             infoStruct = static_cast<ThreadInfoType *>(arg);
   ThreadIdType                 threadID = infoStruct->WorkUnitID;
-  MultiThreaderParameterType * temp
-    = static_cast< MultiThreaderParameterType * >(infoStruct->UserData);
+  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
 
   /** Call the real implementation. */
   temp->st_Self->ThreadedCompute(threadID);
@@ -309,12 +298,11 @@ AdvancedImageMomentsCalculator< TImage >
 } // end ComputeThreaderCallback()
 
 /**
-* ************ ThreadedCompute ****************************
-*/
-template< typename TImage >
+ * ************ ThreadedCompute ****************************
+ */
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::ThreadedCompute(ThreadIdType threadId)
+AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
 {
   typedef typename ImageType::IndexType IndexType;
 
@@ -324,22 +312,21 @@ AdvancedImageMomentsCalculator< TImage >
   }
 
   ScalarType M0 = 0;
-  VectorType M1,Cg;
-  M1.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  Cg.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
-  MatrixType M2,Cm;
-  M2.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-  Cm.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
-  unsigned long  numberOfPixelsCounted = 0;
+  VectorType M1, Cg;
+  M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  MatrixType M2, Cm;
+  M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  unsigned long numberOfPixelsCounted = 0;
 
   /** Get sample container size, number of threads, and output space dimension. */
   const SizeValueType sampleContainerSize = this->m_SampleContainer->Size();
   const ThreadIdType  numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
-/** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads
-    = static_cast<unsigned long>(std::ceil(static_cast<double>(sampleContainerSize)
-      / static_cast<double>(numberOfThreads)));
+  /** Get the samples for this thread. */
+  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfThreads)));
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end = nrOfSamplesPerThreads * (threadId + 1);
@@ -349,19 +336,18 @@ AdvancedImageMomentsCalculator< TImage >
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator threader_fiter;
   typename ImageSampleContainerType::ConstIterator threader_fbegin = this->m_SampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend   = this->m_SampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend = this->m_SampleContainer->Begin();
 
   threader_fbegin += (int)pos_begin;
-  threader_fend   += (int)pos_end;
+  threader_fend += (int)pos_end;
 
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
     double value = (*threader_fiter).Value().m_ImageValue;
-    //IndexType indexPosition = (*threader_fiter).GetIndex();
-    Point< double, ImageDimension > physicalPosition = (*threader_fiter).Value().m_ImageCoordinates;
+    // IndexType indexPosition = (*threader_fiter).GetIndex();
+    Point<double, ImageDimension> physicalPosition = (*threader_fiter).Value().m_ImageCoordinates;
 
-    if (m_SpatialObjectMask.IsNull()
-      || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition))
+    if (m_SpatialObjectMask.IsNull() || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition))
     {
       M0 += value;
 
@@ -385,16 +371,15 @@ AdvancedImageMomentsCalculator< TImage >
   this->m_ComputePerThreadVariables[threadId].st_Cm = Cm;
   this->m_ComputePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
 
-}// end ThreadedCompute()
+} // end ThreadedCompute()
 
- /**
+/**
  * *********************** AfterThreadedCompute***************
  */
 
-template< typename TImage >
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::AfterThreadedCompute()
+AdvancedImageMomentsCalculator<TImage>::AfterThreadedCompute()
 {
   const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
   /** Accumulate thread results. */
@@ -421,10 +406,9 @@ AdvancedImageMomentsCalculator< TImage >
 }
 
 
-template< typename TImage >
+template <typename TImage>
 void
-AdvancedImageMomentsCalculator< TImage >
-::DoPostProcessing()
+AdvancedImageMomentsCalculator<TImage>::DoPostProcessing()
 {
   // Throw an error if the total mass is zero
   if (this->m_M0 == 0.0)
@@ -456,8 +440,8 @@ AdvancedImageMomentsCalculator< TImage >
   }
 
   // Compute principal moments and axes
-  vnl_symmetric_eigensystem< double > eigen(m_Cm.GetVnlMatrix().as_ref());
-  vnl_diag_matrix< double >           pm = eigen.D;
+  vnl_symmetric_eigensystem<double> eigen(m_Cm.GetVnlMatrix().as_ref());
+  vnl_diag_matrix<double>           pm = eigen.D;
   for (unsigned int i = 0; i < ImageDimension; i++)
   {
     m_Pm[i] = pm(i) * m_M0;
@@ -466,9 +450,9 @@ AdvancedImageMomentsCalculator< TImage >
 
   // Add a final reflection if needed for a proper rotation,
   // by multiplying the last row by the determinant
-  vnl_real_eigensystem                     eigenrot(m_Pa.GetVnlMatrix().as_ref());
-  vnl_diag_matrix< std::complex< double > > eigenval = eigenrot.D;
-  std::complex< double >                    det(1.0, 0.0);
+  vnl_real_eigensystem                  eigenrot(m_Pa.GetVnlMatrix().as_ref());
+  vnl_diag_matrix<std::complex<double>> eigenval = eigenrot.D;
+  std::complex<double>                  det(1.0, 0.0);
 
   for (unsigned int i = 0; i < ImageDimension; i++)
   {
@@ -486,111 +470,112 @@ AdvancedImageMomentsCalculator< TImage >
 
 //---------------------------------------------------------------------
 // Get sum of intensities
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::ScalarType
-AdvancedImageMomentsCalculator< TImage >::GetTotalMass() const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::ScalarType
+AdvancedImageMomentsCalculator<TImage>::GetTotalMass() const
 {
-  if ( !m_Valid )
-    {
+  if (!m_Valid)
+  {
     itkExceptionMacro(<< "GetTotalMass() invoked, but the moments have not been computed. Call Compute() first.");
-    }
+  }
   return m_M0;
 }
 
 //--------------------------------------------------------------------
 // Get first moments about origin, in index coordinates
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::VectorType
-AdvancedImageMomentsCalculator< TImage >::GetFirstMoments() const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::VectorType
+AdvancedImageMomentsCalculator<TImage>::GetFirstMoments() const
 {
-  if ( !m_Valid )
-    {
+  if (!m_Valid)
+  {
     itkExceptionMacro(<< "GetFirstMoments() invoked, but the moments have not been computed. Call Compute() first.");
-    }
+  }
   return m_M1;
 }
 
 //--------------------------------------------------------------------
 // Get second moments about origin, in index coordinates
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::MatrixType
-AdvancedImageMomentsCalculator< TImage >::GetSecondMoments() const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::MatrixType
+AdvancedImageMomentsCalculator<TImage>::GetSecondMoments() const
 {
-  if ( !m_Valid )
-    {
+  if (!m_Valid)
+  {
     itkExceptionMacro(<< "GetSecondMoments() invoked, but the moments have not been computed. Call Compute() first.");
-    }
+  }
   return m_M2;
 }
 
 //--------------------------------------------------------------------
 // Get center of gravity, in physical coordinates
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::VectorType
-AdvancedImageMomentsCalculator< TImage >::GetCenterOfGravity() const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::VectorType
+AdvancedImageMomentsCalculator<TImage>::GetCenterOfGravity() const
 {
-  if ( !m_Valid )
-    {
+  if (!m_Valid)
+  {
     itkExceptionMacro(<< "GetCenterOfGravity() invoked, but the moments have not been computed. Call Compute() first.");
-    }
+  }
   return m_Cg;
 }
 
 //--------------------------------------------------------------------
 // Get second central moments, in physical coordinates
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::MatrixType
-AdvancedImageMomentsCalculator< TImage >::GetCentralMoments() const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::MatrixType
+AdvancedImageMomentsCalculator<TImage>::GetCentralMoments() const
 {
-  if ( !m_Valid )
-    {
+  if (!m_Valid)
+  {
     itkExceptionMacro(<< "GetCentralMoments() invoked, but the moments have not been computed. Call Compute() first.");
-    }
+  }
   return m_Cm;
 }
 
 //--------------------------------------------------------------------
 // Get principal moments, in physical coordinates
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::VectorType
-AdvancedImageMomentsCalculator< TImage >::GetPrincipalMoments() const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::VectorType
+AdvancedImageMomentsCalculator<TImage>::GetPrincipalMoments() const
 {
-  if ( !m_Valid )
-    {
-    itkExceptionMacro(<< "GetPrincipalMoments() invoked, but the moments have not been computed. Call Compute() first.");
-    }
+  if (!m_Valid)
+  {
+    itkExceptionMacro(
+      << "GetPrincipalMoments() invoked, but the moments have not been computed. Call Compute() first.");
+  }
   return m_Pm;
 }
 
 //--------------------------------------------------------------------
 // Get principal axes, in physical coordinates
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::MatrixType
-AdvancedImageMomentsCalculator< TImage >::GetPrincipalAxes() const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::MatrixType
+AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxes() const
 {
-  if ( !m_Valid )
-    {
+  if (!m_Valid)
+  {
     itkExceptionMacro(<< "GetPrincipalAxes() invoked, but the moments have not been computed. Call Compute() first.");
-    }
+  }
   return m_Pa;
 }
 
 //--------------------------------------------------------------------
 // Get principal axes to physical axes transform
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::AffineTransformPointer
-AdvancedImageMomentsCalculator< TImage >::GetPrincipalAxesToPhysicalAxesTransform(void) const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::AffineTransformPointer
+AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxesToPhysicalAxesTransform(void) const
 {
   typename AffineTransformType::MatrixType matrix;
   typename AffineTransformType::OffsetType offset;
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
+  for (unsigned int i = 0; i < ImageDimension; i++)
+  {
+    offset[i] = m_Cg[i];
+    for (unsigned int j = 0; j < ImageDimension; j++)
     {
-    offset[i]  = m_Cg[i];
-    for ( unsigned int j = 0; j < ImageDimension; j++ )
-      {
-      matrix[j][i] = m_Pa[i][j];    // Note the transposition
-      }
+      matrix[j][i] = m_Pa[i][j]; // Note the transposition
     }
+  }
 
   AffineTransformPointer result = AffineTransformType::New();
 
@@ -603,20 +588,20 @@ AdvancedImageMomentsCalculator< TImage >::GetPrincipalAxesToPhysicalAxesTransfor
 //--------------------------------------------------------------------
 // Get physical axes to principal axes transform
 
-template< typename TImage >
-typename AdvancedImageMomentsCalculator< TImage >::AffineTransformPointer
-AdvancedImageMomentsCalculator< TImage >::GetPhysicalAxesToPrincipalAxesTransform(void) const
+template <typename TImage>
+typename AdvancedImageMomentsCalculator<TImage>::AffineTransformPointer
+AdvancedImageMomentsCalculator<TImage>::GetPhysicalAxesToPrincipalAxesTransform(void) const
 {
   typename AffineTransformType::MatrixType matrix;
   typename AffineTransformType::OffsetType offset;
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
+  for (unsigned int i = 0; i < ImageDimension; i++)
+  {
+    offset[i] = m_Cg[i];
+    for (unsigned int j = 0; j < ImageDimension; j++)
     {
-    offset[i]    = m_Cg[i];
-    for ( unsigned int j = 0; j < ImageDimension; j++ )
-      {
-      matrix[j][i] = m_Pa[i][j];    // Note the transposition
-      }
+      matrix[j][i] = m_Pa[i][j]; // Note the transposition
     }
+  }
 
   AffineTransformPointer result = AffineTransformType::New();
   result->SetMatrix(matrix);
@@ -629,25 +614,24 @@ AdvancedImageMomentsCalculator< TImage >::GetPhysicalAxesToPrincipalAxesTransfor
 }
 
 /**
-* ************************* SampleImage *********************
-*/
-template< typename TInputImage >
+ * ************************* SampleImage *********************
+ */
+template <typename TInputImage>
 void
-AdvancedImageMomentsCalculator< TInputImage >
-::SampleImage( ImageSampleContainerPointer & sampleContainer )
+AdvancedImageMomentsCalculator<TInputImage>::SampleImage(ImageSampleContainerPointer & sampleContainer)
 {
   /** Set up grid sampler. */
   ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
   //  ImageFullSamplerPointer sampler = ImageFullSamplerType::New();
   sampler->SetInput(this->m_Image);
   sampler->SetInputImageRegion(this->m_Image->GetRequestedRegion());
-  //sampler->SetMask(this->m_Image->GetSpatialObjectMask());
+  // sampler->SetMask(this->m_Image->GetSpatialObjectMask());
 
   /** Determine grid spacing of sampler such that the desired
-  * NumberOfJacobianMeasurements is achieved approximately.
-  * Note that the actually obtained number of samples may be lower, due to masks.
-  * This is taken into account at the end of this function.
-  */
+   * NumberOfJacobianMeasurements is achieved approximately.
+   * Note that the actually obtained number of samples may be lower, due to masks.
+   * This is taken into account at the end of this function.
+   */
   SizeValueType nrofsamples = this->m_NumberOfSamplesForCenteredTransformInitialization;
   sampler->SetNumberOfSamples(nrofsamples);
 
@@ -658,16 +642,14 @@ AdvancedImageMomentsCalculator< TInputImage >
 
   if (nrofsamples == 0)
   {
-    itkExceptionMacro(
-      << "No valid voxels (0/" << this->m_NumberOfSamplesForCenteredTransformInitialization
-      << ") found to estimate the AutomaticTransformInitialization parameters.");
+    itkExceptionMacro(<< "No valid voxels (0/" << this->m_NumberOfSamplesForCenteredTransformInitialization
+                      << ") found to estimate the AutomaticTransformInitialization parameters.");
   }
 } // end SampleImage()
 
-template< typename TInputImage >
+template <typename TInputImage>
 void
-AdvancedImageMomentsCalculator< TInputImage >
-::PrintSelf(std::ostream & os, Indent indent) const
+AdvancedImageMomentsCalculator<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
   os << indent << "Image: " << m_Image.GetPointer() << std::endl;

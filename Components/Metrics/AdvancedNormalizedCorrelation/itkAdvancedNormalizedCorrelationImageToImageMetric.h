@@ -86,115 +86,107 @@ namespace itk
  * \ingroup Metrics
  */
 
-template< class TFixedImage, class TMovingImage >
-class AdvancedNormalizedCorrelationImageToImageMetric :
-  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+template <class TFixedImage, class TMovingImage>
+class AdvancedNormalizedCorrelationImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AdvancedNormalizedCorrelationImageToImageMetric Self;
-  typedef AdvancedImageToImageMetric<
-    TFixedImage, TMovingImage >                         Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef AdvancedNormalizedCorrelationImageToImageMetric       Self;
+  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
+  typedef SmartPointer<Self>                                    Pointer;
+  typedef SmartPointer<const Self>                              ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedNormalizedCorrelationImageToImageMetric, AdvancedImageToImageMetric );
+  itkTypeMacro(AdvancedNormalizedCorrelationImageToImageMetric, AdvancedImageToImageMetric);
 
   /** Typedefs from the superclass. */
-  typedef typename
-    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType            MovingImageType;
-  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
-  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType             FixedImageType;
-  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
-  typedef typename Superclass::InterpolatorType           InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-  typedef typename Superclass::RealType                   RealType;
-  typedef typename Superclass::GradientPixelType          GradientPixelType;
-  typedef typename Superclass::GradientImageType          GradientImageType;
-  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
-  typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
-  typedef typename Superclass::ImageSamplerType           ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename
-    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
-  typedef typename
-    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
-  typedef typename
-    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
-  typedef typename
-    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
-  typedef typename Superclass::ThreaderType   ThreaderType;
-  typedef typename Superclass::ThreadInfoType ThreadInfoType;
+  typedef typename Superclass::CoordinateRepresentationType    CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType                 MovingImageType;
+  typedef typename Superclass::MovingImagePixelType            MovingImagePixelType;
+  typedef typename Superclass::MovingImageConstPointer         MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType                  FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer          FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType            FixedImageRegionType;
+  typedef typename Superclass::TransformType                   TransformType;
+  typedef typename Superclass::TransformPointer                TransformPointer;
+  typedef typename Superclass::InputPointType                  InputPointType;
+  typedef typename Superclass::OutputPointType                 OutputPointType;
+  typedef typename Superclass::TransformParametersType         TransformParametersType;
+  typedef typename Superclass::TransformJacobianType           TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType          NumberOfParametersType;
+  typedef typename Superclass::InterpolatorType                InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer             InterpolatorPointer;
+  typedef typename Superclass::RealType                        RealType;
+  typedef typename Superclass::GradientPixelType               GradientPixelType;
+  typedef typename Superclass::GradientImageType               GradientImageType;
+  typedef typename Superclass::GradientImagePointer            GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType         GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer      GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType              FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer           FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType             MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer          MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                     MeasureType;
+  typedef typename Superclass::DerivativeType                  DerivativeType;
+  typedef typename Superclass::DerivativeValueType             DerivativeValueType;
+  typedef typename Superclass::ParametersType                  ParametersType;
+  typedef typename Superclass::FixedImagePixelType             FixedImagePixelType;
+  typedef typename Superclass::MovingImageRegionType           MovingImageRegionType;
+  typedef typename Superclass::ImageSamplerType                ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer             ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType        ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer     ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType           FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType          MovingImageLimiterType;
+  typedef typename Superclass::FixedImageLimiterOutputType     FixedImageLimiterOutputType;
+  typedef typename Superclass::MovingImageLimiterOutputType    MovingImageLimiterOutputType;
+  typedef typename Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType                    ThreaderType;
+  typedef typename Superclass::ThreadInfoType                  ThreadInfoType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const TransformParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
-  void GetDerivative(
-    const TransformParametersType & parameters,
-    DerivativeType & derivative ) const override;
+  void
+  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivativeSingleThreaded(
-    const TransformParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const;
+  void
+  GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
+                                      MeasureType &                   value,
+                                      DerivativeType &                derivative) const;
 
-  void GetValueAndDerivative(
-    const TransformParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const override;
+  void
+  GetValueAndDerivative(const TransformParametersType & parameters,
+                        MeasureType &                   value,
+                        DerivativeType &                derivative) const override;
 
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
    * from the sample values in the cross-correlation formula and
    * typically results in narrower valleys in the cost function.
    * Default value is false.
    */
-  itkSetMacro( SubtractMean, bool );
-  itkGetConstReferenceMacro( SubtractMean, bool );
-  itkBooleanMacro( SubtractMean );
+  itkSetMacro(SubtractMean, bool);
+  itkGetConstReferenceMacro(SubtractMean, bool);
+  itkBooleanMacro(SubtractMean);
 
 protected:
-
   AdvancedNormalizedCorrelationImageToImageMetric();
   ~AdvancedNormalizedCorrelationImageToImageMetric() override;
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Protected Typedefs ******************/
 
@@ -213,39 +205,42 @@ protected:
   /** Compute a pixel's contribution to the derivative terms;
    * Called by GetValueAndDerivative().
    */
-  void UpdateDerivativeTerms(
-    const RealType & fixedImageValue,
-    const RealType & movingImageValue,
-    const DerivativeType & imageJacobian,
-    const NonZeroJacobianIndicesType & nzji,
-    DerivativeType & derivativeF,
-    DerivativeType & derivativeM,
-    DerivativeType & differential ) const;
+  void
+  UpdateDerivativeTerms(const RealType &                   fixedImageValue,
+                        const RealType &                   movingImageValue,
+                        const DerivativeType &             imageJacobian,
+                        const NonZeroJacobianIndicesType & nzji,
+                        DerivativeType &                   derivativeF,
+                        DerivativeType &                   derivativeM,
+                        DerivativeType &                   differential) const;
 
   /** Initialize some multi-threading related parameters.
    * Overrides function in AdvancedImageToImageMetric, because
    * here we use other parameters.
    */
-  void InitializeThreadingParameters( void ) const override;
+  void
+  InitializeThreadingParameters(void) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID ) override;
+  inline void
+  ThreadedGetValueAndDerivative(ThreadIdType threadID) override;
 
   /** Gather the values and derivatives from all threads */
-  inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const override;
+  inline void
+  AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
   /** AccumulateDerivatives threader callback function */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION AccumulateDerivativesThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-
-  AdvancedNormalizedCorrelationImageToImageMetric( const Self & ); // purposely not implemented
-  void operator=( const Self & );                                  // purposely not implemented
+  AdvancedNormalizedCorrelationImageToImageMetric(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   mutable bool m_SubtractMean;
 
-  typedef typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
+  typedef typename NumericTraits<MeasureType>::AccumulateType AccumulateType;
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.
@@ -273,19 +268,20 @@ private:
     DerivativeType st_DerivativeM;
     DerivativeType st_Differential;
   };
-  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, CorrelationGetValueAndDerivativePerThreadStruct,
-    PaddedCorrelationGetValueAndDerivativePerThreadStruct );
-  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedCorrelationGetValueAndDerivativePerThreadStruct,
-    AlignedCorrelationGetValueAndDerivativePerThreadStruct );
+  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT,
+               CorrelationGetValueAndDerivativePerThreadStruct,
+               PaddedCorrelationGetValueAndDerivativePerThreadStruct);
+  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
+                    PaddedCorrelationGetValueAndDerivativePerThreadStruct,
+                    AlignedCorrelationGetValueAndDerivativePerThreadStruct);
   mutable AlignedCorrelationGetValueAndDerivativePerThreadStruct * m_CorrelationGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType                                             m_CorrelationGetValueAndDerivativePerThreadVariablesSize;
-
+  mutable ThreadIdType m_CorrelationGetValueAndDerivativePerThreadVariablesSize;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedNormalizedCorrelationImageToImageMetric.hxx"
+#  include "itkAdvancedNormalizedCorrelationImageToImageMetric.hxx"
 #endif
 
 #endif // end #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h

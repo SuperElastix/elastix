@@ -34,68 +34,57 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template< class TScalarType,
-unsigned int NInputDimensions  = 3,
-unsigned int NOutputDimensions = 3 >
-class StackTransform :
-  public AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
+template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
+class StackTransform : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef StackTransform Self;
-  typedef AdvancedTransform< TScalarType,
-    NInputDimensions,
-    NOutputDimensions >               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef StackTransform                                                      Self;
+  typedef AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions> Superclass;
+  typedef SmartPointer<Self>                                                  Pointer;
+  typedef SmartPointer<const Self>                                            ConstPointer;
 
   /** New method for creating an object using a factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StackTransform, AdvancedTransform );
+  itkTypeMacro(StackTransform, AdvancedTransform);
 
   /** (Reduced) dimension of the domain space. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, NInputDimensions );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, NOutputDimensions );
-  itkStaticConstMacro( ReducedInputSpaceDimension, unsigned int, NInputDimensions - 1 );
-  itkStaticConstMacro( ReducedOutputSpaceDimension, unsigned int, NOutputDimensions - 1 );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, NInputDimensions);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, NOutputDimensions);
+  itkStaticConstMacro(ReducedInputSpaceDimension, unsigned int, NInputDimensions - 1);
+  itkStaticConstMacro(ReducedOutputSpaceDimension, unsigned int, NOutputDimensions - 1);
 
   /** Typedefs from the Superclass. */
-  typedef typename Superclass::ScalarType     ScalarType;
-  typedef typename Superclass::ParametersType ParametersType;
-  typedef typename Superclass::NumberOfParametersType
-    NumberOfParametersType;
-  typedef typename Superclass::ParametersValueType ParametersValueType;
-  typedef typename Superclass::JacobianType        JacobianType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType
-    JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType
-    JacobianOfSpatialHessianType;
-  typedef typename
-    Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::InputPointType      InputPointType;
-  typedef typename Superclass::InputVectorType     InputVectorType;
-  typedef typename Superclass::OutputVectorType    OutputVectorType;
-  typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
-  typedef typename Superclass::OutputCovariantVectorType
-    OutputCovariantVectorType;
-  typedef typename Superclass::InputCovariantVectorType
-    InputCovariantVectorType;
-  typedef typename Superclass::OutputPointType       OutputPointType;
-  typedef typename Superclass::OutputVectorPixelType OutputVectorPixelType;
-  typedef typename Superclass::InputVectorPixelType  InputVectorPixelType;
+  typedef typename Superclass::ScalarType                    ScalarType;
+  typedef typename Superclass::ParametersType                ParametersType;
+  typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
+  typedef typename Superclass::ParametersValueType           ParametersValueType;
+  typedef typename Superclass::JacobianType                  JacobianType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::InputPointType                InputPointType;
+  typedef typename Superclass::InputVectorType               InputVectorType;
+  typedef typename Superclass::OutputVectorType              OutputVectorType;
+  typedef typename Superclass::InputVnlVectorType            InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType           OutputVnlVectorType;
+  typedef typename Superclass::OutputCovariantVectorType     OutputCovariantVectorType;
+  typedef typename Superclass::InputCovariantVectorType      InputCovariantVectorType;
+  typedef typename Superclass::OutputPointType               OutputPointType;
+  typedef typename Superclass::OutputVectorPixelType         OutputVectorPixelType;
+  typedef typename Superclass::InputVectorPixelType          InputVectorPixelType;
 
   /** Sub transform types, having a reduced dimension. */
-  typedef AdvancedTransform< TScalarType,
-    itkGetStaticConstMacro( ReducedInputSpaceDimension ),
-    itkGetStaticConstMacro( ReducedOutputSpaceDimension ) >  SubTransformType;
+  typedef AdvancedTransform<TScalarType,
+                            itkGetStaticConstMacro(ReducedInputSpaceDimension),
+                            itkGetStaticConstMacro(ReducedOutputSpaceDimension)>
+                                                  SubTransformType;
   typedef typename SubTransformType::Pointer      SubTransformPointer;
-  typedef std::vector< SubTransformPointer  >     SubTransformContainerType;
+  typedef std::vector<SubTransformPointer>        SubTransformContainerType;
   typedef typename SubTransformType::JacobianType SubTransformJacobianType;
 
   /** Dimension - 1 point types. */
@@ -106,30 +95,31 @@ public:
   typedef typename ParametersType::ArrayType ParametersArrayType;
 
   /**  Method to transform a point. */
-  OutputPointType TransformPoint( const InputPointType & ipp ) const override;
+  OutputPointType
+  TransformPoint(const InputPointType & ipp) const override;
 
   /** These vector transforms are not implemented for this transform. */
-  OutputVectorType TransformVector( const InputVectorType & ) const override
+  OutputVectorType
+  TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(
-        << "TransformVector(const InputVectorType &) is not implemented "
-        << "for StackTransform" );
+    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented "
+                      << "for StackTransform");
   }
 
 
-  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
+  OutputVnlVectorType
+  TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(
-        << "TransformVector(const InputVnlVectorType &) is not implemented "
-        << "for StackTransform" );
+    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented "
+                      << "for StackTransform");
   }
 
 
-  OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const override
+  OutputCovariantVectorType
+  TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(
-        << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
-        << "for StackTransform" );
+    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+                      << "for StackTransform");
   }
 
 
@@ -138,28 +128,30 @@ public:
    * However, it is a useful function, since the Jacobian is passed
    * by reference, which makes it threadsafe, unlike the normal
    * GetJacobian function. */
-  void GetJacobian(
-    const InputPointType & ipp,
-    JacobianType & jac,
-    NonZeroJacobianIndicesType & nzji ) const override;
+  void
+  GetJacobian(const InputPointType & ipp, JacobianType & jac, NonZeroJacobianIndicesType & nzji) const override;
 
   /** Set the parameters. Checks if the number of parameters
    * is correct and sets parameters of sub transforms. */
-  void SetParameters( const ParametersType & param ) override;
+  void
+  SetParameters(const ParametersType & param) override;
 
   /** Get the parameters. Concatenates the parameters of the
    * sub transforms. */
-  const ParametersType & GetParameters( void ) const override;
+  const ParametersType &
+  GetParameters(void) const override;
 
   /** Set the fixed parameters. */
-  void SetFixedParameters( const ParametersType & ) override
+  void
+  SetFixedParameters(const ParametersType &) override
   {
     // \todo: to be implemented by Coert
   }
 
 
   /** Get the Fixed Parameters. */
-  const ParametersType & GetFixedParameters( void ) const override
+  const ParametersType &
+  GetFixedParameters(void) const override
   {
     // \todo: to be implemented by Coert: check this:
     return this->m_FixedParameters;
@@ -167,131 +159,140 @@ public:
 
 
   /** Return the number of sub transforms that have been set. */
-  NumberOfParametersType GetNumberOfParameters( void ) const override
+  NumberOfParametersType
+  GetNumberOfParameters(void) const override
   {
-    if( this->m_SubTransformContainer.size() == 0 )
+    if (this->m_SubTransformContainer.size() == 0)
     {
       return 0;
     }
     else
     {
-      return this->m_SubTransformContainer.size() * m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+      return this->m_SubTransformContainer.size() * m_SubTransformContainer[0]->GetNumberOfParameters();
     }
   }
 
 
   /** Set/get number of transforms needed. */
-  virtual void SetNumberOfSubTransforms( const unsigned int num )
+  virtual void
+  SetNumberOfSubTransforms(const unsigned int num)
   {
-    if( this->m_NumberOfSubTransforms != num )
+    if (this->m_NumberOfSubTransforms != num)
     {
       this->m_NumberOfSubTransforms = num;
       this->m_SubTransformContainer.clear();
-      this->m_SubTransformContainer.resize( num );
+      this->m_SubTransformContainer.resize(num);
       this->Modified();
     }
   }
 
 
-  itkGetConstMacro( NumberOfSubTransforms, unsigned int );
+  itkGetConstMacro(NumberOfSubTransforms, unsigned int);
 
   /** Set/get stack transform parameters. */
-  itkSetMacro( StackSpacing, TScalarType );
-  itkGetConstMacro( StackSpacing, TScalarType );
-  itkSetMacro( StackOrigin, TScalarType );
-  itkGetConstMacro( StackOrigin, TScalarType );
+  itkSetMacro(StackSpacing, TScalarType);
+  itkGetConstMacro(StackSpacing, TScalarType);
+  itkSetMacro(StackOrigin, TScalarType);
+  itkGetConstMacro(StackOrigin, TScalarType);
 
   /** Set the initial transform for sub transform i. */
-  virtual void SetSubTransform( unsigned int i, SubTransformType * transform )
+  virtual void
+  SetSubTransform(unsigned int i, SubTransformType * transform)
   {
-    this->m_SubTransformContainer[ i ] = transform;
+    this->m_SubTransformContainer[i] = transform;
     this->Modified();
   }
 
 
   /** Set all sub transforms to transform. */
-  virtual void SetAllSubTransforms( SubTransformType * transform )
+  virtual void
+  SetAllSubTransforms(SubTransformType * transform)
   {
-    for( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
+    for (unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t)
     {
       // Copy transform
-      SubTransformPointer transformcopy = dynamic_cast< SubTransformType * >( transform->CreateAnother().GetPointer() );
-      transformcopy->SetFixedParameters( transform->GetFixedParameters() );
-      transformcopy->SetParameters( transform->GetParameters() );
+      SubTransformPointer transformcopy = dynamic_cast<SubTransformType *>(transform->CreateAnother().GetPointer());
+      transformcopy->SetFixedParameters(transform->GetFixedParameters());
+      transformcopy->SetParameters(transform->GetParameters());
       // Set sub transform
-      this->m_SubTransformContainer[ t ] = transformcopy;
+      this->m_SubTransformContainer[t] = transformcopy;
     }
   }
 
 
   /** Get a sub transform. */
-  virtual SubTransformPointer GetSubTransform( unsigned int i )
+  virtual SubTransformPointer
+  GetSubTransform(unsigned int i)
   {
-    return this->m_SubTransformContainer[ i ];
+    return this->m_SubTransformContainer[i];
   }
 
 
   /** Get number of nonzero Jacobian indices. */
-  NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const override;
+  NumberOfParametersType
+  GetNumberOfNonZeroJacobianIndices(void) const override;
 
   /** Must be provided. */
-  void GetSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj ) const override
+  void
+  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override
   {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
+    itkExceptionMacro(<< "Not implemented for StackTransform");
   }
 
 
-  void GetSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh ) const override
+  void
+  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override
   {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
+    itkExceptionMacro(<< "Not implemented for StackTransform");
   }
 
 
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
+    itkExceptionMacro(<< "Not implemented for StackTransform");
   }
 
 
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               SpatialJacobianType &           sj,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
+    itkExceptionMacro(<< "Not implemented for StackTransform");
   }
 
 
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
+    itkExceptionMacro(<< "Not implemented for StackTransform");
   }
 
 
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              SpatialHessianType &           sh,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
+    itkExceptionMacro(<< "Not implemented for StackTransform");
   }
 
 
 protected:
-
   StackTransform();
   ~StackTransform() override {}
 
 private:
-
-  StackTransform( const Self & );  // purposely not implemented
-  void operator=( const Self & );  // purposely not implemented
+  StackTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   // Number of transforms and transform container
   unsigned int              m_NumberOfSubTransforms;
@@ -299,13 +300,12 @@ private:
 
   // Stack spacing and origin of last dimension
   TScalarType m_StackSpacing, m_StackOrigin;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkStackTransform.hxx"
+#  include "itkStackTransform.hxx"
 #endif
 
 #endif

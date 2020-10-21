@@ -23,7 +23,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for itkGPUTranslationTransformBase */
-itkGPUKernelClassMacro( GPUTranslationTransformBaseKernel );
+itkGPUKernelClassMacro(GPUTranslationTransformBaseKernel);
 
 /** \class GPUTranslationTransformBase
  * \brief Base class for all GPU translation transforms.
@@ -36,60 +36,64 @@ itkGPUKernelClassMacro( GPUTranslationTransformBaseKernel );
  *
  * \ingroup GPUCommon
  */
-template<
-typename TScalarType     = float,    // Data type for scalars
-unsigned int NDimensions = 3 >
+template <typename TScalarType = float, // Data type for scalars
+          unsigned int NDimensions = 3>
 class ITK_EXPORT GPUTranslationTransformBase : public GPUTransformBase
 {
 public:
-
   /** Standard typedefs   */
   typedef GPUTranslationTransformBase Self;
   typedef GPUTransformBase            GPUSuperclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUTranslationTransformBase, GPUSuperclass );
+  itkTypeMacro(GPUTranslationTransformBase, GPUSuperclass);
 
   /** Returns true, the transform is translation transform. */
-  bool IsTranslationTransform( void ) const override { return true; }
+  bool
+  IsTranslationTransform(void) const override
+  {
+    return true;
+  }
 
   /** Type of the scalar representing coordinate and vector elements. */
   typedef TScalarType ScalarType;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( ParametersDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
+  itkStaticConstMacro(ParametersDimension, unsigned int, NDimensions);
 
   /** Standard vector type for this class. */
-  typedef Vector< TScalarType, NDimensions > CPUOutputVectorType;
+  typedef Vector<TScalarType, NDimensions> CPUOutputVectorType;
 
   /** This method returns the CPU value of the offset of the TranslationTransform. */
-  virtual const CPUOutputVectorType & GetCPUOffset( void ) const = 0;
+  virtual const CPUOutputVectorType &
+  GetCPUOffset(void) const = 0;
 
 protected:
-
   GPUTranslationTransformBase();
   ~GPUTranslationTransformBase() override {}
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  bool GetSourceCode( std::string & source ) const override;
+  bool
+  GetSourceCode(std::string & source) const override;
 
   /** Returns data manager that stores all settings for the transform. */
-  GPUDataManager::Pointer GetParametersDataManager( void ) const override;
+  GPUDataManager::Pointer
+  GetParametersDataManager(void) const override;
 
 private:
+  GPUTranslationTransformBase(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 
-  GPUTranslationTransformBase( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );            // purposely not implemented
-
-  std::vector< std::string > m_Sources;
+  std::vector<std::string> m_Sources;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUTranslationTransformBase.hxx"
+#  include "itkGPUTranslationTransformBase.hxx"
 #endif
 
 #endif /* itkGPUTranslationTransformBase_h */

@@ -18,4 +18,4 @@
 
 #include "elxNormalizedMutualInformationMetric.h"
 
-elxInstallMacro( NormalizedMutualInformationMetric );
+elxInstallMacro(NormalizedMutualInformationMetric);

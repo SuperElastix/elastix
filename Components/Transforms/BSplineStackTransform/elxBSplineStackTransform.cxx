@@ -17,4 +17,4 @@
  *=========================================================================*/
 #include "elxBSplineStackTransform.h"
 
-elxInstallMacro( BSplineStackTransform );
+elxInstallMacro(BSplineStackTransform);

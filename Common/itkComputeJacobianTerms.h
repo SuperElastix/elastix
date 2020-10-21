@@ -33,23 +33,21 @@ namespace itk
  * Details can be found in the paper.
  */
 
-template< class TFixedImage, class TTransform >
-class ComputeJacobianTerms :
-  public Object
+template <class TFixedImage, class TTransform>
+class ComputeJacobianTerms : public Object
 {
 public:
-
   /** Standard ITK.*/
-  typedef ComputeJacobianTerms       Self;
-  typedef Object                     Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef ComputeJacobianTerms     Self;
+  typedef Object                   Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ComputeJacobianTerms, Object );
+  itkTypeMacro(ComputeJacobianTerms, Object);
 
   /** typedef  */
   typedef TFixedImage                         FixedImageType;
@@ -60,40 +58,39 @@ public:
   /** Type for the mask of the fixed image. Only pixels that are "inside"
    * this mask will be considered for the computation of the Jacobian terms.
    */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    TFixedImage::ImageDimension );
-  typedef SpatialObject< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer                           FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer                      FixedImageMaskConstPointer;
+  itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
+  typedef SpatialObject<itkGetStaticConstMacro(FixedImageDimension)> FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer                       FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer                  FixedImageMaskConstPointer;
 
   typedef ScaledSingleValuedNonLinearOptimizer ScaledSingleValuedNonLinearOptimizerType;
-  typedef typename ScaledSingleValuedNonLinearOptimizerType
-    ::ScaledCostFunctionPointer ScaledCostFunctionPointer;
-  typedef typename ScaledSingleValuedNonLinearOptimizerType::ScalesType ScalesType;
-  typedef typename TransformType::NonZeroJacobianIndicesType            NonZeroJacobianIndicesType;
+  typedef typename ScaledSingleValuedNonLinearOptimizerType ::ScaledCostFunctionPointer ScaledCostFunctionPointer;
+  typedef typename ScaledSingleValuedNonLinearOptimizerType::ScalesType                 ScalesType;
+  typedef typename TransformType::NonZeroJacobianIndicesType                            NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
-  itkSetConstObjectMacro( FixedImage, FixedImageType );
+  itkSetConstObjectMacro(FixedImage, FixedImageType);
 
   /** Set the transform. */
-  itkSetObjectMacro( Transform, TransformType );
+  itkSetObjectMacro(Transform, TransformType);
 
   /** Set/Get the fixed image mask. */
-  itkSetObjectMacro( FixedImageMask, FixedImageMaskType );
-  itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType );
-  itkGetConstObjectMacro( FixedImageMask, FixedImageMaskType );
+  itkSetObjectMacro(FixedImageMask, FixedImageMaskType);
+  itkSetConstObjectMacro(FixedImageMask, FixedImageMaskType);
+  itkGetConstObjectMacro(FixedImageMask, FixedImageMaskType);
 
   /** Set some parameters. */
-  itkSetMacro( Scales, ScalesType );
-  itkSetMacro( UseScales, bool );
-  itkSetMacro( MaxBandCovSize, unsigned int );
-  itkSetMacro( NumberOfBandStructureSamples, unsigned int );
-  itkSetMacro( NumberOfJacobianMeasurements, SizeValueType );
+  itkSetMacro(Scales, ScalesType);
+  itkSetMacro(UseScales, bool);
+  itkSetMacro(MaxBandCovSize, unsigned int);
+  itkSetMacro(NumberOfBandStructureSamples, unsigned int);
+  itkSetMacro(NumberOfJacobianMeasurements, SizeValueType);
 
   /** Set the region over which the metric will be computed. */
-  void SetFixedImageRegion( const FixedImageRegionType & region )
+  void
+  SetFixedImageRegion(const FixedImageRegionType & region)
   {
-    if( region != this->m_FixedImageRegion )
+    if (region != this->m_FixedImageRegion)
     {
       this->m_FixedImageRegion = region;
     }
@@ -101,44 +98,42 @@ public:
 
 
   /** Get the region over which the metric will be computed. */
-  itkGetConstReferenceMacro( FixedImageRegion, FixedImageRegionType );
+  itkGetConstReferenceMacro(FixedImageRegion, FixedImageRegionType);
 
   /** The main functions that performs the computation. */
-  virtual void Compute( double & TrC, double & TrCC,
-    double & maxJJ, double & maxJCJ );
+  virtual void
+  Compute(double & TrC, double & TrCC, double & maxJJ, double & maxJCJ);
 
 protected:
-
   ComputeJacobianTerms();
   ~ComputeJacobianTerms() override {}
 
   typename FixedImageType::ConstPointer m_FixedImage;
-  FixedImageRegionType       m_FixedImageRegion;
-  FixedImageMaskConstPointer m_FixedImageMask;
-  TransformPointer           m_Transform;
-  ScalesType                 m_Scales;
-  bool                       m_UseScales;
+  FixedImageRegionType                  m_FixedImageRegion;
+  FixedImageMaskConstPointer            m_FixedImageMask;
+  TransformPointer                      m_Transform;
+  ScalesType                            m_Scales;
+  bool                                  m_UseScales;
 
   unsigned int  m_MaxBandCovSize;
   unsigned int  m_NumberOfBandStructureSamples;
   SizeValueType m_NumberOfJacobianMeasurements;
 
-  typedef typename  FixedImageType::IndexType   FixedImageIndexType;
-  typedef typename  FixedImageType::PointType   FixedImagePointType;
-  typedef typename  TransformType::JacobianType JacobianType;
-  typedef typename  JacobianType::ValueType     JacobianValueType;
+  typedef typename FixedImageType::IndexType   FixedImageIndexType;
+  typedef typename FixedImageType::PointType   FixedImagePointType;
+  typedef typename TransformType::JacobianType JacobianType;
+  typedef typename JacobianType::ValueType     JacobianValueType;
 
   /** Samplers. */
-  typedef ImageSamplerBase< FixedImageType >           ImageSamplerBaseType;
+  typedef ImageSamplerBase<FixedImageType>             ImageSamplerBaseType;
   typedef typename ImageSamplerBaseType::Pointer       ImageSamplerBasePointer;
-  typedef ImageRandomSamplerBase< FixedImageType >     ImageRandomSamplerBaseType;
+  typedef ImageRandomSamplerBase<FixedImageType>       ImageRandomSamplerBaseType;
   typedef typename ImageRandomSamplerBaseType::Pointer ImageRandomSamplerBasePointer;
 
-  typedef ImageGridSampler< FixedImageType >     ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer ImageGridSamplerPointer;
-  typedef typename ImageGridSamplerType
-    ::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
+  typedef ImageGridSampler<FixedImageType>                         ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer                   ImageGridSamplerPointer;
+  typedef typename ImageGridSamplerType ::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer               ImageSampleContainerPointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   typedef JacobianType                                   TransformJacobianType;
@@ -148,20 +143,19 @@ protected:
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeDisplacementDistribution
   // in the future it would be better to refactoring this part of the code.
-  virtual void SampleFixedImageForJacobianTerms(
-    ImageSampleContainerPointer & sampleContainer );
+  virtual void
+  SampleFixedImageForJacobianTerms(ImageSampleContainerPointer & sampleContainer);
 
 private:
-
-  ComputeJacobianTerms( const Self & ); // purposely not implemented
-  void operator=( const Self & );       // purposely not implemented
-
+  ComputeJacobianTerms(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkComputeJacobianTerms.hxx"
+#  include "itkComputeJacobianTerms.hxx"
 #endif
 
 #endif // end #ifndef __itkComputeJacobianTerms_h

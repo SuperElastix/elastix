@@ -52,27 +52,24 @@ namespace itk
  *
  * \ingroup ImageFunctions
  */
-template< class TInputImage, class TCoordRep = double >
-class AdvancedRayCastInterpolateImageFunction :
-  public InterpolateImageFunction< TInputImage, TCoordRep >
+template <class TInputImage, class TCoordRep = double>
+class AdvancedRayCastInterpolateImageFunction : public InterpolateImageFunction<TInputImage, TCoordRep>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AdvancedRayCastInterpolateImageFunction            Self;
-  typedef InterpolateImageFunction< TInputImage, TCoordRep > Superclass;
-  typedef SmartPointer< Self >                               Pointer;
-  typedef SmartPointer< const Self >                         ConstPointer;
+  typedef AdvancedRayCastInterpolateImageFunction          Self;
+  typedef InterpolateImageFunction<TInputImage, TCoordRep> Superclass;
+  typedef SmartPointer<Self>                               Pointer;
+  typedef SmartPointer<const Self>                         ConstPointer;
 
   /** Constants for the image dimensions */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /**
    * Type of the Transform Base class
    * The fixed image should be a 3D image
    */
-  typedef Transform< TCoordRep, InputImageDimension, InputImageDimension > TransformType;
+  typedef Transform<TCoordRep, InputImageDimension, InputImageDimension> TransformType;
 
   typedef typename TransformType::Pointer         TransformPointer;
   typedef typename TransformType::InputPointType  InputPointType;
@@ -84,18 +81,18 @@ public:
 
   typedef typename TInputImage::SizeType SizeType;
 
-  typedef Vector< TCoordRep, InputImageDimension > DirectionType;
+  typedef Vector<TCoordRep, InputImageDimension> DirectionType;
 
   /**  Type of the Interpolator Base class */
-  typedef InterpolateImageFunction< TInputImage, TCoordRep > InterpolatorType;
+  typedef InterpolateImageFunction<TInputImage, TCoordRep> InterpolatorType;
 
   typedef typename InterpolatorType::Pointer InterpolatorPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedRayCastInterpolateImageFunction, InterpolateImageFunction );
+  itkTypeMacro(AdvancedRayCastInterpolateImageFunction, InterpolateImageFunction);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** OutputType typedef support. */
   typedef typename Superclass::OutputType OutputType;
@@ -107,7 +104,7 @@ public:
   typedef typename Superclass::RealType RealType;
 
   /** Dimension underlying input image. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Point typedef support. */
   typedef typename Superclass::PointType PointType;
@@ -128,7 +125,8 @@ public:
    * ImageFunction::IsInsideBuffer() can be used to check bounds before
    * calling the method.
    */
-  OutputType Evaluate( const PointType & point ) const override;
+  OutputType
+  Evaluate(const PointType & point) const override;
 
   /** Interpolate the image at a continuous index position
    *
@@ -141,60 +139,63 @@ public:
    * ImageFunction::IsInsideBuffer() can be used to check bounds before
    * calling the method.
    */
-  OutputType EvaluateAtContinuousIndex(
-    const ContinuousIndexType & index ) const override;
+  OutputType
+  EvaluateAtContinuousIndex(const ContinuousIndexType & index) const override;
 
   /** Connect the Transform. */
-  itkSetObjectMacro( Transform, TransformType );
+  itkSetObjectMacro(Transform, TransformType);
   /** Get a pointer to the Transform.  */
-  itkGetModifiableObjectMacro( Transform, TransformType );
+  itkGetModifiableObjectMacro(Transform, TransformType);
 
   /** Connect the Interpolator. */
-  itkSetObjectMacro( Interpolator, InterpolatorType );
+  itkSetObjectMacro(Interpolator, InterpolatorType);
   /** Get a pointer to the Interpolator.  */
-  itkGetModifiableObjectMacro( Interpolator, InterpolatorType );
+  itkGetModifiableObjectMacro(Interpolator, InterpolatorType);
 
   /** Connect the Interpolator. */
-  itkSetMacro( FocalPoint, InputPointType );
+  itkSetMacro(FocalPoint, InputPointType);
   /** Get a pointer to the Interpolator.  */
-  itkGetConstMacro( FocalPoint, InputPointType );
+  itkGetConstMacro(FocalPoint, InputPointType);
 
   /** Connect the Transform. */
-  itkSetMacro( Threshold, double );
+  itkSetMacro(Threshold, double);
   /** Get a pointer to the Transform.  */
-  itkGetConstMacro( Threshold, double );
+  itkGetConstMacro(Threshold, double);
 
   /** Check if a point is inside the image buffer.
    * \warning For efficiency, no validity checking of
    * the input image pointer is done. */
-  inline bool IsInsideBuffer( const PointType & ) const override
+  inline bool
+  IsInsideBuffer(const PointType &) const override
   {
     return true;
   }
 
 
-  bool IsInsideBuffer( const ContinuousIndexType &  ) const override
+  bool
+  IsInsideBuffer(const ContinuousIndexType &) const override
   {
     return true;
   }
 
 
-  bool IsInsideBuffer( const IndexType &  ) const override
+  bool
+  IsInsideBuffer(const IndexType &) const override
   {
     return true;
   }
 
 
 protected:
-
   /// Constructor
   AdvancedRayCastInterpolateImageFunction();
 
   /// Destructor
-  ~AdvancedRayCastInterpolateImageFunction() override{}
+  ~AdvancedRayCastInterpolateImageFunction() override {}
 
   /// Print the object
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /// Transformation used to calculate the new focal point position
   TransformPointer m_Transform;
@@ -209,26 +210,26 @@ protected:
   InterpolatorPointer m_Interpolator;
 
 private:
+  AdvancedRayCastInterpolateImageFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  AdvancedRayCastInterpolateImageFunction( const Self & ); // purposely not implemented
-  void operator=( const Self & );                          // purposely not implemented
-
-  SizeType GetRadius() const override
+  SizeType
+  GetRadius() const override
   {
-    const InputImageType* const input = this->GetInputImage();
+    const InputImageType * const input = this->GetInputImage();
     if (!input)
     {
       itkExceptionMacro("Input image required!");
     }
     return input->GetLargestPossibleRegion().GetSize();
   }
-
 };
 
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedRayCastInterpolateImageFunction.hxx"
+#  include "itkAdvancedRayCastInterpolateImageFunction.hxx"
 #endif
 
 #endif

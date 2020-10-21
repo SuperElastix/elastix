@@ -30,24 +30,21 @@ namespace itk
  * \ingroup Metrics
  */
 
-template< class TFixedImage, class TScalarType >
-class DisplacementMagnitudePenaltyTerm :
-  public TransformPenaltyTerm< TFixedImage, TScalarType >
+template <class TFixedImage, class TScalarType>
+class DisplacementMagnitudePenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
-
   /** Standard ITK stuff. */
-  typedef DisplacementMagnitudePenaltyTerm Self;
-  typedef TransformPenaltyTerm<
-    TFixedImage, TScalarType >                  Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef DisplacementMagnitudePenaltyTerm               Self;
+  typedef TransformPenaltyTerm<TFixedImage, TScalarType> Superclass;
+  typedef SmartPointer<Self>                             Pointer;
+  typedef SmartPointer<const Self>                       ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( DisplacementMagnitudePenaltyTerm, TransformPenaltyTerm );
+  itkTypeMacro(DisplacementMagnitudePenaltyTerm, TransformPenaltyTerm);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
@@ -87,38 +84,36 @@ public:
   typedef typename Superclass::ScalarType                   ScalarType;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** Define the dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** Get the penalty term value.
    * \f[ Value = 1/N sum_x ||T(x) - x||^2 \f]
    */
-  MeasureType GetValue( const ParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const ParametersType & parameters) const override;
 
   /** Get the penalty term derivative.
    * Simply calls GetValueAndDerivative and returns the derivative. */
-  void GetDerivative( const ParametersType & parameters,
-    DerivativeType & derivative ) const override;
+  void
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get the penalty term value and derivative.
    * \f[ Value = C(\mu) = 1/N sum_x ||T_{\mu}(x) - x||^2 \f]
    * \f[ Derivative = \frac{\partial C}{\partial\mu} = 2/N sum_x (T_{\mu}(x)-x)' \frac{\partial T}{\partial \mu} \f]
    */
-  void GetValueAndDerivative(
-    const ParametersType & parameters,
-    MeasureType & value,
-    DerivativeType & derivative ) const override;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
 protected:
-
   /** Typedefs for indices and points. */
   typedef typename Superclass::FixedImageIndexType            FixedImageIndexType;
   typedef typename Superclass::FixedImageIndexValueType       FixedImageIndexValueType;
@@ -138,18 +133,17 @@ protected:
   void PrintSelf( std::ostream& os, Indent indent ) const;*/
 
 private:
-
   /** The private constructor. */
-  DisplacementMagnitudePenaltyTerm( const Self & ); // purposely not implemented
+  DisplacementMagnitudePenaltyTerm(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                    // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkDisplacementMagnitudePenaltyTerm.hxx"
+#  include "itkDisplacementMagnitudePenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkDisplacementMagnitudePenaltyTerm_h

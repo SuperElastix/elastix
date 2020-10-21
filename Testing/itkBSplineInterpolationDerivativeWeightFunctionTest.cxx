@@ -23,26 +23,25 @@
 //-------------------------------------------------------------------------------------
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   /** Some basic type definitions.
    * NOTE: don't change the dimension or the spline order, since the
    * hard-coded ground truth depends on this.
    */
-  const unsigned int Dimension   = 2;
+  const unsigned int Dimension = 2;
   const unsigned int SplineOrder = 3;
-  typedef float CoordinateRepresentationType;
-  const double distance = 1e-3; // the allowable distance
-  //const double allowedTimeDifference = 0.1; // 10% is considered within limits
+  typedef float      CoordinateRepresentationType;
+  const double       distance = 1e-3; // the allowable distance
+  // const double allowedTimeDifference = 0.1; // 10% is considered within limits
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
    */
-  unsigned int N = static_cast< unsigned int >( 1e7 );
+  unsigned int N = static_cast<unsigned int>(1e7);
 
   /** Other typedefs. */
-  typedef itk::BSplineInterpolationDerivativeWeightFunction<
-    CoordinateRepresentationType,
-    Dimension, SplineOrder >                DerivativeWeightFunctionType;
+  typedef itk::BSplineInterpolationDerivativeWeightFunction<CoordinateRepresentationType, Dimension, SplineOrder>
+                                                            DerivativeWeightFunctionType;
   typedef DerivativeWeightFunctionType::ContinuousIndexType ContinuousIndexType;
   typedef DerivativeWeightFunctionType::WeightsType         WeightsType;
 
@@ -53,19 +52,18 @@ main( int argc, char * argv[] )
   std::cerr << "TESTING:\n" << std::endl;
 
   /** Construct several weight functions. */
-  DerivativeWeightFunctionType::Pointer foWeightFunction
-    = DerivativeWeightFunctionType::New();
+  DerivativeWeightFunctionType::Pointer foWeightFunction = DerivativeWeightFunctionType::New();
 
   /** Create and fill a continuous index.
    * NOTE: don't change this, since the hard-coded ground truth depends on this.
    */
   ContinuousIndexType cindex;
-  cindex[ 0 ] =  3.1f;
-  cindex[ 1 ] = -2.2f;
-  foWeightFunction->SetDerivativeDirection( 0 );
+  cindex[0] = 3.1f;
+  cindex[1] = -2.2f;
+  foWeightFunction->SetDerivativeDirection(0);
 
   /** Run evaluate for the first order derivative. */
-  WeightsType foWeights = foWeightFunction->Evaluate( cindex );
+  WeightsType foWeights = foWeightFunction->Evaluate(cindex);
   std::cerr << "weights (1st order) " << foWeights << std::endl;
 
   /** Hard-code the ground truth. You should change this if you change the
@@ -95,55 +93,53 @@ main( int argc, char * argv[] )
    * These numbers are created by a small Matlab program. So, if this appears
    * to be not a valid check, then we made the same bug twice.
    */
-  WeightsType trueFOWeights( 16 );
-  trueFOWeights.Fill( 0.0 );
-  trueFOWeights[  0 ] = -5.400000000000e-4;
-  trueFOWeights[  1 ] = -2.466666666666e-4;
-  trueFOWeights[  2 ] =  7.800000000000e-4;
-  trueFOWeights[  3 ] =  6.666666666666e-6;
-  trueFOWeights[  4 ] = -1.144800000000e-1;
-  trueFOWeights[  5 ] = -5.229333333333e-2;
-  trueFOWeights[  6 ] =  1.653600000000e-1;
-  trueFOWeights[  7 ] =  1.413333333333e-3;
-  trueFOWeights[  8 ] = -2.554200000000e-1;
-  trueFOWeights[  9 ] = -1.166733333333e-1;
-  trueFOWeights[ 10 ] =  3.689400000000e-1;
-  trueFOWeights[ 11 ] =  3.153333333333e-3;
-  trueFOWeights[ 12 ] = -3.456000000000e-2;
-  trueFOWeights[ 13 ] = -1.578666666666e-2;
-  trueFOWeights[ 14 ] =  4.992000000000e-2;
-  trueFOWeights[ 15 ] =  4.266666666666e-4;
+  WeightsType trueFOWeights(16);
+  trueFOWeights.Fill(0.0);
+  trueFOWeights[0] = -5.400000000000e-4;
+  trueFOWeights[1] = -2.466666666666e-4;
+  trueFOWeights[2] = 7.800000000000e-4;
+  trueFOWeights[3] = 6.666666666666e-6;
+  trueFOWeights[4] = -1.144800000000e-1;
+  trueFOWeights[5] = -5.229333333333e-2;
+  trueFOWeights[6] = 1.653600000000e-1;
+  trueFOWeights[7] = 1.413333333333e-3;
+  trueFOWeights[8] = -2.554200000000e-1;
+  trueFOWeights[9] = -1.166733333333e-1;
+  trueFOWeights[10] = 3.689400000000e-1;
+  trueFOWeights[11] = 3.153333333333e-3;
+  trueFOWeights[12] = -3.456000000000e-2;
+  trueFOWeights[13] = -1.578666666666e-2;
+  trueFOWeights[14] = 4.992000000000e-2;
+  trueFOWeights[15] = 4.266666666666e-4;
 
   /** Compute the distance between the two vectors. */
   double error = 0.0;
-  for( unsigned int i = 0; i < foWeights.Size(); ++i )
+  for (unsigned int i = 0; i < foWeights.Size(); ++i)
   {
-    error += vnl_math::sqr( foWeights[ i ] - trueFOWeights[ i ] );
+    error += vnl_math::sqr(foWeights[i] - trueFOWeights[i]);
   }
-  error = std::sqrt( error );
+  error = std::sqrt(error);
 
   /** TEST: Compare the two qualitatively. */
-  if( error > distance )
+  if (error > distance)
   {
-    std::cerr << "ERROR: the first order weights differs more than "
-              << distance << " from the truth." << std::endl;
+    std::cerr << "ERROR: the first order weights differs more than " << distance << " from the truth." << std::endl;
     return 1;
   }
   std::cerr << std::showpoint;
   std::cerr << std::scientific;
-  std::cerr << std::setprecision( 4 );
+  std::cerr << std::setprecision(4);
   std::cerr << "The distance is: " << error << std::endl;
 
   /** Time the fo implementation. */
   clock_t startClock = clock();
-  for( unsigned int i = 0; i < N; ++i )
+  for (unsigned int i = 0; i < N; ++i)
   {
-    foWeightFunction->Evaluate( cindex );
+    foWeightFunction->Evaluate(cindex);
   }
   clock_t endClock = clock();
   clock_t clockITK = endClock - startClock;
-  std::cerr << "The elapsed time for the 1st order derivative is: "
-            << clockITK << std::endl;
+  std::cerr << "The elapsed time for the 1st order derivative is: " << clockITK << std::endl;
 
   /**
    * *********** Function TESTING ****************************************
@@ -155,26 +151,25 @@ main( int argc, char * argv[] )
   /** Just call all available public functions. */
   DerivativeWeightFunctionType::IndexType startIndex;
   DerivativeWeightFunctionType::IndexType trueStartIndex;
-  trueStartIndex[ 0 ] =  2;
-  trueStartIndex[ 1 ] = -4;
-  foWeightFunction->ComputeStartIndex( cindex, startIndex );
-  if( startIndex != trueStartIndex )
+  trueStartIndex[0] = 2;
+  trueStartIndex[1] = -4;
+  foWeightFunction->ComputeStartIndex(cindex, startIndex);
+  if (startIndex != trueStartIndex)
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;
     return 1;
   }
 
   DerivativeWeightFunctionType::SizeType trueSize;
-  trueSize.Fill( SplineOrder + 1 );
-  if( foWeightFunction->GetSupportSize() != trueSize )
+  trueSize.Fill(SplineOrder + 1);
+  if (foWeightFunction->GetSupportSize() != trueSize)
   {
     std::cerr << "ERROR: wrong support size was computed." << std::endl;
     return 1;
   }
 
-  if( foWeightFunction->GetNumberOfWeights()
-    != static_cast< unsigned long >( std::pow(
-    static_cast< float >( SplineOrder + 1 ), 2.0f ) ) )
+  if (foWeightFunction->GetNumberOfWeights() !=
+      static_cast<unsigned long>(std::pow(static_cast<float>(SplineOrder + 1), 2.0f)))
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;
     return 1;
@@ -189,7 +184,7 @@ main( int argc, char * argv[] )
   std::cerr << "\n--------------------------------------------------------";
   std::cerr << "\nPrintSelf() TESTING:\n" << std::endl;
 
-  foWeightFunction->Print( std::cerr, 0 );
+  foWeightFunction->Print(std::cerr, 0);
 
   /** Return a value. */
   return 0;

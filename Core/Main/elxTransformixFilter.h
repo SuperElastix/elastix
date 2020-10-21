@@ -32,22 +32,21 @@
 namespace elastix
 {
 
-template< typename TMovingImage >
-class ELASTIXLIB_API TransformixFilter : public itk::ImageSource< TMovingImage >
+template <typename TMovingImage>
+class ELASTIXLIB_API TransformixFilter : public itk::ImageSource<TMovingImage>
 {
 public:
-
   /** Standard ITK typedefs. */
-  typedef TransformixFilter               Self;
-  typedef itk::ImageSource< TMovingImage > Superclass;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef TransformixFilter              Self;
+  typedef itk::ImageSource<TMovingImage> Superclass;
+  typedef itk::SmartPointer<Self>        Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformixFilter, itk::ImageSource );
+  itkTypeMacro(TransformixFilter, itk::ImageSource);
 
   /** Typedefs. */
   typedef elastix::TransformixMain             TransformixMainType;
@@ -68,92 +67,113 @@ public:
   typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
 
   typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename itk::Image< itk::Vector< float, TMovingImage::ImageDimension >,
-                         TMovingImage::ImageDimension > OutputDeformationFieldType;
+  typedef typename itk::Image<itk::Vector<float, TMovingImage::ImageDimension>, TMovingImage::ImageDimension>
+    OutputDeformationFieldType;
 
   typedef typename TMovingImage::Pointer      InputImagePointer;
   typedef typename TMovingImage::ConstPointer InputImageConstPointer;
 
-  itkStaticConstMacro( MovingImageDimension, unsigned int, TMovingImage::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   /** Set/Get/Add moving image. */
-  virtual void SetMovingImage( TMovingImage * inputImage );
-  InputImageConstPointer GetMovingImage( void );
-  virtual void RemoveMovingImage( void );
+  virtual void
+  SetMovingImage(TMovingImage * inputImage);
+  InputImageConstPointer
+  GetMovingImage(void);
+  virtual void
+  RemoveMovingImage(void);
 
   /** Set/Get/Remove moving point set filename. */
-  itkSetMacro( FixedPointSetFileName, std::string );
-  itkGetMacro( FixedPointSetFileName, std::string );
-  virtual void RemoveFixedPointSetFileName() { this->SetFixedPointSetFileName( "" ); }
+  itkSetMacro(FixedPointSetFileName, std::string);
+  itkGetMacro(FixedPointSetFileName, std::string);
+  virtual void
+  RemoveFixedPointSetFileName()
+  {
+    this->SetFixedPointSetFileName("");
+  }
 
   /** Compute spatial Jacobian On/Off. */
-  itkSetMacro( ComputeSpatialJacobian, bool );
-  itkGetConstMacro( ComputeSpatialJacobian, bool );
-  itkBooleanMacro( ComputeSpatialJacobian );
+  itkSetMacro(ComputeSpatialJacobian, bool);
+  itkGetConstMacro(ComputeSpatialJacobian, bool);
+  itkBooleanMacro(ComputeSpatialJacobian);
 
   /** Compute determinant of spatial Jacobian On/Off. */
-  itkSetMacro( ComputeDeterminantOfSpatialJacobian, bool );
-  itkGetConstMacro( ComputeDeterminantOfSpatialJacobian, bool );
-  itkBooleanMacro( ComputeDeterminantOfSpatialJacobian );
+  itkSetMacro(ComputeDeterminantOfSpatialJacobian, bool);
+  itkGetConstMacro(ComputeDeterminantOfSpatialJacobian, bool);
+  itkBooleanMacro(ComputeDeterminantOfSpatialJacobian);
 
   /** Compute deformation field On/Off. */
-  itkSetMacro( ComputeDeformationField, bool );
-  itkGetConstMacro( ComputeDeformationField, bool );
-  itkBooleanMacro( ComputeDeformationField );
+  itkSetMacro(ComputeDeformationField, bool);
+  itkGetConstMacro(ComputeDeformationField, bool);
+  itkBooleanMacro(ComputeDeformationField);
 
   /** Get/Set transform parameter object. */
-  virtual void SetTransformParameterObject( ParameterObjectPointer transformParameterObject );
+  virtual void
+  SetTransformParameterObject(ParameterObjectPointer transformParameterObject);
 
-  ParameterObjectType* GetTransformParameterObject( void );
+  ParameterObjectType *
+  GetTransformParameterObject(void);
 
-  const ParameterObjectType* GetTransformParameterObject( void ) const;
+  const ParameterObjectType *
+  GetTransformParameterObject(void) const;
 
-  OutputDeformationFieldType* GetOutputDeformationField( void );
+  OutputDeformationFieldType *
+  GetOutputDeformationField(void);
 
-  const OutputDeformationFieldType* GetOutputDeformationField( void ) const;
+  const OutputDeformationFieldType *
+  GetOutputDeformationField(void) const;
 
   /** Set/Get/Remove output directory. */
-  itkSetMacro( OutputDirectory, std::string );
-  itkGetConstMacro( OutputDirectory, std::string );
-  virtual void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); }
+  itkSetMacro(OutputDirectory, std::string);
+  itkGetConstMacro(OutputDirectory, std::string);
+  virtual void
+  RemoveOutputDirectory()
+  {
+    this->SetOutputDirectory("");
+  }
 
   /** Set/Get/Remove log filename. */
-  virtual void SetLogFileName( std::string logFileName );
+  virtual void
+  SetLogFileName(std::string logFileName);
 
-  itkGetConstMacro( LogFileName, std::string );
-  virtual void RemoveLogFileName( void );
+  itkGetConstMacro(LogFileName, std::string);
+  virtual void
+  RemoveLogFileName(void);
 
   /** Log to std::cout on/off. */
-  itkSetMacro( LogToConsole, bool );
-  itkGetConstMacro( LogToConsole, bool );
-  itkBooleanMacro( LogToConsole );
+  itkSetMacro(LogToConsole, bool);
+  itkGetConstMacro(LogToConsole, bool);
+  itkBooleanMacro(LogToConsole);
 
   /** Log to file on/off. */
-  itkSetMacro( LogToFile, bool );
-  itkGetConstMacro( LogToFile, bool );
-  itkBooleanMacro( LogToFile );
+  itkSetMacro(LogToFile, bool);
+  itkGetConstMacro(LogToFile, bool);
+  itkBooleanMacro(LogToFile);
 
   /** To support outputs of different types (i.e. ResultImage and ResultDeformationField)
    * MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden.
    */
-  virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) override;
+  virtual DataObjectPointer
+  MakeOutput(const DataObjectIdentifierType & key) override;
 
   /** The ResultImage and ResultDeformationField get their image properties from the TransformParameterObject. */
-  virtual void GenerateOutputInformation( void ) override;
+  virtual void
+  GenerateOutputInformation(void) override;
 
 protected:
+  TransformixFilter(void);
 
-  TransformixFilter( void );
-
-  virtual void GenerateData( void ) override;
+  virtual void
+  GenerateData(void) override;
 
 private:
-
-  TransformixFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & );    // purposely not implemented
+  TransformixFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** IsEmpty. */
-  static bool IsEmpty( const InputImagePointer inputImage );
+  static bool
+  IsEmpty(const InputImagePointer inputImage);
 
   /** Tell the compiler we want all definitions of Get/Set/Remove
    *  from ProcessObject and TransformixFilter.
@@ -172,13 +192,12 @@ private:
 
   bool m_LogToConsole;
   bool m_LogToFile;
-
 };
 
-} // namespace elx
+} // namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxTransformixFilter.hxx"
+#  include "elxTransformixFilter.hxx"
 #endif
 
 #endif // elxTransformixFilter_h

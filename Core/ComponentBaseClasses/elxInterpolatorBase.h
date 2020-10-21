@@ -40,17 +40,16 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template< class TElastix >
-class InterpolatorBase : public BaseComponentSE< TElastix >
+template <class TElastix>
+class InterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef InterpolatorBase            Self;
-  typedef BaseComponentSE< TElastix > Superclass;
+  typedef InterpolatorBase          Self;
+  typedef BaseComponentSE<TElastix> Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( InterpolatorBase, BaseComponentSE );
+  itkTypeMacro(InterpolatorBase, BaseComponentSE);
 
   /** Typedefs inherited from Elastix. */
   typedef typename Superclass::ElastixType          ElastixType;
@@ -62,46 +61,45 @@ public:
 
   /** Other typedef's. */
   typedef typename ElastixType::MovingImageType InputImageType;
-  typedef ElastixBase::CoordRepType CoordRepType;
+  typedef ElastixBase::CoordRepType             CoordRepType;
 
   /** ITKBaseType. */
-  typedef itk::InterpolateImageFunction<
-    InputImageType, CoordRepType >                     ITKBaseType;
+  typedef itk::InterpolateImageFunction<InputImageType, CoordRepType> ITKBaseType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
+  virtual ITKBaseType *
+  GetAsITKBaseType(void)
   {
-    return dynamic_cast< ITKBaseType * >( this );
+    return dynamic_cast<ITKBaseType *>(this);
   }
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  virtual const ITKBaseType *
+  GetAsITKBaseType(void) const
   {
-    return dynamic_cast< const ITKBaseType * >( this );
+    return dynamic_cast<const ITKBaseType *>(this);
   }
 
 
 protected:
-
   /** The constructor. */
   InterpolatorBase() {}
   /** The destructor. */
   ~InterpolatorBase() override {}
 
 private:
-
   /** The private constructor. */
-  InterpolatorBase( const Self & );   // purposely not implemented
+  InterpolatorBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );     // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxInterpolatorBase.hxx"
+#  include "elxInterpolatorBase.hxx"
 #endif
 
 #endif // end #ifndef __elxInterpolatorBase_h

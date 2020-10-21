@@ -18,4 +18,4 @@
 
 #include "elxRandomCoordinateSampler.h"
 
-elxInstallMacro( RandomCoordinateSampler );
+elxInstallMacro(RandomCoordinateSampler);

@@ -49,21 +49,20 @@ namespace itk
  * \ingroup Numerics Optimizers
  */
 
-class StochasticVarianceReducedGradientDescentOptimizer :
-  public ScaledSingleValuedNonLinearOptimizer
+class StochasticVarianceReducedGradientDescentOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
   /** Standard class typedefs. */
-  typedef StochasticVarianceReducedGradientDescentOptimizer               Self;
-  typedef ScaledSingleValuedNonLinearOptimizer    Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef StochasticVarianceReducedGradientDescentOptimizer Self;
+  typedef ScaledSingleValuedNonLinearOptimizer              Superclass;
+  typedef SmartPointer<Self>                                Pointer;
+  typedef SmartPointer<const Self>                          ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StochasticVarianceReducedGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer );
+  itkTypeMacro(StochasticVarianceReducedGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -77,7 +76,8 @@ public:
   /** Codes of stopping conditions
    * The MinimumStepSize stop condition never occurs, but may
    * be implemented in inheriting classes */
-  typedef enum {
+  typedef enum
+  {
     MaximumNumberOfIterations,
     MetricError,
     MinimumStepSize,
@@ -87,132 +87,141 @@ public:
   } StopConditionType;
 
   /** Advance one step following the gradient direction. */
-  virtual void AdvanceOneStep( void );
+  virtual void
+  AdvanceOneStep(void);
 
   /** Start optimization. */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization. */
-  virtual void ResumeOptimization( void );
+  virtual void
+  ResumeOptimization(void);
 
   /** Stop optimization and pass on exception. */
-  virtual void MetricErrorResponse( ExceptionObject & err );
+  virtual void
+  MetricErrorResponse(ExceptionObject & err);
 
   /** Stop optimization.
    * \sa ResumeOptimization */
-  virtual void StopOptimization( void );
+  virtual void
+  StopOptimization(void);
 
   /** Set the learning rate. */
-  itkSetMacro( LearningRate, double );
+  itkSetMacro(LearningRate, double);
 
   /** Get the learning rate. */
-  itkGetConstReferenceMacro( LearningRate, double );
+  itkGetConstReferenceMacro(LearningRate, double);
 
   /** Set the number of iterations. */
-  itkSetMacro( NumberOfIterations, unsigned long );
+  itkSetMacro(NumberOfIterations, unsigned long);
 
   /** Get the inner LBFGSMemory. */
-  itkGetConstMacro( LBFGSMemory, unsigned int );
+  itkGetConstMacro(LBFGSMemory, unsigned int);
 
   /** Get the number of iterations. */
-  itkGetConstReferenceMacro( NumberOfIterations, unsigned long );
+  itkGetConstReferenceMacro(NumberOfIterations, unsigned long);
 
   /** Get the number of inner loop iterations. */
-  itkGetConstReferenceMacro( NumberOfInnerIterations, unsigned long );
+  itkGetConstReferenceMacro(NumberOfInnerIterations, unsigned long);
 
   /** Get the current iteration number. */
-  itkGetConstMacro( CurrentIteration, unsigned int );
+  itkGetConstMacro(CurrentIteration, unsigned int);
 
   /** Get the current inner iteration number. */
-  itkGetConstMacro( CurrentInnerIteration, unsigned int );
+  itkGetConstMacro(CurrentInnerIteration, unsigned int);
 
   /** Get the current value. */
-  itkGetConstReferenceMacro( Value, double );
+  itkGetConstReferenceMacro(Value, double);
 
   /** Get Stop condition. */
-  itkGetConstReferenceMacro( StopCondition, StopConditionType );
+  itkGetConstReferenceMacro(StopCondition, StopConditionType);
 
   /** Get current gradient. */
-  itkGetConstReferenceMacro( Gradient, DerivativeType );
+  itkGetConstReferenceMacro(Gradient, DerivativeType);
 
   /** Get current search direction. */
-  itkGetConstReferenceMacro( SearchDir, DerivativeType );
+  itkGetConstReferenceMacro(SearchDir, DerivativeType);
 
   /** Set the Previous Position. */
-  itkSetMacro( PreviousPosition, ParametersType );
+  itkSetMacro(PreviousPosition, ParametersType);
 
   /** Get the Previous Position. */
-  itkGetConstReferenceMacro( PreviousPosition, ParametersType );
+  itkGetConstReferenceMacro(PreviousPosition, ParametersType);
 
   /** Set the Previous gradient. */
-  itkSetMacro( PreviousGradient, DerivativeType );
+  itkSetMacro(PreviousGradient, DerivativeType);
 
   /** Get the Previous gradient. */
-  itkGetConstReferenceMacro( PreviousGradient, DerivativeType );
+  itkGetConstReferenceMacro(PreviousGradient, DerivativeType);
 
   /** Set the number of threads. */
-  void SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
+  void
+  SetNumberOfWorkUnits(ThreadIdType numberOfThreads)
   {
-    this->m_Threader->SetNumberOfWorkUnits( numberOfThreads );
+    this->m_Threader->SetNumberOfWorkUnits(numberOfThreads);
   }
-  //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
-  itkSetMacro( UseMultiThread, bool );
+  // itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
+  itkSetMacro(UseMultiThread, bool);
 
-  itkSetMacro( UseOpenMP, bool );
-  itkSetMacro( UseEigen, bool );
+  itkSetMacro(UseOpenMP, bool);
+  itkSetMacro(UseEigen, bool);
 
 protected:
   StochasticVarianceReducedGradientDescentOptimizer();
-  ~StochasticVarianceReducedGradientDescentOptimizer() override {};
-  void PrintSelf( std::ostream& os, Indent indent ) const override;
+  ~StochasticVarianceReducedGradientDescentOptimizer() override{};
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::PlatformMultiThreader               ThreaderType;
-  typedef ThreaderType::WorkUnitInfo   ThreadInfoType;
+  typedef itk::PlatformMultiThreader ThreaderType;
+  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
 
   // made protected so subclass can access
-  double                        m_Value;
-  DerivativeType                m_Gradient;
-  ParametersType                m_SearchDir;
-  ParametersType                m_PreviousSearchDir;
-  //ParametersType                m_PrePreviousSearchDir;
-  ParametersType                m_MeanSearchDir;
-  double                        m_LearningRate;
-  StopConditionType             m_StopCondition;
-  DerivativeType                m_PreviousGradient;
-  //DerivativeType                m_PrePreviousGradient;
-  ParametersType                m_PreviousPosition;
-  ThreaderType::Pointer         m_Threader;
+  double         m_Value;
+  DerivativeType m_Gradient;
+  ParametersType m_SearchDir;
+  ParametersType m_PreviousSearchDir;
+  // ParametersType                m_PrePreviousSearchDir;
+  ParametersType    m_MeanSearchDir;
+  double            m_LearningRate;
+  StopConditionType m_StopCondition;
+  DerivativeType    m_PreviousGradient;
+  // DerivativeType                m_PrePreviousGradient;
+  ParametersType        m_PreviousPosition;
+  ThreaderType::Pointer m_Threader;
 
-  bool                          m_Stop;
-  unsigned long                 m_NumberOfIterations;
-  unsigned long                 m_NumberOfInnerIterations;
-  unsigned long                 m_CurrentIteration;
-  unsigned long                 m_CurrentInnerIteration;
-  unsigned long                 m_LBFGSMemory;
+  bool          m_Stop;
+  unsigned long m_NumberOfIterations;
+  unsigned long m_NumberOfInnerIterations;
+  unsigned long m_CurrentIteration;
+  unsigned long m_CurrentInnerIteration;
+  unsigned long m_LBFGSMemory;
 
 private:
-  StochasticVarianceReducedGradientDescentOptimizer( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
+  StochasticVarianceReducedGradientDescentOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   // multi-threaded AdvanceOneStep:
   bool m_UseMultiThread;
   struct MultiThreaderParameterType
   {
-    ParametersType *  t_NewPosition;
-    Self *            t_Optimizer;
+    ParametersType * t_NewPosition;
+    Self *           t_Optimizer;
   };
 
   bool m_UseOpenMP;
   bool m_UseEigen;
 
   /** The callback function. */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION AdvanceOneStepThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  AdvanceOneStepThreaderCallback(void * arg);
 
   /** The threaded implementation of AdvanceOneStep(). */
-  inline void ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition );
-
+  inline void
+  ThreadedAdvanceOneStep(ThreadIdType threadId, ParametersType & newPosition);
 };
 
 } // end namespace itk

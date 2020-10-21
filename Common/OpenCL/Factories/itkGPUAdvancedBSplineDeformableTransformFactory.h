@@ -33,86 +33,92 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
-class GPUAdvancedBSplineDeformableTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename NDimensions>
+class GPUAdvancedBSplineDeformableTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
   typedef GPUAdvancedBSplineDeformableTransformFactory2 Self;
-  typedef GPUObjectFactoryBase< NDimensions >           Superclass;
-  typedef SmartPointer< Self >                          Pointer;
-  typedef SmartPointer< const Self >                    ConstPointer;
+  typedef GPUObjectFactoryBase<NDimensions>             Superclass;
+  typedef SmartPointer<Self>                            Pointer;
+  typedef SmartPointer<const Self>                      ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUAdvancedBSplineDeformableTransform"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUAdvancedBSplineDeformableTransform";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAdvancedBSplineDeformableTransformFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUAdvancedBSplineDeformableTransformFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TType, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
     // Override for spline order equal 1
     this->RegisterOverride(
-      typeid( AdvancedBSplineDeformableTransform< TType, VImageDimension, 1 > ).name(),
-      typeid( GPUAdvancedBSplineDeformableTransform< TType, VImageDimension, 1 > ).name(),
-      "GPU AdvancedBSplineDeformableTransform override, spline order 1", true,
-      CreateObjectFunction< GPUAdvancedBSplineDeformableTransform< TType, VImageDimension, 1 > >::New()
-      );
+      typeid(AdvancedBSplineDeformableTransform<TType, VImageDimension, 1>).name(),
+      typeid(GPUAdvancedBSplineDeformableTransform<TType, VImageDimension, 1>).name(),
+      "GPU AdvancedBSplineDeformableTransform override, spline order 1",
+      true,
+      CreateObjectFunction<GPUAdvancedBSplineDeformableTransform<TType, VImageDimension, 1>>::New());
 
     // Override for spline order equal 2
     this->RegisterOverride(
-      typeid( AdvancedBSplineDeformableTransform< TType, VImageDimension, 2 > ).name(),
-      typeid( GPUAdvancedBSplineDeformableTransform< TType, VImageDimension, 2 > ).name(),
-      "GPU AdvancedBSplineDeformableTransform override, spline order 2", true,
-      CreateObjectFunction< GPUAdvancedBSplineDeformableTransform< TType, VImageDimension, 2 > >::New()
-      );
+      typeid(AdvancedBSplineDeformableTransform<TType, VImageDimension, 2>).name(),
+      typeid(GPUAdvancedBSplineDeformableTransform<TType, VImageDimension, 2>).name(),
+      "GPU AdvancedBSplineDeformableTransform override, spline order 2",
+      true,
+      CreateObjectFunction<GPUAdvancedBSplineDeformableTransform<TType, VImageDimension, 2>>::New());
 
     // Override for spline order equal 3
     this->RegisterOverride(
-      typeid( AdvancedBSplineDeformableTransform< TType, VImageDimension, 3 > ).name(),
-      typeid( GPUAdvancedBSplineDeformableTransform< TType, VImageDimension, 3 > ).name(),
-      "GPU AdvancedBSplineDeformableTransform override, spline order 3", true,
-      CreateObjectFunction< GPUAdvancedBSplineDeformableTransform< TType, VImageDimension, 3 > >::New()
-      );
+      typeid(AdvancedBSplineDeformableTransform<TType, VImageDimension, 3>).name(),
+      typeid(GPUAdvancedBSplineDeformableTransform<TType, VImageDimension, 3>).name(),
+      "GPU AdvancedBSplineDeformableTransform override, spline order 3",
+      true,
+      CreateObjectFunction<GPUAdvancedBSplineDeformableTransform<TType, VImageDimension, 3>>::New());
   }
 
 
 protected:
-
   GPUAdvancedBSplineDeformableTransformFactory2();
   virtual ~GPUAdvancedBSplineDeformableTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList< float, double >::Type RealTypeList;
+  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUAdvancedBSplineDeformableTransformFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                                // purposely not implemented
-
+  GPUAdvancedBSplineDeformableTransformFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUAdvancedBSplineDeformableTransformFactory.hxx"
+#  include "itkGPUAdvancedBSplineDeformableTransformFactory.hxx"
 #endif
 
 #endif /* __itkGPUAdvancedBSplineDeformableTransformFactory_h */

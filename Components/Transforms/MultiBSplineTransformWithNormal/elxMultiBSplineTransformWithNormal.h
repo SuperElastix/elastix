@@ -86,62 +86,58 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template< class TElastix >
-class MultiBSplineTransformWithNormal :
-  public
-  itk::AdvancedCombinationTransform<
-  typename elx::TransformBase< TElastix >::CoordRepType,
-  elx::TransformBase< TElastix >::FixedImageDimension >,
-  public
-  TransformBase< TElastix >
+template <class TElastix>
+class MultiBSplineTransformWithNormal
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef MultiBSplineTransformWithNormal Self;
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension > Superclass1;
-  typedef elx::TransformBase< TElastix >  Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+                                        Superclass1;
+  typedef elx::TransformBase<TElastix>  Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiBSplineTransformWithNormal, AdvancedCombinationTransform );
+  itkTypeMacro(MultiBSplineTransformWithNormal, AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "BSplineTransform")</tt>\n
    */
-  elxClassNameMacro( "MultiBSplineTransformWithNormal" );
+  elxClassNameMacro("MultiBSplineTransformWithNormal");
 
   /** Dimension of the fixed image. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::AdvancedBSplineDeformableTransformBase<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ) >             BSplineTransformBaseType;
+  typedef itk::AdvancedBSplineDeformableTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                      itkGetStaticConstMacro(SpaceDimension)>
+                                                     BSplineTransformBaseType;
   typedef typename BSplineTransformBaseType::Pointer BSplineTransformBasePointer;
 
   /** Typedef for supported BSplineTransform types. */
-  typedef itk::MultiBSplineDeformableTransformWithNormal<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    1 >                                                   MultiBSplineTransformWithNormalLinearType;
-  typedef itk::MultiBSplineDeformableTransformWithNormal<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    2 >                                                   MultiBSplineTransformWithNormalQuadraticType;
-  typedef itk::MultiBSplineDeformableTransformWithNormal<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    3 >                                                   MultiBSplineTransformWithNormalCubicType;
+  typedef itk::MultiBSplineDeformableTransformWithNormal<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                         itkGetStaticConstMacro(SpaceDimension),
+                                                         1>
+    MultiBSplineTransformWithNormalLinearType;
+  typedef itk::MultiBSplineDeformableTransformWithNormal<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                         itkGetStaticConstMacro(SpaceDimension),
+                                                         2>
+    MultiBSplineTransformWithNormalQuadraticType;
+  typedef itk::MultiBSplineDeformableTransformWithNormal<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                         itkGetStaticConstMacro(SpaceDimension),
+                                                         3>
+    MultiBSplineTransformWithNormalCubicType;
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
@@ -158,19 +154,17 @@ public:
   typedef typename Superclass1::OutputPointType           OutputPointType;
 
   /** Typedef's specific for the BSplineTransform. */
-  typedef typename BSplineTransformBaseType::PixelType     PixelType;
-  typedef typename BSplineTransformBaseType::ImageType     ImageType;
-  typedef typename BSplineTransformBaseType::ImagePointer  ImagePointer;
-  typedef typename BSplineTransformBaseType::RegionType    RegionType;
-  typedef typename BSplineTransformBaseType::IndexType     IndexType;
-  typedef typename BSplineTransformBaseType::SizeType      SizeType;
-  typedef typename BSplineTransformBaseType::SpacingType   SpacingType;
-  typedef typename BSplineTransformBaseType::OriginType    OriginType;
-  typedef typename BSplineTransformBaseType::DirectionType DirectionType;
-  typedef typename
-    BSplineTransformBaseType::ContinuousIndexType ContinuousIndexType;
-  typedef typename
-    BSplineTransformBaseType::ParameterIndexArrayType ParameterIndexArrayType;
+  typedef typename BSplineTransformBaseType::PixelType               PixelType;
+  typedef typename BSplineTransformBaseType::ImageType               ImageType;
+  typedef typename BSplineTransformBaseType::ImagePointer            ImagePointer;
+  typedef typename BSplineTransformBaseType::RegionType              RegionType;
+  typedef typename BSplineTransformBaseType::IndexType               IndexType;
+  typedef typename BSplineTransformBaseType::SizeType                SizeType;
+  typedef typename BSplineTransformBaseType::SpacingType             SpacingType;
+  typedef typename BSplineTransformBaseType::OriginType              OriginType;
+  typedef typename BSplineTransformBaseType::DirectionType           DirectionType;
+  typedef typename BSplineTransformBaseType::ContinuousIndexType     ContinuousIndexType;
+  typedef typename BSplineTransformBaseType::ParameterIndexArrayType ParameterIndexArrayType;
 
   /** Typedef's from TransformBase. */
   typedef typename Superclass2::ElastixType              ElastixType;
@@ -186,25 +180,22 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
-  typedef itk::GridScheduleComputer<
-    CoordRepType, SpaceDimension >                        GridScheduleComputerType;
-  typedef typename GridScheduleComputerType::Pointer GridScheduleComputerPointer;
-  typedef typename GridScheduleComputerType
-    ::VectorGridSpacingFactorType GridScheduleType;
-  typedef itk::UpsampleBSplineParametersFilter<
-    ParametersType, ImageType >                           GridUpsamplerType;
-  typedef typename GridUpsamplerType::Pointer GridUpsamplerPointer;
+  typedef itk::GridScheduleComputer<CoordRepType, SpaceDimension>         GridScheduleComputerType;
+  typedef typename GridScheduleComputerType::Pointer                      GridScheduleComputerPointer;
+  typedef typename GridScheduleComputerType ::VectorGridSpacingFactorType GridScheduleType;
+  typedef itk::UpsampleBSplineParametersFilter<ParametersType, ImageType> GridUpsamplerType;
+  typedef typename GridUpsamplerType::Pointer                             GridUpsamplerPointer;
 
   /** Typdef's for the Image of Labels */
-  typedef itk::Image< unsigned char,
-    itkGetStaticConstMacro( SpaceDimension ) >       ImageLabelType;
-  typedef typename ImageLabelType::Pointer ImageLabelPointer;
+  typedef itk::Image<unsigned char, itkGetStaticConstMacro(SpaceDimension)> ImageLabelType;
+  typedef typename ImageLabelType::Pointer                                  ImageLabelPointer;
 
   /** Execute stuff before anything else is done:
    * \li Initialize the right BSplineTransform.
    * \li Initialize the right grid schedule computer.
    */
-  int BeforeAll( void ) override;
+  int
+  BeforeAll(void) override;
 
   /** Execute stuff before the actual registration:
    * \li Create an initial B-spline grid.
@@ -217,39 +208,45 @@ public:
    * the number of parameters in the registration class. This check is done
    * before calling the BeforeEachResolution() methods.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li In the first resolution call InitializeTransform().
    * \li In next resolutions upsample the B-spline grid if necessary (so, call IncreaseScale())
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
   /** Method to set the initial BSpline grid and initialize the parameters (to 0).
    * \li Define the initial grid region, origin and spacing, using the precomputed grid information.
    * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
    * Called by BeforeEachResolution().
    */
-  virtual void InitializeTransform( void );
+  virtual void
+  InitializeTransform(void);
 
   /** Method to increase the density of the BSpline grid.
    * \li Determine the new B-spline coefficients that describe the current deformation field.
    * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
    * Called by BeforeEachResolution().
    */
-  virtual void IncreaseScale( void );
+  virtual void
+  IncreaseScale(void);
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
   /** Set the scales of the edge B-spline coefficients to zero. */
-  virtual void SetOptimizerScales( const unsigned int edgeWidth );
+  virtual void
+  SetOptimizerScales(const unsigned int edgeWidth);
 
 protected:
-
   /** The constructor. */
   MultiBSplineTransformWithNormal();
 
@@ -257,34 +254,35 @@ protected:
   ~MultiBSplineTransformWithNormal() override {}
 
   /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
-  virtual void PreComputeGridInformation( void );
+  virtual void
+  PreComputeGridInformation(void);
 
 private:
-
   /** The private constructor. */
-  MultiBSplineTransformWithNormal( const Self & );  // purposely not implemented
+  MultiBSplineTransformWithNormal(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );    // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Private variables. */
   typename MultiBSplineTransformWithNormalCubicType::Pointer m_MultiBSplineTransformWithNormal;
-  GridScheduleComputerPointer m_GridScheduleComputer;
-  GridUpsamplerPointer        m_GridUpsampler;
-  ImageLabelPointer           m_Labels;
-  std::string                 m_LabelsPath;
+  GridScheduleComputerPointer                                m_GridScheduleComputer;
+  GridUpsamplerPointer                                       m_GridUpsampler;
+  ImageLabelPointer                                          m_Labels;
+  std::string                                                m_LabelsPath;
 
   /** Variable to remember order of MultiBSplineTransformWithNormal. */
   unsigned int m_SplineOrder;
 
   /** Initialize the right BSplineTransfrom based on the spline order and periodicity. */
-  unsigned int InitializeBSplineTransform();
-
+  unsigned int
+  InitializeBSplineTransform();
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMultiBSplineTransformWithNormal.hxx"
+#  include "elxMultiBSplineTransformWithNormal.hxx"
 #endif
 
 #endif // end #ifndef __elxMultiBSplineTransformWithNormal_h

@@ -41,22 +41,17 @@ namespace elastix
  *    For each dimension, for each resolution level, the downsampling factor of the
  *    fixed image can be specified.\n
  *    Syntax for 2D images:\n
- *    <tt>(FixedImagePyramidRescaleSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>\n
- *    example: <tt>(FixedImagePyramidRescaleSchedule 4 4 2 2 1 1)</tt>\n
- *    Default: isotropic, halved in each resolution, so, like in the example. If
- *    ImagePyramidRescaleSchedule is specified, that schedule is used for both fixed and moving image pyramid.
- * \parameter ImagePyramidRescaleSchedule: rescale schedule for both pyramids
- * \parameter ImagePyramidSchedule: same as ImagePyramidRescaleSchedule
- * \parameter FixedImagePyramidSchedule: same as FixedImagePyramidRescaleSchedule
- * \parameter FixedImagePyramidSmoothingSchedule: sigma's for smoothing the fixed image pyramid.\n
- *    For each dimension, for each resolution level, the sigma of the
- *    fixed image can be specified.\n
- *    Syntax for 2D images:\n
- *    <tt>(FixedImagePyramidSmoothingSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>\n
- *    example: <tt>(FixedImagePyramidSmoothingSchedule 4 4 2 2 1 1)</tt>\n
- *    Default: 0.5 x rescale_factor x fixed_image_spacing.\n
- *    If ImagePyramidSmoothingSchedule is specified, that schedule is used for both fixed and moving image pyramid.
- * \parameter ImagePyramidSmoothingSchedule: smoothing schedule for both pyramids
+ *    <tt>(FixedImagePyramidRescaleSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1>
+ * ...)</tt>\n example: <tt>(FixedImagePyramidRescaleSchedule 4 4 2 2 1 1)</tt>\n Default: isotropic, halved in each
+ * resolution, so, like in the example. If ImagePyramidRescaleSchedule is specified, that schedule is used for both
+ * fixed and moving image pyramid. \parameter ImagePyramidRescaleSchedule: rescale schedule for both pyramids \parameter
+ * ImagePyramidSchedule: same as ImagePyramidRescaleSchedule \parameter FixedImagePyramidSchedule: same as
+ * FixedImagePyramidRescaleSchedule \parameter FixedImagePyramidSmoothingSchedule: sigma's for smoothing the fixed image
+ * pyramid.\n For each dimension, for each resolution level, the sigma of the fixed image can be specified.\n Syntax for
+ * 2D images:\n <tt>(FixedImagePyramidSmoothingSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0>
+ * <reslevel1,dim1> ...)</tt>\n example: <tt>(FixedImagePyramidSmoothingSchedule 4 4 2 2 1 1)</tt>\n Default: 0.5 x
+ * rescale_factor x fixed_image_spacing.\n If ImagePyramidSmoothingSchedule is specified, that schedule is used for both
+ * fixed and moving image pyramid. \parameter ImagePyramidSmoothingSchedule: smoothing schedule for both pyramids
  * \parameter ComputePyramidImagesPerResolution: Flag to specify if all resolution levels are computed
  *    at once, or per resolution. Latter saves memory.\n
  *    example: <tt>(ComputePyramidImagesPerResolution "true")</tt>\n
@@ -69,38 +64,36 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template< class TElastix >
-class FixedGenericPyramid :
-  public itk::GenericMultiResolutionPyramidImageFilter<
-  typename FixedImagePyramidBase< TElastix >::InputImageType,
-  typename FixedImagePyramidBase< TElastix >::OutputImageType >,
-  public FixedImagePyramidBase< TElastix >
+template <class TElastix>
+class FixedGenericPyramid
+  : public itk::GenericMultiResolutionPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
+                                                         typename FixedImagePyramidBase<TElastix>::OutputImageType>
+  , public FixedImagePyramidBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef FixedGenericPyramid Self;
-  typedef itk::GenericMultiResolutionPyramidImageFilter<
-    typename FixedImagePyramidBase< TElastix >::InputImageType,
-    typename FixedImagePyramidBase< TElastix >::OutputImageType >   Superclass1;
-  typedef FixedImagePyramidBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef itk::GenericMultiResolutionPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
+                                                        typename FixedImagePyramidBase<TElastix>::OutputImageType>
+                                          Superclass1;
+  typedef FixedImagePyramidBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>         Pointer;
+  typedef itk::SmartPointer<const Self>   ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FixedGenericPyramid, GenericMultiResolutionPyramidImageFilter );
+  itkTypeMacro(FixedGenericPyramid, GenericMultiResolutionPyramidImageFilter);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific pyramid. \n
    * example: <tt>(FixedImagePyramid "FixedGenericImagePyramid")</tt>\n
    */
-  elxClassNameMacro( "FixedGenericImagePyramid" );
+  elxClassNameMacro("FixedGenericImagePyramid");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::InputImageType         InputImageType;
@@ -124,31 +117,31 @@ public:
   /** Method for setting the schedule. Override from FixedImagePyramidBase,
    * since we now have two schedules, rescaling and smoothing.
    */
-  void SetFixedSchedule( void ) override;
+  void
+  SetFixedSchedule(void) override;
 
   /** Update the current resolution level. */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
   FixedGenericPyramid() {}
   /** The destructor. */
   ~FixedGenericPyramid() override {}
 
 private:
-
   /** The private constructor. */
-  FixedGenericPyramid( const Self & );   // purposely not implemented
+  FixedGenericPyramid(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );        // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxFixedGenericPyramid.hxx"
+#  include "elxFixedGenericPyramid.hxx"
 #endif
 
 #endif // end #ifndef __elxFixedGenericPyramid_h

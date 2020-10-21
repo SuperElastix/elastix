@@ -21,6 +21,6 @@
 
 #include "elxMyStandardResampler.h"
 
-//nothing
+// nothing
 
 #endif

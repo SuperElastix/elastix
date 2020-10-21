@@ -33,69 +33,74 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
-class GPUAdvancedTranslationTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename NDimensions>
+class GPUAdvancedTranslationTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
   typedef GPUAdvancedTranslationTransformFactory2 Self;
-  typedef GPUObjectFactoryBase< NDimensions >     Superclass;
-  typedef SmartPointer< Self >                    Pointer;
-  typedef SmartPointer< const Self >              ConstPointer;
+  typedef GPUObjectFactoryBase<NDimensions>       Superclass;
+  typedef SmartPointer<Self>                      Pointer;
+  typedef SmartPointer<const Self>                ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUAdvancedTranslationTransform"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUAdvancedTranslationTransform";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAdvancedTranslationTransformFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUAdvancedTranslationTransformFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TType, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
-    this->RegisterOverride(
-      typeid( AdvancedTranslationTransform< TType, VImageDimension > ).name(),
-      typeid( GPUAdvancedTranslationTransform< TType, VImageDimension > ).name(),
-      "GPU AdvancedTranslationTransform override", true,
-      CreateObjectFunction< GPUAdvancedTranslationTransform< TType, VImageDimension > >::New()
-      );
+    this->RegisterOverride(typeid(AdvancedTranslationTransform<TType, VImageDimension>).name(),
+                           typeid(GPUAdvancedTranslationTransform<TType, VImageDimension>).name(),
+                           "GPU AdvancedTranslationTransform override",
+                           true,
+                           CreateObjectFunction<GPUAdvancedTranslationTransform<TType, VImageDimension>>::New());
   }
 
 
 protected:
-
   GPUAdvancedTranslationTransformFactory2();
   virtual ~GPUAdvancedTranslationTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList< float, double >::Type RealTypeList;
+  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUAdvancedTranslationTransformFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                          // purposely not implemented
-
+  GPUAdvancedTranslationTransformFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUAdvancedTranslationTransformFactory.hxx"
+#  include "itkGPUAdvancedTranslationTransformFactory.hxx"
 #endif
 
 #endif /* __itkGPUAdvancedTranslationTransformFactory_h */

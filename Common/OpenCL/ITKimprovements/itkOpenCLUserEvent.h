@@ -66,51 +66,56 @@ class OpenCLContext;
 class ITKOpenCL_EXPORT OpenCLUserEvent : public OpenCLEvent
 {
 public:
-
   /** Standard class typedefs. */
   typedef OpenCLUserEvent Self;
 
   /** Constructs a null user event. */
-  OpenCLUserEvent() : OpenCLEvent() {}
+  OpenCLUserEvent()
+    : OpenCLEvent()
+  {}
 
   /** Constructs an OpenCL event object from the native identifier \a id.
    * This class takes over ownership of \a id and will release it in
    * the destructor.
    * If \a id is not a user event, then the newly constructed event
    * will be set to null, and \a id will be released. */
-  OpenCLUserEvent( cl_event id );
+  OpenCLUserEvent(cl_event id);
 
   /** Constructs a copy of \a other. The \c{clRetainEvent()} function
    * will be called to update the reference count on GetEventId().
    * If \a other is not a user event, then the newly constructed event
    * will be set to null. */
-  OpenCLUserEvent( const OpenCLEvent & other );
+  OpenCLUserEvent(const OpenCLEvent & other);
 
   /** Assigns \a other to this OpenCL event object. The current GetEventId() will
    * be released with \c{clReleaseEvent()}, and the new GetEventId() will be
    * retained with \c{clRetainEvent()}.
    * If \a other is not a user event, then this event will be
    * set to null. */
-  OpenCLUserEvent & operator=( const OpenCLEvent & other );
+  OpenCLUserEvent &
+  operator=(const OpenCLEvent & other);
 
   /** Sets this user event to the complete state. Any queued commands that
    * depend upon this event can now proceed.
    * \sa SetStatus() */
-  void SetComplete();
+  void
+  SetComplete();
 
   /** Sets the \a status of this user event. The \a status should
    * be either \c{CL_COMPLETE} or a negative OpenCL error code.
    * \sa SetComplete() */
-  void SetStatus( const cl_int status );
+  void
+  SetStatus(const cl_int status);
 
 private:
-
   /** Checks the event type agains \c{CL_COMMAND_USER} and release it if not. */
-  void ReleaseIfNotUserEvent();
+  void
+  ReleaseIfNotUserEvent();
 
   // Used by OpenCLContext::CreateUserEvent() to avoid ReleaseIfNotUserEvent().
-  OpenCLUserEvent( cl_event id, bool ) :
-    OpenCLEvent( id ) {}
+  OpenCLUserEvent(cl_event id, bool)
+    : OpenCLEvent(id)
+  {}
 
   /** friends from OpenCL core */
   friend class OpenCLContext;

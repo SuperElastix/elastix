@@ -32,22 +32,21 @@ namespace itk
  * \ingroup ANNwrap
  */
 
-template< class TListSample >
-class ANNPriorityTreeSearch : public BinaryANNTreeSearchBase< TListSample >
+template <class TListSample>
+class ANNPriorityTreeSearch : public BinaryANNTreeSearchBase<TListSample>
 {
 public:
-
   /** Standard itk. */
-  typedef ANNPriorityTreeSearch                  Self;
-  typedef BinaryANNTreeSearchBase< TListSample > Superclass;
-  typedef SmartPointer< Self >                   Pointer;
-  typedef SmartPointer< const Self >             ConstPointer;
+  typedef ANNPriorityTreeSearch                Self;
+  typedef BinaryANNTreeSearchBase<TListSample> Superclass;
+  typedef SmartPointer<Self>                   Pointer;
+  typedef SmartPointer<const Self>             ConstPointer;
 
   /** New method for creating an object using a factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ITK type info. */
-  itkTypeMacro( ANNPriorityTreeSearch, BinaryANNTreeSearchBase );
+  itkTypeMacro(ANNPriorityTreeSearch, BinaryANNTreeSearchBase);
 
   /** Typedef's from Superclass. */
   typedef typename Superclass::ListSampleType        ListSampleType;
@@ -56,11 +55,11 @@ public:
   typedef typename Superclass::IndexArrayType        IndexArrayType;
   typedef typename Superclass::DistanceArrayType     DistanceArrayType;
 
-  typedef typename Superclass::ANNPointType         ANNPointType;             // double *
-  typedef typename Superclass::ANNIndexType         ANNIndexType;             // int
-  typedef typename Superclass::ANNIndexArrayType    ANNIndexArrayType;        // int *
-  typedef typename Superclass::ANNDistanceType      ANNDistanceType;          // double
-  typedef typename Superclass::ANNDistanceArrayType ANNDistanceArrayType;     // double *
+  typedef typename Superclass::ANNPointType         ANNPointType;         // double *
+  typedef typename Superclass::ANNIndexType         ANNIndexType;         // int
+  typedef typename Superclass::ANNIndexArrayType    ANNIndexArrayType;    // int *
+  typedef typename Superclass::ANNDistanceType      ANNDistanceType;      // double
+  typedef typename Superclass::ANNDistanceArrayType ANNDistanceArrayType; // double *
 
   typedef typename Superclass::BinaryANNTreeType BinaryANNTreeType;
 
@@ -69,17 +68,17 @@ public:
   typedef ANNpointSet ANNPointSetType;
 
   /** Set and get the error bound eps. */
-  itkSetClampMacro( ErrorBound, double, 0.0, 1e14 );
-  itkGetConstMacro( ErrorBound, double );
+  itkSetClampMacro(ErrorBound, double, 0.0, 1e14);
+  itkGetConstMacro(ErrorBound, double);
 
   /** Search the nearest neighbours of a query point qp. */
-  void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
-    DistanceArrayType & dists ) override;
+  void
+  Search(const MeasurementVectorType & qp, IndexArrayType & ind, DistanceArrayType & dists) override;
 
-  void SetBinaryTree( BinaryTreeType * tree ) override;
+  void
+  SetBinaryTree(BinaryTreeType * tree) override;
 
 protected:
-
   ANNPriorityTreeSearch();
   ~ANNPriorityTreeSearch() override;
 
@@ -88,16 +87,15 @@ protected:
   ANNkDTreeType * m_BinaryTreeAskDTree;
 
 private:
-
-  ANNPriorityTreeSearch( const Self & );  // purposely not implemented
-  void operator=( const Self & );         // purposely not implemented
-
+  ANNPriorityTreeSearch(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkANNPriorityTreeSearch.hxx"
+#  include "itkANNPriorityTreeSearch.hxx"
 #endif
 
 #endif // end #ifndef __itkANNPriorityTreeSearch_h

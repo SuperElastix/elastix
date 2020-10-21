@@ -35,24 +35,22 @@
 // We compare the CPU and GPU output image write RMSE and speed.
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   const unsigned int ImageDimension = 3; // 2
 
-  typedef float                                            InputPixelType;
-  typedef float                                            OutputPixelType;
-  typedef itk::GPUImage< InputPixelType,  ImageDimension > InputImageType;
-  typedef itk::GPUImage< OutputPixelType, ImageDimension > OutputImageType;
+  typedef float                                          InputPixelType;
+  typedef float                                          OutputPixelType;
+  typedef itk::GPUImage<InputPixelType, ImageDimension>  InputImageType;
+  typedef itk::GPUImage<OutputPixelType, ImageDimension> OutputImageType;
 
-  typedef itk::RecursiveGaussianImageFilter
-    < InputImageType, OutputImageType > CPUFilterType;
-  typedef itk::GPURecursiveGaussianImageFilter
-    < InputImageType, OutputImageType > GPUFilterType;
+  typedef itk::RecursiveGaussianImageFilter<InputImageType, OutputImageType>    CPUFilterType;
+  typedef itk::GPURecursiveGaussianImageFilter<InputImageType, OutputImageType> GPUFilterType;
 
-  typedef itk::ImageFileReader< InputImageType >  ReaderType;
-  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  typedef itk::ImageFileReader<InputImageType>  ReaderType;
+  typedef itk::ImageFileWriter<OutputImageType> WriterType;
 
-  if( argc <  3 )
+  if (argc < 3)
   {
     std::cerr << "ERROR: missing arguments" << std::endl;
     std::cerr << "  inputfile outputfile " << std::endl;
@@ -63,30 +61,30 @@ main( int argc, char * argv[] )
   itk::SetupForDebugging();
 
   // Create and check OpenCL context
-  if( !itk::CreateContext() )
+  if (!itk::CreateContext())
   {
     return EXIT_FAILURE;
   }
 
   // Some hard-coded testing options
-  const std::string  inputFileName     = argv[ 1 ];
-  const std::string  outputFileNameCPU = argv[ 2 ];
-  const std::string  outputFileNameGPU = argv[ 3 ];
-  const double       sigma             = 3.0;
-  unsigned int       direction         = 0;
-  const double       epsilon           = 0.01;
+  const std::string  inputFileName = argv[1];
+  const std::string  outputFileNameCPU = argv[2];
+  const std::string  outputFileNameGPU = argv[3];
+  const double       sigma = 3.0;
+  unsigned int       direction = 0;
+  const double       epsilon = 0.01;
   const unsigned int maximumNumberOfThreads = itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads();
 
-  std::cout << std::showpoint << std::setprecision( 4 );
+  std::cout << std::showpoint << std::setprecision(4);
 
   // Reader
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( inputFileName );
+  reader->SetFileName(inputFileName);
   try
   {
     reader->Update();
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
     std::cerr << "ERROR: " << excp << std::endl;
     itk::ReleaseContext();
@@ -103,30 +101,29 @@ main( int argc, char * argv[] )
   std::cout << "Testing the Recursive Gaussian filter, CPU vs GPU:\n";
   std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
 
-  for( unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; nThreads++ )
+  for (unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; nThreads++)
   {
     // Test CPU
     cputimer.Start();
-    cpuFilter->SetNumberOfWorkUnits( nThreads );
-    cpuFilter->SetInput( reader->GetOutput() );
-    cpuFilter->SetSigma( sigma );
-    cpuFilter->SetDirection( direction );
+    cpuFilter->SetNumberOfWorkUnits(nThreads);
+    cpuFilter->SetInput(reader->GetOutput());
+    cpuFilter->SetSigma(sigma);
+    cpuFilter->SetDirection(direction);
     cpuFilter->Update();
     cputimer.Stop();
 
-    std::cout << "CPU " << sigma << " " << direction << " " << nThreads
-              << " " << cputimer.GetMean() << std::endl;
+    std::cout << "CPU " << sigma << " " << direction << " " << nThreads << " " << cputimer.GetMean() << std::endl;
   }
 
   /** Write the CPU result. */
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( cpuFilter->GetOutput() );
-  writer->SetFileName( outputFileNameCPU.c_str() );
+  writer->SetInput(cpuFilter->GetOutput());
+  writer->SetFileName(outputFileNameCPU.c_str());
   try
   {
     writer->Update();
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
     itk::ReleaseContext();
@@ -140,9 +137,9 @@ main( int argc, char * argv[] )
   try
   {
     gpuFilter = GPUFilterType::New();
-    itk::ITKObjectEnableWarnings( gpuFilter.GetPointer() );
+    itk::ITKObjectEnableWarnings(gpuFilter.GetPointer());
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
     itk::ReleaseContext();
@@ -151,25 +148,24 @@ main( int argc, char * argv[] )
 
   // Test GPU
   gputimer.Start();
-  gpuFilter->SetInput( reader->GetOutput() );
-  gpuFilter->SetSigma( sigma );
-  gpuFilter->SetDirection( direction );
+  gpuFilter->SetInput(reader->GetOutput());
+  gpuFilter->SetSigma(sigma);
+  gpuFilter->SetDirection(direction);
   gpuFilter->Update();
   gputimer.Stop();
 
-  std::cout << "GPU " << sigma << " " << direction << " x "
-            << gputimer.GetMean()
-            << " " << cputimer.GetMean() / gputimer.GetMean();
+  std::cout << "GPU " << sigma << " " << direction << " x " << gputimer.GetMean() << " "
+            << cputimer.GetMean() / gputimer.GetMean();
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();
-  gpuWriter->SetInput( gpuFilter->GetOutput() );
-  gpuWriter->SetFileName( outputFileNameGPU.c_str() );
+  gpuWriter->SetInput(gpuFilter->GetOutput());
+  gpuWriter->SetFileName(outputFileNameGPU.c_str());
   try
   {
     gpuWriter->Update();
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
     itk::ReleaseContext();
@@ -178,12 +174,12 @@ main( int argc, char * argv[] )
 
   // Compute RMSE
   double       RMSrelative = 0.0;
-  const double RMSerror    = itk::ComputeRMSE< double, OutputImageType, OutputImageType >
-      ( cpuFilter->GetOutput(), gpuFilter->GetOutput(), RMSrelative );
+  const double RMSerror = itk::ComputeRMSE<double, OutputImageType, OutputImageType>(
+    cpuFilter->GetOutput(), gpuFilter->GetOutput(), RMSrelative);
   std::cout << " " << RMSerror << std::endl;
 
   // Check
-  if( RMSerror > epsilon )
+  if (RMSerror > epsilon)
   {
     std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
     itk::ReleaseContext();
@@ -194,41 +190,40 @@ main( int argc, char * argv[] )
   std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
 
   // Check directions
-  for( direction = 0; direction < ImageDimension; direction++ )
+  for (direction = 0; direction < ImageDimension; direction++)
   {
     cputimer.Start();
-    cpuFilter->SetNumberOfWorkUnits( maximumNumberOfThreads );
-    cpuFilter->SetInput( reader->GetOutput() );
-    cpuFilter->SetSigma( sigma );
-    cpuFilter->SetDirection( direction );
+    cpuFilter->SetNumberOfWorkUnits(maximumNumberOfThreads);
+    cpuFilter->SetInput(reader->GetOutput());
+    cpuFilter->SetSigma(sigma);
+    cpuFilter->SetDirection(direction);
     cpuFilter->Modified();
     cpuFilter->Update();
     cputimer.Stop();
 
-    std::cout << "CPU " << sigma << " " << direction << " " << maximumNumberOfThreads
-              << " " << cputimer.GetMean() << std::endl;
+    std::cout << "CPU " << sigma << " " << direction << " " << maximumNumberOfThreads << " " << cputimer.GetMean()
+              << std::endl;
 
     // Test GPU
     gputimer.Start();
-    gpuFilter->SetInput( reader->GetOutput() );
-    gpuFilter->SetSigma( sigma );
-    gpuFilter->SetDirection( direction );
+    gpuFilter->SetInput(reader->GetOutput());
+    gpuFilter->SetSigma(sigma);
+    gpuFilter->SetDirection(direction);
     gpuFilter->Modified();
     gpuFilter->Update();
     gputimer.Stop();
 
-    std::cout << "GPU " << sigma << " " << direction << " x "
-              << gputimer.GetMean()
-              << " " << cputimer.GetMean() / gputimer.GetMean();
+    std::cout << "GPU " << sigma << " " << direction << " x " << gputimer.GetMean() << " "
+              << cputimer.GetMean() / gputimer.GetMean();
 
     // Compute RMSE
     double       RMSrelative = 0.0;
-    const double RMSerror    = itk::ComputeRMSE< double, OutputImageType, OutputImageType >
-        ( cpuFilter->GetOutput(), gpuFilter->GetOutput(), RMSrelative );
+    const double RMSerror = itk::ComputeRMSE<double, OutputImageType, OutputImageType>(
+      cpuFilter->GetOutput(), gpuFilter->GetOutput(), RMSrelative);
     std::cout << " " << RMSerror << std::endl;
 
     // Check
-    if( RMSerror > epsilon )
+    if (RMSerror > epsilon)
     {
       std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
       itk::ReleaseContext();

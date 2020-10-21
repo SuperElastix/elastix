@@ -57,108 +57,113 @@ namespace itk
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage >
-class SumSquaredTissueVolumeDifferenceImageToImageMetric :
-  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+template <class TFixedImage, class TMovingImage>
+class SumSquaredTissueVolumeDifferenceImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef SumSquaredTissueVolumeDifferenceImageToImageMetric   Self;
-  typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage >      Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef SumSquaredTissueVolumeDifferenceImageToImageMetric    Self;
+  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
+  typedef SmartPointer<Self>                                    Pointer;
+  typedef SmartPointer<const Self>                              ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( SumSquaredTissueVolumeDifferenceImageToImageMetric, AdvancedImageToImageMetric );
+  itkTypeMacro(SumSquaredTissueVolumeDifferenceImageToImageMetric, AdvancedImageToImageMetric);
 
   /** Typedefs from the superclass. */
-  typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType            MovingImageType;
-  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
-  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType             FixedImageType;
-  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::InterpolatorType           InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-  typedef typename Superclass::RealType                   RealType;
-  typedef typename Superclass::GradientPixelType          GradientPixelType;
-  typedef typename Superclass::GradientImageType          GradientImageType;
-  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
-  typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
-  typedef typename Superclass::ImageSamplerType           ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
-  typedef typename Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
-  typedef typename Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-  typedef typename Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
+  typedef typename Superclass::CoordinateRepresentationType    CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType                 MovingImageType;
+  typedef typename Superclass::MovingImagePixelType            MovingImagePixelType;
+  typedef typename Superclass::MovingImageConstPointer         MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType                  FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer          FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType            FixedImageRegionType;
+  typedef typename Superclass::InputPointType                  InputPointType;
+  typedef typename Superclass::OutputPointType                 OutputPointType;
+  typedef typename Superclass::TransformParametersType         TransformParametersType;
+  typedef typename Superclass::TransformJacobianType           TransformJacobianType;
+  typedef typename Superclass::InterpolatorType                InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer             InterpolatorPointer;
+  typedef typename Superclass::RealType                        RealType;
+  typedef typename Superclass::GradientPixelType               GradientPixelType;
+  typedef typename Superclass::GradientImageType               GradientImageType;
+  typedef typename Superclass::GradientImagePointer            GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType         GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer      GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType              FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer           FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType             MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer          MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                     MeasureType;
+  typedef typename Superclass::DerivativeType                  DerivativeType;
+  typedef typename Superclass::DerivativeValueType             DerivativeValueType;
+  typedef typename Superclass::ParametersType                  ParametersType;
+  typedef typename Superclass::FixedImagePixelType             FixedImagePixelType;
+  typedef typename Superclass::MovingImageRegionType           MovingImageRegionType;
+  typedef typename Superclass::ImageSamplerType                ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer             ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType        ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer     ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType           FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType          MovingImageLimiterType;
+  typedef typename Superclass::FixedImageLimiterOutputType     FixedImageLimiterOutputType;
+  typedef typename Superclass::MovingImageLimiterOutputType    MovingImageLimiterOutputType;
+  typedef typename Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::AdvancedTransformType                        TransformType;
-  typedef typename TransformType::SpatialJacobianType                       SpatialJacobianType;
-  typedef typename TransformType::JacobianOfSpatialJacobianType             JacobianOfSpatialJacobianType;
-  typedef typename TransformType::SpatialHessianType                        SpatialHessianType;
-  typedef typename TransformType::JacobianOfSpatialHessianType              JacobianOfSpatialHessianType;
-  typedef typename TransformType::InternalMatrixType                        InternalMatrixType;
+  typedef typename Superclass::AdvancedTransformType            TransformType;
+  typedef typename TransformType::SpatialJacobianType           SpatialJacobianType;
+  typedef typename TransformType::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename TransformType::SpatialHessianType            SpatialHessianType;
+  typedef typename TransformType::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename TransformType::InternalMatrixType            InternalMatrixType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Get the value for single valued optimizers. */
-  virtual MeasureType GetValueSingleThreaded( const TransformParametersType & parameters ) const;
+  virtual MeasureType
+  GetValueSingleThreaded(const TransformParametersType & parameters) const;
 
-  MeasureType GetValue( const TransformParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const TransformParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
-  void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & derivative ) const override;
+  void
+  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const override;
+  void
+  GetValueAndDerivative(const TransformParametersType & parameters,
+                        MeasureType &                   Value,
+                        DerivativeType &                Derivative) const override;
 
   /** Get value and derivatives single-threaded */
-  void GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
-    MeasureType & measure, DerivativeType & derivative) const;
+  void
+  GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
+                                      MeasureType &                   measure,
+                                      DerivativeType &                derivative) const;
 
   /** Set/get the air intensity value */
-  itkSetMacro( AirValue, RealType );
-  itkGetMacro( AirValue, RealType );
+  itkSetMacro(AirValue, RealType);
+  itkGetMacro(AirValue, RealType);
 
   /** Set/get the tissue intensity value */
-  itkSetMacro( TissueValue, RealType );
-  itkGetMacro( TissueValue, RealType );
+  itkSetMacro(TissueValue, RealType);
+  itkGetMacro(TissueValue, RealType);
 
 protected:
   SumSquaredTissueVolumeDifferenceImageToImageMetric();
-  ~SumSquaredTissueVolumeDifferenceImageToImageMetric() override {};
+  ~SumSquaredTissueVolumeDifferenceImageToImageMetric() override{};
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Protected Typedefs ******************/
 
@@ -177,22 +182,22 @@ protected:
   /** Computes the inner product of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
    * to have the right size (same length as Jacobian's number of columns). */
-  void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const override;
+  void
+  EvaluateTransformJacobianInnerProduct(const TransformJacobianType &     jacobian,
+                                        const MovingImageDerivativeType & movingImageDerivative,
+                                        DerivativeType &                  imageJacobian) const override;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
-  void UpdateValueAndDerivativeTerms(
-    const RealType fixedImageValue,
-    const RealType movingImageValue,
-    const DerivativeType & imageJacobian,
-    const NonZeroJacobianIndicesType & nzji,
-    const RealType spatialJacobianDeterminant,
-    const DerivativeType & jacobianOfSpatialJacobianDeterminant,
-    MeasureType & measure,
-    DerivativeType & deriv ) const;
+  void
+  UpdateValueAndDerivativeTerms(const RealType                     fixedImageValue,
+                                const RealType                     movingImageValue,
+                                const DerivativeType &             imageJacobian,
+                                const NonZeroJacobianIndicesType & nzji,
+                                const RealType                     spatialJacobianDeterminant,
+                                const DerivativeType &             jacobianOfSpatialJacobianDeterminant,
+                                MeasureType &                      measure,
+                                DerivativeType &                   deriv) const;
 
   /** Compute the inverse SpatialJacobian to support calculation of the metric gradient.
    * Note that this function does not calculate the true inverse, but instead calculates
@@ -200,37 +205,42 @@ protected:
    * avoid redundant use of the determinant.
    * This function returns false if the SpatialJacobianDeterminant is zero.
    */
-  bool EvaluateInverseSpatialJacobian(
-    const SpatialJacobianType & spatialJacobian,
-    const RealType spatialJacobianDeterminant,
-    SpatialJacobianType & inverseSpatialJacobian ) const;
+  bool
+  EvaluateInverseSpatialJacobian(const SpatialJacobianType & spatialJacobian,
+                                 const RealType              spatialJacobianDeterminant,
+                                 SpatialJacobianType &       inverseSpatialJacobian) const;
 
   /** Compute the dot product of the inverse SpatialJacobian with the
    * Jacobian of SpatialJacobian.  The results are stored in
    * jacobianOfSpatialJacobianDeterminant, which has a length equal to
    * the number of transform parameters times the length of the spatialJacobian.
    */
-  void EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(
+  void
+  EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(
     const JacobianOfSpatialJacobianType & jacobianOfSpatialJacobian,
-    const SpatialJacobianType & inverseSpatialJacobian,
-    DerivativeType & jacobianOfSpatialJacobianDeterminant ) const;
+    const SpatialJacobianType &           inverseSpatialJacobian,
+    DerivativeType &                      jacobianOfSpatialJacobianDeterminant) const;
 
   /** Get value for each thread. */
-  inline void ThreadedGetValue( ThreadIdType threadID ) override;
+  inline void
+  ThreadedGetValue(ThreadIdType threadID) override;
 
   /** Gather the values from all threads. */
-  inline void AfterThreadedGetValue( MeasureType & value ) const override;
+  inline void
+  AfterThreadedGetValue(MeasureType & value) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadId ) override;
+  inline void
+  ThreadedGetValueAndDerivative(ThreadIdType threadId) override;
 
   /** Gather the values and derivatives from all threads */
-  inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & measure, DerivativeType & derivative ) const override;
+  inline void
+  AfterThreadedGetValueAndDerivative(MeasureType & measure, DerivativeType & derivative) const override;
 
 private:
-  SumSquaredTissueVolumeDifferenceImageToImageMetric(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+  SumSquaredTissueVolumeDifferenceImageToImageMetric(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Intensity value to use for air.  Default is -1000 */
   RealType m_AirValue;
@@ -243,7 +253,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSumSquaredTissueVolumeDifferenceImageToImageMetric.hxx"
+#  include "itkSumSquaredTissueVolumeDifferenceImageToImageMetric.hxx"
 #endif
 
 #endif // end #ifndef __itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h

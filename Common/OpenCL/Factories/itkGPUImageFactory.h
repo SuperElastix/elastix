@@ -33,66 +33,71 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename TTypeList, typename NDimensions >
-class GPUImageFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename TTypeList, typename NDimensions>
+class GPUImageFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
-  typedef GPUImageFactory2                    Self;
-  typedef GPUObjectFactoryBase< NDimensions > Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUImageFactory2                  Self;
+  typedef GPUObjectFactoryBase<NDimensions> Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUImage"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUImage";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUImageFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUImageFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TType, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
-    this->RegisterOverride(
-      typeid( Image< TType, VImageDimension > ).name(),
-      typeid( GPUImage< TType, VImageDimension > ).name(),
-      "GPU Image Override", true,
-      CreateObjectFunction< GPUImage< TType, VImageDimension > >::New()
-      );
+    this->RegisterOverride(typeid(Image<TType, VImageDimension>).name(),
+                           typeid(GPUImage<TType, VImageDimension>).name(),
+                           "GPU Image Override",
+                           true,
+                           CreateObjectFunction<GPUImage<TType, VImageDimension>>::New());
   }
 
 
 protected:
-
   GPUImageFactory2();
   virtual ~GPUImageFactory2() {}
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUImageFactory2( const Self & );  // purposely not implemented
-  void operator=( const Self & );    // purposely not implemented
-
+  GPUImageFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUImageFactory.hxx"
+#  include "itkGPUImageFactory.hxx"
 #endif
 
 #endif // end #ifndef __itkGPUImageFactory_h

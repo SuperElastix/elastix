@@ -22,57 +22,54 @@
 
 namespace itk
 {
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >::RegisterOneFactory()
+GPUAdvancedBSplineDeformableTransformFactory2<NDimensions>::RegisterOneFactory()
 {
-  typedef GPUAdvancedBSplineDeformableTransformFactory2< NDimensions > GPUTransformFactoryType;
-  typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  typedef GPUAdvancedBSplineDeformableTransformFactory2<NDimensions> GPUTransformFactoryType;
+  typename GPUTransformFactoryType::Pointer                          factory = GPUTransformFactoryType::New();
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
-GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >::GPUAdvancedBSplineDeformableTransformFactory2()
+template <typename NDimensions>
+GPUAdvancedBSplineDeformableTransformFactory2<NDimensions>::GPUAdvancedBSplineDeformableTransformFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >
-::Register1D()
+GPUAdvancedBSplineDeformableTransformFactory2<NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 1 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 1> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >
-::Register2D()
+GPUAdvancedBSplineDeformableTransformFactory2<NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 2 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 2> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >
-::Register3D()
+GPUAdvancedBSplineDeformableTransformFactory2<NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 3 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 3> visitor;
+  visitor(*this);
 }
 
 

@@ -68,33 +68,30 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template< class TElastix >
-class RSGDEachParameterApart :
-  public
-  itk::RSGDEachParameterApartOptimizer,
-  public
-  OptimizerBase< TElastix >
+template <class TElastix>
+class RSGDEachParameterApart
+  : public itk::RSGDEachParameterApartOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
   typedef RSGDEachParameterApart          Self;
   typedef RSGDEachParameterApartOptimizer Superclass1;
-  typedef OptimizerBase< TElastix >       Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef OptimizerBase<TElastix>         Superclass2;
+  typedef itk::SmartPointer<Self>         Pointer;
+  typedef itk::SmartPointer<const Self>   ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RSGDEachParameterApart, RSGDEachParameterApartOptimizer );
+  itkTypeMacro(RSGDEachParameterApart, RSGDEachParameterApartOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer. \n
    * example: <tt>(Optimizer "RSGDEachParameterApart")</tt>\n
    */
-  elxClassNameMacro( "RSGDEachParameterApart" );
+  elxClassNameMacro("RSGDEachParameterApart");
 
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType    CostFunctionType;
@@ -113,38 +110,42 @@ public:
   typedef typename Superclass1::ParametersType ParametersType;
 
   /** Methods that have to be present everywhere.*/
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
   /** Override the SetInitialPosition.
    * Override the implementation in itkOptimizer.h, to
    * ensure that the scales array and the parameters
    * array have the same size. */
-  void SetInitialPosition( const ParametersType & param ) override;
+  void
+  SetInitialPosition(const ParametersType & param) override;
 
 protected:
-
-  RSGDEachParameterApart(){}
+  RSGDEachParameterApart() {}
   ~RSGDEachParameterApart() override {}
 
 private:
-
-  RSGDEachParameterApart( const Self & );     // purposely not implemented
-  void operator=( const Self & );             // purposely not implemented
-
+  RSGDEachParameterApart(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxRSGDEachParameterApart.hxx"
+#  include "elxRSGDEachParameterApart.hxx"
 #endif
 
 #endif // end #ifndef __elxRSGDEachParameterApart_h

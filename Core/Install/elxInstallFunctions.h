@@ -42,11 +42,10 @@ namespace elastix
  * \ingroup Install
  */
 
-template< class TAnyItkObject >
+template <class TAnyItkObject>
 class InstallFunctions
 {
 public:
-
   /** Standard.*/
   typedef InstallFunctions Self;
   typedef TAnyItkObject    AnyItkObjectType;
@@ -64,23 +63,21 @@ public:
   typedef ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;
 
   /** A wrap around the New() functions of itkObjects. */
-  static ObjectPointer Creator( void )
+  static ObjectPointer
+  Creator(void)
   {
-    return dynamic_cast< ObjectType * >( AnyItkObjectType::New().GetPointer() );
+    return dynamic_cast<ObjectType *>(AnyItkObjectType::New().GetPointer());
   }
 
 
   /** This function places the address of the New() function
    * of AnyItkObjectType in the ComponentDatabase. Returns 0 in
    * case of no errors.  */
-  static int InstallComponent(
-    const ComponentDescriptionType & name,
-    IndexType i, ComponentDatabase * cdb )
+  static int
+  InstallComponent(const ComponentDescriptionType & name, IndexType i, ComponentDatabase * cdb)
   {
-    return cdb->SetCreator( name, i, Self::Creator );
+    return cdb->SetCreator(name, i, Self::Creator);
   }
-
-
 };
 
 } // end namespace elastix

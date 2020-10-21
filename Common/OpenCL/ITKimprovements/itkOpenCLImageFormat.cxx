@@ -21,30 +21,28 @@ namespace itk
 {
 OpenCLImageFormat::OpenCLImageFormat()
 {
-  this->m_ImageType                      = 0;
-  this->m_Format.image_channel_order     = 0;
+  this->m_ImageType = 0;
+  this->m_Format.image_channel_order = 0;
   this->m_Format.image_channel_data_type = 0;
 }
 
 
 //------------------------------------------------------------------------------
-OpenCLImageFormat::OpenCLImageFormat(
-  const OpenCLImageFormat::ChannelOrder channelOrder,
-  const OpenCLImageFormat::ChannelType channelType )
+OpenCLImageFormat::OpenCLImageFormat(const OpenCLImageFormat::ChannelOrder channelOrder,
+                                     const OpenCLImageFormat::ChannelType  channelType)
 {
-  this->m_Format.image_channel_order     = channelOrder;
+  this->m_Format.image_channel_order = channelOrder;
   this->m_Format.image_channel_data_type = channelType;
 }
 
 
 //------------------------------------------------------------------------------
-OpenCLImageFormat::OpenCLImageFormat(
-  const OpenCLImageFormat::ImageType imageType,
-  const OpenCLImageFormat::ChannelOrder channelOrder,
-  const OpenCLImageFormat::ChannelType channelType )
+OpenCLImageFormat::OpenCLImageFormat(const OpenCLImageFormat::ImageType    imageType,
+                                     const OpenCLImageFormat::ChannelOrder channelOrder,
+                                     const OpenCLImageFormat::ChannelType  channelType)
 {
-  this->m_ImageType                      = imageType;
-  this->m_Format.image_channel_order     = channelOrder;
+  this->m_ImageType = imageType;
+  this->m_Format.image_channel_order = channelOrder;
   this->m_Format.image_channel_data_type = channelType;
 }
 
@@ -53,9 +51,8 @@ OpenCLImageFormat::OpenCLImageFormat(
 bool
 OpenCLImageFormat::IsNull() const
 {
-  return ( this->m_ImageType == 0
-         && this->m_Format.image_channel_order == 0
-         && this->m_Format.image_channel_data_type == 0 );
+  return (this->m_ImageType == 0 && this->m_Format.image_channel_order == 0 &&
+          this->m_Format.image_channel_data_type == 0);
 }
 
 
@@ -63,7 +60,7 @@ OpenCLImageFormat::IsNull() const
 OpenCLImageFormat::ImageType
 OpenCLImageFormat::GetImageType() const
 {
-  return OpenCLImageFormat::ImageType( this->m_ImageType );
+  return OpenCLImageFormat::ImageType(this->m_ImageType);
 }
 
 
@@ -71,7 +68,7 @@ OpenCLImageFormat::GetImageType() const
 OpenCLImageFormat::ChannelOrder
 OpenCLImageFormat::GetChannelOrder() const
 {
-  return OpenCLImageFormat::ChannelOrder( this->m_Format.image_channel_order );
+  return OpenCLImageFormat::ChannelOrder(this->m_Format.image_channel_order);
 }
 
 
@@ -79,32 +76,31 @@ OpenCLImageFormat::GetChannelOrder() const
 OpenCLImageFormat::ChannelType
 OpenCLImageFormat::GetChannelType() const
 {
-  return OpenCLImageFormat::ChannelType( this->m_Format.image_channel_data_type );
+  return OpenCLImageFormat::ChannelType(this->m_Format.image_channel_data_type);
 }
 
 
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs )
+operator==(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
 
-  return ( lhs.GetImageType() == rhs.GetImageType()
-         && lhs.GetChannelOrder() == rhs.GetChannelOrder()
-         && lhs.GetChannelType() == rhs.GetChannelType() );
+  return (lhs.GetImageType() == rhs.GetImageType() && lhs.GetChannelOrder() == rhs.GetChannelOrder() &&
+          lhs.GetChannelType() == rhs.GetChannelType());
 }
 
 
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs )
+operator!=(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

@@ -18,4 +18,4 @@
 
 #include "elxEulerStackTransform.h"
 
-elxInstallMacro( EulerStackTransform );
+elxInstallMacro(EulerStackTransform);

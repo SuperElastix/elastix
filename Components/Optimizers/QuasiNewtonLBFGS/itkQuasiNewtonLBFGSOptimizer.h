@@ -58,14 +58,13 @@ namespace itk
 class QuasiNewtonLBFGSOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-
   typedef QuasiNewtonLBFGSOptimizer            Self;
   typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  typedef SmartPointer<Self>                   Pointer;
+  typedef SmartPointer<const Self>             ConstPointer;
 
-  itkNewMacro( Self );
-  itkTypeMacro( QuasiNewtonLBFGSOptimizer, ScaledSingleValuedNonLinearOptimizer );
+  itkNewMacro(Self);
+  itkTypeMacro(QuasiNewtonLBFGSOptimizer, ScaledSingleValuedNonLinearOptimizer);
 
   typedef Superclass::ParametersType         ParametersType;
   typedef Superclass::DerivativeType         DerivativeType;
@@ -74,15 +73,16 @@ public:
   typedef Superclass::MeasureType            MeasureType;
   typedef Superclass::ScalesType             ScalesType;
 
-  typedef Array< double >               RhoType;
-  typedef std::vector< ParametersType > SType;
-  typedef std::vector< DerivativeType > YType;
-  typedef Array< double >               DiagonalMatrixType;
-  typedef LineSearchOptimizer           LineSearchOptimizerType;
+  typedef Array<double>               RhoType;
+  typedef std::vector<ParametersType> SType;
+  typedef std::vector<DerivativeType> YType;
+  typedef Array<double>               DiagonalMatrixType;
+  typedef LineSearchOptimizer         LineSearchOptimizerType;
 
   typedef LineSearchOptimizerType::Pointer LineSearchOptimizerPointer;
 
-  typedef enum {
+  typedef enum
+  {
     MetricError,
     LineSearchError,
     MaximumNumberOfIterations,
@@ -90,52 +90,55 @@ public:
     GradientMagnitudeTolerance,
     ZeroStep,
     Unknown
-  }                                   StopConditionType;
+  } StopConditionType;
 
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
-  virtual void ResumeOptimization( void );
+  virtual void
+  ResumeOptimization(void);
 
-  virtual void StopOptimization( void );
+  virtual void
+  StopOptimization(void);
 
   /** Get information about optimization process: */
-  itkGetConstMacro( CurrentIteration, unsigned long );
-  itkGetConstMacro( CurrentValue, MeasureType );
-  itkGetConstReferenceMacro( CurrentGradient, DerivativeType );
-  itkGetConstMacro( InLineSearch, bool );
-  itkGetConstReferenceMacro( StopCondition, StopConditionType );
-  itkGetConstMacro( CurrentStepLength, double );
+  itkGetConstMacro(CurrentIteration, unsigned long);
+  itkGetConstMacro(CurrentValue, MeasureType);
+  itkGetConstReferenceMacro(CurrentGradient, DerivativeType);
+  itkGetConstMacro(InLineSearch, bool);
+  itkGetConstReferenceMacro(StopCondition, StopConditionType);
+  itkGetConstMacro(CurrentStepLength, double);
 
   /** Setting: the line search optimizer */
-  itkSetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
-  itkGetModifiableObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
+  itkSetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
+  itkGetModifiableObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
 
   /** Setting: the maximum number of iterations */
-  itkGetConstMacro( MaximumNumberOfIterations, unsigned long );
-  itkSetClampMacro( MaximumNumberOfIterations, unsigned long,
-    1, NumericTraits< unsigned long >::max() );
+  itkGetConstMacro(MaximumNumberOfIterations, unsigned long);
+  itkSetClampMacro(MaximumNumberOfIterations, unsigned long, 1, NumericTraits<unsigned long>::max());
 
   /** Setting: the mininum gradient magnitude.
    *
    * The optimizer stops when:
    * ||CurrentGradient|| < GradientMagnitudeTolerance * max(1, ||CurrentPosition||)
    */
-  itkGetConstMacro( GradientMagnitudeTolerance, double );
-  itkSetMacro( GradientMagnitudeTolerance, double );
+  itkGetConstMacro(GradientMagnitudeTolerance, double);
+  itkSetMacro(GradientMagnitudeTolerance, double);
 
   /** Setting: the memory. The number of iterations that are used
    * to estimate the Hessian. 5 by default. 0 results in (normalised) gradient
    * descent search directions */
-  itkSetMacro( Memory, unsigned int );
-  itkGetConstMacro( Memory, unsigned int );
+  itkSetMacro(Memory, unsigned int);
+  itkGetConstMacro(Memory, unsigned int);
 
 protected:
-
   QuasiNewtonLBFGSOptimizer();
-  ~QuasiNewtonLBFGSOptimizer() override{}
+  ~QuasiNewtonLBFGSOptimizer() override {}
 
   // \todo: should be implemented
-  void PrintSelf( std::ostream & os, Indent indent ) const override {}
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override
+  {}
 
   DerivativeType    m_CurrentGradient;
   MeasureType       m_CurrentValue;
@@ -155,13 +158,14 @@ protected:
   unsigned int m_PreviousPoint;
   unsigned int m_Bound;
 
-  itkSetMacro( InLineSearch, bool );
+  itkSetMacro(InLineSearch, bool);
 
   /** Compute H0
    *
    * Override this method if not satisfied with the default choice.
    */
-  virtual void ComputeDiagonalMatrix( DiagonalMatrixType & diag_H0 );
+  virtual void
+  ComputeDiagonalMatrix(DiagonalMatrixType & diag_H0);
 
   /** Compute -Hg
    *
@@ -169,43 +173,37 @@ protected:
    *     "Updating quasi-Newton matrices with limited storage",
    *     Mathematics of Computation, Vol.24, No.151, pp. 773-782.
    */
-  virtual void ComputeSearchDirection(
-    const DerivativeType & gradient,
-    ParametersType & searchDir );
+  virtual void
+  ComputeSearchDirection(const DerivativeType & gradient, ParametersType & searchDir);
 
   /** Perform a line search along the search direction. On calling, x, f, and g should
    * contain the current position, the cost function value at this position, and
    * the derivative. On return the step, x (new position), f (value at x), and g
    * (derivative at x) are updated. */
-  virtual void LineSearch(
-    const ParametersType searchDir,
-    double & step,
-    ParametersType & x,
-    MeasureType & f,
-    DerivativeType & g );
+  virtual void
+  LineSearch(const ParametersType searchDir, double & step, ParametersType & x, MeasureType & f, DerivativeType & g);
 
   /** Store s = x_k - x_k-1 and y = g_k - g_k-1 in m_S and m_Y,
    * and store 1/(ys) in m_Rho. */
-  virtual void StoreCurrentPoint(
-    const ParametersType & step,
-    const DerivativeType & grad_dif );
+  virtual void
+  StoreCurrentPoint(const ParametersType & step, const DerivativeType & grad_dif);
 
   /** Check if convergence has occured;
    * The firstLineSearchDone bool allows the implementation of TestConvergence to
    * decide to skip a few convergence checks when no line search has performed yet
    * (so, before the actual optimisation begins)  */
-  virtual bool TestConvergence( bool firstLineSearchDone );
+  virtual bool
+  TestConvergence(bool firstLineSearchDone);
 
 private:
-
-  QuasiNewtonLBFGSOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );            // purposely not implemented
+  QuasiNewtonLBFGSOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   unsigned long              m_MaximumNumberOfIterations;
   double                     m_GradientMagnitudeTolerance;
   LineSearchOptimizerPointer m_LineSearchOptimizer;
   unsigned int               m_Memory;
-
 };
 
 } // end namespace itk

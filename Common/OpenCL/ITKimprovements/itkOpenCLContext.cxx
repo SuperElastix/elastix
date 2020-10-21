@@ -35,12 +35,12 @@ OpenCLContext::Pointer OpenCLContext::m_Instance = nullptr;
 OpenCLContext::Pointer
 OpenCLContext::GetInstance()
 {
-  if( !OpenCLContext::m_Instance )
+  if (!OpenCLContext::m_Instance)
   {
     // Try the factory first
-    OpenCLContext::m_Instance = ObjectFactory< Self >::Create();
+    OpenCLContext::m_Instance = ObjectFactory<Self>::Create();
     // if the factory did not provide one, then create it here
-    if( !OpenCLContext::m_Instance )
+    if (!OpenCLContext::m_Instance)
     {
       // For the windows OS, use a special output window
       OpenCLContext::m_Instance = new OpenCLContext;
@@ -55,9 +55,9 @@ OpenCLContext::GetInstance()
 
 //------------------------------------------------------------------------------
 void
-OpenCLContext::SetInstance( OpenCLContext * instance )
+OpenCLContext::SetInstance(OpenCLContext * instance)
 {
-  if( OpenCLContext::m_Instance == instance )
+  if (OpenCLContext::m_Instance == instance)
   {
     return;
   }
@@ -78,29 +78,27 @@ OpenCLContext::New()
 class OpenCLContextPimpl
 {
 public:
-
-  OpenCLContextPimpl() :
-    id( 0 ),
-    is_created( false ),
-    last_error( CL_SUCCESS )
+  OpenCLContextPimpl()
+    : id(0)
+    , is_created(false)
+    , last_error(CL_SUCCESS)
   {}
 
   ~OpenCLContextPimpl()
   {
     // Release the command queues for the context.
-    command_queue         = OpenCLCommandQueue();
+    command_queue = OpenCLCommandQueue();
     default_command_queue = OpenCLCommandQueue();
 
     // Release the context.
-    if( is_created )
+    if (is_created)
     {
-      clReleaseContext( id );
+      clReleaseContext(id);
     }
   }
 
 
 public:
-
   cl_context         id;
   bool               is_created;
   OpenCLCommandQueue command_queue;
@@ -111,47 +109,46 @@ public:
 
 //------------------------------------------------------------------------------
 std::string
-GetOpenCLDebugFileName( const std::string & source )
+GetOpenCLDebugFileName(const std::string & source)
 {
   // Create unique filename based on the source code
   const std::size_t sourceSize = source.size();
-  itksysMD5 *       md5        = itksysMD5_New();
+  itksysMD5 *       md5 = itksysMD5_New();
 
-  itksysMD5_Initialize( md5 );
-  itksysMD5_Append( md5, (unsigned char *)source.c_str(), sourceSize );
+  itksysMD5_Initialize(md5);
+  itksysMD5_Append(md5, (unsigned char *)source.c_str(), sourceSize);
   const std::size_t DigestSize = 32u;
-  char              Digest[ DigestSize ];
-  itksysMD5_FinalizeHex( md5, Digest );
-  const std::string hex( Digest, DigestSize );
+  char              Digest[DigestSize];
+  itksysMD5_FinalizeHex(md5, Digest);
+  const std::string hex(Digest, DigestSize);
 
   // construct the name
-  std::string fileName( itk::OpenCLKernelsDebugDirectory );
-  fileName.append( "/ocl-" );
-  fileName.append( hex );
-  fileName.append( ".cl" );
+  std::string fileName(itk::OpenCLKernelsDebugDirectory);
+  fileName.append("/ocl-");
+  fileName.append(hex);
+  fileName.append(".cl");
 
   // free resources
-  itksysMD5_Delete( md5 );
+  itksysMD5_Delete(md5);
 
   return fileName;
 }
 
 
 //------------------------------------------------------------------------------
-OpenCLContext::OpenCLContext() :
-  d_ptr( new OpenCLContextPimpl() )
+OpenCLContext::OpenCLContext()
+  : d_ptr(new OpenCLContextPimpl())
 {}
 
 //------------------------------------------------------------------------------
 // Destructor has to be in cxx, otherwise compiler will print warning messages.
-OpenCLContext::~OpenCLContext()
-{}
+OpenCLContext::~OpenCLContext() {}
 
 //------------------------------------------------------------------------------
 bool
 OpenCLContext::IsCreated() const
 {
-  ITK_OPENCL_D( const OpenCLContext );
+  ITK_OPENCL_D(const OpenCLContext);
   return d->is_created;
 }
 
@@ -163,23 +160,18 @@ OpenCLContext::IsCreated() const
 // asynchronously by the OpenCL implementation. It is the application's
 // responsibility to ensure that the callback function is thread-safe.
 void CL_CALLBACK
-opencl_context_notify( const char * errinfo,
-  const void * /*private_info*/,
-  std::size_t /*cb*/,
-  void * /*user_data*/ )
+     opencl_context_notify(const char * errinfo, const void * /*private_info*/, std::size_t /*cb*/, void * /*user_data*/)
 {
-  itkOpenCLErrorMacroGeneric(
-      << "OpenCL error during context creation or runtime:"
-      << std::endl << errinfo );
+  itkOpenCLErrorMacroGeneric(<< "OpenCL error during context creation or runtime:" << std::endl << errinfo);
 }
 
 
 //------------------------------------------------------------------------------
 bool
-OpenCLContext::Create( const OpenCLDevice::DeviceType type )
+OpenCLContext::Create(const OpenCLDevice::DeviceType type)
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->is_created )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->is_created)
   {
     return true;
   }
@@ -187,15 +179,14 @@ OpenCLContext::Create( const OpenCLDevice::DeviceType type )
   // The "cl_khr_icd" extension says that a null platform cannot
   // be supplied to OpenCL any more, so find the first platform
   // that has devices that match "type".
-  const std::list< OpenCLDevice > devices = OpenCLDevice::GetDevices( type );
-  this->CreateContext( devices, d );
+  const std::list<OpenCLDevice> devices = OpenCLDevice::GetDevices(type);
+  this->CreateContext(devices, d);
 
   // Check if OpenCL context has been created
-  d->is_created = ( d->id != 0 );
-  if( !d->is_created )
+  d->is_created = (d->id != 0);
+  if (!d->is_created)
   {
-    itkOpenCLWarningMacro( << "OpenCLContext::Create(type:" << int(type) << "):"
-                           << this->GetErrorName( d->last_error ) );
+    itkOpenCLWarningMacro(<< "OpenCLContext::Create(type:" << int(type) << "):" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -208,37 +199,31 @@ OpenCLContext::Create( const OpenCLDevice::DeviceType type )
 
 //------------------------------------------------------------------------------
 bool
-OpenCLContext::Create( const std::list< OpenCLDevice > & devices )
+OpenCLContext::Create(const std::list<OpenCLDevice> & devices)
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->is_created )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->is_created)
   {
     return true;
   }
-  if( devices.empty() )
+  if (devices.empty())
   {
-    this->ReportError( CL_INVALID_VALUE, __FILE__, __LINE__, ITK_LOCATION );
+    this->ReportError(CL_INVALID_VALUE, __FILE__, __LINE__, ITK_LOCATION);
     return false;
   }
-  std::vector< cl_device_id > devs;
-  for( std::list< OpenCLDevice >::const_iterator dev = devices.begin();
-    dev != devices.end(); ++dev )
+  std::vector<cl_device_id> devs;
+  for (std::list<OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
   {
-    devs.push_back( ( *dev ).GetDeviceId() );
+    devs.push_back((*dev).GetDeviceId());
   }
 
   cl_platform_id        platform = devices.front().GetPlatform().GetPlatformId();
-  cl_context_properties props[]  = {
-    CL_CONTEXT_PLATFORM,
-    intptr_t( platform ),
-    0
-  };
-  d->id = clCreateContext( props, devs.size(), &devs[ 0 ],
-    opencl_context_notify, 0, &( d->last_error ) );
-  d->is_created = ( d->id != 0 );
-  if( !d->is_created )
+  cl_context_properties props[] = { CL_CONTEXT_PLATFORM, intptr_t(platform), 0 };
+  d->id = clCreateContext(props, devs.size(), &devs[0], opencl_context_notify, 0, &(d->last_error));
+  d->is_created = (d->id != 0);
+  if (!d->is_created)
   {
-    itkOpenCLWarningMacro( << "OpenCLContext::Create:" << this->GetErrorName( d->last_error ) );
+    itkOpenCLWarningMacro(<< "OpenCLContext::Create:" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -251,159 +236,156 @@ OpenCLContext::Create( const std::list< OpenCLDevice > & devices )
 
 //------------------------------------------------------------------------------
 bool
-OpenCLContext::Create( const OpenCLContext::CreateMethod method )
+OpenCLContext::Create(const OpenCLContext::CreateMethod method)
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->is_created )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->is_created)
   {
     return true;
   }
 
-  if( method == OpenCLContext::Default )
+  if (method == OpenCLContext::Default)
   {
-    std::list< OpenCLDevice > devices;
-    const OpenCLDevice        gpuDevice
-      = OpenCLDevice::GetMaximumFlopsDevice( OpenCLDevice::GPU );
-    if( !gpuDevice.IsNull() )
+    std::list<OpenCLDevice> devices;
+    const OpenCLDevice      gpuDevice = OpenCLDevice::GetMaximumFlopsDevice(OpenCLDevice::GPU);
+    if (!gpuDevice.IsNull())
     {
-      devices.push_back( gpuDevice );
-      this->CreateContext( devices, d );
+      devices.push_back(gpuDevice);
+      this->CreateContext(devices, d);
     }
     else
     {
-      const OpenCLDevice cpuDevice
-        = OpenCLDevice::GetMaximumFlopsDevice( OpenCLDevice::CPU );
-      if( !cpuDevice.IsNull() )
+      const OpenCLDevice cpuDevice = OpenCLDevice::GetMaximumFlopsDevice(OpenCLDevice::CPU);
+      if (!cpuDevice.IsNull())
       {
-        devices.push_back( cpuDevice );
-        this->CreateContext( devices, d );
+        devices.push_back(cpuDevice);
+        this->CreateContext(devices, d);
       }
       else
       {
-        const OpenCLDevice acceleratorDevice
-          = OpenCLDevice::GetMaximumFlopsDevice( OpenCLDevice::Accelerator );
-        if( !acceleratorDevice.IsNull() )
+        const OpenCLDevice acceleratorDevice = OpenCLDevice::GetMaximumFlopsDevice(OpenCLDevice::Accelerator);
+        if (!acceleratorDevice.IsNull())
         {
-          devices.push_back( acceleratorDevice );
-          this->CreateContext( devices, d );
+          devices.push_back(acceleratorDevice);
+          this->CreateContext(devices, d);
         }
         else
         {
-          itkGenericExceptionMacro( << "Unable to create OpenCLContext with method MultipleMaximumFlopsDevices." );
+          itkGenericExceptionMacro(<< "Unable to create OpenCLContext with method MultipleMaximumFlopsDevices.");
         }
       }
     }
   }
-  else if( method == OpenCLContext::DevelopmentSingleMaximumFlopsDevice )
+  else if (method == OpenCLContext::DevelopmentSingleMaximumFlopsDevice)
   {
     OpenCLDevice device;
 
 #ifdef OPENCL_USE_INTEL
-#ifdef OPENCL_USE_INTEL_GPU
-    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor( OpenCLDevice::GPU, OpenCLPlatform::Intel );
-#elif OPENCL_USE_INTEL_CPU
-    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor( OpenCLDevice::CPU, OpenCLPlatform::Intel );
-#else
-    itkGenericExceptionMacro( << "Unknown Intel OpenCL platform." );
-#endif
+#  ifdef OPENCL_USE_INTEL_GPU
+    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor(OpenCLDevice::GPU, OpenCLPlatform::Intel);
+#  elif OPENCL_USE_INTEL_CPU
+    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor(OpenCLDevice::CPU, OpenCLPlatform::Intel);
+#  else
+    itkGenericExceptionMacro(<< "Unknown Intel OpenCL platform.");
+#  endif
 
     // NVidia platform
 #elif OPENCL_USE_NVIDIA
-    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor( OpenCLDevice::GPU, OpenCLPlatform::NVidia );
+    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor(OpenCLDevice::GPU, OpenCLPlatform::NVidia);
     // AMD platform
 #elif OPENCL_USE_AMD
-#ifdef OPENCL_USE_AMD_GPU
-    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor( OpenCLDevice::GPU, OpenCLPlatform::AMD );
-#elif OPENCL_USE_AMD_CPU
-    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor( OpenCLDevice::CPU, OpenCLPlatform::AMD );
-#else
-    itkGenericExceptionMacro( << "Unknown AMD OpenCL platform." );
-#endif
+#  ifdef OPENCL_USE_AMD_GPU
+    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor(OpenCLDevice::GPU, OpenCLPlatform::AMD);
+#  elif OPENCL_USE_AMD_CPU
+    device = OpenCLDevice::GetMaximumFlopsDeviceByVendor(OpenCLDevice::CPU, OpenCLPlatform::AMD);
+#  else
+    itkGenericExceptionMacro(<< "Unknown AMD OpenCL platform.");
+#  endif
 
     // Unknown platform
 #else
-    itkGenericExceptionMacro( << "Not supported OpenCL platform by OpenCLContext." );
+    itkGenericExceptionMacro(<< "Not supported OpenCL platform by OpenCLContext.");
 #endif
 
-    std::list< OpenCLDevice > devices;
-    devices.push_back( device );
-    this->CreateContext( devices, d );
+    std::list<OpenCLDevice> devices;
+    devices.push_back(device);
+    this->CreateContext(devices, d);
   }
-  else if( method == OpenCLContext::DevelopmentMultipleMaximumFlopsDevices )
+  else if (method == OpenCLContext::DevelopmentMultipleMaximumFlopsDevices)
   {
-    std::list< OpenCLDevice > devices;
+    std::list<OpenCLDevice> devices;
     // Intel platform
 #ifdef OPENCL_USE_INTEL
-#ifdef OPENCL_USE_INTEL_GPU
-    devices = OpenCLDevice::GetDevices( OpenCLDevice::GPU, OpenCLPlatform::Intel );
-#elif OPENCL_USE_INTEL_CPU
-    devices = OpenCLDevice::GetDevices( OpenCLDevice::CPU, OpenCLPlatform::Intel );
-#else
-    itkGenericExceptionMacro( << "Unknown Intel OpenCL platform." );
-#endif
+#  ifdef OPENCL_USE_INTEL_GPU
+    devices = OpenCLDevice::GetDevices(OpenCLDevice::GPU, OpenCLPlatform::Intel);
+#  elif OPENCL_USE_INTEL_CPU
+    devices = OpenCLDevice::GetDevices(OpenCLDevice::CPU, OpenCLPlatform::Intel);
+#  else
+    itkGenericExceptionMacro(<< "Unknown Intel OpenCL platform.");
+#  endif
 
     // NVidia platform
 #elif OPENCL_USE_NVIDIA
-    devices = OpenCLDevice::GetDevices( OpenCLDevice::GPU, OpenCLPlatform::NVidia );
+    devices = OpenCLDevice::GetDevices(OpenCLDevice::GPU, OpenCLPlatform::NVidia);
     // AMD platform
 #elif OPENCL_USE_AMD
-#ifdef OPENCL_USE_AMD_GPU
-    devices = OpenCLDevice::GetDevices( OpenCLDevice::GPU, OpenCLPlatform::AMD );
-#elif OPENCL_USE_AMD_CPU
-    devices = OpenCLDevice::GetDevices( OpenCLDevice::CPU, OpenCLPlatform::AMD );
-#else
-    itkGenericExceptionMacro( << "Unknown AMD OpenCL platform." );
-#endif
+#  ifdef OPENCL_USE_AMD_GPU
+    devices = OpenCLDevice::GetDevices(OpenCLDevice::GPU, OpenCLPlatform::AMD);
+#  elif OPENCL_USE_AMD_CPU
+    devices = OpenCLDevice::GetDevices(OpenCLDevice::CPU, OpenCLPlatform::AMD);
+#  else
+    itkGenericExceptionMacro(<< "Unknown AMD OpenCL platform.");
+#  endif
 
     // Unknown platform
 #else
-    itkGenericExceptionMacro( << "Not supported OpenCL platform by OpenCLContext." );
+    itkGenericExceptionMacro(<< "Not supported OpenCL platform by OpenCLContext.");
 #endif
-    this->CreateContext( devices, d );
+    this->CreateContext(devices, d);
   }
-  else if( method == OpenCLContext::SingleMaximumFlopsDevice )
+  else if (method == OpenCLContext::SingleMaximumFlopsDevice)
   {
-    std::list< OpenCLDevice > devices;
-    const OpenCLDevice        device = OpenCLDevice::GetMaximumFlopsDevice( OpenCLDevice::GPU );
-    devices.push_back( device );
-    this->CreateContext( devices, d );
+    std::list<OpenCLDevice> devices;
+    const OpenCLDevice      device = OpenCLDevice::GetMaximumFlopsDevice(OpenCLDevice::GPU);
+    devices.push_back(device);
+    this->CreateContext(devices, d);
   }
-  else if( method == OpenCLContext::MultipleMaximumFlopsDevices )
+  else if (method == OpenCLContext::MultipleMaximumFlopsDevices)
   {
-    std::list< OpenCLDevice > devices;
-    devices = OpenCLDevice::GetMaximumFlopsDevices( OpenCLDevice::GPU );
-    if( !devices.empty() )
+    std::list<OpenCLDevice> devices;
+    devices = OpenCLDevice::GetMaximumFlopsDevices(OpenCLDevice::GPU);
+    if (!devices.empty())
     {
-      this->CreateContext( devices, d );
+      this->CreateContext(devices, d);
     }
     else
     {
-      devices = OpenCLDevice::GetMaximumFlopsDevices( OpenCLDevice::CPU );
-      if( !devices.empty() )
+      devices = OpenCLDevice::GetMaximumFlopsDevices(OpenCLDevice::CPU);
+      if (!devices.empty())
       {
-        this->CreateContext( devices, d );
+        this->CreateContext(devices, d);
       }
       else
       {
-        devices = OpenCLDevice::GetMaximumFlopsDevices( OpenCLDevice::Accelerator );
-        if( !devices.empty() )
+        devices = OpenCLDevice::GetMaximumFlopsDevices(OpenCLDevice::Accelerator);
+        if (!devices.empty())
         {
-          this->CreateContext( devices, d );
+          this->CreateContext(devices, d);
         }
         else
         {
-          itkGenericExceptionMacro( << "Unable to create OpenCLContext with method MultipleMaximumFlopsDevices." );
+          itkGenericExceptionMacro(<< "Unable to create OpenCLContext with method MultipleMaximumFlopsDevices.");
         }
       }
     }
   }
 
   // Check if OpenCL context has been created
-  d->is_created = ( d->id != 0 );
-  if( !d->is_created )
+  d->is_created = (d->id != 0);
+  if (!d->is_created)
   {
-    itkOpenCLWarningMacro( << "OpenCLContext::Create(method:" << int(method) << "):"
-                           << this->GetErrorName( d->last_error ) );
+    itkOpenCLWarningMacro(<< "OpenCLContext::Create(method:" << int(method)
+                          << "):" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -416,23 +398,22 @@ OpenCLContext::Create( const OpenCLContext::CreateMethod method )
 
 //------------------------------------------------------------------------------
 bool
-OpenCLContext::Create( const OpenCLPlatform & platfrom,
-  const OpenCLDevice::DeviceType type )
+OpenCLContext::Create(const OpenCLPlatform & platfrom, const OpenCLDevice::DeviceType type)
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->is_created )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->is_created)
   {
     return true;
   }
 
-  this->CreateContext( platfrom, type, d );
+  this->CreateContext(platfrom, type, d);
 
   // Check if OpenCL context has been created
-  d->is_created = ( d->id != 0 );
-  if( !d->is_created )
+  d->is_created = (d->id != 0);
+  if (!d->is_created)
   {
-    itkOpenCLWarningMacro( << "OpenCLContext::Create(platfrom id:" << platfrom.GetPlatformId() << "):"
-                           << this->GetErrorName( d->last_error ) );
+    itkOpenCLWarningMacro(<< "OpenCLContext::Create(platfrom id:" << platfrom.GetPlatformId()
+                          << "):" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -447,8 +428,8 @@ OpenCLContext::Create( const OpenCLPlatform & platfrom,
 bool
 OpenCLContext::Create()
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->is_created )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->is_created)
   {
     return true;
   }
@@ -456,43 +437,42 @@ OpenCLContext::Create()
   OpenCLPlatform platform;
 
 #ifdef OPENCL_USE_INTEL
-#ifdef OPENCL_USE_INTEL_GPU
-  platform = OpenCLPlatform::GetPlatform( OpenCLPlatform::Intel );
-  this->CreateContext( platform, OpenCLDevice::GPU, d );
-#elif OPENCL_USE_INTEL_CPU
-  platform = OpenCLPlatform::GetPlatform( OpenCLPlatform::Intel );
-  this->CreateContext( platform, OpenCLDevice::CPU, d );
-#else
-  itkGenericExceptionMacro( << "Unknown Intel OpenCL platform." );
-#endif
+#  ifdef OPENCL_USE_INTEL_GPU
+  platform = OpenCLPlatform::GetPlatform(OpenCLPlatform::Intel);
+  this->CreateContext(platform, OpenCLDevice::GPU, d);
+#  elif OPENCL_USE_INTEL_CPU
+  platform = OpenCLPlatform::GetPlatform(OpenCLPlatform::Intel);
+  this->CreateContext(platform, OpenCLDevice::CPU, d);
+#  else
+  itkGenericExceptionMacro(<< "Unknown Intel OpenCL platform.");
+#  endif
 
   // NVidia platform
 #elif OPENCL_USE_NVIDIA
-  platform = OpenCLPlatform::GetPlatform( OpenCLPlatform::NVidia );
-  this->CreateContext( platform, OpenCLDevice::GPU, d );
+  platform = OpenCLPlatform::GetPlatform(OpenCLPlatform::NVidia);
+  this->CreateContext(platform, OpenCLDevice::GPU, d);
   // AMD platform
 #elif OPENCL_USE_AMD
-#ifdef OPENCL_USE_AMD_GPU
-  platform = OpenCLPlatform::GetPlatform( OpenCLPlatform::AMD );
-  this->CreateContext( platform, OpenCLDevice::GPU, d );
-#elif OPENCL_USE_AMD_CPU
-  platform = OpenCLPlatform::GetPlatform( OpenCLPlatform::AMD );
-  this->CreateContext( platform, OpenCLDevice::CPU, d );
-#else
-  itkGenericExceptionMacro( << "Unknown AMD OpenCL platform." );
-#endif
+#  ifdef OPENCL_USE_AMD_GPU
+  platform = OpenCLPlatform::GetPlatform(OpenCLPlatform::AMD);
+  this->CreateContext(platform, OpenCLDevice::GPU, d);
+#  elif OPENCL_USE_AMD_CPU
+  platform = OpenCLPlatform::GetPlatform(OpenCLPlatform::AMD);
+  this->CreateContext(platform, OpenCLDevice::CPU, d);
+#  else
+  itkGenericExceptionMacro(<< "Unknown AMD OpenCL platform.");
+#  endif
 
   // Unknown platform
 #else
-  itkGenericExceptionMacro( << "Not supported OpenCL platform by OpenCLContext." );
+  itkGenericExceptionMacro(<< "Not supported OpenCL platform by OpenCLContext.");
 #endif
 
   // Check if OpenCL context has been created
-  d->is_created = ( d->id != 0 );
-  if( !d->is_created )
+  d->is_created = (d->id != 0);
+  if (!d->is_created)
   {
-    itkOpenCLWarningMacro( << "OpenCLContext::Create():"
-                           << this->GetErrorName( d->last_error ) );
+    itkOpenCLWarningMacro(<< "OpenCLContext::Create():" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -506,68 +486,56 @@ OpenCLContext::Create()
 //------------------------------------------------------------------------------
 // \internal
 void
-OpenCLContext::CreateContext( const std::list< OpenCLDevice > & devices,
-  OpenCLContextPimpl * d )
+OpenCLContext::CreateContext(const std::list<OpenCLDevice> & devices, OpenCLContextPimpl * d)
 {
-  if( d->is_created )
+  if (d->is_created)
   {
     return;
   }
 
-  if( !devices.empty() )
+  if (!devices.empty())
   {
-    std::vector< cl_device_id > devs;
-    for( std::list< OpenCLDevice >::const_iterator dev = devices.begin();
-      dev != devices.end(); ++dev )
+    std::vector<cl_device_id> devs;
+    for (std::list<OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
 
     {
-      devs.push_back( ( *dev ).GetDeviceId() );
+      devs.push_back((*dev).GetDeviceId());
     }
 
-    cl_context_properties props[] = {
-      CL_CONTEXT_PLATFORM,
-      cl_context_properties( devices.front().GetPlatform().GetPlatformId() ),
-      0
-    };
-    d->id = clCreateContext
-        ( props, devs.size(), &devs[ 0 ],
-        opencl_context_notify, 0, &( d->last_error ) );
+    cl_context_properties props[] = { CL_CONTEXT_PLATFORM,
+                                      cl_context_properties(devices.front().GetPlatform().GetPlatformId()),
+                                      0 };
+    d->id = clCreateContext(props, devs.size(), &devs[0], opencl_context_notify, 0, &(d->last_error));
   }
   else
   {
     d->last_error = CL_DEVICE_NOT_FOUND;
-    d->id         = 0;
+    d->id = 0;
   }
 }
 
 
 //------------------------------------------------------------------------------
 void
-OpenCLContext::CreateContext( const OpenCLPlatform & platform,
-  const OpenCLDevice::DeviceType type, OpenCLContextPimpl * d )
+OpenCLContext::CreateContext(const OpenCLPlatform &         platform,
+                             const OpenCLDevice::DeviceType type,
+                             OpenCLContextPimpl *           d)
 {
-  if( d->is_created )
+  if (d->is_created)
   {
     return;
   }
 
-  if( !platform.IsNull() )
+  if (!platform.IsNull())
   {
-    cl_context_properties props[] =
-    {
-      CL_CONTEXT_PLATFORM,
-      (cl_context_properties)( platform.GetPlatformId() ),
-      0
-    };
-    cl_device_type device_type = cl_device_type( type );
-    d->id = clCreateContextFromType
-        ( props, device_type,
-        opencl_context_notify, 0, &( d->last_error ) );
+    cl_context_properties props[] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platform.GetPlatformId()), 0 };
+    cl_device_type        device_type = cl_device_type(type);
+    d->id = clCreateContextFromType(props, device_type, opencl_context_notify, 0, &(d->last_error));
   }
   else
   {
     d->last_error = CL_DEVICE_NOT_FOUND;
-    d->id         = 0;
+    d->id = 0;
   }
 }
 
@@ -576,15 +544,15 @@ OpenCLContext::CreateContext( const OpenCLPlatform & platform,
 void
 OpenCLContext::Release()
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->is_created )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->is_created)
   {
-    d->command_queue         = OpenCLCommandQueue();
+    d->command_queue = OpenCLCommandQueue();
     d->default_command_queue = OpenCLCommandQueue();
-    clReleaseContext( d->id );
-    d->id             = 0;
+    clReleaseContext(d->id);
+    d->id = 0;
     d->default_device = OpenCLDevice();
-    d->is_created     = false;
+    d->is_created = false;
   }
 }
 
@@ -593,45 +561,46 @@ OpenCLContext::Release()
 cl_context
 OpenCLContext::GetContextId() const
 {
-  ITK_OPENCL_D( const OpenCLContext );
+  ITK_OPENCL_D(const OpenCLContext);
   return d->id;
 }
 
 
 //------------------------------------------------------------------------------
 void
-OpenCLContext::SetContextId( cl_context id )
+OpenCLContext::SetContextId(cl_context id)
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->id == id || !id )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->id == id || !id)
   {
     return;
   }
   this->Release();
-  clRetainContext( id );
-  d->id         = id;
+  clRetainContext(id);
+  d->id = id;
   d->is_created = true;
 }
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLDevice > OpenCLContext::GetDevices() const
+std::list<OpenCLDevice>
+OpenCLContext::GetDevices() const
 {
-  ITK_OPENCL_D( const OpenCLContext );
-  std::list< OpenCLDevice > devs;
-  if( d->is_created )
+  ITK_OPENCL_D(const OpenCLContext);
+  std::list<OpenCLDevice> devs;
+  if (d->is_created)
   {
     std::size_t size = 0;
-    if( clGetContextInfo( d->id, CL_CONTEXT_DEVICES, 0, 0, &size ) == CL_SUCCESS && size > 0 )
+    if (clGetContextInfo(d->id, CL_CONTEXT_DEVICES, 0, 0, &size) == CL_SUCCESS && size > 0)
     {
-      std::vector< cl_device_id > buf( size );
-      if( clGetContextInfo( d->id, CL_CONTEXT_DEVICES, size, &buf[ 0 ], 0 ) == CL_SUCCESS )
+      std::vector<cl_device_id> buf(size);
+      if (clGetContextInfo(d->id, CL_CONTEXT_DEVICES, size, &buf[0], 0) == CL_SUCCESS)
       {
-        for( std::size_t index = 0; index < size; ++index )
+        for (std::size_t index = 0; index < size; ++index)
         {
-          if( buf[ index ] != 0 )
+          if (buf[index] != 0)
           {
-            devs.push_back( OpenCLDevice( buf[ index ] ) );
+            devs.push_back(OpenCLDevice(buf[index]));
           }
         }
       }
@@ -645,21 +614,20 @@ std::list< OpenCLDevice > OpenCLContext::GetDevices() const
 OpenCLDevice
 OpenCLContext::GetDefaultDevice() const
 {
-  ITK_OPENCL_D( const OpenCLContext );
-  if( d->is_created )
+  ITK_OPENCL_D(const OpenCLContext);
+  if (d->is_created)
   {
-    if( !d->default_device.IsNull() )
+    if (!d->default_device.IsNull())
     {
       return d->default_device;
     }
     std::size_t size = 0;
-    if( clGetContextInfo( d->id, CL_CONTEXT_DEVICES, 0, 0, &size )
-      == CL_SUCCESS && size > 0 )
+    if (clGetContextInfo(d->id, CL_CONTEXT_DEVICES, 0, 0, &size) == CL_SUCCESS && size > 0)
     {
-      std::vector< cl_device_id > buf( size );
-      if( clGetContextInfo( d->id, CL_CONTEXT_DEVICES, size, &buf[ 0 ], 0 ) == CL_SUCCESS )
+      std::vector<cl_device_id> buf(size);
+      if (clGetContextInfo(d->id, CL_CONTEXT_DEVICES, size, &buf[0], 0) == CL_SUCCESS)
       {
-        return OpenCLDevice( buf[ 0 ] );
+        return OpenCLDevice(buf[0]);
       }
     }
   }
@@ -671,23 +639,23 @@ OpenCLContext::GetDefaultDevice() const
 cl_int
 OpenCLContext::GetLastError() const
 {
-  ITK_OPENCL_D( const OpenCLContext );
+  ITK_OPENCL_D(const OpenCLContext);
   return d->last_error;
 }
 
 
 //------------------------------------------------------------------------------
 void
-OpenCLContext::SetLastError( const cl_int error )
+OpenCLContext::SetLastError(const cl_int error)
 {
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   d->last_error = error;
 }
 
 
 //------------------------------------------------------------------------------
 std::string
-OpenCLContext::GetErrorName( const cl_int code )
+OpenCLContext::GetErrorName(const cl_int code)
 {
   static const char * errorString[] = {
     "CL_SUCCESS",                                   // 0
@@ -761,13 +729,13 @@ OpenCLContext::GetErrorName( const cl_int code )
     "CL_INVALID_DEVICE_PARTITION_COUNT",            // -68
   };
 
-  if( code != CL_SUCCESS )
+  if (code != CL_SUCCESS)
   {
-    const int errorCount = sizeof( errorString ) / sizeof( errorString[ 0 ] );
-    const int index      = -code;
-    if( index >= 0 && index < errorCount )
+    const int errorCount = sizeof(errorString) / sizeof(errorString[0]);
+    const int index = -code;
+    if (index >= 0 && index < errorCount)
     {
-      return errorString[ index ];
+      return errorString[index];
     }
     else
     {
@@ -785,8 +753,8 @@ OpenCLContext::GetErrorName( const cl_int code )
 OpenCLCommandQueue
 OpenCLContext::GetCommandQueue()
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( !d->command_queue.IsNull() )
+  ITK_OPENCL_D(OpenCLContext);
+  if (!d->command_queue.IsNull())
   {
     return d->command_queue;
   }
@@ -799,9 +767,9 @@ OpenCLContext::GetCommandQueue()
 
 //------------------------------------------------------------------------------
 void
-OpenCLContext::SetCommandQueue( const OpenCLCommandQueue & queue )
+OpenCLContext::SetCommandQueue(const OpenCLCommandQueue & queue)
 {
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   d->command_queue = queue;
 }
 
@@ -810,32 +778,31 @@ OpenCLContext::SetCommandQueue( const OpenCLCommandQueue & queue )
 OpenCLCommandQueue
 OpenCLContext::GetDefaultCommandQueue()
 {
-  ITK_OPENCL_D( OpenCLContext );
-  if( d->default_command_queue.IsNull() )
+  ITK_OPENCL_D(OpenCLContext);
+  if (d->default_command_queue.IsNull())
   {
-    if( !d->is_created )
+    if (!d->is_created)
     {
       return OpenCLCommandQueue();
     }
     OpenCLDevice dev = this->GetDefaultDevice();
-    if( dev.IsNull() )
+    if (dev.IsNull())
     {
       return OpenCLCommandQueue();
     }
     cl_command_queue queue;
 #ifdef OPENCL_PROFILING
-    queue = clCreateCommandQueue( d->id, dev.GetDeviceId(), CL_QUEUE_PROFILING_ENABLE, &( d->last_error ) );
+    queue = clCreateCommandQueue(d->id, dev.GetDeviceId(), CL_QUEUE_PROFILING_ENABLE, &(d->last_error));
 #else
-    queue = clCreateCommandQueue( d->id, dev.GetDeviceId(), 0, &( d->last_error ) );
+    queue = clCreateCommandQueue(d->id, dev.GetDeviceId(), 0, &(d->last_error));
 #endif
 
-    if( !queue )
+    if (!queue)
     {
-      itkOpenCLWarningMacro( << "OpenCLContext::GetDefaultCommandQueue:"
-                             << this->GetErrorName( d->last_error ) );
+      itkOpenCLWarningMacro(<< "OpenCLContext::GetDefaultCommandQueue:" << this->GetErrorName(d->last_error));
       return OpenCLCommandQueue();
     }
-    d->default_command_queue = OpenCLCommandQueue( this, queue );
+    d->default_command_queue = OpenCLCommandQueue(this, queue);
   }
   return d->default_command_queue;
 }
@@ -846,14 +813,14 @@ OpenCLContext::GetDefaultCommandQueue()
 cl_command_queue
 OpenCLContext::GetActiveQueue()
 {
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   cl_command_queue queue = d->command_queue.GetQueueId();
-  if( queue )
+  if (queue)
   {
     return queue;
   }
   queue = d->default_command_queue.GetQueueId();
-  if( queue )
+  if (queue)
   {
     return queue;
   }
@@ -863,25 +830,22 @@ OpenCLContext::GetActiveQueue()
 
 //------------------------------------------------------------------------------
 OpenCLCommandQueue
-OpenCLContext::CreateCommandQueue( const cl_command_queue_properties properties,
-  const OpenCLDevice & device )
+OpenCLContext::CreateCommandQueue(const cl_command_queue_properties properties, const OpenCLDevice & device)
 {
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   cl_command_queue queue;
-  if( device.IsNull() )
+  if (device.IsNull())
   {
-    queue = clCreateCommandQueue( d->id, this->GetDefaultDevice().GetDeviceId(),
-      properties, &( d->last_error ) );
+    queue = clCreateCommandQueue(d->id, this->GetDefaultDevice().GetDeviceId(), properties, &(d->last_error));
   }
   else
   {
-    queue = clCreateCommandQueue( d->id, device.GetDeviceId(),
-      properties, &( d->last_error ) );
+    queue = clCreateCommandQueue(d->id, device.GetDeviceId(), properties, &(d->last_error));
   }
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( queue )
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (queue)
   {
-    return OpenCLCommandQueue( this, queue );
+    return OpenCLCommandQueue(this, queue);
   }
   else
   {
@@ -892,21 +856,20 @@ OpenCLContext::CreateCommandQueue( const cl_command_queue_properties properties,
 
 //------------------------------------------------------------------------------
 OpenCLBuffer
-OpenCLContext::CreateBufferDevice( const OpenCLMemoryObject::Access access,
-  const std::size_t size )
+OpenCLContext::CreateBufferDevice(const OpenCLMemoryObject::Access access, const std::size_t size)
 {
-  if( size == 0 )
+  if (size == 0)
   {
     return OpenCLBuffer();
   }
 
-  ITK_OPENCL_D( OpenCLContext );
-  cl_mem_flags flags = cl_mem_flags( access );
-  cl_mem       mem   = clCreateBuffer( d->id, flags, size, 0, &( d->last_error ) );
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( mem )
+  ITK_OPENCL_D(OpenCLContext);
+  cl_mem_flags flags = cl_mem_flags(access);
+  cl_mem       mem = clCreateBuffer(d->id, flags, size, 0, &(d->last_error));
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (mem)
   {
-    return OpenCLBuffer( this, mem );
+    return OpenCLBuffer(this, mem);
   }
   else
   {
@@ -917,17 +880,16 @@ OpenCLContext::CreateBufferDevice( const OpenCLMemoryObject::Access access,
 
 //------------------------------------------------------------------------------
 OpenCLBuffer
-OpenCLContext::CreateBufferHost( void * data,
-  const OpenCLMemoryObject::Access access, const std::size_t size )
+OpenCLContext::CreateBufferHost(void * data, const OpenCLMemoryObject::Access access, const std::size_t size)
 {
-  if( size == 0 )
+  if (size == 0)
   {
     return OpenCLBuffer();
   }
 
-  ITK_OPENCL_D( OpenCLContext );
-  cl_mem_flags flags = cl_mem_flags( access );
-  if( data )
+  ITK_OPENCL_D(OpenCLContext);
+  cl_mem_flags flags = cl_mem_flags(access);
+  if (data)
   {
     flags |= CL_MEM_USE_HOST_PTR;
   }
@@ -935,11 +897,11 @@ OpenCLContext::CreateBufferHost( void * data,
   {
     flags |= CL_MEM_ALLOC_HOST_PTR;
   }
-  cl_mem mem = clCreateBuffer( d->id, flags, size, data, &( d->last_error ) );
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( mem )
+  cl_mem mem = clCreateBuffer(d->id, flags, size, data, &(d->last_error));
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (mem)
   {
-    return OpenCLBuffer( this, mem );
+    return OpenCLBuffer(this, mem);
   }
   else
   {
@@ -950,23 +912,21 @@ OpenCLContext::CreateBufferHost( void * data,
 
 //------------------------------------------------------------------------------
 OpenCLBuffer
-OpenCLContext::CreateBufferCopy( const void * data,
-  const OpenCLMemoryObject::Access access, const std::size_t size )
+OpenCLContext::CreateBufferCopy(const void * data, const OpenCLMemoryObject::Access access, const std::size_t size)
 {
-  if( size == 0 )
+  if (size == 0)
   {
     return OpenCLBuffer();
   }
 
-  ITK_OPENCL_D( OpenCLContext );
-  cl_mem_flags flags = cl_mem_flags( access );
+  ITK_OPENCL_D(OpenCLContext);
+  cl_mem_flags flags = cl_mem_flags(access);
   flags |= CL_MEM_COPY_HOST_PTR;
-  cl_mem mem = clCreateBuffer
-      ( d->id, flags, size, const_cast< void * >( data ), &( d->last_error ) );
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( mem )
+  cl_mem mem = clCreateBuffer(d->id, flags, size, const_cast<void *>(data), &(d->last_error));
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (mem)
   {
-    return OpenCLBuffer( this, mem );
+    return OpenCLBuffer(this, mem);
   }
   else
   {
@@ -977,48 +937,43 @@ OpenCLContext::CreateBufferCopy( const void * data,
 
 //------------------------------------------------------------------------------
 OpenCLImage
-OpenCLContext::CreateImageDevice( const OpenCLImageFormat & format,
-  const OpenCLMemoryObject::Access access,
-  const OpenCLSize & size )
+OpenCLContext::CreateImageDevice(const OpenCLImageFormat &        format,
+                                 const OpenCLMemoryObject::Access access,
+                                 const OpenCLSize &               size)
 {
-  if( size.IsZero() )
+  if (size.IsZero())
   {
     return OpenCLImage();
   }
 
-  ITK_OPENCL_D( OpenCLContext );
-  cl_mem_flags flags = cl_mem_flags( access );
+  ITK_OPENCL_D(OpenCLContext);
+  cl_mem_flags flags = cl_mem_flags(access);
 
 #ifdef CL_VERSION_1_2
   // Define image description
   cl_image_desc imageDesc;
-  OpenCLImage::SetImageDescription( imageDesc, format, size );
-  cl_mem mem = clCreateImage
-      ( d->id, flags, &( format.m_Format ), &imageDesc, 0, &( d->last_error ) );
+  OpenCLImage::SetImageDescription(imageDesc, format, size);
+  cl_mem mem = clCreateImage(d->id, flags, &(format.m_Format), &imageDesc, 0, &(d->last_error));
 #else
   cl_mem mem = nullptr;
-  if( size.GetDimension() == 1 )
+  if (size.GetDimension() == 1)
   {
-    itkGenericExceptionMacro( << "OpenCLContext::CreateImageDevice() not supported for 1D." );
+    itkGenericExceptionMacro(<< "OpenCLContext::CreateImageDevice() not supported for 1D.");
   }
-  else if( size.GetDimension() == 2 )
+  else if (size.GetDimension() == 2)
   {
-    mem = clCreateImage2D
-        ( d->id, flags, &( format.m_Format ), size[ 0 ], size[ 1 ],
-        0, 0, &( d->last_error ) );
+    mem = clCreateImage2D(d->id, flags, &(format.m_Format), size[0], size[1], 0, 0, &(d->last_error));
   }
-  else if( size.GetDimension() == 3 )
+  else if (size.GetDimension() == 3)
   {
-    clCreateImage3D
-      ( d->id, flags, &( format.m_Format ), size[ 0 ], size[ 1 ], size[ 2 ],
-      0, 0, 0, &( d->last_error ) );
+    clCreateImage3D(d->id, flags, &(format.m_Format), size[0], size[1], size[2], 0, 0, 0, &(d->last_error));
   }
 #endif
 
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( mem )
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (mem)
   {
-    return OpenCLImage( this, mem );
+    return OpenCLImage(this, mem);
   }
   else
   {
@@ -1029,18 +984,19 @@ OpenCLContext::CreateImageDevice( const OpenCLImageFormat & format,
 
 //------------------------------------------------------------------------------
 OpenCLImage
-OpenCLContext::CreateImageHost( const OpenCLImageFormat & format,
-  void * data, const OpenCLSize & size,
-  const OpenCLMemoryObject::Access access )
+OpenCLContext::CreateImageHost(const OpenCLImageFormat &        format,
+                               void *                           data,
+                               const OpenCLSize &               size,
+                               const OpenCLMemoryObject::Access access)
 {
-  if( size.IsZero() )
+  if (size.IsZero())
   {
     return OpenCLImage();
   }
 
-  ITK_OPENCL_D( OpenCLContext );
-  cl_mem_flags flags = cl_mem_flags( access );
-  if( data )
+  ITK_OPENCL_D(OpenCLContext);
+  cl_mem_flags flags = cl_mem_flags(access);
+  if (data)
   {
     flags |= CL_MEM_USE_HOST_PTR;
   }
@@ -1052,33 +1008,28 @@ OpenCLContext::CreateImageHost( const OpenCLImageFormat & format,
 #ifdef CL_VERSION_1_2
   // Define image description
   cl_image_desc imageDesc;
-  OpenCLImage::SetImageDescription( imageDesc, format, size );
-  cl_mem mem = clCreateImage
-      ( d->id, flags, &( format.m_Format ), &imageDesc, data, &( d->last_error ) );
+  OpenCLImage::SetImageDescription(imageDesc, format, size);
+  cl_mem mem = clCreateImage(d->id, flags, &(format.m_Format), &imageDesc, data, &(d->last_error));
 #else
   cl_mem mem = nullptr;
-  if( size.GetDimension() == 1 )
+  if (size.GetDimension() == 1)
   {
-    itkGenericExceptionMacro( << "OpenCLContext::CreateImageHost() not supported for 1D." );
+    itkGenericExceptionMacro(<< "OpenCLContext::CreateImageHost() not supported for 1D.");
   }
-  else if( size.GetDimension() == 2 )
+  else if (size.GetDimension() == 2)
   {
-    mem = clCreateImage2D
-        ( d->id, flags, &( format.m_Format ), size[ 0 ], size[ 1 ],
-        0, data, &( d->last_error ) );
+    mem = clCreateImage2D(d->id, flags, &(format.m_Format), size[0], size[1], 0, data, &(d->last_error));
   }
-  else if( size.GetDimension() == 3 )
+  else if (size.GetDimension() == 3)
   {
-    clCreateImage3D
-      ( d->id, flags, &( format.m_Format ), size[ 0 ], size[ 1 ], size[ 2 ],
-      0, 0, data, &( d->last_error ) );
+    clCreateImage3D(d->id, flags, &(format.m_Format), size[0], size[1], size[2], 0, 0, data, &(d->last_error));
   }
 #endif
 
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( mem )
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (mem)
   {
-    return OpenCLImage( this, mem );
+    return OpenCLImage(this, mem);
   }
   else
   {
@@ -1089,49 +1040,46 @@ OpenCLContext::CreateImageHost( const OpenCLImageFormat & format,
 
 //------------------------------------------------------------------------------
 OpenCLImage
-OpenCLContext::CreateImageCopy( const OpenCLImageFormat & format,
-  const void * data, const OpenCLSize & size,
-  const OpenCLMemoryObject::Access access )
+OpenCLContext::CreateImageCopy(const OpenCLImageFormat &        format,
+                               const void *                     data,
+                               const OpenCLSize &               size,
+                               const OpenCLMemoryObject::Access access)
 {
-  if( size.IsZero() )
+  if (size.IsZero())
   {
     return OpenCLImage();
   }
 
-  ITK_OPENCL_D( OpenCLContext );
-  cl_mem_flags flags = cl_mem_flags( access ) | CL_MEM_COPY_HOST_PTR;
+  ITK_OPENCL_D(OpenCLContext);
+  cl_mem_flags flags = cl_mem_flags(access) | CL_MEM_COPY_HOST_PTR;
 
 #ifdef CL_VERSION_1_2
   // Define image description
   cl_image_desc imageDesc;
-  OpenCLImage::SetImageDescription( imageDesc, format, size );
-  cl_mem mem = clCreateImage
-      ( d->id, flags, &( format.m_Format ), &imageDesc,
-      const_cast< void * >( data ), &( d->last_error ) );
+  OpenCLImage::SetImageDescription(imageDesc, format, size);
+  cl_mem mem = clCreateImage(d->id, flags, &(format.m_Format), &imageDesc, const_cast<void *>(data), &(d->last_error));
 #else
   cl_mem mem = nullptr;
-  if( size.GetDimension() == 1 )
+  if (size.GetDimension() == 1)
   {
-    itkGenericExceptionMacro( << "OpenCLContext::CreateImageCopy() not supported for 1D." );
+    itkGenericExceptionMacro(<< "OpenCLContext::CreateImageCopy() not supported for 1D.");
   }
-  else if( size.GetDimension() == 2 )
+  else if (size.GetDimension() == 2)
   {
-    mem = clCreateImage2D
-        ( d->id, flags, &( format.m_Format ), size[ 0 ], size[ 1 ],
-        0, const_cast< void * >( data ), &( d->last_error ) );
+    mem = clCreateImage2D(
+      d->id, flags, &(format.m_Format), size[0], size[1], 0, const_cast<void *>(data), &(d->last_error));
   }
-  else if( size.GetDimension() == 3 )
+  else if (size.GetDimension() == 3)
   {
-    clCreateImage3D
-      ( d->id, flags, &( format.m_Format ), size[ 0 ], size[ 1 ], size[ 2 ],
-      0, 0, const_cast< void * >( data ), &( d->last_error ) );
+    clCreateImage3D(
+      d->id, flags, &(format.m_Format), size[0], size[1], size[2], 0, 0, const_cast<void *>(data), &(d->last_error));
   }
 #endif
 
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( mem )
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (mem)
   {
-    return OpenCLImage( this, mem );
+    return OpenCLImage(this, mem);
   }
   else
   {
@@ -1142,24 +1090,24 @@ OpenCLContext::CreateImageCopy( const OpenCLImageFormat & format,
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::CreateProgramFromSourceCode( const std::string & sourceCode,
-  const std::string & prefixSourceCode,
-  const std::string & postfixSourceCode )
+OpenCLContext::CreateProgramFromSourceCode(const std::string & sourceCode,
+                                           const std::string & prefixSourceCode,
+                                           const std::string & postfixSourceCode)
 {
-  if( sourceCode.empty() )
+  if (sourceCode.empty())
   {
-    itkOpenCLWarningMacro( << "The source code is empty for the OpenCL program." );
+    itkOpenCLWarningMacro(<< "The source code is empty for the OpenCL program.");
     return OpenCLProgram();
   }
 
 #ifdef OPENCL_PROFILING
-  itk::OpenCLProfilingTimeProbe timer( "Creating OpenCL program using clCreateProgramWithSource" );
+  itk::OpenCLProfilingTimeProbe timer("Creating OpenCL program using clCreateProgramWithSource");
 #endif
 
   std::stringstream sstream;
 
   // Prepends prefix source code if provided
-  if( !prefixSourceCode.empty() )
+  if (!prefixSourceCode.empty())
   {
     sstream << prefixSourceCode << std::endl;
   }
@@ -1168,75 +1116,75 @@ OpenCLContext::CreateProgramFromSourceCode( const std::string & sourceCode,
   sstream << sourceCode;
 
   // Appends postfix source code if provided
-  if( !postfixSourceCode.empty() )
+  if (!postfixSourceCode.empty())
   {
     sstream << std::endl << postfixSourceCode;
   }
 
-  const std::string oclSource     = sstream.str();
+  const std::string oclSource = sstream.str();
   const std::size_t oclSourceSize = oclSource.size();
 
-  if( oclSourceSize == 0 )
+  if (oclSourceSize == 0)
   {
-    itkOpenCLWarningMacro( << "Cannot build OpenCL brogram from empty source." );
+    itkOpenCLWarningMacro(<< "Cannot build OpenCL brogram from empty source.");
     return OpenCLProgram();
   }
 
-#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
+#if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
   // To work with the Intel SDK for OpenCL* - Debugger plug-in, the OpenCL*
   // kernel code must exist in a text file separate from the code of the host.
   // Also the full path to the file has to be provided.
-  const std::string fileName = GetOpenCLDebugFileName( oclSource );
-  if( prefixSourceCode != "" )
+  const std::string fileName = GetOpenCLDebugFileName(oclSource);
+  if (prefixSourceCode != "")
   {
-    std::ofstream debugfile( fileName.c_str() );
-    if( debugfile.is_open() == false )
+    std::ofstream debugfile(fileName.c_str());
+    if (debugfile.is_open() == false)
     {
-      itkOpenCLWarningMacro( << "Cannot create OpenCL debug source file: " << fileName );
+      itkOpenCLWarningMacro(<< "Cannot create OpenCL debug source file: " << fileName);
       return OpenCLProgram();
     }
     debugfile << oclSource;
     debugfile.close();
 
-    itkOpenCLWarningMacro( << "For Debugging your OpenCL kernel use:\n" << fileName );
+    itkOpenCLWarningMacro(<< "For Debugging your OpenCL kernel use:\n" << fileName);
   }
 
   std::cout << "Creating OpenCL program from source." << std::endl;
 #endif
 
   // Create OpenCL program and return
-#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
-  return this->CreateOpenCLProgram( fileName, oclSource, oclSourceSize );
+#if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
+  return this->CreateOpenCLProgram(fileName, oclSource, oclSourceSize);
 #else
-  return this->CreateOpenCLProgram( std::string(), oclSource, oclSourceSize );
+  return this->CreateOpenCLProgram(std::string(), oclSource, oclSourceSize);
 #endif
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::CreateProgramFromSourceFile( const std::string & filename,
-  const std::string & prefixSourceCode,
-  const std::string & postfixSourceCode )
+OpenCLContext::CreateProgramFromSourceFile(const std::string & filename,
+                                           const std::string & prefixSourceCode,
+                                           const std::string & postfixSourceCode)
 {
-  if( filename.empty() )
+  if (filename.empty())
   {
-    itkOpenCLWarningMacro( << "The filename must be specified." );
+    itkOpenCLWarningMacro(<< "The filename must be specified.");
     return OpenCLProgram();
   }
 
   // open the file
-  std::ifstream inputFile( filename.c_str(), std::ifstream::in | std::ifstream::binary );
-  if( inputFile.is_open() == false )
+  std::ifstream inputFile(filename.c_str(), std::ifstream::in | std::ifstream::binary);
+  if (inputFile.is_open() == false)
   {
-    itkOpenCLWarningMacro( << "Cannot open OpenCL source file: " << filename );
+    itkOpenCLWarningMacro(<< "Cannot open OpenCL source file: " << filename);
     return OpenCLProgram();
   }
 
   std::stringstream sstream;
 
   // Prepends prefix source code if provided
-  if( !prefixSourceCode.empty() )
+  if (!prefixSourceCode.empty())
   {
     sstream << prefixSourceCode << std::endl;
   }
@@ -1245,125 +1193,120 @@ OpenCLContext::CreateProgramFromSourceFile( const std::string & filename,
   sstream << inputFile.rdbuf();
 
   // Appends postfix source code if provided
-  if( !postfixSourceCode.empty() )
+  if (!postfixSourceCode.empty())
   {
     sstream << std::endl << postfixSourceCode;
   }
 
   inputFile.close();
 
-  const std::string oclSource     = sstream.str();
+  const std::string oclSource = sstream.str();
   const std::size_t oclSourceSize = oclSource.size();
 
-  if( oclSourceSize == 0 )
+  if (oclSourceSize == 0)
   {
-    itkOpenCLWarningMacro( << "Cannot build OpenCL source file: " << filename << " is empty." );
+    itkOpenCLWarningMacro(<< "Cannot build OpenCL source file: " << filename << " is empty.");
     return OpenCLProgram();
   }
 
-  std::string fileName( filename );
+  std::string fileName(filename);
 
-#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
+#if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
   // To work with the Intel SDK for OpenCL* - Debugger plug-in, the OpenCL*
   // kernel code must exist in a text file separate from the code of the host.
   // Also the full path to the file has to be provided.
-  if( prefixSourceCode != "" )
+  if (prefixSourceCode != "")
   {
-    fileName = GetOpenCLDebugFileName( oclSource );
+    fileName = GetOpenCLDebugFileName(oclSource);
   }
-  if( prefixSourceCode != "" )
+  if (prefixSourceCode != "")
   {
-    std::ofstream debugfile( fileName.c_str() );
-    if( debugfile.is_open() == false )
+    std::ofstream debugfile(fileName.c_str());
+    if (debugfile.is_open() == false)
     {
-      itkOpenCLWarningMacro( << "Cannot create OpenCL debug source file: " << fileName );
+      itkOpenCLWarningMacro(<< "Cannot create OpenCL debug source file: " << fileName);
       return OpenCLProgram();
     }
     debugfile << oclSource;
     debugfile.close();
 
-    itkOpenCLWarningMacro( << "For Debugging your OpenCL kernel use:\n"
-                           << fileName << " , not original .cl file." );
+    itkOpenCLWarningMacro(<< "For Debugging your OpenCL kernel use:\n" << fileName << " , not original .cl file.");
   }
 
   std::cout << "Creating OpenCL program from : " << fileName << std::endl;
 #endif
 
   // Create OpenCL program and return
-  return this->CreateOpenCLProgram( fileName, oclSource, oclSourceSize );
+  return this->CreateOpenCLProgram(fileName, oclSource, oclSourceSize);
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::CreateOpenCLProgram( const std::string & filename,
-  const std::string & source,
-  const std::size_t sourceSize )
+OpenCLContext::CreateOpenCLProgram(const std::string & filename,
+                                   const std::string & source,
+                                   const std::size_t   sourceSize)
 {
-  if( source.empty() )
+  if (source.empty())
   {
-    itkOpenCLWarningMacro( << "The source is empty for the OpenCL program in filename: '"
-                           << filename << "'" );
+    itkOpenCLWarningMacro(<< "The source is empty for the OpenCL program in filename: '" << filename << "'");
     return OpenCLProgram();
   }
 
 #ifdef OPENCL_PROFILING
-  itk::OpenCLProfilingTimeProbe timer( "Creating OpenCL program using clCreateProgramWithSource" );
+  itk::OpenCLProfilingTimeProbe timer("Creating OpenCL program using clCreateProgramWithSource");
 #endif
 
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   const char * code = source.c_str();
 
-  this->OpenCLDebug( "clCreateProgramWithSource" );
-  cl_program program = clCreateProgramWithSource( d->id, 1, &code, &sourceSize, &( d->last_error ) );
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
+  this->OpenCLDebug("clCreateProgramWithSource");
+  cl_program program = clCreateProgramWithSource(d->id, 1, &code, &sourceSize, &(d->last_error));
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
 
-  if( d->last_error != CL_SUCCESS )
+  if (d->last_error != CL_SUCCESS)
   {
-    itkOpenCLWarningMacro( "Cannot create OpenCL program, filename: '" << filename << "'" );
+    itkOpenCLWarningMacro("Cannot create OpenCL program, filename: '" << filename << "'");
     return OpenCLProgram();
   }
   else
   {
-    return OpenCLProgram( this, program, filename );
+    return OpenCLProgram(this, program, filename);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::CreateProgramFromBinaryCode( const unsigned char * binary,
-  const std::size_t size )
+OpenCLContext::CreateProgramFromBinaryCode(const unsigned char * binary, const std::size_t size)
 {
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   cl_device_id device = GetDefaultDevice().GetDeviceId();
 
-  this->OpenCLDebug( "clCreateProgramWithBinary" );
-  cl_program program = clCreateProgramWithBinary( d->id, 1, &device, &size,
-    &binary, 0, &( d->last_error ) );
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( d->last_error != CL_SUCCESS )
+  this->OpenCLDebug("clCreateProgramWithBinary");
+  cl_program program = clCreateProgramWithBinary(d->id, 1, &device, &size, &binary, 0, &(d->last_error));
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (d->last_error != CL_SUCCESS)
   {
-    itkOpenCLWarningMacro( "Cannot create OpenCL program from binary." );
+    itkOpenCLWarningMacro("Cannot create OpenCL program from binary.");
     return OpenCLProgram();
   }
   else
   {
-    return OpenCLProgram( this, program );
+    return OpenCLProgram(this, program);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::BuildProgramFromSourceCode( const std::string & sourceCode,
-  const std::string & prefixSourceCode,
-  const std::string & postfixSourceCode )
+OpenCLContext::BuildProgramFromSourceCode(const std::string & sourceCode,
+                                          const std::string & prefixSourceCode,
+                                          const std::string & postfixSourceCode)
 {
-  OpenCLProgram program = this->CreateProgramFromSourceCode( sourceCode,
-    prefixSourceCode, postfixSourceCode );
+  OpenCLProgram program = this->CreateProgramFromSourceCode(sourceCode, prefixSourceCode, postfixSourceCode);
 
-  if( program.IsNull() || program.Build() )
+  if (program.IsNull() || program.Build())
   {
     return program;
   }
@@ -1373,16 +1316,15 @@ OpenCLContext::BuildProgramFromSourceCode( const std::string & sourceCode,
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::BuildProgramFromSourceCode( const std::list< OpenCLDevice > & devices,
-  const std::string & sourceCode,
-  const std::string & prefixSourceCode,
-  const std::string & postfixSourceCode,
-  const std::string & extraBuildOptions )
+OpenCLContext::BuildProgramFromSourceCode(const std::list<OpenCLDevice> & devices,
+                                          const std::string &             sourceCode,
+                                          const std::string &             prefixSourceCode,
+                                          const std::string &             postfixSourceCode,
+                                          const std::string &             extraBuildOptions)
 {
-  OpenCLProgram program = this->CreateProgramFromSourceCode( sourceCode,
-    prefixSourceCode, postfixSourceCode );
+  OpenCLProgram program = this->CreateProgramFromSourceCode(sourceCode, prefixSourceCode, postfixSourceCode);
 
-  if( program.IsNull() || program.Build( devices, extraBuildOptions ) )
+  if (program.IsNull() || program.Build(devices, extraBuildOptions))
   {
     return program;
   }
@@ -1392,14 +1334,13 @@ OpenCLContext::BuildProgramFromSourceCode( const std::list< OpenCLDevice > & dev
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::BuildProgramFromSourceFile( const std::string & filename,
-  const std::string & prefixSourceCode,
-  const std::string & postfixSourceCode )
+OpenCLContext::BuildProgramFromSourceFile(const std::string & filename,
+                                          const std::string & prefixSourceCode,
+                                          const std::string & postfixSourceCode)
 {
-  OpenCLProgram program = this->CreateProgramFromSourceFile( filename,
-    prefixSourceCode, postfixSourceCode );
+  OpenCLProgram program = this->CreateProgramFromSourceFile(filename, prefixSourceCode, postfixSourceCode);
 
-  if( program.IsNull() || program.Build() )
+  if (program.IsNull() || program.Build())
   {
     return program;
   }
@@ -1409,16 +1350,15 @@ OpenCLContext::BuildProgramFromSourceFile( const std::string & filename,
 
 //------------------------------------------------------------------------------
 OpenCLProgram
-OpenCLContext::BuildProgramFromSourceFile( const std::list< OpenCLDevice > & devices,
-  const std::string & fileName,
-  const std::string & prefixSourceCode,
-  const std::string & postfixSourceCode,
-  const std::string & extraBuildOptions )
+OpenCLContext::BuildProgramFromSourceFile(const std::list<OpenCLDevice> & devices,
+                                          const std::string &             fileName,
+                                          const std::string &             prefixSourceCode,
+                                          const std::string &             postfixSourceCode,
+                                          const std::string &             extraBuildOptions)
 {
-  OpenCLProgram program = this->CreateProgramFromSourceFile( fileName,
-    prefixSourceCode, postfixSourceCode );
+  OpenCLProgram program = this->CreateProgramFromSourceFile(fileName, prefixSourceCode, postfixSourceCode);
 
-  if( program.IsNull() || program.Build( devices, extraBuildOptions ) )
+  if (program.IsNull() || program.Build(devices, extraBuildOptions))
   {
     return program;
   }
@@ -1427,86 +1367,71 @@ OpenCLContext::BuildProgramFromSourceFile( const std::list< OpenCLDevice > & dev
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLImageFormat > open_cl_get_supported_image_formats(
-  const cl_context ctx,
-  const cl_mem_flags flags,
-  const cl_mem_object_type image_type )
+std::list<OpenCLImageFormat>
+open_cl_get_supported_image_formats(const cl_context ctx, const cl_mem_flags flags, const cl_mem_object_type image_type)
 {
   cl_uint count = 0;
 
-  std::list< OpenCLImageFormat > list;
+  std::list<OpenCLImageFormat> list;
 
-  if( clGetSupportedImageFormats
-      ( ctx, flags, image_type,
-    0, 0, &count ) != CL_SUCCESS || !count )
+  if (clGetSupportedImageFormats(ctx, flags, image_type, 0, 0, &count) != CL_SUCCESS || !count)
   {
     return list;
   }
-  std::vector< cl_image_format > buf( count );
-  if( clGetSupportedImageFormats
-      ( ctx, flags, image_type,
-    count, &buf[ 0 ], 0 ) != CL_SUCCESS )
+  std::vector<cl_image_format> buf(count);
+  if (clGetSupportedImageFormats(ctx, flags, image_type, count, &buf[0], 0) != CL_SUCCESS)
   {
     return list;
   }
-  for( cl_uint index = 0; index < count; ++index )
+  for (cl_uint index = 0; index < count; ++index)
   {
-    list.push_back( OpenCLImageFormat
-        ( OpenCLImageFormat::ChannelOrder( buf[ index ].image_channel_order ),
-      OpenCLImageFormat::ChannelType( buf[ index ].image_channel_data_type ) ) );
+    list.push_back(OpenCLImageFormat(OpenCLImageFormat::ChannelOrder(buf[index].image_channel_order),
+                                     OpenCLImageFormat::ChannelType(buf[index].image_channel_data_type)));
   }
   return list;
 }
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLImageFormat > OpenCLContext::GetSupportedImageFormats(
-  const OpenCLImageFormat::ImageType image_type, const cl_mem_flags flags ) const
+std::list<OpenCLImageFormat>
+OpenCLContext::GetSupportedImageFormats(const OpenCLImageFormat::ImageType image_type, const cl_mem_flags flags) const
 {
-  ITK_OPENCL_D( const OpenCLContext );
+  ITK_OPENCL_D(const OpenCLContext);
 
-  std::list< OpenCLImageFormat > list_image_formats;
-  switch( image_type )
+  std::list<OpenCLImageFormat> list_image_formats;
+  switch (image_type)
   {
     case OpenCLImageFormat::BUFFER:
-      list_image_formats = open_cl_get_supported_image_formats(
-      d->id, flags, CL_MEM_OBJECT_BUFFER );
+      list_image_formats = open_cl_get_supported_image_formats(d->id, flags, CL_MEM_OBJECT_BUFFER);
       break;
     case OpenCLImageFormat::IMAGE2D:
-      list_image_formats =  open_cl_get_supported_image_formats(
-      d->id, flags, CL_MEM_OBJECT_IMAGE2D );
+      list_image_formats = open_cl_get_supported_image_formats(d->id, flags, CL_MEM_OBJECT_IMAGE2D);
       break;
     case OpenCLImageFormat::IMAGE3D:
-      list_image_formats =  open_cl_get_supported_image_formats(
-      d->id, flags, CL_MEM_OBJECT_IMAGE3D );
+      list_image_formats = open_cl_get_supported_image_formats(d->id, flags, CL_MEM_OBJECT_IMAGE3D);
       break;
     case OpenCLImageFormat::IMAGE2D_ARRAY:
-      list_image_formats =  open_cl_get_supported_image_formats(
-      d->id, flags, CL_MEM_OBJECT_IMAGE2D_ARRAY );
+      list_image_formats = open_cl_get_supported_image_formats(d->id, flags, CL_MEM_OBJECT_IMAGE2D_ARRAY);
       break;
     case OpenCLImageFormat::IMAGE1D:
-      list_image_formats =  open_cl_get_supported_image_formats(
-      d->id, flags, CL_MEM_OBJECT_IMAGE1D );
+      list_image_formats = open_cl_get_supported_image_formats(d->id, flags, CL_MEM_OBJECT_IMAGE1D);
       break;
     case OpenCLImageFormat::IMAGE1D_ARRAY:
-      list_image_formats = open_cl_get_supported_image_formats(
-      d->id, flags, CL_MEM_OBJECT_IMAGE1D_ARRAY );
+      list_image_formats = open_cl_get_supported_image_formats(d->id, flags, CL_MEM_OBJECT_IMAGE1D_ARRAY);
       break;
     case OpenCLImageFormat::IMAGE1D_BUFFER:
-      list_image_formats =  open_cl_get_supported_image_formats(
-      d->id, flags, CL_MEM_OBJECT_IMAGE1D_BUFFER );
+      list_image_formats = open_cl_get_supported_image_formats(d->id, flags, CL_MEM_OBJECT_IMAGE1D_BUFFER);
       break;
   }
 
   // Compose the final list
-  std::list< OpenCLImageFormat > list;
-  for( std::list< OpenCLImageFormat >::const_iterator it = list_image_formats.begin();
-    it != list_image_formats.end(); ++it )
+  std::list<OpenCLImageFormat> list;
+  for (std::list<OpenCLImageFormat>::const_iterator it = list_image_formats.begin(); it != list_image_formats.end();
+       ++it)
   {
-    list.push_back( OpenCLImageFormat(
-      OpenCLImageFormat::ImageType( image_type ),
-      OpenCLImageFormat::ChannelOrder( ( *it ).GetChannelOrder() ),
-      OpenCLImageFormat::ChannelType( ( *it ).GetChannelType() ) ) );
+    list.push_back(OpenCLImageFormat(OpenCLImageFormat::ImageType(image_type),
+                                     OpenCLImageFormat::ChannelOrder((*it).GetChannelOrder()),
+                                     OpenCLImageFormat::ChannelType((*it).GetChannelType())));
   }
 
   return list;
@@ -1515,19 +1440,20 @@ std::list< OpenCLImageFormat > OpenCLContext::GetSupportedImageFormats(
 
 //------------------------------------------------------------------------------
 OpenCLSampler
-OpenCLContext::CreateSampler( const bool normalizedCoordinates,
-  const OpenCLSampler::AddressingMode addressingMode,
-  const OpenCLSampler::FilterMode filterMode )
+OpenCLContext::CreateSampler(const bool                          normalizedCoordinates,
+                             const OpenCLSampler::AddressingMode addressingMode,
+                             const OpenCLSampler::FilterMode     filterMode)
 {
-  ITK_OPENCL_D( OpenCLContext );
-  cl_sampler sampler = clCreateSampler
-      ( d->id, normalizedCoordinates ? CL_TRUE : CL_FALSE,
-      cl_addressing_mode( addressingMode ),
-      cl_filter_mode( filterMode ), &( d->last_error ) );
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  if( sampler )
+  ITK_OPENCL_D(OpenCLContext);
+  cl_sampler sampler = clCreateSampler(d->id,
+                                       normalizedCoordinates ? CL_TRUE : CL_FALSE,
+                                       cl_addressing_mode(addressingMode),
+                                       cl_filter_mode(filterMode),
+                                       &(d->last_error));
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  if (sampler)
   {
-    return OpenCLSampler( this, sampler );
+    return OpenCLSampler(this, sampler);
   }
   else
   {
@@ -1540,10 +1466,10 @@ OpenCLContext::CreateSampler( const bool normalizedCoordinates,
 OpenCLUserEvent
 OpenCLContext::CreateUserEvent()
 {
-  ITK_OPENCL_D( OpenCLContext );
-  cl_event event = clCreateUserEvent( d->id, &( d->last_error ) );
-  this->ReportError( d->last_error, __FILE__, __LINE__, ITK_LOCATION );
-  return OpenCLUserEvent( event, true );
+  ITK_OPENCL_D(OpenCLContext);
+  cl_event event = clCreateUserEvent(d->id, &(d->last_error));
+  this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
+  return OpenCLUserEvent(event, true);
 }
 
 
@@ -1551,7 +1477,7 @@ OpenCLContext::CreateUserEvent()
 void
 OpenCLContext::Flush()
 {
-  clFlush( this->GetActiveQueue() );
+  clFlush(this->GetActiveQueue());
 }
 
 
@@ -1559,15 +1485,15 @@ OpenCLContext::Flush()
 void
 OpenCLContext::Finish()
 {
-  clFinish( this->GetActiveQueue() );
+  clFinish(this->GetActiveQueue());
 }
 
 
 //------------------------------------------------------------------------------
 cl_int
-OpenCLContext::Marker( const OpenCLEventList & event_list )
+OpenCLContext::Marker(const OpenCLEventList & event_list)
 {
-  if( event_list.IsEmpty() )
+  if (event_list.IsEmpty())
   {
     return CL_SUCCESS;
   }
@@ -1575,17 +1501,17 @@ OpenCLContext::Marker( const OpenCLEventList & event_list )
   cl_event event;
 
 #ifdef CL_VERSION_1_2
-  const cl_int error = clEnqueueMarkerWithWaitList(
-    this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event );
+  const cl_int error =
+    clEnqueueMarkerWithWaitList(this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event);
 #else
-  const cl_int error = clEnqueueMarker( this->GetActiveQueue(), &event );
+  const cl_int error = clEnqueueMarker(this->GetActiveQueue(), &event);
 #endif
 
-  this->ReportError( error, __FILE__, __LINE__, ITK_LOCATION );
-  if( error == CL_SUCCESS )
+  this->ReportError(error, __FILE__, __LINE__, ITK_LOCATION);
+  if (error == CL_SUCCESS)
   {
-    clWaitForEvents( 1, &event );
-    clReleaseEvent( event );
+    clWaitForEvents(1, &event);
+    clReleaseEvent(event);
   }
   return error;
 }
@@ -1593,9 +1519,9 @@ OpenCLContext::Marker( const OpenCLEventList & event_list )
 
 //------------------------------------------------------------------------------
 OpenCLEvent
-OpenCLContext::MarkerAsync( const OpenCLEventList & event_list )
+OpenCLContext::MarkerAsync(const OpenCLEventList & event_list)
 {
-  if( event_list.IsEmpty() )
+  if (event_list.IsEmpty())
   {
     return OpenCLEvent();
   }
@@ -1603,48 +1529,48 @@ OpenCLContext::MarkerAsync( const OpenCLEventList & event_list )
   cl_event event;
 
 #ifdef CL_VERSION_1_2
-  const cl_int error = clEnqueueMarkerWithWaitList(
-    this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event );
+  const cl_int error =
+    clEnqueueMarkerWithWaitList(this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event);
 #else
-  const cl_int error = clEnqueueMarker( this->GetActiveQueue(), &event );
+  const cl_int error = clEnqueueMarker(this->GetActiveQueue(), &event);
 #endif
 
-  this->ReportError( error, __FILE__, __LINE__, ITK_LOCATION );
-  if( error != CL_SUCCESS )
+  this->ReportError(error, __FILE__, __LINE__, ITK_LOCATION);
+  if (error != CL_SUCCESS)
   {
     return OpenCLEvent();
   }
   else
   {
-    return OpenCLEvent( event );
+    return OpenCLEvent(event);
   }
 }
 
 
 //------------------------------------------------------------------------------
 cl_int
-OpenCLContext::Barrier( const OpenCLEventList & event_list )
+OpenCLContext::Barrier(const OpenCLEventList & event_list)
 {
-  if( event_list.IsEmpty() )
+  if (event_list.IsEmpty())
   {
     return CL_SUCCESS;
   }
 
 #ifdef CL_VERSION_1_2
   cl_event     event;
-  const cl_int error = clEnqueueBarrierWithWaitList(
-    this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event );
+  const cl_int error =
+    clEnqueueBarrierWithWaitList(this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event);
 #else
-  const cl_int error = clEnqueueBarrier( this->GetActiveQueue() );
+  const cl_int error = clEnqueueBarrier(this->GetActiveQueue());
 #endif
 
-  this->ReportError( error, __FILE__, __LINE__, ITK_LOCATION );
+  this->ReportError(error, __FILE__, __LINE__, ITK_LOCATION);
 
 #ifdef CL_VERSION_1_2
-  if( error == CL_SUCCESS )
+  if (error == CL_SUCCESS)
   {
-    clWaitForEvents( 1, &event );
-    clReleaseEvent( event );
+    clWaitForEvents(1, &event);
+    clReleaseEvent(event);
   }
   return error;
 #else
@@ -1655,31 +1581,31 @@ OpenCLContext::Barrier( const OpenCLEventList & event_list )
 
 //------------------------------------------------------------------------------
 OpenCLEvent
-OpenCLContext::BarrierAsync( const OpenCLEventList & event_list )
+OpenCLContext::BarrierAsync(const OpenCLEventList & event_list)
 {
-  if( event_list.IsEmpty() )
+  if (event_list.IsEmpty())
   {
     return OpenCLEvent();
   }
 
 #ifdef CL_VERSION_1_2
   cl_event     event;
-  const cl_int error = clEnqueueBarrierWithWaitList(
-    this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event );
+  const cl_int error =
+    clEnqueueBarrierWithWaitList(this->GetActiveQueue(), event_list.GetSize(), event_list.GetEventData(), &event);
 #else
-  const cl_int error = clEnqueueBarrier( this->GetActiveQueue() );
+  const cl_int error = clEnqueueBarrier(this->GetActiveQueue());
 #endif
 
-  this->ReportError( error, __FILE__, __LINE__, ITK_LOCATION );
+  this->ReportError(error, __FILE__, __LINE__, ITK_LOCATION);
 
 #ifdef CL_VERSION_1_2
-  if( error != CL_SUCCESS )
+  if (error != CL_SUCCESS)
   {
     return OpenCLEvent();
   }
   else
   {
-    return OpenCLEvent( event );
+    return OpenCLEvent(event);
   }
 #else
   return OpenCLEvent();
@@ -1689,17 +1615,16 @@ OpenCLContext::BarrierAsync( const OpenCLEventList & event_list )
 
 //------------------------------------------------------------------------------
 cl_int
-OpenCLContext::WaitForFinished( const OpenCLEventList & event_list )
+OpenCLContext::WaitForFinished(const OpenCLEventList & event_list)
 {
-  if( event_list.IsEmpty() )
+  if (event_list.IsEmpty())
   {
     return CL_SUCCESS;
   }
-  const cl_int error = clWaitForEvents( event_list.GetSize(), event_list.GetEventData() );
-  if( error != CL_SUCCESS )
+  const cl_int error = clWaitForEvents(event_list.GetSize(), event_list.GetEventData());
+  if (error != CL_SUCCESS)
   {
-    itkOpenCLErrorMacroGeneric( << "OpenCLContext::WaitForFinished:"
-                                << OpenCLContext::GetErrorName( error ) );
+    itkOpenCLErrorMacroGeneric(<< "OpenCLContext::WaitForFinished:" << OpenCLContext::GetErrorName(error));
   }
   return error;
 }
@@ -1707,9 +1632,9 @@ OpenCLContext::WaitForFinished( const OpenCLEventList & event_list )
 
 //------------------------------------------------------------------------------
 void
-OpenCLContext::SetDefaultDevice( const OpenCLDevice & device )
+OpenCLContext::SetDefaultDevice(const OpenCLDevice & device)
 {
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   d->default_device = device;
 }
 
@@ -1717,9 +1642,9 @@ OpenCLContext::SetDefaultDevice( const OpenCLDevice & device )
 //------------------------------------------------------------------------------
 // \internal
 void
-OpenCLContext::OpenCLDebug( const std::string & callname )
+OpenCLContext::OpenCLDebug(const std::string & callname)
 {
-#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
+#if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
   std::cout << callname << "..." << std::endl;
 #endif
 }
@@ -1727,15 +1652,13 @@ OpenCLContext::OpenCLDebug( const std::string & callname )
 
 //------------------------------------------------------------------------------
 void
-OpenCLContext::ReportError( const cl_int code, const char * fileName,
-  const int lineNumber, const char * location )
+OpenCLContext::ReportError(const cl_int code, const char * fileName, const int lineNumber, const char * location)
 {
-  ITK_OPENCL_D( OpenCLContext );
+  ITK_OPENCL_D(OpenCLContext);
   d->last_error = code;
-  if( code != CL_SUCCESS )
+  if (code != CL_SUCCESS)
   {
-    ExceptionObject e_( fileName, lineNumber,
-    this->GetErrorName( code ).c_str(), location );
+    ExceptionObject e_(fileName, lineNumber, this->GetErrorName(code).c_str(), location);
     throw e_;
   }
 }
@@ -1744,12 +1667,10 @@ OpenCLContext::ReportError( const cl_int code, const char * fileName,
 //------------------------------------------------------------------------------
 // \internal
 void
-OpenCLContext::OpenCLProfile( cl_event clEvent,
-  const std::string & message,
-  const bool releaseEvent )
+OpenCLContext::OpenCLProfile(cl_event clEvent, const std::string & message, const bool releaseEvent)
 {
 #ifdef OPENCL_PROFILING
-  if( !clEvent )
+  if (!clEvent)
   {
     return;
   }
@@ -1757,34 +1678,34 @@ OpenCLContext::OpenCLProfile( cl_event clEvent,
   cl_int errid;
 
   // Execution time
-  errid = clWaitForEvents( 1, &clEvent );
-  this->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
-  if( errid != CL_SUCCESS )
+  errid = clWaitForEvents(1, &clEvent);
+  this->ReportError(errid, __FILE__, __LINE__, ITK_LOCATION);
+  if (errid != CL_SUCCESS)
   {
-    itkOpenCLWarningMacro( "clWaitForEvents failed" );
+    itkOpenCLWarningMacro("clWaitForEvents failed");
     return;
   }
   cl_ulong start, end;
-  errid  = clGetEventProfilingInfo( clEvent, CL_PROFILING_COMMAND_END, sizeof( cl_ulong ), &end, nullptr );
-  errid |= clGetEventProfilingInfo( clEvent, CL_PROFILING_COMMAND_START, sizeof( cl_ulong ), &start, nullptr );
-  this->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
-  if( errid != CL_SUCCESS )
+  errid = clGetEventProfilingInfo(clEvent, CL_PROFILING_COMMAND_END, sizeof(cl_ulong), &end, nullptr);
+  errid |= clGetEventProfilingInfo(clEvent, CL_PROFILING_COMMAND_START, sizeof(cl_ulong), &start, nullptr);
+  this->ReportError(errid, __FILE__, __LINE__, ITK_LOCATION);
+  if (errid != CL_SUCCESS)
   {
-    itkOpenCLWarningMacro( "clGetEventProfilingInfo failed" );
+    itkOpenCLWarningMacro("clGetEventProfilingInfo failed");
     return;
   }
 
-  const double dSeconds = 1.0e-9 * (double)( end - start );
+  const double dSeconds = 1.0e-9 * (double)(end - start);
   std::cout << "GPU " << message << " execution took " << dSeconds << " seconds." << std::endl;
 
   // Release event if required
-  if( releaseEvent )
+  if (releaseEvent)
   {
-    errid = clReleaseEvent( clEvent );
-    this->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
-    if( errid != CL_SUCCESS )
+    errid = clReleaseEvent(clEvent);
+    this->ReportError(errid, __FILE__, __LINE__, ITK_LOCATION);
+    if (errid != CL_SUCCESS)
     {
-      itkOpenCLWarningMacro( "clReleaseEvent failed" );
+      itkOpenCLWarningMacro("clReleaseEvent failed");
       return;
     }
     clEvent = 0;
@@ -1799,16 +1720,16 @@ void
 OpenCLContext::SetUpProfiling()
 {
 #ifdef OPENCL_PROFILING
-  OpenCLCommandQueue queue = this->CreateCommandQueue( CL_QUEUE_PROFILING_ENABLE );
+  OpenCLCommandQueue queue = this->CreateCommandQueue(CL_QUEUE_PROFILING_ENABLE);
 
-  if( !queue.IsProfilingEnabled() )
+  if (!queue.IsProfilingEnabled())
   {
-    itkOpenCLWarningMacro( << "OpenCLContext attempted to create OpenCL command queue "
-                           << "with CL_QUEUE_PROFILING_ENABLE, but failed." );
+    itkOpenCLWarningMacro(<< "OpenCLContext attempted to create OpenCL command queue "
+                          << "with CL_QUEUE_PROFILING_ENABLE, but failed.");
   }
   else
   {
-    this->SetCommandQueue( queue );
+    this->SetCommandQueue(queue);
   }
 #endif
 }

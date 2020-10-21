@@ -27,9 +27,8 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
-BSplineInterpolationWeightFunction2< TCoordRep, VSpaceDimension, VSplineOrder >
-::BSplineInterpolationWeightFunction2()
+template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>::BSplineInterpolationWeightFunction2()
 {
   /** Initialize the interpolation kernel. */
   this->m_Kernel = KernelType::New();
@@ -41,27 +40,26 @@ BSplineInterpolationWeightFunction2< TCoordRep, VSpaceDimension, VSplineOrder >
  * ******************* Compute1DWeights *******************
  */
 
-template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
+template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
-BSplineInterpolationWeightFunction2< TCoordRep, VSpaceDimension, VSplineOrder >
-::Compute1DWeights(
+BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>::Compute1DWeights(
   const ContinuousIndexType & index,
-  const IndexType & startIndex,
-  OneDWeightsType & weights1D ) const
+  const IndexType &           startIndex,
+  OneDWeightsType &           weights1D) const
 {
   /** Compute the 1D weights. */
-  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    double x = index[ i ] - static_cast< double >( startIndex[ i ] );
+    double x = index[i] - static_cast<double>(startIndex[i]);
 
     // Compute weights
-    double weights[ 6 ]; // Sufficiently large: maximum implemented SplineOrder + 1
-    this->m_Kernel->Evaluate( x, weights );
+    double weights[6]; // Sufficiently large: maximum implemented SplineOrder + 1
+    this->m_Kernel->Evaluate(x, weights);
 
     // Copy
-    for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
+    for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)
     {
-      weights1D[ i ][ k ] = weights[ k ];
+      weights1D[i][k] = weights[k];
     }
   }
 } // end Compute1DWeights()

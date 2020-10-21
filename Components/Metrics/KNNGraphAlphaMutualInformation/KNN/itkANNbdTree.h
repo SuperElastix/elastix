@@ -32,22 +32,21 @@ namespace itk
  * \ingroup ANNwrap
  */
 
-template< class TListSample >
-class ANNbdTree : public ANNkDTree< TListSample >
+template <class TListSample>
+class ANNbdTree : public ANNkDTree<TListSample>
 {
 public:
-
   /** Standard itk. */
-  typedef ANNbdTree                  Self;
-  typedef ANNkDTree< TListSample >   Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef ANNbdTree                Self;
+  typedef ANNkDTree<TListSample>   Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** New method for creating an object using a factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ITK type info. */
-  itkTypeMacro( ANNbdTree, ANNkDTree );
+  itkTypeMacro(ANNbdTree, ANNkDTree);
 
   /** Typedef's from Superclass. */
   typedef typename Superclass::SampleType                 SampleType;
@@ -62,17 +61,19 @@ public:
   typedef ANNshrinkRule ShrinkingRuleType;
 
   /** Set and get the shrinking rule: it defines ... */
-  itkSetMacro( ShrinkingRule, ShrinkingRuleType );
-  itkGetConstMacro( ShrinkingRule, ShrinkingRuleType );
-  void SetShrinkingRule( std::string rule );
+  itkSetMacro(ShrinkingRule, ShrinkingRuleType);
+  itkGetConstMacro(ShrinkingRule, ShrinkingRuleType);
+  void
+  SetShrinkingRule(std::string rule);
 
-  std::string GetShrinkingRule( void );
+  std::string
+  GetShrinkingRule(void);
 
   /** Generate the tree. */
-  void GenerateTree( void ) override;
+  void
+  GenerateTree(void) override;
 
 protected:
-
   /** Constructor. */
   ANNbdTree();
 
@@ -80,22 +81,22 @@ protected:
   ~ANNbdTree() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
   ShrinkingRuleType m_ShrinkingRule;
 
 private:
-
-  ANNbdTree( const Self & );        // purposely not implemented
-  void operator=( const Self & );   // purposely not implemented
-
+  ANNbdTree(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkANNbdTree.hxx"
+#  include "itkANNbdTree.hxx"
 #endif
 
 #endif // end #ifndef __itkANNbdTree_h

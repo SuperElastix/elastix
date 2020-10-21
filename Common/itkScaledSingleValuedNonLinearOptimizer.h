@@ -59,23 +59,20 @@ namespace itk
  *
  */
 
-class ScaledSingleValuedNonLinearOptimizer :
-  public SingleValuedNonLinearOptimizer
+class ScaledSingleValuedNonLinearOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef ScaledSingleValuedNonLinearOptimizer Self;
   typedef SingleValuedNonLinearOptimizer       Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  typedef SmartPointer<Self>                   Pointer;
+  typedef SmartPointer<const Self>             ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ScaledSingleValuedNonLinearOptimizer,
-    SingleValuedNonLinearOptimizer );
+  itkTypeMacro(ScaledSingleValuedNonLinearOptimizer, SingleValuedNonLinearOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType      MeasureType;
@@ -94,54 +91,61 @@ public:
    * Call this method in StartOptimization() and after
    * entering new scales.
    */
-  virtual void InitializeScales( void );
+  virtual void
+  InitializeScales(void);
 
   /** Setting: SetCostFunction. */
-  void SetCostFunction( CostFunctionType * costFunction ) override;
+  void
+  SetCostFunction(CostFunctionType * costFunction) override;
 
   /** Setting: Turn on/off the use of scales. Set this flag to false when no
    * scaling is desired.
    */
-  virtual void SetUseScales( bool arg );
+  virtual void
+  SetUseScales(bool arg);
 
-  bool GetUseScales( void ) const;
+  bool
+  GetUseScales(void) const;
 
   /** Get the current scaled position. */
-  itkGetConstReferenceMacro( ScaledCurrentPosition, ParametersType );
+  itkGetConstReferenceMacro(ScaledCurrentPosition, ParametersType);
 
   /** Get the current unscaled position: get the ScaledCurrentPosition
    * and divide each element through its scale.
    */
-  const ParametersType & GetCurrentPosition( void ) const override;
+  const ParametersType &
+  GetCurrentPosition(void) const override;
 
   /** Get a pointer to the scaled cost function. */
-  itkGetConstObjectMacro( ScaledCostFunction, ScaledCostFunctionType );
+  itkGetConstObjectMacro(ScaledCostFunction, ScaledCostFunctionType);
 
   /** Setting: set to 'true' if you want to maximize the cost function.
    * It forces the scaledCostFunction to negate the cost function value
-    * and its derivative.
-    */
-  itkBooleanMacro( Maximize );
-  virtual void SetMaximize( bool _arg );
+   * and its derivative.
+   */
+  itkBooleanMacro(Maximize);
+  virtual void
+  SetMaximize(bool _arg);
 
-  itkGetConstMacro( Maximize, bool );
+  itkGetConstMacro(Maximize, bool);
 
 protected:
-
   /** The constructor. */
   ScaledSingleValuedNonLinearOptimizer();
   /** The destructor. */
   ~ScaledSingleValuedNonLinearOptimizer() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
   ParametersType            m_ScaledCurrentPosition;
   ScaledCostFunctionPointer m_ScaledCostFunction;
 
   /** Set m_ScaledCurrentPosition. */
-  virtual void SetScaledCurrentPosition( const ParametersType & parameters );
+  virtual void
+  SetScaledCurrentPosition(const ParametersType & parameters);
 
   /** Set the scaled current position by entering the non-scaled
    * parameters. The method multiplies param by the scales and
@@ -154,34 +158,34 @@ protected:
    * This method will probably only be used to convert the InitialPosition
    * entered by the user.
    */
-  void  SetCurrentPosition( const ParametersType & param ) override;
+  void
+  SetCurrentPosition(const ParametersType & param) override;
 
   /** Divide the (scaled) parameters by the scales and call the GetValue routine
    * of the unscaled cost function.
    */
-  virtual MeasureType GetScaledValue(
-    const ParametersType & parameters ) const;
+  virtual MeasureType
+  GetScaledValue(const ParametersType & parameters) const;
 
   /** Divide the (scaled) parameters by the scales, call the GetDerivative routine
    * of the unscaled cost function and divide the resulting derivative by
    * the scales.
    */
-  virtual void GetScaledDerivative(
-    const ParametersType & parameters,
-    DerivativeType & derivative ) const;
+  virtual void
+  GetScaledDerivative(const ParametersType & parameters, DerivativeType & derivative) const;
 
   /** Same procedure as in GetValue and GetDerivative. */
-  virtual void GetScaledValueAndDerivative(
-    const ParametersType & parameters,
-    MeasureType & value,
-    DerivativeType & derivative ) const;
+  virtual void
+  GetScaledValueAndDerivative(const ParametersType & parameters,
+                              MeasureType &          value,
+                              DerivativeType &       derivative) const;
 
 private:
-
   /** The private constructor. */
-  ScaledSingleValuedNonLinearOptimizer( const Self & );   // purposely not implemented
+  ScaledSingleValuedNonLinearOptimizer(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                         // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Variable to store the CurrentPosition, when the function
    * GetCurrentPosition is called. This method needs a member variable,
@@ -189,7 +193,6 @@ private:
    */
   mutable ParametersType m_UnscaledCurrentPosition;
   bool                   m_Maximize;
-
 };
 
 } // end namespace itk

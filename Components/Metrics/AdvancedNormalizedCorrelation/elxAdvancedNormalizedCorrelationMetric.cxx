@@ -18,4 +18,4 @@
 
 #include "elxAdvancedNormalizedCorrelationMetric.h"
 
-elxInstallMacro( AdvancedNormalizedCorrelationMetric );
+elxInstallMacro(AdvancedNormalizedCorrelationMetric);

@@ -26,127 +26,116 @@ namespace elastix
 // PixelType traits for writing types as strings to parameter files
 
 // Default implementation
-template< typename T >
+template <typename T>
 struct PixelType
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
-    itkGenericExceptionMacro(<< "Pixel type \"" << typeid( T ).name() << "\" is not supported." );
+    itkGenericExceptionMacro(<< "Pixel type \"" << typeid(T).name() << "\" is not supported.");
   }
-
-
 };
 
-template< >
-struct PixelType< char >
+template <>
+struct PixelType<char>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "char";
   }
-
-
 };
 
-template< >
-struct PixelType< unsigned char >
+template <>
+struct PixelType<unsigned char>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "unsigned char";
   }
-
-
 };
 
-template< >
-struct PixelType< short >
+template <>
+struct PixelType<short>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "short";
   }
-
-
 };
 
-template< >
-struct PixelType< unsigned short >
+template <>
+struct PixelType<unsigned short>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "unsigned short";
   }
-
-
 };
 
-template< >
-struct PixelType< int >
+template <>
+struct PixelType<int>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "int";
   }
-
-
 };
 
-template< >
-struct PixelType< unsigned int >
+template <>
+struct PixelType<unsigned int>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "unsigned int";
   }
-
-
 };
 
-template< >
-struct PixelType< long >
+template <>
+struct PixelType<long>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "long";
   }
-
-
 };
 
-template< >
-struct PixelType< unsigned long >
+template <>
+struct PixelType<unsigned long>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "unsigned long";
   }
-
-
 };
 
-template< >
-struct PixelType< float >
+template <>
+struct PixelType<float>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "float";
   }
-
-
 };
 
-template< >
-struct PixelType< double >
+template <>
+struct PixelType<double>
 {
-  static const char * ToString()
+  static const char *
+  ToString()
   {
     return "double";
   }
-
-
 };
 
-}
+} // namespace elastix
 
 #endif // elxPixelType_h

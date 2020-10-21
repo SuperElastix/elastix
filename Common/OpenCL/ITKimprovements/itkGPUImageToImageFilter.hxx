@@ -40,45 +40,41 @@
 
 namespace itk
 {
-template< typename TInputImage, typename TOutputImage, typename TParentImageFilter >
-GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
-::GPUImageToImageFilter() :
-  m_GPUEnabled( true )
+template <typename TInputImage, typename TOutputImage, typename TParentImageFilter>
+GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GPUImageToImageFilter()
+  : m_GPUEnabled(true)
 {
   m_GPUKernelManager = OpenCLKernelManager::New();
-  Superclass::SetNumberOfWorkUnits( 1 );
+  Superclass::SetNumberOfWorkUnits(1);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TOutputImage, typename TParentImageFilter >
+template <typename TInputImage, typename TOutputImage, typename TParentImageFilter>
 void
-GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
-::SetNumberOfWorkUnits( ThreadIdType _arg )
+GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::SetNumberOfWorkUnits(ThreadIdType _arg)
 {
-  Superclass::SetNumberOfWorkUnits( 1 );
+  Superclass::SetNumberOfWorkUnits(1);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TOutputImage, typename TParentImageFilter >
+template <typename TInputImage, typename TOutputImage, typename TParentImageFilter>
 void
-GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
-  os << indent << "GPU: " << ( m_GPUEnabled ? "Enabled" : "Disabled" ) << std::endl;
+  os << indent << "GPU: " << (m_GPUEnabled ? "Enabled" : "Disabled") << std::endl;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TOutputImage, typename TParentImageFilter >
+template <typename TInputImage, typename TOutputImage, typename TParentImageFilter>
 void
-GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
-::GenerateData()
+GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GenerateData()
 {
-  if( !m_GPUEnabled )  // call CPU update function
+  if (!m_GPUEnabled) // call CPU update function
   {
     Superclass::GenerateData();
   }
@@ -96,11 +92,11 @@ GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
     this->GPUGenerateData();
 
     // Update CPU buffer for all outputs
-    typedef GPUImage< OutputImagePixelType, OutputImageDimension > GPUOutputImageType;
-    for( OutputDataObjectIterator it( this ); !it.IsAtEnd(); ++it )
+    typedef GPUImage<OutputImagePixelType, OutputImageDimension> GPUOutputImageType;
+    for (OutputDataObjectIterator it(this); !it.IsAtEnd(); ++it)
     {
-      GPUOutputImageType * GPUOutput = dynamic_cast< GPUOutputImageType * >( it.GetOutput() );
-      if( GPUOutput )
+      GPUOutputImageType * GPUOutput = dynamic_cast<GPUOutputImageType *>(it.GetOutput());
+      if (GPUOutput)
       {
         GPUOutput->UpdateCPUBuffer();
       }
@@ -114,75 +110,72 @@ GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TOutputImage, typename TParentImageFilter >
+template <typename TInputImage, typename TOutputImage, typename TParentImageFilter>
 void
-GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
-::GraftOutput( DataObject * graft )
+GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutput(DataObject * graft)
 {
-  if( !graft )
+  if (!graft)
   {
-    itkExceptionMacro( << "Requested to graft output that is a NULL pointer" );
+    itkExceptionMacro(<< "Requested to graft output that is a NULL pointer");
   }
 
-  typedef typename itk::GPUTraits< TOutputImage >::Type GPUOutputImage;
-  typename GPUOutputImage::Pointer outputPtr;
+  typedef typename itk::GPUTraits<TOutputImage>::Type GPUOutputImage;
+  typename GPUOutputImage::Pointer                    outputPtr;
 
   try
   {
-    outputPtr = dynamic_cast< GPUOutputImage * >( this->GetOutput() );
+    outputPtr = dynamic_cast<GPUOutputImage *>(this->GetOutput());
   }
-  catch( ... )
+  catch (...)
   {
     return;
   }
 
-  if( outputPtr.IsNotNull() )
+  if (outputPtr.IsNotNull())
   {
-    outputPtr->Graft( graft );
+    outputPtr->Graft(graft);
   }
   else
   {
     // pointer could not be cast back down
-    itkExceptionMacro( << "itk::GPUImageToImageFilter::GraftOutput() cannot cast "
-                       << typeid( graft ).name() << " to "
-                       << typeid( GPUOutputImage * ).name() );
+    itkExceptionMacro(<< "itk::GPUImageToImageFilter::GraftOutput() cannot cast " << typeid(graft).name() << " to "
+                      << typeid(GPUOutputImage *).name());
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TOutputImage, typename TParentImageFilter >
+template <typename TInputImage, typename TOutputImage, typename TParentImageFilter>
 void
-GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
-::GraftOutput( const DataObjectIdentifierType & key, DataObject * graft )
+GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutput(const DataObjectIdentifierType & key,
+                                                                                  DataObject * graft)
 {
-  if( !graft )
+  if (!graft)
   {
-    itkExceptionMacro( << "Requested to graft output that is a NULL pointer" );
+    itkExceptionMacro(<< "Requested to graft output that is a NULL pointer");
   }
 
-  typedef typename itk::GPUTraits< TOutputImage >::Type GPUOutputImage;
-  typename GPUOutputImage::Pointer outputPtr;
+  typedef typename itk::GPUTraits<TOutputImage>::Type GPUOutputImage;
+  typename GPUOutputImage::Pointer                    outputPtr;
 
   try
   {
-    outputPtr = dynamic_cast< GPUOutputImage * >( this->ProcessObject::GetOutput( key ) );
+    outputPtr = dynamic_cast<GPUOutputImage *>(this->ProcessObject::GetOutput(key));
   }
-  catch( ... )
+  catch (...)
   {
     return;
   }
 
-  if( outputPtr.IsNotNull() )
+  if (outputPtr.IsNotNull())
   {
-    outputPtr->Graft( graft );
+    outputPtr->Graft(graft);
   }
   else
   {
     // pointer could not be cast back down
-    itkExceptionMacro( << "itk::GPUImageToImageFilter::GraftOutput() cannot cast "
-                       << typeid( graft ).name() << " to "
-                       << typeid( GPUOutputImage * ).name() );
+    itkExceptionMacro(<< "itk::GPUImageToImageFilter::GraftOutput() cannot cast " << typeid(graft).name() << " to "
+                      << typeid(GPUOutputImage *).name());
   }
 }
 

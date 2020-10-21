@@ -31,7 +31,7 @@
 #include "itkTimeProbe.h"
 
 #ifdef ELASTIX_USE_OPENMP
-#include <omp.h>
+#  include <omp.h>
 #endif
 
 namespace elastix
@@ -41,31 +41,30 @@ namespace elastix
  * ********************** Constructor ***********************
  */
 
-template< class TElastix >
-PreconditionedStochasticGradientDescent< TElastix >
-::PreconditionedStochasticGradientDescent()
+template <class TElastix>
+PreconditionedStochasticGradientDescent<TElastix>::PreconditionedStochasticGradientDescent()
 {
-  this->m_MaximumNumberOfSamplingAttempts  = 0;
-  this->m_CurrentNumberOfSamplingAttempts  = 0;
-  this->m_PreviousErrorAtIteration         = 0;
+  this->m_MaximumNumberOfSamplingAttempts = 0;
+  this->m_CurrentNumberOfSamplingAttempts = 0;
+  this->m_PreviousErrorAtIteration = 0;
   this->m_AutomaticParameterEstimationDone = false;
 
   this->m_AutomaticParameterEstimation = false;
-  this->m_MaximumStepLength            = 1.0;
-  this->m_MaximumStepLengthRatio       = 1.0;
-  this->m_RegularizationKappa          = 0.8;
-  this->m_ConditionNumber              = 2.0;
-  this->m_NoiseFactor                  = 1.0;
+  this->m_MaximumStepLength = 1.0;
+  this->m_MaximumStepLengthRatio = 1.0;
+  this->m_RegularizationKappa = 0.8;
+  this->m_ConditionNumber = 2.0;
+  this->m_NoiseFactor = 1.0;
 
-  this->m_NumberOfGradientMeasurements    = 0;
-  this->m_NumberOfJacobianMeasurements    = 0;
-  this->m_NumberOfSamplesForPrecondition  = 0;
+  this->m_NumberOfGradientMeasurements = 0;
+  this->m_NumberOfJacobianMeasurements = 0;
+  this->m_NumberOfSamplesForPrecondition = 0;
   this->m_NumberOfSamplesForNoiseCompensationFactor = 0;
-  this->m_NumberOfSpatialSamples          = 5000;
-  this->m_SigmoidScaleFactor              = 0.1;
-  this->m_GlobalStepSize                  = 0;
+  this->m_NumberOfSpatialSamples = 5000;
+  this->m_SigmoidScaleFactor = 0.1;
+  this->m_GlobalStepSize = 0;
 
-  this->m_RandomGenerator   = RandomGeneratorType::GetInstance();
+  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
   this->m_AdvancedTransform = nullptr;
 
   this->m_UseNoiseCompensation = true;
@@ -77,24 +76,23 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::BeforeRegistration( void )
+PreconditionedStochasticGradientDescent<TElastix>::BeforeRegistration(void)
 {
   /** Add the target cell "stepsize" to xout["iteration"]. */
-  xout[ "iteration" ].AddTargetCell( "2:Metric" );
-  xout[ "iteration" ].AddTargetCell( "3a:Time" );
-  xout[ "iteration" ].AddTargetCell( "3b:StepSize" );
-  xout[ "iteration" ].AddTargetCell( "4a:||Gradient||" );
-  xout[ "iteration" ].AddTargetCell( "4b:||SearchDirection||" );
+  xout["iteration"].AddTargetCell("2:Metric");
+  xout["iteration"].AddTargetCell("3a:Time");
+  xout["iteration"].AddTargetCell("3b:StepSize");
+  xout["iteration"].AddTargetCell("4a:||Gradient||");
+  xout["iteration"].AddTargetCell("4b:||SearchDirection||");
 
   /** Format the metric and stepsize as floats. */
-  xl::xout[ "iteration" ][ "2:Metric" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "3a:Time" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "3b:StepSize" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "4b:||SearchDirection||" ] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3a:Time"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3b:StepSize"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4b:||SearchDirection||"] << std::showpoint << std::fixed;
 
   this->m_SettingsVector.clear();
 
@@ -105,123 +103,110 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::BeforeEachResolution( void )
+PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast< unsigned int >(
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()
-    ->GetAsITKBaseType()->GetNumberOfParameters();
+  const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
-    "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
-  this->SetNumberOfIterations( maximumNumberOfIterations );
+  this->GetConfiguration()->ReadParameter(
+    maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
+  this->SetNumberOfIterations(maximumNumberOfIterations);
 
   /** Set the gain parameter A. */
   double A = 20.0;
-  this->GetConfiguration()->ReadParameter( A,
-    "SP_A", this->GetComponentLabel(), level, 0 );
-  this->SetParam_A( A );
+  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  this->SetParam_A(A);
 
   double a = 1.0;
-  this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
   this->SetParam_a(a);
 
   /** Set the MaximumNumberOfSamplingAttempts. check if needed? */
   SizeValueType maximumNumberOfSamplingAttempts = 0;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
-    "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
-  this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
-  if( maximumNumberOfSamplingAttempts > 5 )
+  this->GetConfiguration()->ReadParameter(
+    maximumNumberOfSamplingAttempts, "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0);
+  this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
+  if (maximumNumberOfSamplingAttempts > 5)
   {
-    elxout[ "warning" ]
-      << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
-      << maximumNumberOfSamplingAttempts << ".\n"
-      << "  This functionality is known to cause problems (stack overflow) for large values.\n"
-      << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
-      << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n"
-      << std::endl;
+    elxout["warning"] << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
+                      << maximumNumberOfSamplingAttempts << ".\n"
+                      << "  This functionality is known to cause problems (stack overflow) for large values.\n"
+                      << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
+                      << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n"
+                      << std::endl;
   }
 
   /** Set/Get the initial time. Default: 0.0. Should be >= 0. */
   double initialTime = 0.0;
-  this->GetConfiguration()->ReadParameter( initialTime,
-    "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
-  this->SetInitialTime( initialTime );
+  this->GetConfiguration()->ReadParameter(initialTime, "SigmoidInitialTime", this->GetComponentLabel(), level, 0);
+  this->SetInitialTime(initialTime);
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true
    * NB: the setting is turned off in case of UseRandomSampleRegion == true.
    */
   /** Set whether automatic gain estimation is required; default: true. */
   this->m_AutomaticParameterEstimation = true;
-  this->GetConfiguration()->ReadParameter( this->m_AutomaticParameterEstimation,
-    "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(
+    this->m_AutomaticParameterEstimation, "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0);
 
   std::string stepSizeStrategy = "Adaptive";
-  this->GetConfiguration()->ReadParameter(stepSizeStrategy,
-    "StepSizeStrategy", this->GetComponentLabel(), 0, 0 );
+  this->GetConfiguration()->ReadParameter(stepSizeStrategy, "StepSizeStrategy", this->GetComponentLabel(), 0, 0);
   this->m_StepSizeStrategy = stepSizeStrategy;
 
-  if( this->m_AutomaticParameterEstimation )
+  if (this->m_AutomaticParameterEstimation)
   {
     /** Read user setting. */
-    this->GetConfiguration()->ReadParameter( this->m_MaximumStepLengthRatio,
-      "MaximumStepLengthRatio", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter(
+      this->m_MaximumStepLengthRatio, "MaximumStepLengthRatio", this->GetComponentLabel(), level, 0);
 
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
      * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = std::min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2);
-    const unsigned int movdim = std::min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2);
-    double             sum    = 0.0;
-    for( unsigned int d = 0; d < fixdim; ++d )
+    const unsigned int fixdim = std::min((unsigned int)this->GetElastix()->FixedDimension, (unsigned int)2);
+    const unsigned int movdim = std::min((unsigned int)this->GetElastix()->MovingDimension, (unsigned int)2);
+    double             sum = 0.0;
+    for (unsigned int d = 0; d < fixdim; ++d)
     {
-      sum += this->GetElastix()->GetFixedImage()->GetSpacing()[ d ];
+      sum += this->GetElastix()->GetFixedImage()->GetSpacing()[d];
     }
-    for( unsigned int d = 0; d < movdim; ++d )
+    for (unsigned int d = 0; d < movdim; ++d)
     {
-      sum += this->GetElastix()->GetMovingImage()->GetSpacing()[ d ];
+      sum += this->GetElastix()->GetMovingImage()->GetSpacing()[d];
     }
-    this->m_MaximumStepLength = this->m_MaximumStepLengthRatio * sum / static_cast< double >( fixdim + movdim );
+    this->m_MaximumStepLength = this->m_MaximumStepLengthRatio * sum / static_cast<double>(fixdim + movdim);
 
     /** Read user setting. */
-    this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
-      "MaximumStepLength", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter(
+      this->m_MaximumStepLength, "MaximumStepLength", this->GetComponentLabel(), level, 0);
 
     /** Number of gradients N to estimate the average magnitudes
      * of the exact preconditioned gradient and the approximation error.
      */
     this->m_NumberOfGradientMeasurements = 0;
     this->GetConfiguration()->ReadParameter(
-      this->m_NumberOfGradientMeasurements,
-      "NumberOfGradientMeasurements",
-      this->GetComponentLabel(), level, 0 );
-    this->m_NumberOfGradientMeasurements = std::max(
-      static_cast< SizeValueType >( 2 ),
-      this->m_NumberOfGradientMeasurements );
+      this->m_NumberOfGradientMeasurements, "NumberOfGradientMeasurements", this->GetComponentLabel(), level, 0);
+    this->m_NumberOfGradientMeasurements =
+      std::max(static_cast<SizeValueType>(2), this->m_NumberOfGradientMeasurements);
 
     /** Set the number of Jacobian measurements M.
      * By default, if nothing specified by the user, M is determined as:
      * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfJacobianMeasurements = std::max(
-      static_cast< unsigned int >( 5000 ), static_cast< unsigned int >( 2 * P ) );
+    this->m_NumberOfJacobianMeasurements = std::max(static_cast<unsigned int>(5000), static_cast<unsigned int>(2 * P));
     this->GetConfiguration()->ReadParameter(
-      this->m_NumberOfJacobianMeasurements,
-      "NumberOfJacobianMeasurements",
-      this->GetComponentLabel(), level, 0 );
+      this->m_NumberOfJacobianMeasurements, "NumberOfJacobianMeasurements", this->GetComponentLabel(), level, 0);
 
     /** Set the NumberOfSpatialSamples. */
     unsigned long numberOfSpatialSamples = 5000;
-    this->GetConfiguration()->ReadParameter(numberOfSpatialSamples,
-      "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
+    this->GetConfiguration()->ReadParameter(
+      numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
     this->m_NumberOfSpatialSamples = numberOfSpatialSamples;
 
     /** Set the number of samples for precondition matrix computation.
@@ -229,40 +214,38 @@ PreconditionedStochasticGradientDescent< TElastix >
      * P = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfSamplesForPrecondition = std::max(
-      static_cast< unsigned int >( 1000 ), static_cast< unsigned int >( P ) );
+    this->m_NumberOfSamplesForPrecondition = std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(P));
     this->GetConfiguration()->ReadParameter(
-      this->m_NumberOfSamplesForPrecondition,
-      "NumberOfSamplesForPrecondition",
-      this->GetComponentLabel(), level, 0 );
+      this->m_NumberOfSamplesForPrecondition, "NumberOfSamplesForPrecondition", this->GetComponentLabel(), level, 0);
 
     /** Set the number of image samples used to compute the 'exact' gradient.
      * By default, if nothing supplied by the user, 100000. This works in general.
      * If the image is smaller, the number of samples is automatically reduced later.
      */
     this->m_NumberOfSamplesForNoiseCompensationFactor = 100000;
-    this->GetConfiguration()->ReadParameter(
-      this->m_NumberOfSamplesForNoiseCompensationFactor,
-      "NumberOfSamplesForNoiseCompensationFactor",
-      this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter(this->m_NumberOfSamplesForNoiseCompensationFactor,
+                                            "NumberOfSamplesForNoiseCompensationFactor",
+                                            this->GetComponentLabel(),
+                                            level,
+                                            0);
 
     /** Set/Get the scaling factor zeta of the sigmoid width. Large values
-      * cause a more wide sigmoid. Default: 0.1. Should be > 0.
-      */
+     * cause a more wide sigmoid. Default: 0.1. Should be > 0.
+     */
     double sigmoidScaleFactor = 0.1;
-    this->GetConfiguration()->ReadParameter( sigmoidScaleFactor,
-      "SigmoidScaleFactor", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter(
+      sigmoidScaleFactor, "SigmoidScaleFactor", this->GetComponentLabel(), level, 0);
     this->m_SigmoidScaleFactor = sigmoidScaleFactor;
 
     /** Set the regularization factor kappa. */
     this->m_RegularizationKappa = 0.8;
-    this->GetConfiguration()->ReadParameter(this->m_RegularizationKappa,
-      "RegularizationKappa", this->GetComponentLabel(), level, 0);
+    this->GetConfiguration()->ReadParameter(
+      this->m_RegularizationKappa, "RegularizationKappa", this->GetComponentLabel(), level, 0);
 
     /** Set the regularization factor kappa. */
     this->m_ConditionNumber = 2.0;
-    this->GetConfiguration()->ReadParameter( this->m_ConditionNumber,
-      "ConditionNumber", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter(
+      this->m_ConditionNumber, "ConditionNumber", this->GetComponentLabel(), level, 0);
 
   } // end if automatic parameter estimation
   else
@@ -270,32 +253,29 @@ PreconditionedStochasticGradientDescent< TElastix >
     /** If no automatic parameter estimation is used, a and alpha also need
      * to be specified.
      */
-    double a     = 1.0; // arbitrary guess
+    double a = 1.0; // arbitrary guess
     double alpha = 0.602;
-    this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
-    this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
-    this->SetParam_a( a );
-    this->SetParam_alpha( alpha );
+    this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+    this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
+    this->SetParam_a(a);
+    this->SetParam_alpha(alpha);
 
     /** Set/Get the maximum of the sigmoid. Should be > 0. Default: 1.0. */
     double sigmoidMax = 1.0;
-    this->GetConfiguration()->ReadParameter( sigmoidMax,
-      "SigmoidMax", this->GetComponentLabel(), level, 0 );
-    this->SetSigmoidMax( sigmoidMax );
+    this->GetConfiguration()->ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
+    this->SetSigmoidMax(sigmoidMax);
 
     /** Set/Get the minimum of the sigmoid. Should be < 0. Default: -0.8. */
     double sigmoidMin = -0.8;
-    this->GetConfiguration()->ReadParameter( sigmoidMin,
-      "SigmoidMin", this->GetComponentLabel(), level, 0 );
-    this->SetSigmoidMin( sigmoidMin );
+    this->GetConfiguration()->ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
+    this->SetSigmoidMin(sigmoidMin);
 
     /** Set/Get the scaling of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 1e-8. Should be >0.
      */
     double sigmoidScale = 1e-8;
-    this->GetConfiguration()->ReadParameter( sigmoidScale,
-      "SigmoidScale", this->GetComponentLabel(), level, 0 );
-    this->SetSigmoidScale( sigmoidScale );
+    this->GetConfiguration()->ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
+    this->SetSigmoidScale(sigmoidScale);
 
   } // end else: no automatic parameter estimation
 
@@ -306,30 +286,29 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ***************** AfterEachIteration *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::AfterEachIteration( void )
+PreconditionedStochasticGradientDescent<TElastix>::AfterEachIteration(void)
 {
   /** Print some information. */
-  xl::xout[ "iteration" ][ "2:Metric" ] << this->GetValue();
-  xl::xout[ "iteration" ][ "3a:Time" ] << this->GetCurrentTime();
-  xl::xout[ "iteration" ][ "3b:StepSize" ] << this->GetLearningRate() * this->m_NoiseFactor;
+  xl::xout["iteration"]["2:Metric"] << this->GetValue();
+  xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
+  xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate() * this->m_NoiseFactor;
 
   bool asFastAsPossible = false;
-  if( asFastAsPossible )
+  if (asFastAsPossible)
   {
-    xl::xout[ "iteration" ][ "4a:||Gradient||" ] << "---";
-    xl::xout[ "iteration" ][ "4b:||SearchDirection||" ] << "---";
+    xl::xout["iteration"]["4a:||Gradient||"] << "---";
+    xl::xout["iteration"]["4b:||SearchDirection||"] << "---";
   }
   else
   {
-    xl::xout[ "iteration" ][ "4a:||Gradient||" ] << this->GetGradient().magnitude();
-    xl::xout[ "iteration" ][ "4b:||SearchDirection||" ] << this->GetSearchDirection().magnitude();
+    xl::xout["iteration"]["4a:||Gradient||"] << this->GetGradient().magnitude();
+    xl::xout["iteration"]["4b:||SearchDirection||"] << this->GetSearchDirection().magnitude();
   }
 
   /** Select new spatial samples for the computation of the metric. */
-  if( this->GetNewSamplesEveryIteration() )
+  if (this->GetNewSamplesEveryIteration())
   {
     this->SelectNewSamples();
   }
@@ -341,14 +320,12 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ***************** AfterEachResolution *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::AfterEachResolution( void )
+PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast< unsigned int >(
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /**
    * typedef enum {
@@ -358,7 +335,7 @@ PreconditionedStochasticGradientDescent< TElastix >
    */
   std::string stopcondition;
 
-  switch( this->GetStopCondition() )
+  switch (this->GetStopCondition())
   {
     case MaximumNumberOfIterations:
       stopcondition = "Maximum number of iterations has been reached";
@@ -382,21 +359,19 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   /** Store the used parameters, for later printing to screen. */
   SettingsType settings;
-  settings.a     = this->GetParam_a();
-  settings.A     = this->GetParam_A();
+  settings.a = this->GetParam_a();
+  settings.A = this->GetParam_A();
   settings.alpha = this->GetParam_alpha();
-  settings.fmax  = this->GetSigmoidMax();
-  settings.fmin  = this->GetSigmoidMin();
+  settings.fmax = this->GetSigmoidMax();
+  settings.fmin = this->GetSigmoidMin();
   settings.omega = this->GetSigmoidScale();
-  this->m_SettingsVector.push_back( settings );
+  this->m_SettingsVector.push_back(settings);
 
   /** Print settings that were used in this resolution. */
   SettingsVectorType tempSettingsVector;
-  tempSettingsVector.push_back( settings );
-  elxout
-    << "Settings of " << this->elxGetClassName()
-    << " in resolution " << level << ":" << std::endl;
-  this->PrintSettingsVector( tempSettingsVector );
+  tempSettingsVector.push_back(settings);
+  elxout << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":" << std::endl;
+  this->PrintSettingsVector(tempSettingsVector);
 
 } // end AfterEachResolution()
 
@@ -405,22 +380,16 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ******************* AfterRegistration ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::AfterRegistration( void )
+PreconditionedStochasticGradientDescent<TElastix>::AfterRegistration(void)
 {
   /** Print the best metric value. */
   double bestValue = this->GetValue();
-  elxout << std::endl
-         << "Final metric value  = "
-         << bestValue
-         << std::endl;
+  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
 
-  elxout
-    << "Settings of " << this->elxGetClassName()
-    << " for all resolutions:" << std::endl;
-  this->PrintSettingsVector( this->m_SettingsVector );
+  elxout << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
+  this->PrintSettingsVector(this->m_SettingsVector);
 
 } // end AfterRegistration()
 
@@ -429,13 +398,12 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ****************** StartOptimization *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::StartOptimization( void )
+PreconditionedStochasticGradientDescent<TElastix>::StartOptimization(void)
 {
   /** As this optimizer estimates the scales itself, no other scales are used. */
-  this->SetUseScales( false );
+  this->SetUseScales(false);
 
   this->m_AutomaticParameterEstimationDone = false;
   this->Superclass1::StartOptimization();
@@ -449,15 +417,14 @@ PreconditionedStochasticGradientDescent< TElastix >
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::AdvanceOneStep( void )
+PreconditionedStochasticGradientDescent<TElastix>::AdvanceOneStep(void)
 {
   /** Get space dimension. */
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Compute and set the learning rate. */
-  const double lamda = this->GetParam_a() / ( 1.0 + this->Superclass1::GetCurrentTime() / this->GetParam_A() );
-  this->SetLearningRate( lamda );
+  const double lamda = this->GetParam_a() / (1.0 + this->Superclass1::GetCurrentTime() / this->GetParam_A());
+  this->SetLearningRate(lamda);
 
   DerivativeType & searchDirection = this->m_SearchDirection;
 
@@ -469,14 +436,14 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   /** Update the new position. */
   const double lamda2 = lamda * this->m_NoiseFactor;
-  for( unsigned int j = 0; j < spaceDimension; ++j )
+  for (unsigned int j = 0; j < spaceDimension; ++j)
   {
-    searchDirection[ j ] = this->m_PreconditionVector[ j ] * this->m_Gradient[ j ];
-    newPosition[ j ] = currentPosition[ j ] - lamda2 * searchDirection[ j ];
+    searchDirection[j] = this->m_PreconditionVector[j] * this->m_Gradient[j];
+    newPosition[j] = currentPosition[j] - lamda2 * searchDirection[j];
   }
 
   this->Superclass1::UpdateCurrentTime();
-  this->InvokeEvent( itk::IterationEvent() );
+  this->InvokeEvent(itk::IterationEvent());
 
 } // end AdvanceOneStep()
 
@@ -485,16 +452,14 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ********************** ResumeOptimization **********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::ResumeOptimization( void )
+PreconditionedStochasticGradientDescent<TElastix>::ResumeOptimization(void)
 {
   /** The following code relies on the fact that all components have been set up and
    * that the initial position has been set, so must be called in this function.
    */
-  if( this->GetAutomaticParameterEstimation()
-    && !this->m_AutomaticParameterEstimationDone )
+  if (this->GetAutomaticParameterEstimation() && !this->m_AutomaticParameterEstimationDone)
   {
     this->AutomaticPreconditionerEstimation();
     this->m_AutomaticParameterEstimationDone = true; // hack
@@ -509,14 +474,13 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ****************** MetricErrorResponse *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::MetricErrorResponse( itk::ExceptionObject & err )
+PreconditionedStochasticGradientDescent<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
 {
-  if( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
+  if (this->GetCurrentIteration() != this->m_PreviousErrorAtIteration)
   {
-    this->m_PreviousErrorAtIteration        = this->GetCurrentIteration();
+    this->m_PreviousErrorAtIteration = this->GetCurrentIteration();
     this->m_CurrentNumberOfSamplingAttempts = 1;
   }
   else
@@ -524,7 +488,7 @@ PreconditionedStochasticGradientDescent< TElastix >
     this->m_CurrentNumberOfSamplingAttempts++;
   }
 
-  if( this->m_CurrentNumberOfSamplingAttempts <= this->m_MaximumNumberOfSamplingAttempts )
+  if (this->m_CurrentNumberOfSamplingAttempts <= this->m_MaximumNumberOfSamplingAttempts)
   {
     this->SelectNewSamples();
     this->ResumeOptimization();
@@ -532,7 +496,7 @@ PreconditionedStochasticGradientDescent< TElastix >
   else
   {
     /** Stop optimization and pass on exception. */
-    this->Superclass1::MetricErrorResponse( err );
+    this->Superclass1::MetricErrorResponse(err);
   }
 
 } // end MetricErrorResponse()
@@ -542,112 +506,101 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ******************* AutomaticPreconditionerEstimation **********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::AutomaticPreconditionerEstimation( void )
+PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstimation(void)
 {
   /** Total time. */
   itk::TimeProbe timer;
   timer.Start();
-  elxout << "Starting preconditioner estimation for "
-         << this->elxGetClassName() << " ..." << std::endl;
+  elxout << "Starting preconditioner estimation for " << this->elxGetClassName() << " ..." << std::endl;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
-    this->GetCurrentPosition() );
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(this->GetCurrentPosition());
 
   /** Get the number of parameters. */
-  unsigned int P = static_cast< unsigned int >(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform()->GetNumberOfParameters() );
+  unsigned int P =
+    static_cast<unsigned int>(this->GetRegistration()->GetAsITKBaseType()->GetTransform()->GetNumberOfParameters());
 
-  this->m_SearchDirection = ParametersType( P );
-  this->m_SearchDirection.Fill( 0.0 );// if the print out is not needed, this could be removed. YQ
+  this->m_SearchDirection = ParametersType(P);
+  this->m_SearchDirection.Fill(0.0); // if the print out is not needed, this could be removed. YQ
   /** Get the current resolution level. */
-  unsigned int level = static_cast< unsigned int >(
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Cast to advanced metric type. */
   typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
-  MetricType * testPtr = dynamic_cast< MetricType * >(
-    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
-  if( !testPtr )
+  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  if (!testPtr)
   {
-    itkExceptionMacro( << "ERROR: PreconditionedStochasticGradientDescent expects "
-                       << "the metric to be of type AdvancedImageToImageMetric!" );
+    itkExceptionMacro(<< "ERROR: PreconditionedStochasticGradientDescent expects "
+                      << "the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Getting pointers to the samplers. */
-  const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
-  std::vector< ImageSamplerBasePointer >  originalSampler( M );
-  for( unsigned int m = 0; m < M; ++m )
+  const unsigned int                   M = this->GetElastix()->GetNumberOfMetrics();
+  std::vector<ImageSamplerBasePointer> originalSampler(M);
+  for (unsigned int m = 0; m < M; ++m)
   {
-    ImageSamplerBasePointer sampler =
-      this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
-    originalSampler[ m ] = dynamic_cast< ImageSamplerBaseType * >( sampler.GetPointer() );
+    ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
+    originalSampler[m] = dynamic_cast<ImageSamplerBaseType *>(sampler.GetPointer());
   }
 
   /** Create a random sampler with more samples that can be used for the pre-conditioner computation. */
-  //std::vector< ImageRandomCoordinateSamplerPointer > preconditionSamplers( M, 0 ); // very slow, leave this for reminder. YQ
-  std::vector< ImageRandomSamplerPointer > preconditionSamplers( M );
-  for( unsigned int m = 0; m < M; ++m )
+  // std::vector< ImageRandomCoordinateSamplerPointer > preconditionSamplers( M, 0 ); // very slow, leave this for
+  // reminder. YQ
+  std::vector<ImageRandomSamplerPointer> preconditionSamplers(M);
+  for (unsigned int m = 0; m < M; ++m)
   {
-    ImageSamplerBasePointer sampler =
-      this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();
-    //preconditionSamplers[ m ] = ImageRandomCoordinateSamplerType::New();
-    preconditionSamplers[ m ] = ImageRandomSamplerType::New();
-    preconditionSamplers[ m ]->SetInput( sampler->GetInput() );
-    preconditionSamplers[ m ]->SetInputImageRegion( sampler->GetInputImageRegion() );
-    preconditionSamplers[ m ]->SetMask( sampler->GetMask() );
-    preconditionSamplers[ m ]->SetNumberOfSamples( this->m_NumberOfSamplesForPrecondition );
-    preconditionSamplers[ m ]->Update();
-    this->GetElastix()->GetElxMetricBase( m )
-      ->SetAdvancedMetricImageSampler( preconditionSamplers[ m ] );
+    ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
+    // preconditionSamplers[ m ] = ImageRandomCoordinateSamplerType::New();
+    preconditionSamplers[m] = ImageRandomSamplerType::New();
+    preconditionSamplers[m]->SetInput(sampler->GetInput());
+    preconditionSamplers[m]->SetInputImageRegion(sampler->GetInputImageRegion());
+    preconditionSamplers[m]->SetMask(sampler->GetMask());
+    preconditionSamplers[m]->SetNumberOfSamples(this->m_NumberOfSamplesForPrecondition);
+    preconditionSamplers[m]->Update();
+    this->GetElastix()->GetElxMetricBase(m)->SetAdvancedMetricImageSampler(preconditionSamplers[m]);
   }
 
   /** Construct preconditionerEstimator to initialize the preconditioner estimation. */
   PreconditionerEstimationPointer preconditionerEstimator = PreconditionerEstimationType::New();
-  preconditionerEstimator->SetFixedImage( testPtr->GetFixedImage() );
-  preconditionerEstimator->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
-  preconditionerEstimator->SetFixedImageMask( testPtr->GetFixedImageMask() );
-  preconditionerEstimator->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
-  preconditionerEstimator->SetCostFunction( this->m_CostFunction );
-  preconditionerEstimator->SetNumberOfJacobianMeasurements(
-    this->m_NumberOfJacobianMeasurements );
-  preconditionerEstimator->SetRegularizationKappa( this->m_RegularizationKappa );
-  preconditionerEstimator->SetMaximumStepLength( this->m_MaximumStepLength );
-  preconditionerEstimator->SetConditionNumber( this->m_ConditionNumber );
-  preconditionerEstimator->SetUseScales( false ); // Make sure scales are not used
+  preconditionerEstimator->SetFixedImage(testPtr->GetFixedImage());
+  preconditionerEstimator->SetFixedImageRegion(testPtr->GetFixedImageRegion());
+  preconditionerEstimator->SetFixedImageMask(testPtr->GetFixedImageMask());
+  preconditionerEstimator->SetTransform(this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform());
+  preconditionerEstimator->SetCostFunction(this->m_CostFunction);
+  preconditionerEstimator->SetNumberOfJacobianMeasurements(this->m_NumberOfJacobianMeasurements);
+  preconditionerEstimator->SetRegularizationKappa(this->m_RegularizationKappa);
+  preconditionerEstimator->SetMaximumStepLength(this->m_MaximumStepLength);
+  preconditionerEstimator->SetConditionNumber(this->m_ConditionNumber);
+  preconditionerEstimator->SetUseScales(false); // Make sure scales are not used
 
   /** Construct the preconditioner and initialize. */
-  this->m_PreconditionVector = ParametersType( P );
-  this->m_PreconditionVector.Fill( 0.0 );
+  this->m_PreconditionVector = ParametersType(P);
+  this->m_PreconditionVector.Fill(0.0);
 
   /** Compute the preconditioner. */
-  itk::TimeProbe timer_P; timer_P.Start();
+  itk::TimeProbe timer_P;
+  timer_P.Start();
   elxout << "  Computing preconditioner ..." << std::endl;
   double maxJJ = 0; // needed for the noise compensation term
 
   bool useJacobiType = false;
-  this->GetConfiguration()->ReadParameter( useJacobiType,
-    "JacobiTypePreconditioner", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(
+    useJacobiType, "JacobiTypePreconditioner", this->GetComponentLabel(), level, 0);
 
-  if( useJacobiType )
+  if (useJacobiType)
   {
-    preconditionerEstimator->ComputeJacobiTypePreconditioner( this->GetScaledCurrentPosition(),
-      maxJJ, this->m_PreconditionVector );
+    preconditionerEstimator->ComputeJacobiTypePreconditioner(
+      this->GetScaledCurrentPosition(), maxJJ, this->m_PreconditionVector);
   }
   else
   {
-    preconditionerEstimator->Compute( this->GetScaledCurrentPosition(),
-      maxJJ, this->m_PreconditionVector );
+    preconditionerEstimator->Compute(this->GetScaledCurrentPosition(), maxJJ, this->m_PreconditionVector);
   }
 
   timer_P.Stop();
-  elxout << "  Computing the preconditioner took "
-    << this->ConvertSecondsToDHMS( timer_P.GetMean(), 6 )
-    << std::endl;
+  elxout << "  Computing the preconditioner took " << this->ConvertSecondsToDHMS(timer_P.GetMean(), 6) << std::endl;
 
 #if 0
   elxout << std::scientific;
@@ -658,61 +611,59 @@ PreconditionedStochasticGradientDescent< TElastix >
 #endif
 
   /** Set the sampler back to the original. */
-  for( unsigned int m = 0; m < M; ++m )
+  for (unsigned int m = 0; m < M; ++m)
   {
-    this->GetElastix()->GetElxMetricBase( m )->SetAdvancedMetricImageSampler( originalSampler[ m ] );
+    this->GetElastix()->GetElxMetricBase(m)->SetAdvancedMetricImageSampler(originalSampler[m]);
   }
 
   /** This part is for PSGD-Jacobian type preconditioner, automatic etimation of the step size. */
-  double      jacg = 0.0;
-  if( useJacobiType )
+  double jacg = 0.0;
+  if (useJacobiType)
   {
     itk::TimeProbe timer4;
     /** Construct computeJacobianTerms to initialize the parameter estimation. */
-    typename ComputeDisplacementDistributionType::Pointer
-      computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
-    computeDisplacementDistribution->SetFixedImage( testPtr->GetFixedImage() );
-    computeDisplacementDistribution->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
-    computeDisplacementDistribution->SetFixedImageMask( testPtr->GetFixedImageMask() );
+    typename ComputeDisplacementDistributionType::Pointer computeDisplacementDistribution =
+      ComputeDisplacementDistributionType::New();
+    computeDisplacementDistribution->SetFixedImage(testPtr->GetFixedImage());
+    computeDisplacementDistribution->SetFixedImageRegion(testPtr->GetFixedImageRegion());
+    computeDisplacementDistribution->SetFixedImageMask(testPtr->GetFixedImageMask());
     computeDisplacementDistribution->SetTransform(
-      this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
-    computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
-    computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
-      this->m_NumberOfJacobianMeasurements );
+      this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform());
+    computeDisplacementDistribution->SetCostFunction(this->m_CostFunction);
+    computeDisplacementDistribution->SetNumberOfJacobianMeasurements(this->m_NumberOfJacobianMeasurements);
 
     std::string maximumDisplacementEstimationMethod = "2sigma";
-    this->GetConfiguration()->ReadParameter(maximumDisplacementEstimationMethod,
-      "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0 );
+    this->GetConfiguration()->ReadParameter(
+      maximumDisplacementEstimationMethod, "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
 
     /** Compute the Jacobian terms. */
     elxout << "  Computing displacement distribution ..." << std::endl;
     timer4.Start();
     computeDisplacementDistribution->Compute(
-      this->GetScaledCurrentPosition(), jacg, maxJJ,
-      maximumDisplacementEstimationMethod );
+      this->GetScaledCurrentPosition(), jacg, maxJJ, maximumDisplacementEstimationMethod);
     timer4.Stop();
-    elxout << "  Computing the displacement distribution took "
-      << this->ConvertSecondsToDHMS( timer4.GetMean(), 6 ) << std::endl;
+    elxout << "  Computing the displacement distribution took " << this->ConvertSecondsToDHMS(timer4.GetMean(), 6)
+           << std::endl;
   }
 
   /** Sample the fixed image to estimate the noise factor. */
-  itk::TimeProbe timer_noise; timer_noise.Start();
+  itk::TimeProbe timer_noise;
+  timer_noise.Start();
   double sigma4factor = 1.0;
-  double sigma4       = 0.0;
+  double sigma4 = 0.0;
   elxout << "  The estimated MaxJJ is: " << maxJJ << std::endl;
-  if( maxJJ > 1e-14 )
+  if (maxJJ > 1e-14)
   {
-    sigma4 = sigma4factor * this->m_MaximumStepLength / std::sqrt( maxJJ );
+    sigma4 = sigma4factor * this->m_MaximumStepLength / std::sqrt(maxJJ);
   }
-  double gg           = 0.0;
-  double ee           = 0.0;
-  this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
-  this->m_NoiseFactor = gg / ( gg + ee + 1e-14 );
+  double gg = 0.0;
+  double ee = 0.0;
+  this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
+  this->m_NoiseFactor = gg / (gg + ee + 1e-14);
   timer_noise.Stop();
   elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << std::endl;
   elxout << "  The NoiseFactor is: " << m_NoiseFactor << std::endl;
-  elxout << "  Compute the noise compensation took "
-         << this->ConvertSecondsToDHMS( timer_noise.GetMean(), 6 )
+  elxout << "  Compute the noise compensation took " << this->ConvertSecondsToDHMS(timer_noise.GetMean(), 6)
          << std::endl;
 
   // MS: the following can probably be removed or moved.
@@ -723,26 +674,24 @@ PreconditionedStochasticGradientDescent< TElastix >
   const double fmax = 1.0;
   const double fmin = -0.8;
   /** Set parameters in superclass. */
-  this->SetParam_alpha( alpha );
-  this->SetSigmoidMax( fmax );
-  this->SetSigmoidMin( fmin );
+  this->SetParam_alpha(alpha);
+  this->SetSigmoidMax(fmax);
+  this->SetSigmoidMin(fmin);
 
   /** Initial of the variables. */
   double       a = 1.0;
   const double A = this->GetParam_A();
   const double delta = this->GetMaximumStepLength();
 
-  if( useJacobiType )
+  if (useJacobiType)
   {
-    a = delta * std::pow( A + 1.0, alpha ) / ( jacg + 1e-14 );
+    a = delta * std::pow(A + 1.0, alpha) / (jacg + 1e-14);
   }
-  this->SetParam_a( a );
+  this->SetParam_a(a);
 
   /** Print the elapsed time. */
   timer.Stop();
-  elxout << "Automatic preconditioner estimation took "
-    << this->ConvertSecondsToDHMS( timer.GetMean(), 2 )
-    << std::endl;
+  elxout << "Automatic preconditioner estimation took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
 } // end AutomaticPreconditionerEstimation()
 
@@ -751,39 +700,37 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ******************** SampleGradients **********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::SampleGradients( const ParametersType & mu0,
-  double perturbationSigma, double & gg, double & ee )
+PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const ParametersType & mu0,
+                                                                   double                 perturbationSigma,
+                                                                   double &               gg,
+                                                                   double &               ee)
 {
   /** Some shortcuts. */
   const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
 
   /** Variables for sampler support. Each metric may have a sampler. */
-  std::vector< bool >                                useRandomSampleRegionVec( M, false );
-  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M );
-  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M );
-  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M );
+  std::vector<bool>                                useRandomSampleRegionVec(M, false);
+  std::vector<ImageRandomSamplerBasePointer>       randomSamplerVec(M);
+  std::vector<ImageRandomCoordinateSamplerPointer> randomCoordinateSamplerVec(M);
+  std::vector<ImageGridSamplerPointer>             gridSamplerVec(M);
 
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler
    * for the exact gradients, and set the stochasticgradients flag to true.
    */
   bool stochasticgradients = false;
-  if( this->GetNewSamplesEveryIteration() )
+  if (this->GetNewSamplesEveryIteration())
   {
-    for( unsigned int m = 0; m < M; ++m )
+    for (unsigned int m = 0; m < M; ++m)
     {
       /** Get the sampler. */
-      ImageSamplerBasePointer sampler
-        = this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();
-      randomSamplerVec[ m ]
-        = dynamic_cast< ImageRandomSamplerBaseType * >( sampler.GetPointer() );
-      randomCoordinateSamplerVec[ m ]
-        = dynamic_cast< ImageRandomCoordinateSamplerType * >( sampler.GetPointer() );
+      ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
+      randomSamplerVec[m] = dynamic_cast<ImageRandomSamplerBaseType *>(sampler.GetPointer());
+      randomCoordinateSamplerVec[m] = dynamic_cast<ImageRandomCoordinateSamplerType *>(sampler.GetPointer());
 
-      if( randomSamplerVec[ m ].IsNotNull() )
+      if (randomSamplerVec[m].IsNotNull())
       {
         /** At least one of the metric has a random sampler. */
         stochasticgradients |= true;
@@ -797,127 +744,123 @@ PreconditionedStochasticGradientDescent< TElastix >
          * \todo This does not work for the MultiInputRandomCoordinateImageSampler,
          * because it does not inherit from the RandomCoordinateImageSampler
          */
-        if( randomCoordinateSamplerVec[ m ].IsNotNull() )
+        if (randomCoordinateSamplerVec[m].IsNotNull())
         {
-          useRandomSampleRegionVec[ m ]
-            = randomCoordinateSamplerVec[ m ]->GetUseRandomSampleRegion();
-          if( useRandomSampleRegionVec[ m ] )
+          useRandomSampleRegionVec[m] = randomCoordinateSamplerVec[m]->GetUseRandomSampleRegion();
+          if (useRandomSampleRegionVec[m])
           {
-            if ( this->m_StepSizeStrategy == "Adaptive" )
+            if (this->m_StepSizeStrategy == "Adaptive")
             {
-              xl::xout[ "warning" ]
-                << "WARNING: StepSizeStrategy is set to Constant, "
-                << "because UseRandomSampleRegion is set to \"true\"."
-                << std::endl;
+              xl::xout["warning"] << "WARNING: StepSizeStrategy is set to Constant, "
+                                  << "because UseRandomSampleRegion is set to \"true\"." << std::endl;
               this->m_StepSizeStrategy = "Constant";
             }
           }
           /** Do not turn it off yet, as it would go wrong if you multiple metrics are using
            * all the same sampler. */
-          //randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
+          // randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
 
         } // end if random coordinate sampler
 
         /** Set up the grid sampler for the "exact" gradients.
          * Copy settings from the random sampler and update.
          */
-        gridSamplerVec[ m ] = ImageGridSamplerType::New();
-        gridSamplerVec[ m ]->SetInput( randomSamplerVec[ m ]->GetInput() );
-        gridSamplerVec[ m ]->SetInputImageRegion( randomSamplerVec[ m ]->GetInputImageRegion() );
-        gridSamplerVec[ m ]->SetMask( randomSamplerVec[ m ]->GetMask() );
-        gridSamplerVec[ m ]->SetNumberOfSamples( this->m_NumberOfSamplesForNoiseCompensationFactor);
-        gridSamplerVec[ m ]->Update();
+        gridSamplerVec[m] = ImageGridSamplerType::New();
+        gridSamplerVec[m]->SetInput(randomSamplerVec[m]->GetInput());
+        gridSamplerVec[m]->SetInputImageRegion(randomSamplerVec[m]->GetInputImageRegion());
+        gridSamplerVec[m]->SetMask(randomSamplerVec[m]->GetMask());
+        gridSamplerVec[m]->SetNumberOfSamples(this->m_NumberOfSamplesForNoiseCompensationFactor);
+        gridSamplerVec[m]->Update();
 
       } // end if random sampler
 
     } // end for loop over metrics
 
     /** Start a second loop over all metrics to turn off the random region sampling. */
-    for( unsigned int m = 0; m < M; ++m )
+    for (unsigned int m = 0; m < M; ++m)
     {
-      if( randomCoordinateSamplerVec[ m ].IsNotNull() )
+      if (randomCoordinateSamplerVec[m].IsNotNull())
       {
-        randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
+        randomCoordinateSamplerVec[m]->SetUseRandomSampleRegion(false);
       }
     } // end loop over metrics
 
-  }   // end if NewSamplesEveryIteration.
+  } // end if NewSamplesEveryIteration.
 
   /** Prepare for progress printing. */
-  const auto progressObserver = BaseComponent::IsElastixLibrary() ?
-    nullptr : ProgressCommandType::CreateAndSetUpdateFrequency( this->m_NumberOfGradientMeasurements );
+  const auto progressObserver =
+    BaseComponent::IsElastixLibrary()
+      ? nullptr
+      : ProgressCommandType::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements);
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()
-    ->GetAsITKBaseType()->GetNumberOfParameters();
-  DerivativeType approxgradient( P );
-  DerivativeType exactgradient( P );
-  DerivativeType searchDirection( P );
-  DerivativeType diffgradient;
-  double         exactgg = 0.0;
-  double         diffgg  = 0.0;
-  double         approxgg  = 0.0;
+  const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  DerivativeType     approxgradient(P);
+  DerivativeType     exactgradient(P);
+  DerivativeType     searchDirection(P);
+  DerivativeType     diffgradient;
+  double             exactgg = 0.0;
+  double             diffgg = 0.0;
+  double             approxgg = 0.0;
 
   /** Compute gg for some random parameters. */
-  for( unsigned int i = 0; i < this->m_NumberOfGradientMeasurements; ++i )
+  for (unsigned int i = 0; i < this->m_NumberOfGradientMeasurements; ++i)
   {
-    if ( progressObserver != nullptr )
+    if (progressObserver != nullptr)
     {
       /** Show progress 0-100% */
-      progressObserver->UpdateAndPrintProgress( i );
+      progressObserver->UpdateAndPrintProgress(i);
     }
     /** Generate a perturbation, according to:
      *    \mu_i ~ N( \mu_0, perturbationsigma^2 I ).
      */
     ParametersType perturbedMu0 = mu0;
-    this->AddRandomPerturbation( perturbedMu0, perturbationSigma );
+    this->AddRandomPerturbation(perturbedMu0, perturbationSigma);
 
     /** Compute contribution to exactgg and diffgg. */
-    if( stochasticgradients )
+    if (stochasticgradients)
     {
       /** Set grid sampler(s) and get exact derivative. */
-      for( unsigned int m = 0; m < M; ++m )
+      for (unsigned int m = 0; m < M; ++m)
       {
-        if( gridSamplerVec[ m ].IsNotNull() )
+        if (gridSamplerVec[m].IsNotNull())
         {
-          this->GetElastix()->GetElxMetricBase( m )
-          ->SetAdvancedMetricImageSampler( gridSamplerVec[ m ] );
+          this->GetElastix()->GetElxMetricBase(m)->SetAdvancedMetricImageSampler(gridSamplerVec[m]);
         }
       }
-      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
+      this->GetScaledDerivativeWithExceptionHandling(perturbedMu0, exactgradient);
 
-      for( unsigned int i = 0; i < P; ++i )
+      for (unsigned int i = 0; i < P; ++i)
       {
-        searchDirection[ i ] = exactgradient[ i ] * this->m_PreconditionVector[ i ];
+        searchDirection[i] = exactgradient[i] * this->m_PreconditionVector[i];
       }
       exactgg += inner_product(searchDirection, exactgradient);
 
       /** Set random sampler(s), select new spatial samples and get approximate derivative. */
-      for( unsigned int m = 0; m < M; ++m )
+      for (unsigned int m = 0; m < M; ++m)
       {
-        if( randomSamplerVec[ m ].IsNotNull() )
+        if (randomSamplerVec[m].IsNotNull())
         {
-          this->GetElastix()->GetElxMetricBase( m )
-            ->SetAdvancedMetricImageSampler( randomSamplerVec[ m ] );
+          this->GetElastix()->GetElxMetricBase(m)->SetAdvancedMetricImageSampler(randomSamplerVec[m]);
         }
       }
       this->SelectNewSamples();
-      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, approxgradient );
+      this->GetScaledDerivativeWithExceptionHandling(perturbedMu0, approxgradient);
 
       /** Compute error vector. */
       diffgradient = exactgradient - approxgradient;
-      for( unsigned int i = 0; i < P; ++i )
+      for (unsigned int i = 0; i < P; ++i)
       {
-        searchDirection[ i ] = diffgradient[ i ] * this->m_PreconditionVector[ i ];
+        searchDirection[i] = diffgradient[i] * this->m_PreconditionVector[i];
       }
-      approxgg = inner_product( searchDirection, diffgradient );
+      approxgg = inner_product(searchDirection, diffgradient);
       diffgg += approxgg;
     }
     else // no stochastic gradients
     {
       /** Get exact gradient. */
-      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
+      this->GetScaledDerivativeWithExceptionHandling(perturbedMu0, exactgradient);
 
       /** Compute g^T g. NB: diffgg=0. */
       exactgg += exactgradient.squared_magnitude();
@@ -925,30 +868,29 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   } // end for loop over gradient measurements
 
-  if ( progressObserver != nullptr )
+  if (progressObserver != nullptr)
   {
-    progressObserver->PrintProgress( 1.0 );
+    progressObserver->PrintProgress(1.0);
   }
 
   /** Compute means. */
   exactgg /= this->m_NumberOfGradientMeasurements;
-  diffgg  /= this->m_NumberOfGradientMeasurements;
+  diffgg /= this->m_NumberOfGradientMeasurements;
 
   /** For output: gg and ee.
    * gg and ee will be divided by Pd, but actually need to be divided by
    * the rank, in case of maximum likelihood. In case of no maximum likelihood,
    * the rank equals Pd.
    */
-  gg = std::abs( exactgg );
-  ee = std::abs( diffgg );
+  gg = std::abs(exactgg);
+  ee = std::abs(diffgg);
 
   /** Set back useRandomSampleRegion flag to what it was. */
-  for( unsigned int m = 0; m < M; ++m )
+  for (unsigned int m = 0; m < M; ++m)
   {
-    if( randomCoordinateSamplerVec[ m ].IsNotNull() )
+    if (randomCoordinateSamplerVec[m].IsNotNull())
     {
-      randomCoordinateSamplerVec[ m ]
-      ->SetUseRandomSampleRegion( useRandomSampleRegionVec[ m ] );
+      randomCoordinateSamplerVec[m]->SetUseRandomSampleRegion(useRandomSampleRegionVec[m]);
     }
   }
 
@@ -959,53 +901,52 @@ PreconditionedStochasticGradientDescent< TElastix >
  * **************** PrintSettingsVector **********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::PrintSettingsVector( const SettingsVectorType & settings ) const
+PreconditionedStochasticGradientDescent<TElastix>::PrintSettingsVector(const SettingsVectorType & settings) const
 {
   const unsigned long nrofres = settings.size();
 
   /** Print to log file */
   elxout << "( SP_a ";
-  for( unsigned int i = 0; i < nrofres; ++i )
+  for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[ i ].a << " ";
+    elxout << settings[i].a << " ";
   }
   elxout << ")\n";
 
   elxout << "( SP_A ";
-  for( unsigned int i = 0; i < nrofres; ++i )
+  for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[ i ].A << " ";
+    elxout << settings[i].A << " ";
   }
   elxout << ")\n";
 
   elxout << "( SP_alpha ";
-  for( unsigned int i = 0; i < nrofres; ++i )
+  for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[ i ].alpha << " ";
+    elxout << settings[i].alpha << " ";
   }
   elxout << ")\n";
 
   elxout << "( SigmoidMax ";
-  for( unsigned int i = 0; i < nrofres; ++i )
+  for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[ i ].fmax << " ";
+    elxout << settings[i].fmax << " ";
   }
   elxout << ")\n";
 
   elxout << "( SigmoidMin ";
-  for( unsigned int i = 0; i < nrofres; ++i )
+  for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[ i ].fmin << " ";
+    elxout << settings[i].fmin << " ";
   }
   elxout << ")\n";
 
   elxout << "( SigmoidScale ";
-  for( unsigned int i = 0; i < nrofres; ++i )
+  for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[ i ].omega << " ";
+    elxout << settings[i].omega << " ";
   }
   elxout << ")\n";
 
@@ -1018,27 +959,24 @@ PreconditionedStochasticGradientDescent< TElastix >
  * ****************** CheckForAdvancedTransform **********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::CheckForAdvancedTransform( void )
+PreconditionedStochasticGradientDescent<TElastix>::CheckForAdvancedTransform(void)
 {
-  typename TransformType::Pointer transform = this->GetRegistration()
-    ->GetAsITKBaseType()->GetModifiableTransform();
+  typename TransformType::Pointer transform = this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform();
 
-  AdvancedTransformType * testPtr = dynamic_cast< AdvancedTransformType * >(
-    transform.GetPointer() );
-  if( !testPtr )
+  AdvancedTransformType * testPtr = dynamic_cast<AdvancedTransformType *>(transform.GetPointer());
+  if (!testPtr)
   {
     this->m_AdvancedTransform = nullptr;
-    itkDebugMacro( "Transform is not Advanced" );
-    itkExceptionMacro( << "The automatic parameter estimation of the ASGD "
-                       << "optimizer works only with advanced transforms" );
+    itkDebugMacro("Transform is not Advanced");
+    itkExceptionMacro(<< "The automatic parameter estimation of the ASGD "
+                      << "optimizer works only with advanced transforms");
   }
   else
   {
     this->m_AdvancedTransform = testPtr;
-    itkDebugMacro( "Transform is Advanced" );
+    itkDebugMacro("Transform is Advanced");
   }
 
 } // end CheckForAdvancedTransform()
@@ -1048,18 +986,18 @@ PreconditionedStochasticGradientDescent< TElastix >
  * *************** GetScaledDerivativeWithExceptionHandling ***************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::GetScaledDerivativeWithExceptionHandling(
-  const ParametersType & parameters, DerivativeType & derivative )
+PreconditionedStochasticGradientDescent<TElastix>::GetScaledDerivativeWithExceptionHandling(
+  const ParametersType & parameters,
+  DerivativeType &       derivative)
 {
   double dummyvalue = 0;
   try
   {
-    this->GetScaledValueAndDerivative( parameters, dummyvalue, derivative );
+    this->GetScaledValueAndDerivative(parameters, dummyvalue, derivative);
   }
-  catch( itk::ExceptionObject & err )
+  catch (itk::ExceptionObject & err)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
@@ -1073,15 +1011,14 @@ PreconditionedStochasticGradientDescent< TElastix >
  * *************** AddRandomPerturbation ***************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-PreconditionedStochasticGradientDescent< TElastix >
-::AddRandomPerturbation( ParametersType & parameters, double sigma )
+PreconditionedStochasticGradientDescent<TElastix>::AddRandomPerturbation(ParametersType & parameters, double sigma)
 {
   /** Add delta ~ sigma * N(0,I) to the input parameters. */
-  for( unsigned int p = 0; p < parameters.GetSize(); ++p )
+  for (unsigned int p = 0; p < parameters.GetSize(); ++p)
   {
-    parameters[ p ] += sigma * this->m_RandomGenerator->GetNormalVariate( 0.0, 1.0 );
+    parameters[p] += sigma * this->m_RandomGenerator->GetNormalVariate(0.0, 1.0);
   }
 
 } // end AddRandomPerturbation()

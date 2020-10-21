@@ -55,164 +55,174 @@ namespace itk
  *
  * \ingroup Functions
  */
-template< unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineDerivativeKernelFunction2 : public KernelFunctionBase2< double >
+template <unsigned int VSplineOrder = 3>
+class ITK_EXPORT BSplineDerivativeKernelFunction2 : public KernelFunctionBase2<double>
 {
 public:
-
   /** Standard class typedefs. */
   typedef BSplineDerivativeKernelFunction2 Self;
-  typedef KernelFunctionBase2< double >    Superclass;
-  typedef SmartPointer< Self >             Pointer;
+  typedef KernelFunctionBase2<double>      Superclass;
+  typedef SmartPointer<Self>               Pointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineDerivativeKernelFunction2, KernelFunctionBase2 );
+  itkTypeMacro(BSplineDerivativeKernelFunction2, KernelFunctionBase2);
 
   /** Enum of for spline order. */
-  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
+  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Evaluate the function. */
-  inline double Evaluate( const double & u ) const override
+  inline double
+  Evaluate(const double & u) const override
   {
-    return this->Evaluate( Dispatch< VSplineOrder >(), u );
+    return this->Evaluate(Dispatch<VSplineOrder>(), u);
   }
 
 
   /** Evaluate the function. */
-  inline void Evaluate( const double & u, double * weights ) const override
+  inline void
+  Evaluate(const double & u, double * weights) const override
   {
-    return this->Evaluate( Dispatch< VSplineOrder >(), u, weights );
+    return this->Evaluate(Dispatch<VSplineOrder>(), u, weights);
   }
 
 
 protected:
+  BSplineDerivativeKernelFunction2() {}
+  ~BSplineDerivativeKernelFunction2() override {}
 
-  BSplineDerivativeKernelFunction2(){}
-  ~BSplineDerivativeKernelFunction2() override{}
-
-  void PrintSelf( std::ostream & os, Indent indent ) const override
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override
   {
-    Superclass::PrintSelf( os, indent );
-    os << indent  << "Spline Order: " << SplineOrder << std::endl;
+    Superclass::PrintSelf(os, indent);
+    os << indent << "Spline Order: " << SplineOrder << std::endl;
   }
 
 
 private:
-
-  BSplineDerivativeKernelFunction2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                   // purposely not implemented
+  BSplineDerivativeKernelFunction2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Structures to control overloaded versions of Evaluate */
-  struct DispatchBase {};
-  template< unsigned int >
-  struct Dispatch : DispatchBase {};
+  struct DispatchBase
+  {};
+  template <unsigned int>
+  struct Dispatch : DispatchBase
+  {};
 
   /** Zeroth order spline. */
   // Derivative not defined.
 
   /** First order spline */
-  inline double Evaluate( const Dispatch< 1 > &, const double & u ) const
+  inline double
+  Evaluate(const Dispatch<1> &, const double & u) const
   {
-    const double absValue = std::abs( u );
+    const double absValue = std::abs(u);
 
-    if( absValue < NumericTraits< double >::OneValue() )
+    if (absValue < NumericTraits<double>::OneValue())
     {
-      return -vnl_math::sgn( u );
+      return -vnl_math::sgn(u);
     }
-    else if( absValue == NumericTraits< double >::OneValue() )
+    else if (absValue == NumericTraits<double>::OneValue())
     {
-      return -vnl_math::sgn( u ) / 2.0;
-    }
-    else { return NumericTraits< double >::ZeroValue(); }
-  }
-
-
-  inline void Evaluate( const Dispatch< 1 > &, const double & u, double * weights ) const
-  {
-    // MS \todo: check
-    const double absValue = std::abs( u );
-
-    if( absValue < 1.0 && absValue > 0.0 )
-    {
-      weights[ 0 ] = -1.0;
-      weights[ 1 ] = 1.0;
-    }
-    else if( absValue == 1 )
-    {
-      weights[ 0 ] = -0.5;
-      weights[ 1 ] = 0.0;
+      return -vnl_math::sgn(u) / 2.0;
     }
     else
     {
-      weights[ 0 ] = 0.0;
-      weights[ 1 ] = 0.5;
+      return NumericTraits<double>::ZeroValue();
     }
+  }
 
+
+  inline void
+  Evaluate(const Dispatch<1> &, const double & u, double * weights) const
+  {
+    // MS \todo: check
+    const double absValue = std::abs(u);
+
+    if (absValue < 1.0 && absValue > 0.0)
+    {
+      weights[0] = -1.0;
+      weights[1] = 1.0;
+    }
+    else if (absValue == 1)
+    {
+      weights[0] = -0.5;
+      weights[1] = 0.0;
+    }
+    else
+    {
+      weights[0] = 0.0;
+      weights[1] = 0.5;
+    }
   }
 
 
   /** Second order spline. */
-  inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
+  inline double
+  Evaluate(const Dispatch<2> &, const double & u) const
   {
-    double absValue = std::abs( u );
+    double absValue = std::abs(u);
 
-    if( absValue < 0.5 )
+    if (absValue < 0.5)
     {
       return -2.0 * u;
     }
-    else if( absValue < 1.5 )
+    else if (absValue < 1.5)
     {
-      return u - 1.5 * vnl_math::sgn( u );
+      return u - 1.5 * vnl_math::sgn(u);
     }
     else
     {
-      return NumericTraits< double >::ZeroValue();
+      return NumericTraits<double>::ZeroValue();
     }
   }
 
 
-  inline void Evaluate( const Dispatch< 2 > &, const double & u, double * weights ) const
+  inline void
+  Evaluate(const Dispatch<2> &, const double & u, double * weights) const
   {
     // MS \todo: check
-    weights[ 0 ] =        u - 1.5;
-    weights[ 1 ] = -2.0 * u + 2.0;
-    weights[ 2 ] =        u - 0.5;
+    weights[0] = u - 1.5;
+    weights[1] = -2.0 * u + 2.0;
+    weights[2] = u - 0.5;
   }
 
 
   /**  Third order spline. */
-  inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
+  inline double
+  Evaluate(const Dispatch<3> &, const double & u) const
   {
-    const double absValue = std::abs( u );
+    const double absValue = std::abs(u);
     const double sqrValue = u * u;
 
-    if( absValue < 1.0 )
+    if (absValue < 1.0)
     {
-      if( u > 0.0 )
+      if (u > 0.0)
       {
-        const double dummy = std::abs( u + 0.5 );
-        return ( 6.0 * sqrValue - 2.0 * u - 6.0 * dummy + 3.0 ) / 4.0;
+        const double dummy = std::abs(u + 0.5);
+        return (6.0 * sqrValue - 2.0 * u - 6.0 * dummy + 3.0) / 4.0;
       }
       else
       {
-        const double dummy = std::abs( u - 0.5 );
-        return -( 6.0 * sqrValue + 2.0 * u - 6.0 * dummy + 3.0 ) / 4.0;
+        const double dummy = std::abs(u - 0.5);
+        return -(6.0 * sqrValue + 2.0 * u - 6.0 * dummy + 3.0) / 4.0;
       }
     }
-    else if( absValue < 2.0 )
+    else if (absValue < 2.0)
     {
-      if( u > 0.0 )
+      if (u > 0.0)
       {
-        const double dummy = std::abs( u - 0.5 );
-        return ( u - sqrValue + 3.0 * dummy - 2.5 ) / 2.0;
+        const double dummy = std::abs(u - 0.5);
+        return (u - sqrValue + 3.0 * dummy - 2.5) / 2.0;
       }
       else
       {
-        const double dummy = std::abs( u + 0.5 );
-        return ( u + sqrValue - 3.0 * dummy + 2.5 ) / 2.0;
+        const double dummy = std::abs(u + 0.5);
+        return (u + sqrValue - 3.0 * dummy + 2.5) / 2.0;
       }
     }
     else
@@ -222,34 +232,35 @@ private:
   }
 
 
-  inline void Evaluate( const Dispatch< 3 > &, const double & u, double * weights ) const
+  inline void
+  Evaluate(const Dispatch<3> &, const double & u, double * weights) const
   {
-    const double absValue = std::abs( u );
+    const double absValue = std::abs(u);
     const double sqrValue = u * u;
 
-    weights[ 0 ] =  0.5 * sqrValue - 2.0 * absValue + 2.0;
-    weights[ 1 ] = -1.5 * sqrValue + 5.0 * absValue - 3.5;
-    weights[ 2 ] =  1.5 * sqrValue - 4.0 * absValue + 2.0;
-    weights[ 3 ] = -0.5 * sqrValue +       absValue - 0.5;
+    weights[0] = 0.5 * sqrValue - 2.0 * absValue + 2.0;
+    weights[1] = -1.5 * sqrValue + 5.0 * absValue - 3.5;
+    weights[2] = 1.5 * sqrValue - 4.0 * absValue + 2.0;
+    weights[3] = -0.5 * sqrValue + absValue - 0.5;
   }
 
 
   /** Unimplemented spline order */
-  inline double Evaluate( const DispatchBase &, const double & ) const
+  inline double
+  Evaluate(const DispatchBase &, const double &) const
   {
-    itkExceptionMacro( "Evaluate not implemented for spline order " << SplineOrder );
+    itkExceptionMacro("Evaluate not implemented for spline order " << SplineOrder);
     return 0.0; // This is to avoid compiler warning about missing
     // return statement.  It should never be evaluated.
   }
 
 
   /** Unimplemented spline order */
-  inline void Evaluate( const DispatchBase &, const double &, double * ) const
+  inline void
+  Evaluate(const DispatchBase &, const double &, double *) const
   {
-    itkExceptionMacro( "Evaluate not implemented for spline order " << SplineOrder );
+    itkExceptionMacro("Evaluate not implemented for spline order " << SplineOrder);
   }
-
-
 };
 
 } // end namespace itk

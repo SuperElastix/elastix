@@ -40,27 +40,23 @@ namespace itk
  * http://stacks.iop.org/0031-9155/59/4033
  * \ingroup RegistrationMetrics
  */
-template< class TFixedPointSet, class TMovingPointSet >
-class MissingVolumeMeshPenalty :
-  public SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
+template <class TFixedPointSet, class TMovingPointSet>
+class MissingVolumeMeshPenalty : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef MissingVolumeMeshPenalty Self;
-  typedef SingleValuedPointSetToPointSetMetric<
-    TFixedPointSet, TMovingPointSet >               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef MissingVolumeMeshPenalty                                              Self;
+  typedef SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet> Superclass;
+  typedef SmartPointer<Self>                                                    Pointer;
+  typedef SmartPointer<const Self>                                              ConstPointer;
 
   /** Type used for representing point components  */
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MissingVolumeMeshPenalty,
-    SingleValuedPointSetToPointSetMetric );
+  itkTypeMacro(MissingVolumeMeshPenalty, SingleValuedPointSetToPointSetMetric);
 
   /** Types transferred from the base class */
   typedef typename Superclass::TransformType           TransformType;
@@ -75,33 +71,29 @@ public:
   typedef typename Superclass::InputPointType    InputPointType;
   typedef typename Superclass::OutputPointType   OutputPointType;
   typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector< CoordRepType >             VnlVectorType;
+  typedef vnl_vector<CoordRepType>               VnlVectorType;
 
   typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** Constants for the pointset dimensions. */
-  itkStaticConstMacro( FixedPointSetDimension, unsigned int,
-    Superclass::FixedPointSetDimension );
-  itkStaticConstMacro( MovingPointSetDimension, unsigned int,
-    Superclass::MovingPointSetDimension );
+  itkStaticConstMacro(FixedPointSetDimension, unsigned int, Superclass::FixedPointSetDimension);
+  itkStaticConstMacro(MovingPointSetDimension, unsigned int, Superclass::MovingPointSetDimension);
 
   /** Typedefs. */
   typedef unsigned char DummyMeshPixelType;
-  typedef DefaultStaticMeshTraits< DummyMeshPixelType,
-    FixedPointSetDimension, FixedPointSetDimension, CoordRepType >     MeshTraitsType;
-  typedef Mesh< DummyMeshPixelType, FixedPointSetDimension,
-    MeshTraitsType >                                                   FixedMeshType;
-  typedef typename FixedMeshType::PointIdentifier FixedMeshPointIdentifier;
+  typedef DefaultStaticMeshTraits<DummyMeshPixelType, FixedPointSetDimension, FixedPointSetDimension, CoordRepType>
+                                                                           MeshTraitsType;
+  typedef Mesh<DummyMeshPixelType, FixedPointSetDimension, MeshTraitsType> FixedMeshType;
+  typedef typename FixedMeshType::PointIdentifier                          FixedMeshPointIdentifier;
 
-  typedef typename FixedMeshType::ConstPointer             FixedMeshConstPointer;
-  typedef typename FixedMeshType::Pointer                  FixedMeshPointer;
-  typedef typename MeshTraitsType::CellType                CellInterfaceType;
+  typedef typename FixedMeshType::ConstPointer FixedMeshConstPointer;
+  typedef typename FixedMeshType::Pointer      FixedMeshPointer;
+  typedef typename MeshTraitsType::CellType    CellInterfaceType;
 
-  typedef typename FixedMeshType::PointType             MeshPointType;
-  typedef typename FixedMeshType::PointType::VectorType VectorType;
-  typedef typename VectorType::const_pointer            VectorConstPointer;
-  typedef itk::Vector<
-    typename VectorType::ValueType, FixedPointSetDimension - 1 >         SubVectorType;
+  typedef typename FixedMeshType::PointType                                       MeshPointType;
+  typedef typename FixedMeshType::PointType::VectorType                           VectorType;
+  typedef typename VectorType::const_pointer                                      VectorConstPointer;
+  typedef itk::Vector<typename VectorType::ValueType, FixedPointSetDimension - 1> SubVectorType;
 
   typedef typename FixedMeshType::PointsContainer              MeshPointsContainerType;
   typedef typename MeshPointsContainerType::Pointer            MeshPointsContainerPointer;
@@ -112,58 +104,61 @@ public:
   typedef typename FixedMeshType::PointDataContainer             MeshPointDataContainerType;
   typedef typename FixedMeshType::PointDataContainerConstPointer MeshPointDataContainerConstPointer;
   typedef typename FixedMeshType::PointDataContainerPointer      MeshPointDataContainerPointer;
-  //typedef typename FixedMeshType::PointDataContainerConstIterator     MeshPointDataContainerConstIteratorType;
+  // typedef typename FixedMeshType::PointDataContainerConstIterator     MeshPointDataContainerConstIteratorType;
   typedef typename FixedMeshType::PointDataContainerIterator MeshPointDataContainerConstIteratorType;
   typedef typename MeshPointDataContainerType::Iterator      MeshPointDataContainerIteratorType;
 
-  typedef unsigned int                                         MeshIdType;
-  typedef VectorContainer< MeshIdType, FixedMeshConstPointer > FixedMeshContainerType;
-  typedef typename FixedMeshContainerType::Pointer             FixedMeshContainerPointer;
-  typedef typename FixedMeshContainerType::ConstPointer        FixedMeshContainerConstPointer;
-  typedef typename FixedMeshContainerType::ElementIdentifier   FixedMeshContainerElementIdentifier;
+  typedef unsigned int                                       MeshIdType;
+  typedef VectorContainer<MeshIdType, FixedMeshConstPointer> FixedMeshContainerType;
+  typedef typename FixedMeshContainerType::Pointer           FixedMeshContainerPointer;
+  typedef typename FixedMeshContainerType::ConstPointer      FixedMeshContainerConstPointer;
+  typedef typename FixedMeshContainerType::ElementIdentifier FixedMeshContainerElementIdentifier;
 
-  typedef VectorContainer< MeshIdType, FixedMeshPointer > MappedMeshContainerType;
-  typedef typename MappedMeshContainerType::Pointer       MappedMeshContainerPointer;
-  typedef typename MappedMeshContainerType::ConstPointer  MappedMeshContainerConstPointer;
+  typedef VectorContainer<MeshIdType, FixedMeshPointer>  MappedMeshContainerType;
+  typedef typename MappedMeshContainerType::Pointer      MappedMeshContainerPointer;
+  typedef typename MappedMeshContainerType::ConstPointer MappedMeshContainerConstPointer;
 
-  typedef Array< DerivativeValueType > MeshPointsDerivativeValueType;
+  typedef Array<DerivativeValueType> MeshPointsDerivativeValueType;
 
-  itkSetConstObjectMacro( FixedMeshContainer, FixedMeshContainerType );
-  itkGetConstObjectMacro( FixedMeshContainer, FixedMeshContainerType );
+  itkSetConstObjectMacro(FixedMeshContainer, FixedMeshContainerType);
+  itkGetConstObjectMacro(FixedMeshContainer, FixedMeshContainerType);
 
-  itkSetObjectMacro( MappedMeshContainer, MappedMeshContainerType );
-  itkGetModifiableObjectMacro( MappedMeshContainer, MappedMeshContainerType );
+  itkSetObjectMacro(MappedMeshContainer, MappedMeshContainerType);
+  itkGetModifiableObjectMacro(MappedMeshContainer, MappedMeshContainerType);
 
   /** Initialize the Metric by making sure that all the components are
-  *  present and plugged together correctly.
-  */
-  void Initialize( void ) override;
+   *  present and plugged together correctly.
+   */
+  void
+  Initialize(void) override;
 
   /** Set the fixed mask. */
   // \todo: currently not used
-  //itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType );
+  // itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType );
 
   /** Get the fixed mask. */
-  //itkGetConstObjectMacro( FixedImageMask, FixedImageMaskType );
+  // itkGetConstObjectMacro( FixedImageMask, FixedImageMaskType );
 
   /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const TransformParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
-  void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const override;
+  void
+  GetDerivative(const TransformParametersType & parameters, DerivativeType & Derivative) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const override;
+  void
+  GetValueAndDerivative(const TransformParametersType & parameters,
+                        MeasureType &                   Value,
+                        DerivativeType &                Derivative) const override;
 
 protected:
-
   MissingVolumeMeshPenalty();
   ~MissingVolumeMeshPenalty() override;
 
   /** PrintSelf. */
-  //void PrintSelf(std::ostream& os, Indent indent) const;
+  // void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Member variables. */
   FixedMeshConstPointer m_FixedMesh;
@@ -172,18 +167,18 @@ protected:
   mutable MappedMeshContainerPointer     m_MappedMeshContainer;
 
 private:
+  void
+  SubVector(const VectorType & fullVector, SubVectorType & subVector, const unsigned int leaveOutIndex) const;
 
-  void SubVector( const VectorType & fullVector, SubVectorType & subVector, const unsigned int leaveOutIndex ) const;
-
-  MissingVolumeMeshPenalty( const Self & ); // purposely not implemented
-  void operator=( const Self & );           // purposely not implemented
-
+  MissingVolumeMeshPenalty(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMissingStructurePenalty.hxx"
+#  include "itkMissingStructurePenalty.hxx"
 #endif
 
 #endif

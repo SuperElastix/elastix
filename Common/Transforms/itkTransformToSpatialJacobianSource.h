@@ -62,18 +62,15 @@ namespace itk
  *
  * \ingroup GeometricTransforms
  */
-template< class TOutputImage,
-class TTransformPrecisionType = double >
-class TransformToSpatialJacobianSource :
-  public ImageSource< TOutputImage >
+template <class TOutputImage, class TTransformPrecisionType = double>
+class TransformToSpatialJacobianSource : public ImageSource<TOutputImage>
 {
 public:
-
   /** Standard class typedefs. */
   typedef TransformToSpatialJacobianSource Self;
-  typedef ImageSource< TOutputImage >      Superclass;
-  typedef SmartPointer< Self >             Pointer;
-  typedef SmartPointer< const Self >       ConstPointer;
+  typedef ImageSource<TOutputImage>        Superclass;
+  typedef SmartPointer<Self>               Pointer;
+  typedef SmartPointer<const Self>         ConstPointer;
 
   typedef TOutputImage                           OutputImageType;
   typedef typename OutputImageType::Pointer      OutputImagePointer;
@@ -81,25 +78,25 @@ public:
   typedef typename OutputImageType::RegionType   OutputImageRegionType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformToSpatialJacobianSource, ImageSource );
+  itkTypeMacro(TransformToSpatialJacobianSource, ImageSource);
 
   /** Number of dimensions. */
-  itkStaticConstMacro( ImageDimension, unsigned int,
-    TOutputImage::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Typedefs for transform. */
-  typedef AdvancedTransform< TTransformPrecisionType,
-    itkGetStaticConstMacro( ImageDimension ),
-    itkGetStaticConstMacro( ImageDimension ) >     TransformType;
+  typedef AdvancedTransform<TTransformPrecisionType,
+                            itkGetStaticConstMacro(ImageDimension),
+                            itkGetStaticConstMacro(ImageDimension)>
+                                                      TransformType;
   typedef typename TransformType::ConstPointer        TransformPointerType;
   typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
 
   /** Typedefs for output image. */
   typedef typename OutputImageType::PixelType PixelType;
-  //typedef typename PixelType::ValueType           PixelValueType;
+  // typedef typename PixelType::ValueType           PixelValueType;
   typedef typename OutputImageType::RegionType    RegionType;
   typedef typename RegionType::SizeType           SizeType;
   typedef typename OutputImageType::IndexType     IndexType;
@@ -109,7 +106,7 @@ public:
   typedef typename OutputImageType::DirectionType DirectionType;
 
   /** Typedefs for base image. */
-  typedef ImageBase< itkGetStaticConstMacro( ImageDimension ) > ImageBaseType;
+  typedef ImageBase<itkGetStaticConstMacro(ImageDimension)> ImageBaseType;
 
   /** Set the coordinate transformation.
    * Set the coordinate transform to use for resampling.  Note that this must
@@ -118,105 +115,113 @@ public:
    * the filter uses an Identity transform. You must provide a different
    * transform here, before attempting to run the filter, if you do not want to
    * use the default Identity transform. */
-  itkSetConstObjectMacro( Transform, TransformType );
+  itkSetConstObjectMacro(Transform, TransformType);
 
   /** Get a pointer to the coordinate transform. */
-  itkGetConstObjectMacro( Transform, TransformType );
+  itkGetConstObjectMacro(Transform, TransformType);
 
   /** Set the size of the output image. */
-  virtual void SetOutputSize( const SizeType & size );
+  virtual void
+  SetOutputSize(const SizeType & size);
 
   /** Get the size of the output image. */
-  virtual const SizeType & GetOutputSize();
+  virtual const SizeType &
+  GetOutputSize();
 
   /** Set the start index of the output largest possible region.
-  * The default is an index of all zeros. */
-  virtual void SetOutputIndex( const IndexType & index );
+   * The default is an index of all zeros. */
+  virtual void
+  SetOutputIndex(const IndexType & index);
 
   /** Get the start index of the output largest possible region. */
-  virtual const IndexType & GetOutputIndex();
+  virtual const IndexType &
+  GetOutputIndex();
 
   /** Set the region of the output image. */
-  itkSetMacro( OutputRegion, OutputImageRegionType );
+  itkSetMacro(OutputRegion, OutputImageRegionType);
 
   /** Get the region of the output image. */
-  itkGetConstReferenceMacro( OutputRegion, OutputImageRegionType );
+  itkGetConstReferenceMacro(OutputRegion, OutputImageRegionType);
 
   /** Set the output image spacing. */
-  itkSetMacro( OutputSpacing, SpacingType );
-  virtual void SetOutputSpacing( const double * values );
+  itkSetMacro(OutputSpacing, SpacingType);
+  virtual void
+  SetOutputSpacing(const double * values);
 
   /** Get the output image spacing. */
-  itkGetConstReferenceMacro( OutputSpacing, SpacingType );
+  itkGetConstReferenceMacro(OutputSpacing, SpacingType);
 
   /** Set the output image origin. */
-  itkSetMacro( OutputOrigin, OriginType );
-  virtual void SetOutputOrigin( const double * values );
+  itkSetMacro(OutputOrigin, OriginType);
+  virtual void
+  SetOutputOrigin(const double * values);
 
   /** Get the output image origin. */
-  itkGetConstReferenceMacro( OutputOrigin, OriginType );
+  itkGetConstReferenceMacro(OutputOrigin, OriginType);
 
   /** Set the output direction cosine matrix. */
-  itkSetMacro( OutputDirection, DirectionType );
-  itkGetConstReferenceMacro( OutputDirection, DirectionType );
+  itkSetMacro(OutputDirection, DirectionType);
+  itkGetConstReferenceMacro(OutputDirection, DirectionType);
 
   /** Helper method to set the output parameters based on this image */
-  void SetOutputParametersFromImage( const ImageBaseType * image );
+  void
+  SetOutputParametersFromImage(const ImageBaseType * image);
 
   /** TransformToSpatialJacobianSource produces a floating value image. */
-  void GenerateOutputInformation( void ) override;
+  void
+  GenerateOutputInformation(void) override;
 
   /** Checking if transform is set. If a linear transformation is used,
    * the unthreaded LinearGenerateData is called. */
-  void BeforeThreadedGenerateData( void ) override;
+  void
+  BeforeThreadedGenerateData(void) override;
 
   /** Compute the Modified Time based on changes to the components. */
-  ModifiedTimeType GetMTime( void ) const override;
+  ModifiedTimeType
+  GetMTime(void) const override;
 
 protected:
-
   TransformToSpatialJacobianSource();
   ~TransformToSpatialJacobianSource() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** TransformToSpatialJacobianSource can be implemented as a multithreaded
    * filter.
    */
-  void ThreadedGenerateData(
-    const OutputImageRegionType & outputRegionForThread,
-    ThreadIdType threadId ) override;
+  void
+  ThreadedGenerateData(const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId) override;
 
   /** Default implementation for resampling that works for any
    * transformation type.
    */
-  void NonlinearThreadedGenerateData(
-    const OutputImageRegionType & outputRegionForThread,
-    ThreadIdType threadId );
+  void
+  NonlinearThreadedGenerateData(const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId);
 
   /** Faster implementation for resampling that works for with linear
    *  transformation types. Unthreaded.
    */
-  void LinearGenerateData( void );
+  void
+  LinearGenerateData(void);
 
 private:
-
-  TransformToSpatialJacobianSource( const Self & ); // purposely not implemented
-  void operator=( const Self & );                   // purposely not implemented
+  TransformToSpatialJacobianSource(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Member variables. */
-  RegionType           m_OutputRegion;         // region of the output image
-  TransformPointerType m_Transform;            // Coordinate transform to use
-  SpacingType          m_OutputSpacing;        // output image spacing
-  OriginType           m_OutputOrigin;         // output image origin
-  DirectionType        m_OutputDirection;      // output image direction cosines
-
+  RegionType           m_OutputRegion;    // region of the output image
+  TransformPointerType m_Transform;       // Coordinate transform to use
+  SpacingType          m_OutputSpacing;   // output image spacing
+  OriginType           m_OutputOrigin;    // output image origin
+  DirectionType        m_OutputDirection; // output image direction cosines
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformToSpatialJacobianSource.hxx"
+#  include "itkTransformToSpatialJacobianSource.hxx"
 #endif
 
 #endif // end #ifndef __itkTransformToSpatialJacobianSource_h

@@ -71,21 +71,21 @@ namespace itk
 class MoreThuenteLineSearchOptimizer : public LineSearchOptimizer
 {
 public:
-
   typedef MoreThuenteLineSearchOptimizer Self;
   typedef LineSearchOptimizer            Superclass;
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  typedef SmartPointer<Self>             Pointer;
+  typedef SmartPointer<const Self>       ConstPointer;
 
-  itkNewMacro( Self );
-  itkTypeMacro( MoreThuenteLineSearchOptimizer, LineSearchOptimizer );
+  itkNewMacro(Self);
+  itkTypeMacro(MoreThuenteLineSearchOptimizer, LineSearchOptimizer);
 
   typedef Superclass::MeasureType      MeasureType;
   typedef Superclass::ParametersType   ParametersType;
   typedef Superclass::DerivativeType   DerivativeType;
   typedef Superclass::CostFunctionType CostFunctionType;
 
-  typedef enum {
+  typedef enum
+  {
     StrongWolfeConditionsSatisfied,
     MetricError,
     MaximumNumberOfIterations,
@@ -95,41 +95,47 @@ public:
     RoundingError,
     AscentSearchDirection,
     Unknown
-  }                                   StopConditionType;
+  } StopConditionType;
 
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
-  virtual void StopOptimization( void );
+  virtual void
+  StopOptimization(void);
 
   /** If initial derivative and/or value are given we can save some
    * computation time!
    */
-  void SetInitialDerivative( const DerivativeType & derivative ) override;
+  void
+  SetInitialDerivative(const DerivativeType & derivative) override;
 
-  void SetInitialValue( MeasureType value ) override;
+  void
+  SetInitialValue(MeasureType value) override;
 
   /** Progress information: value, derivative, and directional derivative
    * at the current position.
    */
-  void GetCurrentValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const override;
+  void
+  GetCurrentValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
-  void GetCurrentDerivative( DerivativeType & derivative ) const override;
+  void
+  GetCurrentDerivative(DerivativeType & derivative) const override;
 
-  MeasureType GetCurrentValue( void ) const override;
+  MeasureType
+  GetCurrentValue(void) const override;
 
-  virtual double GetCurrentDirectionalDerivative( void ) const;
+  virtual double
+  GetCurrentDirectionalDerivative(void) const;
 
   /** Progress information: about the state of convergence */
-  itkGetConstMacro( CurrentIteration, unsigned long );
-  itkGetConstReferenceMacro( StopCondition, StopConditionType );
-  itkGetConstMacro( SufficientDecreaseConditionSatisfied, bool );
-  itkGetConstMacro( CurvatureConditionSatisfied, bool );
+  itkGetConstMacro(CurrentIteration, unsigned long);
+  itkGetConstReferenceMacro(StopCondition, StopConditionType);
+  itkGetConstMacro(SufficientDecreaseConditionSatisfied, bool);
+  itkGetConstMacro(CurvatureConditionSatisfied, bool);
 
   /** Setting: the maximum number of iterations. 20 by default. */
-  itkGetConstMacro( MaximumNumberOfIterations, unsigned long );
-  itkSetClampMacro( MaximumNumberOfIterations, unsigned long,
-    1, NumericTraits< unsigned long >::max() );
+  itkGetConstMacro(MaximumNumberOfIterations, unsigned long);
+  itkSetClampMacro(MaximumNumberOfIterations, unsigned long, 1, NumericTraits<unsigned long>::max());
 
   /** Setting: the value tolerance. By default set to 1e-4.
    *
@@ -140,8 +146,8 @@ public:
    *
    * It must be larger than 0.0, and smaller than the GradientTolerance.
    */
-  itkSetClampMacro( ValueTolerance, double, 0.0, NumericTraits< double >::max() );
-  itkGetConstMacro( ValueTolerance, double );
+  itkSetClampMacro(ValueTolerance, double, 0.0, NumericTraits<double>::max());
+  itkGetConstMacro(ValueTolerance, double);
 
   /** Setting: the gradient tolerance. By default set to 0.9.
    *
@@ -152,8 +158,8 @@ public:
    * The lower this value, the more accurate the line search. It must
    * be larger than the ValueTolerance.
    */
-  itkSetClampMacro( GradientTolerance, double, 0.0, NumericTraits< double >::max() );
-  itkGetConstMacro( GradientTolerance, double );
+  itkSetClampMacro(GradientTolerance, double, 0.0, NumericTraits<double>::max());
+  itkGetConstMacro(GradientTolerance, double);
 
   /** Setting: the interval tolerance. By default set to the
    * the machine precision.
@@ -163,15 +169,15 @@ public:
    * further progress: when the interval of uncertainty is
    * smaller than the interval tolerance.
    */
-  itkSetClampMacro( IntervalTolerance, double, 0.0, NumericTraits< double >::max() );
-  itkGetConstMacro( IntervalTolerance, double );
+  itkSetClampMacro(IntervalTolerance, double, 0.0, NumericTraits<double>::max());
+  itkGetConstMacro(IntervalTolerance, double);
 
 protected:
-
   MoreThuenteLineSearchOptimizer();
   ~MoreThuenteLineSearchOptimizer() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   unsigned long     m_CurrentIteration;
   bool              m_InitialDerivativeProvided;
@@ -182,46 +188,63 @@ protected:
   bool              m_CurvatureConditionSatisfied;
 
   /** Load the initial value and derivative into m_f and m_g. */
-  virtual void GetInitialValueAndDerivative( void );
+  virtual void
+  GetInitialValueAndDerivative(void);
 
   /** Check the input settings for errors. */
-  virtual int CheckSettings( void );
+  virtual int
+  CheckSettings(void);
 
   /** Initialize the interval of uncertainty etc. */
-  virtual void InitializeLineSearch( void );
+  virtual void
+  InitializeLineSearch(void);
 
   /** Set the minimum and maximum steps to correspond to the
    * the present interval of uncertainty.
    */
-  virtual void UpdateIntervalMinimumAndMaximum( void );
+  virtual void
+  UpdateIntervalMinimumAndMaximum(void);
 
   /** Force a step to be within the bounds MinimumStepLength and MaximumStepLength */
-  void BoundStep( double & step ) const;
+  void
+  BoundStep(double & step) const;
 
   /** Set m_step to the best step until now, if unusual termination is expected */
-  virtual void PrepareForUnusualTermination( void );
+  virtual void
+  PrepareForUnusualTermination(void);
 
   /** Ask the cost function to compute m_f and m_g at the current position. */
-  virtual void ComputeCurrentValueAndDerivative( void );
+  virtual void
+  ComputeCurrentValueAndDerivative(void);
 
   /** Check for convergence */
-  virtual void TestConvergence( bool & stop );
+  virtual void
+  TestConvergence(bool & stop);
 
   /** Update the interval of uncertainty and compute the new step */
-  virtual void ComputeNewStepAndInterval( void );
+  virtual void
+  ComputeNewStepAndInterval(void);
 
   /** Force a sufficient decrease in the size of the interval of uncertainty */
-  virtual void ForceSufficientDecreaseInIntervalWidth( void );
+  virtual void
+  ForceSufficientDecreaseInIntervalWidth(void);
 
   /** Advance a step along the line search direction and update
    * the interval of uncertainty.
    */
-  virtual int SafeGuardedStep(
-    double & stx, double & fx, double & dx,
-    double & sty, double & fy, double & dy,
-    double & stp, const double & fp, const double & dp,
-    bool & brackt,
-    const double & stpmin, const double & stpmax ) const;
+  virtual int
+  SafeGuardedStep(double &       stx,
+                  double &       fx,
+                  double &       dx,
+                  double &       sty,
+                  double &       fy,
+                  double &       dy,
+                  double &       stp,
+                  const double & fp,
+                  const double & dp,
+                  bool &         brackt,
+                  const double & stpmin,
+                  const double & stpmax) const;
 
   double m_step;
   double m_stepx;
@@ -229,7 +252,7 @@ protected:
   double m_stepmin;
   double m_stepmax;
 
-  MeasureType m_f;  // CurrentValue
+  MeasureType m_f; // CurrentValue
   MeasureType m_fx;
   MeasureType m_fy;
   MeasureType m_finit;
@@ -249,15 +272,14 @@ protected:
   bool m_SafeGuardedStepFailed;
 
 private:
-
-  MoreThuenteLineSearchOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );                 // purposely not implemented
+  MoreThuenteLineSearchOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   unsigned long m_MaximumNumberOfIterations;
   double        m_ValueTolerance;
   double        m_GradientTolerance;
   double        m_IntervalTolerance;
-
 };
 
 } // end namespace itk

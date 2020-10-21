@@ -77,63 +77,61 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template< class TElastix >
-class EulerStackTransform :
-  public itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >,
-  public elx::TransformBase< TElastix >
+template <class TElastix>
+class EulerStackTransform
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public elx::TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef EulerStackTransform                             Self;
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension > Superclass1;
-  typedef elx::TransformBase< TElastix >                  Superclass2;
-  typedef itk::SmartPointer< Self >                       Pointer;
-  typedef itk::SmartPointer< const Self >                 ConstPointer;
+  typedef EulerStackTransform Self;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+                                        Superclass1;
+  typedef elx::TransformBase<TElastix>  Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( EulerStackTransform, itk::AdvancedCombinationTransform );
+  itkTypeMacro(EulerStackTransform, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "EulerStackTransform")</tt>\n
    */
-  elxClassNameMacro( "EulerStackTransform" );
+  elxClassNameMacro("EulerStackTransform");
 
   /** (Reduced) dimension of the fixed image. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
-  itkStaticConstMacro( ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
+  itkStaticConstMacro(ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1);
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::EulerTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ) >        EulerTransformType;
+  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                              itkGetStaticConstMacro(SpaceDimension)>
+                                                      EulerTransformType;
   typedef typename EulerTransformType::Pointer        EulerTransformPointer;
   typedef typename EulerTransformType::InputPointType InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
-  typedef itk::EulerTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( ReducedSpaceDimension ) >                         ReducedDimensionEulerTransformType;
+  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                              itkGetStaticConstMacro(ReducedSpaceDimension)>
+                                                               ReducedDimensionEulerTransformType;
   typedef typename ReducedDimensionEulerTransformType::Pointer ReducedDimensionEulerTransformPointer;
 
   typedef typename ReducedDimensionEulerTransformType::OutputVectorType ReducedDimensionOutputVectorType;
   typedef typename ReducedDimensionEulerTransformType::InputPointType   ReducedDimensionInputPointType;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SpaceDimension ) >           EulerStackTransformType;
+  typedef itk::StackTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                              itkGetStaticConstMacro(SpaceDimension),
+                              itkGetStaticConstMacro(SpaceDimension)>
+                                                    EulerStackTransformType;
   typedef typename EulerStackTransformType::Pointer EulerStackTransformPointer;
 
   /** Typedefs inherited from the superclass. */
@@ -154,44 +152,45 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Reduced Dimension typedef's. */
-  typedef float PixelType;
-  typedef itk::Image< PixelType,
-    itkGetStaticConstMacro( ReducedSpaceDimension ) >          ReducedDimensionImageType;
-  typedef itk::ImageRegion<
-    itkGetStaticConstMacro( ReducedSpaceDimension ) >         ReducedDimensionRegionType;
-  typedef typename ReducedDimensionImageType::PointType     ReducedDimensionPointType;
-  typedef typename ReducedDimensionImageType::SizeType      ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType    ReducedDimensionIndexType;
-  typedef typename ReducedDimensionImageType::SpacingType   ReducedDimensionSpacingType;
-  typedef typename ReducedDimensionImageType::DirectionType ReducedDimensionDirectionType;
-  typedef typename ReducedDimensionImageType::PointType     ReducedDimensionOriginType;
+  typedef float                                                                PixelType;
+  typedef itk::Image<PixelType, itkGetStaticConstMacro(ReducedSpaceDimension)> ReducedDimensionImageType;
+  typedef itk::ImageRegion<itkGetStaticConstMacro(ReducedSpaceDimension)>      ReducedDimensionRegionType;
+  typedef typename ReducedDimensionImageType::PointType                        ReducedDimensionPointType;
+  typedef typename ReducedDimensionImageType::SizeType                         ReducedDimensionSizeType;
+  typedef typename ReducedDimensionRegionType::IndexType                       ReducedDimensionIndexType;
+  typedef typename ReducedDimensionImageType::SpacingType                      ReducedDimensionSpacingType;
+  typedef typename ReducedDimensionImageType::DirectionType                    ReducedDimensionDirectionType;
+  typedef typename ReducedDimensionImageType::PointType                        ReducedDimensionOriginType;
 
   /** For scales setting in the optimizer */
   typedef typename Superclass2::ScalesType ScalesType;
 
   /** Other typedef's. */
-  typedef typename FixedImageType::IndexType                                   IndexType;
-  typedef typename FixedImageType::SizeType                                    SizeType;
-  typedef typename FixedImageType::PointType                                   PointType;
-  typedef typename FixedImageType::SpacingType                                 SpacingType;
-  typedef typename FixedImageType::RegionType                                  RegionType;
-  typedef typename FixedImageType::DirectionType                               DirectionType;
-  typedef typename itk::ContinuousIndex< CoordRepType, ReducedSpaceDimension > ReducedDimensionContinuousIndexType;
-  typedef typename itk::ContinuousIndex< CoordRepType, SpaceDimension >        ContinuousIndexType;
+  typedef typename FixedImageType::IndexType                                 IndexType;
+  typedef typename FixedImageType::SizeType                                  SizeType;
+  typedef typename FixedImageType::PointType                                 PointType;
+  typedef typename FixedImageType::SpacingType                               SpacingType;
+  typedef typename FixedImageType::RegionType                                RegionType;
+  typedef typename FixedImageType::DirectionType                             DirectionType;
+  typedef typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension> ReducedDimensionContinuousIndexType;
+  typedef typename itk::ContinuousIndex<CoordRepType, SpaceDimension>        ContinuousIndexType;
 
   /** Execute stuff before anything else is done:*/
 
-  int BeforeAll( void ) override;
+  int
+  BeforeAll(void) override;
 
   /** Execute stuff before the actual registration:
    * \li Set the stack transform parameters.
    * \li Set initial sub transforms.
    * \li Create initial registration parameters.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Method initialize the parameters (to 0). */
-  virtual void InitializeTransform( void );
+  virtual void
+  InitializeTransform(void);
 
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -200,19 +199,22 @@ public:
    * This function is called by BeforeRegistration, after
    * the InitializeTransform function is called
    */
-  virtual void SetScales( void );
+  virtual void
+  SetScales(void);
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
   /** Function to rotate center of rotation point using initial transformation. */
-  virtual void InitialTransformCenter( ReducedDimensionInputPointType & point );
+  virtual void
+  InitialTransformCenter(ReducedDimensionInputPointType & point);
 
 protected:
-
   /** The constructor. */
   EulerStackTransform();
 
@@ -224,13 +226,14 @@ protected:
    * Transform parameter files generated by elastix version > 3.402
    * save the center of rotation in this way.
    */
-  virtual bool ReadCenterOfRotationPoint( ReducedDimensionInputPointType & rotationPoint ) const;
+  virtual bool
+  ReadCenterOfRotationPoint(ReducedDimensionInputPointType & rotationPoint) const;
 
 private:
-
   /** The private constructor and copy constructor. */
-  EulerStackTransform( const Self & );    // purposely not implemented
-  void operator=( const Self & );         // purposely not implemented
+  EulerStackTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** The Affine stack transform. */
   EulerStackTransformPointer m_EulerStackTransform;
@@ -243,15 +246,15 @@ private:
   double       m_StackOrigin, m_StackSpacing;
 
   /** Initialize the affine transform. */
-  unsigned int InitializeEulerTransform();
-
+  unsigned int
+  InitializeEulerTransform();
 };
 
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxEulerStackTransform.hxx"
+#  include "elxEulerStackTransform.hxx"
 #endif
 
 #endif // end #ifndef __elxEulerStackTransform_h

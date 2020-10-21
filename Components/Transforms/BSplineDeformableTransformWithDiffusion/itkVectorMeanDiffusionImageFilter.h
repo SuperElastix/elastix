@@ -45,58 +45,51 @@ namespace itk
  * \ingroup IntensityImageFilters
  */
 
-template< class TInputImage, class TGrayValueImage >
-class VectorMeanDiffusionImageFilter :
-  public ImageToImageFilter< TInputImage, TInputImage >
+template <class TInputImage, class TGrayValueImage>
+class VectorMeanDiffusionImageFilter : public ImageToImageFilter<TInputImage, TInputImage>
 {
 public:
-
   /** Convenient typedefs for simplifying declarations. */
   typedef TInputImage                          InputImageType;
   typedef TGrayValueImage                      GrayValueImageType;
   typedef typename GrayValueImageType::Pointer GrayValueImagePointer;
 
   /** Standard class typedefs. */
-  typedef VectorMeanDiffusionImageFilter Self;
-  typedef ImageToImageFilter<
-    InputImageType, InputImageType >          Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef VectorMeanDiffusionImageFilter                     Self;
+  typedef ImageToImageFilter<InputImageType, InputImageType> Superclass;
+  typedef SmartPointer<Self>                                 Pointer;
+  typedef SmartPointer<const Self>                           ConstPointer;
 
   /** Extract dimension from input image. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( VectorMeanDiffusionImageFilter, ImageToImageFilter );
+  itkTypeMacro(VectorMeanDiffusionImageFilter, ImageToImageFilter);
 
   /** Image typedef support. */
   typedef typename InputImageType::PixelType InputPixelType;
   typedef typename InputPixelType::ValueType ValueType;
-  //typedef typename NumericTraits<InputPixelType>::RealType    InputRealType;
-  typedef typename InputImageType::RegionType InputImageRegionType;
-  typedef typename InputImageType::SizeType   InputSizeType;
-  typedef typename InputImageType::IndexType  IndexType;
-  typedef Vector< double,
-    itkGetStaticConstMacro( InputImageDimension ) > VectorRealType;
-  typedef Image< double,
-    itkGetStaticConstMacro( InputImageDimension ) > DoubleImageType;
-  typedef typename DoubleImageType::Pointer      DoubleImagePointer;
-  typedef typename GrayValueImageType::PixelType GrayValuePixelType;
+  // typedef typename NumericTraits<InputPixelType>::RealType    InputRealType;
+  typedef typename InputImageType::RegionType                         InputImageRegionType;
+  typedef typename InputImageType::SizeType                           InputSizeType;
+  typedef typename InputImageType::IndexType                          IndexType;
+  typedef Vector<double, itkGetStaticConstMacro(InputImageDimension)> VectorRealType;
+  typedef Image<double, itkGetStaticConstMacro(InputImageDimension)>  DoubleImageType;
+  typedef typename DoubleImageType::Pointer                           DoubleImagePointer;
+  typedef typename GrayValueImageType::PixelType                      GrayValuePixelType;
 
   /** Typedef for the rescale intensity filter. */
-  typedef RescaleIntensityImageFilter<
-    GrayValueImageType, DoubleImageType >           RescaleImageFilterType;
-  typedef typename RescaleImageFilterType::Pointer RescaleImageFilterPointer;
+  typedef RescaleIntensityImageFilter<GrayValueImageType, DoubleImageType> RescaleImageFilterType;
+  typedef typename RescaleImageFilterType::Pointer                         RescaleImageFilterPointer;
 
   /** Set the radius of the neighborhood used to compute the mean. */
-  itkSetMacro( Radius, InputSizeType );
+  itkSetMacro(Radius, InputSizeType);
 
   /** Get the radius of the neighborhood used to compute the mean */
-  itkGetConstReferenceMacro( Radius, InputSizeType );
+  itkGetConstReferenceMacro(Radius, InputSizeType);
 
   /** MeanImageFilter needs a larger input requested region than
    * the output requested region.  As such, MeanImageFilter needs
@@ -105,27 +98,30 @@ public:
    *
    * \sa ImageToImageFilter::GenerateInputRequestedRegion().
    */
-  void GenerateInputRequestedRegion() override;
+  void
+  GenerateInputRequestedRegion() override;
 
   /** Set & Get the NumberOfIterations. */
-  itkSetMacro( NumberOfIterations, unsigned int );
-  itkGetConstMacro( NumberOfIterations, unsigned int );
+  itkSetMacro(NumberOfIterations, unsigned int);
+  itkGetConstMacro(NumberOfIterations, unsigned int);
 
   /** Set- and GetObjectMacro's for the GrayValueImage. */
-  void SetGrayValueImage( GrayValueImageType * _arg );
+  void
+  SetGrayValueImage(GrayValueImageType * _arg);
 
-  typename GrayValueImageType::Pointer GetGrayValueImage( void )
+  typename GrayValueImageType::Pointer
+  GetGrayValueImage(void)
   {
     return this->m_GrayValueImage.GetPointer();
   }
 
 
 protected:
-
   VectorMeanDiffusionImageFilter();
   ~VectorMeanDiffusionImageFilter() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** MeanImageFilter can be implemented as a multithreaded filter.
    * Therefore, this implementation provides a ThreadedGenerateData()
@@ -138,12 +134,13 @@ protected:
    * \sa ImageToImageFilter::ThreadedGenerateData(),
    *     ImageToImageFilter::GenerateData().
    */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
 private:
-
-  VectorMeanDiffusionImageFilter( const Self & );  // purposely not implemented
-  void operator=( const Self & );                  // purposely not implemented
+  VectorMeanDiffusionImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Declare member variables. */
   InputSizeType m_Radius;
@@ -156,14 +153,14 @@ private:
   RescaleImageFilterPointer m_RescaleFilter;
 
   /** For calculating a feature image from the input m_GrayValueImage. */
-  void FilterGrayValueImage( void );
-
+  void
+  FilterGrayValueImage(void);
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVectorMeanDiffusionImageFilter.hxx"
+#  include "itkVectorMeanDiffusionImageFilter.hxx"
 #endif
 
 #endif // end #ifndef __itkVectorMeanDiffusionImageFilter_H__

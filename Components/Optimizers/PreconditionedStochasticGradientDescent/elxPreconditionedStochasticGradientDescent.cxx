@@ -18,4 +18,4 @@
 
 #include "elxPreconditionedStochasticGradientDescent.h"
 
-elxInstallMacro( PreconditionedStochasticGradientDescent );
+elxInstallMacro(PreconditionedStochasticGradientDescent);

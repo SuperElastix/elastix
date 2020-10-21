@@ -31,9 +31,8 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template< class TElastix >
-FiniteDifferenceGradientDescent< TElastix >
-::FiniteDifferenceGradientDescent()
+template <class TElastix>
+FiniteDifferenceGradientDescent<TElastix>::FiniteDifferenceGradientDescent()
 {
   this->m_ShowMetricValues = false;
 } // end Constructor
@@ -43,33 +42,32 @@ FiniteDifferenceGradientDescent< TElastix >
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-FiniteDifferenceGradientDescent< TElastix >::BeforeRegistration( void )
+FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration(void)
 {
-  std::string showMetricValues( "false" );
-  this->GetConfiguration()->ReadParameter(
-    showMetricValues, "ShowMetricValues", 0 );
-  if( showMetricValues == "false" )
+  std::string showMetricValues("false");
+  this->GetConfiguration()->ReadParameter(showMetricValues, "ShowMetricValues", 0);
+  if (showMetricValues == "false")
   {
     this->m_ShowMetricValues = false;
-    this->SetComputeCurrentValue( this->m_ShowMetricValues );
+    this->SetComputeCurrentValue(this->m_ShowMetricValues);
   }
   else
   {
     this->m_ShowMetricValues = true;
-    this->SetComputeCurrentValue( this->m_ShowMetricValues );
+    this->SetComputeCurrentValue(this->m_ShowMetricValues);
   }
 
   /** Add some target cells to xout["iteration"].*/
-  xout[ "iteration" ].AddTargetCell( "2:Metric" );
-  xout[ "iteration" ].AddTargetCell( "3:Gain a_k" );
-  xout[ "iteration" ].AddTargetCell( "4:||Gradient||" );
+  xout["iteration"].AddTargetCell("2:Metric");
+  xout["iteration"].AddTargetCell("3:Gain a_k");
+  xout["iteration"].AddTargetCell("4:||Gradient||");
 
   /** Format them as floats */
-  xl::xout[ "iteration" ][ "2:Metric" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "3:Gain a_k" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3:Gain a_k"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 
 } // end BeforeRegistration
 
@@ -78,39 +76,37 @@ FiniteDifferenceGradientDescent< TElastix >::BeforeRegistration( void )
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-FiniteDifferenceGradientDescent< TElastix >
-::BeforeEachResolution( void )
+FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast< unsigned int >(
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Set the maximumNumberOfIterations.*/
   unsigned int maximumNumberOfIterations = 500;
-  this->m_Configuration->ReadParameter( maximumNumberOfIterations,
-    "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
-  this->SetNumberOfIterations( maximumNumberOfIterations );
+  this->m_Configuration->ReadParameter(
+    maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
+  this->SetNumberOfIterations(maximumNumberOfIterations);
 
   /** \todo  GuessParameters function */
-  double a     = 400.0;
-  double c     = 1.0;
-  double A     = 50.0;
+  double a = 400.0;
+  double c = 1.0;
+  double A = 50.0;
   double alpha = 0.602;
   double gamma = 0.101;
 
-  this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( c, "SP_c", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( A, "SP_A", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0);
 
-  this->SetParam_a( a );
-  this->SetParam_c( c );
-  this->SetParam_A( A );
-  this->SetParam_alpha( alpha );
-  this->SetParam_gamma( gamma );
+  this->SetParam_a(a);
+  this->SetParam_c(c);
+  this->SetParam_A(A);
+  this->SetParam_alpha(alpha);
+  this->SetParam_gamma(gamma);
 
 } // end BeforeEachResolution
 
@@ -119,28 +115,27 @@ FiniteDifferenceGradientDescent< TElastix >
  * ***************** AfterEachIteration *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-FiniteDifferenceGradientDescent< TElastix >
-::AfterEachIteration( void )
+FiniteDifferenceGradientDescent<TElastix>::AfterEachIteration(void)
 {
   /** Print some information */
 
-  if( this->m_ShowMetricValues )
+  if (this->m_ShowMetricValues)
   {
-    xl::xout[ "iteration" ][ "2:Metric" ] << this->GetValue();
+    xl::xout["iteration"]["2:Metric"] << this->GetValue();
   }
   else
   {
-    xl::xout[ "iteration" ][ "2:Metric" ] << "---";
+    xl::xout["iteration"]["2:Metric"] << "---";
   }
-  xl::xout[ "iteration" ][ "3:Gain a_k" ] << this->GetLearningRate();
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << this->GetGradientMagnitude();
+  xl::xout["iteration"]["3:Gain a_k"] << this->GetLearningRate();
+  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
 
   /** Select new spatial samples for the computation of the metric
    * \todo You may also choose to select new samples after evaluation
    * of the metric value */
-  if( this->GetNewSamplesEveryIteration() )
+  if (this->GetNewSamplesEveryIteration())
   {
     this->SelectNewSamples();
   }
@@ -152,10 +147,9 @@ FiniteDifferenceGradientDescent< TElastix >
  * ***************** AfterEachResolution *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-FiniteDifferenceGradientDescent< TElastix >
-::AfterEachResolution( void )
+FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution(void)
 {
 
   /**
@@ -163,7 +157,7 @@ FiniteDifferenceGradientDescent< TElastix >
    */
   std::string stopcondition;
 
-  switch( this->GetStopCondition() )
+  switch (this->GetStopCondition())
   {
 
     case MaximumNumberOfIterations:
@@ -177,7 +171,6 @@ FiniteDifferenceGradientDescent< TElastix >
     default:
       stopcondition = "Unknown";
       break;
-
   }
   /** Print the stopping condition */
 
@@ -190,29 +183,22 @@ FiniteDifferenceGradientDescent< TElastix >
  * ******************* AfterRegistration ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-FiniteDifferenceGradientDescent< TElastix >
-::AfterRegistration( void )
+FiniteDifferenceGradientDescent<TElastix>::AfterRegistration(void)
 {
   /** Print the best metric value */
   double bestValue;
-  if( this->m_ShowMetricValues )
+  if (this->m_ShowMetricValues)
   {
     bestValue = this->GetValue();
-    elxout
-      << std::endl
-      << "Final metric value  = "
-      << bestValue
-      << std::endl;
+    elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
   }
   else
   {
-    elxout
-      << std::endl
-      << "Run Elastix again with the option \"ShowMetricValues\" set"
-      << " to \"true\", to see information about the metric values. "
-      << std::endl;
+    elxout << std::endl
+           << "Run Elastix again with the option \"ShowMetricValues\" set"
+           << " to \"true\", to see information about the metric values. " << std::endl;
   }
 
 } // end AfterRegistration
@@ -222,30 +208,29 @@ FiniteDifferenceGradientDescent< TElastix >
  * ******************* StartOptimization ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-FiniteDifferenceGradientDescent< TElastix >
-::StartOptimization( void )
+FiniteDifferenceGradientDescent<TElastix>::StartOptimization(void)
 {
 
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */
 
-  this->SetUseScales( false );
+  this->SetUseScales(false);
   const ScalesType & scales = this->GetScales();
-  if( scales.GetSize() == this->GetInitialPosition().GetSize() )
+  if (scales.GetSize() == this->GetInitialPosition().GetSize())
   {
-    ScalesType unit_scales( scales.GetSize() );
-    unit_scales.Fill( 1.0 );
-    if( scales != unit_scales )
+    ScalesType unit_scales(scales.GetSize());
+    unit_scales.Fill(1.0);
+    if (scales != unit_scales)
     {
       /** only then: */
-      this->SetUseScales( true );
+      this->SetUseScales(true);
     }
   }
 
   this->Superclass1::StartOptimization();
 
-}   //end StartOptimization
+} // end StartOptimization
 
 
 } // end namespace elastix

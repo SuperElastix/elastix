@@ -18,4 +18,4 @@
 
 #include "elxOpenCLFixedGenericPyramid.h"
 
-elxInstallMacro( OpenCLFixedGenericPyramid );
+elxInstallMacro(OpenCLFixedGenericPyramid);

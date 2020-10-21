@@ -41,23 +41,21 @@ namespace Statistics
  * \ingroup Miscellaneous
  */
 
-template< class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType >
-class ListSampleCArray :
-  public Sample< TMeasurementVector >
+template <class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType>
+class ListSampleCArray : public Sample<TMeasurementVector>
 {
 public:
-
   /** Standard itk. */
-  typedef ListSampleCArray             Self;
-  typedef Sample< TMeasurementVector > Superclass;
-  typedef SmartPointer< Self >         Pointer;
-  typedef SmartPointer< const Self >   ConstPointer;
+  typedef ListSampleCArray           Self;
+  typedef Sample<TMeasurementVector> Superclass;
+  typedef SmartPointer<Self>         Pointer;
+  typedef SmartPointer<const Self>   ConstPointer;
 
   /** New method for creating an object using a factory.*/
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ITK type info */
-  itkTypeMacro( ListSampleCArray, Sample );
+  itkTypeMacro(ListSampleCArray, Sample);
 
   /** Typedef's from Superclass. */
   typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
@@ -73,22 +71,27 @@ public:
   typedef InternalDataType *  InternalDataContainerType;
 
   /** Macro to get the internal data container. */
-  itkGetConstMacro( InternalContainer, InternalDataContainerType );
+  itkGetConstMacro(InternalContainer, InternalDataContainerType);
 
   /** Function to resize the data container. */
-  void Resize( unsigned long n );
+  void
+  Resize(unsigned long n);
 
   /** Function to set the actual (not the allocated) size of the data container. */
-  void SetActualSize( unsigned long n );
+  void
+  SetActualSize(unsigned long n);
 
   /** Function to get the actual (not the allocated) size of the data container. */
-  unsigned long GetActualSize( void );
+  unsigned long
+  GetActualSize(void);
 
   /** Function to clear the data container. */
-  void Clear( void );
+  void
+  Clear(void);
 
   /** Function to get the size of the data container. */
-  InstanceIdentifier Size( void ) const override
+  InstanceIdentifier
+  Size(void) const override
   {
     return this->m_InternalContainerSize;
   }
@@ -100,41 +103,43 @@ public:
    * The method GetMeasurementVector( const InstanceIdentifier &id, MeasurementVectorType & mv)
    * is actually a preferred way to get a measurement vector.
    */
-  const MeasurementVectorType & GetMeasurementVector(
-    InstanceIdentifier id ) const override;
+  const MeasurementVectorType &
+  GetMeasurementVector(InstanceIdentifier id) const override;
 
   /** Function to get a point from the data container. */
-  void GetMeasurementVector( InstanceIdentifier id,
-    MeasurementVectorType & mv ) const;
+  void
+  GetMeasurementVector(InstanceIdentifier id, MeasurementVectorType & mv) const;
 
   /** Function to set part of a point (measurement) in the data container. */
-  void SetMeasurement( InstanceIdentifier id,
-    unsigned int dim, const MeasurementType & value );
+  void
+  SetMeasurement(InstanceIdentifier id, unsigned int dim, const MeasurementType & value);
 
   /** Function to set a point (measurement vector) in the data container. */
-  void SetMeasurementVector( InstanceIdentifier id,
-    const MeasurementVectorType & mv );
+  void
+  SetMeasurementVector(InstanceIdentifier id, const MeasurementVectorType & mv);
 
   /** Function to get the frequency of point i. 1.0 if it exist, 0.0 otherwise. */
-  AbsoluteFrequencyType GetFrequency( InstanceIdentifier id ) const override;
+  AbsoluteFrequencyType
+  GetFrequency(InstanceIdentifier id) const override;
 
   /** Function to get the total frequency. */
-  TotalAbsoluteFrequencyType GetTotalFrequency( void ) const override
+  TotalAbsoluteFrequencyType
+  GetTotalFrequency(void) const override
   {
-    return static_cast< TotalAbsoluteFrequencyType >( this->m_InternalContainerSize );
+    return static_cast<TotalAbsoluteFrequencyType>(this->m_InternalContainerSize);
   }
 
 
 protected:
-
   ListSampleCArray();
   ~ListSampleCArray() override;
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
-  ListSampleCArray( const Self & );   // purposely not implemented
-  void operator=( const Self & );     // purposely not implemented
+  ListSampleCArray(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** The internal storage of the data in a C array. */
   InternalDataContainerType m_InternalContainer;
@@ -145,18 +150,19 @@ private:
   mutable MeasurementVectorType m_TemporaryMeasurementVector;
 
   /** Function to allocate the memory of the data container. */
-  void AllocateInternalContainer( unsigned long size, unsigned int dim );
+  void
+  AllocateInternalContainer(unsigned long size, unsigned int dim);
 
   /** Function to deallocate the memory of the data container. */
-  void DeallocateInternalContainer( void );
-
+  void
+  DeallocateInternalContainer(void);
 };
 
 } // end namespace Statistics
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkListSampleCArray.hxx"
+#  include "itkListSampleCArray.hxx"
 #endif
 
 #endif // end #ifndef __itkListSampleCArray_h

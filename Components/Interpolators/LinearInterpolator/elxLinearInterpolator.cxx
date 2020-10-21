@@ -18,4 +18,4 @@
 
 #include "elxLinearInterpolator.h"
 
-elxInstallMacro( LinearInterpolator );
+elxInstallMacro(LinearInterpolator);

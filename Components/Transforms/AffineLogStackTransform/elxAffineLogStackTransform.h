@@ -37,58 +37,58 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template< class TElastix >
-class AffineLogStackTransform :
-  public itk::AdvancedCombinationTransform<
-  typename elx::TransformBase< TElastix >::CoordRepType,
-  elx::TransformBase< TElastix >::FixedImageDimension >,
-  public elx::TransformBase< TElastix >
+template <class TElastix>
+class AffineLogStackTransform
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public elx::TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef AffineLogStackTransform                         Self;
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension > Superclass1;
-  typedef elx::TransformBase< TElastix >                  Superclass2;
-  typedef itk::SmartPointer< Self >                       Pointer;
-  typedef itk::SmartPointer< const Self >                 ConstPointer;
+  typedef AffineLogStackTransform Self;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+                                        Superclass1;
+  typedef elx::TransformBase<TElastix>  Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AffineLogStackTransform, itk::AdvancedCombinationTransform );
+  itkTypeMacro(AffineLogStackTransform, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "AffineStackTransform")</tt>\n
    */
-  elxClassNameMacro( "AffineLogStackTransform" );
+  elxClassNameMacro("AffineLogStackTransform");
 
   /** (Reduced) dimension of the fixed image. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
-  itkStaticConstMacro( ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
+  itkStaticConstMacro(ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1);
 
-  typedef itk::AffineLogTransform< typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ) >            AffineLogTransformType;
+  typedef itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                  itkGetStaticConstMacro(SpaceDimension)>
+                                                          AffineLogTransformType;
   typedef typename AffineLogTransformType::Pointer        AffineLogTransformPointer;
   typedef typename AffineLogTransformType::InputPointType InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
-  typedef itk::AffineLogTransform< typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( ReducedSpaceDimension ) >                           ReducedDimensionAffineLogTransformBaseType;
+  typedef itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                  itkGetStaticConstMacro(ReducedSpaceDimension)>
+                                                                       ReducedDimensionAffineLogTransformBaseType;
   typedef typename ReducedDimensionAffineLogTransformBaseType::Pointer ReducedDimensionAffineLogTransformBasePointer;
 
   typedef typename ReducedDimensionAffineLogTransformBaseType::OutputVectorType ReducedDimensionOutputVectorType;
   typedef typename ReducedDimensionAffineLogTransformBaseType::InputPointType   ReducedDimensionInputPointType;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SpaceDimension ) >            AffineLogStackTransformType;
+  typedef itk::StackTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                              itkGetStaticConstMacro(SpaceDimension),
+                              itkGetStaticConstMacro(SpaceDimension)>
+                                                        AffineLogStackTransformType;
   typedef typename AffineLogStackTransformType::Pointer AffineLogStackTransformPointer;
 
   /** Typedefs inherited from the superclass. */
@@ -109,44 +109,45 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Reduced Dimension typedef's. */
-  typedef float PixelType;
-  typedef itk::Image< PixelType,
-    itkGetStaticConstMacro( ReducedSpaceDimension ) >       ReducedDimensionImageType;
-  typedef itk::ImageRegion<
-    itkGetStaticConstMacro( ReducedSpaceDimension ) >         ReducedDimensionRegionType;
-  typedef typename ReducedDimensionImageType::PointType     ReducedDimensionPointType;
-  typedef typename ReducedDimensionImageType::SizeType      ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType    ReducedDimensionIndexType;
-  typedef typename ReducedDimensionImageType::SpacingType   ReducedDimensionSpacingType;
-  typedef typename ReducedDimensionImageType::DirectionType ReducedDimensionDirectionType;
-  typedef typename ReducedDimensionImageType::PointType     ReducedDimensionOriginType;
+  typedef float                                                                PixelType;
+  typedef itk::Image<PixelType, itkGetStaticConstMacro(ReducedSpaceDimension)> ReducedDimensionImageType;
+  typedef itk::ImageRegion<itkGetStaticConstMacro(ReducedSpaceDimension)>      ReducedDimensionRegionType;
+  typedef typename ReducedDimensionImageType::PointType                        ReducedDimensionPointType;
+  typedef typename ReducedDimensionImageType::SizeType                         ReducedDimensionSizeType;
+  typedef typename ReducedDimensionRegionType::IndexType                       ReducedDimensionIndexType;
+  typedef typename ReducedDimensionImageType::SpacingType                      ReducedDimensionSpacingType;
+  typedef typename ReducedDimensionImageType::DirectionType                    ReducedDimensionDirectionType;
+  typedef typename ReducedDimensionImageType::PointType                        ReducedDimensionOriginType;
 
   /** For scales setting in the optimizer */
   typedef typename Superclass2::ScalesType ScalesType;
 
   /** Other typedef's. */
-  typedef typename FixedImageType::IndexType                                   IndexType;
-  typedef typename FixedImageType::SizeType                                    SizeType;
-  typedef typename FixedImageType::PointType                                   PointType;
-  typedef typename FixedImageType::SpacingType                                 SpacingType;
-  typedef typename FixedImageType::RegionType                                  RegionType;
-  typedef typename FixedImageType::DirectionType                               DirectionType;
-  typedef typename itk::ContinuousIndex< CoordRepType, ReducedSpaceDimension > ReducedDimensionContinuousIndexType;
-  typedef typename itk::ContinuousIndex< CoordRepType, SpaceDimension >        ContinuousIndexType;
+  typedef typename FixedImageType::IndexType                                 IndexType;
+  typedef typename FixedImageType::SizeType                                  SizeType;
+  typedef typename FixedImageType::PointType                                 PointType;
+  typedef typename FixedImageType::SpacingType                               SpacingType;
+  typedef typename FixedImageType::RegionType                                RegionType;
+  typedef typename FixedImageType::DirectionType                             DirectionType;
+  typedef typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension> ReducedDimensionContinuousIndexType;
+  typedef typename itk::ContinuousIndex<CoordRepType, SpaceDimension>        ContinuousIndexType;
 
   /** Execute stuff before anything else is done:*/
 
-  int BeforeAll( void ) override;
+  int
+  BeforeAll(void) override;
 
   /** Execute stuff before the actual registration:
    * \li Set the stack transform parameters.
    * \li Set initial sub transforms.
    * \li Create initial registration parameters.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Method initialize the parameters (to 0). */
-  virtual void InitializeTransform( void );
+  virtual void
+  InitializeTransform(void);
 
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -155,16 +156,18 @@ public:
    * This function is called by BeforeRegistration, after
    * the InitializeTransform function is called
    */
-  virtual void SetScales( void );
+  virtual void
+  SetScales(void);
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
 protected:
-
   /** The constructor. */
   AffineLogStackTransform();
 
@@ -176,13 +179,14 @@ protected:
    * Transform parameter files generated by elastix version > 3.402
    * save the center of rotation in this way.
    */
-  virtual bool ReadCenterOfRotationPoint( ReducedDimensionInputPointType & rotationPoint ) const;
+  virtual bool
+  ReadCenterOfRotationPoint(ReducedDimensionInputPointType & rotationPoint) const;
 
 private:
-
   /** The private constructor and copy constructor. */
-  AffineLogStackTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );          // purposely not implemented
+  AffineLogStackTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** The Affine stack transform. */
   AffineLogStackTransformPointer m_AffineLogStackTransform;
@@ -195,14 +199,14 @@ private:
   double       m_StackOrigin, m_StackSpacing;
 
   /** Initialize the affine transform. */
-  unsigned int InitializeAffineLogTransform();
-
+  unsigned int
+  InitializeAffineLogTransform();
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxAffineLogStackTransform.hxx"
+#  include "elxAffineLogStackTransform.hxx"
 #endif
 
 #endif // ELXAFFINELOGSTACKTRANSFORM_H

@@ -20,24 +20,24 @@
 #include "itkOpenCLProgram.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   itk::OpenCLDevice device;
 
-  if( !device.IsNull() )
+  if (!device.IsNull())
   {
     return EXIT_FAILURE;
   }
 
   // Get all devices
-  std::list< itk::OpenCLDevice >       gpus;
-  const std::list< itk::OpenCLDevice > devices = itk::OpenCLDevice::GetAllDevices();
-  for( std::list< itk::OpenCLDevice >::const_iterator dev = devices.begin(); dev != devices.end(); ++dev )
+  std::list<itk::OpenCLDevice>       gpus;
+  const std::list<itk::OpenCLDevice> devices = itk::OpenCLDevice::GetAllDevices();
+  for (std::list<itk::OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
   {
-    if( ( ( *dev ).GetDeviceType() & itk::OpenCLDevice::GPU ) != 0 )
+    if (((*dev).GetDeviceType() & itk::OpenCLDevice::GPU) != 0)
     {
-      gpus.push_back( *dev );
-      std::cout << ( *dev );
+      gpus.push_back(*dev);
+      std::cout << (*dev);
     }
   }
 

@@ -35,26 +35,24 @@ namespace itk
  * \sa LimiterFunctionBase, ExponentialLimiterFunction
  *
  */
-template< class TInput, unsigned int NDimension >
-class HardLimiterFunction :
-  public LimiterFunctionBase< TInput, NDimension >
+template <class TInput, unsigned int NDimension>
+class HardLimiterFunction : public LimiterFunctionBase<TInput, NDimension>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef HardLimiterFunction                       Self;
-  typedef LimiterFunctionBase< TInput, NDimension > Superclass;
-  typedef SmartPointer< Self >                      Pointer;
-  typedef SmartPointer< const Self >                ConstPointer;
+  typedef HardLimiterFunction                     Self;
+  typedef LimiterFunctionBase<TInput, NDimension> Superclass;
+  typedef SmartPointer<Self>                      Pointer;
+  typedef SmartPointer<const Self>                ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( HardLimiterFunction, LimiterFunctionBase );
+  itkTypeMacro(HardLimiterFunction, LimiterFunctionBase);
 
   /** Define the New() function, for creation via the ObjectFactory */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Superclass' static consts */
-  itkStaticConstMacro( Dimension, unsigned int, Superclass::Dimension );
+  itkStaticConstMacro(Dimension, unsigned int, Superclass::Dimension);
 
   /** Superclass' typedefs */
   typedef typename Superclass::InputType           InputType;
@@ -63,27 +61,27 @@ public:
   typedef typename Superclass::DerivativeType      DerivativeType;
 
   /** Limit the input value */
-  OutputType Evaluate( const InputType & input ) const override;
+  OutputType
+  Evaluate(const InputType & input) const override;
 
   /** Limit the input value and change the input function derivative accordingly */
-  OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const override;
+  OutputType
+  Evaluate(const InputType & input, DerivativeType & derivative) const override;
 
 protected:
-
-  HardLimiterFunction(){}
-  ~HardLimiterFunction() override{}
+  HardLimiterFunction() {}
+  ~HardLimiterFunction() override {}
 
 private:
-
-  HardLimiterFunction( const Self & ); // purposely not implemented
-  void operator=( const Self & );      // purposely not implemented
-
+  HardLimiterFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkHardLimiterFunction.hxx"
+#  include "itkHardLimiterFunction.hxx"
 #endif
 
 #endif

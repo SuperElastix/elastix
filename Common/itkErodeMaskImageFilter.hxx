@@ -29,15 +29,14 @@ namespace itk
  * ************* Constructor *******************
  */
 
-template< class TImage >
-ErodeMaskImageFilter< TImage >
-::ErodeMaskImageFilter()
+template <class TImage>
+ErodeMaskImageFilter<TImage>::ErodeMaskImageFilter()
 {
-  this->m_IsMovingMask    = false;
+  this->m_IsMovingMask = false;
   this->m_ResolutionLevel = 0;
 
-  ScheduleType defaultSchedule( 1, InputImageDimension );
-  defaultSchedule.Fill( NumericTraits< unsigned int >::OneValue() );
+  ScheduleType defaultSchedule(1, InputImageDimension);
+  defaultSchedule.Fill(NumericTraits<unsigned int>::OneValue());
   this->m_Schedule = defaultSchedule;
 
 } // end Constructor
@@ -47,27 +46,24 @@ ErodeMaskImageFilter< TImage >
  * ************* GenerateData *******************
  */
 
-template< class TImage >
+template <class TImage>
 void
-ErodeMaskImageFilter< TImage >
-::GenerateData( void )
+ErodeMaskImageFilter<TImage>::GenerateData(void)
 {
   /** Typedefs. */
-  //typedef itk::ThresholdImageFilter<InputImageType> ThresholdFilterType;
-  typedef itk::ParabolicErodeImageFilter<
-    InputImageType, OutputImageType >               ErodeFilterType;
-  typedef typename ErodeFilterType::RadiusType     RadiusType;
-  typedef typename ErodeFilterType::ScalarRealType ScalarRealType;
+  // typedef itk::ThresholdImageFilter<InputImageType> ThresholdFilterType;
+  typedef itk::ParabolicErodeImageFilter<InputImageType, OutputImageType> ErodeFilterType;
+  typedef typename ErodeFilterType::RadiusType                            RadiusType;
+  typedef typename ErodeFilterType::ScalarRealType                        ScalarRealType;
 
   /** Get the correct radius. */
   RadiusType     radiusarray;
-  ScalarRealType radius   = 0.0;
+  ScalarRealType radius = 0.0;
   ScalarRealType schedule = 0.0;
-  for( unsigned int i = 0; i < InputImageDimension; ++i )
+  for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
-    schedule = static_cast< ScalarRealType >(
-      this->GetSchedule()[ this->GetResolutionLevel() ][ i ] );
-    if( !this->GetIsMovingMask() )
+    schedule = static_cast<ScalarRealType>(this->GetSchedule()[this->GetResolutionLevel()][i]);
+    if (!this->GetIsMovingMask())
     {
       radius = schedule + 1.0;
     }
@@ -78,7 +74,7 @@ ErodeMaskImageFilter< TImage >
     // Very specific computation for the parabolic erosion filter:
     radius = radius * radius / 2.0 + 1.0;
 
-    radiusarray.SetElement( i, radius );
+    radiusarray.SetElement(i, radius);
   }
 
   /** Threshold the data first. Every voxel with intensity >= 1 is used.
@@ -90,16 +86,16 @@ ErodeMaskImageFilter< TImage >
 
   /** Create and run the erosion filter. */
   typename ErodeFilterType::Pointer erosion = ErodeFilterType::New();
-  erosion->SetUseImageSpacing( false );
-  erosion->SetScale( radiusarray );
-  //erosion->SetInput( threshold->GetOutput() );
-  erosion->SetInput( this->GetInput() );
+  erosion->SetUseImageSpacing(false);
+  erosion->SetScale(radiusarray);
+  // erosion->SetInput( threshold->GetOutput() );
+  erosion->SetInput(this->GetInput());
   erosion->Update();
 
   /** Graft the output of the mini-pipeline back onto the filter's output.
    * this copies back the region ivars and meta-data.
    */
-  this->GraftOutput( erosion->GetOutput() );
+  this->GraftOutput(erosion->GetOutput());
 
 } // end GenerateData()
 

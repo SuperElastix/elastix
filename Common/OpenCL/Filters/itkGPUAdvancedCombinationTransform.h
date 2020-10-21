@@ -34,25 +34,26 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TScalarType = float, unsigned int NDimensions = 3,
-typename TParentTransform      = AdvancedCombinationTransform< TScalarType, NDimensions > >
-class GPUAdvancedCombinationTransform :
-  public TParentTransform, public GPUCompositeTransformBase< TScalarType, NDimensions >
+template <typename TScalarType = float,
+          unsigned int NDimensions = 3,
+          typename TParentTransform = AdvancedCombinationTransform<TScalarType, NDimensions>>
+class GPUAdvancedCombinationTransform
+  : public TParentTransform
+  , public GPUCompositeTransformBase<TScalarType, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUAdvancedCombinationTransform                       Self;
-  typedef TParentTransform                                      CPUSuperclass;
-  typedef GPUCompositeTransformBase< TScalarType, NDimensions > GPUSuperclass;
-  typedef SmartPointer< Self >                                  Pointer;
-  typedef SmartPointer< const Self >                            ConstPointer;
+  typedef GPUAdvancedCombinationTransform                     Self;
+  typedef TParentTransform                                    CPUSuperclass;
+  typedef GPUCompositeTransformBase<TScalarType, NDimensions> GPUSuperclass;
+  typedef SmartPointer<Self>                                  Pointer;
+  typedef SmartPointer<const Self>                            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAdvancedCombinationTransform, TParentTransform );
+  itkTypeMacro(GPUAdvancedCombinationTransform, TParentTransform);
 
   /** Sub transform types. */
   typedef typename GPUSuperclass::TransformType             GPUTransformType;
@@ -60,25 +61,32 @@ public:
   typedef typename GPUSuperclass::TransformTypeConstPointer TransformTypeConstPointer;
 
   /** Get number of transforms in composite transform. */
-  virtual SizeValueType GetNumberOfTransforms( void ) const
-  { return CPUSuperclass::GetNumberOfTransforms(); }
+  virtual SizeValueType
+  GetNumberOfTransforms(void) const
+  {
+    return CPUSuperclass::GetNumberOfTransforms();
+  }
 
   /** Get the Nth transform. */
-  virtual const TransformTypePointer GetNthTransform( SizeValueType n ) const
-  { return CPUSuperclass::GetNthTransform( n ); }
+  virtual const TransformTypePointer
+  GetNthTransform(SizeValueType n) const
+  {
+    return CPUSuperclass::GetNthTransform(n);
+  }
 
 protected:
-
   GPUAdvancedCombinationTransform() {}
   virtual ~GPUAdvancedCombinationTransform() {}
-  void PrintSelf( std::ostream & s, Indent indent ) const override
-  { CPUSuperclass::PrintSelf( s, indent ); }
+  void
+  PrintSelf(std::ostream & s, Indent indent) const override
+  {
+    CPUSuperclass::PrintSelf(s, indent);
+  }
 
 private:
-
-  GPUAdvancedCombinationTransform( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );                // purposely not implemented
-
+  GPUAdvancedCombinationTransform(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

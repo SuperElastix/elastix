@@ -33,22 +33,21 @@ namespace itk
  * a mesh or a pointset.
  */
 
-template< class TOutputMesh >
-class MeshFileReaderBase : public MeshSource< TOutputMesh >
+template <class TOutputMesh>
+class MeshFileReaderBase : public MeshSource<TOutputMesh>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef MeshFileReaderBase         Self;
-  typedef MeshSource< TOutputMesh >  Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef MeshFileReaderBase       Self;
+  typedef MeshSource<TOutputMesh>  Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MeshFileReaderBase, MeshSource );
+  itkTypeMacro(MeshFileReaderBase, MeshSource);
 
   /** Some convenient typedefs. */
   typedef typename Superclass::DataObjectPointer DatabObjectPointer;
@@ -56,25 +55,26 @@ public:
   typedef typename Superclass::OutputMeshPointer OutputMeshPointer;
 
   /** Set/Get the filename */
-  itkGetStringMacro( FileName );
-  itkSetStringMacro( FileName );
+  itkGetStringMacro(FileName);
+  itkSetStringMacro(FileName);
 
   /** Prepare the allocation of the output mesh during the first back
    * propagation of the pipeline.
    */
-  void GenerateOutputInformation( void ) override;
+  void
+  GenerateOutputInformation(void) override;
 
   /** Give the reader a chance to indicate that it will produce more
    * output than it was requested to produce. MeshFileReader cannot
    * currently read a portion of a mesh, so the MeshFileReader must
    * enlarge the RequestedRegion to the size of the mesh on disk.
    */
-  void EnlargeOutputRequestedRegion( DataObject * output ) override;
+  void
+  EnlargeOutputRequestedRegion(DataObject * output) override;
 
 protected:
-
   MeshFileReaderBase();
-  ~MeshFileReaderBase() override{}
+  ~MeshFileReaderBase() override {}
 
   /** Test whether the given filename exist and it is readable,
    * this is intended to be called before attempting to use
@@ -82,21 +82,21 @@ protected:
    * doesn't exist or it is not readable, and exception with an
    * appropriate message will be thrown.
    */
-  virtual void TestFileExistanceAndReadability( void );
+  virtual void
+  TestFileExistanceAndReadability(void);
 
   std::string m_FileName;
 
 private:
-
-  MeshFileReaderBase( const Self & );  // purposely not implemented
-  void operator=( const Self & );      // purposely not implemented
-
+  MeshFileReaderBase(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMeshFileReaderBase.hxx"
+#  include "itkMeshFileReaderBase.hxx"
 #endif
 
 #endif

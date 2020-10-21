@@ -111,44 +111,43 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template< class TElastix >
-class SplineKernelTransform : public itk::AdvancedCombinationTransform<
-  typename elx::TransformBase< TElastix >::CoordRepType,
-  elx::TransformBase< TElastix >::FixedImageDimension >,
-  public elx::TransformBase< TElastix >
+template <class TElastix>
+class SplineKernelTransform
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public elx::TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef SplineKernelTransform Self;
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >   Superclass1;
-  typedef elx::TransformBase< TElastix > Superclass2;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+                                       Superclass1;
+  typedef elx::TransformBase<TElastix> Superclass2;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::KernelTransform2<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >   KernelTransformType;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::KernelTransform2<typename elx::TransformBase<TElastix>::CoordRepType,
+                                elx::TransformBase<TElastix>::FixedImageDimension>
+                                        KernelTransformType;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( SplineKernelTransform, itk::AdvancedCombinationTransform );
+  itkTypeMacro(SplineKernelTransform, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "SplineKernelTransform")</tt>\n
    */
-  elxClassNameMacro( "SplineKernelTransform" );
+  elxClassNameMacro("SplineKernelTransform");
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
@@ -186,7 +185,8 @@ public:
    * \li Check if -fp command line argument was given
    * \li Check if -mp command line argument was given
    */
-  int BeforeAll( void ) override;
+  int
+  BeforeAll(void) override;
 
   /** Execute stuff before the actual registration:
    * \li Setup transform
@@ -194,72 +194,75 @@ public:
    * \li Determine moving image (target) landmarks
    * \li Call InitializeTransform.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
 protected:
-
   /** The constructor. */
   SplineKernelTransform();
   /** The destructor. */
   ~SplineKernelTransform() override {}
 
-  typedef itk::ThinPlateSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   TPKernelTransformType;
-  typedef itk::ThinPlateR2LogRSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   TPRKernelTransformType;
-  typedef itk::VolumeSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   VKernelTransformType;
-  typedef itk::ElasticBodySplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   EBKernelTransformType;
-  typedef itk::ElasticBodyReciprocalSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   EBRKernelTransformType;
+  typedef itk::ThinPlateSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
+    TPKernelTransformType;
+  typedef itk::ThinPlateR2LogRSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
+                                                                                                  TPRKernelTransformType;
+  typedef itk::VolumeSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)> VKernelTransformType;
+  typedef itk::ElasticBodySplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
+    EBKernelTransformType;
+  typedef itk::ElasticBodyReciprocalSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
+    EBRKernelTransformType;
 
   /** Create an instance of a kernel transform. Returns false if the
    * kernelType is unknown.
    */
-  virtual bool SetKernelType( const std::string & kernelType );
+  virtual bool
+  SetKernelType(const std::string & kernelType);
 
   /** Read source landmarks from fp file
    * \li Try reading -fp file
    */
-  virtual void DetermineSourceLandmarks( void );
+  virtual void
+  DetermineSourceLandmarks(void);
 
   /** Read target landmarks from mp file or load identity.
    * \li Try reading -mp file
    * \li If no -mp file was given, place landmarks as identity.
    */
-  virtual bool DetermineTargetLandmarks( void );
+  virtual bool
+  DetermineTargetLandmarks(void);
 
   /** General function to read all landmarks. */
-  virtual void ReadLandmarkFile(
-    const std::string & filename,
-    PointSetPointer & landmarkPointSet,
-    const bool & landmarksInFixedImage );
+  virtual void
+  ReadLandmarkFile(const std::string & filename,
+                   PointSetPointer &   landmarkPointSet,
+                   const bool &        landmarksInFixedImage);
 
   /** The itk kernel transform. */
   KernelTransformPointer m_KernelTransform;
 
 private:
-
   /** The private constructor. */
-  SplineKernelTransform( const Self & ); // purposely not implemented
+  SplineKernelTransform(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );              // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   std::string m_SplineKernelType;
-
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxSplineKernelTransform.hxx"
+#  include "elxSplineKernelTransform.hxx"
 #endif
 
 #endif // end #ifndef __elxSplineKernelTransform_H_

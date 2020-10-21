@@ -19,8 +19,8 @@
 
 namespace itk
 {
-OpenCLProfilingTimeProbe::OpenCLProfilingTimeProbe( const std::string & message ) :
-  m_ProfilingMessage( message )
+OpenCLProfilingTimeProbe::OpenCLProfilingTimeProbe(const std::string & message)
+  : m_ProfilingMessage(message)
 {
   this->m_Timer.Start();
 }
@@ -30,8 +30,7 @@ OpenCLProfilingTimeProbe::OpenCLProfilingTimeProbe( const std::string & message 
 OpenCLProfilingTimeProbe::~OpenCLProfilingTimeProbe()
 {
   this->m_Timer.Stop();
-  std::cout << this->m_ProfilingMessage << " took "
-            << this->m_Timer.GetMean() << " seconds." << std::endl;
+  std::cout << this->m_ProfilingMessage << " took " << this->m_Timer.GetMean() << " seconds." << std::endl;
 }
 
 

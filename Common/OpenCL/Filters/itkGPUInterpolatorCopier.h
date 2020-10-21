@@ -61,23 +61,21 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimensions,
-typename TInterpolator, typename TOutputCoordRep >
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
 class GPUInterpolatorCopier : public Object
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUInterpolatorCopier      Self;
-  typedef Object                     Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUInterpolatorCopier    Self;
+  typedef Object                   Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUInterpolatorCopier, Object );
+  itkTypeMacro(GPUInterpolatorCopier, Object);
 
   /** Type CPU definitions for the interpolator. */
   typedef TInterpolator                                CPUInterpolatorType;
@@ -87,29 +85,26 @@ public:
   typedef TOutputCoordRep                              GPUCoordRepType;
 
   /** Typedef's for non explicit GPU interpolator definitions. */
-  typedef InterpolateImageFunction< CPUInputImageType, GPUCoordRepType >
-    GPUInterpolatorType;
-  typedef typename GPUInterpolatorType::Pointer      GPUInterpolatorPointer;
-  typedef typename GPUInterpolatorType::ConstPointer GPUInterpolatorConstPointer;
+  typedef InterpolateImageFunction<CPUInputImageType, GPUCoordRepType> GPUInterpolatorType;
+  typedef typename GPUInterpolatorType::Pointer                        GPUInterpolatorPointer;
+  typedef typename GPUInterpolatorType::ConstPointer                   GPUInterpolatorConstPointer;
 
   /** Typedef's for explicit GPU interpolator definitions. */
-  typedef typename CPUInputImageType::PixelType CPUInputImagePixelType;
-  typedef itk::GPUImage< CPUInputImagePixelType, CPUInputImageType::ImageDimension >
-    GPUInputImageType;
-  typedef InterpolateImageFunction< GPUInputImageType, GPUCoordRepType >
-    GPUExplicitInterpolatorType;
-  typedef typename GPUExplicitInterpolatorType::Pointer      GPUExplicitInterpolatorPointer;
-  typedef typename GPUExplicitInterpolatorType::ConstPointer GPUExplicitInterpolatorConstPointer;
+  typedef typename CPUInputImageType::PixelType                                    CPUInputImagePixelType;
+  typedef itk::GPUImage<CPUInputImagePixelType, CPUInputImageType::ImageDimension> GPUInputImageType;
+  typedef InterpolateImageFunction<GPUInputImageType, GPUCoordRepType>             GPUExplicitInterpolatorType;
+  typedef typename GPUExplicitInterpolatorType::Pointer                            GPUExplicitInterpolatorPointer;
+  typedef typename GPUExplicitInterpolatorType::ConstPointer                       GPUExplicitInterpolatorConstPointer;
 
   /** Get/Set the input interpolator. */
-  itkSetConstObjectMacro( InputInterpolator, CPUInterpolatorType );
+  itkSetConstObjectMacro(InputInterpolator, CPUInterpolatorType);
 
   /** Compute of the non explicit output interpolator. */
-  itkGetModifiableObjectMacro( Output, GPUInterpolatorType );
+  itkGetModifiableObjectMacro(Output, GPUInterpolatorType);
 
   /** Compute of the explicit output interpolator.
    * This output should be used when ExplicitMode has been set to true. */
-  itkGetModifiableObjectMacro( ExplicitOutput, GPUExplicitInterpolatorType );
+  itkGetModifiableObjectMacro(ExplicitOutput, GPUExplicitInterpolatorType);
 
   /** Get/Set the explicit mode. The default is true.
    * If the explicit mode has been set to false that means that early in the
@@ -117,29 +112,29 @@ public:
    * ObjectFactoryBase::RegisterFactory( GPUNearestNeighborInterpolateImageFunctionFactory::New() );
    * ObjectFactoryBase::RegisterFactory( GPULinearInterpolateImageFunctionFactory::New() );
    * ObjectFactoryBase::RegisterFactory( GPUBSplineInterpolateImageFunctionFactory::New() ); */
-  itkGetConstMacro( ExplicitMode, bool );
-  itkSetMacro( ExplicitMode, bool );
+  itkGetConstMacro(ExplicitMode, bool);
+  itkSetMacro(ExplicitMode, bool);
 
   /** Update method. */
-  void Update( void );
+  void
+  Update(void);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   // Begin concept checking
-  itkConceptMacro( OutputCoordRepIsFloatingPointCheck,
-    ( Concept::IsFloatingPoint< TOutputCoordRep > ) );
+  itkConceptMacro(OutputCoordRepIsFloatingPointCheck, (Concept::IsFloatingPoint<TOutputCoordRep>));
   // End concept checking
 #endif
 
 protected:
-
   GPUInterpolatorCopier();
   ~GPUInterpolatorCopier() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
-  GPUInterpolatorCopier( const Self & ); // purposely not implemented
-  void operator=( const Self & );        // purposely not implemented
+  GPUInterpolatorCopier(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   CPUInterpolatorConstPointer    m_InputInterpolator;
   GPUInterpolatorPointer         m_Output;
@@ -151,7 +146,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUInterpolatorCopier.hxx"
+#  include "itkGPUInterpolatorCopier.hxx"
 #endif
 
 #endif /* __itkGPUInterpolatorCopier_h */

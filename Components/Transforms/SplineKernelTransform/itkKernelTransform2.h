@@ -91,29 +91,26 @@ namespace itk
  *
  */
 
-template< class TScalarType, // probably only float and double make sense here
-unsigned int NDimensions >
+template <class TScalarType, // probably only float and double make sense here
+          unsigned int NDimensions>
 // Number of dimensions
-class KernelTransform2 :
-  public AdvancedTransform< TScalarType, NDimensions, NDimensions >
+class KernelTransform2 : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef KernelTransform2 Self;
-  typedef AdvancedTransform<
-    TScalarType, NDimensions, NDimensions > Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef KernelTransform2                                         Self;
+  typedef AdvancedTransform<TScalarType, NDimensions, NDimensions> Superclass;
+  typedef SmartPointer<Self>                                       Pointer;
+  typedef SmartPointer<const Self>                                 ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( KernelTransform2, AdvancedTransform );
+  itkTypeMacro(KernelTransform2, AdvancedTransform);
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
 
   /** Typedefs. */
   typedef typename Superclass::ScalarType                ScalarType;
@@ -130,124 +127,129 @@ public:
   typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
 
   /** AdvancedTransform typedefs. */
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** PointList typedef. This type is used for maintaining lists of points,
    * specifically, the source and target landmark lists.
    */
-  typedef DefaultStaticMeshTraits< TScalarType,
-    NDimensions, NDimensions, TScalarType, TScalarType >       PointSetTraitsType;
-  typedef PointSet< InputPointType, NDimensions,
-    PointSetTraitsType >                                       PointSetType;
-  typedef typename PointSetType::Pointer                      PointSetPointer;
-  typedef typename PointSetType::PointsContainer              PointsContainer;
-  typedef typename PointSetType::PointsContainerIterator      PointsIterator;
-  typedef typename PointSetType::PointsContainerConstIterator PointsConstIterator;
+  typedef DefaultStaticMeshTraits<TScalarType, NDimensions, NDimensions, TScalarType, TScalarType> PointSetTraitsType;
+  typedef PointSet<InputPointType, NDimensions, PointSetTraitsType>                                PointSetType;
+  typedef typename PointSetType::Pointer                                                           PointSetPointer;
+  typedef typename PointSetType::PointsContainer                                                   PointsContainer;
+  typedef typename PointSetType::PointsContainerIterator                                           PointsIterator;
+  typedef typename PointSetType::PointsContainerConstIterator                                      PointsConstIterator;
 
   /** VectorSet typedef. */
-  typedef VectorContainer< unsigned long, InputVectorType > VectorSetType;
-  typedef typename VectorSetType::Pointer                   VectorSetPointer;
+  typedef VectorContainer<unsigned long, InputVectorType> VectorSetType;
+  typedef typename VectorSetType::Pointer                 VectorSetPointer;
 
   /** 'I' (identity) matrix typedef. */
-  typedef vnl_matrix_fixed< TScalarType, NDimensions, NDimensions > IMatrixType;
+  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> IMatrixType;
 
   /** Return the number of parameters that completely define the Transform. */
-  NumberOfParametersType GetNumberOfParameters( void ) const override
+  NumberOfParametersType
+  GetNumberOfParameters(void) const override
   {
-    return ( this->m_SourceLandmarks->GetNumberOfPoints() * SpaceDimension );
+    return (this->m_SourceLandmarks->GetNumberOfPoints() * SpaceDimension);
   }
 
 
   /** Get the source landmarks list, which we will denote \f$ p \f$. */
-  itkGetModifiableObjectMacro( SourceLandmarks, PointSetType );
+  itkGetModifiableObjectMacro(SourceLandmarks, PointSetType);
 
   /** Set the source landmarks list. */
-  virtual void SetSourceLandmarks( PointSetType * );
+  virtual void
+  SetSourceLandmarks(PointSetType *);
 
   /** Get the target landmarks list, which we will denote  \f$ q \f$. */
-  itkGetModifiableObjectMacro( TargetLandmarks, PointSetType );
+  itkGetModifiableObjectMacro(TargetLandmarks, PointSetType);
 
   /** Set the target landmarks list. */
-  virtual void SetTargetLandmarks( PointSetType * );
+  virtual void
+  SetTargetLandmarks(PointSetType *);
 
   /** Get the displacements list, which we will denote \f$ d \f$,
    * where \f$ d_i = q_i - p_i \f$.
    */
-  itkGetModifiableObjectMacro( Displacements, VectorSetType );
+  itkGetModifiableObjectMacro(Displacements, VectorSetType);
 
   /** Compute W matrix. */
-  void ComputeWMatrix( void );
+  void
+  ComputeWMatrix(void);
 
   /** Compute L matrix inverse. */
-  void ComputeLInverse( void );
+  void
+  ComputeLInverse(void);
 
   /** Compute the position of point in the new space */
-  OutputPointType TransformPoint( const InputPointType & thisPoint ) const override;
+  OutputPointType
+  TransformPoint(const InputPointType & thisPoint) const override;
 
   /** These vector transforms are not implemented for this transform. */
-  OutputVectorType TransformVector( const InputVectorType & ) const override
+  OutputVectorType
+  TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(
-        << "TransformVector(const InputVectorType &) is not implemented "
-        << "for KernelTransform" );
+    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented "
+                      << "for KernelTransform");
   }
 
 
-  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
+  OutputVnlVectorType
+  TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(
-        << "TransformVector(const InputVnlVectorType &) is not implemented "
-        << "for KernelTransform" );
+    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented "
+                      << "for KernelTransform");
   }
 
 
-  OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const override
+  OutputCovariantVectorType
+  TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(
-        << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
-        << "for KernelTransform" );
+    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+                      << "for KernelTransform");
   }
 
 
   /** Compute the Jacobian of the transformation. */
-  void GetJacobian(
-    const InputPointType &,
-    JacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
   /** Set the Transformation Parameters to be an identity transform. */
-  virtual void SetIdentity( void );
+  virtual void
+  SetIdentity(void);
 
   /** Set the Transformation Parameters and update the internal transformation.
    * The parameters represent the source landmarks. Each landmark point is represented
    * by NDimensions doubles. All the landmarks are concatenated to form one flat
    * Array<double>.
    */
-  void SetParameters( const ParametersType & ) override;
+  void
+  SetParameters(const ParametersType &) override;
 
   /** Set Transform Fixed Parameters:
    *     To support the transform file writer this function was
    *     added to set the target landmarks similar to the
    *     SetParameters function setting the source landmarks
    */
-  void SetFixedParameters( const ParametersType & ) override;
+  void
+  SetFixedParameters(const ParametersType &) override;
 
   /** Update the Parameters array from the landmarks coordinates. */
-  virtual void UpdateParameters( void );
+  virtual void
+  UpdateParameters(void);
 
   /** Get the Transformation Parameters - Gets the source landmarks. */
-  const ParametersType & GetParameters( void ) const override;
+  const ParametersType &
+  GetParameters(void) const override;
 
   /** Get Transform Fixed Parameters - Gets the target landmarks. */
-  const ParametersType & GetFixedParameters( void ) const override;
+  const ParametersType &
+  GetFixedParameters(void) const override;
 
   /** Stiffness of the spline.  A stiffness of zero results in the
    * standard interpolating spline.  A non-zero stiffness allows the
@@ -259,16 +261,17 @@ public:
    * International Conference of the IEEE Engineering in Medicine and
    * Biology Society. 1996.
    */
-  virtual void SetStiffness( double stiffness )
+  virtual void
+  SetStiffness(double stiffness)
   {
-    this->m_Stiffness        = stiffness > 0 ? stiffness : 0.0;
-    this->m_LMatrixComputed  = false;
+    this->m_Stiffness = stiffness > 0 ? stiffness : 0.0;
+    this->m_LMatrixComputed = false;
     this->m_LInverseComputed = false;
-    this->m_WMatrixComputed  = false;
+    this->m_WMatrixComputed = false;
   }
 
 
-  itkGetMacro( Stiffness, double );
+  itkGetMacro(Stiffness, double);
 
   /** This method makes only sense for the ElasticBody splines.
    * Declare here, so that you can always call it if you don't know
@@ -276,8 +279,14 @@ public:
    * ElasticBodySplineKernelTransform and in the
    * ElasticBodyReciprocalSplineKernelTransform.
    */
-  virtual void SetAlpha( TScalarType itkNotUsed( Alpha ) ) {}
-  virtual TScalarType GetAlpha( void ) const { return -1.0; }
+  virtual void
+  SetAlpha(TScalarType itkNotUsed(Alpha))
+  {}
+  virtual TScalarType
+  GetAlpha(void) const
+  {
+    return -1.0;
+  }
 
   /** This method makes only sense for the ElasticBody splines.
    * Declare here, so that you can always call it if you don't know
@@ -285,106 +294,110 @@ public:
    * ElasticBodySplineKernelTransform and in the
    * ElasticBodyReciprocalSplineKernelTransform.
    */
-  itkSetMacro( PoissonRatio, TScalarType );
-  virtual const TScalarType GetPoissonRatio( void ) const
+  itkSetMacro(PoissonRatio, TScalarType);
+  virtual const TScalarType
+  GetPoissonRatio(void) const
   {
     return this->m_PoissonRatio;
   }
 
 
   /** Matrix inversion by SVD or QR decomposition. */
-  itkSetMacro( MatrixInversionMethod, std::string );
-  itkGetConstReferenceMacro( MatrixInversionMethod, std::string );
+  itkSetMacro(MatrixInversionMethod, std::string);
+  itkGetConstReferenceMacro(MatrixInversionMethod, std::string);
 
   /** Must be provided. */
-  void GetSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj ) const override
+  void
+  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override
   {
-    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+    itkExceptionMacro(<< "Not implemented for KernelTransform2");
   }
 
 
-  void GetSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh ) const override
+  void
+  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override
   {
-    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+    itkExceptionMacro(<< "Not implemented for KernelTransform2");
   }
 
 
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+    itkExceptionMacro(<< "Not implemented for KernelTransform2");
   }
 
 
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               SpatialJacobianType &           sj,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+    itkExceptionMacro(<< "Not implemented for KernelTransform2");
   }
 
 
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+    itkExceptionMacro(<< "Not implemented for KernelTransform2");
   }
 
 
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              SpatialHessianType &           sh,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+    itkExceptionMacro(<< "Not implemented for KernelTransform2");
   }
 
 
 protected:
-
   KernelTransform2();
   ~KernelTransform2() override;
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 public:
-
   /** 'G' matrix typedef. */
-  typedef vnl_matrix_fixed< TScalarType, NDimensions, NDimensions > GMatrixType;
+  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> GMatrixType;
 
   /** 'L' matrix typedef. */
-  typedef vnl_matrix< TScalarType > LMatrixType;
+  typedef vnl_matrix<TScalarType> LMatrixType;
 
   /** 'K' matrix typedef. */
-  typedef vnl_matrix< TScalarType > KMatrixType;
+  typedef vnl_matrix<TScalarType> KMatrixType;
 
   /** 'P' matrix typedef. */
-  typedef vnl_matrix< TScalarType > PMatrixType;
+  typedef vnl_matrix<TScalarType> PMatrixType;
 
   /** 'Y' matrix typedef. */
-  typedef vnl_matrix< TScalarType > YMatrixType;
+  typedef vnl_matrix<TScalarType> YMatrixType;
 
   /** 'W' matrix typedef. */
-  typedef vnl_matrix< TScalarType > WMatrixType;
+  typedef vnl_matrix<TScalarType> WMatrixType;
 
   /** 'D' matrix typedef. Deformation component */
-  typedef vnl_matrix< TScalarType > DMatrixType;
+  typedef vnl_matrix<TScalarType> DMatrixType;
 
   /** 'A' matrix typedef. Rotational part of the Affine component */
-  typedef vnl_matrix_fixed< TScalarType, NDimensions, NDimensions > AMatrixType;
+  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> AMatrixType;
 
   /** 'B' matrix typedef. Translational part of the Affine component */
-  typedef vnl_vector_fixed< TScalarType, NDimensions > BMatrixType;
+  typedef vnl_vector_fixed<TScalarType, NDimensions> BMatrixType;
 
   /** Row matrix typedef. */
-  typedef vnl_matrix_fixed< TScalarType, 1, NDimensions > RowMatrixType;
+  typedef vnl_matrix_fixed<TScalarType, 1, NDimensions> RowMatrixType;
 
   /** Column matrix typedef. */
-  typedef vnl_matrix_fixed< TScalarType, NDimensions, 1 > ColumnMatrixType;
+  typedef vnl_matrix_fixed<TScalarType, NDimensions, 1> ColumnMatrixType;
 
   /** The list of source landmarks, denoted 'p'. */
   PointSetPointer m_SourceLandmarks;
@@ -393,7 +406,6 @@ public:
   PointSetPointer m_TargetLandmarks;
 
 protected:
-
   /** Compute G(x)
    * This is essentially the kernel of the transform.
    * By overriding this method, we can obtain (among others):
@@ -401,8 +413,8 @@ protected:
    *    Thin plate spline
    *    Volume spline.
    */
-  virtual void ComputeG( const InputVectorType & landmarkVector,
-    GMatrixType & GMatrix ) const;
+  virtual void
+  ComputeG(const InputVectorType & landmarkVector, GMatrixType & GMatrix) const;
 
   /** Compute a G(x) for a point to itself (i.e. for the block
    * diagonal elements of the matrix K. Parameter indicates for which
@@ -411,35 +423,41 @@ protected:
    * matrix where the diagonal elements are the stiffness of the
    * spline.
    */
-  virtual void ComputeReflexiveG( PointsIterator, GMatrixType & GMatrix ) const;
+  virtual void
+  ComputeReflexiveG(PointsIterator, GMatrixType & GMatrix) const;
 
   /** Compute the contribution of the landmarks weighted by the kernel
    * function to the global deformation of the space.
    */
-  virtual void ComputeDeformationContribution(
-    const InputPointType & inputPoint,
-    OutputPointType & result ) const;
+  virtual void
+  ComputeDeformationContribution(const InputPointType & inputPoint, OutputPointType & result) const;
 
   /** Compute K matrix. */
-  void ComputeK( void );
+  void
+  ComputeK(void);
 
   /** Compute L matrix. */
-  void ComputeL( void );
+  void
+  ComputeL(void);
 
   /** Compute P matrix. */
-  void ComputeP( void );
+  void
+  ComputeP(void);
 
   /** Compute Y matrix. */
-  void ComputeY( void );
+  void
+  ComputeY(void);
 
   /** Compute displacements \f$ q_i - p_i \f$. */
-  void ComputeD( void );
+  void
+  ComputeD(void);
 
   /** Reorganize the components of W into D (deformable), A (rotation part
    * of affine) and B (translational part of affine ) components.
    * \warning This method release the memory of the W Matrix.
    */
-  void ReorganizeW( void );
+  void
+  ReorganizeW(void);
 
   /** Stiffness parameter. */
   double m_Stiffness;
@@ -485,7 +503,7 @@ protected:
    * copying the matrix at return time but this is not necessary.
    * SK: we don't need this matrix anymore as a member.
    */
-  //GMatrixType m_GMatrix;
+  // GMatrixType m_GMatrix;
 
   /** Has the W matrix been computed? */
   bool m_WMatrixComputed;
@@ -502,8 +520,8 @@ protected:
    * turn calls ComputeWMatrix(). The L matrix is not changed however, and therefore
    * it is not needed to redo the decomposition.
    */
-  typedef vnl_svd< ScalarType > SVDDecompositionType;
-  typedef vnl_qr< ScalarType >  QRDecompositionType;
+  typedef vnl_svd<ScalarType> SVDDecompositionType;
+  typedef vnl_qr<ScalarType>  QRDecompositionType;
 
   SVDDecompositionType * m_LMatrixDecompositionSVD;
   QRDecompositionType *  m_LMatrixDecompositionQR;
@@ -523,21 +541,20 @@ protected:
   bool m_FastComputationPossible;
 
 private:
-
-  KernelTransform2( const Self & ); // purposely not implemented
-  void operator=( const Self & );   // purposely not implemented
+  KernelTransform2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   TScalarType m_PoissonRatio;
 
   /** Using SVD or QR decomposition. */
   std::string m_MatrixInversionMethod;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkKernelTransform2.hxx"
+#  include "itkKernelTransform2.hxx"
 #endif
 
 #endif // __itkKernelTransform2_h

@@ -18,4 +18,4 @@
 
 #include "elxStatisticalShapePenalty.h"
 
-elxInstallMacro( StatisticalShapePenalty );
+elxInstallMacro(StatisticalShapePenalty);

@@ -27,7 +27,7 @@ GPUTransformBase::GPUTransformBase()
 
 //------------------------------------------------------------------------------
 bool
-GPUTransformBase::GetSourceCode( std::string & /*source*/ ) const
+GPUTransformBase::GetSourceCode(std::string & /*source*/) const
 {
   // do nothing here
   return true;
@@ -36,7 +36,7 @@ GPUTransformBase::GetSourceCode( std::string & /*source*/ ) const
 
 //------------------------------------------------------------------------------
 GPUDataManager::Pointer
-GPUTransformBase::GetParametersDataManager( void ) const
+GPUTransformBase::GetParametersDataManager(void) const
 {
   return this->m_ParametersDataManager;
 }
@@ -44,7 +44,7 @@ GPUTransformBase::GetParametersDataManager( void ) const
 
 //------------------------------------------------------------------------------
 GPUDataManager::Pointer
-GPUTransformBase::GetParametersDataManager( const std::size_t index ) const
+GPUTransformBase::GetParametersDataManager(const std::size_t index) const
 {
   return this->GetParametersDataManager();
 }

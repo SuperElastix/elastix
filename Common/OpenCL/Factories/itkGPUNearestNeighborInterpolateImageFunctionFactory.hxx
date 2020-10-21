@@ -22,86 +22,82 @@
 
 namespace itk
 {
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
-::RegisterOneFactory()
+GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions>::RegisterOneFactory()
 {
-  typedef GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions > GPUInterpolateFactoryType;
+  typedef GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions> GPUInterpolateFactoryType;
   typename GPUInterpolateFactoryType::Pointer factory = GPUInterpolateFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
 
-template< typename TTypeList, typename NDimensions >
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
-::GPUNearestNeighborInterpolateImageFunctionFactory2()
+template <typename TTypeList, typename NDimensions>
+GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList,
+                                                   NDimensions>::GPUNearestNeighborInterpolateImageFunctionFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
-::Register1D()
+GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< TTypeList, 1 > visitor0;
-  visitor0( *this );
+  typelist::VisitDimension<TTypeList, 1> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float type
-  const bool inputHasFloat = typelist::HasType< TTypeList, float >::Type;
-  if( !inputHasFloat )
+  const bool inputHasFloat = typelist::HasType<TTypeList, float>::Type;
+  if (!inputHasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::VisitDimension< FloatTypeList, 1 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
+    typelist::VisitDimension<FloatTypeList, 1>  visitor1;
+    visitor1(*this);
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
-::Register2D()
+GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< TTypeList, 2 > visitor0;
-  visitor0( *this );
+  typelist::VisitDimension<TTypeList, 2> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float type
-  const bool inputHasFloat = typelist::HasType< TTypeList, float >::Type;
-  if( !inputHasFloat )
+  const bool inputHasFloat = typelist::HasType<TTypeList, float>::Type;
+  if (!inputHasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::VisitDimension< FloatTypeList, 2 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
+    typelist::VisitDimension<FloatTypeList, 2>  visitor1;
+    visitor1(*this);
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions >
+template <typename TTypeList, typename NDimensions>
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
-::Register3D()
+GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< TTypeList, 3 > visitor0;
-  visitor0( *this );
+  typelist::VisitDimension<TTypeList, 3> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float type
-  const bool inputHasFloat = typelist::HasType< TTypeList, float >::Type;
-  if( !inputHasFloat )
+  const bool inputHasFloat = typelist::HasType<TTypeList, float>::Type;
+  if (!inputHasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::VisitDimension< FloatTypeList, 3 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
+    typelist::VisitDimension<FloatTypeList, 3>  visitor1;
+    visitor1(*this);
   }
 }
 

@@ -18,4 +18,4 @@
 
 #include "elxNormalizedGradientCorrelationMetric.h"
 
-elxInstallMacro( NormalizedGradientCorrelationMetric );
+elxInstallMacro(NormalizedGradientCorrelationMetric);

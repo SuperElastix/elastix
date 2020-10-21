@@ -53,23 +53,21 @@ namespace itk
  *
  **/
 
-template< class TImage >
-class ErodeMaskImageFilter :
-  public ImageToImageFilter< TImage, TImage >
+template <class TImage>
+class ErodeMaskImageFilter : public ImageToImageFilter<TImage, TImage>
 {
 public:
-
   /** Standard ITK stuff. */
-  typedef ErodeMaskImageFilter                 Self;
-  typedef ImageToImageFilter< TImage, TImage > Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  typedef ErodeMaskImageFilter               Self;
+  typedef ImageToImageFilter<TImage, TImage> Superclass;
+  typedef SmartPointer<Self>                 Pointer;
+  typedef SmartPointer<const Self>           ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ErodeMaskImageFilter, ImageToImageFilter );
+  itkTypeMacro(ErodeMaskImageFilter, ImageToImageFilter);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Typedefs. */
   typedef TImage                              InputImageType;
@@ -80,79 +78,74 @@ public:
   typedef typename OutputImageType::PixelType OutputPixelType;
 
   /** Dimensionality of the two images is assumed to be the same. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    InputImageType::ImageDimension );
-  itkStaticConstMacro( OutputImageDimension, unsigned int,
-    OutputImageType::ImageDimension );
-  itkStaticConstMacro( ImageDimension, unsigned int,
-    OutputImageType::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, OutputImageType::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
 
   /** Define the schedule type. */
-  typedef MultiResolutionPyramidImageFilter<
-    InputImageType, OutputImageType >                    ImagePyramidFilterType;
-  typedef typename ImagePyramidFilterType::ScheduleType ScheduleType;
+  typedef MultiResolutionPyramidImageFilter<InputImageType, OutputImageType> ImagePyramidFilterType;
+  typedef typename ImagePyramidFilterType::ScheduleType                      ScheduleType;
 
   /** Set/Get the pyramid schedule used to downsample the image whose
    * mask is the input of the ErodeMaskImageFilter
    * Default: filled with ones, one resolution.
    */
-  virtual void SetSchedule( const ScheduleType & schedule )
+  virtual void
+  SetSchedule(const ScheduleType & schedule)
   {
     this->m_Schedule = schedule;
     this->Modified();
   }
 
 
-  itkGetConstReferenceMacro( Schedule, ScheduleType );
+  itkGetConstReferenceMacro(Schedule, ScheduleType);
 
   /** Set/Get whether the mask serves as a 'moving mask' in the registration
    * Moving masks are eroded with a slightly larger kernel, because the
    * derivative is usually taken on the moving image.
    * Default: false
    */
-  itkSetMacro( IsMovingMask, bool );
-  itkGetConstMacro( IsMovingMask, bool );
+  itkSetMacro(IsMovingMask, bool);
+  itkGetConstMacro(IsMovingMask, bool);
 
   /** Set the resolution level of the registration. Default: 0. */
-  itkSetMacro( ResolutionLevel, unsigned int );
-  itkGetConstMacro( ResolutionLevel, unsigned int );
+  itkSetMacro(ResolutionLevel, unsigned int);
+  itkGetConstMacro(ResolutionLevel, unsigned int);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro( SameDimensionCheck,
-    ( Concept::SameDimension< InputImageDimension, OutputImageDimension > ) );
+  itkConceptMacro(SameDimensionCheck, (Concept::SameDimension<InputImageDimension, OutputImageDimension>));
   /** End concept checking */
 #endif
 
 protected:
-
   /** Constructor. */
   ErodeMaskImageFilter();
 
   /** Destructor */
-  ~ErodeMaskImageFilter() override{}
+  ~ErodeMaskImageFilter() override {}
 
   /** Standard pipeline method. While this class does not implement a
    * ThreadedGenerateData(), its GenerateData() delegates all
    * calculations to the ParabolicErodeImageFilter, which is multi-threaded.
    */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
 private:
-
-  ErodeMaskImageFilter( const Self & );    // purposely not implemented
-  void operator=( const Self & );          // purposely not implemented
+  ErodeMaskImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   bool         m_IsMovingMask;
   unsigned int m_ResolutionLevel;
   ScheduleType m_Schedule;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkErodeMaskImageFilter.hxx"
+#  include "itkErodeMaskImageFilter.hxx"
 #endif
 
 #endif

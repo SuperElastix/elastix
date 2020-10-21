@@ -37,33 +37,30 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template< class TElastix >
-class Powell :
-  public
-  itk::PowellOptimizer,
-  public
-  OptimizerBase< TElastix >
+template <class TElastix>
+class Powell
+  : public itk::PowellOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
-  typedef Powell                          Self;
-  typedef PowellOptimizer                 Superclass1;
-  typedef OptimizerBase< TElastix >       Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef Powell                        Self;
+  typedef PowellOptimizer               Superclass1;
+  typedef OptimizerBase<TElastix>       Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( Powell, PowellOptimizer );
+  itkTypeMacro(Powell, PowellOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer. \n
    * example: <tt>(Optimizer "Powell")</tt>\n
    */
-  elxClassNameMacro( "Powell" );
+  elxClassNameMacro("Powell");
 
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType    CostFunctionType;
@@ -83,38 +80,42 @@ public:
 
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed. */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
   /** Override the SetInitialPosition.
    * Override the implementation in itkOptimizer.h, to
    * ensure that the scales array and the parameters
    * array have the same size. */
-  void SetInitialPosition( const ParametersType & param ) override;
+  void
+  SetInitialPosition(const ParametersType & param) override;
 
 protected:
-
-  Powell(){}
+  Powell() {}
   ~Powell() override {}
 
 private:
-
-  Powell( const Self & );         // purposely not implemented
-  void operator=( const Self & ); // purposely not implemented
-
+  Powell(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxPowell.hxx"
+#  include "elxPowell.hxx"
 #endif
 
 #endif // end #ifndef __elxPowell_h

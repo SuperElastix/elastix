@@ -22,57 +22,54 @@
 
 namespace itk
 {
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUBSplineTransformFactory2< NDimensions >::RegisterOneFactory()
+GPUBSplineTransformFactory2<NDimensions>::RegisterOneFactory()
 {
-  typedef GPUBSplineTransformFactory2< NDimensions > GPUTransformFactoryType;
-  typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  typedef GPUBSplineTransformFactory2<NDimensions> GPUTransformFactoryType;
+  typename GPUTransformFactoryType::Pointer        factory = GPUTransformFactoryType::New();
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
-GPUBSplineTransformFactory2< NDimensions >::GPUBSplineTransformFactory2()
+template <typename NDimensions>
+GPUBSplineTransformFactory2<NDimensions>::GPUBSplineTransformFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUBSplineTransformFactory2< NDimensions >
-::Register1D()
+GPUBSplineTransformFactory2<NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 1 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 1> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUBSplineTransformFactory2< NDimensions >
-::Register2D()
+GPUBSplineTransformFactory2<NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 2 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 2> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUBSplineTransformFactory2< NDimensions >
-::Register3D()
+GPUBSplineTransformFactory2<NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 3 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 3> visitor;
+  visitor(*this);
 }
 
 

@@ -18,4 +18,4 @@
 
 #include "elxAdvancedMeanSquaresMetric.h"
 
-elxInstallMacro( AdvancedMeanSquaresMetric );
+elxInstallMacro(AdvancedMeanSquaresMetric);

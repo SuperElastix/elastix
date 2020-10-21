@@ -78,37 +78,33 @@ namespace elastix
  * \ingroup Metrics
  */
 
-template< class TElastix >
-class KNNGraphAlphaMutualInformationMetric :
-  public
-  itk::KNNGraphAlphaMutualInformationImageToImageMetric<
-  typename MetricBase< TElastix >::FixedImageType,
-  typename MetricBase< TElastix >::MovingImageType >,
-  public MetricBase< TElastix >
+template <class TElastix>
+class KNNGraphAlphaMutualInformationMetric
+  : public itk::KNNGraphAlphaMutualInformationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
+                                                                 typename MetricBase<TElastix>::MovingImageType>
+  , public MetricBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef KNNGraphAlphaMutualInformationMetric Self;
-  typedef itk::KNNGraphAlphaMutualInformationImageToImageMetric<
-    typename MetricBase< TElastix >::FixedImageType,
-    typename MetricBase< TElastix >::MovingImageType >    Superclass1;
-  typedef MetricBase< TElastix >          Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::KNNGraphAlphaMutualInformationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
+                                                                typename MetricBase<TElastix>::MovingImageType>
+                                        Superclass1;
+  typedef MetricBase<TElastix>          Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( KNNGraphAlphaMutualInformationMetric,
-    itk::KNNGraphAlphaMutualInformationImageToImageMetric );
+  itkTypeMacro(KNNGraphAlphaMutualInformationMetric, itk::KNNGraphAlphaMutualInformationImageToImageMetric);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
    * example: <tt>(Metric "KNNGraphAlphaMutualInformation")</tt>\n
    */
-  elxClassNameMacro( "KNNGraphAlphaMutualInformation" );
+  elxClassNameMacro("KNNGraphAlphaMutualInformation");
 
   /** Typedefs inherited from the superclass.*/
   typedef typename Superclass1::TransformType           TransformType;
@@ -124,11 +120,9 @@ public:
   typedef typename Superclass1::MovingImageConstPointer MovingImageConstPointer;
 
   /** The fixed image dimension */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedef's inherited from Elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -152,7 +146,8 @@ public:
    * \li Set the spline orders of the fixed feature interpolators.
    * \li Set the spline orders of the moving feature interpolators.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li Set the tree type.
@@ -164,33 +159,33 @@ public:
    * \li Set the error bound epsilon for ANN search.
    * \li Set the squared search radius, if appropriate.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
 protected:
-
   /** The constructor. */
   KNNGraphAlphaMutualInformationMetric() {}
   /** The destructor. */
   ~KNNGraphAlphaMutualInformationMetric() override {}
 
 private:
-
   /** The private constructor. */
-  KNNGraphAlphaMutualInformationMetric( const Self & );   // purposely not implemented
+  KNNGraphAlphaMutualInformationMetric(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                   // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxKNNGraphAlphaMutualInformationMetric.hxx"
+#  include "elxKNNGraphAlphaMutualInformationMetric.hxx"
 #endif
 
 #endif // end #ifndef __elxKNNGraphAlphaMutualInformationMetric_H__

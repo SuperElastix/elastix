@@ -48,36 +48,30 @@ namespace elastix
  * \ingroup ImageSamplers
  */
 
-template< class TElastix >
-class RandomSampler :
-  public
-  itk::ImageRandomSampler<
-  typename elx::ImageSamplerBase< TElastix >::InputImageType >,
-  public
-  elx::ImageSamplerBase< TElastix >
+template <class TElastix>
+class RandomSampler
+  : public itk::ImageRandomSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
+  , public elx::ImageSamplerBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef RandomSampler Self;
-  typedef itk::ImageRandomSampler<
-    typename elx::ImageSamplerBase< TElastix >::InputImageType >
-    Superclass1;
-  typedef elx::ImageSamplerBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef RandomSampler                                                                     Self;
+  typedef itk::ImageRandomSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType> Superclass1;
+  typedef elx::ImageSamplerBase<TElastix>                                                   Superclass2;
+  typedef itk::SmartPointer<Self>                                                           Pointer;
+  typedef itk::SmartPointer<const Self>                                                     ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RandomSampler, itk::ImageRandomSampler );
+  itkTypeMacro(RandomSampler, itk::ImageRandomSampler);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n
    * example: <tt>(ImageSampler "Random")</tt>\n
    */
-  elxClassNameMacro( "Random" );
+  elxClassNameMacro("Random");
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
@@ -95,7 +89,7 @@ public:
   typedef typename Superclass1::InputImagePointType          InputImagePointType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass1::InputImageDimension);
 
   /** Typedefs inherited from Elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -109,28 +103,27 @@ public:
   /** Execute stuff before each resolution:
    * \li Set the number of samples.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
   RandomSampler() {}
   /** The destructor. */
   ~RandomSampler() override {}
 
 private:
-
   /** The private constructor. */
-  RandomSampler( const Self & );  // purposely not implemented
+  RandomSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );       // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxRandomSampler.hxx"
+#  include "elxRandomSampler.hxx"
 #endif
 
 #endif // end #ifndef __elxRandomSampler_h

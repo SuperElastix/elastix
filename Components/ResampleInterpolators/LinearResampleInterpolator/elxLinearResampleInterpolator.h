@@ -25,54 +25,51 @@ namespace elastix
 {
 
 /**
-* \class LinearResampleInterpolator
-* \brief A linear resample-interpolator.
-*
-* Compared to the BSplineResampleInterpolator and BSplineResampleInterpolatorFloat
-* with SplineOrder 1 this class uses less (in fact, no) memory. You can select
-* this resample interpolator if memory burden is an issue and linear interpolation
-* is sufficient.
-*
-* The parameters used in this class are:
-* \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
-*   <tt>(ResampleInterpolator "FinalLinearInterpolator")</tt>
-*
-* \ingroup ResampleInterpolators
-*/
+ * \class LinearResampleInterpolator
+ * \brief A linear resample-interpolator.
+ *
+ * Compared to the BSplineResampleInterpolator and BSplineResampleInterpolatorFloat
+ * with SplineOrder 1 this class uses less (in fact, no) memory. You can select
+ * this resample interpolator if memory burden is an issue and linear interpolation
+ * is sufficient.
+ *
+ * The parameters used in this class are:
+ * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
+ *   <tt>(ResampleInterpolator "FinalLinearInterpolator")</tt>
+ *
+ * \ingroup ResampleInterpolators
+ */
 
-template< class TElastix >
-class LinearResampleInterpolator :
-  public
-  itk::LinearInterpolateImageFunction<
-  typename ResampleInterpolatorBase< TElastix >::InputImageType,
-  typename ResampleInterpolatorBase< TElastix >::CoordRepType >,
-  public ResampleInterpolatorBase< TElastix >
+template <class TElastix>
+class LinearResampleInterpolator
+  : public itk::LinearInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                               typename ResampleInterpolatorBase<TElastix>::CoordRepType>
+  , public ResampleInterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef LinearResampleInterpolator Self;
-  typedef itk::LinearInterpolateImageFunction<
-    typename ResampleInterpolatorBase< TElastix >::InputImageType,
-    typename ResampleInterpolatorBase< TElastix >::CoordRepType >   Superclass1;
-  typedef ResampleInterpolatorBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >            Pointer;
-  typedef itk::SmartPointer< const Self >      ConstPointer;
+  typedef itk::LinearInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                              typename ResampleInterpolatorBase<TElastix>::CoordRepType>
+                                             Superclass1;
+  typedef ResampleInterpolatorBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>            Pointer;
+  typedef itk::SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( LinearResampleInterpolator, itk::LinearInterpolateImageFunction );
+  itkTypeMacro(LinearResampleInterpolator, itk::LinearInterpolateImageFunction);
 
   /** Name of this class.
-  * Use this name in the parameter file to select this specific resample interpolator. \n
-  * example: <tt>(ResampleInterpolator "FinalLinearInterpolator")</tt>\n
-  */
-  elxClassNameMacro( "FinalLinearInterpolator" );
+   * Use this name in the parameter file to select this specific resample interpolator. \n
+   * example: <tt>(ResampleInterpolator "FinalLinearInterpolator")</tt>\n
+   */
+  elxClassNameMacro("FinalLinearInterpolator");
 
   /** Dimension of the image. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass1::OutputType          OutputType;
@@ -90,25 +87,23 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
 protected:
-
   /** The constructor. */
   LinearResampleInterpolator() {}
   /** The destructor. */
   ~LinearResampleInterpolator() override {}
 
 private:
-
   /** The private constructor. */
-  LinearResampleInterpolator( const Self & );   // purposely not implemented
+  LinearResampleInterpolator(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxLinearResampleInterpolator.hxx"
+#  include "elxLinearResampleInterpolator.hxx"
 #endif
 
 #endif // end __elxLinearResampleInterpolator_h

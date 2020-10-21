@@ -34,39 +34,36 @@ namespace elastix
  * \ingroup Interpolators
  */
 
-template< class TElastix >
-class RayCastResampleInterpolator :
-  public
-  itk::AdvancedRayCastInterpolateImageFunction<
-  typename ResampleInterpolatorBase< TElastix >::InputImageType,
-  typename ResampleInterpolatorBase< TElastix >::CoordRepType >,
-  public ResampleInterpolatorBase< TElastix >
+template <class TElastix>
+class RayCastResampleInterpolator
+  : public itk::AdvancedRayCastInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                                        typename ResampleInterpolatorBase<TElastix>::CoordRepType>
+  , public ResampleInterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef RayCastResampleInterpolator Self;
-  typedef itk::AdvancedRayCastInterpolateImageFunction<
-    typename ResampleInterpolatorBase< TElastix >::InputImageType,
-    typename ResampleInterpolatorBase< TElastix >::CoordRepType >    Superclass1;
-  typedef ResampleInterpolatorBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >            Pointer;
-  typedef itk::SmartPointer< const Self >      ConstPointer;
+  typedef itk::AdvancedRayCastInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                                       typename ResampleInterpolatorBase<TElastix>::CoordRepType>
+                                             Superclass1;
+  typedef ResampleInterpolatorBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>            Pointer;
+  typedef itk::SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RayCastResampleInterpolator, AdvancedRayCastInterpolateImageFunction );
+  itkTypeMacro(RayCastResampleInterpolator, AdvancedRayCastInterpolateImageFunction);
 
   /** Name of this class.
-  * Use this name in the parameter file to select this specific resample interpolator. \n
-  * example: <tt>(ResampleInterpolator "FinalRayCastInterpolator")</tt>\n
-  */
-  elxClassNameMacro( "FinalRayCastInterpolator" );
+   * Use this name in the parameter file to select this specific resample interpolator. \n
+   * example: <tt>(ResampleInterpolator "FinalRayCastInterpolator")</tt>\n
+   */
+  elxClassNameMacro("FinalRayCastInterpolator");
 
   /** Dimension of the image. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass1::OutputType          OutputType;
@@ -87,33 +84,35 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Typedef's for CombinationTransform */
-  typedef typename itk::EulerTransform<
-    typename InterpolatorBase< TElastix >::CoordRepType, ImageDimension >
-    EulerTransformType;
+  typedef typename itk::EulerTransform<typename InterpolatorBase<TElastix>::CoordRepType, ImageDimension>
+                                                      EulerTransformType;
   typedef typename EulerTransformType::ParametersType TransformParametersType;
   typedef typename EulerTransformType::Pointer        EulerTransformPointer;
-  typedef typename itk::AdvancedTransform<
-    typename InterpolatorBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( ImageDimension ),
-    itkGetStaticConstMacro( ImageDimension ) >             AdvancedTransformType;
+  typedef typename itk::AdvancedTransform<typename InterpolatorBase<TElastix>::CoordRepType,
+                                          itkGetStaticConstMacro(ImageDimension),
+                                          itkGetStaticConstMacro(ImageDimension)>
+                                                  AdvancedTransformType;
   typedef typename AdvancedTransformType::Pointer AdvancedTransformPointer;
-  typedef typename itk::AdvancedCombinationTransform<
-    typename InterpolatorBase< TElastix >::CoordRepType,
-    itkGetStaticConstMacro( ImageDimension ) >            CombinationTransformType;
+  typedef typename itk::AdvancedCombinationTransform<typename InterpolatorBase<TElastix>::CoordRepType,
+                                                     itkGetStaticConstMacro(ImageDimension)>
+                                                     CombinationTransformType;
   typedef typename CombinationTransformType::Pointer CombinationTransformPointer;
 
-  int BeforeAll( void ) override;
+  int
+  BeforeAll(void) override;
 
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( void ) const override;
+  void
+  WriteToFile(void) const override;
 
 protected:
-
   /** The constructor. */
   RayCastResampleInterpolator() {}
 
@@ -123,26 +122,26 @@ protected:
   /** Helper function to initialize the combination transform
    * with a pre-transform.
    */
-  void InitializeRayCastInterpolator( void );
+  void
+  InitializeRayCastInterpolator(void);
 
 private:
-
   /** The private constructor. */
-  RayCastResampleInterpolator( const Self & ); // purposely not implemented
+  RayCastResampleInterpolator(const Self &); // purposely not implemented
 
   /** The private copy constructor. */
-  void operator=( const Self & );              // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   EulerTransformPointer       m_PreTransform;
   TransformParametersType     m_PreParameters;
   CombinationTransformPointer m_CombinationTransform;
-
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxRayCastResampleInterpolator.hxx"
+#  include "elxRayCastResampleInterpolator.hxx"
 #endif
 
 #endif // end __elxRayCastResampleInterpolator_h

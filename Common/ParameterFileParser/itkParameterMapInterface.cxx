@@ -25,8 +25,7 @@ namespace itk
  * **************** Constructor ***************
  */
 
-ParameterMapInterface
-::ParameterMapInterface()
+ParameterMapInterface ::ParameterMapInterface()
 {
   this->m_ParameterMap.clear();
   this->m_PrintErrorMessages = true;
@@ -38,8 +37,7 @@ ParameterMapInterface
  * **************** Destructor ***************
  */
 
-ParameterMapInterface
-::~ParameterMapInterface()
+ParameterMapInterface ::~ParameterMapInterface()
 {
   // empty
 } // end Destructor()
@@ -50,10 +48,9 @@ ParameterMapInterface
  */
 
 void
-ParameterMapInterface
-::SetParameterMap( const ParameterMapType & parMap )
+ParameterMapInterface ::SetParameterMap(const ParameterMapType & parMap)
 {
-  if( !parMap.empty() )
+  if (!parMap.empty())
   {
     this->m_ParameterMap = parMap;
   }
@@ -66,13 +63,11 @@ ParameterMapInterface
  */
 
 std::size_t
-ParameterMapInterface
-::CountNumberOfParameterEntries(
-  const std::string & parameterName ) const
+ParameterMapInterface ::CountNumberOfParameterEntries(const std::string & parameterName) const
 {
-  if( this->m_ParameterMap.count( parameterName ) )
+  if (this->m_ParameterMap.count(parameterName))
   {
-    return this->m_ParameterMap.find( parameterName )->second.size();
+    return this->m_ParameterMap.find(parameterName)->second.size();
   }
   return 0;
 
@@ -84,16 +79,15 @@ ParameterMapInterface
  */
 
 bool
-ParameterMapInterface
-::ReadParameter( bool & parameterValue,
-  const std::string & parameterName,
-  const unsigned int entry_nr,
-  const bool printThisErrorMessage,
-  std::string & errorMessage ) const
+ParameterMapInterface ::ReadParameter(bool &              parameterValue,
+                                      const std::string & parameterName,
+                                      const unsigned int  entry_nr,
+                                      const bool          printThisErrorMessage,
+                                      std::string &       errorMessage) const
 {
   /** Translate the default boolean to string. */
   std::string parameterValueString;
-  if( parameterValue )
+  if (parameterValue)
   {
     parameterValueString = "true";
   }
@@ -103,16 +97,15 @@ ParameterMapInterface
   }
 
   /** Read the boolean as a string. */
-  bool dummy = this->ReadParameter( parameterValueString, parameterName,
-    entry_nr, printThisErrorMessage, errorMessage );
+  bool dummy = this->ReadParameter(parameterValueString, parameterName, entry_nr, printThisErrorMessage, errorMessage);
 
   /** Translate the read-in string to boolean. */
   parameterValue = false;
-  if( parameterValueString == "true" )
+  if (parameterValueString == "true")
   {
     parameterValue = true;
   }
-  else if( parameterValueString == "false" )
+  else if (parameterValueString == "false")
   {
     parameterValue = false;
   }
@@ -120,12 +113,11 @@ ParameterMapInterface
   {
     /** Trying to read a string other than "true" or "false" as a boolean. */
     std::stringstream ss;
-    ss << "ERROR: Entry number " << entry_nr
-       << " for the parameter \"" << parameterName
+    ss << "ERROR: Entry number " << entry_nr << " for the parameter \"" << parameterName
        << "\" should be a boolean, i.e. either \"true\" or \"false\""
        << ", but it reads \"" << parameterValueString << "\".";
 
-    itkExceptionMacro( << ss.str() );
+    itkExceptionMacro(<< ss.str());
   }
 
   return dummy;
@@ -138,8 +130,7 @@ ParameterMapInterface
  */
 
 bool
-ParameterMapInterface
-::StringCast( const std::string & parameterValue, std::string & casted ) const
+ParameterMapInterface ::StringCast(const std::string & parameterValue, std::string & casted) const
 {
   casted = parameterValue;
   return true;
@@ -151,32 +142,27 @@ ParameterMapInterface
  */
 
 bool
-ParameterMapInterface
-::ReadParameter(
-  std::vector< std::string > & parameterValues,
-  const std::string & parameterName,
-  const unsigned int entry_nr_start,
-  const unsigned int entry_nr_end,
-  const bool printThisErrorMessage,
-  std::string & errorMessage ) const
+ParameterMapInterface ::ReadParameter(std::vector<std::string> & parameterValues,
+                                      const std::string &        parameterName,
+                                      const unsigned int         entry_nr_start,
+                                      const unsigned int         entry_nr_end,
+                                      const bool                 printThisErrorMessage,
+                                      std::string &              errorMessage) const
 {
   /** Reset the error message. */
   errorMessage = "";
 
   /** Get the number of entries. */
-  std::size_t numberOfEntries = this->CountNumberOfParameterEntries(
-    parameterName );
+  std::size_t numberOfEntries = this->CountNumberOfParameterEntries(parameterName);
 
   /** Check if the requested parameter exists. */
-  if( numberOfEntries == 0 )
+  if (numberOfEntries == 0)
   {
     std::stringstream ss;
-    ss << "WARNING: The parameter \"" << parameterName
-       << "\", requested between entry numbers " << entry_nr_start
-       << " and " << entry_nr_end
-       << ", does not exist at all.\n"
+    ss << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers " << entry_nr_start
+       << " and " << entry_nr_end << ", does not exist at all.\n"
        << "  The default values are used instead." << std::endl;
-    if( printThisErrorMessage && this->m_PrintErrorMessages )
+    if (printThisErrorMessage && this->m_PrintErrorMessages)
     {
       errorMessage = ss.str();
     }
@@ -184,35 +170,32 @@ ParameterMapInterface
   }
 
   /** Check. */
-  if( entry_nr_start > entry_nr_end )
+  if (entry_nr_start > entry_nr_end)
   {
     std::stringstream ss;
-    ss << "WARNING: The entry number start (" << entry_nr_start
-       << ") should be smaller than entry number end (" << entry_nr_end
-       << "). It was requested for parameter \"" << parameterName
-       << "\"." << std::endl;
+    ss << "WARNING: The entry number start (" << entry_nr_start << ") should be smaller than entry number end ("
+       << entry_nr_end << "). It was requested for parameter \"" << parameterName << "\"." << std::endl;
 
     /** Programming error: just throw an exception. */
-    itkExceptionMacro( << ss.str() );
+    itkExceptionMacro(<< ss.str());
   }
 
   /** Check if it exists at the requested entry numbers. */
-  if( entry_nr_end >= numberOfEntries )
+  if (entry_nr_end >= numberOfEntries)
   {
     std::stringstream ss;
-    ss << "WARNING: The parameter \"" << parameterName
-       << "\" does not exist at entry number " << entry_nr_end
+    ss << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number " << entry_nr_end
        << ".\nThe default empty string \"\" is used instead." << std::endl;
-    itkExceptionMacro( << ss.str() );
+    itkExceptionMacro(<< ss.str());
   }
 
   /** Get the vector of parameters. */
-  const ParameterValuesType & vec = this->m_ParameterMap.find( parameterName )->second;
+  const ParameterValuesType & vec = this->m_ParameterMap.find(parameterName)->second;
 
   /** Copy all parameters at once. */
-  std::vector< std::string >::const_iterator it = vec.begin();
+  std::vector<std::string>::const_iterator it = vec.begin();
   parameterValues.clear();
-  parameterValues.assign( it + entry_nr_start, it + entry_nr_end + 1 );
+  parameterValues.assign(it + entry_nr_start, it + entry_nr_end + 1);
 
   return true;
 }

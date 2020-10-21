@@ -27,54 +27,54 @@
 // OpenCL 1.1 extension definitions
 // cl_khr_fp64
 #ifndef CL_DEVICE_DOUBLE_FP_CONFIG
-#define CL_DEVICE_DOUBLE_FP_CONFIG 0x1032
+#  define CL_DEVICE_DOUBLE_FP_CONFIG 0x1032
 #endif
 
 // cl_khr_fp16
 #ifndef CL_DEVICE_HALF_FP_CONFIG
-#define CL_DEVICE_HALF_FP_CONFIG 0x1033
+#  define CL_DEVICE_HALF_FP_CONFIG 0x1033
 #endif
 
 // OpenCL 1.2 extension definitions
 #ifndef CL_COMMAND_BARRIER
-#define CL_COMMAND_BARRIER 0x1205
+#  define CL_COMMAND_BARRIER 0x1205
 #endif
 
 #ifndef CL_COMMAND_MIGRATE_MEM_OBJECTS
-#define CL_COMMAND_MIGRATE_MEM_OBJECTS 0x1206
+#  define CL_COMMAND_MIGRATE_MEM_OBJECTS 0x1206
 #endif
 
 #ifndef CL_COMMAND_FILL_BUFFER
-#define CL_COMMAND_FILL_BUFFER 0x1207
+#  define CL_COMMAND_FILL_BUFFER 0x1207
 #endif
 
 #ifndef CL_COMMAND_FILL_IMAGE
-#define CL_COMMAND_FILL_IMAGE 0x1208
+#  define CL_COMMAND_FILL_IMAGE 0x1208
 #endif
 
 #ifndef CL_MEM_OBJECT_IMAGE2D_ARRAY
-#define CL_MEM_OBJECT_IMAGE2D_ARRAY 0x10F3
+#  define CL_MEM_OBJECT_IMAGE2D_ARRAY 0x10F3
 #endif
 
 #ifndef CL_MEM_OBJECT_IMAGE1D
-#define CL_MEM_OBJECT_IMAGE1D 0x10F4
+#  define CL_MEM_OBJECT_IMAGE1D 0x10F4
 #endif
 
 #ifndef CL_MEM_OBJECT_IMAGE1D_ARRAY
-#define CL_MEM_OBJECT_IMAGE1D_ARRAY 0x10F5
+#  define CL_MEM_OBJECT_IMAGE1D_ARRAY 0x10F5
 #endif
 
 #ifndef CL_MEM_OBJECT_IMAGE1D_BUFFER
-#define CL_MEM_OBJECT_IMAGE1D_BUFFER 0x10F6
+#  define CL_MEM_OBJECT_IMAGE1D_BUFFER 0x10F6
 #endif
 
 // cl_khr_icd
 // http://www.khronos.org/registry/cl/extensions/khr/cl_khr_icd.txt
 #ifndef CL_PLATFORM_ICD_SUFFIX_KHR
-#define CL_PLATFORM_ICD_SUFFIX_KHR 0x0920
+#  define CL_PLATFORM_ICD_SUFFIX_KHR 0x0920
 #endif
 #ifndef CL_PLATFORM_NOT_FOUND_KHR
-#define CL_PLATFORM_NOT_FOUND_KHR -1001
+#  define CL_PLATFORM_NOT_FOUND_KHR -1001
 #endif
 
 #endif /* __itkOpenCLExtension_h */

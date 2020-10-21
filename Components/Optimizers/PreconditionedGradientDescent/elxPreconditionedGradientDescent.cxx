@@ -18,4 +18,4 @@
 
 #include "elxPreconditionedGradientDescent.h"
 
-elxInstallMacro( PreconditionedGradientDescent );
+elxInstallMacro(PreconditionedGradientDescent);

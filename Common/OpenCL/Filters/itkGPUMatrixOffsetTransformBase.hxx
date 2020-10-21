@@ -40,179 +40,175 @@ typedef struct
 
 typedef struct
 {
-  cl_float16 matrix;          // OpenCL does not have float9
-  cl_float16 inverse_matrix;  // OpenCL does not have float9
+  cl_float16 matrix;         // OpenCL does not have float9
+  cl_float16 inverse_matrix; // OpenCL does not have float9
   cl_float3  offset;
 } GPUMatrixOffsetTransformBase3D;
 
 //------------------------------------------------------------------------------
-template< unsigned int ImageDimension >
-struct SpaceDimensionToType {};
+template <unsigned int ImageDimension>
+struct SpaceDimensionToType
+{};
 
 //----------------------------------------------------------------------------
 // Offset
-template< typename TScalarType, unsigned int SpaceDimension >
+template <typename TScalarType, unsigned int SpaceDimension>
 void
-SetOffset1( const itk::Vector< TScalarType, SpaceDimension > &,
-  cl_float &, SpaceDimensionToType< SpaceDimension > )
+SetOffset1(const itk::Vector<TScalarType, SpaceDimension> &, cl_float &, SpaceDimensionToType<SpaceDimension>)
 {}
 
-template< typename TScalarType, unsigned int SpaceDimension >
+template <typename TScalarType, unsigned int SpaceDimension>
 void
-SetOffset2( const itk::Vector< TScalarType, SpaceDimension > &,
-  cl_float2 &, SpaceDimensionToType< SpaceDimension > )
+SetOffset2(const itk::Vector<TScalarType, SpaceDimension> &, cl_float2 &, SpaceDimensionToType<SpaceDimension>)
 {}
 
-template< typename TScalarType, unsigned int SpaceDimension >
+template <typename TScalarType, unsigned int SpaceDimension>
 void
-SetOffset3( const itk::Vector< TScalarType, SpaceDimension > &,
-  cl_float3 &, SpaceDimensionToType< SpaceDimension > )
+SetOffset3(const itk::Vector<TScalarType, SpaceDimension> &, cl_float3 &, SpaceDimensionToType<SpaceDimension>)
 {}
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetOffset1( const itk::Vector< TScalarType, 1 > & offset,
-  cl_float & ocloffset, SpaceDimensionToType< 1 > )
+SetOffset1(const itk::Vector<TScalarType, 1> & offset, cl_float & ocloffset, SpaceDimensionToType<1>)
 {
-  ocloffset = offset[ 0 ];
+  ocloffset = offset[0];
 }
 
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetOffset2( const itk::Vector< TScalarType, 2 > & offset,
-  cl_float2 & ocloffset, SpaceDimensionToType< 2 > )
+SetOffset2(const itk::Vector<TScalarType, 2> & offset, cl_float2 & ocloffset, SpaceDimensionToType<2>)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 2; i++ )
+  for (unsigned int i = 0; i < 2; i++)
   {
-    ocloffset.s[ id++ ] = offset[ i ];
+    ocloffset.s[id++] = offset[i];
   }
 }
 
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetOffset3( const itk::Vector< TScalarType, 3 > & offset,
-  cl_float3 & ocloffset, SpaceDimensionToType< 3 > )
+SetOffset3(const itk::Vector<TScalarType, 3> & offset, cl_float3 & ocloffset, SpaceDimensionToType<3>)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 3; i++ )
+  for (unsigned int i = 0; i < 3; i++)
   {
-    ocloffset.s[ id++ ] = offset[ i ];
+    ocloffset.s[id++] = offset[i];
   }
-  ocloffset.s[ 3 ] = 0.0;
+  ocloffset.s[3] = 0.0;
 }
 
 
 //----------------------------------------------------------------------------
 // Matrix
-template< typename TScalarType,
-unsigned int OutputSpaceDimension, unsigned int InputSpaceDimension >
+template <typename TScalarType, unsigned int OutputSpaceDimension, unsigned int InputSpaceDimension>
 void
-SetMatrix1( const itk::Matrix< TScalarType, OutputSpaceDimension, InputSpaceDimension > &,
-  cl_float &,
-  SpaceDimensionToType< OutputSpaceDimension >,
-  SpaceDimensionToType< InputSpaceDimension > )
+SetMatrix1(const itk::Matrix<TScalarType, OutputSpaceDimension, InputSpaceDimension> &,
+           cl_float &,
+           SpaceDimensionToType<OutputSpaceDimension>,
+           SpaceDimensionToType<InputSpaceDimension>)
 {}
 
-template< typename TScalarType,
-unsigned int OutputSpaceDimension, unsigned int InputSpaceDimension >
+template <typename TScalarType, unsigned int OutputSpaceDimension, unsigned int InputSpaceDimension>
 void
-SetMatrix2( const itk::Matrix< TScalarType, OutputSpaceDimension, InputSpaceDimension > &,
-  cl_float4 &,
-  SpaceDimensionToType< OutputSpaceDimension >,
-  SpaceDimensionToType< InputSpaceDimension > )
+SetMatrix2(const itk::Matrix<TScalarType, OutputSpaceDimension, InputSpaceDimension> &,
+           cl_float4 &,
+           SpaceDimensionToType<OutputSpaceDimension>,
+           SpaceDimensionToType<InputSpaceDimension>)
 {}
 
-template< typename TScalarType,
-unsigned int OutputSpaceDimension, unsigned int InputSpaceDimension >
+template <typename TScalarType, unsigned int OutputSpaceDimension, unsigned int InputSpaceDimension>
 void
-SetMatrix3( const itk::Matrix< TScalarType, OutputSpaceDimension, InputSpaceDimension > &,
-  cl_float16 &,
-  SpaceDimensionToType< OutputSpaceDimension >,
-  SpaceDimensionToType< InputSpaceDimension > )
+SetMatrix3(const itk::Matrix<TScalarType, OutputSpaceDimension, InputSpaceDimension> &,
+           cl_float16 &,
+           SpaceDimensionToType<OutputSpaceDimension>,
+           SpaceDimensionToType<InputSpaceDimension>)
 {}
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetMatrix1( const itk::Matrix< TScalarType, 1, 1 > & matrix,
-  cl_float & oclmatrix, SpaceDimensionToType< 1 >, SpaceDimensionToType< 1 > )
+SetMatrix1(const itk::Matrix<TScalarType, 1, 1> & matrix,
+           cl_float &                             oclmatrix,
+           SpaceDimensionToType<1>,
+           SpaceDimensionToType<1>)
 {
-  oclmatrix = matrix[ 0 ][ 0 ];
+  oclmatrix = matrix[0][0];
 }
 
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetMatrix2( const itk::Matrix< TScalarType, 2, 2 > & matrix,
-  cl_float4 & oclmatrix, SpaceDimensionToType< 2 >, SpaceDimensionToType< 2 > )
+SetMatrix2(const itk::Matrix<TScalarType, 2, 2> & matrix,
+           cl_float4 &                            oclmatrix,
+           SpaceDimensionToType<2>,
+           SpaceDimensionToType<2>)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 2; i++ )
+  for (unsigned int i = 0; i < 2; i++)
   {
-    for( unsigned int j = 0; j < 2; j++ )
+    for (unsigned int j = 0; j < 2; j++)
     {
-      oclmatrix.s[ id++ ] = matrix[ i ][ j ];
+      oclmatrix.s[id++] = matrix[i][j];
     }
   }
 }
 
 
-template< typename TScalarType >
+template <typename TScalarType>
 void
-SetMatrix3( const itk::Matrix< TScalarType, 3, 3 > & matrix,
-  cl_float16 & oclmatrix, SpaceDimensionToType< 3 >, SpaceDimensionToType< 3 > )
+SetMatrix3(const itk::Matrix<TScalarType, 3, 3> & matrix,
+           cl_float16 &                           oclmatrix,
+           SpaceDimensionToType<3>,
+           SpaceDimensionToType<3>)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 3; i++ )
+  for (unsigned int i = 0; i < 3; i++)
   {
-    for( unsigned int j = 0; j < 3; j++ )
+    for (unsigned int j = 0; j < 3; j++)
     {
-      oclmatrix.s[ id++ ] = matrix[ i ][ j ];
+      oclmatrix.s[id++] = matrix[i][j];
     }
   }
-  for( unsigned int i = 9; i < 16; i++ )
+  for (unsigned int i = 9; i < 16; i++)
   {
-    oclmatrix.s[ i ] = 0.0;
+    oclmatrix.s[i] = 0.0;
   }
 }
 
 
-} // end of ITKGPUMatrixOffsetTransformBase namespace
+} // namespace ITKGPUMatrixOffsetTransformBase
 
 //------------------------------------------------------------------------------
 namespace itk
 {
-template< typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-GPUMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
-::GPUMatrixOffsetTransformBase()
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GPUMatrixOffsetTransformBase()
 {
   // Add GPUMatrixOffsetTransformBase source
-  const std::string sourcePath(
-  GPUMatrixOffsetTransformBaseKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath );
+  const std::string sourcePath(GPUMatrixOffsetTransformBaseKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath);
 
   this->m_ParametersDataManager->Initialize();
-  this->m_ParametersDataManager->SetBufferFlag( CL_MEM_READ_ONLY );
+  this->m_ParametersDataManager->SetBufferFlag(CL_MEM_READ_ONLY);
 
   using namespace ITKGPUMatrixOffsetTransformBase;
   const unsigned int OutputDimension = OutputSpaceDimension;
 
-  switch( OutputDimension )
+  switch (OutputDimension)
   {
     case 1:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUMatrixOffsetTransformBase1D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUMatrixOffsetTransformBase1D));
       break;
     case 2:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUMatrixOffsetTransformBase2D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUMatrixOffsetTransformBase2D));
       break;
     case 3:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUMatrixOffsetTransformBase3D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUMatrixOffsetTransformBase3D));
       break;
     default:
       break;
@@ -223,50 +219,49 @@ GPUMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 GPUDataManager::Pointer
-GPUMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
-::GetParametersDataManager( void ) const
+GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetParametersDataManager(void) const
 {
   using namespace ITKGPUMatrixOffsetTransformBase;
-  const unsigned int                                 OutputDimension = OutputSpaceDimension;
-  const SpaceDimensionToType< InputSpaceDimension >  idim            = {};
-  const SpaceDimensionToType< OutputSpaceDimension > odim = {};
+  const unsigned int                               OutputDimension = OutputSpaceDimension;
+  const SpaceDimensionToType<InputSpaceDimension>  idim = {};
+  const SpaceDimensionToType<OutputSpaceDimension> odim = {};
 
-  switch( OutputDimension )
+  switch (OutputDimension)
   {
     case 1:
     {
       GPUMatrixOffsetTransformBase1D transformBase;
-      SetMatrix1< ScalarType >( GetCPUMatrix(), transformBase.matrix, odim, idim );
-      SetOffset1< ScalarType >( GetCPUOffset(), transformBase.offset, odim );
-      SetMatrix1< ScalarType >( GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &transformBase );
+      SetMatrix1<ScalarType>(GetCPUMatrix(), transformBase.matrix, odim, idim);
+      SetOffset1<ScalarType>(GetCPUOffset(), transformBase.offset, odim);
+      SetMatrix1<ScalarType>(GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&transformBase);
     }
     break;
     case 2:
     {
       GPUMatrixOffsetTransformBase2D transformBase;
-      SetMatrix2< ScalarType >( GetCPUMatrix(), transformBase.matrix, odim, idim );
-      SetOffset2< ScalarType >( GetCPUOffset(), transformBase.offset, odim );
-      SetMatrix2< ScalarType >( GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &transformBase );
+      SetMatrix2<ScalarType>(GetCPUMatrix(), transformBase.matrix, odim, idim);
+      SetOffset2<ScalarType>(GetCPUOffset(), transformBase.offset, odim);
+      SetMatrix2<ScalarType>(GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&transformBase);
     }
     break;
     case 3:
     {
       GPUMatrixOffsetTransformBase3D transformBase;
-      SetMatrix3< ScalarType >( GetCPUMatrix(), transformBase.matrix, odim, idim );
-      SetOffset3< ScalarType >( GetCPUOffset(), transformBase.offset, odim );
-      SetMatrix3< ScalarType >( GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &transformBase );
+      SetMatrix3<ScalarType>(GetCPUMatrix(), transformBase.matrix, odim, idim);
+      SetOffset3<ScalarType>(GetCPUOffset(), transformBase.offset, odim);
+      SetMatrix3<ScalarType>(GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&transformBase);
     }
     break;
     default:
       break;
   }
 
-  this->m_ParametersDataManager->SetGPUDirtyFlag( true );
+  this->m_ParametersDataManager->SetGPUDirtyFlag(true);
   this->m_ParametersDataManager->UpdateGPUBuffer();
 
   return this->m_ParametersDataManager;
@@ -274,12 +269,12 @@ GPUMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 bool
-GPUMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
-::GetSourceCode( std::string & source ) const
+GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetSourceCode(
+  std::string & source) const
 {
-  if( this->m_Sources.size() == 0 )
+  if (this->m_Sources.size() == 0)
   {
     return false;
   }
@@ -287,9 +282,9 @@ GPUMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
   // Create the final source code
   std::ostringstream sources;
   // Add other sources
-  for( std::size_t i = 0; i < this->m_Sources.size(); i++ )
+  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
   {
-    sources << this->m_Sources[ i ] << std::endl;
+    sources << this->m_Sources[i] << std::endl;
   }
   source = sources.str();
   return true;

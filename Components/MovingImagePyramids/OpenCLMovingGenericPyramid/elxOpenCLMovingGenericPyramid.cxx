@@ -18,4 +18,4 @@
 
 #include "elxOpenCLMovingGenericPyramid.h"
 
-elxInstallMacro( OpenCLMovingGenericPyramid );
+elxInstallMacro(OpenCLMovingGenericPyramid);

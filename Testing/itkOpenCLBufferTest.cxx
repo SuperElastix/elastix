@@ -21,13 +21,13 @@
 #include <algorithm>
 
 //------------------------------------------------------------------------------
-template< class type >
+template <class type>
 bool
-std_all_of( const std::vector< type > & v, const type value )
+std_all_of(const std::vector<type> & v, const type value)
 {
-  for( typename std::vector< type >::const_iterator it = v.begin(); it != v.end(); ++it )
+  for (typename std::vector<type>::const_iterator it = v.begin(); it != v.end(); ++it)
   {
-    if( *it != value )
+    if (*it != value)
     {
       return false;
     }
@@ -38,11 +38,11 @@ std_all_of( const std::vector< type > & v, const type value )
 
 //------------------------------------------------------------------------------
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   itk::OpenCLBuffer bufferNull;
 
-  if( !bufferNull.IsNull() )
+  if (!bufferNull.IsNull())
   {
     return EXIT_FAILURE;
   }
@@ -50,63 +50,63 @@ main( int argc, char * argv[] )
   try
   {
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-    context->Create( itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice );
-    const std::list< itk::OpenCLDevice > devices = context->GetDevices();
+    context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
+    const std::list<itk::OpenCLDevice> devices = context->GetDevices();
 
-    itk::OpenCLProgram program = context->BuildProgramFromSourceCode( devices,
-      itk::OpenCLBufferTestKernel::GetOpenCLSource() );
+    itk::OpenCLProgram program =
+      context->BuildProgramFromSourceCode(devices, itk::OpenCLBufferTestKernel::GetOpenCLSource());
 
-    if( program.IsNull() )
+    if (program.IsNull())
     {
-      if( context->GetDefaultDevice().HasCompiler() )
+      if (context->GetDefaultDevice().HasCompiler())
       {
-        itkGenericExceptionMacro( << "Could not compile the OpenCL test program" );
+        itkGenericExceptionMacro(<< "Could not compile the OpenCL test program");
       }
       else
       {
-        itkGenericExceptionMacro( << "OpenCL implementation does not have a compiler" );
+        itkGenericExceptionMacro(<< "OpenCL implementation does not have a compiler");
       }
     }
 
     // Local variables
-    const std::size_t     bufferSize      = 16;
-    const std::size_t     bufferSizeBytes = sizeof( float ) * bufferSize;
-    const float           value           = 5.1f;
-    const itk::OpenCLSize workSize( bufferSize );
+    const std::size_t     bufferSize = 16;
+    const std::size_t     bufferSizeBytes = sizeof(float) * bufferSize;
+    const float           value = 5.1f;
+    const itk::OpenCLSize workSize(bufferSize);
 
     // Tests the OpenCLBuffer
-    itk::OpenCLBuffer deviceBuffer = context->CreateBufferDevice( itk::OpenCLMemoryObject::WriteOnly, bufferSizeBytes );
-    ITK_OPENCL_COMPARE( deviceBuffer.IsNull(), false );
+    itk::OpenCLBuffer deviceBuffer = context->CreateBufferDevice(itk::OpenCLMemoryObject::WriteOnly, bufferSizeBytes);
+    ITK_OPENCL_COMPARE(deviceBuffer.IsNull(), false);
     std::cout << deviceBuffer << std::endl;
-    itk::OpenCLKernel setFloatKernel = program.CreateKernel( "SetFloat" );
-    ITK_OPENCL_COMPARE( setFloatKernel.IsNull(), false );
-    setFloatKernel( deviceBuffer, value );
+    itk::OpenCLKernel setFloatKernel = program.CreateKernel("SetFloat");
+    ITK_OPENCL_COMPARE(setFloatKernel.IsNull(), false);
+    setFloatKernel(deviceBuffer, value);
 
     // Compare results test1
-    std::vector< float > hostBuffer( bufferSize );
-    deviceBuffer.Read( &hostBuffer[ 0 ], sizeof( float ) );
-    ITK_OPENCL_COMPARE( hostBuffer[ 0 ], value );
-    ITK_OPENCL_COMPARE( hostBuffer[ 1 ], 0.0f );
+    std::vector<float> hostBuffer(bufferSize);
+    deviceBuffer.Read(&hostBuffer[0], sizeof(float));
+    ITK_OPENCL_COMPARE(hostBuffer[0], value);
+    ITK_OPENCL_COMPARE(hostBuffer[1], 0.0f);
 
     // Compare results test2
-    setFloatKernel.SetGlobalWorkSize( workSize );
+    setFloatKernel.SetGlobalWorkSize(workSize);
     itk::OpenCLEvent event = setFloatKernel.LaunchKernel();
-    ITK_OPENCL_COMPARE( event.IsNull(), false );
+    ITK_OPENCL_COMPARE(event.IsNull(), false);
     event.WaitForFinished();
 
-    deviceBuffer.Read( &hostBuffer[ 0 ], bufferSizeBytes );
+    deviceBuffer.Read(&hostBuffer[0], bufferSizeBytes);
 
-    const bool result = std_all_of< float >( hostBuffer, value );
+    const bool result = std_all_of<float>(hostBuffer, value);
 
     // Only in the latest compilers
-    //const bool result = std::all_of( hostBuffer.begin(), hostBuffer.end(),
+    // const bool result = std::all_of( hostBuffer.begin(), hostBuffer.end(),
     //  [ value ]( float i ){
     //    return i == value;
     //  } );
 
-    ITK_OPENCL_COMPARE( result, true );
+    ITK_OPENCL_COMPARE(result, true);
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
     itk::ReleaseContext();

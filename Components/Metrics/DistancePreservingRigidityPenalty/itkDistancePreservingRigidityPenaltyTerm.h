@@ -72,23 +72,21 @@ namespace itk
  *
  */
 
-template< class TFixedImage, class TScalarType >
-class DistancePreservingRigidityPenaltyTerm :
-  public TransformPenaltyTerm< TFixedImage, TScalarType >
+template <class TFixedImage, class TScalarType>
+class DistancePreservingRigidityPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
-
   /** Standard itk stuff. */
-  typedef DistancePreservingRigidityPenaltyTerm            Self;
-  typedef TransformPenaltyTerm< TFixedImage, TScalarType > Superclass;
-  typedef SmartPointer< Self >                             Pointer;
-  typedef SmartPointer< const Self >                       ConstPointer;
+  typedef DistancePreservingRigidityPenaltyTerm          Self;
+  typedef TransformPenaltyTerm<TFixedImage, TScalarType> Superclass;
+  typedef SmartPointer<Self>                             Pointer;
+  typedef SmartPointer<const Self>                       ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( DistancePreservingRigidityPenaltyTerm, TransformPenaltyTerm );
+  itkTypeMacro(DistancePreservingRigidityPenaltyTerm, TransformPenaltyTerm);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
@@ -135,67 +133,72 @@ public:
   typedef typename Superclass::InternalMatrixType            InternalMatrixType;
 
   /** Define the dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-  itkStaticConstMacro( MovingImageDimension, unsigned int, FixedImageType::ImageDimension );
-  itkStaticConstMacro( ImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(MovingImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** Initialize the penalty term. */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /** Typedef's for B-spline transform. */
-  typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 3 > BSplineTransformType;
-  typedef typename BSplineTransformType::Pointer                                   BSplineTransformPointer;
-  typedef typename BSplineTransformType::SpacingType                               GridSpacingType;
-  typedef typename BSplineTransformType::ImageType                                 CoefficientImageType;
-  typedef typename CoefficientImageType::Pointer                                   CoefficientImagePointer;
-  typedef typename CoefficientImageType::SpacingType                               CoefficientImageSpacingType;
-  typedef AdvancedCombinationTransform< ScalarType, FixedImageDimension >          CombinationTransformType;
+  typedef AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 3> BSplineTransformType;
+  typedef typename BSplineTransformType::Pointer                                 BSplineTransformPointer;
+  typedef typename BSplineTransformType::SpacingType                             GridSpacingType;
+  typedef typename BSplineTransformType::ImageType                               CoefficientImageType;
+  typedef typename CoefficientImageType::Pointer                                 CoefficientImagePointer;
+  typedef typename CoefficientImageType::SpacingType                             CoefficientImageSpacingType;
+  typedef AdvancedCombinationTransform<ScalarType, FixedImageDimension>          CombinationTransformType;
 
   /** The GetValue()-method returns the rigid penalty value. */
-  MeasureType GetValue( const ParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const ParametersType & parameters) const override;
 
   /** The GetDerivative()-method returns the rigid penalty derivative. */
-  void GetDerivative( const ParametersType & parameters, DerivativeType & derivative ) const override;
+  void
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** The GetValueAndDerivative()-method returns the rigid penalty value and its derivative. */
-  void GetValueAndDerivative( const ParametersType & parameters, MeasureType & value, DerivativeType & derivative ) const override;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
   /** Set the B-spline transform in this class.
    * This class expects a BSplineTransform! It is not suited for others.
    */
-  itkSetObjectMacro( BSplineTransform, BSplineTransformType );
+  itkSetObjectMacro(BSplineTransform, BSplineTransformType);
 
   /** B-spline knot image */
-  typedef Image< signed short, itkGetStaticConstMacro( MovingImageDimension ) > BSplineKnotImageType;
-  typedef typename BSplineKnotImageType::Pointer                                BSplineKnotImagePointer;
-  typedef typename BSplineKnotImageType::RegionType                             BSplineKnotImageRegionType;
+  typedef Image<signed short, itkGetStaticConstMacro(MovingImageDimension)> BSplineKnotImageType;
+  typedef typename BSplineKnotImageType::Pointer                            BSplineKnotImagePointer;
+  typedef typename BSplineKnotImageType::RegionType                         BSplineKnotImageRegionType;
 
   /** penalty grid image */
-  typedef Image< signed short, itkGetStaticConstMacro( MovingImageDimension ) > PenaltyGridImageType;
-  typedef typename PenaltyGridImageType::Pointer                                PenaltyGridImagePointer;
-  typedef typename PenaltyGridImageType::RegionType                             PenaltyGridImageRegionType;
+  typedef Image<signed short, itkGetStaticConstMacro(MovingImageDimension)> PenaltyGridImageType;
+  typedef typename PenaltyGridImageType::Pointer                            PenaltyGridImagePointer;
+  typedef typename PenaltyGridImageType::RegionType                         PenaltyGridImageRegionType;
 
   /** Define the segmented image. */
-  typedef Image< signed short, itkGetStaticConstMacro( MovingImageDimension ) > SegmentedImageType;
-  typedef typename SegmentedImageType::Pointer                                  SegmentedImagePointer;
-  typedef typename SegmentedImageType::RegionType                               SegmentedImageRegionType;
+  typedef Image<signed short, itkGetStaticConstMacro(MovingImageDimension)> SegmentedImageType;
+  typedef typename SegmentedImageType::Pointer                              SegmentedImagePointer;
+  typedef typename SegmentedImageType::RegionType                           SegmentedImageRegionType;
 
   /** Connect the Segmented Image. */
-  itkSetObjectMacro( SegmentedImage, SegmentedImageType );
+  itkSetObjectMacro(SegmentedImage, SegmentedImageType);
 
   /** Get the Segmented Image. */
-  itkGetModifiableObjectMacro( SegmentedImage, SegmentedImageType );
+  itkGetModifiableObjectMacro(SegmentedImage, SegmentedImageType);
 
   /** Connect the Sampled Segmented Image. */
-  itkSetObjectMacro( SampledSegmentedImage, SegmentedImageType );
+  itkSetObjectMacro(SampledSegmentedImage, SegmentedImageType);
 
   /** Get the Sampled Segmented Image. */
-  itkGetModifiableObjectMacro( SampledSegmentedImage, SegmentedImageType );
+  itkGetModifiableObjectMacro(SampledSegmentedImage, SegmentedImageType);
 
-  itkGetMacro( NumberOfRigidGrids, unsigned int );
+  itkGetMacro(NumberOfRigidGrids, unsigned int);
 
 protected:
-
   /** The constructor. */
   DistancePreservingRigidityPenaltyTerm();
 
@@ -203,15 +206,16 @@ protected:
   ~DistancePreservingRigidityPenaltyTerm() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
   /** The private constructor. */
-  DistancePreservingRigidityPenaltyTerm( const Self & ); // purposely not implemented
+  DistancePreservingRigidityPenaltyTerm(const Self &); // purposely not implemented
 
   /** The private copy constructor. */
-  void operator=( const Self & );                        // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Member variables. */
   BSplineTransformPointer m_BSplineTransform;
@@ -224,7 +228,6 @@ private:
   SegmentedImagePointer   m_SampledSegmentedImage;
 
   unsigned int m_NumberOfRigidGrids;
-
 };
 
 // end class DistancePreservingRigidityPenaltyTerm
@@ -232,7 +235,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkDistancePreservingRigidityPenaltyTerm.hxx"
+#  include "itkDistancePreservingRigidityPenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkDistancePreservingRigidityPenaltyTerm_h

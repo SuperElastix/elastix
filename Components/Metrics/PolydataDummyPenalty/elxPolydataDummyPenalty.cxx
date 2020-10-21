@@ -18,4 +18,4 @@
 
 #include "elxPolydataDummyPenalty.h"
 
-elxInstallMacro( PolydataDummyPenalty );
+elxInstallMacro(PolydataDummyPenalty);

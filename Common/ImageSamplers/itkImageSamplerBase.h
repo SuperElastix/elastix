@@ -38,26 +38,23 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageSamplerBase :
-  public ImageToVectorContainerFilter< TInputImage,
-  VectorDataContainer< std::size_t, ImageSample< TInputImage > > >
+template <class TInputImage>
+class ImageSamplerBase
+  : public ImageToVectorContainerFilter<TInputImage, VectorDataContainer<std::size_t, ImageSample<TInputImage>>>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef ImageSamplerBase Self;
-  typedef ImageToVectorContainerFilter<
-    TInputImage, VectorDataContainer<
-    std::size_t, ImageSample< TInputImage > > > Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef ImageToVectorContainerFilter<TInputImage, VectorDataContainer<std::size_t, ImageSample<TInputImage>>>
+                                   Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageSamplerBase, ImageToVectorContainerFilter );
+  itkTypeMacro(ImageSamplerBase, ImageToVectorContainerFilter);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -70,81 +67,90 @@ public:
   typedef typename Superclass::InputImagePixelType          InputImagePixelType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    InputImageType::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);
 
   /** Other typdefs. */
-  typedef ImageSample< InputImageType >                         ImageSampleType;
-  typedef VectorDataContainer< std::size_t, ImageSampleType >   ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer            ImageSampleContainerPointer;
-  typedef typename InputImageType::SizeType                     InputImageSizeType;
-  typedef typename InputImageType::IndexType                    InputImageIndexType;
-  typedef typename InputImageType::PointType                    InputImagePointType;
-  typedef typename InputImagePointType::ValueType               InputImagePointValueType;
-  typedef typename ImageSampleType::RealType                    ImageSampleValueType;
-  typedef SpatialObject< Self::InputImageDimension >            MaskType;
-  typedef typename MaskType::Pointer                            MaskPointer;
-  typedef typename MaskType::ConstPointer                       MaskConstPointer;
-  typedef std::vector< MaskConstPointer >                       MaskVectorType;
-  typedef std::vector< InputImageRegionType >                   InputImageRegionVectorType;
+  typedef ImageSample<InputImageType>                       ImageSampleType;
+  typedef VectorDataContainer<std::size_t, ImageSampleType> ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer        ImageSampleContainerPointer;
+  typedef typename InputImageType::SizeType                 InputImageSizeType;
+  typedef typename InputImageType::IndexType                InputImageIndexType;
+  typedef typename InputImageType::PointType                InputImagePointType;
+  typedef typename InputImagePointType::ValueType           InputImagePointValueType;
+  typedef typename ImageSampleType::RealType                ImageSampleValueType;
+  typedef SpatialObject<Self::InputImageDimension>          MaskType;
+  typedef typename MaskType::Pointer                        MaskPointer;
+  typedef typename MaskType::ConstPointer                   MaskConstPointer;
+  typedef std::vector<MaskConstPointer>                     MaskVectorType;
+  typedef std::vector<InputImageRegionType>                 InputImageRegionVectorType;
 
   /** ******************** Masks ******************** */
 
   /** Set the masks. */
-  virtual void SetMask( const MaskType * _arg, unsigned int pos );
+  virtual void
+  SetMask(const MaskType * _arg, unsigned int pos);
 
   /** Set the first mask. NB: the first mask is used to
    * compute a bounding box in which samples are considered.
    */
-  virtual void SetMask( const MaskType * _arg )
+  virtual void
+  SetMask(const MaskType * _arg)
   {
-    this->SetMask( _arg, 0 );
+    this->SetMask(_arg, 0);
   }
 
 
   /** Get the masks. */
-  virtual const MaskType * GetMask( unsigned int pos ) const;
+  virtual const MaskType *
+  GetMask(unsigned int pos) const;
 
   /** Get the first mask. */
-  virtual const MaskType * GetMask( void ) const
+  virtual const MaskType *
+  GetMask(void) const
   {
-    return this->GetMask( 0 );
+    return this->GetMask(0);
   }
 
 
   /** Set the number of masks. */
-  virtual void SetNumberOfMasks( const unsigned int _arg );
+  virtual void
+  SetNumberOfMasks(const unsigned int _arg);
 
   /** Get the number of masks. */
-  itkGetConstMacro( NumberOfMasks, unsigned int );
+  itkGetConstMacro(NumberOfMasks, unsigned int);
 
   /** ******************** Regions ******************** */
 
   /** Set the region over which the samples will be taken. */
-  virtual void SetInputImageRegion( const InputImageRegionType _arg, unsigned int pos );
+  virtual void
+  SetInputImageRegion(const InputImageRegionType _arg, unsigned int pos);
 
   /** Set the region over which the samples will be taken. */
-  virtual void SetInputImageRegion( const InputImageRegionType _arg )
+  virtual void
+  SetInputImageRegion(const InputImageRegionType _arg)
   {
-    this->SetInputImageRegion( _arg, 0 );
+    this->SetInputImageRegion(_arg, 0);
   }
 
 
   /** Get the input image regions. */
-  virtual const InputImageRegionType & GetInputImageRegion( unsigned int pos ) const;
+  virtual const InputImageRegionType &
+  GetInputImageRegion(unsigned int pos) const;
 
   /** Get the first input image region. */
-  virtual const InputImageRegionType & GetInputImageRegion( void ) const
+  virtual const InputImageRegionType &
+  GetInputImageRegion(void) const
   {
-    return this->GetInputImageRegion( 0 );
+    return this->GetInputImageRegion(0);
   }
 
 
   /** Set the number of input image regions. */
-  virtual void SetNumberOfInputImageRegions( const unsigned int _arg );
+  virtual void
+  SetNumberOfInputImageRegions(const unsigned int _arg);
 
   /** Get the number of input image regions. */
-  itkGetConstMacro( NumberOfInputImageRegions, unsigned int );
+  itkGetConstMacro(NumberOfInputImageRegions, unsigned int);
 
   /** ******************** Other ******************** */
 
@@ -152,27 +158,28 @@ public:
    * will generate a new sample set after calling Update(). The return bool
    * is false when this feature is not supported by the sampler.
    */
-  virtual bool SelectNewSamplesOnUpdate( void );
+  virtual bool
+  SelectNewSamplesOnUpdate(void);
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
-  virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
+  virtual bool
+  SelectingNewSamplesOnUpdateSupported(void) const
   {
     return true;
   }
 
 
   /** Get a handle to the cropped InputImageregion. */
-  itkGetConstReferenceMacro( CroppedInputImageRegion, InputImageRegionType );
+  itkGetConstReferenceMacro(CroppedInputImageRegion, InputImageRegionType);
 
   /** Set/Get the number of samples. */
-  itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits< unsigned long >::max() );
-  itkGetConstMacro( NumberOfSamples, unsigned long );
+  itkSetClampMacro(NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max());
+  itkGetConstMacro(NumberOfSamples, unsigned long);
 
   /** \todo: Temporary, should think about interface. */
-  itkSetMacro( UseMultiThread, bool );
+  itkSetMacro(UseMultiThread, bool);
 
 protected:
-
   /** The constructor. */
   ImageSamplerBase();
 
@@ -180,43 +187,51 @@ protected:
   ~ImageSamplerBase() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** GenerateInputRequestedRegion. */
-  void GenerateInputRequestedRegion( void ) override;
+  void
+  GenerateInputRequestedRegion(void) override;
 
   /** IsInsideAllMasks. */
-  virtual bool IsInsideAllMasks( const InputImagePointType & point ) const;
+  virtual bool
+  IsInsideAllMasks(const InputImagePointType & point) const;
 
   /** UpdateAllMasks. */
-  virtual void UpdateAllMasks( void );
+  virtual void
+  UpdateAllMasks(void);
 
   /** Checks if the InputImageRegions are a subregion of the
-  * LargestPossibleRegions.
-  */
-  virtual bool CheckInputImageRegions( void );
+   * LargestPossibleRegions.
+   */
+  virtual bool
+  CheckInputImageRegions(void);
 
   /** Compute the intersection of the InputImageRegion and the bounding box of the mask. */
-  void CropInputImageRegion( void );
+  void
+  CropInputImageRegion(void);
 
   /** Multi-threaded function that does the work. */
-  void BeforeThreadedGenerateData( void ) override;
+  void
+  BeforeThreadedGenerateData(void) override;
 
-  void AfterThreadedGenerateData( void ) override;
+  void
+  AfterThreadedGenerateData(void) override;
 
   /***/
-  unsigned long                              m_NumberOfSamples;
-  std::vector< ImageSampleContainerPointer > m_ThreaderSampleContainer;
+  unsigned long                            m_NumberOfSamples;
+  std::vector<ImageSampleContainerPointer> m_ThreaderSampleContainer;
 
-  //tmp?
+  // tmp?
   bool m_UseMultiThread;
 
 private:
-
   /** The private constructor. */
-  ImageSamplerBase( const Self & );          // purposely not implemented
+  ImageSamplerBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );            // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Member variables. */
   MaskConstPointer           m_Mask;
@@ -228,13 +243,12 @@ private:
 
   InputImageRegionType m_CroppedInputImageRegion;
   InputImageRegionType m_DummyInputImageRegion;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageSamplerBase.hxx"
+#  include "itkImageSamplerBase.hxx"
 #endif
 
 #endif // end #ifndef __ImageSamplerBase_h

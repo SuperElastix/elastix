@@ -25,18 +25,16 @@
 //-------------------------------------------------------------------------------------
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   /** Some basic type definitions. */
   constexpr unsigned int Dimension = 3;
-  typedef float PixelType;
+  typedef float          PixelType;
 
   /** Check. */
-  if( argc != 4 )
+  if (argc != 4)
   {
-    std::cerr << "ERROR: Usage: "
-              << argv[0]
-              << " <movingImage> <transformParameters> <transformedImage>" << std::endl;
+    std::cerr << "ERROR: Usage: " << argv[0] << " <movingImage> <transformParameters> <transformedImage>" << std::endl;
     return 1;
   }
   const char * movingImageFile = argv[1];

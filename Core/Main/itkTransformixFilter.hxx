@@ -72,9 +72,9 @@ TransformixFilter<TMovingImage>::GenerateData()
   // on some platforms.
   const unsigned int movingImageDimension = MovingImageDimension;
 
-  if (this->IsEmpty(this->GetMovingImage()) &&
-      this->GetFixedPointSetFileName().empty() && !this->GetComputeSpatialJacobian() &&
-      !this->GetComputeDeterminantOfSpatialJacobian() && !this->GetComputeDeformationField())
+  if (this->IsEmpty(this->GetMovingImage()) && this->GetFixedPointSetFileName().empty() &&
+      !this->GetComputeSpatialJacobian() && !this->GetComputeDeterminantOfSpatialJacobian() &&
+      !this->GetComputeDeformationField())
   {
     itkExceptionMacro("Expected at least one of SetMovingImage(), "
                       << "SetFixedPointSetFileName() "
@@ -438,7 +438,8 @@ template <typename TMovingImage>
 const typename TransformixFilter<TMovingImage>::ParameterObjectType *
 TransformixFilter<TMovingImage>::GetTransformParameterObject() const
 {
-  return itkDynamicCastInDebugMode<const ParameterObjectType *>(this->ProcessObject::GetInput("TransformParameterObject"));
+  return itkDynamicCastInDebugMode<const ParameterObjectType *>(
+    this->ProcessObject::GetInput("TransformParameterObject"));
 }
 
 
@@ -490,7 +491,6 @@ TransformixFilter<TMovingImage>::GetOutput(unsigned int idx) const
 {
   return this->ProcessObject::GetOutput(idx);
 }
-
 
 
 template <typename TMovingImage>

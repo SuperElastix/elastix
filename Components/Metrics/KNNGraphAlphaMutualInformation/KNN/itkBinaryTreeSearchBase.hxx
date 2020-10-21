@@ -27,11 +27,10 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template< class TBinaryTree >
-BinaryTreeSearchBase< TBinaryTree >
-::BinaryTreeSearchBase()
+template <class TBinaryTree>
+BinaryTreeSearchBase<TBinaryTree>::BinaryTreeSearchBase()
 {
-  this->m_BinaryTree        = nullptr;
+  this->m_BinaryTree = nullptr;
   this->m_KNearestNeighbors = 1;
 } // end Constructor
 
@@ -40,24 +39,22 @@ BinaryTreeSearchBase< TBinaryTree >
  * ************************ Destructor *************************
  */
 
-template< class TBinaryTree >
-BinaryTreeSearchBase< TBinaryTree >
-::~BinaryTreeSearchBase()
-{}  // end Destructor
+template <class TBinaryTree>
+BinaryTreeSearchBase<TBinaryTree>::~BinaryTreeSearchBase()
+{} // end Destructor
 
 /**
  * ************************ SetBinaryTree *************************
  */
 
-template< class TBinaryTree >
+template <class TBinaryTree>
 void
-BinaryTreeSearchBase< TBinaryTree >
-::SetBinaryTree( BinaryTreeType * tree )
+BinaryTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
 {
-  if( this->m_BinaryTree != tree )
+  if (this->m_BinaryTree != tree)
   {
     this->m_BinaryTree = tree;
-    if( tree )
+    if (tree)
     {
       this->m_DataDimension = this->m_BinaryTree->GetDataDimension();
     }
@@ -70,10 +67,9 @@ BinaryTreeSearchBase< TBinaryTree >
  * ************************ GetBinaryTree *************************
  */
 
-template< class TBinaryTree >
-const typename BinaryTreeSearchBase< TBinaryTree >::BinaryTreeType
-* BinaryTreeSearchBase< TBinaryTree >
-::GetBinaryTree( void ) const
+template <class TBinaryTree>
+const typename BinaryTreeSearchBase<TBinaryTree>::BinaryTreeType *
+BinaryTreeSearchBase<TBinaryTree>::GetBinaryTree(void) const
 {
   return this->m_BinaryTree.GetPointer();
 } // end GetBinaryTree

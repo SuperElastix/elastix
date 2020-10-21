@@ -20,12 +20,13 @@
 
 namespace itk
 {
-OpenCLSampler::OpenCLSampler( const OpenCLSampler & other ) :
-  m_Context( other.m_Context ), m_Id( other.m_Id )
+OpenCLSampler::OpenCLSampler(const OpenCLSampler & other)
+  : m_Context(other.m_Context)
+  , m_Id(other.m_Id)
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clRetainSampler( this->m_Id );
+    clRetainSampler(this->m_Id);
   }
 }
 
@@ -33,25 +34,25 @@ OpenCLSampler::OpenCLSampler( const OpenCLSampler & other ) :
 //------------------------------------------------------------------------------
 OpenCLSampler::~OpenCLSampler()
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clReleaseSampler( this->m_Id );
+    clReleaseSampler(this->m_Id);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLSampler &
-OpenCLSampler::operator=( const OpenCLSampler & other )
+OpenCLSampler::operator=(const OpenCLSampler & other)
 {
   this->m_Context = other.m_Context;
-  if( other.m_Id )
+  if (other.m_Id)
   {
-    clRetainSampler( other.m_Id );
+    clRetainSampler(other.m_Id);
   }
-  if( this->m_Id )
+  if (this->m_Id)
   {
-    clReleaseSampler( this->m_Id );
+    clReleaseSampler(this->m_Id);
   }
   this->m_Id = other.m_Id;
   return *this;
@@ -62,11 +63,10 @@ OpenCLSampler::operator=( const OpenCLSampler & other )
 bool
 OpenCLSampler::GetNormalizedCoordinates() const
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
     cl_bool normalized = CL_FALSE;
-    clGetSamplerInfo( this->m_Id, CL_SAMPLER_NORMALIZED_COORDS,
-      sizeof( normalized ), &normalized, 0 );
+    clGetSamplerInfo(this->m_Id, CL_SAMPLER_NORMALIZED_COORDS, sizeof(normalized), &normalized, 0);
     return normalized != CL_FALSE;
   }
   else
@@ -80,12 +80,11 @@ OpenCLSampler::GetNormalizedCoordinates() const
 OpenCLSampler::AddressingMode
 OpenCLSampler::GetAddressingMode() const
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
     cl_addressing_mode addressing;
-    clGetSamplerInfo( this->m_Id, CL_SAMPLER_ADDRESSING_MODE,
-      sizeof( addressing ), &addressing, 0 );
-    return OpenCLSampler::AddressingMode( addressing );
+    clGetSamplerInfo(this->m_Id, CL_SAMPLER_ADDRESSING_MODE, sizeof(addressing), &addressing, 0);
+    return OpenCLSampler::AddressingMode(addressing);
   }
   else
   {
@@ -98,12 +97,11 @@ OpenCLSampler::GetAddressingMode() const
 OpenCLSampler::FilterMode
 OpenCLSampler::GetFilterMode() const
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
     cl_filter_mode filter;
-    clGetSamplerInfo( this->m_Id, CL_SAMPLER_FILTER_MODE,
-      sizeof( filter ), &filter, 0 );
-    return OpenCLSampler::FilterMode( filter );
+    clGetSamplerInfo(this->m_Id, CL_SAMPLER_FILTER_MODE, sizeof(filter), &filter, 0);
+    return OpenCLSampler::FilterMode(filter);
   }
   else
   {
@@ -115,9 +113,9 @@ OpenCLSampler::GetFilterMode() const
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLSampler & lhs, const OpenCLSampler & rhs )
+operator==(const OpenCLSampler & lhs, const OpenCLSampler & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
@@ -128,9 +126,9 @@ operator==( const OpenCLSampler & lhs, const OpenCLSampler & rhs )
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLSampler & lhs, const OpenCLSampler & rhs )
+operator!=(const OpenCLSampler & lhs, const OpenCLSampler & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

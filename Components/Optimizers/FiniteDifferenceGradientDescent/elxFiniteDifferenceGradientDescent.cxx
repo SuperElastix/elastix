@@ -18,4 +18,4 @@
 
 #include "elxFiniteDifferenceGradientDescent.h"
 
-elxInstallMacro( FiniteDifferenceGradientDescent );
+elxInstallMacro(FiniteDifferenceGradientDescent);

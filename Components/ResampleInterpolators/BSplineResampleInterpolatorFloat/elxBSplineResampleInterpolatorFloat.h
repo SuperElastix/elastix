@@ -25,66 +25,64 @@ namespace elastix
 {
 
 /**
-* \class BSplineResampleInterpolatorFloat
-* \brief A resample-interpolator based on B-splines.
-*
-* Compared to the BSplineResampleInterpolator this class uses
-* a float CoefficientType, instead of double. You can select
-* this resample interpolator if memory burden is an issue.
-*
-* The parameters used in this class are:
-* \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
-*   <tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>
-* \parameter FinalBSplineInterpolationOrder: the order of the B-spline used to resample
-*    the deformed moving image; possible values: (0-5) \n
-*    example: <tt>(FinalBSplineInterpolationOrder 3 ) </tt> \n
-*    Default: 3.
-*
-* The transform parameters necessary for transformix, additionally defined by this class, are:
-* \transformparameter FinalBSplineInterpolationOrder: the order of the B-spline used to resample
-*    the deformed moving image; possible values: (0-5) \n
-*    example: <tt>(FinalBSplineInterpolationOrder 3) </tt> \n
-*    Default: 3.
-*
-* \ingroup ResampleInterpolators
-* \sa BSplineResampleInterpolator
-*/
+ * \class BSplineResampleInterpolatorFloat
+ * \brief A resample-interpolator based on B-splines.
+ *
+ * Compared to the BSplineResampleInterpolator this class uses
+ * a float CoefficientType, instead of double. You can select
+ * this resample interpolator if memory burden is an issue.
+ *
+ * The parameters used in this class are:
+ * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
+ *   <tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>
+ * \parameter FinalBSplineInterpolationOrder: the order of the B-spline used to resample
+ *    the deformed moving image; possible values: (0-5) \n
+ *    example: <tt>(FinalBSplineInterpolationOrder 3 ) </tt> \n
+ *    Default: 3.
+ *
+ * The transform parameters necessary for transformix, additionally defined by this class, are:
+ * \transformparameter FinalBSplineInterpolationOrder: the order of the B-spline used to resample
+ *    the deformed moving image; possible values: (0-5) \n
+ *    example: <tt>(FinalBSplineInterpolationOrder 3) </tt> \n
+ *    Default: 3.
+ *
+ * \ingroup ResampleInterpolators
+ * \sa BSplineResampleInterpolator
+ */
 
-template< class TElastix >
-class BSplineResampleInterpolatorFloat :
-  public
-  itk::BSplineInterpolateImageFunction<
-  typename ResampleInterpolatorBase< TElastix >::InputImageType,
-  typename ResampleInterpolatorBase< TElastix >::CoordRepType,
-  float >,   //CoefficientType
-  public ResampleInterpolatorBase< TElastix >
+template <class TElastix>
+class BSplineResampleInterpolatorFloat
+  : public itk::BSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                                typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+                                                float>
+  , // CoefficientType
+    public ResampleInterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef BSplineResampleInterpolatorFloat Self;
-  typedef itk::BSplineInterpolateImageFunction<
-    typename ResampleInterpolatorBase< TElastix >::InputImageType,
-    typename ResampleInterpolatorBase< TElastix >::CoordRepType,
-    float >                                     Superclass1;
-  typedef ResampleInterpolatorBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >            Pointer;
-  typedef itk::SmartPointer< const Self >      ConstPointer;
+  typedef itk::BSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                               typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+                                               float>
+                                             Superclass1;
+  typedef ResampleInterpolatorBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>            Pointer;
+  typedef itk::SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineResampleInterpolatorFloat, BSplineInterpolateImageFunction );
+  itkTypeMacro(BSplineResampleInterpolatorFloat, BSplineInterpolateImageFunction);
 
   /** Name of this class.
-  * Use this name in the parameter file to select this specific resample interpolator. \n
-  * example: <tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>\n
-  */
-  elxClassNameMacro( "FinalBSplineInterpolatorFloat" );
+   * Use this name in the parameter file to select this specific resample interpolator. \n
+   * example: <tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>\n
+   */
+  elxClassNameMacro("FinalBSplineInterpolatorFloat");
 
   /** Dimension of the image. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass1::OutputType               OutputType;
@@ -109,36 +107,37 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Execute stuff before the actual registration:
-  * \li Set the spline order.
-  */
-  void BeforeRegistration( void ) override;
+   * \li Set the spline order.
+   */
+  void
+  BeforeRegistration(void) override;
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( void ) const override;
+  void
+  WriteToFile(void) const override;
 
 protected:
-
   /** The constructor. */
   BSplineResampleInterpolatorFloat() {}
   /** The destructor. */
   ~BSplineResampleInterpolatorFloat() override {}
 
 private:
-
   /** The private constructor. */
-  BSplineResampleInterpolatorFloat( const Self & );   // purposely not implemented
+  BSplineResampleInterpolatorFloat(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxBSplineResampleInterpolatorFloat.hxx"
+#  include "elxBSplineResampleInterpolatorFloat.hxx"
 #endif
 
 #endif // end __elxBSplineResampleInterpolatorFloat_h

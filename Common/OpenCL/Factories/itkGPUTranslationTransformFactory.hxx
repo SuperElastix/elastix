@@ -22,57 +22,54 @@
 
 namespace itk
 {
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUTranslationTransformFactory2< NDimensions >::RegisterOneFactory()
+GPUTranslationTransformFactory2<NDimensions>::RegisterOneFactory()
 {
-  typedef GPUTranslationTransformFactory2< NDimensions > GPUTransformFactoryType;
-  typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  typedef GPUTranslationTransformFactory2<NDimensions> GPUTransformFactoryType;
+  typename GPUTransformFactoryType::Pointer            factory = GPUTransformFactoryType::New();
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
-GPUTranslationTransformFactory2< NDimensions >::GPUTranslationTransformFactory2()
+template <typename NDimensions>
+GPUTranslationTransformFactory2<NDimensions>::GPUTranslationTransformFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUTranslationTransformFactory2< NDimensions >
-::Register1D()
+GPUTranslationTransformFactory2<NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 1 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 1> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUTranslationTransformFactory2< NDimensions >
-::Register2D()
+GPUTranslationTransformFactory2<NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 2 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 2> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUTranslationTransformFactory2< NDimensions >
-::Register3D()
+GPUTranslationTransformFactory2<NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 3 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 3> visitor;
+  visitor(*this);
 }
 
 

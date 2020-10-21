@@ -22,15 +22,15 @@
 #include <vector>
 
 /** Macro for setting the number of objects. */
-#define itkSetNumberOfMacro( name ) \
-  virtual void SetNumberOf##name##s( const unsigned int _arg ) \
-  { \
-    if( this->m_NumberOf##name##s != _arg ) \
-    { \
-      this->m_##name##Vector.resize( _arg ); \
-      this->m_NumberOf##name##s = _arg; \
-      this->Modified(); \
-    } \
+#define itkSetNumberOfMacro(name)                                                                                      \
+  virtual void SetNumberOf##name##s(const unsigned int _arg)                                                           \
+  {                                                                                                                    \
+    if (this->m_NumberOf##name##s != _arg)                                                                             \
+    {                                                                                                                  \
+      this->m_##name##Vector.resize(_arg);                                                                             \
+      this->m_NumberOf##name##s = _arg;                                                                                \
+      this->Modified();                                                                                                \
+    }                                                                                                                  \
   } // comments for allowing ; after calling the macro
 
 namespace itk
@@ -45,24 +45,22 @@ namespace itk
  *
  */
 
-template< class TFixedImage, class TMovingImage >
-class MultiInputImageToImageMetricBase :
-  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+template <class TFixedImage, class TMovingImage>
+class MultiInputImageToImageMetricBase : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef MultiInputImageToImageMetricBase                        Self;
-  typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage > Superclass;
-  typedef SmartPointer< Self >                                    Pointer;
-  typedef SmartPointer< const Self >                              ConstPointer;
+  typedef MultiInputImageToImageMetricBase                      Self;
+  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
+  typedef SmartPointer<Self>                                    Pointer;
+  typedef SmartPointer<const Self>                              ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MultiInputImageToImageMetricBase, AdvancedImageToImageMetric );
+  itkTypeMacro(MultiInputImageToImageMetricBase, AdvancedImageToImageMetric);
 
   /** Constants for the image dimensions */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, TMovingImage::ImageDimension );
-  itkStaticConstMacro( FixedImageDimension, unsigned int, TFixedImage::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);
+  itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Typedefs from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
@@ -96,229 +94,256 @@ public:
   typedef typename Superclass::DerivativeType               DerivativeType;
   typedef typename Superclass::ParametersType               ParametersType;
 
-  typedef InterpolateImageFunction<
-    FixedImageType, CoordinateRepresentationType >        FixedImageInterpolatorType;
-  typedef typename FixedImageInterpolatorType::Pointer FixedImageInterpolatorPointer;
+  typedef InterpolateImageFunction<FixedImageType, CoordinateRepresentationType> FixedImageInterpolatorType;
+  typedef typename FixedImageInterpolatorType::Pointer                           FixedImageInterpolatorPointer;
 
   /** Typedef's for storing multiple inputs. */
-  typedef std::vector< FixedImageConstPointer >        FixedImageVectorType;
-  typedef std::vector< FixedImageMaskPointer >         FixedImageMaskVectorType;
-  typedef std::vector< FixedImageRegionType >          FixedImageRegionVectorType;
-  typedef std::vector< MovingImageConstPointer >       MovingImageVectorType;
-  typedef std::vector< MovingImageMaskPointer >        MovingImageMaskVectorType;
-  typedef std::vector< InterpolatorPointer >           InterpolatorVectorType;
-  typedef std::vector< FixedImageInterpolatorPointer > FixedImageInterpolatorVectorType;
+  typedef std::vector<FixedImageConstPointer>        FixedImageVectorType;
+  typedef std::vector<FixedImageMaskPointer>         FixedImageMaskVectorType;
+  typedef std::vector<FixedImageRegionType>          FixedImageRegionVectorType;
+  typedef std::vector<MovingImageConstPointer>       MovingImageVectorType;
+  typedef std::vector<MovingImageMaskPointer>        MovingImageMaskVectorType;
+  typedef std::vector<InterpolatorPointer>           InterpolatorVectorType;
+  typedef std::vector<FixedImageInterpolatorPointer> FixedImageInterpolatorVectorType;
 
   /** ******************** Fixed images ******************** */
 
   /** Set the fixed images. */
-  virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
+  virtual void
+  SetFixedImage(const FixedImageType * _arg, unsigned int pos);
 
   /** Set the first fixed image. */
-  void SetFixedImage( const FixedImageType * _arg ) override
+  void
+  SetFixedImage(const FixedImageType * _arg) override
   {
-    this->SetFixedImage( _arg, 0 );
+    this->SetFixedImage(_arg, 0);
   }
 
 
   /** Get the fixed images. */
-  virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
+  virtual const FixedImageType *
+  GetFixedImage(unsigned int pos) const;
 
   /** Get the first fixed image. */
-  const FixedImageType * GetFixedImage( void ) const override
+  const FixedImageType *
+  GetFixedImage(void) const override
   {
-    return this->GetFixedImage( 0 );
+    return this->GetFixedImage(0);
   }
 
 
   /** Set the number of fixed images. */
-  itkSetNumberOfMacro( FixedImage );
+  itkSetNumberOfMacro(FixedImage);
 
   /** Get the number of fixed images. */
-  itkGetConstMacro( NumberOfFixedImages, unsigned int );
+  itkGetConstMacro(NumberOfFixedImages, unsigned int);
 
   /** ******************** Fixed image masks ******************** */
 
   /** Set the fixed image masks. */
-  virtual void SetFixedImageMask( FixedImageMaskType * _arg, unsigned int pos );
+  virtual void
+  SetFixedImageMask(FixedImageMaskType * _arg, unsigned int pos);
 
   /** Set the first fixed image mask. */
-  void SetFixedImageMask( FixedImageMaskType * _arg ) override
+  void
+  SetFixedImageMask(FixedImageMaskType * _arg) override
   {
-    this->SetFixedImageMask( _arg, 0 );
+    this->SetFixedImageMask(_arg, 0);
   }
 
 
   /** Get the fixed image masks. */
-  virtual FixedImageMaskType * GetFixedImageMask( unsigned int pos ) const;
+  virtual FixedImageMaskType *
+  GetFixedImageMask(unsigned int pos) const;
 
   /** Get the first fixed image mask. */
-  FixedImageMaskType * GetFixedImageMask( void ) const override
+  FixedImageMaskType *
+  GetFixedImageMask(void) const override
   {
-    return this->GetFixedImageMask( 0 );
+    return this->GetFixedImageMask(0);
   }
 
 
   /** Set the number of fixed image masks. */
-  itkSetNumberOfMacro( FixedImageMask );
+  itkSetNumberOfMacro(FixedImageMask);
 
   /** Get the number of fixed image masks. */
-  itkGetConstMacro( NumberOfFixedImageMasks, unsigned int );
+  itkGetConstMacro(NumberOfFixedImageMasks, unsigned int);
 
   /** ******************** Fixed image regions ******************** */
 
   /** Set the fixed image regions. */
-  virtual void SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos );
+  virtual void
+  SetFixedImageRegion(const FixedImageRegionType _arg, unsigned int pos);
 
   /** Set the first fixed image region. */
-  void SetFixedImageRegion( const FixedImageRegionType _arg ) override
+  void
+  SetFixedImageRegion(const FixedImageRegionType _arg) override
   {
-    this->SetFixedImageRegion( _arg, 0 );
+    this->SetFixedImageRegion(_arg, 0);
   }
 
 
   /** Get the fixed image regions. */
-  virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
+  virtual const FixedImageRegionType &
+  GetFixedImageRegion(unsigned int pos) const;
 
   /** Get the first fixed image region. */
-  const FixedImageRegionType & GetFixedImageRegion( void ) const override
+  const FixedImageRegionType &
+  GetFixedImageRegion(void) const override
   {
-    return this->GetFixedImageRegion( 0 );
+    return this->GetFixedImageRegion(0);
   }
 
 
   /** Set the number of fixed image regions. */
-  itkSetNumberOfMacro( FixedImageRegion );
+  itkSetNumberOfMacro(FixedImageRegion);
 
   /** Get the number of fixed image regions. */
-  itkGetConstMacro( NumberOfFixedImageRegions, unsigned int );
+  itkGetConstMacro(NumberOfFixedImageRegions, unsigned int);
 
   /** ******************** Moving images ******************** */
 
   /** Set the moving images. */
-  virtual void SetMovingImage( const MovingImageType * _arg, unsigned int pos );
+  virtual void
+  SetMovingImage(const MovingImageType * _arg, unsigned int pos);
 
   /** Set the first moving image. */
-  void SetMovingImage( const MovingImageType * _arg ) override
+  void
+  SetMovingImage(const MovingImageType * _arg) override
   {
-    this->SetMovingImage( _arg, 0 );
+    this->SetMovingImage(_arg, 0);
   }
 
 
   /** Get the moving images. */
-  virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
+  virtual const MovingImageType *
+  GetMovingImage(unsigned int pos) const;
 
   /** Get the first moving image. */
-  const MovingImageType * GetMovingImage( void ) const override
+  const MovingImageType *
+  GetMovingImage(void) const override
   {
-    return this->GetMovingImage( 0 );
+    return this->GetMovingImage(0);
   }
 
 
   /** Set the number of moving images. */
-  itkSetNumberOfMacro( MovingImage );
+  itkSetNumberOfMacro(MovingImage);
 
   /** Get the number of moving images. */
-  itkGetConstMacro( NumberOfMovingImages, unsigned int );
+  itkGetConstMacro(NumberOfMovingImages, unsigned int);
 
   /** ******************** Moving image masks ******************** */
 
   /** Set the moving image masks. */
-  virtual void SetMovingImageMask( MovingImageMaskType * _arg, unsigned int pos );
+  virtual void
+  SetMovingImageMask(MovingImageMaskType * _arg, unsigned int pos);
 
   /** Set the first moving image mask. */
-  void SetMovingImageMask( MovingImageMaskType * _arg ) override
+  void
+  SetMovingImageMask(MovingImageMaskType * _arg) override
   {
-    this->SetMovingImageMask( _arg, 0 );
+    this->SetMovingImageMask(_arg, 0);
   }
 
 
   /** Get the moving image masks. */
-  virtual MovingImageMaskType * GetMovingImageMask( unsigned int pos ) const;
+  virtual MovingImageMaskType *
+  GetMovingImageMask(unsigned int pos) const;
 
   /** Get the first moving image mask. */
-  MovingImageMaskType * GetMovingImageMask( void ) const override
+  MovingImageMaskType *
+  GetMovingImageMask(void) const override
   {
-    return this->GetMovingImageMask( 0 );
+    return this->GetMovingImageMask(0);
   }
 
 
   /** Set the number of moving image masks. */
-  itkSetNumberOfMacro( MovingImageMask );
+  itkSetNumberOfMacro(MovingImageMask);
 
   /** Get the number of moving image masks. */
-  itkGetConstMacro( NumberOfMovingImageMasks, unsigned int );
+  itkGetConstMacro(NumberOfMovingImageMasks, unsigned int);
 
   /** ******************** Interpolators ********************
    * These interpolators are used for the moving images.
    */
 
   /** Set the interpolators. */
-  virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
+  virtual void
+  SetInterpolator(InterpolatorType * _arg, unsigned int pos);
 
   /** Set the first interpolator. */
-  void SetInterpolator( InterpolatorType * _arg ) override
+  void
+  SetInterpolator(InterpolatorType * _arg) override
   {
-    return this->SetInterpolator( _arg, 0 );
+    return this->SetInterpolator(_arg, 0);
   }
 
 
   /** Get the interpolators. */
-  virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
+  virtual InterpolatorType *
+  GetInterpolator(unsigned int pos) const;
 
   /** Get the first interpolator. */
-  InterpolatorType * GetInterpolator( void ) const override
+  InterpolatorType *
+  GetInterpolator(void) const override
   {
-    return this->GetInterpolator( 0 );
+    return this->GetInterpolator(0);
   }
 
 
   /** Set the number of interpolators. */
-  itkSetNumberOfMacro( Interpolator );
+  itkSetNumberOfMacro(Interpolator);
 
   /** Get the number of interpolators. */
-  itkGetConstMacro( NumberOfInterpolators, unsigned int );
+  itkGetConstMacro(NumberOfInterpolators, unsigned int);
 
   /** A function to check if all moving image interpolators are of type B-spline. */
-  itkGetConstMacro( InterpolatorsAreBSpline, bool );
+  itkGetConstMacro(InterpolatorsAreBSpline, bool);
 
   /** ******************** FixedImageInterpolators ********************
    * These interpolators are used for the fixed images.
    */
 
   /** Set the fixed image interpolators. */
-  virtual void SetFixedImageInterpolator( FixedImageInterpolatorType * _arg, unsigned int pos );
+  virtual void
+  SetFixedImageInterpolator(FixedImageInterpolatorType * _arg, unsigned int pos);
 
   /** Set the first fixed image interpolator. */
-  virtual void SetFixedImageInterpolator( FixedImageInterpolatorType * _arg )
+  virtual void
+  SetFixedImageInterpolator(FixedImageInterpolatorType * _arg)
   {
-    return this->SetFixedImageInterpolator( _arg, 0 );
+    return this->SetFixedImageInterpolator(_arg, 0);
   }
 
 
   /** Get the fixed image interpolators. */
-  virtual FixedImageInterpolatorType * GetFixedImageInterpolator( unsigned int pos ) const;
+  virtual FixedImageInterpolatorType *
+  GetFixedImageInterpolator(unsigned int pos) const;
 
   /** Get the first fixed image interpolator. */
-  virtual FixedImageInterpolatorType * GetFixedImageInterpolator( void ) const
+  virtual FixedImageInterpolatorType *
+  GetFixedImageInterpolator(void) const
   {
-    return this->GetFixedImageInterpolator( 0 );
+    return this->GetFixedImageInterpolator(0);
   }
 
 
   /** Set the number of fixed image interpolators. */
-  itkSetNumberOfMacro( FixedImageInterpolator );
+  itkSetNumberOfMacro(FixedImageInterpolator);
 
   /** Get the number of fixed image interpolators. */
-  itkGetConstMacro( NumberOfFixedImageInterpolators, unsigned int );
+  itkGetConstMacro(NumberOfFixedImageInterpolators, unsigned int);
 
   /** ******************** Other public functions ******************** */
 
   /** Initialisation. */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
 protected:
-
   /** Constructor. */
   MultiInputImageToImageMetricBase();
 
@@ -334,27 +359,29 @@ protected:
   /** Typedef's for the moving image interpolators. */
   typedef typename Superclass::BSplineInterpolatorType BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::Pointer    BSplineInterpolatorPointer;
-  typedef std::vector< BSplineInterpolatorPointer >    BSplineInterpolatorVectorType;
+  typedef std::vector<BSplineInterpolatorPointer>      BSplineInterpolatorVectorType;
 
   /** Initialize variables related to the image sampler; called by Initialize. */
-  void InitializeImageSampler( void ) override;
+  void
+  InitializeImageSampler(void) override;
 
   /** Check if all interpolators (for the moving image) are of type
    * BSplineInterpolateImageFunction.
    */
-  virtual void CheckForBSplineInterpolators( void );
+  virtual void
+  CheckForBSplineInterpolators(void);
 
   /** Check if mappedPoint is inside all moving images.
    * If so, the moving image value and possibly derivative are computed.
    */
-  bool EvaluateMovingImageValueAndDerivative(
-    const MovingImagePointType & mappedPoint,
-    RealType & movingImageValue,
-    MovingImageDerivativeType * gradient ) const override;
+  bool
+  EvaluateMovingImageValueAndDerivative(const MovingImagePointType & mappedPoint,
+                                        RealType &                   movingImageValue,
+                                        MovingImageDerivativeType *  gradient) const override;
 
   /** IsInsideMovingMask: Returns the AND of all moving image masks. */
-  bool IsInsideMovingMask(
-    const MovingImagePointType & mappedPoint ) const override;
+  bool
+  IsInsideMovingMask(const MovingImagePointType & mappedPoint) const override;
 
   /** Protected member variables. */
   FixedImageVectorType             m_FixedImageVector;
@@ -369,9 +396,9 @@ protected:
   BSplineInterpolatorVectorType m_BSplineInterpolatorVector;
 
 private:
-
-  MultiInputImageToImageMetricBase( const Self & ); // purposely not implemented
-  void operator=( const Self & );                   // purposely not implemented
+  MultiInputImageToImageMetricBase(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Private member variables. */
   FixedImageRegionType m_DummyFixedImageRegion;
@@ -383,7 +410,6 @@ private:
   unsigned int m_NumberOfMovingImageMasks;
   unsigned int m_NumberOfInterpolators;
   unsigned int m_NumberOfFixedImageInterpolators;
-
 };
 
 } // end namespace itk
@@ -391,7 +417,7 @@ private:
 #undef itkSetNumberOfMacro
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiInputImageToImageMetricBase.hxx"
+#  include "itkMultiInputImageToImageMetricBase.hxx"
 #endif
 
 #endif // end #ifndef __itkMultiInputImageToImageMetricBase_h

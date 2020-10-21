@@ -28,9 +28,8 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template< class TListSample >
-ANNBruteForceTree< TListSample >
-::ANNBruteForceTree()
+template <class TListSample>
+ANNBruteForceTree<TListSample>::ANNBruteForceTree()
 {
   this->m_ANNTree = nullptr;
 } // end Constructor
@@ -40,11 +39,10 @@ ANNBruteForceTree< TListSample >
  * ************************ Destructor *************************
  */
 
-template< class TListSample >
-ANNBruteForceTree< TListSample >
-::~ANNBruteForceTree()
+template <class TListSample>
+ANNBruteForceTree<TListSample>::~ANNBruteForceTree()
 {
-  ANNBinaryTreeCreator::DeleteANNBruteForceTree( this->m_ANNTree );
+  ANNBinaryTreeCreator::DeleteANNBruteForceTree(this->m_ANNTree);
 } // end Destructor
 
 
@@ -52,18 +50,16 @@ ANNBruteForceTree< TListSample >
  * ************************ GenerateTree *************************
  */
 
-template< class TListSample >
+template <class TListSample>
 void
-ANNBruteForceTree< TListSample >
-::GenerateTree( void )
+ANNBruteForceTree<TListSample>::GenerateTree(void)
 {
-  int dim = static_cast< int >( this->GetDataDimension() );
-  int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
+  int dim = static_cast<int>(this->GetDataDimension());
+  int nop = static_cast<int>(this->GetActualNumberOfDataPoints());
 
-  ANNBinaryTreeCreator::DeleteANNBruteForceTree( this->m_ANNTree );
+  ANNBinaryTreeCreator::DeleteANNBruteForceTree(this->m_ANNTree);
 
-  this->m_ANNTree = ANNBinaryTreeCreator::CreateANNBruteForceTree(
-    this->GetSample()->GetInternalContainer(), nop, dim );
+  this->m_ANNTree = ANNBinaryTreeCreator::CreateANNBruteForceTree(this->GetSample()->GetInternalContainer(), nop, dim);
 
 } // end GenerateTree
 

@@ -33,32 +33,27 @@ namespace itk
  * \ingroup ITKTransform
  */
 
-template< typename TScalarType = double,
-  unsigned int NDimensions       = 3,
-  unsigned int VSplineOrder      = 3 >
-class RecursiveBSplineTransform :
-  public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
+template <typename TScalarType = double, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3>
+class RecursiveBSplineTransform : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef RecursiveBSplineTransform          Self;
-  typedef AdvancedBSplineDeformableTransform<
-    TScalarType, NDimensions, VSplineOrder > Superclass;
-  typedef SmartPointer< Self >               Pointer;
-  typedef SmartPointer< const Self >         ConstPointer;
+  typedef RecursiveBSplineTransform                                                  Self;
+  typedef AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder> Superclass;
+  typedef SmartPointer<Self>                                                         Pointer;
+  typedef SmartPointer<const Self>                                                   ConstPointer;
 
   /** New macro for creation of through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RecursiveBSplineTransform, AdvancedBSplineDeformableTransform );
+  itkTypeMacro(RecursiveBSplineTransform, AdvancedBSplineDeformableTransform);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
 
   /** The BSpline order. */
-  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
+  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Standard scalar type for this class. */
   typedef typename Superclass::ScalarType                ScalarType;
@@ -80,7 +75,7 @@ public:
   typedef typename Superclass::PixelType    PixelType;
   typedef typename Superclass::ImageType    ImageType;
   typedef typename Superclass::ImagePointer ImagePointer;
-  //typedef typename Superclass::CoefficientImageArray CoefficientImageArray;
+  // typedef typename Superclass::CoefficientImageArray CoefficientImageArray;
 
   /** Typedefs for specifying the extend to the grid. */
   typedef typename Superclass::RegionType          RegionType;
@@ -114,84 +109,83 @@ public:
   /** Parameter index array type. */
   typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
 
-  typedef typename itk::RecursiveBSplineInterpolationWeightFunction<
-    TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType; //TODO: get rid of this and use the kernels directly.
+  typedef typename itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>
+    RecursiveBSplineWeightFunctionType; // TODO: get rid of this and use the kernels directly.
 
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction2< itkGetStaticConstMacro( SplineOrder ) >                      KernelType;
-  typedef BSplineDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) >            DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > SecondOrderDerivativeKernelType;
+  typedef BSplineKernelFunction2<itkGetStaticConstMacro(SplineOrder)>           KernelType;
+  typedef BSplineDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)> DerivativeKernelType;
+  typedef BSplineSecondOrderDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)>
+    SecondOrderDerivativeKernelType;
 
   /** Interpolation kernel. */
-  typename KernelType::Pointer m_Kernel;
-  typename DerivativeKernelType::Pointer m_DerivativeKernel;
+  typename KernelType::Pointer                      m_Kernel;
+  typename DerivativeKernelType::Pointer            m_DerivativeKernel;
   typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
 
   /** Compute point transformation. This one is commonly used.
    * It calls RecursiveBSplineTransformImplementation2::InterpolateTransformPoint
    * for a recursive implementation.
    */
-  OutputPointType TransformPoint( const InputPointType & point ) const override;
+  OutputPointType
+  TransformPoint(const InputPointType & point) const override;
 
   /** Compute the Jacobian of the transformation. */
-  void GetJacobian(
-    const InputPointType & ipp,
-    JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobian(const InputPointType &       ipp,
+              JacobianType &               j,
+              NonZeroJacobianIndicesType & nonZeroJacobianIndices) const override;
 
   /** Compute the inner product of the Jacobian with the moving image gradient.
    * The Jacobian is (partially) constructed inside this function, but not returned.
    */
-  void EvaluateJacobianWithImageGradientProduct(
-    const InputPointType & ipp,
-    const MovingImageGradientType & movingImageGradient,
-    DerivativeType & imageJacobian,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  EvaluateJacobianWithImageGradientProduct(const InputPointType &          ipp,
+                                           const MovingImageGradientType & movingImageGradient,
+                                           DerivativeType &                imageJacobian,
+                                           NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  void GetSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj ) const override;
+  void
+  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  void GetSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh ) const override;
+  void
+  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute both the spatial Jacobian and the Jacobian of the
    * spatial Jacobian of the transformation.
    */
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               SpatialJacobianType &           sj,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              SpatialHessianType &           sh,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override;
 
 protected:
-
   RecursiveBSplineTransform();
-  ~RecursiveBSplineTransform() override{}
+  ~RecursiveBSplineTransform() override {}
 
   typedef typename Superclass::JacobianImageType JacobianImageType;
   typedef typename Superclass::JacobianPixelType JacobianPixelType;
@@ -199,21 +193,20 @@ protected:
   typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
 
   /** Compute the nonzero Jacobian indices. */
-  void ComputeNonZeroJacobianIndices(
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices,
-    const RegionType & supportRegion ) const override;
+  void
+  ComputeNonZeroJacobianIndices(NonZeroJacobianIndicesType & nonZeroJacobianIndices,
+                                const RegionType &           supportRegion) const override;
 
 private:
-
-  RecursiveBSplineTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );            // purposely not implemented
-
+  RecursiveBSplineTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkRecursiveBSplineTransform.hxx"
+#  include "itkRecursiveBSplineTransform.hxx"
 #endif
 
 #endif /* __itkRecursiveBSplineTransform_h */

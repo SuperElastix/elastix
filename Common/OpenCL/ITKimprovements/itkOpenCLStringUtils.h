@@ -26,33 +26,46 @@
 namespace itk
 {
 // C-style support functions
-std::string opencl_simplified( const std::string & str );
+std::string
+opencl_simplified(const std::string & str);
 
-bool opencl_has_extension( const std::string & list, const std::string & name );
+bool
+opencl_has_extension(const std::string & list, const std::string & name);
 
 // OpenCL C-style support functions
-std::string opencl_get_platform_info_string( const cl_platform_id id, const cl_platform_info name );
+std::string
+opencl_get_platform_info_string(const cl_platform_id id, const cl_platform_info name);
 
-std::string opencl_get_device_info_string( const cl_device_id id, const cl_device_info name );
+std::string
+opencl_get_device_info_string(const cl_device_id id, const cl_device_info name);
 
-bool opencl_is_platform( cl_platform_id id, cl_platform_info name, const char * str );
+bool
+opencl_is_platform(cl_platform_id id, cl_platform_info name, const char * str);
 
-int opencl_version_flags( const std::string & version );
+int
+opencl_version_flags(const std::string & version);
 
-std::list< std::string > opencl_split_string( const std::string & str, const char separator );
+std::list<std::string>
+opencl_split_string(const std::string & str, const char separator);
 
 // OpenCL support functions to retrieve information about an OpenCL device.
-unsigned int opencl_get_device_info_uint( const cl_device_id id, const cl_device_info name );
+unsigned int
+opencl_get_device_info_uint(const cl_device_id id, const cl_device_info name);
 
-int opencl_get_device_info_int( const cl_device_id id, const cl_device_info name );
+int
+opencl_get_device_info_int(const cl_device_id id, const cl_device_info name);
 
-unsigned long opencl_get_device_info_ulong( const cl_device_id id, const cl_device_info name );
+unsigned long
+opencl_get_device_info_ulong(const cl_device_id id, const cl_device_info name);
 
-std::size_t opencl_get_device_info_size( const cl_device_id id, const cl_device_info name );
+std::size_t
+opencl_get_device_info_size(const cl_device_id id, const cl_device_info name);
 
-bool opencl_get_device_info_bool( const cl_device_id id, const cl_device_info name );
+bool
+opencl_get_device_info_bool(const cl_device_id id, const cl_device_info name);
 
-bool opencl_get_device_info_is_string( const cl_device_id id, const cl_device_info name, const char * str );
+bool
+opencl_get_device_info_is_string(const cl_device_id id, const cl_device_info name, const char * str);
 
 } // end of namespace itk
 

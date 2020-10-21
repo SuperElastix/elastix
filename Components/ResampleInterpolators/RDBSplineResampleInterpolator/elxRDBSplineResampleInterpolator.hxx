@@ -27,10 +27,9 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ReducedDimensionBSplineResampleInterpolator< TElastix >
-::BeforeRegistration( void )
+ReducedDimensionBSplineResampleInterpolator<TElastix>::BeforeRegistration(void)
 {
   /** ReducedDimensionBSplineResampleInterpolator specific. */
 
@@ -38,18 +37,17 @@ ReducedDimensionBSplineResampleInterpolator< TElastix >
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
-    "FinalReducedDimensionBSplineInterpolationOrder", 0, false );
-  if( oldstyle )
+  bool oldstyle =
+    this->m_Configuration->ReadParameter(splineOrder, "FinalReducedDimensionBSplineInterpolationOrder", 0, false);
+  if (oldstyle)
   {
-    xout[ "warning" ] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
-                      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
+    xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
+                    << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
   }
-  this->m_Configuration->ReadParameter( splineOrder,
-    "FinalBSplineInterpolationOrder", 0 );
+  this->m_Configuration->ReadParameter(splineOrder, "FinalBSplineInterpolationOrder", 0);
 
   /** Set the splineOrder in the superclass. */
-  this->SetSplineOrder( splineOrder );
+  this->SetSplineOrder(splineOrder);
 
 } // end BeforeRegistration()
 
@@ -58,10 +56,9 @@ ReducedDimensionBSplineResampleInterpolator< TElastix >
  * ******************* ReadFromFile  ****************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ReducedDimensionBSplineResampleInterpolator< TElastix >
-::ReadFromFile( void )
+ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile(void)
 {
   /** Call ReadFromFile of the ResamplerBase. */
   this->Superclass2::ReadFromFile();
@@ -72,18 +69,17 @@ ReducedDimensionBSplineResampleInterpolator< TElastix >
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
-    "FinalReducedDimensionBSplineInterpolationOrder", 0, false );
-  if( oldstyle )
+  bool oldstyle =
+    this->m_Configuration->ReadParameter(splineOrder, "FinalReducedDimensionBSplineInterpolationOrder", 0, false);
+  if (oldstyle)
   {
-    xout[ "warning" ] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
-                      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
+    xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
+                    << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
   }
-  this->m_Configuration->ReadParameter( splineOrder,
-    "FinalBSplineInterpolationOrder", 0 );
+  this->m_Configuration->ReadParameter(splineOrder, "FinalBSplineInterpolationOrder", 0);
 
   /** Set the splineOrder in the superclass. */
-  this->SetSplineOrder( splineOrder );
+  this->SetSplineOrder(splineOrder);
 
 } // end ReadFromFile()
 
@@ -92,10 +88,9 @@ ReducedDimensionBSplineResampleInterpolator< TElastix >
  * ******************* WriteToFile ******************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ReducedDimensionBSplineResampleInterpolator< TElastix >
-::WriteToFile( void ) const
+ReducedDimensionBSplineResampleInterpolator<TElastix>::WriteToFile(void) const
 {
   /** Call WriteToFile of the ResamplerBase. */
   this->Superclass2::WriteToFile();
@@ -103,8 +98,7 @@ ReducedDimensionBSplineResampleInterpolator< TElastix >
   /** The ReducedDimensionBSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
-  xout[ "transpar" ] << "(FinalBSplineInterpolationOrder "
-                     << this->GetSplineOrder() << ")" << std::endl;
+  xout["transpar"] << "(FinalBSplineInterpolationOrder " << this->GetSplineOrder() << ")" << std::endl;
 
 } // end WriteToFile()
 

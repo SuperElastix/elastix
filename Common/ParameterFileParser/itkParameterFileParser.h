@@ -78,49 +78,48 @@ namespace itk
 class ParameterFileParser : public Object
 {
 public:
-
   /** Standard ITK typedefs. */
-  typedef ParameterFileParser        Self;
-  typedef Object                     Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef ParameterFileParser      Self;
+  typedef Object                   Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ParameterFileParser, Object );
+  itkTypeMacro(ParameterFileParser, Object);
 
   /** Typedefs. */
-  typedef std::vector< std::string > ParameterValuesType;
-  typedef std::map<
-    std::string,
-    ParameterValuesType >                 ParameterMapType;
+  typedef std::vector<std::string>                   ParameterValuesType;
+  typedef std::map<std::string, ParameterValuesType> ParameterMapType;
 
   /** Set the name of the file containing the parameters. */
-  itkSetStringMacro( ParameterFileName );
-  itkGetStringMacro( ParameterFileName );
+  itkSetStringMacro(ParameterFileName);
+  itkGetStringMacro(ParameterFileName);
 
   /** Return the parameter map. */
-  virtual const ParameterMapType & GetParameterMap( void ) const;
+  virtual const ParameterMapType &
+  GetParameterMap(void) const;
 
   /** Read the parameters in the parameter map. */
-  void ReadParameterFile( void );
+  void
+  ReadParameterFile(void);
 
   /** Read the parameter file and return the content as a string.
    * Useful for printing the content.
    */
-  std::string ReturnParameterFileAsString( void );
+  std::string
+  ReturnParameterFileAsString(void);
 
 protected:
-
   ParameterFileParser();
   ~ParameterFileParser() override;
 
 private:
-
-  ParameterFileParser( const Self & ); // purposely not implemented
-  void operator=( const Self & );      // purposely not implemented
+  ParameterFileParser(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Performs the following checks:
    * - Is a filename is given
@@ -128,32 +127,34 @@ private:
    * - Is a text file, i.e. does it end with .txt
    * If one of these conditions fail, an exception is thrown.
    */
-  void BasicFileChecking( void ) const;
+  void
+  BasicFileChecking(void) const;
 
   /** Checks a line.
    * - Returns  true if it is a valid line: containing a parameter.
    * - Returns false if it is a valid line: empty or comment.
    * - Throws an exception if it is not a valid line.
    */
-  bool CheckLine( const std::string & line, std::string & lineOut ) const;
+  bool
+  CheckLine(const std::string & line, std::string & lineOut) const;
 
   /** Fills m_ParameterMap with valid entries. */
-  void GetParameterFromLine( const std::string & fullLine,
-    const std::string & line );
+  void
+  GetParameterFromLine(const std::string & fullLine, const std::string & line);
 
   /** Splits a line in parameter name and values. */
-  void SplitLine( const std::string & fullLine, const std::string & line,
-    std::vector< std::string > & splittedLine ) const;
+  void
+  SplitLine(const std::string & fullLine, const std::string & line, std::vector<std::string> & splittedLine) const;
 
   /** Uniform way to throw exceptions when the parameter file appears to be
    * invalid.
    */
-  void ThrowException( const std::string & line, const std::string & hint ) const;
+  void
+  ThrowException(const std::string & line, const std::string & hint) const;
 
   /** Member variables. */
   std::string      m_ParameterFileName;
   ParameterMapType m_ParameterMap;
-
 };
 
 } // end of namespace itk

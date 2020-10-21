@@ -74,36 +74,30 @@ namespace elastix
  * \ingroup ImageSamplers
  */
 
-template< class TElastix >
-class RandomCoordinateSampler :
-  public
-  itk::ImageRandomCoordinateSampler<
-  typename elx::ImageSamplerBase< TElastix >::InputImageType >,
-  public
-  elx::ImageSamplerBase< TElastix >
+template <class TElastix>
+class RandomCoordinateSampler
+  : public itk::ImageRandomCoordinateSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
+  , public elx::ImageSamplerBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef RandomCoordinateSampler Self;
-  typedef itk::ImageRandomCoordinateSampler<
-    typename elx::ImageSamplerBase< TElastix >::InputImageType >
-    Superclass1;
-  typedef elx::ImageSamplerBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef RandomCoordinateSampler                                                                     Self;
+  typedef itk::ImageRandomCoordinateSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType> Superclass1;
+  typedef elx::ImageSamplerBase<TElastix>                                                             Superclass2;
+  typedef itk::SmartPointer<Self>                                                                     Pointer;
+  typedef itk::SmartPointer<const Self>                                                               ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RandomCoordinateSampler, ImageRandomCoordinateSampler );
+  itkTypeMacro(RandomCoordinateSampler, ImageRandomCoordinateSampler);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n
    * example: <tt>(ImageSampler "RandomCoordinate")</tt>\n
    */
-  elxClassNameMacro( "RandomCoordinate" );
+  elxClassNameMacro("RandomCoordinate");
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
@@ -131,7 +125,7 @@ public:
   typedef typename Superclass1::DefaultInterpolatorType DefaultInterpolatorType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass1::InputImageDimension);
 
   /** Typedefs inherited from Elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -147,28 +141,27 @@ public:
    * \li Set the fixed image interpolation order
    * \li Set the UseRandomSampleRegion flag and the SampleRegionSize
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
   RandomCoordinateSampler() {}
   /** The destructor. */
   ~RandomCoordinateSampler() override {}
 
 private:
-
   /** The private constructor. */
-  RandomCoordinateSampler( const Self & ); // purposely not implemented
+  RandomCoordinateSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );          // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxRandomCoordinateSampler.hxx"
+#  include "elxRandomCoordinateSampler.hxx"
 #endif
 
 #endif // end #ifndef __elxRandomCoordinateSampler_h

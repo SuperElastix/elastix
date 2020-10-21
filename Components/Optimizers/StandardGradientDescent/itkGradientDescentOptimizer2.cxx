@@ -23,7 +23,7 @@
 #include "itkMacro.h"
 
 #ifdef ELASTIX_USE_OPENMP
-#include <omp.h>
+#  include <omp.h>
 #endif
 
 
@@ -34,19 +34,18 @@ namespace itk
  * ****************** Constructor ************************
  */
 
-GradientDescentOptimizer2
-::GradientDescentOptimizer2()
+GradientDescentOptimizer2 ::GradientDescentOptimizer2()
 {
-  itkDebugMacro( "Constructor" );
+  itkDebugMacro("Constructor");
 
-  this->m_Stop               = false;
-  this->m_LearningRate       = 1.0;
+  this->m_Stop = false;
+  this->m_LearningRate = 1.0;
   this->m_NumberOfIterations = 100;
-  this->m_CurrentIteration   = 0;
-  this->m_Value              = 0.0;
-  this->m_StopCondition      = MaximumNumberOfIterations;
+  this->m_CurrentIteration = 0;
+  this->m_Value = 0.0;
+  this->m_StopCondition = MaximumNumberOfIterations;
 
-  this->m_UseOpenMP      = false;
+  this->m_UseOpenMP = false;
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 #endif
@@ -59,10 +58,9 @@ GradientDescentOptimizer2
  */
 
 void
-GradientDescentOptimizer2
-::PrintSelf( std::ostream & os, Indent indent ) const
+GradientDescentOptimizer2 ::PrintSelf(std::ostream & os, Indent indent) const
 {
-  this->Superclass::PrintSelf( os, indent );
+  this->Superclass::PrintSelf(os, indent);
 
   os << indent << "LearningRate: " << this->m_LearningRate << std::endl;
   os << indent << "NumberOfIterations: " << this->m_NumberOfIterations << std::endl;
@@ -81,8 +79,7 @@ GradientDescentOptimizer2
  */
 
 void
-GradientDescentOptimizer2
-::StartOptimization( void )
+GradientDescentOptimizer2 ::StartOptimization(void)
 {
   this->m_CurrentIteration = 0;
 
@@ -94,7 +91,7 @@ GradientDescentOptimizer2
   this->InitializeScales();
 
   /** Set the current position as the scaled initial position */
-  this->SetCurrentPosition( this->GetInitialPosition() );
+  this->SetCurrentPosition(this->GetInitialPosition());
 
   this->ResumeOptimization();
 } // end StartOptimization()
@@ -105,33 +102,30 @@ GradientDescentOptimizer2
  */
 
 void
-GradientDescentOptimizer2
-::ResumeOptimization( void )
+GradientDescentOptimizer2 ::ResumeOptimization(void)
 {
-  itkDebugMacro( "ResumeOptimization" );
+  itkDebugMacro("ResumeOptimization");
 
   this->m_Stop = false;
 
-  InvokeEvent( StartEvent() );
+  InvokeEvent(StartEvent());
 
-  const unsigned int spaceDimension
-                   = this->GetScaledCostFunction()->GetNumberOfParameters();
-  this->m_Gradient = DerivativeType( spaceDimension );   // check this
+  const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
+  this->m_Gradient = DerivativeType(spaceDimension); // check this
 
-  while( !this->m_Stop )
+  while (!this->m_Stop)
   {
     try
     {
-      this->GetScaledValueAndDerivative(
-        this->GetScaledCurrentPosition(), m_Value, m_Gradient );
+      this->GetScaledValueAndDerivative(this->GetScaledCurrentPosition(), m_Value, m_Gradient);
     }
-    catch( ExceptionObject & err )
+    catch (ExceptionObject & err)
     {
-      this->MetricErrorResponse( err );
+      this->MetricErrorResponse(err);
     }
 
     /** StopOptimization may have been called. */
-    if( this->m_Stop )
+    if (this->m_Stop)
     {
       break;
     }
@@ -139,14 +133,14 @@ GradientDescentOptimizer2
     this->AdvanceOneStep();
 
     /** StopOptimization may have been called. */
-    if( this->m_Stop )
+    if (this->m_Stop)
     {
       break;
     }
 
     this->m_CurrentIteration++;
 
-    if( m_CurrentIteration >= m_NumberOfIterations )
+    if (m_CurrentIteration >= m_NumberOfIterations)
     {
       this->m_StopCondition = MaximumNumberOfIterations;
       this->StopOptimization();
@@ -163,8 +157,7 @@ GradientDescentOptimizer2
  */
 
 void
-GradientDescentOptimizer2
-::MetricErrorResponse( ExceptionObject & err )
+GradientDescentOptimizer2 ::MetricErrorResponse(ExceptionObject & err)
 {
   /** An exception has occurred. Terminate immediately. */
   this->m_StopCondition = MetricError;
@@ -181,13 +174,12 @@ GradientDescentOptimizer2
  */
 
 void
-GradientDescentOptimizer2
-::StopOptimization( void )
+GradientDescentOptimizer2 ::StopOptimization(void)
 {
-  itkDebugMacro( "StopOptimization" );
+  itkDebugMacro("StopOptimization");
 
   this->m_Stop = true;
-  this->InvokeEvent( EndEvent() );
+  this->InvokeEvent(EndEvent());
 } // end StopOptimization()
 
 
@@ -196,10 +188,9 @@ GradientDescentOptimizer2
  */
 
 void
-GradientDescentOptimizer2
-::AdvanceOneStep( void )
+GradientDescentOptimizer2 ::AdvanceOneStep(void)
 {
-  itkDebugMacro( "AdvanceOneStep" );
+  itkDebugMacro("AdvanceOneStep");
 
   /** Get space dimension. */
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
@@ -209,30 +200,30 @@ GradientDescentOptimizer2
 
   /** Advance one step. */
 #if 1 // force single-threaded since it is fastest most of the times
-//#ifndef ELASTIX_USE_OPENMP // If no OpenMP detected then use single-threaded code
+      //#ifndef ELASTIX_USE_OPENMP // If no OpenMP detected then use single-threaded code
   /** Get a reference to the current position. */
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
   /** Update the new position. */
-  for( unsigned int j = 0; j < spaceDimension; ++j )
+  for (unsigned int j = 0; j < spaceDimension; ++j)
   {
-    newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
+    newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
   }
 #else // Otherwise use OpenMP
   /** Get a reference to the current position. */
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
   /** Update the new position. */
-  const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfWorkUnits() );
-  omp_set_num_threads( nthreads );
-  #pragma omp parallel for
-  for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
+  const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
+  omp_set_num_threads(nthreads);
+#  pragma omp parallel for
+  for (int j = 0; j < static_cast<int>(spaceDimension); j++)
   {
-    newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
+    newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
   }
 #endif
 
-  this->InvokeEvent( IterationEvent() );
+  this->InvokeEvent(IterationEvent());
 
 } // end AdvanceOneStep()
 

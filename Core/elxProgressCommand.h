@@ -90,66 +90,71 @@ namespace elastix
 class ProgressCommand : public itk::Command
 {
 public:
-
   /** Smart pointer declaration methods. */
-  typedef ProgressCommand                 Self;
-  typedef itk::Command                    Superclass;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef ProgressCommand               Self;
+  typedef itk::Command                  Superclass;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Standard ITK stuff. */
-  itkTypeMacro( ProgressCommand, Command );
-  itkNewMacro( Self );
+  itkTypeMacro(ProgressCommand, Command);
+  itkNewMacro(Self);
 
   /** Typedef's. */
   typedef itk::ProcessObject         ProcessObjectType;
   typedef ProcessObjectType::Pointer ProcessObjectPointer;
 
   /** Define when to print the progress. */
-  virtual void SetUpdateFrequency(
-    const unsigned long numberOfVoxels,
-    const unsigned long numberOfUpdates );
+  virtual void
+  SetUpdateFrequency(const unsigned long numberOfVoxels, const unsigned long numberOfUpdates);
 
   /** Connect an observer to a process object. */
-  virtual void ConnectObserver( itk::ProcessObject * filter );
+  virtual void
+  ConnectObserver(itk::ProcessObject * filter);
 
   /** Disconnect an observer to a process object. */
-  virtual void DisconnectObserver( itk::ProcessObject * filter );
+  virtual void
+  DisconnectObserver(itk::ProcessObject * filter);
 
   /** Standard Command virtual methods. */
-  void Execute( itk::Object * caller, const itk::EventObject & event ) override;
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override;
 
-  void Execute( const itk::Object * caller, const itk::EventObject & event ) override;
+  void
+  Execute(const itk::Object * caller, const itk::EventObject & event) override;
 
   /** Print the progress to screen. A float value between 0.0 and 1.0
    * is expected as input.
    */
-  virtual void PrintProgress( const float & progress ) const;
+  virtual void
+  PrintProgress(const float & progress) const;
 
   /** Update and possibly print the progress to screen.
    * The progress information on screen is refreshed according to the
    * UpdateFrequency, which is assumed being specified beforehand using the
    * SetUpdateFrequency function.
    */
-  virtual void UpdateAndPrintProgress( const unsigned long & currentVoxelNumber ) const;
+  virtual void
+  UpdateAndPrintProgress(const unsigned long & currentVoxelNumber) const;
 
   /** Set and get the string starting each progress report. */
-  itkSetStringMacro( StartString );
-  itkGetStringMacro( StartString );
+  itkSetStringMacro(StartString);
+  itkGetStringMacro(StartString);
 
   /** Set and get the string ending each progress report. */
-  itkSetStringMacro( EndString );
-  itkGetStringMacro( EndString );
+  itkSetStringMacro(EndString);
+  itkGetStringMacro(EndString);
 
   /** Get a boolean indicating if the output is a console. */
-  itkGetConstReferenceMacro( StreamOutputIsConsole, bool );
+  itkGetConstReferenceMacro(StreamOutputIsConsole, bool);
 
-  static Pointer CreateAndSetUpdateFrequency(unsigned long numberOfVoxels);
+  static Pointer
+  CreateAndSetUpdateFrequency(unsigned long numberOfVoxels);
 
-  static Pointer CreateAndConnect(itk::ProcessObject&);
+  static Pointer
+  CreateAndConnect(itk::ProcessObject &);
 
 protected:
-
   /** The constructor. */
   ProgressCommand();
 
@@ -157,7 +162,6 @@ protected:
   ~ProgressCommand() override;
 
 private:
-
   /** Member variables to define a start and end string for printing. */
   std::string m_StartString;
   std::string m_EndString;
@@ -171,7 +175,6 @@ private:
   /** Member variables that define the update frequency. */
   unsigned long m_NumberOfVoxels;
   unsigned long m_NumberOfUpdates;
-
 };
 
 } // end namespace elastix

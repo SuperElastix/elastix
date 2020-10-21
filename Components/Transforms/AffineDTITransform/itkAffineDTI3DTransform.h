@@ -75,30 +75,28 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TScalarType = double >
+template <class TScalarType = double>
 // Data type for scalars (float or double)
-class AffineDTI3DTransform :
-  public AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3 >
+class AffineDTI3DTransform : public AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AffineDTI3DTransform                                   Self;
-  typedef AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3 > Superclass;
-  typedef SmartPointer< Self >                                   Pointer;
-  typedef SmartPointer< const Self >                             ConstPointer;
+  typedef AffineDTI3DTransform                                 Self;
+  typedef AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3> Superclass;
+  typedef SmartPointer<Self>                                   Pointer;
+  typedef SmartPointer<const Self>                             ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AffineDTI3DTransform, AdvancedMatrixOffsetTransformBase );
+  itkTypeMacro(AffineDTI3DTransform, AdvancedMatrixOffsetTransformBase);
 
   /** Dimension of the space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( ParametersDimension, unsigned int, 12 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(ParametersDimension, unsigned int, 12);
 
   typedef typename Superclass::ParametersType            ParametersType;
   typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
@@ -119,76 +117,72 @@ public:
   typedef typename Superclass::OffsetType                OffsetType;
   typedef typename Superclass::ScalarType                AngleType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
-  typedef FixedArray< ScalarType > ScalarArrayType;
+  typedef FixedArray<ScalarType> ScalarArrayType;
 
   /** Set/Get the transformation from a container of parameters
    * This is typically used by optimizers.  There are 12 parameters.
    * [ Rx Ry Rz Gx Gy Gz Sx Sy Sz Tx Ty Tz ]
    * ~rotation, scale, skew, translation
    */
-  void SetParameters( const ParametersType & parameters ) override;
+  void
+  SetParameters(const ParametersType & parameters) override;
 
-  const ParametersType & GetParameters( void ) const override;
+  const ParametersType &
+  GetParameters(void) const override;
 
   /** Compute the Jacobian of the transformation. */
-  void GetJacobian(
-    const InputPointType &,
-    JacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
-  void SetIdentity( void ) override;
+  void
+  SetIdentity(void) override;
 
 protected:
-
   AffineDTI3DTransform();
-  AffineDTI3DTransform( const MatrixType & matrix,
-    const OutputPointType & offset );
-  AffineDTI3DTransform( unsigned int outputSpaceDims,
-    unsigned int paramsSpaceDims );
+  AffineDTI3DTransform(const MatrixType & matrix, const OutputPointType & offset);
+  AffineDTI3DTransform(unsigned int outputSpaceDims, unsigned int paramsSpaceDims);
 
-  ~AffineDTI3DTransform(){}
+  ~AffineDTI3DTransform() {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Set values of angles etc directly without recomputing other parameters. */
-  void SetVarAngleScaleShear(
-    ScalarArrayType angle,
-    ScalarArrayType shear,
-    ScalarArrayType scale );
+  void
+  SetVarAngleScaleShear(ScalarArrayType angle, ScalarArrayType shear, ScalarArrayType scale);
 
   /** Compute the components of the rotation matrix in the superclass. */
-  void ComputeMatrix( void ) override;
+  void
+  ComputeMatrix(void) override;
 
-  void ComputeMatrixParameters( void ) override;
+  void
+  ComputeMatrixParameters(void) override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
-  virtual void PrecomputeJacobianOfSpatialJacobian( void );
+  virtual void
+  PrecomputeJacobianOfSpatialJacobian(void);
 
 private:
-
-  AffineDTI3DTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );       // purposely not implemented
+  AffineDTI3DTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   ScalarArrayType m_Angle;
   ScalarArrayType m_Shear;
   ScalarArrayType m_Scale;
-
 };
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAffineDTI3DTransform.hxx"
+#  include "itkAffineDTI3DTransform.hxx"
 #endif
 
 #endif /* __itkAffineDTI3DTransform_h */

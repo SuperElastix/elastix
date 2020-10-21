@@ -36,7 +36,7 @@
 
 namespace elastix
 {
-//using namespace itk; //Not here, because a TransformBase class was added to ITK...
+// using namespace itk; //Not here, because a TransformBase class was added to ITK...
 
 /**
  * \class TransformBase
@@ -129,30 +129,27 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template< class TElastix >
-class TransformBase :
-  public BaseComponentSE< TElastix >
+template <class TElastix>
+class TransformBase : public BaseComponentSE<TElastix>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(TransformBase);
 
   /** Standard ITK stuff. */
-  typedef TransformBase               Self;
-  typedef BaseComponentSE< TElastix > Superclass;
+  typedef TransformBase             Self;
+  typedef BaseComponentSE<TElastix> Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformBase, BaseComponentSE );
+  itkTypeMacro(TransformBase, BaseComponentSE);
 
   /** Typedef from Superclass. */
   typedef typename Superclass::RegistrationType RegistrationType;
 
-  typedef Configuration
-    ::CommandLineArgumentMapType CommandLineArgumentMapType;
-  typedef Configuration
-    ::CommandLineEntryType CommandLineEntryType;
+  typedef Configuration ::CommandLineArgumentMapType CommandLineArgumentMapType;
+  typedef Configuration ::CommandLineEntryType       CommandLineEntryType;
 
   /** Elastix typedef's. */
-  typedef ElastixBase::CoordRepType CoordRepType;
+  typedef ElastixBase::CoordRepType          CoordRepType;
   typedef typename TElastix::FixedImageType  FixedImageType;
   typedef typename TElastix::MovingImageType MovingImageType;
 
@@ -165,23 +162,20 @@ public:
   typedef elx::ProgressCommand ProgressCommandType;
 
   /** Get the dimension of the fixed image. */
-  itkStaticConstMacro( FixedImageDimension,
-    unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** Get the dimension of the moving image. */
-  itkStaticConstMacro( MovingImageDimension,
-    unsigned int, MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Other typedef's. */
   typedef itk::Object ObjectType;
-  typedef itk::AdvancedTransform<
-    CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ),
-    itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;
-  typedef itk::AdvancedCombinationTransform< CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;
-  typedef typename
-    CombinationTransformType::InitialTransformType InitialTransformType;
+  typedef itk::AdvancedTransform<CoordRepType,
+                                 itkGetStaticConstMacro(FixedImageDimension),
+                                 itkGetStaticConstMacro(MovingImageDimension)>
+    ITKBaseType;
+  typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
+                                                                  CombinationTransformType;
+  typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
 
   /** Typedef's for parameters. */
   using ValueType = double;
@@ -192,10 +186,8 @@ public:
   typedef typename ITKBaseType::OutputPointType OutputPointType;
 
   /** Typedef's for TransformPointsAllPoints. */
-  typedef itk::Vector<
-    float, FixedImageDimension >                      VectorPixelType;
-  typedef itk::Image<
-    VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
+  typedef itk::Vector<float, FixedImageDimension>          VectorPixelType;
+  typedef itk::Image<VectorPixelType, FixedImageDimension> DeformationFieldImageType;
 
   /** Typedefs needed for AutomaticScalesEstimation function */
   typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
@@ -206,96 +198,115 @@ public:
   typedef typename TElastix::ParameterMapType ParameterMapType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
+  virtual ITKBaseType *
+  GetAsITKBaseType(void)
   {
-    return dynamic_cast< ITKBaseType * >( this );
+    return dynamic_cast<ITKBaseType *>(this);
   }
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  virtual const ITKBaseType *
+  GetAsITKBaseType(void) const
   {
-    return dynamic_cast< const ITKBaseType * >( this );
+    return dynamic_cast<const ITKBaseType *>(this);
   }
 
 
-  virtual const CombinationTransformType * GetAsCombinationTransform( void ) const
+  virtual const CombinationTransformType *
+  GetAsCombinationTransform(void) const
   {
-    return dynamic_cast< const CombinationTransformType * >( this );
+    return dynamic_cast<const CombinationTransformType *>(this);
   }
 
 
-  virtual CombinationTransformType * GetAsCombinationTransform( void )
+  virtual CombinationTransformType *
+  GetAsCombinationTransform(void)
   {
-    return dynamic_cast< CombinationTransformType * >( this );
+    return dynamic_cast<CombinationTransformType *>(this);
   }
 
 
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
    */
-  int BeforeAllBase( void ) override;
+  int
+  BeforeAllBase(void) override;
 
   /** Execute stuff before the actual transformation:
    * \li Check the appearance of inputpoints to be transformed.
    */
-  virtual int BeforeAllTransformix( void );
+  virtual int
+  BeforeAllTransformix(void);
 
   /** Execute stuff before the actual registration:
    * \li Set the initial transform and how to group transforms.
    */
-  void BeforeRegistrationBase( void ) override;
+  void
+  BeforeRegistrationBase(void) override;
 
   /** Execute stuff after the registration:
    * \li Get and set the final parameters for the resampler.
    */
-  void AfterRegistrationBase( void ) override;
+  void
+  AfterRegistrationBase(void) override;
 
   /** Get the initial transform. */
-  virtual const InitialTransformType * GetInitialTransform( void ) const;
+  virtual const InitialTransformType *
+  GetInitialTransform(void) const;
 
   /** Set the initial transform. */
-  virtual void SetInitialTransform( InitialTransformType * _arg );
+  virtual void
+  SetInitialTransform(InitialTransformType * _arg);
 
   /** Set the TransformParametersFileName. */
-  virtual void SetTransformParametersFileName( const char * filename );
+  virtual void
+  SetTransformParametersFileName(const char * filename);
 
   /** Get the TransformParametersFileName. */
-  itkGetStringMacro( TransformParametersFileName );
+  itkGetStringMacro(TransformParametersFileName);
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  virtual void
+  ReadFromFile(void);
 
   /** Function to create transform-parameters map. */
-  virtual void CreateTransformParametersMap(
-    const ParametersType & param, ParameterMapType * paramsMap ) const;
+  virtual void
+  CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  virtual void
+  WriteToFile(const ParametersType & param) const;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( void ) const;
+  virtual void
+  WriteToFile(void) const;
 
   /** Macro for reading and writing the transform parameters in WriteToFile or not. */
-  virtual void SetReadWriteTransformParameters( const bool _arg );
+  virtual void
+  SetReadWriteTransformParameters(const bool _arg);
 
   /** Function to read the initial transform parameters from a file. */
-  virtual void ReadInitialTransformFromFile(
-    const char * transformParameterFileName );
+  virtual void
+  ReadInitialTransformFromFile(const char * transformParameterFileName);
 
   /** Function to read the initial transform parameters from the internally stored
    * configuration object.
    */
-  virtual void ReadInitialTransformFromVector( const size_t index );
+  virtual void
+  ReadInitialTransformFromVector(const size_t index);
 
   /** Function to transform coordinates from fixed to moving image. */
-  virtual void TransformPoints( void ) const;
+  virtual void
+  TransformPoints(void) const;
 
   /** Function to transform coordinates from fixed to moving image. */
-  virtual void TransformPointsSomePoints( const std::string filename ) const;
+  virtual void
+  TransformPointsSomePoints(const std::string filename) const;
 
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
-  virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
+  virtual void
+  TransformPointsSomePointsVTK(const std::string filename) const;
 
   /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
    *  into Generate* and Write* functions, since that would facilitate a proper library
@@ -305,26 +316,30 @@ public:
    */
 
   /** Function to transform all coordinates from fixed to moving image. */
-  typename DeformationFieldImageType::Pointer GenerateDeformationFieldImage( void ) const;
+  typename DeformationFieldImageType::Pointer
+  GenerateDeformationFieldImage(void) const;
 
-  void WriteDeformationFieldImage( typename DeformationFieldImageType::Pointer ) const;
+  void WriteDeformationFieldImage(typename DeformationFieldImageType::Pointer) const;
 
   /** Legacy function that calls GenerateDeformationFieldImage and WriteDeformationFieldImage. */
-  virtual void TransformPointsAllPoints(void) const;
+  virtual void
+  TransformPointsAllPoints(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
-  virtual void ComputeDeterminantOfSpatialJacobian( void ) const;
+  virtual void
+  ComputeDeterminantOfSpatialJacobian(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
-  virtual void ComputeSpatialJacobian( void ) const;
+  virtual void
+  ComputeSpatialJacobian(void) const;
 
   /** Makes sure that the final parameters from the registration components
    * are copied, set, and stored.
    */
-  virtual void SetFinalParameters( void );
+  virtual void
+  SetFinalParameters(void);
 
 protected:
-
   /** The default-constructor. */
   TransformBase() = default;
   /** The destructor. */
@@ -336,7 +351,8 @@ protected:
    * \li Jacobians dT/dmu are computed
    * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
    */
-  void AutomaticScalesEstimation( ScalesType & scales ) const;
+  void
+  AutomaticScalesEstimation(ScalesType & scales) const;
 
   /** Estimate a scales vector for a stack transform (elxTranslationStackTransform,
    * elxAffineStackTransform, ...) Instead of sampling along the n dimensions of the
@@ -345,39 +361,38 @@ protected:
    * \li Jacobians dT/dmu are computed
    * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
    */
-  void AutomaticScalesEstimationStackTransform(
-    const unsigned int & numSubTransforms, ScalesType & scales ) const;
+  void
+  AutomaticScalesEstimationStackTransform(const unsigned int & numSubTransforms, ScalesType & scales) const;
 
 private:
-
   /** Member variables. */
   std::unique_ptr<ParametersType> m_TransformParametersPointer{};
-  std::string      m_TransformParametersFileName;
-  ParametersType   m_FinalParameters;
+  std::string                     m_TransformParametersFileName;
+  ParametersType                  m_FinalParameters;
 
   /** Boolean to decide whether or not the transform parameters are written. */
   bool m_ReadWriteTransformParameters{ true };
 
-  std::string GetInitialTransformParametersFileName( void ) const
+  std::string
+  GetInitialTransformParametersFileName(void) const
   {
-    if( !this->GetInitialTransform() )
+    if (!this->GetInitialTransform())
     {
       return "NoInitialTransform";
     }
 
-    const Self * t0 = dynamic_cast<const Self *>( this->GetInitialTransform() );
+    const Self * t0 = dynamic_cast<const Self *>(this->GetInitialTransform());
     return t0->GetTransformParametersFileName();
   }
 
   /** Boolean to decide whether or not the transform parameters are written in binary format. */
   bool m_UseBinaryFormatForTransformationParameters{};
-
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxTransformBase.hxx"
+#  include "elxTransformBase.hxx"
 #endif
 
 #endif // end #ifndef __elxTransformBase_h

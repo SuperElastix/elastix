@@ -50,7 +50,6 @@ namespace Functor
 class GPUFunctorBase
 {
 public:
-
   // constructor
   GPUFunctorBase() {}
 
@@ -59,8 +58,8 @@ public:
 
   /** Setup GPU kernel arguments for this functor.
    * \return Current argument index to set additional arguments in the GPU kernel. */
-  virtual int SetGPUKernelArguments( OpenCLKernelManager::Pointer KernelManager, int KernelHandle ) = 0;
-
+  virtual int
+  SetGPUKernelArguments(OpenCLKernelManager::Pointer KernelManager, int KernelHandle) = 0;
 };
 
 } // end of namespace Functor

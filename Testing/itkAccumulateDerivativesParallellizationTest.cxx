@@ -32,7 +32,7 @@
 
 // Multi-threading using OpenMP
 #ifdef ELASTIX_USE_OPENMP
-#include <omp.h>
+#  include <omp.h>
 #endif
 
 // select double or float internal type of array
@@ -46,25 +46,24 @@ typedef unsigned int ThreadIdType;
 class MetricTEMP : public itk::Object
 {
 public:
-
   /** Standard class typedefs. */
-  typedef MetricTEMP                Self;
-  typedef itk::SmartPointer< Self > Pointer;
-  itkNewMacro( Self );
+  typedef MetricTEMP              Self;
+  typedef itk::SmartPointer<Self> Pointer;
+  itkNewMacro(Self);
 
-  typedef InternalScalarType                DerivativeValueType;
-  typedef itk::Array< DerivativeValueType > DerivativeType;
+  typedef InternalScalarType              DerivativeValueType;
+  typedef itk::Array<DerivativeValueType> DerivativeType;
 
-  unsigned long                         m_NumberOfParameters;
-  mutable std::vector< DerivativeType > m_ThreaderDerivatives;
+  unsigned long                       m_NumberOfParameters;
+  mutable std::vector<DerivativeType> m_ThreaderDerivatives;
 
-  typedef itk::PlatformMultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader ThreaderType;
   typedef ThreaderType::WorkUnitInfo ThreadInfoType;
-  ThreaderType::Pointer m_Threader;
-  DerivativeValueType   m_NormalSum;
-  ThreadIdType          m_NumberOfThreads;
-  bool                  m_UseOpenMP;
-  bool                  m_UseMultiThreaded;
+  ThreaderType::Pointer              m_Threader;
+  DerivativeValueType                m_NormalSum;
+  ThreadIdType                       m_NumberOfThreads;
+  bool                               m_UseOpenMP;
+  bool                               m_UseMultiThreaded;
 
   struct MultiThreaderParameterType
   {
@@ -79,105 +78,104 @@ public:
   // Constructor
   MetricTEMP()
   {
-    this->m_ThreaderMetricParameters.st_Metric              = nullptr;
-    this->m_ThreaderMetricParameters.st_DerivativePointer   = nullptr;
+    this->m_ThreaderMetricParameters.st_Metric = nullptr;
+    this->m_ThreaderMetricParameters.st_DerivativePointer = nullptr;
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 0.0;
 
     this->m_NumberOfParameters = 0;
-    this->m_Threader           = ThreaderType::New();
-    this->m_NumberOfThreads    = this->m_Threader->GetNumberOfWorkUnits();
-    this->m_UseOpenMP          = false;
-    this->m_UseMultiThreaded   = false;
-    this->m_NormalSum          = 3.1415926;
+    this->m_Threader = ThreaderType::New();
+    this->m_NumberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
+    this->m_UseOpenMP = false;
+    this->m_UseMultiThreaded = false;
+    this->m_NormalSum = 3.1415926;
 
 #ifdef ELASTIX_USE_OPENMP
-    const int nthreads = static_cast< int >( this->m_NumberOfThreads );
-    omp_set_num_threads( nthreads );
+    const int nthreads = static_cast<int>(this->m_NumberOfThreads);
+    omp_set_num_threads(nthreads);
 #endif
   }
 
 
-  void AccumulateDerivatives( DerivativeType & derivative )
+  void
+  AccumulateDerivatives(DerivativeType & derivative)
   {
     DerivativeValueType normal_sum = this->m_NormalSum;
     this->m_NumberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
     /** Accumulate derivatives. */
-    if( !this->m_UseMultiThreaded ) // single threadedly
+    if (!this->m_UseMultiThreaded) // single threadedly
     {
-      derivative = this->m_ThreaderDerivatives[ 0 ] * normal_sum;
-      for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
+      derivative = this->m_ThreaderDerivatives[0] * normal_sum;
+      for (ThreadIdType i = 1; i < this->m_NumberOfThreads; i++)
       {
-        derivative += this->m_ThreaderDerivatives[ i ] * normal_sum;
+        derivative += this->m_ThreaderDerivatives[i] * normal_sum;
       }
     }
     // compute multi-threadedly with itk threads
-    else if( !this->m_UseOpenMP )
+    else if (!this->m_UseOpenMP)
     {
-      this->m_ThreaderMetricParameters.st_Metric              = this;
-      this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
+      this->m_ThreaderMetricParameters.st_Metric = this;
+      this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
       this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-      this->m_Threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
-        const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
+      this->m_Threader->SetSingleMethod(
+        this->AccumulateDerivativesThreaderCallback,
+        const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
       this->m_Threader->SingleMethodExecute();
     }
 #ifdef ELASTIX_USE_OPENMP
     // compute multi-threadedly with openmp
     else
     {
-      const int spaceDimension = static_cast< int >( this->m_NumberOfParameters );
-      #pragma omp parallel for
-      for( int j = 0; j < spaceDimension; ++j )
+      const int spaceDimension = static_cast<int>(this->m_NumberOfParameters);
+#  pragma omp parallel for
+      for (int j = 0; j < spaceDimension; ++j)
       {
-        DerivativeValueType tmp = itk::NumericTraits< DerivativeValueType >::Zero;
-        for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+        DerivativeValueType tmp = itk::NumericTraits<DerivativeValueType>::Zero;
+        for (ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i)
         {
-          tmp += this->m_ThreaderDerivatives[ i ][ j ];
+          tmp += this->m_ThreaderDerivatives[i][j];
         }
-        derivative[ j ] = tmp * normal_sum;
+        derivative[j] = tmp * normal_sum;
       }
     }
 #endif
-  }  // end AccumulateDerivatives()
+  } // end AccumulateDerivatives()
 
 
-/**
- *********** AccumulateDerivativesThreaderCallback *************
- */
+  /**
+   *********** AccumulateDerivativesThreaderCallback *************
+   */
 
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION AccumulateDerivativesThreaderCallback( void * arg )
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  AccumulateDerivativesThreaderCallback(void * arg)
   {
-    ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-    ThreadIdType     threadID    = infoStruct->WorkUnitID;
+    ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
+    ThreadIdType     threadID = infoStruct->WorkUnitID;
     ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
-    MultiThreaderParameterType * temp
-      = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
+    MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
 
-    const unsigned int numPar  = temp->st_Metric->m_NumberOfParameters;
-    const unsigned int subSize = static_cast< unsigned int >(
-      std::ceil( static_cast< double >( numPar )
-      / static_cast< double >( nrOfThreads ) ) );
+    const unsigned int numPar = temp->st_Metric->m_NumberOfParameters;
+    const unsigned int subSize =
+      static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
     const unsigned int jmin = threadID * subSize;
-    unsigned int       jmax = ( threadID + 1 ) * subSize;
-    jmax = ( jmax > numPar ) ? numPar : jmax;
+    unsigned int       jmax = (threadID + 1) * subSize;
+    jmax = (jmax > numPar) ? numPar : jmax;
 
-    for( unsigned int j = jmin; j < jmax; ++j )
+    for (unsigned int j = jmin; j < jmax; ++j)
     {
-      DerivativeValueType tmp = itk::NumericTraits< DerivativeValueType >::Zero;
-      for( ThreadIdType i = 0; i < nrOfThreads; ++i )
+      DerivativeValueType tmp = itk::NumericTraits<DerivativeValueType>::Zero;
+      for (ThreadIdType i = 0; i < nrOfThreads; ++i)
       {
-        tmp += temp->st_Metric->m_ThreaderDerivatives[ i ][ j ];
+        tmp += temp->st_Metric->m_ThreaderDerivatives[i][j];
       }
-      temp->st_DerivativePointer[ j ] = tmp / temp->st_NormalizationFactor;
+      temp->st_DerivativePointer[j] = tmp / temp->st_NormalizationFactor;
     }
 
     return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
   } // end AccumulateDerivativesThreaderCallback()
-
-
 };
 
 // end class Metric
@@ -185,12 +183,11 @@ public:
 //-------------------------------------------------------------------------------------
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   // Declare and setup
-  std::cout << std::fixed << std::showpoint << std::setprecision( 8 );
-  std::cout << "RESULTS FOR InternalScalarType = " << typeid( InternalScalarType ).name()
-            << "\n\n" << std::endl;
+  std::cout << std::fixed << std::showpoint << std::setprecision(8);
+  std::cout << "RESULTS FOR InternalScalarType = " << typeid(InternalScalarType).name() << "\n\n" << std::endl;
 
   /** Typedefs. */
   typedef MetricTEMP                  MetricClass;
@@ -199,80 +196,103 @@ main( int argc, char * argv[] )
   MetricClass::Pointer metric = MetricClass::New();
 
   // test parameters
-  std::vector< unsigned int > arraySizes;
-  arraySizes.push_back( 1e2 ); arraySizes.push_back( 1e3 ); arraySizes.push_back( 1e4 );
-  arraySizes.push_back( 1e5 ); arraySizes.push_back( 1e6 ); arraySizes.push_back( 1e7 );
-  std::vector< unsigned int > repetitions;
-  repetitions.push_back( 2e6 ); repetitions.push_back( 2e5 ); repetitions.push_back( 2e4 );
-  repetitions.push_back( 2e3 ); repetitions.push_back( 1e2 ); repetitions.push_back( 1e1 );
+  std::vector<unsigned int> arraySizes;
+  arraySizes.push_back(1e2);
+  arraySizes.push_back(1e3);
+  arraySizes.push_back(1e4);
+  arraySizes.push_back(1e5);
+  arraySizes.push_back(1e6);
+  arraySizes.push_back(1e7);
+  std::vector<unsigned int> repetitions;
+  repetitions.push_back(2e6);
+  repetitions.push_back(2e5);
+  repetitions.push_back(2e4);
+  repetitions.push_back(2e3);
+  repetitions.push_back(1e2);
+  repetitions.push_back(1e1);
 
   const ThreadIdType nrThreads = metric->m_Threader->GetNumberOfWorkUnits();
 
   /** For all sizes. */
-  for( unsigned int s = 0; s < arraySizes.size(); ++s )
+  for (unsigned int s = 0; s < arraySizes.size(); ++s)
   {
-    std::cout << "Array size = " << arraySizes[ s ] << std::endl;
+    std::cout << "Array size = " << arraySizes[s] << std::endl;
 
     /** Setup. */
     itk::TimeProbesCollectorBase timeCollector;
     unsigned int                 rep = 0;
-    repetitions[ s ] = 1; // outcomment this line for full testing
+    repetitions[s] = 1; // outcomment this line for full testing
 
-    DerivativeType derivative( arraySizes[ s ] );
-    derivative.Fill( 0.0 );
+    DerivativeType derivative(arraySizes[s]);
+    derivative.Fill(0.0);
 
-    metric->m_ThreaderDerivatives.resize( nrThreads );
-    metric->m_NumberOfParameters = arraySizes[ s ];
-    for( ThreadIdType t = 0; t < nrThreads; ++t )
+    metric->m_ThreaderDerivatives.resize(nrThreads);
+    metric->m_NumberOfParameters = arraySizes[s];
+    for (ThreadIdType t = 0; t < nrThreads; ++t)
     {
       // Allocate
-      metric->m_ThreaderDerivatives[ t ].SetSize( metric->m_NumberOfParameters );
-      metric->m_ThreaderDerivatives[ t ].Fill( 0 );
+      metric->m_ThreaderDerivatives[t].SetSize(metric->m_NumberOfParameters);
+      metric->m_ThreaderDerivatives[t].Fill(0);
 
-      for( unsigned int i = 0; i < arraySizes[ s ]; ++i )
+      for (unsigned int i = 0; i < arraySizes[s]; ++i)
       {
-        metric->m_ThreaderDerivatives[ t ][ i ] = 2.1;
+        metric->m_ThreaderDerivatives[t][i] = 2.1;
       }
     }
 
     /** Time the single-threaded implementation. */
-    metric->m_UseOpenMP        = false;
+    metric->m_UseOpenMP = false;
     metric->m_UseMultiThreaded = false;
-    for( unsigned int i = 0; i < repetitions[ s ]; ++i )
+    for (unsigned int i = 0; i < repetitions[s]; ++i)
     {
-      timeCollector.Start( "st" );
-      metric->AccumulateDerivatives( derivative );
-      timeCollector.Stop( "st" );
+      timeCollector.Start("st");
+      metric->AccumulateDerivatives(derivative);
+      timeCollector.Stop("st");
     }
 
     /** Time the ITK multi-threaded implementation. */
-    metric->m_UseOpenMP        = false;
+    metric->m_UseOpenMP = false;
     metric->m_UseMultiThreaded = true;
-    if( arraySizes[ s ] < 5000 ) { rep = repetitions[ s ] / 100.0; }
-    else { rep = repetitions[ s ]; }
-    if( rep < 10 ) { rep = 10; }
-    for( unsigned int i = 0; i < rep; ++i )
+    if (arraySizes[s] < 5000)
     {
-      timeCollector.Start( "ITK (mt)" );
-      metric->AccumulateDerivatives( derivative );
-      timeCollector.Stop( "ITK (mt)" );
+      rep = repetitions[s] / 100.0;
+    }
+    else
+    {
+      rep = repetitions[s];
+    }
+    if (rep < 10)
+    {
+      rep = 10;
+    }
+    for (unsigned int i = 0; i < rep; ++i)
+    {
+      timeCollector.Start("ITK (mt)");
+      metric->AccumulateDerivatives(derivative);
+      timeCollector.Stop("ITK (mt)");
     }
 
     /** Time the OpenMP multi-threaded implementation. */
 #ifdef ELASTIX_USE_OPENMP
-    metric->m_UseOpenMP        = true;
+    metric->m_UseOpenMP = true;
     metric->m_UseMultiThreaded = true;
-    if( arraySizes[ s ] < 10000 )
+    if (arraySizes[s] < 10000)
     {
-      rep = repetitions[ s ] / 10.0;
-      if( rep < 10 ) { rep = 10; }
+      rep = repetitions[s] / 10.0;
+      if (rep < 10)
+      {
+        rep = 10;
+      }
     }
-    else { rep = repetitions[ s ]; }
-    for( unsigned int i = 0; i < rep; ++i )
+    else
     {
-      timeCollector.Start( "OMP (mt)" );
-      metric->AccumulateDerivatives( derivative );
-      timeCollector.Stop( "OMP (mt)" );
+      rep = repetitions[s];
+    }
+    for (unsigned int i = 0; i < rep; ++i)
+    {
+      timeCollector.Start("OMP (mt)");
+      metric->AccumulateDerivatives(derivative);
+      timeCollector.Stop("OMP (mt)");
     }
 #endif
 

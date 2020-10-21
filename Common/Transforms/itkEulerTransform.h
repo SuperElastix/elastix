@@ -31,21 +31,17 @@ namespace itk
  *
  */
 
-template< unsigned int Dimension >
+template <unsigned int Dimension>
 class EulerGroup
 {
 public:
-
-  template< class TScalarType >
+  template <class TScalarType>
   class Dummy
   {
-public:
-
+  public:
     /** Typedef's.*/
-    typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension > EulerTransform_tmp;
-
+    typedef AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension> EulerTransform_tmp;
   };
-
 };
 
 /**
@@ -54,21 +50,17 @@ public:
  *
  */
 
-template< >
-class EulerGroup< 2 >
+template <>
+class EulerGroup<2>
 {
 public:
-
-  template< class TScalarType >
+  template <class TScalarType>
   class Dummy
   {
-public:
-
+  public:
     /** Typedef's.*/
-    typedef AdvancedRigid2DTransform< TScalarType > EulerTransform_tmp;
-
+    typedef AdvancedRigid2DTransform<TScalarType> EulerTransform_tmp;
   };
-
 };
 
 /**
@@ -77,21 +69,17 @@ public:
  *
  */
 
-template< >
-class EulerGroup< 3 >
+template <>
+class EulerGroup<3>
 {
 public:
-
-  template< class TScalarType >
+  template <class TScalarType>
   class Dummy
   {
-public:
-
+  public:
     /** Typedef's.*/
-    typedef AdvancedEuler3DTransform< TScalarType > EulerTransform_tmp;
-
+    typedef AdvancedEuler3DTransform<TScalarType> EulerTransform_tmp;
   };
-
 };
 
 /**
@@ -100,32 +88,29 @@ public:
  *
  */
 
-template< class TScalarType, unsigned int Dimension >
+template <class TScalarType, unsigned int Dimension>
 class EulerGroupTemplate
 {
 public:
-
   typedef EulerGroupTemplate Self;
   typedef TScalarType        ScalarType;
-  itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
 
   // This declaration of 'Euler' does not work with the GCC compiler
   //    typedef EulerGroup<  itkGetStaticConstMacro( SpaceDimension ) >       Euler;
   // The following trick works though:
-  template< unsigned int D >
+  template <unsigned int D>
   class EulerGroupWrap
   {
-public:
-
-    typedef EulerGroup< D > Euler;
+  public:
+    typedef EulerGroup<D> Euler;
   };
 
-  typedef EulerGroupWrap< Dimension >            EulerGroupWrapInstance;
+  typedef EulerGroupWrap<Dimension>              EulerGroupWrapInstance;
   typedef typename EulerGroupWrapInstance::Euler Euler;
 
-  typedef typename Euler::template Dummy< ScalarType > EulerDummy;
-  typedef typename EulerDummy::EulerTransform_tmp      EulerTransform_tmp;
-
+  typedef typename Euler::template Dummy<ScalarType> EulerDummy;
+  typedef typename EulerDummy::EulerTransform_tmp    EulerTransform_tmp;
 };
 
 /**
@@ -137,29 +122,24 @@ public:
  * \ingroup Transforms
  */
 
-template< class TScalarType, unsigned int Dimension >
-class EulerTransform :
-  public EulerGroupTemplate<
-  TScalarType, Dimension >::EulerTransform_tmp
+template <class TScalarType, unsigned int Dimension>
+class EulerTransform : public EulerGroupTemplate<TScalarType, Dimension>::EulerTransform_tmp
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef EulerTransform Self;
-  typedef typename EulerGroupTemplate<
-    TScalarType, Dimension >
-    ::EulerTransform_tmp Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef EulerTransform                                                          Self;
+  typedef typename EulerGroupTemplate<TScalarType, Dimension>::EulerTransform_tmp Superclass;
+  typedef SmartPointer<Self>                                                      Pointer;
+  typedef SmartPointer<const Self>                                                ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( EulerTransform, EulerGroupTemplate );
+  itkTypeMacro(EulerTransform, EulerGroupTemplate);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
 
   /** Typedefs inherited from the superclass. */
 
@@ -178,20 +158,18 @@ public:
   typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** Make sure SetComputeZYX() is available, also in 2D,
    * in which case, its just a dummy function.
    */
-  void SetComputeZYX( const bool ) // No override.
+  void
+  SetComputeZYX(const bool) // No override.
   {
     static_assert(SpaceDimension != 3, "This is not the specialization is 3D!");
   }
@@ -200,7 +178,8 @@ public:
   /** Make sure GetComputeZYX() is available, also in 2D,
    * in which case, it just returns false.
    */
-  bool GetComputeZYX( void ) const // No override.
+  bool
+  GetComputeZYX(void) const // No override.
   {
     static_assert(SpaceDimension != 3, "This is not the specialization is 3D!");
     return false;
@@ -208,56 +187,49 @@ public:
 
 
 protected:
-
-  EulerTransform(){}
-  ~EulerTransform() override{}
+  EulerTransform() {}
+  ~EulerTransform() override {}
 
 private:
-
-  EulerTransform( const Self & );  // purposely not implemented
-  void operator=( const Self & );  // purposely not implemented
-
+  EulerTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
-template< class TScalarType >
-class EulerTransform<TScalarType, 3> :
-  public EulerGroupTemplate<
-  TScalarType, 3 >::EulerTransform_tmp
+template <class TScalarType>
+class EulerTransform<TScalarType, 3> : public EulerGroupTemplate<TScalarType, 3>::EulerTransform_tmp
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef EulerTransform Self;
-  typedef typename EulerGroupTemplate<
-    TScalarType, 3 >
-    ::EulerTransform_tmp Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef EulerTransform                                                  Self;
+  typedef typename EulerGroupTemplate<TScalarType, 3>::EulerTransform_tmp Superclass;
+  typedef SmartPointer<Self>                                              Pointer;
+  typedef SmartPointer<const Self>                                        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( EulerTransform, EulerGroupTemplate );
+  itkTypeMacro(EulerTransform, EulerGroupTemplate);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, 3 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, 3);
 
 
   /** Make sure SetComputeZYX() is available, also in 2D,
    * in which case, its just a dummy function.
    * \note This member function is only an `override` in 3D.
    */
-  void SetComputeZYX( const bool arg ) override
+  void
+  SetComputeZYX(const bool arg) override
   {
     static_assert(SpaceDimension == 3, "This specialization is for 3D only!");
 
-    typedef AdvancedEuler3DTransform< TScalarType > Euler3DTransformType;
-    typename Euler3DTransformType::Pointer transform
-      = dynamic_cast< Euler3DTransformType * >( this );
-    if( transform )
+    typedef AdvancedEuler3DTransform<TScalarType> Euler3DTransformType;
+    typename Euler3DTransformType::Pointer        transform = dynamic_cast<Euler3DTransformType *>(this);
+    if (transform)
     {
-      transform->Euler3DTransformType::SetComputeZYX( arg );
+      transform->Euler3DTransformType::SetComputeZYX(arg);
     }
   }
 
@@ -266,15 +238,15 @@ public:
    * in which case, it just returns false.
    * \note This member function is only an `override` in 3D.
    */
-  bool GetComputeZYX( void ) const override
+  bool
+  GetComputeZYX(void) const override
   {
     static_assert(SpaceDimension == 3, "This specialization is for 3D only!");
 
-    typedef AdvancedEuler3DTransform< TScalarType > Euler3DTransformType;
-    typename Euler3DTransformType::ConstPointer transform
-      = dynamic_cast< const Euler3DTransformType * >( this );
+    typedef AdvancedEuler3DTransform<TScalarType> Euler3DTransformType;
+    typename Euler3DTransformType::ConstPointer   transform = dynamic_cast<const Euler3DTransformType *>(this);
 
-    if( transform )
+    if (transform)
     {
       return transform->Euler3DTransformType::GetComputeZYX();
     }
@@ -283,15 +255,13 @@ public:
 
 
 protected:
-
-  EulerTransform(){}
-  ~EulerTransform() override{}
+  EulerTransform() {}
+  ~EulerTransform() override {}
 
 private:
-
-  EulerTransform( const Self & );  // purposely not implemented
-  void operator=( const Self & );  // purposely not implemented
-
+  EulerTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

@@ -31,21 +31,17 @@ namespace itk
  *
  */
 
-template< unsigned int Dimension >
+template <unsigned int Dimension>
 class AffineDTIGroup
 {
 public:
-
-  template< class TScalarType >
+  template <class TScalarType>
   class Dummy
   {
-public:
-
+  public:
     /** Typedef's.*/
-    typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension > AffineDTITransform_tmp;
-
+    typedef AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension> AffineDTITransform_tmp;
   };
-
 };
 
 /**
@@ -54,21 +50,17 @@ public:
  *
  */
 
-template< >
-class AffineDTIGroup< 2 >
+template <>
+class AffineDTIGroup<2>
 {
 public:
-
-  template< class TScalarType >
+  template <class TScalarType>
   class Dummy
   {
-public:
-
+  public:
     /** Typedef's.*/
-    typedef AffineDTI2DTransform< TScalarType > AffineDTITransform_tmp;
-
+    typedef AffineDTI2DTransform<TScalarType> AffineDTITransform_tmp;
   };
-
 };
 
 /**
@@ -77,21 +69,17 @@ public:
  *
  */
 
-template< >
-class AffineDTIGroup< 3 >
+template <>
+class AffineDTIGroup<3>
 {
 public:
-
-  template< class TScalarType >
+  template <class TScalarType>
   class Dummy
   {
-public:
-
+  public:
     /** Typedef's.*/
-    typedef AffineDTI3DTransform< TScalarType > AffineDTITransform_tmp;
-
+    typedef AffineDTI3DTransform<TScalarType> AffineDTITransform_tmp;
   };
-
 };
 
 /**
@@ -100,32 +88,29 @@ public:
  *
  */
 
-template< class TScalarType, unsigned int Dimension >
+template <class TScalarType, unsigned int Dimension>
 class AffineDTIGroupTemplate
 {
 public:
-
   typedef AffineDTIGroupTemplate Self;
   typedef TScalarType            ScalarType;
-  itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
 
   // This declaration of 'AffineDTI' does not work with the GCC compiler
   //    typedef AffineDTIGroup<  itkGetStaticConstMacro( SpaceDimension ) >       AffineDTI;
   // The following trick works though:
-  template< unsigned int D >
+  template <unsigned int D>
   class AffineDTIGroupWrap
   {
-public:
-
-    typedef AffineDTIGroup< D > AffineDTI;
+  public:
+    typedef AffineDTIGroup<D> AffineDTI;
   };
 
-  typedef AffineDTIGroupWrap< Dimension >                AffineDTIGroupWrapInstance;
+  typedef AffineDTIGroupWrap<Dimension>                  AffineDTIGroupWrapInstance;
   typedef typename AffineDTIGroupWrapInstance::AffineDTI AffineDTI;
 
-  typedef typename AffineDTI::template Dummy< ScalarType > AffineDTIDummy;
-  typedef typename AffineDTIDummy::AffineDTITransform_tmp  AffineDTITransform_tmp;
-
+  typedef typename AffineDTI::template Dummy<ScalarType>  AffineDTIDummy;
+  typedef typename AffineDTIDummy::AffineDTITransform_tmp AffineDTITransform_tmp;
 };
 
 /**
@@ -137,29 +122,24 @@ public:
  * \ingroup Transforms
  */
 
-template< class TScalarType, unsigned int Dimension >
-class AffineDTITransform :
-  public AffineDTIGroupTemplate<
-  TScalarType, Dimension >::AffineDTITransform_tmp
+template <class TScalarType, unsigned int Dimension>
+class AffineDTITransform : public AffineDTIGroupTemplate<TScalarType, Dimension>::AffineDTITransform_tmp
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef AffineDTITransform Self;
-  typedef typename AffineDTIGroupTemplate<
-    TScalarType, Dimension >
-    ::AffineDTITransform_tmp Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef AffineDTITransform                                                              Self;
+  typedef typename AffineDTIGroupTemplate<TScalarType, Dimension>::AffineDTITransform_tmp Superclass;
+  typedef SmartPointer<Self>                                                              Pointer;
+  typedef SmartPointer<const Self>                                                        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AffineDTITransform, AffineDTIGroupTemplate );
+  itkTypeMacro(AffineDTITransform, AffineDTIGroupTemplate);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
 
   /** Typedefs inherited from the superclass. */
 
@@ -178,26 +158,21 @@ public:
   typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
 protected:
-
-  AffineDTITransform(){}
-  ~AffineDTITransform() override{}
+  AffineDTITransform() {}
+  ~AffineDTITransform() override {}
 
 private:
-
-  AffineDTITransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );     // purposely not implemented
-
+  AffineDTITransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

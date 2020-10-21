@@ -34,15 +34,13 @@ namespace itk
 class ITKOpenCL_EXPORT OpenCLProfilingTimeProbe
 {
 public:
-
   /** Constructor */
-  OpenCLProfilingTimeProbe( const std::string & message );
+  OpenCLProfilingTimeProbe(const std::string & message);
 
   /** Destructor */
   ~OpenCLProfilingTimeProbe();
 
 private:
-
   TimeProbe   m_Timer;
   std::string m_ProfilingMessage;
 };

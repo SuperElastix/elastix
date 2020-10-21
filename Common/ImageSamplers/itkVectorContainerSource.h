@@ -28,23 +28,21 @@ namespace itk
  * \brief A base class for creating an ImageToVectorContainerFilter.
  */
 
-template< class TOutputVectorContainer >
-class VectorContainerSource :
-  public ProcessObject
+template <class TOutputVectorContainer>
+class VectorContainerSource : public ProcessObject
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef VectorContainerSource      Self;
-  typedef ProcessObject              Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef VectorContainerSource    Self;
+  typedef ProcessObject            Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( VectorContainerSource, ProcessObject );
+  itkTypeMacro(VectorContainerSource, ProcessObject);
 
   /** Some convenient typedefs. */
   typedef typename Superclass::DataObjectPointer      DataObjectPointer;
@@ -52,47 +50,51 @@ public:
   typedef typename OutputVectorContainerType::Pointer OutputVectorContainerPointer;
 
   /** Get the vector container output of this process object. */
-  OutputVectorContainerType * GetOutput( void );
+  OutputVectorContainerType *
+  GetOutput(void);
 
   /** Get the vector container output of this process object. */
-  OutputVectorContainerType * GetOutput( unsigned int idx );
+  OutputVectorContainerType *
+  GetOutput(unsigned int idx);
 
   /** Graft the specified DataObject onto this ProcessObject's output. */
-  virtual void GraftOutput( DataObject * output );
+  virtual void
+  GraftOutput(DataObject * output);
 
   /** Graft the specified DataObject onto this ProcessObject's output. */
-  virtual void GraftNthOutput( unsigned int idx, DataObject * output );
+  virtual void
+  GraftNthOutput(unsigned int idx, DataObject * output);
 
   /** Make a DataObject of the correct type to used as the specified output. */
-  virtual DataObjectPointer MakeOutput( unsigned int idx );
+  virtual DataObjectPointer
+  MakeOutput(unsigned int idx);
 
 protected:
-
   /** The constructor. */
   VectorContainerSource();
   /** The destructor. */
   ~VectorContainerSource() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
   /** The private constructor. */
-  VectorContainerSource( const Self & ); // purposely not implemented
+  VectorContainerSource(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );        // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Member variables. */
   int m_GenerateDataRegion;
   int m_GenerateDataNumberOfRegions;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVectorContainerSource.hxx"
+#  include "itkVectorContainerSource.hxx"
 #endif
 
 #endif // end #ifndef __itkVectorContainerSource_h

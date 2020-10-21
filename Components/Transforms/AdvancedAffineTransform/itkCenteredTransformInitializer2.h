@@ -88,32 +88,29 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TTransform, class TFixedImage, class TMovingImage >
+template <class TTransform, class TFixedImage, class TMovingImage>
 class CenteredTransformInitializer2 : public Object
 {
 public:
-
   /** Standard class typedefs. */
   typedef CenteredTransformInitializer2 Self;
   typedef Object                        Superclass;
-  typedef SmartPointer< Self >          Pointer;
-  typedef SmartPointer< const Self >    ConstPointer;
+  typedef SmartPointer<Self>            Pointer;
+  typedef SmartPointer<const Self>      ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( CenteredTransformInitializer2, Object );
+  itkTypeMacro(CenteredTransformInitializer2, Object);
 
   /** Type of the transform to initialize */
   typedef TTransform                      TransformType;
   typedef typename TransformType::Pointer TransformPointer;
 
   /** Dimension of parameters. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int,
-    TransformType::InputSpaceDimension );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int,
-    TransformType::OutputSpaceDimension );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
   typedef TFixedImage  FixedImageType;
@@ -122,21 +119,17 @@ public:
   typedef typename FixedImageType::ConstPointer  FixedImagePointer;
   typedef typename MovingImageType::ConstPointer MovingImagePointer;
 
-  typedef Image< unsigned char, InputSpaceDimension >  FixedImageMaskType;
-  typedef Image< unsigned char, OutputSpaceDimension > MovingImageMaskType;
-  typedef typename FixedImageMaskType::ConstPointer    FixedImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer   MovingImageMaskPointer;
+  typedef Image<unsigned char, InputSpaceDimension>  FixedImageMaskType;
+  typedef Image<unsigned char, OutputSpaceDimension> MovingImageMaskType;
+  typedef typename FixedImageMaskType::ConstPointer  FixedImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer MovingImageMaskPointer;
 
   /** Moment calculators */
-  typedef AdvancedImageMomentsCalculator< FixedImageType >
-    FixedImageCalculatorType;
-  typedef AdvancedImageMomentsCalculator< MovingImageType >
-    MovingImageCalculatorType;
+  typedef AdvancedImageMomentsCalculator<FixedImageType>  FixedImageCalculatorType;
+  typedef AdvancedImageMomentsCalculator<MovingImageType> MovingImageCalculatorType;
 
-  typedef typename FixedImageCalculatorType::Pointer
-    FixedImageCalculatorPointer;
-  typedef typename MovingImageCalculatorType::Pointer
-    MovingImageCalculatorPointer;
+  typedef typename FixedImageCalculatorType::Pointer  FixedImageCalculatorPointer;
+  typedef typename MovingImageCalculatorType::Pointer MovingImageCalculatorPointer;
 
   /** Offset type. */
   typedef typename TransformType::OffsetType OffsetType;
@@ -147,48 +140,73 @@ public:
   /** Vector type. */
   typedef typename TransformType::OutputVectorType OutputVectorType;
 
-  typedef typename FixedImageType::PixelType  InputPixelType;
+  typedef typename FixedImageType::PixelType InputPixelType;
 
   /** Set the transform to be initialized */
-  itkSetObjectMacro( Transform,   TransformType   );
+  itkSetObjectMacro(Transform, TransformType);
 
   /** Set the fixed image used in the registration process */
-  itkSetConstObjectMacro( FixedImage,  FixedImageType  );
+  itkSetConstObjectMacro(FixedImage, FixedImageType);
 
   /** Set the moving image used in the registration process */
-  itkSetConstObjectMacro( MovingImage, MovingImageType );
+  itkSetConstObjectMacro(MovingImage, MovingImageType);
 
   /** Mask support. */
-  itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType  );
-  itkSetConstObjectMacro( MovingImageMask, MovingImageMaskType );
+  itkSetConstObjectMacro(FixedImageMask, FixedImageMaskType);
+  itkSetConstObjectMacro(MovingImageMask, MovingImageMaskType);
 
   /** Settings for MomentsCalculator. */
-  itkSetMacro( NumberOfSamplesForCenteredTransformInitialization, SizeValueType );
-  itkSetMacro( LowerThresholdForCenterGravity, InputPixelType );
-  itkSetMacro( CenterOfGravityUsesLowerThreshold, bool );
+  itkSetMacro(NumberOfSamplesForCenteredTransformInitialization, SizeValueType);
+  itkSetMacro(LowerThresholdForCenterGravity, InputPixelType);
+  itkSetMacro(CenterOfGravityUsesLowerThreshold, bool);
 
   /** Initialize the transform using data from the images */
-  virtual void InitializeTransform();
+  virtual void
+  InitializeTransform();
 
   /** Select between using the geometrical center of the images or
       using the center of mass given by the image intensities. */
-  void GeometryOn()    { m_UseMoments = false; m_UseOrigins = false; m_UseTop = false; }
-  void MomentsOn()     { m_UseMoments = true; m_UseOrigins = false; m_UseTop = false; }
-  void OriginsOn()     { m_UseMoments = false; m_UseOrigins = true; m_UseTop = false; }
-  void GeometryTopOn() { m_UseMoments = false; m_UseOrigins = false; m_UseTop = true; }
+  void
+  GeometryOn()
+  {
+    m_UseMoments = false;
+    m_UseOrigins = false;
+    m_UseTop = false;
+  }
+  void
+  MomentsOn()
+  {
+    m_UseMoments = true;
+    m_UseOrigins = false;
+    m_UseTop = false;
+  }
+  void
+  OriginsOn()
+  {
+    m_UseMoments = false;
+    m_UseOrigins = true;
+    m_UseTop = false;
+  }
+  void
+  GeometryTopOn()
+  {
+    m_UseMoments = false;
+    m_UseOrigins = false;
+    m_UseTop = true;
+  }
 
   /** Get() access to the moments calculators */
-  itkGetConstObjectMacro( FixedCalculator,  FixedImageCalculatorType  );
-  itkGetConstObjectMacro( MovingCalculator, MovingImageCalculatorType );
+  itkGetConstObjectMacro(FixedCalculator, FixedImageCalculatorType);
+  itkGetConstObjectMacro(MovingCalculator, MovingImageCalculatorType);
 
 protected:
-
   CenteredTransformInitializer2();
   ~CenteredTransformInitializer2() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  itkGetModifiableObjectMacro( Transform, TransformType );
+  itkGetModifiableObjectMacro(Transform, TransformType);
 
   /** Settings for MomentsCalculator. */
   SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;
@@ -196,9 +214,9 @@ protected:
   bool           m_CenterOfGravityUsesLowerThreshold;
 
 private:
-
-  CenteredTransformInitializer2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                // purposely not implemented
+  CenteredTransformInitializer2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   TransformPointer m_Transform;
 
@@ -213,13 +231,12 @@ private:
 
   FixedImageCalculatorPointer  m_FixedCalculator;
   MovingImageCalculatorPointer m_MovingCalculator;
-
 };
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCenteredTransformInitializer2.hxx"
+#  include "itkCenteredTransformInitializer2.hxx"
 #endif
 
 #endif /* __itkCenteredTransformInitializer2_h */

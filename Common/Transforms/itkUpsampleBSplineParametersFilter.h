@@ -35,23 +35,21 @@ namespace itk
  *
  */
 
-template< class TArray, class TImage >
-class UpsampleBSplineParametersFilter :
-  public Object
+template <class TArray, class TImage>
+class UpsampleBSplineParametersFilter : public Object
 {
 public:
-
   /** Standard class typedefs. */
   typedef UpsampleBSplineParametersFilter Self;
   typedef Object                          Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef SmartPointer<Self>              Pointer;
+  typedef SmartPointer<const Self>        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( UpsampleBSplineParametersFilter, Object );
+  itkTypeMacro(UpsampleBSplineParametersFilter, Object);
 
   /** Typedefs. */
   typedef TArray                            ArrayType;
@@ -65,41 +63,40 @@ public:
   typedef typename ImageType::RegionType    RegionType;
 
   /** Dimension of the fixed image. */
-  itkStaticConstMacro( Dimension, unsigned int, ImageType::ImageDimension );
+  itkStaticConstMacro(Dimension, unsigned int, ImageType::ImageDimension);
 
   /** Set the origin of the current grid. */
-  itkSetMacro( CurrentGridOrigin, OriginType );
+  itkSetMacro(CurrentGridOrigin, OriginType);
 
   /** Set the spacing of the current grid. */
-  itkSetMacro( CurrentGridSpacing, SpacingType );
+  itkSetMacro(CurrentGridSpacing, SpacingType);
 
   /** Set the direction of the current grid. */
-  itkSetMacro( CurrentGridDirection, DirectionType );
+  itkSetMacro(CurrentGridDirection, DirectionType);
 
   /** Set the region of the current grid. */
-  itkSetMacro( CurrentGridRegion, RegionType );
+  itkSetMacro(CurrentGridRegion, RegionType);
 
   /** Set the origin of the required grid. */
-  itkSetMacro( RequiredGridOrigin, OriginType );
+  itkSetMacro(RequiredGridOrigin, OriginType);
 
   /** Set the spacing of the required grid. */
-  itkSetMacro( RequiredGridSpacing, SpacingType );
+  itkSetMacro(RequiredGridSpacing, SpacingType);
 
   /** Set the direction of the required grid. */
-  itkSetMacro( RequiredGridDirection, DirectionType );
+  itkSetMacro(RequiredGridDirection, DirectionType);
 
   /** Set the region of the required grid. */
-  itkSetMacro( RequiredGridRegion, RegionType );
+  itkSetMacro(RequiredGridRegion, RegionType);
 
   /** Set the B-spline order. */
-  itkSetMacro( BSplineOrder, unsigned int );
+  itkSetMacro(BSplineOrder, unsigned int);
 
   /** Compute the output parameter array. */
-  virtual void UpsampleParameters( const ArrayType & param_in,
-    ArrayType & param_out );
+  virtual void
+  UpsampleParameters(const ArrayType & param_in, ArrayType & param_out);
 
 protected:
-
   /** Constructor. */
   UpsampleBSplineParametersFilter();
 
@@ -107,15 +104,17 @@ protected:
   ~UpsampleBSplineParametersFilter() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Function that checks if upsampling is required. */
-  virtual bool DoUpsampling( void );
+  virtual bool
+  DoUpsampling(void);
 
 private:
-
-  UpsampleBSplineParametersFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & );                  // purposely not implemented
+  UpsampleBSplineParametersFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Private member variables. */
   OriginType    m_CurrentGridOrigin;
@@ -127,13 +126,12 @@ private:
   DirectionType m_RequiredGridDirection;
   RegionType    m_RequiredGridRegion;
   unsigned int  m_BSplineOrder;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkUpsampleBSplineParametersFilter.hxx"
+#  include "itkUpsampleBSplineParametersFilter.hxx"
 #endif
 
 #endif // end #ifndef __itkUpsampleBSplineParametersFilter_h

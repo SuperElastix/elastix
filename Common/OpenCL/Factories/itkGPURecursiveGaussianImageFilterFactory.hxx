@@ -22,91 +22,87 @@
 
 namespace itk
 {
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::RegisterOneFactory()
+GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::RegisterOneFactory()
 {
-  typedef GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions > GPUFilterFactoryType;
+  typedef GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions> GPUFilterFactoryType;
   typename GPUFilterFactoryType::Pointer factory = GPUFilterFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::GPURecursiveGaussianImageFilterFactory2()
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
+GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::
+  GPURecursiveGaussianImageFilterFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::Register1D()
+GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 1 > visitor0;
-  visitor0( *this );
+  typelist::DualVisitDimension<TTypeListIn, TTypeListOut, 1> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float type
-  const bool inputHasFloat  = typelist::HasType< TTypeListIn, float >::Type;
-  const bool outputHasFloat = typelist::HasType< TTypeListOut, float >::Type;
+  const bool inputHasFloat = typelist::HasType<TTypeListIn, float>::Type;
+  const bool outputHasFloat = typelist::HasType<TTypeListOut, float>::Type;
 
-  if( !inputHasFloat || !outputHasFloat )
+  if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::DualVisitDimension< FloatTypeList, FloatTypeList, 1 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 1> visitor1;
+    visitor1(*this);
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::Register2D()
+GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 2 > visitor0;
-  visitor0( *this );
+  typelist::DualVisitDimension<TTypeListIn, TTypeListOut, 2> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float type
-  const bool inputHasFloat  = typelist::HasType< TTypeListIn, float >::Type;
-  const bool outputHasFloat = typelist::HasType< TTypeListOut, float >::Type;
+  const bool inputHasFloat = typelist::HasType<TTypeListIn, float>::Type;
+  const bool outputHasFloat = typelist::HasType<TTypeListOut, float>::Type;
 
-  if( !inputHasFloat || !outputHasFloat )
+  if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::DualVisitDimension< FloatTypeList, FloatTypeList, 2 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 2> visitor1;
+    visitor1(*this);
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::Register3D()
+GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 3 > visitor0;
-  visitor0( *this );
+  typelist::DualVisitDimension<TTypeListIn, TTypeListOut, 3> visitor0;
+  visitor0(*this);
 
   // Perform extra factory registration with float type
-  const bool inputHasFloat  = typelist::HasType< TTypeListIn, float >::Type;
-  const bool outputHasFloat = typelist::HasType< TTypeListOut, float >::Type;
+  const bool inputHasFloat = typelist::HasType<TTypeListIn, float>::Type;
+  const bool outputHasFloat = typelist::HasType<TTypeListOut, float>::Type;
 
-  if( !inputHasFloat || !outputHasFloat )
+  if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
-    typelist::DualVisitDimension< FloatTypeList, FloatTypeList, 3 > visitor1;
-    visitor1( *this );
+    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 3> visitor1;
+    visitor1(*this);
   }
 }
 

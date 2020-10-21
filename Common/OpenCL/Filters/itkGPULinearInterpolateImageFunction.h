@@ -27,7 +27,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPULinearInterpolateImageFunction */
-itkGPUKernelClassMacro( GPULinearInterpolateImageFunctionKernel );
+itkGPUKernelClassMacro(GPULinearInterpolateImageFunctionKernel);
 
 /** \class GPULinearInterpolateImageFunction
  * \brief GPU version of LinearInterpolateImageFunction.
@@ -40,48 +40,47 @@ itkGPUKernelClassMacro( GPULinearInterpolateImageFunctionKernel );
  *
  * \ingroup GPUCommon
  */
-template< typename TInputImage, typename TCoordRep = float >
-class ITK_EXPORT GPULinearInterpolateImageFunction :
-  public         GPUInterpolateImageFunction< TInputImage, TCoordRep,
-  LinearInterpolateImageFunction< TInputImage, TCoordRep > >
+template <typename TInputImage, typename TCoordRep = float>
+class ITK_EXPORT GPULinearInterpolateImageFunction
+  : public GPUInterpolateImageFunction<TInputImage, TCoordRep, LinearInterpolateImageFunction<TInputImage, TCoordRep>>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPULinearInterpolateImageFunction                                    Self;
-  typedef LinearInterpolateImageFunction< TInputImage, TCoordRep >             CPUSuperclass;
-  typedef GPUInterpolateImageFunction< TInputImage, TCoordRep, CPUSuperclass > GPUSuperclass;
-  typedef SmartPointer< Self >                                                 Pointer;
-  typedef SmartPointer< const Self >                                           ConstPointer;
+  typedef GPULinearInterpolateImageFunction                                  Self;
+  typedef LinearInterpolateImageFunction<TInputImage, TCoordRep>             CPUSuperclass;
+  typedef GPUInterpolateImageFunction<TInputImage, TCoordRep, CPUSuperclass> GPUSuperclass;
+  typedef SmartPointer<Self>                                                 Pointer;
+  typedef SmartPointer<const Self>                                           ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPULinearInterpolateImageFunction, GPUSuperclass );
+  itkTypeMacro(GPULinearInterpolateImageFunction, GPUSuperclass);
 
 protected:
-
   GPULinearInterpolateImageFunction();
   ~GPULinearInterpolateImageFunction() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  bool GetSourceCode( std::string & source ) const override;
+  bool
+  GetSourceCode(std::string & source) const override;
 
 private:
+  GPULinearInterpolateImageFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  GPULinearInterpolateImageFunction( const Self & ); // purposely not implemented
-  void operator=( const Self & );                    // purposely not implemented
-
-  std::vector< std::string > m_Sources;
+  std::vector<std::string> m_Sources;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPULinearInterpolateImageFunction.hxx"
+#  include "itkGPULinearInterpolateImageFunction.hxx"
 #endif
 
 #endif /* __itkGPULinearInterpolateImageFunction_h */

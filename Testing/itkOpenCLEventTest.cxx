@@ -19,11 +19,11 @@
 #include "itkOpenCLEventTest.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   itk::OpenCLEvent eventNull;
 
-  if( !eventNull.IsNull() )
+  if (!eventNull.IsNull())
   {
     return EXIT_FAILURE;
   }
@@ -31,7 +31,7 @@ main( int argc, char * argv[] )
   try
   {
     // Create and check OpenCL context
-    if( !itk::CreateContext() )
+    if (!itk::CreateContext())
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
@@ -41,82 +41,80 @@ main( int argc, char * argv[] )
 
     // Setup for OpenCL profiling
 #ifdef OPENCL_PROFILING
-    if( !context->GetDefaultCommandQueue().IsProfilingEnabled() )
+    if (!context->GetDefaultCommandQueue().IsProfilingEnabled())
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 #else
-    itk::OpenCLCommandQueue queue
-      = context->CreateCommandQueue( CL_QUEUE_PROFILING_ENABLE );
-    if( !queue.IsProfilingEnabled() )
+    itk::OpenCLCommandQueue queue = context->CreateCommandQueue(CL_QUEUE_PROFILING_ENABLE);
+    if (!queue.IsProfilingEnabled())
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }
-    context->SetCommandQueue( queue );
+    context->SetCommandQueue(queue);
 #endif
 
     // Create program
-    itk::OpenCLProgram program = context->BuildProgramFromSourceCode(
-      context->GetDevices(), itk::OpenCLEventTestKernel::GetOpenCLSource() );
-    if( program.IsNull() )
+    itk::OpenCLProgram program =
+      context->BuildProgramFromSourceCode(context->GetDevices(), itk::OpenCLEventTestKernel::GetOpenCLSource());
+    if (program.IsNull())
     {
-      if( context->GetDefaultDevice().HasCompiler() )
+      if (context->GetDefaultDevice().HasCompiler())
       {
-        itkGenericExceptionMacro( << "Could not compile the OpenCL test program" );
+        itkGenericExceptionMacro(<< "Could not compile the OpenCL test program");
       }
       else
       {
-        itkGenericExceptionMacro( << "OpenCL implementation does not have a compiler" );
+        itkGenericExceptionMacro(<< "OpenCL implementation does not have a compiler");
       }
     }
 
     // Create vector
-    itk::OpenCLVector< float > oclVector
-      = context->CreateVector< float >( itk::OpenCLMemoryObject::ReadWrite, 1000 );
-    for( std::size_t index = 0; index < oclVector.GetSize(); ++index )
+    itk::OpenCLVector<float> oclVector = context->CreateVector<float>(itk::OpenCLMemoryObject::ReadWrite, 1000);
+    for (std::size_t index = 0; index < oclVector.GetSize(); ++index)
     {
-      oclVector[ index ] = float(index);
+      oclVector[index] = float(index);
     }
 
-    itk::OpenCLKernel kernel = program.CreateKernel( "AddToVector" );
-    ITK_OPENCL_COMPARE( kernel.IsNull(), false );
+    itk::OpenCLKernel kernel = program.CreateKernel("AddToVector");
+    ITK_OPENCL_COMPARE(kernel.IsNull(), false);
 
-    kernel.SetGlobalWorkSize( oclVector.GetSize() );
-    itk::OpenCLEvent event = kernel( oclVector, 1567.4f );
+    kernel.SetGlobalWorkSize(oclVector.GetSize());
+    itk::OpenCLEvent event = kernel(oclVector, 1567.4f);
 
     // Wait to finish
     event.WaitForFinished();
 
     // Check the event execution times
-    if( event.GetFinishTime() == 0 )
+    if (event.GetFinishTime() == 0)
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
-    if( event.GetSubmitTime() <= event.GetQueueTime() )
+    if (event.GetSubmitTime() <= event.GetQueueTime())
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
-    if( event.GetRunTime() <= event.GetSubmitTime() )
+    if (event.GetRunTime() <= event.GetSubmitTime())
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
-    if( event.GetFinishTime() <= event.GetRunTime() )
+    if (event.GetFinishTime() <= event.GetRunTime())
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
-    context->SetCommandQueue( context->GetDefaultCommandQueue() );
+    context->SetCommandQueue(context->GetDefaultCommandQueue());
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
     itk::ReleaseContext();

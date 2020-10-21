@@ -33,63 +33,66 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
-class GPUAdvancedEuler2DTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename NDimensions>
+class GPUAdvancedEuler2DTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
   typedef GPUAdvancedEuler2DTransformFactory2 Self;
-  typedef GPUObjectFactoryBase< NDimensions > Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUObjectFactoryBase<NDimensions>   Superclass;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUAdvancedEuler2DTransform"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUAdvancedEuler2DTransform";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAdvancedEuler2DTransformFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUAdvancedEuler2DTransformFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType >
-  void operator()( void )
+  template <typename TType>
+  void
+  operator()(void)
   {
-    this->RegisterOverride(
-      typeid( AdvancedEuler2DTransform< TType > ).name(),
-      typeid( GPUAdvancedEuler2DTransform< TType > ).name(),
-      "GPU AdvancedEuler2DTransform override", true,
-      CreateObjectFunction< GPUAdvancedEuler2DTransform< TType > >::New()
-      );
+    this->RegisterOverride(typeid(AdvancedEuler2DTransform<TType>).name(),
+                           typeid(GPUAdvancedEuler2DTransform<TType>).name(),
+                           "GPU AdvancedEuler2DTransform override",
+                           true,
+                           CreateObjectFunction<GPUAdvancedEuler2DTransform<TType>>::New());
   }
 
 
 protected:
-
   GPUAdvancedEuler2DTransformFactory2();
   virtual ~GPUAdvancedEuler2DTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList< float, double >::Type RealTypeList;
+  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
 private:
-
-  GPUAdvancedEuler2DTransformFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                      // purposely not implemented
-
+  GPUAdvancedEuler2DTransformFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUAdvancedEuler2DTransformFactory.hxx"
+#  include "itkGPUAdvancedEuler2DTransformFactory.hxx"
 #endif
 
 #endif /* __itkGPUAdvancedEuler2DTransformFactory_h */

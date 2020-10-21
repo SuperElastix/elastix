@@ -46,21 +46,21 @@ namespace itk
 class FullSearchOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
-
   /** Standard class typedefs. */
   typedef FullSearchOptimizer            Self;
   typedef SingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  typedef SmartPointer<Self>             Pointer;
+  typedef SmartPointer<const Self>       ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FullSearchOptimizer, SingleValuedNonLinearOptimizer );
+  itkTypeMacro(FullSearchOptimizer, SingleValuedNonLinearOptimizer);
 
   /** Codes of stopping conditions */
-  typedef enum {
+  typedef enum
+  {
     FullRangeSearched,
     MetricError
   } StopConditionType;
@@ -71,38 +71,50 @@ public:
   typedef Superclass::CostFunctionPointer CostFunctionPointer;
   typedef Superclass::MeasureType         MeasureType;
 
-  typedef ParametersType::ValueType               ParameterValueType;     // = double
-  typedef ParameterValueType                      RangeValueType;
-  typedef FixedArray< RangeValueType, 3 >         RangeType;
-  typedef MapContainer< unsigned int, RangeType > SearchSpaceType;
-  typedef SearchSpaceType::Pointer                SearchSpacePointer;
-  typedef SearchSpaceType::ConstIterator          SearchSpaceIteratorType;
+  typedef ParametersType::ValueType             ParameterValueType; // = double
+  typedef ParameterValueType                    RangeValueType;
+  typedef FixedArray<RangeValueType, 3>         RangeType;
+  typedef MapContainer<unsigned int, RangeType> SearchSpaceType;
+  typedef SearchSpaceType::Pointer              SearchSpacePointer;
+  typedef SearchSpaceType::ConstIterator        SearchSpaceIteratorType;
 
   /** Type that stores the parameter values of the parameters to be optimized.
-  * Updated every iteration. */
-  typedef Array< ParameterValueType > SearchSpacePointType;
+   * Updated every iteration. */
+  typedef Array<ParameterValueType> SearchSpacePointType;
 
   /** The same values, but transformed to integer indices.
-  * These can be used to create an image visualizing the search space. */
-  typedef Array< IndexValueType > SearchSpaceIndexType;
+   * These can be used to create an image visualizing the search space. */
+  typedef Array<IndexValueType> SearchSpaceIndexType;
 
   /** The size of each dimension to be searched ((max-min)/step)) */
-  typedef Array< SizeValueType > SearchSpaceSizeType;
+  typedef Array<SizeValueType> SearchSpaceSizeType;
 
   /** NB: The methods SetScales has no influence! */
 
   /** Methods to configure the cost function. */
-  itkGetConstMacro( Maximize, bool );
-  itkSetMacro( Maximize, bool );
-  itkBooleanMacro( Maximize );
-  bool GetMinimize() const
-  { return !m_Maximize; }
-  void SetMinimize( bool v )
-  { this->SetMaximize( !v ); }
-  void MinimizeOn()
-  { this->MaximizeOff(); }
-  void MinimizeOff()
-  { this->MaximizeOn(); }
+  itkGetConstMacro(Maximize, bool);
+  itkSetMacro(Maximize, bool);
+  itkBooleanMacro(Maximize);
+  bool
+  GetMinimize() const
+  {
+    return !m_Maximize;
+  }
+  void
+  SetMinimize(bool v)
+  {
+    this->SetMaximize(!v);
+  }
+  void
+  MinimizeOn()
+  {
+    this->MaximizeOff();
+  }
+  void
+  MinimizeOff()
+  {
+    this->MaximizeOn();
+  }
 
   /** Set the CurrentPosition, CurrentPoint and CurrentIndex to the next point
    * in the search space.
@@ -118,22 +130,26 @@ public:
    *
    * Then the appropriate parameters in the ParameterArray are updated.
    */
-  virtual void UpdateCurrentPosition( void );
+  virtual void
+  UpdateCurrentPosition(void);
 
   /** Start optimization.
    * Make sure to set the initial position before starting the optimization
    */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization.
    */
-  virtual void ResumeOptimization( void );
+  virtual void
+  ResumeOptimization(void);
 
   /** Stop optimization.
    * \sa ResumeOptimization
    */
-  virtual void StopOptimization( void );
+  virtual void
+  StopOptimization(void);
 
   /**
    * Set/Get the SearchSpace, which is defined by a pointer to an
@@ -145,58 +161,64 @@ public:
    * Instead of using this function, the Add/RemoveSearchDimension methods can be used,
    * to define a search space.
    */
-  itkSetObjectMacro( SearchSpace, SearchSpaceType );
-  itkGetModifiableObjectMacro( SearchSpace, SearchSpaceType );
+  itkSetObjectMacro(SearchSpace, SearchSpaceType);
+  itkGetModifiableObjectMacro(SearchSpace, SearchSpaceType);
 
   /** Add/Remove a dimension to/from the SearchSpace */
-  virtual void AddSearchDimension( unsigned int param_nr,
-    RangeValueType minimum, RangeValueType maximum, RangeValueType step );
+  virtual void
+  AddSearchDimension(unsigned int param_nr, RangeValueType minimum, RangeValueType maximum, RangeValueType step);
 
-  virtual void RemoveSearchDimension( unsigned int param_nr );
+  virtual void
+  RemoveSearchDimension(unsigned int param_nr);
 
   /** Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc..... */
-  virtual unsigned long GetNumberOfIterations( void );
+  virtual unsigned long
+  GetNumberOfIterations(void);
 
   /** Get the Dimension of the SearchSpace. Calculated from the SearchSpace. */
-  virtual unsigned int GetNumberOfSearchSpaceDimensions( void );
+  virtual unsigned int
+  GetNumberOfSearchSpaceDimensions(void);
 
   /** Returns an array containing trunc((max-min)/step) for each SearchSpaceDimension) */
-  virtual const SearchSpaceSizeType & GetSearchSpaceSize( void );
+  virtual const SearchSpaceSizeType &
+  GetSearchSpaceSize(void);
 
   /** Convert an index to a full parameter array. Requires a valid InitialPosition! */
-  virtual ParametersType PointToPosition( const SearchSpacePointType & point );
+  virtual ParametersType
+  PointToPosition(const SearchSpacePointType & point);
 
-  virtual ParametersType IndexToPosition( const SearchSpaceIndexType & index );
+  virtual ParametersType
+  IndexToPosition(const SearchSpaceIndexType & index);
 
   /** Convert an index to a point */
-  virtual SearchSpacePointType IndexToPoint( const SearchSpaceIndexType & index );
+  virtual SearchSpacePointType
+  IndexToPoint(const SearchSpaceIndexType & index);
 
   /** Get the current iteration number. */
-  itkGetConstMacro( CurrentIteration, unsigned long );
+  itkGetConstMacro(CurrentIteration, unsigned long);
 
   /** Get the point in SearchSpace that is currently evaluated */
-  itkGetConstReferenceMacro( CurrentPointInSearchSpace, SearchSpacePointType );
-  itkGetConstReferenceMacro( CurrentIndexInSearchSpace, SearchSpaceIndexType );
+  itkGetConstReferenceMacro(CurrentPointInSearchSpace, SearchSpacePointType);
+  itkGetConstReferenceMacro(CurrentIndexInSearchSpace, SearchSpaceIndexType);
 
   /** Get the point in SearchSpace that is currently the most optimal */
-  itkGetConstReferenceMacro( BestPointInSearchSpace, SearchSpacePointType );
-  itkGetConstReferenceMacro( BestIndexInSearchSpace, SearchSpaceIndexType );
+  itkGetConstReferenceMacro(BestPointInSearchSpace, SearchSpacePointType);
+  itkGetConstReferenceMacro(BestIndexInSearchSpace, SearchSpaceIndexType);
 
   /** Get the current value. */
-  itkGetConstMacro( Value, double );
+  itkGetConstMacro(Value, double);
 
   /** Get the best value. */
-  itkGetConstMacro( BestValue, double );
+  itkGetConstMacro(BestValue, double);
 
   /** Get Stop condition. */
-  itkGetConstMacro( StopCondition, StopConditionType );
+  itkGetConstMacro(StopCondition, StopConditionType);
 
 protected:
-
   FullSearchOptimizer();
   ~FullSearchOptimizer() override {}
 
-  //void PrintSelf(std::ostream& os, Indent indent) const;
+  // void PrintSelf(std::ostream& os, Indent indent) const;
 
   bool              m_Maximize;
   bool              m_Stop;
@@ -213,15 +235,15 @@ protected:
   unsigned int         m_NumberOfSearchSpaceDimensions;
 
   unsigned long m_LastSearchSpaceChanges;
-  virtual void ProcessSearchSpaceChanges( void );
+  virtual void
+  ProcessSearchSpaceChanges(void);
 
 private:
-
-  FullSearchOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );      // purposely not implemented
+  FullSearchOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   unsigned long m_CurrentIteration;
-
 };
 
 } // end namespace itk

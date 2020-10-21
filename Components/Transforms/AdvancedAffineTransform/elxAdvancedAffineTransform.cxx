@@ -18,4 +18,4 @@
 
 #include "elxAdvancedAffineTransform.h"
 
-elxInstallMacro( AdvancedAffineTransformElastix );
+elxInstallMacro(AdvancedAffineTransformElastix);

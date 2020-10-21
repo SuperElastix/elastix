@@ -51,27 +51,24 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TScalarType = double,   // Data type for scalars (float or double)
-unsigned int NDimensions    = 3 >
+template <class TScalarType = double, // Data type for scalars (float or double)
+          unsigned int NDimensions = 3>
 // Number of dimensions
-class ElasticBodyReciprocalSplineKernelTransform2 :
-  public KernelTransform2<  TScalarType, NDimensions >
+class ElasticBodyReciprocalSplineKernelTransform2 : public KernelTransform2<TScalarType, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
   typedef ElasticBodyReciprocalSplineKernelTransform2 Self;
-  typedef KernelTransform2<  TScalarType,
-    NDimensions > Superclass;
+  typedef KernelTransform2<TScalarType, NDimensions>  Superclass;
 
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ElasticBodyReciprocalSplineKernelTransform2, KernelTransform2 );
+  itkTypeMacro(ElasticBodyReciprocalSplineKernelTransform2, KernelTransform2);
 
   /** New macro for creation of through a Smart Pointer */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Scalar type. */
   typedef typename Superclass::ScalarType ScalarType;
@@ -83,18 +80,19 @@ public:
   typedef typename Superclass::JacobianType JacobianType;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass::SpaceDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass::SpaceDimension);
 
   /** Set alpha.  Alpha is related to Poisson's Ratio (\f$\nu\f$) as
    * \f$\alpha = 8 ( 1 - \nu ) - 1\f$
    */
-  //itkSetMacro( Alpha, TScalarType ); Cant use the macro because the matrices must be recomputed
-  void SetAlpha( TScalarType Alpha ) override
+  // itkSetMacro( Alpha, TScalarType ); Cant use the macro because the matrices must be recomputed
+  void
+  SetAlpha(TScalarType Alpha) override
   {
-    this->m_Alpha            = Alpha;
-    this->m_LMatrixComputed  = false;
+    this->m_Alpha = Alpha;
+    this->m_LMatrixComputed = false;
     this->m_LInverseComputed = false;
-    this->m_WMatrixComputed  = false;
+    this->m_WMatrixComputed = false;
   }
 
 
@@ -102,18 +100,20 @@ public:
   elxOverrideGetConstMacro(Alpha, TScalarType);
 
   /** Convenience method */
-  void SetPoissonRatio( const TScalarType Nu ) override
+  void
+  SetPoissonRatio(const TScalarType Nu) override
   {
-    if( Nu > -1.0 && Nu < 0.5 )
+    if (Nu > -1.0 && Nu < 0.5)
     {
-      this->SetAlpha( 8.0 * ( 1.0 - Nu ) - 1.0 );
+      this->SetAlpha(8.0 * (1.0 - Nu) - 1.0);
     }
   }
 
 
-  const TScalarType GetPoissonRatio( void ) const override
+  const TScalarType
+  GetPoissonRatio(void) const override
   {
-    return 1.0 - ( this->m_Alpha + 1.0 ) / 8.0;
+    return 1.0 - (this->m_Alpha + 1.0) / 8.0;
   }
 
 
@@ -127,10 +127,10 @@ public:
   typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
 
 protected:
-
   ElasticBodyReciprocalSplineKernelTransform2();
   ~ElasticBodyReciprocalSplineKernelTransform2() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
@@ -144,22 +144,22 @@ protected:
    * \f$r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 } \f$ and
    * \f$I\f$ is the identity matrix.
    */
-  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const override;
+  void
+  ComputeG(const InputVectorType & x, GMatrixType & GMatrix) const override;
 
   /** alpha, Poisson's ratio */
   TScalarType m_Alpha;
 
 private:
-
-  ElasticBodyReciprocalSplineKernelTransform2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                              // purposely not implemented
-
+  ElasticBodyReciprocalSplineKernelTransform2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkElasticBodyReciprocalSplineKernelTransform2.hxx"
+#  include "itkElasticBodyReciprocalSplineKernelTransform2.hxx"
 #endif
 
 #endif // __itkElasticBodyReciprocalSplineKernelTransform2_h

@@ -34,29 +34,27 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TScalarType = float, unsigned int NDimensions = 3,
-typename TParentTransform      = AffineTransform< TScalarType, NDimensions > >
-class GPUAffineTransform :
-  public TParentTransform,
-  public GPUMatrixOffsetTransformBase< TScalarType, NDimensions, NDimensions >
+template <typename TScalarType = float,
+          unsigned int NDimensions = 3,
+          typename TParentTransform = AffineTransform<TScalarType, NDimensions>>
+class GPUAffineTransform
+  : public TParentTransform
+  , public GPUMatrixOffsetTransformBase<TScalarType, NDimensions, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUAffineTransform Self;
-  typedef TParentTransform   CPUSuperclass;
-  typedef GPUMatrixOffsetTransformBase< TScalarType,
-    NDimensions,
-    NDimensions > GPUSuperclass;
+  typedef GPUAffineTransform                                                  Self;
+  typedef TParentTransform                                                    CPUSuperclass;
+  typedef GPUMatrixOffsetTransformBase<TScalarType, NDimensions, NDimensions> GPUSuperclass;
 
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAffineTransform, CPUSuperclass );
+  itkTypeMacro(GPUAffineTransform, CPUSuperclass);
 
   /** Typedefs from GPUSuperclass. */
   typedef typename GPUSuperclass::CPUMatrixType        CPUMatrixType;
@@ -64,24 +62,34 @@ public:
   typedef typename GPUSuperclass::CPUOutputVectorType  CPUOutputVectorType;
 
   /** Get CPU matrix of an MatrixOffsetTransformBase. */
-  virtual const CPUMatrixType & GetCPUMatrix( void ) const { return this->GetMatrix(); }
+  virtual const CPUMatrixType &
+  GetCPUMatrix(void) const
+  {
+    return this->GetMatrix();
+  }
 
   /** Get CPU inverse matrix of an MatrixOffsetTransformBase. */
-  virtual const CPUInverseMatrixType & GetCPUInverseMatrix( void ) const { return this->GetInverseMatrix(); }
+  virtual const CPUInverseMatrixType &
+  GetCPUInverseMatrix(void) const
+  {
+    return this->GetInverseMatrix();
+  }
 
   /** Get CPU offset of an MatrixOffsetTransformBase. */
-  virtual const CPUOutputVectorType & GetCPUOffset( void ) const { return this->GetOffset(); }
+  virtual const CPUOutputVectorType &
+  GetCPUOffset(void) const
+  {
+    return this->GetOffset();
+  }
 
 protected:
-
   GPUAffineTransform() {}
   virtual ~GPUAffineTransform() {}
 
 private:
-
-  GPUAffineTransform( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );   // purposely not implemented
-
+  GPUAffineTransform(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

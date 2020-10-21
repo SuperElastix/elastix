@@ -24,7 +24,7 @@
 namespace elastix
 {
 
-//nothing
+// nothing
 
 } // end namespace elastix
 

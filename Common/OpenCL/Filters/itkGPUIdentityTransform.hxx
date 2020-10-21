@@ -24,31 +24,30 @@
 
 namespace itk
 {
-template< typename TScalarType, unsigned int NDimensions, typename TParentTransform >
-GPUIdentityTransform< TScalarType, NDimensions, TParentTransform >::GPUIdentityTransform()
+template <typename TScalarType, unsigned int NDimensions, typename TParentTransform>
+GPUIdentityTransform<TScalarType, NDimensions, TParentTransform>::GPUIdentityTransform()
 {
   // Add GPUIdentityTransform source
-  const std::string sourcePath( GPUIdentityTransformKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath );
+  const std::string sourcePath(GPUIdentityTransformKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions, typename TParentTransform >
+template <typename TScalarType, unsigned int NDimensions, typename TParentTransform>
 bool
-GPUIdentityTransform< TScalarType, NDimensions, TParentTransform >
-::GetSourceCode( std::string & source ) const
+GPUIdentityTransform<TScalarType, NDimensions, TParentTransform>::GetSourceCode(std::string & source) const
 {
-  if( this->m_Sources.size() == 0 )
+  if (this->m_Sources.size() == 0)
   {
     return false;
   }
 
   // Create the final source code
   std::ostringstream sources;
-  for( std::size_t i = 0; i < this->m_Sources.size(); i++ )
+  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
   {
-    sources << this->m_Sources[ i ] << std::endl;
+    sources << this->m_Sources[i] << std::endl;
   }
   source = sources.str();
   return true;
@@ -56,12 +55,11 @@ GPUIdentityTransform< TScalarType, NDimensions, TParentTransform >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions, typename TParentTransform >
+template <typename TScalarType, unsigned int NDimensions, typename TParentTransform>
 void
-GPUIdentityTransform< TScalarType, NDimensions, TParentTransform >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUIdentityTransform<TScalarType, NDimensions, TParentTransform>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  CPUSuperclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf(os, indent);
 }
 
 
