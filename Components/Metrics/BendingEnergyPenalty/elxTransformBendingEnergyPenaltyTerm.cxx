@@ -17,4 +17,4 @@
  *=========================================================================*/
 #include "elxTransformBendingEnergyPenaltyTerm.h"
 
-elxInstallMacro( TransformBendingEnergyPenalty );
+elxInstallMacro(TransformBendingEnergyPenalty);

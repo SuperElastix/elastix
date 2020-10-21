@@ -60,32 +60,30 @@ namespace elastix
  *
  */
 
-template< class TElastix >
-class DistancePreservingRigidityPenalty :
-  public itk::DistancePreservingRigidityPenaltyTerm< typename MetricBase< TElastix >::FixedImageType, double >,
-  public MetricBase< TElastix >
+template <class TElastix>
+class DistancePreservingRigidityPenalty
+  : public itk::DistancePreservingRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>
+  , public MetricBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef DistancePreservingRigidityPenalty Self;
-  typedef itk::DistancePreservingRigidityPenaltyTerm<
-    typename MetricBase< TElastix >::FixedImageType, double > Superclass1;
-  typedef MetricBase< TElastix >          Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef DistancePreservingRigidityPenalty                                                                 Self;
+  typedef itk::DistancePreservingRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double> Superclass1;
+  typedef MetricBase<TElastix>                                                                              Superclass2;
+  typedef itk::SmartPointer<Self>                                                                           Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( DistancePreservingRigidityPenalty, itk::DistancePreservingRigidityPenaltyTerm );
+  itkTypeMacro(DistancePreservingRigidityPenalty, itk::DistancePreservingRigidityPenaltyTerm);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
    * example: <tt>(Metric "DistancePreservingRigidityPenalty")</tt>\n
    */
-  elxClassNameMacro( "DistancePreservingRigidityPenalty" );
+  elxClassNameMacro("DistancePreservingRigidityPenalty");
 
   /** Typedefs from the superclass. */
   typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
@@ -130,10 +128,10 @@ public:
   typedef typename Superclass1::SegmentedImageType           SegmentedImageType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedef's inherited from elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -145,43 +143,42 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Typedef for multi-resolution pyramid of segmented image */
-  typedef itk::MultiResolutionPyramidImageFilter<
-    SegmentedImageType, SegmentedImageType >              SegmentedImagePyramidType;
-  typedef typename SegmentedImagePyramidType::Pointer SegmentedImagePyramidPointer;
+  typedef itk::MultiResolutionPyramidImageFilter<SegmentedImageType, SegmentedImageType> SegmentedImagePyramidType;
+  typedef typename SegmentedImagePyramidType::Pointer                                    SegmentedImagePyramidPointer;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /**
    * Do some things before registration:
    * \li Read the fixed rigidity image.
    * \li Setup some extra target cells.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
 protected:
-
   /** The constructor. */
-  DistancePreservingRigidityPenalty(){}
+  DistancePreservingRigidityPenalty() {}
 
   /** The destructor. */
   ~DistancePreservingRigidityPenalty() override {}
 
 private:
-
   /** The private constructor. */
-  DistancePreservingRigidityPenalty( const Self & ); // purposely not implemented
+  DistancePreservingRigidityPenalty(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                    // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxDistancePreservingRigidityPenaltyTerm.hxx"
+#  include "elxDistancePreservingRigidityPenaltyTerm.hxx"
 #endif
 
 #endif // end #ifndef __elxDistancePreservingRigidityPenaltyTerm_H__

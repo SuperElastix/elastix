@@ -33,69 +33,74 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
-class GPUAdvancedCombinationTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
+template <typename NDimensions>
+class GPUAdvancedCombinationTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
   typedef GPUAdvancedCombinationTransformFactory2 Self;
-  typedef GPUObjectFactoryBase< NDimensions >     Superclass;
-  typedef SmartPointer< Self >                    Pointer;
-  typedef SmartPointer< const Self >              ConstPointer;
+  typedef GPUObjectFactoryBase<NDimensions>       Superclass;
+  typedef SmartPointer<Self>                      Pointer;
+  typedef SmartPointer<const Self>                ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUAdvancedCombinationTransform"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUAdvancedCombinationTransform";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAdvancedCombinationTransformFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUAdvancedCombinationTransformFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TType, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TType, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
-    this->RegisterOverride(
-      typeid( AdvancedCombinationTransform< TType, VImageDimension > ).name(),
-      typeid( GPUAdvancedCombinationTransform< TType, VImageDimension > ).name(),
-      "GPU AdvancedCombinationTransformFactory override", true,
-      CreateObjectFunction< GPUAdvancedCombinationTransform< TType, VImageDimension > >::New()
-      );
+    this->RegisterOverride(typeid(AdvancedCombinationTransform<TType, VImageDimension>).name(),
+                           typeid(GPUAdvancedCombinationTransform<TType, VImageDimension>).name(),
+                           "GPU AdvancedCombinationTransformFactory override",
+                           true,
+                           CreateObjectFunction<GPUAdvancedCombinationTransform<TType, VImageDimension>>::New());
   }
 
 
 protected:
-
   GPUAdvancedCombinationTransformFactory2();
   virtual ~GPUAdvancedCombinationTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList< float, double >::Type RealTypeList;
+  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUAdvancedCombinationTransformFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                          // purposely not implemented
-
+  GPUAdvancedCombinationTransformFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUAdvancedCombinationTransformFactory.hxx"
+#  include "itkGPUAdvancedCombinationTransformFactory.hxx"
 #endif
 
 #endif /* __itkGPUAdvancedCombinationTransformFactory_h */

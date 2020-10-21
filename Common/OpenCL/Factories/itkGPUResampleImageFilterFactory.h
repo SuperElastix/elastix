@@ -33,142 +33,137 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
-class GPUResampleImageFilterFactory2 :
-  public GPUObjectFactoryBase< NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
+class GPUResampleImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
-  typedef GPUResampleImageFilterFactory2      Self;
-  typedef GPUObjectFactoryBase< NDimensions > Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUResampleImageFilterFactory2    Self;
+  typedef GPUObjectFactoryBase<NDimensions> Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUResampleImageFilter"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUResampleImageFilter";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUResampleImageFilterFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUResampleImageFilterFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TTypeIn, typename TTypeOut, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TTypeIn, typename TTypeOut, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
     // Image typedefs
-    typedef Image< TTypeIn, VImageDimension >     InputImageType;
-    typedef Image< TTypeOut, VImageDimension >    OutputImageType;
-    typedef GPUImage< TTypeIn, VImageDimension >  GPUInputImageType;
-    typedef GPUImage< TTypeOut, VImageDimension > GPUOutputImageType;
+    typedef Image<TTypeIn, VImageDimension>     InputImageType;
+    typedef Image<TTypeOut, VImageDimension>    OutputImageType;
+    typedef GPUImage<TTypeIn, VImageDimension>  GPUInputImageType;
+    typedef GPUImage<TTypeOut, VImageDimension> GPUOutputImageType;
 
     // Override default
-    this->RegisterOverride(
-      typeid( ResampleImageFilter< InputImageType, OutputImageType, float > ).name(),
-      typeid( GPUResampleImageFilter< InputImageType, OutputImageType, float > ).name(),
-      "GPU ResampleImageFilter override default, interpolator float",
-      true,
-      CreateObjectFunction< GPUResampleImageFilter< InputImageType, OutputImageType, float > >::New()
-      );
+    this->RegisterOverride(typeid(ResampleImageFilter<InputImageType, OutputImageType, float>).name(),
+                           typeid(GPUResampleImageFilter<InputImageType, OutputImageType, float>).name(),
+                           "GPU ResampleImageFilter override default, interpolator float",
+                           true,
+                           CreateObjectFunction<GPUResampleImageFilter<InputImageType, OutputImageType, float>>::New());
 
     // Override default
     // With interpolator precision type as double, on GPU as float
-    this->RegisterOverride(
-      typeid( ResampleImageFilter< InputImageType, OutputImageType, double > ).name(),
-      typeid( GPUResampleImageFilter< InputImageType, OutputImageType, float > ).name(),
-      "GPU ResampleImageFilter override default, interpolator double",
-      true,
-      CreateObjectFunction< GPUResampleImageFilter< InputImageType, OutputImageType, float > >::New()
-      );
+    this->RegisterOverride(typeid(ResampleImageFilter<InputImageType, OutputImageType, double>).name(),
+                           typeid(GPUResampleImageFilter<InputImageType, OutputImageType, float>).name(),
+                           "GPU ResampleImageFilter override default, interpolator double",
+                           true,
+                           CreateObjectFunction<GPUResampleImageFilter<InputImageType, OutputImageType, float>>::New());
 
     // Override when itkGPUImage is first template argument
     this->RegisterOverride(
-      typeid( ResampleImageFilter< GPUInputImageType, OutputImageType, float > ).name(),
-      typeid( GPUResampleImageFilter< GPUInputImageType, OutputImageType, float > ).name(),
+      typeid(ResampleImageFilter<GPUInputImageType, OutputImageType, float>).name(),
+      typeid(GPUResampleImageFilter<GPUInputImageType, OutputImageType, float>).name(),
       "GPU ResampleImageFilter override GPUImage first, interpolator float",
       true,
-      CreateObjectFunction< GPUResampleImageFilter< GPUInputImageType, OutputImageType, float > >::New()
-      );
+      CreateObjectFunction<GPUResampleImageFilter<GPUInputImageType, OutputImageType, float>>::New());
 
     // Override when itkGPUImage is first template argument
     // With interpolator precision type as double, on GPU as float
     this->RegisterOverride(
-      typeid( ResampleImageFilter< GPUInputImageType, OutputImageType, double > ).name(),
-      typeid( GPUResampleImageFilter< GPUInputImageType, OutputImageType, float > ).name(),
+      typeid(ResampleImageFilter<GPUInputImageType, OutputImageType, double>).name(),
+      typeid(GPUResampleImageFilter<GPUInputImageType, OutputImageType, float>).name(),
       "GPU ResampleImageFilter override GPUImage first, interpolator double",
       true,
-      CreateObjectFunction< GPUResampleImageFilter< GPUInputImageType, OutputImageType, float > >::New()
-      );
+      CreateObjectFunction<GPUResampleImageFilter<GPUInputImageType, OutputImageType, float>>::New());
 
     // Override when itkGPUImage is second template argument
     this->RegisterOverride(
-      typeid( ResampleImageFilter< InputImageType, GPUOutputImageType, float > ).name(),
-      typeid( GPUResampleImageFilter< InputImageType, GPUOutputImageType, float > ).name(),
+      typeid(ResampleImageFilter<InputImageType, GPUOutputImageType, float>).name(),
+      typeid(GPUResampleImageFilter<InputImageType, GPUOutputImageType, float>).name(),
       "GPU ResampleImageFilter override GPUImage second, interpolator float",
       true,
-      CreateObjectFunction< GPUResampleImageFilter< InputImageType, GPUOutputImageType, float > >::New()
-      );
+      CreateObjectFunction<GPUResampleImageFilter<InputImageType, GPUOutputImageType, float>>::New());
 
     // Override when itkGPUImage is second template argument
     // With interpolator precision type as double, on GPU as float
     this->RegisterOverride(
-      typeid( ResampleImageFilter< InputImageType, GPUOutputImageType, double > ).name(),
-      typeid( GPUResampleImageFilter< InputImageType, GPUOutputImageType, float > ).name(),
+      typeid(ResampleImageFilter<InputImageType, GPUOutputImageType, double>).name(),
+      typeid(GPUResampleImageFilter<InputImageType, GPUOutputImageType, float>).name(),
       "GPU ResampleImageFilter override GPUImage second, interpolator double",
       true,
-      CreateObjectFunction< GPUResampleImageFilter< InputImageType, GPUOutputImageType, float > >::New()
-      );
+      CreateObjectFunction<GPUResampleImageFilter<InputImageType, GPUOutputImageType, float>>::New());
 
     // Override when itkGPUImage is first and second template arguments
     this->RegisterOverride(
-      typeid( ResampleImageFilter< GPUInputImageType, GPUOutputImageType, float > ).name(),
-      typeid( GPUResampleImageFilter< GPUInputImageType, GPUOutputImageType, float > ).name(),
+      typeid(ResampleImageFilter<GPUInputImageType, GPUOutputImageType, float>).name(),
+      typeid(GPUResampleImageFilter<GPUInputImageType, GPUOutputImageType, float>).name(),
       "GPU ResampleImageFilter override GPUImage first and second, interpolator float",
       true,
-      CreateObjectFunction< GPUResampleImageFilter< GPUInputImageType, GPUOutputImageType, float > >::New()
-      );
+      CreateObjectFunction<GPUResampleImageFilter<GPUInputImageType, GPUOutputImageType, float>>::New());
 
     // Override when itkGPUImage is first and second template arguments
     // With interpolator precision type as double, on GPU as float
     this->RegisterOverride(
-      typeid( ResampleImageFilter< GPUInputImageType, GPUOutputImageType, double > ).name(),
-      typeid( GPUResampleImageFilter< GPUInputImageType, GPUOutputImageType, float > ).name(),
+      typeid(ResampleImageFilter<GPUInputImageType, GPUOutputImageType, double>).name(),
+      typeid(GPUResampleImageFilter<GPUInputImageType, GPUOutputImageType, float>).name(),
       "GPU ResampleImageFilter override GPUImage first and second, interpolator double",
       true,
-      CreateObjectFunction< GPUResampleImageFilter< GPUInputImageType, GPUOutputImageType, float > >::New()
-      );
+      CreateObjectFunction<GPUResampleImageFilter<GPUInputImageType, GPUOutputImageType, float>>::New());
   }
 
 
 protected:
-
   GPUResampleImageFilterFactory2();
   virtual ~GPUResampleImageFilterFactory2() {}
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUResampleImageFilterFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );                 // purposely not implemented
-
+  GPUResampleImageFilterFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUResampleImageFilterFactory.hxx"
+#  include "itkGPUResampleImageFilterFactory.hxx"
 #endif
 
 #endif // end #ifndef __itkGPUResampleImageFilterFactory_h

@@ -18,4 +18,4 @@
 
 #include "elxConjugateGradientFRPR.h"
 
-elxInstallMacro( ConjugateGradientFRPR );
+elxInstallMacro(ConjugateGradientFRPR);

@@ -70,20 +70,18 @@ namespace itk
  * \ingroup Metrics
  */
 
-template< class TFixedImage, class TMovingImage >
-class ParzenWindowHistogramImageToImageMetric :
-  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+template <class TFixedImage, class TMovingImage>
+class ParzenWindowHistogramImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef ParzenWindowHistogramImageToImageMetric                 Self;
-  typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage > Superclass;
-  typedef SmartPointer< Self >                                    Pointer;
-  typedef SmartPointer< const Self >                              ConstPointer;
+  typedef ParzenWindowHistogramImageToImageMetric               Self;
+  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
+  typedef SmartPointer<Self>                                    Pointer;
+  typedef SmartPointer<const Self>                              ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ParzenWindowHistogramImageToImageMetric, AdvancedImageToImageMetric );
+  itkTypeMacro(ParzenWindowHistogramImageToImageMetric, AdvancedImageToImageMetric);
 
   /** Typedefs from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType    CoordinateRepresentationType;
@@ -130,12 +128,10 @@ public:
   typedef typename Superclass::ThreadInfoType                  ThreadInfoType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Initialize the Metric by
    * (1) Call the superclass' implementation
@@ -143,23 +139,25 @@ public:
    * (3) InitializeKernels()
    * (4) Resize AlphaDerivatives
    */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /** Get the derivatives of the match measure. This method simply calls the
    * the GetValueAndDerivative, since this will be mostly almost as fast
    * as just computing the derivative.
    */
-  void GetDerivative(
-    const ParametersType & parameters,
-    DerivativeType & Derivative ) const override;
+  void
+  GetDerivative(const ParametersType & parameters, DerivativeType & Derivative) const override;
 
   /**  Get the value and derivatives for single valued optimizers.
    * This method calls this->GetValueAndAnalyticDerivative or
    * this->GetValueAndFiniteDifferenceDerivative, depending on the bool
    * m_UseFiniteDifferenceDerivative.
    */
-  void GetValueAndDerivative( const ParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const override;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
   /** Number of bins to use for the fixed image in the histogram.
    * Typical value is 32.  The minimum value is 4 due to the padding
@@ -167,9 +165,8 @@ public:
    * that even if the metric is used on binary images, the number of bins
    * should at least be equal to four.
    */
-  itkSetClampMacro( NumberOfFixedHistogramBins, unsigned long,
-    4, NumericTraits< unsigned long >::max() );
-  itkGetMacro( NumberOfFixedHistogramBins, unsigned long );
+  itkSetClampMacro(NumberOfFixedHistogramBins, unsigned long, 4, NumericTraits<unsigned long>::max());
+  itkGetMacro(NumberOfFixedHistogramBins, unsigned long);
 
   /** Number of bins to use for the moving image in the histogram.
    * Typical value is 32.  The minimum value is 4 due to the padding
@@ -177,46 +174,44 @@ public:
    * that even if the metric is used on binary images, the number of bins
    * should at least be equal to four.
    */
-  itkSetClampMacro( NumberOfMovingHistogramBins, unsigned long,
-    4, NumericTraits< unsigned long >::max() );
-  itkGetMacro( NumberOfMovingHistogramBins, unsigned long );
+  itkSetClampMacro(NumberOfMovingHistogramBins, unsigned long, 4, NumericTraits<unsigned long>::max());
+  itkGetMacro(NumberOfMovingHistogramBins, unsigned long);
 
   /** The B-spline order of the fixed Parzen window; default: 0 */
-  itkSetClampMacro( FixedKernelBSplineOrder, unsigned int, 0, 3 );
-  itkGetConstMacro( FixedKernelBSplineOrder, unsigned int );
+  itkSetClampMacro(FixedKernelBSplineOrder, unsigned int, 0, 3);
+  itkGetConstMacro(FixedKernelBSplineOrder, unsigned int);
 
   /** The B-spline order of the moving B-spline order; default: 3 */
-  itkSetClampMacro( MovingKernelBSplineOrder, unsigned int, 0, 3 );
-  itkGetConstMacro( MovingKernelBSplineOrder, unsigned int );
+  itkSetClampMacro(MovingKernelBSplineOrder, unsigned int, 0, 3);
+  itkGetConstMacro(MovingKernelBSplineOrder, unsigned int);
 
   /** Option to use explicit PDF derivatives, which requires a lot
    * of memory in case of many parameters.
    */
-  itkSetMacro( UseExplicitPDFDerivatives, bool );
-  itkGetConstReferenceMacro( UseExplicitPDFDerivatives, bool );
-  itkBooleanMacro( UseExplicitPDFDerivatives );
+  itkSetMacro(UseExplicitPDFDerivatives, bool);
+  itkGetConstReferenceMacro(UseExplicitPDFDerivatives, bool);
+  itkBooleanMacro(UseExplicitPDFDerivatives);
 
   /** Whether you plan to call the GetDerivative/GetValueAndDerivative method or not.
    * This option should be set before calling Initialize(); Default: false.
    */
-  itkSetMacro( UseDerivative, bool );
-  itkGetConstMacro( UseDerivative, bool );
+  itkSetMacro(UseDerivative, bool);
+  itkGetConstMacro(UseDerivative, bool);
 
   /** Whether you want to use a finite difference implementation of the metric's derivative.
    * This option should be set before calling Initialize(); Default: false.
    */
-  itkSetMacro( UseFiniteDifferenceDerivative, bool );
-  itkGetConstMacro( UseFiniteDifferenceDerivative, bool );
+  itkSetMacro(UseFiniteDifferenceDerivative, bool);
+  itkGetConstMacro(UseFiniteDifferenceDerivative, bool);
 
   /** For computing the finite difference derivative, the perturbation (delta) of the
    * transform parameters; default: 1.0.
    * mu_right= mu + delta*e_k
    */
-  itkSetMacro( FiniteDifferencePerturbation, double );
-  itkGetConstMacro( FiniteDifferencePerturbation, double );
+  itkSetMacro(FiniteDifferencePerturbation, double);
+  itkGetConstMacro(FiniteDifferencePerturbation, double);
 
 protected:
-
   /** The constructor. */
   ParzenWindowHistogramImageToImageMetric();
 
@@ -224,7 +219,8 @@ protected:
   ~ParzenWindowHistogramImageToImageMetric() override;
 
   /** Print Self. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Protected Typedefs ******************/
 
@@ -244,12 +240,12 @@ protected:
   /** Typedefs for the PDFs and PDF derivatives. */
   typedef double                                       PDFValueType;
   typedef float                                        PDFDerivativeValueType;
-  typedef Array< PDFValueType >                        MarginalPDFType;
-  typedef Image< PDFValueType, 2 >                     JointPDFType;
+  typedef Array<PDFValueType>                          MarginalPDFType;
+  typedef Image<PDFValueType, 2>                       JointPDFType;
   typedef typename JointPDFType::Pointer               JointPDFPointer;
-  typedef Image< PDFDerivativeValueType, 3 >           JointPDFDerivativesType;
+  typedef Image<PDFDerivativeValueType, 3>             JointPDFDerivativesType;
   typedef typename JointPDFDerivativesType::Pointer    JointPDFDerivativesPointer;
-  typedef Image< PDFValueType, 2 >                     IncrementalMarginalPDFType;
+  typedef Image<PDFValueType, 2>                       IncrementalMarginalPDFType;
   typedef typename IncrementalMarginalPDFType::Pointer IncrementalMarginalPDFPointer;
   typedef JointPDFType::IndexType                      JointPDFIndexType;
   typedef JointPDFType::RegionType                     JointPDFRegionType;
@@ -260,10 +256,10 @@ protected:
   typedef IncrementalMarginalPDFType::IndexType        IncrementalMarginalPDFIndexType;
   typedef IncrementalMarginalPDFType::RegionType       IncrementalMarginalPDFRegionType;
   typedef IncrementalMarginalPDFType::SizeType         IncrementalMarginalPDFSizeType;
-  typedef Array< PDFValueType >                        ParzenValueContainerType;
+  typedef Array<PDFValueType>                          ParzenValueContainerType;
 
   /** Typedefs for Parzen kernel. */
-  typedef KernelFunctionBase2< PDFValueType >  KernelFunctionType;
+  typedef KernelFunctionBase2<PDFValueType>    KernelFunctionType;
   typedef typename KernelFunctionType::Pointer KernelFunctionPointer;
 
   /** Protected variables **************************** */
@@ -284,7 +280,7 @@ protected:
   IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFRight;
   IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFLeft;
   IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFLeft;
-  mutable JointPDFRegionType    m_JointPDFWindow;                // no need for mutable anymore?
+  mutable JointPDFRegionType    m_JointPDFWindow; // no need for mutable anymore?
   double                        m_MovingImageNormalizedMin;
   double                        m_FixedImageNormalizedMin;
   double                        m_FixedImageBinSize;
@@ -298,7 +294,7 @@ protected:
   KernelFunctionPointer m_DerivativeMovingKernel;
 
   /** Threading related parameters. */
-  mutable std::vector< JointPDFPointer > m_ThreaderJointPDFs;
+  mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs;
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.
@@ -314,27 +310,35 @@ protected:
     SizeValueType   st_NumberOfPixelsCounted;
     JointPDFPointer st_JointPDF;
   };
-  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, ParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
-    PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct );
-  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
-    AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct );
-  mutable AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct * m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType                                                       m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
+  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT,
+               ParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
+               PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct);
+  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
+                    PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
+                    AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct);
+  mutable AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct *
+                       m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
+  mutable ThreadIdType m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
 
   /** Initialize threading related parameters. */
-  void InitializeThreadingParameters( void ) const override;
+  void
+  InitializeThreadingParameters(void) const override;
 
   /** Multi-threaded versions of the ComputePDF function. */
-  inline void ThreadedComputePDFs( ThreadIdType threadId );
+  inline void
+  ThreadedComputePDFs(ThreadIdType threadId);
 
   /** Single-threadedly accumulate results. */
-  inline void AfterThreadedComputePDFs( void ) const;
+  inline void
+  AfterThreadedComputePDFs(void) const;
 
   /** Helper function to launch the threads. */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ComputePDFsThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ComputePDFsThreaderCallback(void * arg);
 
   /** Helper function to launch the threads. */
-  void LaunchComputePDFsThreaderCallback( void ) const;
+  void
+  LaunchComputePDFsThreaderCallback(void) const;
 
   /** Compute the Parzen values given an image value and a starting histogram index
    * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for
@@ -342,20 +346,21 @@ protected:
    * Returns the values in a ParzenValueContainer, which is supposed to have
    * the right size already.
    */
-  void EvaluateParzenValues(
-    double parzenWindowTerm, OffsetValueType parzenWindowIndex,
-    const KernelFunctionType * kernel,
-    ParzenValueContainerType & parzenValues ) const;
+  void
+  EvaluateParzenValues(double                     parzenWindowTerm,
+                       OffsetValueType            parzenWindowIndex,
+                       const KernelFunctionType * kernel,
+                       ParzenValueContainerType & parzenValues) const;
 
   /** Update the joint PDF with a pixel pair; on demand also updates the
    * pdf derivatives (if the Jacobian pointers are nonzero).
    */
-  virtual void UpdateJointPDFAndDerivatives(
-    const RealType & fixedImageValue,
-    const RealType & movingImageValue,
-    const DerivativeType * imageJacobian,
-    const NonZeroJacobianIndicesType * nzji,
-    JointPDFType * jointPDF ) const;
+  virtual void
+  UpdateJointPDFAndDerivatives(const RealType &                   fixedImageValue,
+                               const RealType &                   movingImageValue,
+                               const DerivativeType *             imageJacobian,
+                               const NonZeroJacobianIndicesType * nzji,
+                               JointPDFType *                     jointPDF) const;
 
   /** Update the joint PDF and the incremental pdfs.
    * The input is a pixel pair (fixed, moving, moving mask) and
@@ -367,48 +372,51 @@ protected:
    * \todo The IsInsideMovingMask return bools are converted to doubles (1 or 0) to
    * simplify the computation. But this may not be necessary.
    */
-  virtual void UpdateJointPDFAndIncrementalPDFs(
-    RealType fixedImageValue, RealType movingImageValue, RealType movingMaskValue,
-    const DerivativeType & movingImageValuesRight,
-    const DerivativeType & movingImageValuesLeft,
-    const DerivativeType & movingMaskValuesRight,
-    const DerivativeType & movingMaskValuesLeft,
-    const NonZeroJacobianIndicesType & nzji ) const;
+  virtual void
+  UpdateJointPDFAndIncrementalPDFs(RealType                           fixedImageValue,
+                                   RealType                           movingImageValue,
+                                   RealType                           movingMaskValue,
+                                   const DerivativeType &             movingImageValuesRight,
+                                   const DerivativeType &             movingImageValuesLeft,
+                                   const DerivativeType &             movingMaskValuesRight,
+                                   const DerivativeType &             movingMaskValuesLeft,
+                                   const NonZeroJacobianIndicesType & nzji) const;
 
   /** Update the pdf derivatives
    * adds -image_jac[mu]*factor to the bin
    * with index [ mu, pdfIndex[0], pdfIndex[1] ] for all mu.
    * This function should only be called from UpdateJointPDFAndDerivatives.
    */
-  void UpdateJointPDFDerivatives(
-    const JointPDFIndexType & pdfIndex, double factor,
-    const DerivativeType & imageJacobian,
-    const NonZeroJacobianIndicesType & nzji ) const;
+  void
+  UpdateJointPDFDerivatives(const JointPDFIndexType &          pdfIndex,
+                            double                             factor,
+                            const DerivativeType &             imageJacobian,
+                            const NonZeroJacobianIndicesType & nzji) const;
 
   /** Multiply the pdf entries by the given normalization factor. */
-  virtual void NormalizeJointPDF(
-    JointPDFType * pdf, const double & factor ) const;
+  virtual void
+  NormalizeJointPDF(JointPDFType * pdf, const double & factor) const;
 
   /** Multiply the pdf derivatives entries by the given normalization factor. */
-  virtual void NormalizeJointPDFDerivatives(
-    JointPDFDerivativesType * pdf, const double & factor ) const;
+  virtual void
+  NormalizeJointPDFDerivatives(JointPDFDerivativesType * pdf, const double & factor) const;
 
   /** Compute marginal pdfs by summing over the joint pdf
    * direction = 0: fixed marginal pdf
    * direction = 1: moving marginal pdf
    */
-  virtual void ComputeMarginalPDF(
-    const JointPDFType * jointPDF,
-    MarginalPDFType & marginalPDF,
-    const unsigned int & direction ) const;
+  virtual void
+  ComputeMarginalPDF(const JointPDFType * jointPDF,
+                     MarginalPDFType &    marginalPDF,
+                     const unsigned int & direction) const;
 
   /** Compute incremental marginal pdfs. Integrates the incremental PDF
    * to obtain the fixed and moving marginal pdfs at once.
    */
-  virtual void ComputeIncrementalMarginalPDFs(
-    const JointPDFDerivativesType * incrementalPDF,
-    IncrementalMarginalPDFType * fixedIncrementalMarginalPDF,
-    IncrementalMarginalPDFType * movingIncrementalMarginalPDF ) const;
+  virtual void
+  ComputeIncrementalMarginalPDFs(const JointPDFDerivativesType * incrementalPDF,
+                                 IncrementalMarginalPDFType *    fixedIncrementalMarginalPDF,
+                                 IncrementalMarginalPDFType *    movingIncrementalMarginalPDF) const;
 
   /** Compute PDFs and pdf derivatives; Loops over the fixed image samples and constructs
    * the m_JointPDF, m_JointPDFDerivatives, and m_Alpha.
@@ -419,7 +427,8 @@ protected:
    * The histograms are left unnormalized since it may be faster to
    * not do this explicitly.
    */
-  virtual void ComputePDFsAndPDFDerivatives( const ParametersType & parameters ) const;
+  virtual void
+  ComputePDFsAndPDFDerivatives(const ParametersType & parameters) const;
 
   /** Compute PDFs and incremental pdfs (which you can use to compute finite
    * difference estimate of the derivative).
@@ -444,7 +453,8 @@ protected:
    * p(mu+delta*e_k) = ( par(k) ) * jh(mu+delta*e_k)
    * p(mu-delta*e_k) = ( pal(k) ) * jh(mu-delta*e_k)
    */
-  virtual void ComputePDFsAndIncrementalPDFs( const ParametersType & parameters ) const;
+  virtual void
+  ComputePDFsAndIncrementalPDFs(const ParametersType & parameters) const;
 
   /** Compute PDFs; Loops over the fixed image samples and constructs
    * the m_JointPDF and m_Alpha
@@ -454,39 +464,45 @@ protected:
    * The histogram is left unnormalised since it may be faster to
    * not do this explicitly.
    */
-  virtual void ComputePDFsSingleThreaded( const ParametersType & parameters ) const;
+  virtual void
+  ComputePDFsSingleThreaded(const ParametersType & parameters) const;
 
-  virtual void ComputePDFs( const ParametersType & parameters ) const;
+  virtual void
+  ComputePDFs(const ParametersType & parameters) const;
 
   /** Some initialization functions, called by Initialize. */
-  virtual void InitializeHistograms( void );
+  virtual void
+  InitializeHistograms(void);
 
-  virtual void InitializeKernels( void );
+  virtual void
+  InitializeKernels(void);
 
   /** Get the value and analytic derivatives for single valued optimizers.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false
    * Implement this method in subclasses.
    */
-  virtual void GetValueAndAnalyticDerivative(
-    const ParametersType & itkNotUsed( parameters ),
-    MeasureType & itkNotUsed( value ),
-    DerivativeType & itkNotUsed( derivative ) ) const {}
+  virtual void
+  GetValueAndAnalyticDerivative(const ParametersType & itkNotUsed(parameters),
+                                MeasureType &          itkNotUsed(value),
+                                DerivativeType &       itkNotUsed(derivative)) const
+  {}
 
   /** Get the value and finite difference derivatives for single valued optimizers.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true
    * Implement this method in subclasses.
    */
-  virtual void GetValueAndFiniteDifferenceDerivative(
-    const ParametersType & itkNotUsed( parameters ),
-    MeasureType & itkNotUsed( value ),
-    DerivativeType & itkNotUsed( derivative ) ) const {}
+  virtual void
+  GetValueAndFiniteDifferenceDerivative(const ParametersType & itkNotUsed(parameters),
+                                        MeasureType &          itkNotUsed(value),
+                                        DerivativeType &       itkNotUsed(derivative)) const
+  {}
 
 private:
-
   /** The private constructor. */
-  ParzenWindowHistogramImageToImageMetric( const Self & ); // purposely not implemented
+  ParzenWindowHistogramImageToImageMetric(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                          // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Variables that can/should be accessed by their Set/Get functions. */
   unsigned long m_NumberOfFixedHistogramBins;
@@ -497,13 +513,12 @@ private:
   bool          m_UseExplicitPDFDerivatives;
   bool          m_UseFiniteDifferenceDerivative;
   double        m_FiniteDifferencePerturbation;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkParzenWindowHistogramImageToImageMetric.hxx"
+#  include "itkParzenWindowHistogramImageToImageMetric.hxx"
 #endif
 
 #endif // end #ifndef __itkParzenWindowHistogramImageToImageMetric_H__

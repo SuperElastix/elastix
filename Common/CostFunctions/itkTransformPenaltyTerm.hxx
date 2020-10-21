@@ -27,34 +27,34 @@ namespace itk
  * ****************** CheckForBSplineTransform *******************************
  */
 
-template< class TFixedImage, class TScalarType >
+template <class TFixedImage, class TScalarType>
 bool
-TransformPenaltyTerm< TFixedImage, TScalarType >
-::CheckForBSplineTransform2( BSplineOrder3TransformPointer & bspline ) const
+TransformPenaltyTerm<TFixedImage, TScalarType>::CheckForBSplineTransform2(BSplineOrder3TransformPointer & bspline) const
 {
   /** The following checks for many spline orders. */
   this->CheckForBSplineTransform();
 
   /** Quit if the advanced transform is not a B-spline. */
-  if( !this->m_TransformIsBSpline ) return false;
+  if (!this->m_TransformIsBSpline)
+    return false;
 
   /** We will return the B-spline by reference, but only in case it is a third order B-spline. */
-  BSplineOrder3TransformType * testPtr1
-    = dynamic_cast< BSplineOrder3TransformType * >( this->m_AdvancedTransform.GetPointer() );
-  CombinationTransformType * testPtr2a
-    = dynamic_cast< CombinationTransformType * >( this->m_AdvancedTransform.GetPointer() );
+  BSplineOrder3TransformType * testPtr1 =
+    dynamic_cast<BSplineOrder3TransformType *>(this->m_AdvancedTransform.GetPointer());
+  CombinationTransformType * testPtr2a =
+    dynamic_cast<CombinationTransformType *>(this->m_AdvancedTransform.GetPointer());
 
-  if( testPtr1 )
+  if (testPtr1)
   {
     /** The transform is of type AdvancedBSplineDeformableTransform. */
     bspline = testPtr1;
   }
-  else if( testPtr2a )
+  else if (testPtr2a)
   {
     /** The transform is of type AdvancedCombinationTransform. */
-    BSplineOrder3TransformType * testPtr2b = dynamic_cast< BSplineOrder3TransformType * >(
-      ( testPtr2a->GetModifiableCurrentTransform() ) );
-    if( testPtr2b )
+    BSplineOrder3TransformType * testPtr2b =
+      dynamic_cast<BSplineOrder3TransformType *>((testPtr2a->GetModifiableCurrentTransform()));
+    if (testPtr2b)
     {
       /** The current transform is of type AdvancedBSplineDeformableTransform. */
       bspline = testPtr2b;

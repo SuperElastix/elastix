@@ -36,43 +36,50 @@ namespace itk
 class OpenCLLogger : public LoggerBase
 {
 public:
-
-  typedef OpenCLLogger               Self;
-  typedef LoggerBase                 Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef OpenCLLogger             Self;
+  typedef LoggerBase               Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( OpenCLLogger, Object );
+  itkTypeMacro(OpenCLLogger, Object);
 
   /** This is a singleton pattern New. There will only be ONE
    * reference to a OpenCLLogger object per process. Clients that
    * call this must call Delete on the object so that the reference
    * counting will work. The single instance will be unreferenced when
    * the program exits. */
-  static Pointer New();
+  static Pointer
+  New();
 
   /** Return the singleton instance with no reference counting. */
-  static Pointer GetInstance();
+  static Pointer
+  GetInstance();
 
   /** Set log filename prefix. */
-  void SetLogFileNamePrefix( const std::string & prefix );
+  void
+  SetLogFileNamePrefix(const std::string & prefix);
 
   /** Get the log filename. */
-  std::string GetLogFileName() const { return this->m_FileName; }
+  std::string
+  GetLogFileName() const
+  {
+    return this->m_FileName;
+  }
 
   /** Set output directory for logger. */
-  itkSetStringMacro( OutputDirectory );
+  itkSetStringMacro(OutputDirectory);
 
   /** Returns true if the underlying OpenCL logger has been
    * created, false otherwise. */
-  bool IsCreated() const;
+  bool
+  IsCreated() const;
 
   /** Overloaded. */
-  void Write( PriorityLevelEnum level, std::string const & content ) override;
+  void
+  Write(PriorityLevelEnum level, std::string const & content) override;
 
 protected:
-
   /** Constructor */
   OpenCLLogger();
 
@@ -80,14 +87,15 @@ protected:
   ~OpenCLLogger() override;
 
   /** Initialize */
-  void Initialize();
+  void
+  Initialize();
 
 private:
-
   static Pointer m_Instance;
 
-  OpenCLLogger( const Self & );   //purposely not implemented
-  void operator=( const Self & ); //purposely not implemented
+  OpenCLLogger(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   std::string m_FileName;
   std::string m_OutputDirectory;

@@ -23,9 +23,9 @@ namespace itk
 {
 OpenCLMemoryObject::~OpenCLMemoryObject()
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clReleaseMemObject( this->m_Id );
+    clReleaseMemObject(this->m_Id);
   }
 }
 
@@ -36,8 +36,7 @@ OpenCLMemoryObject::GetMemoryType() const
 {
   cl_mem_object_type mem_type;
 
-  if( clGetMemObjectInfo( this->m_Id, CL_MEM_TYPE,
-    sizeof( mem_type ), &mem_type, 0 ) != CL_SUCCESS )
+  if (clGetMemObjectInfo(this->m_Id, CL_MEM_TYPE, sizeof(mem_type), &mem_type, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -54,8 +53,7 @@ OpenCLMemoryObject::GetFlags() const
 {
   cl_mem_flags flags;
 
-  if( clGetMemObjectInfo( this->m_Id, CL_MEM_FLAGS,
-    sizeof( flags ), &flags, 0 ) != CL_SUCCESS )
+  if (clGetMemObjectInfo(this->m_Id, CL_MEM_FLAGS, sizeof(flags), &flags, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -72,8 +70,7 @@ OpenCLMemoryObject::GetSize() const
 {
   std::size_t size;
 
-  if( clGetMemObjectInfo( this->m_Id, CL_MEM_SIZE,
-    sizeof( size ), &size, 0 ) != CL_SUCCESS )
+  if (clGetMemObjectInfo(this->m_Id, CL_MEM_SIZE, sizeof(size), &size, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -90,8 +87,7 @@ OpenCLMemoryObject::GetHostPointer() const
 {
   void * ptr;
 
-  if( clGetMemObjectInfo( this->m_Id, CL_MEM_HOST_PTR,
-    sizeof( ptr ), &ptr, 0 ) != CL_SUCCESS )
+  if (clGetMemObjectInfo(this->m_Id, CL_MEM_HOST_PTR, sizeof(ptr), &ptr, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -108,8 +104,7 @@ OpenCLMemoryObject::GetMapCount() const
 {
   cl_uint map_count;
 
-  if( clGetMemObjectInfo( this->m_Id, CL_MEM_MAP_COUNT,
-    sizeof( map_count ), &map_count, 0 ) != CL_SUCCESS )
+  if (clGetMemObjectInfo(this->m_Id, CL_MEM_MAP_COUNT, sizeof(map_count), &map_count, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -126,8 +121,8 @@ OpenCLMemoryObject::GetReferenceCount() const
 {
   cl_uint reference_count;
 
-  if( clGetMemObjectInfo( this->m_Id, CL_MEM_REFERENCE_COUNT,
-    sizeof( reference_count ), &reference_count, 0 ) != CL_SUCCESS )
+  if (clGetMemObjectInfo(this->m_Id, CL_MEM_REFERENCE_COUNT, sizeof(reference_count), &reference_count, 0) !=
+      CL_SUCCESS)
   {
     return 0;
   }
@@ -144,58 +139,58 @@ OpenCLMemoryObject::GetAccess() const
 {
   cl_mem_flags flags;
 
-  if( clGetMemObjectInfo( this->m_Id, CL_MEM_FLAGS,
-    sizeof( flags ), &flags, 0 ) != CL_SUCCESS )
+  if (clGetMemObjectInfo(this->m_Id, CL_MEM_FLAGS, sizeof(flags), &flags, 0) != CL_SUCCESS)
   {
     return OpenCLMemoryObject::ReadWrite; // Return default value
   }
   else
   {
-    return OpenCLMemoryObject::Access( flags & ( CL_MEM_READ_WRITE | CL_MEM_READ_ONLY | CL_MEM_WRITE_ONLY ) );
+    return OpenCLMemoryObject::Access(flags & (CL_MEM_READ_WRITE | CL_MEM_READ_ONLY | CL_MEM_WRITE_ONLY));
   }
 }
 
 
 //------------------------------------------------------------------------------
 void
-OpenCLMemoryObject::Unmap( void * ptr, const bool wait )
+OpenCLMemoryObject::Unmap(void * ptr, const bool wait)
 {
   cl_event event;
   cl_int   error;
 
-  if( wait )
+  if (wait)
   {
-    error = clEnqueueUnmapMemObject
-        ( this->GetContext()->GetActiveQueue(), this->GetMemoryId(), ptr, 0, 0, &event );
+    error = clEnqueueUnmapMemObject(this->GetContext()->GetActiveQueue(), this->GetMemoryId(), ptr, 0, 0, &event);
   }
   else
   {
-    error = clEnqueueUnmapMemObject
-        ( this->GetContext()->GetActiveQueue(), this->GetMemoryId(), ptr, 0, 0, 0 );
+    error = clEnqueueUnmapMemObject(this->GetContext()->GetActiveQueue(), this->GetMemoryId(), ptr, 0, 0, 0);
   }
 
-  this->GetContext()->ReportError( error, __FILE__, __LINE__, ITK_LOCATION );
-  if( error == CL_SUCCESS && wait )
+  this->GetContext()->ReportError(error, __FILE__, __LINE__, ITK_LOCATION);
+  if (error == CL_SUCCESS && wait)
   {
-    clWaitForEvents( 1, &event );
-    clReleaseEvent( event );
+    clWaitForEvents(1, &event);
+    clReleaseEvent(event);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLEvent
-OpenCLMemoryObject::UnmapAsync( void * ptr, const OpenCLEventList & event_list )
+OpenCLMemoryObject::UnmapAsync(void * ptr, const OpenCLEventList & event_list)
 {
   cl_event     event;
-  const cl_int error = clEnqueueUnmapMemObject
-      ( this->GetContext()->GetActiveQueue(), this->GetMemoryId(), ptr,
-      event_list.GetSize(), event_list.GetEventData(), &event );
+  const cl_int error = clEnqueueUnmapMemObject(this->GetContext()->GetActiveQueue(),
+                                               this->GetMemoryId(),
+                                               ptr,
+                                               event_list.GetSize(),
+                                               event_list.GetEventData(),
+                                               &event);
 
-  this->GetContext()->ReportError( error, __FILE__, __LINE__, ITK_LOCATION );
-  if( error == CL_SUCCESS )
+  this->GetContext()->ReportError(error, __FILE__, __LINE__, ITK_LOCATION);
+  if (error == CL_SUCCESS)
   {
-    return OpenCLEvent( event );
+    return OpenCLEvent(event);
   }
   else
   {
@@ -206,16 +201,16 @@ OpenCLMemoryObject::UnmapAsync( void * ptr, const OpenCLEventList & event_list )
 
 //------------------------------------------------------------------------------
 void
-OpenCLMemoryObject::SetId( OpenCLContext * context, const cl_mem id )
+OpenCLMemoryObject::SetId(OpenCLContext * context, const cl_mem id)
 {
   this->m_Context = context;
-  if( id )
+  if (id)
   {
-    clRetainMemObject( id );
+    clRetainMemObject(id);
   }
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clReleaseMemObject( this->m_Id );
+    clReleaseMemObject(this->m_Id);
   }
   this->m_Id = id;
 }
@@ -223,13 +218,13 @@ OpenCLMemoryObject::SetId( OpenCLContext * context, const cl_mem id )
 
 //------------------------------------------------------------------------------
 cl_map_flags
-OpenCLMemoryObject::GetMapFlags( const OpenCLMemoryObject::Access access )
+OpenCLMemoryObject::GetMapFlags(const OpenCLMemoryObject::Access access)
 {
-  if( access == OpenCLMemoryObject::ReadOnly )
+  if (access == OpenCLMemoryObject::ReadOnly)
   {
     return CL_MAP_READ;
   }
-  else if( access == OpenCLMemoryObject::WriteOnly )
+  else if (access == OpenCLMemoryObject::WriteOnly)
   {
     return CL_MAP_WRITE;
   }
@@ -242,19 +237,17 @@ OpenCLMemoryObject::GetMapFlags( const OpenCLMemoryObject::Access access )
 
 //------------------------------------------------------------------------------
 cl_int
-OpenCLMemoryObject::SetDestructorCallback(
-  void ( CL_CALLBACK * pfn_notify )( cl_mem, void * ), void * user_data /*= NULL*/ )
+OpenCLMemoryObject::SetDestructorCallback(void(CL_CALLBACK * pfn_notify)(cl_mem, void *), void * user_data /*= NULL*/)
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
-  const cl_int error = clSetMemObjectDestructorCallback( this->m_Id, pfn_notify, user_data );
-  if( error != CL_SUCCESS )
+  const cl_int error = clSetMemObjectDestructorCallback(this->m_Id, pfn_notify, user_data);
+  if (error != CL_SUCCESS)
   {
-    itkOpenCLErrorMacroGeneric( << "OpenCLMemoryObject::SetDestructorCallback:"
-                                << OpenCLContext::GetErrorName( error ) );
+    itkOpenCLErrorMacroGeneric(<< "OpenCLMemoryObject::SetDestructorCallback:" << OpenCLContext::GetErrorName(error));
   }
   return error;
 }
@@ -263,9 +256,9 @@ OpenCLMemoryObject::SetDestructorCallback(
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs )
+operator==(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
@@ -276,9 +269,9 @@ operator==( const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs )
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs )
+operator!=(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

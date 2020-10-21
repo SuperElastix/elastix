@@ -33,19 +33,18 @@ using namespace std;
  * cells are flushed.
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutrow< charT, traits >
-::WriteBufferedData( void )
+xoutrow<charT, traits>::WriteBufferedData(void)
 {
   /** Write the cell-data to the outputs, separated by tabs. */
-  auto xit   = this->m_XTargetCells.begin();
+  auto xit = this->m_XTargetCells.begin();
   auto tmpIt = xit;
 
-  for( ++tmpIt; tmpIt != this->m_XTargetCells.end(); ++xit, ++tmpIt )
+  for (++tmpIt; tmpIt != this->m_XTargetCells.end(); ++xit, ++tmpIt)
   {
     /** Write a tab to the cell */
-    *( xit->second ) << "\t";
+    *(xit->second) << "\t";
 
     /** And send its contents to the outputs */
     xit->second->WriteBufferedData();
@@ -56,7 +55,7 @@ xoutrow< charT, traits >
   /** Go to the last cell and use it to send an enter to the outputs. */
   xit->second->WriteBufferedData();
   --xit;
-  *( xit->second ) << "\n";
+  *(xit->second) << "\n";
   xit->second->WriteBufferedData();
 
 } // end WriteBufferedData()
@@ -66,25 +65,24 @@ xoutrow< charT, traits >
  * ******************** AddTargetCell ***************************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutrow< charT, traits >
-::AddTargetCell( const char * name )
+xoutrow<charT, traits>::AddTargetCell(const char * name)
 {
-  if( this->m_CellMap.count( name ) == 0 )
+  if (this->m_CellMap.count(name) == 0)
   {
     /** A new cell (type xoutcell) is created. */
     std::unique_ptr<XOutCellType> cell{ new XOutCellType };
-    auto& cellReference = *cell;
+    auto &                        cellReference = *cell;
 
     /** Set the outputs equal to the outputs of this object. */
-    cell->SetOutputs( this->m_COutputs );
-    cell->SetOutputs( this->m_XOutputs );
+    cell->SetOutputs(this->m_COutputs);
+    cell->SetOutputs(this->m_XOutputs);
 
     /** Stored in a map, to make sure that later we can
      * delete all memory, assigned in this function.
      */
-    this->m_CellMap.insert( std::make_pair( name, std::move(cell) ) );
+    this->m_CellMap.insert(std::make_pair(name, std::move(cell)));
 
     /** Add the address of the cell to the TargetCell-map. */
     return this->Superclass::AddTargetCell(name, &cellReference);
@@ -101,19 +99,18 @@ xoutrow< charT, traits >
  * ********************* RemoveTargetCell ***********************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutrow< charT, traits >
-::RemoveTargetCell( const char * name )
+xoutrow<charT, traits>::RemoveTargetCell(const char * name)
 {
   int returndummy = 1;
 
-  if( this->m_XTargetCells.erase( name ) > 0 )
+  if (this->m_XTargetCells.erase(name) > 0)
   {
     returndummy = 0;
   }
 
-  if( this->m_CellMap.erase( name ) > 0 )
+  if (this->m_CellMap.erase(name) > 0)
   {
     returndummy = 0;
   }
@@ -127,10 +124,9 @@ xoutrow< charT, traits >
  * **************** SetTargetCells (xout objects) ***************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutrow< charT, traits >
-::SetTargetCells( const XStreamMapType & cellmap )
+xoutrow<charT, traits>::SetTargetCells(const XStreamMapType & cellmap)
 {
   /** Clean the this->m_CellMap (cells that are created using the
    * AddTarget(const char *) method.
@@ -150,21 +146,20 @@ xoutrow< charT, traits >
  * ****************** AddOutput (ostream_type) ******************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutrow< charT, traits >
-::AddOutput( const char * name, ostream_type * output )
+xoutrow<charT, traits>::AddOutput(const char * name, ostream_type * output)
 {
-  int                    returndummy = 0;
+  int returndummy = 0;
 
   /** Set the output in all cells. */
-  for( const auto& cell : this->m_XTargetCells )
+  for (const auto & cell : this->m_XTargetCells)
   {
-    returndummy |= cell.second->AddOutput( name, output );
+    returndummy |= cell.second->AddOutput(name, output);
   }
 
   /** Call the Superclass's implementation. */
-  returndummy |= this->Superclass::AddOutput( name, output );
+  returndummy |= this->Superclass::AddOutput(name, output);
   return returndummy;
 
 } // end AddOutput()
@@ -174,21 +169,20 @@ xoutrow< charT, traits >
  * ********************** AddOutput (xoutbase) ******************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutrow< charT, traits >
-::AddOutput( const char * name, Superclass * output )
+xoutrow<charT, traits>::AddOutput(const char * name, Superclass * output)
 {
-  int                    returndummy = 0;
+  int returndummy = 0;
 
   /** Set the output in all cells. */
-  for( const auto& cell : this->m_XTargetCells )
+  for (const auto & cell : this->m_XTargetCells)
   {
-    returndummy |= cell.second->AddOutput( name, output );
+    returndummy |= cell.second->AddOutput(name, output);
   }
 
   /** Call the Superclass's implementation. */
-  returndummy |= this->Superclass::AddOutput( name, output );
+  returndummy |= this->Superclass::AddOutput(name, output);
   return returndummy;
 
 } // end AddOutput()
@@ -198,20 +192,19 @@ xoutrow< charT, traits >
  * ******************** RemoveOutput ****************************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutrow< charT, traits >
-::RemoveOutput( const char * name )
+xoutrow<charT, traits>::RemoveOutput(const char * name)
 {
-  int                    returndummy = 0;
+  int returndummy = 0;
   /** Set the output in all cells. */
-  for( const auto& cell : this->m_XTargetCells )
+  for (const auto & cell : this->m_XTargetCells)
   {
-    returndummy |= cell.second->RemoveOutput( name );
+    returndummy |= cell.second->RemoveOutput(name);
   }
 
   /** Call the Superclass's implementation. */
-  returndummy |= this->Superclass::RemoveOutput( name );
+  returndummy |= this->Superclass::RemoveOutput(name);
   return returndummy;
 
 } // end RemoveOutput()
@@ -221,19 +214,18 @@ xoutrow< charT, traits >
  * ******************* SetOutputs (ostream_types) ***************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutrow< charT, traits >
-::SetOutputs( const CStreamMapType & outputmap )
+xoutrow<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
 {
   /** Set the output in all cells. */
-  for( const auto& cell : this->m_XTargetCells )
+  for (const auto & cell : this->m_XTargetCells)
   {
-    cell.second->SetOutputs( outputmap );
+    cell.second->SetOutputs(outputmap);
   }
 
   /** Call the Superclass's implementation. */
-  this->Superclass::SetOutputs( outputmap );
+  this->Superclass::SetOutputs(outputmap);
 
 } // end SetOutputs()
 
@@ -242,19 +234,18 @@ xoutrow< charT, traits >
  * ******************* SetOutputs (xoutobjects) *****************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutrow< charT, traits >
-::SetOutputs( const XStreamMapType & outputmap )
+xoutrow<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
 {
   /** Set the output in all cells. */
-  for( const auto& cell : this->m_XTargetCells )
+  for (const auto & cell : this->m_XTargetCells)
   {
-    cell.second->SetOutputs( outputmap );
+    cell.second->SetOutputs(outputmap);
   }
 
   /** Call the Superclass's implementation. */
-  this->Superclass::SetOutputs( outputmap );
+  this->Superclass::SetOutputs(outputmap);
 
 } // end SetOutputs()
 
@@ -263,23 +254,22 @@ xoutrow< charT, traits >
  * ******************** WriteHeaders ****************************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutrow< charT, traits >
-::WriteHeaders( void )
+xoutrow<charT, traits>::WriteHeaders(void)
 {
   /** Copy '*this'. */
   Self headerwriter;
-  headerwriter.SetTargetCells( this->m_XTargetCells );
+  headerwriter.SetTargetCells(this->m_XTargetCells);
   // no CTargetCells, because they are not used in xoutrow!
-  headerwriter.SetOutputs( this->m_COutputs );
-  headerwriter.SetOutputs( this->m_XOutputs );
+  headerwriter.SetOutputs(this->m_COutputs);
+  headerwriter.SetOutputs(this->m_XOutputs);
 
   /** Write the cell-names to the cells of the headerwriter. */
-  for( const auto& cell : this->m_XTargetCells )
+  for (const auto & cell : this->m_XTargetCells)
   {
     /** Write the cell's name to each cell. */
-    headerwriter[ cell.first.c_str() ] << cell.first;
+    headerwriter[cell.first.c_str()] << cell.first;
   } // end for
   headerwriter.WriteBufferedData();
 
@@ -292,17 +282,16 @@ xoutrow< charT, traits >
  * Returns a target cell.
  */
 
-template< class charT, class traits >
-xoutbase< charT, traits > &
-xoutrow< charT, traits >
-::SelectXCell( const char * name )
+template <class charT, class traits>
+xoutbase<charT, traits> &
+xoutrow<charT, traits>::SelectXCell(const char * name)
 {
-  std::string cellname( name );
+  std::string cellname(name);
 
   /** Check if the name is "WriteHeaders". Then the method
    * this->WriteHeaders() is invoked.
    */
-  if( cellname == "WriteHeaders" )
+  if (cellname == "WriteHeaders")
   {
     this->WriteHeaders();
     return *this;
@@ -310,7 +299,7 @@ xoutrow< charT, traits >
   else
   {
     /** Call the Superclass's implementation. */
-    return this->Superclass::SelectXCell( name );
+    return this->Superclass::SelectXCell(name);
   }
 
 } // end SelectXCell()

@@ -21,25 +21,25 @@
 
 namespace itk
 {
-OpenCLEventList::OpenCLEventList( const OpenCLEvent & event )
+OpenCLEventList::OpenCLEventList(const OpenCLEvent & event)
 {
   cl_event id = event.GetEventId();
 
-  if( id )
+  if (id)
   {
-    clRetainEvent( id );
-    this->m_Events.push_back( id );
+    clRetainEvent(id);
+    this->m_Events.push_back(id);
   }
 }
 
 
 //------------------------------------------------------------------------------
-OpenCLEventList::OpenCLEventList( const OpenCLEventList & other ) :
-  m_Events( other.m_Events )
+OpenCLEventList::OpenCLEventList(const OpenCLEventList & other)
+  : m_Events(other.m_Events)
 {
-  for( std::size_t index = 0; index < this->m_Events.size(); ++index )
+  for (std::size_t index = 0; index < this->m_Events.size(); ++index)
   {
-    clRetainEvent( this->m_Events[ index ] );
+    clRetainEvent(this->m_Events[index]);
   }
 }
 
@@ -47,27 +47,27 @@ OpenCLEventList::OpenCLEventList( const OpenCLEventList & other ) :
 //------------------------------------------------------------------------------
 OpenCLEventList::~OpenCLEventList()
 {
-  for( std::size_t index = 0; index < this->m_Events.size(); ++index )
+  for (std::size_t index = 0; index < this->m_Events.size(); ++index)
   {
-    clReleaseEvent( this->m_Events[ index ] );
+    clReleaseEvent(this->m_Events[index]);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLEventList &
-OpenCLEventList::operator=( const OpenCLEventList & other )
+OpenCLEventList::operator=(const OpenCLEventList & other)
 {
-  if( this != &other )
+  if (this != &other)
   {
-    for( std::size_t index = 0; index < this->m_Events.size(); ++index )
+    for (std::size_t index = 0; index < this->m_Events.size(); ++index)
     {
-      clReleaseEvent( this->m_Events[ index ] );
+      clReleaseEvent(this->m_Events[index]);
     }
     this->m_Events = other.m_Events;
-    for( std::size_t index = 0; index < this->m_Events.size(); ++index )
+    for (std::size_t index = 0; index < this->m_Events.size(); ++index)
     {
-      clRetainEvent( this->m_Events[ index ] );
+      clRetainEvent(this->m_Events[index]);
     }
   }
   return *this;
@@ -76,43 +76,43 @@ OpenCLEventList::operator=( const OpenCLEventList & other )
 
 //------------------------------------------------------------------------------
 void
-OpenCLEventList::Append( const OpenCLEvent & event )
+OpenCLEventList::Append(const OpenCLEvent & event)
 {
   cl_event id = event.GetEventId();
 
-  if( id )
+  if (id)
   {
-    clRetainEvent( id );
-    this->m_Events.push_back( id );
+    clRetainEvent(id);
+    this->m_Events.push_back(id);
   }
 }
 
 
 //------------------------------------------------------------------------------
 void
-OpenCLEventList::Append( const OpenCLEventList & other )
+OpenCLEventList::Append(const OpenCLEventList & other)
 {
-  for( std::size_t index = 0; index < other.m_Events.size(); ++index )
+  for (std::size_t index = 0; index < other.m_Events.size(); ++index)
   {
-    cl_event id = other.m_Events[ index ];
-    clRetainEvent( id );
-    this->m_Events.push_back( id );
+    cl_event id = other.m_Events[index];
+    clRetainEvent(id);
+    this->m_Events.push_back(id);
   }
 }
 
 
 //------------------------------------------------------------------------------
 void
-OpenCLEventList::Remove( const OpenCLEvent & event )
+OpenCLEventList::Remove(const OpenCLEvent & event)
 {
   OpenCLEventListArrayType::iterator it;
 
-  for( it = this->m_Events.begin(); it < this->m_Events.end(); ++it )
+  for (it = this->m_Events.begin(); it < this->m_Events.end(); ++it)
   {
-    if( *it == event.GetEventId() )
+    if (*it == event.GetEventId())
     {
-      clReleaseEvent( *it );
-      this->m_Events.erase( it );
+      clReleaseEvent(*it);
+      this->m_Events.erase(it);
       break;
     }
   }
@@ -121,13 +121,13 @@ OpenCLEventList::Remove( const OpenCLEvent & event )
 
 //------------------------------------------------------------------------------
 OpenCLEvent
-OpenCLEventList::Get( const std::size_t index ) const
+OpenCLEventList::Get(const std::size_t index) const
 {
-  if( index < this->m_Events.size() )
+  if (index < this->m_Events.size())
   {
-    cl_event id = this->m_Events[ index ];
-    clRetainEvent( id );
-    return OpenCLEvent( id );
+    cl_event id = this->m_Events[index];
+    clRetainEvent(id);
+    return OpenCLEvent(id);
   }
   else
   {
@@ -138,13 +138,13 @@ OpenCLEventList::Get( const std::size_t index ) const
 
 //------------------------------------------------------------------------------
 bool
-OpenCLEventList::Contains( const OpenCLEvent & event ) const
+OpenCLEventList::Contains(const OpenCLEvent & event) const
 {
   OpenCLEventListArrayType::const_iterator it;
 
-  for( it = this->m_Events.begin(); it < this->m_Events.end(); ++it )
+  for (it = this->m_Events.begin(); it < this->m_Events.end(); ++it)
   {
-    if( *it == event.GetEventId() )
+    if (*it == event.GetEventId())
     {
       return true;
     }
@@ -157,7 +157,7 @@ OpenCLEventList::Contains( const OpenCLEvent & event ) const
 const cl_event *
 OpenCLEventList::GetEventData() const
 {
-  return this->m_Events.empty() ? 0 : &this->m_Events[ 0 ];
+  return this->m_Events.empty() ? 0 : &this->m_Events[0];
 }
 
 
@@ -171,36 +171,36 @@ OpenCLEventList::GetEventArray() const
 
 //------------------------------------------------------------------------------
 OpenCLEventList &
-OpenCLEventList::operator+=( const OpenCLEvent & event )
+OpenCLEventList::operator+=(const OpenCLEvent & event)
 {
-  this->Append( event );
+  this->Append(event);
   return *this;
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLEventList &
-OpenCLEventList::operator+=( const OpenCLEventList & other )
+OpenCLEventList::operator+=(const OpenCLEventList & other)
 {
-  this->Append( other );
+  this->Append(other);
   return *this;
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLEventList &
-OpenCLEventList::operator<<( const OpenCLEvent & event )
+OpenCLEventList::operator<<(const OpenCLEvent & event)
 {
-  this->Append( event );
+  this->Append(event);
   return *this;
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLEventList &
-OpenCLEventList::operator<<( const OpenCLEventList & other )
+OpenCLEventList::operator<<(const OpenCLEventList & other)
 {
-  this->Append( other );
+  this->Append(other);
   return *this;
 }
 
@@ -209,16 +209,15 @@ OpenCLEventList::operator<<( const OpenCLEventList & other )
 cl_int
 OpenCLEventList::WaitForFinished()
 {
-  if( this->m_Events.empty() )
+  if (this->m_Events.empty())
   {
     return 0;
   }
 
-  const cl_int error = clWaitForEvents( this->GetSize(), this->GetEventData() );
-  if( error != CL_SUCCESS )
+  const cl_int error = clWaitForEvents(this->GetSize(), this->GetEventData());
+  if (error != CL_SUCCESS)
   {
-    itkOpenCLErrorMacroGeneric( << "OpenCLEventList::WaitForFinished:"
-                                << OpenCLContext::GetErrorName( error ) );
+    itkOpenCLErrorMacroGeneric(<< "OpenCLEventList::WaitForFinished:" << OpenCLContext::GetErrorName(error));
   }
   return error;
 }
@@ -227,9 +226,9 @@ OpenCLEventList::WaitForFinished()
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLEventList & lhs, const OpenCLEventList & rhs )
+operator==(const OpenCLEventList & lhs, const OpenCLEventList & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
@@ -237,18 +236,18 @@ operator==( const OpenCLEventList & lhs, const OpenCLEventList & rhs )
   const OpenCLEventList::OpenCLEventListArrayType & eventsArrayLHS = lhs.GetEventArray();
   const OpenCLEventList::OpenCLEventListArrayType & eventsArrayRHS = rhs.GetEventArray();
 
-  if( eventsArrayLHS.size() != eventsArrayRHS.size() )
+  if (eventsArrayLHS.size() != eventsArrayRHS.size())
   {
     return false;
   }
 
   OpenCLEventList::OpenCLEventListArrayType::const_iterator ilhs;
   OpenCLEventList::OpenCLEventListArrayType::const_iterator irhs;
-  for( ilhs = eventsArrayLHS.begin(), irhs = eventsArrayRHS.begin();
-    ilhs < eventsArrayLHS.end() && irhs < eventsArrayRHS.end();
-    ++ilhs, ++irhs )
+  for (ilhs = eventsArrayLHS.begin(), irhs = eventsArrayRHS.begin();
+       ilhs < eventsArrayLHS.end() && irhs < eventsArrayRHS.end();
+       ++ilhs, ++irhs)
   {
-    if( *ilhs != *irhs )
+    if (*ilhs != *irhs)
     {
       return false;
     }
@@ -261,9 +260,9 @@ operator==( const OpenCLEventList & lhs, const OpenCLEventList & rhs )
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLEventList & lhs, const OpenCLEventList & rhs )
+operator!=(const OpenCLEventList & lhs, const OpenCLEventList & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

@@ -18,13 +18,14 @@
 
 #include "elxBaseComponent.h"
 
-#include <cmath> // For fmod.
+#include <cmath>   // For fmod.
 #include <iomanip> // For setprecision.
 #include <sstream> // For ostringstream.
 
 namespace
 {
-bool IsElastixLibrary(const bool initialValue = true)
+bool
+IsElastixLibrary(const bool initialValue = true)
 {
   // By default, assume that this is the elastix library (not the elastix executable).
 
@@ -34,7 +35,7 @@ bool IsElastixLibrary(const bool initialValue = true)
 
   return isElastixLibrary;
 }
-}
+} // namespace
 
 namespace elastix
 {
@@ -44,7 +45,7 @@ namespace elastix
  */
 
 const char *
-BaseComponent::elxGetClassName( void ) const
+BaseComponent::elxGetClassName(void) const
 {
   return "BaseComponent";
 } // end elxGetClassName()
@@ -55,7 +56,7 @@ BaseComponent::elxGetClassName( void ) const
  */
 
 void
-BaseComponent::SetComponentLabel( const char * label, unsigned int idx )
+BaseComponent::SetComponentLabel(const char * label, unsigned int idx)
 {
   std::ostringstream makestring;
   makestring << label << idx;
@@ -68,18 +69,20 @@ BaseComponent::SetComponentLabel( const char * label, unsigned int idx )
  */
 
 const char *
-BaseComponent::GetComponentLabel( void ) const
+BaseComponent::GetComponentLabel(void) const
 {
   return this->m_ComponentLabel.c_str();
 } // end GetComponentLabel()
 
 
-bool BaseComponent::IsElastixLibrary()
+bool
+BaseComponent::IsElastixLibrary()
 {
   return ::IsElastixLibrary();
 }
 
-void BaseComponent::InitializeElastixExecutable()
+void
+BaseComponent::InitializeElastixExecutable()
 {
   ::IsElastixLibrary(false);
 }
@@ -89,17 +92,16 @@ void BaseComponent::InitializeElastixExecutable()
  */
 
 std::string
-BaseComponent::ConvertSecondsToDHMS(
-  const double totalSeconds, const unsigned int precision )
+BaseComponent::ConvertSecondsToDHMS(const double totalSeconds, const unsigned int precision)
 {
   /** Define days, hours, minutes. */
   const std::size_t secondsPerMinute = 60;
-  const std::size_t secondsPerHour   = 60 * secondsPerMinute;
-  const std::size_t secondsPerDay    = 24 * secondsPerHour;
+  const std::size_t secondsPerHour = 60 * secondsPerMinute;
+  const std::size_t secondsPerDay = 24 * secondsPerHour;
 
   /** Convert total seconds. */
-  std::size_t       iSeconds = static_cast< std::size_t >( totalSeconds );
-  const std::size_t days     = iSeconds / secondsPerDay;
+  std::size_t       iSeconds = static_cast<std::size_t>(totalSeconds);
+  const std::size_t days = iSeconds / secondsPerDay;
 
   iSeconds %= secondsPerDay;
   const std::size_t hours = iSeconds / secondsPerHour;
@@ -107,17 +109,29 @@ BaseComponent::ConvertSecondsToDHMS(
   iSeconds %= secondsPerHour;
   const std::size_t minutes = iSeconds / secondsPerMinute;
 
-  //iSeconds %= secondsPerMinute;
-  //const std::size_t seconds = iSeconds;
-  const double dSeconds = fmod( totalSeconds, 60.0 );
+  // iSeconds %= secondsPerMinute;
+  // const std::size_t seconds = iSeconds;
+  const double dSeconds = fmod(totalSeconds, 60.0);
 
   /** Create a string in days, hours, minutes and seconds. */
   bool               nonzero = false;
-  std::ostringstream make_string( "" );
-  if( days    != 0            ) { make_string << days    << "d"; nonzero = true; }
-  if( hours   != 0 || nonzero ) { make_string << hours   << "h"; nonzero = true; }
-  if( minutes != 0 || nonzero ) { make_string << minutes << "m"; nonzero = true; }
-  make_string << std::showpoint << std::fixed << std::setprecision( precision );
+  std::ostringstream make_string("");
+  if (days != 0)
+  {
+    make_string << days << "d";
+    nonzero = true;
+  }
+  if (hours != 0 || nonzero)
+  {
+    make_string << hours << "h";
+    nonzero = true;
+  }
+  if (minutes != 0 || nonzero)
+  {
+    make_string << minutes << "m";
+    nonzero = true;
+  }
+  make_string << std::showpoint << std::fixed << std::setprecision(precision);
   make_string << dSeconds << "s";
 
   /** Return a value. */
@@ -126,4 +140,4 @@ BaseComponent::ConvertSecondsToDHMS(
 } // end ConvertSecondsToDHMS()
 
 
-} //end namespace elastix
+} // end namespace elastix

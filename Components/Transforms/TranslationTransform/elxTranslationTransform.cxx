@@ -18,4 +18,4 @@
 
 #include "elxTranslationTransform.h"
 
-elxInstallMacro( TranslationTransformElastix );
+elxInstallMacro(TranslationTransformElastix);

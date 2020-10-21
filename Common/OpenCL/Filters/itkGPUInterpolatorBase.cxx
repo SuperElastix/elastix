@@ -27,7 +27,7 @@ GPUInterpolatorBase::GPUInterpolatorBase()
 
 //------------------------------------------------------------------------------
 bool
-GPUInterpolatorBase::GetSourceCode( std::string & /*_source*/ ) const
+GPUInterpolatorBase::GetSourceCode(std::string & /*_source*/) const
 {
   // do nothing here
   return true;
@@ -36,7 +36,7 @@ GPUInterpolatorBase::GetSourceCode( std::string & /*_source*/ ) const
 
 //------------------------------------------------------------------------------
 GPUDataManager::Pointer
-GPUInterpolatorBase::GetParametersDataManager( void ) const
+GPUInterpolatorBase::GetParametersDataManager(void) const
 {
   return this->m_ParametersDataManager;
 }

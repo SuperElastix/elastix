@@ -35,13 +35,14 @@ namespace itk
  */
 struct OpenCLDefaultImageDimentions
 {
-  itkStaticConstMacro( Support1D, bool, true );
-  itkStaticConstMacro( Support2D, bool, true );
-  itkStaticConstMacro( Support3D, bool, true );
+  itkStaticConstMacro(Support1D, bool, true);
+  itkStaticConstMacro(Support2D, bool, true);
+  itkStaticConstMacro(Support3D, bool, true);
 };
 
 // Default OpenCL supported image types
-typedef typelist::MakeTypeList< unsigned char, char, unsigned short, short, unsigned int, int, float, double >::Type OpenCLDefaultImageTypes;
-} // end namespace elastix
+typedef typelist::MakeTypeList<unsigned char, char, unsigned short, short, unsigned int, int, float, double>::Type
+  OpenCLDefaultImageTypes;
+} // namespace itk
 
 #endif // end #ifndef __itkGPUSupportedImages_h

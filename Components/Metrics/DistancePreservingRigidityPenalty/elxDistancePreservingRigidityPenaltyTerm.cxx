@@ -17,4 +17,4 @@
  *=========================================================================*/
 #include "elxDistancePreservingRigidityPenaltyTerm.h"
 
-elxInstallMacro( DistancePreservingRigidityPenalty );
+elxInstallMacro(DistancePreservingRigidityPenalty);

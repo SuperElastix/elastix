@@ -42,28 +42,25 @@ namespace itk
  * the spline order.
  */
 
-template< class TScalarType = double, unsigned int NDimensions = 3 >
-class DeformationVectorFieldTransform :
-  public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, 0 >
+template <class TScalarType = double, unsigned int NDimensions = 3>
+class DeformationVectorFieldTransform : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef DeformationVectorFieldTransform Self;
-  typedef AdvancedBSplineDeformableTransform<
-    TScalarType, NDimensions, 0 >               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef DeformationVectorFieldTransform                                 Self;
+  typedef AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0> Superclass;
+  typedef SmartPointer<Self>                                              Pointer;
+  typedef SmartPointer<const Self>                                        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( DeformationVectorFieldTransform, AdvancedBSplineDeformableTransform );
+  itkTypeMacro(DeformationVectorFieldTransform, AdvancedBSplineDeformableTransform);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( SplineOrder, unsigned int, Superclass::SplineOrder );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
+  itkStaticConstMacro(SplineOrder, unsigned int, Superclass::SplineOrder);
 
   /** Typedef's inherited from Superclass. */
   typedef typename Superclass::ScalarType                ScalarType;
@@ -84,11 +81,9 @@ public:
   typedef typename Superclass::ImagePointer CoefficientImagePointer;
 
   /** Typedef's for VectorImage. */
-  typedef Vector< float,
-    itkGetStaticConstMacro( SpaceDimension ) >          CoefficientVectorPixelType;
-  typedef Image< CoefficientVectorPixelType,
-    itkGetStaticConstMacro( SpaceDimension ) >          CoefficientVectorImageType;
-  typedef typename CoefficientVectorImageType::Pointer CoefficientVectorImagePointer;
+  typedef Vector<float, itkGetStaticConstMacro(SpaceDimension)>                     CoefficientVectorPixelType;
+  typedef Image<CoefficientVectorPixelType, itkGetStaticConstMacro(SpaceDimension)> CoefficientVectorImageType;
+  typedef typename CoefficientVectorImageType::Pointer                              CoefficientVectorImagePointer;
 
   /** Set the coefficient image as a deformation field.
    * The superclass provides a similar function (SetCoeffficientImage),
@@ -99,7 +94,8 @@ public:
    * nr_of_dim scalar images and passes it on to the
    * SetCoefficientImage function.
    */
-  virtual void SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage );
+  virtual void
+  SetCoefficientVectorImage(const CoefficientVectorImageType * vecImage);
 
   /** Get the coefficient image as a vector image.
    * The vector image is created only on demand. The caller is
@@ -107,31 +103,30 @@ public:
    * this stresses the fact that this method does not return a member
    * variable, like most Get... methods.
    */
-  virtual void GetCoefficientVectorImage( CoefficientVectorImagePointer & vecImage ) const;
+  virtual void
+  GetCoefficientVectorImage(CoefficientVectorImagePointer & vecImage) const;
 
 protected:
-
   /** The constructor. */
   DeformationVectorFieldTransform();
   /** The destructor. */
   ~DeformationVectorFieldTransform() override;
 
 private:
-
   /** The private constructor. */
-  DeformationVectorFieldTransform( const Self & );  // purposely not implemented
+  DeformationVectorFieldTransform(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                   // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Member variables. */
-  CoefficientImagePointer m_Images[ SpaceDimension ];
-
+  CoefficientImagePointer m_Images[SpaceDimension];
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkDeformationVectorFieldTransform.hxx"
+#  include "itkDeformationVectorFieldTransform.hxx"
 #endif
 
 #endif // end #ifndef __itkDeformationVectorFieldTransform_h__

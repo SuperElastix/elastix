@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 
- // Elastix header files:
+// Elastix header files:
 #include "elastix.h"
 #include "elxTransformixMain.h"
 #include <Core/elxVersionMacros.h>
@@ -30,26 +30,26 @@
 
 
 int
-main( int argc, char ** argv )
+main(int argc, char ** argv)
 {
   elastix::BaseComponent::InitializeElastixExecutable();
   assert(!elastix::BaseComponent::IsElastixLibrary());
 
   /** Check if "-help" or "--version" was asked for.*/
-  if( argc == 1 )
+  if (argc == 1)
   {
     std::cout << "Use \"transformix --help\" for information about transformix-usage." << std::endl;
     return 0;
   }
-  else if( argc == 2 )
+  else if (argc == 2)
   {
-    std::string argument( argv[ 1 ] );
-    if( argument == "-help" || argument == "--help" || argument == "-h" )
+    std::string argument(argv[1]);
+    if (argument == "-help" || argument == "--help" || argument == "-h")
     {
       PrintHelp();
       return 0;
     }
-    else if( argument == "--version" )
+    else if (argument == "--version")
     {
       std::cout << "transformix version: " ELASTIX_VERSION_STRING << std::endl;
       return 0;
@@ -77,42 +77,45 @@ main( int argc, char ** argv )
   int             returndummy = 0;
   ArgumentMapType argMap;
   bool            outFolderPresent = false;
-  std::string     outFolder        = "";
-  std::string     logFileName      = "";
+  std::string     outFolder = "";
+  std::string     logFileName = "";
 
   /** Put command line parameters into parameterFileList. */
-  for( unsigned int i = 1; static_cast< long >( i ) < argc - 1; i += 2 )
+  for (unsigned int i = 1; static_cast<long>(i) < argc - 1; i += 2)
   {
-    std::string key( argv[ i ] );
-    std::string value( argv[ i + 1 ] );
+    std::string key(argv[i]);
+    std::string value(argv[i + 1]);
 
-    if( key == "-out" )
+    if (key == "-out")
     {
       /** Make sure that last character of the output folder equals a '/' or '\'. */
-      const char last = value[ value.size() - 1 ];
-      if( last != '/' && last != '\\' ) { value.append( "/" ); }
-      value = itksys::SystemTools::ConvertToOutputPath( value.c_str() );
+      const char last = value[value.size() - 1];
+      if (last != '/' && last != '\\')
+      {
+        value.append("/");
+      }
+      value = itksys::SystemTools::ConvertToOutputPath(value.c_str());
 
       /** Note that on Windows, in case the output folder contains a space,
        * the path name is double quoted by ConvertToOutputPath, which is undesirable.
        * So, we remove these quotes again.
        */
-      if( itksys::SystemTools::StringStartsWith( value.c_str(), "\"" )
-        && itksys::SystemTools::StringEndsWith(   value.c_str(), "\"" ) )
+      if (itksys::SystemTools::StringStartsWith(value.c_str(), "\"") &&
+          itksys::SystemTools::StringEndsWith(value.c_str(), "\""))
       {
-        value = value.substr( 1, value.length() - 2 );
+        value = value.substr(1, value.length() - 2);
       }
 
       /** Save this information. */
       outFolderPresent = true;
-      outFolder        = value;
+      outFolder = value;
 
     } // end if key == "-out"
 
     /** Attempt to save the arguments in the ArgumentMap. */
-    if( argMap.count( key ) == 0 )
+    if (argMap.count(key) == 0)
     {
-      argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
+      argMap.insert(ArgumentMapEntryType(key.c_str(), value.c_str()));
     }
     else
     {
@@ -125,21 +128,18 @@ main( int argc, char ** argv )
   } // end for loop
 
   /** The argv0 argument, required for finding the component.dll/so's. */
-  argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] ) );
+  argMap.insert(ArgumentMapEntryType("-argv0", argv[0]));
 
   /** Check that the option "-tp" is given. */
-  if( argMap.count( "-tp" ) == 0 )
+  if (argMap.count("-tp") == 0)
   {
     std::cerr << "ERROR: No CommandLine option \"-tp\" given!" << std::endl;
     returndummy |= -1;
   }
 
   /** Check that at least one of the following options is given. */
-  if( argMap.count( "-in" ) == 0
-    && argMap.count( "-ipp" ) == 0
-    && argMap.count( "-def" ) == 0
-    && argMap.count( "-jac" ) == 0
-    && argMap.count( "-jacmat" ) == 0 )
+  if (argMap.count("-in") == 0 && argMap.count("-ipp") == 0 && argMap.count("-def") == 0 && argMap.count("-jac") == 0 &&
+      argMap.count("-jacmat") == 0)
   {
     std::cerr << "ERROR: At least one of the CommandLine options \"-in\", "
               << "\"-def\", \"-jac\", or \"-jacmat\" should be given!" << std::endl;
@@ -147,11 +147,11 @@ main( int argc, char ** argv )
   }
 
   /** Check if the -out option is given and setup xout. */
-  if( outFolderPresent )
+  if (outFolderPresent)
   {
     /** Check if the output directory exists. */
-    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
-    if( !outFolderExists )
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory(outFolder.c_str());
+    if (!outFolderExists)
     {
       std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl;
       std::cerr << "You are responsible for creating it." << std::endl;
@@ -160,9 +160,9 @@ main( int argc, char ** argv )
     else
     {
       /** Setup xout. */
-      logFileName = argMap[ "-out" ] + "transformix.log";
-      int returndummy2 = elx::xoutSetup( logFileName.c_str(), true, true );
-      if( returndummy2 )
+      logFileName = argMap["-out"] + "transformix.log";
+      int returndummy2 = elx::xoutSetup(logFileName.c_str(), true, true);
+      if (returndummy2)
       {
         std::cerr << "ERROR while setting up xout." << std::endl;
       }
@@ -176,7 +176,7 @@ main( int argc, char ** argv )
   }
 
   /** Stop if some fatal errors occurred. */
-  if( returndummy )
+  if (returndummy)
   {
     return returndummy;
   }
@@ -189,19 +189,16 @@ main( int argc, char ** argv )
   elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
   /** Print where transformix was run. */
-  elxout << "which transformix:   " << argv[ 0 ] << std::endl;
+  elxout << "which transformix:   " << argv[0] << std::endl;
   itksys::SystemInformation info;
   info.RunCPUCheck();
   info.RunOSCheck();
   info.RunMemoryCheck();
   elxout << "transformix runs at: " << info.GetHostname() << std::endl;
-  elxout << "  " << info.GetOSName() << " "
-         << info.GetOSRelease() << ( info.Is64Bits() ? " (x64), " : ", " )
+  elxout << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
          << info.GetOSVersion() << std::endl;
-  elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and "
-         << info.GetNumberOfPhysicalCPU() << " cores @ "
-         << static_cast< unsigned int >( info.GetProcessorClockFrequency() )
-         << " MHz." << std::endl;
+  elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
+         << " cores @ " << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz." << std::endl;
 
   /**
    * ********************* START TRANSFORMATION *******************
@@ -211,24 +208,22 @@ main( int argc, char ** argv )
   transformix = TransformixMainType::New();
 
   /** Print a start message. */
-  elxout << "Running transformix with parameter file \""
-         << argMap[ "-tp" ] << "\".\n" << std::endl;
+  elxout << "Running transformix with parameter file \"" << argMap["-tp"] << "\".\n" << std::endl;
 
   /** Run transformix. */
-  returndummy = transformix->Run( argMap );
+  returndummy = transformix->Run(argMap);
 
   /** Check if transformix run without errors. */
-  if( returndummy != 0 )
+  if (returndummy != 0)
   {
-    xl::xout[ "error" ] << "Errors occurred" << std::endl;
+    xl::xout["error"] << "Errors occurred" << std::endl;
     return returndummy;
   }
 
   /** Stop timer and print it. */
   totaltimer.Stop();
   elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
-  elxout << "Total time elapsed: "
-         << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
+  elxout << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n" << std::endl;
 
   /** Clean up. */
   transformix = nullptr;
@@ -245,14 +240,14 @@ main( int argc, char ** argv )
  */
 
 void
-PrintHelp( void )
+PrintHelp(void)
 {
   /** Print the version. */
   std::cout << "transformix version: " ELASTIX_VERSION_STRING "\n\n";
 
   /** What is transformix? */
   std::cout << "transformix applies a transform on an input image and/or "
-    "generates a deformation field.\n";
+               "generates a deformation field.\n";
   std::cout << "The transform is specified in the transform-parameter file.\n";
   std::cout << "  --help, -h displays this message and exit\n";
   std::cout << "  --version  output version information and exit\n" << std::endl;
@@ -281,11 +276,13 @@ PrintHelp( void )
 
   /** The parameter file. */
   std::cout << "The transform-parameter file must contain all the information "
-    "necessary for transformix to run properly. That includes which transform "
-    "to use, with which parameters, etc. For a usable transform-parameter file, "
-    "run elastix, and inspect the output file \"TransformParameters.0.txt\".\n" << std::endl;
+               "necessary for transformix to run properly. That includes which transform "
+               "to use, with which parameters, etc. For a usable transform-parameter file, "
+               "run elastix, and inspect the output file \"TransformParameters.0.txt\".\n"
+            << std::endl;
 
   std::cout << "Need further help?\n"
-    "Check the website http://elastix.isi.uu.nl, or mail elastix@bigr.nl." << std::endl;
+               "Check the website http://elastix.isi.uu.nl, or mail elastix@bigr.nl."
+            << std::endl;
 
 } // end PrintHelp()

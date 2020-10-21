@@ -63,65 +63,59 @@ namespace itk
  * \ingroup Transforms
  *
  **/
-template< class TScalarType = double >
-//Data type for scalars (float or double)
-class ITK_EXPORT AdvancedVersorTransform : public AdvancedRigid3DTransform< TScalarType >
+template <class TScalarType = double>
+// Data type for scalars (float or double)
+class ITK_EXPORT AdvancedVersorTransform : public AdvancedRigid3DTransform<TScalarType>
 {
 public:
-
   /** Standard Self Typedef */
-  typedef AdvancedVersorTransform                 Self;
-  typedef AdvancedRigid3DTransform< TScalarType > Superclass;
-  typedef SmartPointer< Self >                    Pointer;
-  typedef SmartPointer< const Self >              ConstPointer;
+  typedef AdvancedVersorTransform               Self;
+  typedef AdvancedRigid3DTransform<TScalarType> Superclass;
+  typedef SmartPointer<Self>                    Pointer;
+  typedef SmartPointer<const Self>              ConstPointer;
 
   /** Run-time type information (and related methods).  */
-  itkTypeMacro( AdvancedVersorTransform, AdvancedRigid3DTransform );
+  itkTypeMacro(AdvancedVersorTransform, AdvancedRigid3DTransform);
 
   /** New macro for creation of through a Smart Pointer */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Dimension of parameters */
-  itkStaticConstMacro( SpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, 3 );
-  itkStaticConstMacro( ParametersDimension, unsigned int, 3 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 3);
+  itkStaticConstMacro(ParametersDimension, unsigned int, 3);
 
   /** Parameters Type   */
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::JacobianType           JacobianType;
-  typedef typename Superclass::ScalarType             ScalarType;
-  typedef typename Superclass::InputPointType         InputPointType;
-  typedef typename Superclass::OutputPointType        OutputPointType;
-  typedef typename Superclass::InputVectorType        InputVectorType;
-  typedef typename Superclass::OutputVectorType       OutputVectorType;
-  typedef typename Superclass::InputVnlVectorType     InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType    OutputVnlVectorType;
-  typedef typename Superclass::InputCovariantVectorType
-    InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType
-    OutputCovariantVectorType;
-  typedef typename Superclass::MatrixType        MatrixType;
-  typedef typename Superclass::InverseMatrixType InverseMatrixType;
-  typedef typename Superclass::CenterType        CenterType;
-  typedef typename Superclass::OffsetType        OffsetType;
+  typedef typename Superclass::ParametersType            ParametersType;
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass::JacobianType              JacobianType;
+  typedef typename Superclass::ScalarType                ScalarType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::MatrixType                MatrixType;
+  typedef typename Superclass::InverseMatrixType         InverseMatrixType;
+  typedef typename Superclass::CenterType                CenterType;
+  typedef typename Superclass::OffsetType                OffsetType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** VnlQuaternion Type */
-  typedef vnl_quaternion< TScalarType > VnlQuaternionType;
+  typedef vnl_quaternion<TScalarType> VnlQuaternionType;
 
   /** Versor Type */
-  typedef Versor< TScalarType >           VersorType;
+  typedef Versor<TScalarType>             VersorType;
   typedef typename VersorType::VectorType AxisType;
   typedef typename VersorType::ValueType  AngleType;
 
@@ -133,74 +127,83 @@ public:
    * of the right part of the versor. This can be seen
    * as the components of the vector parallel to the rotation
    * axis and multiplied by std::sin( angle / 2 ). */
-  void SetParameters( const ParametersType & parameters ) override;
+  void
+  SetParameters(const ParametersType & parameters) override;
 
   /** Get the Transformation Parameters. */
-  const ParametersType & GetParameters( void ) const override;
+  const ParametersType &
+  GetParameters(void) const override;
 
   /** Set the rotational part of the transform */
-  void SetRotation( const VersorType & versor );
+  void
+  SetRotation(const VersorType & versor);
 
-  void SetRotation( const AxisType & axis, AngleType angle );
+  void
+  SetRotation(const AxisType & axis, AngleType angle);
 
-  itkGetConstReferenceMacro( Versor, VersorType );
+  itkGetConstReferenceMacro(Versor, VersorType);
 
   /** Set the parameters to the IdentityTransform */
-  void SetIdentity( void ) override;
+  void
+  SetIdentity(void) override;
 
   /** This method computes the Jacobian matrix of the transformation. */
-  void GetJacobian(
-    const InputPointType &,
-    JacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
 protected:
-
   /** Construct an AdvancedVersorTransform object */
-  AdvancedVersorTransform( const MatrixType & matrix,
-    const OutputVectorType & offset );
-  AdvancedVersorTransform( unsigned int paramDims );
+  AdvancedVersorTransform(const MatrixType & matrix, const OutputVectorType & offset);
+  AdvancedVersorTransform(unsigned int paramDims);
   AdvancedVersorTransform();
 
   /** Destroy an AdvancedVersorTransform object */
-  ~AdvancedVersorTransform(){}
+  ~AdvancedVersorTransform() {}
 
   /** This method must be made protected here because it is not a safe way of
    * initializing the Versor */
-  void SetRotationMatrix( const MatrixType & matrix ) override
-  { this->Superclass::SetRotationMatrix( matrix ); }
+  void
+  SetRotationMatrix(const MatrixType & matrix) override
+  {
+    this->Superclass::SetRotationMatrix(matrix);
+  }
 
-  void SetVarVersor( const VersorType & newVersor )
-  { m_Versor = newVersor; }
+  void
+  SetVarVersor(const VersorType & newVersor)
+  {
+    m_Versor = newVersor;
+  }
 
   /** Print contents of a AdvancedVersorTransform */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Compute Matrix
    *  Compute the components of the rotation matrix in the superclass */
-  void ComputeMatrix( void ) override;
+  void
+  ComputeMatrix(void) override;
 
-  void ComputeMatrixParameters( void ) override;
+  void
+  ComputeMatrixParameters(void) override;
 
 private:
-
   /** Copy a AdvancedVersorTransform object */
-  AdvancedVersorTransform( const Self & other ); // Not implemented
+  AdvancedVersorTransform(const Self & other); // Not implemented
 
   /** Assignment operator */
-  const Self & operator=( const Self & ); // Not implemented
+  const Self &
+  operator=(const Self &); // Not implemented
 
   /** Versor containing the rotation */
   VersorType m_Versor;
-
 };
 
-//class AdvancedVersorTransform
+// class AdvancedVersorTransform
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedVersorTransform.hxx"
+#  include "itkAdvancedVersorTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedVersorTransform_h */

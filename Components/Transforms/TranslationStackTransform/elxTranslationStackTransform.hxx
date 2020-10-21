@@ -29,11 +29,10 @@ namespace elastix
 /**
  * ********************* Constructor ****************************
  */
-template< class TElastix >
-TranslationStackTransform< TElastix >
-::TranslationStackTransform()
+template <class TElastix>
+TranslationStackTransform<TElastix>::TranslationStackTransform()
 {
-  xl::xout[ "error" ] << "Constructor" << std::endl;
+  xl::xout["error"] << "Constructor" << std::endl;
 } // end Constructor
 
 
@@ -41,12 +40,11 @@ TranslationStackTransform< TElastix >
  * ******************* InitializeTranslationTransform ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 unsigned int
-TranslationStackTransform< TElastix >
-::InitializeTranslationTransform()
+TranslationStackTransform<TElastix>::InitializeTranslationTransform()
 {
-  xl::xout[ "error" ] << "InitializeTranslationTransform" << std::endl;
+  xl::xout["error"] << "InitializeTranslationTransform" << std::endl;
 
   this->m_TranslationDummySubTransform = ReducedDimensionTranslationTransformType::New();
 
@@ -54,7 +52,7 @@ TranslationStackTransform< TElastix >
   this->m_TranslationStackTransform = TranslationStackTransformType::New();
 
   /** Set stack transform as current transform. */
-  this->SetCurrentTransform( this->m_TranslationStackTransform );
+  this->SetCurrentTransform(this->m_TranslationStackTransform);
 
   return 0;
 } // end InitializeTranslationTransform()
@@ -64,12 +62,11 @@ TranslationStackTransform< TElastix >
  * ******************* BeforeAll ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 int
-TranslationStackTransform< TElastix >
-::BeforeAll( void )
+TranslationStackTransform<TElastix>::BeforeAll(void)
 {
-  xl::xout[ "error" ] << "BeforeAll" << std::endl;
+  xl::xout["error"] << "BeforeAll" << std::endl;
 
   /** Initialize translation transform. */
   return InitializeTranslationTransform();
@@ -80,35 +77,34 @@ TranslationStackTransform< TElastix >
  * ******************* BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-TranslationStackTransform< TElastix >
-::BeforeRegistration( void )
+TranslationStackTransform<TElastix>::BeforeRegistration(void)
 {
-  xl::xout[ "error" ] << "BeforeRegistration" << std::endl;
+  xl::xout["error"] << "BeforeRegistration" << std::endl;
 
   /** Task 1 - Set the stack transform parameters. */
 
   /** Determine stack transform settings. Here they are based on the fixed image. */
   const SizeType imageSize = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  this->m_NumberOfSubTransforms = imageSize[ SpaceDimension - 1 ];
-  this->m_StackSpacing          = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
-  this->m_StackOrigin           = this->GetElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
+  this->m_NumberOfSubTransforms = imageSize[SpaceDimension - 1];
+  this->m_StackSpacing = this->GetElastix()->GetFixedImage()->GetSpacing()[SpaceDimension - 1];
+  this->m_StackOrigin = this->GetElastix()->GetFixedImage()->GetOrigin()[SpaceDimension - 1];
 
   /** Set stack transform parameters. */
-  this->m_TranslationStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
-  this->m_TranslationStackTransform->SetStackOrigin( this->m_StackOrigin );
-  this->m_TranslationStackTransform->SetStackSpacing( this->m_StackSpacing );
+  this->m_TranslationStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_TranslationStackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_TranslationStackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_TranslationStackTransform->SetAllSubTransforms( this->m_TranslationDummySubTransform );
+  this->m_TranslationStackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
-  ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
-  dummyInitialParameters.Fill( 0.0 );
+  ParametersType dummyInitialParameters(this->GetNumberOfParameters());
+  dummyInitialParameters.Fill(0.0);
 
   /** Put parameters in the registration. */
-  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters( dummyInitialParameters );
+  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(dummyInitialParameters);
 
 } // end BeforeRegistration()
 
@@ -117,23 +113,22 @@ TranslationStackTransform< TElastix >
  * ********************* InitializeTransform ****************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-TranslationStackTransform< TElastix >
-::InitializeTransform()
+TranslationStackTransform<TElastix>::InitializeTransform()
 {
-  xl::xout[ "error" ] << "InitializeTransform" << std::endl;
+  xl::xout["error"] << "InitializeTransform" << std::endl;
 
   /** Initialize the m_TranslationDummySubTransform */
   this->m_TranslationDummySubTransform->SetIdentity();
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_TranslationStackTransform->SetAllSubTransforms( this->m_TranslationDummySubTransform );
+  this->m_TranslationStackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
-  ParametersType initialParameters( this->GetNumberOfParameters() );
-  initialParameters.Fill( 0.0 );
-  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParametersOfNextLevel( initialParameters );
+  ParametersType initialParameters(this->GetNumberOfParameters());
+  initialParameters.Fill(0.0);
+  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParametersOfNextLevel(initialParameters);
 
 } // end InitializeTransform()
 
@@ -142,31 +137,28 @@ TranslationStackTransform< TElastix >
  * ************************* ReadFromFile ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-TranslationStackTransform< TElastix >
-::ReadFromFile( void )
+TranslationStackTransform<TElastix>::ReadFromFile(void)
 {
-  xl::xout[ "error" ] << "ReadFromFile" << std::endl;
+  xl::xout["error"] << "ReadFromFile" << std::endl;
 
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
-  this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
-    "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackOrigin,
-    "StackOrigin", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
-    "StackSpacing", this->GetComponentLabel(), 0, 0 );
+  this->GetConfiguration()->ReadParameter(
+    this->m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+  this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+  this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
   /** Initialize translation transform. */
   InitializeTranslationTransform();
 
   /** Set stack transform parameters. */
-  this->m_TranslationStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
-  this->m_TranslationStackTransform->SetStackOrigin( this->m_StackOrigin );
-  this->m_TranslationStackTransform->SetStackSpacing( this->m_StackSpacing );
+  this->m_TranslationStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_TranslationStackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_TranslationStackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_TranslationStackTransform->SetAllSubTransforms( this->m_TranslationDummySubTransform );
+  this->m_TranslationStackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
@@ -178,27 +170,26 @@ TranslationStackTransform< TElastix >
  * ************************* WriteToFile ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-TranslationStackTransform< TElastix >
-::WriteToFile( const ParametersType & param ) const
+TranslationStackTransform<TElastix>::WriteToFile(const ParametersType & param) const
 {
-  xl::xout[ "error" ] << "WriteToFile" << std::endl;
+  xl::xout["error"] << "WriteToFile" << std::endl;
 
   /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile( param );
+  this->Superclass2::WriteToFile(param);
 
   /** Add some TranslationTransform specific lines. */
-  xout[ "transpar" ] << std::endl << "// TranslationStackTransform specific" << std::endl;
+  xout["transpar"] << std::endl << "// TranslationStackTransform specific" << std::endl;
 
   /** Write the stack spacing, stack origin and number of sub transforms. */
-  xout[ "transpar" ] << "(StackSpacing " << this->m_TranslationStackTransform->GetStackSpacing() << ")" << std::endl;
-  xout[ "transpar" ] << "(StackOrigin " << this->m_TranslationStackTransform->GetStackOrigin() << ")" << std::endl;
-  xout[ "transpar" ] << "(NumberOfSubTransforms " << this->m_TranslationStackTransform->GetNumberOfSubTransforms() << ")" << std::endl;
+  xout["transpar"] << "(StackSpacing " << this->m_TranslationStackTransform->GetStackSpacing() << ")" << std::endl;
+  xout["transpar"] << "(StackOrigin " << this->m_TranslationStackTransform->GetStackOrigin() << ")" << std::endl;
+  xout["transpar"] << "(NumberOfSubTransforms " << this->m_TranslationStackTransform->GetNumberOfSubTransforms() << ")"
+                   << std::endl;
 
   /** Set the precision back to default value. */
-  xout[ "transpar" ] << std::setprecision(
-    this->m_Elastix->GetDefaultOutputPrecision() );
+  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
 
 } // end WriteToFile()
 

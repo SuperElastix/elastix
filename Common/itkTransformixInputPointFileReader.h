@@ -42,22 +42,21 @@ namespace itk
  * should be read.
  **/
 
-template< class TOutputMesh >
-class TransformixInputPointFileReader : public MeshFileReaderBase< TOutputMesh >
+template <class TOutputMesh>
+class TransformixInputPointFileReader : public MeshFileReaderBase<TOutputMesh>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef TransformixInputPointFileReader   Self;
-  typedef MeshFileReaderBase< TOutputMesh > Superclass;
-  typedef SmartPointer< Self >              Pointer;
-  typedef SmartPointer< const Self >        ConstPointer;
+  typedef TransformixInputPointFileReader Self;
+  typedef MeshFileReaderBase<TOutputMesh> Superclass;
+  typedef SmartPointer<Self>              Pointer;
+  typedef SmartPointer<const Self>        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformixInputPointFileReader, MeshFileReaderBase );
+  itkTypeMacro(TransformixInputPointFileReader, MeshFileReaderBase);
 
   /** Some convenient typedefs. */
   typedef typename Superclass::DataObjectPointer DatabObjectPointer;
@@ -67,7 +66,7 @@ public:
   /** Get whether the read points are indices; actually we should store this as a kind
    * of meta data in the output, but i don't understand this concept yet...
    */
-  itkGetConstMacro( PointsAreIndices, bool );
+  itkGetConstMacro(PointsAreIndices, bool);
 
   /** Get the number of points that are defined in the file.
    * In fact we also should store this somehow in the output dataobject,
@@ -80,20 +79,21 @@ public:
    * MeshReaderBase class and inheriting classes, so somehow it
    * seems logic to store this kind of data in the inheriting reader classes.
    */
-  itkGetConstMacro( NumberOfPoints, unsigned long );
+  itkGetConstMacro(NumberOfPoints, unsigned long);
 
   /** Prepare the allocation of the output mesh during the first back
    * propagation of the pipeline. Updates the PointsAreIndices and NumberOfPoints.
    */
-  void GenerateOutputInformation( void ) override;
+  void
+  GenerateOutputInformation(void) override;
 
 protected:
-
   TransformixInputPointFileReader();
   ~TransformixInputPointFileReader() override;
 
   /** Fill the point container of the output. */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
   unsigned long m_NumberOfPoints;
   bool          m_PointsAreIndices;
@@ -101,16 +101,15 @@ protected:
   std::ifstream m_Reader;
 
 private:
-
-  TransformixInputPointFileReader( const Self & ); // purposely not implemented
-  void operator=( const Self & );                  // purposely not implemented
-
+  TransformixInputPointFileReader(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformixInputPointFileReader.hxx"
+#  include "itkTransformixInputPointFileReader.hxx"
 #endif
 
 #endif

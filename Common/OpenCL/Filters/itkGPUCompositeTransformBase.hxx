@@ -31,71 +31,69 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 GPUDataManager::Pointer
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::GetParametersDataManager( const std::size_t index ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::GetParametersDataManager(const std::size_t index) const
 {
   GPUDataManager::Pointer parameters;
 
-  if( this->GetNumberOfTransforms() == 0 )
+  if (this->GetNumberOfTransforms() == 0)
   {
     return parameters;
   }
   else
   {
-    const GPUTransformBase * transformBase
-      = dynamic_cast< const GPUTransformBase * >( this->GetNthTransform( index ).GetPointer() );
+    const GPUTransformBase * transformBase =
+      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
 
-    if( transformBase )
+    if (transformBase)
     {
       return transformBase->GetParametersDataManager();
     }
     else
     {
-      itkExceptionMacro( << "Could not get GPU transform base." );
+      itkExceptionMacro(<< "Could not get GPU transform base.");
     }
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::GetSourceCode( std::string & source ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::GetSourceCode(std::string & source) const
 {
   // Create the final source code
   std::ostringstream sources;
   std::string        source_i;
 
-  bool identityLoaded    = false;
-  bool affineLoaded      = false;
+  bool identityLoaded = false;
+  bool affineLoaded = false;
   bool translationLoaded = false;
-  bool bsplineLoaded     = false;
+  bool bsplineLoaded = false;
 
   // Add sources based on Transform type
-  for( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
   {
-    if( this->IsIdentityTransform( i, true, source_i ) && !identityLoaded )
+    if (this->IsIdentityTransform(i, true, source_i) && !identityLoaded)
     {
       sources << source_i << std::endl;
       identityLoaded = true;
     }
 
-    if( this->IsMatrixOffsetTransform( i, true, source_i ) && !affineLoaded )
+    if (this->IsMatrixOffsetTransform(i, true, source_i) && !affineLoaded)
     {
       sources << source_i << std::endl;
       affineLoaded = true;
     }
 
-    if( this->IsTranslationTransform( i, true, source_i ) && !translationLoaded )
+    if (this->IsTranslationTransform(i, true, source_i) && !translationLoaded)
     {
       sources << source_i << std::endl;
       translationLoaded = true;
     }
 
-    if( this->IsBSplineTransform( i, true, source_i ) && !bsplineLoaded )
+    if (this->IsBSplineTransform(i, true, source_i) && !bsplineLoaded)
     {
       sources << source_i << std::endl;
       bsplineLoaded = true;
@@ -109,14 +107,13 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::HasIdentityTransform( void ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasIdentityTransform(void) const
 {
-  for( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
   {
-    if( this->IsIdentityTransform( i ) )
+    if (this->IsIdentityTransform(i))
     {
       return true;
     }
@@ -127,14 +124,13 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::HasMatrixOffsetTransform( void ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasMatrixOffsetTransform(void) const
 {
-  for( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
   {
-    if( this->IsMatrixOffsetTransform( i ) )
+    if (this->IsMatrixOffsetTransform(i))
     {
       return true;
     }
@@ -145,14 +141,13 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::HasTranslationTransform( void ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasTranslationTransform(void) const
 {
-  for( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
   {
-    if( this->IsTranslationTransform( i ) )
+    if (this->IsTranslationTransform(i))
     {
       return true;
     }
@@ -163,14 +158,13 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::HasBSplineTransform( void ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasBSplineTransform(void) const
 {
-  for( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
   {
-    if( this->IsBSplineTransform( i ) )
+    if (this->IsBSplineTransform(i))
     {
       return true;
     }
@@ -181,84 +175,88 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsIdentityTransform( const std::size_t index ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsIdentityTransform(const std::size_t index) const
 {
   // First quick check if Linear
-  if( this->GetNthTransform( index )->GetTransformCategory()
-    != TransformBaseTemplate< TScalarType >::TransformCategoryEnum::Linear )
+  if (this->GetNthTransform(index)->GetTransformCategory() !=
+      TransformBaseTemplate<TScalarType>::TransformCategoryEnum::Linear)
   {
     return false;
   }
 
   // Perform specific check
-  typedef GPUIdentityTransform< ScalarType, NDimensions > IdentityTransformType;
-  const IdentityTransformType * identity
-    = dynamic_cast< const IdentityTransformType * >( this->GetNthTransform( index ).GetPointer() );
-  if( !identity ) { return false; }
+  typedef GPUIdentityTransform<ScalarType, NDimensions> IdentityTransformType;
+  const IdentityTransformType *                         identity =
+    dynamic_cast<const IdentityTransformType *>(this->GetNthTransform(index).GetPointer());
+  if (!identity)
+  {
+    return false;
+  }
 
   return true;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsMatrixOffsetTransform( const std::size_t index ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsMatrixOffsetTransform(const std::size_t index) const
 {
   // First quick check if Linear
-  if( this->GetNthTransform( index )->GetTransformCategory()
-    != TransformBaseTemplate< TScalarType >::TransformCategoryEnum::Linear )
+  if (this->GetNthTransform(index)->GetTransformCategory() !=
+      TransformBaseTemplate<TScalarType>::TransformCategoryEnum::Linear)
   {
     return false;
   }
 
   // Perform specific check
-  typedef GPUMatrixOffsetTransformBase<
-    ScalarType, InputSpaceDimension, OutputSpaceDimension > MatrixOffsetTransformBaseType;
-  const MatrixOffsetTransformBaseType * matrixoffset
-    = dynamic_cast< const MatrixOffsetTransformBaseType * >( this->GetNthTransform( index ).GetPointer() );
-  if( !matrixoffset ) { return false; }
+  typedef GPUMatrixOffsetTransformBase<ScalarType, InputSpaceDimension, OutputSpaceDimension>
+                                        MatrixOffsetTransformBaseType;
+  const MatrixOffsetTransformBaseType * matrixoffset =
+    dynamic_cast<const MatrixOffsetTransformBaseType *>(this->GetNthTransform(index).GetPointer());
+  if (!matrixoffset)
+  {
+    return false;
+  }
 
   return true;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsTranslationTransform( const std::size_t index ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsTranslationTransform(const std::size_t index) const
 {
   // First quick check if Linear
-  if( this->GetNthTransform( index )->GetTransformCategory()
-    != TransformBaseTemplate< TScalarType >::TransformCategoryEnum::Linear )
+  if (this->GetNthTransform(index)->GetTransformCategory() !=
+      TransformBaseTemplate<TScalarType>::TransformCategoryEnum::Linear)
   {
     return false;
   }
 
   // Perform specific check
-  typedef GPUTranslationTransformBase<
-    ScalarType, InputSpaceDimension > TranslationTransformBaseType;
-  const TranslationTransformBaseType * translation
-    = dynamic_cast< const TranslationTransformBaseType * >( this->GetNthTransform( index ).GetPointer() );
-  if( !translation ) { return false; }
+  typedef GPUTranslationTransformBase<ScalarType, InputSpaceDimension> TranslationTransformBaseType;
+  const TranslationTransformBaseType *                                 translation =
+    dynamic_cast<const TranslationTransformBaseType *>(this->GetNthTransform(index).GetPointer());
+  if (!translation)
+  {
+    return false;
+  }
 
   return true;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsBSplineTransform( const std::size_t index ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsBSplineTransform(const std::size_t index) const
 {
-  if( this->GetNthTransform( index )->GetTransformCategory()
-    == TransformBaseTemplate< TScalarType >::TransformCategoryEnum::BSpline )
+  if (this->GetNthTransform(index)->GetTransformCategory() ==
+      TransformBaseTemplate<TScalarType>::TransformCategoryEnum::BSpline)
   {
     return true;
   }
@@ -268,23 +266,26 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsIdentityTransform( const std::size_t index,
-  const bool loadSource, std::string & source ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsIdentityTransform(const std::size_t index,
+                                                                         const bool        loadSource,
+                                                                         std::string &     source) const
 {
-  typedef GPUIdentityTransform< ScalarType, NDimensions > IdentityTransformType;
-  const IdentityTransformType * identity
-    = dynamic_cast< const IdentityTransformType * >( this->GetNthTransform( index ).GetPointer() );
+  typedef GPUIdentityTransform<ScalarType, NDimensions> IdentityTransformType;
+  const IdentityTransformType *                         identity =
+    dynamic_cast<const IdentityTransformType *>(this->GetNthTransform(index).GetPointer());
 
-  if( !identity ) { return false; }
-
-  if( loadSource )
+  if (!identity)
   {
-    const GPUTransformBase * transformBase
-      = dynamic_cast< const GPUTransformBase * >( this->GetNthTransform( index ).GetPointer() );
-    transformBase->GetSourceCode( source );
+    return false;
+  }
+
+  if (loadSource)
+  {
+    const GPUTransformBase * transformBase =
+      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
+    transformBase->GetSourceCode(source);
   }
 
   return true;
@@ -292,24 +293,27 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsMatrixOffsetTransform( const std::size_t index,
-  const bool loadSource, std::string & source ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsMatrixOffsetTransform(const std::size_t index,
+                                                                             const bool        loadSource,
+                                                                             std::string &     source) const
 {
-  typedef GPUMatrixOffsetTransformBase<
-    ScalarType, InputSpaceDimension, OutputSpaceDimension > MatrixOffsetTransformBaseType;
-  const MatrixOffsetTransformBaseType * matrixoffset
-    = dynamic_cast< const MatrixOffsetTransformBaseType * >( this->GetNthTransform( index ).GetPointer() );
+  typedef GPUMatrixOffsetTransformBase<ScalarType, InputSpaceDimension, OutputSpaceDimension>
+                                        MatrixOffsetTransformBaseType;
+  const MatrixOffsetTransformBaseType * matrixoffset =
+    dynamic_cast<const MatrixOffsetTransformBaseType *>(this->GetNthTransform(index).GetPointer());
 
-  if( !matrixoffset ) { return false; }
-
-  if( loadSource )
+  if (!matrixoffset)
   {
-    const GPUTransformBase * transformBase
-      = dynamic_cast< const GPUTransformBase * >( this->GetNthTransform( index ).GetPointer() );
-    transformBase->GetSourceCode( source );
+    return false;
+  }
+
+  if (loadSource)
+  {
+    const GPUTransformBase * transformBase =
+      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
+    transformBase->GetSourceCode(source);
   }
 
   return true;
@@ -317,25 +321,26 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsTranslationTransform( const std::size_t index,
-  const bool loadSource, std::string & source ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsTranslationTransform(const std::size_t index,
+                                                                            const bool        loadSource,
+                                                                            std::string &     source) const
 {
-  typedef GPUTranslationTransformBase<
-    ScalarType, InputSpaceDimension > TranslationTransformBaseType;
-  const TranslationTransformBaseType * translation
-    = dynamic_cast< const TranslationTransformBaseType * >(
-    this->GetNthTransform( index ).GetPointer() );
+  typedef GPUTranslationTransformBase<ScalarType, InputSpaceDimension> TranslationTransformBaseType;
+  const TranslationTransformBaseType *                                 translation =
+    dynamic_cast<const TranslationTransformBaseType *>(this->GetNthTransform(index).GetPointer());
 
-  if( !translation ) { return false; }
-
-  if( loadSource )
+  if (!translation)
   {
-    const GPUTransformBase * transformBase
-      = dynamic_cast< const GPUTransformBase * >( this->GetNthTransform( index ).GetPointer() );
-    transformBase->GetSourceCode( source );
+    return false;
+  }
+
+  if (loadSource)
+  {
+    const GPUTransformBase * transformBase =
+      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
+    transformBase->GetSourceCode(source);
   }
 
   return true;
@@ -343,21 +348,20 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 
 
 //------------------------------------------------------------------------------
-template< typename TScalarType, unsigned int NDimensions >
+template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase< TScalarType, NDimensions >
-::IsBSplineTransform(
-  const std::size_t _index,
-  const bool loadSource, std::string & source ) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::IsBSplineTransform(const std::size_t _index,
+                                                                        const bool        loadSource,
+                                                                        std::string &     source) const
 {
-  if( this->GetNthTransform( _index )->GetTransformCategory()
-    == TransformBaseTemplate< TScalarType >::TransformCategoryEnum::BSpline )
+  if (this->GetNthTransform(_index)->GetTransformCategory() ==
+      TransformBaseTemplate<TScalarType>::TransformCategoryEnum::BSpline)
   {
-    if( loadSource )
+    if (loadSource)
     {
-      const GPUTransformBase * transformBase
-        = dynamic_cast< const GPUTransformBase * >( this->GetNthTransform( _index ).GetPointer() );
-      transformBase->GetSourceCode( source );
+      const GPUTransformBase * transformBase =
+        dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(_index).GetPointer());
+      transformBase->GetSourceCode(source);
     }
     return true;
   }

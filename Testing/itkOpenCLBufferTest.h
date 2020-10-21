@@ -23,7 +23,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for OpenCLBufferTest.cl kernel */
-itkGPUKernelClassMacro( OpenCLBufferTestKernel );
+itkGPUKernelClassMacro(OpenCLBufferTestKernel);
 } // end namespace itk
 
 #endif /* __itkOpenCLBufferTest_h */

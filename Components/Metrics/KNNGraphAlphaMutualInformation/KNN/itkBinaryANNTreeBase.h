@@ -19,7 +19,7 @@
 #define __itkBinaryANNTreeBase_h
 
 #include "itkBinaryTreeBase.h"
-#include <ANN/ANN.h>  // ANN declarations
+#include <ANN/ANN.h> // ANN declarations
 
 namespace itk
 {
@@ -33,19 +33,18 @@ namespace itk
  * \ingroup ANNwrap
  */
 
-template< class TListSample >
-class BinaryANNTreeBase : public BinaryTreeBase< TListSample >
+template <class TListSample>
+class BinaryANNTreeBase : public BinaryTreeBase<TListSample>
 {
 public:
-
   /** Standard itk. */
-  typedef BinaryANNTreeBase             Self;
-  typedef BinaryTreeBase< TListSample > Superclass;
-  typedef SmartPointer< Self >          Pointer;
-  typedef SmartPointer< const Self >    ConstPointer;
+  typedef BinaryANNTreeBase           Self;
+  typedef BinaryTreeBase<TListSample> Superclass;
+  typedef SmartPointer<Self>          Pointer;
+  typedef SmartPointer<const Self>    ConstPointer;
 
   /** ITK type info. */
-  itkTypeMacro( BinaryANNTreeBase, BinaryTreeBase );
+  itkTypeMacro(BinaryANNTreeBase, BinaryTreeBase);
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::SampleType                 SampleType;
@@ -57,10 +56,10 @@ public:
   typedef ANNpointSet ANNPointSetType;
 
   /** Get the ANN tree. */
-  virtual ANNPointSetType * GetANNTree( void ) const = 0;
+  virtual ANNPointSetType *
+  GetANNTree(void) const = 0;
 
 protected:
-
   /** Constructor. */
   BinaryANNTreeBase();
 
@@ -68,16 +67,15 @@ protected:
   ~BinaryANNTreeBase() override {}
 
 private:
-
-  BinaryANNTreeBase( const Self & );  // purposely not implemented
-  void operator=( const Self & );     // purposely not implemented
-
+  BinaryANNTreeBase(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBinaryANNTreeBase.hxx"
+#  include "itkBinaryANNTreeBase.hxx"
 #endif
 
 #endif // end #ifndef __itkBinaryANNTreeBase_h

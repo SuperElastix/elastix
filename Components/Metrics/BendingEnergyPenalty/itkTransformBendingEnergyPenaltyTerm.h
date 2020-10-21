@@ -46,24 +46,21 @@ namespace itk
  * \ingroup Metrics
  */
 
-template< class TFixedImage, class TScalarType >
-class TransformBendingEnergyPenaltyTerm :
-  public TransformPenaltyTerm< TFixedImage, TScalarType >
+template <class TFixedImage, class TScalarType>
+class TransformBendingEnergyPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
-
   /** Standard ITK stuff. */
-  typedef TransformBendingEnergyPenaltyTerm Self;
-  typedef TransformPenaltyTerm<
-    TFixedImage, TScalarType >                  Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef TransformBendingEnergyPenaltyTerm              Self;
+  typedef TransformPenaltyTerm<TFixedImage, TScalarType> Superclass;
+  typedef SmartPointer<Self>                             Pointer;
+  typedef SmartPointer<const Self>                       ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformBendingEnergyPenaltyTerm, TransformPenaltyTerm );
+  itkTypeMacro(TransformBendingEnergyPenaltyTerm, TransformPenaltyTerm);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
@@ -106,62 +103,62 @@ public:
   typedef typename Superclass::ThreadInfoType               ThreadInfoType;
 
   /** Typedef's for the B-spline transform. */
-  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
-  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
-  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
-  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
-  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
-  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
-  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
+  typedef typename Superclass::CombinationTransformType      CombinationTransformType;
+  typedef typename Superclass::BSplineOrder1TransformType    BSplineOrder1TransformType;
+  typedef typename Superclass::BSplineOrder1TransformPointer BSplineOrder1TransformPointer;
+  typedef typename Superclass::BSplineOrder2TransformType    BSplineOrder2TransformType;
+  typedef typename Superclass::BSplineOrder2TransformPointer BSplineOrder2TransformPointer;
+  typedef typename Superclass::BSplineOrder3TransformType    BSplineOrder3TransformType;
+  typedef typename Superclass::BSplineOrder3TransformPointer BSplineOrder3TransformPointer;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
-  typedef typename Superclass::HessianValueType   HessianValueType;
-  typedef typename Superclass::HessianType        HessianType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::HessianValueType               HessianValueType;
+  typedef typename Superclass::HessianType                    HessianType;
 
   /** Define the dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** Get the penalty term value. */
-  MeasureType GetValue( const ParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const ParametersType & parameters) const override;
 
   /** Get the penalty term derivative. */
-  void GetDerivative( const ParametersType & parameters,
-    DerivativeType & derivative ) const override;
+  void
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get the penalty term value and derivative. */
-  virtual void GetValueAndDerivativeSingleThreaded(
-    const ParametersType & parameters,
-    MeasureType & value,
-    DerivativeType & derivative ) const;
+  virtual void
+  GetValueAndDerivativeSingleThreaded(const ParametersType & parameters,
+                                      MeasureType &          value,
+                                      DerivativeType &       derivative) const;
 
-  void GetValueAndDerivative(
-    const ParametersType & parameters,
-    MeasureType & value,
-    DerivativeType & derivative ) const override;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID ) override;
+  inline void
+  ThreadedGetValueAndDerivative(ThreadIdType threadID) override;
 
   /** Gather the values and derivatives from all threads */
-  inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const override;
+  inline void
+  AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
   /** Experimental feature: compute SelfHessian */
-  void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const override;
+  void
+  GetSelfHessian(const TransformParametersType & parameters, HessianType & H) const override;
 
   /** Default: 100000 */
-  itkSetMacro( NumberOfSamplesForSelfHessian, unsigned int );
-  itkGetConstMacro( NumberOfSamplesForSelfHessian, unsigned int );
+  itkSetMacro(NumberOfSamplesForSelfHessian, unsigned int);
+  itkGetConstMacro(NumberOfSamplesForSelfHessian, unsigned int);
 
 protected:
-
   /** Typedefs for indices and points. */
   typedef typename Superclass::FixedImageIndexType            FixedImageIndexType;
   typedef typename Superclass::FixedImageIndexValueType       FixedImageIndexValueType;
@@ -172,7 +169,7 @@ protected:
   typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
 
   /** Typedefs for SelfHessian */
-  typedef ImageGridSampler< FixedImageType > SelfHessianSamplerType;
+  typedef ImageGridSampler<FixedImageType> SelfHessianSamplerType;
 
   /** The constructor. */
   TransformBendingEnergyPenaltyTerm();
@@ -181,20 +178,19 @@ protected:
   ~TransformBendingEnergyPenaltyTerm() override {}
 
 private:
-
   /** The private constructor. */
-  TransformBendingEnergyPenaltyTerm( const Self & ); // purposely not implemented
+  TransformBendingEnergyPenaltyTerm(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                    // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   unsigned int m_NumberOfSamplesForSelfHessian;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformBendingEnergyPenaltyTerm.hxx"
+#  include "itkTransformBendingEnergyPenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkTransformBendingEnergyPenaltyTerm_h

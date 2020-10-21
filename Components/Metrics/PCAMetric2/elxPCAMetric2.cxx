@@ -18,4 +18,4 @@
 
 #include "elxPCAMetric2.h"
 
-elxInstallMacro( PCAMetric2 );
+elxInstallMacro(PCAMetric2);

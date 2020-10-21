@@ -26,47 +26,45 @@ namespace itk
 /**
  * Constructor
  */
-template< typename TInputImage, typename TOutputImage >
-GPUCastImageFilter< TInputImage, TOutputImage >
-::GPUCastImageFilter()
+template <typename TInputImage, typename TOutputImage>
+GPUCastImageFilter<TInputImage, TOutputImage>::GPUCastImageFilter()
 {
   std::ostringstream defines;
 
-  if( TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1 )
+  if (TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1)
   {
-    itkExceptionMacro( "GPUCastImageFilter supports 1/2/3D image." );
+    itkExceptionMacro("GPUCastImageFilter supports 1/2/3D image.");
   }
 
   defines << "#define DIM_" << TInputImage::ImageDimension << "\n";
   defines << "#define INPIXELTYPE ";
-  GetTypenameInString( typeid( typename TInputImage::PixelType ), defines );
+  GetTypenameInString(typeid(typename TInputImage::PixelType), defines);
   defines << "#define OUTPIXELTYPE ";
-  GetTypenameInString( typeid( typename TOutputImage::PixelType ), defines );
+  GetTypenameInString(typeid(typename TOutputImage::PixelType), defines);
 
   // OpenCL kernel source
   const char * GPUSource = GPUCastImageFilterKernel::GetOpenCLSource();
   // Build and create kernel
-  const OpenCLProgram program = this->m_GPUKernelManager->BuildProgramFromSourceCode( GPUSource, defines.str() );
-  if( !program.IsNull() )
+  const OpenCLProgram program = this->m_GPUKernelManager->BuildProgramFromSourceCode(GPUSource, defines.str());
+  if (!program.IsNull())
   {
-    this->m_UnaryFunctorImageFilterGPUKernelHandle
-      = this->m_GPUKernelManager->CreateKernel( program, "CastImageFilter" );
+    this->m_UnaryFunctorImageFilterGPUKernelHandle = this->m_GPUKernelManager->CreateKernel(program, "CastImageFilter");
   }
   else
   {
-    itkExceptionMacro( << "Kernel has not been loaded from string:\n" << GPUSource );
+    itkExceptionMacro(<< "Kernel has not been loaded from string:\n" << GPUSource);
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TOutputImage >
+template <typename TInputImage, typename TOutputImage>
 void
-GPUCastImageFilter< TInputImage, TOutputImage >::GPUGenerateData()
+GPUCastImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 {
-  itkDebugMacro( << "Calling GPUCastImageFilter::GPUGenerateData()" );
+  itkDebugMacro(<< "Calling GPUCastImageFilter::GPUGenerateData()");
   GPUSuperclass::GPUGenerateData();
-  itkDebugMacro( << "GPUCastImageFilter::GPUGenerateData() finished" );
+  itkDebugMacro(<< "GPUCastImageFilter::GPUGenerateData() finished");
 }
 
 

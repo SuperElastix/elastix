@@ -18,4 +18,4 @@
 
 #include "elxQuasiNewtonLBFGS.h"
 
-elxInstallMacro( QuasiNewtonLBFGS );
+elxInstallMacro(QuasiNewtonLBFGS);

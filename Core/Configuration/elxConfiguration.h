@@ -47,25 +47,26 @@ namespace elastix
  * \ingroup Configuration
  */
 
-class Configuration : public itk::Object, public BaseComponent
+class Configuration
+  : public itk::Object
+  , public BaseComponent
 {
 public:
-
   /** Standard itk.*/
-  typedef Configuration                   Self;
-  typedef itk::Object                     Superclass1;
-  typedef BaseComponent                   Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef Configuration                 Self;
+  typedef itk::Object                   Superclass1;
+  typedef BaseComponent                 Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Standard part of all itk objects. */
-  itkTypeMacro( Configuration, itk::Object );
+  itkTypeMacro(Configuration, itk::Object);
 
   /** Typedefs for the command line arguments. */
-  typedef std::map< std::string, std::string >   CommandLineArgumentMapType;
+  typedef std::map<std::string, std::string>     CommandLineArgumentMapType;
   typedef CommandLineArgumentMapType::value_type CommandLineEntryType;
 
   /** Typedefs for the parameter file. */
@@ -75,13 +76,15 @@ public:
   typedef ParameterMapInterfaceType::Pointer ParameterMapInterfacePointer;
 
   /** Get and Set CommandLine arguments into the argument map. */
-  std::string GetCommandLineArgument( const std::string & key ) const;
+  std::string
+  GetCommandLineArgument(const std::string & key) const;
 
-  void SetCommandLineArgument( const std::string & key, const std::string & value );
+  void
+  SetCommandLineArgument(const std::string & key, const std::string & value);
 
   /** Get/Set the name of the parameterFileName. */
-  itkGetStringMacro( ParameterFileName );
-  itkSetStringMacro( ParameterFileName );
+  itkGetStringMacro(ParameterFileName);
+  itkSetStringMacro(ParameterFileName);
 
   /** Pass the command line arguments as a map.
    * One of the command line arguments should be either:
@@ -90,26 +93,29 @@ public:
    * The specified (transform) parameter file is read by the
    * itk::ParameterFileParser and passed to the itk::ParameterMapInterface.
    */
-  virtual int Initialize( const CommandLineArgumentMapType & _arg );
+  virtual int
+  Initialize(const CommandLineArgumentMapType & _arg);
 
-  virtual int Initialize( const CommandLineArgumentMapType & _arg,
-    const ParameterFileParserType::ParameterMapType & inputMap );
+  virtual int
+  Initialize(const CommandLineArgumentMapType & _arg, const ParameterFileParserType::ParameterMapType & inputMap);
 
   /** True, if Initialize was successfully called. */
-  virtual bool IsInitialized( void ) const; //to elxconfigurationbase
+  virtual bool
+  IsInitialized(void) const; // to elxconfigurationbase
 
   /** Other elastix related information. */
 
   /** Get and Set the elastix level. */
-  itkSetMacro( ElastixLevel, unsigned int );
-  itkGetConstMacro( ElastixLevel, unsigned int );
+  itkSetMacro(ElastixLevel, unsigned int);
+  itkGetConstMacro(ElastixLevel, unsigned int);
 
   /** Get and Set the total number of elastix levels. */
-  itkSetMacro( TotalNumberOfElastixLevels, unsigned int );
-  itkGetConstMacro( TotalNumberOfElastixLevels, unsigned int );
+  itkSetMacro(TotalNumberOfElastixLevels, unsigned int);
+  itkGetConstMacro(TotalNumberOfElastixLevels, unsigned int);
 
   /***/
-  virtual bool GetPrintErrorMessages( void )
+  virtual bool
+  GetPrintErrorMessages(void)
   {
     return this->m_ParameterMapInterface->GetPrintErrorMessages();
   }
@@ -123,36 +129,39 @@ public:
   /** Methods that is called at the very beginning of elastixTemplate::Run.
    * \li Prints the parameter file
    */
-  int BeforeAll( void ) override;
+  int
+  BeforeAll(void) override;
 
   /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
    * \li Prints the parameter file
    */
-  virtual int BeforeAllTransformix( void );
+  virtual int
+  BeforeAllTransformix(void);
 
   /** Interface to the ParameterMapInterface. */
 
   /** Count the number of parameters. */
-  std::size_t CountNumberOfParameterEntries(
-    const std::string & parameterName ) const
+  std::size_t
+  CountNumberOfParameterEntries(const std::string & parameterName) const
   {
-    return this->m_ParameterMapInterface->CountNumberOfParameterEntries(
-      parameterName );
+    return this->m_ParameterMapInterface->CountNumberOfParameterEntries(parameterName);
   }
 
 
   /** Read a parameter from the parameter file. */
-  template< class T >
-  bool ReadParameter( T & parameterValue, const std::string & parameterName,
-    const unsigned int entry_nr, const bool printThisErrorMessage )
+  template <class T>
+  bool
+  ReadParameter(T &                 parameterValue,
+                const std::string & parameterName,
+                const unsigned int  entry_nr,
+                const bool          printThisErrorMessage)
   {
     std::string errorMessage = "";
-    bool        found        = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, entry_nr,
-      printThisErrorMessage, errorMessage );
-    if( errorMessage != "" )
+    bool        found = this->m_ParameterMapInterface->ReadParameter(
+      parameterValue, parameterName, entry_nr, printThisErrorMessage, errorMessage);
+    if (errorMessage != "")
     {
-      xl::xout[ "error" ] << errorMessage;
+      xl::xout["error"] << errorMessage;
     }
 
     return found;
@@ -160,16 +169,15 @@ public:
 
 
   /** Read a parameter from the parameter file. */
-  template< class T >
-  bool ReadParameter( T & parameterValue, const std::string & parameterName,
-    const unsigned int entry_nr )
+  template <class T>
+  bool
+  ReadParameter(T & parameterValue, const std::string & parameterName, const unsigned int entry_nr)
   {
     std::string errorMessage = "";
-    bool        found        = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, entry_nr, errorMessage );
-    if( errorMessage != "" )
+    bool found = this->m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, errorMessage);
+    if (errorMessage != "")
     {
-      xl::xout[ "error" ] << errorMessage;
+      xl::xout["error"] << errorMessage;
     }
 
     return found;
@@ -177,19 +185,21 @@ public:
 
 
   /** Read a parameter from the parameter file. */
-  template< class T >
-  bool ReadParameter( T & parameterValue, const std::string & parameterName,
-    const std::string & prefix,
-    const unsigned int entry_nr, const int default_entry_nr,
-    const bool printThisErrorMessage ) const
+  template <class T>
+  bool
+  ReadParameter(T &                 parameterValue,
+                const std::string & parameterName,
+                const std::string & prefix,
+                const unsigned int  entry_nr,
+                const int           default_entry_nr,
+                const bool          printThisErrorMessage) const
   {
     std::string errorMessage = "";
-    bool        found        = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, prefix, entry_nr, default_entry_nr,
-      printThisErrorMessage, errorMessage );
-    if( errorMessage != "" )
+    bool        found = this->m_ParameterMapInterface->ReadParameter(
+      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, printThisErrorMessage, errorMessage);
+    if (errorMessage != "")
     {
-      xl::xout[ "error" ] << errorMessage;
+      xl::xout["error"] << errorMessage;
     }
 
     return found;
@@ -197,18 +207,20 @@ public:
 
 
   /** Read a parameter from the parameter file. */
-  template< class T >
-  bool ReadParameter( T & parameterValue, const std::string & parameterName,
-    const std::string & prefix,
-    const unsigned int entry_nr, const int default_entry_nr ) const
+  template <class T>
+  bool
+  ReadParameter(T &                 parameterValue,
+                const std::string & parameterName,
+                const std::string & prefix,
+                const unsigned int  entry_nr,
+                const int           default_entry_nr) const
   {
     std::string errorMessage = "";
-    bool        found        = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, prefix, entry_nr, default_entry_nr,
-      errorMessage );
-    if( errorMessage != "" )
+    bool        found = this->m_ParameterMapInterface->ReadParameter(
+      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, errorMessage);
+    if (errorMessage != "")
     {
-      xl::xout[ "error" ] << errorMessage;
+      xl::xout["error"] << errorMessage;
     }
 
     return found;
@@ -216,20 +228,20 @@ public:
 
 
   /** Read a range of parameters from the parameter file. */
-  template< class T >
-  bool ReadParameter( std::vector< T > & parameterValues,
-    const std::string & parameterName,
-    const unsigned int entry_nr_start,
-    const unsigned int entry_nr_end,
-    const bool printThisErrorMessage ) const
+  template <class T>
+  bool
+  ReadParameter(std::vector<T> &    parameterValues,
+                const std::string & parameterName,
+                const unsigned int  entry_nr_start,
+                const unsigned int  entry_nr_end,
+                const bool          printThisErrorMessage) const
   {
     std::string errorMessage = "";
-    bool        found        = this->m_ParameterMapInterface->ReadParameter(
-      parameterValues, parameterName, entry_nr_start, entry_nr_end,
-      printThisErrorMessage, errorMessage );
-    if( errorMessage != "" )
+    bool        found = this->m_ParameterMapInterface->ReadParameter(
+      parameterValues, parameterName, entry_nr_start, entry_nr_end, printThisErrorMessage, errorMessage);
+    if (errorMessage != "")
     {
-      xl::xout[ "error" ] << errorMessage;
+      xl::xout["error"] << errorMessage;
     }
 
     return found;
@@ -237,7 +249,6 @@ public:
 
 
 protected:
-
   Configuration();
   ~Configuration() override {}
 
@@ -245,12 +256,13 @@ protected:
    * This function is not really generic. It's just added because it needs to be
    * called by both BeforeAll and BeforeAllTransformix.
    */
-  virtual void PrintParameterFile( void ) const;
+  virtual void
+  PrintParameterFile(void) const;
 
 private:
-
-  Configuration( const Self & );    // purposely not implemented
-  void operator=( const Self & );   // purposely not implemented
+  Configuration(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   CommandLineArgumentMapType   m_CommandLineArgumentMap;
   std::string                  m_ParameterFileName;
@@ -260,7 +272,6 @@ private:
   bool         m_IsInitialized;
   unsigned int m_ElastixLevel;
   unsigned int m_TotalNumberOfElastixLevels;
-
 };
 
 } // end namespace elastix

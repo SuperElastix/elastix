@@ -27,10 +27,9 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template< class TListSample >
-BinaryANNTreeBase< TListSample >
-::BinaryANNTreeBase()
-{}  // end Constructor
+template <class TListSample>
+BinaryANNTreeBase<TListSample>::BinaryANNTreeBase()
+{} // end Constructor
 
 } // end namespace itk
 

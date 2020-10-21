@@ -67,24 +67,21 @@ namespace itk
  * \ingroup Metrics
  */
 
-template< class TFixedImage, class TScalarType >
-class TransformRigidityPenaltyTerm :
-  public TransformPenaltyTerm< TFixedImage, TScalarType >
+template <class TFixedImage, class TScalarType>
+class TransformRigidityPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
-
   /** Standard itk stuff. */
-  typedef TransformRigidityPenaltyTerm Self;
-  typedef TransformPenaltyTerm<
-    TFixedImage, TScalarType >            Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef TransformRigidityPenaltyTerm                   Self;
+  typedef TransformPenaltyTerm<TFixedImage, TScalarType> Superclass;
+  typedef SmartPointer<Self>                             Pointer;
+  typedef SmartPointer<const Self>                       ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformRigidityPenaltyTerm, TransformPenaltyTerm );
+  itkTypeMacro(TransformRigidityPenaltyTerm, TransformPenaltyTerm);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
@@ -124,28 +121,29 @@ public:
   typedef typename Superclass::ScalarType                   ScalarType;
 
   /** Typedef's for the B-spline transform. */
-  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
-  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
-  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
-  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
-  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
-  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
-  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
+  typedef typename Superclass::CombinationTransformType      CombinationTransformType;
+  typedef typename Superclass::BSplineOrder1TransformType    BSplineOrder1TransformType;
+  typedef typename Superclass::BSplineOrder1TransformPointer BSplineOrder1TransformPointer;
+  typedef typename Superclass::BSplineOrder2TransformType    BSplineOrder2TransformType;
+  typedef typename Superclass::BSplineOrder2TransformPointer BSplineOrder2TransformPointer;
+  typedef typename Superclass::BSplineOrder3TransformType    BSplineOrder3TransformType;
+  typedef typename Superclass::BSplineOrder3TransformPointer BSplineOrder3TransformPointer;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
 
   /** Define the dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-  itkStaticConstMacro( MovingImageDimension, unsigned int, FixedImageType::ImageDimension );
-  itkStaticConstMacro( ImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(MovingImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** Initialize the penalty term. */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /** Typedef's for B-spline transform. */
   typedef BSplineOrder3TransformType                 BSplineTransformType;
@@ -156,175 +154,174 @@ public:
   typedef typename CoefficientImageType::SpacingType CoefficientImageSpacingType;
 
   /** Typedef support for neighborhoods, filters, etc. */
-  typedef Neighborhood< ScalarType,
-    itkGetStaticConstMacro( FixedImageDimension ) >     NeighborhoodType;
-  typedef typename NeighborhoodType::SizeType           NeighborhoodSizeType;
-  typedef ImageRegionIterator< CoefficientImageType >   CoefficientImageIteratorType;
-  typedef NeighborhoodOperatorImageFilter<
-    CoefficientImageType, CoefficientImageType >        NOIFType;
-  typedef NeighborhoodIterator< CoefficientImageType >  NeighborhoodIteratorType;
-  typedef typename NeighborhoodIteratorType::RadiusType RadiusType;
+  typedef Neighborhood<ScalarType, itkGetStaticConstMacro(FixedImageDimension)>       NeighborhoodType;
+  typedef typename NeighborhoodType::SizeType                                         NeighborhoodSizeType;
+  typedef ImageRegionIterator<CoefficientImageType>                                   CoefficientImageIteratorType;
+  typedef NeighborhoodOperatorImageFilter<CoefficientImageType, CoefficientImageType> NOIFType;
+  typedef NeighborhoodIterator<CoefficientImageType>                                  NeighborhoodIteratorType;
+  typedef typename NeighborhoodIteratorType::RadiusType                               RadiusType;
 
   /** Typedef's for the construction of the rigidity image. */
-  typedef CoefficientImageType                     RigidityImageType;
-  typedef typename RigidityImageType::Pointer      RigidityImagePointer;
-  typedef typename RigidityImageType::PixelType    RigidityPixelType;
-  typedef typename RigidityImageType::RegionType   RigidityImageRegionType;
-  typedef typename RigidityImageType::IndexType    RigidityImageIndexType;
-  typedef typename RigidityImageType::PointType    RigidityImagePointType;
-  typedef ImageRegionIterator< RigidityImageType > RigidityImageIteratorType;
-  typedef BinaryBallStructuringElement<
-    RigidityPixelType,
-    itkGetStaticConstMacro( FixedImageDimension ) >     StructuringElementType;
-  typedef typename StructuringElementType::RadiusType SERadiusType;
-  typedef GrayscaleDilateImageFilter<
-    RigidityImageType, RigidityImageType,
-    StructuringElementType >                            DilateFilterType;
-  typedef typename DilateFilterType::Pointer DilateFilterPointer;
+  typedef CoefficientImageType                   RigidityImageType;
+  typedef typename RigidityImageType::Pointer    RigidityImagePointer;
+  typedef typename RigidityImageType::PixelType  RigidityPixelType;
+  typedef typename RigidityImageType::RegionType RigidityImageRegionType;
+  typedef typename RigidityImageType::IndexType  RigidityImageIndexType;
+  typedef typename RigidityImageType::PointType  RigidityImagePointType;
+  typedef ImageRegionIterator<RigidityImageType> RigidityImageIteratorType;
+  typedef BinaryBallStructuringElement<RigidityPixelType, itkGetStaticConstMacro(FixedImageDimension)>
+                                                                                                   StructuringElementType;
+  typedef typename StructuringElementType::RadiusType                                              SERadiusType;
+  typedef GrayscaleDilateImageFilter<RigidityImageType, RigidityImageType, StructuringElementType> DilateFilterType;
+  typedef typename DilateFilterType::Pointer                                                       DilateFilterPointer;
 
   /** Check stuff. */
-  void CheckUseAndCalculationBooleans( void );
+  void
+  CheckUseAndCalculationBooleans(void);
 
   /** The GetValue()-method returns the rigid penalty value. */
-  MeasureType GetValue(
-    const ParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const ParametersType & parameters) const override;
 
   /** The GetDerivative()-method returns the rigid penalty derivative. */
-  void GetDerivative(
-    const ParametersType & parameters,
-    DerivativeType & derivative ) const override;
+  void
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Contains calls from GetValueAndDerivative that are thread-unsafe. */
-  void BeforeThreadedGetValueAndDerivative(
-    const TransformParametersType & parameters ) const override;
+  void
+  BeforeThreadedGetValueAndDerivative(const TransformParametersType & parameters) const override;
 
   /** The GetValueAndDerivative()-method returns the rigid penalty value and its derivative. */
-  void GetValueAndDerivative(
-    const ParametersType & parameters,
-    MeasureType & value,
-    DerivativeType & derivative ) const override;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
   /** Set the B-spline transform in this class.
    * This class expects a BSplineTransform! It is not suited for others.
    */
-  itkSetObjectMacro( BSplineTransform, BSplineTransformType );
+  itkSetObjectMacro(BSplineTransform, BSplineTransformType);
 
   /** Set the RigidityImage in this class. */
-  //itkSetObjectMacro( RigidityCoefficientImage, RigidityImageType );
+  // itkSetObjectMacro( RigidityCoefficientImage, RigidityImageType );
 
   /** Set/Get the weight of the linearity condition part. */
-  itkSetClampMacro( LinearityConditionWeight, ScalarType,
-    0.0, NumericTraits< ScalarType >::max() );
-  itkGetMacro( LinearityConditionWeight, ScalarType );
+  itkSetClampMacro(LinearityConditionWeight, ScalarType, 0.0, NumericTraits<ScalarType>::max());
+  itkGetMacro(LinearityConditionWeight, ScalarType);
 
   /** Set/Get the weight of the orthonormality condition part. */
-  itkSetClampMacro( OrthonormalityConditionWeight, ScalarType,
-    0.0, NumericTraits< ScalarType >::max() );
-  itkGetMacro( OrthonormalityConditionWeight, ScalarType );
+  itkSetClampMacro(OrthonormalityConditionWeight, ScalarType, 0.0, NumericTraits<ScalarType>::max());
+  itkGetMacro(OrthonormalityConditionWeight, ScalarType);
 
   /** Set/Get the weight of the properness condition part. */
-  itkSetClampMacro( PropernessConditionWeight, ScalarType,
-    0.0, NumericTraits< ScalarType >::max() );
-  itkGetMacro( PropernessConditionWeight, ScalarType );
+  itkSetClampMacro(PropernessConditionWeight, ScalarType, 0.0, NumericTraits<ScalarType>::max());
+  itkGetMacro(PropernessConditionWeight, ScalarType);
 
   /** Set the usage of the linearity condition part. */
-  itkSetMacro( UseLinearityCondition, bool );
+  itkSetMacro(UseLinearityCondition, bool);
 
   /** Set the usage of the orthonormality condition part. */
-  itkSetMacro( UseOrthonormalityCondition, bool );
+  itkSetMacro(UseOrthonormalityCondition, bool);
 
   /** Set the usage of the properness condition part. */
-  itkSetMacro( UsePropernessCondition, bool );
+  itkSetMacro(UsePropernessCondition, bool);
 
   /** Set the calculation of the linearity condition part,
    * even if we don't use it.
    */
-  itkSetMacro( CalculateLinearityCondition, bool );
+  itkSetMacro(CalculateLinearityCondition, bool);
 
   /** Set the calculation of the orthonormality condition part,
    * even if we don't use it.
    */
-  itkSetMacro( CalculateOrthonormalityCondition, bool );
+  itkSetMacro(CalculateOrthonormalityCondition, bool);
 
   /** Set the calculation of the properness condition part.,
    * even if we don't use it.
    */
-  itkSetMacro( CalculatePropernessCondition, bool );
+  itkSetMacro(CalculatePropernessCondition, bool);
 
   /** Get the value of the linearity condition. */
-  itkGetConstReferenceMacro( LinearityConditionValue, MeasureType );
+  itkGetConstReferenceMacro(LinearityConditionValue, MeasureType);
 
   /** Get the value of the orthonormality condition. */
-  itkGetConstReferenceMacro( OrthonormalityConditionValue, MeasureType );
+  itkGetConstReferenceMacro(OrthonormalityConditionValue, MeasureType);
 
   /** Get the value of the properness condition. */
-  itkGetConstReferenceMacro( PropernessConditionValue, MeasureType );
+  itkGetConstReferenceMacro(PropernessConditionValue, MeasureType);
 
   /** Get the gradient magnitude of the linearity condition. */
-  itkGetConstReferenceMacro( LinearityConditionGradientMagnitude, MeasureType );
+  itkGetConstReferenceMacro(LinearityConditionGradientMagnitude, MeasureType);
 
   /** Get the gradient magnitude of the orthonormality condition. */
-  itkGetConstReferenceMacro( OrthonormalityConditionGradientMagnitude, MeasureType );
+  itkGetConstReferenceMacro(OrthonormalityConditionGradientMagnitude, MeasureType);
 
   /** Get the gradient magnitude of the properness condition. */
-  itkGetConstReferenceMacro( PropernessConditionGradientMagnitude, MeasureType );
+  itkGetConstReferenceMacro(PropernessConditionGradientMagnitude, MeasureType);
 
   /** Get the value of the total rigidity penalty term. */
-  //itkGetConstReferenceMacro( RigidityPenaltyTermValue, MeasureType );
+  // itkGetConstReferenceMacro( RigidityPenaltyTermValue, MeasureType );
 
   /** Set if the RigidityImage's are dilated. */
-  itkSetMacro( DilateRigidityImages, bool );
+  itkSetMacro(DilateRigidityImages, bool);
 
   /** Set the DilationRadiusMultiplier. */
-  itkSetClampMacro( DilationRadiusMultiplier, CoordinateRepresentationType,
-    0.1, NumericTraits< CoordinateRepresentationType >::max() );
+  itkSetClampMacro(DilationRadiusMultiplier,
+                   CoordinateRepresentationType,
+                   0.1,
+                   NumericTraits<CoordinateRepresentationType>::max());
 
   /** Set the fixed coefficient image. */
-  itkSetObjectMacro( FixedRigidityImage, RigidityImageType );
+  itkSetObjectMacro(FixedRigidityImage, RigidityImageType);
 
   /** Set the moving coefficient image. */
-  itkSetObjectMacro( MovingRigidityImage, RigidityImageType );
+  itkSetObjectMacro(MovingRigidityImage, RigidityImageType);
 
   /** Set to use the FixedRigidityImage or not. */
-  itkSetMacro( UseFixedRigidityImage, bool );
+  itkSetMacro(UseFixedRigidityImage, bool);
 
   /** Set to use the MovingRigidityImage or not. */
-  itkSetMacro( UseMovingRigidityImage, bool );
+  itkSetMacro(UseMovingRigidityImage, bool);
 
   /** Function to fill the RigidityCoefficientImage every iteration. */
-  void FillRigidityCoefficientImage( const ParametersType & parameters ) const;
+  void
+  FillRigidityCoefficientImage(const ParametersType & parameters) const;
 
 protected:
-
   /** The constructor. */
   TransformRigidityPenaltyTerm();
   /** The destructor. */
   ~TransformRigidityPenaltyTerm() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
   /** The private constructor. */
-  TransformRigidityPenaltyTerm( const Self & ); // purposely not implemented
+  TransformRigidityPenaltyTerm(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );            // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Internal function to dilate the rigidity images. */
-  virtual void DilateRigidityImages( void );
+  virtual void
+  DilateRigidityImages(void);
 
   /** Private function used for the filtering. It creates 1D separable operators F. */
-  void Create1DOperator( NeighborhoodType & F, const std::string & whichF,
-    const unsigned int WhichDimension, const CoefficientImageSpacingType & spacing ) const;
+  void
+  Create1DOperator(NeighborhoodType &                  F,
+                   const std::string &                 whichF,
+                   const unsigned int                  WhichDimension,
+                   const CoefficientImageSpacingType & spacing) const;
 
   /** Private function used for the filtering. It creates ND inseparable operators F. */
-  void CreateNDOperator( NeighborhoodType & F, const std::string & whichF,
-    const CoefficientImageSpacingType & spacing ) const;
+  void
+  CreateNDOperator(NeighborhoodType & F, const std::string & whichF, const CoefficientImageSpacingType & spacing) const;
 
   /** Private function used for the filtering. It performs 1D separable filtering. */
-  CoefficientImagePointer FilterSeparable( const CoefficientImageType *,
-    const std::vector< NeighborhoodType > & Operators ) const;
+  CoefficientImagePointer
+  FilterSeparable(const CoefficientImageType *, const std::vector<NeighborhoodType> & Operators) const;
 
   /** Member variables. */
   BSplineTransformPointer m_BSplineTransform;
@@ -348,25 +345,24 @@ private:
   bool m_CalculatePropernessCondition;
 
   /** Rigidity image variables. */
-  CoordinateRepresentationType       m_DilationRadiusMultiplier;
-  bool                               m_DilateRigidityImages;
-  mutable bool                       m_RigidityCoefficientImageIsFilled;
-  RigidityImagePointer               m_FixedRigidityImage;
-  RigidityImagePointer               m_MovingRigidityImage;
-  RigidityImagePointer               m_RigidityCoefficientImage;
-  std::vector< DilateFilterPointer > m_FixedRigidityImageDilation;
-  std::vector< DilateFilterPointer > m_MovingRigidityImageDilation;
-  RigidityImagePointer               m_FixedRigidityImageDilated;
-  RigidityImagePointer               m_MovingRigidityImageDilated;
-  bool                               m_UseFixedRigidityImage;
-  bool                               m_UseMovingRigidityImage;
-
+  CoordinateRepresentationType     m_DilationRadiusMultiplier;
+  bool                             m_DilateRigidityImages;
+  mutable bool                     m_RigidityCoefficientImageIsFilled;
+  RigidityImagePointer             m_FixedRigidityImage;
+  RigidityImagePointer             m_MovingRigidityImage;
+  RigidityImagePointer             m_RigidityCoefficientImage;
+  std::vector<DilateFilterPointer> m_FixedRigidityImageDilation;
+  std::vector<DilateFilterPointer> m_MovingRigidityImageDilation;
+  RigidityImagePointer             m_FixedRigidityImageDilated;
+  RigidityImagePointer             m_MovingRigidityImageDilated;
+  bool                             m_UseFixedRigidityImage;
+  bool                             m_UseMovingRigidityImage;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformRigidityPenaltyTerm.hxx"
+#  include "itkTransformRigidityPenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkTransformRigidityPenaltyTerm_h

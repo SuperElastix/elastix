@@ -42,24 +42,21 @@ namespace itk
  *
  */
 
-template< class TFixedImage, class TTransform >
-class ComputeDisplacementDistribution :
-  public ScaledSingleValuedNonLinearOptimizer
+template <class TFixedImage, class TTransform>
+class ComputeDisplacementDistribution : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-
   /** Standard ITK.*/
   typedef ComputeDisplacementDistribution      Self;
   typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  typedef SmartPointer<Self>                   Pointer;
+  typedef SmartPointer<const Self>             ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ComputeDisplacementDistribution,
-    ScaledSingleValuedNonLinearOptimizer );
+  itkTypeMacro(ComputeDisplacementDistribution, ScaledSingleValuedNonLinearOptimizer);
 
   /** typedef  */
   typedef TFixedImage                         FixedImageType;
@@ -74,31 +71,31 @@ public:
   /** Type for the mask of the fixed image. Only pixels that are "inside"
    * this mask will be considered for the computation of the Jacobian terms.
    */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    TFixedImage::ImageDimension );
-  typedef SpatialObject< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer                           FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer                      FixedImageMaskConstPointer;
-  typedef typename TransformType::NonZeroJacobianIndicesType             NonZeroJacobianIndicesType;
+  itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
+  typedef SpatialObject<itkGetStaticConstMacro(FixedImageDimension)> FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer                       FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer                  FixedImageMaskConstPointer;
+  typedef typename TransformType::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
-  itkSetConstObjectMacro( FixedImage, FixedImageType );
+  itkSetConstObjectMacro(FixedImage, FixedImageType);
 
   /** Set the transform. */
-  itkSetObjectMacro( Transform, TransformType );
+  itkSetObjectMacro(Transform, TransformType);
 
   /** Set/Get the fixed image mask. */
-  itkSetObjectMacro( FixedImageMask, FixedImageMaskType );
-  itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType );
-  itkGetConstObjectMacro( FixedImageMask, FixedImageMaskType );
+  itkSetObjectMacro(FixedImageMask, FixedImageMaskType);
+  itkSetConstObjectMacro(FixedImageMask, FixedImageMaskType);
+  itkGetConstObjectMacro(FixedImageMask, FixedImageMaskType);
 
   /** Set some parameters. */
-  itkSetMacro( NumberOfJacobianMeasurements, SizeValueType );
+  itkSetMacro(NumberOfJacobianMeasurements, SizeValueType);
 
   /** Set the region over which the metric will be computed. */
-  void SetFixedImageRegion( const FixedImageRegionType & region )
+  void
+  SetFixedImageRegion(const FixedImageRegionType & region)
   {
-    if( region != this->m_FixedImageRegion )
+    if (region != this->m_FixedImageRegion)
     {
       this->m_FixedImageRegion = region;
     }
@@ -106,37 +103,39 @@ public:
 
 
   /** Get the region over which the metric will be computed. */
-  itkGetConstReferenceMacro( FixedImageRegion, FixedImageRegionType );
+  itkGetConstReferenceMacro(FixedImageRegion, FixedImageRegionType);
 
   /** The main function that performs the multi-threaded computation. */
-  virtual void Compute( const ParametersType & mu,
-    double & jacg, double & maxJJ, std::string method );
+  virtual void
+  Compute(const ParametersType & mu, double & jacg, double & maxJJ, std::string method);
 
   /** The main function that performs the single-threaded computation. */
-  virtual void ComputeSingleThreaded( const ParametersType & mu,
-    double & jacg, double & maxJJ, std::string method );
+  virtual void
+  ComputeSingleThreaded(const ParametersType & mu, double & jacg, double & maxJJ, std::string method);
 
-  virtual void ComputeUsingSearchDirection( const ParametersType & mu,
-    double & jacg, double & maxJJ, std::string methods );
+  virtual void
+  ComputeUsingSearchDirection(const ParametersType & mu, double & jacg, double & maxJJ, std::string methods);
 
   /** Set the number of threads. */
-  void SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
+  void
+  SetNumberOfWorkUnits(ThreadIdType numberOfThreads)
   {
-    this->m_Threader->SetNumberOfWorkUnits( numberOfThreads );
+    this->m_Threader->SetNumberOfWorkUnits(numberOfThreads);
   }
 
 
-  virtual void BeforeThreadedCompute( const ParametersType & mu );
+  virtual void
+  BeforeThreadedCompute(const ParametersType & mu);
 
-  virtual void AfterThreadedCompute( double & jacg, double & maxJJ );
+  virtual void
+  AfterThreadedCompute(double & jacg, double & maxJJ);
 
 protected:
-
   ComputeDisplacementDistribution();
   ~ComputeDisplacementDistribution() override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::PlatformMultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader ThreaderType;
   typedef ThreaderType::WorkUnitInfo ThreadInfoType;
 
   typename FixedImageType::ConstPointer   m_FixedImage;
@@ -149,26 +148,25 @@ protected:
   SizeValueType                           m_NumberOfParameters;
   ThreaderType::Pointer                   m_Threader;
 
-  typedef typename  FixedImageType::IndexType   FixedImageIndexType;
-  typedef typename  FixedImageType::PointType   FixedImagePointType;
-  typedef typename  TransformType::JacobianType JacobianType;
-  typedef typename  JacobianType::ValueType     JacobianValueType;
+  typedef typename FixedImageType::IndexType   FixedImageIndexType;
+  typedef typename FixedImageType::PointType   FixedImagePointType;
+  typedef typename TransformType::JacobianType JacobianType;
+  typedef typename JacobianType::ValueType     JacobianValueType;
 
   /** Samplers. */
-  typedef ImageSamplerBase< FixedImageType >     ImageSamplerBaseType;
+  typedef ImageSamplerBase<FixedImageType>       ImageSamplerBaseType;
   typedef typename ImageSamplerBaseType::Pointer ImageSamplerBasePointer;
 
-  typedef ImageFullSampler< FixedImageType >     ImageFullSamplerType;
+  typedef ImageFullSampler<FixedImageType>       ImageFullSamplerType;
   typedef typename ImageFullSamplerType::Pointer ImageFullSamplerPointer;
 
-  typedef ImageRandomSamplerBase< FixedImageType >     ImageRandomSamplerBaseType;
+  typedef ImageRandomSamplerBase<FixedImageType>       ImageRandomSamplerBaseType;
   typedef typename ImageRandomSamplerBaseType::Pointer ImageRandomSamplerBasePointer;
 
-  typedef ImageGridSampler< FixedImageType >     ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer ImageGridSamplerPointer;
-  typedef typename ImageGridSamplerType
-    ::ImageSampleContainerType                   ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
+  typedef ImageGridSampler<FixedImageType>                         ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer                   ImageGridSamplerPointer;
+  typedef typename ImageGridSamplerType ::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer               ImageSampleContainerPointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   typedef JacobianType                                   TransformJacobianType;
@@ -178,20 +176,24 @@ protected:
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeJacobianTerms
   // in the future it would be better to refactoring this part of the code
-  virtual void SampleFixedImageForJacobianTerms(
-    ImageSampleContainerPointer & sampleContainer );
+  virtual void
+  SampleFixedImageForJacobianTerms(ImageSampleContainerPointer & sampleContainer);
 
   /** Launch MultiThread Compute. */
-  void LaunchComputeThreaderCallback( void ) const;
+  void
+  LaunchComputeThreaderCallback(void) const;
 
   /** Compute threader callback function. */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ComputeThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ComputeThreaderCallback(void * arg);
 
   /** The threaded implementation of Compute(). */
-  virtual inline void ThreadedCompute( ThreadIdType threadID );
+  virtual inline void
+  ThreadedCompute(ThreadIdType threadID);
 
   /** Initialize some multi-threading related parameters. */
-  virtual void InitializeThreadingParameters( void );
+  virtual void
+  InitializeThreadingParameters(void);
 
   /** To give the threads access to all member variables and functions. */
   struct MultiThreaderParameterType
@@ -208,10 +210,8 @@ protected:
     double        st_DisplacementSquared;
     SizeValueType st_NumberOfPixelsCounted;
   };
-  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, ComputePerThreadStruct,
-    PaddedComputePerThreadStruct );
-  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct,
-    AlignedComputePerThreadStruct );
+  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, ComputePerThreadStruct, PaddedComputePerThreadStruct);
+  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct, AlignedComputePerThreadStruct);
   mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
   mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
 
@@ -220,16 +220,15 @@ protected:
   ImageSampleContainerPointer m_SampleContainer;
 
 private:
-
-  ComputeDisplacementDistribution( const Self & ); // purposely not implemented
-  void operator=( const Self & );                  // purposely not implemented
-
+  ComputeDisplacementDistribution(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkComputeDisplacementDistribution.hxx"
+#  include "itkComputeDisplacementDistribution.hxx"
 #endif
 
 #endif // end #ifndef __itkComputeDisplacementDistribution_h

@@ -28,11 +28,11 @@ using namespace std;
  * **************** AddOutput (ostream_type) ********************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutsimple< charT, traits >::AddOutput( const char * name, ostream_type * output )
+xoutsimple<charT, traits>::AddOutput(const char * name, ostream_type * output)
 {
-  return this->AddTargetCell( name, output );
+  return this->AddTargetCell(name, output);
 
 } // end AddOutput
 
@@ -41,11 +41,11 @@ xoutsimple< charT, traits >::AddOutput( const char * name, ostream_type * output
  * **************** AddOutput (xoutsimple) **********************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutsimple< charT, traits >::AddOutput( const char * name, Superclass * output )
+xoutsimple<charT, traits>::AddOutput(const char * name, Superclass * output)
 {
-  return this->AddTargetCell( name, output );
+  return this->AddTargetCell(name, output);
 
 } // end AddOutput
 
@@ -54,11 +54,11 @@ xoutsimple< charT, traits >::AddOutput( const char * name, Superclass * output )
  * ***************** RemoveOutput *******************************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutsimple< charT, traits >::RemoveOutput( const char * name )
+xoutsimple<charT, traits>::RemoveOutput(const char * name)
 {
-  return this->RemoveTargetCell( name );
+  return this->RemoveTargetCell(name);
 
 } // end RemoveOutput
 
@@ -67,11 +67,11 @@ xoutsimple< charT, traits >::RemoveOutput( const char * name )
  * **************** SetOutputs (ostream_types) ******************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutsimple< charT, traits >::SetOutputs( const CStreamMapType & outputmap )
+xoutsimple<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
 {
-  this->SetTargetCells( outputmap );
+  this->SetTargetCells(outputmap);
 
 } // end SetOutputs
 
@@ -80,11 +80,11 @@ xoutsimple< charT, traits >::SetOutputs( const CStreamMapType & outputmap )
  * **************** SetOutputs (xoutobjects) ********************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutsimple< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
+xoutsimple<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
 {
-  this->SetTargetCells( outputmap );
+  this->SetTargetCells(outputmap);
 
 } // end SetOutputs()
 
@@ -93,9 +93,9 @@ xoutsimple< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
  * **************** GetOutputs (map of xoutobjects) *************
  */
 
-template< class charT, class traits >
-auto xoutsimple< charT, traits >::GetXOutputs( void )
--> const XStreamMapType &
+template <class charT, class traits>
+auto
+xoutsimple<charT, traits>::GetXOutputs(void) -> const XStreamMapType &
 {
   return this->m_XTargetCells;
 
@@ -105,9 +105,9 @@ auto xoutsimple< charT, traits >::GetXOutputs( void )
  * **************** GetOutputs (map of c-streams) ***************
  */
 
-template< class charT, class traits >
-auto xoutsimple< charT, traits >::GetCOutputs( void )
--> const CStreamMapType &
+template <class charT, class traits>
+auto
+xoutsimple<charT, traits>::GetCOutputs(void) -> const CStreamMapType &
 {
   return this->m_CTargetCells;
 

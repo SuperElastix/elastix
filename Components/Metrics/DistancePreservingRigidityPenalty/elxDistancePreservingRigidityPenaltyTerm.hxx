@@ -31,99 +31,96 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-DistancePreservingRigidityPenalty< TElastix >
-::BeforeRegistration( void )
+DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
 {
   /** Read the fixed rigidity image. */
   string segmentedImageName = "";
-  this->GetConfiguration()->ReadParameter( segmentedImageName,
-    "SegmentedImageName", this->GetComponentLabel(), 0, -1, false );
+  this->GetConfiguration()->ReadParameter(
+    segmentedImageName, "SegmentedImageName", this->GetComponentLabel(), 0, -1, false);
 
-  typedef typename Superclass1::SegmentedImageType                SegmentedImageType;
-  typedef itk::ImageFileReader< SegmentedImageType >              SegmentedImageReaderType;
-  typedef itk::ChangeInformationImageFilter< SegmentedImageType > ChangeInfoFilterType;
-  typedef typename ChangeInfoFilterType::Pointer                  ChangeInfoFilterPointer;
-  typedef typename SegmentedImageType::DirectionType              DirectionType;
-  typedef typename SegmentedImageType::SizeType::SizeValueType    SizeValueType;
+  typedef typename Superclass1::SegmentedImageType              SegmentedImageType;
+  typedef itk::ImageFileReader<SegmentedImageType>              SegmentedImageReaderType;
+  typedef itk::ChangeInformationImageFilter<SegmentedImageType> ChangeInfoFilterType;
+  typedef typename ChangeInfoFilterType::Pointer                ChangeInfoFilterPointer;
+  typedef typename SegmentedImageType::DirectionType            DirectionType;
+  typedef typename SegmentedImageType::SizeType::SizeValueType  SizeValueType;
 
   /** Create the reader and set the filename. */
   typename SegmentedImageReaderType::Pointer segmentedImageReader = SegmentedImageReaderType::New();
-  segmentedImageReader->SetFileName( segmentedImageName.c_str() );
+  segmentedImageReader->SetFileName(segmentedImageName.c_str());
   segmentedImageReader->Update();
 
   /** Possibly overrule the direction cosines. */
   ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
   DirectionType           direction;
   direction.SetIdentity();
-  infoChanger->SetOutputDirection( direction );
-  infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
-  infoChanger->SetInput( segmentedImageReader->GetOutput() );
+  infoChanger->SetOutputDirection(direction);
+  infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
+  infoChanger->SetInput(segmentedImageReader->GetOutput());
 
   /** Do the reading. */
   try
   {
     infoChanger->Update();
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
     /** Add information to the exception. */
-    excp.SetLocation( "MattesMutualInformationWithRigidityPenalty - BeforeRegistration()" );
+    excp.SetLocation("MattesMutualInformationWithRigidityPenalty - BeforeRegistration()");
     string err_str = excp.GetDescription();
     err_str += "\nError occurred while reading the segmented image.\n";
-    excp.SetDescription( err_str );
+    excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
     throw excp;
   }
 
-  this->SetSegmentedImage( infoChanger->GetOutput() );
+  this->SetSegmentedImage(infoChanger->GetOutput());
 
   /** Get information from the segmented image. */
-  typename SegmentedImageType::SizeType segmentedImageSize       = this->GetSegmentedImage()->GetBufferedRegion().GetSize();
-  typename SegmentedImageType::PointType segmentedImageOrigin    = this->GetSegmentedImage()->GetOrigin();
+  typename SegmentedImageType::SizeType  segmentedImageSize = this->GetSegmentedImage()->GetBufferedRegion().GetSize();
+  typename SegmentedImageType::PointType segmentedImageOrigin = this->GetSegmentedImage()->GetOrigin();
   typename SegmentedImageType::SpacingType segmentedImageSpacing = this->GetSegmentedImage()->GetSpacing();
 
   /** Get the grid sampling spacing for calculation of the rigidity penalty term. */
   typename SegmentedImageType::SpacingType penaltyGridSpacingInVoxels;
-  for( unsigned int dim = 0; dim < FixedImageDimension; ++dim )
+  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {
     this->m_Configuration->ReadParameter(
-      penaltyGridSpacingInVoxels[ dim ], "PenaltyGridSpacingInVoxels",
-      this->GetComponentLabel(), dim, 0 );
+      penaltyGridSpacingInVoxels[dim], "PenaltyGridSpacingInVoxels", this->GetComponentLabel(), dim, 0);
   }
 
   /** Compute resampled spacing and size. */
   typename SegmentedImageType::SpacingType resampledImageSpacing;
-  typename SegmentedImageType::SizeType resampledImageSize;
-  for( unsigned int dim = 0; dim < FixedImageDimension; ++dim )
+  typename SegmentedImageType::SizeType    resampledImageSize;
+  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {
-    resampledImageSpacing[ dim ] = segmentedImageSpacing[ dim ] * penaltyGridSpacingInVoxels[ dim ];
-    resampledImageSize[ dim ]    = static_cast< SizeValueType >(
-      segmentedImageSize[ dim ] / penaltyGridSpacingInVoxels[ dim ] );
+    resampledImageSpacing[dim] = segmentedImageSpacing[dim] * penaltyGridSpacingInVoxels[dim];
+    resampledImageSize[dim] = static_cast<SizeValueType>(segmentedImageSize[dim] / penaltyGridSpacingInVoxels[dim]);
   }
 
   /** Create resampler, identity transform and linear interpolator. */
-  typedef itk::ResampleImageFilter< SegmentedImageType, SegmentedImageType > ResampleFilterType;
-  typename ResampleFilterType::Pointer resampler = ResampleFilterType::New();
+  typedef itk::ResampleImageFilter<SegmentedImageType, SegmentedImageType> ResampleFilterType;
+  typename ResampleFilterType::Pointer                                     resampler = ResampleFilterType::New();
 
-  typedef itk::IdentityTransform< double, Superclass1::ImageDimension > IdentityTransformType;
-  typename IdentityTransformType::Pointer identityTransform = IdentityTransformType::New();
+  typedef itk::IdentityTransform<double, Superclass1::ImageDimension> IdentityTransformType;
+  typename IdentityTransformType::Pointer                             identityTransform = IdentityTransformType::New();
   identityTransform->SetIdentity();
 
-  typedef itk::LinearInterpolateImageFunction< SegmentedImageType, double > LinearInterpolatorType;
+  typedef itk::LinearInterpolateImageFunction<SegmentedImageType, double> LinearInterpolatorType;
   typename LinearInterpolatorType::Pointer linearInterpolator = LinearInterpolatorType::New();
 
   /** Configure the resampler and run it. */
-  resampler->SetInterpolator( linearInterpolator );
-  resampler->SetTransform( identityTransform );
-  resampler->SetOutputSpacing( resampledImageSpacing );
-  resampler->SetOutputOrigin( segmentedImageOrigin );
-  resampler->SetSize( resampledImageSize );
-  resampler->SetInput( this->GetSegmentedImage() );
+  resampler->SetInterpolator(linearInterpolator);
+  resampler->SetTransform(identityTransform);
+  resampler->SetOutputSpacing(resampledImageSpacing);
+  resampler->SetOutputOrigin(segmentedImageOrigin);
+  resampler->SetSize(resampledImageSize);
+  resampler->SetInput(this->GetSegmentedImage());
   resampler->Update();
 
-  this->SetSampledSegmentedImage( resampler->GetOutput() );
+  this->SetSampledSegmentedImage(resampler->GetOutput());
 
 } // end BeforeRegistration()
 
@@ -132,10 +129,9 @@ DistancePreservingRigidityPenalty< TElastix >
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-DistancePreservingRigidityPenalty< TElastix >
-::Initialize( void )
+DistancePreservingRigidityPenalty<TElastix>::Initialize(void)
 {
   /** Initialize this class with the Superclass initializer. */
   itk::TimeProbe timer;
@@ -145,7 +141,7 @@ DistancePreservingRigidityPenalty< TElastix >
   /** Stop and print the timer. */
   timer.Stop();
   elxout << "Initialization of DistancePreservingRigidityPenalty term took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
 
 } // end Initialize()
 

@@ -28,7 +28,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUBSplineInterpolateImageFunction */
-itkGPUKernelClassMacro( GPUBSplineInterpolateImageFunctionKernel );
+itkGPUKernelClassMacro(GPUBSplineInterpolateImageFunctionKernel);
 
 /** \class GPUBSplineInterpolateImageFunction
  * \brief GPU version of BSplineInterpolateImageFunction.
@@ -41,74 +41,78 @@ itkGPUKernelClassMacro( GPUBSplineInterpolateImageFunctionKernel );
  *
  * \ingroup GPUCommon
  */
-template< typename TInputImage, typename TCoordRep = float, typename TCoefficientType = float >
-class ITK_EXPORT GPUBSplineInterpolateImageFunction :
-  public         GPUInterpolateImageFunction< TInputImage, TCoordRep,
-  BSplineInterpolateImageFunction< TInputImage, TCoordRep,
-  TCoefficientType > >
+template <typename TInputImage, typename TCoordRep = float, typename TCoefficientType = float>
+class ITK_EXPORT GPUBSplineInterpolateImageFunction
+  : public GPUInterpolateImageFunction<TInputImage,
+                                       TCoordRep,
+                                       BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>
 {
 public:
-
   /** Standard class typedefs. */
   typedef GPUBSplineInterpolateImageFunction Self;
-  typedef GPUInterpolateImageFunction<
-    TInputImage, TCoordRep, BSplineInterpolateImageFunction<
-    TInputImage, TCoordRep, TCoefficientType > > GPUSuperclass;
-  typedef BSplineInterpolateImageFunction<
-    TInputImage, TCoordRep, BSplineInterpolateImageFunction<
-    TInputImage, TCoordRep, TCoefficientType > > CPUSuperclass;
-  typedef GPUSuperclass              Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUInterpolateImageFunction<TInputImage,
+                                      TCoordRep,
+                                      BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>
+    GPUSuperclass;
+  typedef BSplineInterpolateImageFunction<TInputImage,
+                                          TCoordRep,
+                                          BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>
+                                   CPUSuperclass;
+  typedef GPUSuperclass            Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUBSplineInterpolateImageFunction, GPUSuperclass );
+  itkTypeMacro(GPUBSplineInterpolateImageFunction, GPUSuperclass);
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ImageDimension constants */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
-  typedef GPUImage< TCoefficientType, InputImageDimension > GPUCoefficientImageType;
-  typedef typename GPUCoefficientImageType::Pointer         GPUCoefficientImagePointer;
-  typedef typename GPUDataManager::Pointer                  GPUDataManagerPointer;
+  typedef GPUImage<TCoefficientType, InputImageDimension> GPUCoefficientImageType;
+  typedef typename GPUCoefficientImageType::Pointer       GPUCoefficientImagePointer;
+  typedef typename GPUDataManager::Pointer                GPUDataManagerPointer;
 
   /** Set the input image. This must be set by the user. */
-  virtual void SetInputImage( const TInputImage * inputData );
+  virtual void
+  SetInputImage(const TInputImage * inputData);
 
   /** Get the GPU coefficient image. */
-  const GPUCoefficientImagePointer GetGPUCoefficients() const;
+  const GPUCoefficientImagePointer
+  GetGPUCoefficients() const;
 
   /** Get the GPU coefficient image base. */
-  const GPUDataManagerPointer GetGPUCoefficientsImageBase() const;
+  const GPUDataManagerPointer
+  GetGPUCoefficientsImageBase() const;
 
 protected:
-
   GPUBSplineInterpolateImageFunction();
   ~GPUBSplineInterpolateImageFunction() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  bool GetSourceCode( std::string & source ) const override;
+  bool
+  GetSourceCode(std::string & source) const override;
 
 private:
-
-  GPUBSplineInterpolateImageFunction( const Self & ); // purposely not implemented
-  void operator=( const Self & );                     // purposely not implemented
+  GPUBSplineInterpolateImageFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   GPUCoefficientImagePointer m_GPUCoefficients;
   GPUDataManagerPointer      m_GPUCoefficientsImageBase;
 
-  std::vector< std::string > m_Sources;
+  std::vector<std::string> m_Sources;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUBSplineInterpolateImageFunction.hxx"
+#  include "itkGPUBSplineInterpolateImageFunction.hxx"
 #endif
 
 #endif /* __itkGPUBSplineInterpolateImageFunction_h */

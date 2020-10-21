@@ -46,38 +46,36 @@ namespace elastix
  * \ingroup Resamplers
  */
 
-template< class TElastix >
-class OpenCLResampler :
-  public itk::ResampleImageFilter<
-  typename ResamplerBase< TElastix >::InputImageType,
-  typename ResamplerBase< TElastix >::OutputImageType,
-  typename ResamplerBase< TElastix >::CoordRepType >,
-  public ResamplerBase< TElastix >
+template <class TElastix>
+class OpenCLResampler
+  : public itk::ResampleImageFilter<typename ResamplerBase<TElastix>::InputImageType,
+                                    typename ResamplerBase<TElastix>::OutputImageType,
+                                    typename ResamplerBase<TElastix>::CoordRepType>
+  , public ResamplerBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef OpenCLResampler Self;
 
-  typedef itk::ResampleImageFilter<
-    typename ResamplerBase< TElastix >::InputImageType,
-    typename ResamplerBase< TElastix >::OutputImageType,
-    typename ResamplerBase< TElastix >::CoordRepType > Superclass1;
-  typedef ResamplerBase< TElastix >       Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::ResampleImageFilter<typename ResamplerBase<TElastix>::InputImageType,
+                                   typename ResamplerBase<TElastix>::OutputImageType,
+                                   typename ResamplerBase<TElastix>::CoordRepType>
+                                        Superclass1;
+  typedef ResamplerBase<TElastix>       Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( OpenCLResampler, ResampleImageFilter );
+  itkTypeMacro(OpenCLResampler, ResampleImageFilter);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific resampler. \n
    * example: <tt>(Resampler "OpenCLResampler")</tt>\n
    */
-  elxClassNameMacro( "OpenCLResampler" );
+  elxClassNameMacro("OpenCLResampler");
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::InterpolatorType InterpolatorType;
@@ -91,80 +89,86 @@ public:
   typedef typename OutputImageType::RegionType  OutputImageRegionType;
 
   /** GPU Typedefs for GPU image and GPU resampler. */
-  typedef itk::GPUImage< InputImagePixelType, InputImageType::ImageDimension >
-    GPUInputImageType;
-  typedef typename GPUInputImageType::Pointer GPUInputImagePointer;
-  typedef itk::GPUImage< OutputImagePixelType, OutputImageType::ImageDimension >
-    GPUOutputImageType;
-  typedef float GPUInterpolatorPrecisionType;
+  typedef itk::GPUImage<InputImagePixelType, InputImageType::ImageDimension>   GPUInputImageType;
+  typedef typename GPUInputImageType::Pointer                                  GPUInputImagePointer;
+  typedef itk::GPUImage<OutputImagePixelType, OutputImageType::ImageDimension> GPUOutputImageType;
+  typedef float                                                                GPUInterpolatorPrecisionType;
 
-  typedef itk::GPUResampleImageFilter<
-    GPUInputImageType,
-    GPUOutputImageType,
-    GPUInterpolatorPrecisionType > GPUResamplerType;
+  typedef itk::GPUResampleImageFilter<GPUInputImageType, GPUOutputImageType, GPUInterpolatorPrecisionType>
+                                             GPUResamplerType;
   typedef typename GPUResamplerType::Pointer GPUResamplerPointer;
 
   /** Set the transform. */
-  virtual void SetTransform( const TransformType * _arg );
+  virtual void
+  SetTransform(const TransformType * _arg);
 
   /** Set the interpolator. */
-  virtual void SetInterpolator( InterpolatorType * _arg );
+  virtual void
+  SetInterpolator(InterpolatorType * _arg);
 
   /** Do some things before registration. */
-  virtual void BeforeRegistration( void );
+  virtual void
+  BeforeRegistration(void);
 
   /** Function to read parameters from a file. */
-  virtual void ReadFromFile( void );
+  virtual void
+  ReadFromFile(void);
 
   /** Function to write parameters to a file. */
-  virtual void WriteToFile( void ) const;
+  virtual void
+  WriteToFile(void) const;
 
 protected:
-
   /** The constructor. */
   OpenCLResampler();
   /** The destructor. */
   virtual ~OpenCLResampler() {}
 
   /** This method performs all configuration for GPU resampler. */
-  void BeforeGenerateData( void );
+  void
+  BeforeGenerateData(void);
 
   /** Executes GPU resampler. */
-  virtual void GenerateData( void );
+  virtual void
+  GenerateData(void);
 
   /** Transform copier */
-  typedef typename ResamplerBase< TElastix >::CoordRepType InterpolatorPrecisionType;
-  typedef typename itk::AdvancedCombinationTransform< InterpolatorPrecisionType, OutputImageType::ImageDimension >
+  typedef typename ResamplerBase<TElastix>::CoordRepType InterpolatorPrecisionType;
+  typedef typename itk::AdvancedCombinationTransform<InterpolatorPrecisionType, OutputImageType::ImageDimension>
     AdvancedCombinationTransformType;
-  typedef typename itk::GPUAdvancedCombinationTransformCopier<
-    OpenCLImageTypes, OpenCLImageDimentions, AdvancedCombinationTransformType, float >
-    TransformCopierType;
+  typedef typename itk::GPUAdvancedCombinationTransformCopier<OpenCLImageTypes,
+                                                              OpenCLImageDimentions,
+                                                              AdvancedCombinationTransformType,
+                                                              float>
+                                                                 TransformCopierType;
   typedef typename TransformCopierType::Pointer                  TransformCopierPointer;
   typedef typename TransformCopierType::GPUComboTransformPointer GPUTransformPointer;
 
   /** Interpolator copier */
   typedef typename InterpolatorType::InputImageType InterpolatorInputImageType;
   typedef typename InterpolatorType::CoordRepType   InterpolatorCoordRepType;
-  typedef itk::InterpolateImageFunction< InterpolatorInputImageType, InterpolatorCoordRepType >
+  typedef itk::InterpolateImageFunction<InterpolatorInputImageType, InterpolatorCoordRepType>
     InterpolateImageFunctionType;
-  typedef typename itk::GPUInterpolatorCopier<
-    OpenCLImageTypes, OpenCLImageDimentions, InterpolateImageFunctionType, float >
-    InterpolateCopierType;
+  typedef
+    typename itk::GPUInterpolatorCopier<OpenCLImageTypes, OpenCLImageDimentions, InterpolateImageFunctionType, float>
+                                                                         InterpolateCopierType;
   typedef typename InterpolateCopierType::Pointer                        InterpolateCopierPointer;
   typedef typename InterpolateCopierType::GPUExplicitInterpolatorPointer GPUExplicitInterpolatorPointer;
 
 private:
-
   /** The private constructor. */
-  OpenCLResampler( const Self & ); // purposely not implemented
+  OpenCLResampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );  // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Helper method to report switching to CPU mode. */
-  void SwitchingToCPUAndReport( const bool configError );
+  void
+  SwitchingToCPUAndReport(const bool configError);
 
   /** Helper method to report to elastix log. */
-  void ReportToLog( void );
+  void
+  ReportToLog(void);
 
   TransformCopierPointer   m_TransformCopier;
   InterpolateCopierPointer m_InterpolatorCopier;
@@ -180,7 +184,7 @@ private:
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxOpenCLResampler.hxx"
+#  include "elxOpenCLResampler.hxx"
 #endif
 
 #endif // end #ifndef __elxOpenCLResampler_h

@@ -18,4 +18,4 @@
 
 #include "elxSumSquaredTissueVolumeDifferenceMetric.h"
 
-elxInstallMacro( SumSquaredTissueVolumeDifferenceMetric );
+elxInstallMacro(SumSquaredTissueVolumeDifferenceMetric);

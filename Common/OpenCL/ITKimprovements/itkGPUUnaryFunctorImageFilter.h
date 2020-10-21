@@ -56,61 +56,63 @@ namespace itk
  *
  * \ingroup   ITKGPUCommon
  */
-template< typename TInputImage, typename TOutputImage, typename TFunction, typename TParentImageFilter
-  = InPlaceImageFilter< TInputImage, TOutputImage > >
-class ITKOpenCL_EXPORT GPUUnaryFunctorImageFilter : public GPUInPlaceImageFilter< TInputImage, TOutputImage,
-  TParentImageFilter >
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TFunction,
+          typename TParentImageFilter = InPlaceImageFilter<TInputImage, TOutputImage>>
+class ITKOpenCL_EXPORT GPUUnaryFunctorImageFilter
+  : public GPUInPlaceImageFilter<TInputImage, TOutputImage, TParentImageFilter>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUUnaryFunctorImageFilter                         Self;
-  typedef TParentImageFilter                                 CPUSuperclass;
-  typedef GPUInPlaceImageFilter< TInputImage, TOutputImage > GPUSuperclass;
-  typedef SmartPointer< Self >                               Pointer;
-  typedef SmartPointer< const Self >                         ConstPointer;
+  typedef GPUUnaryFunctorImageFilter                       Self;
+  typedef TParentImageFilter                               CPUSuperclass;
+  typedef GPUInPlaceImageFilter<TInputImage, TOutputImage> GPUSuperclass;
+  typedef SmartPointer<Self>                               Pointer;
+  typedef SmartPointer<const Self>                         ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUUnaryFunctorImageFilter, GPUInPlaceImageFilter );
+  itkTypeMacro(GPUUnaryFunctorImageFilter, GPUInPlaceImageFilter);
 
   /** Some typedefs. */
   typedef TFunction FunctorType;
 
-  typedef TInputImage                              InputImageType;
-  typedef typename    InputImageType::ConstPointer InputImagePointer;
-  typedef typename    InputImageType::RegionType   InputImageRegionType;
-  typedef typename    InputImageType::PixelType    InputImagePixelType;
+  typedef TInputImage                           InputImageType;
+  typedef typename InputImageType::ConstPointer InputImagePointer;
+  typedef typename InputImageType::RegionType   InputImageRegionType;
+  typedef typename InputImageType::PixelType    InputImagePixelType;
 
-  typedef TOutputImage                             OutputImageType;
-  typedef typename     OutputImageType::Pointer    OutputImagePointer;
-  typedef typename     OutputImageType::RegionType OutputImageRegionType;
-  typedef typename     OutputImageType::PixelType  OutputImagePixelType;
+  typedef TOutputImage                         OutputImageType;
+  typedef typename OutputImageType::Pointer    OutputImagePointer;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  typedef typename OutputImageType::PixelType  OutputImagePixelType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
-  itkStaticConstMacro( OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
-  FunctorType & GetFunctor()
+  FunctorType &
+  GetFunctor()
   {
     return m_Functor;
   }
 
 
-  const FunctorType & GetFunctor() const
+  const FunctorType &
+  GetFunctor() const
   {
     return m_Functor;
   }
 
 
   /** Set the functor object. */
-  void SetFunctor( const FunctorType & functor )
+  void
+  SetFunctor(const FunctorType & functor)
   {
-    if( m_Functor != functor )
+    if (m_Functor != functor)
     {
       m_Functor = functor;
       this->Modified();
@@ -119,23 +121,24 @@ public:
 
 
 protected:
-
   GPUUnaryFunctorImageFilter() {}
 
   virtual ~GPUUnaryFunctorImageFilter() {}
 
-  virtual void GenerateOutputInformation();
+  virtual void
+  GenerateOutputInformation();
 
-  virtual void GPUGenerateData();
+  virtual void
+  GPUGenerateData();
 
   /** GPU kernel handle is defined here instead of in the child class
    * because GPUGenerateData() in this base class is used. */
   int m_UnaryFunctorImageFilterGPUKernelHandle;
 
 private:
-
-  GPUUnaryFunctorImageFilter( const Self & );   // purposely not implemented
-  void operator=( const Self & );               // purposely not implemented
+  GPUUnaryFunctorImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   FunctorType m_Functor;
 };
@@ -143,7 +146,7 @@ private:
 } // end of namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUUnaryFunctorImageFilter.hxx"
+#  include "itkGPUUnaryFunctorImageFilter.hxx"
 #endif
 
 #endif

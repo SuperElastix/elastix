@@ -34,44 +34,45 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TScalarType = float, unsigned int NDimensions = 3,
-typename TParentTransform      = AdvancedTranslationTransform< TScalarType, NDimensions > >
-class GPUAdvancedTranslationTransform :
-  public TParentTransform,
-  public GPUTranslationTransformBase< TScalarType, NDimensions >
+template <typename TScalarType = float,
+          unsigned int NDimensions = 3,
+          typename TParentTransform = AdvancedTranslationTransform<TScalarType, NDimensions>>
+class GPUAdvancedTranslationTransform
+  : public TParentTransform
+  , public GPUTranslationTransformBase<TScalarType, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUAdvancedTranslationTransform Self;
-  typedef TParentTransform                CPUSuperclass;
-  typedef GPUTranslationTransformBase<
-    TScalarType, NDimensions >            GPUSuperclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUAdvancedTranslationTransform                       Self;
+  typedef TParentTransform                                      CPUSuperclass;
+  typedef GPUTranslationTransformBase<TScalarType, NDimensions> GPUSuperclass;
+  typedef SmartPointer<Self>                                    Pointer;
+  typedef SmartPointer<const Self>                              ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAdvancedTranslationTransform, CPUSuperclass );
+  itkTypeMacro(GPUAdvancedTranslationTransform, CPUSuperclass);
 
   /** Typedefs from GPUSuperclass. */
   typedef typename GPUSuperclass::CPUOutputVectorType CPUOutputVectorType;
 
   /** This method returns the CPU value of the offset of the TranslationTransform. */
-  virtual const CPUOutputVectorType & GetCPUOffset( void ) const { return this->GetOffset(); }
+  virtual const CPUOutputVectorType &
+  GetCPUOffset(void) const
+  {
+    return this->GetOffset();
+  }
 
 protected:
-
   GPUAdvancedTranslationTransform() {}
   virtual ~GPUAdvancedTranslationTransform() {}
 
 private:
-
-  GPUAdvancedTranslationTransform( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );                // purposely not implemented
-
+  GPUAdvancedTranslationTransform(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

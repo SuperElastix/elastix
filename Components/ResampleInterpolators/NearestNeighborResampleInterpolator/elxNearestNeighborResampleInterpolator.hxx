@@ -21,6 +21,6 @@
 
 #include "elxNearestNeighborResampleInterpolator.h"
 
-//nothing
+// nothing
 
 #endif // end #ifndef __elxNearestNeighborResampleInterpolator_hxx

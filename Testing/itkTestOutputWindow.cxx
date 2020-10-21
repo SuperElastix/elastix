@@ -21,15 +21,15 @@ namespace itk
 {
 //------------------------------------------------------------------------------
 void
-TestOutputWindow::PrintSelf( std::ostream & os, Indent indent ) const
+TestOutputWindow::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 }
 
 
 //------------------------------------------------------------------------------
 void
-TestOutputWindow::DisplayText( const char * text )
+TestOutputWindow::DisplayText(const char * text)
 {
   std::cout << text;
 }

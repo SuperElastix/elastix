@@ -36,26 +36,23 @@ using namespace xl;
  */
 
 int
-ComponentDatabase::SetCreator(
-  const ComponentDescriptionType & name,
-  IndexType i,
-  PtrToCreator creator )
+ComponentDatabase::SetCreator(const ComponentDescriptionType & name, IndexType i, PtrToCreator creator)
 {
   /** Make a key with the input arguments */
-  CreatorMapKeyType key( name, i );
+  CreatorMapKeyType key(name, i);
 
   /** Check if this key has been defined already.
    * If not, insert the key + creator in the map.
    */
-  if( CreatorMap.count( key ) )    //==1
+  if (CreatorMap.count(key)) //==1
   {
-    xout[ "error" ] << "Error: " << std::endl;
-    xout[ "error" ] << name << "(index " << i << ") - This component has already been installed!" << std::endl;
+    xout["error"] << "Error: " << std::endl;
+    xout["error"] << name << "(index " << i << ") - This component has already been installed!" << std::endl;
     return 1;
   }
   else
   {
-    CreatorMap.insert( CreatorMapEntryType( key, creator ) );
+    CreatorMap.insert(CreatorMapEntryType(key, creator));
     return 0;
   }
 
@@ -67,30 +64,29 @@ ComponentDatabase::SetCreator(
  */
 
 int
-ComponentDatabase::SetIndex(
-  const PixelTypeDescriptionType & fixedPixelType,
-  ImageDimensionType fixedDimension,
-  const PixelTypeDescriptionType & movingPixelType,
-  ImageDimensionType movingDimension,
-  IndexType i )
+ComponentDatabase::SetIndex(const PixelTypeDescriptionType & fixedPixelType,
+                            ImageDimensionType               fixedDimension,
+                            const PixelTypeDescriptionType & movingPixelType,
+                            ImageDimensionType               movingDimension,
+                            IndexType                        i)
 {
   /** Make a key with the input arguments.*/
-  ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
-  ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );
-  IndexMapKeyType          key( fixedImage, movingImage );
+  ImageTypeDescriptionType fixedImage(fixedPixelType, fixedDimension);
+  ImageTypeDescriptionType movingImage(movingPixelType, movingDimension);
+  IndexMapKeyType          key(fixedImage, movingImage);
 
   /** Insert the key+index in the map, if it hadn't been done before yet.*/
-  if( IndexMap.count( key ) )  //==1
+  if (IndexMap.count(key)) //==1
   {
-    xout[ "error" ] << "Error:" << std::endl;
-    xout[ "error" ] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
-    xout[ "error" ] << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl;
-    xout[ "error" ] << "Elastix already supports this combination of ImageTypes!" << std::endl;
+    xout["error"] << "Error:" << std::endl;
+    xout["error"] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
+    xout["error"] << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl;
+    xout["error"] << "Elastix already supports this combination of ImageTypes!" << std::endl;
     return 1;
   }
   else
   {
-    IndexMap.insert( IndexMapEntryType( key, i ) );
+    IndexMap.insert(IndexMapEntryType(key, i));
     return 0;
   }
 
@@ -102,22 +98,20 @@ ComponentDatabase::SetIndex(
  */
 
 ComponentDatabase::PtrToCreator
-ComponentDatabase::GetCreator(
-  const ComponentDescriptionType & name,
-  IndexType i ) const
+ComponentDatabase::GetCreator(const ComponentDescriptionType & name, IndexType i) const
 {
   /** Make a key with the input arguments */
-  CreatorMapKeyType key( name, i );
+  CreatorMapKeyType key(name, i);
 
   const auto found = CreatorMap.find(key);
 
   /** Check if this key has been defined. If yes, return the 'creator'
    * that is linked to it.
    */
-  if( found == end(CreatorMap) )
+  if (found == end(CreatorMap))
   {
-    xout[ "error" ] << "Error: " << std::endl;
-    xout[ "error" ] << name << "(index " << i << ") - This component is not installed!" << std::endl;
+    xout["error"] << "Error: " << std::endl;
+    xout["error"] << name << "(index " << i << ") - This component is not installed!" << std::endl;
     return nullptr;
   }
   else
@@ -133,33 +127,33 @@ ComponentDatabase::GetCreator(
  */
 
 ComponentDatabase::IndexType
-ComponentDatabase::GetIndex(
-  const PixelTypeDescriptionType & fixedPixelType,
-  ImageDimensionType fixedDimension,
-  const PixelTypeDescriptionType & movingPixelType,
-  ImageDimensionType movingDimension ) const
+ComponentDatabase::GetIndex(const PixelTypeDescriptionType & fixedPixelType,
+                            ImageDimensionType               fixedDimension,
+                            const PixelTypeDescriptionType & movingPixelType,
+                            ImageDimensionType               movingDimension) const
 {
   /** Make a key with the input arguments */
-  ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
-  ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );
-  IndexMapKeyType          key( fixedImage, movingImage );
+  ImageTypeDescriptionType fixedImage(fixedPixelType, fixedDimension);
+  ImageTypeDescriptionType movingImage(movingPixelType, movingDimension);
+  IndexMapKeyType          key(fixedImage, movingImage);
 
   const auto found = IndexMap.find(key);
 
   /** Check if this key has been defined. If yes, return the 'index'
    * that is linked to it.
    */
-  if( found == end(IndexMap) )
+  if (found == end(IndexMap))
   {
-    xout[ "error" ] << "ERROR:\n"
-                    << "  FixedImageType:  " << fixedDimension << "D " << fixedPixelType << std::endl
-                    << "  MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl
-                    << "  elastix was not compiled with this combination of ImageTypes!\n"
-                    << "  You have two options to solve this:\n"
-                    << "  1. Add the combination to the CMake parameters ELASTIX_IMAGE_nD_PIXELTYPES and "
-                    << "ELASTIX_IMAGE_DIMENSIONS, re-cmake and re-compile.\n"
-                    << "  2. Change the parameters FixedInternalImagePixelType and/or MovingInternalImagePixelType "
-                    << "in the elastix parameter file.\n" << std::endl;
+    xout["error"] << "ERROR:\n"
+                  << "  FixedImageType:  " << fixedDimension << "D " << fixedPixelType << std::endl
+                  << "  MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl
+                  << "  elastix was not compiled with this combination of ImageTypes!\n"
+                  << "  You have two options to solve this:\n"
+                  << "  1. Add the combination to the CMake parameters ELASTIX_IMAGE_nD_PIXELTYPES and "
+                  << "ELASTIX_IMAGE_DIMENSIONS, re-cmake and re-compile.\n"
+                  << "  2. Change the parameters FixedInternalImagePixelType and/or MovingInternalImagePixelType "
+                  << "in the elastix parameter file.\n"
+                  << std::endl;
     return 0;
   }
   else

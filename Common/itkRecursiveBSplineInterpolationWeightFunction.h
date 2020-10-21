@@ -27,30 +27,27 @@
 namespace itk
 {
 /** Recursive template to retrieve the number of B-spline indices at compile time. */
-template< unsigned int SplineOrder, unsigned int Dimension >
+template <unsigned int SplineOrder, unsigned int Dimension>
 class GetConstNumberOfIndicesHack
 {
 public:
-
-  typedef GetConstNumberOfIndicesHack< SplineOrder, Dimension - 1 > OneDimensionLess;
-  itkStaticConstMacro( Value, unsigned int, ( SplineOrder + 1 ) * OneDimensionLess::Value );
+  typedef GetConstNumberOfIndicesHack<SplineOrder, Dimension - 1> OneDimensionLess;
+  itkStaticConstMacro(Value, unsigned int, (SplineOrder + 1) * OneDimensionLess::Value);
 };
 
-template< unsigned int SplineOrder >
-class GetConstNumberOfIndicesHack< SplineOrder, 0 >
+template <unsigned int SplineOrder>
+class GetConstNumberOfIndicesHack<SplineOrder, 0>
 {
 public:
-
-  itkStaticConstMacro( Value, unsigned int, 1 );
+  itkStaticConstMacro(Value, unsigned int, 1);
 };
 
 /** Recursive template to retrieve the number of B-spline weights at compile time. */
-template< unsigned int SplineOrder, unsigned int Dimension >
+template <unsigned int SplineOrder, unsigned int Dimension>
 class GetConstNumberOfWeightsHackRecursiveBSpline
 {
 public:
-
-  itkStaticConstMacro( Value, unsigned int, ( SplineOrder + 1 ) * Dimension  );
+  itkStaticConstMacro(Value, unsigned int, (SplineOrder + 1) * Dimension);
 };
 
 /** \class RecursiveBSplineInterpolationWeightFunction
@@ -70,57 +67,52 @@ public:
  * \ingroup Functions ImageInterpolators
  * \ingroup ITKCommon
  */
-template<
-  typename TCoordRep           = float,
-  unsigned int VSpaceDimension = 2,
-  unsigned int VSplineOrder    = 3 >
-class RecursiveBSplineInterpolationWeightFunction :
-  public BSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
+template <typename TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+class RecursiveBSplineInterpolationWeightFunction
+  : public BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef RecursiveBSplineInterpolationWeightFunction Self;
-  typedef BSplineInterpolationWeightFunction<
-    TCoordRep, VSpaceDimension, VSplineOrder >        Superclass;
-  typedef SmartPointer< Self >                        Pointer;
-  typedef SmartPointer< const Self >                  ConstPointer;
+  typedef RecursiveBSplineInterpolationWeightFunction                                  Self;
+  typedef BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder> Superclass;
+  typedef SmartPointer<Self>                                                           Pointer;
+  typedef SmartPointer<const Self>                                                     ConstPointer;
 
   /** New macro for creation of through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RecursiveBSplineInterpolationWeightFunction, FunctionBase );
+  itkTypeMacro(RecursiveBSplineInterpolationWeightFunction, FunctionBase);
 
   /** Space dimension. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, VSpaceDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, VSpaceDimension);
 
   /** Spline order. */
-  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
+  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Typedefs from superclass*/
   typedef typename Superclass::WeightsType         WeightsType;
   typedef typename Superclass::IndexType           IndexType;
   typedef typename Superclass::SizeType            SizeType;
   typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
-  //typedef typename Superclass::
+  // typedef typename Superclass::
 
   /** Get number of hacks. */
-  typedef GetConstNumberOfWeightsHackRecursiveBSpline<
-    itkGetStaticConstMacro( SplineOrder ),
-    itkGetStaticConstMacro( SpaceDimension ) > GetConstNumberOfWeightsHackRecursiveBSplineType;
-  itkStaticConstMacro( NumberOfWeights, unsigned int, GetConstNumberOfWeightsHackRecursiveBSplineType::Value );
-  typedef GetConstNumberOfIndicesHack<
-    itkGetStaticConstMacro( SplineOrder ),
-    itkGetStaticConstMacro( SpaceDimension ) > GetConstNumberOfIndicesHackType;
-  itkStaticConstMacro( NumberOfIndices, unsigned int, GetConstNumberOfIndicesHackType::Value );
+  typedef GetConstNumberOfWeightsHackRecursiveBSpline<itkGetStaticConstMacro(SplineOrder),
+                                                      itkGetStaticConstMacro(SpaceDimension)>
+    GetConstNumberOfWeightsHackRecursiveBSplineType;
+  itkStaticConstMacro(NumberOfWeights, unsigned int, GetConstNumberOfWeightsHackRecursiveBSplineType::Value);
+  typedef GetConstNumberOfIndicesHack<itkGetStaticConstMacro(SplineOrder), itkGetStaticConstMacro(SpaceDimension)>
+    GetConstNumberOfIndicesHackType;
+  itkStaticConstMacro(NumberOfIndices, unsigned int, GetConstNumberOfIndicesHackType::Value);
 
   /** Get number of indices. */
-  itkGetConstMacro( NumberOfIndices, unsigned int );
+  itkGetConstMacro(NumberOfIndices, unsigned int);
 
   /** Evaluate the weights at specified ContinousIndex position.
    * Subclasses must provide this method. */
-  WeightsType Evaluate( const ContinuousIndexType & index ) const override;
+  WeightsType
+  Evaluate(const ContinuousIndexType & index) const override;
 
   /** Evaluate the weights at specified ContinousIndex position.
    * The weights are returned in the user specified container.
@@ -130,25 +122,27 @@ public:
    * On return, startIndex contains the start index of the
    * support region over which the weights are defined.
    */
-  void Evaluate( const ContinuousIndexType & index,
-    WeightsType & weights, IndexType & startIndex ) const override;
+  void
+  Evaluate(const ContinuousIndexType & index, WeightsType & weights, IndexType & startIndex) const override;
 
-  void EvaluateDerivative( const ContinuousIndexType & index,
-    WeightsType & weights, const IndexType & startIndex ) const;
+  void
+  EvaluateDerivative(const ContinuousIndexType & index, WeightsType & weights, const IndexType & startIndex) const;
 
-  void EvaluateSecondOrderDerivative( const ContinuousIndexType & index,
-    WeightsType & weights, const IndexType & startIndex ) const;
+  void
+  EvaluateSecondOrderDerivative(const ContinuousIndexType & index,
+                                WeightsType &               weights,
+                                const IndexType &           startIndex) const;
 
 protected:
-
   RecursiveBSplineInterpolationWeightFunction();
   ~RecursiveBSplineInterpolationWeightFunction() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
-  RecursiveBSplineInterpolationWeightFunction( const Self & ); // purposely not implemented
-  void operator=( const Self & );                              // purposely not implemented
+  RecursiveBSplineInterpolationWeightFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Private members; We unfortunatly cannot use those of the superclass. */
   unsigned int m_NumberOfWeights;
@@ -156,21 +150,21 @@ private:
   SizeType     m_SupportSize;
 
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction2< itkGetStaticConstMacro( SplineOrder ) >                      KernelType;
-  typedef BSplineDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) >            DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > SecondOrderDerivativeKernelType;
+  typedef BSplineKernelFunction2<itkGetStaticConstMacro(SplineOrder)>           KernelType;
+  typedef BSplineDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)> DerivativeKernelType;
+  typedef BSplineSecondOrderDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)>
+    SecondOrderDerivativeKernelType;
 
   /** Interpolation kernel. */
-  typename KernelType::Pointer m_Kernel;
-  typename DerivativeKernelType::Pointer m_DerivativeKernel;
+  typename KernelType::Pointer                      m_Kernel;
+  typename DerivativeKernelType::Pointer            m_DerivativeKernel;
   typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkRecursiveBSplineInterpolationWeightFunction.hxx"
+#  include "itkRecursiveBSplineInterpolationWeightFunction.hxx"
 #endif
 
 #endif

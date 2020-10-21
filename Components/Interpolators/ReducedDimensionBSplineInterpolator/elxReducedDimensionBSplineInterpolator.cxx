@@ -18,4 +18,4 @@
 
 #include "elxReducedDimensionBSplineInterpolator.h"
 
-elxInstallMacro( ReducedDimensionBSplineInterpolator );
+elxInstallMacro(ReducedDimensionBSplineInterpolator);

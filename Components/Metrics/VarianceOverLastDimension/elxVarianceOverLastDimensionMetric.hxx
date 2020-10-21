@@ -28,17 +28,16 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-VarianceOverLastDimensionMetric< TElastix >
-::Initialize( void )
+VarianceOverLastDimensionMetric<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of VarianceOverLastDimensionMetric metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -47,10 +46,9 @@ VarianceOverLastDimensionMetric< TElastix >
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-VarianceOverLastDimensionMetric< TElastix >
-::BeforeRegistration( void )
+VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration(void)
 {
   /** Check that the direction cosines are structured like
    *       [ dc  dc  0 ]
@@ -58,24 +56,24 @@ VarianceOverLastDimensionMetric< TElastix >
    *       [  0   0  1 ]
    */
   typedef typename FixedImageType::DirectionType DirectionType;
-  DirectionType dc = this->GetElastix()->GetFixedImage()->GetDirection();
+  DirectionType                                  dc = this->GetElastix()->GetFixedImage()->GetDirection();
 
   bool dcValid = true;
-  for( unsigned int i = 0; i < FixedImageDimension - 1; ++i )
+  for (unsigned int i = 0; i < FixedImageDimension - 1; ++i)
   {
-    dcValid &= ( dc[ FixedImageDimension - 1 ][ i ] == 0 );
-    dcValid &= ( dc[ i ][ FixedImageDimension - 1 ] == 0 );
+    dcValid &= (dc[FixedImageDimension - 1][i] == 0);
+    dcValid &= (dc[i][FixedImageDimension - 1] == 0);
   }
-  dcValid &= ( dc[ FixedImageDimension - 1 ][ FixedImageDimension - 1 ] == 1 );
+  dcValid &= (dc[FixedImageDimension - 1][FixedImageDimension - 1] == 1);
 
-  if( !dcValid )
+  if (!dcValid)
   {
-    itkExceptionMacro( << "\nERROR: the direction cosines matrix of the fixed image is invalid!\n\n"
-                       << "  The VarianceOverLastDimensionMetric expects the last dimension to represent\n"
-                       << "  time and therefore requires a direction cosines matrix of the form:\n"
-                       << "       [ . . 0 ]\n"
-                       << "  dc = [ . . 0 ]\n"
-                       << "       [ 0 0 1 ]" );
+    itkExceptionMacro(<< "\nERROR: the direction cosines matrix of the fixed image is invalid!\n\n"
+                      << "  The VarianceOverLastDimensionMetric expects the last dimension to represent\n"
+                      << "  time and therefore requires a direction cosines matrix of the form:\n"
+                      << "       [ . . 0 ]\n"
+                      << "  dc = [ . . 0 ]\n"
+                      << "       [ 0 0 1 ]");
   }
 
 } // end BeforeRegistration()
@@ -85,78 +83,73 @@ VarianceOverLastDimensionMetric< TElastix >
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-VarianceOverLastDimensionMetric< TElastix >
-::BeforeEachResolution( void )
+VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level
-    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the random sampling in the last dimension. */
   bool useRandomSampling = false;
-  this->GetConfiguration()->ReadParameter( useRandomSampling,
-    "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0 );
-  this->SetSampleLastDimensionRandomly( useRandomSampling );
+  this->GetConfiguration()->ReadParameter(
+    useRandomSampling, "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0);
+  this->SetSampleLastDimensionRandomly(useRandomSampling);
 
   /** Get and set if we want to subtract the mean from the derivative. */
   bool subtractMean = false;
-  this->GetConfiguration()->ReadParameter( subtractMean,
-    "SubtractMean", this->GetComponentLabel(), 0, 0 );
-  this->SetSubtractMean( subtractMean );
+  this->GetConfiguration()->ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
+  this->SetSubtractMean(subtractMean);
 
   /** Get and set the number of random samples for the last dimension. */
   int numSamplesLastDimension = 10;
-  this->GetConfiguration()->ReadParameter( numSamplesLastDimension,
-    "NumSamplesLastDimension", this->GetComponentLabel(), level, 0 );
-  this->SetNumSamplesLastDimension( numSamplesLastDimension );
+  this->GetConfiguration()->ReadParameter(
+    numSamplesLastDimension, "NumSamplesLastDimension", this->GetComponentLabel(), level, 0);
+  this->SetNumSamplesLastDimension(numSamplesLastDimension);
 
   /** Get and set the number of additional samples sampled at the fixed time point.  */
   unsigned int numAdditionalSamplesFixed = 0;
-  this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
-    "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
-  this->SetNumAdditionalSamplesFixed( numAdditionalSamplesFixed );
+  this->GetConfiguration()->ReadParameter(
+    numAdditionalSamplesFixed, "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0);
+  this->SetNumAdditionalSamplesFixed(numAdditionalSamplesFixed);
 
   /** Get and set the fixed timepoint number. */
   unsigned int reducedDimensionIndex = 0;
   this->GetConfiguration()->ReadParameter(
-    reducedDimensionIndex, "ReducedDimensionIndex",
-    this->GetComponentLabel(), 0, 0 );
-  this->SetReducedDimensionIndex( reducedDimensionIndex );
+    reducedDimensionIndex, "ReducedDimensionIndex", this->GetComponentLabel(), 0, 0);
+  this->SetReducedDimensionIndex(reducedDimensionIndex);
 
   /** Check if this transform is a B-spline transform. */
-  CombinationTransformType * testPtr1
-    = dynamic_cast< CombinationTransformType * >( this->GetElastix()->GetElxTransformBase() );
-  if( testPtr1 )
+  CombinationTransformType * testPtr1 =
+    dynamic_cast<CombinationTransformType *>(this->GetElastix()->GetElxTransformBase());
+  if (testPtr1)
   {
     /** Check for B-spline transform. */
-    const BSplineTransformBaseType * testPtr2 = dynamic_cast< const BSplineTransformBaseType * >(
-      testPtr1->GetCurrentTransform() );
-    if( testPtr2 )
+    const BSplineTransformBaseType * testPtr2 =
+      dynamic_cast<const BSplineTransformBaseType *>(testPtr1->GetCurrentTransform());
+    if (testPtr2)
     {
-      this->SetGridSize( testPtr2->GetGridRegion().GetSize() );
+      this->SetGridSize(testPtr2->GetGridRegion().GetSize());
     }
     else
     {
       /** Check for stack transform. */
-      StackTransformType * testPtr3 = dynamic_cast< StackTransformType * >(
-        testPtr1->GetModifiableCurrentTransform() );
-      if( testPtr3 )
+      StackTransformType * testPtr3 = dynamic_cast<StackTransformType *>(testPtr1->GetModifiableCurrentTransform());
+      if (testPtr3)
       {
         /** Set itk member variable. */
-        this->SetTransformIsStackTransform( true );
+        this->SetTransformIsStackTransform(true);
 
-        if( testPtr3->GetNumberOfSubTransforms() > 0 )
+        if (testPtr3->GetNumberOfSubTransforms() > 0)
         {
           /** Check if subtransform is a B-spline transform. */
-          ReducedDimensionBSplineTransformBaseType * testPtr4 = dynamic_cast< ReducedDimensionBSplineTransformBaseType * >(
-            testPtr3->GetSubTransform( 0 ).GetPointer() );
-          if( testPtr4 )
+          ReducedDimensionBSplineTransformBaseType * testPtr4 =
+            dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(testPtr3->GetSubTransform(0).GetPointer());
+          if (testPtr4)
           {
             FixedImageSizeType gridSize;
-            gridSize.Fill( testPtr3->GetNumberOfSubTransforms() );
-            this->SetGridSize( gridSize );
+            gridSize.Fill(testPtr3->GetNumberOfSubTransforms());
+            this->SetGridSize(gridSize);
           }
         }
       }

@@ -18,4 +18,4 @@
 
 #include "elxBSplineTransformWithDiffusion.h"
 
-elxInstallMacro( BSplineTransformWithDiffusion );
+elxInstallMacro(BSplineTransformWithDiffusion);

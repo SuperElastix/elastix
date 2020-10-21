@@ -53,23 +53,21 @@ namespace itk
  * \ingroup Optimizers
  */
 
-class StochasticPreconditionedGradientDescentOptimizer :
-  public PreconditionedGradientDescentOptimizer
+class StochasticPreconditionedGradientDescentOptimizer : public PreconditionedGradientDescentOptimizer
 {
 public:
-
   /** Standard ITK.*/
-  typedef StochasticPreconditionedGradientDescentOptimizer    Self;
+  typedef StochasticPreconditionedGradientDescentOptimizer Self;
   typedef PreconditionedGradientDescentOptimizer           Superclass;
 
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StochasticPreconditionedGradientDescentOptimizer, PreconditionedGradientDescentOptimizer );
+  itkTypeMacro(StochasticPreconditionedGradientDescentOptimizer, PreconditionedGradientDescentOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -82,28 +80,30 @@ public:
   typedef Superclass::StopConditionType         StopConditionType;
 
   /** Some typedefs for computing the SelfHessian */
-  typedef Superclass::PreconditionValueType     PreconditionValueType;
-  typedef Superclass::PreconditionType          PreconditionType;
-  //typedef Superclass::EigenSystemType           EigenSystemType;
+  typedef Superclass::PreconditionValueType PreconditionValueType;
+  typedef Superclass::PreconditionType      PreconditionType;
+  // typedef Superclass::EigenSystemType           EigenSystemType;
 
   /** Set/Get a. */
-  itkSetMacro( Param_a, double );
-  itkGetConstMacro( Param_a, double );
+  itkSetMacro(Param_a, double);
+  itkGetConstMacro(Param_a, double);
 
   /** Set/Get A. */
-  itkSetMacro( Param_A, double );
-  itkGetConstMacro( Param_A, double );
+  itkSetMacro(Param_A, double);
+  itkGetConstMacro(Param_A, double);
 
   /** Set/Get alpha. */
-  itkSetMacro( Param_alpha, double );
-  itkGetConstMacro( Param_alpha, double );
+  itkSetMacro(Param_alpha, double);
+  itkGetConstMacro(Param_alpha, double);
 
   /** Sets a new LearningRate before calling the Superclass'
    * implementation, and updates the current time. */
-  virtual void AdvanceOneStep( void );
+  virtual void
+  AdvanceOneStep(void);
 
   /** Set current time to 0 and call superclass' implementation. */
-  virtual void StartOptimization( void );
+  virtual void
+  StartOptimization(void);
 
   /** Set/Get the initial time. Should be >=0. This function is
    * superfluous, since Param_A does effectively the same.
@@ -111,44 +111,45 @@ public:
    * the initial time may have a different function than Param_A.
    * Default: 0.0
    */
-  itkSetMacro( InitialTime, double );
-  itkGetConstMacro( InitialTime, double );
+  itkSetMacro(InitialTime, double);
+  itkGetConstMacro(InitialTime, double);
 
   /** Get the current time. This equals the CurrentIteration in this base class
    * but may be different in inheriting classes, such as the AccelerateGradientDescent.
    */
-  itkGetConstMacro( CurrentTime, double );
+  itkGetConstMacro(CurrentTime, double);
 
 protected:
-
   StochasticPreconditionedGradientDescentOptimizer();
-  virtual ~StochasticPreconditionedGradientDescentOptimizer() {};
+  virtual ~StochasticPreconditionedGradientDescentOptimizer(){};
 
   /** Function to compute the parameter at time/iteration k. */
-  virtual double Compute_a( double k ) const;
+  virtual double
+  Compute_a(double k) const;
 
   /** Function to update the current time
    * This function just increments the CurrentTime by 1.
    * Inheriting functions may implement something smarter,
    * for example, dependent on the progress.
    */
-  virtual void UpdateCurrentTime( void );
+  virtual void
+  UpdateCurrentTime(void);
 
   /** The current time, which serves as input for Compute_a */
   double m_CurrentTime;
 
 private:
-
-  StochasticPreconditionedGradientDescentOptimizer( const Self& );  // purposely not implemented
-  void operator=( const Self& );              // purposely not implemented
+  StochasticPreconditionedGradientDescentOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /**Parameters, as described by Spall. */
-  double                        m_Param_a;
-  double                        m_Param_A;
-  double                        m_Param_alpha;
+  double m_Param_a;
+  double m_Param_A;
+  double m_Param_alpha;
 
   /** Settings */
-  double                        m_InitialTime;
+  double m_InitialTime;
 
 }; // end class StochasticPreconditionedGradientDescentOptimizer
 

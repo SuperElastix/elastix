@@ -18,4 +18,4 @@
 
 #include "elxMovingGenericPyramid.h"
 
-elxInstallMacro( MovingGenericPyramid );
+elxInstallMacro(MovingGenericPyramid);

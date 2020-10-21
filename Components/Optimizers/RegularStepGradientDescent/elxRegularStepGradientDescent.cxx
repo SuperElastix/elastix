@@ -18,4 +18,4 @@
 
 #include "elxRegularStepGradientDescent.h"
 
-elxInstallMacro( RegularStepGradientDescent );
+elxInstallMacro(RegularStepGradientDescent);

@@ -18,4 +18,4 @@
 
 #include "elxAdvancedKappaStatisticMetric.h"
 
-elxInstallMacro( AdvancedKappaStatisticMetric );
+elxInstallMacro(AdvancedKappaStatisticMetric);

@@ -33,102 +33,99 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
-class GPUShrinkImageFilterFactory2 :
-  public GPUObjectFactoryBase< NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
+class GPUShrinkImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-
-  typedef GPUShrinkImageFilterFactory2        Self;
-  typedef GPUObjectFactoryBase< NDimensions > Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUShrinkImageFilterFactory2      Self;
+  typedef GPUObjectFactoryBase<NDimensions> Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** Return a descriptive string describing the factory. */
-  const char * GetDescription() const { return "A Factory for GPUShrinkImageFilter"; }
+  const char *
+  GetDescription() const
+  {
+    return "A Factory for GPUShrinkImageFilter";
+  }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro( Self );
+  itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUShrinkImageFilterFactory2, GPUObjectFactoryBase );
+  itkTypeMacro(GPUShrinkImageFilterFactory2, GPUObjectFactoryBase);
 
   /** Register one factory of this type. */
-  static void RegisterOneFactory();
+  static void
+  RegisterOneFactory();
 
   /** Operator() to register override. */
-  template< typename TTypeIn, typename TTypeOut, unsigned int VImageDimension >
-  void operator()( void )
+  template <typename TTypeIn, typename TTypeOut, unsigned int VImageDimension>
+  void
+  operator()(void)
   {
     // Image typedefs
-    typedef Image< TTypeIn, VImageDimension >     InputImageType;
-    typedef Image< TTypeOut, VImageDimension >    OutputImageType;
-    typedef GPUImage< TTypeIn, VImageDimension >  GPUInputImageType;
-    typedef GPUImage< TTypeOut, VImageDimension > GPUOutputImageType;
+    typedef Image<TTypeIn, VImageDimension>     InputImageType;
+    typedef Image<TTypeOut, VImageDimension>    OutputImageType;
+    typedef GPUImage<TTypeIn, VImageDimension>  GPUInputImageType;
+    typedef GPUImage<TTypeOut, VImageDimension> GPUOutputImageType;
 
     // Override default
-    this->RegisterOverride(
-      typeid( ShrinkImageFilter< InputImageType, OutputImageType > ).name(),
-      typeid( GPUShrinkImageFilter< InputImageType, OutputImageType > ).name(),
-      "GPU ShrinkImageFilter override default",
-      true,
-      CreateObjectFunction< GPUShrinkImageFilter< InputImageType, OutputImageType > >::New()
-      );
+    this->RegisterOverride(typeid(ShrinkImageFilter<InputImageType, OutputImageType>).name(),
+                           typeid(GPUShrinkImageFilter<InputImageType, OutputImageType>).name(),
+                           "GPU ShrinkImageFilter override default",
+                           true,
+                           CreateObjectFunction<GPUShrinkImageFilter<InputImageType, OutputImageType>>::New());
 
     // Override when itkGPUImage is first template argument
-    this->RegisterOverride(
-      typeid( ShrinkImageFilter< GPUInputImageType, OutputImageType > ).name(),
-      typeid( GPUShrinkImageFilter< GPUInputImageType, OutputImageType > ).name(),
-      "GPU ShrinkImageFilter override GPUImage first",
-      true,
-      CreateObjectFunction< GPUShrinkImageFilter< GPUInputImageType, OutputImageType > >::New()
-      );
+    this->RegisterOverride(typeid(ShrinkImageFilter<GPUInputImageType, OutputImageType>).name(),
+                           typeid(GPUShrinkImageFilter<GPUInputImageType, OutputImageType>).name(),
+                           "GPU ShrinkImageFilter override GPUImage first",
+                           true,
+                           CreateObjectFunction<GPUShrinkImageFilter<GPUInputImageType, OutputImageType>>::New());
 
     // Override when itkGPUImage is second template argument
-    this->RegisterOverride(
-      typeid( ShrinkImageFilter< InputImageType, GPUOutputImageType > ).name(),
-      typeid( GPUShrinkImageFilter< InputImageType, GPUOutputImageType > ).name(),
-      "GPU ShrinkImageFilter override GPUImage second",
-      true,
-      CreateObjectFunction< GPUShrinkImageFilter< InputImageType, GPUOutputImageType > >::New()
-      );
+    this->RegisterOverride(typeid(ShrinkImageFilter<InputImageType, GPUOutputImageType>).name(),
+                           typeid(GPUShrinkImageFilter<InputImageType, GPUOutputImageType>).name(),
+                           "GPU ShrinkImageFilter override GPUImage second",
+                           true,
+                           CreateObjectFunction<GPUShrinkImageFilter<InputImageType, GPUOutputImageType>>::New());
 
     // Override when itkGPUImage is first and second template arguments
-    this->RegisterOverride(
-      typeid( ShrinkImageFilter< GPUInputImageType, GPUOutputImageType > ).name(),
-      typeid( GPUShrinkImageFilter< GPUInputImageType, GPUOutputImageType > ).name(),
-      "GPU ShrinkImageFilter override GPUImage first and second",
-      true,
-      CreateObjectFunction< GPUShrinkImageFilter< GPUInputImageType, GPUOutputImageType > >::New()
-      );
+    this->RegisterOverride(typeid(ShrinkImageFilter<GPUInputImageType, GPUOutputImageType>).name(),
+                           typeid(GPUShrinkImageFilter<GPUInputImageType, GPUOutputImageType>).name(),
+                           "GPU ShrinkImageFilter override GPUImage first and second",
+                           true,
+                           CreateObjectFunction<GPUShrinkImageFilter<GPUInputImageType, GPUOutputImageType>>::New());
   }
 
 
 protected:
-
   GPUShrinkImageFilterFactory2();
   virtual ~GPUShrinkImageFilterFactory2() {}
 
   /** Register methods for 1D. */
-  virtual void Register1D();
+  virtual void
+  Register1D();
 
   /** Register methods for 2D. */
-  virtual void Register2D();
+  virtual void
+  Register2D();
 
   /** Register methods for 3D. */
-  virtual void Register3D();
+  virtual void
+  Register3D();
 
 private:
-
-  GPUShrinkImageFilterFactory2( const Self & ); // purposely not implemented
-  void operator=( const Self & );               // purposely not implemented
-
+  GPUShrinkImageFilterFactory2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUShrinkImageFilterFactory.hxx"
+#  include "itkGPUShrinkImageFilterFactory.hxx"
 #endif
 
 #endif // end #ifndef __itkGPUShrinkImageFilterFactory_h

@@ -74,34 +74,32 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TScalarType = double >
+template <class TScalarType = double>
 // Data type for scalars (float or double)
-class ITK_EXPORT AdvancedSimilarity2DTransform :
-  public         AdvancedRigid2DTransform< TScalarType >
+class ITK_EXPORT AdvancedSimilarity2DTransform : public AdvancedRigid2DTransform<TScalarType>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AdvancedSimilarity2DTransform           Self;
-  typedef AdvancedRigid2DTransform< TScalarType > Superclass;
-  typedef SmartPointer< Self >                    Pointer;
-  typedef SmartPointer< const Self >              ConstPointer;
+  typedef AdvancedSimilarity2DTransform         Self;
+  typedef AdvancedRigid2DTransform<TScalarType> Superclass;
+  typedef SmartPointer<Self>                    Pointer;
+  typedef SmartPointer<const Self>              ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedSimilarity2DTransform, AdvancedRigid2DTransform );
+  itkTypeMacro(AdvancedSimilarity2DTransform, AdvancedRigid2DTransform);
 
   /** Dimension of parameters. */
-  itkStaticConstMacro( SpaceDimension,           unsigned int, 2 );
-  itkStaticConstMacro( InputSpaceDimension,      unsigned int, 2 );
-  itkStaticConstMacro( OutputSpaceDimension,     unsigned int, 2 );
-  itkStaticConstMacro( ParametersDimension,      unsigned int, 4 );
+  itkStaticConstMacro(SpaceDimension, unsigned int, 2);
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, 2);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 2);
+  itkStaticConstMacro(ParametersDimension, unsigned int, 4);
 
   /** Scalar type. */
   typedef typename Superclass::ScalarType ScalarType;
-  typedef          TScalarType            ScaleType;
+  typedef TScalarType                     ScaleType;
 
   /** Parameters type. */
   typedef typename Superclass::ParametersType         ParametersType;
@@ -132,31 +130,30 @@ public:
   typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** Set the Scale part of the transform. */
-  void SetScale( ScaleType scale );
+  void
+  SetScale(ScaleType scale);
 
-  itkGetConstReferenceMacro( Scale, ScaleType );
+  itkGetConstReferenceMacro(Scale, ScaleType);
 
   /** Set the transformation from a container of parameters
-    * This is typically used by optimizers.
-    * There are 4 parameters. The first one represents the
-    * scale, the second represents the angle of rotation
-    * and the last two represent the translation.
-    * The center of rotation is fixed.
-    *
-    * \sa Transform::SetParameters()
-    * \sa Transform::SetFixedParameters() */
-  void SetParameters( const ParametersType & parameters ) override;
+   * This is typically used by optimizers.
+   * There are 4 parameters. The first one represents the
+   * scale, the second represents the angle of rotation
+   * and the last two represent the translation.
+   * The center of rotation is fixed.
+   *
+   * \sa Transform::SetParameters()
+   * \sa Transform::SetFixedParameters() */
+  void
+  SetParameters(const ParametersType & parameters) override;
 
   /** Get the parameters that uniquely define the transform
    * This is typically used by optimizers.
@@ -167,7 +164,8 @@ public:
    *
    * \sa Transform::GetParameters()
    * \sa Transform::GetFixedParameters() */
-  const ParametersType & GetParameters( void ) const override;
+  const ParametersType &
+  GetParameters(void) const override;
 
   /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
@@ -175,25 +173,26 @@ public:
    * \sa Transform::GetJacobian() */
 
   /** Compute the Jacobian of the transformation. */
-  void GetJacobian(
-    const InputPointType &,
-    JacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
   /** Set the transformation to an identity. */
-  void SetIdentity( void ) override;
+  void
+  SetIdentity(void) override;
 
   /**
    * This method creates and returns a new AdvancedSimilarity2DTransform object
    * which is the inverse of self.
    **/
-  void CloneInverseTo( Pointer & newinverse ) const;
+  void
+  CloneInverseTo(Pointer & newinverse) const;
 
   /**
    * This method creates and returns a new AdvancedSimilarity2DTransform object
    * which has the same parameters.
    **/
-  void CloneTo( Pointer & clone ) const;
+  void
+  CloneTo(Pointer & clone) const;
 
   /**
    * Set the rotation Matrix of a Similarity 2D Transform
@@ -208,50 +207,55 @@ public:
    * \sa MatrixOffsetTransformBase::SetMatrix()
    *
    **/
-  void SetMatrix( const MatrixType & matrix ) override;
+  void
+  SetMatrix(const MatrixType & matrix) override;
 
 protected:
-
   AdvancedSimilarity2DTransform();
-  AdvancedSimilarity2DTransform( unsigned int spaceDimension,
-    unsigned int parametersDimension );
+  AdvancedSimilarity2DTransform(unsigned int spaceDimension, unsigned int parametersDimension);
 
-  ~AdvancedSimilarity2DTransform() override{}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  ~AdvancedSimilarity2DTransform() override {}
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Compute matrix from angle and scale. This is used in Set methods
    * to update the underlying matrix whenever a transform parameter
    * is changed. */
-  void ComputeMatrix( void ) override;
+  void
+  ComputeMatrix(void) override;
 
   /** Compute the angle and scale from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
    * MatrixOffsetTransformBase::Compose() and
    * MatrixOffsetTransformBase::GetInverse(). */
-  void ComputeMatrixParameters( void ) override;
+  void
+  ComputeMatrixParameters(void) override;
 
   /** Set the scale without updating underlying variables. */
-  void SetVarScale( ScaleType scale )
-  { m_Scale = scale; }
+  void
+  SetVarScale(ScaleType scale)
+  {
+    m_Scale = scale;
+  }
 
   /** Update the m_JacobianOfSpatialJacobian.  */
-  void PrecomputeJacobianOfSpatialJacobian( void ) override;
+  void
+  PrecomputeJacobianOfSpatialJacobian(void) override;
 
 private:
-
-  AdvancedSimilarity2DTransform( const Self & ); //purposely not implemented
-  void operator=( const Self & );                //purposely not implemented
+  AdvancedSimilarity2DTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   ScaleType m_Scale;
-
 };
 
-//class AdvancedSimilarity2DTransform
+// class AdvancedSimilarity2DTransform
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedSimilarity2DTransform.hxx"
+#  include "itkAdvancedSimilarity2DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedSimilarity2DTransform_h */

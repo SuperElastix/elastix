@@ -18,4 +18,4 @@
 
 #include "elxAdvancedMattesMutualInformationMetric.h"
 
-elxInstallMacro( AdvancedMattesMutualInformationMetric );
+elxInstallMacro(AdvancedMattesMutualInformationMetric);

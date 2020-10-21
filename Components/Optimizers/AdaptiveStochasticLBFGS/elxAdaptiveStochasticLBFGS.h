@@ -100,92 +100,101 @@ namespace elastix
  */
 
 template <class TElastix>
-class AdaptiveStochasticLBFGS :
-  public itk::AdaptiveStochasticLBFGSOptimizer,
-  public OptimizerBase<TElastix>
+class AdaptiveStochasticLBFGS
+  : public itk::AdaptiveStochasticLBFGSOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK. */
-  typedef AdaptiveStochasticLBFGS           Self;
-  typedef AdaptiveStochasticLBFGSOptimizer  Superclass1;
-  typedef OptimizerBase<TElastix>           Superclass2;
-  typedef itk::SmartPointer<Self>           Pointer;
-  typedef itk::SmartPointer<const Self>     ConstPointer;
+  typedef AdaptiveStochasticLBFGS          Self;
+  typedef AdaptiveStochasticLBFGSOptimizer Superclass1;
+  typedef OptimizerBase<TElastix>          Superclass2;
+  typedef itk::SmartPointer<Self>          Pointer;
+  typedef itk::SmartPointer<const Self>    ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdaptiveStochasticLBFGS,
-    AdaptiveStochasticLBFGSOptimizer );
+  itkTypeMacro(AdaptiveStochasticLBFGS, AdaptiveStochasticLBFGSOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer.
    * example: <tt>(Optimizer "AdaptiveStochasticLBFGS")</tt>\n
    */
-  elxClassNameMacro( "AdaptiveStochasticLBFGS" );
+  elxClassNameMacro("AdaptiveStochasticLBFGS");
 
   /** Typedef's inherited from Superclass1. */
-  typedef Superclass1::CostFunctionType               CostFunctionType;
-  typedef Superclass1::CostFunctionPointer            CostFunctionPointer;
-  typedef Superclass1::StopConditionType              StopConditionType;
+  typedef Superclass1::CostFunctionType    CostFunctionType;
+  typedef Superclass1::CostFunctionPointer CostFunctionPointer;
+  typedef Superclass1::StopConditionType   StopConditionType;
 
   /** Typedef's inherited from Superclass2. */
-  typedef typename Superclass2::ElastixType           ElastixType;
-  typedef typename Superclass2::ElastixPointer        ElastixPointer;
-  typedef typename Superclass2::ConfigurationType     ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType      RegistrationType;
-  typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType           ITKBaseType;
-  typedef itk::SizeValueType                          SizeValueType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  typedef itk::SizeValueType                         SizeValueType;
 
-//  typedef LineSearchOptimizer           LineSearchOptimizerType;
+  //  typedef LineSearchOptimizer           LineSearchOptimizerType;
 
-//  typedef LineSearchOptimizerType::Pointer LineSearchOptimizerPointer;
+  //  typedef LineSearchOptimizerType::Pointer LineSearchOptimizerPointer;
 
   /** Typedef for the ParametersType. */
-  typedef typename Superclass1::ParametersType        ParametersType;
+  typedef typename Superclass1::ParametersType ParametersType;
 
-  typedef itk::LineSearchOptimizer                    LineSearchOptimizerType;
+  typedef itk::LineSearchOptimizer LineSearchOptimizerType;
 
-  typedef LineSearchOptimizerType::Pointer            LineSearchOptimizerPointer;
-  typedef itk::MoreThuenteLineSearchOptimizer         LineOptimizerType;
-  typedef LineOptimizerType::Pointer                  LineOptimizerPointer;
+  typedef LineSearchOptimizerType::Pointer    LineSearchOptimizerPointer;
+  typedef itk::MoreThuenteLineSearchOptimizer LineOptimizerType;
+  typedef LineOptimizerType::Pointer          LineOptimizerPointer;
 
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed.
    */
-  void BeforeRegistration( void ) override;
-  void BeforeEachResolution( void ) override;
-  void AfterEachResolution( void ) override;
-  void AfterEachIteration( void ) override;
-  void AfterRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
+  void
+  BeforeEachResolution(void) override;
+  void
+  AfterEachResolution(void) override;
+  void
+  AfterEachIteration(void) override;
+  void
+  AfterRegistration(void) override;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation.
    */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** LBFGS Update step. */
-  virtual void LBFGSUpdate( void );
+  virtual void
+  LBFGSUpdate(void);
 
   /** AdvanceOneStep. */
-  void AdvanceOneStep( void ) override;
+  void
+  AdvanceOneStep(void) override;
 
   /** If automatic gain estimation is desired, then estimate SP_a, SP_alpha
    * SigmoidScale, SigmoidMax, SigmoidMin.
    * After that call Superclass' implementation.
    */
-  void ResumeOptimization( void ) override;
+  void
+  ResumeOptimization(void) override;
 
   /** Stop optimization and pass on exception. */
-  void MetricErrorResponse( itk::ExceptionObject & err ) override;
+  void
+  MetricErrorResponse(itk::ExceptionObject & err) override;
 
   /** Stop optimization.
-  * \sa StopOptimization */
-  void StopOptimization( void ) override;
+   * \sa StopOptimization */
+  void
+  StopOptimization(void) override;
 
   /** Set/Get whether automatic parameter estimation is desired.
    * If true, make sure to set the maximum step length.
@@ -196,105 +205,99 @@ public:
    * A usually suitable value for SP_A is 20, which is the
    * default setting, if not specified by the user.
    */
-  itkSetMacro( AutomaticParameterEstimation, bool );
-  itkGetConstMacro( AutomaticParameterEstimation, bool );
+  itkSetMacro(AutomaticParameterEstimation, bool);
+  itkGetConstMacro(AutomaticParameterEstimation, bool);
 
   /** Set/Get whether automatic LBFGS step size estimation is desired. */
-  itkSetMacro( AutomaticLBFGSStepsizeEstimation, bool );
-  itkGetConstMacro( AutomaticLBFGSStepsizeEstimation, bool );
+  itkSetMacro(AutomaticLBFGSStepsizeEstimation, bool);
+  itkGetConstMacro(AutomaticLBFGSStepsizeEstimation, bool);
 
   /** Set/Get maximum step length. */
-  itkSetMacro( MaximumStepLength, double );
-  itkGetConstMacro( MaximumStepLength, double );
+  itkSetMacro(MaximumStepLength, double);
+  itkGetConstMacro(MaximumStepLength, double);
 
   /** Set the MaximumNumberOfSamplingAttempts. */
-  itkSetMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
+  itkSetMacro(MaximumNumberOfSamplingAttempts, SizeValueType);
 
   /** Get the MaximumNumberOfSamplingAttempts. */
-  itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
+  itkGetConstReferenceMacro(MaximumNumberOfSamplingAttempts, SizeValueType);
 
   /** Type to count and reference number of threads */
-  typedef unsigned int  ThreadIdType;
+  typedef unsigned int ThreadIdType;
 
   /** Set the number of threads. */
-  void SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
+  void
+  SetNumberOfWorkUnits(ThreadIdType numberOfThreads)
   {
-    this->m_Threader->SetNumberOfWorkUnits( numberOfThreads );
+    this->m_Threader->SetNumberOfWorkUnits(numberOfThreads);
   }
 
 protected:
-
   /** Protected typedefs */
-  typedef typename RegistrationType::FixedImageType   FixedImageType;
-  typedef typename RegistrationType::MovingImageType  MovingImageType;
+  typedef typename RegistrationType::FixedImageType  FixedImageType;
+  typedef typename RegistrationType::MovingImageType MovingImageType;
 
-  typedef typename FixedImageType::RegionType         FixedImageRegionType;
-  typedef typename FixedImageType::IndexType          FixedImageIndexType;
-  typedef typename FixedImageType::PointType          FixedImagePointType;
-  typedef typename RegistrationType::ITKBaseType      itkRegistrationType;
-  typedef typename itkRegistrationType::TransformType TransformType;
-  typedef typename TransformType::JacobianType        JacobianType;
-  typedef itk::ComputeJacobianTerms<
-    FixedImageType,TransformType >                    ComputeJacobianTermsType;
-  typedef typename JacobianType::ValueType            JacobianValueType;
-  struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
-  typedef typename std::vector<SettingsType>          SettingsVectorType;
+  typedef typename FixedImageType::RegionType                      FixedImageRegionType;
+  typedef typename FixedImageType::IndexType                       FixedImageIndexType;
+  typedef typename FixedImageType::PointType                       FixedImagePointType;
+  typedef typename RegistrationType::ITKBaseType                   itkRegistrationType;
+  typedef typename itkRegistrationType::TransformType              TransformType;
+  typedef typename TransformType::JacobianType                     JacobianType;
+  typedef itk::ComputeJacobianTerms<FixedImageType, TransformType> ComputeJacobianTermsType;
+  typedef typename JacobianType::ValueType                         JacobianValueType;
+  struct SettingsType
+  {
+    double a, A, alpha, fmax, fmin, omega;
+  };
+  typedef typename std::vector<SettingsType> SettingsVectorType;
 
-  typedef itk::ComputeDisplacementDistribution<
-    FixedImageType,TransformType >                    ComputeDisplacementDistributionType;
+  typedef itk::ComputeDisplacementDistribution<FixedImageType, TransformType> ComputeDisplacementDistributionType;
 
   /** Samplers: */
-  typedef itk::ImageSamplerBase<FixedImageType>       ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer      ImageSamplerBasePointer;
-  typedef itk::ImageRandomSamplerBase<FixedImageType> ImageRandomSamplerBaseType;
-  typedef typename
-    ImageRandomSamplerBaseType::Pointer               ImageRandomSamplerBasePointer;
-  typedef
-    itk::ImageRandomCoordinateSampler<FixedImageType> ImageRandomCoordinateSamplerType;
-  typedef typename
-    ImageRandomCoordinateSamplerType::Pointer         ImageRandomCoordinateSamplerPointer;
-  typedef typename ImageSamplerBaseType::ImageSampleType       ImageSampleType;
+  typedef itk::ImageSamplerBase<FixedImageType>              ImageSamplerBaseType;
+  typedef typename ImageSamplerBaseType::Pointer             ImageSamplerBasePointer;
+  typedef itk::ImageRandomSamplerBase<FixedImageType>        ImageRandomSamplerBaseType;
+  typedef typename ImageRandomSamplerBaseType::Pointer       ImageRandomSamplerBasePointer;
+  typedef itk::ImageRandomCoordinateSampler<FixedImageType>  ImageRandomCoordinateSamplerType;
+  typedef typename ImageRandomCoordinateSamplerType::Pointer ImageRandomCoordinateSamplerPointer;
+  typedef typename ImageSamplerBaseType::ImageSampleType     ImageSampleType;
 
   /** Image random sampler. */
-  typedef itk::ImageRandomSampler< FixedImageType >   ImageRandomSamplerType;
-  typedef typename ImageRandomSamplerType::Pointer    ImageRandomSamplerPointer;
-  typedef typename
-    ImageRandomSamplerType::ImageSampleContainerType  ImageRadomSampleContainerType;
-  typedef typename
-    ImageRadomSampleContainerType::Pointer            ImageRadomSampleContainerPointer;
+  typedef itk::ImageRandomSampler<FixedImageType>                   ImageRandomSamplerType;
+  typedef typename ImageRandomSamplerType::Pointer                  ImageRandomSamplerPointer;
+  typedef typename ImageRandomSamplerType::ImageSampleContainerType ImageRadomSampleContainerType;
+  typedef typename ImageRadomSampleContainerType::Pointer           ImageRadomSampleContainerPointer;
 
   /** Image grid sampler. */
-  typedef itk::ImageGridSampler< FixedImageType >     ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer      ImageGridSamplerPointer;
-  typedef typename
-    ImageGridSamplerType::ImageSampleContainerType    ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
+  typedef itk::ImageGridSampler<FixedImageType>                   ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer                  ImageGridSamplerPointer;
+  typedef typename ImageGridSamplerType::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer              ImageSampleContainerPointer;
 
   /** Other protected typedefs */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  typedef ProgressCommand                             ProgressCommandType;
-  typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
+  typedef ProgressCommand                                        ProgressCommandType;
+  typedef typename ProgressCommand::Pointer                      ProgressCommandPointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
-  typedef JacobianType                                TransformJacobianType;
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
-  typedef typename TransformType::ScalarType          CoordinateRepresentationType;
-  typedef itk::AdvancedTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro(FixedImageDimension),
-    itkGetStaticConstMacro(MovingImageDimension) >    AdvancedTransformType;
-  typedef typename
-    AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef JacobianType TransformJacobianType;
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
+  typedef typename TransformType::ScalarType CoordinateRepresentationType;
+  typedef itk::AdvancedTransform<CoordinateRepresentationType,
+                                 itkGetStaticConstMacro(FixedImageDimension),
+                                 itkGetStaticConstMacro(MovingImageDimension)>
+                                                                     AdvancedTransformType;
+  typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** For L-BFGS usage. */
-  typedef itk::Array< double >               RhoType;
-  typedef std::vector< ParametersType >      SType;
-  typedef std::vector< DerivativeType >      YType;
-  typedef itk::Array< double >               DiagonalMatrixType;
+  typedef itk::Array<double>          RhoType;
+  typedef std::vector<ParametersType> SType;
+  typedef std::vector<DerivativeType> YType;
+  typedef itk::Array<double>          DiagonalMatrixType;
 
   AdaptiveStochasticLBFGS();
-  ~AdaptiveStochasticLBFGS() override {};
+  ~AdaptiveStochasticLBFGS() override{};
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;
@@ -305,37 +308,43 @@ protected:
   SizeValueType m_NumberOfSamplesForExactGradient;
 
   /** The transform stored as AdvancedTransform */
-  typename AdvancedTransformType::Pointer           m_AdvancedTransform;
+  typename AdvancedTransformType::Pointer m_AdvancedTransform;
 
   /** RandomGenerator for AddRandomPerturbation. */
-  typename RandomGeneratorType::Pointer             m_RandomGenerator;
+  typename RandomGeneratorType::Pointer m_RandomGenerator;
 
   double m_SigmoidScaleFactor;
 
   /** Check if the transform is an advanced transform. Called by Initialize. */
-  virtual void CheckForAdvancedTransform( void );
+  virtual void
+  CheckForAdvancedTransform(void);
 
   /** Print the contents of the settings vector to elxout. */
-  virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
+  virtual void
+  PrintSettingsVector(const SettingsVectorType & settings) const;
 
   /** Select different method to estimate some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
    * SigmoidScale.
    */
-  virtual void AutomaticParameterEstimation( void );
+  virtual void
+  AutomaticParameterEstimation(void);
 
   /** Original estimation method to get the reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
    * SigmoidScale.
    */
-  virtual void AutomaticParameterEstimationOriginal( void );
+  virtual void
+  AutomaticParameterEstimationOriginal(void);
 
   /** Estimates some reasonable values for the parameters using displacement distribution
    * SP_a, SP_alpha (=1)
    */
-  virtual void AutomaticParameterEstimationUsingDisplacementDistribution( void );
+  virtual void
+  AutomaticParameterEstimationUsingDisplacementDistribution(void);
 
-  virtual void AutomaticLBFGSStepsizeEstimation( void );
+  virtual void
+  AutomaticLBFGSStepsizeEstimation(void);
 
   /** Measure some derivatives, exact and approximated. Returns
    * the squared magnitude of the gradient and approximation error.
@@ -344,30 +353,31 @@ protected:
    * mu_n - mu_0 ~ N(0, perturbationSigma^2 I );
    * gg = g^T g, etc.
    */
-  virtual void SampleGradients( const ParametersType & mu0,
-    double perturbationSigma, double & gg, double & ee );
+  virtual void
+  SampleGradients(const ParametersType & mu0, double perturbationSigma, double & gg, double & ee);
 
   /** Helper function, which calls GetScaledValueAndDerivative and does
    * some exception handling. Used by SampleGradients.
    */
-  virtual void GetScaledDerivativeWithExceptionHandling(
-    const ParametersType & parameters, DerivativeType & derivative );
+  virtual void
+  GetScaledDerivativeWithExceptionHandling(const ParametersType & parameters, DerivativeType & derivative);
 
   /** Helper function that adds a random perturbation delta to the input
    * parameters, with delta ~ sigma * N(0,I). Used by SampleGradients.
    */
-  virtual void AddRandomPerturbation( ParametersType & parameters, double sigma );
+  virtual void
+  AddRandomPerturbation(ParametersType & parameters, double sigma);
 
   /** Store s = x_k - x_k-1 and y = g_k - g_k-1 in m_S and m_Y,
    * and store 1/(ys) in m_Rho. */
-  virtual void StoreCurrentPoint(
-    const ParametersType & step,
-    const DerivativeType & grad_dif );
+  virtual void
+  StoreCurrentPoint(const ParametersType & step, const DerivativeType & grad_dif);
   /** Compute H0
    *
    * Override this method if not satisfied with the default choice.
    */
-  virtual void ComputeDiagonalMatrix( DiagonalMatrixType & diag_H0 );
+  virtual void
+  ComputeDiagonalMatrix(DiagonalMatrixType & diag_H0);
 
   /** Compute -Hg
    *
@@ -375,9 +385,8 @@ protected:
    *     "Updating quasi-Newton matrices with limited storage",
    *     Mathematics of Computation, Vol.24, No.151, pp. 773-782.
    */
-  virtual void ComputeSearchDirection(
-    const DerivativeType & gradient,
-    DerivativeType & searchDir );
+  virtual void
+  ComputeSearchDirection(const DerivativeType & gradient, DerivativeType & searchDir);
 
   /** Setting: the minimum gradient magnitude.
    *
@@ -385,12 +394,12 @@ protected:
    * ||CurrentGradient|| < GradientMagnitudeTolerance * max(1, ||CurrentPosition||)
    */
 
-  DerivativeType                m_PreviousCurvatureGradient;
+  DerivativeType m_PreviousCurvatureGradient;
 
-  double                        m_NoiseFactor;
-  unsigned int                  m_CurrentT;
-  unsigned int                  m_PreviousT;
-  unsigned int                  m_Bound;
+  double       m_NoiseFactor;
+  unsigned int m_CurrentT;
+  unsigned int m_PreviousT;
+  unsigned int m_Bound;
 
   RhoType m_Rho;
   SType   m_S;
@@ -399,26 +408,28 @@ protected:
   double  m_WindowScale;
 
 private:
-
-  AdaptiveStochasticLBFGS( const Self& );  // purposely not implemented
-  void operator=( const Self& );           // purposely not implemented
+  AdaptiveStochasticLBFGS(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   // multi-threaded AdvanceOneStep:
   struct MultiThreaderParameterType
   {
-    ParametersType *  t_NewPosition;
-    Self *            t_Optimizer;
+    ParametersType * t_NewPosition;
+    Self *           t_Optimizer;
   };
 
   /** The callback function. */
-  static itk::ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg );
+  static itk::ITK_THREAD_RETURN_TYPE
+  AdvanceOneStepThreaderCallback(void * arg);
 
   /** The threaded implementation of AdvanceOneStep(). */
-  inline void ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition );
+  inline void
+  ThreadedAdvanceOneStep(ThreadIdType threadId, ParametersType & newPosition);
 
-  bool    m_AutomaticParameterEstimation;
-  bool    m_AutomaticLBFGSStepsizeEstimation;
-  double  m_MaximumStepLength;
+  bool   m_AutomaticParameterEstimation;
+  bool   m_AutomaticLBFGSStepsizeEstimation;
+  double m_MaximumStepLength;
 
   /** Private variables for the sampling attempts. */
   SizeValueType m_MaximumNumberOfSamplingAttempts;
@@ -439,7 +450,7 @@ private:
   bool m_OriginalButSigmoidToDefault;
   bool m_UseNoiseFactor;
 
-  bool                        m_UseAdaptiveLBFGSStepSizes;
+  bool m_UseAdaptiveLBFGSStepSizes;
 
 }; // end class AdaptiveStochasticLBFGS
 
@@ -447,7 +458,7 @@ private:
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxAdaptiveStochasticLBFGS.hxx"
+#  include "elxAdaptiveStochasticLBFGS.hxx"
 #endif
 
 #endif // end #ifndef __elxAdaptiveStochasticLBFGS_h

@@ -32,8 +32,8 @@
 
 /** Get rid of warnings about too long variable names. */
 #ifdef _MSC_VER
-#pragma warning ( disable : 4786 )
-#pragma warning ( disable : 4503 )
+#  pragma warning(disable : 4786)
+#  pragma warning(disable : 4503)
 #endif
 
 #include "itkMacro.h" // itkTypeMacroNoParent
@@ -70,8 +70,16 @@ public:
    * (like MetricBase, TransformBase, etc.). In this way similar
    * behavior for a group of components can be implemented.
    */
-  virtual int BeforeAllBase( void ) { return 0; }
-  virtual int BeforeAll( void ) { return 0; }
+  virtual int
+  BeforeAllBase(void)
+  {
+    return 0;
+  }
+  virtual int
+  BeforeAll(void)
+  {
+    return 0;
+  }
 
   /**
    * Callback methods that each component of elastix is supposed
@@ -79,11 +87,21 @@ public:
    * (like MetricBase, TransformBase, etc.). In this way similar
    * behavior for a group of components can be implemented.
    */
-  virtual void BeforeRegistrationBase( void ) {}
-  virtual void BeforeEachResolutionBase( void ) {}
-  virtual void AfterEachResolutionBase( void ) {}
-  virtual void AfterEachIterationBase( void ) {}
-  virtual void AfterRegistrationBase( void ) {}
+  virtual void
+  BeforeRegistrationBase(void)
+  {}
+  virtual void
+  BeforeEachResolutionBase(void)
+  {}
+  virtual void
+  AfterEachResolutionBase(void)
+  {}
+  virtual void
+  AfterEachIterationBase(void)
+  {}
+  virtual void
+  AfterRegistrationBase(void)
+  {}
 
   /**
    * Callback methods that each component of elastix is supposed
@@ -91,20 +109,31 @@ public:
    * component (like MattesMutualInformationMetric) to achieve
    * behavior, specific for that single component.
    */
-  virtual void BeforeRegistration( void ) {}
-  virtual void BeforeEachResolution( void ) {}
-  virtual void AfterEachResolution( void ) {}
-  virtual void AfterEachIteration( void ) {}
-  virtual void AfterRegistration( void ) {}
+  virtual void
+  BeforeRegistration(void)
+  {}
+  virtual void
+  BeforeEachResolution(void)
+  {}
+  virtual void
+  AfterEachResolution(void)
+  {}
+  virtual void
+  AfterEachIteration(void)
+  {}
+  virtual void
+  AfterRegistration(void)
+  {}
 
   /**
    * The name of the component in the ComponentDatabase.
    * Override this function not directly, but with the
    * elxClassNameMacro("name").
    */
-  virtual const char * elxGetClassName( void ) const;
+  virtual const char *
+  elxGetClassName(void) const;
 
-  itkTypeMacroNoParent( BaseComponent );
+  itkTypeMacroNoParent(BaseComponent);
 
   /** Set the component label, which consists of a label
    * ( "Metric", "Transform") and an index number. In case
@@ -113,27 +142,29 @@ public:
    * parameter file for example, to distinguish between options
    * meant for Metric0 and for Metric1.
    */
-  void SetComponentLabel( const char * label, unsigned int idx );
+  void
+  SetComponentLabel(const char * label, unsigned int idx);
 
   /** Get the componentlabel as a string: "Metric0" for example. */
-  const char * GetComponentLabel( void ) const;
+  const char *
+  GetComponentLabel(void) const;
 
-  static bool IsElastixLibrary();
+  static bool
+  IsElastixLibrary();
 
-  static void InitializeElastixExecutable();
+  static void
+  InitializeElastixExecutable();
 
   /** Convenience function to convert seconds to day, hour, minute, second format. */
-  static std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision );
+  static std::string
+  ConvertSecondsToDHMS(const double totalSeconds, const unsigned int precision);
 
 protected:
-
   BaseComponent() = default;
   virtual ~BaseComponent() = default;
 
 private:
-
   std::string m_ComponentLabel;
-
 };
 
 } // end namespace elastix

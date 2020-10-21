@@ -36,88 +36,88 @@ namespace itk
  * http://dx.doi.org/10.1109/TMI.2015.2476354
  */
 
-template< class TFixedImage, class TTransform >
-class ComputePreconditionerUsingDisplacementDistribution :
-  public ComputeDisplacementDistribution< TFixedImage, TTransform >
+template <class TFixedImage, class TTransform>
+class ComputePreconditionerUsingDisplacementDistribution
+  : public ComputeDisplacementDistribution<TFixedImage, TTransform>
 {
 public:
-
   /** Standard ITK.*/
-  typedef ComputePreconditionerUsingDisplacementDistribution  Self;
-  typedef ComputeDisplacementDistribution<
-    TFixedImage, TTransform >                                 Superclass;
-  typedef SmartPointer< Self >                                Pointer;
-  typedef SmartPointer< const Self >                          ConstPointer;
+  typedef ComputePreconditionerUsingDisplacementDistribution       Self;
+  typedef ComputeDisplacementDistribution<TFixedImage, TTransform> Superclass;
+  typedef SmartPointer<Self>                                       Pointer;
+  typedef SmartPointer<const Self>                                 ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ComputePreconditionerUsingDisplacementDistribution,
-    ComputeDisplacementDistribution );
+  itkTypeMacro(ComputePreconditionerUsingDisplacementDistribution, ComputeDisplacementDistribution);
 
   /** typedef  */
-  typedef typename Superclass::FixedImageType          FixedImageType;
-  typedef typename Superclass::FixedImagePixelType     FixedImagePixelType;
-  typedef typename Superclass::TransformType           TransformType;
-  typedef typename Superclass::TransformPointer        TransformPointer;
-  typedef typename Superclass::FixedImageRegionType    FixedImageRegionType;
-  typedef typename Superclass::ParametersType          ParametersType;
-  typedef typename Superclass::DerivativeType          DerivativeType;
-  typedef typename Superclass::ScalesType              ScalesType;
+  typedef typename Superclass::FixedImageType       FixedImageType;
+  typedef typename Superclass::FixedImagePixelType  FixedImagePixelType;
+  typedef typename Superclass::TransformType        TransformType;
+  typedef typename Superclass::TransformPointer     TransformPointer;
+  typedef typename Superclass::FixedImageRegionType FixedImageRegionType;
+  typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::DerivativeType       DerivativeType;
+  typedef typename Superclass::ScalesType           ScalesType;
 
-  typedef typename Superclass::FixedImageMaskType          FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer       FixedImageMaskPointer;
-  typedef typename Superclass::FixedImageMaskConstPointer  FixedImageMaskConstPointer;
-  typedef typename Superclass::NonZeroJacobianIndicesType  NonZeroJacobianIndicesType;
+  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
+  typedef typename Superclass::FixedImageMaskConstPointer FixedImageMaskConstPointer;
+  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   // check
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** Set/get kappa for regularization. */
-  itkSetClampMacro( RegularizationKappa, double, 0.0, 1.0 );
-  itkGetConstReferenceMacro( RegularizationKappa, double );
+  itkSetClampMacro(RegularizationKappa, double, 0.0, 1.0);
+  itkGetConstReferenceMacro(RegularizationKappa, double);
 
   /** Set/get maximum step length delta. */
-  itkSetMacro( MaximumStepLength, double );
-  itkGetConstReferenceMacro( MaximumStepLength, double );
+  itkSetMacro(MaximumStepLength, double);
+  itkGetConstReferenceMacro(MaximumStepLength, double);
 
   /** Set/get kappa for condition number. */
-  itkSetClampMacro( ConditionNumber, double, 0.0, 10.0 );
-  itkGetConstReferenceMacro( ConditionNumber, double );
+  itkSetClampMacro(ConditionNumber, double, 0.0, 10.0);
+  itkGetConstReferenceMacro(ConditionNumber, double);
 
   /** The main function that performs the computation.
    * DO NOT USE.
    */
-  void Compute( const ParametersType & mu,
-    double & jacg, double & maxJJ, std::string method ) override;
+  void
+  Compute(const ParametersType & mu, double & jacg, double & maxJJ, std::string method) override;
 
   /** The main function that performs the computation.
    * DO NOT USE.
    */
-  virtual void ComputeDistributionTermsUsingSearchDir( const ParametersType & mu,
-    double & jacg, double & maxJJ, std::string methods );
+  virtual void
+  ComputeDistributionTermsUsingSearchDir(const ParametersType & mu, double & jacg, double & maxJJ, std::string methods);
 
   /** The main function that performs the computation.
    * B-spline specific thing we tried. Can be removed later.
    */
-  virtual void ComputeForBSplineOnly( const ParametersType & mu,
-    const double & delta, double & maxJJ, ParametersType & preconditioner );
+  virtual void
+  ComputeForBSplineOnly(const ParametersType & mu,
+                        const double &         delta,
+                        double &               maxJJ,
+                        ParametersType &       preconditioner);
 
   /** The main function that performs the computation.
    * The aims to be a generic function, working for all transformations.
    */
-  virtual void Compute( const ParametersType & mu,
-    double & maxJJ, ParametersType & preconditioner );
+  virtual void
+  Compute(const ParametersType & mu, double & maxJJ, ParametersType & preconditioner);
 
-  virtual void ComputeJacobiTypePreconditioner( const ParametersType & mu,
-    double & maxJJ, ParametersType & preconditioner );
+  virtual void
+  ComputeJacobiTypePreconditioner(const ParametersType & mu, double & maxJJ, ParametersType & preconditioner);
 
   /** Interpolate the preconditioner, for the non-visited entries. */
-  virtual void PreconditionerInterpolation( ParametersType & preconditioner );
+  virtual void
+  PreconditionerInterpolation(ParametersType & preconditioner);
 
 protected:
-
   ComputePreconditionerUsingDisplacementDistribution();
   ~ComputePreconditionerUsingDisplacementDistribution() override {}
 
@@ -144,16 +144,15 @@ protected:
   double m_ConditionNumber;
 
 private:
-
-  ComputePreconditionerUsingDisplacementDistribution( const Self & ); // purposely not implemented
-  void operator=( const Self & );                  // purposely not implemented
-
+  ComputePreconditionerUsingDisplacementDistribution(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkComputePreconditionerUsingDisplacementDistribution.hxx"
+#  include "itkComputePreconditionerUsingDisplacementDistribution.hxx"
 #endif
 
 #endif // end #ifndef __itkComputePreconditionerUsingDisplacementDistribution_h

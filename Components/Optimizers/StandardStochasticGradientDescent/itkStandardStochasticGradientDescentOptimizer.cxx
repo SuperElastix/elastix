@@ -27,8 +27,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-StandardStochasticGradientOptimizer
-::StandardStochasticGradientOptimizer()
+StandardStochasticGradientOptimizer ::StandardStochasticGradientOptimizer()
 {
   this->m_Param_a = 1.0;
   this->m_Param_A = 1.0;
@@ -44,7 +43,8 @@ StandardStochasticGradientOptimizer
  * ********************** StartOptimization *********************
  */
 
-void StandardStochasticGradientOptimizer::StartOptimization( void )
+void
+StandardStochasticGradientOptimizer::StartOptimization(void)
 {
   this->m_CurrentTime = this->m_InitialTime;
   this->Superclass::StartOptimization();
@@ -56,11 +56,10 @@ void StandardStochasticGradientOptimizer::StartOptimization( void )
  */
 
 void
-StandardStochasticGradientOptimizer
-::AdvanceOneStep( void )
+StandardStochasticGradientOptimizer ::AdvanceOneStep(void)
 {
 
-  this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
+  this->SetLearningRate(this->Compute_a(this->m_CurrentTime));
 
   this->Superclass::AdvanceOneStep();
 
@@ -73,11 +72,10 @@ StandardStochasticGradientOptimizer
  * ************************** Compute_a *************************
  */
 
-double StandardStochasticGradientOptimizer
-::Compute_a( double k ) const
+double
+StandardStochasticGradientOptimizer ::Compute_a(double k) const
 {
-  return static_cast<double>(
-    this->m_Param_a / std::pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+  return static_cast<double>(this->m_Param_a / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
 } // end Compute_a
 
@@ -85,11 +83,10 @@ double StandardStochasticGradientOptimizer
  * ************************** Compute_beta *************************
  */
 
-double StandardStochasticGradientOptimizer
-::Compute_beta( double k ) const
+double
+StandardStochasticGradientOptimizer ::Compute_beta(double k) const
 {
-  return static_cast<double>(
-    this->m_Param_beta / std::pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+  return static_cast<double>(this->m_Param_beta / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
 } // end Compute_beta()
 
@@ -98,8 +95,8 @@ double StandardStochasticGradientOptimizer
  * ************************** UpdateCurrentTime ********************
  */
 
-void StandardStochasticGradientOptimizer
-::UpdateCurrentTime( void )
+void
+StandardStochasticGradientOptimizer ::UpdateCurrentTime(void)
 {
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;

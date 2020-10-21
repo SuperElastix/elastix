@@ -18,4 +18,4 @@
 
 #include "elxSimultaneousPerturbation.h"
 
-elxInstallMacro( SimultaneousPerturbation );
+elxInstallMacro(SimultaneousPerturbation);

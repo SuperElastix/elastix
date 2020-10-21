@@ -50,29 +50,26 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template<
-  class TScalarType        = double,    // Data type for scalars (float or double)
-  unsigned int NDimensions = 3 >        // Number of dimensions
-class ITK_EXPORT AdvancedTranslationTransform :
-  public         AdvancedTransform< TScalarType, NDimensions, NDimensions >
+template <class TScalarType = double,   // Data type for scalars (float or double)
+          unsigned int NDimensions = 3> // Number of dimensions
+class ITK_EXPORT AdvancedTranslationTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AdvancedTranslationTransform                               Self;
-  typedef AdvancedTransform< TScalarType, NDimensions, NDimensions > Superclass;
-  typedef SmartPointer< Self >                                       Pointer;
-  typedef SmartPointer< const Self >                                 ConstPointer;
+  typedef AdvancedTranslationTransform                             Self;
+  typedef AdvancedTransform<TScalarType, NDimensions, NDimensions> Superclass;
+  typedef SmartPointer<Self>                                       Pointer;
+  typedef SmartPointer<const Self>                                 ConstPointer;
 
   /** New macro for creation of through the object factory.*/
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedTranslationTransform, AdvancedTransform );
+  itkTypeMacro(AdvancedTranslationTransform, AdvancedTransform);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( ParametersDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
+  itkStaticConstMacro(ParametersDimension, unsigned int, NDimensions);
 
   /** Standard scalar type for this class. */
   typedef typename Superclass::ScalarType ScalarType;
@@ -85,178 +82,200 @@ public:
   typedef typename Superclass::JacobianType JacobianType;
 
   /** Standard vector type for this class. */
-  typedef Vector< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > InputVectorType;
-  typedef Vector< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > OutputVectorType;
+  typedef Vector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputVectorType;
+  typedef Vector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputVectorType;
 
   /** Standard covariant vector type for this class. */
-  typedef CovariantVector< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > InputCovariantVectorType;
-  typedef CovariantVector< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > OutputCovariantVectorType;
+  typedef CovariantVector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputCovariantVectorType;
+  typedef CovariantVector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputCovariantVectorType;
 
   /** Standard vnl_vector type for this class. */
-  typedef vnl_vector_fixed< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > InputVnlVectorType;
-  typedef vnl_vector_fixed< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > OutputVnlVectorType;
+  typedef vnl_vector_fixed<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputVnlVectorType;
+  typedef vnl_vector_fixed<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputVnlVectorType;
 
   /** Standard coordinate point type for this class. */
-  typedef Point< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > InputPointType;
-  typedef Point< TScalarType, itkGetStaticConstMacro( SpaceDimension ) > OutputPointType;
+  typedef Point<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputPointType;
+  typedef Point<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputPointType;
 
   /** AdvancedTransform typedefs */
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** This method returns the value of the offset of the
    * AdvancedTranslationTransform.
    */
-  const OutputVectorType & GetOffset( void ) const
-  { return m_Offset; }
+  const OutputVectorType &
+  GetOffset(void) const
+  {
+    return m_Offset;
+  }
 
   /** This method sets the parameters for the transform
    * value specified by the user. */
-  void SetParameters( const ParametersType & parameters ) override;
+  void
+  SetParameters(const ParametersType & parameters) override;
 
   /** Get the Transformation Parameters. */
-  const ParametersType & GetParameters( void ) const override;
+  const ParametersType &
+  GetParameters(void) const override;
 
   /** Set offset of an Translation Transform.
    * This method sets the offset of an AdvancedTranslationTransform to a
    * value specified by the user. */
-  void SetOffset( const OutputVectorType & offset )
-  { m_Offset = offset; return; }
+  void
+  SetOffset(const OutputVectorType & offset)
+  {
+    m_Offset = offset;
+    return;
+  }
 
   /** Compose with another AdvancedTranslationTransform. */
-  void Compose( const Self * other, bool pre = 0 );
+  void
+  Compose(const Self * other, bool pre = 0);
 
   /** Compose affine transformation with a translation.
    * This method modifies self to include a translation of the
    * origin.  The translation is precomposed with self if pre is
    * true, and postcomposed otherwise. */
-  void Translate( const OutputVectorType & offset, bool pre = 0 );
+  void
+  Translate(const OutputVectorType & offset, bool pre = 0);
 
   /** Transform by an affine transformation.
    * This method applies the affine transform given by self to a
    * given point or vector, returning the transformed point or
    * vector. */
-  OutputPointType     TransformPoint( const InputPointType  & point ) const override;
+  OutputPointType
+  TransformPoint(const InputPointType & point) const override;
 
-  OutputVectorType    TransformVector( const InputVectorType & vector ) const override;
+  OutputVectorType
+  TransformVector(const InputVectorType & vector) const override;
 
-  OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const override;
+  OutputVnlVectorType
+  TransformVector(const InputVnlVectorType & vector) const override;
 
-  OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType & vector ) const override;
+  OutputCovariantVectorType
+  TransformCovariantVector(const InputCovariantVectorType & vector) const override;
 
   /** This method finds the point or vector that maps to a given
    * point or vector under the affine transformation defined by
    * self.  If no such point exists, an exception is thrown. */
-  inline InputPointType    BackTransform( const OutputPointType  & point ) const;
+  inline InputPointType
+  BackTransform(const OutputPointType & point) const;
 
-  inline InputVectorType   BackTransform( const OutputVectorType & vector ) const;
+  inline InputVectorType
+  BackTransform(const OutputVectorType & vector) const;
 
-  inline InputVnlVectorType BackTransform( const OutputVnlVectorType & vector ) const;
+  inline InputVnlVectorType
+  BackTransform(const OutputVnlVectorType & vector) const;
 
-  inline InputCovariantVectorType BackTransform(
-    const OutputCovariantVectorType & vector ) const;
+  inline InputCovariantVectorType
+  BackTransform(const OutputCovariantVectorType & vector) const;
 
   /** Find inverse of an affine transformation.
    * This method creates and returns a new AdvancedTranslationTransform object
    * which is the inverse of self.  If self is not invertible,
    * false is returned.  */
-  bool GetInverse( Self * inverse ) const;
+  bool
+  GetInverse(Self * inverse) const;
 
   /** Compute the Jacobian of the transformation. */
-  void GetJacobian(
-    const InputPointType &,
-    JacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  void GetSpatialJacobian(
-    const InputPointType &,
-    SpatialJacobianType & ) const override;
+  void
+  GetSpatialJacobian(const InputPointType &, SpatialJacobianType &) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  void GetSpatialHessian(
-    const InputPointType &,
-    SpatialHessianType & ) const override;
+  void
+  GetSpatialHessian(const InputPointType &, SpatialHessianType &) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType &,
-    JacobianOfSpatialJacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &,
+                               JacobianOfSpatialJacobianType &,
+                               NonZeroJacobianIndicesType &) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType &,
-    SpatialJacobianType &,
-    JacobianOfSpatialJacobianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &,
+                               SpatialJacobianType &,
+                               JacobianOfSpatialJacobianType &,
+                               NonZeroJacobianIndicesType &) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType &,
-    JacobianOfSpatialHessianType &,
-    NonZeroJacobianIndicesType & ) const override;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &,
+                              JacobianOfSpatialHessianType &,
+                              NonZeroJacobianIndicesType &) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              SpatialHessianType &           sh,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override;
 
   /** Set the parameters to the IdentityTransform */
-  void SetIdentity( void );
+  void
+  SetIdentity(void);
 
   /** Return the number of parameters that completely define the Transform  */
-  NumberOfParametersType GetNumberOfParameters( void ) const override
-  { return NDimensions; }
+  NumberOfParametersType
+  GetNumberOfParameters(void) const override
+  {
+    return NDimensions;
+  }
 
   /** Indicates that this transform is linear. That is, given two
    * points P and Q, and scalar coefficients a and b, then
    *
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
-  bool IsLinear() const override { return true; }
+  bool
+  IsLinear() const override
+  {
+    return true;
+  }
 
   /** Set the fixed parameters and update internal transformation.
    * The Translation Transform does not require fixed parameters,
    * therefore the implementation of this method is a null operation. */
-  void SetFixedParameters( const ParametersType & ) override
-  { /* purposely blank */ }
+  void
+  SetFixedParameters(const ParametersType &) override
+  { /* purposely blank */
+  }
 
   /** Get the Fixed Parameters. The AdvancedTranslationTransform does not
    * require Fixed parameters, therefore this method returns an
    * parameters array of size zero. */
-  const ParametersType & GetFixedParameters( void ) const override
+  const ParametersType &
+  GetFixedParameters(void) const override
   {
-    this->m_FixedParameters.SetSize( 0 );
+    this->m_FixedParameters.SetSize(0);
     return this->m_FixedParameters;
   }
 
 
 protected:
-
   AdvancedTranslationTransform();
   ~AdvancedTranslationTransform() override;
   /** Print contents of an AdvancedTranslationTransform. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
+  AdvancedTranslationTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  AdvancedTranslationTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );               // purposely not implemented
-
-  OutputVectorType m_Offset;         // Offset of the transformation
+  OutputVectorType m_Offset; // Offset of the transformation
 
   JacobianType                  m_LocalJacobian;
   SpatialJacobianType           m_SpatialJacobian;
@@ -264,59 +283,50 @@ private:
   NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
   JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian;
-
 };
 
-//class AdvancedTranslationTransform
+// class AdvancedTranslationTransform
 
 // Back transform a point
-template< class TScalarType, unsigned int NDimensions >
-inline
-typename AdvancedTranslationTransform< TScalarType, NDimensions >::InputPointType
-AdvancedTranslationTransform< TScalarType, NDimensions >
-::BackTransform( const OutputPointType & point ) const
+template <class TScalarType, unsigned int NDimensions>
+inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputPointType
+AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputPointType & point) const
 {
   return point - m_Offset;
 }
 
 
 // Back transform a vector
-template< class TScalarType, unsigned int NDimensions >
-inline
-typename AdvancedTranslationTransform< TScalarType, NDimensions >::InputVectorType
-AdvancedTranslationTransform< TScalarType, NDimensions >
-::BackTransform( const OutputVectorType & vect ) const
+template <class TScalarType, unsigned int NDimensions>
+inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputVectorType
+AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputVectorType & vect) const
 {
   return vect;
 }
 
 
 // Back transform a vnl_vector
-template< class TScalarType, unsigned int NDimensions >
-inline
-typename AdvancedTranslationTransform< TScalarType, NDimensions >::InputVnlVectorType
-AdvancedTranslationTransform< TScalarType, NDimensions >
-::BackTransform( const OutputVnlVectorType & vect ) const
+template <class TScalarType, unsigned int NDimensions>
+inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputVnlVectorType
+AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputVnlVectorType & vect) const
 {
   return vect;
 }
 
 
 // Back Transform a CovariantVector
-template< class TScalarType, unsigned int NDimensions >
-inline
-typename AdvancedTranslationTransform< TScalarType, NDimensions >::InputCovariantVectorType
-AdvancedTranslationTransform< TScalarType, NDimensions >
-::BackTransform( const OutputCovariantVectorType & vect ) const
+template <class TScalarType, unsigned int NDimensions>
+inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputCovariantVectorType
+AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputCovariantVectorType & vect) const
 {
   return vect;
 }
 
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedTranslationTransform.txx"
+#  include "itkAdvancedTranslationTransform.txx"
 #endif
 
 #endif /* __itkAdvancedTranslationTransform_h */

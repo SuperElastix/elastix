@@ -17,4 +17,4 @@
  *=========================================================================*/
 #include "elxAffineLogStackTransform.h"
 
-elxInstallMacro( AffineLogStackTransform );
+elxInstallMacro(AffineLogStackTransform);

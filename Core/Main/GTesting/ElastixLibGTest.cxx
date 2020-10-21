@@ -17,7 +17,7 @@
  *=========================================================================*/
 
 
- // First include the header file to be tested:
+// First include the header file to be tested:
 #include "elastixlib.h"
 
 // ITK header files:
@@ -32,7 +32,7 @@
 
 
 // Tests registering two small (5x6) binary images, using the example code from
-// Elastix manual paragraph "Running elastix". 
+// Elastix manual paragraph "Running elastix".
 GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
 {
   using elastix::ELASTIX;
@@ -45,14 +45,13 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   using OffsetType = itk::Offset<ImageDimension>;
   using RegionRangeType = itk::Experimental::ImageRegionRange<ITKImageType>;
 
-  const std::pair<std::string, std::string> parameterArray[] =
-  {
+  const std::pair<std::string, std::string> parameterArray[] = {
     // Parameters with non-default values (A-Z):
-    { "FixedImageDimension", std::to_string(ImageDimension)},
+    { "FixedImageDimension", std::to_string(ImageDimension) },
     { "ImageSampler", "Full" },
     { "MaximumNumberOfIterations", "2" }, // Default value: 500
     { "Metric", "AdvancedNormalizedCorrelation" },
-    { "MovingImageDimension", std::to_string(ImageDimension)},
+    { "MovingImageDimension", std::to_string(ImageDimension) },
     { "NumberOfResolutions", "2" }, // Default value: 3
     { "Optimizer", "AdaptiveStochasticGradientDescent" },
     { "Transform", "TranslationTransform" },
@@ -92,56 +91,55 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
     { "WriteResultImage", "true" },
   };
 
-  std::map < std::string, std::vector< std::string > > parameters;
+  std::map<std::string, std::vector<std::string>> parameters;
 
-  for (const auto& pair: parameterArray)
+  for (const auto & pair : parameterArray)
   {
-    const auto result = parameters.insert({ pair.first, {pair.second} } );
+    const auto result = parameters.insert({ pair.first, { pair.second } });
 
     ASSERT_EQ(std::make_pair(pair, result.second), std::make_pair(pair, true));
   }
 
   const OffsetType translationOffset{ { 1, -2 } };
-  const auto regionSize = SizeType::Filled(2);
-  const SizeType imageSize{ { 5, 6 } };
-  const IndexType fixedImageRegionIndex{ { 1, 3 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
   const auto fixed_image = ITKImageType::New();
   fixed_image->SetRegions(imageSize);
   fixed_image->Allocate(true);
-  const RegionType fixedImageRegion{ fixedImageRegionIndex, regionSize };
+  const RegionType      fixedImageRegion{ fixedImageRegionIndex, regionSize };
   const RegionRangeType fixedImageRegionRange{ *fixed_image, fixedImageRegion };
   std::fill(std::begin(fixedImageRegionRange), std::end(fixedImageRegionRange), 1.0f);
 
   const auto moving_image = ITKImageType::New();
   moving_image->SetRegions(imageSize);
   moving_image->Allocate(true);
-  const RegionType movingImageRegion{ fixedImageRegionIndex + translationOffset, regionSize };
+  const RegionType      movingImageRegion{ fixedImageRegionIndex + translationOffset, regionSize };
   const RegionRangeType movingImageRegionRange{ *moving_image, movingImageRegion };
   std::fill(std::begin(movingImageRegionRange), std::end(movingImageRegionRange), 1.0f);
 
   const std::string output_directory(".");
-  const bool write_log_file{ false };
-  const bool output_to_console{ false };
+  const bool        write_log_file{ false };
+  const bool        output_to_console{ false };
 
   //////////////////////////////////////////////////////////////////////////
   // Code snippet from Manual paragraph "Running elastix" starts here >>>
   ELASTIX elastix;
-  int error = 0;
+  int     error = 0;
   try
   {
-    error = elastix.RegisterImages(
-      static_cast<typename itk::DataObject::Pointer>(fixed_image.GetPointer()),
-      static_cast<typename itk::DataObject::Pointer>(moving_image.GetPointer()),
-      parameters,        // Parameter map read in previous code
-      output_directory,  // Directory where output is written, if enabled
-      write_log_file,    // Enable/disable writing of elastix.log
-      output_to_console, // Enable/disable output to console
-      nullptr,           // Provide fixed image mask (optional, nullptr = no mask)
-      nullptr            // Provide moving image mask (optional, nullptr = no mask)
+    error = elastix.RegisterImages(static_cast<typename itk::DataObject::Pointer>(fixed_image.GetPointer()),
+                                   static_cast<typename itk::DataObject::Pointer>(moving_image.GetPointer()),
+                                   parameters,        // Parameter map read in previous code
+                                   output_directory,  // Directory where output is written, if enabled
+                                   write_log_file,    // Enable/disable writing of elastix.log
+                                   output_to_console, // Enable/disable output to console
+                                   nullptr,           // Provide fixed image mask (optional, nullptr = no mask)
+                                   nullptr            // Provide moving image mask (optional, nullptr = no mask)
     );
   }
-  catch (itk::ExceptionObject &err)
+  catch (itk::ExceptionObject & err)
   {
     // Do some error handling.
     std::cerr << err.what() << '\n';
@@ -152,8 +150,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
     if (elastix.GetResultImage().IsNotNull())
     {
       // Typedef the ITKImageType first...
-      ITKImageType * output_image = static_cast<ITKImageType *>(
-        elastix.GetResultImage().GetPointer());
+      ITKImageType * output_image = static_cast<ITKImageType *>(elastix.GetResultImage().GetPointer());
       EXPECT_NE(output_image, nullptr);
     }
   }
@@ -163,8 +160,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   }
 
   // Get transform parameters of all registration steps.
-  RegistrationParametersContainerType transform_parameters
-    = elastix.GetTransformParameterMapList();
+  RegistrationParametersContainerType transform_parameters = elastix.GetTransformParameterMapList();
 
   // <<< Code snippet from Manual paragraph "Running elastix" ends here
   //////////////////////////////////////////////////////////////////////////
@@ -172,55 +168,54 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   ASSERT_TRUE(!transform_parameters.empty());
   EXPECT_EQ(transform_parameters.size(), 1);
 
-  const auto& first = transform_parameters.front();
-  const auto found = first.find("TransformParameters");
+  const auto & first = transform_parameters.front();
+  const auto   found = first.find("TransformParameters");
   ASSERT_NE(found, first.cend());
 
-  const auto& transformParameters = found->second;
+  const auto & transformParameters = found->second;
   ASSERT_EQ(transformParameters.size(), ImageDimension);
 
   std::array<double, ImageDimension> estimatedTranslationOffset;
 
-  std::transform(transformParameters.cbegin(), transformParameters.cend(), estimatedTranslationOffset.begin(), [](const std::string& arg)
-  {
-    return std::stod(arg);
-  });
+  std::transform(transformParameters.cbegin(),
+                 transformParameters.cend(),
+                 estimatedTranslationOffset.begin(),
+                 [](const std::string & arg) { return std::stod(arg); });
 
   OffsetType roundedTranslationOffset;
 
-  std::transform(estimatedTranslationOffset.cbegin(), estimatedTranslationOffset.cend(), roundedTranslationOffset.begin(), [](const double arg)
-  {
-    return static_cast<itk::OffsetValueType>( std::round(arg) );
-  });
+  std::transform(estimatedTranslationOffset.cbegin(),
+                 estimatedTranslationOffset.cend(),
+                 roundedTranslationOffset.begin(),
+                 [](const double arg) { return static_cast<itk::OffsetValueType>(std::round(arg)); });
 
   EXPECT_EQ(roundedTranslationOffset, translationOffset);
 }
 
 
 // Tests that the TransformParameters of a translation are all zero when the
-// fixed and the moving image are the same. 
+// fixed and the moving image are the same.
 GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovingImage)
 {
   using ImageType = itk::Image<float>;
   constexpr auto ImageDimension = ImageType::ImageDimension;
   using SizeType = itk::Size<ImageDimension>;
 
-  const std::pair<std::string, std::string> parameterArray[] =
-  {
+  const std::pair<std::string, std::string> parameterArray[] = {
     // Parameters with non-default values (A-Z):
-    { "FixedImageDimension", std::to_string(ImageDimension)},
+    { "FixedImageDimension", std::to_string(ImageDimension) },
     { "ImageSampler", "Full" },
     { "Metric", "AdvancedNormalizedCorrelation" },
-    { "MovingImageDimension", std::to_string(ImageDimension)},
+    { "MovingImageDimension", std::to_string(ImageDimension) },
     { "Optimizer", "AdaptiveStochasticGradientDescent" },
     { "Transform", "TranslationTransform" }
   };
 
-  std::map < std::string, std::vector< std::string > > parameters;
+  std::map<std::string, std::vector<std::string>> parameters;
 
-  for (const auto& pair : parameterArray)
+  for (const auto & pair : parameterArray)
   {
-    ASSERT_TRUE(parameters.insert({ pair.first, {pair.second} }).second);
+    ASSERT_TRUE(parameters.insert({ pair.first, { pair.second } }).second);
   }
 
   const auto indexValue = 1;
@@ -230,7 +225,8 @@ GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovi
   const auto image = ImageType::New();
   image->SetRegions(SizeType::Filled(imageSizeValue));
   image->Allocate(true);
-  const itk::ImageRegion<ImageDimension> imageRegion{ { {indexValue, indexValue}}, SizeType::Filled(regionSizeValue) };
+  const itk::ImageRegion<ImageDimension>               imageRegion{ { { indexValue, indexValue } },
+                                                      SizeType::Filled(regionSizeValue) };
   const itk::Experimental::ImageRegionRange<ImageType> imageRegionRange{ *image, imageRegion };
   std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1.0f);
 
@@ -242,14 +238,14 @@ GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovi
   ASSERT_TRUE(!transformParameterMaps.empty());
   EXPECT_EQ(transformParameterMaps.size(), 1);
 
-  const auto& transformParameterMap = transformParameterMaps.front();
-  const auto found = transformParameterMap.find("TransformParameters");
+  const auto & transformParameterMap = transformParameterMaps.front();
+  const auto   found = transformParameterMap.find("TransformParameters");
   ASSERT_NE(found, transformParameterMap.cend());
 
-  const auto& transformParameters = found->second;
+  const auto & transformParameters = found->second;
   ASSERT_EQ(transformParameters.size(), ImageDimension);
 
-  for (const auto& transformParameter : transformParameters)
+  for (const auto & transformParameter : transformParameters)
   {
     EXPECT_EQ(transformParameter, "0");
   }

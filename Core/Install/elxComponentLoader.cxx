@@ -36,48 +36,42 @@ using namespace xl;
  */
 
 /** Define a class<N> with a method DO(...) that calls class<N+1>::DO(...) */
-template< ComponentDatabase::IndexType VIndex >
+template <ComponentDatabase::IndexType VIndex>
 class _installsupportedimagesrecursively
 {
 public:
-
   /** ElastixTypedef is defined in elxSupportedImageTypes.h, by means of the
-    * the elxSupportedImageTypesMacro */
-  typedef ElastixTypedef< VIndex >                    ET;
+   * the elxSupportedImageTypesMacro */
+  typedef ElastixTypedef<VIndex>                      ET;
   typedef typename ET::ElastixType                    ElastixType;
   typedef ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;
 
-  static int DO( const ComponentDescriptionType & name, ComponentDatabase * cdb )
+  static int
+  DO(const ComponentDescriptionType & name, ComponentDatabase * cdb)
   {
-    int dummy1 = InstallFunctions< ElastixType >::InstallComponent( name, VIndex, cdb );
-    int dummy2 = cdb->SetIndex(
-      ET::fPixelTypeAsString(),
-      ET::fDim(),
-      ET::mPixelTypeAsString(),
-      ET::mDim(),
-      VIndex  );
-    if( ElastixTypedef< VIndex + 1 >::Defined() )
+    int dummy1 = InstallFunctions<ElastixType>::InstallComponent(name, VIndex, cdb);
+    int dummy2 = cdb->SetIndex(ET::fPixelTypeAsString(), ET::fDim(), ET::mPixelTypeAsString(), ET::mDim(), VIndex);
+    if (ElastixTypedef<VIndex + 1>::Defined())
     {
-      return _installsupportedimagesrecursively< VIndex + 1 >::DO( name, cdb );
+      return _installsupportedimagesrecursively<VIndex + 1>::DO(name, cdb);
     }
-    return ( dummy1 + dummy2 );
+    return (dummy1 + dummy2);
   }
-
-
 };
 
 // end template class
 
 /** To prevent an infinite loop, DO() does nothing in class<lastImageTypeCombination> */
-template< >
-class _installsupportedimagesrecursively< NrOfSupportedImageTypes + 1 >
+template <>
+class _installsupportedimagesrecursively<NrOfSupportedImageTypes + 1>
 {
 public:
-
   typedef ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;
-  static int DO( const ComponentDescriptionType & /** name */,
-    ComponentDatabase * /** cdb */ )
-  { return 0; }
+  static int
+  DO(const ComponentDescriptionType & /** name */, ComponentDatabase * /** cdb */)
+  {
+    return 0;
+  }
 };
 
 // end template class specialization
@@ -106,23 +100,23 @@ ComponentLoader::~ComponentLoader()
  * *************** InstallSupportedImageTypes ********************
  */
 int
-ComponentLoader::InstallSupportedImageTypes( void )
+ComponentLoader::InstallSupportedImageTypes(void)
 {
   /**
-  * Method: A recursive template was defined at the top of this file, that
-  * installs support for all combinations of ImageTypes defined in
-  * elxSupportedImageTypes.h
-  *
-  * Result: The VIndices are stored in the elx::ComponentDatabase::IndexMap.
-  * The New() functions of ElastixTemplate<> in the
-  * elx::ComponentDatabase::CreatorMap, with key "Elastix".
-  */
+   * Method: A recursive template was defined at the top of this file, that
+   * installs support for all combinations of ImageTypes defined in
+   * elxSupportedImageTypes.h
+   *
+   * Result: The VIndices are stored in the elx::ComponentDatabase::IndexMap.
+   * The New() functions of ElastixTemplate<> in the
+   * elx::ComponentDatabase::CreatorMap, with key "Elastix".
+   */
 
   /** Call class<1>::DO(...) */
-  int _InstallDummy_SupportedImageTypes
-    = _installsupportedimagesrecursively< 1 >::DO( "Elastix", this->m_ComponentDatabase );
+  int _InstallDummy_SupportedImageTypes =
+    _installsupportedimagesrecursively<1>::DO("Elastix", this->m_ComponentDatabase);
 
-  if( _InstallDummy_SupportedImageTypes == 0 )
+  if (_InstallDummy_SupportedImageTypes == 0)
   {
     this->m_ImageTypeSupportInstalled = true;
   }
@@ -137,32 +131,29 @@ ComponentLoader::InstallSupportedImageTypes( void )
  */
 
 int
-ComponentLoader::LoadComponents( const char * /** argv0 */ )
+ComponentLoader::LoadComponents(const char * /** argv0 */)
 {
   int installReturnCode = 0;
 
   /** Generate the mapping between indices and image types */
-  if( !this->m_ImageTypeSupportInstalled )
+  if (!this->m_ImageTypeSupportInstalled)
   {
     installReturnCode = this->InstallSupportedImageTypes();
-    if( installReturnCode != 0 )
+    if (installReturnCode != 0)
     {
-      xout[ "error" ]
-        << "ERROR: ImageTypeSupport installation failed. "
-        << std::endl;
+      xout["error"] << "ERROR: ImageTypeSupport installation failed. " << std::endl;
       return installReturnCode;
     }
-  }   //end if !ImageTypeSupportInstalled
+  } // end if !ImageTypeSupportInstalled
 
   elxout << "Installing all components." << std::endl;
 
   /** Fill the component database */
-  installReturnCode = InstallAllComponents( this->m_ComponentDatabase );
+  installReturnCode = InstallAllComponents(this->m_ComponentDatabase);
 
-  if( installReturnCode )
+  if (installReturnCode)
   {
-    xout[ "error" ]
-      << "ERROR: Installing of at least one of components failed." << std::endl;
+    xout["error"] << "ERROR: Installing of at least one of components failed." << std::endl;
     return installReturnCode;
   }
 
@@ -184,12 +175,12 @@ ComponentLoader::UnloadComponents()
    * This function used to be more useful when we still used .dll's.
    */
 
-  //Not necessary I think:
-  //this->m_ComponentDatabase = 0;
+  // Not necessary I think:
+  // this->m_ComponentDatabase = 0;
 
 } // end UnloadComponents
 
 
-} //end namespace elastix
+} // end namespace elastix
 
 #endif //#ifndef __elxComponentLoader_cxx

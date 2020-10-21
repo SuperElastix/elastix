@@ -18,4 +18,4 @@
 
 #include "elxWeightedCombinationTransform.h"
 
-elxInstallMacro( WeightedCombinationTransformElastix );
+elxInstallMacro(WeightedCombinationTransformElastix);

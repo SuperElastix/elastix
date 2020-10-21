@@ -19,11 +19,11 @@
 #include "itkTestHelper.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   itk::OpenCLContext::Pointer contextNull = itk::OpenCLContext::New();
 
-  if( contextNull->IsCreated() )
+  if (contextNull->IsCreated())
   {
     itk::ReleaseContext();
     return EXIT_FAILURE;
@@ -32,28 +32,28 @@ main( int argc, char * argv[] )
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
 
   // Check the pointers, they should be the same
-  if( contextNull.GetPointer() != context.GetPointer() )
+  if (contextNull.GetPointer() != context.GetPointer())
   {
     itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
-  //context->Create(itk::OpenCLContext::Default);
-  context->Create( itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice );
-  //context->Create(itk::OpenCLContext::DevelopmentMultipleMaximumFlopsDevices);
-  //context->Create(itk::OpenCLContext::SingleMaximumFlopsDevice);
-  //context->Create(itk::OpenCLContext::MultipleMaximumFlopsDevices);
+  // context->Create(itk::OpenCLContext::Default);
+  context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
+  // context->Create(itk::OpenCLContext::DevelopmentMultipleMaximumFlopsDevices);
+  // context->Create(itk::OpenCLContext::SingleMaximumFlopsDevice);
+  // context->Create(itk::OpenCLContext::MultipleMaximumFlopsDevices);
 
-  if( !context->IsCreated() )
+  if (!context->IsCreated())
   {
     itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
-  std::list< itk::OpenCLDevice > devices = context->GetDevices();
-  for( std::list< itk::OpenCLDevice >::const_iterator dev = devices.begin(); dev != devices.end(); ++dev )
+  std::list<itk::OpenCLDevice> devices = context->GetDevices();
+  for (std::list<itk::OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
   {
-    std::cout << ( *dev ) << std::endl;
+    std::cout << (*dev) << std::endl;
   }
 
   // Release and exit

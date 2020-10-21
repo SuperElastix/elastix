@@ -18,4 +18,4 @@
 
 #include "elxFullSampler.h"
 
-elxInstallMacro( FullSampler );
+elxInstallMacro(FullSampler);

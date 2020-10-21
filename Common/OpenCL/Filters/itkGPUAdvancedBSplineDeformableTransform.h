@@ -34,58 +34,61 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TScalarType = float, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3,
-typename TParentTransform      = AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder > >
-class GPUAdvancedBSplineDeformableTransform :
-  public TParentTransform, public GPUBSplineBaseTransform< TScalarType, NDimensions >
+template <typename TScalarType = float,
+          unsigned int NDimensions = 3,
+          unsigned int VSplineOrder = 3,
+          typename TParentTransform = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>>
+class GPUAdvancedBSplineDeformableTransform
+  : public TParentTransform
+  , public GPUBSplineBaseTransform<TScalarType, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUAdvancedBSplineDeformableTransform Self;
-  typedef TParentTransform                      CPUSuperclass;
-  typedef GPUBSplineBaseTransform<
-    TScalarType, NDimensions >                   GPUSuperclass;
-  typedef SmartPointer< Self >                   Pointer;
-  typedef SmartPointer< const Self >             ConstPointer;
-  typedef typename CPUSuperclass::ParametersType ParametersType;
-  typedef typename CPUSuperclass::ImagePointer   ImagePointer;
+  typedef GPUAdvancedBSplineDeformableTransform             Self;
+  typedef TParentTransform                                  CPUSuperclass;
+  typedef GPUBSplineBaseTransform<TScalarType, NDimensions> GPUSuperclass;
+  typedef SmartPointer<Self>                                Pointer;
+  typedef SmartPointer<const Self>                          ConstPointer;
+  typedef typename CPUSuperclass::ParametersType            ParametersType;
+  typedef typename CPUSuperclass::ImagePointer              ImagePointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAdvancedBSplineDeformableTransform, TParentTransform );
+  itkTypeMacro(GPUAdvancedBSplineDeformableTransform, TParentTransform);
 
   /** This method sets the parameters of the transform. */
-  void SetParameters( const ParametersType & parameters );
+  void
+  SetParameters(const ParametersType & parameters);
 
   /** Set the array of coefficient images. */
-  void SetCoefficientImages( ImagePointer images[] );
+  void
+  SetCoefficientImages(ImagePointer images[]);
 
 protected:
-
   GPUAdvancedBSplineDeformableTransform();
   virtual ~GPUAdvancedBSplineDeformableTransform() {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  void CopyCoefficientImagesToGPU( void );
+  void
+  CopyCoefficientImagesToGPU(void);
 
 private:
-
-  GPUAdvancedBSplineDeformableTransform( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );                      // purposely not implemented
-
+  GPUAdvancedBSplineDeformableTransform(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUAdvancedBSplineDeformableTransform.hxx"
+#  include "itkGPUAdvancedBSplineDeformableTransform.hxx"
 #endif
 
 #endif /* __itkGPUAdvancedBSplineDeformableTransform_h */

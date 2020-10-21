@@ -21,6 +21,6 @@
 
 #include "elxMovingSmoothingPyramid.h"
 
-//nothing
+// nothing
 
 #endif //#ifndef __elxMovingSmoothingPyramid_hxx

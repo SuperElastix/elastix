@@ -28,10 +28,10 @@ using namespace std;
  * ************************ Constructor *************************
  */
 
-template< class charT, class traits >
-xoutcell< charT, traits >::xoutcell()
+template <class charT, class traits>
+xoutcell<charT, traits>::xoutcell()
 {
-  this->AddTargetCell( "InternalBuffer", &( this->m_InternalBuffer ) );
+  this->AddTargetCell("InternalBuffer", &(this->m_InternalBuffer));
 
 } // end Constructor
 
@@ -42,9 +42,9 @@ xoutcell< charT, traits >::xoutcell()
  * The buffered data is sent to the outputs.
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutcell< charT, traits >::WriteBufferedData( void )
+xoutcell<charT, traits>::WriteBufferedData(void)
 {
   /** Make sure all data is written to the string */
   this->m_InternalBuffer << flush;
@@ -54,20 +54,20 @@ xoutcell< charT, traits >::WriteBufferedData( void )
   const char * const charbuf = strbuf.c_str();
 
   /** Send the string to the outputs */
-  for( const auto& output : this->m_COutputs )
+  for (const auto & output : this->m_COutputs)
   {
-    *( output.second ) << charbuf << flush;
+    *(output.second) << charbuf << flush;
   }
 
   /** Send the string to the outputs */
-  for( const auto& output : this->m_XOutputs )
+  for (const auto & output : this->m_XOutputs)
   {
-    *( output.second ) << charbuf;
+    *(output.second) << charbuf;
     output.second->WriteBufferedData();
   }
 
   /** Empty the internal buffer */
-  this->m_InternalBuffer.str( string( "" ) );
+  this->m_InternalBuffer.str(string(""));
 
 } // end WriteBufferedData
 

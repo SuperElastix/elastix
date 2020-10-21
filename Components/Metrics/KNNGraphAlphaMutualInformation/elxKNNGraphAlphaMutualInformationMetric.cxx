@@ -18,4 +18,4 @@
 
 #include "elxKNNGraphAlphaMutualInformationMetric.h"
 
-elxInstallMacro( KNNGraphAlphaMutualInformationMetric );
+elxInstallMacro(KNNGraphAlphaMutualInformationMetric);

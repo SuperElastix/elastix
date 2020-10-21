@@ -18,4 +18,4 @@
 
 #include "elxVarianceOverLastDimensionMetric.h"
 
-elxInstallMacro( VarianceOverLastDimensionMetric );
+elxInstallMacro(VarianceOverLastDimensionMetric);

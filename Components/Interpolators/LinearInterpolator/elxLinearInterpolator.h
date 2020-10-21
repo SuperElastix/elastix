@@ -40,39 +40,36 @@ namespace elastix
  * \ingroup Interpolators
  */
 
-template< class TElastix >
-class LinearInterpolator :
-  public itk::AdvancedLinearInterpolateImageFunction<
-  typename InterpolatorBase< TElastix >::InputImageType,
-  typename InterpolatorBase< TElastix >::CoordRepType >,
-  public InterpolatorBase< TElastix >
+template <class TElastix>
+class LinearInterpolator
+  : public itk::AdvancedLinearInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                       typename InterpolatorBase<TElastix>::CoordRepType>
+  , public InterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef LinearInterpolator Self;
-  typedef itk::AdvancedLinearInterpolateImageFunction<
-    typename InterpolatorBase< TElastix >::InputImageType,
-    typename InterpolatorBase< TElastix >::CoordRepType >
-    Superclass1;
-  typedef InterpolatorBase< TElastix >    Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::AdvancedLinearInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                      typename InterpolatorBase<TElastix>::CoordRepType>
+                                        Superclass1;
+  typedef InterpolatorBase<TElastix>    Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( LinearInterpolator, itk::AdvancedLinearInterpolateImageFunction );
+  itkTypeMacro(LinearInterpolator, itk::AdvancedLinearInterpolateImageFunction);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n
    * example: <tt>(Interpolator "LinearInterpolator")</tt>\n
    */
-  elxClassNameMacro( "LinearInterpolator" );
+  elxClassNameMacro("LinearInterpolator");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::OutputType          OutputType;
@@ -91,25 +88,23 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
 protected:
-
   /** The constructor. */
   LinearInterpolator() {}
   /** The destructor. */
   ~LinearInterpolator() override {}
 
 private:
-
   /** The private constructor. */
-  LinearInterpolator( const Self & );  // purposely not implemented
+  LinearInterpolator(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );      // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxLinearInterpolator.hxx"
+#  include "elxLinearInterpolator.hxx"
 #endif
 
 #endif // end #ifndef __elxLinearInterpolator_h

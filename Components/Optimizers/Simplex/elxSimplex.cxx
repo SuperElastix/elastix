@@ -18,4 +18,4 @@
 
 #include "elxSimplex.h"
 
-elxInstallMacro( Simplex );
+elxInstallMacro(Simplex);

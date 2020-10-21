@@ -54,17 +54,16 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template< class TElastix >
-class FixedImagePyramidBase : public BaseComponentSE< TElastix >
+template <class TElastix>
+class FixedImagePyramidBase : public BaseComponentSE<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef FixedImagePyramidBase       Self;
-  typedef BaseComponentSE< TElastix > Superclass;
+  typedef FixedImagePyramidBase     Self;
+  typedef BaseComponentSE<TElastix> Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FixedImagePyramidBase, BaseComponentSE );
+  itkTypeMacro(FixedImagePyramidBase, BaseComponentSE);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::ElastixType          ElastixType;
@@ -79,63 +78,66 @@ public:
   typedef typename ElastixType::FixedImageType OutputImageType;
 
   /** Other typedef's. */
-  typedef itk::MultiResolutionPyramidImageFilter<
-    InputImageType, OutputImageType >                 ITKBaseType;
+  typedef itk::MultiResolutionPyramidImageFilter<InputImageType, OutputImageType> ITKBaseType;
 
   /** Typedef's from ITKBaseType. */
   typedef typename ITKBaseType::ScheduleType ScheduleType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
+  virtual ITKBaseType *
+  GetAsITKBaseType(void)
   {
-    return dynamic_cast< ITKBaseType * >( this );
+    return dynamic_cast<ITKBaseType *>(this);
   }
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  virtual const ITKBaseType *
+  GetAsITKBaseType(void) const
   {
-    return dynamic_cast< const ITKBaseType * >( this );
+    return dynamic_cast<const ITKBaseType *>(this);
   }
 
 
   /** Execute stuff before the actual registration:
    * \li Set the schedule of the fixed image pyramid.
    */
-  void BeforeRegistrationBase( void ) override;
+  void
+  BeforeRegistrationBase(void) override;
 
   /** Execute stuff before each resolution:
    * \li Write the pyramid image to file.
    */
-  void BeforeEachResolutionBase( void ) override;
+  void
+  BeforeEachResolutionBase(void) override;
 
   /** Method for setting the schedule. */
-  virtual void SetFixedSchedule( void );
+  virtual void
+  SetFixedSchedule(void);
 
   /** Method to write the pyramid image. */
-  virtual void WritePyramidImage( const std::string & filename,
-    const unsigned int & level ); // const;
+  virtual void
+  WritePyramidImage(const std::string &  filename,
+                    const unsigned int & level); // const;
 
 protected:
-
   /** The constructor. */
   FixedImagePyramidBase() {}
   /** The destructor. */
   ~FixedImagePyramidBase() override {}
 
 private:
-
   /** The private constructor. */
-  FixedImagePyramidBase( const Self & ); // purposely not implemented
+  FixedImagePyramidBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );        // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxFixedImagePyramidBase.hxx"
+#  include "elxFixedImagePyramidBase.hxx"
 #endif
 
 #endif // end #ifndef __elxFixedImagePyramidBase_h

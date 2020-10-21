@@ -33,23 +33,21 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageFullSampler :
-  public ImageSamplerBase< TInputImage >
+template <class TInputImage>
+class ImageFullSampler : public ImageSamplerBase<TInputImage>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageFullSampler                Self;
-  typedef ImageSamplerBase< TInputImage > Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef ImageFullSampler              Self;
+  typedef ImageSamplerBase<TInputImage> Superclass;
+  typedef SmartPointer<Self>            Pointer;
+  typedef SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageFullSampler, ImageSamplerBase );
+  itkTypeMacro(ImageFullSampler, ImageSamplerBase);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -66,8 +64,7 @@ public:
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    Superclass::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** Other typdefs. */
   typedef typename InputImageType::IndexType InputImageIndexType;
@@ -76,50 +73,51 @@ public:
   /** Selecting new samples makes no sense if nothing changed.
    * The same samples would be selected anyway.
    */
-  bool SelectNewSamplesOnUpdate( void ) override
+  bool
+  SelectNewSamplesOnUpdate(void) override
   {
     return false;
   }
 
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
-  bool SelectingNewSamplesOnUpdateSupported( void ) const override
+  bool
+  SelectingNewSamplesOnUpdateSupported(void) const override
   {
     return false;
   }
 
 
 protected:
-
   /** The constructor. */
   ImageFullSampler() {}
   /** The destructor. */
   ~ImageFullSampler() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Function that does the work. */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
   /** Multi-threaded function that does the work. */
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void
+  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
 
 private:
-
   /** The private constructor. */
-  ImageFullSampler( const Self & );          // purposely not implemented
+  ImageFullSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );            // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageFullSampler.hxx"
+#  include "itkImageFullSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageFullSampler_h

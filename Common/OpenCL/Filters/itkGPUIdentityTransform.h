@@ -26,7 +26,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUIdentityTransform */
-itkGPUKernelClassMacro( GPUIdentityTransformKernel );
+itkGPUKernelClassMacro(GPUIdentityTransformKernel);
 
 /** \class GPUIdentityTransform
  * \brief GPU version of IdentityTransform.
@@ -39,51 +39,58 @@ itkGPUKernelClassMacro( GPUIdentityTransformKernel );
  *
  * \ingroup GPUCommon
  */
-template< typename TScalarType = float, unsigned int NDimensions = 3,
-typename TParentTransform      = IdentityTransform< TScalarType, NDimensions > >
-class GPUIdentityTransform : public TParentTransform, public GPUTransformBase
+template <typename TScalarType = float,
+          unsigned int NDimensions = 3,
+          typename TParentTransform = IdentityTransform<TScalarType, NDimensions>>
+class GPUIdentityTransform
+  : public TParentTransform
+  , public GPUTransformBase
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUIdentityTransform       Self;
-  typedef TParentTransform           CPUSuperclass;
-  typedef GPUTransformBase           GPUSuperclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUIdentityTransform     Self;
+  typedef TParentTransform         CPUSuperclass;
+  typedef GPUTransformBase         GPUSuperclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUIdentityTransform, TParentTransform );
+  itkTypeMacro(GPUIdentityTransform, TParentTransform);
 
   /** Returns true if the derived transform is identity transform,
    * false otherwise. */
-  bool IsIdentityTransform( void ) const override { return true; }
+  bool
+  IsIdentityTransform(void) const override
+  {
+    return true;
+  }
 
 protected:
-
   GPUIdentityTransform();
   ~GPUIdentityTransform() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  bool GetSourceCode( std::string & source ) const override;
+  bool
+  GetSourceCode(std::string & source) const override;
 
 private:
+  GPUIdentityTransform(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 
-  GPUIdentityTransform( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );     // purposely not implemented
-
-  std::vector< std::string > m_Sources;
+  std::vector<std::string> m_Sources;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUIdentityTransform.hxx"
+#  include "itkGPUIdentityTransform.hxx"
 #endif
 
 #endif /* __itkGPUIdentityTransform_h */

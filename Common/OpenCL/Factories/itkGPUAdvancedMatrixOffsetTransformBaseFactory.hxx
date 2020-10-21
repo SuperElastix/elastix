@@ -22,57 +22,54 @@
 
 namespace itk
 {
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >::RegisterOneFactory()
+GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>::RegisterOneFactory()
 {
-  typedef GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions > GPUTransformFactoryType;
-  typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  typedef GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions> GPUTransformFactoryType;
+  typename GPUTransformFactoryType::Pointer                         factory = GPUTransformFactoryType::New();
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >::GPUAdvancedMatrixOffsetTransformBaseFactory2()
+template <typename NDimensions>
+GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>::GPUAdvancedMatrixOffsetTransformBaseFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >
-::Register1D()
+GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 1 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 1> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >
-::Register2D()
+GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 2 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 2> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >
-::Register3D()
+GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::VisitDimension< RealTypeList, 3 > visitor;
-  visitor( *this );
+  typelist::VisitDimension<RealTypeList, 3> visitor;
+  visitor(*this);
 }
 
 

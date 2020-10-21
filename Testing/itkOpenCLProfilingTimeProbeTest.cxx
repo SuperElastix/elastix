@@ -18,10 +18,10 @@
 #include "itkOpenCLProfilingTimeProbe.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   {
-    itk::OpenCLProfilingTimeProbe timer( "Hello ITK OpenCL!" );
+    itk::OpenCLProfilingTimeProbe timer("Hello ITK OpenCL!");
   }
 
   return EXIT_SUCCESS;

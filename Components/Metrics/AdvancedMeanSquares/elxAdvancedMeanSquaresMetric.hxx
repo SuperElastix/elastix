@@ -28,17 +28,16 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-AdvancedMeanSquaresMetric< TElastix >
-::Initialize( void )
+AdvancedMeanSquaresMetric<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of AdvancedMeanSquares metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+  elxout << "Initialization of AdvancedMeanSquares metric took: " << static_cast<long>(timer.GetMean() * 1000) << " ms."
+         << std::endl;
 
 } // end Initialize()
 
@@ -47,46 +46,43 @@ AdvancedMeanSquaresMetric< TElastix >
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-AdvancedMeanSquaresMetric< TElastix >
-::BeforeEachResolution( void )
+AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level
-    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the normalization. */
   bool useNormalization = false;
-  this->GetConfiguration()->ReadParameter( useNormalization,
-    "UseNormalization", this->GetComponentLabel(), level, 0 );
-  this->SetUseNormalization( useNormalization );
+  this->GetConfiguration()->ReadParameter(useNormalization, "UseNormalization", this->GetComponentLabel(), level, 0);
+  this->SetUseNormalization(useNormalization);
 
   /** Experimental options for SelfHessian */
 
   /** Set the number of samples used to compute the SelfHessian */
   unsigned int numberOfSamplesForSelfHessian = 100000;
-  this->GetConfiguration()->ReadParameter( numberOfSamplesForSelfHessian,
-    "NumberOfSamplesForSelfHessian", this->GetComponentLabel(), level, 0 );
-  this->SetNumberOfSamplesForSelfHessian( numberOfSamplesForSelfHessian );
+  this->GetConfiguration()->ReadParameter(
+    numberOfSamplesForSelfHessian, "NumberOfSamplesForSelfHessian", this->GetComponentLabel(), level, 0);
+  this->SetNumberOfSamplesForSelfHessian(numberOfSamplesForSelfHessian);
 
   /** Set the smoothing sigma used to compute the SelfHessian */
   double selfHessianSmoothingSigma = 1.0;
-  this->GetConfiguration()->ReadParameter( selfHessianSmoothingSigma,
-    "SelfHessianSmoothingSigma", this->GetComponentLabel(), level, 0 );
-  this->SetSelfHessianSmoothingSigma( selfHessianSmoothingSigma );
+  this->GetConfiguration()->ReadParameter(
+    selfHessianSmoothingSigma, "SelfHessianSmoothingSigma", this->GetComponentLabel(), level, 0);
+  this->SetSelfHessianSmoothingSigma(selfHessianSmoothingSigma);
 
   /** Set the smoothing sigma used to compute the SelfHessian */
   double selfHessianNoiseRange = 1.0;
-  this->GetConfiguration()->ReadParameter( selfHessianNoiseRange,
-    "SelfHessianNoiseRange", this->GetComponentLabel(), level, 0 );
-  this->SetSelfHessianNoiseRange( selfHessianNoiseRange );
+  this->GetConfiguration()->ReadParameter(
+    selfHessianNoiseRange, "SelfHessianNoiseRange", this->GetComponentLabel(), level, 0);
+  this->SetSelfHessianNoiseRange(selfHessianNoiseRange);
 
   /** Select the use of an OpenMP implementation for GetValueAndDerivative. */
-  std::string useOpenMP = this->m_Configuration->GetCommandLineArgument( "-useOpenMP_SSD" );
-  if( useOpenMP == "true" )
+  std::string useOpenMP = this->m_Configuration->GetCommandLineArgument("-useOpenMP_SSD");
+  if (useOpenMP == "true")
   {
-    this->SetUseOpenMP( true );
+    this->SetUseOpenMP(true);
   }
 
 } // end BeforeEachResolution()

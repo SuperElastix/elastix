@@ -36,19 +36,23 @@ namespace itk
 class ITK_EXPORT GPUInterpolatorBase
 {
 public:
-
   /** Run-time type information (and related methods). */
-  virtual const char * GetNameOfClass() const { return "GPUInterpolatorBase"; }
+  virtual const char *
+  GetNameOfClass() const
+  {
+    return "GPUInterpolatorBase";
+  }
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const;
+  virtual bool
+  GetSourceCode(std::string & source) const;
 
   /** Returns data manager that stores all settings for the transform. */
-  virtual GPUDataManager::Pointer GetParametersDataManager( void ) const;
+  virtual GPUDataManager::Pointer
+  GetParametersDataManager(void) const;
 
 protected:
-
   GPUInterpolatorBase();
   virtual ~GPUInterpolatorBase() {}
 

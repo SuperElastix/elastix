@@ -33,26 +33,24 @@ namespace itk
  * \ingroup Optimizers
  */
 
-class RSGDEachParameterApartBaseOptimizer :
-  public SingleValuedNonLinearOptimizer
+class RSGDEachParameterApartBaseOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
-
   /** Standard "Self" typedef. */
   typedef RSGDEachParameterApartBaseOptimizer Self;
   typedef SingleValuedNonLinearOptimizer      Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RSGDEachParameterApartBaseOptimizer,
-    SingleValuedNonLinearOptimizer );
+  itkTypeMacro(RSGDEachParameterApartBaseOptimizer, SingleValuedNonLinearOptimizer);
 
   /** Codes of stopping conditions. */
-  typedef enum {
+  typedef enum
+  {
     GradientMagnitudeTolerance = 1,
     StepTooSmall,
     ImageNotAvailable,
@@ -62,91 +60,105 @@ public:
   } StopConditionType;
 
   /** Specify whether to minimize or maximize the cost function. */
-  itkSetMacro( Maximize, bool );
-  itkGetConstMacro( Maximize, bool );
-  itkBooleanMacro( Maximize );
-  bool GetMinimize() const
-  { return !m_Maximize; }
-  void SetMinimize( bool v )
-  { this->SetMaximize( !v ); }
-  void    MinimizeOn( void )
-  { SetMaximize( false ); }
-  void    MinimizeOff( void )
-  { SetMaximize( true ); }
+  itkSetMacro(Maximize, bool);
+  itkGetConstMacro(Maximize, bool);
+  itkBooleanMacro(Maximize);
+  bool
+  GetMinimize() const
+  {
+    return !m_Maximize;
+  }
+  void
+  SetMinimize(bool v)
+  {
+    this->SetMaximize(!v);
+  }
+  void
+  MinimizeOn(void)
+  {
+    SetMaximize(false);
+  }
+  void
+  MinimizeOff(void)
+  {
+    SetMaximize(true);
+  }
 
   /** Start optimization. */
-  void    StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Resume previously stopped optimization with current parameters.
-  * \sa StopOptimization */
-  void    ResumeOptimization( void );
+   * \sa StopOptimization */
+  void
+  ResumeOptimization(void);
 
   /** Stop optimization.
-  * \sa ResumeOptimization */
-  void    StopOptimization( void );
+   * \sa ResumeOptimization */
+  void
+  StopOptimization(void);
 
   /** Set/Get parameters to control the optimization process. */
-  itkSetMacro( MaximumStepLength, double );
-  itkSetMacro( MinimumStepLength, double );
-  itkSetMacro( NumberOfIterations, unsigned long );
-  itkSetMacro( GradientMagnitudeTolerance, double );
-  itkGetConstMacro( MaximumStepLength, double );
-  itkGetConstMacro( MinimumStepLength, double );
-  itkGetConstMacro( NumberOfIterations, unsigned long );
-  itkGetConstMacro( GradientMagnitudeTolerance, double );
-  itkGetConstMacro( CurrentIteration, unsigned long );
-  itkGetConstMacro( StopCondition, StopConditionType );
-  itkGetConstMacro( Value, MeasureType );
-  itkGetConstReferenceMacro( Gradient, DerivativeType );
+  itkSetMacro(MaximumStepLength, double);
+  itkSetMacro(MinimumStepLength, double);
+  itkSetMacro(NumberOfIterations, unsigned long);
+  itkSetMacro(GradientMagnitudeTolerance, double);
+  itkGetConstMacro(MaximumStepLength, double);
+  itkGetConstMacro(MinimumStepLength, double);
+  itkGetConstMacro(NumberOfIterations, unsigned long);
+  itkGetConstMacro(GradientMagnitudeTolerance, double);
+  itkGetConstMacro(CurrentIteration, unsigned long);
+  itkGetConstMacro(StopCondition, StopConditionType);
+  itkGetConstMacro(Value, MeasureType);
+  itkGetConstReferenceMacro(Gradient, DerivativeType);
 
   /** Get the array of all step lengths */
-  itkGetConstReferenceMacro( CurrentStepLengths, DerivativeType );
+  itkGetConstReferenceMacro(CurrentStepLengths, DerivativeType);
 
   /** Get the current average step length */
-  itkGetConstMacro( CurrentStepLength, double );
+  itkGetConstMacro(CurrentStepLength, double);
 
   /** Get the current GradientMagnitude */
-  itkGetConstMacro( GradientMagnitude, double );
+  itkGetConstMacro(GradientMagnitude, double);
 
 protected:
-
   RSGDEachParameterApartBaseOptimizer();
   ~RSGDEachParameterApartBaseOptimizer() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Advance one step following the gradient direction
-  * This method verifies if a change in direction is required
-  * and if a reduction in steplength is required. */
-  virtual void AdvanceOneStep( void );
+   * This method verifies if a change in direction is required
+   * and if a reduction in steplength is required. */
+  virtual void
+  AdvanceOneStep(void);
 
   /** Advance one step along the corrected gradient taking into
-  * account the steplength represented by factor.
-  * This method is invoked by AdvanceOneStep. It is expected
-  * to be overrided by optimization methods in non-vector spaces
-  *
-  * In RSGDEachParameterApart this function does not accepts a
-  * single scalar steplength factor, but an array of factors,
-  * which contains the steplength for each parameter apart.
-  *
-  * \sa AdvanceOneStep */
-  virtual void StepAlongGradient(
-    const DerivativeType &,
-    const DerivativeType & )
+   * account the steplength represented by factor.
+   * This method is invoked by AdvanceOneStep. It is expected
+   * to be overrided by optimization methods in non-vector spaces
+   *
+   * In RSGDEachParameterApart this function does not accepts a
+   * single scalar steplength factor, but an array of factors,
+   * which contains the steplength for each parameter apart.
+   *
+   * \sa AdvanceOneStep */
+  virtual void
+  StepAlongGradient(const DerivativeType &, const DerivativeType &)
   {
     ExceptionObject ex;
-    ex.SetLocation( __FILE__ );
-    ex.SetDescription( "This method MUST be overloaded in derived classes" );
+    ex.SetLocation(__FILE__);
+    ex.SetDescription("This method MUST be overloaded in derived classes");
     throw ex;
   }
 
 
 private:
-
-  RSGDEachParameterApartBaseOptimizer( const Self & );  // purposely not implemented
-  void operator=( const Self & );                       // purposely not implemented
+  RSGDEachParameterApartBaseOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
 protected:
-
   DerivativeType m_Gradient;
   DerivativeType m_PreviousGradient;
 
@@ -167,7 +179,6 @@ protected:
   unsigned long     m_CurrentIteration;
 
   double m_GradientMagnitude;
-
 };
 
 } // end namespace itk

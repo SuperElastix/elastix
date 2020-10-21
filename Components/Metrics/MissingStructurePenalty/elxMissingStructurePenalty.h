@@ -50,37 +50,33 @@ namespace elastix
  * \ingroup RegistrationMetrics
  */
 
-template< class TElastix >
-class MissingStructurePenalty :
-  public
-  itk::MissingVolumeMeshPenalty<
-  typename MetricBase< TElastix >::FixedPointSetType,
-  typename MetricBase< TElastix >::MovingPointSetType >,
-  public MetricBase< TElastix >
+template <class TElastix>
+class MissingStructurePenalty
+  : public itk::MissingVolumeMeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
+                                         typename MetricBase<TElastix>::MovingPointSetType>
+  , public MetricBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef MissingStructurePenalty Self;
-  typedef itk::MissingVolumeMeshPenalty<
-    typename MetricBase< TElastix >::FixedPointSetType,
-    typename MetricBase< TElastix >::MovingPointSetType > Superclass1;
-  typedef MetricBase< TElastix >          Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::MissingVolumeMeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
+                                        typename MetricBase<TElastix>::MovingPointSetType>
+                                        Superclass1;
+  typedef MetricBase<TElastix>          Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MissingStructurePenalty,
-    itk::MissingVolumeMeshPenalty );
+  itkTypeMacro(MissingStructurePenalty, itk::MissingVolumeMeshPenalty);
 
   /** Name of this class.
-  * Use this name in the parameter file to select this specific metric. \n
-  * example: <tt>(Metric "MissingStructurePenalty")</tt>\n
-  */
-  elxClassNameMacro( "MissingStructurePenalty" );
+   * Use this name in the parameter file to select this specific metric. \n
+   * example: <tt>(Metric "MissingStructurePenalty")</tt>\n
+   */
+  elxClassNameMacro("MissingStructurePenalty");
 
   /** Typedefs from the superclass. */
   typedef typename Superclass1::FixedMeshType         FixedMeshType;
@@ -120,10 +116,9 @@ public:
   /** Other typedef's. */
   typedef itk::Object ObjectType;
 
-  typedef itk::AdvancedCombinationTransform< CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;
-  typedef typename
-    CombinationTransformType::InitialTransformType InitialTransformType;
+  typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
+                                                                  CombinationTransformType;
+  typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
 
   /** Typedefs inherited from elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -137,60 +132,65 @@ public:
   typedef typename Superclass2::MovingImageType      MovingImageType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
-  * assumes that the fixed and moving image are of the same type.
-  */
+   * assumes that the fixed and moving image are of the same type.
+   */
   typedef FixedPointSetType PointSetType;
   typedef FixedMeshType     MeshType;
   typedef FixedImageType    ImageType;
 
   /** Sets up a timer to measure the initialization time and calls the
-  * Superclass' implementation.
-  */
-  void Initialize( void ) override;
+   * Superclass' implementation.
+   */
+  void
+  Initialize(void) override;
 
   /**
-  * Do some things before registration:
-  * \li Load and set the pointsets.
-  */
-  int BeforeAllBase( void ) override;
+   * Do some things before registration:
+   * \li Load and set the pointsets.
+   */
+  int
+  BeforeAllBase(void) override;
 
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
   /** Function to read the corresponding points. */
-  unsigned int ReadMesh(
-  const std::string & meshFileName,
-  typename FixedMeshType::Pointer & mesh );
+  unsigned int
+  ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh);
 
-  void WriteResultMesh( const char * filename, MeshIdType meshId );
+  void
+  WriteResultMesh(const char * filename, MeshIdType meshId);
 
-  unsigned int ReadTransformixPoints( const std::string & filename, typename MeshType::Pointer & mesh );
+  unsigned int
+  ReadTransformixPoints(const std::string & filename, typename MeshType::Pointer & mesh);
 
   /** Overwrite to silence warning. */
-  void SelectNewSamples( void ) override{}
+  void
+  SelectNewSamples(void) override
+  {}
 
 protected:
-
   /** The constructor. */
   MissingStructurePenalty();
   /** The destructor. */
   ~MissingStructurePenalty() override {}
 
 private:
-
   /** The private constructor. */
-  MissingStructurePenalty( const Self & );  // purposely not implemented
+  MissingStructurePenalty(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );           // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   unsigned int m_NumberOfMeshes;
 };
@@ -198,7 +198,7 @@ private:
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMissingStructurePenalty.hxx"
+#  include "elxMissingStructurePenalty.hxx"
 #endif
 
 #endif // end #ifndef __elxMissingStructurePenalty_H__

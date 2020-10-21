@@ -111,33 +111,30 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template< class TElastix >
-class CMAEvolutionStrategy :
-  public
-  itk::CMAEvolutionStrategyOptimizer,
-  public
-  OptimizerBase< TElastix >
+template <class TElastix>
+class CMAEvolutionStrategy
+  : public itk::CMAEvolutionStrategyOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
-  typedef CMAEvolutionStrategy            Self;
-  typedef CMAEvolutionStrategyOptimizer   Superclass1;
-  typedef OptimizerBase< TElastix >       Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef CMAEvolutionStrategy          Self;
+  typedef CMAEvolutionStrategyOptimizer Superclass1;
+  typedef OptimizerBase<TElastix>       Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( CMAEvolutionStrategy, CMAEvolutionStrategyOptimizer );
+  itkTypeMacro(CMAEvolutionStrategy, CMAEvolutionStrategyOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer. \n
    * example: <tt>(Optimizer "CMAEvolutionStrategy")</tt>\n
    */
-  elxClassNameMacro( "CMAEvolutionStrategy" );
+  elxClassNameMacro("CMAEvolutionStrategy");
 
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType    CostFunctionType;
@@ -158,39 +155,44 @@ public:
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
 protected:
-
-  CMAEvolutionStrategy(){}
+  CMAEvolutionStrategy() {}
   ~CMAEvolutionStrategy() override {}
 
   /** Call the superclass' implementation and print the value of some variables */
-  void InitializeProgressVariables( void ) override;
+  void
+  InitializeProgressVariables(void) override;
 
 private:
-
-  CMAEvolutionStrategy( const Self & );   // purposely not implemented
-  void operator=( const Self & );         // purposely not implemented
-
+  CMAEvolutionStrategy(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxCMAEvolutionStrategy.hxx"
+#  include "elxCMAEvolutionStrategy.hxx"
 #endif
 
 #endif // end #ifndef __elxCMAEvolutionStrategy_h

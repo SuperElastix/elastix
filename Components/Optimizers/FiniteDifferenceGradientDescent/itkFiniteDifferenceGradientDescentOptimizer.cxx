@@ -34,25 +34,24 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-FiniteDifferenceGradientDescentOptimizer
-::FiniteDifferenceGradientDescentOptimizer()
+FiniteDifferenceGradientDescentOptimizer ::FiniteDifferenceGradientDescentOptimizer()
 {
-  itkDebugMacro( "Constructor" );
+  itkDebugMacro("Constructor");
 
-  this->m_Stop               = false;
+  this->m_Stop = false;
   this->m_NumberOfIterations = 100;
-  this->m_CurrentIteration   = 0;
-  this->m_Value              = 0.0;
-  this->m_StopCondition      = MaximumNumberOfIterations;
+  this->m_CurrentIteration = 0;
+  this->m_Value = 0.0;
+  this->m_StopCondition = MaximumNumberOfIterations;
 
-  this->m_GradientMagnitude   = 0.0;
-  this->m_LearningRate        = 0.0;
+  this->m_GradientMagnitude = 0.0;
+  this->m_LearningRate = 0.0;
   this->m_ComputeCurrentValue = false;
-  this->m_Param_a             = 1.0;
-  this->m_Param_c             = 1.0;
-  this->m_Param_A             = 1.0;
-  this->m_Param_alpha         = 0.602;
-  this->m_Param_gamma         = 0.101;
+  this->m_Param_a = 1.0;
+  this->m_Param_c = 1.0;
+  this->m_Param_A = 1.0;
+  this->m_Param_alpha = 0.602;
+  this->m_Param_gamma = 0.101;
 
 } // end Constructor
 
@@ -62,21 +61,15 @@ FiniteDifferenceGradientDescentOptimizer
  */
 
 void
-FiniteDifferenceGradientDescentOptimizer
-::PrintSelf( std::ostream & os, Indent indent ) const
+FiniteDifferenceGradientDescentOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
-  os << indent << "LearningRate: "
-     << this->m_LearningRate << std::endl;
-  os << indent << "NumberOfIterations: "
-     << this->m_NumberOfIterations << std::endl;
-  os << indent << "CurrentIteration: "
-     << this->m_CurrentIteration;
-  os << indent << "Value: "
-     << this->m_Value;
-  os << indent << "StopCondition: "
-     << this->m_StopCondition;
+  os << indent << "LearningRate: " << this->m_LearningRate << std::endl;
+  os << indent << "NumberOfIterations: " << this->m_NumberOfIterations << std::endl;
+  os << indent << "CurrentIteration: " << this->m_CurrentIteration;
+  os << indent << "Value: " << this->m_Value;
+  os << indent << "StopCondition: " << this->m_StopCondition;
   os << std::endl;
 
 } // end PrintSelf
@@ -86,13 +79,12 @@ FiniteDifferenceGradientDescentOptimizer
  * *********************** StartOptimization ********************
  */
 void
-FiniteDifferenceGradientDescentOptimizer
-::StartOptimization( void )
+FiniteDifferenceGradientDescentOptimizer ::StartOptimization(void)
 {
-  itkDebugMacro( "StartOptimization" );
+  itkDebugMacro("StartOptimization");
 
   this->m_CurrentIteration = 0;
-  this->m_Stop             = false;
+  this->m_Stop = false;
 
   /** Get the number of parameters; checks also if a cost function has been set at all.
    * if not: an exception is thrown */
@@ -102,9 +94,9 @@ FiniteDifferenceGradientDescentOptimizer
   this->InitializeScales();
 
   /** Set the current position as the scaled initial position */
-  this->SetCurrentPosition( this->GetInitialPosition() );
+  this->SetCurrentPosition(this->GetInitialPosition());
 
-  if( !this->m_Stop )
+  if (!this->m_Stop)
   {
     this->ResumeOptimization();
   }
@@ -117,38 +109,37 @@ FiniteDifferenceGradientDescentOptimizer
  */
 
 void
-FiniteDifferenceGradientDescentOptimizer
-::ResumeOptimization( void )
+FiniteDifferenceGradientDescentOptimizer ::ResumeOptimization(void)
 {
-  itkDebugMacro( "ResumeOptimization" );
+  itkDebugMacro("ResumeOptimization");
 
   this->m_Stop = false;
-  double       ck             = 1.0;
+  double       ck = 1.0;
   unsigned int spaceDimension = 1;
 
   ParametersType param;
   double         valueplus;
   double         valuemin;
 
-  InvokeEvent( StartEvent() );
-  while( !this->m_Stop )
+  InvokeEvent(StartEvent());
+  while (!this->m_Stop)
   {
     /** Get the Number of parameters.*/
     spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
     /** Initialisation.*/
-    ck               = this->Compute_c( m_CurrentIteration );
-    this->m_Gradient = DerivativeType( spaceDimension );
-    param            = this->GetScaledCurrentPosition();
+    ck = this->Compute_c(m_CurrentIteration);
+    this->m_Gradient = DerivativeType(spaceDimension);
+    param = this->GetScaledCurrentPosition();
 
     /** Compute the current value, if desired by interested users */
-    if( this->m_ComputeCurrentValue )
+    if (this->m_ComputeCurrentValue)
     {
       try
       {
-        this->m_Value = this->GetScaledValue( param );
+        this->m_Value = this->GetScaledValue(param);
       }
-      catch( ExceptionObject & err )
+      catch (ExceptionObject & err)
       {
         // An exception has occurred.
         // Terminate immediately.
@@ -158,32 +149,32 @@ FiniteDifferenceGradientDescentOptimizer
         // Pass exception to caller
         throw err;
       }
-      if( m_Stop )
+      if (m_Stop)
       {
         break;
       }
-    }   // if m_ComputeCurrentValue
+    } // if m_ComputeCurrentValue
 
     double sumOfSquaredGradients = 0.0;
     /** Calculate the derivative; this may take a while... */
     try
     {
-      for( unsigned int j = 0; j < spaceDimension; j++ )
+      for (unsigned int j = 0; j < spaceDimension; j++)
       {
-        param[ j ] += ck;
-        valueplus   = this->GetScaledValue( param );
-        param[ j ] -= 2.0 * ck;
-        valuemin    = this->GetScaledValue( param );
-        param[ j ] += ck;
+        param[j] += ck;
+        valueplus = this->GetScaledValue(param);
+        param[j] -= 2.0 * ck;
+        valuemin = this->GetScaledValue(param);
+        param[j] += ck;
 
-        const double gradient = ( valueplus - valuemin ) / ( 2.0 * ck );
-        this->m_Gradient[ j ] = gradient;
+        const double gradient = (valueplus - valuemin) / (2.0 * ck);
+        this->m_Gradient[j] = gradient;
 
-        sumOfSquaredGradients += ( gradient * gradient );
+        sumOfSquaredGradients += (gradient * gradient);
 
-      }   // for j = 0 .. spaceDimension
+      } // for j = 0 .. spaceDimension
     }
-    catch( ExceptionObject & err )
+    catch (ExceptionObject & err)
     {
       // An exception has occurred.
       // Terminate immediately.
@@ -194,27 +185,27 @@ FiniteDifferenceGradientDescentOptimizer
       throw err;
     }
 
-    if( m_Stop )
+    if (m_Stop)
     {
       break;
     }
 
     /** Save the gradient magnitude;
      * only for interested users... */
-    this->m_GradientMagnitude = std::sqrt( sumOfSquaredGradients );
+    this->m_GradientMagnitude = std::sqrt(sumOfSquaredGradients);
 
     this->AdvanceOneStep();
 
     this->m_CurrentIteration++;
 
-    if( this->m_CurrentIteration >= this->m_NumberOfIterations )
+    if (this->m_CurrentIteration >= this->m_NumberOfIterations)
     {
       this->m_StopCondition = MaximumNumberOfIterations;
       StopOptimization();
       break;
     }
 
-  }   // while !m_stop
+  } // while !m_stop
 
 } // end ResumeOptimization
 
@@ -224,13 +215,12 @@ FiniteDifferenceGradientDescentOptimizer
  */
 
 void
-FiniteDifferenceGradientDescentOptimizer
-::StopOptimization( void )
+FiniteDifferenceGradientDescentOptimizer ::StopOptimization(void)
 {
-  itkDebugMacro( "StopOptimization" );
+  itkDebugMacro("StopOptimization");
 
   this->m_Stop = true;
-  InvokeEvent( EndEvent() );
+  InvokeEvent(EndEvent());
 
 } // end StopOptimization
 
@@ -240,31 +230,29 @@ FiniteDifferenceGradientDescentOptimizer
  */
 
 void
-FiniteDifferenceGradientDescentOptimizer
-::AdvanceOneStep( void )
+FiniteDifferenceGradientDescentOptimizer ::AdvanceOneStep(void)
 {
-  itkDebugMacro( "AdvanceOneStep" );
+  itkDebugMacro("AdvanceOneStep");
 
-  const unsigned int spaceDimension
-    = this->GetScaledCostFunction()->GetNumberOfParameters();
+  const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Compute the gain */
-  double ak = this->Compute_a( this->m_CurrentIteration );
+  double ak = this->Compute_a(this->m_CurrentIteration);
 
   /** Save it for users that are interested */
   this->m_LearningRate = ak;
 
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-  ParametersType newPosition( spaceDimension );
-  for( unsigned int j = 0; j < spaceDimension; j++ )
+  ParametersType newPosition(spaceDimension);
+  for (unsigned int j = 0; j < spaceDimension; j++)
   {
-    newPosition[ j ] = currentPosition[ j ] - ak * this->m_Gradient[ j ];
+    newPosition[j] = currentPosition[j] - ak * this->m_Gradient[j];
   }
 
-  this->SetScaledCurrentPosition( newPosition );
+  this->SetScaledCurrentPosition(newPosition);
 
-  this->InvokeEvent( IterationEvent() );
+  this->InvokeEvent(IterationEvent());
 
 } // end AdvanceOneStep
 
@@ -277,11 +265,9 @@ FiniteDifferenceGradientDescentOptimizer
  */
 
 double
-FiniteDifferenceGradientDescentOptimizer
-::Compute_a( unsigned long k ) const
+FiniteDifferenceGradientDescentOptimizer ::Compute_a(unsigned long k) const
 {
-  return static_cast< double >(
-    this->m_Param_a / std::pow( this->m_Param_A + k + 1, this->m_Param_alpha ) );
+  return static_cast<double>(this->m_Param_a / std::pow(this->m_Param_A + k + 1, this->m_Param_alpha));
 
 } // end Compute_a
 
@@ -294,11 +280,9 @@ FiniteDifferenceGradientDescentOptimizer
  */
 
 double
-FiniteDifferenceGradientDescentOptimizer
-::Compute_c( unsigned long k ) const
+FiniteDifferenceGradientDescentOptimizer ::Compute_c(unsigned long k) const
 {
-  return static_cast< double >(
-    this->m_Param_c / std::pow( k + 1, this->m_Param_gamma ) );
+  return static_cast<double>(this->m_Param_c / std::pow(k + 1, this->m_Param_gamma));
 
 } // end Compute_c
 

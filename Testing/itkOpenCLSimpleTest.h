@@ -23,10 +23,10 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for OpenCLSimpleTest1.cl kernel */
-itkGPUKernelClassMacro( OpenCLSimpleTest1Kernel );
+itkGPUKernelClassMacro(OpenCLSimpleTest1Kernel);
 
 /** Create a helper GPU Kernel class for OpenCLSimpleTest2.cl kernel */
-itkGPUKernelClassMacro( OpenCLSimpleTest2Kernel );
+itkGPUKernelClassMacro(OpenCLSimpleTest2Kernel);
 } // end namespace itk
 
 #endif /* __itkOpenCLSimpleTest_h */

@@ -36,52 +36,72 @@ namespace itk
 class ITK_EXPORT GPUTransformBase
 {
 public:
-
   /** Standard class typedefs. */
   typedef GPUTransformBase Self;
 
   /** Run-time type information (and related methods). */
-  virtual const char * GetNameOfClass() const { return "GPUTransformBase"; }
+  virtual const char *
+  GetNameOfClass() const
+  {
+    return "GPUTransformBase";
+  }
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const;
+  virtual bool
+  GetSourceCode(std::string & source) const;
 
   /** Returns true if the derived transform is identity transform,
    * false otherwise. */
-  virtual bool IsIdentityTransform( void ) const { return false; }
+  virtual bool
+  IsIdentityTransform(void) const
+  {
+    return false;
+  }
 
   /** Returns true if the derived transform is matrix offset transform,
    * false otherwise. */
-  virtual bool IsMatrixOffsetTransform( void ) const { return false; }
+  virtual bool
+  IsMatrixOffsetTransform(void) const
+  {
+    return false;
+  }
 
   /** Returns true if the derived transform is translation transform,
    * false otherwise. */
-  virtual bool IsTranslationTransform( void ) const { return false; }
+  virtual bool
+  IsTranslationTransform(void) const
+  {
+    return false;
+  }
 
   /** Returns true if the derived transform is BSpline transform,
    * false otherwise. */
-  virtual bool IsBSplineTransform( void ) const { return false; }
+  virtual bool
+  IsBSplineTransform(void) const
+  {
+    return false;
+  }
 
   /** Returns data manager that stores all settings for the transform. */
-  virtual GPUDataManager::Pointer GetParametersDataManager( void ) const;
+  virtual GPUDataManager::Pointer
+  GetParametersDataManager(void) const;
 
   /** Returns data manager that stores all settings for the transform \a index.
    * Used by combination transforms. */
-  virtual GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const;
+  virtual GPUDataManager::Pointer
+  GetParametersDataManager(const std::size_t index) const;
 
 protected:
-
   GPUTransformBase();
   virtual ~GPUTransformBase() {}
 
   GPUDataManager::Pointer m_ParametersDataManager;
 
 private:
-
-  GPUTransformBase( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & ); // purposely not implemented
-
+  GPUTransformBase(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

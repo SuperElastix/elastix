@@ -20,8 +20,8 @@
  *  This is to set the priority, but which does not work on cygwin.
  */
 
-#if defined( _WIN32 ) && !defined( __CYGWIN__ )
-  #include <windows.h>
+#if defined(_WIN32) && !defined(__CYGWIN__)
+#  include <windows.h>
 #endif
 
 #include "elxElastixMain.h"
@@ -30,8 +30,8 @@
 #include "itkPlatformMultiThreader.h"
 
 #ifdef ELASTIX_USE_OPENCL
-#include "itkOpenCLContext.h"
-#include "itkOpenCLSetup.h"
+#  include "itkOpenCLContext.h"
+#  include "itkOpenCLSetup.h"
 #endif
 
 namespace
@@ -70,16 +70,16 @@ Data g_data;
  */
 
 int
-elastix::xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
+elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
 {
   int returndummy = 0;
-  set_xout( &g_data.Xout );
+  set_xout(&g_data.Xout);
 
-  if( setupLogging )
+  if (setupLogging)
   {
     /** Open the logfile for writing. */
-    g_data.LogFileStream.open( logfilename );
-    if( !g_data.LogFileStream.is_open() )
+    g_data.LogFileStream.open(logfilename);
+    if (!g_data.LogFileStream.is_open())
     {
       std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
       return 1;
@@ -87,38 +87,38 @@ elastix::xoutSetup( const char * logfilename, bool setupLogging, bool setupCout 
   }
 
   /** Set std::cout and the logfile as outputs of xout. */
-  if( setupLogging )
+  if (setupLogging)
   {
-    returndummy |= xout.AddOutput( "log", &g_data.LogFileStream );
+    returndummy |= xout.AddOutput("log", &g_data.LogFileStream);
   }
-  if( setupCout )
+  if (setupCout)
   {
-    returndummy |= xout.AddOutput( "cout", &std::cout );
+    returndummy |= xout.AddOutput("cout", &std::cout);
   }
 
   /** Set outputs of LogOnly and CoutOnly. */
-  returndummy |= g_data.LogOnlyXout.AddOutput( "log", &g_data.LogFileStream );
-  returndummy |= g_data.CoutOnlyXout.AddOutput( "cout", &std::cout );
+  returndummy |= g_data.LogOnlyXout.AddOutput("log", &g_data.LogFileStream);
+  returndummy |= g_data.CoutOnlyXout.AddOutput("cout", &std::cout);
 
   /** Copy the outputs to the warning-, error- and standard-xouts. */
-  g_data.WarningXout.SetOutputs( xout.GetCOutputs() );
-  g_data.ErrorXout.SetOutputs( xout.GetCOutputs() );
-  g_data.StandardXout.SetOutputs( xout.GetCOutputs() );
+  g_data.WarningXout.SetOutputs(xout.GetCOutputs());
+  g_data.ErrorXout.SetOutputs(xout.GetCOutputs());
+  g_data.StandardXout.SetOutputs(xout.GetCOutputs());
 
-  g_data.WarningXout.SetOutputs( xout.GetXOutputs() );
-  g_data.ErrorXout.SetOutputs( xout.GetXOutputs() );
-  g_data.StandardXout.SetOutputs( xout.GetXOutputs() );
+  g_data.WarningXout.SetOutputs(xout.GetXOutputs());
+  g_data.ErrorXout.SetOutputs(xout.GetXOutputs());
+  g_data.StandardXout.SetOutputs(xout.GetXOutputs());
 
   /** Link the warning-, error- and standard-xouts to xout. */
-  returndummy |= xout.AddTargetCell( "warning", &g_data.WarningXout );
-  returndummy |= xout.AddTargetCell( "error", &g_data.ErrorXout );
-  returndummy |= xout.AddTargetCell( "standard", &g_data.StandardXout );
-  returndummy |= xout.AddTargetCell( "logonly", &g_data.LogOnlyXout );
-  returndummy |= xout.AddTargetCell( "coutonly", &g_data.CoutOnlyXout );
+  returndummy |= xout.AddTargetCell("warning", &g_data.WarningXout);
+  returndummy |= xout.AddTargetCell("error", &g_data.ErrorXout);
+  returndummy |= xout.AddTargetCell("standard", &g_data.StandardXout);
+  returndummy |= xout.AddTargetCell("logonly", &g_data.LogOnlyXout);
+  returndummy |= xout.AddTargetCell("coutonly", &g_data.CoutOnlyXout);
 
   /** Format the output. */
-  xout[ "standard" ] << std::fixed;
-  xout[ "standard" ] << std::showpoint;
+  xout["standard"] << std::fixed;
+  xout["standard"] << std::showpoint;
 
   /** Return a value. */
   return returndummy;
@@ -133,7 +133,7 @@ namespace elastix
  * ********************* xoutManager ******************************
  */
 
-xoutManager::xoutManager( const std::string& logFileName, const bool setupLogging, const bool setupCout )
+xoutManager::xoutManager(const std::string & logFileName, const bool setupLogging, const bool setupCout)
 {
   if (xoutSetup(logFileName.c_str(), setupLogging, setupCout))
   {
@@ -166,15 +166,15 @@ ElastixMain::ElastixMain()
 
   this->m_DBIndex = 0;
 
-  this->m_FixedImageContainer  = nullptr;
+  this->m_FixedImageContainer = nullptr;
   this->m_MovingImageContainer = nullptr;
 
-  this->m_FixedMaskContainer  = nullptr;
+  this->m_FixedMaskContainer = nullptr;
   this->m_MovingMaskContainer = nullptr;
 
   this->m_ResultImageContainer = nullptr;
 
-  this->m_FinalTransform   = nullptr;
+  this->m_FinalTransform = nullptr;
   this->m_InitialTransform = nullptr;
   this->m_TransformParametersMap.clear();
 
@@ -197,7 +197,7 @@ ElastixMain::~ElastixMain()
 {
 #ifdef ELASTIX_USE_OPENCL
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-  if( context->IsCreated() )
+  if (context->IsCreated())
   {
     context->Release();
   }
@@ -210,18 +210,17 @@ ElastixMain::~ElastixMain()
  */
 
 void
-ElastixMain
-::EnterCommandLineArguments( const ArgumentMapType & argmap )
+ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap)
 {
 
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
-  int dummy = this->m_Configuration->Initialize( argmap );
-  if( dummy )
+  int dummy = this->m_Configuration->Initialize(argmap);
+  if (dummy)
   {
-    xout[ "error" ] << "ERROR: Something went wrong during initialization "
-                    << "of the configuration object." << std::endl;
+    xout["error"] << "ERROR: Something went wrong during initialization "
+                  << "of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineParameters()
@@ -232,17 +231,15 @@ ElastixMain
  */
 
 void
-ElastixMain
-::EnterCommandLineArguments( const ArgumentMapType & argmap,
-  const ParameterMapType & inputMap )
+ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
-  int dummy = this->m_Configuration->Initialize( argmap, inputMap );
-  if( dummy )
+  int dummy = this->m_Configuration->Initialize(argmap, inputMap);
+  if (dummy)
   {
-    xout[ "error" ] << "ERROR: Something went wrong during initialization of the configuration object." << std::endl;
+    xout["error"] << "ERROR: Something went wrong during initialization of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineArguments()
@@ -253,28 +250,27 @@ ElastixMain
  */
 
 void
-ElastixMain
-::EnterCommandLineArguments( const ArgumentMapType & argmap,
-  const std::vector< ParameterMapType > & inputMaps )
+ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
 {
   this->m_Configurations.clear();
-  this->m_Configurations.resize( inputMaps.size() );
+  this->m_Configurations.resize(inputMaps.size());
 
-  for( size_t i = 0; i < inputMaps.size(); ++i )
+  for (size_t i = 0; i < inputMaps.size(); ++i)
   {
     /** Initialize the configuration object with the
      * command line parameters entered by the user.
      */
-    this->m_Configurations[ i ] = ConfigurationType::New();
-    int dummy = this->m_Configurations[ i ]->Initialize( argmap, inputMaps[ i ] );
-    if( dummy )
+    this->m_Configurations[i] = ConfigurationType::New();
+    int dummy = this->m_Configurations[i]->Initialize(argmap, inputMaps[i]);
+    if (dummy)
     {
-      xout[ "error" ] << "ERROR: Something went wrong during initialization of configuration object " << i << "." << std::endl;
+      xout["error"] << "ERROR: Something went wrong during initialization of configuration object " << i << "."
+                    << std::endl;
     }
   }
 
   /** Copy last configuration object to m_Configuration. */
-  this->m_Configuration = this->m_Configurations[ inputMaps.size() - 1 ];
+  this->m_Configuration = this->m_Configurations[inputMaps.size() - 1];
 } // end EnterCommandLineArguments()
 
 
@@ -286,7 +282,7 @@ ElastixMain
  */
 
 int
-ElastixMain::Run( void )
+ElastixMain::Run(void)
 {
 
   /** Set process properties. */
@@ -295,7 +291,7 @@ ElastixMain::Run( void )
 
   /** Initialize database. */
   int errorCode = this->InitDBIndex();
-  if( errorCode != 0 )
+  if (errorCode != 0)
   {
     return errorCode;
   }
@@ -304,12 +300,12 @@ ElastixMain::Run( void )
   try
   {
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
-    this->m_Elastix = this->CreateComponent( "Elastix" );
+    this->m_Elastix = this->CreateComponent("Elastix");
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    xl::xout[ "error" ] << excp << std::endl;
+    xl::xout["error"] << excp << std::endl;
     errorCode = 1;
     return errorCode;
   }
@@ -318,17 +314,15 @@ ElastixMain::Run( void )
 #ifdef ELASTIX_USE_OPENCL
   /** Check if user overrides OpenCL device selection. */
   std::string userSuppliedOpenCLDeviceType = "GPU";
-  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceType,
-    "OpenCLDeviceType", 0, false );
+  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceType, "OpenCLDeviceType", 0, false);
 
   int userSuppliedOpenCLDeviceID = -1;
-  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceID,
-    "OpenCLDeviceID", 0, false );
+  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceID, "OpenCLDeviceID", 0, false);
 
-  std::string errorMessage              = "";
-  const bool  creatingContextSuccessful = itk::CreateOpenCLContext(
-    errorMessage, userSuppliedOpenCLDeviceType, userSuppliedOpenCLDeviceID );
-  if( !creatingContextSuccessful )
+  std::string errorMessage = "";
+  const bool  creatingContextSuccessful =
+    itk::CreateOpenCLContext(errorMessage, userSuppliedOpenCLDeviceType, userSuppliedOpenCLDeviceID);
+  if (!creatingContextSuccessful)
   {
     /** Report and disable the GPU by releasing the context. */
     elxout << errorMessage << std::endl;
@@ -339,102 +333,90 @@ ElastixMain::Run( void )
   }
 
   /** Create a log file. */
-  itk::CreateOpenCLLogger( "elastix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
+  itk::CreateOpenCLLogger("elastix", this->m_Configuration->GetCommandLineArgument("-out"));
 #endif
 
   /** Set some information in the ElastixBase. */
-  this->GetElastixBase()->SetConfiguration( this->m_Configuration );
-  this->GetElastixBase()->SetComponentDatabase( this->s_CDB );
-  this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
+  this->GetElastixBase()->SetConfiguration(this->m_Configuration);
+  this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
+  this->GetElastixBase()->SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. ImageSampler is not mandatory.
    * No defaults are specified for ImageSampler, Metric, Transform
    * and Optimizer.
    */
   this->GetElastixBase()->SetRegistrationContainer(
-    this->CreateComponents( "Registration", "MultiResolutionRegistration",
-    errorCode ) );
+    this->CreateComponents("Registration", "MultiResolutionRegistration", errorCode));
 
   this->GetElastixBase()->SetFixedImagePyramidContainer(
-    this->CreateComponents( "FixedImagePyramid", "FixedSmoothingImagePyramid",
-    errorCode ) );
+    this->CreateComponents("FixedImagePyramid", "FixedSmoothingImagePyramid", errorCode));
 
   this->GetElastixBase()->SetMovingImagePyramidContainer(
-    this->CreateComponents( "MovingImagePyramid", "MovingSmoothingImagePyramid",
-    errorCode ) );
+    this->CreateComponents("MovingImagePyramid", "MovingSmoothingImagePyramid", errorCode));
 
-  this->GetElastixBase()->SetImageSamplerContainer(
-    this->CreateComponents( "ImageSampler", "", errorCode, false ) );
+  this->GetElastixBase()->SetImageSamplerContainer(this->CreateComponents("ImageSampler", "", errorCode, false));
 
   this->GetElastixBase()->SetInterpolatorContainer(
-    this->CreateComponents( "Interpolator", "BSplineInterpolator",
-    errorCode ) );
+    this->CreateComponents("Interpolator", "BSplineInterpolator", errorCode));
 
-  this->GetElastixBase()->SetMetricContainer(
-    this->CreateComponents( "Metric", "", errorCode ) );
+  this->GetElastixBase()->SetMetricContainer(this->CreateComponents("Metric", "", errorCode));
 
-  this->GetElastixBase()->SetOptimizerContainer(
-    this->CreateComponents( "Optimizer", "", errorCode ) );
+  this->GetElastixBase()->SetOptimizerContainer(this->CreateComponents("Optimizer", "", errorCode));
 
   this->GetElastixBase()->SetResampleInterpolatorContainer(
-    this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator",
-    errorCode ) );
+    this->CreateComponents("ResampleInterpolator", "FinalBSplineInterpolator", errorCode));
 
-  this->GetElastixBase()->SetResamplerContainer(
-    this->CreateComponents( "Resampler", "DefaultResampler",
-    errorCode ) );
+  this->GetElastixBase()->SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
 
-  this->GetElastixBase()->SetTransformContainer(
-    this->CreateComponents( "Transform", "", errorCode ) );
+  this->GetElastixBase()->SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
 
   /** Check if all component could be created. */
-  if( errorCode != 0 )
+  if (errorCode != 0)
   {
-    xout[ "error" ] << "ERROR:" << std::endl;
-    xout[ "error" ] << "One or more components could not be created." << std::endl;
+    xout["error"] << "ERROR:" << std::endl;
+    xout["error"] << "One or more components could not be created." << std::endl;
     return 1;
   }
 
   /** Set the images and masks. If not set by the user, it is not a problem.
    * ElastixTemplate will try to load them from disk.
    */
-  this->GetElastixBase()->SetFixedImageContainer( this->GetModifiableFixedImageContainer() );
-  this->GetElastixBase()->SetMovingImageContainer( this->GetModifiableMovingImageContainer() );
-  this->GetElastixBase()->SetFixedMaskContainer( this->GetModifiableFixedMaskContainer() );
-  this->GetElastixBase()->SetMovingMaskContainer( this->GetModifiableMovingMaskContainer() );
-  this->GetElastixBase()->SetResultImageContainer( this->GetModifiableResultImageContainer() );
+  this->GetElastixBase()->SetFixedImageContainer(this->GetModifiableFixedImageContainer());
+  this->GetElastixBase()->SetMovingImageContainer(this->GetModifiableMovingImageContainer());
+  this->GetElastixBase()->SetFixedMaskContainer(this->GetModifiableFixedMaskContainer());
+  this->GetElastixBase()->SetMovingMaskContainer(this->GetModifiableMovingMaskContainer());
+  this->GetElastixBase()->SetResultImageContainer(this->GetModifiableResultImageContainer());
 
   /** Set the initial transform, if it happens to be there. */
-  this->GetElastixBase()->SetInitialTransform( this->GetModifiableInitialTransform() );
+  this->GetElastixBase()->SetInitialTransform(this->GetModifiableInitialTransform());
 
   /** Set the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false.
    */
-  this->GetElastixBase()->SetOriginalFixedImageDirectionFlat(
-    this->GetOriginalFixedImageDirectionFlat() );
+  this->GetElastixBase()->SetOriginalFixedImageDirectionFlat(this->GetOriginalFixedImageDirectionFlat());
 
   /** Run elastix! */
   try
   {
     errorCode = this->GetElastixBase()->Run();
   }
-  catch( itk::ExceptionObject & excp1 )
+  catch (itk::ExceptionObject & excp1)
   {
     /** We just print the itk::exception and let the program quit. */
-    xl::xout[ "error" ] << excp1 << std::endl;
+    xl::xout["error"] << excp1 << std::endl;
     errorCode = 1;
   }
-  catch( std::exception & excp2 )
+  catch (std::exception & excp2)
   {
     /** We just print the std::exception and let the program quit. */
-    xl::xout[ "error" ] << "std: " << excp2.what() << std::endl;
+    xl::xout["error"] << "std: " << excp2.what() << std::endl;
     errorCode = 1;
   }
-  catch( ... )
+  catch (...)
   {
     /** We don't know what happened and just print a general message. */
-    xl::xout[ "error" ] << "ERROR: an unknown non-ITK, non-std exception was caught.\n"
-                        << "Please report this to elastix@bigr.nl." << std::endl;
+    xl::xout["error"] << "ERROR: an unknown non-ITK, non-std exception was caught.\n"
+                      << "Please report this to elastix@bigr.nl." << std::endl;
     errorCode = 1;
   }
 
@@ -445,16 +427,15 @@ ElastixMain::Run( void )
   this->m_TransformParametersMap = this->GetElastixBase()->GetTransformParametersMap();
 
   /** Store the images in ElastixMain. */
-  this->SetFixedImageContainer( this->GetElastixBase()->GetFixedImageContainer() );
-  this->SetMovingImageContainer( this->GetElastixBase()->GetMovingImageContainer() );
-  this->SetFixedMaskContainer( this->GetElastixBase()->GetFixedMaskContainer() );
-  this->SetMovingMaskContainer( this->GetElastixBase()->GetMovingMaskContainer() );
-  this->SetResultImageContainer( this->GetElastixBase()->GetResultImageContainer() );
+  this->SetFixedImageContainer(this->GetElastixBase()->GetFixedImageContainer());
+  this->SetMovingImageContainer(this->GetElastixBase()->GetMovingImageContainer());
+  this->SetFixedMaskContainer(this->GetElastixBase()->GetFixedMaskContainer());
+  this->SetMovingMaskContainer(this->GetElastixBase()->GetMovingMaskContainer());
+  this->SetResultImageContainer(this->GetElastixBase()->GetResultImageContainer());
 
   /** Store the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false. */
-  this->SetOriginalFixedImageDirectionFlat(
-    this->GetElastixBase()->GetOriginalFixedImageDirectionFlat() );
+  this->SetOriginalFixedImageDirectionFlat(this->GetElastixBase()->GetOriginalFixedImageDirectionFlat());
 
   /** Return a value. */
   return errorCode;
@@ -467,9 +448,9 @@ ElastixMain::Run( void )
  */
 
 int
-ElastixMain::Run( const ArgumentMapType & argmap )
+ElastixMain::Run(const ArgumentMapType & argmap)
 {
-  this->EnterCommandLineArguments( argmap );
+  this->EnterCommandLineArguments(argmap);
   return this->Run();
 } // end Run()
 
@@ -479,11 +460,9 @@ ElastixMain::Run( const ArgumentMapType & argmap )
  */
 
 int
-ElastixMain
-::Run( const ArgumentMapType & argmap,
-  const ParameterMapType & inputMap )
+ElastixMain ::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
-  this->EnterCommandLineArguments( argmap, inputMap );
+  this->EnterCommandLineArguments(argmap, inputMap);
   return this->Run();
 } // end Run()
 
@@ -497,51 +476,48 @@ ElastixMain
  */
 
 int
-ElastixMain::InitDBIndex( void )
+ElastixMain::InitDBIndex(void)
 {
   /** Only do something when the configuration object wasn't initialized yet. */
-  if( this->m_Configuration->IsInitialized() )
+  if (this->m_Configuration->IsInitialized())
   {
     /** FixedImagePixelType. */
-    if( this->m_FixedImagePixelType.empty() )
+    if (this->m_FixedImagePixelType.empty())
     {
       /** Try to read it from the parameter file. */
       this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-      this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,
-        "FixedInternalImagePixelType", 0 );
+      this->m_Configuration->ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
     }
 
     /** FixedImageDimension. */
-    if( this->m_FixedImageDimension == 0 )
+    if (this->m_FixedImageDimension == 0)
     {
       if (!BaseComponent::IsElastixLibrary())
       {
         /** Get the fixed image file name. */
-        std::string fixedImageFileName
-          = this->m_Configuration->GetCommandLineArgument( "-f" );
-        if( fixedImageFileName == "" )
+        std::string fixedImageFileName = this->m_Configuration->GetCommandLineArgument("-f");
+        if (fixedImageFileName == "")
         {
-          fixedImageFileName = this->m_Configuration->GetCommandLineArgument( "-f0" );
+          fixedImageFileName = this->m_Configuration->GetCommandLineArgument("-f0");
         }
 
         /** Sanity check. */
-        if( fixedImageFileName == "" )
+        if (fixedImageFileName == "")
         {
-          xout[ "error" ] << "ERROR: could not read fixed image." << std::endl;
-          xout[ "error" ] << "  both -f and -f0 are unspecified" << std::endl;
+          xout["error"] << "ERROR: could not read fixed image." << std::endl;
+          xout["error"] << "  both -f and -f0 are unspecified" << std::endl;
           return 1;
         }
 
         /** Read it from the fixed image header. */
         try
         {
-          this->GetImageInformationFromFile( fixedImageFileName,
-            this->m_FixedImageDimension );
+          this->GetImageInformationFromFile(fixedImageFileName, this->m_FixedImageDimension);
         }
-        catch( itk::ExceptionObject & err )
+        catch (itk::ExceptionObject & err)
         {
-          xout[ "error" ] << "ERROR: could not read fixed image." << std::endl;
-          xout[ "error" ] << err << std::endl;
+          xout["error"] << "ERROR: could not read fixed image." << std::endl;
+          xout["error"] << err << std::endl;
           return 1;
         }
 
@@ -549,80 +525,76 @@ ElastixMain::InitDBIndex( void )
          * This only serves as a check; elastix versions prior to 4.6 read the dimension
          * from the parameter file, but now we read it from the image header.
          */
-        unsigned int fixDimParameterFile  = 0;
-        bool         foundInParameterFile = this->m_Configuration->ReadParameter( fixDimParameterFile,
-          "FixedImageDimension", 0, false );
+        unsigned int fixDimParameterFile = 0;
+        bool         foundInParameterFile =
+          this->m_Configuration->ReadParameter(fixDimParameterFile, "FixedImageDimension", 0, false);
 
         /** Check. */
-        if( foundInParameterFile )
+        if (foundInParameterFile)
         {
-          if( fixDimParameterFile != this->m_FixedImageDimension )
+          if (fixDimParameterFile != this->m_FixedImageDimension)
           {
-            xout[ "error" ] << "ERROR: problem defining fixed image dimension.\n"
-                            << "  The parameter file says:     " << fixDimParameterFile << "\n"
-                            << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
-                            << "  Note that from elastix 4.6 the parameter file definition \"FixedImageDimension\" "
-                            << "is not needed anymore.\n  Please remove this entry from your parameter file."
-                            << std::endl;
+            xout["error"] << "ERROR: problem defining fixed image dimension.\n"
+                          << "  The parameter file says:     " << fixDimParameterFile << "\n"
+                          << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
+                          << "  Note that from elastix 4.6 the parameter file definition \"FixedImageDimension\" "
+                          << "is not needed anymore.\n  Please remove this entry from your parameter file."
+                          << std::endl;
             return 1;
           }
         }
       }
       else
       {
-        this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
-          "FixedImageDimension", 0, false );
+        this->m_Configuration->ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0, false);
       }
 
       /** Just a sanity check, probably not needed. */
-      if( this->m_FixedImageDimension == 0 )
+      if (this->m_FixedImageDimension == 0)
       {
-        xout[ "error" ] << "ERROR:" << std::endl;
-        xout[ "error" ] << "The FixedImageDimension is not given." << std::endl;
+        xout["error"] << "ERROR:" << std::endl;
+        xout["error"] << "The FixedImageDimension is not given." << std::endl;
         return 1;
       }
     }
 
     /** MovingImagePixelType. */
-    if( this->m_MovingImagePixelType.empty() )
+    if (this->m_MovingImagePixelType.empty())
     {
       /** Try to read it from the parameter file. */
       this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-      this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
-        "MovingInternalImagePixelType", 0 );
+      this->m_Configuration->ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
     }
 
     /** MovingImageDimension. */
-    if( this->m_MovingImageDimension == 0 )
+    if (this->m_MovingImageDimension == 0)
     {
       if (!BaseComponent::IsElastixLibrary())
       {
         /** Get the moving image file name. */
-        std::string movingImageFileName
-          = this->m_Configuration->GetCommandLineArgument( "-m" );
-        if( movingImageFileName == "" )
+        std::string movingImageFileName = this->m_Configuration->GetCommandLineArgument("-m");
+        if (movingImageFileName == "")
         {
-          movingImageFileName = this->m_Configuration->GetCommandLineArgument( "-m0" );
+          movingImageFileName = this->m_Configuration->GetCommandLineArgument("-m0");
         }
 
         /** Sanity check. */
-        if( movingImageFileName == "" )
+        if (movingImageFileName == "")
         {
-          xout[ "error" ] << "ERROR: could not read moving image." << std::endl;
-          xout[ "error" ] << "  both -m and -m0 are unspecified" << std::endl;
+          xout["error"] << "ERROR: could not read moving image." << std::endl;
+          xout["error"] << "  both -m and -m0 are unspecified" << std::endl;
           return 1;
         }
 
         /** Read it from the moving image header. */
         try
         {
-          this->GetImageInformationFromFile( movingImageFileName,
-            this->m_MovingImageDimension );
+          this->GetImageInformationFromFile(movingImageFileName, this->m_MovingImageDimension);
         }
-        catch( itk::ExceptionObject & err )
+        catch (itk::ExceptionObject & err)
         {
-          xout[ "error" ] << "ERROR: could not read moving image." << std::endl;
-          xout[ "error" ] << err << std::endl;
+          xout["error"] << "ERROR: could not read moving image." << std::endl;
+          xout["error"] << err << std::endl;
           return 1;
         }
 
@@ -630,63 +602,61 @@ ElastixMain::InitDBIndex( void )
          * This only serves as a check; elastix versions prior to 4.6 read the dimension
          * from the parameter file, but now we read it from the image header.
          */
-        unsigned int movDimParameterFile  = 0;
-        bool         foundInParameterFile = this->m_Configuration->ReadParameter( movDimParameterFile,
-          "MovingImageDimension", 0, false );
+        unsigned int movDimParameterFile = 0;
+        bool         foundInParameterFile =
+          this->m_Configuration->ReadParameter(movDimParameterFile, "MovingImageDimension", 0, false);
 
         /** Check. */
-        if( foundInParameterFile )
+        if (foundInParameterFile)
         {
-          if( movDimParameterFile != this->m_MovingImageDimension )
+          if (movDimParameterFile != this->m_MovingImageDimension)
           {
-            xout[ "error" ] << "ERROR: problem defining moving image dimension.\n"
-                            << "  The parameter file says:      " << movDimParameterFile << "\n"
-                            << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
-                            << "  Note that from elastix 4.6 the parameter file definition \"MovingImageDimension\" "
-                            << "is not needed anymore.\n  Please remove this entry from your parameter file."
-                            << std::endl;
+            xout["error"] << "ERROR: problem defining moving image dimension.\n"
+                          << "  The parameter file says:      " << movDimParameterFile << "\n"
+                          << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
+                          << "  Note that from elastix 4.6 the parameter file definition \"MovingImageDimension\" "
+                          << "is not needed anymore.\n  Please remove this entry from your parameter file."
+                          << std::endl;
             return 1;
           }
         }
       }
       else
       {
-        this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
-          "MovingImageDimension", 0, false );
+        this->m_Configuration->ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0, false);
       }
 
       /** Just a sanity check, probably not needed. */
-      if( this->m_MovingImageDimension == 0 )
+      if (this->m_MovingImageDimension == 0)
       {
-        xout[ "error" ] << "ERROR:" << std::endl;
-        xout[ "error" ] << "The MovingImageDimension is not given." << std::endl;
+        xout["error"] << "ERROR:" << std::endl;
+        xout["error"] << "The MovingImageDimension is not given." << std::endl;
         return 1;
       }
     }
 
     /** Load the components. */
-    if( this->s_CDB.IsNull() )
+    if (this->s_CDB.IsNull())
     {
       int loadReturnCode = this->LoadComponents();
-      if( loadReturnCode != 0 )
+      if (loadReturnCode != 0)
       {
-        xout[ "error" ] << "Loading components failed" << std::endl;
+        xout["error"] << "Loading components failed" << std::endl;
         return loadReturnCode;
       }
     }
 
-    if( this->s_CDB.IsNotNull() )
+    if (this->s_CDB.IsNotNull())
     {
       /** Get the DBIndex from the ComponentDatabase. */
-      this->m_DBIndex = this->s_CDB->GetIndex(
-        this->m_FixedImagePixelType,
-        this->m_FixedImageDimension,
-        this->m_MovingImagePixelType,
-        this->m_MovingImageDimension );
-      if( this->m_DBIndex == 0 )
+      this->m_DBIndex = this->s_CDB->GetIndex(this->m_FixedImagePixelType,
+                                              this->m_FixedImageDimension,
+                                              this->m_MovingImagePixelType,
+                                              this->m_MovingImageDimension);
+      if (this->m_DBIndex == 0)
       {
-        xout[ "error" ] << "ERROR:" << std::endl;
-        xout[ "error" ] << "Something went wrong in the ComponentDatabase" << std::endl;
+        xout["error"] << "ERROR:" << std::endl;
+        xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
         return 1;
       }
     } // end if s_CDB!=0
@@ -694,8 +664,8 @@ ElastixMain::InitDBIndex( void )
   } // end if m_Configuration->Initialized();
   else
   {
-    xout[ "error" ] << "ERROR:" << std::endl;
-    xout[ "error" ] << "The configuration object has not been initialized." << std::endl;
+    xout["error"] << "ERROR:" << std::endl;
+    xout["error"] << "The configuration object has not been initialized." << std::endl;
     return 1;
   }
 
@@ -710,10 +680,10 @@ ElastixMain::InitDBIndex( void )
  */
 
 void
-ElastixMain::SetElastixLevel( unsigned int level )
+ElastixMain::SetElastixLevel(unsigned int level)
 {
   /** Call SetElastixLevel from MyConfiguration. */
-  this->m_Configuration->SetElastixLevel( level );
+  this->m_Configuration->SetElastixLevel(level);
 
 } // end SetElastixLevel()
 
@@ -723,7 +693,7 @@ ElastixMain::SetElastixLevel( unsigned int level )
  */
 
 unsigned int
-ElastixMain::GetElastixLevel( void )
+ElastixMain::GetElastixLevel(void)
 {
   /** Call GetElastixLevel from MyConfiguration. */
   return this->m_Configuration->GetElastixLevel();
@@ -736,10 +706,10 @@ ElastixMain::GetElastixLevel( void )
  */
 
 void
-ElastixMain::SetTotalNumberOfElastixLevels( unsigned int levels )
+ElastixMain::SetTotalNumberOfElastixLevels(unsigned int levels)
 {
   /** Call SetTotalNumberOfElastixLevels from MyConfiguration. */
-  this->m_Configuration->SetTotalNumberOfElastixLevels( levels );
+  this->m_Configuration->SetTotalNumberOfElastixLevels(levels);
 
 } // end SetTotalNumberOfElastixLevels()
 
@@ -749,7 +719,7 @@ ElastixMain::SetTotalNumberOfElastixLevels( unsigned int levels )
  */
 
 unsigned int
-ElastixMain::GetTotalNumberOfElastixLevels( void )
+ElastixMain::GetTotalNumberOfElastixLevels(void)
 {
   /** Call GetTotalNumberOfElastixLevels from MyConfiguration. */
   return this->m_Configuration->GetTotalNumberOfElastixLevels();
@@ -765,27 +735,26 @@ ElastixMain::GetTotalNumberOfElastixLevels( void )
  */
 
 int
-ElastixMain::LoadComponents( void )
+ElastixMain::LoadComponents(void)
 {
   /** Create a ComponentDatabase. */
-  if( this->s_CDB.IsNull() )
+  if (this->s_CDB.IsNull())
   {
     this->s_CDB = ComponentDatabaseType::New();
   }
 
   /** Create a ComponentLoader and set the database. */
-  if( this->s_ComponentLoader.IsNull() )
+  if (this->s_ComponentLoader.IsNull())
   {
     this->s_ComponentLoader = ComponentLoaderType::New();
-    this->s_ComponentLoader->SetComponentDatabase( s_CDB );
+    this->s_ComponentLoader->SetComponentDatabase(s_CDB);
   }
 
   /** Get the current program. */
-  const char * argv0
-    = this->m_Configuration->GetCommandLineArgument( "-argv0" ).c_str();
+  const char * argv0 = this->m_Configuration->GetCommandLineArgument("-argv0").c_str();
 
   /** Load the components. */
-  return this->s_ComponentLoader->LoadComponents( argv0 );
+  return this->s_ComponentLoader->LoadComponents(argv0);
 
 } // end LoadComponents()
 
@@ -795,12 +764,12 @@ ElastixMain::LoadComponents( void )
  */
 
 void
-ElastixMain::UnloadComponents( void )
+ElastixMain::UnloadComponents(void)
 {
   s_CDB = nullptr;
-  s_ComponentLoader->SetComponentDatabase( nullptr );
+  s_ComponentLoader->SetComponentDatabase(nullptr);
 
-  if( s_ComponentLoader )
+  if (s_ComponentLoader)
   {
     s_ComponentLoader->UnloadComponents();
   }
@@ -815,15 +784,15 @@ ElastixMain::UnloadComponents( void )
  */
 
 ElastixMain::ElastixBaseType *
-ElastixMain::GetElastixBase( void ) const
+ElastixMain::GetElastixBase(void) const
 {
   ElastixBaseType * testpointer;
 
   /** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
-  testpointer = dynamic_cast< ElastixBaseType * >( this->m_Elastix.GetPointer() );
-  if( !testpointer )
+  testpointer = dynamic_cast<ElastixBaseType *>(this->m_Elastix.GetPointer());
+  if (!testpointer)
   {
-    itkExceptionMacro( << "Probably GetElastixBase() is called before having called Run()" );
+    itkExceptionMacro(<< "Probably GetElastixBase() is called before having called Run()");
   }
 
   return testpointer;
@@ -836,19 +805,18 @@ ElastixMain::GetElastixBase( void ) const
  */
 
 ElastixMain::ObjectPointer
-ElastixMain::CreateComponent(
-  const ComponentDescriptionType & name )
+ElastixMain::CreateComponent(const ComponentDescriptionType & name)
 {
   /** A pointer to the New() function. */
-  PtrToCreator  testcreator = nullptr;
-  testcreator = this->s_CDB->GetCreator( name,  this->m_DBIndex );
+  PtrToCreator testcreator = nullptr;
+  testcreator = this->s_CDB->GetCreator(name, this->m_DBIndex);
 
   // Note that ObjectPointer() yields a default-constructed SmartPointer (null).
   ObjectPointer testpointer = testcreator ? testcreator() : ObjectPointer();
 
-  if( testpointer.IsNull() )
+  if (testpointer.IsNull())
   {
-    itkExceptionMacro( << "The following component could not be created: " << name );
+    itkExceptionMacro(<< "The following component could not be created: " << name);
   }
 
   return testpointer;
@@ -861,13 +829,13 @@ ElastixMain::CreateComponent(
  */
 
 ElastixMain::ObjectContainerPointer
-ElastixMain::CreateComponents(
-  const std::string & key,
-  const ComponentDescriptionType & defaultComponentName,
-  int & errorcode, bool mandatoryComponent )
+ElastixMain::CreateComponents(const std::string &              key,
+                              const ComponentDescriptionType & defaultComponentName,
+                              int &                            errorcode,
+                              bool                             mandatoryComponent)
 {
-  ComponentDescriptionType componentName   = defaultComponentName;
-  unsigned int             componentnr     = 0;
+  ComponentDescriptionType componentName = defaultComponentName;
+  unsigned int             componentnr = 0;
   ObjectContainerPointer   objectContainer = ObjectContainerType::New();
   objectContainer->Initialize();
 
@@ -875,20 +843,17 @@ ElastixMain::CreateComponents(
    * If the user hasn't specified any component names, use
    * the default, and give a warning.
    */
-  bool found = this->m_Configuration->ReadParameter(
-    componentName, key, componentnr, true );
+  bool found = this->m_Configuration->ReadParameter(componentName, key, componentnr, true);
 
   /** If the default equals "" (so no default), the mandatoryComponent
    * flag is true, and not component was given by the user,
    * then elastix quits.
    */
-  if( !found && ( defaultComponentName == "" ) )
+  if (!found && (defaultComponentName == ""))
   {
-    if( mandatoryComponent )
+    if (mandatoryComponent)
     {
-      xout[ "error" ]
-        << "ERROR: the following component has not been specified: "
-        << key << std::endl;
+      xout["error"] << "ERROR: the following component has not been specified: " << key << std::endl;
       errorcode = 1;
       return objectContainer;
     }
@@ -903,45 +868,36 @@ ElastixMain::CreateComponents(
   /** Try creating the specified component. */
   try
   {
-    objectContainer->CreateElementAt( componentnr )
-      = this->CreateComponent( componentName );
+    objectContainer->CreateElementAt(componentnr) = this->CreateComponent(componentName);
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
-    xout[ "error" ]
-      << "ERROR: error occurred while creating "
-      << key << " "
-      << componentnr << "." << std::endl;
-    xout[ "error" ] << excp << std::endl;
+    xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
+    xout["error"] << excp << std::endl;
     errorcode = 1;
     return objectContainer;
   }
 
   /** Check if more than one component name is given. */
-  while( found )
+  while (found)
   {
     ++componentnr;
-    found = this->m_Configuration->ReadParameter(
-      componentName, key, componentnr, false );
-    if( found )
+    found = this->m_Configuration->ReadParameter(componentName, key, componentnr, false);
+    if (found)
     {
       try
       {
-        objectContainer->CreateElementAt( componentnr )
-          = this->CreateComponent( componentName );
+        objectContainer->CreateElementAt(componentnr) = this->CreateComponent(componentName);
       }
-      catch( itk::ExceptionObject & excp )
+      catch (itk::ExceptionObject & excp)
       {
-        xout[ "error" ]
-          << "ERROR: error occurred while creating "
-          << key << " "
-          << componentnr  << "." << std::endl;
-        xout[ "error" ] << excp << std::endl;
+        xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
+        xout["error"] << excp << std::endl;
         errorcode = 1;
         return objectContainer;
       }
     } // end if
-  } // end while
+  }   // end while
 
   return objectContainer;
 
@@ -953,43 +909,43 @@ ElastixMain::CreateComponents(
  */
 
 void
-ElastixMain::SetProcessPriority( void ) const
+ElastixMain::SetProcessPriority(void) const
 {
   /** If wanted, set the priority of this process high or below normal. */
-  std::string processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
-  if( processPriority == "high" )
+  std::string processPriority = this->m_Configuration->GetCommandLineArgument("-priority");
+  if (processPriority == "high")
   {
-    #if defined( _WIN32 ) && !defined( __CYGWIN__ )
-    SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
-    #endif
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+#endif
   }
-  else if( processPriority == "abovenormal" )
+  else if (processPriority == "abovenormal")
   {
-    #if defined( _WIN32 ) && !defined( __CYGWIN__ )
-    SetPriorityClass( GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS );
-    #endif
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass(GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS);
+#endif
   }
-  else if( processPriority == "normal" )
+  else if (processPriority == "normal")
   {
-    #if defined( _WIN32 ) && !defined( __CYGWIN__ )
-    SetPriorityClass( GetCurrentProcess(), NORMAL_PRIORITY_CLASS );
-    #endif
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
+#endif
   }
-  else if( processPriority == "belownormal" )
+  else if (processPriority == "belownormal")
   {
-    #if defined( _WIN32 ) && !defined( __CYGWIN__ )
-    SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
-    #endif
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+#endif
   }
-  else if( processPriority == "idle" )
+  else if (processPriority == "idle")
   {
-    #if defined( _WIN32 ) && !defined( __CYGWIN__ )
-    SetPriorityClass( GetCurrentProcess(), IDLE_PRIORITY_CLASS );
-    #endif
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
+#endif
   }
-  else if( processPriority != "" )
+  else if (processPriority != "")
   {
-    xl::xout[ "warning" ]
+    xl::xout["warning"]
       << "Unsupported -priority value. Specify one of <high, abovenormal, normal, belownormal, idle, ''>." << std::endl;
   }
 
@@ -1001,19 +957,16 @@ ElastixMain::SetProcessPriority( void ) const
  */
 
 void
-ElastixMain::SetMaximumNumberOfThreads( void ) const
+ElastixMain::SetMaximumNumberOfThreads(void) const
 {
   /** Get the number of threads from the command line. */
-  std::string maximumNumberOfThreadsString
-    = this->m_Configuration->GetCommandLineArgument( "-threads" );
+  std::string maximumNumberOfThreadsString = this->m_Configuration->GetCommandLineArgument("-threads");
 
   /** If supplied, set the maximum number of threads. */
-  if( maximumNumberOfThreadsString != "" )
+  if (maximumNumberOfThreadsString != "")
   {
-    const int maximumNumberOfThreads
-      = atoi( maximumNumberOfThreadsString.c_str() );
-    itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads(
-      maximumNumberOfThreads );
+    const int maximumNumberOfThreads = atoi(maximumNumberOfThreadsString.c_str());
+    itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads(maximumNumberOfThreads);
   }
 } // end SetMaximumNumberOfThreads()
 
@@ -1023,8 +976,7 @@ ElastixMain::SetMaximumNumberOfThreads( void ) const
  */
 
 void
-ElastixMain::SetOriginalFixedImageDirectionFlat(
-  const FlatDirectionCosinesType & arg )
+ElastixMain::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg)
 {
   this->m_OriginalFixedImageDirection = arg;
 } // end SetOriginalFixedImageDirectionFlat()
@@ -1035,7 +987,7 @@ ElastixMain::SetOriginalFixedImageDirectionFlat(
  */
 
 const ElastixMain::FlatDirectionCosinesType &
-ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
+ElastixMain::GetOriginalFixedImageDirectionFlat(void) const
 {
   return this->m_OriginalFixedImageDirection;
 } // end GetOriginalFixedImageDirectionFlat()
@@ -1046,7 +998,7 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
  */
 
 ElastixMain::ParameterMapType
-ElastixMain::GetTransformParametersMap( void ) const
+ElastixMain::GetTransformParametersMap(void) const
 {
   return this->m_TransformParametersMap;
 } // end GetTransformParametersMap()
@@ -1057,34 +1009,32 @@ ElastixMain::GetTransformParametersMap( void ) const
  */
 
 void
-ElastixMain::GetImageInformationFromFile(
-  const std::string & filename,
-  ImageDimensionType & imageDimension ) const
+ElastixMain::GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const
 {
-  if( filename != "" )
+  if (filename != "")
   {
     /** Dummy image type. */
-    const unsigned int DummyDimension = 3;
-    typedef short                                        DummyPixelType;
-    typedef itk::Image< DummyPixelType, DummyDimension > DummyImageType;
+    const unsigned int                                 DummyDimension = 3;
+    typedef short                                      DummyPixelType;
+    typedef itk::Image<DummyPixelType, DummyDimension> DummyImageType;
 
     /** Create a testReader. */
-    typedef itk::ImageFileReader< DummyImageType > ReaderType;
-    ReaderType::Pointer testReader = ReaderType::New();
-    testReader->SetFileName( filename.c_str() );
+    typedef itk::ImageFileReader<DummyImageType> ReaderType;
+    ReaderType::Pointer                          testReader = ReaderType::New();
+    testReader->SetFileName(filename.c_str());
 
     /** Generate all information. */
     testReader->UpdateOutputInformation();
 
     /** Extract the required information. */
     itk::SmartPointer<const itk::ImageIOBase> testImageIO = testReader->GetImageIO();
-    //itk::ImageIOBase::IOComponentType componentType = testImageIO->GetComponentType();
-    //pixelType = itk::ImageIOBase::GetComponentTypeAsString( componentType );
-    if( testImageIO.IsNull() )
+    // itk::ImageIOBase::IOComponentType componentType = testImageIO->GetComponentType();
+    // pixelType = itk::ImageIOBase::GetComponentTypeAsString( componentType );
+    if (testImageIO.IsNull())
     {
       /** Extra check. In principal, ITK the testreader should already have thrown an exception
        * if it was not possible to create the ImageIO object */
-      itkExceptionMacro( << "ERROR: ImageIO object was not created, but no exception was thrown." );
+      itkExceptionMacro(<< "ERROR: ImageIO object was not created, but no exception was thrown.");
     }
     imageDimension = testImageIO->GetNumberOfDimensions();
   } // end if

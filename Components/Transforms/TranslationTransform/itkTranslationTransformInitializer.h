@@ -57,47 +57,44 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TTransform,
-class TFixedImage,
-class TMovingImage >
+template <class TTransform, class TFixedImage, class TMovingImage>
 class TranslationTransformInitializer : public Object
 {
 public:
-
   /** Standard class typedefs. */
   typedef TranslationTransformInitializer Self;
   typedef Object                          Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef SmartPointer<Self>              Pointer;
+  typedef SmartPointer<const Self>        ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TranslationTransformInitializer, Object );
+  itkTypeMacro(TranslationTransformInitializer, Object);
 
   /** Type of the transform to initialize */
   typedef TTransform                      TransformType;
   typedef typename TransformType::Pointer TransformPointer;
 
   /** Dimension of parameters. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, TransformType::SpaceDimension );
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, TransformType::SpaceDimension);
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
-  typedef TFixedImage                                  FixedImageType;
-  typedef TMovingImage                                 MovingImageType;
-  typedef typename FixedImageType::ConstPointer        FixedImagePointer;
-  typedef typename MovingImageType::ConstPointer       MovingImagePointer;
-  typedef Image< unsigned char, InputSpaceDimension >  FixedMaskType;
-  typedef Image< unsigned char, OutputSpaceDimension > MovingMaskType;
-  typedef typename FixedMaskType::ConstPointer         FixedMaskPointer;
-  typedef typename MovingMaskType::ConstPointer        MovingMaskPointer;
+  typedef TFixedImage                                FixedImageType;
+  typedef TMovingImage                               MovingImageType;
+  typedef typename FixedImageType::ConstPointer      FixedImagePointer;
+  typedef typename MovingImageType::ConstPointer     MovingImagePointer;
+  typedef Image<unsigned char, InputSpaceDimension>  FixedMaskType;
+  typedef Image<unsigned char, OutputSpaceDimension> MovingMaskType;
+  typedef typename FixedMaskType::ConstPointer       FixedMaskPointer;
+  typedef typename MovingMaskType::ConstPointer      MovingMaskPointer;
 
   /** Moment calculators */
-  typedef ImageMomentsCalculator< FixedImageType >  FixedImageCalculatorType;
-  typedef ImageMomentsCalculator< MovingImageType > MovingImageCalculatorType;
+  typedef ImageMomentsCalculator<FixedImageType>  FixedImageCalculatorType;
+  typedef ImageMomentsCalculator<MovingImageType> MovingImageCalculatorType;
 
   typedef typename FixedImageCalculatorType::Pointer  FixedImageCalculatorPointer;
   typedef typename MovingImageCalculatorType::Pointer MovingImageCalculatorPointer;
@@ -109,43 +106,52 @@ public:
   typedef typename TransformType::OutputVectorType OutputVectorType;
 
   /** Set the transform to be initialized */
-  itkSetObjectMacro( Transform, TransformType );
+  itkSetObjectMacro(Transform, TransformType);
 
   /** Set the fixed image used in the registration process */
-  itkSetConstObjectMacro( FixedImage, FixedImageType );
+  itkSetConstObjectMacro(FixedImage, FixedImageType);
 
   /** Set the moving image used in the registration process */
-  itkSetConstObjectMacro( MovingImage, MovingImageType );
+  itkSetConstObjectMacro(MovingImage, MovingImageType);
 
   /** Set the fixed image mask used in the registration process */
-  itkSetConstObjectMacro( FixedMask, FixedMaskType );
+  itkSetConstObjectMacro(FixedMask, FixedMaskType);
 
   /** Set the moving image mask used in the registration process */
-  itkSetConstObjectMacro( MovingMask, MovingMaskType );
+  itkSetConstObjectMacro(MovingMask, MovingMaskType);
 
   /** Initialize the transform using data from the images */
-  virtual void InitializeTransform() const;
+  virtual void
+  InitializeTransform() const;
 
   /** Select between using the geometrical center of the images or
       using the center of mass given by the image intensities. */
-  void GeometryOn() { m_UseMoments = false; }
-  void MomentsOn()  { m_UseMoments = true; }
+  void
+  GeometryOn()
+  {
+    m_UseMoments = false;
+  }
+  void
+  MomentsOn()
+  {
+    m_UseMoments = true;
+  }
 
   /** Get() access to the moments calculators */
-  itkGetConstObjectMacro( FixedCalculator,  FixedImageCalculatorType  );
-  itkGetConstObjectMacro( MovingCalculator, MovingImageCalculatorType );
+  itkGetConstObjectMacro(FixedCalculator, FixedImageCalculatorType);
+  itkGetConstObjectMacro(MovingCalculator, MovingImageCalculatorType);
 
 protected:
-
   TranslationTransformInitializer();
-  ~TranslationTransformInitializer() override{}
+  ~TranslationTransformInitializer() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
-  TranslationTransformInitializer( const Self & ); // purposely not implemented
-  void operator=( const Self & );                  // purposely not implemented
+  TranslationTransformInitializer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   TransformPointer   m_Transform;
   FixedImagePointer  m_FixedImage;
@@ -156,13 +162,12 @@ private:
 
   FixedImageCalculatorPointer  m_FixedCalculator;
   MovingImageCalculatorPointer m_MovingCalculator;
-
 };
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTranslationTransformInitializer.hxx"
+#  include "itkTranslationTransformInitializer.hxx"
 #endif
 
 #endif /* __itkTranslationTransformInitializer_h */

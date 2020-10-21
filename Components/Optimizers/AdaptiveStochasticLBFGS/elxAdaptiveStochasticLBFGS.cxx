@@ -18,4 +18,4 @@
 
 #include "elxAdaptiveStochasticLBFGS.h"
 
-elxInstallMacro( AdaptiveStochasticLBFGS );
+elxInstallMacro(AdaptiveStochasticLBFGS);

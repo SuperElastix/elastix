@@ -87,33 +87,30 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template< class TElastix >
-class ConjugateGradient :
-  public
-  itk::GenericConjugateGradientOptimizer,
-  public
-  OptimizerBase< TElastix >
+template <class TElastix>
+class ConjugateGradient
+  : public itk::GenericConjugateGradientOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
   typedef ConjugateGradient                 Self;
   typedef GenericConjugateGradientOptimizer Superclass1;
-  typedef OptimizerBase< TElastix >         Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef OptimizerBase<TElastix>           Superclass2;
+  typedef itk::SmartPointer<Self>           Pointer;
+  typedef itk::SmartPointer<const Self>     ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ConjugateGradient, GenericConjugateGradientOptimizer );
+  itkTypeMacro(ConjugateGradient, GenericConjugateGradientOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer. \n
    * example: <tt>(Optimizer "ConjugateGradient")</tt>\n
    */
-  elxClassNameMacro( "ConjugateGradient" );
+  elxClassNameMacro("ConjugateGradient");
 
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType    CostFunctionType;
@@ -135,63 +132,69 @@ public:
   /** Extra typedefs */
   typedef itk::MoreThuenteLineSearchOptimizer    LineOptimizerType;
   typedef LineOptimizerType::Pointer             LineOptimizerPointer;
-  typedef itk::ReceptorMemberCommand< Self >     EventPassThroughType;
+  typedef itk::ReceptorMemberCommand<Self>       EventPassThroughType;
   typedef typename EventPassThroughType::Pointer EventPassThroughPointer;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
-  itkGetConstMacro( StartLineSearch, bool );
+  itkGetConstMacro(StartLineSearch, bool);
 
 protected:
-
   ConjugateGradient();
   ~ConjugateGradient() override {}
 
   LineOptimizerPointer m_LineOptimizer;
 
   /** Convert the line search stop condition to a string */
-  virtual std::string GetLineSearchStopCondition( void ) const;
+  virtual std::string
+  GetLineSearchStopCondition(void) const;
 
   /** Generate a string, representing the phase of optimisation
    * (line search, main) */
-  virtual std::string DeterminePhase( void ) const;
+  virtual std::string
+  DeterminePhase(void) const;
 
   /** Reimplement the superclass. Calls the superclass' implementation
    * and checks if the MoreThuente line search routine has stopped with
    * Wolfe conditions satisfied. */
-  bool TestConvergence( bool firstLineSearchDone ) override;
+  bool
+  TestConvergence(bool firstLineSearchDone) override;
 
   /** Call the superclass' implementation. If an itk::ExceptionObject is caught,
    * because the line search optimizer tried a too big step, the exception
    * is printed, but ignored further. The optimizer stops, but elastix
    * just goes on to the next resolution. */
-  void LineSearch(
-    const ParametersType searchDir,
-    double & step,
-    ParametersType & x,
-    MeasureType & f,
-    DerivativeType & g ) override;
+  void
+  LineSearch(const ParametersType searchDir, double & step, ParametersType & x, MeasureType & f, DerivativeType & g)
+    override;
 
 private:
+  ConjugateGradient(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  ConjugateGradient( const Self & );  // purposely not implemented
-  void operator=( const Self & );     // purposely not implemented
-
-  void InvokeIterationEvent( const itk::EventObject & event );
+  void
+  InvokeIterationEvent(const itk::EventObject & event);
 
   EventPassThroughPointer m_EventPasser;
   double                  m_SearchDirectionMagnitude;
@@ -199,13 +202,12 @@ private:
   bool                    m_GenerateLineSearchIterations;
   bool                    m_StopIfWolfeNotSatisfied;
   bool                    m_WolfeIsStopCondition;
-
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxConjugateGradient.hxx"
+#  include "elxConjugateGradient.hxx"
 #endif
 
 #endif // end #ifndef __elxConjugateGradient_h

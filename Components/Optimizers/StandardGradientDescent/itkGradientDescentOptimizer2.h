@@ -51,22 +51,20 @@ namespace itk
  * \ingroup Numerics Optimizers
  */
 
-class GradientDescentOptimizer2 :
-  public ScaledSingleValuedNonLinearOptimizer
+class GradientDescentOptimizer2 : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-
   /** Standard class typedefs. */
   typedef GradientDescentOptimizer2            Self;
   typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  typedef SmartPointer<Self>                   Pointer;
+  typedef SmartPointer<const Self>             ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GradientDescentOptimizer2, ScaledSingleValuedNonLinearOptimizer );
+  itkTypeMacro(GradientDescentOptimizer2, ScaledSingleValuedNonLinearOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -80,64 +78,70 @@ public:
   /** Codes of stopping conditions
    * The MinimumStepSize stopcondition never occurs, but may
    * be implemented in inheriting classes */
-  typedef enum {
+  typedef enum
+  {
     MaximumNumberOfIterations,
     MetricError,
     MinimumStepSize
   } StopConditionType;
 
   /** Advance one step following the gradient direction. */
-  virtual void AdvanceOneStep( void );
+  virtual void
+  AdvanceOneStep(void);
 
   /** Start optimization. */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization. */
-  virtual void ResumeOptimization( void );
+  virtual void
+  ResumeOptimization(void);
 
   /** Stop optimization and pass on exception. */
-  virtual void MetricErrorResponse( ExceptionObject & err );
+  virtual void
+  MetricErrorResponse(ExceptionObject & err);
 
   /** Stop optimization.
    * \sa ResumeOptimization */
-  virtual void StopOptimization( void );
+  virtual void
+  StopOptimization(void);
 
   /** Set the learning rate. */
-  itkSetMacro( LearningRate, double );
+  itkSetMacro(LearningRate, double);
 
   /** Get the learning rate. */
-  itkGetConstReferenceMacro( LearningRate, double );
+  itkGetConstReferenceMacro(LearningRate, double);
 
   /** Set the number of iterations. */
-  itkSetMacro( NumberOfIterations, unsigned long );
+  itkSetMacro(NumberOfIterations, unsigned long);
 
   /** Get the number of iterations. */
-  itkGetConstReferenceMacro( NumberOfIterations, unsigned long );
+  itkGetConstReferenceMacro(NumberOfIterations, unsigned long);
 
   /** Get the current iteration number. */
-  itkGetConstMacro( CurrentIteration, unsigned int );
+  itkGetConstMacro(CurrentIteration, unsigned int);
 
   /** Get the current value. */
-  itkGetConstReferenceMacro( Value, double );
+  itkGetConstReferenceMacro(Value, double);
 
   /** Get Stop condition. */
-  itkGetConstReferenceMacro( StopCondition, StopConditionType );
+  itkGetConstReferenceMacro(StopCondition, StopConditionType);
 
   /** Get current gradient. */
-  itkGetConstReferenceMacro( Gradient, DerivativeType );
+  itkGetConstReferenceMacro(Gradient, DerivativeType);
 
   /** Get current search direction */
-  itkGetConstReferenceMacro( SearchDirection, DerivativeType );
+  itkGetConstReferenceMacro(SearchDirection, DerivativeType);
 
   /** Set use OpenMP or not. */
-  itkSetMacro( UseOpenMP, bool );
+  itkSetMacro(UseOpenMP, bool);
 
 protected:
-
   GradientDescentOptimizer2();
   ~GradientDescentOptimizer2() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   // made protected so subclass can access
   double            m_Value;
@@ -151,12 +155,11 @@ protected:
   unsigned long m_CurrentIteration;
 
 private:
-
-  GradientDescentOptimizer2( const Self & ); // purposely not implemented
-  void operator=( const Self & );            // purposely not implemented
+  GradientDescentOptimizer2(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   bool m_UseOpenMP;
-
 };
 
 } // end namespace itk

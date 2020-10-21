@@ -21,16 +21,16 @@
 
 namespace itk
 {
-OpenCLUserEvent::OpenCLUserEvent( cl_event id ) :
-  OpenCLEvent( id )
+OpenCLUserEvent::OpenCLUserEvent(cl_event id)
+  : OpenCLEvent(id)
 {
   this->ReleaseIfNotUserEvent();
 }
 
 
 //------------------------------------------------------------------------------
-OpenCLUserEvent::OpenCLUserEvent( const OpenCLEvent & other ) :
-  OpenCLEvent( other )
+OpenCLUserEvent::OpenCLUserEvent(const OpenCLEvent & other)
+  : OpenCLEvent(other)
 {
   this->ReleaseIfNotUserEvent();
 }
@@ -38,18 +38,18 @@ OpenCLUserEvent::OpenCLUserEvent( const OpenCLEvent & other ) :
 
 //------------------------------------------------------------------------------
 OpenCLUserEvent &
-OpenCLUserEvent::operator=( const OpenCLEvent & other )
+OpenCLUserEvent::operator=(const OpenCLEvent & other)
 {
-  if( this->m_Id != other.m_Id )
+  if (this->m_Id != other.m_Id)
   {
-    if( this->m_Id )
+    if (this->m_Id)
     {
-      clReleaseEvent( this->m_Id );
+      clReleaseEvent(this->m_Id);
     }
     this->m_Id = other.m_Id;
-    if( this->m_Id )
+    if (this->m_Id)
     {
-      clRetainEvent( this->m_Id );
+      clRetainEvent(this->m_Id);
     }
     this->ReleaseIfNotUserEvent();
   }
@@ -61,21 +61,20 @@ OpenCLUserEvent::operator=( const OpenCLEvent & other )
 void
 OpenCLUserEvent::SetComplete()
 {
-  this->SetStatus( CL_COMPLETE );
+  this->SetStatus(CL_COMPLETE);
 }
 
 
 //------------------------------------------------------------------------------
 void
-OpenCLUserEvent::SetStatus( const cl_int status )
+OpenCLUserEvent::SetStatus(const cl_int status)
 {
-  if( this->m_Id )
+  if (this->m_Id)
   {
-    cl_int error = clSetUserEventStatus( this->m_Id, status );
-    if( error != CL_SUCCESS )
+    cl_int error = clSetUserEventStatus(this->m_Id, status);
+    if (error != CL_SUCCESS)
     {
-      itkOpenCLWarningMacroGeneric( << "OpenCLUserEvent::SetStatus:"
-                                    << OpenCLContext::GetErrorName( error ) );
+      itkOpenCLWarningMacroGeneric(<< "OpenCLUserEvent::SetStatus:" << OpenCLContext::GetErrorName(error));
     }
   }
 }
@@ -85,9 +84,9 @@ OpenCLUserEvent::SetStatus( const cl_int status )
 void
 OpenCLUserEvent::ReleaseIfNotUserEvent()
 {
-  if( this->m_Id && this->GetCommandType() != CL_COMMAND_USER )
+  if (this->m_Id && this->GetCommandType() != CL_COMMAND_USER)
   {
-    clReleaseEvent( this->m_Id );
+    clReleaseEvent(this->m_Id);
     this->m_Id = 0;
   }
 }

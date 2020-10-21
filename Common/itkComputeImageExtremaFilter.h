@@ -44,16 +44,15 @@ namespace itk
  * \wikiexample{Statistics/StatisticsImageFilter,Compute min\, max\, variance and mean of an Image.}
  * \endwiki
  */
-template< typename TInputImage >
-class ComputeImageExtremaFilter :
-  public StatisticsImageFilter< TInputImage >
+template <typename TInputImage>
+class ComputeImageExtremaFilter : public StatisticsImageFilter<TInputImage>
 {
 public:
   /** Standard Self typedef */
-  typedef ComputeImageExtremaFilter                     Self;
-  typedef StatisticsImageFilter< TInputImage >          Superclass;
-  typedef SmartPointer< Self >                          Pointer;
-  typedef SmartPointer< const Self >                    ConstPointer;
+  typedef ComputeImageExtremaFilter          Self;
+  typedef StatisticsImageFilter<TInputImage> Superclass;
+  typedef SmartPointer<Self>                 Pointer;
+  typedef SmartPointer<const Self>           ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -68,68 +67,74 @@ public:
   typedef typename Superclass::SizeType   SizeType;
   typedef typename Superclass::IndexType  IndexType;
   typedef typename Superclass::PixelType  PixelType;
-  typedef typename TInputImage::PointType  PointType;
+  typedef typename TInputImage::PointType PointType;
 
   /** Image related typedefs. */
-  itkStaticConstMacro( ImageDimension, unsigned int,
-                      TInputImage::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Type to use for computations. */
   typedef typename Superclass::RealType RealType;
 
-  itkSetMacro( ImageRegion, RegionType );
-  itkSetMacro( UseMask, bool );
+  itkSetMacro(ImageRegion, RegionType);
+  itkSetMacro(UseMask, bool);
 
-  typedef SpatialObject< itkGetStaticConstMacro(ImageDimension) > ImageMaskType;
-  typedef typename ImageMaskType::Pointer ImageMaskPointer;
-  typedef typename ImageMaskType::ConstPointer ImageMaskConstPointer;
-  itkSetConstObjectMacro( ImageMask, ImageMaskType );
-  itkGetConstObjectMacro( ImageMask, ImageMaskType );
+  typedef SpatialObject<itkGetStaticConstMacro(ImageDimension)> ImageMaskType;
+  typedef typename ImageMaskType::Pointer                       ImageMaskPointer;
+  typedef typename ImageMaskType::ConstPointer                  ImageMaskConstPointer;
+  itkSetConstObjectMacro(ImageMask, ImageMaskType);
+  itkGetConstObjectMacro(ImageMask, ImageMaskType);
 
-  typedef ImageMaskSpatialObject< itkGetStaticConstMacro(ImageDimension) > ImageSpatialMaskType;
-  typedef typename ImageSpatialMaskType::Pointer ImageSpatialMaskPointer;
-  typedef typename ImageSpatialMaskType::ConstPointer ImageSpatialMaskConstPointer;
-  itkSetConstObjectMacro( ImageSpatialMask, ImageSpatialMaskType );
-  itkGetConstObjectMacro( ImageSpatialMask, ImageSpatialMaskType );
+  typedef ImageMaskSpatialObject<itkGetStaticConstMacro(ImageDimension)> ImageSpatialMaskType;
+  typedef typename ImageSpatialMaskType::Pointer                         ImageSpatialMaskPointer;
+  typedef typename ImageSpatialMaskType::ConstPointer                    ImageSpatialMaskConstPointer;
+  itkSetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
+  itkGetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
 
 protected:
   ComputeImageExtremaFilter();
   ~ComputeImageExtremaFilter() override {}
 
   /** Initialize some accumulators before the threads run. */
-  void BeforeStreamedGenerateData() override;
+  void
+  BeforeStreamedGenerateData() override;
 
   /** Do final mean and variance computation from data accumulated in threads.
    */
-  void AfterStreamedGenerateData() override;
+  void
+  AfterStreamedGenerateData() override;
 
   /** Multi-thread version GenerateData. */
-  void ThreadedStreamedGenerateData(const RegionType &) override;
-  virtual void ThreadedGenerateDataImageSpatialMask( const RegionType & );
-  virtual void ThreadedGenerateDataImageMask( const RegionType & );
-  virtual void SameGeometry();
-  RegionType            m_ImageRegion;
-  ImageMaskConstPointer m_ImageMask;
-  ImageSpatialMaskConstPointer  m_ImageSpatialMask;
-  bool                  m_UseMask;
-  bool                  m_SameGeometry;
+  void
+  ThreadedStreamedGenerateData(const RegionType &) override;
+  virtual void
+  ThreadedGenerateDataImageSpatialMask(const RegionType &);
+  virtual void
+  ThreadedGenerateDataImageMask(const RegionType &);
+  virtual void
+                               SameGeometry();
+  RegionType                   m_ImageRegion;
+  ImageMaskConstPointer        m_ImageMask;
+  ImageSpatialMaskConstPointer m_ImageSpatialMask;
+  bool                         m_UseMask;
+  bool                         m_SameGeometry;
 
 private:
-  ComputeImageExtremaFilter( const Self & );
-  void operator = ( const Self & );
+  ComputeImageExtremaFilter(const Self &);
+  void
+  operator=(const Self &);
 
   CompensatedSummation<RealType> m_ThreadSum{ 1 };
   CompensatedSummation<RealType> m_SumOfSquares{ 1 };
-  SizeValueType m_Count{ 1 };
-  PixelType     m_ThreadMin{ 1 };
-  PixelType     m_ThreadMax{ 1 };
+  SizeValueType                  m_Count{ 1 };
+  PixelType                      m_ThreadMin{ 1 };
+  PixelType                      m_ThreadMax{ 1 };
 
   std::mutex m_Mutex;
 }; // end of class
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkComputeImageExtremaFilter.hxx"
+#  include "itkComputeImageExtremaFilter.hxx"
 #endif
 
 #endif

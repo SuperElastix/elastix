@@ -18,4 +18,4 @@
 
 #include "elxSumOfPairwiseCorrelationCoefficientsMetric.h"
 
-elxInstallMacro( SumOfPairwiseCorrelationCoefficientsMetric );
+elxInstallMacro(SumOfPairwiseCorrelationCoefficientsMetric);

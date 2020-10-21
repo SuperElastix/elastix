@@ -106,35 +106,30 @@ namespace elastix
  *
  */
 
-template< class TElastix >
-class TransformRigidityPenalty :
-  public itk::TransformRigidityPenaltyTerm<
-  typename MetricBase< TElastix >::FixedImageType,
-  double >,
-  public MetricBase< TElastix >
+template <class TElastix>
+class TransformRigidityPenalty
+  : public itk::TransformRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>
+  , public MetricBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef TransformRigidityPenalty Self;
-  typedef itk::TransformRigidityPenaltyTerm<
-    typename MetricBase< TElastix >::FixedImageType,
-    double >                                            Superclass1;
-  typedef MetricBase< TElastix >          Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef TransformRigidityPenalty                                                                 Self;
+  typedef itk::TransformRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double> Superclass1;
+  typedef MetricBase<TElastix>                                                                     Superclass2;
+  typedef itk::SmartPointer<Self>                                                                  Pointer;
+  typedef itk::SmartPointer<const Self>                                                            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformRigidityPenalty, itk::TransformRigidityPenaltyTerm );
+  itkTypeMacro(TransformRigidityPenalty, itk::TransformRigidityPenaltyTerm);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
    * example: <tt>(Metric "TransformRigidityPenalty")</tt>\n
    */
-  elxClassNameMacro( "TransformRigidityPenalty" );
+  elxClassNameMacro("TransformRigidityPenalty");
 
   /** Typedefs from the superclass. */
   typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
@@ -179,12 +174,10 @@ public:
   typedef typename Superclass1::CoefficientImageType CoefficientImageType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedef's inherited from elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -198,13 +191,15 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /**
    * Do some things before each resolution:
    * \li Read all parameters.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
   /**
    * Do some things before registration:
@@ -212,41 +207,43 @@ public:
    * \li Read the moving rigidity image.
    * \li Setup some extra target cells.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /**
    * Do some things after each iteration:
    * \li Print the OC, PC, LC parts of the rigidity term.
    */
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
   /** This metric is advanced (so it has a sampling possibility), but it
    * purposely does not use samplers. The MetricBase class, however, issues
    * a warning if this is the case, so we overwrite that function.
    */
-  void SelectNewSamples( void ) override{}
+  void
+  SelectNewSamples(void) override
+  {}
 
 protected:
-
   /** The constructor. */
-  TransformRigidityPenalty(){}
+  TransformRigidityPenalty() {}
 
   /** The destructor. */
   ~TransformRigidityPenalty() override {}
 
 private:
-
   /** The private constructor. */
-  TransformRigidityPenalty( const Self & ); // purposely not implemented
+  TransformRigidityPenalty(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );              // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxTransformRigidityPenaltyTerm.hxx"
+#  include "elxTransformRigidityPenaltyTerm.hxx"
 #endif
 
 #endif // end #ifndef __elxTransformRigidityPenaltyTerm_H__

@@ -29,15 +29,15 @@ namespace elastix
  */
 
 template <class TElastix>
-void SumSquaredTissueVolumeDifferenceMetric<TElastix>
-::Initialize(void)
+void
+SumSquaredTissueVolumeDifferenceMetric<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of SumSquaredTissueVolumeDifference metric took: "
-    << static_cast<long>( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -47,24 +47,21 @@ void SumSquaredTissueVolumeDifferenceMetric<TElastix>
  */
 
 template <class TElastix>
-void SumSquaredTissueVolumeDifferenceMetric<TElastix>
-::BeforeEachResolution( void )
+void
+SumSquaredTissueVolumeDifferenceMetric<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level =
-    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the AirValue. */
   float AirValue = -1000.0;
-  this->GetConfiguration()->ReadParameter( AirValue,
-    "AirValue", this->GetComponentLabel(), level, 0 );
-  this->SetAirValue( AirValue );
+  this->GetConfiguration()->ReadParameter(AirValue, "AirValue", this->GetComponentLabel(), level, 0);
+  this->SetAirValue(AirValue);
 
   /** Get and set the TissueValue. */
   float TissueValue = 55.0;
-  this->GetConfiguration()->ReadParameter( TissueValue,
-    "TissueValue", this->GetComponentLabel(), level, 0 );
-  this->SetTissueValue( TissueValue );
+  this->GetConfiguration()->ReadParameter(TissueValue, "TissueValue", this->GetComponentLabel(), level, 0);
+  this->SetTissueValue(TissueValue);
 
 } // end BeforeEachResolution()
 

@@ -19,7 +19,7 @@
 #define __itkMevisDicomTiffImageIO_h
 
 #ifdef _MSC_VER
-#pragma warning ( disable : 4786 )
+#  pragma warning(disable : 4786)
 #endif
 
 #include "itkImageIOBase.h"
@@ -109,54 +109,61 @@ class TIFFReaderInternal;
 class ITK_EXPORT MevisDicomTiffImageIO : public ImageIOBase
 {
 public:
-
   typedef MevisDicomTiffImageIO Self;
   typedef ImageIOBase           Superclass;
-  typedef SmartPointer< Self >  Pointer;
+  typedef SmartPointer<Self>    Pointer;
 
-  itkNewMacro( Self );
-  itkTypeMacro( MevisDicomTiffImageIO, Superclass );
-  itkGetMacro( RescaleSlope, double );
-  itkGetMacro( RescaleIntercept, double );
-  itkGetMacro( GantryTilt, double );
+  itkNewMacro(Self);
+  itkTypeMacro(MevisDicomTiffImageIO, Superclass);
+  itkGetMacro(RescaleSlope, double);
+  itkGetMacro(RescaleIntercept, double);
+  itkGetMacro(GantryTilt, double);
 
-  virtual bool CanReadFile( const char * );
+  virtual bool
+  CanReadFile(const char *);
 
-  virtual void ReadImageInformation();
+  virtual void
+  ReadImageInformation();
 
-  virtual void Read( void * buffer );
+  virtual void
+  Read(void * buffer);
 
-  virtual bool CanWriteFile( const char * );
+  virtual bool
+  CanWriteFile(const char *);
 
-  virtual void WriteImageInformation();
+  virtual void
+  WriteImageInformation();
 
-  virtual void Write( const void * buffer );
+  virtual void
+  Write(const void * buffer);
 
-  virtual bool CanStreamRead()
+  virtual bool
+  CanStreamRead()
   {
     return false;
   }
 
 
-  virtual bool CanStreamWrite()
+  virtual bool
+  CanStreamWrite()
   {
     return false;
   }
 
 
 protected:
-
   MevisDicomTiffImageIO();
   ~MevisDicomTiffImageIO();
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
+  MevisDicomTiffImageIO(const Self &);
+  void
+  operator=(const Self &);
 
-  MevisDicomTiffImageIO( const Self & );
-  void operator=( const Self & );
-
-  bool FindElement( const gdcm::DataSet ds, const gdcm::Tag tag, gdcm::DataElement & de,
-    const bool breadthfirstsearch );
+  bool
+  FindElement(const gdcm::DataSet ds, const gdcm::Tag tag, gdcm::DataElement & de, const bool breadthfirstsearch);
 
   // the following may include the pathname
   std::string m_DcmFileName;
@@ -181,7 +188,6 @@ private:
   double m_GantryTilt;
   double m_EstimatedMinimum;
   double m_EstimatedMaximum;
-
 };
 
 } // end namespace itk

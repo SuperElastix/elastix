@@ -73,45 +73,43 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template< class TElastix >
-class AdvancedAffineTransformElastix :
-  public itk::AdvancedCombinationTransform<
-  typename elx::TransformBase< TElastix >::CoordRepType,
-  elx::TransformBase< TElastix >::FixedImageDimension >,
-  public elx::TransformBase< TElastix >
+template <class TElastix>
+class AdvancedAffineTransformElastix
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public elx::TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef AdvancedAffineTransformElastix Self;
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
-  typedef elx::TransformBase< TElastix >  Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+                                        Superclass1;
+  typedef elx::TransformBase<TElastix>  Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::AdvancedMatrixOffsetTransformBase<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension,
-    elx::TransformBase< TElastix >::MovingImageDimension >     AffineTransformType;
+  typedef itk::AdvancedMatrixOffsetTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                 elx::TransformBase<TElastix>::FixedImageDimension,
+                                                 elx::TransformBase<TElastix>::MovingImageDimension>
+    AffineTransformType;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedAffineTransformElastix, itk::AdvancedCombinationTransform );
+  itkTypeMacro(AdvancedAffineTransformElastix, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "AffineTransform")</tt>\n
    */
-  elxClassNameMacro( "AffineTransform" );
+  elxClassNameMacro("AffineTransform");
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
@@ -150,9 +148,9 @@ public:
   typedef typename FixedImageType::RegionType    RegionType;
   typedef typename FixedImageType::DirectionType DirectionType;
 
-  //typedef CenteredTransformInitializer<
-  typedef itk::CenteredTransformInitializer2<
-    AffineTransformType, FixedImageType, MovingImageType > TransformInitializerType;
+  // typedef CenteredTransformInitializer<
+  typedef itk::CenteredTransformInitializer2<AffineTransformType, FixedImageType, MovingImageType>
+                                                     TransformInitializerType;
   typedef typename TransformInitializerType::Pointer TransformInitializerPointer;
   typedef typename AffineTransformType::Pointer      AffineTransformPointer;
 
@@ -163,7 +161,8 @@ public:
    * \li Call InitializeTransform
    * \li Set the scales.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Initialize Transform.
    * \li Set all parameters to zero.
@@ -180,7 +179,8 @@ public:
    *
    * It is not yet possible to enter an initial rotation angle or scaling.
    */
-  virtual void InitializeTransform( void );
+  virtual void
+  InitializeTransform(void);
 
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -189,27 +189,29 @@ public:
    * This function is called by BeforeRegistration, after
    * the InitializeTransform function is called
    */
-  virtual void SetScales( void );
+  virtual void
+  SetScales(void);
 
   /** Function to read transform-parameters from a file.
    *
    * It reads the center of rotation and calls the superclass' implementation.
    */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file.
    * It writes the center of rotation to file and calls the superclass' implementation.
    */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
   /** Function to create transform-parameters map.
    * Creates the TransformParametersmap
    */
-  void CreateTransformParametersMap(
-    const ParametersType & param, ParameterMapType * paramsMap ) const override;
+  void
+  CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const override;
 
 protected:
-
   /** The constructor. */
   AdvancedAffineTransformElastix();
   /** The destructor. */
@@ -220,23 +222,23 @@ protected:
    * Transform parameter files generated by elastix version > 3.402
    * save the center of rotation in this way.
    */
-  virtual bool ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const;
+  virtual bool
+  ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
 
 private:
-
   /** The private constructor. */
-  AdvancedAffineTransformElastix( const Self & );   // purposely not implemented
+  AdvancedAffineTransformElastix(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );           // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   AffineTransformPointer m_AffineTransform;
-
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxAdvancedAffineTransform.hxx"
+#  include "elxAdvancedAffineTransform.hxx"
 #endif
 
 #endif // end #ifndef __elxAdvancedAffineTransform_H_

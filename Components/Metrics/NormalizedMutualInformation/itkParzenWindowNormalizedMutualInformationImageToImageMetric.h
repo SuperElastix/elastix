@@ -68,90 +68,81 @@ namespace itk
  * \sa ParzenWindowHistogramImageToImageMetric
  */
 
-template< class TFixedImage, class TMovingImage >
-class ParzenWindowNormalizedMutualInformationImageToImageMetric :
-  public ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
+template <class TFixedImage, class TMovingImage>
+class ParzenWindowNormalizedMutualInformationImageToImageMetric
+  : public ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef ParzenWindowNormalizedMutualInformationImageToImageMetric Self;
-  typedef ParzenWindowHistogramImageToImageMetric<
-    TFixedImage, TMovingImage >                                       Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef ParzenWindowNormalizedMutualInformationImageToImageMetric          Self;
+  typedef ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage> Superclass;
+  typedef SmartPointer<Self>                                                 Pointer;
+  typedef SmartPointer<const Self>                                           ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(
-    ParzenWindowNormalizedMutualInformationImageToImageMetric,
-    ParzenWindowHistogramImageToImageMetric );
+  itkTypeMacro(ParzenWindowNormalizedMutualInformationImageToImageMetric, ParzenWindowHistogramImageToImageMetric);
 
   /** Typedefs from the superclass. */
-  typedef typename
-    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType            MovingImageType;
-  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
-  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType             FixedImageType;
-  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::InterpolatorType           InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-  typedef typename Superclass::RealType                   RealType;
-  typedef typename Superclass::GradientPixelType          GradientPixelType;
-  typedef typename Superclass::GradientImageType          GradientImageType;
-  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
-  typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
-  typedef typename Superclass::ImageSamplerType           ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename
-    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
-  typedef typename
-    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
-  typedef typename
-    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
-  typedef typename
-    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename Superclass::CoordinateRepresentationType    CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType                 MovingImageType;
+  typedef typename Superclass::MovingImagePixelType            MovingImagePixelType;
+  typedef typename Superclass::MovingImageConstPointer         MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType                  FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer          FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType            FixedImageRegionType;
+  typedef typename Superclass::TransformType                   TransformType;
+  typedef typename Superclass::TransformPointer                TransformPointer;
+  typedef typename Superclass::InputPointType                  InputPointType;
+  typedef typename Superclass::OutputPointType                 OutputPointType;
+  typedef typename Superclass::TransformParametersType         TransformParametersType;
+  typedef typename Superclass::TransformJacobianType           TransformJacobianType;
+  typedef typename Superclass::InterpolatorType                InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer             InterpolatorPointer;
+  typedef typename Superclass::RealType                        RealType;
+  typedef typename Superclass::GradientPixelType               GradientPixelType;
+  typedef typename Superclass::GradientImageType               GradientImageType;
+  typedef typename Superclass::GradientImagePointer            GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType         GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer      GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType              FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer           FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType             MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer          MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                     MeasureType;
+  typedef typename Superclass::DerivativeType                  DerivativeType;
+  typedef typename Superclass::ParametersType                  ParametersType;
+  typedef typename Superclass::FixedImagePixelType             FixedImagePixelType;
+  typedef typename Superclass::MovingImageRegionType           MovingImageRegionType;
+  typedef typename Superclass::ImageSamplerType                ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer             ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType        ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer     ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType           FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType          MovingImageLimiterType;
+  typedef typename Superclass::FixedImageLimiterOutputType     FixedImageLimiterOutputType;
+  typedef typename Superclass::MovingImageLimiterOutputType    MovingImageLimiterOutputType;
+  typedef typename Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /**  Get the value: the negative normalized mutual information. */
-  MeasureType GetValue( const ParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const ParametersType & parameters) const override;
 
   /**  Get the value and derivatives for single valued optimizers. */
-  void GetValueAndDerivative( const ParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const override;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          Value,
+                        DerivativeType &       Derivative) const override;
 
 protected:
-
   /** The constructor. */
   ParzenWindowNormalizedMutualInformationImageToImageMetric() {}
 
@@ -159,7 +150,8 @@ protected:
   ~ParzenWindowNormalizedMutualInformationImageToImageMetric() override {}
 
   /** Print Self. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Protected Typedefs ******************/
 
@@ -190,7 +182,8 @@ protected:
 
   /** Replace the marginal probabilities by log(probabilities)
    * Changes the input pdf since they are not needed anymore! */
-  virtual void ComputeLogMarginalPDF( MarginalPDFType & pdf ) const;
+  virtual void
+  ComputeLogMarginalPDF(MarginalPDFType & pdf) const;
 
   /** Compute the normalized mutual information and the jointEntropy
    * NMI = (Ef + Em) / Ej
@@ -198,21 +191,21 @@ protected:
    * Em = moving marginal entropy = - sum_k sum_i p(i,k) log pm(i)
    * Ej = joint entropy = - sum_k sum_i p(i,k) log p(i,k)
    */
-  virtual MeasureType ComputeNormalizedMutualInformation( MeasureType & jointEntropy ) const;
+  virtual MeasureType
+  ComputeNormalizedMutualInformation(MeasureType & jointEntropy) const;
 
 private:
-
   /** The private constructor. */
-  ParzenWindowNormalizedMutualInformationImageToImageMetric( const Self & );  // purposely not implemented
+  ParzenWindowNormalizedMutualInformationImageToImageMetric(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkParzenWindowNormalizedMutualInformationImageToImageMetric.hxx"
+#  include "itkParzenWindowNormalizedMutualInformationImageToImageMetric.hxx"
 #endif
 
 #endif // end #ifndef __itkParzenWindowNormalizedMutualInformationImageToImageMetric_H__

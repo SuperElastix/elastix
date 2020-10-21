@@ -41,66 +41,59 @@ namespace elastix
  *    For each dimension, for each resolution level, the downsampling factor of the
  *    moving image can be specified.\n
  *    Syntax for 2D images:\n
- *    <tt>(MovingImagePyramidRescaleSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>\n
- *    example: <tt>(MovingImagePyramidRescaleSchedule 4 4 2 2 1 1)</tt>\n
- *    Default: isotropic, halved in each resolution, so, like in the example. If
- *    ImagePyramidRescaleSchedule is specified, that schedule is used for both moving and moving image pyramid.
- * \parameter ImagePyramidRescaleSchedule: rescale schedule for both pyramids
+ *    <tt>(MovingImagePyramidRescaleSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1>
+ * ...)</tt>\n example: <tt>(MovingImagePyramidRescaleSchedule 4 4 2 2 1 1)</tt>\n Default: isotropic, halved in each
+ * resolution, so, like in the example. If ImagePyramidRescaleSchedule is specified, that schedule is used for both
+ * moving and moving image pyramid. \parameter ImagePyramidRescaleSchedule: rescale schedule for both pyramids
  * \parameter ImagePyramidSchedule: same as ImagePyramidRescaleSchedule
  * \parameter MovingImagePyramidSchedule: same as MovingImagePyramidRescaleSchedule
  * \parameter MovingImagePyramidSmoothingSchedule: sigma's for smoothing the moving image pyramid.\n
  *    For each dimension, for each resolution level, the sigma of the
  *    moving image can be specified.\n
  *    Syntax for 2D images:\n
- *    <tt>(MovingImagePyramidSmoothingSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>\n
- *    example: <tt>(MovingImagePyramidSmoothingSchedule 4 4 2 2 1 1)</tt>\n
- *    Default: 0.5 x rescale_factor x moving_image_spacing.\n
- *    If ImagePyramidSmoothingSchedule is specified, that schedule is used for both moving and moving image pyramid.
- * \parameter ImagePyramidSmoothingSchedule: smoothing schedule for both pyramids
- * \parameter ComputePyramidImagesPerResolution: Flag to specify if all resolution levels are computed
- *    at once, or per resolution. Latter saves memory.\n
- *    example: <tt>(ComputePyramidImagesPerResolution "true")</tt>\n
- *    Default false.
- * \parameter ImagePyramidUseShrinkImageFilter: Flag to specify if the ShrinkingImageFilter is used
- *    for rescaling the image, or the ResampleImageFilter. Shrinker is faster.\n
- *    example: <tt>(ImagePyramidUseShrinkImageFilter "true")</tt>\n
- *    Default false, so by default the resampler is used.
+ *    <tt>(MovingImagePyramidSmoothingSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1>
+ * ...)</tt>\n example: <tt>(MovingImagePyramidSmoothingSchedule 4 4 2 2 1 1)</tt>\n Default: 0.5 x rescale_factor x
+ * moving_image_spacing.\n If ImagePyramidSmoothingSchedule is specified, that schedule is used for both moving and
+ * moving image pyramid. \parameter ImagePyramidSmoothingSchedule: smoothing schedule for both pyramids \parameter
+ * ComputePyramidImagesPerResolution: Flag to specify if all resolution levels are computed at once, or per resolution.
+ * Latter saves memory.\n example: <tt>(ComputePyramidImagesPerResolution "true")</tt>\n Default false. \parameter
+ * ImagePyramidUseShrinkImageFilter: Flag to specify if the ShrinkingImageFilter is used for rescaling the image, or the
+ * ResampleImageFilter. Shrinker is faster.\n example: <tt>(ImagePyramidUseShrinkImageFilter "true")</tt>\n Default
+ * false, so by default the resampler is used.
  *
  * \ingroup ImagePyramids
  */
 
-template< class TElastix >
-class MovingGenericPyramid :
-  public itk::GenericMultiResolutionPyramidImageFilter<
-  typename MovingImagePyramidBase< TElastix >::InputImageType,
-  typename MovingImagePyramidBase< TElastix >::OutputImageType >,
-  public MovingImagePyramidBase< TElastix >
+template <class TElastix>
+class MovingGenericPyramid
+  : public itk::GenericMultiResolutionPyramidImageFilter<typename MovingImagePyramidBase<TElastix>::InputImageType,
+                                                         typename MovingImagePyramidBase<TElastix>::OutputImageType>
+  , public MovingImagePyramidBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef MovingGenericPyramid Self;
-  typedef itk::GenericMultiResolutionPyramidImageFilter<
-    typename MovingImagePyramidBase< TElastix >::InputImageType,
-    typename MovingImagePyramidBase< TElastix >::OutputImageType >   Superclass1;
-  typedef MovingImagePyramidBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >          Pointer;
-  typedef itk::SmartPointer< const Self >    ConstPointer;
+  typedef itk::GenericMultiResolutionPyramidImageFilter<typename MovingImagePyramidBase<TElastix>::InputImageType,
+                                                        typename MovingImagePyramidBase<TElastix>::OutputImageType>
+                                           Superclass1;
+  typedef MovingImagePyramidBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>          Pointer;
+  typedef itk::SmartPointer<const Self>    ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MovingGenericPyramid, GenericMultiResolutionPyramidImageFilter );
+  itkTypeMacro(MovingGenericPyramid, GenericMultiResolutionPyramidImageFilter);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific pyramid. \n
    * example: <tt>(MovingImagePyramid "MovingGenericImagePyramid")</tt>\n
    */
-  elxClassNameMacro( "MovingGenericImagePyramid" );
+  elxClassNameMacro("MovingGenericImagePyramid");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::InputImageType         InputImageType;
@@ -124,31 +117,31 @@ public:
   /** Method for setting the schedule. Override from MovingImagePyramidBase,
    * since we now have two schedules, rescaling and smoothing.
    */
-  void SetMovingSchedule( void ) override;
+  void
+  SetMovingSchedule(void) override;
 
   /** Update the current resolution level. */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
   MovingGenericPyramid() {}
   /** The destructor. */
   ~MovingGenericPyramid() override {}
 
 private:
-
   /** The private constructor. */
-  MovingGenericPyramid( const Self & );  // purposely not implemented
+  MovingGenericPyramid(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );        // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMovingGenericPyramid.hxx"
+#  include "elxMovingGenericPyramid.hxx"
 #endif
 
 #endif // end #ifndef __elxMovingGenericPyramid_h

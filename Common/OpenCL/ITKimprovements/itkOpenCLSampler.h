@@ -71,22 +71,26 @@ class OpenCLContext;
 class ITKOpenCL_EXPORT OpenCLSampler
 {
 public:
-
   /** Standard class typedefs. */
   typedef OpenCLSampler Self;
 
   /** Constructs a null OpenCL sampler object. */
-  OpenCLSampler() : m_Context( 0 ), m_Id( 0 ) {}
+  OpenCLSampler()
+    : m_Context(0)
+    , m_Id(0)
+  {}
 
   /** Constructs an OpenCL sampler object from the native identifier \a id.
    * This class takes over ownership of \a id and will release it in
    * the destructor. The sampler \a id will be associated with \a context. */
-  OpenCLSampler( OpenCLContext * context, cl_sampler id ) :
-    m_Context( context ), m_Id( id ) {}
+  OpenCLSampler(OpenCLContext * context, cl_sampler id)
+    : m_Context(context)
+    , m_Id(id)
+  {}
 
   /** Constructs a copy of \a other. The \c{clRetainSampler()} function
-  * will be called to update the reference count on GetSamplerId(). */
-  OpenCLSampler( const OpenCLSampler & other );
+   * will be called to update the reference count on GetSamplerId(). */
+  OpenCLSampler(const OpenCLSampler & other);
 
   /** Releases this OpenCL sampler object by calling \c{clReleaseSampler()}. */
   ~OpenCLSampler();
@@ -94,7 +98,8 @@ public:
   /** Assigns \a other to this OpenCL sampler object. The current samplerId()
    * will be released with \c{clReleaseSampler()}, and the new samplerId()
    * will be retained with \c{clRetainSampler()}. */
-  OpenCLSampler & operator=( const OpenCLSampler & other );
+  OpenCLSampler &
+  operator=(const OpenCLSampler & other);
 
   /** \enum OpenCLSampler::AddressingMode
    * This enum specifies how to handle out-of-range image co-ordinates
@@ -104,12 +109,13 @@ public:
    * \value Clamp Out-of-range requests clamp to the image extents.
    * \value Repeat Repeats the image in a cycle.
    * \value Mirrored Repeats the image in a cycle. */
-  enum AddressingMode {
-    None           = 0x1130, // CL_ADDRESS_NONE
-    ClampToEdge    = 0x1131, // CL_ADDRESS_CLAMP_TO_EDGE
-    Clamp          = 0x1132, // CL_ADDRESS_CLAMP
-    Repeat         = 0x1133, // CL_ADDRESS_REPEAT
-    MirroredRepeat = 0x1134  // CL_ADDRESS_MIRRORED_REPEAT
+  enum AddressingMode
+  {
+    None = 0x1130,          // CL_ADDRESS_NONE
+    ClampToEdge = 0x1131,   // CL_ADDRESS_CLAMP_TO_EDGE
+    Clamp = 0x1132,         // CL_ADDRESS_CLAMP
+    Repeat = 0x1133,        // CL_ADDRESS_REPEAT
+    MirroredRepeat = 0x1134 // CL_ADDRESS_MIRRORED_REPEAT
   };
 
   /** \enum OpenCLSampler::FilterMode
@@ -118,59 +124,74 @@ public:
    * \value Nearest Use the color of the nearest pixel.
    * \value Linear Interpolate linearly between pixel colors to generate
    * intermediate pixel colors. */
-  enum FilterMode {
+  enum FilterMode
+  {
     Nearest = 0x1140, // CL_FILTER_NEAREST
-    Linear  = 0x1141  // CL_FILTER_LINEAR
+    Linear = 0x1141   // CL_FILTER_LINEAR
   };
 
   /** Returns true if this OpenCL sampler object is null, false otherwise.*/
-  bool IsNull() const { return this->m_Id == 0; }
+  bool
+  IsNull() const
+  {
+    return this->m_Id == 0;
+  }
 
   /** Returns true if this sampler is using normalized co-ordinates, false otherwise.
    * \sa GetAddressingMode(), GetFilterMode() */
-  bool GetNormalizedCoordinates() const;
+  bool
+  GetNormalizedCoordinates() const;
 
   /** Returns the addressing mode for out-of-range co-ordinates
    * when reading from an image in OpenCL.
    * \sa GetNormalizedCoordinates(), GetFilterMode() */
-  OpenCLSampler::AddressingMode GetAddressingMode() const;
+  OpenCLSampler::AddressingMode
+  GetAddressingMode() const;
 
   /** Returns the type of filter to apply when reading from an image in OpenCL.
    * \sa GetNormalizedCoordinates(), GetAddressingMode() */
-  OpenCLSampler::FilterMode GetFilterMode() const;
+  OpenCLSampler::FilterMode
+  GetFilterMode() const;
 
   /** Returns the native OpenCL identifier for this sampler;
    * or 0 if the sampler is null. */
-  cl_sampler GetSamplerId() const { return this->m_Id; }
+  cl_sampler
+  GetSamplerId() const
+  {
+    return this->m_Id;
+  }
 
   /** Returns the OpenCL context that this sampler was created for;
    * null if not yet created within a context. */
-  OpenCLContext * GetContext() const { return this->m_Context; }
+  OpenCLContext *
+  GetContext() const
+  {
+    return this->m_Context;
+  }
 
 private:
-
   OpenCLContext * m_Context;
   cl_sampler      m_Id;
 };
 
 /** Operator ==
-* Returns true if \a lhs OpenCL sampler is the same as \a rhs, false otherwise.
-* \sa operator!= */
-bool ITKOpenCL_EXPORT operator==( const OpenCLSampler & lhs, const OpenCLSampler & rhs );
+ * Returns true if \a lhs OpenCL sampler is the same as \a rhs, false otherwise.
+ * \sa operator!= */
+bool ITKOpenCL_EXPORT
+     operator==(const OpenCLSampler & lhs, const OpenCLSampler & rhs);
 
 /** Operator !=
-* Returns true if \a lhs OpenCL sampler is not the same as \a rhs, false otherwise.
-* \sa operator== */
-bool ITKOpenCL_EXPORT operator!=( const OpenCLSampler & lhs, const OpenCLSampler & rhs );
+ * Returns true if \a lhs OpenCL sampler is not the same as \a rhs, false otherwise.
+ * \sa operator== */
+bool ITKOpenCL_EXPORT
+     operator!=(const OpenCLSampler & lhs, const OpenCLSampler & rhs);
 
 /** Stream out operator for OpenCLSampler */
-template< typename charT, typename traits >
-inline
-std::basic_ostream< charT, traits > &
-operator<<( std::basic_ostream< charT, traits > & strm,
-  const OpenCLSampler & sampler )
+template <typename charT, typename traits>
+inline std::basic_ostream<charT, traits> &
+operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLSampler & sampler)
 {
-  if( sampler.IsNull() )
+  if (sampler.IsNull())
   {
     strm << "OpenCLSampler(null)";
     return strm;
@@ -178,8 +199,7 @@ operator<<( std::basic_ostream< charT, traits > & strm,
 
   const char indent = ' ';
 
-  strm << "OpenCLSampler" << std::endl
-       << indent << "Id: " << sampler.GetSamplerId() << std::endl;
+  strm << "OpenCLSampler" << std::endl << indent << "Id: " << sampler.GetSamplerId() << std::endl;
 
   return strm;
 }

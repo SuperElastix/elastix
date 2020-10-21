@@ -39,18 +39,17 @@ namespace elastix
 class ELASTIXLIB_API ELASTIX
 {
 public:
-
-  //typedefs for images
+  // typedefs for images
   typedef itk::DataObject Image;
   typedef Image::Pointer  ImagePointer;
 
-  //typedefs for parameter map
-  typedef itk::ParameterFileParser::ParameterValuesType             ParameterValuesType;
-  typedef itk::ParameterFileParser::ParameterMapType                ParameterMapType;
-  typedef std::vector< itk::ParameterFileParser::ParameterMapType > ParameterMapListType;
+  // typedefs for parameter map
+  typedef itk::ParameterFileParser::ParameterValuesType           ParameterValuesType;
+  typedef itk::ParameterFileParser::ParameterMapType              ParameterMapType;
+  typedef std::vector<itk::ParameterFileParser::ParameterMapType> ParameterMapListType;
 
-  //typedefs for ObjectPointer
-  typedef elastix::ElastixMain::ObjectPointer              ObjectPointer;
+  // typedefs for ObjectPointer
+  typedef elastix::ElastixMain::ObjectPointer ObjectPointer;
 
   /**
    *  Constructor and destructor
@@ -83,42 +82,45 @@ public:
    *    \todo generate file elastix_errors.h containing error codedefines
    *      (e.g. #define ELASTIX_NO_ERROR 0)
    */
-  int RegisterImages( ImagePointer fixedImage,
-    ImagePointer movingImage,
-    const ParameterMapType & parameterMap,
-    const std::string & outputPath,
-    bool performLogging,
-    bool performCout,
-    ImagePointer fixedMask = nullptr,
-    ImagePointer movingMask = nullptr );
+  int
+  RegisterImages(ImagePointer             fixedImage,
+                 ImagePointer             movingImage,
+                 const ParameterMapType & parameterMap,
+                 const std::string &      outputPath,
+                 bool                     performLogging,
+                 bool                     performCout,
+                 ImagePointer             fixedMask = nullptr,
+                 ImagePointer             movingMask = nullptr);
 
-  int RegisterImages( ImagePointer fixedImage,
-    ImagePointer movingImage,
-    const std::vector< ParameterMapType > & parameterMaps,
-    const std::string & outputPath,
-    bool performLogging,
-    bool performCout,
-    ImagePointer fixedMask = nullptr,
-    ImagePointer movingMask = nullptr,
-    ObjectPointer transform = nullptr);
+  int
+  RegisterImages(ImagePointer                          fixedImage,
+                 ImagePointer                          movingImage,
+                 const std::vector<ParameterMapType> & parameterMaps,
+                 const std::string &                   outputPath,
+                 bool                                  performLogging,
+                 bool                                  performCout,
+                 ImagePointer                          fixedMask = nullptr,
+                 ImagePointer                          movingMask = nullptr,
+                 ObjectPointer                         transform = nullptr);
 
   /** Getter for result image. */
-  ImagePointer GetResultImage( void );
+  ImagePointer
+  GetResultImage(void);
 
   /** Get transform parameters of last registration step. */
-  ParameterMapType GetTransformParameterMap( void );
+  ParameterMapType
+  GetTransformParameterMap(void);
 
   /** Get transform parameters of all registration steps. */
-  ParameterMapListType GetTransformParameterMapList( void );
+  ParameterMapListType
+  GetTransformParameterMapList(void);
 
 private:
-
   /* the result images */
   ImagePointer m_ResultImage;
 
   /* Final transformation*/
   ParameterMapListType m_TransformParametersList;
-
 };
 
 // end class ELASTIX

@@ -18,4 +18,4 @@
 
 #include "elxAdaGrad.h"
 
-elxInstallMacro( AdaGrad );
+elxInstallMacro(AdaGrad);

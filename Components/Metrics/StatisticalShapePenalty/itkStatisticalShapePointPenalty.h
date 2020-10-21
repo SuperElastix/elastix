@@ -52,25 +52,21 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 
-template< class TFixedPointSet, class TMovingPointSet >
-class StatisticalShapePointPenalty :
-  public SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
+template <class TFixedPointSet, class TMovingPointSet>
+class StatisticalShapePointPenalty : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef StatisticalShapePointPenalty Self;
-  typedef SingleValuedPointSetToPointSetMetric<
-    TFixedPointSet, TMovingPointSet >               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef StatisticalShapePointPenalty                                          Self;
+  typedef SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet> Superclass;
+  typedef SmartPointer<Self>                                                    Pointer;
+  typedef SmartPointer<const Self>                                              ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StatisticalShapePointPenalty,
-    SingleValuedPointSetToPointSetMetric );
+  itkTypeMacro(StatisticalShapePointPenalty, SingleValuedPointSetToPointSetMetric);
 
   /** Types transferred from the base class */
   typedef typename Superclass::TransformType              TransformType;
@@ -94,125 +90,135 @@ public:
   typedef typename Superclass::OutputPointType OutputPointType;
 
   typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector< CoordRepType >             VnlVectorType;
-  typedef vnl_matrix< CoordRepType >             VnlMatrixType;
-  //typedef itk::Array<VnlVectorType *> ProposalDerivativeType;
-  typedef typename std::vector< VnlVectorType * > ProposalDerivativeType;
-  //typedef typename vnl_vector<VnlVectorType *> ProposalDerivativeType; //Cannot be linked
-  typedef vnl_svd_economy< CoordRepType > PCACovarianceType;
+  typedef vnl_vector<CoordRepType>               VnlVectorType;
+  typedef vnl_matrix<CoordRepType>               VnlMatrixType;
+  // typedef itk::Array<VnlVectorType *> ProposalDerivativeType;
+  typedef typename std::vector<VnlVectorType *> ProposalDerivativeType;
+  // typedef typename vnl_vector<VnlVectorType *> ProposalDerivativeType; //Cannot be linked
+  typedef vnl_svd_economy<CoordRepType> PCACovarianceType;
 
   /** Initialization. */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const override;
+  MeasureType
+  GetValue(const TransformParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
-  void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const override;
+  void
+  GetDerivative(const TransformParametersType & parameters, DerivativeType & Derivative) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const override;
+  void
+  GetValueAndDerivative(const TransformParametersType & parameters,
+                        MeasureType &                   Value,
+                        DerivativeType &                Derivative) const override;
 
   /** Set/Get the shrinkageIntensity parameter. */
-  itkSetClampMacro( ShrinkageIntensity, MeasureType, 0.0, 1.0 );
-  itkGetMacro( ShrinkageIntensity, MeasureType );
+  itkSetClampMacro(ShrinkageIntensity, MeasureType, 0.0, 1.0);
+  itkGetMacro(ShrinkageIntensity, MeasureType);
 
-  itkSetMacro( ShrinkageIntensityNeedsUpdate, bool );
-  itkBooleanMacro( ShrinkageIntensityNeedsUpdate );
+  itkSetMacro(ShrinkageIntensityNeedsUpdate, bool);
+  itkBooleanMacro(ShrinkageIntensityNeedsUpdate);
 
   /** Set/Get the BaseVariance parameter. */
-  itkSetClampMacro( BaseVariance, MeasureType,
-    -1.0, NumericTraits< MeasureType >::max() );
-  itkGetMacro( BaseVariance, MeasureType );
+  itkSetClampMacro(BaseVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
+  itkGetMacro(BaseVariance, MeasureType);
 
-  itkSetMacro( BaseVarianceNeedsUpdate, bool );
-  itkBooleanMacro( BaseVarianceNeedsUpdate );
+  itkSetMacro(BaseVarianceNeedsUpdate, bool);
+  itkBooleanMacro(BaseVarianceNeedsUpdate);
 
-  itkSetClampMacro( CentroidXVariance, MeasureType,
-    -1.0, NumericTraits< MeasureType >::max() );
-  itkGetMacro( CentroidXVariance, MeasureType );
+  itkSetClampMacro(CentroidXVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
+  itkGetMacro(CentroidXVariance, MeasureType);
 
-  itkSetClampMacro( CentroidYVariance, MeasureType,
-    -1.0, NumericTraits< MeasureType >::max() );
-  itkGetMacro( CentroidYVariance, MeasureType );
+  itkSetClampMacro(CentroidYVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
+  itkGetMacro(CentroidYVariance, MeasureType);
 
-  itkSetClampMacro( CentroidZVariance, MeasureType,
-    -1.0, NumericTraits< MeasureType >::max() );
-  itkGetMacro( CentroidZVariance, MeasureType );
+  itkSetClampMacro(CentroidZVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
+  itkGetMacro(CentroidZVariance, MeasureType);
 
-  itkSetClampMacro( SizeVariance, MeasureType,
-    -1.0, NumericTraits< MeasureType >::max() );
-  itkGetMacro( SizeVariance, MeasureType );
+  itkSetClampMacro(SizeVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
+  itkGetMacro(SizeVariance, MeasureType);
 
-  itkSetMacro( VariancesNeedsUpdate, bool );
-  itkBooleanMacro( VariancesNeedsUpdate );
+  itkSetMacro(VariancesNeedsUpdate, bool);
+  itkBooleanMacro(VariancesNeedsUpdate);
 
-  itkSetClampMacro( CutOffValue, MeasureType,
-    0.0, NumericTraits< MeasureType >::max() );
-  itkGetMacro( CutOffValue, MeasureType );
+  itkSetClampMacro(CutOffValue, MeasureType, 0.0, NumericTraits<MeasureType>::max());
+  itkGetMacro(CutOffValue, MeasureType);
 
-  itkSetClampMacro( CutOffSharpness, MeasureType,
-    NumericTraits< MeasureType >::NonpositiveMin(), NumericTraits< MeasureType >::max() );
-  itkGetMacro( CutOffSharpness, MeasureType );
+  itkSetClampMacro(CutOffSharpness,
+                   MeasureType,
+                   NumericTraits<MeasureType>::NonpositiveMin(),
+                   NumericTraits<MeasureType>::max());
+  itkGetMacro(CutOffSharpness, MeasureType);
 
-  itkSetMacro( ShapeModelCalculation, int );
-  itkGetConstReferenceMacro( ShapeModelCalculation, int );
+  itkSetMacro(ShapeModelCalculation, int);
+  itkGetConstReferenceMacro(ShapeModelCalculation, int);
 
-  itkSetMacro( NormalizedShapeModel, bool );
-  itkGetConstReferenceMacro( NormalizedShapeModel, bool );
-  itkBooleanMacro( NormalizedShapeModel );
+  itkSetMacro(NormalizedShapeModel, bool);
+  itkGetConstReferenceMacro(NormalizedShapeModel, bool);
+  itkBooleanMacro(NormalizedShapeModel);
 
-  itkSetConstObjectMacro( EigenVectors, vnl_matrix< double > );
-  itkSetConstObjectMacro( EigenValues, vnl_vector< double > );
-  itkSetConstObjectMacro( MeanVector, vnl_vector< double > );
+  itkSetConstObjectMacro(EigenVectors, vnl_matrix<double>);
+  itkSetConstObjectMacro(EigenValues, vnl_vector<double>);
+  itkSetConstObjectMacro(MeanVector, vnl_vector<double>);
 
-  itkSetConstObjectMacro( CovarianceMatrix, vnl_matrix< double > );
+  itkSetConstObjectMacro(CovarianceMatrix, vnl_matrix<double>);
 
 protected:
-
   StatisticalShapePointPenalty();
   ~StatisticalShapePointPenalty() override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
+  StatisticalShapePointPenalty(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  StatisticalShapePointPenalty( const Self & );  // purposely not implemented
-  void operator=( const Self & );                // purposely not implemented
+  void
+  FillProposalVector(const OutputPointType & fixedPoint, const unsigned int vertexindex) const;
 
-  void FillProposalVector( const OutputPointType & fixedPoint,
-    const unsigned int vertexindex ) const;
+  void
+  FillProposalDerivative(const OutputPointType & fixedPoint, const unsigned int vertexindex) const;
 
-  void FillProposalDerivative( const OutputPointType & fixedPoint,
-    const unsigned int vertexindex ) const;
+  void
+  UpdateCentroidAndAlignProposalVector(const unsigned int shapeLength) const;
 
-  void UpdateCentroidAndAlignProposalVector(
-    const unsigned int shapeLength ) const;
+  void
+  UpdateCentroidAndAlignProposalDerivative(const unsigned int shapeLength) const;
 
-  void UpdateCentroidAndAlignProposalDerivative(
-    const unsigned int shapeLength ) const;
+  void
+  UpdateL2(const unsigned int shapeLength) const;
 
-  void UpdateL2( const unsigned int shapeLength ) const;
+  void
+  NormalizeProposalVector(const unsigned int shapeLength) const;
 
-  void NormalizeProposalVector( const unsigned int shapeLength ) const;
+  void
+  UpdateL2AndNormalizeProposalDerivative(const unsigned int shapeLength) const;
 
-  void UpdateL2AndNormalizeProposalDerivative( const unsigned int shapeLength ) const;
+  void
+  CalculateValue(MeasureType &   value,
+                 VnlVectorType & differenceVector,
+                 VnlVectorType & centerrotated,
+                 VnlVectorType & eigrot) const;
 
-  void CalculateValue( MeasureType & value, VnlVectorType & differenceVector,
-    VnlVectorType & centerrotated, VnlVectorType & eigrot ) const;
+  void
+  CalculateDerivative(DerivativeType &      derivative,
+                      const MeasureType &   value,
+                      const VnlVectorType & differenceVector,
+                      const VnlVectorType & centerrotated,
+                      const VnlVectorType & eigrot,
+                      const unsigned int    shapeLength) const;
 
-  void CalculateDerivative( DerivativeType & derivative, const MeasureType & value,
-    const VnlVectorType & differenceVector, const VnlVectorType & centerrotated,
-    const VnlVectorType & eigrot, const unsigned int shapeLength ) const;
+  void
+  CalculateCutOffValue(MeasureType & value) const;
 
-  void CalculateCutOffValue( MeasureType & value ) const;
-
-  void CalculateCutOffDerivative(
-  typename DerivativeType::element_type & derivativeElement,
-  const MeasureType &value ) const;
+  void
+  CalculateCutOffDerivative(typename DerivativeType::element_type & derivativeElement, const MeasureType & value) const;
 
   const VnlVectorType * m_MeanVector;
   const VnlMatrixType * m_CovarianceMatrix;
@@ -248,13 +254,12 @@ private:
 
   double m_CutOffValue;
   double m_CutOffSharpness;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkStatisticalShapePointPenalty.hxx"
+#  include "itkStatisticalShapePointPenalty.hxx"
 #endif
 
 #endif

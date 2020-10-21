@@ -18,4 +18,4 @@
 
 #include "elxFixedSmoothingPyramid.h"
 
-elxInstallMacro( FixedSmoothingPyramid );
+elxInstallMacro(FixedSmoothingPyramid);

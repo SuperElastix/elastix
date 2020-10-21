@@ -27,11 +27,11 @@ namespace itk
 OpenCLVersion
 OpenCLDevice::GetOpenCLVersion() const
 {
-  if( !this->m_Version )
+  if (!this->m_Version)
   {
-    this->m_Version = opencl_version_flags( opencl_get_device_info_string( this->m_Id, CL_DEVICE_VERSION ) );
+    this->m_Version = opencl_version_flags(opencl_get_device_info_string(this->m_Id, CL_DEVICE_VERSION));
   }
-  return OpenCLVersion( this->m_Version );
+  return OpenCLVersion(this->m_Version);
 }
 
 
@@ -39,7 +39,7 @@ OpenCLDevice::GetOpenCLVersion() const
 std::string
 OpenCLDevice::GetVersion() const
 {
-  return opencl_get_device_info_string( this->m_Id, CL_DEVICE_VERSION );
+  return opencl_get_device_info_string(this->m_Id, CL_DEVICE_VERSION);
 }
 
 
@@ -49,14 +49,13 @@ OpenCLDevice::GetDeviceType() const
 {
   cl_device_type type;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_TYPE, sizeof( type ), &type, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() || clGetDeviceInfo(this->m_Id, CL_DEVICE_TYPE, sizeof(type), &type, 0) != CL_SUCCESS)
   {
-    return OpenCLDevice::DeviceType( 0 );
+    return OpenCLDevice::DeviceType(0);
   }
   else
   {
-    return OpenCLDevice::DeviceType( type );
+    return OpenCLDevice::DeviceType(type);
   }
 }
 
@@ -67,15 +66,13 @@ OpenCLDevice::GetPlatform() const
 {
   cl_platform_id platform;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_PLATFORM, sizeof( platform ),
-    &platform, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() || clGetDeviceInfo(this->m_Id, CL_DEVICE_PLATFORM, sizeof(platform), &platform, 0) != CL_SUCCESS)
   {
     return OpenCLPlatform();
   }
   else
   {
-    return OpenCLPlatform( platform );
+    return OpenCLPlatform(platform);
   }
 }
 
@@ -84,7 +81,7 @@ OpenCLDevice::GetPlatform() const
 unsigned int
 OpenCLDevice::GetVendorId() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_VENDOR_ID );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_VENDOR_ID);
 }
 
 
@@ -92,7 +89,7 @@ OpenCLDevice::GetVendorId() const
 bool
 OpenCLDevice::IsAvailable() const
 {
-  return opencl_get_device_info_bool( this->m_Id, CL_DEVICE_AVAILABLE );
+  return opencl_get_device_info_bool(this->m_Id, CL_DEVICE_AVAILABLE);
 }
 
 
@@ -100,7 +97,7 @@ OpenCLDevice::IsAvailable() const
 bool
 OpenCLDevice::HasCompiler() const
 {
-  return opencl_get_device_info_bool( this->m_Id, CL_DEVICE_COMPILER_AVAILABLE );
+  return opencl_get_device_info_bool(this->m_Id, CL_DEVICE_COMPILER_AVAILABLE);
 }
 
 
@@ -110,15 +107,14 @@ OpenCLDevice::HasNativeKernels() const
 {
   cl_device_exec_capabilities caps;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_EXECUTION_CAPABILITIES,
-    sizeof( caps ), &caps, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() ||
+      clGetDeviceInfo(this->m_Id, CL_DEVICE_EXECUTION_CAPABILITIES, sizeof(caps), &caps, 0) != CL_SUCCESS)
   {
     return false;
   }
   else
   {
-    return ( caps & CL_EXEC_NATIVE_KERNEL ) != 0;
+    return (caps & CL_EXEC_NATIVE_KERNEL) != 0;
   }
 }
 
@@ -129,15 +125,13 @@ OpenCLDevice::HasOutOfOrderExecution() const
 {
   cl_command_queue_properties props;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_QUEUE_PROPERTIES,
-    sizeof( props ), &props, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() || clGetDeviceInfo(this->m_Id, CL_DEVICE_QUEUE_PROPERTIES, sizeof(props), &props, 0) != CL_SUCCESS)
   {
     return false;
   }
   else
   {
-    return ( props & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE ) != 0;
+    return (props & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE) != 0;
   }
 }
 
@@ -146,7 +140,7 @@ OpenCLDevice::HasOutOfOrderExecution() const
 bool
 OpenCLDevice::HasDouble() const
 {
-  return this->HasExtension( "cl_khr_fp64" );
+  return this->HasExtension("cl_khr_fp64");
 }
 
 
@@ -154,7 +148,7 @@ OpenCLDevice::HasDouble() const
 bool
 OpenCLDevice::HasHalfFloat() const
 {
-  return this->HasExtension( "cl_khr_fp16" );
+  return this->HasExtension("cl_khr_fp16");
 }
 
 
@@ -162,7 +156,7 @@ OpenCLDevice::HasHalfFloat() const
 bool
 OpenCLDevice::HasErrorCorrectingMemory() const
 {
-  return opencl_get_device_info_bool( this->m_Id, CL_DEVICE_ERROR_CORRECTION_SUPPORT );
+  return opencl_get_device_info_bool(this->m_Id, CL_DEVICE_ERROR_CORRECTION_SUPPORT);
 }
 
 
@@ -170,7 +164,7 @@ OpenCLDevice::HasErrorCorrectingMemory() const
 bool
 OpenCLDevice::HasUnifiedMemory() const
 {
-  return opencl_get_device_info_bool( this->m_Id, CL_DEVICE_HOST_UNIFIED_MEMORY );
+  return opencl_get_device_info_bool(this->m_Id, CL_DEVICE_HOST_UNIFIED_MEMORY);
 }
 
 
@@ -178,7 +172,7 @@ OpenCLDevice::HasUnifiedMemory() const
 unsigned int
 OpenCLDevice::GetComputeUnits() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MAX_COMPUTE_UNITS );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MAX_COMPUTE_UNITS);
 }
 
 
@@ -186,7 +180,7 @@ OpenCLDevice::GetComputeUnits() const
 unsigned int
 OpenCLDevice::GetClockFrequency() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MAX_CLOCK_FREQUENCY );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MAX_CLOCK_FREQUENCY);
 }
 
 
@@ -194,7 +188,7 @@ OpenCLDevice::GetClockFrequency() const
 unsigned int
 OpenCLDevice::GetAddressBits() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_ADDRESS_BITS );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_ADDRESS_BITS);
 }
 
 
@@ -202,7 +196,7 @@ OpenCLDevice::GetAddressBits() const
 OpenCLDevice::Endian
 OpenCLDevice::GetByteOrder() const
 {
-  if( opencl_get_device_info_bool( this->m_Id, CL_DEVICE_ENDIAN_LITTLE ) )
+  if (opencl_get_device_info_bool(this->m_Id, CL_DEVICE_ENDIAN_LITTLE))
   {
     return OpenCLDevice::LittleEndian;
   }
@@ -219,25 +213,25 @@ OpenCLDevice::GetMaximumWorkItemSize() const
 {
   std::size_t dims = 0;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS,
-    sizeof( dims ), &dims, 0 ) != CL_SUCCESS || !dims )
+  if (this->IsNull() ||
+      clGetDeviceInfo(this->m_Id, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, sizeof(dims), &dims, 0) != CL_SUCCESS || !dims)
   {
-    return OpenCLSize( 1, 1, 1 );
+    return OpenCLSize(1, 1, 1);
   }
 
-  std::vector< std::size_t > buffer( dims );
-  clGetDeviceInfo( this->m_Id, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof( std::size_t ) * dims, &buffer[ 0 ], 0 );
-  if( dims == 1 )
+  std::vector<std::size_t> buffer(dims);
+  clGetDeviceInfo(this->m_Id, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof(std::size_t) * dims, &buffer[0], 0);
+  if (dims == 1)
   {
-    return OpenCLSize( buffer[ 0 ] );
+    return OpenCLSize(buffer[0]);
   }
-  else if( dims == 2 )
+  else if (dims == 2)
   {
-    return OpenCLSize( buffer[ 0 ], buffer[ 1 ] );
+    return OpenCLSize(buffer[0], buffer[1]);
   }
   else
   {
-    return OpenCLSize( buffer[ 0 ], buffer[ 1 ], buffer[ 2 ] );
+    return OpenCLSize(buffer[0], buffer[1], buffer[2]);
   }
 }
 
@@ -246,7 +240,7 @@ OpenCLDevice::GetMaximumWorkItemSize() const
 size_t
 OpenCLDevice::GetMaximumWorkItemsPerGroup() const
 {
-  return opencl_get_device_info_size( this->m_Id, CL_DEVICE_MAX_WORK_GROUP_SIZE );
+  return opencl_get_device_info_size(this->m_Id, CL_DEVICE_MAX_WORK_GROUP_SIZE);
 }
 
 
@@ -254,7 +248,7 @@ OpenCLDevice::GetMaximumWorkItemsPerGroup() const
 bool
 OpenCLDevice::HasImage2D() const
 {
-  return opencl_get_device_info_bool( this->m_Id, CL_DEVICE_IMAGE_SUPPORT );
+  return opencl_get_device_info_bool(this->m_Id, CL_DEVICE_IMAGE_SUPPORT);
 }
 
 
@@ -262,13 +256,13 @@ OpenCLDevice::HasImage2D() const
 bool
 OpenCLDevice::HasImage3D() const
 {
-  if( !opencl_get_device_info_bool( this->m_Id, CL_DEVICE_IMAGE_SUPPORT ) )
+  if (!opencl_get_device_info_bool(this->m_Id, CL_DEVICE_IMAGE_SUPPORT))
   {
     return false;
   }
-  return opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE3D_MAX_WIDTH ) != 0
-         || opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE3D_MAX_HEIGHT ) != 0
-         || opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE3D_MAX_DEPTH ) != 0;
+  return opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE3D_MAX_WIDTH) != 0 ||
+         opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE3D_MAX_HEIGHT) != 0 ||
+         opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE3D_MAX_DEPTH) != 0;
 }
 
 
@@ -276,7 +270,7 @@ OpenCLDevice::HasImage3D() const
 bool
 OpenCLDevice::HasWritableImage3D() const
 {
-  return this->HasExtension( "cl_khr_3d_image_writes" );
+  return this->HasExtension("cl_khr_3d_image_writes");
 }
 
 
@@ -284,12 +278,12 @@ OpenCLDevice::HasWritableImage3D() const
 OpenCLSize
 OpenCLDevice::GetMaximumImage2DSize() const
 {
-  if( !opencl_get_device_info_bool( this->m_Id, CL_DEVICE_IMAGE_SUPPORT ) )
+  if (!opencl_get_device_info_bool(this->m_Id, CL_DEVICE_IMAGE_SUPPORT))
   {
     return OpenCLSize();
   }
-  return OpenCLSize( opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE2D_MAX_WIDTH ),
-    opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE2D_MAX_HEIGHT ) );
+  return OpenCLSize(opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE2D_MAX_WIDTH),
+                    opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE2D_MAX_HEIGHT));
 }
 
 
@@ -297,13 +291,13 @@ OpenCLDevice::GetMaximumImage2DSize() const
 OpenCLSize
 OpenCLDevice::GetMaximumImage3DSize() const
 {
-  if( !opencl_get_device_info_bool( this->m_Id, CL_DEVICE_IMAGE_SUPPORT ) )
+  if (!opencl_get_device_info_bool(this->m_Id, CL_DEVICE_IMAGE_SUPPORT))
   {
-    return OpenCLSize( 0, 0, 0 );
+    return OpenCLSize(0, 0, 0);
   }
-  return OpenCLSize( opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE3D_MAX_WIDTH ),
-    opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE3D_MAX_HEIGHT ),
-    opencl_get_device_info_size( this->m_Id, CL_DEVICE_IMAGE3D_MAX_DEPTH ) );
+  return OpenCLSize(opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE3D_MAX_WIDTH),
+                    opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE3D_MAX_HEIGHT),
+                    opencl_get_device_info_size(this->m_Id, CL_DEVICE_IMAGE3D_MAX_DEPTH));
 }
 
 
@@ -311,11 +305,11 @@ OpenCLDevice::GetMaximumImage3DSize() const
 unsigned int
 OpenCLDevice::GetMaximumSamplers() const
 {
-  if( !opencl_get_device_info_bool( this->m_Id, CL_DEVICE_IMAGE_SUPPORT ) )
+  if (!opencl_get_device_info_bool(this->m_Id, CL_DEVICE_IMAGE_SUPPORT))
   {
     return 0;
   }
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MAX_SAMPLERS );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MAX_SAMPLERS);
 }
 
 
@@ -323,11 +317,11 @@ OpenCLDevice::GetMaximumSamplers() const
 unsigned int
 OpenCLDevice::GetMaximumReadImages() const
 {
-  if( !opencl_get_device_info_bool( this->m_Id, CL_DEVICE_IMAGE_SUPPORT ) )
+  if (!opencl_get_device_info_bool(this->m_Id, CL_DEVICE_IMAGE_SUPPORT))
   {
     return 0;
   }
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MAX_READ_IMAGE_ARGS );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MAX_READ_IMAGE_ARGS);
 }
 
 
@@ -335,11 +329,11 @@ OpenCLDevice::GetMaximumReadImages() const
 unsigned int
 OpenCLDevice::GetMaximumWriteImages() const
 {
-  if( !opencl_get_device_info_bool( this->m_Id, CL_DEVICE_IMAGE_SUPPORT ) )
+  if (!opencl_get_device_info_bool(this->m_Id, CL_DEVICE_IMAGE_SUPPORT))
   {
     return 0;
   }
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MAX_WRITE_IMAGE_ARGS );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MAX_WRITE_IMAGE_ARGS);
 }
 
 
@@ -347,7 +341,7 @@ OpenCLDevice::GetMaximumWriteImages() const
 unsigned int
 OpenCLDevice::GetPreferredCharVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR);
 }
 
 
@@ -355,7 +349,7 @@ OpenCLDevice::GetPreferredCharVectorSize() const
 unsigned int
 OpenCLDevice::GetPreferredShortVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT);
 }
 
 
@@ -363,7 +357,7 @@ OpenCLDevice::GetPreferredShortVectorSize() const
 unsigned int
 OpenCLDevice::GetPreferredIntVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT);
 }
 
 
@@ -371,7 +365,7 @@ OpenCLDevice::GetPreferredIntVectorSize() const
 unsigned int
 OpenCLDevice::GetPreferredLongVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG);
 }
 
 
@@ -379,7 +373,7 @@ OpenCLDevice::GetPreferredLongVectorSize() const
 unsigned int
 OpenCLDevice::GetPreferredFloatVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT);
 }
 
 
@@ -387,7 +381,7 @@ OpenCLDevice::GetPreferredFloatVectorSize() const
 unsigned int
 OpenCLDevice::GetPreferredDoubleVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE);
 }
 
 
@@ -395,7 +389,7 @@ OpenCLDevice::GetPreferredDoubleVectorSize() const
 unsigned int
 OpenCLDevice::GetPreferredHalfFloatVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF);
 }
 
 
@@ -403,7 +397,7 @@ OpenCLDevice::GetPreferredHalfFloatVectorSize() const
 unsigned int
 OpenCLDevice::GetNativeCharVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR);
 }
 
 
@@ -411,7 +405,7 @@ OpenCLDevice::GetNativeCharVectorSize() const
 unsigned int
 OpenCLDevice::GetNativeShortVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT);
 }
 
 
@@ -419,7 +413,7 @@ OpenCLDevice::GetNativeShortVectorSize() const
 unsigned int
 OpenCLDevice::GetNativeIntVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_INT );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_INT);
 }
 
 
@@ -427,7 +421,7 @@ OpenCLDevice::GetNativeIntVectorSize() const
 unsigned int
 OpenCLDevice::GetNativeLongVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG);
 }
 
 
@@ -435,7 +429,7 @@ OpenCLDevice::GetNativeLongVectorSize() const
 unsigned int
 OpenCLDevice::GetNativeFloatVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT);
 }
 
 
@@ -443,7 +437,7 @@ OpenCLDevice::GetNativeFloatVectorSize() const
 unsigned int
 OpenCLDevice::GetNativeDoubleVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE);
 }
 
 
@@ -451,7 +445,7 @@ OpenCLDevice::GetNativeDoubleVectorSize() const
 unsigned int
 OpenCLDevice::GetNativeHalfFloatVectorSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF);
 }
 
 
@@ -461,15 +455,14 @@ OpenCLDevice::GetFloatCapabilities() const
 {
   cl_device_fp_config config;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_SINGLE_FP_CONFIG,
-    sizeof( config ), &config, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() ||
+      clGetDeviceInfo(this->m_Id, CL_DEVICE_SINGLE_FP_CONFIG, sizeof(config), &config, 0) != CL_SUCCESS)
   {
     return NotSupported;
   }
   else
   {
-    return OpenCLDevice::FloatCapability( config );
+    return OpenCLDevice::FloatCapability(config);
   }
 }
 
@@ -480,15 +473,14 @@ OpenCLDevice::GetDoubleCapabilities() const
 {
   cl_device_fp_config config;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_DOUBLE_FP_CONFIG,
-    sizeof( config ), &config, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() ||
+      clGetDeviceInfo(this->m_Id, CL_DEVICE_DOUBLE_FP_CONFIG, sizeof(config), &config, 0) != CL_SUCCESS)
   {
     return NotSupported;
   }
   else
   {
-    return OpenCLDevice::FloatCapability( config );
+    return OpenCLDevice::FloatCapability(config);
   }
 }
 
@@ -499,15 +491,13 @@ OpenCLDevice::GetHalfFloatCapabilities() const
 {
   cl_device_fp_config config;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_HALF_FP_CONFIG,
-    sizeof( config ), &config, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() || clGetDeviceInfo(this->m_Id, CL_DEVICE_HALF_FP_CONFIG, sizeof(config), &config, 0) != CL_SUCCESS)
   {
     return NotSupported;
   }
   else
   {
-    return OpenCLDevice::FloatCapability( config );
+    return OpenCLDevice::FloatCapability(config);
   }
 }
 
@@ -516,7 +506,7 @@ OpenCLDevice::GetHalfFloatCapabilities() const
 std::size_t
 OpenCLDevice::GetProfilingTimerResolution() const
 {
-  return opencl_get_device_info_size( this->m_Id, CL_DEVICE_PROFILING_TIMER_RESOLUTION );
+  return opencl_get_device_info_size(this->m_Id, CL_DEVICE_PROFILING_TIMER_RESOLUTION);
 }
 
 
@@ -524,7 +514,7 @@ OpenCLDevice::GetProfilingTimerResolution() const
 unsigned long
 OpenCLDevice::GetMaximumAllocationSize() const
 {
-  return opencl_get_device_info_ulong( this->m_Id, CL_DEVICE_MAX_MEM_ALLOC_SIZE );
+  return opencl_get_device_info_ulong(this->m_Id, CL_DEVICE_MAX_MEM_ALLOC_SIZE);
 }
 
 
@@ -532,7 +522,7 @@ OpenCLDevice::GetMaximumAllocationSize() const
 unsigned long
 OpenCLDevice::GetGlobalMemorySize() const
 {
-  return opencl_get_device_info_ulong( this->m_Id, CL_DEVICE_GLOBAL_MEM_SIZE );
+  return opencl_get_device_info_ulong(this->m_Id, CL_DEVICE_GLOBAL_MEM_SIZE);
 }
 
 
@@ -542,15 +532,14 @@ OpenCLDevice::GetGlobalMemoryCacheType() const
 {
   cl_device_mem_cache_type type;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_GLOBAL_MEM_CACHE_TYPE,
-    sizeof( type ), &type, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() ||
+      clGetDeviceInfo(this->m_Id, CL_DEVICE_GLOBAL_MEM_CACHE_TYPE, sizeof(type), &type, 0) != CL_SUCCESS)
   {
     return NoCache;
   }
   else
   {
-    return OpenCLDevice::CacheType( type );
+    return OpenCLDevice::CacheType(type);
   }
 }
 
@@ -559,7 +548,7 @@ OpenCLDevice::GetGlobalMemoryCacheType() const
 unsigned long
 OpenCLDevice::GetGlobalMemoryCacheSize() const
 {
-  return opencl_get_device_info_ulong( this->m_Id, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE );
+  return opencl_get_device_info_ulong(this->m_Id, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE);
 }
 
 
@@ -567,7 +556,7 @@ OpenCLDevice::GetGlobalMemoryCacheSize() const
 unsigned int
 OpenCLDevice::GetGlobalMemoryCacheLineSize() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE);
 }
 
 
@@ -575,7 +564,7 @@ OpenCLDevice::GetGlobalMemoryCacheLineSize() const
 unsigned long
 OpenCLDevice::GetLocalMemorySize() const
 {
-  return opencl_get_device_info_ulong( this->m_Id, CL_DEVICE_LOCAL_MEM_SIZE );
+  return opencl_get_device_info_ulong(this->m_Id, CL_DEVICE_LOCAL_MEM_SIZE);
 }
 
 
@@ -585,9 +574,7 @@ OpenCLDevice::IsLocalMemorySeparate() const
 {
   cl_device_local_mem_type type;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_LOCAL_MEM_TYPE,
-    sizeof( type ), &type, 0 )
-    != CL_SUCCESS )
+  if (this->IsNull() || clGetDeviceInfo(this->m_Id, CL_DEVICE_LOCAL_MEM_TYPE, sizeof(type), &type, 0) != CL_SUCCESS)
   {
     return false;
   }
@@ -602,7 +589,7 @@ OpenCLDevice::IsLocalMemorySeparate() const
 unsigned long
 OpenCLDevice::GetMaximumConstantBufferSize() const
 {
-  return opencl_get_device_info_ulong( this->m_Id, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE );
+  return opencl_get_device_info_ulong(this->m_Id, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE);
 }
 
 
@@ -610,7 +597,7 @@ OpenCLDevice::GetMaximumConstantBufferSize() const
 unsigned int
 OpenCLDevice::GetMaximumConstantArguments() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MAX_CONSTANT_ARGS );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MAX_CONSTANT_ARGS);
 }
 
 
@@ -618,7 +605,7 @@ OpenCLDevice::GetMaximumConstantArguments() const
 unsigned int
 OpenCLDevice::GetDefaultAlignment() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MEM_BASE_ADDR_ALIGN ) / 8;
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MEM_BASE_ADDR_ALIGN) / 8;
 }
 
 
@@ -626,7 +613,7 @@ OpenCLDevice::GetDefaultAlignment() const
 unsigned int
 OpenCLDevice::GetMinimumAlignment() const
 {
-  return opencl_get_device_info_uint( this->m_Id, CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE );
+  return opencl_get_device_info_uint(this->m_Id, CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE);
 }
 
 
@@ -634,7 +621,7 @@ OpenCLDevice::GetMinimumAlignment() const
 std::size_t
 OpenCLDevice::GetMaximumParameterBytes() const
 {
-  return opencl_get_device_info_size( this->m_Id, CL_DEVICE_MAX_PARAMETER_SIZE );
+  return opencl_get_device_info_size(this->m_Id, CL_DEVICE_MAX_PARAMETER_SIZE);
 }
 
 
@@ -642,7 +629,7 @@ OpenCLDevice::GetMaximumParameterBytes() const
 bool
 OpenCLDevice::IsFullProfile() const
 {
-  return opencl_get_device_info_is_string( this->m_Id, CL_DEVICE_PROFILE, "FULL_PROFILE" );
+  return opencl_get_device_info_is_string(this->m_Id, CL_DEVICE_PROFILE, "FULL_PROFILE");
 }
 
 
@@ -650,7 +637,7 @@ OpenCLDevice::IsFullProfile() const
 bool
 OpenCLDevice::IsEmbeddedProfile() const
 {
-  return opencl_get_device_info_is_string( this->m_Id, CL_DEVICE_PROFILE, "EMBEDDED_PROFILE" );
+  return opencl_get_device_info_is_string(this->m_Id, CL_DEVICE_PROFILE, "EMBEDDED_PROFILE");
 }
 
 
@@ -658,7 +645,7 @@ OpenCLDevice::IsEmbeddedProfile() const
 std::string
 OpenCLDevice::GetProfile() const
 {
-  return opencl_get_device_info_string( this->m_Id, CL_DEVICE_PROFILE );
+  return opencl_get_device_info_string(this->m_Id, CL_DEVICE_PROFILE);
 }
 
 
@@ -666,7 +653,7 @@ OpenCLDevice::GetProfile() const
 std::string
 OpenCLDevice::GetDriverVersion() const
 {
-  return opencl_get_device_info_string( this->m_Id, CL_DRIVER_VERSION );
+  return opencl_get_device_info_string(this->m_Id, CL_DRIVER_VERSION);
 }
 
 
@@ -674,7 +661,7 @@ OpenCLDevice::GetDriverVersion() const
 std::string
 OpenCLDevice::GetName() const
 {
-  return opencl_get_device_info_string( this->m_Id, CL_DEVICE_NAME );
+  return opencl_get_device_info_string(this->m_Id, CL_DEVICE_NAME);
 }
 
 
@@ -682,25 +669,26 @@ OpenCLDevice::GetName() const
 std::string
 OpenCLDevice::GetVendor() const
 {
-  return opencl_get_device_info_string( this->m_Id, CL_DEVICE_VENDOR );
+  return opencl_get_device_info_string(this->m_Id, CL_DEVICE_VENDOR);
 }
 
 
 //------------------------------------------------------------------------------
-std::list< std::string > OpenCLDevice::GetExtensions() const
+std::list<std::string>
+OpenCLDevice::GetExtensions() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
-    return std::list< std::string >();
+    return std::list<std::string>();
   }
-  const std::string extensions = opencl_simplified( opencl_get_device_info_string( this->m_Id, CL_DEVICE_EXTENSIONS ) );
-  if( !extensions.empty() )
+  const std::string extensions = opencl_simplified(opencl_get_device_info_string(this->m_Id, CL_DEVICE_EXTENSIONS));
+  if (!extensions.empty())
   {
-    return opencl_split_string( extensions, ' ' );
+    return opencl_split_string(extensions, ' ');
   }
   else
   {
-    return std::list< std::string >();
+    return std::list<std::string>();
   }
 }
 
@@ -709,9 +697,9 @@ std::list< std::string > OpenCLDevice::GetExtensions() const
 std::string
 OpenCLDevice::GetLanguageVersion() const
 {
-  std::string vers = opencl_get_device_info_string( this->m_Id, CL_DEVICE_OPENCL_C_VERSION );
+  std::string vers = opencl_get_device_info_string(this->m_Id, CL_DEVICE_OPENCL_C_VERSION);
 
-  if( vers.empty() && !( this->GetOpenCLVersion() & VERSION_1_1 ) )
+  if (vers.empty() && !(this->GetOpenCLVersion() & VERSION_1_1))
   {
     vers = "OpenCL 1.0";
   }
@@ -721,39 +709,40 @@ OpenCLDevice::GetLanguageVersion() const
 
 //------------------------------------------------------------------------------
 bool
-OpenCLDevice::HasExtension( const std::string & name ) const
+OpenCLDevice::HasExtension(const std::string & name) const
 {
   std::size_t size;
 
-  if( this->IsNull() || clGetDeviceInfo( this->m_Id, CL_DEVICE_EXTENSIONS, 0, 0, &size ) != CL_SUCCESS )
+  if (this->IsNull() || clGetDeviceInfo(this->m_Id, CL_DEVICE_EXTENSIONS, 0, 0, &size) != CL_SUCCESS)
   {
     return false;
   }
-  std::string buffer( size, '\0' );
-  clGetDeviceInfo( this->m_Id, CL_DEVICE_EXTENSIONS, size, &buffer[ 0 ], &size );
-  return opencl_has_extension( buffer, name );
+  std::string buffer(size, '\0');
+  clGetDeviceInfo(this->m_Id, CL_DEVICE_EXTENSIONS, size, &buffer[0], &size);
+  return opencl_has_extension(buffer, name);
 }
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLDevice > OpenCLDevice::GetAllDevices()
+std::list<OpenCLDevice>
+OpenCLDevice::GetAllDevices()
 {
-  const std::list< itk::OpenCLPlatform > platforms = OpenCLPlatform::GetAllPlatforms();
-  std::list< OpenCLDevice >              devices;
+  const std::list<itk::OpenCLPlatform> platforms = OpenCLPlatform::GetAllPlatforms();
+  std::list<OpenCLDevice>              devices;
 
-  for( std::list< itk::OpenCLPlatform >::const_iterator platform = platforms.begin();
-    platform != platforms.end(); ++platform )
+  for (std::list<itk::OpenCLPlatform>::const_iterator platform = platforms.begin(); platform != platforms.end();
+       ++platform)
   {
     cl_uint size;
-    if( clGetDeviceIDs( ( *platform ).GetPlatformId(), CL_DEVICE_TYPE_ALL, 0, 0, &size ) != CL_SUCCESS )
+    if (clGetDeviceIDs((*platform).GetPlatformId(), CL_DEVICE_TYPE_ALL, 0, 0, &size) != CL_SUCCESS)
     {
       continue;
     }
-    std::vector< cl_device_id > buffer( size );
-    clGetDeviceIDs( ( *platform ).GetPlatformId(), CL_DEVICE_TYPE_ALL, size, &buffer[ 0 ], &size );
-    for( std::vector< cl_device_id >::iterator device = buffer.begin(); device != buffer.end(); ++device )
+    std::vector<cl_device_id> buffer(size);
+    clGetDeviceIDs((*platform).GetPlatformId(), CL_DEVICE_TYPE_ALL, size, &buffer[0], &size);
+    for (std::vector<cl_device_id>::iterator device = buffer.begin(); device != buffer.end(); ++device)
     {
-      devices.push_back( OpenCLDevice( *device ) );
+      devices.push_back(OpenCLDevice(*device));
     }
   }
   return devices;
@@ -761,38 +750,36 @@ std::list< OpenCLDevice > OpenCLDevice::GetAllDevices()
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLDevice > OpenCLDevice::GetDevices( const OpenCLDevice::DeviceType types,
-  const OpenCLPlatform & platform )
+std::list<OpenCLDevice>
+OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType types, const OpenCLPlatform & platform)
 {
-  std::list< OpenCLDevice >   devices;
-  std::list< OpenCLPlatform > platforms;
+  std::list<OpenCLDevice>   devices;
+  std::list<OpenCLPlatform> platforms;
 
-  if( platform.IsNull() )
+  if (platform.IsNull())
   {
     platforms = OpenCLPlatform::GetAllPlatforms();
   }
   else
   {
-    platforms.push_back( platform );
+    platforms.push_back(platform);
   }
-  for( std::list< itk::OpenCLPlatform >::iterator platform = platforms.begin();
-    platform != platforms.end(); ++platform )
+  for (std::list<itk::OpenCLPlatform>::iterator platform = platforms.begin(); platform != platforms.end(); ++platform)
   {
     cl_uint size;
-    if( clGetDeviceIDs( ( *platform ).GetPlatformId(), cl_device_type( types ), 0, 0, &size ) != CL_SUCCESS )
+    if (clGetDeviceIDs((*platform).GetPlatformId(), cl_device_type(types), 0, 0, &size) != CL_SUCCESS)
     {
       continue;
     }
-    if( !size )
+    if (!size)
     {
       continue;
     }
-    std::vector< cl_device_id > buffer( size );
-    clGetDeviceIDs( ( *platform ).GetPlatformId(), cl_device_type( types ),
-      size, &buffer[ 0 ], &size );
-    for( std::vector< cl_device_id >::iterator device = buffer.begin(); device != buffer.end(); ++device )
+    std::vector<cl_device_id> buffer(size);
+    clGetDeviceIDs((*platform).GetPlatformId(), cl_device_type(types), size, &buffer[0], &size);
+    for (std::vector<cl_device_id>::iterator device = buffer.begin(); device != buffer.end(); ++device)
     {
-      devices.push_back( OpenCLDevice( *device ) );
+      devices.push_back(OpenCLDevice(*device));
     }
     break;
   }
@@ -801,24 +788,24 @@ std::list< OpenCLDevice > OpenCLDevice::GetDevices( const OpenCLDevice::DeviceTy
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLDevice > OpenCLDevice::GetDevices( const OpenCLDevice::DeviceType type,
-  const OpenCLPlatform::VendorType vendor )
+std::list<OpenCLDevice>
+OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType type, const OpenCLPlatform::VendorType vendor)
 {
-  const OpenCLPlatform platform = OpenCLPlatform::GetPlatform( vendor );
+  const OpenCLPlatform platform = OpenCLPlatform::GetPlatform(vendor);
 
-  if( platform.IsNull() )
+  if (platform.IsNull())
   {
-    return std::list< OpenCLDevice >();
+    return std::list<OpenCLDevice>();
   }
   else
   {
-    const std::list< itk::OpenCLDevice > allDevices = itk::OpenCLDevice::GetDevices( type, platform );
-    std::list< OpenCLDevice >            devices;
-    for( std::list< itk::OpenCLDevice >::const_iterator dev = allDevices.begin(); dev != allDevices.end(); ++dev )
+    const std::list<itk::OpenCLDevice> allDevices = itk::OpenCLDevice::GetDevices(type, platform);
+    std::list<OpenCLDevice>            devices;
+    for (std::list<itk::OpenCLDevice>::const_iterator dev = allDevices.begin(); dev != allDevices.end(); ++dev)
     {
-      if( ( ( *dev ).GetDeviceType() & type ) != 0 )
+      if (((*dev).GetDeviceType() & type) != 0)
       {
-        devices.push_back( *dev );
+        devices.push_back(*dev);
       }
     }
     return devices;
@@ -828,93 +815,91 @@ std::list< OpenCLDevice > OpenCLDevice::GetDevices( const OpenCLDevice::DeviceTy
 
 //------------------------------------------------------------------------------
 OpenCLDevice
-OpenCLDevice::GetMaximumFlopsDevice( const std::list< OpenCLDevice > & devices,
-  const OpenCLDevice::DeviceType type )
+OpenCLDevice::GetMaximumFlopsDevice(const std::list<OpenCLDevice> & devices, const OpenCLDevice::DeviceType type)
 {
-  if( devices.empty() )
+  if (devices.empty())
   {
     return OpenCLDevice();
   }
 
   // Find the device that has maximum Flops
   int          maxFlops = 0;
-  cl_device_id id       = 0;
-  for( std::list< OpenCLDevice >::const_iterator device = devices.begin(); device != devices.end(); ++device )
+  cl_device_id id = 0;
+  for (std::list<OpenCLDevice>::const_iterator device = devices.begin(); device != devices.end(); ++device)
   {
-    int deviceFlops = ( *device ).GetComputeUnits() * ( *device ).GetClockFrequency();
-    if( deviceFlops > maxFlops && ( ( *device ).GetDeviceType() == type ) )
+    int deviceFlops = (*device).GetComputeUnits() * (*device).GetClockFrequency();
+    if (deviceFlops > maxFlops && ((*device).GetDeviceType() == type))
     {
       maxFlops = deviceFlops;
-      id       = ( *device ).GetDeviceId();
+      id = (*device).GetDeviceId();
     }
   }
 
-  return OpenCLDevice( id );
+  return OpenCLDevice(id);
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLDevice
-OpenCLDevice::GetMaximumFlopsDevice( const OpenCLDevice::DeviceType type )
+OpenCLDevice::GetMaximumFlopsDevice(const OpenCLDevice::DeviceType type)
 {
-  const std::list< OpenCLDevice > devices = itk::OpenCLDevice::GetAllDevices();
+  const std::list<OpenCLDevice> devices = itk::OpenCLDevice::GetAllDevices();
 
-  return GetMaximumFlopsDevice( devices, type );
+  return GetMaximumFlopsDevice(devices, type);
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLDevice
-OpenCLDevice::GetMaximumFlopsDeviceByVendor( const OpenCLDevice::DeviceType type,
-  const OpenCLPlatform::VendorType vendor )
+OpenCLDevice::GetMaximumFlopsDeviceByVendor(const OpenCLDevice::DeviceType   type,
+                                            const OpenCLPlatform::VendorType vendor)
 {
-  const std::list< OpenCLDevice > devices = itk::OpenCLDevice::GetDevices( type, vendor );
+  const std::list<OpenCLDevice> devices = itk::OpenCLDevice::GetDevices(type, vendor);
 
-  return GetMaximumFlopsDevice( devices, type );
+  return GetMaximumFlopsDevice(devices, type);
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLDevice
-OpenCLDevice::GetMaximumFlopsDeviceByPlatform( const OpenCLDevice::DeviceType types,
-  const OpenCLPlatform & platform )
+OpenCLDevice::GetMaximumFlopsDeviceByPlatform(const OpenCLDevice::DeviceType types, const OpenCLPlatform & platform)
 {
-  const std::list< OpenCLDevice > devices = itk::OpenCLDevice::GetDevices( types, platform );
+  const std::list<OpenCLDevice> devices = itk::OpenCLDevice::GetDevices(types, platform);
 
-  return GetMaximumFlopsDevice( devices, types );
+  return GetMaximumFlopsDevice(devices, types);
 }
 
 
 //------------------------------------------------------------------------------
-std::list< OpenCLDevice > OpenCLDevice::GetMaximumFlopsDevices( const OpenCLDevice::DeviceType type,
-  const OpenCLPlatform & platform )
+std::list<OpenCLDevice>
+OpenCLDevice::GetMaximumFlopsDevices(const OpenCLDevice::DeviceType type, const OpenCLPlatform & platform)
 {
-  const std::list< OpenCLDevice > allDevices = itk::OpenCLDevice::GetDevices( type, platform );
+  const std::list<OpenCLDevice> allDevices = itk::OpenCLDevice::GetDevices(type, platform);
 
-  if( allDevices.empty() )
+  if (allDevices.empty())
   {
-    return std::list< OpenCLDevice >();
+    return std::list<OpenCLDevice>();
   }
 
   // Find the device that has maximum Flops
-  typedef std::pair< std::size_t, cl_device_id > DeviceType;
-  typedef std::set< DeviceType >                 MaximumFlopsDevicesType;
-  MaximumFlopsDevicesType maximumFlopsDevices;
-  for( std::list< OpenCLDevice >::const_iterator device = allDevices.begin(); device != allDevices.end(); ++device )
+  typedef std::pair<std::size_t, cl_device_id> DeviceType;
+  typedef std::set<DeviceType>                 MaximumFlopsDevicesType;
+  MaximumFlopsDevicesType                      maximumFlopsDevices;
+  for (std::list<OpenCLDevice>::const_iterator device = allDevices.begin(); device != allDevices.end(); ++device)
   {
-    int        deviceFlops = ( *device ).GetComputeUnits() * ( *device ).GetClockFrequency();
-    DeviceType deviceWithFlops( deviceFlops, ( *device ).GetDeviceId() );
-    maximumFlopsDevices.insert( deviceWithFlops );
+    int        deviceFlops = (*device).GetComputeUnits() * (*device).GetClockFrequency();
+    DeviceType deviceWithFlops(deviceFlops, (*device).GetDeviceId());
+    maximumFlopsDevices.insert(deviceWithFlops);
   }
 
   // Combine result
-  std::list< OpenCLDevice > devices;
-  for( MaximumFlopsDevicesType::const_reverse_iterator rit = maximumFlopsDevices.rbegin();
-    rit != maximumFlopsDevices.rend();
-    ++rit )
+  std::list<OpenCLDevice> devices;
+  for (MaximumFlopsDevicesType::const_reverse_iterator rit = maximumFlopsDevices.rbegin();
+       rit != maximumFlopsDevices.rend();
+       ++rit)
   {
-    OpenCLDevice device( ( *rit ).second );
-    devices.push_back( device );
+    OpenCLDevice device((*rit).second);
+    devices.push_back(device);
   }
 
   return devices;
@@ -924,9 +909,9 @@ std::list< OpenCLDevice > OpenCLDevice::GetMaximumFlopsDevices( const OpenCLDevi
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLDevice & lhs, const OpenCLDevice & rhs )
+operator==(const OpenCLDevice & lhs, const OpenCLDevice & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
@@ -937,9 +922,9 @@ operator==( const OpenCLDevice & lhs, const OpenCLDevice & rhs )
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLDevice & lhs, const OpenCLDevice & rhs )
+operator!=(const OpenCLDevice & lhs, const OpenCLDevice & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

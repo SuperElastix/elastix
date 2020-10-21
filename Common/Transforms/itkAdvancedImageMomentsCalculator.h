@@ -62,15 +62,15 @@ namespace itk
  * \todo It's not yet clear how multi-echo images should be handled here.
  * \ingroup ITKImageStatistics
  */
-template< typename TImage >
+template <typename TImage>
 class AdvancedImageMomentsCalculator : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedImageMomentsCalculator< TImage > Self;
-  typedef Object                           Superclass;
-  typedef SmartPointer< Self >             Pointer;
-  typedef SmartPointer< const Self >       ConstPointer;
+  typedef AdvancedImageMomentsCalculator<TImage> Self;
+  typedef Object                                 Superclass;
+  typedef SmartPointer<Self>                     Pointer;
+  typedef SmartPointer<const Self>               ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -79,26 +79,23 @@ public:
   itkTypeMacro(AdvancedImageMomentsCalculator, Object);
 
   /** Extract the dimension of the image. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TImage::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** Standard scalar type within this class. */
   typedef double ScalarType;
 
   /** Standard vector type within this class. */
-  typedef Vector< ScalarType, itkGetStaticConstMacro(ImageDimension) > VectorType;
+  typedef Vector<ScalarType, itkGetStaticConstMacro(ImageDimension)> VectorType;
 
   /** Spatial Object type within this class. */
-  typedef SpatialObject< itkGetStaticConstMacro(ImageDimension) > SpatialObjectType;
+  typedef SpatialObject<itkGetStaticConstMacro(ImageDimension)> SpatialObjectType;
 
   /** Spatial Object member types used within this class. */
   typedef typename SpatialObjectType::Pointer      SpatialObjectPointer;
   typedef typename SpatialObjectType::ConstPointer SpatialObjectConstPointer;
 
   /** Standard matrix type within this class. */
-  typedef Matrix< ScalarType,
-                  itkGetStaticConstMacro(ImageDimension),
-                  itkGetStaticConstMacro(ImageDimension) >   MatrixType;
+  typedef Matrix<ScalarType, itkGetStaticConstMacro(ImageDimension), itkGetStaticConstMacro(ImageDimension)> MatrixType;
 
   /** Standard image type within this class. */
   typedef TImage ImageType;
@@ -108,29 +105,31 @@ public:
   typedef typename ImageType::ConstPointer ImageConstPointer;
 
   /** Affine transform for mapping to and from principal axis */
-  typedef AffineTransform< double, itkGetStaticConstMacro(ImageDimension) > AffineTransformType;
-  typedef typename AffineTransformType::Pointer                             AffineTransformPointer;
+  typedef AffineTransform<double, itkGetStaticConstMacro(ImageDimension)> AffineTransformType;
+  typedef typename AffineTransformType::Pointer                           AffineTransformPointer;
 
   /** Set the input image. */
-  virtual void SetImage(const ImageType *image)
+  virtual void
+  SetImage(const ImageType * image)
   {
-    if ( m_Image != image )
-      {
+    if (m_Image != image)
+    {
       m_Image = image;
       this->Modified();
       m_Valid = false;
-      }
+    }
   }
 
   /** Set the spatial object mask. */
-  virtual void SetSpatialObjectMask(const SpatialObject< itkGetStaticConstMacro(ImageDimension) > *so)
+  virtual void
+  SetSpatialObjectMask(const SpatialObject<itkGetStaticConstMacro(ImageDimension)> * so)
   {
-    if ( m_SpatialObjectMask != so )
-      {
+    if (m_SpatialObjectMask != so)
+    {
       m_SpatialObjectMask = so;
       this->Modified();
       m_Valid = false;
-      }
+    }
   }
 
   /** Compute moments of a new or modified image.
@@ -139,41 +138,48 @@ public:
    * moments and related parameters can then be retrieved by using
    * other methods of this object. */
   /** The multi-threading implementation. */
-  void Compute();
+  void
+  Compute();
 
   /** The main functions that performs the single thread computation. */
-  void ComputeSingleThreaded();
+  void
+  ComputeSingleThreaded();
   /** Return the total mass (or zeroth moment) of an image.
    * This method returns the sum of pixel intensities (also known as
    * the zeroth moment or the total mass) of the image whose moments
    * were last computed by this object. */
-  ScalarType GetTotalMass() const;
+  ScalarType
+  GetTotalMass() const;
 
   /** Return first moments about origin, in index coordinates.
    * This method returns the first moments around the origin of the
    * image whose moments were last computed by this object.  For
    * simplicity, these moments are computed in index coordinates
    * rather than physical coordinates. */
-  VectorType GetFirstMoments() const;
+  VectorType
+  GetFirstMoments() const;
 
   /** Return second moments about origin, in index coordinates.
    * This method returns the second moments around the origin
    * of the image whose moments were last computed by this object.
    * For simplicity, these moments are computed in index coordinates
    * rather than physical coordinates. */
-  MatrixType GetSecondMoments() const;
+  MatrixType
+  GetSecondMoments() const;
 
   /** Return center of gravity, in physical coordinates.
    * This method returns the center of gravity of the image whose
    * moments were last computed by this object.  The center of
    * gravity is computed in physical coordinates. */
-  VectorType GetCenterOfGravity() const;
+  VectorType
+  GetCenterOfGravity() const;
 
   /** Return second central moments, in physical coordinates.
    * This method returns the central second moments of the image
    * whose moments were last computed by this object.  The central
    * moments are computed in physical coordinates. */
-  MatrixType GetCentralMoments() const;
+  MatrixType
+  GetCentralMoments() const;
 
   /** Return principal moments, in physical coordinates.
    * This method returns the principal moments of the image whose
@@ -181,7 +187,8 @@ public:
    * returned as a vector, with the principal moments ordered from
    * smallest to largest.  The moments are computed in physical
    * coordinates.   */
-  VectorType GetPrincipalMoments() const;
+  VectorType
+  GetPrincipalMoments() const;
 
   /** Return principal axes, in physical coordinates.
    * This method returns the principal axes of the image whose
@@ -195,67 +202,78 @@ public:
    * have foolishly made one or more of the spacing values negative;
    * in that case, _you_ get to figure out the consequences.)  The
    * moments are computed in physical coordinates. */
-  MatrixType GetPrincipalAxes() const;
+  MatrixType
+  GetPrincipalAxes() const;
 
   /** Get the affine transform from principal axes to physical axes
    * This method returns an affine transform which transforms from
    * the principal axes coordinate system to physical coordinates. */
-  AffineTransformPointer GetPrincipalAxesToPhysicalAxesTransform() const;
+  AffineTransformPointer
+  GetPrincipalAxesToPhysicalAxesTransform() const;
 
   /** Get the affine transform from physical axes to principal axes
    * This method returns an affine transform which transforms from
    * the physical coordinate system to the principal axes coordinate
    * system. */
-  AffineTransformPointer GetPhysicalAxesToPrincipalAxesTransform() const;
+  AffineTransformPointer
+  GetPhysicalAxesToPrincipalAxesTransform() const;
 
   /** Set the number of threads. */
-  void SetNumberOfWorkUnits(ThreadIdType numberOfThreads)
+  void
+  SetNumberOfWorkUnits(ThreadIdType numberOfThreads)
   {
     this->m_Threader->SetNumberOfWorkUnits(numberOfThreads);
   }
 
-  virtual void BeforeThreadedCompute( void );
+  virtual void
+  BeforeThreadedCompute(void);
 
-  virtual void AfterThreadedCompute( void );
+  virtual void
+  AfterThreadedCompute(void);
 
-  typedef itk::ImageGridSampler< ImageType >     ImageGridSamplerType;
-//  typedef itk::ImageFullSampler< ImageType >     ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer ImageGridSamplerPointer;
-  typedef typename ImageGridSamplerType
-    ::ImageSampleContainerType                   ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
+  typedef itk::ImageGridSampler<ImageType> ImageGridSamplerType;
+  //  typedef itk::ImageFullSampler< ImageType >     ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer                   ImageGridSamplerPointer;
+  typedef typename ImageGridSamplerType ::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer               ImageSampleContainerPointer;
 
-  virtual void SampleImage(ImageSampleContainerPointer & sampleContainer);
+  virtual void
+  SampleImage(ImageSampleContainerPointer & sampleContainer);
 
-  typedef itk::BinaryThresholdImageFilter < TImage, TImage >             BinaryThresholdImageFilterType;
-  typedef typename TImage::PixelType  InputPixelType;
+  typedef itk::BinaryThresholdImageFilter<TImage, TImage> BinaryThresholdImageFilterType;
+  typedef typename TImage::PixelType                      InputPixelType;
 
   /** Set some parameters. */
-  itkSetMacro( NumberOfSamplesForCenteredTransformInitialization, SizeValueType );
-  itkSetMacro( LowerThresholdForCenterGravity, InputPixelType );
-  itkSetMacro( CenterOfGravityUsesLowerThreshold, bool );
+  itkSetMacro(NumberOfSamplesForCenteredTransformInitialization, SizeValueType);
+  itkSetMacro(LowerThresholdForCenterGravity, InputPixelType);
+  itkSetMacro(CenterOfGravityUsesLowerThreshold, bool);
 
 protected:
   AdvancedImageMomentsCalculator();
   ~AdvancedImageMomentsCalculator() override;
-  void PrintSelf(std::ostream & os, Indent indent) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::PlatformMultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader ThreaderType;
   typedef ThreaderType::WorkUnitInfo ThreadInfoType;
-  ThreaderType::Pointer                   m_Threader;
+  ThreaderType::Pointer              m_Threader;
 
   /** Launch MultiThread Compute. */
-  void LaunchComputeThreaderCallback(void) const;
+  void
+  LaunchComputeThreaderCallback(void) const;
 
   /** Compute threader callback function. */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ComputeThreaderCallback(void * arg);
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ComputeThreaderCallback(void * arg);
 
   /** The threaded implementation of Compute(). */
-  virtual inline void ThreadedCompute(ThreadIdType threadID);
+  virtual inline void
+  ThreadedCompute(ThreadIdType threadID);
 
   /** Initialize some multi-threading related parameters. */
-  virtual void InitializeThreadingParameters(void);
+  virtual void
+  InitializeThreadingParameters(void);
 
   /** To give the threads access to all member variables and functions. */
   struct MultiThreaderParameterType
@@ -267,55 +285,55 @@ protected:
   struct ComputePerThreadStruct
   {
     /**  Used for accumulating variables. */
-    ScalarType st_M0;                   // Zeroth moment for threading
-    VectorType st_M1;                   // First moments about origin for threading
-    MatrixType st_M2;                   // Second moments about origin for threading
-    VectorType st_Cg;                   // Center of gravity (physical units) for threading
-    MatrixType st_Cm;                   // Second central moments (physical) for threading
+    ScalarType    st_M0; // Zeroth moment for threading
+    VectorType    st_M1; // First moments about origin for threading
+    MatrixType    st_M2; // Second moments about origin for threading
+    VectorType    st_Cg; // Center of gravity (physical units) for threading
+    MatrixType    st_Cm; // Second central moments (physical) for threading
     SizeValueType st_NumberOfPixelsCounted;
   };
-  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, ComputePerThreadStruct,
-    PaddedComputePerThreadStruct);
-  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct,
-    AlignedComputePerThreadStruct);
+  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, ComputePerThreadStruct, PaddedComputePerThreadStruct);
+  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct, AlignedComputePerThreadStruct);
   mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
   mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
-  bool                        m_UseMultiThread;
-  SizeValueType               m_NumberOfPixelsCounted;
+  bool                                    m_UseMultiThread;
+  SizeValueType                           m_NumberOfPixelsCounted;
 
   /** The type of region used for multithreading */
   typedef typename ImageType::RegionType ThreadRegionType;
 
-  SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;
-  InputPixelType m_LowerThresholdForCenterGravity;
-  bool           m_CenterOfGravityUsesLowerThreshold;
+  SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization;
+  InputPixelType              m_LowerThresholdForCenterGravity;
+  bool                        m_CenterOfGravityUsesLowerThreshold;
   ImageSampleContainerPointer m_SampleContainer;
 
 private:
   /** Internal helper function. Does post processing at the end of
    * ComputeSingleThreaded() and AfterThreadedCompute() */
-  void DoPostProcessing();
+  void
+  DoPostProcessing();
 
-  AdvancedImageMomentsCalculator( const Self & );
-  void operator = ( const Self & );
+  AdvancedImageMomentsCalculator(const Self &);
+  void
+  operator=(const Self &);
 
-  bool       m_Valid;                // Have moments been computed yet?
-  ScalarType m_M0;                   // Zeroth moment
-  VectorType m_M1;                   // First moments about origin
-  MatrixType m_M2;                   // Second moments about origin
-  VectorType m_Cg;                   // Center of gravity (physical units)
-  MatrixType m_Cm;                   // Second central moments (physical)
-  VectorType m_Pm;                   // Principal moments (physical)
-  MatrixType m_Pa;                   // Principal axes (physical)
+  bool       m_Valid; // Have moments been computed yet?
+  ScalarType m_M0;    // Zeroth moment
+  VectorType m_M1;    // First moments about origin
+  MatrixType m_M2;    // Second moments about origin
+  VectorType m_Cg;    // Center of gravity (physical units)
+  MatrixType m_Cm;    // Second central moments (physical)
+  VectorType m_Pm;    // Principal moments (physical)
+  MatrixType m_Pa;    // Principal axes (physical)
 
   ImageConstPointer         m_Image;
   SpatialObjectConstPointer m_SpatialObjectMask;
 
-};  // class AdvancedImageMomentsCalculator
+}; // class AdvancedImageMomentsCalculator
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedImageMomentsCalculator.hxx"
+#  include "itkAdvancedImageMomentsCalculator.hxx"
 #endif
 
 #endif /* itkAdvancedImageMomentsCalculator_h */

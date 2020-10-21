@@ -32,22 +32,21 @@ namespace itk
  * \ingroup ANNwrap
  */
 
-template< class TListSample >
-class ANNkDTree : public BinaryANNTreeBase< TListSample >
+template <class TListSample>
+class ANNkDTree : public BinaryANNTreeBase<TListSample>
 {
 public:
-
   /** Standard itk. */
-  typedef ANNkDTree                        Self;
-  typedef BinaryANNTreeBase< TListSample > Superclass;
-  typedef SmartPointer< Self >             Pointer;
-  typedef SmartPointer< const Self >       ConstPointer;
+  typedef ANNkDTree                      Self;
+  typedef BinaryANNTreeBase<TListSample> Superclass;
+  typedef SmartPointer<Self>             Pointer;
+  typedef SmartPointer<const Self>       ConstPointer;
 
   /** New method for creating an object using a factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** ITK type info. */
-  itkTypeMacro( ANNkDTree, BinaryANNTreeBase );
+  itkTypeMacro(ANNkDTree, BinaryANNTreeBase);
 
   /** Typedef's from Superclass. */
   typedef typename Superclass::SampleType                 SampleType;
@@ -62,34 +61,37 @@ public:
   typedef unsigned int BucketSizeType;
 
   /** Set and get the bucket size: the number of points in a region/bucket. */
-  itkSetMacro( BucketSize, BucketSizeType );
-  itkGetConstMacro( BucketSize, BucketSizeType );
+  itkSetMacro(BucketSize, BucketSizeType);
+  itkGetConstMacro(BucketSize, BucketSizeType);
 
   /** Set and get the splitting rule: it defines how the space is divided. */
-  itkSetMacro( SplittingRule, SplittingRuleType );
-  itkGetConstMacro( SplittingRule, SplittingRuleType );
-  void SetSplittingRule( std::string rule );
+  itkSetMacro(SplittingRule, SplittingRuleType);
+  itkGetConstMacro(SplittingRule, SplittingRuleType);
+  void
+  SetSplittingRule(std::string rule);
 
-  std::string GetSplittingRule( void );
+  std::string
+  GetSplittingRule(void);
 
   /** Set the maximum number of points that are to be visited. */
-  //void SetMaximumNumberOfPointsToVisit( unsigned int num )
+  // void SetMaximumNumberOfPointsToVisit( unsigned int num )
   //{
   //  annMaxPtsVisit( static_cast<int>( num ) );
   //}
 
   /** Generate the tree. */
-  void GenerateTree( void ) override;
+  void
+  GenerateTree(void) override;
 
   /** Get the ANN tree. */
-  ANNPointSetType * GetANNTree( void ) const override
+  ANNPointSetType *
+  GetANNTree(void) const override
   {
     return this->m_ANNTree;
   }
 
 
 protected:
-
   /** Constructor. */
   ANNkDTree();
 
@@ -97,7 +99,8 @@ protected:
   ~ANNkDTree() override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
   ANNkDTreeType *   m_ANNTree;
@@ -105,16 +108,15 @@ protected:
   BucketSizeType    m_BucketSize;
 
 private:
-
-  ANNkDTree( const Self & );        // purposely not implemented
-  void operator=( const Self & );   // purposely not implemented
-
+  ANNkDTree(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkANNkDTree.hxx"
+#  include "itkANNkDTree.hxx"
 #endif
 
 #endif // end #ifndef __itkANNkDTree_h

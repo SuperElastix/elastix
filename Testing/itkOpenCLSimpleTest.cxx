@@ -23,51 +23,51 @@
 // This test is mainly to test CMake generating process when two kernels are
 // merged into one source code see OpenCLSimpleTestKernel.cxx
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   try
   {
-    std::list< itk::OpenCLDevice > devices;
-    itk::OpenCLContext::Pointer    context = itk::OpenCLContext::GetInstance();
-    context->Create( itk::OpenCLContext::DevelopmentMultipleMaximumFlopsDevices );
+    std::list<itk::OpenCLDevice> devices;
+    itk::OpenCLContext::Pointer  context = itk::OpenCLContext::GetInstance();
+    context->Create(itk::OpenCLContext::DevelopmentMultipleMaximumFlopsDevices);
     devices = context->GetDevices();
 
-    itk::OpenCLProgram programAllGPU = context->BuildProgramFromSourceCode( devices,
-      itk::OpenCLSimpleTest1Kernel::GetOpenCLSource() );
+    itk::OpenCLProgram programAllGPU =
+      context->BuildProgramFromSourceCode(devices, itk::OpenCLSimpleTest1Kernel::GetOpenCLSource());
 
-    if( context.IsNull() )
+    if (context.IsNull())
     {
-      if( context->GetDefaultDevice().HasCompiler() )
+      if (context->GetDefaultDevice().HasCompiler())
       {
-        itkGenericExceptionMacro( << "Could not compile the OpenCL test program" );
+        itkGenericExceptionMacro(<< "Could not compile the OpenCL test program");
       }
       else
       {
-        itkGenericExceptionMacro( << "OpenCL implementation does not have a compiler" );
+        itkGenericExceptionMacro(<< "OpenCL implementation does not have a compiler");
       }
     }
     context->Release();
 
     // Create context with maximum flops
-    context->Create( itk::OpenCLContext::SingleMaximumFlopsDevice );
+    context->Create(itk::OpenCLContext::SingleMaximumFlopsDevice);
     devices = context->GetDevices();
-    itk::OpenCLProgram programMaxFlops = context->BuildProgramFromSourceCode( devices,
-      itk::OpenCLSimpleTest2Kernel::GetOpenCLSource() );
+    itk::OpenCLProgram programMaxFlops =
+      context->BuildProgramFromSourceCode(devices, itk::OpenCLSimpleTest2Kernel::GetOpenCLSource());
 
-    if( programMaxFlops.IsNull() )
+    if (programMaxFlops.IsNull())
     {
-      if( context->GetDefaultDevice().HasCompiler() )
+      if (context->GetDefaultDevice().HasCompiler())
       {
-        itkGenericExceptionMacro( << "Could not compile the OpenCL test program" );
+        itkGenericExceptionMacro(<< "Could not compile the OpenCL test program");
       }
       else
       {
-        itkGenericExceptionMacro( << "OpenCL implementation does not have a compiler" );
+        itkGenericExceptionMacro(<< "OpenCL implementation does not have a compiler");
       }
     }
     context->Release();
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
     itk::ReleaseContext();

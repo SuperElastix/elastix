@@ -18,4 +18,4 @@
 
 #include "elxGridSampler.h"
 
-elxInstallMacro( GridSampler );
+elxInstallMacro(GridSampler);

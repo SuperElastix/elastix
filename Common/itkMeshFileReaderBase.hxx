@@ -30,9 +30,8 @@ namespace itk
  * **************** Constructor ***************
  */
 
-template< class TOutputMesh >
-MeshFileReaderBase< TOutputMesh >
-::MeshFileReaderBase()
+template <class TOutputMesh>
+MeshFileReaderBase<TOutputMesh>::MeshFileReaderBase()
 {
   this->m_FileName = "";
 } // end constructor
@@ -42,34 +41,32 @@ MeshFileReaderBase< TOutputMesh >
  * ***************GenerateOutputInformation ***********
  */
 
-template< class TOutputMesh >
+template <class TOutputMesh>
 void
-MeshFileReaderBase< TOutputMesh >
-::GenerateOutputInformation( void )
+MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation(void)
 {
   OutputMeshPointer output = this->GetOutput();
 
-  itkDebugMacro( << "Reading file for GenerateOutputInformation(): " << this->m_FileName );
+  itkDebugMacro(<< "Reading file for GenerateOutputInformation(): " << this->m_FileName);
 
   /** Check to see if we can read the file given the name or prefix */
-  if( this->m_FileName == "" )
+  if (this->m_FileName == "")
   {
-    throw MeshFileReaderException( __FILE__, __LINE__,
-      "FileName must be specified", ITK_LOCATION );
+    throw MeshFileReaderException(__FILE__, __LINE__, "FileName must be specified", ITK_LOCATION);
   }
 
   /** Test if the file exist and if it can be open.
    * and exception will be thrown otherwise. */
   this->TestFileExistanceAndReadability();
 
-  //Copy MetaDataDictionary from instantiated reader to output mesh?
-  //output->SetMetaDataDictionary(m_ImageIO->GetMetaDataDictionary());
-  //this->SetMetaDataDictionary(m_ImageIO->GetMetaDataDictionary());
+  // Copy MetaDataDictionary from instantiated reader to output mesh?
+  // output->SetMetaDataDictionary(m_ImageIO->GetMetaDataDictionary());
+  // this->SetMetaDataDictionary(m_ImageIO->GetMetaDataDictionary());
 
   // This makes not really sense i think.
-  //MeshRegionType region;
+  // MeshRegionType region;
   // region = ?
-  //output->SetLargestPossibleRegion(region);
+  // output->SetLargestPossibleRegion(region);
 
 } // end GenerateOutputInformation()
 
@@ -78,39 +75,32 @@ MeshFileReaderBase< TOutputMesh >
  * *************TestFileExistanceAndReadability ***********
  */
 
-template< class TOutputMesh >
+template <class TOutputMesh>
 void
-MeshFileReaderBase< TOutputMesh >
-::TestFileExistanceAndReadability( void )
+MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability(void)
 {
   // Test if the file exists.
-  if( !itksys::SystemTools::FileExists( this->m_FileName.c_str() ) )
+  if (!itksys::SystemTools::FileExists(this->m_FileName.c_str()))
   {
-    MeshFileReaderException e( __FILE__, __LINE__ );
+    MeshFileReaderException e(__FILE__, __LINE__);
     std::ostringstream      msg;
-    msg << "The file doesn't exists. "
-        << std::endl << "Filename = " << this->m_FileName
-        << std::endl;
-    e.SetDescription( msg.str().c_str() );
+    msg << "The file doesn't exists. " << std::endl << "Filename = " << this->m_FileName << std::endl;
+    e.SetDescription(msg.str().c_str());
     throw e;
     return;
   }
 
   // Test if the file can be open for reading access.
   std::ifstream readTester;
-  readTester.open( this->m_FileName.c_str() );
-  if( readTester.fail() )
+  readTester.open(this->m_FileName.c_str());
+  if (readTester.fail())
   {
     readTester.close();
     std::ostringstream msg;
-    msg << "The file couldn't be opened for reading. "
-        << std::endl << "Filename: " << this->m_FileName
-        << std::endl;
-    MeshFileReaderException e( __FILE__, __LINE__,
-    msg.str().c_str(), ITK_LOCATION );
+    msg << "The file couldn't be opened for reading. " << std::endl << "Filename: " << this->m_FileName << std::endl;
+    MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
     throw e;
     return;
-
   }
   readTester.close();
 
@@ -121,21 +111,19 @@ MeshFileReaderBase< TOutputMesh >
  * **************EnlargeOutputRequestedRegion***********
  */
 
-template< class TOutputMesh >
+template <class TOutputMesh>
 void
-MeshFileReaderBase< TOutputMesh >
-::EnlargeOutputRequestedRegion( DataObject * output )
+MeshFileReaderBase<TOutputMesh>::EnlargeOutputRequestedRegion(DataObject * output)
 {
-  OutputMeshPointer out = dynamic_cast< OutputMeshType * >( output );
+  OutputMeshPointer out = dynamic_cast<OutputMeshType *>(output);
 
-  if( out )
+  if (out)
   {
     out->SetRequestedRegionToLargestPossibleRegion();
   }
   else
   {
-    throw  MeshFileReaderException( __FILE__, __LINE__,
-      "Invalid output object type" );
+    throw MeshFileReaderException(__FILE__, __LINE__, "Invalid output object type");
   }
 
 } // end EnlargeOutputRequestedRegion()

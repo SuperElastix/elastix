@@ -52,93 +52,96 @@ namespace itk
  * \sa FiniteDifferenceGradientDescent
  */
 
-class FiniteDifferenceGradientDescentOptimizer :
-  public ScaledSingleValuedNonLinearOptimizer
+class FiniteDifferenceGradientDescentOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-
   /** Standard class typedefs. */
   typedef FiniteDifferenceGradientDescentOptimizer Self;
   typedef ScaledSingleValuedNonLinearOptimizer     Superclass;
-  typedef SmartPointer< Self >                     Pointer;
-  typedef SmartPointer< const Self >               ConstPointer;
+  typedef SmartPointer<Self>                       Pointer;
+  typedef SmartPointer<const Self>                 ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FiniteDifferenceGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer );
+  itkTypeMacro(FiniteDifferenceGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer);
 
   /** Codes of stopping conditions */
-  typedef enum {
+  typedef enum
+  {
     MaximumNumberOfIterations,
     MetricError
   } StopConditionType;
 
   /** Advance one step following the gradient direction. */
-  virtual void AdvanceOneStep( void );
+  virtual void
+  AdvanceOneStep(void);
 
   /** Start optimization. */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Resume previously stopped optimization with current parameters
-  * \sa StopOptimization. */
-  void ResumeOptimization( void );
+   * \sa StopOptimization. */
+  void
+  ResumeOptimization(void);
 
   /** Stop optimization.
-  * \sa ResumeOptimization */
-  void StopOptimization( void );
+   * \sa ResumeOptimization */
+  void
+  StopOptimization(void);
 
   /** Set the number of iterations. */
-  itkSetMacro( NumberOfIterations, unsigned long );
+  itkSetMacro(NumberOfIterations, unsigned long);
 
   /** Get the number of iterations. */
-  itkGetConstMacro( NumberOfIterations, unsigned long );
+  itkGetConstMacro(NumberOfIterations, unsigned long);
 
   /** Get the current iteration number. */
-  itkGetConstMacro( CurrentIteration, unsigned long );
+  itkGetConstMacro(CurrentIteration, unsigned long);
 
   /** Get the current value. */
-  itkGetConstMacro( Value, double );
+  itkGetConstMacro(Value, double);
 
   /** Get Stop condition. */
-  itkGetConstMacro( StopCondition, StopConditionType );
+  itkGetConstMacro(StopCondition, StopConditionType);
 
   /** Set/Get a. */
-  itkSetMacro( Param_a, double );
-  itkGetMacro( Param_a, double );
+  itkSetMacro(Param_a, double);
+  itkGetMacro(Param_a, double);
 
   /** Set/Get c. */
-  itkSetMacro( Param_c, double );
-  itkGetMacro( Param_c, double );
+  itkSetMacro(Param_c, double);
+  itkGetMacro(Param_c, double);
 
   /** Set/Get A. */
-  itkSetMacro( Param_A, double );
-  itkGetMacro( Param_A, double );
+  itkSetMacro(Param_A, double);
+  itkGetMacro(Param_A, double);
 
   /** Set/Get alpha. */
-  itkSetMacro( Param_alpha, double );
-  itkGetMacro( Param_alpha, double );
+  itkSetMacro(Param_alpha, double);
+  itkGetMacro(Param_alpha, double);
 
   /** Set/Get gamma. */
-  itkSetMacro( Param_gamma, double );
-  itkGetMacro( Param_gamma, double );
+  itkSetMacro(Param_gamma, double);
+  itkGetMacro(Param_gamma, double);
 
-  itkGetConstMacro( ComputeCurrentValue, bool );
-  itkSetMacro( ComputeCurrentValue, bool );
-  itkBooleanMacro( ComputeCurrentValue );
+  itkGetConstMacro(ComputeCurrentValue, bool);
+  itkSetMacro(ComputeCurrentValue, bool);
+  itkBooleanMacro(ComputeCurrentValue);
 
   /** Get the CurrentStepLength, GradientMagnitude and LearningRate (a_k) */
-  itkGetConstMacro( GradientMagnitude, double );
-  itkGetConstMacro( LearningRate, double );
+  itkGetConstMacro(GradientMagnitude, double);
+  itkGetConstMacro(LearningRate, double);
 
 protected:
-
   FiniteDifferenceGradientDescentOptimizer();
   ~FiniteDifferenceGradientDescentOptimizer() override {}
 
   /** PrintSelf method.*/
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   // made protected so subclass can access
   DerivativeType m_Gradient;
@@ -146,21 +149,23 @@ protected:
   double         m_GradientMagnitude;
 
   /** Boolean that says if the current value of
-  * the metric has to be computed. This is not
-  * necessary for optimisation; just nice for
-  * progress information.
-  */
+   * the metric has to be computed. This is not
+   * necessary for optimisation; just nice for
+   * progress information.
+   */
   bool m_ComputeCurrentValue;
 
   // Functions to compute the parameters at iteration k.
-  virtual double Compute_a( unsigned long k ) const;
+  virtual double
+  Compute_a(unsigned long k) const;
 
-  virtual double Compute_c( unsigned long k ) const;
+  virtual double
+  Compute_c(unsigned long k) const;
 
 private:
-
-  FiniteDifferenceGradientDescentOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );                           // purposely not implemented
+  FiniteDifferenceGradientDescentOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Private member variables.*/
   bool              m_Stop;
@@ -175,7 +180,6 @@ private:
   double m_Param_A;
   double m_Param_alpha;
   double m_Param_gamma;
-
 };
 
 } // end namespace itk

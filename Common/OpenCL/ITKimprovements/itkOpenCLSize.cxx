@@ -21,11 +21,11 @@
 namespace itk
 {
 static std::size_t
-opencl_gcd_of_size( std::size_t x, std::size_t y )
+opencl_gcd_of_size(std::size_t x, std::size_t y)
 {
   std::size_t remainder;
 
-  while( ( remainder = x % y ) != 0 )
+  while ((remainder = x % y) != 0)
   {
     x = y;
     y = remainder;
@@ -40,83 +40,81 @@ const OpenCLSize::Null OpenCLSize::null = {};
 bool
 OpenCLSize::IsZero() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return true;
   }
 
-  if( this->m_Dim == 1 )
+  if (this->m_Dim == 1)
   {
-    return ( this->m_Sizes[ 0 ] == 0 );
+    return (this->m_Sizes[0] == 0);
   }
-  else if( this->m_Dim == 2 )
+  else if (this->m_Dim == 2)
   {
-    return ( this->m_Sizes[ 0 ] == 0 && this->m_Sizes[ 1 ] == 0 );
+    return (this->m_Sizes[0] == 0 && this->m_Sizes[1] == 0);
   }
   else
   {
-    return ( this->m_Sizes[ 0 ] == 0 && this->m_Sizes[ 1 ] == 0 && this->m_Sizes[ 2 ] == 0 );
+    return (this->m_Sizes[0] == 0 && this->m_Sizes[1] == 0 && this->m_Sizes[2] == 0);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLSize
-OpenCLSize::GetLocalWorkSize( const OpenCLSize & maxWorkItemSize,
-  const std::size_t maxItemsPerGroup )
+OpenCLSize::GetLocalWorkSize(const OpenCLSize & maxWorkItemSize, const std::size_t maxItemsPerGroup)
 {
   // Get sizes and dimension
-  const std::size_t * sizes     = maxWorkItemSize.GetSizes();
+  const std::size_t * sizes = maxWorkItemSize.GetSizes();
   const std::size_t   dimension = maxWorkItemSize.GetDimension();
 
   // Adjust for the maximum work item size in each dimension.
-  std::size_t width  = dimension >= 1 ? opencl_gcd_of_size( sizes[ 0 ], maxWorkItemSize.GetWidth() ) : 1;
-  std::size_t height = dimension >= 2 ? opencl_gcd_of_size( sizes[ 1 ], maxWorkItemSize.GetHeight() ) : 1;
-  std::size_t depth  = dimension >= 3 ? opencl_gcd_of_size( sizes[ 2 ], maxWorkItemSize.GetDepth() ) : 1;
+  std::size_t width = dimension >= 1 ? opencl_gcd_of_size(sizes[0], maxWorkItemSize.GetWidth()) : 1;
+  std::size_t height = dimension >= 2 ? opencl_gcd_of_size(sizes[1], maxWorkItemSize.GetHeight()) : 1;
+  std::size_t depth = dimension >= 3 ? opencl_gcd_of_size(sizes[2], maxWorkItemSize.GetDepth()) : 1;
 
   // Reduce in size by a factor of 2 until underneath the maximum group size.
-  while( maxItemsPerGroup && ( width * height * depth ) > maxItemsPerGroup )
+  while (maxItemsPerGroup && (width * height * depth) > maxItemsPerGroup)
   {
-    width  = ( width > 1 ) ? ( width / 2 ) : 1;
-    height = ( height > 1 ) ? ( height / 2 ) : 1;
-    depth  = ( depth > 1 ) ? ( depth / 2 ) : 1;
+    width = (width > 1) ? (width / 2) : 1;
+    height = (height > 1) ? (height / 2) : 1;
+    depth = (depth > 1) ? (depth / 2) : 1;
   }
 
   // Return the final result.
-  if( dimension >= 3 )
+  if (dimension >= 3)
   {
-    return OpenCLSize( width, height, depth );
+    return OpenCLSize(width, height, depth);
   }
-  else if( dimension >= 2 )
+  else if (dimension >= 2)
   {
-    return OpenCLSize( width, height );
+    return OpenCLSize(width, height);
   }
   else
   {
-    return OpenCLSize( width );
+    return OpenCLSize(width);
   }
 }
 
 
 //------------------------------------------------------------------------------
 OpenCLSize
-OpenCLSize::GetLocalWorkSize( const OpenCLDevice & device )
+OpenCLSize::GetLocalWorkSize(const OpenCLDevice & device)
 {
-  return GetLocalWorkSize( device.GetMaximumWorkItemSize(),
-    device.GetMaximumWorkItemsPerGroup() );
+  return GetLocalWorkSize(device.GetMaximumWorkItemSize(), device.GetMaximumWorkItemsPerGroup());
 }
 
 
 //------------------------------------------------------------------------------
 static inline std::size_t
-opencl_cl_round_to( const std::size_t value, const std::size_t multiple )
+opencl_cl_round_to(const std::size_t value, const std::size_t multiple)
 {
-  if( multiple <= 1 )
+  if (multiple <= 1)
   {
     return value;
   }
   std::size_t remainder = value % multiple;
-  if( !remainder )
+  if (!remainder)
   {
     return value;
   }
@@ -129,22 +127,22 @@ opencl_cl_round_to( const std::size_t value, const std::size_t multiple )
 
 //------------------------------------------------------------------------------
 OpenCLSize
-OpenCLSize::RoundTo( const OpenCLSize & size ) const
+OpenCLSize::RoundTo(const OpenCLSize & size) const
 {
-  if( this->m_Dim == 1 )
+  if (this->m_Dim == 1)
   {
-    return OpenCLSize( opencl_cl_round_to( this->m_Sizes[ 0 ], size.m_Sizes[ 0 ] ) );
+    return OpenCLSize(opencl_cl_round_to(this->m_Sizes[0], size.m_Sizes[0]));
   }
-  else if( this->m_Dim == 2 )
+  else if (this->m_Dim == 2)
   {
-    return OpenCLSize( opencl_cl_round_to( this->m_Sizes[ 0 ], size.m_Sizes[ 0 ] ),
-      opencl_cl_round_to( this->m_Sizes[ 1 ], size.m_Sizes[ 1 ] ) );
+    return OpenCLSize(opencl_cl_round_to(this->m_Sizes[0], size.m_Sizes[0]),
+                      opencl_cl_round_to(this->m_Sizes[1], size.m_Sizes[1]));
   }
   else
   {
-    return OpenCLSize( opencl_cl_round_to( this->m_Sizes[ 0 ], size.m_Sizes[ 0 ] ),
-      opencl_cl_round_to( this->m_Sizes[ 1 ], size.m_Sizes[ 1 ] ),
-      opencl_cl_round_to( this->m_Sizes[ 2 ], size.m_Sizes[ 2 ] ) );
+    return OpenCLSize(opencl_cl_round_to(this->m_Sizes[0], size.m_Sizes[0]),
+                      opencl_cl_round_to(this->m_Sizes[1], size.m_Sizes[1]),
+                      opencl_cl_round_to(this->m_Sizes[2], size.m_Sizes[2]));
   }
 }
 
@@ -152,26 +150,24 @@ OpenCLSize::RoundTo( const OpenCLSize & size ) const
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLSize & lhs, const OpenCLSize & rhs )
+operator==(const OpenCLSize & lhs, const OpenCLSize & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
 
-  return lhs.GetDimension() == rhs.GetDimension()
-         && lhs.GetWidth() == rhs.GetWidth()
-         && lhs.GetHeight() == rhs.GetHeight()
-         && lhs.GetDepth() == rhs.GetDepth();
+  return lhs.GetDimension() == rhs.GetDimension() && lhs.GetWidth() == rhs.GetWidth() &&
+         lhs.GetHeight() == rhs.GetHeight() && lhs.GetDepth() == rhs.GetDepth();
 }
 
 
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLSize & lhs, const OpenCLSize & rhs )
+operator!=(const OpenCLSize & lhs, const OpenCLSize & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

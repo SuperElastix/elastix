@@ -31,19 +31,19 @@ namespace elastix
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-Powell< TElastix >::BeforeRegistration( void )
+Powell<TElastix>::BeforeRegistration(void)
 {
   /** Add the target cell "stepsize" to xout["iteration"].*/
-  xout[ "iteration" ].AddTargetCell( "2:Metric" );
-  xout[ "iteration" ].AddTargetCell( "3:StepSize" );
-  xout[ "iteration" ].AddTargetCell( "4:||Gradient||" );
+  xout["iteration"].AddTargetCell("2:Metric");
+  xout["iteration"].AddTargetCell("3:StepSize");
+  xout["iteration"].AddTargetCell("4:||Gradient||");
 
   /** Format the metric and stepsize as floats */
-  xl::xout[ "iteration" ][ "2:Metric" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3:StepSize"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 
 } // end BeforeRegistration
 
@@ -52,38 +52,33 @@ Powell< TElastix >::BeforeRegistration( void )
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-Powell< TElastix >
-::BeforeEachResolution( void )
+Powell<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast< unsigned int >(
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Set the value tolerance.*/
   double valueTolerance = 1e-8;
-  this->m_Configuration->ReadParameter( valueTolerance,
-    "ValueTolerance", this->GetComponentLabel(), level, 0 );
-  this->SetValueTolerance( valueTolerance );
+  this->m_Configuration->ReadParameter(valueTolerance, "ValueTolerance", this->GetComponentLabel(), level, 0);
+  this->SetValueTolerance(valueTolerance);
 
   /** Set the MaximumStepLength.*/
-  double maxStepLength = 16.0 / std::pow( 2.0, static_cast< int >( level ) );
-  this->m_Configuration->ReadParameter( maxStepLength,
-    "MaximumStepLength", this->GetComponentLabel(), level, 0 );
-  this->SetStepLength( maxStepLength );
+  double maxStepLength = 16.0 / std::pow(2.0, static_cast<int>(level));
+  this->m_Configuration->ReadParameter(maxStepLength, "MaximumStepLength", this->GetComponentLabel(), level, 0);
+  this->SetStepLength(maxStepLength);
 
   /** Set the MinimumStepLength.*/
-  double stepTolerance = 0.5 / std::pow( 2.0, static_cast< int >( level ) );
-  this->m_Configuration->ReadParameter( stepTolerance,
-    "StepTolerance", this->GetComponentLabel(), level, 0 );
-  this->SetStepTolerance( stepTolerance );
+  double stepTolerance = 0.5 / std::pow(2.0, static_cast<int>(level));
+  this->m_Configuration->ReadParameter(stepTolerance, "StepTolerance", this->GetComponentLabel(), level, 0);
+  this->SetStepTolerance(stepTolerance);
 
   /** Set the maximumNumberOfIterations.*/
   unsigned int maximumNumberOfIterations = 500;
-  this->m_Configuration->ReadParameter( maximumNumberOfIterations,
-    "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
-  this->SetMaximumIteration( maximumNumberOfIterations );
+  this->m_Configuration->ReadParameter(
+    maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
+  this->SetMaximumIteration(maximumNumberOfIterations);
 
 } // end BeforeEachResolution
 
@@ -92,14 +87,13 @@ Powell< TElastix >
  * ***************** AfterEachIteration *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-Powell< TElastix >
-::AfterEachIteration( void )
+Powell<TElastix>::AfterEachIteration(void)
 {
   /** Print some information */
-  xl::xout[ "iteration" ][ "2:Metric" ] << this->GetValue();
-  xl::xout[ "iteration" ][ "3:StepSize" ] << this->GetStepLength();
+  xl::xout["iteration"]["2:Metric"] << this->GetValue();
+  xl::xout["iteration"]["3:StepSize"] << this->GetStepLength();
 } // end AfterEachIteration
 
 
@@ -107,10 +101,9 @@ Powell< TElastix >
  * ***************** AfterEachResolution *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-Powell< TElastix >
-::AfterEachResolution( void )
+Powell<TElastix>::AfterEachResolution(void)
 {
   /**
    * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
@@ -128,14 +121,13 @@ Powell< TElastix >
  * ******************* AfterRegistration ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-Powell< TElastix >
-::AfterRegistration( void )
+Powell<TElastix>::AfterRegistration(void)
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();
-  elxout << std::endl << "Final metric value  = " << bestValue  << std::endl;
+  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
 
 } // end AfterRegistration
 
@@ -144,10 +136,9 @@ Powell< TElastix >
  * ******************* SetInitialPosition ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-Powell< TElastix >
-::SetInitialPosition( const ParametersType & param )
+Powell<TElastix>::SetInitialPosition(const ParametersType & param)
 {
   /** Override the implementation in itkOptimizer.h, to
    * ensure that the scales array and the parameters
@@ -155,17 +146,17 @@ Powell< TElastix >
    */
 
   /** Call the Superclass' implementation. */
-  this->Superclass1::SetInitialPosition( param );
+  this->Superclass1::SetInitialPosition(param);
 
   /** Set the scales array to the same size if the size has been changed */
-  ScalesType   scales    = this->GetScales();
+  ScalesType   scales = this->GetScales();
   unsigned int paramsize = param.Size();
 
-  if( ( scales.Size() ) != paramsize )
+  if ((scales.Size()) != paramsize)
   {
-    ScalesType newscales( paramsize );
-    newscales.Fill( 1.0 );
-    this->SetScales( newscales );
+    ScalesType newscales(paramsize);
+    newscales.Fill(1.0);
+    this->SetScales(newscales);
   }
 
   /** \todo to optimizerbase? */

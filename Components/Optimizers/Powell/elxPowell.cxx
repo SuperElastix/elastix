@@ -18,4 +18,4 @@
 
 #include "elxPowell.h"
 
-elxInstallMacro( Powell );
+elxInstallMacro(Powell);

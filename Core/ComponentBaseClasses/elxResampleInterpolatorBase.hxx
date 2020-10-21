@@ -28,10 +28,9 @@ namespace elastix
  * ******************* ReadFromFile *****************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ResampleInterpolatorBase< TElastix >
-::ReadFromFile( void )
+ResampleInterpolatorBase<TElastix>::ReadFromFile(void)
 {
   // nothing, but must be here
 
@@ -42,17 +41,15 @@ ResampleInterpolatorBase< TElastix >
  * ******************* WriteToFile ******************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ResampleInterpolatorBase< TElastix >
-::WriteToFile( void ) const
+ResampleInterpolatorBase<TElastix>::WriteToFile(void) const
 {
   /** Write ResampleInterpolator specific things. */
-  xl::xout[ "transpar" ] << "\n// ResampleInterpolator specific" << std::endl;
+  xl::xout["transpar"] << "\n// ResampleInterpolator specific" << std::endl;
 
   /** Write the name of the resample-interpolator. */
-  xl::xout[ "transpar" ] << "(ResampleInterpolator \""
-                         << this->elxGetClassName() << "\")" << std::endl;
+  xl::xout["transpar"] << "(ResampleInterpolator \"" << this->elxGetClassName() << "\")" << std::endl;
 
 } // end WriteToFile()
 
@@ -61,18 +58,17 @@ ResampleInterpolatorBase< TElastix >
  * ******************* CreateTransformParametersMap ****************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ResampleInterpolatorBase< TElastix >
-::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
+ResampleInterpolatorBase<TElastix>::CreateTransformParametersMap(ParameterMapType * paramsMap) const
 {
-  std::string                parameterName;
-  std::vector< std::string > parameterValues;
+  std::string              parameterName;
+  std::vector<std::string> parameterValues;
 
   /** Write the name of this transform. */
   parameterName = "ResampleInterpolator";
-  parameterValues.push_back( this->elxGetClassName() );
-  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.push_back(this->elxGetClassName());
+  paramsMap->insert(make_pair(parameterName, parameterValues));
   parameterValues.clear();
 
 } // end CreateTransformParametersMap()

@@ -28,11 +28,10 @@ using namespace std;
  * ********************* operator[] *****************************
  */
 
-template< class charT, class traits >
-xoutbase< charT, traits > &
-xoutbase< charT, traits >::operator[]( const char * cellname )
+template <class charT, class traits>
+xoutbase<charT, traits> & xoutbase<charT, traits>::operator[](const char * cellname)
 {
-  return this->SelectXCell( cellname );
+  return this->SelectXCell(cellname);
 
 } // end operator[]
 
@@ -45,20 +44,20 @@ xoutbase< charT, traits >::operator[]( const char * cellname )
  * cells are flushed.
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutbase< charT, traits >::WriteBufferedData( void )
+xoutbase<charT, traits>::WriteBufferedData(void)
 {
   /** Update the target c-streams. */
-  for( const auto& cell : m_CTargetCells )
+  for (const auto & cell : m_CTargetCells)
   {
-    *( cell.second ) << flush;
+    *(cell.second) << flush;
   }
 
   /** WriteBufferedData of the target xout-objects. */
-  for( const auto& cell : m_XTargetCells )
+  for (const auto & cell : m_XTargetCells)
   {
-    ( *( cell.second ) ).WriteBufferedData();
+    (*(cell.second)).WriteBufferedData();
   }
 
 } // end WriteBufferedData
@@ -68,20 +67,20 @@ xoutbase< charT, traits >::WriteBufferedData( void )
  * **************** AddTargetCell (ostream_type) ****************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutbase< charT, traits >::AddTargetCell( const char * name, ostream_type * cell )
+xoutbase<charT, traits>::AddTargetCell(const char * name, ostream_type * cell)
 {
   int returndummy = 1;
 
-  if( this->m_XTargetCells.count( name ) )
+  if (this->m_XTargetCells.count(name))
   {
     /** an X-cell with the same name already exists */
     returndummy = 2;
   }
   else
   {
-    this->m_CTargetCells.insert( CStreamMapEntryType( name, cell ) );
+    this->m_CTargetCells.insert(CStreamMapEntryType(name, cell));
     returndummy = 0;
   }
 
@@ -94,20 +93,20 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, ostream_type * cell
  * **************** AddTargetCell (xoutbase) ********************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutbase< charT, traits >::AddTargetCell( const char * name, Self * cell )
+xoutbase<charT, traits>::AddTargetCell(const char * name, Self * cell)
 {
   int returndummy = 1;
 
-  if( this->m_CTargetCells.count( name ) )
+  if (this->m_CTargetCells.count(name))
   {
     /** a C-cell with the same name already exists */
     returndummy = 2;
   }
   else
   {
-    this->m_XTargetCells.insert( XStreamMapEntryType( name, cell ) );
+    this->m_XTargetCells.insert(XStreamMapEntryType(name, cell));
     returndummy = 0;
   }
 
@@ -120,18 +119,18 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, Self * cell )
  * ***************** RemoveTargetCell ***************************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutbase< charT, traits >::RemoveTargetCell( const char * name )
+xoutbase<charT, traits>::RemoveTargetCell(const char * name)
 {
   int returndummy = 1;
 
-  if( this->m_XTargetCells.erase( name ) > 0 )
+  if (this->m_XTargetCells.erase(name) > 0)
   {
     returndummy = 0;
   }
 
-  if( this->m_CTargetCells.erase( name ) > 0 )
+  if (this->m_CTargetCells.erase(name) > 0)
   {
     returndummy = 0;
   }
@@ -145,9 +144,9 @@ xoutbase< charT, traits >::RemoveTargetCell( const char * name )
  * **************** SetTargetCells (ostream_types) **************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutbase< charT, traits >::SetTargetCells( const CStreamMapType & cellmap )
+xoutbase<charT, traits>::SetTargetCells(const CStreamMapType & cellmap)
 {
   this->m_CTargetCells = cellmap;
 
@@ -157,9 +156,9 @@ xoutbase< charT, traits >::SetTargetCells( const CStreamMapType & cellmap )
 /**
  * **************** SetTargetCells (xout objects) ***************
  */
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutbase< charT, traits >::SetTargetCells( const XStreamMapType & cellmap )
+xoutbase<charT, traits>::SetTargetCells(const XStreamMapType & cellmap)
 {
   this->m_XTargetCells = cellmap;
 
@@ -170,19 +169,19 @@ xoutbase< charT, traits >::SetTargetCells( const XStreamMapType & cellmap )
  * **************** AddOutput (ostream_type) ********************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutbase< charT, traits >::AddOutput( const char * name, ostream_type * output )
+xoutbase<charT, traits>::AddOutput(const char * name, ostream_type * output)
 {
   int returndummy = 1;
 
-  if( this->m_XOutputs.count( name ) )
+  if (this->m_XOutputs.count(name))
   {
     returndummy = 2;
   }
   else
   {
-    this->m_COutputs.insert( CStreamMapEntryType( name, output ) );
+    this->m_COutputs.insert(CStreamMapEntryType(name, output));
     returndummy = 0;
   }
 
@@ -195,19 +194,19 @@ xoutbase< charT, traits >::AddOutput( const char * name, ostream_type * output )
  * **************** AddOutput (xoutbase) ************************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutbase< charT, traits >::AddOutput( const char * name, Self * output )
+xoutbase<charT, traits>::AddOutput(const char * name, Self * output)
 {
   int returndummy = 1;
 
-  if( this->m_COutputs.count( name ) )
+  if (this->m_COutputs.count(name))
   {
     returndummy = 2;
   }
   else
   {
-    this->m_XOutputs.insert( XStreamMapEntryType( name, output ) );
+    this->m_XOutputs.insert(XStreamMapEntryType(name, output));
     returndummy = 0;
   }
 
@@ -220,21 +219,21 @@ xoutbase< charT, traits >::AddOutput( const char * name, Self * output )
  * *********************** RemoveOutput *************************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 int
-xoutbase< charT, traits >::RemoveOutput( const char * name )
+xoutbase<charT, traits>::RemoveOutput(const char * name)
 {
   int returndummy = 1;
 
-  if( this->m_XOutputs.count( name ) )
+  if (this->m_XOutputs.count(name))
   {
-    this->m_XOutputs.erase( name );
+    this->m_XOutputs.erase(name);
     returndummy = 0;
   }
 
-  if( this->m_COutputs.count( name ) )
+  if (this->m_COutputs.count(name))
   {
-    this->m_COutputs.erase( name );
+    this->m_COutputs.erase(name);
     returndummy = 0;
   }
 
@@ -247,9 +246,9 @@ xoutbase< charT, traits >::RemoveOutput( const char * name )
  * ******************* SetOutputs (ostream_types) ***************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutbase< charT, traits >::SetOutputs( const CStreamMapType & outputmap )
+xoutbase<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
 {
   this->m_COutputs = outputmap;
 
@@ -260,9 +259,9 @@ xoutbase< charT, traits >::SetOutputs( const CStreamMapType & outputmap )
  * **************** SetOutputs (xoutobjects) ********************
  */
 
-template< class charT, class traits >
+template <class charT, class traits>
 void
-xoutbase< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
+xoutbase<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
 {
   this->m_XOutputs = outputmap;
 
@@ -275,13 +274,13 @@ xoutbase< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
  * Returns a target cell.
  */
 
-template< class charT, class traits >
-xoutbase< charT, traits > &
-xoutbase< charT, traits >::SelectXCell( const char * name )
+template <class charT, class traits>
+xoutbase<charT, traits> &
+xoutbase<charT, traits>::SelectXCell(const char * name)
 {
-  if( this->m_XTargetCells.count( name ) )
+  if (this->m_XTargetCells.count(name))
   {
-    return *( this->m_XTargetCells[ name ] );
+    return *(this->m_XTargetCells[name]);
   }
   else
   {
@@ -295,9 +294,9 @@ xoutbase< charT, traits >::SelectXCell( const char * name )
  * **************** GetOutputs (map of xoutobjects) *************
  */
 
-template< class charT, class traits >
-const typename xoutbase< charT, traits >::XStreamMapType
-& xoutbase< charT, traits >::GetXOutputs( void )
+template <class charT, class traits>
+const typename xoutbase<charT, traits>::XStreamMapType &
+xoutbase<charT, traits>::GetXOutputs(void)
 {
   return this->m_XOutputs;
 
@@ -307,9 +306,9 @@ const typename xoutbase< charT, traits >::XStreamMapType
  * **************** GetOutputs (map of c-streams) ***************
  */
 
-template< class charT, class traits >
-const typename xoutbase< charT, traits >::CStreamMapType
-& xoutbase< charT, traits >::GetCOutputs( void )
+template <class charT, class traits>
+const typename xoutbase<charT, traits>::CStreamMapType &
+xoutbase<charT, traits>::GetCOutputs(void)
 {
   return this->m_COutputs;
 

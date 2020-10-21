@@ -20,7 +20,7 @@
 #include "elastix.h" // For ConvertSecondsToDHMS and GetCurrentDateAndTime.
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
-#include "itkUseMevisDicomTiff.h"
+#  include "itkUseMevisDicomTiff.h"
 #endif
 
 #include "elxTransformixMain.h"
@@ -44,9 +44,9 @@ namespace transformix
  * ******************* Constructor ***********************
  */
 
-TRANSFORMIX::TRANSFORMIX() : m_ResultImage(nullptr)
-{
-} // end Constructor
+TRANSFORMIX::TRANSFORMIX()
+  : m_ResultImage(nullptr)
+{} // end Constructor
 
 
 /**
@@ -64,7 +64,7 @@ TRANSFORMIX::~TRANSFORMIX()
  */
 
 TRANSFORMIX::ImagePointer
-TRANSFORMIX::GetResultImage( void )
+TRANSFORMIX::GetResultImage(void)
 {
   return this->m_ResultImage;
 } // end GetResultImage()
@@ -75,12 +75,11 @@ TRANSFORMIX::GetResultImage( void )
  */
 
 int
-TRANSFORMIX::TransformImage(
-  ImagePointer inputImage,
-  std::vector< ParameterMapType > & parameterMaps,
-  std::string outputPath,
-  bool performLogging,
-  bool performCout )
+TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
+                            std::vector<ParameterMapType> & parameterMaps,
+                            std::string                     outputPath,
+                            bool                            performLogging,
+                            bool                            performCout)
 {
   /** Some typedef's.*/
   typedef elx::TransformixMain                        TransformixMainType;
@@ -94,28 +93,29 @@ TRANSFORMIX::TransformImage(
   /** Declare an instance of the Transformix class. */
   TransformixMainPointer transformix;
 
-  DataObjectContainerPointer movingImageContainer = nullptr;;
+  DataObjectContainerPointer movingImageContainer = nullptr;
+  ;
   DataObjectContainerPointer resultImageContainer = nullptr;
 
   /** Initialize. */
   int             returndummy = 0;
   ArgumentMapType argMap;
   bool            outFolderPresent = false;
-  std::string     outFolder        = "";
-  std::string     logFileName      = "";
+  std::string     outFolder = "";
+  std::string     logFileName = "";
 
   std::string key;
   std::string value;
 
-  if( !outputPath.empty() )
+  if (!outputPath.empty())
   {
-    key   = "-out";
+    key = "-out";
     value = outputPath;
 
     /** Make sure that last character of the output folder equals a '/'. */
-    if( value.find_last_of( "/" ) != value.size() - 1  )
+    if (value.find_last_of("/") != value.size() - 1)
     {
-      value.append( "/" );
+      value.append("/");
     }
 
     outFolderPresent = true;
@@ -123,8 +123,8 @@ TRANSFORMIX::TransformImage(
   else
   {
     /** Put command line parameters into parameterFileList. */
-    //there must be an "-out", this is checked later in code!!
-    key   = "-out";
+    // there must be an "-out", this is checked later in code!!
+    key = "-out";
     value = "output_path_not_set";
   }
 
@@ -132,11 +132,11 @@ TRANSFORMIX::TransformImage(
   outFolder = value;
 
   /** Attempt to save the arguments in the ArgumentMap. */
-  if( argMap.count( key ) == 0 )
+  if (argMap.count(key) == 0)
   {
-    argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
+    argMap.insert(ArgumentMapEntryType(key.c_str(), value.c_str()));
   }
-  else if( performCout )
+  else if (performCout)
   {
     /** Duplicate arguments. */
     std::cerr << "WARNING!" << std::endl;
@@ -144,23 +144,23 @@ TRANSFORMIX::TransformImage(
     std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
   }
 
-  if( performLogging )
+  if (performLogging)
   {
     /** Check if the output directory exists. */
-    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
-    if( !outFolderExists )
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory(outFolder.c_str());
+    if (!outFolderExists)
     {
-      if( performCout )
+      if (performCout)
       {
         std::cerr << "ERROR: the output directory does not exist." << std::endl;
         std::cerr << "You are responsible for creating it." << std::endl;
       }
-      return ( -2 );
+      return (-2);
     }
     else
     {
       /** Setup xout. */
-      if( performLogging )
+      if (performLogging)
       {
         logFileName = outFolder + "transformix.log";
       }
@@ -168,18 +168,18 @@ TRANSFORMIX::TransformImage(
   }
 
   /** The argv0 argument, required for finding the component.dll/so's. */
-  argMap.insert( ArgumentMapEntryType( "-argv0", "transformix" ) );
+  argMap.insert(ArgumentMapEntryType("-argv0", "transformix"));
 
   /** Setup xout. */
   const elx::xoutManager manager{};
-  int returndummy2 = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
-  if( returndummy2 && performCout )
+  int                    returndummy2 = elx::xoutSetup(logFileName.c_str(), performLogging, performCout);
+  if (returndummy2 && performCout)
   {
-    if( performCout )
+    if (performCout)
     {
       std::cerr << "ERROR while setting up xout." << std::endl;
     }
-    return ( returndummy2 );
+    return (returndummy2);
   }
   elxout << std::endl;
 
@@ -196,18 +196,18 @@ TRANSFORMIX::TransformImage(
   transformix = TransformixMainType::New();
 
   /** Set stuff from input or needed for output */
-  movingImageContainer                       = DataObjectContainerType::New();
-  movingImageContainer->CreateElementAt( 0 ) = inputImage;
-  transformix->SetMovingImageContainer( movingImageContainer );
-  transformix->SetResultImageContainer( resultImageContainer );
+  movingImageContainer = DataObjectContainerType::New();
+  movingImageContainer->CreateElementAt(0) = inputImage;
+  transformix->SetMovingImageContainer(movingImageContainer);
+  transformix->SetResultImageContainer(resultImageContainer);
 
   /** Run transformix. */
-  returndummy = transformix->Run( argMap, parameterMaps );
+  returndummy = transformix->Run(argMap, parameterMaps);
 
   /** Check if transformix run without errors. */
-  if( returndummy != 0 )
+  if (returndummy != 0)
   {
-    xl::xout[ "error" ] << "Errors occurred" << std::endl;
+    xl::xout["error"] << "Errors occurred" << std::endl;
     return returndummy;
   }
 
@@ -217,9 +217,9 @@ TRANSFORMIX::TransformImage(
   /** Stop timer and print it. */
   totaltimer.Stop();
   elxout << "\nTransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
-  elxout << "Elapsed time: " << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
+  elxout << "Elapsed time: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n" << std::endl;
 
-  this->m_ResultImage = resultImageContainer->ElementAt( 0 );
+  this->m_ResultImage = resultImageContainer->ElementAt(0);
 
   /** Clean up. */
   transformix = nullptr;
@@ -236,18 +236,17 @@ TRANSFORMIX::TransformImage(
  */
 
 int
-TRANSFORMIX::TransformImage(
-  ImagePointer inputImage,
-  ParameterMapType & parameterMap,
-  std::string outputPath,
-  bool performLogging,
-  bool performCout )
+TRANSFORMIX::TransformImage(ImagePointer       inputImage,
+                            ParameterMapType & parameterMap,
+                            std::string        outputPath,
+                            bool               performLogging,
+                            bool               performCout)
 {
   // Transform single parameter map to a one-sized vector of parameter maps and call other
   // transform method.
-  std::vector< ParameterMapType > parameterMaps;
-  parameterMaps.push_back( parameterMap );
-  return TransformImage( inputImage, parameterMaps, outputPath, performLogging, performCout );
+  std::vector<ParameterMapType> parameterMaps;
+  parameterMaps.push_back(parameterMap);
+  return TransformImage(inputImage, parameterMaps, outputPath, performLogging, performCout);
 } // end TransformImage()
 
 } // namespace transformix

@@ -22,59 +22,54 @@
 
 namespace itk
 {
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPUShrinkImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::RegisterOneFactory()
+GPUShrinkImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::RegisterOneFactory()
 {
-  typedef GPUShrinkImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions > GPUFilterFactoryType;
-  typename GPUFilterFactoryType::Pointer factory = GPUFilterFactoryType::New();
-  ObjectFactoryBase::RegisterFactory( factory );
+  typedef GPUShrinkImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions> GPUFilterFactoryType;
+  typename GPUFilterFactoryType::Pointer                                       factory = GPUFilterFactoryType::New();
+  ObjectFactoryBase::RegisterFactory(factory);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
-GPUShrinkImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::GPUShrinkImageFilterFactory2()
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
+GPUShrinkImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::GPUShrinkImageFilterFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPUShrinkImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::Register1D()
+GPUShrinkImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register1D()
 {
   // Define visitor and perform factory registration
-  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 1 > visitor;
-  visitor( *this );
+  typelist::DualVisitDimension<TTypeListIn, TTypeListOut, 1> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPUShrinkImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::Register2D()
+GPUShrinkImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register2D()
 {
   // Define visitor and perform factory registration
-  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 2 > visitor;
-  visitor( *this );
+  typelist::DualVisitDimension<TTypeListIn, TTypeListOut, 2> visitor;
+  visitor(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
-GPUShrinkImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
-::Register3D()
+GPUShrinkImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register3D()
 {
   // Define visitor and perform factory registration
-  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 3 > visitor;
-  visitor( *this );
+  typelist::DualVisitDimension<TTypeListIn, TTypeListOut, 3> visitor;
+  visitor(*this);
 }
 
 

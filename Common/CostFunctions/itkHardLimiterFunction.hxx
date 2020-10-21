@@ -24,32 +24,30 @@
 namespace itk
 {
 
-template< class TInput, unsigned int NDimension >
-typename HardLimiterFunction< TInput, NDimension >::OutputType
-HardLimiterFunction< TInput, NDimension >
-::Evaluate( const InputType & input ) const
+template <class TInput, unsigned int NDimension>
+typename HardLimiterFunction<TInput, NDimension>::OutputType
+HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const
 {
-  OutputType output = std::min( static_cast< OutputType >( input ), this->m_UpperBound );
-  return ( std::max( output, this->m_LowerBound ) );
+  OutputType output = std::min(static_cast<OutputType>(input), this->m_UpperBound);
+  return (std::max(output, this->m_LowerBound));
 } // end Evaluate()
 
 
-template< class TInput, unsigned int NDimension >
-typename HardLimiterFunction< TInput, NDimension >::OutputType
-HardLimiterFunction< TInput, NDimension >
-::Evaluate( const InputType & input, DerivativeType & derivative ) const
+template <class TInput, unsigned int NDimension>
+typename HardLimiterFunction<TInput, NDimension>::OutputType
+HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input, DerivativeType & derivative) const
 {
-  if( input > this->m_UpperBound )
+  if (input > this->m_UpperBound)
   {
-    derivative.Fill( itk::NumericTraits< OutputType >::ZeroValue() );
-    return ( this->m_UpperBound );
+    derivative.Fill(itk::NumericTraits<OutputType>::ZeroValue());
+    return (this->m_UpperBound);
   }
-  if( input < this->m_LowerBound )
+  if (input < this->m_LowerBound)
   {
-    derivative.Fill( itk::NumericTraits< OutputType >::ZeroValue() );
-    return ( this->m_LowerBound );
+    derivative.Fill(itk::NumericTraits<OutputType>::ZeroValue());
+    return (this->m_LowerBound);
   }
-  return ( static_cast< OutputType >( input ) );
+  return (static_cast<OutputType>(input));
 } // end Evaluate()
 
 

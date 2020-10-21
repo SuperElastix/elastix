@@ -50,47 +50,41 @@ namespace itk
  * \sa RSGDEachParameterApart
  */
 
-class RSGDEachParameterApartOptimizer :
-  public RSGDEachParameterApartBaseOptimizer
+class RSGDEachParameterApartOptimizer : public RSGDEachParameterApartBaseOptimizer
 {
 public:
-
   /** Standard class typedefs. */
   typedef RSGDEachParameterApartOptimizer     Self;
   typedef RSGDEachParameterApartBaseOptimizer Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RSGDEachParameterApartOptimizer,
-    RSGDEachParameterApartBaseOptimizer );
+  itkTypeMacro(RSGDEachParameterApartOptimizer, RSGDEachParameterApartBaseOptimizer);
 
   /** Cost function typedefs. */
   typedef Superclass::CostFunctionType CostFunctionType;
   typedef CostFunctionType::Pointer    CostFunctionPointer;
 
 protected:
-
   RSGDEachParameterApartOptimizer() {}
   ~RSGDEachParameterApartOptimizer() override {}
 
   /** Advance one step along the corrected gradient taking into
-  * account the steplengths represented by the factor array.
-  * This method is invoked by AdvanceOneStep. It is expected
-  * to be overrided by optimization methods in non-vector spaces
-  * \sa AdvanceOneStep */
-  void StepAlongGradient(
-    const DerivativeType & factor,
-    const DerivativeType & transformedGradient ) override;
+   * account the steplengths represented by the factor array.
+   * This method is invoked by AdvanceOneStep. It is expected
+   * to be overrided by optimization methods in non-vector spaces
+   * \sa AdvanceOneStep */
+  void
+  StepAlongGradient(const DerivativeType & factor, const DerivativeType & transformedGradient) override;
 
 private:
-
-  RSGDEachParameterApartOptimizer( const Self & );  // purposely not implemented
-  void operator=( const Self & );                   // purposely not implemented
-
+  RSGDEachParameterApartOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

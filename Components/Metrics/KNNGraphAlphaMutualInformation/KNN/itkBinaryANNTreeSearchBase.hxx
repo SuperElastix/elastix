@@ -27,9 +27,8 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template< class TBinaryTree >
-BinaryANNTreeSearchBase< TBinaryTree >
-::BinaryANNTreeSearchBase()
+template <class TBinaryTree>
+BinaryANNTreeSearchBase<TBinaryTree>::BinaryANNTreeSearchBase()
 {
   this->m_BinaryTreeAsITKANNType = nullptr;
 } // end Constructor
@@ -39,27 +38,25 @@ BinaryANNTreeSearchBase< TBinaryTree >
  * ************************ Destructor *************************
  */
 
-template< class TBinaryTree >
-BinaryANNTreeSearchBase< TBinaryTree >
-::~BinaryANNTreeSearchBase()
-{}  // end Destructor
+template <class TBinaryTree>
+BinaryANNTreeSearchBase<TBinaryTree>::~BinaryANNTreeSearchBase()
+{} // end Destructor
 
 /**
  * ************************ SetBinaryTree *************************
  */
 
-template< class TBinaryTree >
+template <class TBinaryTree>
 void
-BinaryANNTreeSearchBase< TBinaryTree >
-::SetBinaryTree( BinaryTreeType * tree )
+BinaryANNTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
 {
-  this->Superclass::SetBinaryTree( tree );
-  if( tree )
+  this->Superclass::SetBinaryTree(tree);
+  if (tree)
   {
-    BinaryANNTreeType * testPtr = dynamic_cast< BinaryANNTreeType * >( tree );
-    if( testPtr )
+    BinaryANNTreeType * testPtr = dynamic_cast<BinaryANNTreeType *>(tree);
+    if (testPtr)
     {
-      if( testPtr != this->m_BinaryTreeAsITKANNType )
+      if (testPtr != this->m_BinaryTreeAsITKANNType)
       {
         this->m_BinaryTreeAsITKANNType = testPtr;
         this->Modified();
@@ -67,12 +64,12 @@ BinaryANNTreeSearchBase< TBinaryTree >
     }
     else
     {
-      itkExceptionMacro( << "ERROR: The tree is not of type BinaryANNTreeBase." );
+      itkExceptionMacro(<< "ERROR: The tree is not of type BinaryANNTreeBase.");
     }
   }
   else
   {
-    if( this->m_BinaryTreeAsITKANNType.IsNotNull() )
+    if (this->m_BinaryTreeAsITKANNType.IsNotNull())
     {
       this->m_BinaryTreeAsITKANNType = nullptr;
       this->Modified();

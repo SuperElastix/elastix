@@ -30,19 +30,18 @@ namespace itk
  * ****************** Constructor *****************************
  */
 
-MoreThuenteLineSearchOptimizer
-::MoreThuenteLineSearchOptimizer()
+MoreThuenteLineSearchOptimizer ::MoreThuenteLineSearchOptimizer()
 {
-  this->m_f                         = NumericTraits< MeasureType >::Zero;
-  this->m_dg                        = 0.0;
+  this->m_f = NumericTraits<MeasureType>::Zero;
+  this->m_dg = 0.0;
   this->m_InitialDerivativeProvided = false;
-  this->m_InitialValueProvided      = false;
+  this->m_InitialValueProvided = false;
   this->m_MaximumNumberOfIterations = 20;
-  this->m_ValueTolerance            = 1e-4;
-  this->m_GradientTolerance         = 0.9;
-  this->m_IntervalTolerance         = std::numeric_limits< double >::epsilon();
-  this->SetMinimumStepLength( 1e-20 );
-  this->SetMaximumStepLength( 1e20 );
+  this->m_ValueTolerance = 1e-4;
+  this->m_GradientTolerance = 0.9;
+  this->m_IntervalTolerance = std::numeric_limits<double>::epsilon();
+  this->SetMinimumStepLength(1e-20);
+  this->SetMaximumStepLength(1e20);
 
   this->InitializeLineSearch();
 
@@ -54,11 +53,10 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::SetInitialValue( MeasureType value )
+MoreThuenteLineSearchOptimizer ::SetInitialValue(MeasureType value)
 {
   this->m_InitialValueProvided = true;
-  this->m_f                    = value;
+  this->m_f = value;
   this->Modified();
 
 } // end SetInitialValue()
@@ -69,11 +67,10 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::SetInitialDerivative( const DerivativeType & derivative )
+MoreThuenteLineSearchOptimizer ::SetInitialDerivative(const DerivativeType & derivative)
 {
   this->m_InitialDerivativeProvided = true;
-  this->m_g                         = derivative;
+  this->m_g = derivative;
   this->Modified();
 
 } // end SetInitialDerivative()
@@ -84,11 +81,9 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::GetCurrentValueAndDerivative(
-  MeasureType & value, DerivativeType & derivative ) const
+MoreThuenteLineSearchOptimizer ::GetCurrentValueAndDerivative(MeasureType & value, DerivativeType & derivative) const
 {
-  value      = m_f;
+  value = m_f;
   derivative = m_g;
 
 } // end GetCurrentValueAndDerivative()
@@ -99,8 +94,7 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::GetCurrentDerivative( DerivativeType & derivative ) const
+MoreThuenteLineSearchOptimizer ::GetCurrentDerivative(DerivativeType & derivative) const
 {
   derivative = m_g;
 
@@ -112,8 +106,7 @@ MoreThuenteLineSearchOptimizer
  */
 
 MoreThuenteLineSearchOptimizer::MeasureType
-MoreThuenteLineSearchOptimizer
-::GetCurrentValue( void ) const
+MoreThuenteLineSearchOptimizer ::GetCurrentValue(void) const
 {
   return m_f;
 
@@ -125,8 +118,7 @@ MoreThuenteLineSearchOptimizer
  */
 
 double
-MoreThuenteLineSearchOptimizer
-::GetCurrentDirectionalDerivative( void ) const
+MoreThuenteLineSearchOptimizer ::GetCurrentDirectionalDerivative(void) const
 {
   return m_dg;
 
@@ -138,37 +130,36 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::StartOptimization( void )
+MoreThuenteLineSearchOptimizer ::StartOptimization(void)
 {
   this->CheckSettings();
 
-  this->SetCurrentPosition( this->GetInitialPosition() );
+  this->SetCurrentPosition(this->GetInitialPosition());
   this->GetInitialValueAndDerivative();
-  this->m_dg = this->DirectionalDerivative( this->m_g );
+  this->m_dg = this->DirectionalDerivative(this->m_g);
 
   this->InitializeLineSearch();
 
-  this->InvokeEvent( StartEvent() );
+  this->InvokeEvent(StartEvent());
 
-  if(  this->m_dginit >= 0 )
+  if (this->m_dginit >= 0)
   {
     this->m_StopCondition = AscentSearchDirection;
     this->StopOptimization();
   }
 
-  while( !this->m_Stop )
+  while (!this->m_Stop)
   {
 
     this->UpdateIntervalMinimumAndMaximum();
-    this->BoundStep( this->m_step );
+    this->BoundStep(this->m_step);
     this->PrepareForUnusualTermination();
-    this->SetCurrentStepLength( this->m_step );
+    this->SetCurrentStepLength(this->m_step);
     this->ComputeCurrentValueAndDerivative();
-    this->m_dg = this->DirectionalDerivative( this->m_g );
-    this->TestConvergence( this->m_Stop );
-    this->InvokeEvent( IterationEvent() );
-    if( this->m_Stop )
+    this->m_dg = this->DirectionalDerivative(this->m_g);
+    this->TestConvergence(this->m_Stop);
+    this->InvokeEvent(IterationEvent());
+    if (this->m_Stop)
     {
       this->StopOptimization();
       break;
@@ -187,11 +178,10 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::StopOptimization( void )
+MoreThuenteLineSearchOptimizer ::StopOptimization(void)
 {
   this->m_Stop = true;
-  this->InvokeEvent( EndEvent() );
+  this->InvokeEvent(EndEvent());
 
 } // end StopOptimization()
 
@@ -201,44 +191,42 @@ MoreThuenteLineSearchOptimizer
  */
 
 int
-MoreThuenteLineSearchOptimizer
-::CheckSettings( void )
+MoreThuenteLineSearchOptimizer ::CheckSettings(void)
 {
-  if( this->GetCostFunction() == nullptr )
+  if (this->GetCostFunction() == nullptr)
   {
-    itkExceptionMacro( << "CostFunction has not been set!" );
+    itkExceptionMacro(<< "CostFunction has not been set!");
   }
 
-  const unsigned int numberOfParameters
-    = this->GetCostFunction()->GetNumberOfParameters();
+  const unsigned int numberOfParameters = this->GetCostFunction()->GetNumberOfParameters();
 
-  if( this->GetInitialPosition().GetSize() != numberOfParameters )
+  if (this->GetInitialPosition().GetSize() != numberOfParameters)
   {
-    itkExceptionMacro( << "InitialPosition has incorrect dimension!" );
+    itkExceptionMacro(<< "InitialPosition has incorrect dimension!");
   }
 
-  if( this->GetLineSearchDirection().GetSize() != numberOfParameters )
+  if (this->GetLineSearchDirection().GetSize() != numberOfParameters)
   {
-    itkExceptionMacro( << "LineSearchDirection has incorrect dimension!" );
+    itkExceptionMacro(<< "LineSearchDirection has incorrect dimension!");
   }
 
-  if( this->GetMinimumStepLength() <= 0.0 )
+  if (this->GetMinimumStepLength() <= 0.0)
   {
-    itkExceptionMacro( << "MinimumStepLength must be higher than zero!" );
+    itkExceptionMacro(<< "MinimumStepLength must be higher than zero!");
   }
 
-  if( this->GetMinimumStepLength() > this->GetMaximumStepLength() )
+  if (this->GetMinimumStepLength() > this->GetMaximumStepLength())
   {
-    itkExceptionMacro( << "MinimumStepLength must be smaller than MaximumStepLength!" );
+    itkExceptionMacro(<< "MinimumStepLength must be smaller than MaximumStepLength!");
   }
 
-  if( this->GetGradientTolerance() < this->GetValueTolerance() )
+  if (this->GetGradientTolerance() < this->GetValueTolerance())
   {
-    itkExceptionMacro( << "GradientTolerance must be greater than ValueTolerance!" );
+    itkExceptionMacro(<< "GradientTolerance must be greater than ValueTolerance!");
   }
   return 0;
 
-}  // end CheckSettings()
+} // end CheckSettings()
 
 
 /**
@@ -246,44 +234,36 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::GetInitialValueAndDerivative( void )
+MoreThuenteLineSearchOptimizer ::GetInitialValueAndDerivative(void)
 {
 
-  if( !( this->m_InitialValueProvided && this->m_InitialDerivativeProvided ) )
+  if (!(this->m_InitialValueProvided && this->m_InitialDerivativeProvided))
   {
 
     try
     {
-      if( !this->m_InitialValueProvided && !this->m_InitialDerivativeProvided )
+      if (!this->m_InitialValueProvided && !this->m_InitialDerivativeProvided)
       {
-        this->GetCostFunction()->GetValueAndDerivative(
-          this->GetInitialPosition(),
-          this->m_f,
-          this->m_g );
+        this->GetCostFunction()->GetValueAndDerivative(this->GetInitialPosition(), this->m_f, this->m_g);
       }
-      else if( !this->m_InitialValueProvided )
+      else if (!this->m_InitialValueProvided)
       {
-        this->m_f = this->GetCostFunction()->GetValue(
-          this->GetInitialPosition() );
+        this->m_f = this->GetCostFunction()->GetValue(this->GetInitialPosition());
       }
-      else if( !this->m_InitialDerivativeProvided )
+      else if (!this->m_InitialDerivativeProvided)
       {
-        this->GetCostFunction()->GetDerivative(
-          this->GetInitialPosition(),
-          this->m_g );
+        this->GetCostFunction()->GetDerivative(this->GetInitialPosition(), this->m_g);
       }
-
     }
-    catch( ExceptionObject & err )
+    catch (ExceptionObject & err)
     {
       this->m_StopCondition = MetricError;
-      //this->StopOptimization(); //not here since no start event has been generated yet
+      // this->StopOptimization(); //not here since no start event has been generated yet
 
       /** Any user provided initial values/derivatives may not be
        * valid anymore */
       this->m_InitialDerivativeProvided = false;
-      this->m_InitialValueProvided      = false;
+      this->m_InitialValueProvided = false;
 
       throw err;
     }
@@ -293,7 +273,7 @@ MoreThuenteLineSearchOptimizer
    * valid anymore */
 
   this->m_InitialDerivativeProvided = false;
-  this->m_InitialValueProvided      = false;
+  this->m_InitialValueProvided = false;
 
 } // end GetInitialValueAndDerivative()
 
@@ -306,32 +286,31 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::InitializeLineSearch( void )
+MoreThuenteLineSearchOptimizer ::InitializeLineSearch(void)
 {
-  this->m_Stop                                 = false;
-  this->m_StopCondition                        = Unknown;
-  this->m_CurrentIteration                     = 0;
+  this->m_Stop = false;
+  this->m_StopCondition = Unknown;
+  this->m_CurrentIteration = 0;
   this->m_SufficientDecreaseConditionSatisfied = false;
-  this->m_CurvatureConditionSatisfied          = false;
-  this->m_CurrentStepLength                    = 0.0;
+  this->m_CurvatureConditionSatisfied = false;
+  this->m_CurrentStepLength = 0.0;
 
-  this->m_finit                 = this->m_f;
-  this->m_fx                    = this->m_finit;
-  this->m_fy                    = this->m_finit;
-  this->m_step                  = this->GetInitialStepLengthEstimate();
-  this->m_stepx                 = 0.0;
-  this->m_stepy                 = 0.0;
-  this->m_stepmin               = 0.0;
-  this->m_stepmax               = 0.0;
-  this->m_dginit                = this->m_dg;
-  this->m_dgx                   = this->m_dginit;
-  this->m_dgy                   = this->m_dginit;
-  this->m_dgtest                = this->GetValueTolerance() * this->m_dginit;
-  this->m_width                 = this->GetMaximumStepLength() - this->GetMinimumStepLength();
-  this->m_width1                = this->m_width / 0.5;
-  this->m_brackt                = false;
-  this->m_stage1                = true;
+  this->m_finit = this->m_f;
+  this->m_fx = this->m_finit;
+  this->m_fy = this->m_finit;
+  this->m_step = this->GetInitialStepLengthEstimate();
+  this->m_stepx = 0.0;
+  this->m_stepy = 0.0;
+  this->m_stepmin = 0.0;
+  this->m_stepmax = 0.0;
+  this->m_dginit = this->m_dg;
+  this->m_dgx = this->m_dginit;
+  this->m_dgy = this->m_dginit;
+  this->m_dgtest = this->GetValueTolerance() * this->m_dginit;
+  this->m_width = this->GetMaximumStepLength() - this->GetMinimumStepLength();
+  this->m_width1 = this->m_width / 0.5;
+  this->m_brackt = false;
+  this->m_stage1 = true;
   this->m_SafeGuardedStepFailed = false;
 
 } // end InitializeLineSearch()
@@ -345,21 +324,19 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::UpdateIntervalMinimumAndMaximum( void )
+MoreThuenteLineSearchOptimizer ::UpdateIntervalMinimumAndMaximum(void)
 {
   const double xtrapf = 4.0;
 
-  if( this->m_brackt )
+  if (this->m_brackt)
   {
-    this->m_stepmin = std::min( this->m_stepx, this->m_stepy );
-    this->m_stepmax = std::max( this->m_stepx, this->m_stepy );
+    this->m_stepmin = std::min(this->m_stepx, this->m_stepy);
+    this->m_stepmax = std::max(this->m_stepx, this->m_stepy);
   }
   else
   {
     this->m_stepmin = this->m_stepx;
-    this->m_stepmax
-      = this->m_step + xtrapf * ( this->m_step - this->m_stepx );
+    this->m_stepmax = this->m_step + xtrapf * (this->m_step - this->m_stepx);
   }
 
 } // end UpdateIntervalMinimumAndMaximum()
@@ -373,11 +350,10 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::BoundStep( double & step ) const
+MoreThuenteLineSearchOptimizer ::BoundStep(double & step) const
 {
-  step = std::max( step, this->GetMinimumStepLength() );
-  step = std::min( step, this->GetMaximumStepLength() );
+  step = std::max(step, this->GetMinimumStepLength());
+  step = std::min(step, this->GetMaximumStepLength());
 
 } // end BoundStep()
 
@@ -390,17 +366,11 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::PrepareForUnusualTermination( void )
+MoreThuenteLineSearchOptimizer ::PrepareForUnusualTermination(void)
 {
-  if( ( this->m_brackt
-    && ( this->m_step <= this->m_stepmin
-    || this->m_step >= this->m_stepmax ) )
-    || this->m_CurrentIteration >= this->GetMaximumNumberOfIterations() - 1
-    || this->m_SafeGuardedStepFailed
-    || ( this->m_brackt
-    && this->m_stepmax - this->m_stepmin
-    <= this->GetIntervalTolerance() * this->m_stepmax ) )
+  if ((this->m_brackt && (this->m_step <= this->m_stepmin || this->m_step >= this->m_stepmax)) ||
+      this->m_CurrentIteration >= this->GetMaximumNumberOfIterations() - 1 || this->m_SafeGuardedStepFailed ||
+      (this->m_brackt && this->m_stepmax - this->m_stepmin <= this->GetIntervalTolerance() * this->m_stepmax))
   {
     this->m_step = this->m_stepx;
   }
@@ -415,15 +385,13 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::ComputeCurrentValueAndDerivative( void )
+MoreThuenteLineSearchOptimizer ::ComputeCurrentValueAndDerivative(void)
 {
   try
   {
-    this->GetCostFunction()->GetValueAndDerivative(
-      this->GetCurrentPosition(), this->m_f, this->m_g );
+    this->GetCostFunction()->GetValueAndDerivative(this->GetCurrentPosition(), this->m_f, this->m_g);
   }
-  catch( ExceptionObject & err )
+  catch (ExceptionObject & err)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
@@ -440,61 +408,52 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::TestConvergence( bool & stop )
+MoreThuenteLineSearchOptimizer ::TestConvergence(bool & stop)
 {
   stop = false;
   const double & step = this->m_step;
 
   MeasureType ftest1 = this->m_finit + step * this->m_dgtest;
 
-  this->m_SufficientDecreaseConditionSatisfied = ( this->m_f <= ftest1 );
-  this->m_CurvatureConditionSatisfied          = ( std::abs( this->m_dg ) <=
-    this->GetGradientTolerance() * ( -this->m_dginit ) );
+  this->m_SufficientDecreaseConditionSatisfied = (this->m_f <= ftest1);
+  this->m_CurvatureConditionSatisfied = (std::abs(this->m_dg) <= this->GetGradientTolerance() * (-this->m_dginit));
 
-  if( ( this->m_brackt
-    && ( step <= this->m_stepmin || step >= this->m_stepmax ) )
-    || this->m_SafeGuardedStepFailed )
+  if ((this->m_brackt && (step <= this->m_stepmin || step >= this->m_stepmax)) || this->m_SafeGuardedStepFailed)
   {
     this->m_StopCondition = RoundingError;
-    stop                  = true;
+    stop = true;
   }
 
-  if( step == this->GetMaximumStepLength()
-    && this->m_SufficientDecreaseConditionSatisfied
-    && this->m_dg <= this->m_dgtest )
+  if (step == this->GetMaximumStepLength() && this->m_SufficientDecreaseConditionSatisfied &&
+      this->m_dg <= this->m_dgtest)
   {
     this->m_StopCondition = StepTooLarge;
-    stop                  = true;
+    stop = true;
   }
 
-  if( step == this->GetMinimumStepLength()
-    && ( !( this->m_SufficientDecreaseConditionSatisfied )
-    || this->m_dg >= this->m_dgtest ) )
+  if (step == this->GetMinimumStepLength() &&
+      (!(this->m_SufficientDecreaseConditionSatisfied) || this->m_dg >= this->m_dgtest))
   {
     this->m_StopCondition = StepTooSmall;
-    stop                  = true;
+    stop = true;
   }
 
-  if( this->m_CurrentIteration >= this->GetMaximumNumberOfIterations() - 1 )
+  if (this->m_CurrentIteration >= this->GetMaximumNumberOfIterations() - 1)
   {
     this->m_StopCondition = MaximumNumberOfIterations;
-    stop                  = true;
+    stop = true;
   }
 
-  if( this->m_brackt
-    && this->m_stepmax - this->m_stepmin
-    <= this->GetIntervalTolerance() * this->m_stepmax )
+  if (this->m_brackt && this->m_stepmax - this->m_stepmin <= this->GetIntervalTolerance() * this->m_stepmax)
   {
     this->m_StopCondition = IntervalTooSmall;
-    stop                  = true;
+    stop = true;
   }
 
-  if( this->m_SufficientDecreaseConditionSatisfied
-    && this->m_CurvatureConditionSatisfied  )
+  if (this->m_SufficientDecreaseConditionSatisfied && this->m_CurvatureConditionSatisfied)
   {
     this->m_StopCondition = StrongWolfeConditionsSatisfied;
-    stop                  = true;
+    stop = true;
   }
 
 } // end TestConvergence()
@@ -507,55 +466,56 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::ComputeNewStepAndInterval( void )
+MoreThuenteLineSearchOptimizer ::ComputeNewStepAndInterval(void)
 {
   int returncode = 0;
 
   /** In the first stage we seek a step for which the modified
-  * function has a nonpositive value and nonnegative derivative. */
+   * function has a nonpositive value and nonnegative derivative. */
 
   /** Stage1? */
-  if( this->m_stage1
-    && this->m_SufficientDecreaseConditionSatisfied
-    && this->m_dg >= this->m_dginit * std::min(
-    this->GetValueTolerance(), this->GetGradientTolerance() ) )
+  if (this->m_stage1 && this->m_SufficientDecreaseConditionSatisfied &&
+      this->m_dg >= this->m_dginit * std::min(this->GetValueTolerance(), this->GetGradientTolerance()))
   {
     this->m_stage1 = false;
   }
 
   /* A modified function is used to predict the step only if
-  * we have not obtained a step for which the modified
-  * function has a nonpositive function value and nonnegative
-  * derivative, and if a lower function value has been
-  * obtained but the decrease is not sufficient. */
+   * we have not obtained a step for which the modified
+   * function has a nonpositive function value and nonnegative
+   * derivative, and if a lower function value has been
+   * obtained but the decrease is not sufficient. */
 
-  if( this->m_stage1
-    && this->m_f <= this->m_fx
-    && !( this->m_SufficientDecreaseConditionSatisfied ) )
+  if (this->m_stage1 && this->m_f <= this->m_fx && !(this->m_SufficientDecreaseConditionSatisfied))
   {
     /* Define the modified function and derivative values. */
     const double & dgtest = this->m_dgtest;
 
-    double fm   = this->m_f - this->m_step * dgtest;
-    double fxm  = this->m_fx - this->m_stepx * dgtest;
-    double fym  = this->m_fy - this->m_stepy * dgtest;
-    double dgm  = this->m_dg - dgtest;
+    double fm = this->m_f - this->m_step * dgtest;
+    double fxm = this->m_fx - this->m_stepx * dgtest;
+    double fym = this->m_fy - this->m_stepy * dgtest;
+    double dgm = this->m_dg - dgtest;
     double dgxm = this->m_dgx - dgtest;
     double dgym = this->m_dgy - dgtest;
 
     /* Call SafeGuardedStep to update the interval of uncertainty */
     /* and to compute the new step. */
-    returncode = this->SafeGuardedStep(
-      this->m_stepx, fxm, dgxm,
-      this->m_stepy, fym, dgym,
-      this->m_step, fm, dgm,
-      this->m_brackt,
-      this->m_stepmin, this->m_stepmax );
+    returncode = this->SafeGuardedStep(this->m_stepx,
+                                       fxm,
+                                       dgxm,
+                                       this->m_stepy,
+                                       fym,
+                                       dgym,
+                                       this->m_step,
+                                       fm,
+                                       dgm,
+                                       this->m_brackt,
+                                       this->m_stepmin,
+                                       this->m_stepmax);
 
     /* Reset the function and gradient values. */
-    this->m_fx  = fxm + this->m_stepx * dgtest;
-    this->m_fy  = fym + this->m_stepy * dgtest;
+    this->m_fx = fxm + this->m_stepx * dgtest;
+    this->m_fy = fym + this->m_stepy * dgtest;
     this->m_dgx = dgxm + dgtest;
     this->m_dgy = dgym + dgtest;
   }
@@ -563,20 +523,26 @@ MoreThuenteLineSearchOptimizer
   {
     /* Call SafeGuardedStep to update the interval of uncertainty */
     /* and to compute the new step. */
-    returncode = this->SafeGuardedStep(
-      this->m_stepx, this->m_fx, this->m_dgx,
-      this->m_stepy, this->m_fy, this->m_dgy,
-      this->m_step, this->m_f, this->m_dg,
-      this->m_brackt,
-      this->m_stepmin, this->m_stepmax );
+    returncode = this->SafeGuardedStep(this->m_stepx,
+                                       this->m_fx,
+                                       this->m_dgx,
+                                       this->m_stepy,
+                                       this->m_fy,
+                                       this->m_dgy,
+                                       this->m_step,
+                                       this->m_f,
+                                       this->m_dg,
+                                       this->m_brackt,
+                                       this->m_stepmin,
+                                       this->m_stepmax);
   }
 
-  if( returncode == 0 )
+  if (returncode == 0)
   {
     this->m_SafeGuardedStepFailed = true;
   }
 
-} //end ComputeNewStepAndInterval()
+} // end ComputeNewStepAndInterval()
 
 
 /**
@@ -586,20 +552,19 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::ForceSufficientDecreaseInIntervalWidth( void )
+MoreThuenteLineSearchOptimizer ::ForceSufficientDecreaseInIntervalWidth(void)
 {
-  if( this->m_brackt )
+  if (this->m_brackt)
   {
     const double & stx = this->m_stepx;
     const double & sty = this->m_stepy;
 
-    if( std::abs( sty - stx ) >= .66 * this->m_width1 )
+    if (std::abs(sty - stx) >= .66 * this->m_width1)
     {
-      this->m_step = stx + .5 * ( sty - stx );
+      this->m_step = stx + .5 * (sty - stx);
     }
     this->m_width1 = this->m_width;
-    this->m_width  = std::abs( sty - stx );
+    this->m_width = std::abs(sty - stx);
   }
 
 } // end ForceSufficientDecreaseInIntervalWidth()
@@ -613,26 +578,31 @@ MoreThuenteLineSearchOptimizer
  */
 
 int
-MoreThuenteLineSearchOptimizer
-::SafeGuardedStep(
-  double & stx, double & fx, double & dx,
-  double & sty, double & fy, double & dy,
-  double & stp, const double & fp, const double & dp,
-  bool & brackt,
-  const double & stpmin, const double & stpmax ) const
+MoreThuenteLineSearchOptimizer ::SafeGuardedStep(double &       stx,
+                                                 double &       fx,
+                                                 double &       dx,
+                                                 double &       sty,
+                                                 double &       fy,
+                                                 double &       dy,
+                                                 double &       stp,
+                                                 const double & fp,
+                                                 const double & dp,
+                                                 bool &         brackt,
+                                                 const double & stpmin,
+                                                 const double & stpmax) const
 {
   /** This function is largely just a copy of the following function
-  * taken from netlib/lbfgs.c */
+   * taken from netlib/lbfgs.c */
 
   /** Original documentation: */
 
   /**    void mcstep_(stx, fx, dx, sty, fy, dy, stp, fp, dp,
-  *             brackt, stpmin, stpmax, info)
-  *      doublereal *stx, *fx, *dx, *sty, *fy, *dy, *stp, *fp, *dp;
-  *      logical *brackt;
-  *      doublereal *stpmin, *stpmax;
-  *      integer *info;
-  */
+   *             brackt, stpmin, stpmax, info)
+   *      doublereal *stx, *fx, *dx, *sty, *fy, *dy, *stp, *fp, *dp;
+   *      logical *brackt;
+   *      doublereal *stpmin, *stpmax;
+   *      integer *info;
+   */
 
   /*     SUBROUTINE MCSTEP */
 
@@ -704,50 +674,44 @@ MoreThuenteLineSearchOptimizer
 
   /* CHECK THE INPUT PARAMETERS FOR ERRORS. */
 
-  if( ( brackt && ( stp <= std::min( stx, sty )
-    || stp >= std::max( stx, sty ) ) )
-    || dx * ( stp - stx ) >= 0.
-    || stpmax < stpmin )
+  if ((brackt && (stp <= std::min(stx, sty) || stp >= std::max(stx, sty))) || dx * (stp - stx) >= 0. || stpmax < stpmin)
   {
     return returncode;
   }
 
   /* DETERMINE IF THE DERIVATIVES HAVE OPPOSITE SIGN. */
 
-  sgnd = dp * ( dx / std::abs( dx ) );
+  sgnd = dp * (dx / std::abs(dx));
 
   /*     FIRST CASE. A HIGHER FUNCTION VALUE. */
   /*     THE MINIMUM IS BRACKETED. IF THE CUBIC STEP IS CLOSER */
   /*     TO STX THAN THE QUADRATIC STEP, THE CUBIC STEP IS TAKEN, */
   /*     ELSE THE AVERAGE OF THE CUBIC AND QUADRATIC STEPS IS TAKEN. */
 
-  if( fp > fx )
+  if (fp > fx)
   {
     returncode = 1;
-    bound      = true;
-    theta      = ( fx - fp ) * 3 / ( stp - stx ) + dx + dp;
-    s          = std::max(
-      std::max( std::abs( theta ), std::abs( dx ) ),
-      std::abs( dp ) );
-    d__1  = theta / s;
-    gamma = s * std::sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
-    if( stp < stx )
+    bound = true;
+    theta = (fx - fp) * 3 / (stp - stx) + dx + dp;
+    s = std::max(std::max(std::abs(theta), std::abs(dx)), std::abs(dp));
+    d__1 = theta / s;
+    gamma = s * std::sqrt(d__1 * d__1 - dx / s * (dp / s));
+    if (stp < stx)
     {
       gamma = -gamma;
     }
-    p    = gamma - dx + theta;
-    q    = gamma - dx + gamma + dp;
-    r    = p / q;
-    stpc = stx + r * ( stp - stx );
-    stpq = stx
-      + dx / ( ( fx - fp ) / ( stp - stx ) + dx ) / 2 * ( stp - stx );
-    if( std::abs( stpc - stx ) < std::abs( stpq - stx ) )
+    p = gamma - dx + theta;
+    q = gamma - dx + gamma + dp;
+    r = p / q;
+    stpc = stx + r * (stp - stx);
+    stpq = stx + dx / ((fx - fp) / (stp - stx) + dx) / 2 * (stp - stx);
+    if (std::abs(stpc - stx) < std::abs(stpq - stx))
     {
       stpf = stpc;
     }
     else
     {
-      stpf = stpc + ( stpq - stpc ) / 2;
+      stpf = stpc + (stpq - stpc) / 2;
     }
     brackt = true;
 
@@ -755,28 +719,25 @@ MoreThuenteLineSearchOptimizer
     /*     OPPOSITE SIGN. THE MINIMUM IS BRACKETED. IF THE CUBIC */
     /*     STEP IS CLOSER TO STX THAN THE QUADRATIC (SECANT) STEP, */
     /*     THE CUBIC STEP IS TAKEN, ELSE THE QUADRATIC STEP IS TAKEN. */
-
   }
-  else if( sgnd < 0. )
+  else if (sgnd < 0.)
   {
     returncode = 2;
-    bound      = false;
-    theta      = ( fx - fp ) * 3 / ( stp - stx ) + dx + dp;
-    s          = std::max(
-      std::max( std::abs( theta ), std::abs( dx ) ),
-      std::abs( dp ) );
-    d__1  = theta / s;
-    gamma = s * std::sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
-    if( stp > stx )
+    bound = false;
+    theta = (fx - fp) * 3 / (stp - stx) + dx + dp;
+    s = std::max(std::max(std::abs(theta), std::abs(dx)), std::abs(dp));
+    d__1 = theta / s;
+    gamma = s * std::sqrt(d__1 * d__1 - dx / s * (dp / s));
+    if (stp > stx)
     {
       gamma = -gamma;
     }
-    p    = gamma - dp + theta;
-    q    = gamma - dp + gamma + dx;
-    r    = p / q;
-    stpc = stp + r * ( stx - stp );
-    stpq = stp + dp / ( dp - dx ) * ( stx - stp );
-    if( std::abs( stpc - stp ) > std::abs( stpq - stp ) )
+    p = gamma - dp + theta;
+    q = gamma - dp + gamma + dx;
+    r = p / q;
+    stpc = stp + r * (stx - stp);
+    stpq = stp + dp / (dp - dx) * (stx - stp);
+    if (std::abs(stpc - stp) > std::abs(stpq - stp))
     {
       stpf = stpc;
     }
@@ -794,35 +755,32 @@ MoreThuenteLineSearchOptimizer
     /*     EITHER STPMIN OR STPMAX. THE QUADRATIC (SECANT) STEP IS ALSO */
     /*     COMPUTED AND IF THE MINIMUM IS BRACKETED THEN THE THE STEP */
     /*     CLOSEST TO STX IS TAKEN, ELSE THE STEP FARTHEST AWAY IS TAKEN. */
-
   }
-  else if( std::abs( dp ) < std::abs( dx ) )
+  else if (std::abs(dp) < std::abs(dx))
   {
     returncode = 3;
-    bound      = true;
-    theta      = ( fx - fp ) * 3 / ( stp - stx ) + dx + dp;
-    s          = std::max(
-      std::max( std::abs( theta ), std::abs( dx ) ),
-      std::abs( dp ) );
+    bound = true;
+    theta = (fx - fp) * 3 / (stp - stx) + dx + dp;
+    s = std::max(std::max(std::abs(theta), std::abs(dx)), std::abs(dp));
 
     /* THE CASE GAMMA = 0 ONLY ARISES IF THE CUBIC DOES NOT TEND */
     /* TO INFINITY IN THE DIRECTION OF THE STEP. */
 
-    d__1  = theta / s;
-    d__1  = d__1 * d__1 - dx / s * ( dp / s );
-    gamma = s * std::sqrt( std::max( 0., d__1 ) );
-    if( stp > stx )
+    d__1 = theta / s;
+    d__1 = d__1 * d__1 - dx / s * (dp / s);
+    gamma = s * std::sqrt(std::max(0., d__1));
+    if (stp > stx)
     {
       gamma = -gamma;
     }
     p = gamma - dp + theta;
-    q = gamma + ( dx - dp ) + gamma;
+    q = gamma + (dx - dp) + gamma;
     r = p / q;
-    if( r < 0. && gamma != 0. )
+    if (r < 0. && gamma != 0.)
     {
-      stpc = stp + r * ( stx - stp );
+      stpc = stp + r * (stx - stp);
     }
-    else if( stp > stx )
+    else if (stp > stx)
     {
       stpc = stpmax;
     }
@@ -830,10 +788,10 @@ MoreThuenteLineSearchOptimizer
     {
       stpc = stpmin;
     }
-    stpq = stp + dp / ( dp - dx ) * ( stx - stp );
-    if( brackt )
+    stpq = stp + dp / (dp - dx) * (stx - stp);
+    if (brackt)
     {
-      if( std::abs( stp - stpc ) < std::abs( stp - stpq ) )
+      if (std::abs(stp - stpc) < std::abs(stp - stpq))
       {
         stpf = stpc;
       }
@@ -844,7 +802,7 @@ MoreThuenteLineSearchOptimizer
     }
     else
     {
-      if( std::abs( stp - stpc ) > std::abs( stp - stpq ) )
+      if (std::abs(stp - stpc) > std::abs(stp - stpq))
       {
         stpf = stpc;
       }
@@ -858,31 +816,28 @@ MoreThuenteLineSearchOptimizer
     /*     SAME SIGN, AND THE MAGNITUDE OF THE DERIVATIVE DOES */
     /*     NOT DECREASE. IF THE MINIMUM IS NOT BRACKETED, THE STEP */
     /*     IS EITHER STPMIN OR STPMAX, ELSE THE CUBIC STEP IS TAKEN. */
-
   }
   else
   {
     returncode = 4;
-    bound      = false;
-    if( brackt )
+    bound = false;
+    if (brackt)
     {
-      theta = ( fp - fy ) * 3 / ( sty - stp ) + dy + dp;
-      s     = std::max(
-        std::max( std::abs( theta ), std::abs( dy ) ),
-        std::abs( dp ) );
-      d__1  = theta / s;
-      gamma = s * std::sqrt( d__1 * d__1 - dy / s * ( dp / s ) );
-      if( stp > sty )
+      theta = (fp - fy) * 3 / (sty - stp) + dy + dp;
+      s = std::max(std::max(std::abs(theta), std::abs(dy)), std::abs(dp));
+      d__1 = theta / s;
+      gamma = s * std::sqrt(d__1 * d__1 - dy / s * (dp / s));
+      if (stp > sty)
       {
         gamma = -gamma;
       }
-      p    = gamma - dp + theta;
-      q    = gamma - dp + gamma + dy;
-      r    = p / q;
-      stpc = stp + r * ( sty - stp );
+      p = gamma - dp + theta;
+      q = gamma - dp + gamma + dy;
+      r = p / q;
+      stpc = stp + r * (sty - stp);
       stpf = stpc;
     }
-    else if( stp > stx )
+    else if (stp > stx)
     {
       stpf = stpmax;
     }
@@ -895,41 +850,41 @@ MoreThuenteLineSearchOptimizer
   /*     UPDATE THE INTERVAL OF UNCERTAINTY. THIS UPDATE DOES NOT */
   /*     DEPEND ON THE NEW STEP OR THE CASE ANALYSIS ABOVE. */
 
-  if( fp > fx )
+  if (fp > fx)
   {
     sty = stp;
-    fy  = fp;
-    dy  = dp;
+    fy = fp;
+    dy = dp;
   }
   else
   {
-    if( sgnd < 0. )
+    if (sgnd < 0.)
     {
       sty = stx;
-      fy  = fx;
-      dy  = dx;
+      fy = fx;
+      dy = dx;
     }
     stx = stp;
-    fx  = fp;
-    dx  = dp;
+    fx = fp;
+    dx = dp;
   }
 
   /*     COMPUTE THE NEW STEP AND SAFEGUARD IT. */
 
-  stpf = std::min( stpmax, stpf );
-  stpf = std::max( stpmin, stpf );
-  stp  = stpf;
-  if( brackt && bound )
+  stpf = std::min(stpmax, stpf);
+  stpf = std::max(stpmin, stpf);
+  stp = stpf;
+  if (brackt && bound)
   {
-    if( sty > stx )
+    if (sty > stx)
     {
-      d__1 = stx + ( sty - stx ) * .66f;
-      stp  = std::min( d__1, stp );
+      d__1 = stx + (sty - stx) * .66f;
+      stp = std::min(d__1, stp);
     }
     else
     {
-      d__1 = stx + ( sty - stx ) * .66f;
-      stp  = std::max( d__1, stp );
+      d__1 = stx + (sty - stx) * .66f;
+      stp = std::max(d__1, stp);
     }
   }
 
@@ -943,79 +898,51 @@ MoreThuenteLineSearchOptimizer
  */
 
 void
-MoreThuenteLineSearchOptimizer
-::PrintSelf( std::ostream & os, Indent indent ) const
+MoreThuenteLineSearchOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
 {
   /** Call the superclass' PrintSelf. */
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
-  os << indent << "m_CurrentIteration: "
-     << this->m_CurrentIteration << std::endl;
-  os << indent << "m_InitialDerivativeProvided: "
-     << ( this->m_InitialDerivativeProvided ? "true" : "false" ) << std::endl;
-  os << indent << "m_InitialValueProvided: "
-     << ( this->m_InitialValueProvided ? "true" : "false" ) << std::endl;
-  os << indent << "m_StopCondition: "
-     << this->m_StopCondition << std::endl;
-  os << indent << "m_Stop: "
-     << ( this->m_Stop ? "true" : "false" ) << std::endl;
-  os << indent << "m_SufficientDecreaseConditionSatisfied: "
-     << ( this->m_SufficientDecreaseConditionSatisfied ? "true" : "false" ) << std::endl;
-  os << indent << "m_CurvatureConditionSatisfied: "
-     << ( this->m_CurvatureConditionSatisfied ? "true" : "false" ) << std::endl;
+  os << indent << "m_CurrentIteration: " << this->m_CurrentIteration << std::endl;
+  os << indent << "m_InitialDerivativeProvided: " << (this->m_InitialDerivativeProvided ? "true" : "false")
+     << std::endl;
+  os << indent << "m_InitialValueProvided: " << (this->m_InitialValueProvided ? "true" : "false") << std::endl;
+  os << indent << "m_StopCondition: " << this->m_StopCondition << std::endl;
+  os << indent << "m_Stop: " << (this->m_Stop ? "true" : "false") << std::endl;
+  os << indent
+     << "m_SufficientDecreaseConditionSatisfied: " << (this->m_SufficientDecreaseConditionSatisfied ? "true" : "false")
+     << std::endl;
+  os << indent << "m_CurvatureConditionSatisfied: " << (this->m_CurvatureConditionSatisfied ? "true" : "false")
+     << std::endl;
 
-  os << indent << "m_step: "
-     << this->m_step << std::endl;
-  os << indent << "m_stepx: "
-     << this->m_stepx << std::endl;
-  os << indent << "m_stepy: "
-     << this->m_stepy << std::endl;
-  os << indent << "m_stepmin: "
-     << this->m_stepmin << std::endl;
-  os << indent << "m_stepmax: "
-     << this->m_stepmax << std::endl;
+  os << indent << "m_step: " << this->m_step << std::endl;
+  os << indent << "m_stepx: " << this->m_stepx << std::endl;
+  os << indent << "m_stepy: " << this->m_stepy << std::endl;
+  os << indent << "m_stepmin: " << this->m_stepmin << std::endl;
+  os << indent << "m_stepmax: " << this->m_stepmax << std::endl;
 
-  os << indent << "m_f: "
-     << this->m_f << std::endl;
-  os << indent << "m_fx: "
-     << this->m_fx << std::endl;
-  os << indent << "m_fy: "
-     << this->m_fy << std::endl;
-  os << indent << "m_finit: "
-     << this->m_finit << std::endl;
+  os << indent << "m_f: " << this->m_f << std::endl;
+  os << indent << "m_fx: " << this->m_fx << std::endl;
+  os << indent << "m_fy: " << this->m_fy << std::endl;
+  os << indent << "m_finit: " << this->m_finit << std::endl;
 
-  os << indent << "m_g: "
-     << this->m_g << std::endl;
-  os << indent << "m_dg: "
-     << this->m_dg << std::endl;
-  os << indent << "m_dginit: "
-     << this->m_dginit << std::endl;
-  os << indent << "m_dgx: "
-     << this->m_dgx << std::endl;
-  os << indent << "m_dgy: "
-     << this->m_dgy << std::endl;
-  os << indent << "m_dgtest: "
-     << this->m_dgtest << std::endl;
+  os << indent << "m_g: " << this->m_g << std::endl;
+  os << indent << "m_dg: " << this->m_dg << std::endl;
+  os << indent << "m_dginit: " << this->m_dginit << std::endl;
+  os << indent << "m_dgx: " << this->m_dgx << std::endl;
+  os << indent << "m_dgy: " << this->m_dgy << std::endl;
+  os << indent << "m_dgtest: " << this->m_dgtest << std::endl;
 
-  os << indent << "m_width: "
-     << this->m_width << std::endl;
-  os << indent << "m_width1: "
-     << this->m_width1 << std::endl;
-  os << indent << "m_brackt: "
-     << ( this->m_brackt ? "true" : "false" ) << std::endl;
-  os << indent << "m_stage1: "
-     << ( this->m_stage1 ? "true" : "false" ) << std::endl;
-  os << indent << "m_SafeGuardedStepFailed: "
-     << ( this->m_SafeGuardedStepFailed ? "true" : "false" ) << std::endl;
+  os << indent << "m_width: " << this->m_width << std::endl;
+  os << indent << "m_width1: " << this->m_width1 << std::endl;
+  os << indent << "m_brackt: " << (this->m_brackt ? "true" : "false") << std::endl;
+  os << indent << "m_stage1: " << (this->m_stage1 ? "true" : "false") << std::endl;
+  os << indent << "m_SafeGuardedStepFailed: " << (this->m_SafeGuardedStepFailed ? "true" : "false") << std::endl;
 
-  os << indent << "m_MaximumNumberOfIterations: "
-     << this->m_MaximumNumberOfIterations << std::endl;
-  os << indent << "m_ValueTolerance: "
-     << this->m_ValueTolerance << std::endl;
-  os << indent << "m_GradientTolerance: "
-     << this->m_GradientTolerance << std::endl;
-  os << indent << "m_IntervalTolerance: "
-     << this->m_IntervalTolerance << std::endl;
+  os << indent << "m_MaximumNumberOfIterations: " << this->m_MaximumNumberOfIterations << std::endl;
+  os << indent << "m_ValueTolerance: " << this->m_ValueTolerance << std::endl;
+  os << indent << "m_GradientTolerance: " << this->m_GradientTolerance << std::endl;
+  os << indent << "m_IntervalTolerance: " << this->m_IntervalTolerance << std::endl;
 
 } // end PrintSelf()
 

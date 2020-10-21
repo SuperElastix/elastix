@@ -25,66 +25,65 @@ namespace elastix
 {
 
 /**
-* \class ReducedDimensionBSplineResampleInterpolator
-* \brief A resample-interpolator based on B-splines which ignores the last dimension.
-*
-* The parameters used in this class are:
-* \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
-*   <tt>(ResampleInterpolator "FinalReducedDimensionBSplineInterpolator")</tt>
-* \parameter FinalReducedDimensionBSplineInterpolationOrder: the order of the B-spline used to resample
-*    the deformed moving image; possible values: (0-5) \n
-*    example: <tt>(FinalReducedDimensionBSplineInterpolationOrder 3) </tt> \n
-*    Default: 3.
-*
-* The transform parameters necessary for transformix, additionally defined by this class, are:
-* \transformparameter FinalReducedDimensionBSplineInterpolationOrder: the order of the B-spline used to resample
-*    the deformed moving image; possible values: (0-5) \n
-*    example: <tt>(FinalReducedDimensionBSplineInterpolationOrder 3) </tt> \n
-*    Default: 3.
-*
-* If you are in memory problems, you may use the LinearResampleInterpolator,
-* or the NearestNeighborResampleInterpolator. Note that the former will also
-* interpolate in the last dimension.
-*
-* \ingroup ResampleInterpolators
-* \sa ReducedDimensionBSplineResampleInterpolatorFloat
-*/
+ * \class ReducedDimensionBSplineResampleInterpolator
+ * \brief A resample-interpolator based on B-splines which ignores the last dimension.
+ *
+ * The parameters used in this class are:
+ * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
+ *   <tt>(ResampleInterpolator "FinalReducedDimensionBSplineInterpolator")</tt>
+ * \parameter FinalReducedDimensionBSplineInterpolationOrder: the order of the B-spline used to resample
+ *    the deformed moving image; possible values: (0-5) \n
+ *    example: <tt>(FinalReducedDimensionBSplineInterpolationOrder 3) </tt> \n
+ *    Default: 3.
+ *
+ * The transform parameters necessary for transformix, additionally defined by this class, are:
+ * \transformparameter FinalReducedDimensionBSplineInterpolationOrder: the order of the B-spline used to resample
+ *    the deformed moving image; possible values: (0-5) \n
+ *    example: <tt>(FinalReducedDimensionBSplineInterpolationOrder 3) </tt> \n
+ *    Default: 3.
+ *
+ * If you are in memory problems, you may use the LinearResampleInterpolator,
+ * or the NearestNeighborResampleInterpolator. Note that the former will also
+ * interpolate in the last dimension.
+ *
+ * \ingroup ResampleInterpolators
+ * \sa ReducedDimensionBSplineResampleInterpolatorFloat
+ */
 
-template< class TElastix >
-class ReducedDimensionBSplineResampleInterpolator :
-  public
-  itk::ReducedDimensionBSplineInterpolateImageFunction<
-  typename ResampleInterpolatorBase< TElastix >::InputImageType,
-  typename ResampleInterpolatorBase< TElastix >::CoordRepType,
-  double >,   //CoefficientType
-  public ResampleInterpolatorBase< TElastix >
+template <class TElastix>
+class ReducedDimensionBSplineResampleInterpolator
+  : public itk::ReducedDimensionBSplineInterpolateImageFunction<
+      typename ResampleInterpolatorBase<TElastix>::InputImageType,
+      typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+      double>
+  , // CoefficientType
+    public ResampleInterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef ReducedDimensionBSplineResampleInterpolator Self;
-  typedef itk::BSplineInterpolateImageFunction<
-    typename ResampleInterpolatorBase< TElastix >::InputImageType,
-    typename ResampleInterpolatorBase< TElastix >::CoordRepType,
-    double >                                    Superclass1;
-  typedef ResampleInterpolatorBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >            Pointer;
-  typedef itk::SmartPointer< const Self >      ConstPointer;
+  typedef itk::BSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                               typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+                                               double>
+                                             Superclass1;
+  typedef ResampleInterpolatorBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>            Pointer;
+  typedef itk::SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ReducedDimensionBSplineResampleInterpolator, itk::ReducedDimensionBSplineInterpolateImageFunction );
+  itkTypeMacro(ReducedDimensionBSplineResampleInterpolator, itk::ReducedDimensionBSplineInterpolateImageFunction);
 
   /** Name of this class.
-  * Use this name in the parameter file to select this specific resample interpolator. \n
-  * example: <tt>(ResampleInterpolator "FinalBSplineInterpolator")</tt>\n
-  */
-  elxClassNameMacro( "FinalReducedDimensionBSplineInterpolator" );
+   * Use this name in the parameter file to select this specific resample interpolator. \n
+   * example: <tt>(ResampleInterpolator "FinalBSplineInterpolator")</tt>\n
+   */
+  elxClassNameMacro("FinalReducedDimensionBSplineInterpolator");
 
   /** Dimension of the image. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass1::OutputType               OutputType;
@@ -109,36 +108,37 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Execute stuff before the actual registration:
-  * \li Set the spline order.
-  */
-  void BeforeRegistration( void ) override;
+   * \li Set the spline order.
+   */
+  void
+  BeforeRegistration(void) override;
 
   /** Function to read transform-parameters from a file. */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file. */
-  void WriteToFile( void ) const override;
+  void
+  WriteToFile(void) const override;
 
 protected:
-
   /** The constructor. */
   ReducedDimensionBSplineResampleInterpolator() {}
   /** The destructor. */
   ~ReducedDimensionBSplineResampleInterpolator() override {}
 
 private:
-
   /** The private constructor. */
-  ReducedDimensionBSplineResampleInterpolator( const Self & );  // purposely not implemented
+  ReducedDimensionBSplineResampleInterpolator(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxRDBSplineResampleInterpolator.hxx"
+#  include "elxRDBSplineResampleInterpolator.hxx"
 #endif
 
 #endif // end __elxReducedDimensionBSplineResampleInterpolator_h

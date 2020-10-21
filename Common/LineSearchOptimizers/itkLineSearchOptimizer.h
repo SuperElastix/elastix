@@ -37,14 +37,13 @@ namespace itk
 class LineSearchOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
-
   typedef LineSearchOptimizer            Self;
   typedef SingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer< Self >           Pointer;
-  typedef SmartPointer< const Self >     ConstPointer;
+  typedef SmartPointer<Self>             Pointer;
+  typedef SmartPointer<const Self>       ConstPointer;
 
-  //itkNewMacro(Self); because this is an abstract base class.
-  itkTypeMacro( LineSearchOptimizer, SingleValuedNonLinearOptimizer );
+  // itkNewMacro(Self); because this is an abstract base class.
+  itkTypeMacro(LineSearchOptimizer, SingleValuedNonLinearOptimizer);
 
   typedef Superclass::MeasureType      MeasureType;
   typedef Superclass::ParametersType   ParametersType;
@@ -52,14 +51,15 @@ public:
   typedef Superclass::CostFunctionType CostFunctionType;
 
   /** Set/Get the LineSearchDirection */
-  virtual void SetLineSearchDirection( const ParametersType & arg )
+  virtual void
+  SetLineSearchDirection(const ParametersType & arg)
   {
     this->m_LineSearchDirection = arg;
     this->Modified();
   }
 
 
-  itkGetConstReferenceMacro( LineSearchDirection, ParametersType );
+  itkGetConstReferenceMacro(LineSearchDirection, ParametersType);
 
   /** Inheriting classes may override these methods if they need
    * value/derivative information of the cost function at the
@@ -70,9 +70,12 @@ public:
    * should call these methods, to avoid possible unnecessary
    * computations.
    */
-  virtual void SetInitialDerivative(
-    const DerivativeType & itkNotUsed( derivative ) ) {}
-  virtual void SetInitialValue( MeasureType itkNotUsed( value ) ) {}
+  virtual void
+  SetInitialDerivative(const DerivativeType & itkNotUsed(derivative))
+  {}
+  virtual void
+  SetInitialValue(MeasureType itkNotUsed(value))
+  {}
 
   /** These methods must be implemented by inheriting classes. It
    * depends on the specific line search algorithm if it already computed
@@ -84,19 +87,21 @@ public:
    * These methods allow the main optimization algorithm to reuse
    * data that the LineSearch algorithm already computed.
    */
-  virtual void GetCurrentValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const = 0;
+  virtual void
+  GetCurrentValueAndDerivative(MeasureType & value, DerivativeType & derivative) const = 0;
 
-  virtual void GetCurrentDerivative( DerivativeType & derivative ) const = 0;
+  virtual void
+  GetCurrentDerivative(DerivativeType & derivative) const = 0;
 
-  virtual MeasureType GetCurrentValue( void ) const = 0;
+  virtual MeasureType
+  GetCurrentValue(void) const = 0;
 
   /**
    * StepLength is a a scalar, defined as:
    * m_InitialPosition + StepLength * m_LineSearchDirection  =
    * m_CurrentPosition
    */
-  itkGetConstMacro( CurrentStepLength, double );
+  itkGetConstMacro(CurrentStepLength, double);
 
   /** Settings: the maximum/minimum step length and the initial
    * estimate.
@@ -107,18 +112,18 @@ public:
    * call these methods, 'in the hope' that the line search
    * optimizer does something sensible with it.
    */
-  itkSetMacro( MinimumStepLength, double );
-  itkGetConstMacro( MinimumStepLength, double );
-  itkSetMacro( MaximumStepLength, double );
-  itkGetConstMacro( MaximumStepLength, double );
-  itkSetMacro( InitialStepLengthEstimate, double );
-  itkGetConstMacro( InitialStepLengthEstimate, double );
+  itkSetMacro(MinimumStepLength, double);
+  itkGetConstMacro(MinimumStepLength, double);
+  itkSetMacro(MaximumStepLength, double);
+  itkGetConstMacro(MaximumStepLength, double);
+  itkSetMacro(InitialStepLengthEstimate, double);
+  itkGetConstMacro(InitialStepLengthEstimate, double);
 
 protected:
-
   LineSearchOptimizer();
   ~LineSearchOptimizer() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   double m_CurrentStepLength;
 
@@ -127,22 +132,23 @@ protected:
    * m_CurrentPosition =
    * m_InitialPosition + StepLength * m_LineSearchDirection
    */
-  virtual void SetCurrentStepLength( double step );
+  virtual void
+  SetCurrentStepLength(double step);
 
   /** Computes the inner product of the argument and the line search direction. */
-  double DirectionalDerivative( const DerivativeType & derivative ) const;
+  double
+  DirectionalDerivative(const DerivativeType & derivative) const;
 
 private:
-
-  LineSearchOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );      // purposely not implemented
+  LineSearchOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   ParametersType m_LineSearchDirection;
 
   double m_MinimumStepLength;
   double m_MaximumStepLength;
   double m_InitialStepLengthEstimate;
-
 };
 
 } // end namespace itk

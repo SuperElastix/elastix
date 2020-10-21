@@ -71,17 +71,16 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template< class TElastix >
-class RegistrationBase : public BaseComponentSE< TElastix >
+template <class TElastix>
+class RegistrationBase : public BaseComponentSE<TElastix>
 {
 public:
-
   /** Standard ITK stuff. */
-  typedef RegistrationBase            Self;
-  typedef BaseComponentSE< TElastix > Superclass;
+  typedef RegistrationBase          Self;
+  typedef BaseComponentSE<TElastix> Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( RegistrationBase, BaseComponentSE );
+  itkTypeMacro(RegistrationBase, BaseComponentSE);
 
   /** Typedef's from Elastix. */
   typedef typename Superclass::ElastixType          ElastixType;
@@ -96,28 +95,29 @@ public:
   typedef typename ElastixType::MovingImageType MovingImageType;
 
   /** Get the dimension of the fixed image. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   /** Get the dimension of the moving image. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedef for ITKBaseType. */
-  typedef itk::MultiResolutionImageRegistrationMethod2<
-    FixedImageType, MovingImageType >       ITKBaseType;
+  typedef itk::MultiResolutionImageRegistrationMethod2<FixedImageType, MovingImageType> ITKBaseType;
 
   /** Typedef for mask erosion options */
-  typedef std::vector< bool > UseMaskErosionArrayType;
+  typedef std::vector<bool> UseMaskErosionArrayType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
+  virtual ITKBaseType *
+  GetAsITKBaseType(void)
   {
-    return dynamic_cast< ITKBaseType * >( this );
+    return dynamic_cast<ITKBaseType *>(this);
   }
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  virtual const ITKBaseType *
+  GetAsITKBaseType(void) const
   {
-    return dynamic_cast< const ITKBaseType * >( this );
+    return dynamic_cast<const ITKBaseType *>(this);
   }
 
 
@@ -141,42 +141,37 @@ public:
    * All options can be specified for each resolution specifically, or at once for all
    * resolutions.
    */
-  virtual bool ReadMaskParameters(
-    UseMaskErosionArrayType & useMaskErosionArray,
-    const unsigned int nrOfMasks,
-    const std::string & whichMask,
-    const unsigned int level ) const;
+  virtual bool
+  ReadMaskParameters(UseMaskErosionArrayType & useMaskErosionArray,
+                     const unsigned int        nrOfMasks,
+                     const std::string &       whichMask,
+                     const unsigned int        level) const;
 
 protected:
-
   /** The constructor. */
   RegistrationBase() {}
   /** The destructor. */
   ~RegistrationBase() override {}
 
   /** Typedef's for mask support. */
-  typedef typename ElastixType::MaskPixelType   MaskPixelType;
-  typedef typename ElastixType::FixedMaskType   FixedMaskImageType;
-  typedef typename ElastixType::MovingMaskType  MovingMaskImageType;
-  typedef typename FixedMaskImageType::Pointer  FixedMaskImagePointer;
-  typedef typename MovingMaskImageType::Pointer MovingMaskImagePointer;
-  typedef itk::ImageMaskSpatialObject<
-    itkGetStaticConstMacro( FixedImageDimension ) >          FixedMaskSpatialObjectType;
-  typedef itk::ImageMaskSpatialObject<
-    itkGetStaticConstMacro( MovingImageDimension ) >         MovingMaskSpatialObjectType;
-  typedef typename
-    FixedMaskSpatialObjectType::Pointer FixedMaskSpatialObjectPointer;
-  typedef typename
-    MovingMaskSpatialObjectType::Pointer MovingMaskSpatialObjectPointer;
+  typedef typename ElastixType::MaskPixelType                                       MaskPixelType;
+  typedef typename ElastixType::FixedMaskType                                       FixedMaskImageType;
+  typedef typename ElastixType::MovingMaskType                                      MovingMaskImageType;
+  typedef typename FixedMaskImageType::Pointer                                      FixedMaskImagePointer;
+  typedef typename MovingMaskImageType::Pointer                                     MovingMaskImagePointer;
+  typedef itk::ImageMaskSpatialObject<itkGetStaticConstMacro(FixedImageDimension)>  FixedMaskSpatialObjectType;
+  typedef itk::ImageMaskSpatialObject<itkGetStaticConstMacro(MovingImageDimension)> MovingMaskSpatialObjectType;
+  typedef typename FixedMaskSpatialObjectType::Pointer                              FixedMaskSpatialObjectPointer;
+  typedef typename MovingMaskSpatialObjectType::Pointer                             MovingMaskSpatialObjectPointer;
 
   typedef typename ITKBaseType::FixedImagePyramidType  FixedImagePyramidType;
   typedef typename ITKBaseType::MovingImagePyramidType MovingImagePyramidType;
 
   /** Some typedef's used for eroding the masks */
-  typedef itk::ErodeMaskImageFilter< FixedMaskImageType >  FixedMaskErodeFilterType;
-  typedef typename FixedMaskErodeFilterType::Pointer       FixedMaskErodeFilterPointer;
-  typedef itk::ErodeMaskImageFilter< MovingMaskImageType > MovingMaskErodeFilterType;
-  typedef typename MovingMaskErodeFilterType::Pointer      MovingMaskErodeFilterPointer;
+  typedef itk::ErodeMaskImageFilter<FixedMaskImageType>  FixedMaskErodeFilterType;
+  typedef typename FixedMaskErodeFilterType::Pointer     FixedMaskErodeFilterPointer;
+  typedef itk::ErodeMaskImageFilter<MovingMaskImageType> MovingMaskErodeFilterType;
+  typedef typename MovingMaskErodeFilterType::Pointer    MovingMaskErodeFilterPointer;
 
   /** Generate a spatial object from a mask image, possibly after eroding the image
    * Input:
@@ -190,9 +185,11 @@ protected:
    *
    * This function is used by the registration components
    */
-  FixedMaskSpatialObjectPointer GenerateFixedMaskSpatialObject(
-    const FixedMaskImageType * maskImage, bool useMaskErosion,
-    const FixedImagePyramidType * pyramid, unsigned int level ) const;
+  FixedMaskSpatialObjectPointer
+  GenerateFixedMaskSpatialObject(const FixedMaskImageType *    maskImage,
+                                 bool                          useMaskErosion,
+                                 const FixedImagePyramidType * pyramid,
+                                 unsigned int                  level) const;
 
   /** Generate a spatial object from a mask image, possibly after eroding the image
    * Input:
@@ -206,23 +203,24 @@ protected:
    *
    * This function is used by the registration components
    */
-  MovingMaskSpatialObjectPointer GenerateMovingMaskSpatialObject(
-    const MovingMaskImageType * maskImage, bool useMaskErosion,
-    const MovingImagePyramidType * pyramid, unsigned int level ) const;
+  MovingMaskSpatialObjectPointer
+  GenerateMovingMaskSpatialObject(const MovingMaskImageType *    maskImage,
+                                  bool                           useMaskErosion,
+                                  const MovingImagePyramidType * pyramid,
+                                  unsigned int                   level) const;
 
 private:
-
   /** The private constructor. */
-  RegistrationBase( const Self & );   // purposely not implemented
+  RegistrationBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );     // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxRegistrationBase.hxx"
+#  include "elxRegistrationBase.hxx"
 #endif
 
 #endif // end #ifndef __elxRegistrationBase_h

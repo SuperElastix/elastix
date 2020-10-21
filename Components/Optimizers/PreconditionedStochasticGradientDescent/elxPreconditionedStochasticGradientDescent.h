@@ -174,32 +174,30 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template< class TElastix >
-class PreconditionedStochasticGradientDescent :
-  public itk::PreconditionedASGDOptimizer,
-  public OptimizerBase< TElastix >
+template <class TElastix>
+class PreconditionedStochasticGradientDescent
+  : public itk::PreconditionedASGDOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK. */
   typedef PreconditionedStochasticGradientDescent Self;
   typedef PreconditionedASGDOptimizer             Superclass1;
-  typedef OptimizerBase< TElastix >               Superclass2;
-  typedef itk::SmartPointer< Self >               Pointer;
-  typedef itk::SmartPointer< const Self >         ConstPointer;
+  typedef OptimizerBase<TElastix>                 Superclass2;
+  typedef itk::SmartPointer<Self>                 Pointer;
+  typedef itk::SmartPointer<const Self>           ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PreconditionedStochasticGradientDescent,
-    VoxelWiseASGDOptimizer );
+  itkTypeMacro(PreconditionedStochasticGradientDescent, VoxelWiseASGDOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer.
    * example: <tt>(Optimizer "PreconditionedStochasticGradientDescent")</tt>\n
    */
-  elxClassNameMacro( "PreconditionedStochasticGradientDescent" );
+  elxClassNameMacro("PreconditionedStochasticGradientDescent");
 
   /** Typedef's inherited from Superclass1. */
   typedef Superclass1::CostFunctionType    CostFunctionType;
@@ -222,32 +220,41 @@ public:
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed.
    */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation.
    */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Advance one step following the gradient direction. */
-  void AdvanceOneStep( void ) override;
+  void
+  AdvanceOneStep(void) override;
 
   /** If automatic gain estimation is desired, then estimate SP_a, SP_alpha
    * SigmoidScale, SigmoidMax, SigmoidMin.
    * After that call Superclass' implementation.
    */
-  void ResumeOptimization( void ) override;
+  void
+  ResumeOptimization(void) override;
 
   /** Stop optimization and pass on exception. */
-  void MetricErrorResponse( itk::ExceptionObject & err ) override;
+  void
+  MetricErrorResponse(itk::ExceptionObject & err) override;
 
   /** Set/Get whether automatic parameter estimation is desired.
    * If true, make sure to set the maximum step length.
@@ -258,23 +265,22 @@ public:
    * A usually suitable value for SP_A is 20, which is the
    * default setting, if not specified by the user.
    */
-  itkSetMacro( AutomaticParameterEstimation, bool );
-  itkGetConstMacro( AutomaticParameterEstimation, bool );
+  itkSetMacro(AutomaticParameterEstimation, bool);
+  itkGetConstMacro(AutomaticParameterEstimation, bool);
 
   /** Set/Get maximum step length. */
-  itkSetMacro( MaximumStepLength, double );
-  itkGetConstReferenceMacro( MaximumStepLength, double );
+  itkSetMacro(MaximumStepLength, double);
+  itkGetConstReferenceMacro(MaximumStepLength, double);
 
   /** Set/Get regularization value kappa. */
-  itkSetClampMacro( RegularizationKappa, double, 0.0, 1.0 );
-  itkGetConstReferenceMacro( RegularizationKappa, double );
+  itkSetClampMacro(RegularizationKappa, double, 0.0, 1.0);
+  itkGetConstReferenceMacro(RegularizationKappa, double);
 
   /** Set/Get the MaximumNumberOfSamplingAttempts. */
-  itkSetMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
-  itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
+  itkSetMacro(MaximumNumberOfSamplingAttempts, SizeValueType);
+  itkGetConstReferenceMacro(MaximumNumberOfSamplingAttempts, SizeValueType);
 
-protected :
-
+protected:
   PreconditionedStochasticGradientDescent();
   ~PreconditionedStochasticGradientDescent() override {}
 
@@ -288,35 +294,33 @@ protected :
   typedef typename RegistrationType::ITKBaseType      itkRegistrationType;
   typedef typename itkRegistrationType::TransformType TransformType;
   typedef typename TransformType::JacobianType        JacobianType;
-  typedef typename JacobianType::ValueType JacobianValueType;
-  struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
-  typedef typename std::vector< SettingsType > SettingsVectorType;
+  typedef typename JacobianType::ValueType            JacobianValueType;
+  struct SettingsType
+  {
+    double a, A, alpha, fmax, fmin, omega;
+  };
+  typedef typename std::vector<SettingsType>   SettingsVectorType;
   typedef typename ElastixType::FixedImageType OutputImageType;
 
-  typedef itk::ComputePreconditionerUsingDisplacementDistribution<
-    FixedImageType, TransformType >                     PreconditionerEstimationType;
+  typedef itk::ComputePreconditionerUsingDisplacementDistribution<FixedImageType, TransformType>
+                                                         PreconditionerEstimationType;
   typedef typename PreconditionerEstimationType::Pointer PreconditionerEstimationPointer;
 
-  typedef itk::ComputeDisplacementDistribution<
-    FixedImageType, TransformType >                    ComputeDisplacementDistributionType;
+  typedef itk::ComputeDisplacementDistribution<FixedImageType, TransformType> ComputeDisplacementDistributionType;
 
   /** Samplers: */
-  typedef itk::ImageSamplerBase< FixedImageType >       ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer        ImageSamplerBasePointer;
-  typedef itk::ImageRandomSamplerBase< FixedImageType > ImageRandomSamplerBaseType;
-  typedef typename
-    ImageRandomSamplerBaseType::Pointer ImageRandomSamplerBasePointer;
-  typedef
-    itk::ImageRandomCoordinateSampler< FixedImageType > ImageRandomCoordinateSamplerType;
-  typedef typename
-    ImageRandomCoordinateSamplerType::Pointer ImageRandomCoordinateSamplerPointer;
-  typedef itk::ImageRandomSampler< FixedImageType > ImageRandomSamplerType;
-  typedef typename ImageRandomSamplerType::Pointer ImageRandomSamplerPointer;
-  typedef itk::ImageGridSampler< FixedImageType > ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer  ImageGridSamplerPointer;
-  typedef typename
-    ImageGridSamplerType::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
+  typedef itk::ImageSamplerBase<FixedImageType>                   ImageSamplerBaseType;
+  typedef typename ImageSamplerBaseType::Pointer                  ImageSamplerBasePointer;
+  typedef itk::ImageRandomSamplerBase<FixedImageType>             ImageRandomSamplerBaseType;
+  typedef typename ImageRandomSamplerBaseType::Pointer            ImageRandomSamplerBasePointer;
+  typedef itk::ImageRandomCoordinateSampler<FixedImageType>       ImageRandomCoordinateSamplerType;
+  typedef typename ImageRandomCoordinateSamplerType::Pointer      ImageRandomCoordinateSamplerPointer;
+  typedef itk::ImageRandomSampler<FixedImageType>                 ImageRandomSamplerType;
+  typedef typename ImageRandomSamplerType::Pointer                ImageRandomSamplerPointer;
+  typedef itk::ImageGridSampler<FixedImageType>                   ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer                  ImageGridSamplerPointer;
+  typedef typename ImageGridSamplerType::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer              ImageSampleContainerPointer;
 
   /** Other protected typedefs */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
@@ -326,21 +330,20 @@ protected :
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   typedef JacobianType TransformJacobianType;
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
   typedef typename TransformType::ScalarType CoordinateRepresentationType;
 
-  typedef itk::AdvancedTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro( FixedImageDimension ),
-    itkGetStaticConstMacro( MovingImageDimension ) >            AdvancedTransformType;
-  typedef typename AdvancedTransformType::Pointer               AdvancedTransformPointer;
-  typedef typename
-    AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef itk::AdvancedTransform<CoordinateRepresentationType,
+                                 itkGetStaticConstMacro(FixedImageDimension),
+                                 itkGetStaticConstMacro(MovingImageDimension)>
+                                                                     AdvancedTransformType;
+  typedef typename AdvancedTransformType::Pointer                    AdvancedTransformPointer;
+  typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
-  typedef itk::AdvancedBSplineDeformableTransformBase<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro( FixedImageDimension )>              AdvancedBSplineDeformableTransformType;
+  typedef itk::AdvancedBSplineDeformableTransformBase<CoordinateRepresentationType,
+                                                      itkGetStaticConstMacro(FixedImageDimension)>
+                                                                   AdvancedBSplineDeformableTransformType;
   typedef typename AdvancedBSplineDeformableTransformType::Pointer BSplineTransformBasePointer;
 
   /** Variable to store the automatically determined settings for each resolution. */
@@ -359,23 +362,26 @@ protected :
   /** RandomGenerator for AddRandomPerturbation. */
   RandomGeneratorPointer m_RandomGenerator;
 
-  double                    m_SigmoidScaleFactor;
-  double                    m_NoiseFactor;
-  double                    m_GlobalStepSize;
-  double                    m_RegularizationKappa;
-  double                    m_ConditionNumber;
+  double m_SigmoidScaleFactor;
+  double m_NoiseFactor;
+  double m_GlobalStepSize;
+  double m_RegularizationKappa;
+  double m_ConditionNumber;
 
   /** Check if the transform is an advanced transform. Called by Initialize. */
-  virtual void CheckForAdvancedTransform( void );
+  virtual void
+  CheckForAdvancedTransform(void);
 
   /** Print the contents of the settings vector to elxout. */
-  virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
+  virtual void
+  PrintSettingsVector(const SettingsVectorType & settings) const;
 
   /** Select different method to estimate some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
    * SigmoidScale.
    */
-  virtual void AutomaticPreconditionerEstimation( void );
+  virtual void
+  AutomaticPreconditionerEstimation(void);
 
   /** Measure some derivatives, exact and approximated. Returns
    * the squared magnitude of the gradient and approximation error.
@@ -384,24 +390,25 @@ protected :
    * mu_n - mu_0 ~ N(0, perturbationSigma^2 I );
    * gg = g^T g, etc.
    */
-  virtual void SampleGradients( const ParametersType & mu0,
-    double perturbationSigma, double & gg, double & ee );
+  virtual void
+  SampleGradients(const ParametersType & mu0, double perturbationSigma, double & gg, double & ee);
 
   /** Helper function, which calls GetScaledValueAndDerivative and does
    * some exception handling. Used by SampleGradients.
    */
-  virtual void GetScaledDerivativeWithExceptionHandling(
-    const ParametersType & parameters, DerivativeType & derivative );
+  virtual void
+  GetScaledDerivativeWithExceptionHandling(const ParametersType & parameters, DerivativeType & derivative);
 
   /** Helper function that adds a random perturbation delta to the input
    * parameters, with delta ~ sigma * N(0,I). Used by SampleGradients.
    */
-  virtual void AddRandomPerturbation( ParametersType & parameters, double sigma );
+  virtual void
+  AddRandomPerturbation(ParametersType & parameters, double sigma);
 
 private:
-
-  PreconditionedStochasticGradientDescent( const Self & );  // purposely not implemented
-  void operator=( const Self & ); // purposely not implemented
+  PreconditionedStochasticGradientDescent(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;
@@ -420,13 +427,12 @@ private:
   /** The flag of using noise compensation. */
   bool m_UseNoiseCompensation;
   bool m_OriginalButSigmoidToDefault;
-
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxPreconditionedStochasticGradientDescent.hxx"
+#  include "elxPreconditionedStochasticGradientDescent.hxx"
 #endif
 
 #endif // end #ifndef __elxPreconditionedStochasticGradientDescent_h

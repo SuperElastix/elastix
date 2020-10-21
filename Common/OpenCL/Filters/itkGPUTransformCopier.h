@@ -58,23 +58,21 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimensions,
-typename TTransform, typename TOutputTransformPrecisionType >
+template <typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType>
 class GPUTransformCopier : public Object
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUTransformCopier         Self;
-  typedef Object                     Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUTransformCopier       Self;
+  typedef Object                   Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUTransformCopier, Object );
+  itkTypeMacro(GPUTransformCopier, Object);
 
   /** Type CPU definitions for the transform. */
   typedef TTransform                                     CPUTransformType;
@@ -84,22 +82,21 @@ public:
   typedef typename CPUTransformType::ScalarType          CPUScalarType;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, CPUTransformType::InputSpaceDimension );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, CPUTransformType::OutputSpaceDimension );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, CPUTransformType::InputSpaceDimension);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, CPUTransformType::OutputSpaceDimension);
 
   /** Type GPU definitions for the transform. */
-  typedef TOutputTransformPrecisionType GPUScalarType;
-  typedef Transform< GPUScalarType, InputSpaceDimension, OutputSpaceDimension >
-    GPUTransformType;
-  typedef typename GPUTransformType::Pointer             GPUTransformPointer;
-  typedef typename GPUTransformType::ParametersType      GPUParametersType;
-  typedef typename GPUTransformType::FixedParametersType GPUFixedParametersType;
+  typedef TOutputTransformPrecisionType                                       GPUScalarType;
+  typedef Transform<GPUScalarType, InputSpaceDimension, OutputSpaceDimension> GPUTransformType;
+  typedef typename GPUTransformType::Pointer                                  GPUTransformPointer;
+  typedef typename GPUTransformType::ParametersType                           GPUParametersType;
+  typedef typename GPUTransformType::FixedParametersType                      GPUFixedParametersType;
 
   /** Get/Set the input transform. */
-  itkSetConstObjectMacro( InputTransform, CPUTransformType );
+  itkSetConstObjectMacro(InputTransform, CPUTransformType);
 
   /** Compute of the output transform. */
-  itkGetModifiableObjectMacro( Output, GPUTransformType );
+  itkGetModifiableObjectMacro(Output, GPUTransformType);
 
   /** Get/Set the explicit mode. The default is true.
    * If the explicit mode has been set to false that means that early in the
@@ -109,124 +106,124 @@ public:
    * ObjectFactoryBase::RegisterFactory( GPUBSplineTransformFactory::New() );
    * ObjectFactoryBase::RegisterFactory( GPUEuler3DTransformFactory::New() );
    * ObjectFactoryBase::RegisterFactory( GPUSimilarity3DTransformFactory::New() ); */
-  itkGetConstMacro( ExplicitMode, bool );
-  itkSetMacro( ExplicitMode, bool );
+  itkGetConstMacro(ExplicitMode, bool);
+  itkSetMacro(ExplicitMode, bool);
 
   /** Update method. */
-  void Update( void );
+  void
+  Update(void);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   // Begin concept checking
-  itkConceptMacro( OutputTransformPrecisionTypeIsFloatingPointCheck,
-    ( Concept::IsFloatingPoint< TOutputTransformPrecisionType > ) );
+  itkConceptMacro(OutputTransformPrecisionTypeIsFloatingPointCheck,
+                  (Concept::IsFloatingPoint<TOutputTransformPrecisionType>));
   // End concept checking
 #endif
 
 protected:
-
   GPUTransformCopier();
   ~GPUTransformCopier() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Method to copy the transforms parameters. */
-  bool CopyTransform(
-    const CPUTransformConstPointer & fromTransform,
-    GPUTransformPointer & toTransform );
+  bool
+  CopyTransform(const CPUTransformConstPointer & fromTransform, GPUTransformPointer & toTransform);
 
   /** Cast and copy the transform parameters. */
-  void CastCopyTransformParameters(
-    const CPUTransformConstPointer & fromTransform,
-    GPUTransformPointer & toTransform );
+  void
+  CastCopyTransformParameters(const CPUTransformConstPointer & fromTransform, GPUTransformPointer & toTransform);
 
   /** Method to copy the parameters. */
-  void CastCopyParameters(
-    const CPUParametersType & from,
-    GPUParametersType & to );
+  void
+  CastCopyParameters(const CPUParametersType & from, GPUParametersType & to);
 
   /** Method to copy the fixed parameters. */
-  void CastCopyFixedParameters(
-    const CPUFixedParametersType & from,
-    GPUFixedParametersType & to );
+  void
+  CastCopyFixedParameters(const CPUFixedParametersType & from, GPUFixedParametersType & to);
 
 private:
-
   /** Copy method for BSpline transform. */
-  bool CopyBSplineTransform(
-    const CPUTransformConstPointer & fromTransform,
-    GPUTransformPointer & toTransform );
+  bool
+  CopyBSplineTransform(const CPUTransformConstPointer & fromTransform, GPUTransformPointer & toTransform);
 
   /** Templated struct to capture the transform space dimension */
-  template< unsigned int Dimension >
-  struct TransformSpaceDimensionToType {};
+  template <unsigned int Dimension>
+  struct TransformSpaceDimensionToType
+  {};
 
   /** Copy method for Euler2D transform. */
-  template< unsigned int InputSpaceDimension >
-  bool CopyEuler2DTransform(
-    const CPUTransformConstPointer &,
-    GPUTransformPointer &,
-    TransformSpaceDimensionToType< InputSpaceDimension > )
+  template <unsigned int InputSpaceDimension>
+  bool
+  CopyEuler2DTransform(const CPUTransformConstPointer &,
+                       GPUTransformPointer &,
+                       TransformSpaceDimensionToType<InputSpaceDimension>)
   {
     return false;
   }
 
 
   /** Copy method for Euler3D transform. */
-  template< unsigned int InputSpaceDimension >
-  bool CopyEuler3DTransform(
-    const CPUTransformConstPointer &,
-    GPUTransformPointer &,
-    TransformSpaceDimensionToType< InputSpaceDimension > )
+  template <unsigned int InputSpaceDimension>
+  bool
+  CopyEuler3DTransform(const CPUTransformConstPointer &,
+                       GPUTransformPointer &,
+                       TransformSpaceDimensionToType<InputSpaceDimension>)
   {
     return false;
   }
 
 
   /** Copy method for Euler2D transform, partial specialization. */
-  bool CopyEuler2DTransform(
-    const CPUTransformConstPointer & fromTransform,
-    GPUTransformPointer & toTransform, TransformSpaceDimensionToType< 2 > );
+  bool
+  CopyEuler2DTransform(const CPUTransformConstPointer & fromTransform,
+                       GPUTransformPointer &            toTransform,
+                       TransformSpaceDimensionToType<2>);
 
   /** Copy method for Euler3D transform, partial specialization. */
-  bool CopyEuler3DTransform(
-    const CPUTransformConstPointer & fromTransform,
-    GPUTransformPointer & toTransform, TransformSpaceDimensionToType< 3 > );
+  bool
+  CopyEuler3DTransform(const CPUTransformConstPointer & fromTransform,
+                       GPUTransformPointer &            toTransform,
+                       TransformSpaceDimensionToType<3>);
 
   /** Copy method for Similarity2D transform. */
-  template< unsigned int InputSpaceDimension >
-  bool CopySimilarity2DTransform(
-    const CPUTransformConstPointer &,
-    GPUTransformPointer &,
-    TransformSpaceDimensionToType< InputSpaceDimension > )
+  template <unsigned int InputSpaceDimension>
+  bool
+  CopySimilarity2DTransform(const CPUTransformConstPointer &,
+                            GPUTransformPointer &,
+                            TransformSpaceDimensionToType<InputSpaceDimension>)
   {
     return false;
   }
 
 
   /** Copy method for Similarity3D transform. */
-  template< unsigned int InputSpaceDimension >
-  bool CopySimilarity3DTransform(
-    const CPUTransformConstPointer &,
-    GPUTransformPointer &,
-    TransformSpaceDimensionToType< InputSpaceDimension > )
+  template <unsigned int InputSpaceDimension>
+  bool
+  CopySimilarity3DTransform(const CPUTransformConstPointer &,
+                            GPUTransformPointer &,
+                            TransformSpaceDimensionToType<InputSpaceDimension>)
   {
     return false;
   }
 
 
   /** Copy method for Similarity2D transform, partial specialization. */
-  bool CopySimilarity2DTransform(
-    const CPUTransformConstPointer & fromTransform,
-    GPUTransformPointer & toTransform, TransformSpaceDimensionToType< 2 > );
+  bool
+  CopySimilarity2DTransform(const CPUTransformConstPointer & fromTransform,
+                            GPUTransformPointer &            toTransform,
+                            TransformSpaceDimensionToType<2>);
 
   /** Copy method for Similarity3D transform, partial specialization. */
-  bool CopySimilarity3DTransform(
-    const CPUTransformConstPointer & fromTransform,
-    GPUTransformPointer & toTransform, TransformSpaceDimensionToType< 3 > );
+  bool
+  CopySimilarity3DTransform(const CPUTransformConstPointer & fromTransform,
+                            GPUTransformPointer &            toTransform,
+                            TransformSpaceDimensionToType<3>);
 
 private:
-
-  GPUTransformCopier( const Self & ); // purposely not implemented
-  void operator=( const Self & );     // purposely not implemented
+  GPUTransformCopier(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   CPUTransformConstPointer m_InputTransform;
   GPUTransformPointer      m_Output;
@@ -237,7 +234,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUTransformCopier.hxx"
+#  include "itkGPUTransformCopier.hxx"
 #endif
 
 #endif /* __itkGPUTransformCopier_h */

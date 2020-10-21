@@ -18,4 +18,4 @@
 
 #include "elxTranslationStackTransform.h"
 
-elxInstallMacro( TranslationStackTransform );
+elxInstallMacro(TranslationStackTransform);

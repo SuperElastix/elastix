@@ -24,36 +24,34 @@
 
 namespace itk
 {
-template< typename TInputImage, typename TCoordRep >
-GPULinearInterpolateImageFunction< TInputImage, TCoordRep >
-::GPULinearInterpolateImageFunction()
+template <typename TInputImage, typename TCoordRep>
+GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GPULinearInterpolateImageFunction()
 {
   // Add GPUImageFunction implementation
-  const std::string sourcePath0( GPUImageFunctionKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath0 );
+  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath0);
 
   // Add GPULinearInterpolateImageFunction implementation
-  const std::string sourcePath1( GPULinearInterpolateImageFunctionKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath1 );
+  const std::string sourcePath1(GPULinearInterpolateImageFunctionKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath1);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep >
+template <typename TInputImage, typename TCoordRep>
 bool
-GPULinearInterpolateImageFunction< TInputImage, TCoordRep >
-::GetSourceCode( std::string & source ) const
+GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GetSourceCode(std::string & source) const
 {
-  if( this->m_Sources.size() == 0 )
+  if (this->m_Sources.size() == 0)
   {
     return false;
   }
 
   // Create the source code
   std::ostringstream sources;
-  for( std::size_t i = 0; i < this->m_Sources.size(); i++ )
+  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
   {
-    sources << this->m_Sources[ i ] << std::endl;
+    sources << this->m_Sources[i] << std::endl;
   }
 
   source = sources.str();
@@ -62,13 +60,12 @@ GPULinearInterpolateImageFunction< TInputImage, TCoordRep >
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep >
+template <typename TInputImage, typename TCoordRep>
 void
-GPULinearInterpolateImageFunction< TInputImage, TCoordRep >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  CPUSuperclass::PrintSelf( os, indent );
-  GPUSuperclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf(os, indent);
+  GPUSuperclass::PrintSelf(os, indent);
 }
 
 

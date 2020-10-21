@@ -23,38 +23,43 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template<  typename TTypeList, typename NDimensions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
-GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType >
-::GPUCompositeTransformCopier()
+template <typename TTypeList,
+          typename NDimensions,
+          typename TCompositeTransform,
+          typename TOutputTransformPrecisionType>
+GPUCompositeTransformCopier<TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType>::
+  GPUCompositeTransformCopier()
 {
-  this->m_InputTransform        = nullptr;
-  this->m_Output                = nullptr;
+  this->m_InputTransform = nullptr;
+  this->m_Output = nullptr;
   this->m_InternalTransformTime = 0;
-  this->m_ExplicitMode          = true;
-  this->m_TransformCopier       = GPUTransformCopierType::New();
+  this->m_ExplicitMode = true;
+  this->m_TransformCopier = GPUTransformCopierType::New();
 }
 
 
 //------------------------------------------------------------------------------
-template<  typename TTypeList, typename NDimensions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
+template <typename TTypeList,
+          typename NDimensions,
+          typename TCompositeTransform,
+          typename TOutputTransformPrecisionType>
 void
-GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType >
-::Update( void )
+GPUCompositeTransformCopier<TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType>::Update(void)
 {
-  if( !this->m_InputTransform )
+  if (!this->m_InputTransform)
   {
-    itkExceptionMacro( << "Input CompositeTransform has not been connected" );
+    itkExceptionMacro(<< "Input CompositeTransform has not been connected");
     return;
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified
   const ModifiedTimeType t = this->m_InputTransform->GetMTime();
 
-  if( t == this->m_InternalTransformTime )
+  if (t == this->m_InternalTransformTime)
   {
     return; // No need to update
   }
-  else if( t > this->m_InternalTransformTime )
+  else if (t > this->m_InternalTransformTime)
   {
     // Cache the timestamp
     this->m_InternalTransformTime = t;
@@ -63,31 +68,35 @@ GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutpu
     this->m_Output = GPUCompositeTransformType::New();
 
     // Set the same explicit mode
-    this->m_TransformCopier->SetExplicitMode( this->m_ExplicitMode );
+    this->m_TransformCopier->SetExplicitMode(this->m_ExplicitMode);
 
-    for( std::size_t i = 0; i < m_InputTransform->GetNumberOfTransforms(); ++i )
+    for (std::size_t i = 0; i < m_InputTransform->GetNumberOfTransforms(); ++i)
     {
-      const CPUTransformPointer fromTransform = this->m_InputTransform->GetNthTransform( i );
+      const CPUTransformPointer fromTransform = this->m_InputTransform->GetNthTransform(i);
 
       // Perform copy
-      this->m_TransformCopier->SetInputTransform( fromTransform );
+      this->m_TransformCopier->SetInputTransform(fromTransform);
       this->m_TransformCopier->Update();
       GPUOutputTransformPointer toTransform = this->m_TransformCopier->GetModifiableOutput();
 
       // Add to output
-      this->m_Output->AddTransform( toTransform );
+      this->m_Output->AddTransform(toTransform);
     }
   }
 }
 
 
 //------------------------------------------------------------------------------
-template<  typename TTypeList, typename NDimensions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
+template <typename TTypeList,
+          typename NDimensions,
+          typename TCompositeTransform,
+          typename TOutputTransformPrecisionType>
 void
-GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUCompositeTransformCopier<TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType>::PrintSelf(
+  std::ostream & os,
+  Indent         indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
   os << indent << "Input Transform: " << this->m_InputTransform << std::endl;
   os << indent << "Output Transform: " << this->m_Output << std::endl;
   os << indent << "Internal Transform Time: " << this->m_InternalTransformTime << std::endl;

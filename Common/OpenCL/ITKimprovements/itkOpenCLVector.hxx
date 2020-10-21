@@ -24,146 +24,140 @@ namespace itk
 {
 
 //------------------------------------------------------------------------------
-template< typename T >
-OpenCLVector< T >::OpenCLVector() :
-  OpenCLVectorBase( sizeof( T ) ) {}
+template <typename T>
+OpenCLVector<T>::OpenCLVector()
+  : OpenCLVectorBase(sizeof(T))
+{}
 
 //------------------------------------------------------------------------------
-template< typename T >
-OpenCLVector< T >::OpenCLVector
-  ( OpenCLContext * context, const OpenCLMemoryObject::Access access, const std::size_t size ) :
-  OpenCLVectorBase( sizeof( T ) )
+template <typename T>
+OpenCLVector<T>::OpenCLVector(OpenCLContext * context, const OpenCLMemoryObject::Access access, const std::size_t size)
+  : OpenCLVectorBase(sizeof(T))
 {
-  OpenCLVectorBase::Create( context, access, size );
+  OpenCLVectorBase::Create(context, access, size);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
-OpenCLVector< T >::OpenCLVector( const OpenCLVector< T > & other ) :
-  OpenCLVectorBase( sizeof( T ), other )
+template <typename T>
+OpenCLVector<T>::OpenCLVector(const OpenCLVector<T> & other)
+  : OpenCLVectorBase(sizeof(T), other)
 {}
 
 //------------------------------------------------------------------------------
-template< typename T >
-OpenCLVector< T >::~OpenCLVector() {}
+template <typename T>
+OpenCLVector<T>::~OpenCLVector()
+{}
 
 //------------------------------------------------------------------------------
-template< typename T >
-OpenCLVector< T > &
-OpenCLVector< T >::operator=( const OpenCLVector< T > & other )
+template <typename T>
+OpenCLVector<T> &
+OpenCLVector<T>::operator=(const OpenCLVector<T> & other)
 {
-  this->Assign( other );
+  this->Assign(other);
   return *this;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 bool
-OpenCLVector< T >::IsNull() const
+OpenCLVector<T>::IsNull() const
 {
   return this->d_ptr == 0;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 void
-OpenCLVector< T >::Release()
+OpenCLVector<T>::Release()
 {
   OpenCLVectorBase::Release();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
-T &
-OpenCLVector< T >::operator[]( const std::size_t index )
+template <typename T>
+T & OpenCLVector<T>::operator[](const std::size_t index)
 {
-  itkAssertOrThrowMacro( ( index < this->m_Size ), "OpenCLVector<T>::operator["
-      << index << "] index out of range" );
-  if( !this->m_Mapped )
+  itkAssertOrThrowMacro((index < this->m_Size), "OpenCLVector<T>::operator[" << index << "] index out of range");
+  if (!this->m_Mapped)
   {
     this->Map();
   }
-  return ( reinterpret_cast< T * >( this->m_Mapped ) )[ index ];
+  return (reinterpret_cast<T *>(this->m_Mapped))[index];
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
-const T &
-OpenCLVector< T >::operator[]( const std::size_t index ) const
+template <typename T>
+const T & OpenCLVector<T>::operator[](const std::size_t index) const
 {
-  itkAssertOrThrowMacro( ( index < this->m_Size ), "OpenCLVector<T>::operator["
-      << index << "] index out of range" );
-  if( !this->m_Mapped )
+  itkAssertOrThrowMacro((index < this->m_Size), "OpenCLVector<T>::operator[" << index << "] index out of range");
+  if (!this->m_Mapped)
   {
-    const_cast< OpenCLVector< T > * >( this )->map();
+    const_cast<OpenCLVector<T> *>(this)->map();
   }
-  return ( reinterpret_cast< T * >( this->m_Mapped ) )[ index ];
+  return (reinterpret_cast<T *>(this->m_Mapped))[index];
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 void
-OpenCLVector< T >::Write( const T * data,
-  const std::size_t count, const std::size_t offset /*= 0 */ )
+OpenCLVector<T>::Write(const T * data, const std::size_t count, const std::size_t offset /*= 0 */)
 {
-  itkAssertOrThrowMacro( ( ( offset + count ) <= this->m_Size ),
-    "OpenCLVector<T>::Write(data, " << count << ", " << offset << ")"
-                                    << " (offset + count) is out of range" )
+  itkAssertOrThrowMacro(((offset + count) <= this->m_Size),
+                        "OpenCLVector<T>::Write(data, " << count << ", " << offset << ")"
+                                                        << " (offset + count) is out of range")
 
-  OpenCLVectorBase::Write( data, count * sizeof( T ), offset * sizeof( T ) );
+    OpenCLVectorBase::Write(data, count * sizeof(T), offset * sizeof(T));
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 void
-OpenCLVector< T >::Read
-  ( T * data, const std::size_t count, const std::size_t offset /*= 0 */ )
+OpenCLVector<T>::Read(T * data, const std::size_t count, const std::size_t offset /*= 0 */)
 {
-  itkAssertOrThrowMacro( ( ( offset + count ) <= this->m_Size ),
-    "OpenCLVector<T>::Read(data, " << count << ", " << offset << ")"
-                                   << " (offset + count) is out of range" )
+  itkAssertOrThrowMacro(((offset + count) <= this->m_Size),
+                        "OpenCLVector<T>::Read(data, " << count << ", " << offset << ")"
+                                                       << " (offset + count) is out of range")
 
-  OpenCLVectorBase::Read( data, count * sizeof( T ), offset * sizeof( T ) );
+    OpenCLVectorBase::Read(data, count * sizeof(T), offset * sizeof(T));
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 void
-OpenCLVector< T >::Write
-  ( const Vector< T > & data, const std::size_t offset /*= 0 */ )
+OpenCLVector<T>::Write(const Vector<T> & data, const std::size_t offset /*= 0 */)
 {
-  this->Write( data.GetDataPointer(), data.GetLength(), offset );
+  this->Write(data.GetDataPointer(), data.GetLength(), offset);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 OpenCLContext *
-OpenCLVector< T >::GetContext() const
+OpenCLVector<T>::GetContext() const
 {
   return OpenCLVectorBase::GetContext();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename T >
+template <typename T>
 OpenCLBuffer
-OpenCLVector< T >::GetBuffer() const
+OpenCLVector<T>::GetBuffer() const
 {
   cl_mem id = OpenCLVectorBase::GetMemoryId();
 
-  if( id )
+  if (id)
   {
-    clRetainMemObject( id );
-    return OpenCLBuffer( this->GetContext(), id );
+    clRetainMemObject(id);
+    return OpenCLBuffer(this->GetContext(), id);
   }
   else
   {

@@ -58,16 +58,21 @@ namespace itk
 class ITKOpenCL_EXPORT OpenCLDevice
 {
 public:
-
   /** Standard class typedefs. */
   typedef OpenCLDevice Self;
 
   /** Constructs a default OpenCL device identifier. */
-  OpenCLDevice() : m_Id( 0 ), m_Version( 0 ) {}
+  OpenCLDevice()
+    : m_Id(0)
+    , m_Version(0)
+  {}
 
   /** Constructs an OpenCL device identifier that corresponds to the
    * native OpenCL value \a id. */
-  OpenCLDevice( cl_device_id id ) : m_Id( id ), m_Version( 0 ) {}
+  OpenCLDevice(cl_device_id id)
+    : m_Id(id)
+    , m_Version(0)
+  {}
 
   /** \enum OpenCLDevice::DeviceType
    * This enum defines the type of OpenCL device that is represented
@@ -77,65 +82,85 @@ public:
    * \value GPU An OpenCL device that is also an OpenGL GPU.
    * \value Accelerator Dedicated OpenCL accelerator.
    * \value All All OpenCL device types. */
-  enum DeviceType {
-    Default     = ( 1 << 0 ),
-    CPU         = ( 1 << 1 ),
-    GPU         = ( 1 << 2 ),
-    Accelerator = ( 1 << 3 ),
-    Custom      = ( 1 << 4 ),
-    All         = 0xFFFFFFFF
+  enum DeviceType
+  {
+    Default = (1 << 0),
+    CPU = (1 << 1),
+    GPU = (1 << 2),
+    Accelerator = (1 << 3),
+    Custom = (1 << 4),
+    All = 0xFFFFFFFF
   };
 
-  enum Endian {
+  enum Endian
+  {
     BigEndian,
     LittleEndian
   };
 
   /** Returns true if this OpenCL device identifier is null. */
-  bool IsNull() const { return this->m_Id == 0; }
+  bool
+  IsNull() const
+  {
+    return this->m_Id == 0;
+  }
 
   /** Returns the native OpenCL device identifier for this object. */
-  cl_device_id GetDeviceId() const { return this->m_Id; }
+  cl_device_id
+  GetDeviceId() const
+  {
+    return this->m_Id;
+  }
 
   /** Returns the OpenCL versions supported by this device.
    * \sa GetVersion(), OpenCLPlatform::GetOpenCLVersion() */
-  OpenCLVersion GetOpenCLVersion() const;
+  OpenCLVersion
+  GetOpenCLVersion() const;
 
   /** Returns the OpenCL version that is implemented by this OpenCL device,
    * usually something like \c{OpenCL 1.0}.
    * The versionFlags() function parses the version into flag bits
    * that are easier to test than the string returned by version().
    * \sa GetOpenCLVersion(), GetDriverVersion() */
-  std::string GetVersion() const;
+  std::string
+  GetVersion() const;
 
   /** Returns the type of this device.
    * It is possible for a device to have more than one type. */
-  OpenCLDevice::DeviceType GetDeviceType() const;
+  OpenCLDevice::DeviceType
+  GetDeviceType() const;
 
   /** Returns the platform identifier for this device. */
-  OpenCLPlatform GetPlatform() const;
+  OpenCLPlatform
+  GetPlatform() const;
 
   /** Returns the vendor's identifier for this device. */
-  unsigned int GetVendorId() const;
+  unsigned int
+  GetVendorId() const;
 
   /** Returns true if this device is available, false otherwise. */
-  bool IsAvailable() const;
+  bool
+  IsAvailable() const;
 
   /** Returns true if this device has a compiler available, false otherwise. */
-  bool HasCompiler() const;
+  bool
+  HasCompiler() const;
 
   /** Returns true if this device has support for executing native kernels,
    * false otherwise. */
-  bool HasNativeKernels() const;
+  bool
+  HasNativeKernels() const;
 
   /** Returns true if this device supports out of order execution
    * of commands on a OpenCLCommandQueue, false otherwise.
    * \sa OpenCLCommandQueue::IsOutOfOrder() */
-  bool HasOutOfOrderExecution() const;
+  bool
+  HasOutOfOrderExecution() const;
 
   /** Returns true if this device supports the \c{double} type
    * via the \c{cl_khr_fp64} extension, false otherwise. */
-  bool HasDouble() const;
+  bool
+  HasDouble() const;
 
   /** Returns true if this device supports operations on the
    * \c{half} type via the \c{cl_khr_fp16} extension, false otherwise.
@@ -143,99 +168,121 @@ public:
    * for data storage even if this function returns false.
    * However, kernels can only perform arithmetic operations on
    * \c{half} values if this function returns true. */
-  bool HasHalfFloat() const;
+  bool
+  HasHalfFloat() const;
 
   /** Returns true if the device implements error correction on
    * its memory areas, false otherwise. */
-  bool HasErrorCorrectingMemory() const;
+  bool
+  HasErrorCorrectingMemory() const;
 
   /** Returns true if the device and the host share a unified
    * memory address space, false otherwise. */
-  bool HasUnifiedMemory() const;
+  bool
+  HasUnifiedMemory() const;
 
   /** Returns the number of parallel compute units on the device. */
-  unsigned int GetComputeUnits() const;
+  unsigned int
+  GetComputeUnits() const;
 
   /** Returns the maximum clock frequency for this device in MHz. */
-  unsigned int GetClockFrequency() const;
+  unsigned int
+  GetClockFrequency() const;
 
   /** Returns the number of address bits used by the device,
    * usually 32 or 64. */
-  unsigned int GetAddressBits() const;
+  unsigned int
+  GetAddressBits() const;
 
   /** Returns the byte order of the device, indicating little endian or big
    * endian. */
-  OpenCLDevice::Endian GetByteOrder() const;
+  OpenCLDevice::Endian
+  GetByteOrder() const;
 
   /** Returns the maximum work size for this device.
    * \sa GetMaximumWorkItemsPerGroup() */
-  OpenCLSize GetMaximumWorkItemSize() const;
+  OpenCLSize
+  GetMaximumWorkItemSize() const;
 
   /** Returns the maximum number of work items in a work group executing a
    * kernel using data parallel execution.
    * \sa GetMaximumWorkItemSize() */
-  std::size_t GetMaximumWorkItemsPerGroup() const;
+  std::size_t
+  GetMaximumWorkItemsPerGroup() const;
 
   /** Returns true if this device has 2D image support, false otherwise. */
-  bool HasImage2D() const;
+  bool
+  HasImage2D() const;
 
   /** Returns true if this device has 3D image support, false otherwise. */
-  bool HasImage3D() const;
+  bool
+  HasImage3D() const;
 
   /** Returns true if this device supports writing to 3D images
    * via the \c{cl_khr_3d_image_writes} extension, false otherwise. */
-  bool HasWritableImage3D() const;
+  bool
+  HasWritableImage3D() const;
 
   /** Returns the maximum size of 2D images that are supported
    * by this device; or an empty SizeType2D if images are not supported.
    * \sa GetMaximumImage3DSize(), HasImage2D() */
-  OpenCLSize GetMaximumImage2DSize() const;
+  OpenCLSize
+  GetMaximumImage2DSize() const;
 
   /** Returns the maximum size of 3D images that are supported
    * by this device; or (0, 0, 0) if images are not supported.
    * \sa GetMaximumImage2DSize(), HasImage3D() */
-  OpenCLSize GetMaximumImage3DSize() const;
+  OpenCLSize
+  GetMaximumImage3DSize() const;
 
   /** Returns the maximum number of image samplers that can be used
    * in a kernel at one time; 0 if images are not supported. */
-  unsigned int GetMaximumSamplers() const;
+  unsigned int
+  GetMaximumSamplers() const;
 
   /** Returns the maximum number of image objects that can be
    * read simultaneously by a kernel; 0 if images are not supported.
    * \sa GetMaximumWriteImages() */
-  unsigned int GetMaximumReadImages() const;
+  unsigned int
+  GetMaximumReadImages() const;
 
   /** Returns the maximum number of image objects that can be
    * written simultaneously by a kernel; 0 if images are not supported.
    * \sa maximumReadImages() */
-  unsigned int GetMaximumWriteImages() const;
+  unsigned int
+  GetMaximumWriteImages() const;
 
   /** Returns the preferred size for vectors of type \c{char} in the device.
    * For example, 4 indicates that 4 \c{char} values can be packed into
    * a vector and operated on as a unit for optimal performance. */
-  unsigned int GetPreferredCharVectorSize() const;
+  unsigned int
+  GetPreferredCharVectorSize() const;
 
   /** Returns the preferred size for vectors of type \c{short} in the device.
    * For example, 4 indicates that 4 \c{short} values can be packed into
    * a vector and operated on as a unit for optimal performance. */
-  unsigned int GetPreferredShortVectorSize() const;
+  unsigned int
+  GetPreferredShortVectorSize() const;
 
   /** Returns the preferred size for vectors of type \c{int} in the device.
    * For example, 4 indicates that 4 \c{int} values can be packed into
    * a vector and operated on as a unit for optimal performance. */
-  unsigned int GetPreferredIntVectorSize() const;
+  unsigned int
+  GetPreferredIntVectorSize() const;
 
   /** Returns the preferred size for vectors of type \c{long}
    * in the device. For example, 2 indicates that 2 \c{long}
    * values can be packed into a vector and operated on as a
    * unit for optimal performance. */
-  unsigned int GetPreferredLongVectorSize() const;
+  unsigned int
+  GetPreferredLongVectorSize() const;
 
   /** Returns the preferred size for vectors of type \c{float}
    * in the device. For example, 4 indicates that 4 \c{float}
    * values can be packed into a vector and operated on as a
    * unit for optimal performance. */
-  unsigned int GetPreferredFloatVectorSize() const;
+  unsigned int
+  GetPreferredFloatVectorSize() const;
 
   /** Returns the preferred size for vectors of type \c{double}
    * in the device. For example, 2 indicates that 2 \c{double}
@@ -243,7 +290,8 @@ public:
    * unit for optimal performance.
    * Returns zero if the device does not support \c{double}.
    * \sa HasDouble() */
-  unsigned int GetPreferredDoubleVectorSize() const;
+  unsigned int
+  GetPreferredDoubleVectorSize() const;
 
   /** Returns the preferred size for vectors of type \c{half}
    * in the device. For example, 2 indicates that 2 \c{half}
@@ -252,37 +300,43 @@ public:
    * Returns zero if the device does not support \c{half},
    * or the device does not support OpenCL 1.1.
    * \sa HasHalfFloat() */
-  unsigned int GetPreferredHalfFloatVectorSize() const;
+  unsigned int
+  GetPreferredHalfFloatVectorSize() const;
 
   /** Returns the native size for vectors of type \c{char}
    * in the device. For example, 4 indicates that 4 \c{char}
    * values can be packed into a vector and operated on as a
    * unit for optimal performance. Returns zero on OpenCL 1.0. */
-  unsigned int GetNativeCharVectorSize() const;
+  unsigned int
+  GetNativeCharVectorSize() const;
 
   /** Returns the native size for vectors of type \c{short}
    * in the device. For example, 4 indicates that 4 \c{short}
    * values can be packed into a vector and operated on as a
    * unit for optimal performance. Returns zero on OpenCL 1.0. */
-  unsigned int GetNativeShortVectorSize() const;
+  unsigned int
+  GetNativeShortVectorSize() const;
 
   /** Returns the native size for vectors of type \c{int}
    * in the device. For example, 4 indicates that 4 \c{int}
    * values can be packed into a vector and operated on as a
    * unit for optimal performance. Returns zero on OpenCL 1.0. */
-  unsigned int GetNativeIntVectorSize() const;
+  unsigned int
+  GetNativeIntVectorSize() const;
 
   /** Returns the native size for vectors of type \c{long}
    * in the device. For example, 2 indicates that 2 \c{long}
    * values can be packed into a vector and operated on as a
    * unit for optimal performance. Returns zero on OpenCL 1.0. */
-  unsigned int GetNativeLongVectorSize() const;
+  unsigned int
+  GetNativeLongVectorSize() const;
 
   /** Returns the native size for vectors of type \c{float}
    * in the device. For example, 4 indicates that 4 \c{float}
    * values can be packed into a vector and operated on as a
    * unit for optimal performance. Returns zero on OpenCL 1.0. */
-  unsigned int GetNativeFloatVectorSize() const;
+  unsigned int
+  GetNativeFloatVectorSize() const;
 
   /** Returns the native size for vectors of type \c{double}
    * in the device. For example, 2 indicates that 2 \c{double}
@@ -290,7 +344,8 @@ public:
    * unit for optimal performance. Returns zero on OpenCL 1.0,
    * or if the device does not support \c{double}.
    * \sa HasDouble() */
-  unsigned int GetNativeDoubleVectorSize() const;
+  unsigned int
+  GetNativeDoubleVectorSize() const;
 
   /** Returns the native size for vectors of type \c{half}
    * in the device. For example, 2 indicates that 2 \c{half}
@@ -298,7 +353,8 @@ public:
    * unit for optimal performance. Returns zero on OpenCL 1.0,
    * or if the device does not support \c{half}.
    * \sa HasHalfFloat() */
-  unsigned int GetNativeHalfFloatVectorSize() const;
+  unsigned int
+  GetNativeHalfFloatVectorSize() const;
 
   /** \enum OpenCLDevice::FloatCapability
    * This enum defines the floating-point capabilities of the
@@ -311,45 +367,52 @@ public:
    * \value RoundZero Round to zero rounding mode supported.
    * \value RoundInfinity Round to infinity rounding mode supported.
    * \value FusedMultiplyAdd IEEE754-2008 fused multiply-add is supported. */
-  enum FloatCapability {
-    NotSupported     = 0x0000,
-    Denorm           = 0x0001,
-    InfinityNaN      = 0x0002,
-    RoundNearest     = 0x0004,
-    RoundZero        = 0x0008,
-    RoundInfinity    = 0x0010,
+  enum FloatCapability
+  {
+    NotSupported = 0x0000,
+    Denorm = 0x0001,
+    InfinityNaN = 0x0002,
+    RoundNearest = 0x0004,
+    RoundZero = 0x0008,
+    RoundInfinity = 0x0010,
     FusedMultiplyAdd = 0x0020
   };
 
   /** Returns a set of flags that describes the floating-point
    * capabilities of the \c{float} type on this device. */
-  FloatCapability GetFloatCapabilities() const;
+  FloatCapability
+  GetFloatCapabilities() const;
 
   /** Returns a set of flags that describes the floating-point
    * capabilities of the \c{double} type on this device.
    * Returns OpenCLDevice::NotSupported if operations on \c{double}
    * are not supported by the device.
    * \sa HasDouble() */
-  FloatCapability GetDoubleCapabilities() const;
+  FloatCapability
+  GetDoubleCapabilities() const;
 
   /** Returns a set of flags that describes the floating-point
    * capabilities of the \c{half} type on this device.
    * Returns OpenCLDevice::NotSupported if operations on \c{half}
    * are not supported by the device.
    * \sa HasHalfFloat() */
-  FloatCapability GetHalfFloatCapabilities() const;
+  FloatCapability
+  GetHalfFloatCapabilities() const;
 
   /** Returns the resolution of the device profiling timer in nanoseconds.
    * \sa OpenCLEvent::GetFinishTime() */
-  std::size_t GetProfilingTimerResolution() const;
+  std::size_t
+  GetProfilingTimerResolution() const;
 
   /** Returns the maximum memory allocation size in bytes.
    * \sa GetGlobalMemorySize() */
-  unsigned long GetMaximumAllocationSize() const;
+  unsigned long
+  GetMaximumAllocationSize() const;
 
   /** Returns the number of bytes of global memory in the device.
    * \sa GetGlobalMemoryCacheSize(), localMemorySize() */
-  unsigned long GetGlobalMemorySize() const;
+  unsigned long
+  GetGlobalMemorySize() const;
 
   /** \enum OpenCLDevice::CacheType
    * This enum defines the type of global memory cache that is
@@ -357,162 +420,184 @@ public:
    * \value NoCache No global memory cache.
    * \value ReadOnlyCache Read-only global memory cache.
    * \value ReadWriteCache Read-write global memory cache. */
-  enum CacheType {
-    NoCache        = 0,
-    ReadOnlyCache  = 1,
+  enum CacheType
+  {
+    NoCache = 0,
+    ReadOnlyCache = 1,
     ReadWriteCache = 2
   };
 
   /** Returns the type of global memory cache that is supported
    * by the device. */
-  CacheType GetGlobalMemoryCacheType() const;
+  CacheType
+  GetGlobalMemoryCacheType() const;
 
   /** Returns the size of the global memory cache in bytes.
    * \sa GetGlobalMemorySize(), GetGlobalMemoryCacheLineSize() */
-  unsigned long GetGlobalMemoryCacheSize() const;
+  unsigned long
+  GetGlobalMemoryCacheSize() const;
 
   /** Returns the size of a single global memory cache line in bytes.
    * \sa GetGlobalMemoryCacheSize() */
-  unsigned int GetGlobalMemoryCacheLineSize() const;
+  unsigned int
+  GetGlobalMemoryCacheLineSize() const;
 
   /** Returns the number of bytes of local memory in the device.
    * \sa GetGlobalMemorySize(), IsLocalMemorySeparate() */
-  unsigned long GetLocalMemorySize() const;
+  unsigned long
+  GetLocalMemorySize() const;
 
   /** Returns true if the local memory on this device is in a separate
    * dedicated storage area from global memory; false if local memory
    * is allocated from global memory.
    * \sa GetLocalMemorySize() */
-  bool IsLocalMemorySeparate() const;
+  bool
+  IsLocalMemorySeparate() const;
 
   /** Returns the maximum size for a constant buffer allocation.
    * \sa GetMaximumConstantArguments() */
-  unsigned long GetMaximumConstantBufferSize() const;
+  unsigned long
+  GetMaximumConstantBufferSize() const;
 
   /** Returns the maximum number of constant arguments that can
    * be passed to a kernel.
    * \sa GetMaximumConstantBufferSize() */
-  unsigned int GetMaximumConstantArguments() const;
+  unsigned int
+  GetMaximumConstantArguments() const;
 
   /** Returns the default alignment for allocated memory in bytes.
    * \sa GetMinimumAlignment() */
-  unsigned int GetDefaultAlignment() const;
+  unsigned int
+  GetDefaultAlignment() const;
 
   /** Returns the minimum alignment for any data type in bytes.
    * \sa GetDefaultAlignment() */
-  unsigned int GetMinimumAlignment() const;
+  unsigned int
+  GetMinimumAlignment() const;
 
   /** Returns the maximum number of parameter bytes that can be passed
    * to a kernel. */
-  std::size_t GetMaximumParameterBytes() const;
+  std::size_t
+  GetMaximumParameterBytes() const;
 
   /** Returns true if profile() is \c FULL_PROFILE, false otherwise.
    * \sa IsEmbeddedProfile() */
-  bool IsFullProfile() const;
+  bool
+  IsFullProfile() const;
 
   /** Returns true if profile() is \c EMBEDDED_PROFILE, false otherwise.
    * \sa IsFullProfile() */
-  bool IsEmbeddedProfile() const;
+  bool
+  IsEmbeddedProfile() const;
 
   /** Returns the profile that is implemented by this OpenCL device,
    * usually \c FULL_PROFILE or \c EMBEDDED_PROFILE.
    * \sa isFullProfile(), isEmbeddedProfile() */
-  std::string GetProfile() const;
+  std::string
+  GetProfile() const;
 
   /** Returns the driver version of this OpenCL device.
    * \sa GetVersion() */
-  std::string GetDriverVersion() const;
+  std::string
+  GetDriverVersion() const;
 
   /** Returns the name of this OpenCL device. */
-  std::string GetName() const;
+  std::string
+  GetName() const;
 
   /** Returns the vendor of this OpenCL device. */
-  std::string GetVendor() const;
+  std::string
+  GetVendor() const;
 
   /** Returns a list of the extensions supported by this OpenCL device.
    * \sa HasExtension() */
-  std::list< std::string > GetExtensions() const;
+  std::list<std::string>
+  GetExtensions() const;
 
   /** Returns the highest version of the OpenCL language supported by
    * this device's compiler. For example, \c{OpenCL 1.1}. */
-  std::string GetLanguageVersion() const;
+  std::string
+  GetLanguageVersion() const;
 
   /** Returns true if this device has an extension called \a name, false otherwise.
    * This function is more efficient than checking for \a name in the return
    * value from extensions(), if the caller is only interested in a single
    * extension. Use extensions() to check for several extensions at once.
    * \sa GetExtensions() */
-  bool HasExtension( const std::string & name ) const;
+  bool
+  HasExtension(const std::string & name) const;
 
   /** Returns a list of all OpenCL devices on all platforms on this system.
    * \sa GetDevices() */
-  static std::list< OpenCLDevice > GetAllDevices();
+  static std::list<OpenCLDevice>
+  GetAllDevices();
 
   /** Returns a list of all OpenCL devices that match \a types on
    * \a platform on this system. If \a platform is null, then
    * the first platform that has devices matching \a types will be used.
    * \sa GetAllDevices() */
-  static std::list< OpenCLDevice > GetDevices( const OpenCLDevice::DeviceType types,
-    const OpenCLPlatform & platform = OpenCLPlatform() );
+  static std::list<OpenCLDevice>
+  GetDevices(const OpenCLDevice::DeviceType types, const OpenCLPlatform & platform = OpenCLPlatform());
 
   /** Returns a list of all OpenCL devices that match \a types on
    * \a vendor on this system.
    * \sa GetAllDevices() */
-  static std::list< OpenCLDevice > GetDevices( const OpenCLDevice::DeviceType type,
-    const OpenCLPlatform::VendorType vendor );
+  static std::list<OpenCLDevice>
+  GetDevices(const OpenCLDevice::DeviceType type, const OpenCLPlatform::VendorType vendor);
 
   /** Returns the device with maximal flops on this system that match \a type.
    * \sa GetAllDevices() */
-  static OpenCLDevice GetMaximumFlopsDevice( const std::list< OpenCLDevice > & devices,
-    const OpenCLDevice::DeviceType type );
+  static OpenCLDevice
+  GetMaximumFlopsDevice(const std::list<OpenCLDevice> & devices, const OpenCLDevice::DeviceType type);
 
   /** Returns the device with maximal flops on this system that match \a type.
    * \sa GetAllDevices(), GetMaximumFlopsDevices() */
-  static OpenCLDevice GetMaximumFlopsDevice( const OpenCLDevice::DeviceType type );
+  static OpenCLDevice
+  GetMaximumFlopsDevice(const OpenCLDevice::DeviceType type);
 
   /** Returns the device with maximal flops on this system that match \a types and
    * \a vendor on this system.
    * \sa GetAllDevices(), GetMaximumFlopsDevices() */
-  static OpenCLDevice GetMaximumFlopsDeviceByVendor( const OpenCLDevice::DeviceType type,
-    const OpenCLPlatform::VendorType vendor );
+  static OpenCLDevice
+  GetMaximumFlopsDeviceByVendor(const OpenCLDevice::DeviceType type, const OpenCLPlatform::VendorType vendor);
 
   /** Returns the device with maximal flops from the context that match \a types on
    * \a platform on this system.
    * \sa GetMaximumFlopsDevice(), GetAllDevices() */
-  static OpenCLDevice GetMaximumFlopsDeviceByPlatform( const OpenCLDevice::DeviceType types,
-    const OpenCLPlatform & platform = OpenCLPlatform() );
+  static OpenCLDevice
+  GetMaximumFlopsDeviceByPlatform(const OpenCLDevice::DeviceType types,
+                                  const OpenCLPlatform &         platform = OpenCLPlatform());
 
   /** Returns the devices with maximal flops on this system, sorted according to
    * maximal flops. The device with maximal flops will be the first element
    * in the list container.
    * \sa GetAllDevices(), GetMaximumFlopsDevice() */
-  static std::list< OpenCLDevice > GetMaximumFlopsDevices( const OpenCLDevice::DeviceType type,
-    const OpenCLPlatform & platform = OpenCLPlatform() );
+  static std::list<OpenCLDevice>
+  GetMaximumFlopsDevices(const OpenCLDevice::DeviceType type, const OpenCLPlatform & platform = OpenCLPlatform());
 
 private:
-
   cl_device_id m_Id;
   mutable int  m_Version;
 };
 
 /** Operator ==
-* Returns true if \a lhs OpenCL device identifier is the same as \a rhs, false otherwise.
-* \sa operator!= */
-bool ITKOpenCL_EXPORT operator==( const OpenCLDevice & lhs, const OpenCLDevice & rhs );
+ * Returns true if \a lhs OpenCL device identifier is the same as \a rhs, false otherwise.
+ * \sa operator!= */
+bool ITKOpenCL_EXPORT
+     operator==(const OpenCLDevice & lhs, const OpenCLDevice & rhs);
 
 /** Operator !=
-* Returns true if \a lhs OpenCL device identifier is not the same as \a rhs, false otherwise.
-* \sa operator== */
-bool ITKOpenCL_EXPORT operator!=( const OpenCLDevice & lhs, const OpenCLDevice & rhs );
+ * Returns true if \a lhs OpenCL device identifier is not the same as \a rhs, false otherwise.
+ * \sa operator== */
+bool ITKOpenCL_EXPORT
+     operator!=(const OpenCLDevice & lhs, const OpenCLDevice & rhs);
 
 /** Stream out operator for OpenCLDevice */
-template< typename charT, typename traits >
-inline
-std::basic_ostream< charT, traits > &
-operator<<( std::basic_ostream< charT, traits > & strm,
-  const OpenCLDevice & device )
+template <typename charT, typename traits>
+inline std::basic_ostream<charT, traits> &
+operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device)
 {
-  if( device.IsNull() )
+  if (device.IsNull())
   {
     strm << "OpenCLDevice(null)";
     return strm;
@@ -520,91 +605,107 @@ operator<<( std::basic_ostream< charT, traits > & strm,
 
   const char indent = ' ';
 
-  strm << "OpenCLDevice" << std::endl
-       << indent << "Id: " << device.GetDeviceId() << std::endl;
+  strm << "OpenCLDevice" << std::endl << indent << "Id: " << device.GetDeviceId() << std::endl;
 
   strm << indent << "OpenCL version: ";
-  switch( device.GetOpenCLVersion() )
+  switch (device.GetOpenCLVersion())
   {
     case VERSION_1_0:
-      strm << "1.0"; break;
+      strm << "1.0";
+      break;
     case VERSION_1_1:
-      strm << "1.1"; break;
+      strm << "1.1";
+      break;
     case VERSION_1_2:
-      strm << "1.2"; break;
+      strm << "1.2";
+      break;
     case VERSION_2_0:
-      strm << "2.0"; break;
+      strm << "2.0";
+      break;
     case VERSION_2_1:
-      strm << "2.1"; break;
+      strm << "2.1";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
   strm << std::endl << indent << "Version: " << device.GetVersion() << std::endl;
 
   strm << indent << "Device type: ";
-  switch( device.GetDeviceType() )
+  switch (device.GetDeviceType())
   {
     case OpenCLDevice::Default:
-      strm << "Default"; break;
+      strm << "Default";
+      break;
     case OpenCLDevice::CPU:
-      strm << "CPU"; break;
+      strm << "CPU";
+      break;
     case OpenCLDevice::GPU:
-      strm << "GPU"; break;
+      strm << "GPU";
+      break;
     case OpenCLDevice::Accelerator:
-      strm << "Accelerator"; break;
+      strm << "Accelerator";
+      break;
     case OpenCLDevice::All:
-      strm << "All"; break;
+      strm << "All";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
   // strm << device.GetPlatform() << std::endl;
-  strm << std::endl << indent << "Vendor Id: " << device.GetVendorId() << std::endl
-       << indent << "Available: " << ( device.IsAvailable() ? "Yes" : "No" ) << std::endl
-       << indent << "Has compiler: " << ( device.HasCompiler() ? "Yes" : "No" ) << std::endl
-       << indent << "Has native kernels: " << ( device.HasNativeKernels() ? "Yes" : "No" ) << std::endl
-       << indent << "Has out of order execution: " << ( device.HasOutOfOrderExecution() ? "Yes" : "No" ) << std::endl
-       << indent << "Has double: " << ( device.HasDouble() ? "Yes" : "No" ) << std::endl
-       << indent << "Has half float: " << ( device.HasHalfFloat() ? "Yes" : "No" ) << std::endl
-       << indent << "Has error correcting memory: " << ( device.HasErrorCorrectingMemory() ? "Yes" : "No" ) << std::endl
-       << indent << "Has unified memory: " << ( device.HasUnifiedMemory() ? "Yes" : "No" ) << std::endl
+  strm << std::endl
+       << indent << "Vendor Id: " << device.GetVendorId() << std::endl
+       << indent << "Available: " << (device.IsAvailable() ? "Yes" : "No") << std::endl
+       << indent << "Has compiler: " << (device.HasCompiler() ? "Yes" : "No") << std::endl
+       << indent << "Has native kernels: " << (device.HasNativeKernels() ? "Yes" : "No") << std::endl
+       << indent << "Has out of order execution: " << (device.HasOutOfOrderExecution() ? "Yes" : "No") << std::endl
+       << indent << "Has double: " << (device.HasDouble() ? "Yes" : "No") << std::endl
+       << indent << "Has half float: " << (device.HasHalfFloat() ? "Yes" : "No") << std::endl
+       << indent << "Has error correcting memory: " << (device.HasErrorCorrectingMemory() ? "Yes" : "No") << std::endl
+       << indent << "Has unified memory: " << (device.HasUnifiedMemory() ? "Yes" : "No") << std::endl
        << indent << "Compute units: " << device.GetComputeUnits() << std::endl
        << indent << "Clock frequency: " << device.GetClockFrequency() << std::endl
        << indent << "Address bits: " << device.GetAddressBits() << std::endl;
 
   strm << indent << "Byte order: ";
-  switch( device.GetByteOrder() )
+  switch (device.GetByteOrder())
   {
     case OpenCLDevice::BigEndian:
-      strm << "Big Endian"; break;
+      strm << "Big Endian";
+      break;
     case OpenCLDevice::LittleEndian:
-      strm << "Little Endian"; break;
+      strm << "Little Endian";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
-  strm << std::endl << indent << "Maximum work item size: " << device.GetMaximumWorkItemSize() << std::endl
+  strm << std::endl
+       << indent << "Maximum work item size: " << device.GetMaximumWorkItemSize() << std::endl
        << indent << "Maximum work items per group: " << device.GetMaximumWorkItemsPerGroup() << std::endl
        << indent << "Maximum work items per group: " << device.GetMaximumWorkItemsPerGroup() << std::endl;
 
   // Has Image 2D
   const bool hasImage2D = device.HasImage2D();
-  strm << indent << "Has image 2D: " << ( hasImage2D ? "Yes" : "No" ) << std::endl;
-  if( hasImage2D )
+  strm << indent << "Has image 2D: " << (hasImage2D ? "Yes" : "No") << std::endl;
+  if (hasImage2D)
   {
     strm << indent << "Maximum image 2D size: " << device.GetMaximumImage2DSize() << std::endl;
   }
 
   // Has Image 3D
   const bool hasImage3D = device.HasImage3D();
-  strm << indent << "Has image 3D: " << ( hasImage3D ? "Yes" : "No" ) << std::endl;
-  if( hasImage3D )
+  strm << indent << "Has image 3D: " << (hasImage3D ? "Yes" : "No") << std::endl;
+  if (hasImage3D)
   {
     strm << indent << "Maximum image 3D size: " << device.GetMaximumImage3DSize() << std::endl;
   }
 
-  strm << indent << "Has writable image 3D: " << ( device.HasWritableImage3D() ? "Yes" : "No" ) << std::endl
+  strm << indent << "Has writable image 3D: " << (device.HasWritableImage3D() ? "Yes" : "No") << std::endl
        << indent << "Maximum samplers: " << device.GetMaximumSamplers() << std::endl
        << indent << "Maximum read images: " << device.GetMaximumReadImages() << std::endl
        << indent << "Maximum write images: " << device.GetMaximumWriteImages() << std::endl
@@ -626,113 +727,143 @@ operator<<( std::basic_ostream< charT, traits > & strm,
        << indent << "Native half float vector size: " << device.GetNativeHalfFloatVectorSize() << std::endl;
 
   strm << indent << "Float capabilities: ";
-  switch( device.GetFloatCapabilities() )
+  switch (device.GetFloatCapabilities())
   {
     case OpenCLDevice::NotSupported:
-      strm << "Not supported"; break;
+      strm << "Not supported";
+      break;
     case OpenCLDevice::Denorm:
-      strm << "Denorm"; break;
+      strm << "Denorm";
+      break;
     case OpenCLDevice::InfinityNaN:
-      strm << "Infinity nan"; break;
+      strm << "Infinity nan";
+      break;
     case OpenCLDevice::RoundNearest:
-      strm << "Round nearest"; break;
+      strm << "Round nearest";
+      break;
     case OpenCLDevice::RoundZero:
-      strm << "Round zero"; break;
+      strm << "Round zero";
+      break;
     case OpenCLDevice::RoundInfinity:
-      strm << "Round infinity"; break;
+      strm << "Round infinity";
+      break;
     case OpenCLDevice::FusedMultiplyAdd:
-      strm << "Fused multiply add"; break;
+      strm << "Fused multiply add";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
   strm << std::endl << indent << "Double capabilities: ";
-  switch( device.GetDoubleCapabilities() )
+  switch (device.GetDoubleCapabilities())
   {
     case OpenCLDevice::NotSupported:
-      strm << "Not supported"; break;
+      strm << "Not supported";
+      break;
     case OpenCLDevice::Denorm:
-      strm << "Denorm"; break;
+      strm << "Denorm";
+      break;
     case OpenCLDevice::InfinityNaN:
-      strm << "Infinity NaN"; break;
+      strm << "Infinity NaN";
+      break;
     case OpenCLDevice::RoundNearest:
-      strm << "Round nearest"; break;
+      strm << "Round nearest";
+      break;
     case OpenCLDevice::RoundZero:
-      strm << "Round zero"; break;
+      strm << "Round zero";
+      break;
     case OpenCLDevice::RoundInfinity:
-      strm << "Round infinity"; break;
+      strm << "Round infinity";
+      break;
     case OpenCLDevice::FusedMultiplyAdd:
-      strm << "Fused multiply add"; break;
+      strm << "Fused multiply add";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
   strm << std::endl << indent << "Half float capabilities: ";
-  switch( device.GetHalfFloatCapabilities() )
+  switch (device.GetHalfFloatCapabilities())
   {
     case OpenCLDevice::NotSupported:
-      strm << "Not supported"; break;
+      strm << "Not supported";
+      break;
     case OpenCLDevice::Denorm:
-      strm << "Denorm"; break;
+      strm << "Denorm";
+      break;
     case OpenCLDevice::InfinityNaN:
-      strm << "Infinity NaN"; break;
+      strm << "Infinity NaN";
+      break;
     case OpenCLDevice::RoundNearest:
-      strm << "Round nearest"; break;
+      strm << "Round nearest";
+      break;
     case OpenCLDevice::RoundZero:
-      strm << "Round zero"; break;
+      strm << "Round zero";
+      break;
     case OpenCLDevice::RoundInfinity:
-      strm << "Round infinity"; break;
+      strm << "Round infinity";
+      break;
     case OpenCLDevice::FusedMultiplyAdd:
-      strm << "Fused multiply add"; break;
+      strm << "Fused multiply add";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
-  strm << std::endl << indent << "Profiling timer resolution: " << device.GetProfilingTimerResolution() << std::endl
+  strm << std::endl
+       << indent << "Profiling timer resolution: " << device.GetProfilingTimerResolution() << std::endl
        << indent << "Maximum allocation size: " << device.GetMaximumAllocationSize() << std::endl
        << indent << "Global memory size: " << device.GetGlobalMemorySize() << std::endl;
 
   strm << indent << "Global memory cache type: ";
-  switch( device.GetGlobalMemoryCacheType() )
+  switch (device.GetGlobalMemoryCacheType())
   {
     case OpenCLDevice::NoCache:
-      strm << "No cache"; break;
+      strm << "No cache";
+      break;
     case OpenCLDevice::ReadOnlyCache:
-      strm << "Read only cache"; break;
+      strm << "Read only cache";
+      break;
     case OpenCLDevice::ReadWriteCache:
-      strm << "Read write cache"; break;
+      strm << "Read write cache";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
-  strm << std::endl << indent << "Global memory cache size: " << device.GetGlobalMemoryCacheSize() << std::endl
+  strm << std::endl
+       << indent << "Global memory cache size: " << device.GetGlobalMemoryCacheSize() << std::endl
        << indent << "Global memory cache line size: " << device.GetGlobalMemoryCacheLineSize() << std::endl
        << indent << "Local memory size: " << device.GetLocalMemorySize() << std::endl
-       << indent << "Local memory separated: " << ( device.IsLocalMemorySeparate() ? "Yes" : "No" ) << std::endl
+       << indent << "Local memory separated: " << (device.IsLocalMemorySeparate() ? "Yes" : "No") << std::endl
        << indent << "Maximum constant buffer size: " << device.GetMaximumConstantBufferSize() << std::endl
        << indent << "Maximum constant arguments: " << device.GetMaximumConstantArguments() << std::endl
        << indent << "Default alignment: " << device.GetDefaultAlignment() << std::endl
        << indent << "Minimum alignment: " << device.GetMinimumAlignment() << std::endl
        << indent << "Maximum parameter bytes: " << device.GetMaximumParameterBytes() << std::endl
-       << indent << "Full profile: " << ( device.IsFullProfile() ? "Yes" : "No" ) << std::endl
-       << indent << "Embedded profile: " << ( device.IsEmbeddedProfile() ? "Yes" : "No" ) << std::endl
+       << indent << "Full profile: " << (device.IsFullProfile() ? "Yes" : "No") << std::endl
+       << indent << "Embedded profile: " << (device.IsEmbeddedProfile() ? "Yes" : "No") << std::endl
        << indent << "Profile: " << device.GetProfile() << std::endl
        << indent << "Driver version: " << device.GetDriverVersion() << std::endl
        << indent << "Name: " << device.GetName() << std::endl
        << indent << "Vendor: " << device.GetVendor() << std::endl
        << indent << "Language Version: " << device.GetLanguageVersion() << std::endl;
 
-  const std::list< std::string > extensions     = device.GetExtensions();
-  const std::size_t              extensionsSize = extensions.size();
+  const std::list<std::string> extensions = device.GetExtensions();
+  const std::size_t            extensionsSize = extensions.size();
   strm << indent << "Extensions(" << extensionsSize << "): ";
-  if( extensionsSize == 0 )
+  if (extensionsSize == 0)
   {
     strm << "none";
   }
   else
   {
     strm << std::endl;
-    for( std::list< std::string >::const_iterator it = extensions.begin(); it != extensions.end(); ++it )
+    for (std::list<std::string>::const_iterator it = extensions.begin(); it != extensions.end(); ++it)
     {
       strm << indent << indent << "- " << *it << std::endl;
     }

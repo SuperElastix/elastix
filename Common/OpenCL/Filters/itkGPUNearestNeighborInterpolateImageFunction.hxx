@@ -24,36 +24,34 @@
 
 namespace itk
 {
-template< typename TInputImage, typename TCoordRep >
-GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
-::GPUNearestNeighborInterpolateImageFunction()
+template <typename TInputImage, typename TCoordRep>
+GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::GPUNearestNeighborInterpolateImageFunction()
 {
   // Add GPUImageFunction implementation
-  const std::string sourcePath0( GPUImageFunctionKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath0 );
+  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath0);
 
   // Add GPUNearestNeighborInterpolateImageFunction implementation
-  const std::string sourcePath1( GPUNearestNeighborInterpolateImageFunctionKernel::GetOpenCLSource() );
-  this->m_Sources.push_back( sourcePath1 );
+  const std::string sourcePath1(GPUNearestNeighborInterpolateImageFunctionKernel::GetOpenCLSource());
+  this->m_Sources.push_back(sourcePath1);
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep >
+template <typename TInputImage, typename TCoordRep>
 bool
-GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
-::GetSourceCode( std::string & source ) const
+GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::GetSourceCode(std::string & source) const
 {
-  if( this->m_Sources.size() == 0 )
+  if (this->m_Sources.size() == 0)
   {
     return false;
   }
 
   // Create the source code
   std::ostringstream sources;
-  for( std::size_t i = 0; i < this->m_Sources.size(); i++ )
+  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
   {
-    sources << this->m_Sources[ i ] << std::endl;
+    sources << this->m_Sources[i] << std::endl;
   }
 
   source = sources.str();
@@ -62,13 +60,12 @@ GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep >
+template <typename TInputImage, typename TCoordRep>
 void
-GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  CPUSuperclass::PrintSelf( os, indent );
-  GPUSuperclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf(os, indent);
+  GPUSuperclass::PrintSelf(os, indent);
 }
 
 

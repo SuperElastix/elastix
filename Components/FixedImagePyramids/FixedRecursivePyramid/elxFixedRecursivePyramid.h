@@ -35,40 +35,36 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template< class TElastix >
-class FixedRecursivePyramid :
-  public
-  itk::RecursiveMultiResolutionPyramidImageFilter<
-  typename FixedImagePyramidBase< TElastix >::InputImageType,
-  typename FixedImagePyramidBase< TElastix >::OutputImageType >,
-  public
-  FixedImagePyramidBase< TElastix >
+template <class TElastix>
+class FixedRecursivePyramid
+  : public itk::RecursiveMultiResolutionPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
+                                                           typename FixedImagePyramidBase<TElastix>::OutputImageType>
+  , public FixedImagePyramidBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef FixedRecursivePyramid Self;
-  typedef itk::RecursiveMultiResolutionPyramidImageFilter<
-    typename FixedImagePyramidBase< TElastix >::InputImageType,
-    typename FixedImagePyramidBase< TElastix >::OutputImageType > Superclass1;
-  typedef FixedImagePyramidBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef itk::RecursiveMultiResolutionPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
+                                                          typename FixedImagePyramidBase<TElastix>::OutputImageType>
+                                          Superclass1;
+  typedef FixedImagePyramidBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>         Pointer;
+  typedef itk::SmartPointer<const Self>   ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FixedRecursivePyramid, itk::RecursiveMultiResolutionPyramidImageFilter );
+  itkTypeMacro(FixedRecursivePyramid, itk::RecursiveMultiResolutionPyramidImageFilter);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific pyramid. \n
    * example: <tt>(FixedImagePyramid "FixedRecursiveImagePyramid")</tt>\n
    */
-  elxClassNameMacro( "FixedRecursiveImagePyramid" );
+  elxClassNameMacro("FixedRecursiveImagePyramid");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::InputImageType         InputImageType;
@@ -88,25 +84,23 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
 protected:
-
   /** The constructor. */
   FixedRecursivePyramid() {}
   /** The destructor. */
   ~FixedRecursivePyramid() override {}
 
 private:
-
   /** The private constructor. */
-  FixedRecursivePyramid( const Self & );  // purposely not implemented
+  FixedRecursivePyramid(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );         // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxFixedRecursivePyramid.hxx"
+#  include "elxFixedRecursivePyramid.hxx"
 #endif
 
 #endif // end #ifndef __elxFixedRecursivePyramid_h

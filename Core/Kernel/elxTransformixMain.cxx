@@ -20,8 +20,8 @@
  *  This is to set the priority, but which does not work on cygwin.
  */
 
-#if defined( _WIN32 ) && !defined( __CYGWIN__ )
-  #include <windows.h>
+#if defined(_WIN32) && !defined(__CYGWIN__)
+#  include <windows.h>
 #endif
 
 #include "elxTransformixMain.h"
@@ -29,8 +29,8 @@
 #include "elxMacro.h"
 
 #ifdef ELASTIX_USE_OPENCL
-#include "itkOpenCLContext.h"
-#include "itkOpenCLSetup.h"
+#  include "itkOpenCLContext.h"
+#  include "itkOpenCLSetup.h"
 #endif
 
 namespace elastix
@@ -44,7 +44,7 @@ namespace elastix
  */
 
 int
-TransformixMain::Run( void )
+TransformixMain::Run(void)
 {
   /** Set process properties. */
   this->SetProcessPriority();
@@ -52,7 +52,7 @@ TransformixMain::Run( void )
 
   /** Initialize database. */
   int errorCode = this->InitDBIndex();
-  if( errorCode != 0 )
+  if (errorCode != 0)
   {
     return errorCode;
   }
@@ -61,12 +61,12 @@ TransformixMain::Run( void )
   try
   {
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
-    this->m_Elastix = this->CreateComponent( "Elastix" );
+    this->m_Elastix = this->CreateComponent("Elastix");
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    xl::xout[ "error" ] << excp << std::endl;
+    xl::xout["error"] << excp << std::endl;
     errorCode = 1;
     return errorCode;
   }
@@ -75,17 +75,15 @@ TransformixMain::Run( void )
 #ifdef ELASTIX_USE_OPENCL
   /** Check if user overrides OpenCL device selection. */
   std::string userSuppliedOpenCLDeviceType = "GPU";
-  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceType,
-    "OpenCLDeviceType", 0, false );
+  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceType, "OpenCLDeviceType", 0, false);
 
   int userSuppliedOpenCLDeviceID = -1;
-  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceID,
-    "OpenCLDeviceID", 0, false );
+  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceID, "OpenCLDeviceID", 0, false);
 
-  std::string errorMessage              = "";
-  const bool  creatingContextSuccessful = itk::CreateOpenCLContext(
-    errorMessage, userSuppliedOpenCLDeviceType, userSuppliedOpenCLDeviceID );
-  if( !creatingContextSuccessful )
+  std::string errorMessage = "";
+  const bool  creatingContextSuccessful =
+    itk::CreateOpenCLContext(errorMessage, userSuppliedOpenCLDeviceType, userSuppliedOpenCLDeviceID);
+  if (!creatingContextSuccessful)
   {
     /** Report and disable the GPU by releasing the context. */
     elxout << errorMessage << std::endl;
@@ -96,71 +94,63 @@ TransformixMain::Run( void )
   }
 
   /** Create a log file. */
-  itk::CreateOpenCLLogger( "transformix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
+  itk::CreateOpenCLLogger("transformix", this->m_Configuration->GetCommandLineArgument("-out"));
 #endif
 
   if (BaseComponent::IsElastixLibrary())
   {
-    this->GetElastixBase()->SetConfigurations( this->m_Configurations );
+    this->GetElastixBase()->SetConfigurations(this->m_Configurations);
   }
 
   /** Set some information in the ElastixBase. */
-  this->GetElastixBase()->SetConfiguration( this->m_Configuration );
-  this->GetElastixBase()->SetComponentDatabase( this->s_CDB );
-  this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
+  this->GetElastixBase()->SetConfiguration(this->m_Configuration);
+  this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
+  this->GetElastixBase()->SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. No default is specified for the Transform. */
   this->GetElastixBase()->SetResampleInterpolatorContainer(
-    this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator",
-    errorCode ) );
+    this->CreateComponents("ResampleInterpolator", "FinalBSplineInterpolator", errorCode));
 
-  this->GetElastixBase()->SetResamplerContainer(
-    this->CreateComponents( "Resampler", "DefaultResampler", errorCode ) );
+  this->GetElastixBase()->SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
 
-  this->GetElastixBase()->SetTransformContainer(
-    this->CreateComponents( "Transform", "", errorCode ) );
+  this->GetElastixBase()->SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
 
   /** Check if all components could be created. */
-  if( errorCode != 0 )
+  if (errorCode != 0)
   {
-    xl::xout[ "error" ] << "ERROR:" << std::endl;
-    xl::xout[ "error" ] << "One or more components could not be created." << std::endl;
+    xl::xout["error"] << "ERROR:" << std::endl;
+    xl::xout["error"] << "One or more components could not be created." << std::endl;
     return 1;
   }
 
   /** Set the images. If not set by the user, it is not a problem.
    * ElastixTemplate will try to load them from disk.
    */
-  this->GetElastixBase()->SetMovingImageContainer(
-    this->GetModifiableMovingImageContainer() );
+  this->GetElastixBase()->SetMovingImageContainer(this->GetModifiableMovingImageContainer());
 
   /** Set the initial transform, if it happens to be there
-  * \todo: Does this make sense for transformix?
-  */
-  this->GetElastixBase()->SetInitialTransform( this->GetModifiableInitialTransform() );
+   * \todo: Does this make sense for transformix?
+   */
+  this->GetElastixBase()->SetInitialTransform(this->GetModifiableInitialTransform());
 
   /** ApplyTransform! */
   try
   {
     errorCode = this->GetElastixBase()->ApplyTransform();
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    xl::xout[ "error" ] << std::endl
-                        << "--------------- Exception ---------------"
-                        << std::endl << excp
-                        << "-----------------------------------------" << std::endl;
+    xl::xout["error"] << std::endl
+                      << "--------------- Exception ---------------" << std::endl
+                      << excp << "-----------------------------------------" << std::endl;
     errorCode = 1;
   }
 
   /** Save the image container. */
-  this->SetMovingImageContainer(
-    this->GetElastixBase()->GetMovingImageContainer() );
-  this->SetResultImageContainer(
-    this->GetElastixBase()->GetResultImageContainer() );
-  this->SetResultDeformationFieldContainer(
-    this->GetElastixBase()->GetResultDeformationFieldContainer() );
+  this->SetMovingImageContainer(this->GetElastixBase()->GetMovingImageContainer());
+  this->SetResultImageContainer(this->GetElastixBase()->GetResultImageContainer());
+  this->SetResultDeformationFieldContainer(this->GetElastixBase()->GetResultDeformationFieldContainer());
 
   return errorCode;
 
@@ -172,9 +162,9 @@ TransformixMain::Run( void )
  */
 
 int
-TransformixMain::Run( const ArgumentMapType & argmap )
+TransformixMain::Run(const ArgumentMapType & argmap)
 {
-  this->EnterCommandLineArguments( argmap );
+  this->EnterCommandLineArguments(argmap);
   return this->Run();
 } // end Run()
 
@@ -184,11 +174,9 @@ TransformixMain::Run( const ArgumentMapType & argmap )
  */
 
 int
-TransformixMain::Run(
-  const ArgumentMapType & argmap,
-  const ParameterMapType & inputMap )
+TransformixMain::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
-  this->EnterCommandLineArguments( argmap, inputMap );
+  this->EnterCommandLineArguments(argmap, inputMap);
   return this->Run();
 } // end Run()
 
@@ -198,11 +186,9 @@ TransformixMain::Run(
  */
 
 int
-TransformixMain::Run(
-  const ArgumentMapType & argmap,
-  const std::vector< ParameterMapType > & inputMaps )
+TransformixMain::Run(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
 {
-  this->EnterCommandLineArguments( argmap, inputMaps );
+  this->EnterCommandLineArguments(argmap, inputMaps);
   return this->Run();
 } // end Run()
 
@@ -212,11 +198,10 @@ TransformixMain::Run(
  */
 
 void
-TransformixMain::SetInputImageContainer(
-  DataObjectContainerType * inputImageContainer )
+TransformixMain::SetInputImageContainer(DataObjectContainerType * inputImageContainer)
 {
   /** InputImage == MovingImage. */
-  this->SetMovingImageContainer( inputImageContainer );
+  this->SetMovingImageContainer(inputImageContainer);
 
 } // end SetInputImage()
 
@@ -229,7 +214,7 @@ TransformixMain::~TransformixMain()
 {
 #ifdef ELASTIX_USE_OPENCL
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-  if( context->IsCreated() )
+  if (context->IsCreated())
   {
     context->Release();
   }
@@ -242,83 +227,78 @@ TransformixMain::~TransformixMain()
  */
 
 int
-TransformixMain::InitDBIndex( void )
+TransformixMain::InitDBIndex(void)
 {
   /** Check if configuration object was already initialized. */
-  if( this->m_Configuration->IsInitialized() )
+  if (this->m_Configuration->IsInitialized())
   {
     /** Try to read MovingImagePixelType from the parameter file. */
     this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-    this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
-      "MovingInternalImagePixelType", 0 );
+    this->m_Configuration->ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
 
     /** Try to read FixedImagePixelType from the parameter file. */
     this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-    this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,
-      "FixedInternalImagePixelType", 0 );
+    this->m_Configuration->ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
 
     /** MovingImageDimension. */
-    if( this->m_MovingImageDimension == 0 )
+    if (this->m_MovingImageDimension == 0)
     {
       /** Try to read it from the transform parameter file. */
-      this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
-        "MovingImageDimension", 0 );
+      this->m_Configuration->ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0);
 
-      if( this->m_MovingImageDimension == 0 )
+      if (this->m_MovingImageDimension == 0)
       {
-        xl::xout[ "error" ] << "ERROR:" << std::endl;
-        xl::xout[ "error" ] << "The MovingImageDimension is not given." << std::endl;
+        xl::xout["error"] << "ERROR:" << std::endl;
+        xl::xout["error"] << "The MovingImageDimension is not given." << std::endl;
         return 1;
       }
     }
 
     /** FixedImageDimension. */
-    if( this->m_FixedImageDimension == 0 )
+    if (this->m_FixedImageDimension == 0)
     {
       /** Try to read it from the transform parameter file. */
-      this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
-        "FixedImageDimension", 0 );
+      this->m_Configuration->ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0);
 
-      if( this->m_FixedImageDimension == 0 )
+      if (this->m_FixedImageDimension == 0)
       {
-        xl::xout[ "error" ] << "ERROR:" << std::endl;
-        xl::xout[ "error" ] << "The FixedImageDimension is not given." << std::endl;
+        xl::xout["error"] << "ERROR:" << std::endl;
+        xl::xout["error"] << "The FixedImageDimension is not given." << std::endl;
         return 1;
       }
     }
 
     /** Load the components. */
-    if( this->s_CDB.IsNull() )
+    if (this->s_CDB.IsNull())
     {
       int loadReturnCode = this->LoadComponents();
-      if( loadReturnCode != 0 )
+      if (loadReturnCode != 0)
       {
-        xl::xout[ "error" ] << "Loading components failed" << std::endl;
+        xl::xout["error"] << "Loading components failed" << std::endl;
         return loadReturnCode;
       }
     }
 
-    if( this->s_CDB.IsNotNull() )
+    if (this->s_CDB.IsNotNull())
     {
       /** Get the DBIndex from the ComponentDatabase. */
-      this->m_DBIndex = this->s_CDB->GetIndex(
-        this->m_FixedImagePixelType,
-        this->m_FixedImageDimension,
-        this->m_MovingImagePixelType,
-        this->m_MovingImageDimension );
-      if( this->m_DBIndex == 0 )
+      this->m_DBIndex = this->s_CDB->GetIndex(this->m_FixedImagePixelType,
+                                              this->m_FixedImageDimension,
+                                              this->m_MovingImagePixelType,
+                                              this->m_MovingImageDimension);
+      if (this->m_DBIndex == 0)
       {
-        xl::xout[ "error" ] << "ERROR:" << std::endl;
-        xl::xout[ "error" ] << "Something went wrong in the ComponentDatabase." << std::endl;
+        xl::xout["error"] << "ERROR:" << std::endl;
+        xl::xout["error"] << "Something went wrong in the ComponentDatabase." << std::endl;
         return 1;
       }
-    } //end if s_CDB!=0
+    } // end if s_CDB!=0
 
   } // end if m_Configuration->Initialized();
   else
   {
-    xl::xout[ "error" ] << "ERROR:" << std::endl;
-    xl::xout[ "error" ] << "The configuration object has not been initialized." << std::endl;
+    xl::xout["error"] << "ERROR:" << std::endl;
+    xl::xout["error"] << "The configuration object has not been initialized." << std::endl;
     return 1;
   }
 

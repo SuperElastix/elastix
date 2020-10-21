@@ -35,40 +35,36 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template< class TElastix >
-class FixedShrinkingPyramid :
-  public
-  itk::MultiResolutionShrinkPyramidImageFilter<
-  typename FixedImagePyramidBase< TElastix >::InputImageType,
-  typename FixedImagePyramidBase< TElastix >::OutputImageType >,
-  public
-  FixedImagePyramidBase< TElastix >
+template <class TElastix>
+class FixedShrinkingPyramid
+  : public itk::MultiResolutionShrinkPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
+                                                        typename FixedImagePyramidBase<TElastix>::OutputImageType>
+  , public FixedImagePyramidBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef FixedShrinkingPyramid Self;
-  typedef itk::MultiResolutionShrinkPyramidImageFilter<
-    typename FixedImagePyramidBase< TElastix >::InputImageType,
-    typename FixedImagePyramidBase< TElastix >::OutputImageType > Superclass1;
-  typedef FixedImagePyramidBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef itk::MultiResolutionShrinkPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
+                                                       typename FixedImagePyramidBase<TElastix>::OutputImageType>
+                                          Superclass1;
+  typedef FixedImagePyramidBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>         Pointer;
+  typedef itk::SmartPointer<const Self>   ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FixedShrinkingPyramid, itk::MultiResolutionShrinkPyramidImageFilter );
+  itkTypeMacro(FixedShrinkingPyramid, itk::MultiResolutionShrinkPyramidImageFilter);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific pyramid. \n
    * example: <tt>(FixedImagePyramid "FixedShrinkingImagePyramid")</tt>\n
    */
-  elxClassNameMacro( "FixedShrinkingImagePyramid" );
+  elxClassNameMacro("FixedShrinkingImagePyramid");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::InputImageType         InputImageType;
@@ -88,25 +84,23 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
 protected:
-
   /** The constructor. */
   FixedShrinkingPyramid() {}
   /** The destructor. */
   ~FixedShrinkingPyramid() override {}
 
 private:
-
   /** The private constructor. */
-  FixedShrinkingPyramid( const Self & );  // purposely not implemented
+  FixedShrinkingPyramid(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );         // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxFixedShrinkingPyramid.hxx"
+#  include "elxFixedShrinkingPyramid.hxx"
 #endif
 
 #endif // end #ifndef __elxFixedShrinkingPyramid_h

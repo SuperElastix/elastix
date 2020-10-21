@@ -34,58 +34,61 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TScalarType = float, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3,
-typename TParentTransform      = BSplineTransform< TScalarType, NDimensions, VSplineOrder > >
-class GPUBSplineTransform :
-  public TParentTransform, public GPUBSplineBaseTransform< TScalarType, NDimensions >
+template <typename TScalarType = float,
+          unsigned int NDimensions = 3,
+          unsigned int VSplineOrder = 3,
+          typename TParentTransform = BSplineTransform<TScalarType, NDimensions, VSplineOrder>>
+class GPUBSplineTransform
+  : public TParentTransform
+  , public GPUBSplineBaseTransform<TScalarType, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUBSplineTransform Self;
-  typedef TParentTransform    CPUSuperclass;
-  typedef GPUBSplineBaseTransform<
-    TScalarType, NDimensions >                          GPUSuperclass;
-  typedef SmartPointer< Self >                          Pointer;
-  typedef SmartPointer< const Self >                    ConstPointer;
-  typedef typename CPUSuperclass::ParametersType        ParametersType;
-  typedef typename CPUSuperclass::CoefficientImageArray CoefficientImageArray;
+  typedef GPUBSplineTransform                               Self;
+  typedef TParentTransform                                  CPUSuperclass;
+  typedef GPUBSplineBaseTransform<TScalarType, NDimensions> GPUSuperclass;
+  typedef SmartPointer<Self>                                Pointer;
+  typedef SmartPointer<const Self>                          ConstPointer;
+  typedef typename CPUSuperclass::ParametersType            ParametersType;
+  typedef typename CPUSuperclass::CoefficientImageArray     CoefficientImageArray;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUBSplineTransform, TParentTransform );
+  itkTypeMacro(GPUBSplineTransform, TParentTransform);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
 
   /** This method sets the parameters of the transform. */
-  void SetParameters( const ParametersType & parameters );
+  void
+  SetParameters(const ParametersType & parameters);
 
   /** Set the array of coefficient images array. */
-  void SetCoefficientImages( const CoefficientImageArray & images );
+  void
+  SetCoefficientImages(const CoefficientImageArray & images);
 
 protected:
-
   GPUBSplineTransform();
   virtual ~GPUBSplineTransform() {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  void CopyCoefficientImagesToGPU();
+  void
+  CopyCoefficientImagesToGPU();
 
 private:
-
-  GPUBSplineTransform( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );    // purposely not implemented
-
+  GPUBSplineTransform(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUBSplineTransform.hxx"
+#  include "itkGPUBSplineTransform.hxx"
 #endif
 
 #endif /* __itkGPUBSplineTransform_h */

@@ -68,17 +68,16 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template< class TElastix >
-class MetricBase : public BaseComponentSE< TElastix >
+template <class TElastix>
+class MetricBase : public BaseComponentSE<TElastix>
 {
 public:
-
   /** Standard ITK stuff. */
-  typedef MetricBase                  Self;
-  typedef BaseComponentSE< TElastix > Superclass;
+  typedef MetricBase                Self;
+  typedef BaseComponentSE<TElastix> Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MetricBase, BaseComponentSE );
+  itkTypeMacro(MetricBase, BaseComponentSE);
 
   /** Typedef's inherited from Elastix. */
   typedef typename Superclass::ElastixType          ElastixType;
@@ -97,32 +96,35 @@ public:
   typedef typename MovingPointType::ValueType   MovingPointValueType;
 
   /** ITKBaseType. */
-  typedef itk::SingleValuedCostFunction ITKBaseType;
-  typedef itk::AdvancedImageToImageMetric<
-    FixedImageType, MovingImageType >                 AdvancedMetricType;
-  typedef typename AdvancedMetricType::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef itk::SingleValuedCostFunction                                    ITKBaseType;
+  typedef itk::AdvancedImageToImageMetric<FixedImageType, MovingImageType> AdvancedMetricType;
+  typedef typename AdvancedMetricType::MovingImageDerivativeScalesType     MovingImageDerivativeScalesType;
 
   /** Get the dimension of the fixed image. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   /** Get the dimension of the moving image. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedefs for point sets. */
   typedef typename ITKBaseType::ParametersValueType CoordinateRepresentationType;
-  typedef itk::PointSet<
-    CoordinateRepresentationType, FixedImageDimension,
-    itk::DefaultStaticMeshTraits<
-    CoordinateRepresentationType,
-    FixedImageDimension, FixedImageDimension,
-    CoordinateRepresentationType, CoordinateRepresentationType,
-    CoordinateRepresentationType > >                FixedPointSetType;
-  typedef itk::PointSet<
-    CoordinateRepresentationType, MovingImageDimension,
-    itk::DefaultStaticMeshTraits<
-    CoordinateRepresentationType,
-    MovingImageDimension, MovingImageDimension,
-    CoordinateRepresentationType, CoordinateRepresentationType,
-    CoordinateRepresentationType > >                MovingPointSetType;
+  typedef itk::PointSet<CoordinateRepresentationType,
+                        FixedImageDimension,
+                        itk::DefaultStaticMeshTraits<CoordinateRepresentationType,
+                                                     FixedImageDimension,
+                                                     FixedImageDimension,
+                                                     CoordinateRepresentationType,
+                                                     CoordinateRepresentationType,
+                                                     CoordinateRepresentationType>>
+    FixedPointSetType;
+  typedef itk::PointSet<CoordinateRepresentationType,
+                        MovingImageDimension,
+                        itk::DefaultStaticMeshTraits<CoordinateRepresentationType,
+                                                     MovingImageDimension,
+                                                     MovingImageDimension,
+                                                     CoordinateRepresentationType,
+                                                     CoordinateRepresentationType,
+                                                     CoordinateRepresentationType>>
+    MovingPointSetType;
 
   /** Typedefs for sampler support. */
   typedef typename AdvancedMetricType::ImageSamplerType ImageSamplerBaseType;
@@ -131,16 +133,18 @@ public:
   typedef typename ITKBaseType::MeasureType MeasureType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
+  virtual ITKBaseType *
+  GetAsITKBaseType(void)
   {
-    return dynamic_cast< ITKBaseType * >( this );
+    return dynamic_cast<ITKBaseType *>(this);
   }
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  virtual const ITKBaseType *
+  GetAsITKBaseType(void) const
   {
-    return dynamic_cast< const ITKBaseType * >( this );
+    return dynamic_cast<const ITKBaseType *>(this);
   }
 
 
@@ -148,50 +152,61 @@ public:
    * \li Check if the exact metric value should be computed
    * (to monitor the progress of the registration).
    */
-  void BeforeEachResolutionBase( void ) override;
+  void
+  BeforeEachResolutionBase(void) override;
 
   /** Execute stuff after each iteration:
    * \li Optionally compute the exact metric value and plot it to screen.
    */
-  void AfterEachIterationBase( void ) override;
+  void
+  AfterEachIterationBase(void) override;
 
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.
    */
-  virtual void SelectNewSamples( void );
+  virtual void
+  SelectNewSamples(void);
 
   /** Returns whether the metric uses a sampler. When the metric is not of
    * AdvancedMetricType, the function returns false immediately.
    */
-  virtual bool GetAdvancedMetricUseImageSampler( void ) const;
+  virtual bool
+  GetAdvancedMetricUseImageSampler(void) const;
 
   /** Method to set the image sampler. The image sampler is only used when
    * the metric is of type AdvancedMetricType, and has UseImageSampler set
    * to true. In other cases, the function does nothing.
    */
-  virtual void SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler );
+  virtual void
+  SetAdvancedMetricImageSampler(ImageSamplerBaseType * sampler);
 
   /** Methods to get the image sampler. The image sampler is only used when
    * the metric is of type AdvancedMetricType, and has UseImageSampler set
    * to true. In other cases, the function returns 0.
    */
-  virtual ImageSamplerBaseType * GetAdvancedMetricImageSampler( void ) const;
+  virtual ImageSamplerBaseType *
+  GetAdvancedMetricImageSampler(void) const;
 
   /** Get if the exact metric value is computed */
-  virtual bool GetShowExactMetricValue( void ) const
-  { return this->m_ShowExactMetricValue; }
+  virtual bool
+  GetShowExactMetricValue(void) const
+  {
+    return this->m_ShowExactMetricValue;
+  }
 
   /** Get the last computed exact metric value */
-  virtual MeasureType GetCurrentExactMetricValue( void ) const
-  { return this->m_CurrentExactMetricValue; }
+  virtual MeasureType
+  GetCurrentExactMetricValue(void) const
+  {
+    return this->m_CurrentExactMetricValue;
+  }
 
 protected:
-
   /** The parameters type. */
   typedef typename ITKBaseType::ParametersType ParametersType;
 
   /** The full sampler used by the GetExactValue method. */
-  typedef itk::ImageGridSampler< FixedImageType >                     ExactMetricImageSamplerType;
+  typedef itk::ImageGridSampler<FixedImageType>                       ExactMetricImageSamplerType;
   typedef typename ExactMetricImageSamplerType::Pointer               ExactMetricImageSamplerPointer;
   typedef typename ExactMetricImageSamplerType::SampleGridSpacingType ExactMetricSampleGridSpacingType;
 
@@ -209,7 +224,8 @@ protected:
    * In other cases it returns 0. You may re-implement this method in
    * the elxYourMetric, if you like.
    */
-  virtual MeasureType GetExactValue( const ParametersType & parameters );
+  virtual MeasureType
+  GetExactValue(const ParametersType & parameters);
 
   /** \todo the method GetExactDerivative could as well be added here. */
 
@@ -220,18 +236,17 @@ protected:
   unsigned int                     m_ExactMetricEachXNumberOfIterations;
 
 private:
-
   /** The private constructor. */
-  MetricBase( const Self & );      // purposely not implemented
+  MetricBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );  // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMetricBase.hxx"
+#  include "elxMetricBase.hxx"
 #endif
 
 #endif // end #ifndef __elxMetricBase_h

@@ -24,7 +24,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUBSplineDecompositionImageFilter */
-itkGPUKernelClassMacro( GPUBSplineDecompositionImageFilterKernel );
+itkGPUKernelClassMacro(GPUBSplineDecompositionImageFilterKernel);
 
 /** \class GPUBSplineDecompositionImageFilter
  * \brief GPU version of BSplineDecompositionImageFilter.
@@ -37,27 +37,23 @@ itkGPUKernelClassMacro( GPUBSplineDecompositionImageFilterKernel );
  *
  * \ingroup GPUCommon
  */
-template< typename TInputImage, typename TOutputImage >
-class ITK_EXPORT GPUBSplineDecompositionImageFilter :
-  public         GPUImageToImageFilter< TInputImage, TOutputImage,
-  BSplineDecompositionImageFilter< TInputImage, TOutputImage > >
+template <typename TInputImage, typename TOutputImage>
+class ITK_EXPORT GPUBSplineDecompositionImageFilter
+  : public GPUImageToImageFilter<TInputImage, TOutputImage, BSplineDecompositionImageFilter<TInputImage, TOutputImage>>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef GPUBSplineDecompositionImageFilter Self;
-  typedef BSplineDecompositionImageFilter<
-    TInputImage, TOutputImage >                CPUSuperclass;
-  typedef GPUImageToImageFilter<
-    TInputImage, TOutputImage, CPUSuperclass > GPUSuperclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUBSplineDecompositionImageFilter                              Self;
+  typedef BSplineDecompositionImageFilter<TInputImage, TOutputImage>      CPUSuperclass;
+  typedef GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass> GPUSuperclass;
+  typedef SmartPointer<Self>                                              Pointer;
+  typedef SmartPointer<const Self>                                        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUBSplineDecompositionImageFilter, GPUSuperclass );
+  itkTypeMacro(GPUBSplineDecompositionImageFilter, GPUSuperclass);
 
   /** Superclass typedefs. */
   typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
@@ -72,23 +68,22 @@ public:
   typedef typename InputImageType::PixelType    InputImagePixelType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
-  itkStaticConstMacro( OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
 protected:
-
   GPUBSplineDecompositionImageFilter();
-  ~GPUBSplineDecompositionImageFilter(){}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  ~GPUBSplineDecompositionImageFilter() {}
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  virtual void GPUGenerateData( void );
+  virtual void
+  GPUGenerateData(void);
 
 private:
-
-  GPUBSplineDecompositionImageFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & );                     // purposely not implemented
+  GPUBSplineDecompositionImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;
@@ -97,7 +92,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUBSplineDecompositionImageFilter.hxx"
+#  include "itkGPUBSplineDecompositionImageFilter.hxx"
 #endif
 
 #endif /* __itkGPUBSplineDecompositionImageFilter_h */

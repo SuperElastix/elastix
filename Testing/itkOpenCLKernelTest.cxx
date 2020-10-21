@@ -18,11 +18,11 @@
 #include "itkOpenCLKernel.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   itk::OpenCLKernel kernel;
 
-  if( !kernel.IsNull() )
+  if (!kernel.IsNull())
   {
     return EXIT_FAILURE;
   }

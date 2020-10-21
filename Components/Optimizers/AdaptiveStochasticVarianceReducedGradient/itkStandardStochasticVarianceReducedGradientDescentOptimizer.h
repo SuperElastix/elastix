@@ -53,23 +53,21 @@ namespace itk
  * \ingroup Optimizers
  */
 
-class StandardStochasticVarianceReducedGradientOptimizer :
-  public StochasticVarianceReducedGradientDescentOptimizer
+class StandardStochasticVarianceReducedGradientOptimizer : public StochasticVarianceReducedGradientDescentOptimizer
 {
 public:
-
   /** Standard ITK.*/
-  typedef StandardStochasticVarianceReducedGradientOptimizer            Self;
-  typedef StochasticVarianceReducedGradientDescentOptimizer             Superclass;
+  typedef StandardStochasticVarianceReducedGradientOptimizer Self;
+  typedef StochasticVarianceReducedGradientDescentOptimizer  Superclass;
 
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StandardStochasticVarianceReducedGradientOptimizer, StochasticVarianceReducedGradientDescentOptimizer );
+  itkTypeMacro(StandardStochasticVarianceReducedGradientOptimizer, StochasticVarianceReducedGradientDescentOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -82,65 +80,70 @@ public:
   typedef Superclass::StopConditionType         StopConditionType;
 
   /** Set/Get a. */
-  itkSetMacro( Param_a, double );
-  itkGetConstMacro( Param_a, double );
+  itkSetMacro(Param_a, double);
+  itkGetConstMacro(Param_a, double);
 
   /** Set/Get beta. */
-  itkSetMacro( Param_beta, double );
-  itkGetConstMacro( Param_beta, double );
+  itkSetMacro(Param_beta, double);
+  itkGetConstMacro(Param_beta, double);
 
   /** Set/Get A. */
-  itkSetMacro( Param_A, double );
-  itkGetConstMacro( Param_A, double );
+  itkSetMacro(Param_A, double);
+  itkGetConstMacro(Param_A, double);
 
   /** Set/Get alpha. */
-  itkSetMacro( Param_alpha, double );
-  itkGetConstMacro( Param_alpha, double );
+  itkSetMacro(Param_alpha, double);
+  itkGetConstMacro(Param_alpha, double);
 
   /** Sets a new LearningRate before calling the Superclass'
-  * implementation, and updates the current time. */
-  void AdvanceOneStep( void ) override;
+   * implementation, and updates the current time. */
+  void
+  AdvanceOneStep(void) override;
 
   /** Set current time to 0 and call superclass' implementation. */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Set/Get the initial time. Should be >=0. This function is
    * superfluous, since Param_A does effectively the same.
    * However, in inheriting classes, like the AcceleratedStochasticVarianceReducedGradient
    * the initial time may have a different function than Param_A.
    * Default: 0.0 */
-  itkSetMacro( InitialTime, double );
-  itkGetConstMacro( InitialTime, double );
+  itkSetMacro(InitialTime, double);
+  itkGetConstMacro(InitialTime, double);
 
   /** Get the current time. This equals the CurrentIteration in this base class
    * but may be different in inheriting classes, such as the AccelerateStochasticVarianceReducedGradient */
-  itkGetConstMacro( CurrentTime, double );
+  itkGetConstMacro(CurrentTime, double);
 
   /** Set the current time to the initial time. This can be useful
    * to 'reset' the optimisation, for example if you changed the
    * cost function while optimisation. Be careful with this function. */
-  virtual void ResetCurrentTimeToInitialTime( void )
+  virtual void
+  ResetCurrentTimeToInitialTime(void)
   {
     this->m_CurrentTime = this->m_InitialTime;
   }
 
 protected:
-
   StandardStochasticVarianceReducedGradientOptimizer();
-  ~StandardStochasticVarianceReducedGradientOptimizer() override {};
+  ~StandardStochasticVarianceReducedGradientOptimizer() override{};
 
   /** Function to compute the step size for SGD at time/iteration k. */
-  virtual double Compute_a( double k ) const;
+  virtual double
+  Compute_a(double k) const;
 
   /** Function to compute the step size for SQN at time/iteration k. */
-  virtual double Compute_beta( double k ) const;
+  virtual double
+  Compute_beta(double k) const;
 
   /** Function to update the current time
    * This function just increments the CurrentTime by 1.
    * Inheriting functions may implement something smarter,
    * for example, dependent on the progress.
    */
-  virtual void UpdateCurrentTime( void );
+  virtual void
+  UpdateCurrentTime(void);
 
   /** The current time, which serves as input for Compute_a */
   double m_CurrentTime;
@@ -149,18 +152,18 @@ protected:
   bool m_UseConstantStep;
 
 private:
-
-  StandardStochasticVarianceReducedGradientOptimizer( const Self& );  // purposely not implemented
-  void operator=( const Self& );              // purposely not implemented
+  StandardStochasticVarianceReducedGradientOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /**Parameters, as described by Spall.*/
-  double                        m_Param_a;
-  double                        m_Param_beta;
-  double                        m_Param_A;
-  double                        m_Param_alpha;
+  double m_Param_a;
+  double m_Param_beta;
+  double m_Param_A;
+  double m_Param_alpha;
 
   /** Settings */
-  double                        m_InitialTime;
+  double m_InitialTime;
 
 }; // end class StandardStochasticVarianceReducedGradientOptimizer
 

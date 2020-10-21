@@ -18,4 +18,4 @@
 
 #include "elxRSGDEachParameterApart.h"
 
-elxInstallMacro( RSGDEachParameterApart );
+elxInstallMacro(RSGDEachParameterApart);

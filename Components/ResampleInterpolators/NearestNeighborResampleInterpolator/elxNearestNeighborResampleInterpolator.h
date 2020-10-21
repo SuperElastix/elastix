@@ -25,54 +25,51 @@ namespace elastix
 {
 
 /**
-* \class NearestNeighborResampleInterpolator
-* \brief A nearest neighbor resample-interpolator.
-*
-* Compared to the BSplineResampleInterpolator and BSplineResampleInterpolatorFloat
-* with SplineOrder 0 this class uses less (in fact, no) memory. You can select
-* this resample interpolator if memory burden is an issue and nearest neighbor interpolation
-* is sufficient.
-*
-* The parameters used in this class are:
-* \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
-*   <tt>(ResampleInterpolator "FinalNearestNeighborInterpolator")</tt>
-*
-* \ingroup ResampleInterpolators
-*/
+ * \class NearestNeighborResampleInterpolator
+ * \brief A nearest neighbor resample-interpolator.
+ *
+ * Compared to the BSplineResampleInterpolator and BSplineResampleInterpolatorFloat
+ * with SplineOrder 0 this class uses less (in fact, no) memory. You can select
+ * this resample interpolator if memory burden is an issue and nearest neighbor interpolation
+ * is sufficient.
+ *
+ * The parameters used in this class are:
+ * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
+ *   <tt>(ResampleInterpolator "FinalNearestNeighborInterpolator")</tt>
+ *
+ * \ingroup ResampleInterpolators
+ */
 
-template< class TElastix >
-class NearestNeighborResampleInterpolator :
-  public
-  itk::NearestNeighborInterpolateImageFunction<
-  typename ResampleInterpolatorBase< TElastix >::InputImageType,
-  typename ResampleInterpolatorBase< TElastix >::CoordRepType >,
-  public ResampleInterpolatorBase< TElastix >
+template <class TElastix>
+class NearestNeighborResampleInterpolator
+  : public itk::NearestNeighborInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                                        typename ResampleInterpolatorBase<TElastix>::CoordRepType>
+  , public ResampleInterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef NearestNeighborResampleInterpolator Self;
-  typedef itk::NearestNeighborInterpolateImageFunction<
-    typename ResampleInterpolatorBase< TElastix >::InputImageType,
-    typename ResampleInterpolatorBase< TElastix >::CoordRepType >   Superclass1;
-  typedef ResampleInterpolatorBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >            Pointer;
-  typedef itk::SmartPointer< const Self >      ConstPointer;
+  typedef itk::NearestNeighborInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                                       typename ResampleInterpolatorBase<TElastix>::CoordRepType>
+                                             Superclass1;
+  typedef ResampleInterpolatorBase<TElastix> Superclass2;
+  typedef itk::SmartPointer<Self>            Pointer;
+  typedef itk::SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( NearestNeighborResampleInterpolator, NearestNeighborInterpolateImageFunction );
+  itkTypeMacro(NearestNeighborResampleInterpolator, NearestNeighborInterpolateImageFunction);
 
   /** Name of this class.
-  * Use this name in the parameter file to select this specific resample interpolator. \n
-  * example: <tt>(ResampleInterpolator "FinalNearestNeighborInterpolator")</tt>\n
-  */
-  elxClassNameMacro( "FinalNearestNeighborInterpolator" );
+   * Use this name in the parameter file to select this specific resample interpolator. \n
+   * example: <tt>(ResampleInterpolator "FinalNearestNeighborInterpolator")</tt>\n
+   */
+  elxClassNameMacro("FinalNearestNeighborInterpolator");
 
   /** Dimension of the image. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass1::OutputType          OutputType;
@@ -90,25 +87,23 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
 protected:
-
   /** The constructor. */
   NearestNeighborResampleInterpolator() {}
   /** The destructor. */
   ~NearestNeighborResampleInterpolator() override {}
 
 private:
-
   /** The private constructor. */
-  NearestNeighborResampleInterpolator( const Self & );   // purposely not implemented
+  NearestNeighborResampleInterpolator(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxNearestNeighborResampleInterpolator.hxx"
+#  include "elxNearestNeighborResampleInterpolator.hxx"
 #endif
 
 #endif // end __elxNearestNeighborResampleInterpolator_h

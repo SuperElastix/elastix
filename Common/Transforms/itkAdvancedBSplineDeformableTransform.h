@@ -46,7 +46,7 @@ namespace itk
 {
 
 // Forward declarations for friendship
-template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
+template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 class MultiBSplineDeformableTransformWithNormal;
 
 /** \class AdvancedBSplineDeformableTransform
@@ -126,64 +126,55 @@ class MultiBSplineDeformableTransformWithNormal;
  *
  * \ingroup Transforms
  */
-template<
-class TScalarType         = double,      // Data type for scalars
-unsigned int NDimensions  = 3,           // Number of dimensions
-unsigned int VSplineOrder = 3 >
+template <class TScalarType = double,   // Data type for scalars
+          unsigned int NDimensions = 3, // Number of dimensions
+          unsigned int VSplineOrder = 3>
 // Spline order
-class AdvancedBSplineDeformableTransform :
-  public AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
+class AdvancedBSplineDeformableTransform : public AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef AdvancedBSplineDeformableTransform Self;
-  typedef AdvancedBSplineDeformableTransformBase<
-    TScalarType, NDimensions >                      Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef AdvancedBSplineDeformableTransform                               Self;
+  typedef AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions> Superclass;
+  typedef SmartPointer<Self>                                               Pointer;
+  typedef SmartPointer<const Self>                                         ConstPointer;
 
   /** New macro for creation of through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedBSplineDeformableTransform, AdvancedBSplineDeformableTransformBase );
+  itkTypeMacro(AdvancedBSplineDeformableTransform, AdvancedBSplineDeformableTransformBase);
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
 
   /** The B-spline order. */
-  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
+  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Typedefs from Superclass. */
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::ParametersValueType    ParametersValueType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::DerivativeType         DerivativeType;
-  typedef typename Superclass::JacobianType           JacobianType;
-  typedef typename Superclass::ScalarType             ScalarType;
-  typedef typename Superclass::InputPointType         InputPointType;
-  typedef typename Superclass::OutputPointType        OutputPointType;
-  typedef typename Superclass::InputVectorType        InputVectorType;
-  typedef typename Superclass::OutputVectorType       OutputVectorType;
-  typedef typename Superclass::InputVnlVectorType     InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType    OutputVnlVectorType;
-  typedef typename Superclass::InputCovariantVectorType
-    InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType
-    OutputCovariantVectorType;
+  typedef typename Superclass::ParametersType            ParametersType;
+  typedef typename Superclass::ParametersValueType       ParametersValueType;
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass::DerivativeType            DerivativeType;
+  typedef typename Superclass::JacobianType              JacobianType;
+  typedef typename Superclass::ScalarType                ScalarType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
 
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType           InternalMatrixType;
-  typedef typename Superclass::MovingImageGradientType      MovingImageGradientType;
-  typedef typename Superclass::MovingImageGradientValueType MovingImageGradientValueType;
+  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::MovingImageGradientType        MovingImageGradientType;
+  typedef typename Superclass::MovingImageGradientValueType   MovingImageGradientValueType;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename Superclass::PixelType    PixelType;
@@ -201,27 +192,30 @@ public:
   typedef typename Superclass::GridOffsetType GridOffsetType;
 
   /** This method specifies the region over which the grid resides. */
-  void SetGridRegion( const RegionType & region ) override;
+  void
+  SetGridRegion(const RegionType & region) override;
 
   /** Transform points by a B-spline deformable transformation. */
-  OutputPointType TransformPoint( const InputPointType & point ) const override;
+  OutputPointType
+  TransformPoint(const InputPointType & point) const override;
 
   /** Interpolation weights function type. */
-  typedef BSplineInterpolationWeightFunction2< ScalarType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SplineOrder ) >                 WeightsFunctionType;
+  typedef BSplineInterpolationWeightFunction2<ScalarType,
+                                              itkGetStaticConstMacro(SpaceDimension),
+                                              itkGetStaticConstMacro(SplineOrder)>
+                                                            WeightsFunctionType;
   typedef typename WeightsFunctionType::Pointer             WeightsFunctionPointer;
   typedef typename WeightsFunctionType::WeightsType         WeightsType;
   typedef typename WeightsFunctionType::ContinuousIndexType ContinuousIndexType;
-  typedef BSplineInterpolationDerivativeWeightFunction<
-    ScalarType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SplineOrder ) >                 DerivativeWeightsFunctionType;
+  typedef BSplineInterpolationDerivativeWeightFunction<ScalarType,
+                                                       itkGetStaticConstMacro(SpaceDimension),
+                                                       itkGetStaticConstMacro(SplineOrder)>
+                                                          DerivativeWeightsFunctionType;
   typedef typename DerivativeWeightsFunctionType::Pointer DerivativeWeightsFunctionPointer;
-  typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<
-    ScalarType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SplineOrder ) >                 SODerivativeWeightsFunctionType;
+  typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType,
+                                                                  itkGetStaticConstMacro(SpaceDimension),
+                                                                  itkGetStaticConstMacro(SplineOrder)>
+                                                            SODerivativeWeightsFunctionType;
   typedef typename SODerivativeWeightsFunctionType::Pointer SODerivativeWeightsFunctionPointer;
 
   /** Parameter index array type. */
@@ -234,98 +228,98 @@ public:
    * Parameter indices for the i-th dimension can be obtained by adding
    * ( i * this->GetNumberOfParametersPerDimension() ) to the indices array.
    */
-  virtual void TransformPoint(
-    const InputPointType & inputPoint,
-    OutputPointType & outputPoint,
-    WeightsType & weights,
-    ParameterIndexArrayType & indices,
-    bool & inside ) const;
+  virtual void
+  TransformPoint(const InputPointType &    inputPoint,
+                 OutputPointType &         outputPoint,
+                 WeightsType &             weights,
+                 ParameterIndexArrayType & indices,
+                 bool &                    inside) const;
 
   /** Get number of weights. */
-  unsigned long GetNumberOfWeights( void ) const
+  unsigned long
+  GetNumberOfWeights(void) const
   {
     return this->m_WeightsFunction->GetNumberOfWeights();
   }
 
 
-  unsigned int GetNumberOfAffectedWeights( void ) const override;
+  unsigned int
+  GetNumberOfAffectedWeights(void) const override;
 
-  NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const override;
+  NumberOfParametersType
+  GetNumberOfNonZeroJacobianIndices(void) const override;
 
   /** Compute the Jacobian of the transformation. */
-  void GetJacobian(
-    const InputPointType & ipp,
-    JacobianType & j,
-    NonZeroJacobianIndicesType & nzji ) const override;
+  void
+  GetJacobian(const InputPointType & ipp, JacobianType & j, NonZeroJacobianIndicesType & nzji) const override;
 
   /** Compute the inner product of the Jacobian with the moving image gradient.
    * The Jacobian is (partially) constructed inside this function, but not returned.
    */
-  void EvaluateJacobianWithImageGradientProduct(
-    const InputPointType & ipp,
-    const MovingImageGradientType & movingImageGradient,
-    DerivativeType & imageJacobian,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  EvaluateJacobianWithImageGradientProduct(const InputPointType &          ipp,
+                                           const MovingImageGradientType & movingImageGradient,
+                                           DerivativeType &                imageJacobian,
+                                           NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  void GetSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj ) const override;
+  void
+  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  void GetSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh ) const override;
+  void
+  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute both the spatial Jacobian and the Jacobian of the
    * spatial Jacobian of the transformation.
    */
-  void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               SpatialJacobianType &           sj,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              SpatialHessianType &           sh,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override;
 
 protected:
-
   /** Print contents of an AdvancedBSplineDeformableTransform. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   AdvancedBSplineDeformableTransform();
   ~AdvancedBSplineDeformableTransform() override;
 
   /** Allow subclasses to access and manipulate the weights function. */
   // Why??
-  itkSetObjectMacro( WeightsFunction, WeightsFunctionType );
-  itkGetModifiableObjectMacro( WeightsFunction, WeightsFunctionType );
+  itkSetObjectMacro(WeightsFunction, WeightsFunctionType);
+  itkGetModifiableObjectMacro(WeightsFunction, WeightsFunctionType);
 
   /** Wrap flat array into images of coefficients. */
-  void WrapAsImages( void );
+  void
+  WrapAsImages(void);
 
-  void ComputeNonZeroJacobianIndices(
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices,
-    const RegionType & supportRegion ) const override;
+  void
+  ComputeNonZeroJacobianIndices(NonZeroJacobianIndicesType & nonZeroJacobianIndices,
+                                const RegionType &           supportRegion) const override;
 
   typedef typename Superclass::JacobianImageType JacobianImageType;
   typedef typename Superclass::JacobianPixelType JacobianPixelType;
@@ -334,25 +328,24 @@ protected:
    * For each direction we create a different weights function for thread-
    * safety.
    */
-  WeightsFunctionPointer                                           m_WeightsFunction;
-  std::vector< DerivativeWeightsFunctionPointer >                  m_DerivativeWeightsFunctions;
-  std::vector< std::vector< SODerivativeWeightsFunctionPointer > > m_SODerivativeWeightsFunctions;
+  WeightsFunctionPointer                                       m_WeightsFunction;
+  std::vector<DerivativeWeightsFunctionPointer>                m_DerivativeWeightsFunctions;
+  std::vector<std::vector<SODerivativeWeightsFunctionPointer>> m_SODerivativeWeightsFunctions;
 
 private:
+  AdvancedBSplineDeformableTransform(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  AdvancedBSplineDeformableTransform( const Self & ); // purposely not implemented
-  void operator=( const Self & );                     // purposely not implemented
-
-  friend class MultiBSplineDeformableTransformWithNormal< ScalarType,
-  itkGetStaticConstMacro( SpaceDimension ),
-  itkGetStaticConstMacro( SplineOrder ) >;
-
+  friend class MultiBSplineDeformableTransformWithNormal<ScalarType,
+                                                         itkGetStaticConstMacro(SpaceDimension),
+                                                         itkGetStaticConstMacro(SplineOrder)>;
 };
 
-}  // namespace itk
+} // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedBSplineDeformableTransform.hxx"
+#  include "itkAdvancedBSplineDeformableTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedBSplineDeformableTransform_h */

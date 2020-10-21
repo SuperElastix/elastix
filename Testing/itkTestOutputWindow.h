@@ -47,33 +47,32 @@ DisplayDebugText - <Debug>
 class TestOutputWindow : public OutputWindow
 {
 public:
-
   /** Standard class typedefs. */
-  typedef TestOutputWindow           Self;
-  typedef OutputWindow               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef TestOutputWindow         Self;
+  typedef OutputWindow             Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TestOutputWindow, OutputWindow );
+  itkTypeMacro(TestOutputWindow, OutputWindow);
 
   /** Overloaded */
-  void DisplayText( const char * ) override;
+  void
+  DisplayText(const char *) override;
 
 protected:
-
   TestOutputWindow() {}
   ~TestOutputWindow() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
-  TestOutputWindow( const Self & ); //purposely not implemented
-  void operator=( const Self & );   //purposely not implemented
-
+  TestOutputWindow(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk

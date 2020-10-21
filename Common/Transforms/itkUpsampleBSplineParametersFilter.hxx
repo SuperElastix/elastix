@@ -31,19 +31,18 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template< class TArray, class TImage >
-UpsampleBSplineParametersFilter< TArray, TImage >
-::UpsampleBSplineParametersFilter()
+template <class TArray, class TImage>
+UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleBSplineParametersFilter()
 {
   this->m_BSplineOrder = 3;
 
   // Initialize grid settings.
-  this->m_CurrentGridOrigin.Fill( 0.0 );
-  this->m_CurrentGridSpacing.Fill( 0.0 );
-  this->m_CurrentGridDirection.Fill( 0.0 );
-  this->m_RequiredGridOrigin.Fill( 0.0 );
-  this->m_RequiredGridSpacing.Fill( 0.0 );
-  this->m_RequiredGridDirection.Fill( 0.0 );
+  this->m_CurrentGridOrigin.Fill(0.0);
+  this->m_CurrentGridSpacing.Fill(0.0);
+  this->m_CurrentGridDirection.Fill(0.0);
+  this->m_RequiredGridOrigin.Fill(0.0);
+  this->m_RequiredGridSpacing.Fill(0.0);
+  this->m_RequiredGridDirection.Fill(0.0);
 } // end Constructor()
 
 
@@ -51,55 +50,46 @@ UpsampleBSplineParametersFilter< TArray, TImage >
  * ******************* UpsampleParameters *******************
  */
 
-template< class TArray, class TImage >
+template <class TArray, class TImage>
 void
-UpsampleBSplineParametersFilter< TArray, TImage >
-::UpsampleParameters( const ArrayType & parameters_in,
-  ArrayType & parameters_out )
+UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayType & parameters_in,
+                                                                    ArrayType &       parameters_out)
 {
   /** Determine if upsampling is required. */
-  if( !this->DoUpsampling() )
+  if (!this->DoUpsampling())
   {
     parameters_out = parameters_in; // \todo: hard copy, can be avoided
     return;
   }
 
   /** Typedefs. */
-  typedef itk::ResampleImageFilter<
-    ImageType, ImageType >                        UpsampleFilterType;
-  typedef itk::BSplineResampleImageFunction<
-    ImageType, ValueType >                        CoefficientUpsampleFunctionType;
-  typedef itk::BSplineDecompositionImageFilter<
-    ImageType, ImageType >                        DecompositionFilterType;
+  typedef itk::ResampleImageFilter<ImageType, ImageType>             UpsampleFilterType;
+  typedef itk::BSplineResampleImageFunction<ImageType, ValueType>    CoefficientUpsampleFunctionType;
+  typedef itk::BSplineDecompositionImageFilter<ImageType, ImageType> DecompositionFilterType;
 
   /** Get the number of parameters. */
-  const unsigned int currentNumberOfPixels
-    = this->m_CurrentGridRegion.GetNumberOfPixels();
-  const unsigned int requiredNumberOfPixels
-    = this->m_RequiredGridRegion.GetNumberOfPixels();
+  const unsigned int currentNumberOfPixels = this->m_CurrentGridRegion.GetNumberOfPixels();
+  const unsigned int requiredNumberOfPixels = this->m_RequiredGridRegion.GetNumberOfPixels();
 
   /** Create the new vector of output parameters, with the correct size. */
-  parameters_out.SetSize( requiredNumberOfPixels * Dimension );
+  parameters_out.SetSize(requiredNumberOfPixels * Dimension);
 
   /** Get the pointer to the data of the input parameters. */
-  PixelType * inputDataPointer
-    = const_cast< PixelType * >( parameters_in.data_block() );
-  PixelType * outputDataPointer
-    = const_cast< PixelType * >( parameters_out.data_block() );
+  PixelType * inputDataPointer = const_cast<PixelType *>(parameters_in.data_block());
+  PixelType * outputDataPointer = const_cast<PixelType *>(parameters_out.data_block());
 
   /** The input parameters are represented as a coefficient image. */
   ImagePointer coeffs_in = ImageType::New();
-  coeffs_in->SetOrigin(  this->m_CurrentGridOrigin );
-  coeffs_in->SetSpacing( this->m_CurrentGridSpacing );
-  coeffs_in->SetDirection( this->m_CurrentGridDirection );
-  coeffs_in->SetRegions( this->m_CurrentGridRegion );
+  coeffs_in->SetOrigin(this->m_CurrentGridOrigin);
+  coeffs_in->SetSpacing(this->m_CurrentGridSpacing);
+  coeffs_in->SetDirection(this->m_CurrentGridDirection);
+  coeffs_in->SetRegions(this->m_CurrentGridRegion);
 
   /** Loop over dimension: each direction is upsampled separately. */
-  for( unsigned int j = 0; j < Dimension; j++ )
+  for (unsigned int j = 0; j < Dimension; j++)
   {
     /** Fill the coefficient image with parameter data. */
-    coeffs_in->GetPixelContainer()->SetImportPointer(
-      inputDataPointer, currentNumberOfPixels );
+    coeffs_in->GetPixelContainer()->SetImportPointer(inputDataPointer, currentNumberOfPixels);
     inputDataPointer += currentNumberOfPixels;
 
     /** Set the coefficient image as the input of the upsampler filter.
@@ -112,25 +102,22 @@ UpsampleBSplineParametersFilter< TArray, TImage >
      *
      * This code is derived from the itk-example DeformableRegistration6.cxx.
      */
-    typename UpsampleFilterType::Pointer upsampler
-      = UpsampleFilterType::New();
-    typename CoefficientUpsampleFunctionType::Pointer coeffUpsampleFunction
-      = CoefficientUpsampleFunctionType::New();
-    typename DecompositionFilterType::Pointer decompositionFilter
-      = DecompositionFilterType::New();
+    typename UpsampleFilterType::Pointer              upsampler = UpsampleFilterType::New();
+    typename CoefficientUpsampleFunctionType::Pointer coeffUpsampleFunction = CoefficientUpsampleFunctionType::New();
+    typename DecompositionFilterType::Pointer         decompositionFilter = DecompositionFilterType::New();
 
     /** Setup the upsampler. */
-    upsampler->SetInterpolator( coeffUpsampleFunction );
-    upsampler->SetSize( this->m_RequiredGridRegion.GetSize() );
-    upsampler->SetOutputStartIndex( this->m_RequiredGridRegion.GetIndex() );
-    upsampler->SetOutputSpacing( this->m_RequiredGridSpacing );
-    upsampler->SetOutputOrigin( this->m_RequiredGridOrigin );
-    upsampler->SetOutputDirection( this->m_RequiredGridDirection );
-    upsampler->SetInput( coeffs_in );
+    upsampler->SetInterpolator(coeffUpsampleFunction);
+    upsampler->SetSize(this->m_RequiredGridRegion.GetSize());
+    upsampler->SetOutputStartIndex(this->m_RequiredGridRegion.GetIndex());
+    upsampler->SetOutputSpacing(this->m_RequiredGridSpacing);
+    upsampler->SetOutputOrigin(this->m_RequiredGridOrigin);
+    upsampler->SetOutputDirection(this->m_RequiredGridDirection);
+    upsampler->SetInput(coeffs_in);
 
     /** Setup the decomposition filter. */
-    decompositionFilter->SetSplineOrder( this->m_BSplineOrder );
-    decompositionFilter->SetInput( upsampler->GetOutput() );
+    decompositionFilter->SetSplineOrder(this->m_BSplineOrder);
+    decompositionFilter->SetInput(upsampler->GetOutput());
 
     /** Do the upsampling. */
     try
@@ -140,13 +127,13 @@ UpsampleBSplineParametersFilter< TArray, TImage >
       // by deriving it from the RecursiveSeparableImageFilter,
       // similar to the SmoothingRecursiveGaussianImageFilter.
     }
-    catch( itk::ExceptionObject & excp )
+    catch (itk::ExceptionObject & excp)
     {
       /** Add information to the exception. */
-      excp.SetLocation( "UpsampleBSplineParametersFilter - UpsampleParameters()" );
+      excp.SetLocation("UpsampleBSplineParametersFilter - UpsampleParameters()");
       std::string err_str = excp.GetDescription();
       err_str += "\nError occurred while using decompositionFilter.\n";
-      excp.SetDescription( err_str );
+      excp.SetDescription(err_str);
 
       /** Pass the exception to an higher level. */
       throw excp;
@@ -156,8 +143,7 @@ UpsampleBSplineParametersFilter< TArray, TImage >
     const PixelType * coeffs_out = decompositionFilter->GetOutput()->GetBufferPointer();
 
     /** Copy the contents of coeffs_out in a ParametersType array. */
-    std::copy( coeffs_out, coeffs_out + requiredNumberOfPixels,
-      outputDataPointer + requiredNumberOfPixels * j );
+    std::copy(coeffs_out, coeffs_out + requiredNumberOfPixels, outputDataPointer + requiredNumberOfPixels * j);
 
   } // end for dimension loop
 
@@ -168,15 +154,14 @@ UpsampleBSplineParametersFilter< TArray, TImage >
  * ******************* DoUpsampling *******************
  */
 
-template< class TArray, class TImage >
+template <class TArray, class TImage>
 bool
-UpsampleBSplineParametersFilter< TArray, TImage >
-::DoUpsampling( void )
+UpsampleBSplineParametersFilter<TArray, TImage>::DoUpsampling(void)
 {
-  bool ret = ( this->m_CurrentGridOrigin != this->m_RequiredGridOrigin );
-  ret |= ( this->m_CurrentGridSpacing != this->m_RequiredGridSpacing );
-  ret |= ( this->m_CurrentGridDirection != this->m_RequiredGridDirection );
-  ret |= ( this->m_CurrentGridRegion != this->m_RequiredGridRegion );
+  bool ret = (this->m_CurrentGridOrigin != this->m_RequiredGridOrigin);
+  ret |= (this->m_CurrentGridSpacing != this->m_RequiredGridSpacing);
+  ret |= (this->m_CurrentGridDirection != this->m_RequiredGridDirection);
+  ret |= (this->m_CurrentGridRegion != this->m_RequiredGridRegion);
 
   return ret;
 
@@ -187,22 +172,21 @@ UpsampleBSplineParametersFilter< TArray, TImage >
  * ******************* PrintSelf *******************
  */
 
-template< class TArray, class TImage >
+template <class TArray, class TImage>
 void
-UpsampleBSplineParametersFilter< TArray, TImage >
-::PrintSelf( std::ostream & os, Indent indent ) const
+UpsampleBSplineParametersFilter<TArray, TImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  this->Superclass::PrintSelf( os, indent );
+  this->Superclass::PrintSelf(os, indent);
 
-  os << indent << "CurrentGridOrigin: "  << this->m_CurrentGridOrigin << std::endl;
+  os << indent << "CurrentGridOrigin: " << this->m_CurrentGridOrigin << std::endl;
   os << indent << "CurrentGridSpacing: " << this->m_CurrentGridSpacing << std::endl;
   os << indent << "CurrentGridDirection: " << this->m_CurrentGridDirection << std::endl;
-  os << indent << "CurrentGridRegion: "  << this->m_CurrentGridRegion << std::endl;
+  os << indent << "CurrentGridRegion: " << this->m_CurrentGridRegion << std::endl;
 
-  os << indent << "RequiredGridOrigin: "  << this->m_RequiredGridOrigin << std::endl;
+  os << indent << "RequiredGridOrigin: " << this->m_RequiredGridOrigin << std::endl;
   os << indent << "RequiredGridSpacing: " << this->m_RequiredGridSpacing << std::endl;
   os << indent << "RequiredGridDirection: " << this->m_RequiredGridDirection << std::endl;
-  os << indent << "RequiredGridRegion: "  << this->m_RequiredGridRegion << std::endl;
+  os << indent << "RequiredGridRegion: " << this->m_RequiredGridRegion << std::endl;
 
   os << indent << "BSplineOrder: " << this->m_BSplineOrder << std::endl;
 

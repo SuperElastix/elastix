@@ -35,23 +35,21 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageRandomSampler :
-  public ImageRandomSamplerBase< TInputImage >
+template <class TInputImage>
+class ImageRandomSampler : public ImageRandomSamplerBase<TInputImage>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageRandomSampler                    Self;
-  typedef ImageRandomSamplerBase< TInputImage > Superclass;
-  typedef SmartPointer< Self >                  Pointer;
-  typedef SmartPointer< const Self >            ConstPointer;
+  typedef ImageRandomSampler                  Self;
+  typedef ImageRandomSamplerBase<TInputImage> Superclass;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageRandomSampler, ImageRandomSamplerBase );
+  itkTypeMacro(ImageRandomSampler, ImageRandomSamplerBase);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -70,40 +68,37 @@ public:
   typedef typename Superclass::InputImageSizeType           InputImageSizeType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    Superclass::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** Other typedefs. */
   typedef typename InputImageType::IndexType InputImageIndexType;
   typedef typename InputImageType::PointType InputImagePointType;
 
 protected:
-
   /** The constructor. */
   ImageRandomSampler() {}
   /** The destructor. */
   ~ImageRandomSampler() override {}
 
   /** Functions that do the work. */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void
+  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
 
 private:
-
   /** The private constructor. */
-  ImageRandomSampler( const Self & );        // purposely not implemented
+  ImageRandomSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );            // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomSampler.hxx"
+#  include "itkImageRandomSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomSampler_h

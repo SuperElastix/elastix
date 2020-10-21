@@ -18,4 +18,4 @@
 
 #include "elxAdaptiveStochasticVarianceReducedGradient.h"
 
-elxInstallMacro( AdaptiveStochasticVarianceReducedGradient );
+elxInstallMacro(AdaptiveStochasticVarianceReducedGradient);

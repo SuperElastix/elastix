@@ -30,9 +30,8 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template< class TInputImage >
-ImageRandomSamplerBase< TInputImage >
-::ImageRandomSamplerBase()
+template <class TInputImage>
+ImageRandomSamplerBase<TInputImage>::ImageRandomSamplerBase()
 {
   this->m_NumberOfSamples = 1000;
 
@@ -43,10 +42,9 @@ ImageRandomSamplerBase< TInputImage >
  * ******************* BeforeThreadedGenerateData *******************
  */
 
-template< class TInputImage >
+template <class TInputImage>
 void
-ImageRandomSamplerBase< TInputImage >
-::BeforeThreadedGenerateData( void )
+ImageRandomSamplerBase<TInputImage>::BeforeThreadedGenerateData(void)
 {
   /** Create a random number generator. Also used in the ImageRandomConstIteratorWithIndex. */
   typedef typename Statistics::MersenneTwisterRandomVariateGenerator::Pointer GeneratorPointer;
@@ -54,19 +52,18 @@ ImageRandomSamplerBase< TInputImage >
   // \todo: should probably be global?
 
   /** Clear the random number list. */
-  this->m_RandomNumberList.resize( 0 );
-  this->m_RandomNumberList.reserve( this->m_NumberOfSamples );
+  this->m_RandomNumberList.resize(0);
+  this->m_RandomNumberList.reserve(this->m_NumberOfSamples);
 
   /** Fill the list with random numbers. */
-  const double numPixels = static_cast< double >( this->GetCroppedInputImageRegion().GetNumberOfPixels() );
-  localGenerator->GetVariateWithOpenRange( numPixels - 0.5 ); // dummy jump
-  for( unsigned long i = 0; i < this->m_NumberOfSamples; i++ )
+  const double numPixels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
+  localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
+  for (unsigned long i = 0; i < this->m_NumberOfSamples; i++)
   {
-    const double randomPosition
-      = localGenerator->GetVariateWithOpenRange( numPixels - 0.5 );
-    this->m_RandomNumberList.push_back( randomPosition );
+    const double randomPosition = localGenerator->GetVariateWithOpenRange(numPixels - 0.5);
+    this->m_RandomNumberList.push_back(randomPosition);
   }
-  localGenerator->GetVariateWithOpenRange( numPixels - 0.5 ); // dummy jump
+  localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
 
   /** Initialize variables needed for threads. */
   Superclass::BeforeThreadedGenerateData();
@@ -78,12 +75,11 @@ ImageRandomSamplerBase< TInputImage >
  * ******************* PrintSelf *******************
  */
 
-template< class TInputImage >
+template <class TInputImage>
 void
-ImageRandomSamplerBase< TInputImage >
-::PrintSelf( std::ostream & os, Indent indent ) const
+ImageRandomSamplerBase<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
   os << indent << "NumberOfSamples: " << this->m_NumberOfSamples << std::endl;
 

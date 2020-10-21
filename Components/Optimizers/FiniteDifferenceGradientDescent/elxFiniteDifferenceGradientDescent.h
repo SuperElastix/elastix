@@ -76,33 +76,30 @@ namespace elastix
  * \sa FiniteDifferenceGradientDescentOptimizer
  */
 
-template< class TElastix >
-class FiniteDifferenceGradientDescent :
-  public
-  itk::FiniteDifferenceGradientDescentOptimizer,
-  public
-  OptimizerBase< TElastix >
+template <class TElastix>
+class FiniteDifferenceGradientDescent
+  : public itk::FiniteDifferenceGradientDescentOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
   typedef FiniteDifferenceGradientDescent          Self;
   typedef FiniteDifferenceGradientDescentOptimizer Superclass1;
-  typedef OptimizerBase< TElastix >                Superclass2;
-  typedef itk::SmartPointer< Self >                Pointer;
-  typedef itk::SmartPointer< const Self >          ConstPointer;
+  typedef OptimizerBase<TElastix>                  Superclass2;
+  typedef itk::SmartPointer<Self>                  Pointer;
+  typedef itk::SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FiniteDifferenceGradientDescent, FiniteDifferenceGradientDescentOptimizer );
+  itkTypeMacro(FiniteDifferenceGradientDescent, FiniteDifferenceGradientDescentOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer. \n
    * example: <tt>(Optimizer "FiniteDifferenceGradientDescent")</tt>\n
    */
-  elxClassNameMacro( "FiniteDifferenceGradientDescent" );
+  elxClassNameMacro("FiniteDifferenceGradientDescent");
 
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType    CostFunctionType;
@@ -122,38 +119,42 @@ public:
   typedef typename Superclass1::ParametersType ParametersType;
 
   /** Methods that take care of setting parameters and printing progress information.*/
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
 protected:
-
   FiniteDifferenceGradientDescent();
   ~FiniteDifferenceGradientDescent() override {}
 
   bool m_ShowMetricValues;
 
 private:
-
-  FiniteDifferenceGradientDescent( const Self & ); // purposely not implemented
-  void operator=( const Self & );                  // purposely not implemented
-
+  FiniteDifferenceGradientDescent(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxFiniteDifferenceGradientDescent.hxx"
+#  include "elxFiniteDifferenceGradientDescent.hxx"
 #endif
 
 #endif // end #ifndef __elxFiniteDifferenceGradientDescent_h

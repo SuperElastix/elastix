@@ -36,56 +36,64 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimensions >
+template <typename NDimensions>
 class GPUObjectFactoryBase : public ObjectFactoryBase
 {
 public:
-
-  typedef GPUObjectFactoryBase       Self;
-  typedef ObjectFactoryBase          Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUObjectFactoryBase     Self;
+  typedef ObjectFactoryBase        Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  const char * GetITKSourceVersion() const override { return ITK_SOURCE_VERSION; }
+  const char *
+  GetITKSourceVersion() const override
+  {
+    return ITK_SOURCE_VERSION;
+  }
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUObjectFactoryBase, ObjectFactoryBase );
+  itkTypeMacro(GPUObjectFactoryBase, ObjectFactoryBase);
 
   /** Supported dimensions. */
-  itkStaticConstMacro( Support1D, bool, NDimensions::Support1D );
-  itkStaticConstMacro( Support2D, bool, NDimensions::Support2D );
-  itkStaticConstMacro( Support3D, bool, NDimensions::Support3D );
+  itkStaticConstMacro(Support1D, bool, NDimensions::Support1D);
+  itkStaticConstMacro(Support2D, bool, NDimensions::Support2D);
+  itkStaticConstMacro(Support3D, bool, NDimensions::Support3D);
 
   /** Main register method. This method is usually called by the derived
    * class in the constructor or after UnRegisterAllFactories() was called. */
-  virtual void RegisterAll();
+  virtual void
+  RegisterAll();
 
 protected:
-
   GPUObjectFactoryBase() {}
   ~GPUObjectFactoryBase() override {}
 
   /** Register methods for 1D. */
-  virtual void Register1D() {}
+  virtual void
+  Register1D()
+  {}
 
   /** Register methods for 2D. */
-  virtual void Register2D() {}
+  virtual void
+  Register2D()
+  {}
 
   /** Register methods for 3D. */
-  virtual void Register3D() {}
+  virtual void
+  Register3D()
+  {}
 
 private:
-
-  GPUObjectFactoryBase( const Self & ); // purposely not implemented
-  void operator=( const Self & );       // purposely not implemented
-
+  GPUObjectFactoryBase(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUObjectFactoryBase.hxx"
+#  include "itkGPUObjectFactoryBase.hxx"
 #endif
 
 #endif // end #ifndef __itkGPUObjectFactoryBase_h

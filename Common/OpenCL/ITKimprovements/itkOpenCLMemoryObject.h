@@ -38,15 +38,19 @@ class OpenCLContext;
 class ITKOpenCL_EXPORT OpenCLMemoryObject
 {
 protected:
-
   /** Constructs a null OpenCL memory object and associates it with \a context. */
-  OpenCLMemoryObject( OpenCLContext * context = 0 ) : m_Context( context ), m_Id( 0 ) {}
+  OpenCLMemoryObject(OpenCLContext * context = 0)
+    : m_Context(context)
+    , m_Id(0)
+  {}
 
   /** Constructs an OpenCL memory object from the native identifier \a id,
    * and associates it with \a context. This class takes over ownership
    * of \a id and will release it in the destructor. */
-  OpenCLMemoryObject( OpenCLContext * context, const cl_mem id ) :
-    m_Context( context ), m_Id( id ) {}
+  OpenCLMemoryObject(OpenCLContext * context, const cl_mem id)
+    : m_Context(context)
+    , m_Id(id)
+  {}
 
   /** Destructor for OpenCL memory object. After the memory object reference count
    * becomes zero and commands queued for execution on a command-queue(s) that
@@ -56,12 +60,11 @@ protected:
   ~OpenCLMemoryObject();
 
 public:
-
   /** Standard class typedefs. */
-  typedef OpenCLMemoryObject      Self;
-  typedef Size< 4 >               RectangleType;
-  typedef Point< std::size_t, 2 > PointType;
-  typedef Size< 2 >               SizeType;
+  typedef OpenCLMemoryObject    Self;
+  typedef Size<4>               RectangleType;
+  typedef Point<std::size_t, 2> PointType;
+  typedef Size<2>               SizeType;
 
   /** \enum OpenCLMemoryObject::Access
    * This enum defines the access mode to the OpenCL memory objects.
@@ -80,59 +83,81 @@ public:
    * kernel is undefined.
    * \note ReadWrite or WriteOnly and ReadOnly are mutually exclusive.
    */
-  enum Access {
+  enum Access
+  {
     ReadWrite = 0x0001,
     WriteOnly = 0x0002,
-    ReadOnly  = 0x0004
+    ReadOnly = 0x0004
   };
 
   /** Returns true if this OpenCL memory object is null, false otherwise. */
-  bool IsNull() const { return this->m_Id == 0; }
+  bool
+  IsNull() const
+  {
+    return this->m_Id == 0;
+  }
 
   /** Returns the native OpenCL identifier for this memory object. */
-  cl_mem GetMemoryId() const { return this->m_Id; }
+  cl_mem
+  GetMemoryId() const
+  {
+    return this->m_Id;
+  }
 
   /** Returns the OpenCL context that created this memory object. */
-  OpenCLContext * GetContext() const { return this->m_Context; }
+  OpenCLContext *
+  GetContext() const
+  {
+    return this->m_Context;
+  }
 
   /** Returns the memory object type used to create this object. */
-  cl_mem_object_type GetMemoryType() const;
+  cl_mem_object_type
+  GetMemoryType() const;
 
   /** Returns the access flags that were used to create this memory object. */
-  cl_mem_flags GetFlags() const;
+  cl_mem_flags
+  GetFlags() const;
 
   /** Returns actual size of the data store associated with memory object in bytes. */
-  std::size_t GetSize() const;
+  std::size_t
+  GetSize() const;
 
   /** Return the host pointer argument value specified when memory object is created.
    * Otherwise a NULL value is returned. */
-  void * GetHostPointer() const;
+  void *
+  GetHostPointer() const;
 
   /** Returns map count. The map count returned should be considered immediately stale.
    * It is unsuitable for general use in applications. This feature is provided
    * for debugging. */
-  cl_uint GetMapCount() const;
+  cl_uint
+  GetMapCount() const;
 
   /** Returns memory object reference count. The reference count returned should
    * be considered immediately stale. It is unsuitable for general use in
    * applications. This feature is provided for identifying memory leaks. */
-  cl_uint GetReferenceCount() const;
+  cl_uint
+  GetReferenceCount() const;
 
   /** Returns the access mode that was used to create this memory object. */
-  OpenCLMemoryObject::Access GetAccess() const;
+  OpenCLMemoryObject::Access
+  GetAccess() const;
 
   /** Requests a command to unmap a previously mapped region at \a ptr of a memory object.
    * This function will wait until the request has finished if the \a wait is true.
    * The request is executed on the active command queue for context.
    * \sa UnmapAsync(), OpenCLBuffer::Map() */
-  void Unmap( void * ptr, const bool wait = false );
+  void
+  Unmap(void * ptr, const bool wait = false);
 
   /** Requests a command to unmap a previously mapped region at \a ptr of a memory object.
    * The request will be started after all events in \a event_list are finished.
    * Returns an event object that can be used to wait for the request to finish.
    * The request is executed on the active command queue for context().
    * \sa Unmap(), OpenCLBuffer::MapAsync() */
-  OpenCLEvent UnmapAsync( void * ptr, const OpenCLEventList & event_list = OpenCLEventList() );
+  OpenCLEvent
+  UnmapAsync(void * ptr, const OpenCLEventList & event_list = OpenCLEventList());
 
   /** Registers a user callback function with a memory object.
    * Each call to \c{clSetMemObjectDestructorCallback} registers the specified
@@ -144,46 +169,45 @@ public:
    * to be notified when the memory referenced by host_ptr, specified when the
    * memory object is created and used as the storage bits for the memory
    * object, can be reused or freed. */
-  cl_int SetDestructorCallback(
-    void ( CL_CALLBACK * pfn_notify )( cl_mem, void * ),
-    void * user_data = nullptr );
+  cl_int
+  SetDestructorCallback(void(CL_CALLBACK * pfn_notify)(cl_mem, void *), void * user_data = nullptr);
 
 protected:
-
   /** Helper function to pass cl_mem \a id. */
-  void SetId( OpenCLContext * context, const cl_mem id );
+  void
+  SetId(OpenCLContext * context, const cl_mem id);
 
   /** Helper function to get cl_map_flags from access. */
-  cl_map_flags GetMapFlags( const OpenCLMemoryObject::Access access );
+  cl_map_flags
+  GetMapFlags(const OpenCLMemoryObject::Access access);
 
 private:
-
   OpenCLContext * m_Context;
   cl_mem          m_Id;
 
-  OpenCLMemoryObject( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );   // purposely not implemented
-
+  OpenCLMemoryObject(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 };
 
 /** Operator ==
-* Returns true if \a lhs OpenCL memory object is the same as \a rhs, false otherwise.
-* \sa operator!= */
-bool ITKOpenCL_EXPORT operator==( const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs );
+ * Returns true if \a lhs OpenCL memory object is the same as \a rhs, false otherwise.
+ * \sa operator!= */
+bool ITKOpenCL_EXPORT
+     operator==(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs);
 
 /** Operator !=
-* Returns true if \a lhs OpenCL memory object identifier is not the same as \a rhs, false otherwise.
-* \sa operator== */
-bool ITKOpenCL_EXPORT operator!=( const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs );
+ * Returns true if \a lhs OpenCL memory object identifier is not the same as \a rhs, false otherwise.
+ * \sa operator== */
+bool ITKOpenCL_EXPORT
+     operator!=(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs);
 
 /** Stream out operator for OpenCLMemoryObject */
-template< typename charT, typename traits >
-inline
-std::basic_ostream< charT, traits > &
-operator<<( std::basic_ostream< charT, traits > & strm,
-  const OpenCLMemoryObject & memoryObject )
+template <typename charT, typename traits>
+inline std::basic_ostream<charT, traits> &
+operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLMemoryObject & memoryObject)
 {
-  if( memoryObject.IsNull() )
+  if (memoryObject.IsNull())
   {
     strm << "OpenCLMemoryObject(null)";
     return strm;
@@ -202,16 +226,20 @@ operator<<( std::basic_ostream< charT, traits > & strm,
        << indent << "Host pointer: " << memoryObject.GetHostPointer() << std::endl
        << indent << "Access: ";
 
-  switch( memoryObject.GetAccess() )
+  switch (memoryObject.GetAccess())
   {
     case OpenCLMemoryObject::ReadWrite:
-      strm << "Read Write"; break;
+      strm << "Read Write";
+      break;
     case OpenCLMemoryObject::WriteOnly:
-      strm << "Write Only"; break;
+      strm << "Write Only";
+      break;
     case OpenCLMemoryObject::ReadOnly:
-      strm << "Read Only"; break;
+      strm << "Read Only";
+      break;
     default:
-      strm << "Unknown"; break;
+      strm << "Unknown";
+      break;
   }
 
   strm << std::endl;

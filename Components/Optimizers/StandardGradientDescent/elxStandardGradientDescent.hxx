@@ -29,12 +29,12 @@ namespace elastix
  * ***************** Constructor ***********************
  */
 
-template< class TElastix >
-StandardGradientDescent< TElastix >::StandardGradientDescent()
+template <class TElastix>
+StandardGradientDescent<TElastix>::StandardGradientDescent()
 {
   this->m_MaximumNumberOfSamplingAttempts = 0;
   this->m_CurrentNumberOfSamplingAttempts = 0;
-  this->m_PreviousErrorAtIteration        = 0;
+  this->m_PreviousErrorAtIteration = 0;
 
 } // end Constructor()
 
@@ -43,19 +43,19 @@ StandardGradientDescent< TElastix >::StandardGradientDescent()
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StandardGradientDescent< TElastix >::BeforeRegistration( void )
+StandardGradientDescent<TElastix>::BeforeRegistration(void)
 {
   /** Add the target cell "stepsize" to xout["iteration"].*/
-  xout[ "iteration" ].AddTargetCell( "2:Metric" );
-  xout[ "iteration" ].AddTargetCell( "3:StepSize" );
-  xout[ "iteration" ].AddTargetCell( "4:||Gradient||" );
+  xout["iteration"].AddTargetCell("2:Metric");
+  xout["iteration"].AddTargetCell("3:StepSize");
+  xout["iteration"].AddTargetCell("4:||Gradient||");
 
   /** Format the metric and stepsize as floats */
-  xl::xout[ "iteration" ][ "2:Metric" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3:StepSize"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 
 } // end BeforeRegistration()
 
@@ -64,48 +64,45 @@ StandardGradientDescent< TElastix >::BeforeRegistration( void )
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StandardGradientDescent< TElastix >
-::BeforeEachResolution( void )
+StandardGradientDescent<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast< unsigned int >(
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Set the maximumNumberOfIterations. */
   unsigned int maximumNumberOfIterations = 500;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
-    "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
-  this->SetNumberOfIterations( maximumNumberOfIterations );
+  this->GetConfiguration()->ReadParameter(
+    maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
+  this->SetNumberOfIterations(maximumNumberOfIterations);
 
   /** Set the gain parameters */
-  double a     = 400.0;
-  double A     = 50.0;
+  double a = 400.0;
+  double A = 50.0;
   double alpha = 0.602;
 
-  this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( A, "SP_A", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
 
-  this->SetParam_a( a );
-  this->SetParam_A( A );
-  this->SetParam_alpha( alpha );
+  this->SetParam_a(a);
+  this->SetParam_A(A);
+  this->SetParam_alpha(alpha);
 
   /** Set the MaximumNumberOfSamplingAttempts. */
   unsigned int maximumNumberOfSamplingAttempts = 0;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
-    "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
-  this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
-  if( maximumNumberOfSamplingAttempts > 5 )
+  this->GetConfiguration()->ReadParameter(
+    maximumNumberOfSamplingAttempts, "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0);
+  this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
+  if (maximumNumberOfSamplingAttempts > 5)
   {
-    elxout[ "warning" ]
-      << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
-      << maximumNumberOfSamplingAttempts << ".\n"
-      << "  This functionality is known to cause problems (stack overflow) for large values.\n"
-      << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
-      << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n"
-      << std::endl;
+    elxout["warning"] << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
+                      << maximumNumberOfSamplingAttempts << ".\n"
+                      << "  This functionality is known to cause problems (stack overflow) for large values.\n"
+                      << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
+                      << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n"
+                      << std::endl;
   }
 
 } // end BeforeEachResolution()
@@ -115,18 +112,17 @@ StandardGradientDescent< TElastix >
  * ***************** AfterEachIteration *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StandardGradientDescent< TElastix >
-::AfterEachIteration( void )
+StandardGradientDescent<TElastix>::AfterEachIteration(void)
 {
   /** Print some information */
-  xl::xout[ "iteration" ][ "2:Metric" ] << this->GetValue();
-  xl::xout[ "iteration" ][ "3:StepSize" ] << this->GetLearningRate();
-  xl::xout[ "iteration" ][ "4:||Gradient||" ] << this->GetGradient().magnitude();
+  xl::xout["iteration"]["2:Metric"] << this->GetValue();
+  xl::xout["iteration"]["3:StepSize"] << this->GetLearningRate();
+  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
 
   /** Select new spatial samples for the computation of the metric */
-  if( this->GetNewSamplesEveryIteration() )
+  if (this->GetNewSamplesEveryIteration())
   {
     this->SelectNewSamples();
   }
@@ -138,16 +134,15 @@ StandardGradientDescent< TElastix >
  * ***************** AfterEachResolution *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StandardGradientDescent< TElastix >
-::AfterEachResolution( void )
+StandardGradientDescent<TElastix>::AfterEachResolution(void)
 {
   /**
    * enum   StopConditionType {  MaximumNumberOfIterations, MetricError }
    */
   std::string stopcondition;
-  switch( this->GetStopCondition() )
+  switch (this->GetStopCondition())
   {
 
     case MaximumNumberOfIterations:
@@ -161,7 +156,6 @@ StandardGradientDescent< TElastix >
     default:
       stopcondition = "Unknown";
       break;
-
   }
 
   /** Print the stopping condition */
@@ -174,18 +168,13 @@ StandardGradientDescent< TElastix >
  * ******************* AfterRegistration ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StandardGradientDescent< TElastix >
-::AfterRegistration( void )
+StandardGradientDescent<TElastix>::AfterRegistration(void)
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();
-  elxout
-    << std::endl
-    << "Final metric value  = "
-    << bestValue
-    << std::endl;
+  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
 
 } // end AfterRegistration()
 
@@ -194,28 +183,27 @@ StandardGradientDescent< TElastix >
  * ****************** StartOptimization *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StandardGradientDescent< TElastix >
-::StartOptimization( void )
+StandardGradientDescent<TElastix>::StartOptimization(void)
 {
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */
-  this->SetUseScales( false );
+  this->SetUseScales(false);
   const ScalesType & scales = this->GetScales();
-  if( scales.GetSize() == this->GetInitialPosition().GetSize() )
+  if (scales.GetSize() == this->GetInitialPosition().GetSize())
   {
-    ScalesType unit_scales( scales.GetSize() );
-    unit_scales.Fill( 1.0 );
-    if( scales != unit_scales )
+    ScalesType unit_scales(scales.GetSize());
+    unit_scales.Fill(1.0);
+    if (scales != unit_scales)
     {
       /** only then: */
-      this->SetUseScales( true );
+      this->SetUseScales(true);
     }
   }
 
   /** Reset these values. */
   this->m_CurrentNumberOfSamplingAttempts = 0;
-  this->m_PreviousErrorAtIteration        = 0;
+  this->m_PreviousErrorAtIteration = 0;
 
   /** Superclass implementation. */
   this->Superclass1::StartOptimization();
@@ -227,14 +215,13 @@ StandardGradientDescent< TElastix >
  * ****************** MetricErrorResponse *************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StandardGradientDescent< TElastix >
-::MetricErrorResponse( itk::ExceptionObject & err )
+StandardGradientDescent<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
 {
-  if( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
+  if (this->GetCurrentIteration() != this->m_PreviousErrorAtIteration)
   {
-    this->m_PreviousErrorAtIteration        = this->GetCurrentIteration();
+    this->m_PreviousErrorAtIteration = this->GetCurrentIteration();
     this->m_CurrentNumberOfSamplingAttempts = 1;
   }
   else
@@ -242,7 +229,7 @@ StandardGradientDescent< TElastix >
     this->m_CurrentNumberOfSamplingAttempts++;
   }
 
-  if( this->m_CurrentNumberOfSamplingAttempts <= this->m_MaximumNumberOfSamplingAttempts )
+  if (this->m_CurrentNumberOfSamplingAttempts <= this->m_MaximumNumberOfSamplingAttempts)
   {
     this->SelectNewSamples();
     this->ResumeOptimization();
@@ -250,7 +237,7 @@ StandardGradientDescent< TElastix >
   else
   {
     /** Stop optimisation and pass on exception. */
-    this->Superclass1::MetricErrorResponse( err );
+    this->Superclass1::MetricErrorResponse(err);
   }
 
 } // end MetricErrorResponse()

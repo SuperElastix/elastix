@@ -78,48 +78,46 @@ namespace elastix
  * \sa WeightedCombinationTransform
  */
 
-template< class TElastix >
-class WeightedCombinationTransformElastix :
-  public itk::AdvancedCombinationTransform<
-  typename elx::TransformBase< TElastix >::CoordRepType,
-  elx::TransformBase< TElastix >::FixedImageDimension >,
-  public elx::TransformBase< TElastix >
+template <class TElastix>
+class WeightedCombinationTransformElastix
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                             elx::TransformBase<TElastix>::FixedImageDimension>
+  , public elx::TransformBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef WeightedCombinationTransformElastix Self;
 
-  typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension >   Superclass1;
+  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension>
+    Superclass1;
 
-  typedef elx::TransformBase< TElastix > Superclass2;
+  typedef elx::TransformBase<TElastix> Superclass2;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::WeightedCombinationTransform<
-    typename elx::TransformBase< TElastix >::CoordRepType,
-    elx::TransformBase< TElastix >::FixedImageDimension,
-    elx::TransformBase< TElastix >::MovingImageDimension >  WeightedCombinationTransformType;
+  typedef itk::WeightedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension,
+                                            elx::TransformBase<TElastix>::MovingImageDimension>
+    WeightedCombinationTransformType;
 
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( WeightedCombinationTransformElastix, itk::AdvancedCombinationTransform );
+  itkTypeMacro(WeightedCombinationTransformElastix, itk::AdvancedCombinationTransform);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
    * example: <tt>(Transform "WeightedCombinationTransform")</tt>\n
    */
-  elxClassNameMacro( "WeightedCombinationTransform" );
+  elxClassNameMacro("WeightedCombinationTransform");
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
@@ -151,13 +149,10 @@ public:
   typedef typename Superclass2::CommandLineEntryType       CommandLineEntryType;
 
   /** Extra typedefs */
-  typedef typename WeightedCombinationTransformType::Pointer WeightedCombinationTransformPointer;
-  typedef typename
-    WeightedCombinationTransformType::TransformContainerType TransformContainerType;
-  typedef typename
-    WeightedCombinationTransformType::TransformType SubTransformType;
-  typedef typename
-    WeightedCombinationTransformType::TransformPointer SubTransformPointer;
+  typedef typename WeightedCombinationTransformType::Pointer                WeightedCombinationTransformPointer;
+  typedef typename WeightedCombinationTransformType::TransformContainerType TransformContainerType;
+  typedef typename WeightedCombinationTransformType::TransformType          SubTransformType;
+  typedef typename WeightedCombinationTransformType::TransformPointer       SubTransformPointer;
 
   /** For scales setting in the optimizer */
   typedef typename Superclass2::ScalesType ScalesType;
@@ -166,7 +161,8 @@ public:
    * \li Read some parameters
    * \li Call InitializeTransform.
    * \li Set the scales. */
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
   /** Initialize Transform.
    * \li Load subtransforms
@@ -175,7 +171,8 @@ public:
    * \li Set the initial parameters in the Registration object
    * This function is called by BeforeRegistration().
    */
-  virtual void InitializeTransform( void );
+  virtual void
+  InitializeTransform(void);
 
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -184,48 +181,50 @@ public:
    * This function is called by BeforeRegistration, after
    * the InitializeTransform function is called
    */
-  virtual void SetScales( void );
+  virtual void
+  SetScales(void);
 
   /** Function to read transform-parameters from a file.
    *
    * It loads the subtransforms, the NormalizeWeights option,
    * and calls the superclass' implementation.
    */
-  void ReadFromFile( void ) override;
+  void
+  ReadFromFile(void) override;
 
   /** Function to write transform-parameters to a file.
    * It writes the names of the subTransform parameterFiles.
    * and the NormalizeWeights option, and calls the superclass' implementation.
    */
-  void WriteToFile( const ParametersType & param ) const override;
+  void
+  WriteToFile(const ParametersType & param) const override;
 
   /** Load from the parameter file a list of subtransforms. The filenames are
    * stored in the m_SubTransformFileNames list */
-  virtual void LoadSubTransforms( void );
+  virtual void
+  LoadSubTransforms(void);
 
 protected:
-
   /** The constructor. */
   WeightedCombinationTransformElastix();
   /** The destructor. */
   ~WeightedCombinationTransformElastix() override {}
 
   WeightedCombinationTransformPointer m_WeightedCombinationTransform;
-  std::vector< std::string >          m_SubTransformFileNames;
+  std::vector<std::string>            m_SubTransformFileNames;
 
 private:
-
   /** The private constructor. */
-  WeightedCombinationTransformElastix( const Self & );  // purposely not implemented
+  WeightedCombinationTransformElastix(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxWeightedCombinationTransform.hxx"
+#  include "elxWeightedCombinationTransform.hxx"
 #endif
 
 #endif // end #ifndef __elxWeightedCombinationTransform_H_

@@ -18,4 +18,4 @@
 
 #include "elxSimilarityTransform.h"
 
-elxInstallMacro( SimilarityTransformElastix );
+elxInstallMacro(SimilarityTransformElastix);

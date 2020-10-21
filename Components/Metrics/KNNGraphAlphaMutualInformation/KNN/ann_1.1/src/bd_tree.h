@@ -6,12 +6,12 @@
 //----------------------------------------------------------------------
 // Copyright (c) 1997-2005 University of Maryland and Sunil Arya and
 // David Mount.  All Rights Reserved.
-// 
+//
 // This software and related documentation is part of the Approximate
 // Nearest Neighbor Library (ANN).  This software is provided under
 // the provisions of the Lesser GNU Public License (LGPL).  See the
 // file ../ReadMe.txt for further information.
-// 
+//
 // The University of Maryland (U.M.) and the authors make no
 // representations about the suitability or fitness of this software for
 // any purpose.  It is provided "as is" without express or implied
@@ -27,8 +27,8 @@
 #ifndef ANN_bd_tree_H
 #define ANN_bd_tree_H
 
-#include <ANN/ANNx.h>					// all ANN includes
-#include "kd_tree.h"					// kd-tree includes
+#include <ANN/ANNx.h> // all ANN includes
+#include "kd_tree.h"  // kd-tree includes
 
 //----------------------------------------------------------------------
 //	bd-tree shrinking node.
@@ -58,43 +58,47 @@
 //		pointing normals.
 //----------------------------------------------------------------------
 
-class ANNbd_shrink : public ANNkd_node	// splitting node of a kd-tree
+class ANNbd_shrink : public ANNkd_node // splitting node of a kd-tree
 {
-	int					n_bnds;			// number of bounding halfspaces
-	ANNorthHSArray		bnds;			// list of bounding halfspaces
-	ANNkd_ptr			child[2];		// in and out children
+  int            n_bnds;   // number of bounding halfspaces
+  ANNorthHSArray bnds;     // list of bounding halfspaces
+  ANNkd_ptr      child[2]; // in and out children
 public:
-	ANNbd_shrink(						// constructor
-		int				nb,				// number of bounding halfspaces
-		ANNorthHSArray	bds,			// list of bounding halfspaces
-		ANNkd_ptr ic=NULL, ANNkd_ptr oc=NULL)	// children
-		{
-			n_bnds			= nb;				// cutting dimension
-			bnds			= bds;				// assign bounds
-			child[ANN_IN]	= ic;				// set children
-			child[ANN_OUT]	= oc;
-		}
+  ANNbd_shrink(         // constructor
+    int            nb,  // number of bounding halfspaces
+    ANNorthHSArray bds, // list of bounding halfspaces
+    ANNkd_ptr      ic = NULL,
+    ANNkd_ptr      oc = NULL) // children
+  {
+    n_bnds = nb;        // cutting dimension
+    bnds = bds;         // assign bounds
+    child[ANN_IN] = ic; // set children
+    child[ANN_OUT] = oc;
+  }
 
-	~ANNbd_shrink() override						// destructor
-		{
-			if (child[ANN_IN]!= NULL && child[ANN_IN]!=  KD_TRIVIAL) 
-				delete child[ANN_IN];
-			if (child[ANN_OUT]!= NULL&& child[ANN_OUT]!= KD_TRIVIAL) 
-				delete child[ANN_OUT];
-			if (bnds != NULL)
-				delete [] bnds;			// delete bounds
-		}
+  ~ANNbd_shrink() override // destructor
+  {
+    if (child[ANN_IN] != NULL && child[ANN_IN] != KD_TRIVIAL)
+      delete child[ANN_IN];
+    if (child[ANN_OUT] != NULL && child[ANN_OUT] != KD_TRIVIAL)
+      delete child[ANN_OUT];
+    if (bnds != NULL)
+      delete[] bnds; // delete bounds
+  }
 
-	void getStats(						// get tree statistics
-				int dim,						// dimension of space
-				ANNkdStats &st,					// statistics
-				ANNorthRect &bnd_box) override;			// bounding box
-	void print(int level, ostream &out) override;// print node
-	void dump(ostream &out) override;			// dump node
+  void
+  getStats(                          // get tree statistics
+    int           dim,               // dimension of space
+    ANNkdStats &  st,                // statistics
+    ANNorthRect & bnd_box) override; // bounding box
+  void
+  print(int level, ostream & out) override; // print node
+  void
+  dump(ostream & out) override; // dump node
 
-	void ann_search(ANNdist) override;			// standard search
-	void ann_pri_search(ANNdist) override;		// priority search
-	void ann_FR_search(ANNdist) override; 		// fixed-radius search
+  void ann_search(ANNdist) override;     // standard search
+  void ann_pri_search(ANNdist) override; // priority search
+  void ann_FR_search(ANNdist) override;  // fixed-radius search
 };
 
 #endif

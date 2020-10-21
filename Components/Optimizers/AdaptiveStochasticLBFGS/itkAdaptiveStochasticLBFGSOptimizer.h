@@ -66,11 +66,9 @@ namespace itk
  * \ingroup Optimizers
  */
 
-class AdaptiveStochasticLBFGSOptimizer :
-  public StandardStochasticGradientOptimizer
+class AdaptiveStochasticLBFGSOptimizer : public StandardStochasticGradientOptimizer
 {
 public:
-
   /** Standard ITK.*/
   typedef AdaptiveStochasticLBFGSOptimizer    Self;
   typedef StandardStochasticGradientOptimizer Superclass;
@@ -78,11 +76,10 @@ public:
   typedef SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdaptiveStochasticLBFGSOptimizer,
-    StandardStochasticGradientOptimizer );
+  itkTypeMacro(AdaptiveStochasticLBFGSOptimizer, StandardStochasticGradientOptimizer);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -95,32 +92,31 @@ public:
   typedef Superclass::StopConditionType         StopConditionType;
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true */
-  itkSetMacro( UseAdaptiveStepSizes, bool );
-  itkGetConstMacro( UseAdaptiveStepSizes, bool );
+  itkSetMacro(UseAdaptiveStepSizes, bool);
+  itkGetConstMacro(UseAdaptiveStepSizes, bool);
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true */
-  itkSetMacro( UseSearchDirForAdaptiveStepSize, bool );
-  itkGetConstMacro( UseSearchDirForAdaptiveStepSize, bool );
+  itkSetMacro(UseSearchDirForAdaptiveStepSize, bool);
+  itkGetConstMacro(UseSearchDirForAdaptiveStepSize, bool);
 
   /** Set/Get the maximum of the sigmoid.
    * Should be >0. Default: 1.0 */
-  itkSetMacro( SigmoidMax, double );
-  itkGetConstMacro( SigmoidMax, double );
+  itkSetMacro(SigmoidMax, double);
+  itkGetConstMacro(SigmoidMax, double);
 
   /** Set/Get the maximum of the sigmoid.
    * Should be <0. Default: -0.8 */
-  itkSetMacro( SigmoidMin, double );
-  itkGetConstMacro( SigmoidMin, double );
+  itkSetMacro(SigmoidMin, double);
+  itkGetConstMacro(SigmoidMin, double);
 
   /** Set/Get the scaling of the sigmoid width. Large values
    * cause a more wide sigmoid. Default: 1e-8. Should be >0. */
-  itkSetMacro( SigmoidScale, double );
-  itkGetConstMacro( SigmoidScale, double );
+  itkSetMacro(SigmoidScale, double);
+  itkGetConstMacro(SigmoidScale, double);
 
 protected:
-
   AdaptiveStochasticLBFGSOptimizer();
-  ~AdaptiveStochasticLBFGSOptimizer() override {};
+  ~AdaptiveStochasticLBFGSOptimizer() override{};
 
   /** Function to update the current time
    * If UseAdaptiveStepSizes is false this function just increments
@@ -129,28 +125,29 @@ protected:
    * time = max[ 0, time + sigmoid( -gradient*previousgradient) ]\n
    * In that case, also the m_PreviousGradient is updated.
    */
-  void UpdateCurrentTime( void ) override;
+  void
+  UpdateCurrentTime(void) override;
 
   /** The PreviousGradient, necessary for the CruzAcceleration */
-  //m_previousGradient m_PrePreviousGradient are not used, where should I put them?
-  //DerivativeType m_previousGradient;
-  //DerivativeType m_PrePreviousGradient;
-  unsigned long  m_UpdateFrequenceL;
-  bool           m_UseSearchDirForAdaptiveStepSize;
-  bool           m_UseAdaptiveStepSizes;
-  double         m_SearchLengthScale;
-  std::string    m_StepSizeStrategy;
+  // m_previousGradient m_PrePreviousGradient are not used, where should I put them?
+  // DerivativeType m_previousGradient;
+  // DerivativeType m_PrePreviousGradient;
+  unsigned long m_UpdateFrequenceL;
+  bool          m_UseSearchDirForAdaptiveStepSize;
+  bool          m_UseAdaptiveStepSizes;
+  double        m_SearchLengthScale;
+  std::string   m_StepSizeStrategy;
 
 private:
-
-  AdaptiveStochasticLBFGSOptimizer( const Self& ); // purposely not implemented
-  void operator=( const Self& );                   // purposely not implemented
+  AdaptiveStochasticLBFGSOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Settings */
 
-  double                        m_SigmoidMax;
-  double                        m_SigmoidMin;
-  double                        m_SigmoidScale;
+  double m_SigmoidMax;
+  double m_SigmoidMin;
+  double m_SigmoidScale;
 
 }; // end class AdaptiveStochasticLBFGSOptimizer
 

@@ -18,4 +18,4 @@
 
 #include "elxMovingSmoothingPyramid.h"
 
-elxInstallMacro( MovingSmoothingPyramid );
+elxInstallMacro(MovingSmoothingPyramid);

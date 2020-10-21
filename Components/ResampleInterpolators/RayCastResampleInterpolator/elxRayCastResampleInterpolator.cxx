@@ -18,4 +18,4 @@
 
 #include "elxRayCastResampleInterpolator.h"
 
-elxInstallMacro( RayCastResampleInterpolator );
+elxInstallMacro(RayCastResampleInterpolator);

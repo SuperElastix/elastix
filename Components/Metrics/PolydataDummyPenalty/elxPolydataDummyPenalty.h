@@ -48,47 +48,45 @@ namespace elastix
  *
  */
 
-//TODO: define a base class templated on meshes in stead of 2 pointsets.
-//typedef unsigned char DummyPixelType;
-//typedef unsigned char BinaryPixelType;
-//typedef itk::Mesh<BinaryPixelType,FixedImageDimension> FixedMeshType;
-//typedef itk::Mesh <DummyPixelType, MetricBase<TElastix>::FixedImageDimension>  FixedMeshType; //pixeltype is unused, but necessary for the declaration, so a type with the smallest memory footprint is used.
+// TODO: define a base class templated on meshes in stead of 2 pointsets.
+// typedef unsigned char DummyPixelType;
+// typedef unsigned char BinaryPixelType;
+// typedef itk::Mesh<BinaryPixelType,FixedImageDimension> FixedMeshType;
+// typedef itk::Mesh <DummyPixelType, MetricBase<TElastix>::FixedImageDimension>  FixedMeshType; //pixeltype is unused,
+// but necessary for the declaration, so a type with the smallest memory footprint is used.
 //  template <class TElastix >
-//class PolydataDummyPenalty
+// class PolydataDummyPenalty
 //  : public
 //  itk::MeshPenalty < itk::Mesh<DummyPixelType, MetricBase <TElastix>::FixedImageDimension > >,
 //  public MetricBase<TElastix>
 //
-template< class TElastix >
-class PolydataDummyPenalty :
-  public
-  itk::MeshPenalty<
-  typename MetricBase< TElastix >::FixedPointSetType,
-  typename MetricBase< TElastix >::MovingPointSetType >,
-  public MetricBase< TElastix >
+template <class TElastix>
+class PolydataDummyPenalty
+  : public itk::MeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
+                            typename MetricBase<TElastix>::MovingPointSetType>
+  , public MetricBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef PolydataDummyPenalty Self;
-  typedef itk::MeshPenalty<
-    typename MetricBase< TElastix >::FixedPointSetType,
-    typename MetricBase< TElastix >::MovingPointSetType > Superclass1;
-  typedef MetricBase< TElastix >          Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::MeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
+                           typename MetricBase<TElastix>::MovingPointSetType>
+                                        Superclass1;
+  typedef MetricBase<TElastix>          Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PolydataDummyPenalty, itk::MeshPenalty );
+  itkTypeMacro(PolydataDummyPenalty, itk::MeshPenalty);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
    * example: <tt>(Metric "PolydataDummyPenalty")</tt>\n
    */
-  elxClassNameMacro( "PolydataDummyPenalty" );
+  elxClassNameMacro("PolydataDummyPenalty");
 
   /** Typedefs from the superclass. */
   typedef typename Superclass1::FixedMeshType         FixedMeshType;
@@ -132,10 +130,9 @@ public:
   itkGetStaticConstMacro( FixedImageDimension ),
   itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;
   */
-  typedef itk::AdvancedCombinationTransform< CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;
-  typedef typename
-    CombinationTransformType::InitialTransformType InitialTransformType;
+  typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
+                                                                  CombinationTransformType;
+  typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
 
   /** Typedefs inherited from elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -149,10 +146,8 @@ public:
   typedef typename Superclass2::MovingImageType      MovingImageType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
    * assumes that the fixed and moving image are of the same type.
@@ -162,51 +157,58 @@ public:
   typedef FixedImageType    ImageType;
 
   /** Typedef for timer. */
-  //typedef tmr::Timer          TimerType;
-  //typedef TimerType::Pointer  TimerPointer;
+  // typedef tmr::Timer          TimerType;
+  // typedef TimerType::Pointer  TimerPointer;
 
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
    */
-  void Initialize( void ) override;
+  void
+  Initialize(void) override;
 
   /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */
-  int BeforeAllBase( void ) override;
+  int
+  BeforeAllBase(void) override;
 
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
   /** Function to read the corresponding points. */
-  unsigned int ReadMesh(
-    const std::string & meshFileName,
-    typename FixedMeshType::Pointer & mesh );
+  unsigned int
+  ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh);
 
-  void WriteResultMesh( const char * filename, MeshIdType meshId );
+  void
+  WriteResultMesh(const char * filename, MeshIdType meshId);
 
-  unsigned int ReadTransformixPoints( const std::string & filename, typename MeshType::Pointer & mesh );
+  unsigned int
+  ReadTransformixPoints(const std::string & filename, typename MeshType::Pointer & mesh);
 
   /** Overwrite to silence warning. */
-  void SelectNewSamples( void ) override{}
+  void
+  SelectNewSamples(void) override
+  {}
 
 protected:
-
   /** The constructor. */
   PolydataDummyPenalty();
   /** The destructor. */
   ~PolydataDummyPenalty() override {}
 
 private:
-
   /** The private constructor. */
-  PolydataDummyPenalty( const Self & );  // purposely not implemented
+  PolydataDummyPenalty(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );        // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   unsigned int m_NumberOfMeshes;
 };
@@ -214,7 +216,7 @@ private:
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxPolydataDummyPenalty.hxx"
+#  include "elxPolydataDummyPenalty.hxx"
 #endif
 
 #endif // end #ifndef __elxPolydataDummyPenalty_H__

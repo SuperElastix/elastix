@@ -23,23 +23,22 @@
 
 namespace itk
 {
-template< typename NDimensions >
+template <typename NDimensions>
 void
-GPUObjectFactoryBase< NDimensions >
-::RegisterAll()
+GPUObjectFactoryBase<NDimensions>::RegisterAll()
 {
   OpenCLContext::Pointer context = OpenCLContext::GetInstance();
-  if( context->IsCreated() )
+  if (context->IsCreated())
   {
-    if( Support1D )
+    if (Support1D)
     {
       this->Register1D();
     }
-    if( Support2D )
+    if (Support2D)
     {
       this->Register2D();
     }
-    if( Support3D )
+    if (Support3D)
     {
       this->Register3D();
     }

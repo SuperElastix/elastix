@@ -30,23 +30,21 @@ namespace itk
  * a vector container.
  */
 
-template< class TInputImage, class TOutputVectorContainer >
-class ImageToVectorContainerFilter :
-  public VectorContainerSource< TOutputVectorContainer >
+template <class TInputImage, class TOutputVectorContainer>
+class ImageToVectorContainerFilter : public VectorContainerSource<TOutputVectorContainer>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageToVectorContainerFilter                    Self;
-  typedef VectorContainerSource< TOutputVectorContainer > Superclass;
-  typedef SmartPointer< Self >                            Pointer;
-  typedef SmartPointer< const Self >                      ConstPointer;
+  typedef ImageToVectorContainerFilter                  Self;
+  typedef VectorContainerSource<TOutputVectorContainer> Superclass;
+  typedef SmartPointer<Self>                            Pointer;
+  typedef SmartPointer<const Self>                      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageToVectorContainerFilter, VectorContainerSource );
+  itkTypeMacro(ImageToVectorContainerFilter, VectorContainerSource);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -61,25 +59,31 @@ public:
   typedef typename InputImageType::PixelType    InputImagePixelType;
 
   /** Create a valid output. */
-  DataObject::Pointer MakeOutput( unsigned int idx ) override;
+  DataObject::Pointer
+  MakeOutput(unsigned int idx) override;
 
   /** Set the input image of this process object.  */
-  void SetInput( unsigned int idx, const InputImageType * input );
+  void
+  SetInput(unsigned int idx, const InputImageType * input);
 
   /** Set the input image of this process object.  */
-  void SetInput( const InputImageType * input );
+  void
+  SetInput(const InputImageType * input);
 
   /** Get the input image of this process object.  */
-  const InputImageType * GetInput( void );
+  const InputImageType *
+  GetInput(void);
 
   /** Get the input image of this process object.  */
-  const InputImageType * GetInput( unsigned int idx );
+  const InputImageType *
+  GetInput(unsigned int idx);
 
   /** Get the output Mesh of this process object.  */
-  OutputVectorContainerType * GetOutput( void );
+  OutputVectorContainerType *
+  GetOutput(void);
 
   /** Prepare the output. */
-  //virtual void GenerateOutputInformation( void );
+  // virtual void GenerateOutputInformation( void );
 
   /** A version of GenerateData() specific for image processing
    * filters.  This implementation will split the processing across
@@ -96,7 +100,8 @@ public:
    * instead.
    *
    * \sa ThreadedGenerateData() */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
   /** If an imaging filter can be implemented as a multithreaded
    * algorithm, the filter will provide an implementation of
@@ -120,9 +125,8 @@ public:
    * different thread).
    *
    * \sa GenerateData(), SplitRequestedRegion() */
-  virtual void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId );
+  virtual void
+  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId);
 
   /** If an imaging filter needs to perform processing after the buffer
    * has been allocated but before threads are spawned, the filter can
@@ -134,7 +138,9 @@ public:
    *      4) Call AfterThreadedGenerateData()
    * Note that this flow of control is only available if a filter provides
    * a ThreadedGenerateData() method and NOT a GenerateData() method. */
-  virtual void BeforeThreadedGenerateData( void ) {}
+  virtual void
+  BeforeThreadedGenerateData(void)
+  {}
 
   /** If an imaging filter needs to perform processing after all
    * processing threads have completed, the filter can can provide an
@@ -146,20 +152,25 @@ public:
    *      4) Call AfterThreadedGenerateData()
    * Note that this flow of control is only available if a filter provides
    * a ThreadedGenerateData() method and NOT a GenerateData() method. */
-  virtual void AfterThreadedGenerateData( void ) {}
+  virtual void
+  AfterThreadedGenerateData(void)
+  {}
 
   /** Split the output's RequestedRegion into "numberOfSplits" pieces, returning
    * region "i" as "splitRegion". This method is called "numberOfSplits" times. The
    * regions must not overlap. The method returns the number of pieces that
    * the routine is capable of splitting the output RequestedRegion,
    * i.e. return value is less than or equal to "numberOfSplits". */
-  virtual unsigned int SplitRequestedRegion( const ThreadIdType & threadId,
-    const ThreadIdType & numberOfSplits, InputImageRegionType & splitRegion );
+  virtual unsigned int
+  SplitRequestedRegion(const ThreadIdType &   threadId,
+                       const ThreadIdType &   numberOfSplits,
+                       InputImageRegionType & splitRegion);
 
   /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
    * library will call this routine for each thread, which will delegate the
    * control to ThreadedGenerateData(). */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ThreaderCallback(void * arg);
 
   /** Internal structure used for passing image data into the threading library */
   struct ThreadStruct //?
@@ -168,28 +179,27 @@ public:
   };
 
 protected:
-
   /** The constructor. */
   ImageToVectorContainerFilter();
   /** The destructor. */
   ~ImageToVectorContainerFilter() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
   /** The private constructor. */
-  ImageToVectorContainerFilter( const Self & );  // purposely not implemented
+  ImageToVectorContainerFilter(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageToVectorContainerFilter.hxx"
+#  include "itkImageToVectorContainerFilter.hxx"
 #endif
 
 #endif // end #ifndef __itkImageToVectorContainerFilter_h

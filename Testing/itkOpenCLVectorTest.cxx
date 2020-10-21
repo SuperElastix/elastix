@@ -21,13 +21,13 @@
 #include <algorithm>
 
 //------------------------------------------------------------------------------
-template< class type >
+template <class type>
 bool
-std_all_of( const typename std::vector< type > & v, const type value )
+std_all_of(const typename std::vector<type> & v, const type value)
 {
-  for( typename std::vector< type >::const_iterator it = v.begin(); it != v.end(); ++it )
+  for (typename std::vector<type>::const_iterator it = v.begin(); it != v.end(); ++it)
   {
-    if( *it != value )
+    if (*it != value)
     {
       return false;
     }
@@ -37,13 +37,13 @@ std_all_of( const typename std::vector< type > & v, const type value )
 
 
 //------------------------------------------------------------------------------
-template< class type >
+template <class type>
 bool
-std_first_of( const typename std::vector< type > & v, const std::size_t n, const type value )
+std_first_of(const typename std::vector<type> & v, const std::size_t n, const type value)
 {
-  for( std::size_t i = 0; i < n; i++ )
+  for (std::size_t i = 0; i < n; i++)
   {
-    if( v[ i ] != value )
+    if (v[i] != value)
     {
       return false;
     }
@@ -54,15 +54,15 @@ std_first_of( const typename std::vector< type > & v, const std::size_t n, const
 
 //------------------------------------------------------------------------------
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
-  typedef unsigned char                        VectorTypeUChar;
-  typedef float                                VectorTypeFloat;
-  typedef itk::OpenCLVector< VectorTypeUChar > OCLVectorTypeUChar;
-  typedef itk::OpenCLVector< VectorTypeFloat > OCLVectorTypeFloat;
-  OCLVectorTypeUChar vectorNull;
+  typedef unsigned char                      VectorTypeUChar;
+  typedef float                              VectorTypeFloat;
+  typedef itk::OpenCLVector<VectorTypeUChar> OCLVectorTypeUChar;
+  typedef itk::OpenCLVector<VectorTypeFloat> OCLVectorTypeFloat;
+  OCLVectorTypeUChar                         vectorNull;
 
-  if( !vectorNull.IsNull() )
+  if (!vectorNull.IsNull())
   {
     return EXIT_FAILURE;
   }
@@ -70,21 +70,21 @@ main( int argc, char * argv[] )
   try
   {
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-    context->Create( itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice );
-    const std::list< itk::OpenCLDevice > devices = context->GetDevices();
+    context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
+    const std::list<itk::OpenCLDevice> devices = context->GetDevices();
 
-    itk::OpenCLProgram program = context->BuildProgramFromSourceCode( devices,
-      itk::OpenCLVectorTestKernel::GetOpenCLSource() );
+    itk::OpenCLProgram program =
+      context->BuildProgramFromSourceCode(devices, itk::OpenCLVectorTestKernel::GetOpenCLSource());
 
-    if( program.IsNull() )
+    if (program.IsNull())
     {
-      if( context->GetDefaultDevice().HasCompiler() )
+      if (context->GetDefaultDevice().HasCompiler())
       {
-        itkGenericExceptionMacro( << "Could not compile the OpenCL test program" );
+        itkGenericExceptionMacro(<< "Could not compile the OpenCL test program");
       }
       else
       {
-        itkGenericExceptionMacro( << "OpenCL implementation does not have a compiler" );
+        itkGenericExceptionMacro(<< "OpenCL implementation does not have a compiler");
       }
     }
 
@@ -93,78 +93,78 @@ main( int argc, char * argv[] )
     const VectorTypeUChar valueUChar = 5;
     const VectorTypeFloat valueFloat = 5.1f;
 
-    const std::size_t     bufferUCharSizeBytes = sizeof( VectorTypeUChar ) * bufferSize;
-    const std::size_t     bufferFloatSizeBytes = sizeof( VectorTypeFloat ) * bufferSize;
-    const itk::OpenCLSize workSize( bufferSize );
-    const itk::OpenCLSize smallSize( 8 );
+    const std::size_t     bufferUCharSizeBytes = sizeof(VectorTypeUChar) * bufferSize;
+    const std::size_t     bufferFloatSizeBytes = sizeof(VectorTypeFloat) * bufferSize;
+    const itk::OpenCLSize workSize(bufferSize);
+    const itk::OpenCLSize smallSize(8);
 
     // Tests the OpenCLVector
-    OCLVectorTypeUChar deviceUCharVector
-      = context->CreateVector< VectorTypeUChar >( itk::OpenCLMemoryObject::WriteOnly, bufferUCharSizeBytes );
-    ITK_OPENCL_COMPARE( deviceUCharVector.IsNull(), false );
+    OCLVectorTypeUChar deviceUCharVector =
+      context->CreateVector<VectorTypeUChar>(itk::OpenCLMemoryObject::WriteOnly, bufferUCharSizeBytes);
+    ITK_OPENCL_COMPARE(deviceUCharVector.IsNull(), false);
     std::cout << deviceUCharVector << std::endl;
 
-    OCLVectorTypeFloat deviceFloatVector
-      = context->CreateVector< VectorTypeFloat >( itk::OpenCLMemoryObject::WriteOnly, bufferFloatSizeBytes );
-    ITK_OPENCL_COMPARE( deviceFloatVector.IsNull(), false );
+    OCLVectorTypeFloat deviceFloatVector =
+      context->CreateVector<VectorTypeFloat>(itk::OpenCLMemoryObject::WriteOnly, bufferFloatSizeBytes);
+    ITK_OPENCL_COMPARE(deviceFloatVector.IsNull(), false);
     std::cout << deviceFloatVector << std::endl;
 
     // Create kernels
-    itk::OpenCLKernel setUCharKernel = program.CreateKernel( "SetUChar" );
-    ITK_OPENCL_COMPARE( setUCharKernel.IsNull(), false );
-    setUCharKernel.SetGlobalWorkSize( smallSize );
-    setUCharKernel( deviceUCharVector, valueUChar );
+    itk::OpenCLKernel setUCharKernel = program.CreateKernel("SetUChar");
+    ITK_OPENCL_COMPARE(setUCharKernel.IsNull(), false);
+    setUCharKernel.SetGlobalWorkSize(smallSize);
+    setUCharKernel(deviceUCharVector, valueUChar);
 
-    itk::OpenCLKernel setFloatKernel = program.CreateKernel( "SetFloat" );
-    ITK_OPENCL_COMPARE( setFloatKernel.IsNull(), false );
-    setFloatKernel.SetGlobalWorkSize( smallSize );
-    setFloatKernel( deviceFloatVector, valueFloat );
+    itk::OpenCLKernel setFloatKernel = program.CreateKernel("SetFloat");
+    ITK_OPENCL_COMPARE(setFloatKernel.IsNull(), false);
+    setFloatKernel.SetGlobalWorkSize(smallSize);
+    setFloatKernel(deviceFloatVector, valueFloat);
 
     // Compare results from kernel setUChar
-    std::vector< VectorTypeUChar > hostBufferUChar( bufferSize );
-    deviceUCharVector.Read( &hostBufferUChar[ 0 ], bufferSize );
-    const bool resultUChar0 = std_first_of< VectorTypeUChar >( hostBufferUChar, smallSize.GetSizes()[ 0 ], valueUChar );
-    ITK_OPENCL_COMPARE( resultUChar0, true );
+    std::vector<VectorTypeUChar> hostBufferUChar(bufferSize);
+    deviceUCharVector.Read(&hostBufferUChar[0], bufferSize);
+    const bool resultUChar0 = std_first_of<VectorTypeUChar>(hostBufferUChar, smallSize.GetSizes()[0], valueUChar);
+    ITK_OPENCL_COMPARE(resultUChar0, true);
 
     // Run again kernel setUChar and compare results
-    setUCharKernel.SetGlobalWorkSize( workSize );
+    setUCharKernel.SetGlobalWorkSize(workSize);
     itk::OpenCLEvent eventUChar = setUCharKernel.LaunchKernel();
-    ITK_OPENCL_COMPARE( eventUChar.IsNull(), false );
+    ITK_OPENCL_COMPARE(eventUChar.IsNull(), false);
     eventUChar.WaitForFinished();
 
-    deviceUCharVector.Read( &hostBufferUChar[ 0 ], bufferSize );
-    const bool resultUChar1 = std_all_of< VectorTypeUChar >( hostBufferUChar, valueUChar );
+    deviceUCharVector.Read(&hostBufferUChar[0], bufferSize);
+    const bool resultUChar1 = std_all_of<VectorTypeUChar>(hostBufferUChar, valueUChar);
 
     // Only in the latest compilers
-    //const bool resultUChar = std::all_of( hostBufferUChar.begin(), hostBufferUChar.end(),
+    // const bool resultUChar = std::all_of( hostBufferUChar.begin(), hostBufferUChar.end(),
     //  [ valueUChar ]( VectorTypeUChar i ){
     //    return i == valueUChar;
     //  } );
-    ITK_OPENCL_COMPARE( resultUChar1, true );
+    ITK_OPENCL_COMPARE(resultUChar1, true);
 
     // Compare results from kernel setFloat
-    std::vector< VectorTypeFloat > hostBufferFloat( bufferSize );
-    deviceFloatVector.Read( &hostBufferFloat[ 0 ], bufferSize );
-    const bool resultFloat0 = std_first_of< VectorTypeFloat >( hostBufferFloat, smallSize.GetSizes()[ 0 ], valueFloat );
-    ITK_OPENCL_COMPARE( resultFloat0, true );
+    std::vector<VectorTypeFloat> hostBufferFloat(bufferSize);
+    deviceFloatVector.Read(&hostBufferFloat[0], bufferSize);
+    const bool resultFloat0 = std_first_of<VectorTypeFloat>(hostBufferFloat, smallSize.GetSizes()[0], valueFloat);
+    ITK_OPENCL_COMPARE(resultFloat0, true);
 
     // Run again kernel setFloat and compare results
-    setFloatKernel.SetGlobalWorkSize( workSize );
+    setFloatKernel.SetGlobalWorkSize(workSize);
     itk::OpenCLEvent eventFloat = setFloatKernel.LaunchKernel();
-    ITK_OPENCL_COMPARE( eventFloat.IsNull(), false );
+    ITK_OPENCL_COMPARE(eventFloat.IsNull(), false);
     eventFloat.WaitForFinished();
 
-    deviceFloatVector.Read( &hostBufferFloat[ 0 ], bufferSize );
-    const bool resultFloat1 = std_all_of< VectorTypeFloat >( hostBufferFloat, valueFloat );
+    deviceFloatVector.Read(&hostBufferFloat[0], bufferSize);
+    const bool resultFloat1 = std_all_of<VectorTypeFloat>(hostBufferFloat, valueFloat);
 
     // Only in the latest compilers
-    //const bool resultFloat = std::all_of( hostBufferFloat.begin(), hostBufferFloat.end(),
+    // const bool resultFloat = std::all_of( hostBufferFloat.begin(), hostBufferFloat.end(),
     //  [ valueFloat ]( VectorTypeFloat i ){
     //    return i == valueFloat;
     //  } );
-    ITK_OPENCL_COMPARE( resultFloat1, true );
+    ITK_OPENCL_COMPARE(resultFloat1, true);
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
     itk::ReleaseContext();

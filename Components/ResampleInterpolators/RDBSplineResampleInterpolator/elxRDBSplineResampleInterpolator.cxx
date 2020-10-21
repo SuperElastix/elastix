@@ -18,4 +18,4 @@
 
 #include "elxRDBSplineResampleInterpolator.h"
 
-elxInstallMacro( ReducedDimensionBSplineResampleInterpolator );
+elxInstallMacro(ReducedDimensionBSplineResampleInterpolator);

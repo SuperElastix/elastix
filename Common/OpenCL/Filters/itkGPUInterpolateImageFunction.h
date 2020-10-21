@@ -34,26 +34,26 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TInputImage, typename TCoordRep = float, typename TParentInterpolateImageFunction
-                                                   = InterpolateImageFunction< TInputImage, TCoordRep > >
-class ITK_EXPORT GPUInterpolateImageFunction :
-  public         TParentInterpolateImageFunction, public GPUInterpolatorBase
+template <typename TInputImage,
+          typename TCoordRep = float,
+          typename TParentInterpolateImageFunction = InterpolateImageFunction<TInputImage, TCoordRep>>
+class ITK_EXPORT GPUInterpolateImageFunction
+  : public TParentInterpolateImageFunction
+  , public GPUInterpolatorBase
 {
 public:
-
   /** Standard class typedefs. */
   typedef GPUInterpolateImageFunction     Self;
   typedef TParentInterpolateImageFunction CPUSuperclass;
   typedef GPUInterpolatorBase             GPUSuperclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef SmartPointer<Self>              Pointer;
+  typedef SmartPointer<const Self>        ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUInterpolateImageFunction, TParentInterpolateImageFunction );
+  itkTypeMacro(GPUInterpolateImageFunction, TParentInterpolateImageFunction);
 
   /** ImageDimension constants */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Superclass typedef support. */
   typedef typename CPUSuperclass::InputImageType      InputImageType;
@@ -61,25 +61,25 @@ public:
   typedef typename CPUSuperclass::CoordRepType        CoordRepType;
 
 protected:
-
   GPUInterpolateImageFunction();
   ~GPUInterpolateImageFunction() override {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Returns data manager that stores all settings for the transform. */
-  GPUDataManager::Pointer GetParametersDataManager( void ) const override;
+  GPUDataManager::Pointer
+  GetParametersDataManager(void) const override;
 
 private:
-
-  GPUInterpolateImageFunction( const Self & ); // purposely not implemented
-  void operator=( const Self & );              // purposely not implemented
-
+  GPUInterpolateImageFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUInterpolateImageFunction.hxx"
+#  include "itkGPUInterpolateImageFunction.hxx"
 #endif
 
 #endif /* __itkGPUInterpolateImageFunction_h */

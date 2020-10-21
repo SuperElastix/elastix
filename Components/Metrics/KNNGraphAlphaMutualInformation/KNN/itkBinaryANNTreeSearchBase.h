@@ -34,21 +34,18 @@ namespace itk
  * \ingroup ANNwrap
  */
 
-template< class TListSample >
-class BinaryANNTreeSearchBase :
-  public BinaryTreeSearchBase< TListSample >
+template <class TListSample>
+class BinaryANNTreeSearchBase : public BinaryTreeSearchBase<TListSample>
 {
 public:
-
   /** Standard itk. */
-  typedef BinaryANNTreeSearchBase Self;
-  typedef BinaryTreeSearchBase<
-    TListSample >                     Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef BinaryANNTreeSearchBase           Self;
+  typedef BinaryTreeSearchBase<TListSample> Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** ITK type info. */
-  itkTypeMacro( BinaryANNTreeSearchBase, BinaryTreeSearchBase );
+  itkTypeMacro(BinaryANNTreeSearchBase, BinaryTreeSearchBase);
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::ListSampleType        ListSampleType;
@@ -59,22 +56,22 @@ public:
   typedef typename Superclass::DistanceArrayType     DistanceArrayType;
 
   /** Typedefs from ANN. */
-  typedef ANNpoint     ANNPointType;            // double *
-  typedef ANNidx       ANNIndexType;            // int
-  typedef ANNidxArray  ANNIndexArrayType;       // int *
-  typedef ANNdist      ANNDistanceType;         // double
-  typedef ANNdistArray ANNDistanceArrayType;    // double *
+  typedef ANNpoint     ANNPointType;         // double *
+  typedef ANNidx       ANNIndexType;         // int
+  typedef ANNidxArray  ANNIndexArrayType;    // int *
+  typedef ANNdist      ANNDistanceType;      // double
+  typedef ANNdistArray ANNDistanceArrayType; // double *
 
   /** An itk ANN tree. */
-  typedef BinaryANNTreeBase< ListSampleType > BinaryANNTreeType;
+  typedef BinaryANNTreeBase<ListSampleType> BinaryANNTreeType;
 
   /** Set and get the binary tree. */
-  void SetBinaryTree( BinaryTreeType * tree ) override;
+  void
+  SetBinaryTree(BinaryTreeType * tree) override;
 
-  //const BinaryTreeType * GetBinaryTree( void ) const;
+  // const BinaryTreeType * GetBinaryTree( void ) const;
 
 protected:
-
   BinaryANNTreeSearchBase();
   ~BinaryANNTreeSearchBase() override;
 
@@ -82,16 +79,15 @@ protected:
   typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
 
 private:
-
-  BinaryANNTreeSearchBase( const Self & );  // purposely not implemented
-  void operator=( const Self & );           // purposely not implemented
-
+  BinaryANNTreeSearchBase(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBinaryANNTreeSearchBase.hxx"
+#  include "itkBinaryANNTreeSearchBase.hxx"
 #endif
 
 #endif // end #ifndef __itkBinaryANNTreeSearchBase_h

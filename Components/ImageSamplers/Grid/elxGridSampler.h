@@ -45,36 +45,30 @@ namespace elastix
  * \ingroup ImageSamplers
  */
 
-template< class TElastix >
-class GridSampler :
-  public
-  itk::ImageGridSampler<
-  typename elx::ImageSamplerBase< TElastix >::InputImageType >,
-  public
-  elx::ImageSamplerBase< TElastix >
+template <class TElastix>
+class GridSampler
+  : public itk::ImageGridSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
+  , public elx::ImageSamplerBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef GridSampler Self;
-  typedef itk::ImageGridSampler<
-    typename elx::ImageSamplerBase< TElastix >::InputImageType >
-    Superclass1;
-  typedef elx::ImageSamplerBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef GridSampler                                                                     Self;
+  typedef itk::ImageGridSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType> Superclass1;
+  typedef elx::ImageSamplerBase<TElastix>                                                 Superclass2;
+  typedef itk::SmartPointer<Self>                                                         Pointer;
+  typedef itk::SmartPointer<const Self>                                                   ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GridSampler, itk::ImageGridSampler );
+  itkTypeMacro(GridSampler, itk::ImageGridSampler);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n
    * example: <tt>(ImageSampler "Grid")</tt>\n
    */
-  elxClassNameMacro( "Grid" );
+  elxClassNameMacro("Grid");
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
@@ -94,7 +88,7 @@ public:
   typedef typename Superclass1::SampleGridSpacingValueType   SampleGridSpacingValueType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass1::InputImageDimension);
 
   /** Typedefs inherited from Elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;
@@ -108,28 +102,27 @@ public:
   /** Execute stuff before each resolution:
    * \li Set the sampling grid size.
    */
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
 protected:
-
   /** The constructor. */
   GridSampler() {}
   /** The destructor. */
   ~GridSampler() override {}
 
 private:
-
   /** The private constructor. */
-  GridSampler( const Self & );  // purposely not implemented
+  GridSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );       // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxGridSampler.hxx"
+#  include "elxGridSampler.hxx"
 #endif
 
 #endif // end #ifndef __elxGridSampler_h

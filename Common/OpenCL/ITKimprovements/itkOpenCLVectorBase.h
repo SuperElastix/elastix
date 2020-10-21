@@ -37,57 +37,64 @@ class OpenCLVectorBasePimpl;
 class ITKOpenCL_EXPORT OpenCLVectorBase
 {
 protected:
-
   /** Creates a vector with \a elemSize. */
-  OpenCLVectorBase( const std::size_t elemSize );
+  OpenCLVectorBase(const std::size_t elemSize);
 
   /** Creates a copy of the \a other vector reference with \a elemSize.
    * The vector's contents are not duplicated, modifications to this vector
    * will also affect \a other. */
-  OpenCLVectorBase( const std::size_t elemSize, const OpenCLVectorBase & other );
+  OpenCLVectorBase(const std::size_t elemSize, const OpenCLVectorBase & other);
 
   /** Destroys this vector reference. If this is the last reference
    * to the underlying data, the vector will be unmapped and deallocated. */
   ~OpenCLVectorBase();
 
   /** Assign vector and take ownership. */
-  void Assign( const OpenCLVectorBase & other );
+  void
+  Assign(const OpenCLVectorBase & other);
 
   /** A vector object is created using the following method. */
-  void Create( OpenCLContext * context,
-    const OpenCLMemoryObject::Access access, const std::size_t size  );
+  void
+  Create(OpenCLContext * context, const OpenCLMemoryObject::Access access, const std::size_t size);
 
   /** Decrements the memobj reference count. */
-  void Release();
+  void
+  Release();
 
   /** Enqueues a command to map a region of the buffer object given by buffer
    * into the host address.
    * \sa Unmap() */
-  void Map();
+  void
+  Map();
 
   /** Enqueues a command to unmap a previously mapped region of a memory object.
    * \sa Map() */
-  void Unmap() const;
+  void
+  Unmap() const;
 
   /** The following functions enqueue commands to read from a buffer object to host memory.
    * \sa Write() */
-  void Read( void * data, const std::size_t size, const std::size_t offset = 0 );
+  void
+  Read(void * data, const std::size_t size, const std::size_t offset = 0);
 
   /** The following functions enqueue commands to write from a buffer object to host memory.
    * \sa Read() */
-  void Write( const void * data, const std::size_t size, const std::size_t offset = 0 );
+  void
+  Write(const void * data, const std::size_t size, const std::size_t offset = 0);
 
   /** Returns the native OpenCL identifier for this memory object. */
-  cl_mem GetMemoryId() const;
+  cl_mem
+  GetMemoryId() const;
 
   /** Returns the OpenCL context that created this memory object. */
-  OpenCLContext * GetContext() const;
+  OpenCLContext *
+  GetContext() const;
 
   /** Unmaps and returns the native OpenCL identifier for this memory object. */
-  cl_mem GetKernelArgument() const;
+  cl_mem
+  GetKernelArgument() const;
 
 protected:
-
   OpenCLVectorBasePimpl * d_ptr;
   std::size_t             m_ElementSize;
   std::size_t             m_Size;

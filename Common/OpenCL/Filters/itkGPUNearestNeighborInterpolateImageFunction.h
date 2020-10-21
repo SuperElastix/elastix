@@ -27,7 +27,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUNearestNeighborInterpolateImageFunction */
-itkGPUKernelClassMacro( GPUNearestNeighborInterpolateImageFunctionKernel );
+itkGPUKernelClassMacro(GPUNearestNeighborInterpolateImageFunctionKernel);
 
 /** \class GPUNearestNeighborInterpolateImageFunction
  * \brief GPU version of NearestNeighborInterpolateImageFunction.
@@ -40,48 +40,49 @@ itkGPUKernelClassMacro( GPUNearestNeighborInterpolateImageFunctionKernel );
  *
  * \ingroup GPUCommon
  */
-template< typename TInputImage, typename TCoordRep = float >
-class ITK_EXPORT GPUNearestNeighborInterpolateImageFunction :
-  public         GPUInterpolateImageFunction< TInputImage, TCoordRep,
-  NearestNeighborInterpolateImageFunction< TInputImage, TCoordRep > >
+template <typename TInputImage, typename TCoordRep = float>
+class ITK_EXPORT GPUNearestNeighborInterpolateImageFunction
+  : public GPUInterpolateImageFunction<TInputImage,
+                                       TCoordRep,
+                                       NearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GPUNearestNeighborInterpolateImageFunction                           Self;
-  typedef NearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >    CPUSuperclass;
-  typedef GPUInterpolateImageFunction< TInputImage, TCoordRep, CPUSuperclass > GPUSuperclass;
-  typedef SmartPointer< Self >                                                 Pointer;
-  typedef SmartPointer< const Self >                                           ConstPointer;
+  typedef GPUNearestNeighborInterpolateImageFunction                         Self;
+  typedef NearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>    CPUSuperclass;
+  typedef GPUInterpolateImageFunction<TInputImage, TCoordRep, CPUSuperclass> GPUSuperclass;
+  typedef SmartPointer<Self>                                                 Pointer;
+  typedef SmartPointer<const Self>                                           ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUNearestNeighborInterpolateImageFunction, GPUSuperclass );
+  itkTypeMacro(GPUNearestNeighborInterpolateImageFunction, GPUSuperclass);
 
 protected:
-
   GPUNearestNeighborInterpolateImageFunction();
   ~GPUNearestNeighborInterpolateImageFunction() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  bool GetSourceCode( std::string & source ) const override;
+  bool
+  GetSourceCode(std::string & source) const override;
 
 private:
+  GPUNearestNeighborInterpolateImageFunction(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
-  GPUNearestNeighborInterpolateImageFunction( const Self & ); // purposely not implemented
-  void operator=( const Self & );                             // purposely not implemented
-
-  std::vector< std::string > m_Sources;
+  std::vector<std::string> m_Sources;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUNearestNeighborInterpolateImageFunction.hxx"
+#  include "itkGPUNearestNeighborInterpolateImageFunction.hxx"
 #endif
 
 #endif /* __itkGPUNearestNeighborInterpolateImageFunction_h */

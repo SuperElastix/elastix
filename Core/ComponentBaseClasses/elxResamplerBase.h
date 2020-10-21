@@ -69,17 +69,16 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template< class TElastix >
-class ResamplerBase : public BaseComponentSE< TElastix >
+template <class TElastix>
+class ResamplerBase : public BaseComponentSE<TElastix>
 {
 public:
-
   /** Standard ITK stuff. */
-  typedef ResamplerBase               Self;
-  typedef BaseComponentSE< TElastix > Superclass;
+  typedef ResamplerBase             Self;
+  typedef BaseComponentSE<TElastix> Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ResamplerBase, BaseComponentSE );
+  itkTypeMacro(ResamplerBase, BaseComponentSE);
 
   /** Typedef's from superclass. */
   typedef typename Superclass::ElastixType          ElastixType;
@@ -90,15 +89,14 @@ public:
   typedef typename Superclass::RegistrationPointer  RegistrationPointer;
 
   /** Typedef's from elastix.
-  * NB: it is assumed that fixed and moving image dimension are equal!  */
+   * NB: it is assumed that fixed and moving image dimension are equal!  */
   typedef typename ElastixType::MovingImageType InputImageType;
   typedef typename ElastixType::MovingImageType OutputImageType;
-  //typedef typename ElastixType::FixedImageType      OutputImageType;
+  // typedef typename ElastixType::FixedImageType      OutputImageType;
   typedef ElastixBase::CoordRepType CoordRepType;
 
   /** Other typedef's. */
-  typedef itk::ResampleImageFilter<
-    InputImageType, OutputImageType, CoordRepType >  ITKBaseType;
+  typedef itk::ResampleImageFilter<InputImageType, OutputImageType, CoordRepType> ITKBaseType;
 
   /** Typedef's from ResampleImageFiler. */
   typedef typename ITKBaseType::TransformType    TransformType;
@@ -117,27 +115,32 @@ public:
   typedef elx::ProgressCommand ProgressCommandType;
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int,
-    OutputImageType::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
+  virtual ITKBaseType *
+  GetAsITKBaseType(void)
   {
-    return dynamic_cast< ITKBaseType * >( this );
+    return dynamic_cast<ITKBaseType *>(this);
   }
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  virtual const ITKBaseType *
+  GetAsITKBaseType(void) const
   {
-    return dynamic_cast< const ITKBaseType * >( this );
+    return dynamic_cast<const ITKBaseType *>(this);
   }
 
 
   /** Execute stuff before the actual transformation:
    * \li nothing here
    */
-  virtual int BeforeAllTransformix( void ){ return 0; }
+  virtual int
+  BeforeAllTransformix(void)
+  {
+    return 0;
+  }
 
   /** Execute stuff before the actual registration:
    * \li Set all components into the resampler, such as the transform
@@ -145,71 +148,80 @@ public:
    * \li Set output image information, such as size, spacing, etc.
    * \li Set the default pixel value.
    */
-  void BeforeRegistrationBase( void ) override;
+  void
+  BeforeRegistrationBase(void) override;
 
   /** Execute stuff after each resolution:
    * \li Write the resulting output image.
    */
-  void AfterEachResolutionBase( void ) override;
+  void
+  AfterEachResolutionBase(void) override;
 
   /** Execute stuff after each iteration:
    * \li Write the resulting output image.
    */
-  void AfterEachIterationBase( void ) override;
+  void
+  AfterEachIterationBase(void) override;
 
   /** Execute stuff after the registration:
    * \li Write the resulting output image.
    */
-  void AfterRegistrationBase( void ) override;
+  void
+  AfterRegistrationBase(void) override;
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  virtual void
+  ReadFromFile(void);
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( void ) const;
+  virtual void
+  WriteToFile(void) const;
 
   /** Function to create transform-parameters map. */
-  virtual void CreateTransformParametersMap( ParameterMapType * paramsMap ) const;
+  virtual void
+  CreateTransformParametersMap(ParameterMapType * paramsMap) const;
 
   /** Function to perform resample and write the result output image to a file. */
-  virtual void ResampleAndWriteResultImage( const char * filename, const bool & showProgress = true );
+  virtual void
+  ResampleAndWriteResultImage(const char * filename, const bool & showProgress = true);
 
   /** Function to write the result output image to a file. */
-  virtual void WriteResultImage( OutputImageType * imageimage,
-    const char * filename, const bool & showProgress = true );
+  virtual void
+  WriteResultImage(OutputImageType * imageimage, const char * filename, const bool & showProgress = true);
 
   /** Function to create the result image in the format of an itk::Image. */
-  virtual void CreateItkResultImage( void );
+  virtual void
+  CreateItkResultImage(void);
 
 protected:
-
   /** The constructor. */
   ResamplerBase();
   /** The destructor. */
   ~ResamplerBase() override {}
 
   /** Method that sets the transform, the interpolator and the inputImage. */
-  virtual void SetComponents( void );
+  virtual void
+  SetComponents(void);
 
   /** Variable that defines to print the progress or not. */
   bool m_ShowProgress;
 
 private:
-
   /** The private constructor. */
-  ResamplerBase( const Self & );   // purposely not implemented
+  ResamplerBase(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );  // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Release memory. */
-  void ReleaseMemory( void );
-
+  void
+  ReleaseMemory(void);
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxResamplerBase.hxx"
+#  include "elxResamplerBase.hxx"
 #endif
 
 #endif // end #ifndef __elxResamplerBase_h

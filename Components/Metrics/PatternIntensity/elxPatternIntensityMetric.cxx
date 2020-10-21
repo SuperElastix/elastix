@@ -18,4 +18,4 @@
 
 #include "elxPatternIntensityMetric.h"
 
-elxInstallMacro( PatternIntensityMetric );
+elxInstallMacro(PatternIntensityMetric);

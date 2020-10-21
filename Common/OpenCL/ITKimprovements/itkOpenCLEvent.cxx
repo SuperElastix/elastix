@@ -21,22 +21,22 @@
 
 namespace itk
 {
-OpenCLEvent::OpenCLEvent() :
-  m_Id( 0 )
+OpenCLEvent::OpenCLEvent()
+  : m_Id(0)
 {}
 
 //------------------------------------------------------------------------------
-OpenCLEvent::OpenCLEvent( const cl_event id ) :
-  m_Id( id )
+OpenCLEvent::OpenCLEvent(const cl_event id)
+  : m_Id(id)
 {}
 
 //------------------------------------------------------------------------------
-OpenCLEvent::OpenCLEvent( const OpenCLEvent & other ) :
-  m_Id( other.m_Id )
+OpenCLEvent::OpenCLEvent(const OpenCLEvent & other)
+  : m_Id(other.m_Id)
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clRetainEvent( this->m_Id );
+    clRetainEvent(this->m_Id);
   }
 }
 
@@ -44,24 +44,24 @@ OpenCLEvent::OpenCLEvent( const OpenCLEvent & other ) :
 //------------------------------------------------------------------------------
 OpenCLEvent::~OpenCLEvent()
 {
-  if( !this->IsNull() )
+  if (!this->IsNull())
   {
-    clReleaseEvent( this->m_Id );
+    clReleaseEvent(this->m_Id);
   }
 }
 
 
 //------------------------------------------------------------------------------
 inline OpenCLEvent &
-OpenCLEvent::operator=( const OpenCLEvent & other )
+OpenCLEvent::operator=(const OpenCLEvent & other)
 {
-  if( other.m_Id )
+  if (other.m_Id)
   {
-    clRetainEvent( other.m_Id );
+    clRetainEvent(other.m_Id);
   }
-  if( this->m_Id )
+  if (this->m_Id)
   {
-    clReleaseEvent( this->m_Id );
+    clReleaseEvent(this->m_Id);
   }
   this->m_Id = other.m_Id;
   return *this;
@@ -72,15 +72,14 @@ OpenCLEvent::operator=( const OpenCLEvent & other )
 cl_int
 OpenCLEvent::GetStatus() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return CL_INVALID_EVENT;
   }
 
   cl_int st, error;
-  error = clGetEventInfo( m_Id, CL_EVENT_COMMAND_EXECUTION_STATUS,
-    sizeof( st ), &st, 0 );
-  if( error != CL_SUCCESS )
+  error = clGetEventInfo(m_Id, CL_EVENT_COMMAND_EXECUTION_STATUS, sizeof(st), &st, 0);
+  if (error != CL_SUCCESS)
   {
     return error;
   }
@@ -95,15 +94,14 @@ OpenCLEvent::GetStatus() const
 cl_command_type
 OpenCLEvent::GetCommandType() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
   cl_command_type type;
-  cl_int          error = clGetEventInfo( this->m_Id, CL_EVENT_COMMAND_TYPE,
-    sizeof( type ), &type, 0 );
-  if( error != CL_SUCCESS )
+  cl_int          error = clGetEventInfo(this->m_Id, CL_EVENT_COMMAND_TYPE, sizeof(type), &type, 0);
+  if (error != CL_SUCCESS)
   {
     return 0;
   }
@@ -118,16 +116,15 @@ OpenCLEvent::GetCommandType() const
 cl_int
 OpenCLEvent::WaitForFinished()
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
-  const cl_int error = clWaitForEvents( 1, &this->m_Id );
-  if( error != CL_SUCCESS )
+  const cl_int error = clWaitForEvents(1, &this->m_Id);
+  if (error != CL_SUCCESS)
   {
-    itkOpenCLErrorMacroGeneric( << "OpenCLEvent::WaitForFinished:"
-                                << OpenCLContext::GetErrorName( error ) );
+    itkOpenCLErrorMacroGeneric(<< "OpenCLEvent::WaitForFinished:" << OpenCLContext::GetErrorName(error));
   }
   return error;
 }
@@ -135,19 +132,17 @@ OpenCLEvent::WaitForFinished()
 
 //------------------------------------------------------------------------------
 cl_int
-OpenCLEvent::SetCallback( cl_int type,
-  void( CL_CALLBACK * pfn_notify )( cl_event, cl_int, void * ), void * user_data )
+OpenCLEvent::SetCallback(cl_int type, void(CL_CALLBACK * pfn_notify)(cl_event, cl_int, void *), void * user_data)
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
-  const cl_int error = clSetEventCallback( m_Id, type, pfn_notify, user_data );
-  if( error != CL_SUCCESS )
+  const cl_int error = clSetEventCallback(m_Id, type, pfn_notify, user_data);
+  if (error != CL_SUCCESS)
   {
-    itkOpenCLErrorMacroGeneric( << "OpenCLEvent::SetCallback:"
-                                << OpenCLContext::GetErrorName( error ) );
+    itkOpenCLErrorMacroGeneric(<< "OpenCLEvent::SetCallback:" << OpenCLContext::GetErrorName(error));
   }
   return error;
 }
@@ -157,15 +152,13 @@ OpenCLEvent::SetCallback( cl_int type,
 cl_ulong
 OpenCLEvent::GetQueueTime() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
   cl_ulong time;
-  if( clGetEventProfilingInfo
-      ( this->m_Id, CL_PROFILING_COMMAND_QUEUED,
-    sizeof( time ), &time, 0 ) != CL_SUCCESS )
+  if (clGetEventProfilingInfo(this->m_Id, CL_PROFILING_COMMAND_QUEUED, sizeof(time), &time, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -177,15 +170,13 @@ OpenCLEvent::GetQueueTime() const
 cl_ulong
 OpenCLEvent::GetSubmitTime() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
   cl_ulong time;
-  if( clGetEventProfilingInfo
-      ( this->m_Id, CL_PROFILING_COMMAND_SUBMIT,
-    sizeof( time ), &time, 0 ) != CL_SUCCESS )
+  if (clGetEventProfilingInfo(this->m_Id, CL_PROFILING_COMMAND_SUBMIT, sizeof(time), &time, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -197,15 +188,13 @@ OpenCLEvent::GetSubmitTime() const
 cl_ulong
 OpenCLEvent::GetRunTime() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
   cl_ulong time;
-  if( clGetEventProfilingInfo
-      ( this->m_Id, CL_PROFILING_COMMAND_START,
-    sizeof( time ), &time, 0 ) != CL_SUCCESS )
+  if (clGetEventProfilingInfo(this->m_Id, CL_PROFILING_COMMAND_START, sizeof(time), &time, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -217,15 +206,13 @@ OpenCLEvent::GetRunTime() const
 cl_ulong
 OpenCLEvent::GetFinishTime() const
 {
-  if( this->IsNull() )
+  if (this->IsNull())
   {
     return 0;
   }
 
   cl_ulong time;
-  if( clGetEventProfilingInfo
-      ( this->m_Id, CL_PROFILING_COMMAND_END,
-    sizeof( time ), &time, 0 ) != CL_SUCCESS )
+  if (clGetEventProfilingInfo(this->m_Id, CL_PROFILING_COMMAND_END, sizeof(time), &time, 0) != CL_SUCCESS)
   {
     return 0;
   }
@@ -236,9 +223,9 @@ OpenCLEvent::GetFinishTime() const
 //------------------------------------------------------------------------------
 //! Operator ==
 bool
-operator==( const OpenCLEvent & lhs, const OpenCLEvent & rhs )
+operator==(const OpenCLEvent & lhs, const OpenCLEvent & rhs)
 {
-  if( &rhs == &lhs )
+  if (&rhs == &lhs)
   {
     return true;
   }
@@ -249,9 +236,9 @@ operator==( const OpenCLEvent & lhs, const OpenCLEvent & rhs )
 //------------------------------------------------------------------------------
 //! Operator !=
 bool
-operator!=( const OpenCLEvent & lhs, const OpenCLEvent & rhs )
+operator!=(const OpenCLEvent & lhs, const OpenCLEvent & rhs)
 {
-  return !( lhs == rhs );
+  return !(lhs == rhs);
 }
 
 

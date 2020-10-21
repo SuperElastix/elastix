@@ -14,12 +14,13 @@
 #include "elxTimer.h"
 
 
-int TestStartStop( void )
+int
+TestStartStop(void)
 {
   tmr::Timer::Pointer pTmr = tmr::Timer::New();
   pTmr->StartTimer();
 
-  if ( pTmr->StopTimer() != 0 )
+  if (pTmr->StopTimer() != 0)
   {
     std::cerr << "StopTimer() failed.\n";
     return 1;
@@ -29,26 +30,27 @@ int TestStartStop( void )
 } // end TestStartStop()
 
 
-int TestZeroTimeOutput( void )
+int
+TestZeroTimeOutput(void)
 {
   tmr::Timer::Pointer pTmr = tmr::Timer::New();
 
   pTmr->StartTimer();
   pTmr->StopTimer();
 
-  if ( pTmr->GetElapsedTimeSec() != 0 )
+  if (pTmr->GetElapsedTimeSec() != 0)
   {
     std::cerr << "GetElapsedTimeSec() != 0\n";
     return 1;
   }
 
-  if ( pTmr->PrintElapsedTimeSec() != "0" )
+  if (pTmr->PrintElapsedTimeSec() != "0")
   {
     std::cerr << "PrintElapsedTimeSec() != 0\n";
     return 1;
   }
 
-  if ( pTmr->PrintElapsedTimeDHMS() != "0 Seconds" )
+  if (pTmr->PrintElapsedTimeDHMS() != "0 Seconds")
   {
     std::cerr << "PrintElapsedTimeDHMS() failed.\n";
     return 1;
@@ -59,7 +61,8 @@ int TestZeroTimeOutput( void )
 } // end TestZeroTimeOutput()
 
 
-int main( int argc, char *argv[] )
+int
+main(int argc, char * argv[])
 {
   int errorCode = TestStartStop() || TestZeroTimeOutput();
 
@@ -67,4 +70,3 @@ int main( int argc, char *argv[] )
 
   return errorCode;
 } // end main()
-

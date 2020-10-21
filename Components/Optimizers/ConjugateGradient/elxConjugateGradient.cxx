@@ -18,4 +18,4 @@
 
 #include "elxConjugateGradient.h"
 
-elxInstallMacro( ConjugateGradient );
+elxInstallMacro(ConjugateGradient);

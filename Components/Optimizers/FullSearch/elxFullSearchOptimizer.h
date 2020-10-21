@@ -53,33 +53,30 @@ namespace elastix
  * \sa FullSearchOptimizer
  */
 
-template< class TElastix >
-class FullSearch :
-  public
-  itk::FullSearchOptimizer,
-  public
-  OptimizerBase< TElastix >
+template <class TElastix>
+class FullSearch
+  : public itk::FullSearchOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
-  typedef FullSearch                      Self;
-  typedef itk::FullSearchOptimizer        Superclass1;
-  typedef OptimizerBase< TElastix >       Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef FullSearch                    Self;
+  typedef itk::FullSearchOptimizer      Superclass1;
+  typedef OptimizerBase<TElastix>       Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( FullSearch, itk::FullSearchOptimizer );
+  itkTypeMacro(FullSearch, itk::FullSearchOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer. \n
    * example: <tt>(Optimizer "FullSearch")</tt>\n
    */
-  elxClassNameMacro( "FullSearch" );
+  elxClassNameMacro("FullSearch");
 
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType        CostFunctionType;
@@ -106,31 +103,35 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** To store the results of the full search */
-  typedef itk::NDImageBase< float >     NDImageType;
+  typedef itk::NDImageBase<float>       NDImageType;
   typedef typename NDImageType::Pointer NDImagePointer;
 
   /** To store the names of the search space dimensions */
-  typedef std::map< unsigned int, std::string >         DimensionNameMapType;
+  typedef std::map<unsigned int, std::string>           DimensionNameMapType;
   typedef typename DimensionNameMapType::const_iterator NameIteratorType;
 
   /** Methods that have to be present everywhere.*/
-  void BeforeRegistration( void ) override;
+  void
+  BeforeRegistration(void) override;
 
-  void BeforeEachResolution( void ) override;
+  void
+  BeforeEachResolution(void) override;
 
-  void AfterEachResolution( void ) override;
+  void
+  AfterEachResolution(void) override;
 
-  void AfterEachIteration( void ) override;
+  void
+  AfterEachIteration(void) override;
 
-  void AfterRegistration( void ) override;
+  void
+  AfterRegistration(void) override;
 
   /** \todo BeforeAll, checking parameters. */
 
   /** Get a pointer to the image containing the optimization surface. */
-  itkGetModifiableObjectMacro( OptimizationSurface, NDImageType );
+  itkGetModifiableObjectMacro(OptimizationSurface, NDImageType);
 
 protected:
-
   FullSearch();
   ~FullSearch() override {}
 
@@ -142,22 +143,23 @@ protected:
    * ranges from the parameter file is a real error. Prints some
    * error message if so.
    */
-  //virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
+  // virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
   //  int errorcode, unsigned int entry_nr);
-  virtual bool CheckSearchSpaceRangeDefinition( const std::string & fullFieldName,
-    const bool found, const unsigned int entry_nr ) const;
+  virtual bool
+  CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
+                                  const bool          found,
+                                  const unsigned int  entry_nr) const;
 
 private:
-
-  FullSearch( const Self & );       // purposely not implemented
-  void operator=( const Self & );   // purposely not implemented
-
+  FullSearch(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxFullSearchOptimizer.hxx"
+#  include "elxFullSearchOptimizer.hxx"
 #endif
 
 #endif // end #ifndef __elxFullSearchOptimizer_h

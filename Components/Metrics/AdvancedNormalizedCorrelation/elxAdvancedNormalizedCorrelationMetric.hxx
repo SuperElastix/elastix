@@ -28,20 +28,17 @@ namespace elastix
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-AdvancedNormalizedCorrelationMetric< TElastix >
-::BeforeEachResolution( void )
+AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level
-    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set SubtractMean. Default true. */
   bool subtractMean = true;
-  this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
-    this->GetComponentLabel(), level, 0 );
-  this->SetSubtractMean( subtractMean );
+  this->GetConfiguration()->ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), level, 0);
+  this->SetSubtractMean(subtractMean);
 
 } // end BeforeEachResolution()
 
@@ -50,17 +47,16 @@ AdvancedNormalizedCorrelationMetric< TElastix >
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-AdvancedNormalizedCorrelationMetric< TElastix >
-::Initialize( void )
+AdvancedNormalizedCorrelationMetric<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+  elxout << "Initialization of AdvancedNormalizedCorrelation metric took: " << static_cast<long>(timer.GetMean() * 1000)
+         << " ms." << std::endl;
 
 } // end Initialize()
 

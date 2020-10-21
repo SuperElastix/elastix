@@ -18,4 +18,4 @@
 
 #include "elxAffineLogTransform.h"
 
-elxInstallMacro( AffineLogTransformElastix );
+elxInstallMacro(AffineLogTransformElastix);

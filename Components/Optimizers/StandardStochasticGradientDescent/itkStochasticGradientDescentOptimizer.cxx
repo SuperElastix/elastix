@@ -22,12 +22,12 @@
 #include "itkMacro.h"
 
 #ifdef ELASTIX_USE_OPENMP
-#include <omp.h>
+#  include <omp.h>
 #endif
 
 #ifdef ELASTIX_USE_EIGEN
-#include <Eigen/Dense>
-#include <Eigen/Core>
+#  include <Eigen/Dense>
+#  include <Eigen/Core>
 #endif
 
 namespace itk
@@ -37,10 +37,9 @@ namespace itk
  * ****************** Constructor ************************
  */
 
-StochasticGradientDescentOptimizer
-::StochasticGradientDescentOptimizer()
+StochasticGradientDescentOptimizer ::StochasticGradientDescentOptimizer()
 {
-  itkDebugMacro( "Constructor" );
+  itkDebugMacro("Constructor");
 
   this->m_LearningRate = 1.0;
   this->m_NumberOfIterations = 100;
@@ -62,24 +61,17 @@ StochasticGradientDescentOptimizer
  */
 
 void
-StochasticGradientDescentOptimizer
-::PrintSelf( std::ostream& os, Indent indent ) const
+StochasticGradientDescentOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
 {
-  this->Superclass::PrintSelf( os, indent );
+  this->Superclass::PrintSelf(os, indent);
 
-  os << indent << "LearningRate: "
-    << this->m_LearningRate << std::endl;
-  os << indent << "NumberOfIterations: "
-    << this->m_NumberOfIterations << std::endl;
-  os << indent << "CurrentIteration: "
-    << this->m_CurrentIteration;
-  os << indent << "Value: "
-    << this->m_Value;
-  os << indent << "StopCondition: "
-    << this->m_StopCondition;
+  os << indent << "LearningRate: " << this->m_LearningRate << std::endl;
+  os << indent << "NumberOfIterations: " << this->m_NumberOfIterations << std::endl;
+  os << indent << "CurrentIteration: " << this->m_CurrentIteration;
+  os << indent << "Value: " << this->m_Value;
+  os << indent << "StopCondition: " << this->m_StopCondition;
   os << std::endl;
-  os << indent << "Gradient: "
-    << this->m_Gradient;
+  os << indent << "Gradient: " << this->m_Gradient;
   os << std::endl;
 
 } // end PrintSelf()
@@ -90,22 +82,21 @@ StochasticGradientDescentOptimizer
  */
 
 void
-StochasticGradientDescentOptimizer
-::StartOptimization( void )
+StochasticGradientDescentOptimizer ::StartOptimization(void)
 {
-  itkDebugMacro( "StartOptimization" );
+  itkDebugMacro("StartOptimization");
 
   this->m_CurrentIteration = 0;
 
   /** Get the number of parameters; checks also if a cost function has been set at all.
-  * if not: an exception is thrown */
+   * if not: an exception is thrown */
   this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Initialize the scaledCostFunction with the currently set scales */
   this->InitializeScales();
 
   /** Set the current position as the scaled initial position */
-  this->SetCurrentPosition( this->GetInitialPosition() );
+  this->SetCurrentPosition(this->GetInitialPosition());
 
   this->ResumeOptimization();
 } // end StartOptimization()
@@ -116,40 +107,37 @@ StochasticGradientDescentOptimizer
  */
 
 void
-StochasticGradientDescentOptimizer
-::ResumeOptimization( void )
+StochasticGradientDescentOptimizer ::ResumeOptimization(void)
 {
-  itkDebugMacro( "ResumeOptimization" );
+  itkDebugMacro("ResumeOptimization");
 
   this->m_Stop = false;
 
-  InvokeEvent( StartEvent() );
+  InvokeEvent(StartEvent());
 
   this->m_PreviousGradient = this->GetPreviousGradient();
   this->m_PreviousPosition = this->GetPreviousPosition();
 
-  const unsigned int spaceDimension
-    = this->GetScaledCostFunction()->GetNumberOfParameters();
-  this->m_Gradient = DerivativeType( spaceDimension ); // check this
+  const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
+  this->m_Gradient = DerivativeType(spaceDimension); // check this
 
-  DerivativeType   currentPositionGradient;
-  DerivativeType   previousPositionGradient;
+  DerivativeType currentPositionGradient;
+  DerivativeType previousPositionGradient;
 
-  while( !this->m_Stop )
+  while (!this->m_Stop)
   {
 
     try
     {
-      this->GetScaledValueAndDerivative(
-        this->GetScaledCurrentPosition(), m_Value, this->m_Gradient );
+      this->GetScaledValueAndDerivative(this->GetScaledCurrentPosition(), m_Value, this->m_Gradient);
     }
-    catch( ExceptionObject& err )
+    catch (ExceptionObject & err)
     {
-      this->MetricErrorResponse( err );
+      this->MetricErrorResponse(err);
     }
 
     /** StopOptimization may have been called. */
-    if( this->m_Stop )
+    if (this->m_Stop)
     {
       break;
     }
@@ -157,14 +145,14 @@ StochasticGradientDescentOptimizer
     this->AdvanceOneStep();
 
     /** StopOptimization may have been called. */
-    if( this->m_Stop )
+    if (this->m_Stop)
     {
       break;
     }
 
     this->m_CurrentIteration++;
 
-    if( m_CurrentIteration >= m_NumberOfIterations )
+    if (m_CurrentIteration >= m_NumberOfIterations)
     {
       this->m_StopCondition = MaximumNumberOfIterations;
       this->StopOptimization();
@@ -181,8 +169,7 @@ StochasticGradientDescentOptimizer
  */
 
 void
-StochasticGradientDescentOptimizer
-::MetricErrorResponse( ExceptionObject & err )
+StochasticGradientDescentOptimizer ::MetricErrorResponse(ExceptionObject & err)
 {
   /** An exception has occurred. Terminate immediately. */
   this->m_StopCondition = MetricError;
@@ -199,13 +186,12 @@ StochasticGradientDescentOptimizer
  */
 
 void
-StochasticGradientDescentOptimizer
-::StopOptimization( void )
+StochasticGradientDescentOptimizer ::StopOptimization(void)
 {
-  itkDebugMacro( "StopOptimization" );
+  itkDebugMacro("StopOptimization");
 
   this->m_Stop = true;
-  this->InvokeEvent( EndEvent() );
+  this->InvokeEvent(EndEvent());
 } // end StopOptimization
 
 
@@ -214,113 +200,111 @@ StochasticGradientDescentOptimizer
  */
 
 void
-StochasticGradientDescentOptimizer
-::AdvanceOneStep( void )
+StochasticGradientDescentOptimizer ::AdvanceOneStep(void)
 {
-  itkDebugMacro( "AdvanceOneStep" );
+  itkDebugMacro("AdvanceOneStep");
 
   /** Get space dimension. */
-  const unsigned int spaceDimension
-    = this->GetScaledCostFunction()->GetNumberOfParameters();
+  const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Get a reference to the previously allocated newPosition. */
   ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
   /** Advance one step. */
   // single-threadedly
-  if( !this->m_UseMultiThread || true ) // for now force single-threaded since it is fastest most of the times
-  //if( !this->m_UseMultiThread && false ) // force multi-threaded
+  if (!this->m_UseMultiThread || true) // for now force single-threaded since it is fastest most of the times
+  // if( !this->m_UseMultiThread && false ) // force multi-threaded
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
     /** Update the new position. */
-    for( unsigned int j = 0; j < spaceDimension; j++ )
+    for (unsigned int j = 0; j < spaceDimension; j++)
     {
-      newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
+      newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
     }
   }
 #ifdef ELASTIX_USE_OPENMP
-  else if( this->m_UseOpenMP && !this->m_UseEigen )
+  else if (this->m_UseOpenMP && !this->m_UseEigen)
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
     /** Update the new position. */
-    const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfWorkUnits() );
-    omp_set_num_threads( nthreads );
-#pragma omp parallel for
-    for( int j = 0; j < static_cast<int>( spaceDimension ); j++ )
+    const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
+    omp_set_num_threads(nthreads);
+#  pragma omp parallel for
+    for (int j = 0; j < static_cast<int>(spaceDimension); j++)
     {
-      newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
+      newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
     }
   }
 #endif
 #ifdef ELASTIX_USE_EIGEN
-  else if( !this->m_UseOpenMP && this->m_UseEigen )
+  else if (!this->m_UseOpenMP && this->m_UseEigen)
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-    const double learningRate = this->m_LearningRate;
+    const double           learningRate = this->m_LearningRate;
 
     /** Wrap itk::Arrays into Eigen jackets. */
-    typedef Eigen::VectorXd ParametersTypeEigen;
-    Eigen::Map<ParametersTypeEigen> newPositionE( newPosition.data_block(), spaceDimension );
-    Eigen::Map<const ParametersTypeEigen> currentPositionE( currentPosition.data_block(), spaceDimension );
-    Eigen::Map<ParametersTypeEigen> gradientE( this->m_Gradient.data_block(), spaceDimension );
+    typedef Eigen::VectorXd               ParametersTypeEigen;
+    Eigen::Map<ParametersTypeEigen>       newPositionE(newPosition.data_block(), spaceDimension);
+    Eigen::Map<const ParametersTypeEigen> currentPositionE(currentPosition.data_block(), spaceDimension);
+    Eigen::Map<ParametersTypeEigen>       gradientE(this->m_Gradient.data_block(), spaceDimension);
 
     /** Update the new position. */
     newPositionE = currentPositionE - learningRate * gradientE;
   }
 #endif
-#if defined( ELASTIX_USE_OPENMP ) && defined( ELASTIX_USE_EIGEN )
-  else if( this->m_UseOpenMP && this->m_UseEigen )
+#if defined(ELASTIX_USE_OPENMP) && defined(ELASTIX_USE_EIGEN)
+  else if (this->m_UseOpenMP && this->m_UseEigen)
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-    const double learningRate = this->m_LearningRate;
+    const double           learningRate = this->m_LearningRate;
 
     /** Wrap itk::Arrays into Eigen jackets. */
-    typedef Eigen::VectorXd ParametersTypeEigen;
-    Eigen::Map<ParametersTypeEigen> newPositionE( newPosition.data_block(), spaceDimension );
-    Eigen::Map<const ParametersTypeEigen> currentPositionE( currentPosition.data_block(), spaceDimension );
-    Eigen::Map<ParametersTypeEigen> gradientE( this->m_Gradient.data_block(), spaceDimension );
+    typedef Eigen::VectorXd               ParametersTypeEigen;
+    Eigen::Map<ParametersTypeEigen>       newPositionE(newPosition.data_block(), spaceDimension);
+    Eigen::Map<const ParametersTypeEigen> currentPositionE(currentPosition.data_block(), spaceDimension);
+    Eigen::Map<ParametersTypeEigen>       gradientE(this->m_Gradient.data_block(), spaceDimension);
 
     /** Update the new position. */
-    const int spaceDim = static_cast<int>( spaceDimension );
-    const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfWorkUnits() );
-    omp_set_num_threads( nthreads );
-#pragma omp parallel for
-    for( int i = 0; i < nthreads; i += 1 )
+    const int spaceDim = static_cast<int>(spaceDimension);
+    const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
+    omp_set_num_threads(nthreads);
+#  pragma omp parallel for
+    for (int i = 0; i < nthreads; i += 1)
     {
       int threadId = omp_get_thread_num();
-      int chunk = ( spaceDimension + nthreads - 1 ) / nthreads;
+      int chunk = (spaceDimension + nthreads - 1) / nthreads;
       int jmin = threadId * chunk;
-      int jmax = ( threadId + 1 ) * chunk < spaceDim ? ( threadId + 1 ) * chunk : spaceDim;
+      int jmax = (threadId + 1) * chunk < spaceDim ? (threadId + 1) * chunk : spaceDim;
       int subSize = jmax - jmin;
 
-      newPositionE.segment( jmin, subSize ) = currentPositionE.segment( jmin, subSize )
-        - learningRate * gradientE.segment( jmin, subSize );
+      newPositionE.segment(jmin, subSize) =
+        currentPositionE.segment(jmin, subSize) - learningRate * gradientE.segment(jmin, subSize);
     }
   }
 #endif
   else
   {
     /** Fill the threader parameter struct with information. */
-    MultiThreaderParameterType * temp = new  MultiThreaderParameterType;
+    MultiThreaderParameterType * temp = new MultiThreaderParameterType;
     temp->t_NewPosition = &newPosition;
     temp->t_Optimizer = this;
 
     /** Call multi-threaded AdvanceOneStep(). */
     ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfWorkUnits( this->m_Threader->GetNumberOfWorkUnits() );
-    local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
+    local_threader->SetNumberOfWorkUnits(this->m_Threader->GetNumberOfWorkUnits());
+    local_threader->SetSingleMethod(AdvanceOneStepThreaderCallback, (void *)(temp));
     local_threader->SingleMethodExecute();
 
     delete temp;
   }
 
-  this->InvokeEvent( IterationEvent() );
+  this->InvokeEvent(IterationEvent());
 
 } // end AdvanceOneStep()
 
@@ -329,17 +313,16 @@ StochasticGradientDescentOptimizer
  * ************ AdvanceOneStepThreaderCallback ****************************
  */
 
-ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION StochasticGradientDescentOptimizer
-::AdvanceOneStepThreaderCallback( void * arg )
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+StochasticGradientDescentOptimizer ::AdvanceOneStepThreaderCallback(void * arg)
 {
   /** Get the current thread id and user data. */
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>( arg );
-  ThreadIdType threadID = infoStruct->WorkUnitID;
-  MultiThreaderParameterType * temp
-    = static_cast<MultiThreaderParameterType *>( infoStruct->UserData );
+  ThreadInfoType *             infoStruct = static_cast<ThreadInfoType *>(arg);
+  ThreadIdType                 threadID = infoStruct->WorkUnitID;
+  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
 
   /** Call the real implementation. */
-  temp->t_Optimizer->ThreadedAdvanceOneStep( threadID, *( temp->t_NewPosition ) );
+  temp->t_Optimizer->ThreadedAdvanceOneStep(threadID, *(temp->t_NewPosition));
 
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -350,28 +333,26 @@ ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION StochasticGradientDescentOptimizer
  * ************ ThreadedAdvanceOneStep ****************************
  */
 
-void StochasticGradientDescentOptimizer
-::ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition )
+void
+StochasticGradientDescentOptimizer ::ThreadedAdvanceOneStep(ThreadIdType threadId, ParametersType & newPosition)
 {
   /** Compute the range for this thread. */
-  const unsigned int spaceDimension
-    = this->GetScaledCostFunction()->GetNumberOfParameters();
+  const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
   const unsigned int subSize = static_cast<unsigned int>(
-    std::ceil( static_cast<double>( spaceDimension )
-      / static_cast<double>( this->m_Threader->GetNumberOfWorkUnits() ) ) );
+    std::ceil(static_cast<double>(spaceDimension) / static_cast<double>(this->m_Threader->GetNumberOfWorkUnits())));
   const unsigned int jmin = threadId * subSize;
-  unsigned int jmax = ( threadId + 1 ) * subSize;
-  jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax;
+  unsigned int       jmax = (threadId + 1) * subSize;
+  jmax = (jmax > spaceDimension) ? spaceDimension : jmax;
 
   /** Get a reference to the current position. */
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-  const double learningRate = this->m_LearningRate;
+  const double           learningRate = this->m_LearningRate;
   const DerivativeType & gradient = this->m_Gradient;
 
   /** Advance one step: mu_{k+1} = mu_k - a_k * gradient_k */
-  for( unsigned int j = jmin; j < jmax; j++ )
+  for (unsigned int j = jmin; j < jmax; j++)
   {
-    newPosition[ j ] = currentPosition[ j ] - learningRate * gradient[ j ];
+    newPosition[j] = currentPosition[j] - learningRate * gradient[j];
   }
 
 } // end ThreadedAdvanceOneStep()

@@ -18,4 +18,4 @@
 
 #include "elxRandomSampler.h"
 
-elxInstallMacro( RandomSampler );
+elxInstallMacro(RandomSampler);

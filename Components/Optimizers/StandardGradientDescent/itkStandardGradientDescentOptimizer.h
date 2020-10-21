@@ -62,23 +62,21 @@ namespace itk
  * \ingroup Optimizers
  */
 
-class StandardGradientDescentOptimizer :
-  public GradientDescentOptimizer2
+class StandardGradientDescentOptimizer : public GradientDescentOptimizer2
 {
 public:
-
   /** Standard ITK.*/
   typedef StandardGradientDescentOptimizer Self;
   typedef GradientDescentOptimizer2        Superclass;
 
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( StandardGradientDescentOptimizer, GradientDescentOptimizer2 );
+  itkTypeMacro(StandardGradientDescentOptimizer, GradientDescentOptimizer2);
 
   /** Typedefs inherited from the superclass. */
   typedef Superclass::MeasureType               MeasureType;
@@ -91,58 +89,62 @@ public:
   typedef Superclass::StopConditionType         StopConditionType;
 
   /** Set/Get a. */
-  itkSetMacro( Param_a, double );
-  itkGetConstMacro( Param_a, double );
+  itkSetMacro(Param_a, double);
+  itkGetConstMacro(Param_a, double);
 
   /** Set/Get A. */
-  itkSetMacro( Param_A, double );
-  itkGetConstMacro( Param_A, double );
+  itkSetMacro(Param_A, double);
+  itkGetConstMacro(Param_A, double);
 
   /** Set/Get alpha. */
-  itkSetMacro( Param_alpha, double );
-  itkGetConstMacro( Param_alpha, double );
+  itkSetMacro(Param_alpha, double);
+  itkGetConstMacro(Param_alpha, double);
 
   /** Sets a new LearningRate before calling the Superclass'
    * implementation, and updates the current time. */
-  void AdvanceOneStep( void ) override;
+  void
+  AdvanceOneStep(void) override;
 
   /** Set current time to 0 and call superclass' implementation. */
-  void StartOptimization( void ) override;
+  void
+  StartOptimization(void) override;
 
   /** Set/Get the initial time. Should be >=0. This function is
    * superfluous, since Param_A does effectively the same.
    * However, in inheriting classes, like the AcceleratedGradientDescent
    * the initial time may have a different function than Param_A.
    * Default: 0.0 */
-  itkSetMacro( InitialTime, double );
-  itkGetConstMacro( InitialTime, double );
+  itkSetMacro(InitialTime, double);
+  itkGetConstMacro(InitialTime, double);
 
   /** Get the current time. This equals the CurrentIteration in this base class
    * but may be different in inheriting classes, such as the AccelerateGradientDescent */
-  itkGetConstMacro( CurrentTime, double );
+  itkGetConstMacro(CurrentTime, double);
 
   /** Set the current time to the initial time. This can be useful
    * to 'reset' the optimisation, for example if you changed the
    * cost function while optimisation. Be careful with this function. */
-  virtual void ResetCurrentTimeToInitialTime( void )
+  virtual void
+  ResetCurrentTimeToInitialTime(void)
   {
     this->m_CurrentTime = this->m_InitialTime;
   }
 
 
 protected:
-
   StandardGradientDescentOptimizer();
   ~StandardGradientDescentOptimizer() override {}
 
   /** Function to compute the parameter at time/iteration k. */
-  virtual double Compute_a( double k ) const;
+  virtual double
+  Compute_a(double k) const;
 
   /** Function to update the current time
    * This function just increments the CurrentTime by 1.
    * Inheriting functions may implement something smarter,
    * for example, dependent on the progress */
-  virtual void UpdateCurrentTime( void );
+  virtual void
+  UpdateCurrentTime(void);
 
   /** The current time, which serves as input for Compute_a */
   double m_CurrentTime;
@@ -151,9 +153,9 @@ protected:
   bool m_UseConstantStep;
 
 private:
-
-  StandardGradientDescentOptimizer( const Self & ); // purposely not implemented
-  void operator=( const Self & );                   // purposely not implemented
+  StandardGradientDescentOptimizer(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /**Parameters, as described by Spall.*/
   double m_Param_a;
@@ -162,7 +164,6 @@ private:
 
   /** Settings */
   double m_InitialTime;
-
 };
 
 } // end namespace itk

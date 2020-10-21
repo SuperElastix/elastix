@@ -34,21 +34,21 @@ namespace itk
  *
  */
 
-template< class TFixedImage, class TMovingImage,
-class TFixedFeatureImage = TFixedImage, class TMovingFeatureImage = TMovingImage >
-class ImageToImageMetricWithFeatures :
-  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+template <class TFixedImage,
+          class TMovingImage,
+          class TFixedFeatureImage = TFixedImage,
+          class TMovingFeatureImage = TMovingImage>
+class ImageToImageMetricWithFeatures : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef ImageToImageMetricWithFeatures                          Self;
-  typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage > Superclass;
-  typedef SmartPointer< Self >                                    Pointer;
-  typedef SmartPointer< const Self >                              ConstPointer;
+  typedef ImageToImageMetricWithFeatures                        Self;
+  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
+  typedef SmartPointer<Self>                                    Pointer;
+  typedef SmartPointer<const Self>                              ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageToImageMetricWithFeatures, AdvancedImageToImageMetric );
+  itkTypeMacro(ImageToImageMetricWithFeatures, AdvancedImageToImageMetric);
 
   /** Typedefs from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType    CoordinateRepresentationType;
@@ -94,125 +94,142 @@ public:
   typedef typename Superclass::MovingImageLimiterOutputType    MovingImageLimiterOutputType;
 
   /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
+  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
   /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedefs for the feature images. */
   typedef TFixedFeatureImage                       FixedFeatureImageType;
   typedef typename FixedFeatureImageType::Pointer  FixedFeatureImagePointer;
   typedef TMovingFeatureImage                      MovingFeatureImageType;
   typedef typename MovingFeatureImageType::Pointer MovingFeatureImagePointer;
-  typedef std::vector< FixedFeatureImagePointer >  FixedFeatureImageVectorType;
-  typedef std::vector< MovingFeatureImagePointer > MovingFeatureImageVectorType;
+  typedef std::vector<FixedFeatureImagePointer>    FixedFeatureImageVectorType;
+  typedef std::vector<MovingFeatureImagePointer>   MovingFeatureImageVectorType;
 
   /** Typedefs for the feature images interpolators. */
-  typedef InterpolateImageFunction< FixedFeatureImageType, double >  FixedFeatureInterpolatorType;
-  typedef InterpolateImageFunction< MovingFeatureImageType, double > MovingFeatureInterpolatorType;
-  typedef typename FixedFeatureInterpolatorType::Pointer             FixedFeatureInterpolatorPointer;
-  typedef typename MovingFeatureInterpolatorType::Pointer            MovingFeatureInterpolatorPointer;
-  typedef std::vector< FixedFeatureInterpolatorPointer >             FixedFeatureInterpolatorVectorType;
-  typedef std::vector< MovingFeatureInterpolatorPointer >            MovingFeatureInterpolatorVectorType;
+  typedef InterpolateImageFunction<FixedFeatureImageType, double>  FixedFeatureInterpolatorType;
+  typedef InterpolateImageFunction<MovingFeatureImageType, double> MovingFeatureInterpolatorType;
+  typedef typename FixedFeatureInterpolatorType::Pointer           FixedFeatureInterpolatorPointer;
+  typedef typename MovingFeatureInterpolatorType::Pointer          MovingFeatureInterpolatorPointer;
+  typedef std::vector<FixedFeatureInterpolatorPointer>             FixedFeatureInterpolatorVectorType;
+  typedef std::vector<MovingFeatureInterpolatorPointer>            MovingFeatureInterpolatorVectorType;
 
   /** Set the number of fixed feature images. */
-  void SetNumberOfFixedFeatureImages( unsigned int arg );
+  void
+  SetNumberOfFixedFeatureImages(unsigned int arg);
 
   /** Get the number of fixed feature images. */
-  itkGetConstMacro( NumberOfFixedFeatureImages, unsigned int );
+  itkGetConstMacro(NumberOfFixedFeatureImages, unsigned int);
 
   /** Functions to set the fixed feature images. */
-  void SetFixedFeatureImage( unsigned int i, FixedFeatureImageType * im );
+  void
+  SetFixedFeatureImage(unsigned int i, FixedFeatureImageType * im);
 
-  void SetFixedFeatureImage( FixedFeatureImageType * im )
+  void
+  SetFixedFeatureImage(FixedFeatureImageType * im)
   {
-    this->SetFixedFeatureImage( 0, im );
+    this->SetFixedFeatureImage(0, im);
   }
 
 
   /** Functions to get the fixed feature images. */
-  const FixedFeatureImageType * GetFixedFeatureImage( unsigned int i ) const;
+  const FixedFeatureImageType *
+  GetFixedFeatureImage(unsigned int i) const;
 
-  const FixedFeatureImageType * GetFixedFeatureImage( void ) const
+  const FixedFeatureImageType *
+  GetFixedFeatureImage(void) const
   {
-    return this->GetFixedFeatureImage( 0 );
+    return this->GetFixedFeatureImage(0);
   }
 
 
   /** Functions to set the fixed feature interpolators. */
-  void SetFixedFeatureInterpolator( unsigned int i, FixedFeatureInterpolatorType * interpolator );
+  void
+  SetFixedFeatureInterpolator(unsigned int i, FixedFeatureInterpolatorType * interpolator);
 
-  void SetFixedFeatureInterpolator( FixedFeatureInterpolatorType * interpolator )
+  void
+  SetFixedFeatureInterpolator(FixedFeatureInterpolatorType * interpolator)
   {
-    this->SetFixedFeatureInterpolator( 0, interpolator );
+    this->SetFixedFeatureInterpolator(0, interpolator);
   }
 
 
   /** Functions to get the fixed feature interpolators. */
-  const FixedFeatureInterpolatorType * GetFixedFeatureInterpolator( unsigned int i ) const;
+  const FixedFeatureInterpolatorType *
+  GetFixedFeatureInterpolator(unsigned int i) const;
 
-  const FixedFeatureInterpolatorType * GetFixedFeatureInterpolator( void ) const
+  const FixedFeatureInterpolatorType *
+  GetFixedFeatureInterpolator(void) const
   {
-    return this->GetFixedFeatureInterpolator( 0 );
+    return this->GetFixedFeatureInterpolator(0);
   }
 
 
   /** Set the number of moving feature images. */
-  void SetNumberOfMovingFeatureImages( unsigned int arg );
+  void
+  SetNumberOfMovingFeatureImages(unsigned int arg);
 
   /** Get the number of moving feature images. */
-  itkGetConstMacro( NumberOfMovingFeatureImages, unsigned int );
+  itkGetConstMacro(NumberOfMovingFeatureImages, unsigned int);
 
   /** Functions to set the moving feature images. */
-  void SetMovingFeatureImage( unsigned int i, MovingFeatureImageType * im );
+  void
+  SetMovingFeatureImage(unsigned int i, MovingFeatureImageType * im);
 
-  void SetMovingFeatureImage( MovingFeatureImageType * im )
+  void
+  SetMovingFeatureImage(MovingFeatureImageType * im)
   {
-    this->SetMovingFeatureImage( 0, im );
+    this->SetMovingFeatureImage(0, im);
   }
 
 
   /** Functions to get the moving feature images. */
-  const MovingFeatureImageType * GetMovingFeatureImage( unsigned int i ) const;
+  const MovingFeatureImageType *
+  GetMovingFeatureImage(unsigned int i) const;
 
-  const MovingFeatureImageType * GetMovingFeatureImage( void ) const
+  const MovingFeatureImageType *
+  GetMovingFeatureImage(void) const
   {
-    return this->GetMovingFeatureImage( 0 );
+    return this->GetMovingFeatureImage(0);
   }
 
 
   /** Functions to set the moving feature interpolators. */
-  void SetMovingFeatureInterpolator( unsigned int i, MovingFeatureInterpolatorType * interpolator );
+  void
+  SetMovingFeatureInterpolator(unsigned int i, MovingFeatureInterpolatorType * interpolator);
 
-  void SetMovingFeatureInterpolator( MovingFeatureInterpolatorType * interpolator )
+  void
+  SetMovingFeatureInterpolator(MovingFeatureInterpolatorType * interpolator)
   {
-    this->SetMovingFeatureInterpolator( 0, interpolator );
+    this->SetMovingFeatureInterpolator(0, interpolator);
   }
 
 
   /** Functions to get the moving feature interpolators. */
-  const MovingFeatureInterpolatorType * GetMovingFeatureInterpolator( unsigned int i ) const;
+  const MovingFeatureInterpolatorType *
+  GetMovingFeatureInterpolator(unsigned int i) const;
 
-  const MovingFeatureInterpolatorType * GetMovingFeatureInterpolator( void ) const
+  const MovingFeatureInterpolatorType *
+  GetMovingFeatureInterpolator(void) const
   {
-    return this->GetMovingFeatureInterpolator( 0 );
+    return this->GetMovingFeatureInterpolator(0);
   }
 
 
   /** Initialize the metric. */
-  virtual void Initialize( void );
+  virtual void
+  Initialize(void);
 
 protected:
-
   ImageToImageMetricWithFeatures();
   virtual ~ImageToImageMetricWithFeatures() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const;
 
   typedef typename Superclass::BSplineInterpolatorType        BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::Pointer           BSplineInterpolatorPointer;
-  typedef std::vector< BSplineInterpolatorPointer >           BSplineFeatureInterpolatorVectorType;
+  typedef std::vector<BSplineInterpolatorPointer>             BSplineFeatureInterpolatorVectorType;
   typedef typename Superclass::FixedImagePointType            FixedImagePointType;
   typedef typename Superclass::MovingImagePointType           MovingImagePointType;
   typedef typename Superclass::MovingImageDerivativeType      MovingImageDerivativeType;
@@ -226,26 +243,26 @@ protected:
   FixedFeatureInterpolatorVectorType  m_FixedFeatureInterpolators;
   MovingFeatureInterpolatorVectorType m_MovingFeatureInterpolators;
 
-  std::vector< bool >                  m_FeatureInterpolatorsIsBSpline;
+  std::vector<bool>                    m_FeatureInterpolatorsIsBSpline;
   bool                                 m_FeatureInterpolatorsAreBSpline;
   BSplineFeatureInterpolatorVectorType m_MovingFeatureBSplineInterpolators;
 
   /** Initialize variables for image derivative computation; this
    * method is called by Initialize.
    */
-  virtual void CheckForBSplineFeatureInterpolators( void );
+  virtual void
+  CheckForBSplineFeatureInterpolators(void);
 
 private:
-
-  ImageToImageMetricWithFeatures( const Self & ); // purposely not implemented
-  void operator=( const Self & );                 // purposely not implemented
-
+  ImageToImageMetricWithFeatures(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageToImageMetricWithFeatures.hxx"
+#  include "itkImageToImageMetricWithFeatures.hxx"
 #endif
 
 #endif // end #ifndef __itkImageToImageMetricWithFeatures_h

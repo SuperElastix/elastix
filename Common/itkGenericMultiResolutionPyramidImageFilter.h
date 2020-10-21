@@ -113,52 +113,45 @@ namespace itk
  * \ingroup PyramidImageFilter MultiThreaded Streamed
  * \ingroup ITKRegistrationCommon
  */
-template< class TInputImage, class TOutputImage, class TPrecisionType = double >
-class GenericMultiResolutionPyramidImageFilter :
-  public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
+template <class TInputImage, class TOutputImage, class TPrecisionType = double>
+class GenericMultiResolutionPyramidImageFilter : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 {
 public:
-
   /** Standard class typedefs. */
-  typedef GenericMultiResolutionPyramidImageFilter Self;
-  typedef MultiResolutionPyramidImageFilter<
-    TInputImage, TOutputImage >           Superclass;
-  typedef typename Superclass::Superclass SuperSuperclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef GenericMultiResolutionPyramidImageFilter                     Self;
+  typedef MultiResolutionPyramidImageFilter<TInputImage, TOutputImage> Superclass;
+  typedef typename Superclass::Superclass                              SuperSuperclass;
+  typedef SmartPointer<Self>                                           Pointer;
+  typedef SmartPointer<const Self>                                     ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GenericMultiResolutionPyramidImageFilter,
-    MultiResolutionPyramidImageFilter );
+  itkTypeMacro(GenericMultiResolutionPyramidImageFilter, MultiResolutionPyramidImageFilter);
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro( ImageDimension, unsigned int,
-    TInputImage::ImageDimension );
-  itkStaticConstMacro( OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
+  itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Inherit types from Superclass. */
-  typedef typename Superclass::ScheduleType                   ScheduleType;
-  typedef typename Superclass::InputImageType                 InputImageType;
-  typedef typename Superclass::OutputImageType                OutputImageType;
-  typedef typename Superclass::InputImagePointer              InputImagePointer;
-  typedef typename Superclass::OutputImagePointer             OutputImagePointer;
-  typedef typename Superclass::InputImageConstPointer         InputImageConstPointer;
-  typedef typename Superclass::InputImageType::SpacingType    SpacingType;
-  typedef typename InputImageType::PixelType                  PixelType;
-  typedef typename NumericTraits< PixelType >::ScalarRealType ScalarRealType;
+  typedef typename Superclass::ScheduleType                 ScheduleType;
+  typedef typename Superclass::InputImageType               InputImageType;
+  typedef typename Superclass::OutputImageType              OutputImageType;
+  typedef typename Superclass::InputImagePointer            InputImagePointer;
+  typedef typename Superclass::OutputImagePointer           OutputImagePointer;
+  typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
+  typedef typename Superclass::InputImageType::SpacingType  SpacingType;
+  typedef typename InputImageType::PixelType                PixelType;
+  typedef typename NumericTraits<PixelType>::ScalarRealType ScalarRealType;
 
   /** SmoothingScheduleType typedef support. */
-  typedef Array2D< ScalarRealType > SmoothingScheduleType;
-  typedef ScheduleType              RescaleScheduleType;
+  typedef Array2D<ScalarRealType> SmoothingScheduleType;
+  typedef ScheduleType            RescaleScheduleType;
 
   /** Define the type for the sigma array. */
-  typedef FixedArray< ScalarRealType,
-    itkGetStaticConstMacro( ImageDimension ) > SigmaArrayType;
-  typedef SigmaArrayType RescaleFactorArrayType;
+  typedef FixedArray<ScalarRealType, itkGetStaticConstMacro(ImageDimension)> SigmaArrayType;
+  typedef SigmaArrayType                                                     RescaleFactorArrayType;
 
   /** Set a multi-resolution schedule. The input schedule must have only
    * ImageDimension number of columns and NumberOfLevels number of rows. For
@@ -167,7 +160,8 @@ public:
    * this condition. All shrink factors less than one will also be clamped
    * to the value of 1.
    */
-  void SetSchedule( const ScheduleType & schedule ) override;
+  void
+  SetSchedule(const ScheduleType & schedule) override;
 
   /** Set a multi-resolution rescale schedule. The input schedule must have only
    * ImageDimension number of columns and NumberOfLevels number of rows. For
@@ -176,13 +170,16 @@ public:
    * this condition. All shrink factors less than one will also be clamped
    * to the value of 1.
    */
-  virtual void SetRescaleSchedule( const RescaleScheduleType & schedule );
+  virtual void
+  SetRescaleSchedule(const RescaleScheduleType & schedule);
 
   /** Set a multi-resolution rescale schedule with ones. */
-  virtual void SetRescaleScheduleToUnity( void );
+  virtual void
+  SetRescaleScheduleToUnity(void);
 
   /** Get the multi-resolution rescale schedule. */
-  const RescaleScheduleType & GetRescaleSchedule( void ) const
+  const RescaleScheduleType &
+  GetRescaleSchedule(void) const
   {
     return this->m_Schedule;
   }
@@ -192,50 +189,53 @@ public:
    * ImageDimension number of columns and NumberOfLevels number of rows.
    * All sigmas less than 0 will also be clamped to the value of 0.
    */
-  virtual void SetSmoothingSchedule( const SmoothingScheduleType & schedule );
+  virtual void
+  SetSmoothingSchedule(const SmoothingScheduleType & schedule);
 
   /** Set a multi-resolution rescale schedule with zeros. */
-  virtual void SetSmoothingScheduleToZero( void );
+  virtual void
+  SetSmoothingScheduleToZero(void);
 
   /** Get the multi-resolution smoothing schedule. */
-  itkGetConstReferenceMacro( SmoothingSchedule, SmoothingScheduleType );
+  itkGetConstReferenceMacro(SmoothingSchedule, SmoothingScheduleType);
 
   /** Set the number of multi-resolution levels. The matrices containing the
    * schedule will be resized accordingly. The schedules are populated with
    * default values.
    */
-  void SetNumberOfLevels( unsigned int num ) override;
+  void
+  SetNumberOfLevels(unsigned int num) override;
 
   /** Set the current multi-resolution levels. The current level is clamped to
    * a total number of levels.
    */
-  virtual void SetCurrentLevel( unsigned int level );
+  virtual void
+  SetCurrentLevel(unsigned int level);
 
   /** Get the current multi-resolution level. */
-  itkGetConstReferenceMacro( CurrentLevel, unsigned int );
+  itkGetConstReferenceMacro(CurrentLevel, unsigned int);
 
   /** Set a control on whether a current level will be used. */
-  virtual void SetComputeOnlyForCurrentLevel( const bool _arg );
+  virtual void
+  SetComputeOnlyForCurrentLevel(const bool _arg);
 
-  itkGetConstMacro( ComputeOnlyForCurrentLevel, bool );
-  itkBooleanMacro( ComputeOnlyForCurrentLevel );
+  itkGetConstMacro(ComputeOnlyForCurrentLevel, bool);
+  itkBooleanMacro(ComputeOnlyForCurrentLevel);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro( SameDimensionCheck,
-    ( Concept::SameDimension< ImageDimension, OutputImageDimension > ) );
-  itkConceptMacro( OutputHasNumericTraitsCheck,
-    ( Concept::HasNumericTraits< typename TOutputImage::PixelType > ) );
+  itkConceptMacro(SameDimensionCheck, (Concept::SameDimension<ImageDimension, OutputImageDimension>));
+  itkConceptMacro(OutputHasNumericTraitsCheck, (Concept::HasNumericTraits<typename TOutputImage::PixelType>));
   /** End concept checking */
 #endif
 
 protected:
-
   GenericMultiResolutionPyramidImageFilter();
   ~GenericMultiResolutionPyramidImageFilter() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** GenericMultiResolutionPyramidImageFilter may produce images which are of
    * different resolution and different pixel spacing than its input image.
@@ -244,23 +244,28 @@ protected:
    * pipeline execution model. The original documentation of this method is
    * below. \sa ProcessObject::GenerateOutputInformaton().
    */
-  void GenerateOutputInformation( void ) override;
+  void
+  GenerateOutputInformation(void) override;
 
   /** Given one output whose requested region has been set, this method sets
    * the requested region for the remaining output images. The original
    * documentation of this method is below. \sa
    * ProcessObject::GenerateOutputRequestedRegion().
    */
-  void GenerateOutputRequestedRegion( DataObject * output ) override;
+  void
+  GenerateOutputRequestedRegion(DataObject * output) override;
 
   /** Overwrite the Superclass implementation: no padding required. */
-  void GenerateInputRequestedRegion( void ) override;
+  void
+  GenerateInputRequestedRegion(void) override;
 
   /** Generate the output data. */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
   /** Release the output data when the current level is used. */
-  void ReleaseOutputs( void );
+  void
+  ReleaseOutputs(void);
 
   SmoothingScheduleType m_SmoothingSchedule;
   unsigned int          m_CurrentLevel;
@@ -268,97 +273,101 @@ protected:
   bool                  m_SmoothingScheduleDefined;
 
 private:
-
   /** Typedef for smoother. Smooth always happens first, then only from
    * InputImageType to OutputImageType is possible.
    */
-  typedef SmoothingRecursiveGaussianImageFilter<
-    InputImageType, OutputImageType > SmootherType;
+  typedef SmoothingRecursiveGaussianImageFilter<InputImageType, OutputImageType> SmootherType;
 
   /** Typedefs for shrinker or resample. If smoother has not been used, then
    * we have to use InputImageType to OutputImageType,
    * otherwise OutputImageType to OutputImageType.
    */
-  typedef ImageToImageFilter< OutputImageType, OutputImageType >
-    ImageToImageFilterSameTypes;
-  typedef ImageToImageFilter< InputImageType, OutputImageType >
-    ImageToImageFilterDifferentTypes;
+  typedef ImageToImageFilter<OutputImageType, OutputImageType> ImageToImageFilterSameTypes;
+  typedef ImageToImageFilter<InputImageType, OutputImageType>  ImageToImageFilterDifferentTypes;
 
   /** Smooth image at current level. Returns true if performed.
    * This method does not perform execution.
    */
-  bool SetupSmoother( const unsigned int level,
-    typename SmootherType::Pointer & smoother,
-    const InputImageConstPointer & input );
+  bool
+  SetupSmoother(const unsigned int               level,
+                typename SmootherType::Pointer & smoother,
+                const InputImageConstPointer &   input);
 
   /** Shrink or Resample image at current level. Returns 1 or 2 if performed,
    * 0 otherwise. This method does not perform execution.
    */
-  int SetupShrinkerOrResampler( const unsigned int level,
-    typename SmootherType::Pointer & smoother,
-    const bool sameType,
-    const InputImageConstPointer & input,
-    const OutputImagePointer & outputPtr,
-    typename ImageToImageFilterSameTypes::Pointer & rescaleSameTypes,
-    typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes );
+  int
+  SetupShrinkerOrResampler(const unsigned int                                   level,
+                           typename SmootherType::Pointer &                     smoother,
+                           const bool                                           sameType,
+                           const InputImageConstPointer &                       input,
+                           const OutputImagePointer &                           outputPtr,
+                           typename ImageToImageFilterSameTypes::Pointer &      rescaleSameTypes,
+                           typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes);
 
   /** Defines Shrink or Resample filters. */
-  void DefineShrinkerOrResampler(
-    const bool sameType,
-    const RescaleFactorArrayType & shrinkFactors,
-    const OutputImagePointer & outputPtr,
-    typename ImageToImageFilterSameTypes::Pointer & rescaleSameTypes,
-    typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes );
+  void
+  DefineShrinkerOrResampler(const bool                                           sameType,
+                            const RescaleFactorArrayType &                       shrinkFactors,
+                            const OutputImagePointer &                           outputPtr,
+                            typename ImageToImageFilterSameTypes::Pointer &      rescaleSameTypes,
+                            typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes);
 
   /** Initialize m_SmoothingSchedule to default values for backward compatibility. */
-  void SetSmoothingScheduleToDefault( void );
+  void
+  SetSmoothingScheduleToDefault(void);
 
   /** Checks whether we have to compute anything based on
    * m_ComputeOnlyForCurrentLevel and m_CurrentLevel.
    */
-  bool ComputeForCurrentLevel( const unsigned int level ) const;
+  bool
+  ComputeForCurrentLevel(const unsigned int level) const;
 
   /** Backward compatibility method to compute default sigma value. */
-  double GetDefaultSigma( const unsigned int level,
-    const unsigned int dim,
-    const unsigned int * factors,
-    const SpacingType & spacing ) const;
+  double
+  GetDefaultSigma(const unsigned int   level,
+                  const unsigned int   dim,
+                  const unsigned int * factors,
+                  const SpacingType &  spacing) const;
 
   /** Get sigmas from m_SmoothingSchedule for the level. */
-  void GetSigma( const unsigned int level,
-    SigmaArrayType & sigmaArray ) const;
+  void
+  GetSigma(const unsigned int level, SigmaArrayType & sigmaArray) const;
 
   /** Get shrink factors from m_Schedule for the level. */
-  void GetShrinkFactors( const unsigned int level,
-    RescaleFactorArrayType & shrinkFactors ) const;
+  void
+  GetShrinkFactors(const unsigned int level, RescaleFactorArrayType & shrinkFactors) const;
 
   /** Returns true if all elements of sigmaArray are zeros,
    * otherwise return false.
    */
-  bool AreSigmasAllZeros( const SigmaArrayType & sigmaArray ) const;
+  bool
+  AreSigmasAllZeros(const SigmaArrayType & sigmaArray) const;
 
   /** Returns true if all elements of rescaleFactorArray are ones,
    * otherwise return false.
    */
-  bool AreRescaleFactorsAllOnes( const RescaleFactorArrayType & rescaleFactorArray ) const;
+  bool
+  AreRescaleFactorsAllOnes(const RescaleFactorArrayType & rescaleFactorArray) const;
 
   /** Returns true if smooth has been used in pipeline, otherwise return false. */
-  bool IsSmoothingUsed( void ) const;
+  bool
+  IsSmoothingUsed(void) const;
 
   /** Returns true if rescale has been used in pipeline, otherwise return false. */
-  bool IsRescaleUsed( void ) const;
+  bool
+  IsRescaleUsed(void) const;
 
 private:
-
-  GenericMultiResolutionPyramidImageFilter( const Self & ); // purposely not implemented
-  void operator=( const Self & );                           // purposely not implemented
-
+  GenericMultiResolutionPyramidImageFilter(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGenericMultiResolutionPyramidImageFilter.hxx"
+#  include "itkGenericMultiResolutionPyramidImageFilter.hxx"
 #endif
 
 #endif

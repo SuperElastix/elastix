@@ -37,67 +37,51 @@
 #include <vector>
 
 int
-main( int argc, char ** argv )
+main(int argc, char ** argv)
 {
   elastix::BaseComponent::InitializeElastixExecutable();
-  assert( ! elastix::BaseComponent::IsElastixLibrary() );
+  assert(!elastix::BaseComponent::IsElastixLibrary());
 
   /** Check if "--help" or "--version" was asked for. */
-  if( argc == 1 )
+  if (argc == 1)
   {
     std::cout << "Use \"elastix --help\" for information about elastix-usage." << std::endl;
     return 0;
   }
-  else if( argc == 2 )
+  else if (argc == 2)
   {
-    std::string argument( argv[ 1 ] );
-    if( argument == "-help" || argument == "--help" || argument == "-h" )
+    std::string argument(argv[1]);
+    if (argument == "-help" || argument == "--help" || argument == "-h")
     {
       PrintHelp();
       return 0;
     }
-    else if( argument == "--version" )
+    else if (argument == "--version")
     {
       std::cout << "elastix version: " ELASTIX_VERSION_STRING << std::endl;
       return 0;
     }
     else if (argument == "--extended-version")
     {
-      std::cout
-        << "elastix version: " ELASTIX_VERSION_STRING
-        << "\nITK version: "
-        << ITK_VERSION_MAJOR << '.'
-        << ITK_VERSION_MINOR << '.'
-        << ITK_VERSION_PATCH
-        << "\nBuild date: "
-        << __DATE__
-        << ' '
-        << __TIME__
+      std::cout << "elastix version: " ELASTIX_VERSION_STRING << "\nITK version: " << ITK_VERSION_MAJOR << '.'
+                << ITK_VERSION_MINOR << '.' << ITK_VERSION_PATCH << "\nBuild date: " << __DATE__ << ' ' << __TIME__
 #ifdef _MSC_FULL_VER
-        << "\nCompiler: Visual C++ version "
-        << _MSC_FULL_VER << '.'
-        << _MSC_BUILD
+                << "\nCompiler: Visual C++ version " << _MSC_FULL_VER << '.' << _MSC_BUILD
 #endif
 #ifdef __clang__
-        << "\nCompiler: Clang"
-#ifdef __VERSION__
-        << " version "
-        << __VERSION__
-#endif
+                << "\nCompiler: Clang"
+#  ifdef __VERSION__
+                << " version " << __VERSION__
+#  endif
 #endif
 #if defined(__GNUC__)
-        << "\nCompiler: GCC"
-#ifdef __VERSION__
-        << " version "
-        << __VERSION__
+                << "\nCompiler: GCC"
+#  ifdef __VERSION__
+                << " version " << __VERSION__
+#  endif
 #endif
-#endif
-        << "\nMemory address size: "
-        << std::numeric_limits<std::size_t>::digits
-        << "-bit"
-        << "\nCMake version: "
-        << ELX_CMAKE_VERSION
-        << std::endl;
+                << "\nMemory address size: " << std::numeric_limits<std::size_t>::digits << "-bit"
+                << "\nCMake version: " << ELX_CMAKE_VERSION << std::endl;
       return 0;
     }
     else
@@ -119,44 +103,46 @@ main( int argc, char ** argv )
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
-  ArgumentMapType            argMap;
-  std::queue< std::string >  parameterFileList;
-  std::string                outFolder;
+  ArgumentMapType         argMap;
+  std::queue<std::string> parameterFileList;
+  std::string             outFolder;
 
   /** Put command line parameters into parameterFileList. */
-  for( unsigned int i = 1; static_cast< long >( i ) < ( argc - 1 ); i += 2 )
+  for (unsigned int i = 1; static_cast<long>(i) < (argc - 1); i += 2)
   {
-    std::string key( argv[ i ] );
-    std::string value( argv[ i + 1 ] );
+    std::string key(argv[i]);
+    std::string value(argv[i + 1]);
 
-    if( key == "-p" )
+    if (key == "-p")
     {
       /** Queue the ParameterFileNames. */
-      parameterFileList.push( value );
+      parameterFileList.push(value);
       /** The different '-p' are stored in the argMap, with
        * keys p(1), p(2), etc. */
       std::ostringstream tempPname;
       tempPname << "-p(" << parameterFileList.size() << ")";
       std::string tempPName = tempPname.str();
-      argMap.insert( ArgumentMapEntryType( tempPName, value ) );
+      argMap.insert(ArgumentMapEntryType(tempPName, value));
     }
     else
     {
-      if( key == "-out" )
+      if (key == "-out")
       {
         /** Make sure that last character of the output folder equals a '/' or '\'. */
-        const char last = value[ value.size() - 1 ];
-        if( last != '/' && last != '\\' ) { value.append( "/" ); }
-        value = itksys::SystemTools::ConvertToOutputPath( value );
+        const char last = value[value.size() - 1];
+        if (last != '/' && last != '\\')
+        {
+          value.append("/");
+        }
+        value = itksys::SystemTools::ConvertToOutputPath(value);
 
         /** Note that on Windows, in case the output folder contains a space,
          * the path name is double quoted by ConvertToOutputPath, which is undesirable.
          * So, we remove these quotes again.
          */
-        if( itksys::SystemTools::StringStartsWith( value, "\"" )
-          && itksys::SystemTools::StringEndsWith(   value, "\"" ) )
+        if (itksys::SystemTools::StringStartsWith(value, "\"") && itksys::SystemTools::StringEndsWith(value, "\""))
         {
-          value = value.substr( 1, value.length() - 2 );
+          value = value.substr(1, value.length() - 2);
         }
 
         /** Save this information. */
@@ -165,9 +151,9 @@ main( int argc, char ** argv )
       } // end if key == "-out"
 
       /** Attempt to save the arguments in the ArgumentMap. */
-      if( argMap.count( key ) == 0 )
+      if (argMap.count(key) == 0)
       {
-        argMap.insert( ArgumentMapEntryType( key, value ) );
+        argMap.insert(ArgumentMapEntryType(key, value));
       }
       else
       {
@@ -182,22 +168,22 @@ main( int argc, char ** argv )
   } // end for loop
 
   /** The argv0 argument, required for finding the component.dll/so's. */
-  argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] ) );
+  argMap.insert(ArgumentMapEntryType("-argv0", argv[0]));
 
   int returndummy{};
 
   /** Check if at least once the option "-p" is given. */
-  if( parameterFileList.empty() )
+  if (parameterFileList.empty())
   {
     std::cerr << "ERROR: No CommandLine option \"-p\" given!" << std::endl;
     returndummy |= -1;
   }
 
   /** Check if the -out option is given. */
-  if( ! outFolder.empty() )
+  if (!outFolder.empty())
   {
     /** Check if the output directory exists. */
-    if( ! itksys::SystemTools::FileIsDirectory( outFolder ) )
+    if (!itksys::SystemTools::FileIsDirectory(outFolder))
     {
       std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl;
       std::cerr << "You are responsible for creating it." << std::endl;
@@ -207,8 +193,8 @@ main( int argc, char ** argv )
     {
       /** Setup xout. */
       const std::string logFileName = outFolder + "elastix.log";
-      const int returndummy2{ elx::xoutSetup(logFileName.c_str(), true, true) };
-      if( returndummy2 != 0 )
+      const int         returndummy2{ elx::xoutSetup(logFileName.c_str(), true, true) };
+      if (returndummy2 != 0)
       {
         std::cerr << "ERROR while setting up xout." << std::endl;
       }
@@ -222,7 +208,7 @@ main( int argc, char ** argv )
   }
 
   /** Stop if some fatal errors occurred. */
-  if( returndummy != 0 )
+  if (returndummy != 0)
   {
     return returndummy;
   }
@@ -235,26 +221,23 @@ main( int argc, char ** argv )
   elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
   /** Print where elastix was run. */
-  elxout << "which elastix:   " << argv[ 0 ] << std::endl;
+  elxout << "which elastix:   " << argv[0] << std::endl;
   itksys::SystemInformation info;
   info.RunCPUCheck();
   info.RunOSCheck();
   info.RunMemoryCheck();
   elxout << "elastix runs at: " << info.GetHostname() << std::endl;
-  elxout << "  " << info.GetOSName() << " "
-         << info.GetOSRelease() << ( info.Is64Bits() ? " (x64), " : ", " )
+  elxout << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
          << info.GetOSVersion() << std::endl;
-  elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and "
-         << info.GetNumberOfPhysicalCPU() << " cores @ "
-         << static_cast< unsigned int >( info.GetProcessorClockFrequency() )
-         << " MHz." << std::endl;
+  elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
+         << " cores @ " << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz." << std::endl;
 
 
-  ObjectPointer              transform            = nullptr;
-  DataObjectContainerPointer fixedImageContainer  = nullptr;
+  ObjectPointer              transform = nullptr;
+  DataObjectContainerPointer fixedImageContainer = nullptr;
   DataObjectContainerPointer movingImageContainer = nullptr;
-  DataObjectContainerPointer fixedMaskContainer   = nullptr;
-  DataObjectContainerPointer movingMaskContainer  = nullptr;
+  DataObjectContainerPointer fixedMaskContainer = nullptr;
+  DataObjectContainerPointer movingMaskContainer = nullptr;
   FlatDirectionCosinesType   fixedImageOriginalDirection;
 
   /**
@@ -266,34 +249,35 @@ main( int argc, char ** argv )
   const auto nrOfParameterFiles = parameterFileList.size();
   assert(nrOfParameterFiles <= UINT_MAX);
 
-  for( unsigned i{}; i < static_cast<unsigned>(nrOfParameterFiles); ++i )
+  for (unsigned i{}; i < static_cast<unsigned>(nrOfParameterFiles); ++i)
   {
     /** Create another instance of ElastixMain. */
     const auto elastixMain = ElastixMainType::New();
 
     /** Set stuff we get from a former registration. */
-    elastixMain->SetInitialTransform( transform );
-    elastixMain->SetFixedImageContainer( fixedImageContainer );
-    elastixMain->SetMovingImageContainer( movingImageContainer );
-    elastixMain->SetFixedMaskContainer( fixedMaskContainer );
-    elastixMain->SetMovingMaskContainer( movingMaskContainer );
-    elastixMain->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
+    elastixMain->SetInitialTransform(transform);
+    elastixMain->SetFixedImageContainer(fixedImageContainer);
+    elastixMain->SetMovingImageContainer(movingImageContainer);
+    elastixMain->SetFixedMaskContainer(fixedMaskContainer);
+    elastixMain->SetMovingMaskContainer(movingMaskContainer);
+    elastixMain->SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirection);
 
     /** Set the current elastix-level. */
-    elastixMain->SetElastixLevel( i );
-    elastixMain->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
+    elastixMain->SetElastixLevel(i);
+    elastixMain->SetTotalNumberOfElastixLevels(nrOfParameterFiles);
 
     /** Get the argMap entry for the parameter file, and exchange its file name
      * with the first file name in the list.
      */
-    std::string& parameterFileName = argMap[ "-p" ];
-    parameterFileName.swap( parameterFileList.front() );
+    std::string & parameterFileName = argMap["-p"];
+    parameterFileName.swap(parameterFileList.front());
     parameterFileList.pop();
 
     /** Print a start message. */
-    elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
-    elxout << "Running elastix with parameter file " << i
-           << ": \"" << parameterFileName << "\".\n" << std::endl;
+    elxout << "-------------------------------------------------------------------------"
+           << "\n"
+           << std::endl;
+    elxout << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\".\n" << std::endl;
 
     /** Declare a timer, start it and print the start time. */
     itk::TimeProbe timer;
@@ -301,53 +285,55 @@ main( int argc, char ** argv )
     elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
 
     /** Start registration. */
-    returndummy = elastixMain->Run( argMap );
+    returndummy = elastixMain->Run(argMap);
 
     /** Check for errors. */
-    if( returndummy != 0 )
+    if (returndummy != 0)
     {
-      xl::xout[ "error" ] << "Errors occurred!" << std::endl;
+      xl::xout["error"] << "Errors occurred!" << std::endl;
       return returndummy;
     }
 
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform                   = elastixMain->GetModifiableFinalTransform();
-    fixedImageContainer         = elastixMain->GetModifiableFixedImageContainer();
-    movingImageContainer        = elastixMain->GetModifiableMovingImageContainer();
-    fixedMaskContainer          = elastixMain->GetModifiableFixedMaskContainer();
-    movingMaskContainer         = elastixMain->GetModifiableMovingMaskContainer();
+    transform = elastixMain->GetModifiableFinalTransform();
+    fixedImageContainer = elastixMain->GetModifiableFixedImageContainer();
+    movingImageContainer = elastixMain->GetModifiableMovingImageContainer();
+    fixedMaskContainer = elastixMain->GetModifiableFixedMaskContainer();
+    movingMaskContainer = elastixMain->GetModifiableMovingMaskContainer();
     fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
 
     /** Print a finish message. */
-    elxout << "Running elastix with parameter file " << i
-           << ": \"" << parameterFileName << "\", has finished.\n" << std::endl;
+    elxout << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\", has finished.\n"
+           << std::endl;
 
     /** Stop timer and print it. */
     timer.Stop();
     elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
-    elxout << "Time used for running elastix with this parameter file:\n  "
-           << ConvertSecondsToDHMS( timer.GetMean(), 1 ) << ".\n" << std::endl;
+    elxout << "Time used for running elastix with this parameter file:\n  " << ConvertSecondsToDHMS(timer.GetMean(), 1)
+           << ".\n"
+           << std::endl;
   } // end loop over registrations
 
-  elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
+  elxout << "-------------------------------------------------------------------------"
+         << "\n"
+         << std::endl;
 
   /** Stop totaltimer and print it. */
   totaltimer.Stop();
-  elxout << "Total time elapsed: "
-         << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
+  elxout << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n" << std::endl;
 
   /**
    * Make sure all the components that are defined in a Module (.DLL/.so)
    * are deleted before the modules are closed.
    */
 
-  transform            = nullptr;
-  fixedImageContainer  = nullptr;
+  transform = nullptr;
+  fixedImageContainer = nullptr;
   movingImageContainer = nullptr;
-  fixedMaskContainer   = nullptr;
-  movingMaskContainer  = nullptr;
+  fixedMaskContainer = nullptr;
+  movingMaskContainer = nullptr;
 
   /** Close the modules. */
   ElastixMainType::UnloadComponents();
@@ -363,7 +349,7 @@ main( int argc, char ** argv )
  */
 
 void
-PrintHelp( void )
+PrintHelp(void)
 {
   /** Print the version. */
   std::cout << "elastix version: " << ELASTIX_VERSION_STRING "\n\n";
@@ -373,15 +359,15 @@ PrintHelp( void )
   std::cout << "The registration-process is specified in the parameter file.\n";
   std::cout << "  --help, -h displays this message and exit\n";
   std::cout << "  --version  output version information and exit\n"
-    << "  --extended-version  output extended version information and exit\n" << std::endl;
+            << "  --extended-version  output extended version information and exit\n"
+            << std::endl;
 
   /** Mandatory arguments.*/
   std::cout << "Call elastix from the command line with mandatory arguments:\n";
   std::cout << "  -f        fixed image\n";
   std::cout << "  -m        moving image\n";
   std::cout << "  -out      output directory\n";
-  std::cout << "  -p        parameter file, elastix handles 1 or more \"-p\"\n"
-            << std::endl;
+  std::cout << "  -p        parameter file, elastix handles 1 or more \"-p\"\n" << std::endl;
 
   /** Optional arguments.*/
   std::cout << "Optional extra commands:\n";
@@ -390,17 +376,18 @@ PrintHelp( void )
   std::cout << "  -t0       parameter file for initial transform\n";
   std::cout << "  -priority set the process priority to high, abovenormal, normal (default),\n"
             << "            belownormal, or idle (Windows only option)\n";
-  std::cout << "  -threads  set the maximum number of threads of elastix\n"
-            << std::endl;
+  std::cout << "  -threads  set the maximum number of threads of elastix\n" << std::endl;
 
   /** The parameter file.*/
   std::cout << "The parameter-file must contain all the information "
-    "necessary for elastix to run properly. That includes which metric to "
-    "use, which optimizer, which transform, etc. It must also contain "
-    "information specific for the metric, optimizer, transform, etc. "
-    "For a usable parameter-file, see the website.\n" << std::endl;
+               "necessary for elastix to run properly. That includes which metric to "
+               "use, which optimizer, which transform, etc. It must also contain "
+               "information specific for the metric, optimizer, transform, etc. "
+               "For a usable parameter-file, see the website.\n"
+            << std::endl;
 
   std::cout << "Need further help?\nCheck the website http://elastix.isi.uu.nl, "
-    "or mail elastix@bigr.nl." << std::endl;
+               "or mail elastix@bigr.nl."
+            << std::endl;
 
 } // end PrintHelp()

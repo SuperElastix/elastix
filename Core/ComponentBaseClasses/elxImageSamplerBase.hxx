@@ -28,41 +28,39 @@ namespace elastix
  * ******************* BeforeEachResolutionBase ******************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-ImageSamplerBase< TElastix >
-::BeforeEachResolutionBase( void )
+ImageSamplerBase<TElastix>::BeforeEachResolutionBase(void)
 {
   /** Get the current resolution level. */
-  unsigned int level
-    = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler.
    * The "" argument means that no prefix is supplied.
    */
   bool newSamples = false;
-  this->m_Configuration->ReadParameter( newSamples,
-    "NewSamplesEveryIteration", "", level, 0, true );
+  this->m_Configuration->ReadParameter(newSamples, "NewSamplesEveryIteration", "", level, 0, true);
 
-  if( newSamples )
+  if (newSamples)
   {
     bool ret = this->GetAsITKBaseType()->SelectingNewSamplesOnUpdateSupported();
-    if( !ret )
+    if (!ret)
     {
-      xl::xout[ "warning" ]
-        << "WARNING: You want to select new samples every iteration,\n"
-        << "but the selected ImageSampler is not suited for that."
-        << std::endl;
+      xl::xout["warning"] << "WARNING: You want to select new samples every iteration,\n"
+                          << "but the selected ImageSampler is not suited for that." << std::endl;
     }
   }
 
   /** Temporary?: Use the multi-threaded version or not. */
-  std::string useMultiThread = this->m_Configuration->GetCommandLineArgument( "-mts" ); // mts: multi-threaded samplers
-  if( useMultiThread == "true" )
+  std::string useMultiThread = this->m_Configuration->GetCommandLineArgument("-mts"); // mts: multi-threaded samplers
+  if (useMultiThread == "true")
   {
-    this->GetAsITKBaseType()->SetUseMultiThread( true );
+    this->GetAsITKBaseType()->SetUseMultiThread(true);
   }
-  else { this->GetAsITKBaseType()->SetUseMultiThread( false ); }
+  else
+  {
+    this->GetAsITKBaseType()->SetUseMultiThread(false);
+  }
 
 } // end BeforeEachResolutionBase()
 

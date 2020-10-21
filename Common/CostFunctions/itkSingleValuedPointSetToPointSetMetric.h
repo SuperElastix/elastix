@@ -58,23 +58,21 @@ namespace itk
  *
  */
 
-template< class TFixedPointSet, class TMovingPointSet >
-class SingleValuedPointSetToPointSetMetric :
-  public SingleValuedCostFunction
+template <class TFixedPointSet, class TMovingPointSet>
+class SingleValuedPointSetToPointSetMetric : public SingleValuedCostFunction
 {
 public:
-
   /** Standard class typedefs. */
   typedef SingleValuedPointSetToPointSetMetric Self;
   typedef SingleValuedCostFunction             Superclass;
-  typedef SmartPointer< Self >                 Pointer;
-  typedef SmartPointer< const Self >           ConstPointer;
+  typedef SmartPointer<Self>                   Pointer;
+  typedef SmartPointer<const Self>             ConstPointer;
 
   /** Type used for representing point components  */
   typedef Superclass::ParametersValueType CoordinateRepresentationType;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( SingleValuedPointSetToPointSetMetric, SingleValuedCostFunction );
+  itkTypeMacro(SingleValuedPointSetToPointSetMetric, SingleValuedCostFunction);
 
   /** Typedefs. */
   typedef TFixedPointSet                                                FixedPointSetType;
@@ -87,29 +85,26 @@ public:
   typedef typename FixedPointSetType::PointDataContainer::ConstIterator PointDataIterator;
 
   /** Constants for the pointset dimensions. */
-  itkStaticConstMacro( FixedPointSetDimension, unsigned int,
-    TFixedPointSet::PointDimension );
-  itkStaticConstMacro( MovingPointSetDimension, unsigned int,
-    TMovingPointSet::PointDimension );
+  itkStaticConstMacro(FixedPointSetDimension, unsigned int, TFixedPointSet::PointDimension);
+  itkStaticConstMacro(MovingPointSetDimension, unsigned int, TMovingPointSet::PointDimension);
 
   /**  More typedefs. */
-  typedef AdvancedTransform< CoordinateRepresentationType,
-    itkGetStaticConstMacro( FixedPointSetDimension ),
-    itkGetStaticConstMacro( MovingPointSetDimension ) > TransformType;
+  typedef AdvancedTransform<CoordinateRepresentationType,
+                            itkGetStaticConstMacro(FixedPointSetDimension),
+                            itkGetStaticConstMacro(MovingPointSetDimension)>
+                                                  TransformType;
   typedef typename TransformType::Pointer         TransformPointer;
   typedef typename TransformType::InputPointType  InputPointType;
   typedef typename TransformType::OutputPointType OutputPointType;
   typedef typename TransformType::ParametersType  TransformParametersType;
   typedef typename TransformType::JacobianType    TransformJacobianType;
 
-  typedef SpatialObject<
-    itkGetStaticConstMacro( FixedPointSetDimension ) > FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer      FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer FixedImageMaskConstPointer;
-  typedef SpatialObject<
-    itkGetStaticConstMacro( MovingPointSetDimension ) >  MovingImageMaskType;
-  typedef typename MovingImageMaskType::Pointer      MovingImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer MovingImageMaskConstPointer;
+  typedef SpatialObject<itkGetStaticConstMacro(FixedPointSetDimension)>  FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer                           FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer                      FixedImageMaskConstPointer;
+  typedef SpatialObject<itkGetStaticConstMacro(MovingPointSetDimension)> MovingImageMaskType;
+  typedef typename MovingImageMaskType::Pointer                          MovingImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer                     MovingImageMaskConstPointer;
 
   /**  Type of the measure. */
   typedef Superclass::MeasureType            MeasureType;
@@ -121,63 +116,69 @@ public:
   typedef typename TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** Connect the fixed pointset.  */
-  itkSetConstObjectMacro( FixedPointSet, FixedPointSetType );
+  itkSetConstObjectMacro(FixedPointSet, FixedPointSetType);
 
   /** Get the fixed pointset. */
-  itkGetConstObjectMacro( FixedPointSet, FixedPointSetType );
+  itkGetConstObjectMacro(FixedPointSet, FixedPointSetType);
 
   /** Connect the moving pointset.  */
-  itkSetConstObjectMacro( MovingPointSet, MovingPointSetType );
+  itkSetConstObjectMacro(MovingPointSet, MovingPointSetType);
 
   /** Get the moving pointset. */
-  itkGetConstObjectMacro( MovingPointSet, MovingPointSetType );
+  itkGetConstObjectMacro(MovingPointSet, MovingPointSetType);
 
   /** Connect the Transform. */
-  itkSetObjectMacro( Transform, TransformType );
+  itkSetObjectMacro(Transform, TransformType);
 
   /** Get a pointer to the Transform.  */
-  itkGetConstObjectMacro( Transform, TransformType );
+  itkGetConstObjectMacro(Transform, TransformType);
 
   /** Set the parameters defining the Transform. */
-  void SetTransformParameters( const ParametersType & parameters ) const;
+  void
+  SetTransformParameters(const ParametersType & parameters) const;
 
   /** Return the number of parameters required by the transform. */
-  unsigned int GetNumberOfParameters( void ) const override
-  { return this->m_Transform->GetNumberOfParameters(); }
+  unsigned int
+  GetNumberOfParameters(void) const override
+  {
+    return this->m_Transform->GetNumberOfParameters();
+  }
 
   /** Initialize the Metric by making sure that all the components are
    *  present and plugged together correctly.
    */
-  virtual void Initialize( void );
+  virtual void
+  Initialize(void);
 
   /** Set the fixed mask. */
   // \todo: currently not used
-  itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType );
+  itkSetConstObjectMacro(FixedImageMask, FixedImageMaskType);
 
   /** Get the fixed mask. */
-  itkGetConstObjectMacro( FixedImageMask, FixedImageMaskType );
+  itkGetConstObjectMacro(FixedImageMask, FixedImageMaskType);
 
   /** Set the moving mask. */
-  itkSetConstObjectMacro( MovingImageMask, MovingImageMaskType );
+  itkSetConstObjectMacro(MovingImageMask, MovingImageMaskType);
 
   /** Get the moving mask. */
-  itkGetConstObjectMacro( MovingImageMask, MovingImageMaskType );
+  itkGetConstObjectMacro(MovingImageMask, MovingImageMaskType);
 
   /** Contains calls from GetValueAndDerivative that are thread-unsafe. */
-  virtual void BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const;
+  virtual void
+  BeforeThreadedGetValueAndDerivative(const TransformParametersType & parameters) const;
 
   /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
-  itkSetMacro( UseMetricSingleThreaded, bool );
-  itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
-  itkBooleanMacro( UseMetricSingleThreaded );
+  itkSetMacro(UseMetricSingleThreaded, bool);
+  itkGetConstReferenceMacro(UseMetricSingleThreaded, bool);
+  itkBooleanMacro(UseMetricSingleThreaded);
 
 protected:
-
   SingleValuedPointSetToPointSetMetric();
   ~SingleValuedPointSetToPointSetMetric() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
   FixedPointSetConstPointer   m_FixedPointSet;
@@ -192,16 +193,15 @@ protected:
   bool m_UseMetricSingleThreaded;
 
 private:
-
-  SingleValuedPointSetToPointSetMetric( const Self & ); // purposely not implemented
-  void operator=( const Self & );                       // purposely not implemented
-
+  SingleValuedPointSetToPointSetMetric(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSingleValuedPointSetToPointSetMetric.hxx"
+#  include "itkSingleValuedPointSetToPointSetMetric.hxx"
 #endif
 
 #endif

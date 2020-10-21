@@ -36,149 +36,141 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep >
-GPUInterpolatorCopier< TTypeList, NDimensions, TInterpolator, TOutputCoordRep >
-::GPUInterpolatorCopier()
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
+GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::GPUInterpolatorCopier()
 {
-  this->m_InputInterpolator     = nullptr;
-  this->m_Output                = nullptr;
-  this->m_ExplicitOutput        = nullptr;
+  this->m_InputInterpolator = nullptr;
+  this->m_Output = nullptr;
+  this->m_ExplicitOutput = nullptr;
   this->m_InternalTransformTime = 0;
-  this->m_ExplicitMode          = true;
+  this->m_ExplicitMode = true;
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep >
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
 void
-GPUInterpolatorCopier< TTypeList, NDimensions, TInterpolator, TOutputCoordRep >
-::Update( void )
+GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::Update(void)
 {
-  if( !this->m_InputInterpolator )
+  if (!this->m_InputInterpolator)
   {
-    itkExceptionMacro( << "Input Interpolator has not been connected" );
+    itkExceptionMacro(<< "Input Interpolator has not been connected");
     return;
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified
   const ModifiedTimeType t = this->m_InputInterpolator->GetMTime();
 
-  if( t == this->m_InternalTransformTime )
+  if (t == this->m_InternalTransformTime)
   {
     return; // No need to update
   }
-  else if( t > this->m_InternalTransformTime )
+  else if (t > this->m_InternalTransformTime)
   {
     // Cache the timestamp
     this->m_InternalTransformTime = t;
 
     // Try Nearest
-    typedef NearestNeighborInterpolateImageFunction<
-      CPUInputImageType, CPUCoordRepType > NearestNeighborInterpolatorType;
-    const typename NearestNeighborInterpolatorType::ConstPointer nearest
-      = dynamic_cast< const NearestNeighborInterpolatorType * >( m_InputInterpolator.GetPointer() );
+    typedef NearestNeighborInterpolateImageFunction<CPUInputImageType, CPUCoordRepType> NearestNeighborInterpolatorType;
+    const typename NearestNeighborInterpolatorType::ConstPointer                        nearest =
+      dynamic_cast<const NearestNeighborInterpolatorType *>(m_InputInterpolator.GetPointer());
 
-    if( nearest )
+    if (nearest)
     {
-      if( this->m_ExplicitMode )
+      if (this->m_ExplicitMode)
       {
         // Create GPU NearestNeighbor interpolator in explicit mode
-        typedef GPUNearestNeighborInterpolateImageFunction<
-          GPUInputImageType, GPUCoordRepType > GPUNearestNeighborInterpolatorType;
+        typedef GPUNearestNeighborInterpolateImageFunction<GPUInputImageType, GPUCoordRepType>
+          GPUNearestNeighborInterpolatorType;
         this->m_ExplicitOutput = GPUNearestNeighborInterpolatorType::New();
       }
       else
       {
         // Create GPU NearestNeighbor interpolator in implicit mode
-        typedef NearestNeighborInterpolateImageFunction<
-          CPUInputImageType, GPUCoordRepType > GPUNearestNeighborInterpolatorType;
+        typedef NearestNeighborInterpolateImageFunction<CPUInputImageType, GPUCoordRepType>
+          GPUNearestNeighborInterpolatorType;
         this->m_Output = GPUNearestNeighborInterpolatorType::New();
       }
       return;
     }
 
     // Try Linear
-    typedef LinearInterpolateImageFunction<
-      CPUInputImageType, CPUCoordRepType > LinearInterpolatorType;
-    const typename LinearInterpolatorType::ConstPointer linear
-      = dynamic_cast< const LinearInterpolatorType * >( m_InputInterpolator.GetPointer() );
+    typedef LinearInterpolateImageFunction<CPUInputImageType, CPUCoordRepType> LinearInterpolatorType;
+    const typename LinearInterpolatorType::ConstPointer                        linear =
+      dynamic_cast<const LinearInterpolatorType *>(m_InputInterpolator.GetPointer());
 
-    if( linear )
+    if (linear)
     {
-      if( this->m_ExplicitMode )
+      if (this->m_ExplicitMode)
       {
         // Create GPU Linear interpolator in explicit mode
-        typedef GPULinearInterpolateImageFunction<
-          GPUInputImageType, GPUCoordRepType > GPULinearInterpolatorType;
+        typedef GPULinearInterpolateImageFunction<GPUInputImageType, GPUCoordRepType> GPULinearInterpolatorType;
         this->m_ExplicitOutput = GPULinearInterpolatorType::New();
       }
       else
       {
         // Create GPU Linear interpolator in implicit mode
-        typedef LinearInterpolateImageFunction<
-          CPUInputImageType, GPUCoordRepType > GPULinearInterpolatorType;
+        typedef LinearInterpolateImageFunction<CPUInputImageType, GPUCoordRepType> GPULinearInterpolatorType;
         this->m_Output = GPULinearInterpolatorType::New();
       }
       return;
     }
 
     // Try BSpline
-    typedef BSplineInterpolateImageFunction<
-      CPUInputImageType, CPUCoordRepType, CPUCoordRepType > BSplineInterpolatorType;
-    const typename BSplineInterpolatorType::ConstPointer bspline
-      = dynamic_cast< const BSplineInterpolatorType * >( m_InputInterpolator.GetPointer() );
+    typedef BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, CPUCoordRepType>
+                                                         BSplineInterpolatorType;
+    const typename BSplineInterpolatorType::ConstPointer bspline =
+      dynamic_cast<const BSplineInterpolatorType *>(m_InputInterpolator.GetPointer());
 
-    if( bspline )
+    if (bspline)
     {
-      if( this->m_ExplicitMode )
+      if (this->m_ExplicitMode)
       {
         // Register image factory because BSplineInterpolateImageFunction
         // using m_Coefficients as ITK images inside the implementation
-        typedef itk::GPUImageFactory2< TTypeList, NDimensions > GPUImageFactoryType;
-        typedef typename GPUImageFactoryType::Pointer           GPUImageFactoryPointer;
-        GPUImageFactoryPointer imageFactory = GPUImageFactoryType::New();
-        itk::ObjectFactoryBase::RegisterFactory( imageFactory );
+        typedef itk::GPUImageFactory2<TTypeList, NDimensions> GPUImageFactoryType;
+        typedef typename GPUImageFactoryType::Pointer         GPUImageFactoryPointer;
+        GPUImageFactoryPointer                                imageFactory = GPUImageFactoryType::New();
+        itk::ObjectFactoryBase::RegisterFactory(imageFactory);
 
         // Create GPU BSpline interpolator in explicit mode
-        typedef GPUBSplineInterpolateImageFunction<
-          GPUInputImageType, GPUCoordRepType, GPUCoordRepType > GPUBSplineInterpolatorType;
-        typename GPUBSplineInterpolatorType::Pointer bsplineInterpolator
-          = GPUBSplineInterpolatorType::New();
-        bsplineInterpolator->SetSplineOrder( bspline->GetSplineOrder() );
+        typedef GPUBSplineInterpolateImageFunction<GPUInputImageType, GPUCoordRepType, GPUCoordRepType>
+                                                     GPUBSplineInterpolatorType;
+        typename GPUBSplineInterpolatorType::Pointer bsplineInterpolator = GPUBSplineInterpolatorType::New();
+        bsplineInterpolator->SetSplineOrder(bspline->GetSplineOrder());
 
         // UnRegister image factory
-        itk::ObjectFactoryBase::UnRegisterFactory( imageFactory );
+        itk::ObjectFactoryBase::UnRegisterFactory(imageFactory);
 
         this->m_ExplicitOutput = bsplineInterpolator;
       }
       else
       {
         // Create GPU BSpline interpolator in implicit mode
-        typedef BSplineInterpolateImageFunction<
-          CPUInputImageType, GPUCoordRepType, GPUCoordRepType > GPUBSplineInterpolatorType;
-        typename GPUBSplineInterpolatorType::Pointer bsplineInterpolator
-          = GPUBSplineInterpolatorType::New();
-        bsplineInterpolator->SetSplineOrder( bspline->GetSplineOrder() );
+        typedef BSplineInterpolateImageFunction<CPUInputImageType, GPUCoordRepType, GPUCoordRepType>
+                                                     GPUBSplineInterpolatorType;
+        typename GPUBSplineInterpolatorType::Pointer bsplineInterpolator = GPUBSplineInterpolatorType::New();
+        bsplineInterpolator->SetSplineOrder(bspline->GetSplineOrder());
         this->m_Output = bsplineInterpolator;
       }
       return;
     }
 
-    if( this->m_Output.IsNull() )
+    if (this->m_Output.IsNull())
     {
-      itkExceptionMacro( << "GPUInterpolatorCopier was unable to copy interpolator from: " << this->m_InputInterpolator );
+      itkExceptionMacro(<< "GPUInterpolatorCopier was unable to copy interpolator from: " << this->m_InputInterpolator);
     }
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep >
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
 void
-GPUInterpolatorCopier< TTypeList, NDimensions, TInterpolator, TOutputCoordRep >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::PrintSelf(std::ostream & os,
+                                                                                         Indent         indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
   os << indent << "Input Interpolator: " << this->m_InputInterpolator << std::endl;
   os << indent << "Output Non Explicit Interpolator: " << this->m_Output << std::endl;
   os << indent << "Output Explicit Interpolator: " << this->m_ExplicitOutput << std::endl;

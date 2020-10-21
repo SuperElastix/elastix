@@ -18,4 +18,4 @@
 
 #include "elxOpenCLResampler.h"
 
-elxInstallMacro( OpenCLResampler );
+elxInstallMacro(OpenCLResampler);

@@ -37,28 +37,26 @@ namespace itk
  * \ingroup Common
  */
 
-template< class TAnyITKTransform >
-class DeformationFieldRegulizer :
-  public TAnyITKTransform
+template <class TAnyITKTransform>
+class DeformationFieldRegulizer : public TAnyITKTransform
 {
 public:
-
   /** Standard itk. */
-  typedef DeformationFieldRegulizer  Self;
-  typedef TAnyITKTransform           Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef DeformationFieldRegulizer Self;
+  typedef TAnyITKTransform          Superclass;
+  typedef SmartPointer<Self>        Pointer;
+  typedef SmartPointer<const Self>  ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( DeformationFieldRegulizer, TAnyITKTransform );
+  itkTypeMacro(DeformationFieldRegulizer, TAnyITKTransform);
 
   /** Input space dimension. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension);
   /** Output space dimension. */
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension );
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension);
 
   /** Typedef's inherited from Superclass. */
   typedef typename Superclass::ScalarType                ScalarType;
@@ -74,14 +72,12 @@ public:
   typedef typename Superclass::OutputPointType           OutputPointType;
 
   /** Typedef's needed in this class. */
-  typedef DeformationVectorFieldTransform<
-    ScalarType,
-    itkGetStaticConstMacro( InputSpaceDimension ) >       IntermediaryDFTransformType;
-  typedef typename IntermediaryDFTransformType::Pointer IntermediaryDFTransformPointer;
-  typedef typename IntermediaryDFTransformType
-    ::CoefficientVectorImageType VectorImageType;
-  typedef typename VectorImageType::PixelType    VectorPixelType;
-  typedef ImageRegionIterator< VectorImageType > IteratorType;
+  typedef DeformationVectorFieldTransform<ScalarType, itkGetStaticConstMacro(InputSpaceDimension)>
+                                                                            IntermediaryDFTransformType;
+  typedef typename IntermediaryDFTransformType::Pointer                     IntermediaryDFTransformPointer;
+  typedef typename IntermediaryDFTransformType ::CoefficientVectorImageType VectorImageType;
+  typedef typename VectorImageType::PixelType                               VectorPixelType;
+  typedef ImageRegionIterator<VectorImageType>                              IteratorType;
 
   /** Typedef's for the vectorImage. */
   typedef typename VectorImageType::RegionType  RegionType;
@@ -89,42 +85,43 @@ public:
   typedef typename VectorImageType::PointType   OriginType;
 
   /** Function to create and initialze the deformation fields. */
-  void InitializeDeformationFields( void );
+  void
+  InitializeDeformationFields(void);
 
   /** Function to update the intermediary deformation field by adding
    * a diffused deformation field to it.
    */
-  virtual void UpdateIntermediaryDeformationFieldTransform(
-  typename VectorImageType::Pointer vecImage );
+  virtual void
+  UpdateIntermediaryDeformationFieldTransform(typename VectorImageType::Pointer vecImage);
 
   /** itk Set macro for the region of the deformation field. */
-  itkSetMacro( DeformationFieldRegion, RegionType );
+  itkSetMacro(DeformationFieldRegion, RegionType);
 
   /** itk Set macro for the spacing of the deformation field. */
-  itkSetMacro( DeformationFieldSpacing, SpacingType );
+  itkSetMacro(DeformationFieldSpacing, SpacingType);
 
   /** itk Set macro for the origin of the deformation field. */
-  itkSetMacro( DeformationFieldOrigin, OriginType );
+  itkSetMacro(DeformationFieldOrigin, OriginType);
 
   /** itk Get macro for the deformation field transform. */
-  itkGetConstObjectMacro( IntermediaryDeformationFieldTransform, IntermediaryDFTransformType );
+  itkGetConstObjectMacro(IntermediaryDeformationFieldTransform, IntermediaryDFTransformType);
 
   /** Method to transform a point. */
-  OutputPointType TransformPoint( const InputPointType & inputPoint ) const override;
+  OutputPointType
+  TransformPoint(const InputPointType & inputPoint) const override;
 
 protected:
-
   /** The constructor. */
   DeformationFieldRegulizer();
   /** The destructor. */
   ~DeformationFieldRegulizer() override {}
 
 private:
-
   /** The private constructor. */
-  DeformationFieldRegulizer( const Self & );  // purposely not implemented
+  DeformationFieldRegulizer(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );             // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Declaration of members. */
   IntermediaryDFTransformPointer m_IntermediaryDeformationFieldTransform;
@@ -134,13 +131,12 @@ private:
   RegionType  m_DeformationFieldRegion;
   OriginType  m_DeformationFieldOrigin;
   SpacingType m_DeformationFieldSpacing;
-
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkDeformationFieldRegulizer.hxx"
+#  include "itkDeformationFieldRegulizer.hxx"
 #endif
 
 #endif // end #ifndef __itkDeformationFieldRegulizer_H__

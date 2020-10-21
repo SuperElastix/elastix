@@ -18,4 +18,4 @@
 
 #include "elxFullSearchOptimizer.h"
 
-elxInstallMacro( FullSearch );
+elxInstallMacro(FullSearch);

@@ -30,12 +30,11 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template< class TElastix >
-EulerTransformElastix< TElastix >
-::EulerTransformElastix()
+template <class TElastix>
+EulerTransformElastix<TElastix>::EulerTransformElastix()
 {
   this->m_EulerTransform = EulerTransformType::New();
-  this->SetCurrentTransform( this->m_EulerTransform );
+  this->SetCurrentTransform(this->m_EulerTransform);
 
 } // end Constructor
 
@@ -44,10 +43,9 @@ EulerTransformElastix< TElastix >
  * ******************* BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-EulerTransformElastix< TElastix >
-::BeforeRegistration( void )
+EulerTransformElastix<TElastix>::BeforeRegistration(void)
 {
   /** Set center of rotation and initial translation. */
   this->InitializeTransform();
@@ -62,39 +60,38 @@ EulerTransformElastix< TElastix >
  * ************************* ReadFromFile ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-EulerTransformElastix< TElastix >
-::ReadFromFile( void )
+EulerTransformElastix<TElastix>::ReadFromFile(void)
 {
   /** Variables. */
   InputPointType centerOfRotationPoint;
-  centerOfRotationPoint.Fill( 0.0 );
+  centerOfRotationPoint.Fill(0.0);
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  bool pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
+  bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
 
-  if( !pointRead )
+  if (!pointRead)
   {
-    xl::xout[ "error" ] << "ERROR: No center of rotation is specified in "
-                        << "the transform parameter file" << std::endl;
-    itkExceptionMacro( << "Transform parameter file is corrupt." )
+    xl::xout["error"] << "ERROR: No center of rotation is specified in "
+                      << "the transform parameter file" << std::endl;
+    itkExceptionMacro(<< "Transform parameter file is corrupt.")
   }
 
   /** Set the center in this Transform. */
-  this->m_EulerTransform->SetCenter( centerOfRotationPoint );
+  this->m_EulerTransform->SetCenter(centerOfRotationPoint);
 
   /** Read the ComputeZYX. */
-  if( SpaceDimension == 3 )
+  if (SpaceDimension == 3)
   {
     std::string computeZYX = "false";
-    this->m_Configuration->ReadParameter( computeZYX, "ComputeZYX", 0 );
-    if( computeZYX == "true" )
+    this->m_Configuration->ReadParameter(computeZYX, "ComputeZYX", 0);
+    if (computeZYX == "true")
     {
-      this->m_EulerTransform->SetComputeZYX( true );
+      this->m_EulerTransform->SetComputeZYX(true);
     }
   }
 
@@ -111,41 +108,40 @@ EulerTransformElastix< TElastix >
  * ************************* WriteToFile ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-EulerTransformElastix< TElastix >
-::WriteToFile( const ParametersType & param ) const
+EulerTransformElastix<TElastix>::WriteToFile(const ParametersType & param) const
 {
   /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile( param );
+  this->Superclass2::WriteToFile(param);
 
   /** Write EulerTransform specific things. */
-  xout[ "transpar" ] << std::endl << "// EulerTransform specific" << std::endl;
+  xout["transpar"] << std::endl << "// EulerTransform specific" << std::endl;
 
   /** Set the precision of cout to 10. */
-  xout[ "transpar" ] << std::setprecision( 10 );
+  xout["transpar"] << std::setprecision(10);
 
   /** Get the center of rotation point and write it to file. */
   InputPointType rotationPoint = this->m_EulerTransform->GetCenter();
-  xout[ "transpar" ] << "(CenterOfRotationPoint ";
-  for( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  xout["transpar"] << "(CenterOfRotationPoint ";
+  for (unsigned int i = 0; i < SpaceDimension - 1; i++)
   {
-    xout[ "transpar" ] << rotationPoint[ i ] << " ";
+    xout["transpar"] << rotationPoint[i] << " ";
   }
-  xout[ "transpar" ] << rotationPoint[ SpaceDimension - 1 ] << ")" << std::endl;
+  xout["transpar"] << rotationPoint[SpaceDimension - 1] << ")" << std::endl;
 
   /** Set the precision back to default value. */
-  xout[ "transpar" ] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
+  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
 
   /** Write the ComputeZYX to file. */
-  if( SpaceDimension == 3 )
+  if (SpaceDimension == 3)
   {
     std::string computeZYX = "false";
-    if( this->m_EulerTransform->GetComputeZYX() )
+    if (this->m_EulerTransform->GetComputeZYX())
     {
       computeZYX = "true";
     }
-    xout[ "transpar" ] << "(ComputeZYX \"" << computeZYX << "\")" << std::endl;
+    xout["transpar"] << "(ComputeZYX \"" << computeZYX << "\")" << std::endl;
   }
 
 } // end WriteToFile()
@@ -155,42 +151,41 @@ EulerTransformElastix< TElastix >
  * ************************* CreateTransformParametersMap ************************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-EulerTransformElastix< TElastix >
-::CreateTransformParametersMap(
-  const ParametersType & param,
-  ParameterMapType * paramsMap ) const
+EulerTransformElastix<TElastix>::CreateTransformParametersMap(const ParametersType & param,
+                                                              ParameterMapType *     paramsMap) const
 {
-  std::ostringstream         tmpStream;
-  std::string                parameterName;
-  std::vector< std::string > parameterValues;
+  std::ostringstream       tmpStream;
+  std::string              parameterName;
+  std::vector<std::string> parameterValues;
 
   /** Call the CreateTransformParametersMap from the TransformBase. */
-  this->Superclass2::CreateTransformParametersMap( param, paramsMap );
+  this->Superclass2::CreateTransformParametersMap(param, paramsMap);
 
   /** Get the center of rotation point and write it to file. */
   parameterName = "CenterOfRotationPoint";
   InputPointType rotationPoint = this->m_EulerTransform->GetCenter();
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
-    tmpStream.str( "" ); tmpStream << rotationPoint[ i ];
-    parameterValues.push_back( tmpStream.str() );
+    tmpStream.str("");
+    tmpStream << rotationPoint[i];
+    parameterValues.push_back(tmpStream.str());
   }
-  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  paramsMap->insert(make_pair(parameterName, parameterValues));
   parameterValues.clear();
 
   /** Write the ComputeZYX to file. */
-  if( SpaceDimension == 3 )
+  if (SpaceDimension == 3)
   {
     parameterName = "ComputeZYX";
     std::string computeZYX = "false";
-    if( this->m_EulerTransform->GetComputeZYX() )
+    if (this->m_EulerTransform->GetComputeZYX())
     {
       computeZYX = "true";
     }
-    parameterValues.push_back( computeZYX );
-    paramsMap->insert( make_pair( parameterName, parameterValues ) );
+    parameterValues.push_back(computeZYX);
+    paramsMap->insert(make_pair(parameterName, parameterValues));
     parameterValues.clear();
   }
 
@@ -201,10 +196,9 @@ EulerTransformElastix< TElastix >
  * ************************* InitializeTransform *********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-EulerTransformElastix< TElastix >
-::InitializeTransform( void )
+EulerTransformElastix<TElastix>::InitializeTransform(void)
 {
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_EulerTransform->SetIdentity();
@@ -216,24 +210,22 @@ EulerTransformElastix< TElastix >
   InputPointType centerOfRotationPoint;
   bool           centerGivenAsIndex = true;
   bool           centerGivenAsPoint = true;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
     /** Initialize. */
-    centerOfRotationIndex[ i ] = 0;
-    centerOfRotationPoint[ i ] = 0.0;
+    centerOfRotationIndex[i] = 0;
+    centerOfRotationPoint[i] = 0.0;
 
     /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = this->m_Configuration->ReadParameter(
-      centerOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if( !foundI )
+    bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
+    if (!foundI)
     {
       centerGivenAsIndex &= false;
     }
 
     /** Check COR point: Returns zero when parameter was in the parameter file. */
-    bool foundP = this->m_Configuration->ReadParameter(
-      centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
-    if( !foundP )
+    bool foundP = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
+    if (!foundP)
     {
       centerGivenAsPoint &= false;
     }
@@ -243,34 +235,33 @@ EulerTransformElastix< TElastix >
   /** Check if CenterOfRotation has index-values within image. */
   bool CORIndexInImage = true;
   bool CORPointInImage = true;
-  if( centerGivenAsIndex )
+  if (centerGivenAsIndex)
   {
-    CORIndexInImage =  this->m_Registration->GetAsITKBaseType()
-      ->GetFixedImage()->GetLargestPossibleRegion().IsInside(
-      centerOfRotationIndex );
+    CORIndexInImage = this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().IsInside(
+      centerOfRotationIndex);
   }
 
-  if( centerGivenAsPoint )
+  if (centerGivenAsPoint)
   {
-    typedef itk::ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
-    ContinuousIndexType cindex;
-    CORPointInImage = this->m_Registration->GetAsITKBaseType()
-      ->GetFixedImage()->TransformPhysicalPointToContinuousIndex(
-      centerOfRotationPoint, cindex );
-  }
-
-  /** Give a warning if necessary. */
-  if( !CORIndexInImage && centerGivenAsIndex )
-  {
-    xl::xout[ "warning" ] << "WARNING: Center of Rotation (index) is not "
-                          << "within image boundaries!" << std::endl;
+    typedef itk::ContinuousIndex<double, SpaceDimension> ContinuousIndexType;
+    ContinuousIndexType                                  cindex;
+    CORPointInImage =
+      this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformPhysicalPointToContinuousIndex(
+        centerOfRotationPoint, cindex);
   }
 
   /** Give a warning if necessary. */
-  if( !CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex )
+  if (!CORIndexInImage && centerGivenAsIndex)
   {
-    xl::xout[ "warning" ] << "WARNING: Center of Rotation (point) is not "
-                          << "within image boundaries!" << std::endl;
+    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not "
+                        << "within image boundaries!" << std::endl;
+  }
+
+  /** Give a warning if necessary. */
+  if (!CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex)
+  {
+    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not "
+                        << "within image boundaries!" << std::endl;
   }
 
   /** Check if user wants automatic transform initialization; false by default.
@@ -278,10 +269,9 @@ EulerTransformElastix< TElastix >
    * not possible.
    */
   bool automaticTransformInitialization = false;
-  bool tmpBool                          = false;
-  this->m_Configuration->ReadParameter( tmpBool,
-    "AutomaticTransformInitialization", 0 );
-  if( tmpBool && this->Superclass1::GetInitialTransform() == nullptr )
+  bool tmpBool = false;
+  this->m_Configuration->ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
+  if (tmpBool && this->Superclass1::GetInitialTransform() == nullptr)
   {
     automaticTransformInitialization = true;
   }
@@ -292,26 +282,22 @@ EulerTransformElastix< TElastix >
    * - The user asked for AutomaticTransformInitialization
    */
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if( !centerGiven || automaticTransformInitialization )
+  if (!centerGiven || automaticTransformInitialization)
   {
 
     /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
      */
-    TransformInitializerPointer transformInitializer
-      = TransformInitializerType::New();
-    transformInitializer->SetFixedImage(
-      this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
-    transformInitializer->SetMovingImage(
-      this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
-    transformInitializer->SetTransform( this->m_EulerTransform );
+    TransformInitializerPointer transformInitializer = TransformInitializerType::New();
+    transformInitializer->SetFixedImage(this->m_Registration->GetAsITKBaseType()->GetFixedImage());
+    transformInitializer->SetMovingImage(this->m_Registration->GetAsITKBaseType()->GetMovingImage());
+    transformInitializer->SetTransform(this->m_EulerTransform);
 
     /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
     std::string method = "GeometricalCenter";
-    this->m_Configuration->ReadParameter( method,
-      "AutomaticTransformInitializationMethod", 0 );
-    if( method == "CenterOfGravity" )
+    this->m_Configuration->ReadParameter(method, "AutomaticTransformInitializationMethod", 0);
+    if (method == "CenterOfGravity")
     {
       transformInitializer->MomentsOn();
     }
@@ -322,47 +308,42 @@ EulerTransformElastix< TElastix >
   /** Set the translation to zero, if no AutomaticTransformInitialization
    * was desired.
    */
-  if( !automaticTransformInitialization )
+  if (!automaticTransformInitialization)
   {
     OutputVectorType noTranslation;
-    noTranslation.Fill( 0.0 );
-    this->m_EulerTransform->SetTranslation( noTranslation );
+    noTranslation.Fill(0.0);
+    this->m_EulerTransform->SetTranslation(noTranslation);
   }
 
   /** Set the center of rotation if it was entered by the user. */
-  if( centerGiven )
+  if (centerGiven)
   {
-    if( centerGivenAsIndex )
+    if (centerGivenAsIndex)
     {
       /** Convert from index-value to physical-point-value. */
-      this->m_Registration->GetAsITKBaseType()->GetFixedImage()
-      ->TransformIndexToPhysicalPoint(
-        centerOfRotationIndex, centerOfRotationPoint );
+      this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformIndexToPhysicalPoint(centerOfRotationIndex,
+                                                                                               centerOfRotationPoint);
     }
-    this->m_EulerTransform->SetCenter( centerOfRotationPoint );
+    this->m_EulerTransform->SetCenter(centerOfRotationPoint);
   }
 
   /** Apply the initial transform to the center of rotation, if
    * composition is used to combine the initial transform with the
    * the current (euler) transform.
    */
-  if( this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != nullptr )
+  if (this->GetUseComposition() && this->Superclass1::GetInitialTransform() != nullptr)
   {
-    InputPointType transformedCenterOfRotationPoint
-      = this->Superclass1::GetInitialTransform()->TransformPoint(
-      this->m_EulerTransform->GetCenter() );
-    this->m_EulerTransform->SetCenter( transformedCenterOfRotationPoint );
+    InputPointType transformedCenterOfRotationPoint =
+      this->Superclass1::GetInitialTransform()->TransformPoint(this->m_EulerTransform->GetCenter());
+    this->m_EulerTransform->SetCenter(transformedCenterOfRotationPoint);
   }
 
   /** Set the initial parameters in this->m_Registration. */
-  this->m_Registration->GetAsITKBaseType()
-  ->SetInitialTransformParameters( this->GetParameters() );
+  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(this->GetParameters());
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
-  elxout << "Transform parameters are initialized as: "
-         << this->GetParameters() << std::endl;
+  elxout << "Transform parameters are initialized as: " << this->GetParameters() << std::endl;
 
 } // end InitializeTransform()
 
@@ -371,25 +352,23 @@ EulerTransformElastix< TElastix >
  * ************************* SetScales *********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-EulerTransformElastix< TElastix >
-::SetScales( void )
+EulerTransformElastix<TElastix>::SetScales(void)
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType                   newscales( N );
-  newscales.Fill( 1.0 );
+  ScalesType                   newscales(N);
+  newscales.Fill(1.0);
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimation = false;
-  this->m_Configuration->ReadParameter( automaticScalesEstimation,
-    "AutomaticScalesEstimation", 0 );
+  this->m_Configuration->ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
 
-  if( automaticScalesEstimation )
+  if (automaticScalesEstimation)
   {
     elxout << "Scales are estimated automatically." << std::endl;
-    this->AutomaticScalesEstimation( newscales );
+    this->AutomaticScalesEstimation(newscales);
   }
   else
   {
@@ -423,7 +402,10 @@ EulerTransformElastix< TElastix >
      * If the Dimension is 2, only the first parameter represent a rotation.
      */
     unsigned int RotationPart = 3;
-    if( SpaceDimension == 2 ) { RotationPart = 1; }
+    if (SpaceDimension == 2)
+    {
+      RotationPart = 1;
+    }
 
     /** this->m_Configuration->ReadParameter() returns 0 if there is a value given
      * in the parameter-file, and returns 1 if there is no value given in the
@@ -437,34 +419,33 @@ EulerTransformElastix< TElastix >
      *   own scale.
      */
 
-    std::size_t count
-      = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
+    std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
 
     /** Check which of the above options is used. */
-    if( count == 0 )
+    if (count == 0)
     {
       /** In this case the first option is used. */
-      for( unsigned int i = 0; i < RotationPart; i++ )
+      for (unsigned int i = 0; i < RotationPart; i++)
       {
-        newscales[ i ] = defaultScalingvalue;
+        newscales[i] = defaultScalingvalue;
       }
     }
-    else if( count == 1 )
+    else if (count == 1)
     {
       /** In this case the second option is used. */
       double scale = defaultScalingvalue;
-      this->m_Configuration->ReadParameter( scale, "Scales", 0 );
-      for( unsigned int i = 0; i < RotationPart; i++ )
+      this->m_Configuration->ReadParameter(scale, "Scales", 0);
+      for (unsigned int i = 0; i < RotationPart; i++)
       {
-        newscales[ i ] = scale;
+        newscales[i] = scale;
       }
     }
-    else if( count == this->GetNumberOfParameters() )
+    else if (count == this->GetNumberOfParameters())
     {
       /** In this case the third option is used. */
-      for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+      for (unsigned int i = 0; i < this->GetNumberOfParameters(); i++)
       {
-        this->m_Configuration->ReadParameter( newscales[ i ], "Scales", i );
+        this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }
     }
     else
@@ -473,8 +454,8 @@ EulerTransformElastix< TElastix >
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file"
-                         << " has not been set properly." );
+      itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file"
+                        << " has not been set properly.");
     }
 
   } // end else: no automaticScalesEstimation
@@ -482,7 +463,7 @@ EulerTransformElastix< TElastix >
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
   /** Set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newscales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);
 
 } // end SetScales()
 
@@ -491,30 +472,28 @@ EulerTransformElastix< TElastix >
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template< class TElastix >
+template <class TElastix>
 bool
-EulerTransformElastix< TElastix >
-::ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const
+EulerTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
   InputPointType centerOfRotationPoint;
   bool           centerGivenAsPoint = true;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for (unsigned int i = 0; i < SpaceDimension; i++)
   {
-    centerOfRotationPoint[ i ] = 0;
+    centerOfRotationPoint[i] = 0;
 
     /** Returns zero when parameter was in the parameter file */
-    bool found = this->m_Configuration->ReadParameter(
-      centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
-    if( !found )
+    bool found = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
+    if (!found)
     {
       centerGivenAsPoint &= false;
     }
   }
 
-  if( !centerGivenAsPoint )
+  if (!centerGivenAsPoint)
   {
     return false;
   }

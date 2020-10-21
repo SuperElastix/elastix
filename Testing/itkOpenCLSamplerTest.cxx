@@ -19,11 +19,11 @@
 #include "itkOpenCLSampler.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
   itk::OpenCLSampler samplerNull;
 
-  if( !samplerNull.IsNull() )
+  if (!samplerNull.IsNull())
   {
     return EXIT_FAILURE;
   }
@@ -31,21 +31,20 @@ main( int argc, char * argv[] )
   try
   {
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-    context->Create( itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice );
-    const std::list< itk::OpenCLDevice > devices = context->GetDevices();
+    context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
+    const std::list<itk::OpenCLDevice> devices = context->GetDevices();
 
     // Test the OpenCLSampler
-    itk::OpenCLSampler sampler = context->CreateSampler( true,
-      itk::OpenCLSampler::ClampToEdge,
-      itk::OpenCLSampler::Nearest );
+    itk::OpenCLSampler sampler =
+      context->CreateSampler(true, itk::OpenCLSampler::ClampToEdge, itk::OpenCLSampler::Nearest);
 
-    if( sampler.IsNull() )
+    if (sampler.IsNull())
     {
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
     itk::ReleaseContext();

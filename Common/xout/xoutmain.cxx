@@ -25,23 +25,25 @@ namespace xoutlibrary
 static xoutbase_type * local_xout = nullptr;
 
 xoutbase_type &
-get_xout( void )
+get_xout(void)
 {
   return *local_xout;
 }
 
 
 void
-set_xout( xoutbase_type * arg )
+set_xout(xoutbase_type * arg)
 {
   local_xout = arg;
 }
 
-bool xout_valid() {
+bool
+xout_valid()
+{
   return local_xout != nullptr;
 }
 
 
-} // end namespace
+} // namespace xoutlibrary
 
 #endif // end #ifndef __xoutmain_cxx

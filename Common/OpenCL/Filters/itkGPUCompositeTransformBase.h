@@ -34,115 +34,124 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TScalarType = float, unsigned int NDimensions = 3 >
+template <typename TScalarType = float, unsigned int NDimensions = 3>
 class ITK_EXPORT GPUCompositeTransformBase : public GPUTransformBase
 {
 public:
-
   /** Standard class typedefs. */
   typedef GPUCompositeTransformBase Self;
   typedef GPUTransformBase          GPUSuperclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUCompositeTransformBase, GPUSuperclass );
+  itkTypeMacro(GPUCompositeTransformBase, GPUSuperclass);
 
   /** Sub transform types. */
-  typedef TScalarType                                        ScalarType;
-  typedef Transform< TScalarType, NDimensions, NDimensions > TransformType;
-  typedef typename TransformType::Pointer                    TransformTypePointer;
-  typedef typename TransformType::ConstPointer               TransformTypeConstPointer;
+  typedef TScalarType                                      ScalarType;
+  typedef Transform<TScalarType, NDimensions, NDimensions> TransformType;
+  typedef typename TransformType::Pointer                  TransformTypePointer;
+  typedef typename TransformType::ConstPointer             TransformTypeConstPointer;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int, NDimensions);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int, NDimensions);
 
   /** Get number of transforms in composite transform. */
-  virtual SizeValueType GetNumberOfTransforms() const = 0;
+  virtual SizeValueType
+  GetNumberOfTransforms() const = 0;
 
   /** Get the Nth transform. */
-  virtual const TransformTypePointer GetNthTransform( SizeValueType n ) const = 0;
+  virtual const TransformTypePointer
+  GetNthTransform(SizeValueType n) const = 0;
 
   /** Returns true if the derived composite transform has identity transform,
    * false otherwise. */
-  virtual bool HasIdentityTransform( void ) const;
+  virtual bool
+  HasIdentityTransform(void) const;
 
   /** Returns true if the derived composite transform has matrix offset transform,
    * false otherwise. */
-  virtual bool HasMatrixOffsetTransform( void ) const;
+  virtual bool
+  HasMatrixOffsetTransform(void) const;
 
   /** Returns true if the derived composite transform has translation transform,
    * false otherwise. */
-  virtual bool HasTranslationTransform( void ) const;
+  virtual bool
+  HasTranslationTransform(void) const;
 
   /** Returns true if the derived composite transform has BSpline transform,
    * false otherwise. */
-  virtual bool HasBSplineTransform( void ) const;
+  virtual bool
+  HasBSplineTransform(void) const;
 
   /** Returns true if the transform at \a index is identity transform,
    * false otherwise. */
-  virtual bool IsIdentityTransform( const std::size_t index ) const;
+  virtual bool
+  IsIdentityTransform(const std::size_t index) const;
 
   /** Returns true if the transform at \a index is matrix offset transform,
    * false otherwise. */
-  virtual bool IsMatrixOffsetTransform( const std::size_t index ) const;
+  virtual bool
+  IsMatrixOffsetTransform(const std::size_t index) const;
 
   /** Returns true if the transform at \a index is translation transform,
    * false otherwise. */
-  virtual bool IsTranslationTransform( const std::size_t index ) const;
+  virtual bool
+  IsTranslationTransform(const std::size_t index) const;
 
   /** Returns true if the transform at \a index is BSpline transform,
    * false otherwise. */
-  virtual bool IsBSplineTransform( const std::size_t index ) const;
+  virtual bool
+  IsBSplineTransform(const std::size_t index) const;
 
 protected:
-
   GPUCompositeTransformBase() {}
   ~GPUCompositeTransformBase() override {}
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  bool GetSourceCode( std::string & source ) const override;
+  bool
+  GetSourceCode(std::string & source) const override;
 
   /** Returns data manager that stores all settings for the transform \a index.
    * Used by combination transforms. */
-  GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const override;
+  GPUDataManager::Pointer
+  GetParametersDataManager(const std::size_t index) const override;
 
 private:
-
-  GPUCompositeTransformBase( const Self & other ); // purposely not implemented
-  const Self & operator=( const Self & );          // purposely not implemented
+  GPUCompositeTransformBase(const Self & other); // purposely not implemented
+  const Self &
+  operator=(const Self &); // purposely not implemented
 
   /** \internal
    * Returns true if the transform at \a index is identity transform,
    * false otherwise. If \a loadSource is true, the OpenCL \a source code is loaded. */
-  bool IsIdentityTransform( const std::size_t index,
-    const bool loadSource, std::string & source ) const;
+  bool
+  IsIdentityTransform(const std::size_t index, const bool loadSource, std::string & source) const;
 
   /** \internal
    * Returns true if the transform at \a index is matrix offset transform,
    * false otherwise. If \a loadSource is true, the OpenCL \a source code is loaded. */
 
-  bool IsMatrixOffsetTransform( const std::size_t index,
-    const bool loadSource, std::string & source ) const;
+  bool
+  IsMatrixOffsetTransform(const std::size_t index, const bool loadSource, std::string & source) const;
 
   /** \internal
    * Returns true if the transform at \a index is translation transform,
    * false otherwise. If \a loadSource is true, the OpenCL \a source code is loaded. */
-  bool IsTranslationTransform( const std::size_t index,
-    const bool loadSource, std::string & source ) const;
+  bool
+  IsTranslationTransform(const std::size_t index, const bool loadSource, std::string & source) const;
 
   /** \internal
    * Returns true if the transform at \a index is BSpline transform,
    * false otherwise. If \a loadSource is true, the OpenCL \a source code is loaded. */
-  bool IsBSplineTransform( const std::size_t index,
-    const bool loadSource, std::string & source ) const;
-
+  bool
+  IsBSplineTransform(const std::size_t index, const bool loadSource, std::string & source) const;
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUCompositeTransformBase.hxx"
+#  include "itkGPUCompositeTransformBase.hxx"
 #endif
 
 #endif /* __itkGPUCompositeTransformBase_h */

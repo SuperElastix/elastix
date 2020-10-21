@@ -29,28 +29,27 @@ namespace itk
  * ***************** Constructor ***********************
  */
 
-template< typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform >
-GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, TParentTransform >
-::GPUAdvancedBSplineDeformableTransform()
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform>
+GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::
+  GPUAdvancedBSplineDeformableTransform()
 {
-  GPUSuperclass::SetSplineOrder( CPUSuperclass::SplineOrder );
+  GPUSuperclass::SetSplineOrder(CPUSuperclass::SplineOrder);
 
   typedef typename CPUSuperclass::ImageType       CPUCoefficientImage;
   typedef typename CPUCoefficientImage::PixelType CPUCoefficientsImagePixelType;
 
-  typedef GPUImage< CPUCoefficientsImagePixelType,
-    CPUCoefficientImage::ImageDimension > GPUCoefficientsImageType;
-  typedef typename GPUCoefficientsImageType::Pointer GPUCoefficientsImagePointer;
+  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
+  typedef typename GPUCoefficientsImageType::Pointer                                   GPUCoefficientsImagePointer;
 
-  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    GPUCoefficientsImagePointer gpuCoefficientImage
-      = dynamic_cast< GPUCoefficientsImageType * >( this->m_CoefficientImages[ i ].GetPointer() );
+    GPUCoefficientsImagePointer gpuCoefficientImage =
+      dynamic_cast<GPUCoefficientsImageType *>(this->m_CoefficientImages[i].GetPointer());
 
-    if( gpuCoefficientImage )
+    if (gpuCoefficientImage)
     {
-      gpuCoefficientImage->GetGPUDataManager()->SetGPUBufferLock( true );
-      gpuCoefficientImage->GetGPUDataManager()->SetCPUBufferLock( true );
+      gpuCoefficientImage->GetGPUDataManager()->SetGPUBufferLock(true);
+      gpuCoefficientImage->GetGPUDataManager()->SetCPUBufferLock(true);
     }
   }
 } // end constructor
@@ -60,12 +59,12 @@ GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, T
  * ***************** SetCoefficientImages ***********************
  */
 
-template< typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform >
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform>
 void
-GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, TParentTransform >
-::SetCoefficientImages( ImagePointer images[] )
+GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::SetCoefficientImages(
+  ImagePointer images[])
 {
-  CPUSuperclass::SetCoefficientImages( images );
+  CPUSuperclass::SetCoefficientImages(images);
   this->CopyCoefficientImagesToGPU();
 } // end SetCoefficientImages()
 
@@ -74,12 +73,12 @@ GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, T
  * ***************** SetParameters ***********************
  */
 
-template< typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform >
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform>
 void
-GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, TParentTransform >
-::SetParameters( const ParametersType & parameters )
+GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::SetParameters(
+  const ParametersType & parameters)
 {
-  CPUSuperclass::SetParameters( parameters );
+  CPUSuperclass::SetParameters(parameters);
   this->CopyCoefficientImagesToGPU();
 } // end SetParameters()
 
@@ -88,37 +87,36 @@ GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, T
  * ***************** CopyCoefficientImagesToGPU ***********************
  */
 
-template< typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform >
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform>
 void
-GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, TParentTransform >
-::CopyCoefficientImagesToGPU( void )
+GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::
+  CopyCoefficientImagesToGPU(void)
 {
   typedef typename CPUSuperclass::ImageType             CPUCoefficientImage;
   typedef typename CPUCoefficientImage::PixelType       CPUCoefficientsImagePixelType;
   typedef typename GPUSuperclass::GPUDataManagerPointer GPUDataManagerPointer;
 
-  typedef GPUImage< CPUCoefficientsImagePixelType,
-    CPUCoefficientImage::ImageDimension > GPUCoefficientsImageType;
-  typedef typename GPUCoefficientsImageType::Pointer GPUCoefficientsImagePointer;
+  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
+  typedef typename GPUCoefficientsImageType::Pointer                                   GPUCoefficientsImagePointer;
 
-  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    GPUCoefficientsImagePointer gpuCoefficientImage
-      = dynamic_cast< GPUCoefficientsImageType * >( this->m_CoefficientImages[ i ].GetPointer() );
+    GPUCoefficientsImagePointer gpuCoefficientImage =
+      dynamic_cast<GPUCoefficientsImageType *>(this->m_CoefficientImages[i].GetPointer());
 
-    if( gpuCoefficientImage )
+    if (gpuCoefficientImage)
     {
-      gpuCoefficientImage->GetGPUDataManager()->SetGPUBufferLock( false );
+      gpuCoefficientImage->GetGPUDataManager()->SetGPUBufferLock(false);
       gpuCoefficientImage->AllocateGPU();
-      gpuCoefficientImage->GetGPUDataManager()->SetGPUDirtyFlag( true );
+      gpuCoefficientImage->GetGPUDataManager()->SetGPUDirtyFlag(true);
       gpuCoefficientImage->GetGPUDataManager()->UpdateGPUBuffer();
-      gpuCoefficientImage->GetGPUDataManager()->SetGPUBufferLock( true );
+      gpuCoefficientImage->GetGPUDataManager()->SetGPUBufferLock(true);
     }
 
-    this->m_GPUBSplineTransformCoefficientImages[ i ] = gpuCoefficientImage;
+    this->m_GPUBSplineTransformCoefficientImages[i] = gpuCoefficientImage;
 
     GPUDataManagerPointer gpuCoefficientsBase = GPUDataManager::New();
-    this->m_GPUBSplineTransformCoefficientImagesBase[ i ] = gpuCoefficientsBase;
+    this->m_GPUBSplineTransformCoefficientImagesBase[i] = gpuCoefficientsBase;
   }
 } // end CopyCoefficientImagesToGPU()
 
@@ -127,12 +125,13 @@ GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, T
  * ***************** PrintSelf ***********************
  */
 
-template< typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform >
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform>
 void
-GPUAdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder, TParentTransform >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::PrintSelf(
+  std::ostream & os,
+  Indent         indent) const
 {
-  CPUSuperclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf(os, indent);
 } // end PrintSelf()
 
 

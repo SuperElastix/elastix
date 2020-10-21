@@ -30,20 +30,19 @@ namespace itk
  *
  */
 
-template< class TImage >
+template <class TImage>
 class ImageSample
 {
 public:
-
-  //ImageSample():m_ImageValue(0.0){};
-  ImageSample(){}
+  // ImageSample():m_ImageValue(0.0){};
+  ImageSample() {}
   ~ImageSample() {}
 
   /** Typedef's. */
-  typedef TImage                                        ImageType;
-  typedef typename ImageType::PointType                 PointType;
-  typedef typename ImageType::PixelType                 PixelType;
-  typedef typename NumericTraits< PixelType >::RealType RealType;
+  typedef TImage                                      ImageType;
+  typedef typename ImageType::PointType               PointType;
+  typedef typename ImageType::PixelType               PixelType;
+  typedef typename NumericTraits<PixelType>::RealType RealType;
 
   /** Member variables. */
   PointType m_ImageCoordinates;

@@ -30,22 +30,20 @@ namespace Statistics
  * ************************ Constructor *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::ListSampleCArray()
+template <class TMeasurementVector, class TInternalValue>
+ListSampleCArray<TMeasurementVector, TInternalValue>::ListSampleCArray()
 {
-  this->m_InternalContainer     = nullptr;
+  this->m_InternalContainer = nullptr;
   this->m_InternalContainerSize = 0;
-  this->m_ActualSize            = 0;
+  this->m_ActualSize = 0;
 } // end Constructor
 
 
 /**
  * ************************ Destructor *************************
  */
-template< class TMeasurementVector, class TInternalValue >
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::~ListSampleCArray()
+template <class TMeasurementVector, class TInternalValue>
+ListSampleCArray<TMeasurementVector, TInternalValue>::~ListSampleCArray()
 {
   this->DeallocateInternalContainer();
 } // end Destructor
@@ -55,18 +53,17 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ GetMeasurementVector *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::GetMeasurementVector( InstanceIdentifier id, MeasurementVectorType & mv ) const
+ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(InstanceIdentifier      id,
+                                                                           MeasurementVectorType & mv) const
 {
-  if( id < this->m_InternalContainerSize )
+  if (id < this->m_InternalContainerSize)
   {
-    mv = MeasurementVectorType( this->m_InternalContainer[ id ],
-      this->GetMeasurementVectorSize(), false );
+    mv = MeasurementVectorType(this->m_InternalContainer[id], this->GetMeasurementVectorSize(), false);
     return;
   }
-  itkExceptionMacro( << "The requested index is larger than the container size." );
+  itkExceptionMacro(<< "The requested index is larger than the container size.");
 
 } // end GetMeasurementVector()
 
@@ -75,19 +72,17 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ GetMeasurementVector *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
-const typename ListSampleCArray< TMeasurementVector, TInternalValue >
-::MeasurementVectorType
-& ListSampleCArray< TMeasurementVector, TInternalValue >
-::GetMeasurementVector( InstanceIdentifier id ) const
+template <class TMeasurementVector, class TInternalValue>
+const typename ListSampleCArray<TMeasurementVector, TInternalValue>::MeasurementVectorType &
+ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(InstanceIdentifier id) const
 {
-  if( id < this->m_InternalContainerSize )
+  if (id < this->m_InternalContainerSize)
   {
-    this->m_TemporaryMeasurementVector = MeasurementVectorType(
-      this->m_InternalContainer[ id ], this->GetMeasurementVectorSize(), false );
+    this->m_TemporaryMeasurementVector =
+      MeasurementVectorType(this->m_InternalContainer[id], this->GetMeasurementVectorSize(), false);
     return this->m_TemporaryMeasurementVector;
   }
-  itkExceptionMacro( << "The requested index is larger than the container size." );
+  itkExceptionMacro(<< "The requested index is larger than the container size.");
 
   /** dummy return; */
   return this->m_TemporaryMeasurementVector;
@@ -98,15 +93,15 @@ const typename ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ SetMeasurement *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::SetMeasurement( InstanceIdentifier id,
-  unsigned int dim, const MeasurementType & value )
+ListSampleCArray<TMeasurementVector, TInternalValue>::SetMeasurement(InstanceIdentifier      id,
+                                                                     unsigned int            dim,
+                                                                     const MeasurementType & value)
 {
-  if( id < this->m_InternalContainerSize )
+  if (id < this->m_InternalContainerSize)
   {
-    this->m_InternalContainer[ id ][ dim ] = value;
+    this->m_InternalContainer[id][dim] = value;
   }
 } // end SetMeasurement()
 
@@ -115,18 +110,17 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ SetMeasurementVector *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::SetMeasurementVector( InstanceIdentifier id,
-  const MeasurementVectorType & mv )
+ListSampleCArray<TMeasurementVector, TInternalValue>::SetMeasurementVector(InstanceIdentifier            id,
+                                                                           const MeasurementVectorType & mv)
 {
   unsigned int dim = this->GetMeasurementVectorSize();
-  if( id < this->m_InternalContainerSize )
+  if (id < this->m_InternalContainerSize)
   {
-    for( unsigned int i = 0; i < dim; i++ )
+    for (unsigned int i = 0; i < dim; i++)
     {
-      this->m_InternalContainer[ id ][ i ] = mv[ i ];
+      this->m_InternalContainer[id][i] = mv[i];
     }
     // or maybe with iterators
   }
@@ -137,26 +131,25 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ Resize *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::Resize( unsigned long size )
+ListSampleCArray<TMeasurementVector, TInternalValue>::Resize(unsigned long size)
 {
   /** Resizing deallocates and then allocates memory.
    * Therefore, the memory contains junk just after calling
    * this function. So the m_ActualSize is zero.
    */
   this->m_ActualSize = 0;
-  if( this->m_InternalContainer )
+  if (this->m_InternalContainer)
   {
     this->DeallocateInternalContainer();
     this->m_InternalContainerSize = 0;
     this->Modified();
   }
-  if( size > 0 )
+  if (size > 0)
   {
     unsigned int dim = this->GetMeasurementVectorSize();
-    this->AllocateInternalContainer( size, dim );
+    this->AllocateInternalContainer(size, dim);
     this->m_InternalContainerSize = size;
     this->Modified();
   }
@@ -168,12 +161,11 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ SetActualSize *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::SetActualSize( unsigned long size )
+ListSampleCArray<TMeasurementVector, TInternalValue>::SetActualSize(unsigned long size)
 {
-  if( this->m_ActualSize != size )
+  if (this->m_ActualSize != size)
   {
     this->m_ActualSize = size;
     this->Modified();
@@ -185,10 +177,9 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ GetActualSize *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 unsigned long
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::GetActualSize( void )
+ListSampleCArray<TMeasurementVector, TInternalValue>::GetActualSize(void)
 {
   return this->m_ActualSize;
 } // end GetActualSize()
@@ -198,12 +189,11 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ Clear *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::Clear( void )
+ListSampleCArray<TMeasurementVector, TInternalValue>::Clear(void)
 {
-  this->Resize( 0 );
+  this->Resize(0);
 } // end Clear()
 
 
@@ -211,16 +201,15 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ AllocateInternalContainer *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::AllocateInternalContainer( unsigned long size, unsigned int dim )
+ListSampleCArray<TMeasurementVector, TInternalValue>::AllocateInternalContainer(unsigned long size, unsigned int dim)
 {
-  this->m_InternalContainer = new InternalDataType[ size ];
-  InternalDataType p = new InternalValueType[ size * dim ];
-  for( unsigned long i = 0; i < size; i++ )
+  this->m_InternalContainer = new InternalDataType[size];
+  InternalDataType p = new InternalValueType[size * dim];
+  for (unsigned long i = 0; i < size; i++)
   {
-    this->m_InternalContainer[ i ] = &( p[ i * dim ] );
+    this->m_InternalContainer[i] = &(p[i * dim]);
   }
 } // end AllocateInternalContainer()
 
@@ -229,14 +218,13 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ DeallocateInternalContainer *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::DeallocateInternalContainer( void )
+ListSampleCArray<TMeasurementVector, TInternalValue>::DeallocateInternalContainer(void)
 {
-  if( this->m_InternalContainer )
+  if (this->m_InternalContainer)
   {
-    delete[] this->m_InternalContainer[ 0 ];
+    delete[] this->m_InternalContainer[0];
     delete[] this->m_InternalContainer;
     this->m_InternalContainer = nullptr;
   }
@@ -247,18 +235,17 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ GetFrequency *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
-typename ListSampleCArray< TMeasurementVector, TInternalValue >::AbsoluteFrequencyType
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::GetFrequency( InstanceIdentifier id ) const
+template <class TMeasurementVector, class TInternalValue>
+typename ListSampleCArray<TMeasurementVector, TInternalValue>::AbsoluteFrequencyType
+ListSampleCArray<TMeasurementVector, TInternalValue>::GetFrequency(InstanceIdentifier id) const
 {
-  if( id < this->m_InternalContainerSize )
+  if (id < this->m_InternalContainerSize)
   {
-    return itk::NumericTraits< AbsoluteFrequencyType >::One;
+    return itk::NumericTraits<AbsoluteFrequencyType>::One;
   }
   else
   {
-    return itk::NumericTraits< AbsoluteFrequencyType >::Zero;
+    return itk::NumericTraits<AbsoluteFrequencyType>::Zero;
   }
 } // end GetFrequency()
 
@@ -267,15 +254,13 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
  * ************************ PrintSelf *************************
  */
 
-template< class TMeasurementVector, class TInternalValue >
+template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray< TMeasurementVector, TInternalValue >
-::PrintSelf( std::ostream & os, Indent indent ) const
+ListSampleCArray<TMeasurementVector, TInternalValue>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
-  os << indent << "Internal Data Container: "
-     << &m_InternalContainer << std::endl;
+  os << indent << "Internal Data Container: " << &m_InternalContainer << std::endl;
 
 } // end PrintSelf()
 

@@ -25,23 +25,21 @@ namespace elastix
 {
 
 /**
-* ******************* BeforeEachResolution ******************
-*/
+ * ******************* BeforeEachResolution ******************
+ */
 
-template< class TElastix >
+template <class TElastix>
 void
-RandomSamplerSparseMask< TElastix >
-::BeforeEachResolution( void )
+RandomSamplerSparseMask<TElastix>::BeforeEachResolution(void)
 {
-  const unsigned int level
-    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  const unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Set the NumberOfSpatialSamples. */
   unsigned long numberOfSpatialSamples = 5000;
-  this->GetConfiguration()->ReadParameter( numberOfSpatialSamples,
-    "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter(
+    numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
 
-  this->SetNumberOfSamples( numberOfSpatialSamples );
+  this->SetNumberOfSamples(numberOfSpatialSamples);
 
 } // end BeforeEachResolution()
 

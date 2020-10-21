@@ -20,12 +20,12 @@
 
 #include "itkOpenCLExport.h"
 
-#if defined( __APPLE__ ) || defined( __MACOSX )
-#include <OpenCL/cl_platform.h>
-#include <OpenCL/cl.h>
+#if defined(__APPLE__) || defined(__MACOSX)
+#  include <OpenCL/cl_platform.h>
+#  include <OpenCL/cl.h>
 #else
-#include <CL/cl_platform.h>
-#include <CL/cl.h>
+#  include <CL/cl_platform.h>
+#  include <CL/cl.h>
 #endif
 
 namespace itk
@@ -38,7 +38,8 @@ namespace itk
  * \value VERSION_2_0 OpenCL 2.0 is supported.
  * \value VERSION_2_1 OpenCL 2.1 is supported.
  */
-enum OpenCLVersion {
+enum OpenCLVersion
+{
   VERSION_1_0 = 0x0001,
   VERSION_1_1 = 0x0002,
   VERSION_1_2 = 0x0003,

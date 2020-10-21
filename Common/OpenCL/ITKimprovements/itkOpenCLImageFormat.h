@@ -34,7 +34,6 @@ class OpenCLContext;
 class ITKOpenCL_EXPORT OpenCLImageFormat
 {
 public:
-
   /** Standard class typedefs. */
   typedef OpenCLImageFormat Self;
 
@@ -47,13 +46,14 @@ public:
    * \value IMAGE1D The The 1D image.
    * \value IMAGE1D_ARRAY The 1D array.
    * \value IMAGE1D_BUFFER The 1D buffer. */
-  enum ImageType {
-    BUFFER         = 0x10F0,
-    IMAGE2D        = 0x10F1,
-    IMAGE3D        = 0x10F2,
-    IMAGE2D_ARRAY  = 0x10F3,
-    IMAGE1D        = 0x10F4,
-    IMAGE1D_ARRAY  = 0x10F5,
+  enum ImageType
+  {
+    BUFFER = 0x10F0,
+    IMAGE2D = 0x10F1,
+    IMAGE3D = 0x10F2,
+    IMAGE2D_ARRAY = 0x10F3,
+    IMAGE1D = 0x10F4,
+    IMAGE1D_ARRAY = 0x10F5,
     IMAGE1D_BUFFER = 0x10F6
   };
 
@@ -87,21 +87,22 @@ public:
    *       CL_UNORM_SHORT_565, CL_UNORM_SHORT_555 or CL_UNORM_INT101010.
    * \value DEPTH Allow a CL image to be created from a GL depth texture.
    * \value DEPTH_STENCIL Allow a CL image to be created from a GL depth-stencil texture. */
-  enum ChannelOrder {
-    R             = 0x10B0,
-    A             = 0x10B1,
-    RG            = 0x10B2,
-    RA            = 0x10B3,
-    RGB           = 0x10B4,
-    RGBA          = 0x10B5,
-    BGRA          = 0x10B6,
-    ARGB          = 0x10B7,
-    INTENSITY     = 0x10B8,
-    LUMINANCE     = 0x10B9,
-    Rx            = 0x10BA,
-    RGx           = 0x10BB,
-    RGBx          = 0x10BC,
-    DEPTH         = 0x10BD,
+  enum ChannelOrder
+  {
+    R = 0x10B0,
+    A = 0x10B1,
+    RG = 0x10B2,
+    RA = 0x10B3,
+    RGB = 0x10B4,
+    RGBA = 0x10B5,
+    BGRA = 0x10B6,
+    ARGB = 0x10B7,
+    INTENSITY = 0x10B8,
+    LUMINANCE = 0x10B9,
+    Rx = 0x10BA,
+    RGx = 0x10BB,
+    RGBx = 0x10BC,
+    DEPTH = 0x10BD,
     DEPTH_STENCIL = 0x10BE
   };
 
@@ -130,23 +131,24 @@ public:
    * \value HALF_FLOAT Each channel component is a 16-bit half-float value.
    * \value FLOAT Each channel component is a single precision floating-point value.
    * \value UNORM_INT24 Each channel component is stored as an unsigned normalized 24-bit value. */
-  enum ChannelType {
-    SNORM_INT8       = 0x10D0,
-    SNORM_INT16      = 0x10D1,
-    UNORM_INT8       = 0x10D2,
-    UNORM_INT16      = 0x10D3,
-    UNORM_SHORT_565  = 0x10D4,
-    UNORM_SHORT_555  = 0x10D5,
+  enum ChannelType
+  {
+    SNORM_INT8 = 0x10D0,
+    SNORM_INT16 = 0x10D1,
+    UNORM_INT8 = 0x10D2,
+    UNORM_INT16 = 0x10D3,
+    UNORM_SHORT_565 = 0x10D4,
+    UNORM_SHORT_555 = 0x10D5,
     UNORM_INT_101010 = 0x10D6,
-    SIGNED_INT8      = 0x10D7,
-    SIGNED_INT16     = 0x10D8,
-    SIGNED_INT32     = 0x10D9,
-    UNSIGNED_INT8    = 0x10DA,
-    UNSIGNED_INT16   = 0x10DB,
-    UNSIGNED_INT32   = 0x10DC,
-    HALF_FLOAT       = 0x10DD,
-    FLOAT            = 0x10DE,
-    UNORM_INT24      = 0x10DF
+    SIGNED_INT8 = 0x10D7,
+    SIGNED_INT16 = 0x10D8,
+    SIGNED_INT32 = 0x10D9,
+    UNSIGNED_INT8 = 0x10DA,
+    UNSIGNED_INT16 = 0x10DB,
+    UNSIGNED_INT32 = 0x10DC,
+    HALF_FLOAT = 0x10DD,
+    FLOAT = 0x10DE,
+    UNORM_INT24 = 0x10DF
   };
 
   /** Constructs a null OpenCL image format descriptor.
@@ -155,34 +157,35 @@ public:
 
   /** Constructs an OpenCL image format descriptor from
    * \a channelOrder and \a channelType. */
-  OpenCLImageFormat(
-    const OpenCLImageFormat::ChannelOrder channelOrder,
-    const OpenCLImageFormat::ChannelType channelType );
+  OpenCLImageFormat(const OpenCLImageFormat::ChannelOrder channelOrder,
+                    const OpenCLImageFormat::ChannelType  channelType);
 
   /** Constructs an OpenCL image format descriptor from
    * \a imageType \a channelOrder and \a channelType. */
-  OpenCLImageFormat(
-    const OpenCLImageFormat::ImageType imageType,
-    const OpenCLImageFormat::ChannelOrder channelOrder,
-    const OpenCLImageFormat::ChannelType channelType );
+  OpenCLImageFormat(const OpenCLImageFormat::ImageType    imageType,
+                    const OpenCLImageFormat::ChannelOrder channelOrder,
+                    const OpenCLImageFormat::ChannelType  channelType);
 
   /** Returns true if this OpenCL image format descriptor is null. */
-  bool IsNull() const;
+  bool
+  IsNull() const;
 
   /** Returns the image type in this OpenCL image format.
    *\sa GetChannelOrder(), GetChannelType() */
-  OpenCLImageFormat::ImageType GetImageType() const;
+  OpenCLImageFormat::ImageType
+  GetImageType() const;
 
   /** Returns the order of channels in this OpenCL image format.
    *\sa GetChannelType(), GetImageType() */
-  OpenCLImageFormat::ChannelOrder GetChannelOrder() const;
+  OpenCLImageFormat::ChannelOrder
+  GetChannelOrder() const;
 
   /** Returns the representation type for channels in this OpenCL image format.
    * \sa GetChannelOrder(), GetImageType() */
-  OpenCLImageFormat::ChannelType GetChannelType() const;
+  OpenCLImageFormat::ChannelType
+  GetChannelType() const;
 
 private:
-
   cl_mem_object_type m_ImageType;
   cl_image_format    m_Format;
 
@@ -192,119 +195,160 @@ private:
 };
 
 /** Operator ==
-* Returns true if \a lhs OpenCL image format is the same as \a rhs, false otherwise.
-* \sa operator!= */
-bool ITKOpenCL_EXPORT operator==( const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs );
+ * Returns true if \a lhs OpenCL image format is the same as \a rhs, false otherwise.
+ * \sa operator!= */
+bool ITKOpenCL_EXPORT
+     operator==(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs);
 
 /** Operator !=
-* Returns true if \a lhs OpenCL image format is not the same as \a rhs, false otherwise.
-* \sa operator== */
-bool ITKOpenCL_EXPORT operator!=( const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs );
+ * Returns true if \a lhs OpenCL image format is not the same as \a rhs, false otherwise.
+ * \sa operator== */
+bool ITKOpenCL_EXPORT
+     operator!=(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs);
 
 /** Stream out operator for OpenCLImageFormat */
-template< typename charT, typename traits >
-inline
-std::basic_ostream< charT, traits > &
-operator<<( std::basic_ostream< charT, traits > & strm,
-  const OpenCLImageFormat & format )
+template <typename charT, typename traits>
+inline std::basic_ostream<charT, traits> &
+operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLImageFormat & format)
 {
-  if( format.IsNull() )
+  if (format.IsNull())
   {
     strm << "OpenCLImageFormat(null)";
     return strm;
   }
 
   strm << "OpenCLImageFormat(";
-  switch( int( format.GetImageType() ) )
+  switch (int(format.GetImageType()))
   {
     case OpenCLImageFormat::BUFFER:
-      strm << "BUFFER, "; break;
+      strm << "BUFFER, ";
+      break;
     case OpenCLImageFormat::IMAGE2D:
-      strm << "IMAGE2D, "; break;
+      strm << "IMAGE2D, ";
+      break;
     case OpenCLImageFormat::IMAGE3D:
-      strm << "IMAGE3D, "; break;
+      strm << "IMAGE3D, ";
+      break;
     case OpenCLImageFormat::IMAGE2D_ARRAY:
-      strm << "IMAGE2D_ARRAY, "; break;
+      strm << "IMAGE2D_ARRAY, ";
+      break;
     case OpenCLImageFormat::IMAGE1D:
-      strm << "IMAGE1D, "; break;
+      strm << "IMAGE1D, ";
+      break;
     case OpenCLImageFormat::IMAGE1D_ARRAY:
-      strm << "IMAGE1D_ARRAY, "; break;
+      strm << "IMAGE1D_ARRAY, ";
+      break;
     case OpenCLImageFormat::IMAGE1D_BUFFER:
-      strm << "IMAGE1D_BUFFER, "; break;
+      strm << "IMAGE1D_BUFFER, ";
+      break;
     default:
-      strm << int( format.GetImageType() ) << ", "; break;
+      strm << int(format.GetImageType()) << ", ";
+      break;
   }
-  switch( int( format.GetChannelOrder() ) )
+  switch (int(format.GetChannelOrder()))
   {
     case OpenCLImageFormat::R:
-      strm << "R, "; break;
+      strm << "R, ";
+      break;
     case OpenCLImageFormat::A:
-      strm << "A, "; break;
+      strm << "A, ";
+      break;
     case OpenCLImageFormat::RG:
-      strm << "RG, "; break;
+      strm << "RG, ";
+      break;
     case OpenCLImageFormat::RA:
-      strm << "RA, "; break;
+      strm << "RA, ";
+      break;
     case OpenCLImageFormat::RGB:
-      strm << "RGB, "; break;
+      strm << "RGB, ";
+      break;
     case OpenCLImageFormat::RGBA:
-      strm << "RGBA, "; break;
+      strm << "RGBA, ";
+      break;
     case OpenCLImageFormat::BGRA:
-      strm << "BGRA, "; break;
+      strm << "BGRA, ";
+      break;
     case OpenCLImageFormat::ARGB:
-      strm << "ARGB, "; break;
+      strm << "ARGB, ";
+      break;
     case OpenCLImageFormat::INTENSITY:
-      strm << "INTENSITY, "; break;
+      strm << "INTENSITY, ";
+      break;
     case OpenCLImageFormat::LUMINANCE:
-      strm << "LUMINANCE, "; break;
+      strm << "LUMINANCE, ";
+      break;
     case OpenCLImageFormat::Rx:
-      strm << "Rx, "; break;
+      strm << "Rx, ";
+      break;
     case OpenCLImageFormat::RGx:
-      strm << "RGx, "; break;
+      strm << "RGx, ";
+      break;
     case OpenCLImageFormat::RGBx:
-      strm << "RGBx, "; break;
+      strm << "RGBx, ";
+      break;
     case OpenCLImageFormat::DEPTH:
-      strm << "DEPTH, "; break;
+      strm << "DEPTH, ";
+      break;
     case OpenCLImageFormat::DEPTH_STENCIL:
-      strm << "DEPTH_STENCIL, "; break;
+      strm << "DEPTH_STENCIL, ";
+      break;
     default:
-      strm << int( format.GetChannelOrder() ) << ", "; break;
+      strm << int(format.GetChannelOrder()) << ", ";
+      break;
   }
-  switch( int( format.GetChannelType() ) )
+  switch (int(format.GetChannelType()))
   {
     case OpenCLImageFormat::SNORM_INT8:
-      strm << "SNORM_INT8"; break;
+      strm << "SNORM_INT8";
+      break;
     case OpenCLImageFormat::SNORM_INT16:
-      strm << "SNORM_INT16"; break;
+      strm << "SNORM_INT16";
+      break;
     case OpenCLImageFormat::UNORM_INT8:
-      strm << "UNORM_INT8"; break;
+      strm << "UNORM_INT8";
+      break;
     case OpenCLImageFormat::UNORM_INT16:
-      strm << "UNORM_INT16"; break;
+      strm << "UNORM_INT16";
+      break;
     case OpenCLImageFormat::UNORM_SHORT_565:
-      strm << "UNORM_SHORT_565"; break;
+      strm << "UNORM_SHORT_565";
+      break;
     case OpenCLImageFormat::UNORM_SHORT_555:
-      strm << "UNORM_SHORT_555"; break;
+      strm << "UNORM_SHORT_555";
+      break;
     case OpenCLImageFormat::UNORM_INT_101010:
-      strm << "UNORM_INT_101010"; break;
+      strm << "UNORM_INT_101010";
+      break;
     case OpenCLImageFormat::SIGNED_INT8:
-      strm << "SIGNED_INT8"; break;
+      strm << "SIGNED_INT8";
+      break;
     case OpenCLImageFormat::SIGNED_INT16:
-      strm << "SIGNED_INT16"; break;
+      strm << "SIGNED_INT16";
+      break;
     case OpenCLImageFormat::SIGNED_INT32:
-      strm << "SIGNED_INT32"; break;
+      strm << "SIGNED_INT32";
+      break;
     case OpenCLImageFormat::UNSIGNED_INT8:
-      strm << "UNSIGNED_INT8"; break;
+      strm << "UNSIGNED_INT8";
+      break;
     case OpenCLImageFormat::UNSIGNED_INT16:
-      strm << "UNSIGNED_INT16"; break;
+      strm << "UNSIGNED_INT16";
+      break;
     case OpenCLImageFormat::UNSIGNED_INT32:
-      strm << "UNSIGNED_INT32"; break;
+      strm << "UNSIGNED_INT32";
+      break;
     case OpenCLImageFormat::HALF_FLOAT:
-      strm << "HALF_FLOAT"; break;
+      strm << "HALF_FLOAT";
+      break;
     case OpenCLImageFormat::FLOAT:
-      strm << "FLOAT"; break;
+      strm << "FLOAT";
+      break;
     case OpenCLImageFormat::UNORM_INT24:
-      strm << "UNORM_INT24"; break;
+      strm << "UNORM_INT24";
+      break;
     default:
-      strm << int( format.GetChannelType() ); break;
+      strm << int(format.GetChannelType());
+      break;
   }
 
   strm << ')' << std::endl;

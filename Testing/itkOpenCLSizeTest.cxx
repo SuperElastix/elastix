@@ -20,11 +20,11 @@
 #include "itkTestHelper.h"
 
 int
-main( int argc, char * argv[] )
+main(int argc, char * argv[])
 {
-  itk::OpenCLSize size( itk::OpenCLSize::null );
+  itk::OpenCLSize size(itk::OpenCLSize::null);
 
-  if( !size.IsNull() )
+  if (!size.IsNull())
   {
     return EXIT_FAILURE;
   }
@@ -32,16 +32,16 @@ main( int argc, char * argv[] )
   try
   {
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
-    context->Create( itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice );
-    const std::list< itk::OpenCLDevice > devices = context->GetDevices();
+    context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
+    const std::list<itk::OpenCLDevice> devices = context->GetDevices();
 
     // Will be different for every device
-    const itk::OpenCLSize localSize = itk::OpenCLSize::GetLocalWorkSize( context->GetDefaultDevice() );
-    ITK_OPENCL_COMPARE( localSize.GetDimension(), (cl_uint)3 );
+    const itk::OpenCLSize localSize = itk::OpenCLSize::GetLocalWorkSize(context->GetDefaultDevice());
+    ITK_OPENCL_COMPARE(localSize.GetDimension(), (cl_uint)3);
 
     context->Release();
   }
-  catch( itk::ExceptionObject & e )
+  catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
     itk::ReleaseContext();

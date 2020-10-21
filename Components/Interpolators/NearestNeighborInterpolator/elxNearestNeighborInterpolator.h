@@ -38,40 +38,36 @@ namespace elastix
  * \ingroup Interpolators
  */
 
-template< class TElastix >
-class NearestNeighborInterpolator :
-  public
-  itk::NearestNeighborInterpolateImageFunction<
-  typename InterpolatorBase< TElastix >::InputImageType,
-  typename InterpolatorBase< TElastix >::CoordRepType >,
-  public
-  InterpolatorBase< TElastix >
+template <class TElastix>
+class NearestNeighborInterpolator
+  : public itk::NearestNeighborInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                        typename InterpolatorBase<TElastix>::CoordRepType>
+  , public InterpolatorBase<TElastix>
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef NearestNeighborInterpolator Self;
-  typedef itk::NearestNeighborInterpolateImageFunction<
-    typename InterpolatorBase< TElastix >::InputImageType,
-    typename InterpolatorBase< TElastix >::CoordRepType > Superclass1;
-  typedef InterpolatorBase< TElastix >    Superclass2;
-  typedef itk::SmartPointer< Self >       Pointer;
-  typedef itk::SmartPointer< const Self > ConstPointer;
+  typedef itk::NearestNeighborInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                       typename InterpolatorBase<TElastix>::CoordRepType>
+                                        Superclass1;
+  typedef InterpolatorBase<TElastix>    Superclass2;
+  typedef itk::SmartPointer<Self>       Pointer;
+  typedef itk::SmartPointer<const Self> ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( NearestNeighborInterpolator, itk::NearestNeighborInterpolateImageFunction );
+  itkTypeMacro(NearestNeighborInterpolator, itk::NearestNeighborInterpolateImageFunction);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n
    * example: <tt>(Interpolator "NearestNeighborInterpolator")</tt>\n
    */
-  elxClassNameMacro( "NearestNeighborInterpolator" );
+  elxClassNameMacro("NearestNeighborInterpolator");
 
   /** Get the ImageDimension. */
-  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+  itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::OutputType          OutputType;
@@ -90,25 +86,23 @@ public:
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
 protected:
-
   /** The constructor. */
   NearestNeighborInterpolator() {}
   /** The destructor. */
   ~NearestNeighborInterpolator() override {}
 
 private:
-
   /** The private constructor. */
-  NearestNeighborInterpolator( const Self & );  // purposely not implemented
+  NearestNeighborInterpolator(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );       // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxNearestNeighborInterpolator.hxx"
+#  include "elxNearestNeighborInterpolator.hxx"
 #endif
 
 #endif // end #ifndef __elxNearestNeighborInterpolator_h

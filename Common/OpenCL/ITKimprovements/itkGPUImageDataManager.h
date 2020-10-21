@@ -16,22 +16,22 @@
  *
  *=========================================================================*/
 /*=========================================================================
-*
-*  Copyright Insight Software Consortium
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*         http://www.apache.org/licenses/LICENSE-2.0.txt
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-*
-*=========================================================================*/
+ *
+ *  Copyright Insight Software Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkGPUImageDataManager_h
 #define __itkGPUImageDataManager_h
 
@@ -59,46 +59,48 @@ namespace itk
  *
  * \ingroup ITKGPUCommon
  */
-template< typename TPixel, unsigned int NDimension >
+template <typename TPixel, unsigned int NDimension>
 class GPUImage;
 
-template< typename ImageType >
+template <typename ImageType>
 class ITKOpenCL_EXPORT GPUImageDataManager : public GPUDataManager
 {
   // allow GPUKernelManager to access GPU buffer pointer
   friend class OpenCLKernelManager;
-  friend class GPUImage< typename ImageType::PixelType, ImageType::ImageDimension >;
+  friend class GPUImage<typename ImageType::PixelType, ImageType::ImageDimension>;
 
 public:
+  typedef GPUImageDataManager      Self;
+  typedef GPUDataManager           Superclass;
+  typedef SmartPointer<Self>       Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
 
-  typedef GPUImageDataManager        Self;
-  typedef GPUDataManager             Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  itkNewMacro(Self);
+  itkTypeMacro(GPUImageDataManager, GPUDataManager);
 
-  itkNewMacro( Self );
-  itkTypeMacro( GPUImageDataManager, GPUDataManager );
-
-  void SetImagePointer( typename ImageType::Pointer img );
+  void
+  SetImagePointer(typename ImageType::Pointer img);
 
   /** actual GPU->CPU memory copy takes place here */
-  void UpdateCPUBuffer() override;
+  void
+  UpdateCPUBuffer() override;
 
   /** actual CPU->GPU memory copy takes place here */
-  void UpdateGPUBuffer() override;
+  void
+  UpdateGPUBuffer() override;
 
   /** Grafting GPU Image Data */
-  virtual void Graft( const GPUImageDataManager * data );
+  virtual void
+  Graft(const GPUImageDataManager * data);
 
 protected:
-
   GPUImageDataManager() { m_Image = nullptr; }
   ~GPUImageDataManager() override {}
 
 private:
-
-  GPUImageDataManager( const Self & );   // purposely not implemented
-  void operator=( const Self & );        // purposely not implemented
+  GPUImageDataManager(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   typename ImageType::Pointer m_Image;
 };
@@ -106,7 +108,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUImageDataManager.hxx"
+#  include "itkGPUImageDataManager.hxx"
 #endif
 
 #endif

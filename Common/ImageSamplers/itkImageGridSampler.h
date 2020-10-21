@@ -40,23 +40,21 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageGridSampler :
-  public ImageSamplerBase< TInputImage >
+template <class TInputImage>
+class ImageGridSampler : public ImageSamplerBase<TInputImage>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageGridSampler                Self;
-  typedef ImageSamplerBase< TInputImage > Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef ImageGridSampler              Self;
+  typedef ImageSamplerBase<TInputImage> Superclass;
+  typedef SmartPointer<Self>            Pointer;
+  typedef SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageGridSampler, ImageSamplerBase );
+  itkTypeMacro(ImageGridSampler, ImageSamplerBase);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -73,12 +71,11 @@ public:
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    Superclass::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** Other typdefs. */
   typedef typename Superclass::InputImageIndexType InputImageIndexType;
-  //typedef typename Superclass::InputImageSpacingType        InputImageSpacingType;
+  // typedef typename Superclass::InputImageSpacingType        InputImageSpacingType;
   typedef typename Superclass::InputImagePointType InputImagePointType;
 
   /** Typedefs for support of user defined grid spacing for the spatial samples. */
@@ -93,9 +90,10 @@ public:
    * Moreover, it calls SetNumberOfSamples(0) (see below), to make sure
    * that the user-set sample grid spacing is never overruled.
    */
-  void SetSampleGridSpacing( const SampleGridSpacingType & arg );
+  void
+  SetSampleGridSpacing(const SampleGridSpacingType & arg);
 
-  itkGetConstReferenceMacro( SampleGridSpacing, SampleGridSpacingType );
+  itkGetConstReferenceMacro(SampleGridSpacing, SampleGridSpacingType);
 
   /** Define an isotropic SampleGridSpacing such that the desired number
    * of samples is approximately realized. The following formula is used:
@@ -113,26 +111,28 @@ public:
    *
    * This function overrules any previous calls to SetSampleGridSpacing.
    */
-  void SetNumberOfSamples( unsigned long nrofsamples ) override;
+  void
+  SetNumberOfSamples(unsigned long nrofsamples) override;
 
   /** Selecting new samples makes no sense if nothing changed. The same
    * samples would be selected anyway.
    */
-  bool SelectNewSamplesOnUpdate( void ) override
+  bool
+  SelectNewSamplesOnUpdate(void) override
   {
     return false;
   }
 
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
-  bool SelectingNewSamplesOnUpdateSupported( void ) const override
+  bool
+  SelectingNewSamplesOnUpdateSupported(void) const override
   {
     return false;
   }
 
 
 protected:
-
   /** The constructor. */
   ImageGridSampler();
 
@@ -140,10 +140,12 @@ protected:
   ~ImageGridSampler() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Function that does the work. */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing;
@@ -152,18 +154,17 @@ protected:
   unsigned long m_RequestedNumberOfSamples;
 
 private:
-
   /** The private constructor. */
-  ImageGridSampler( const Self & );    // purposely not implemented
+  ImageGridSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );      // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageGridSampler.hxx"
+#  include "itkImageGridSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageGridSampler_h

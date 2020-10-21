@@ -60,23 +60,24 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimensions,
-typename TCompositeTransform, typename TOutputTransformPrecisionType >
+template <typename TTypeList,
+          typename NDimensions,
+          typename TCompositeTransform,
+          typename TOutputTransformPrecisionType>
 class GPUCompositeTransformCopier : public Object
 {
 public:
-
   /** Standard class typedefs. */
   typedef GPUCompositeTransformCopier Self;
   typedef Object                      Superclass;
-  typedef SmartPointer< Self >        Pointer;
-  typedef SmartPointer< const Self >  ConstPointer;
+  typedef SmartPointer<Self>          Pointer;
+  typedef SmartPointer<const Self>    ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUCompositeTransformCopier, Object );
+  itkTypeMacro(GPUCompositeTransformCopier, Object);
 
   /** Type CPU definitions for the transform. */
   typedef TCompositeTransform                               CPUCompositeTransformType;
@@ -88,25 +89,23 @@ public:
   /** Dimension of the domain space.
    * TCompositeTransform::InputDimension and TCompositeTransform::OutputDimension
    * are the same just pick the select one of them. */
-  itkStaticConstMacro( SpaceDimension, unsigned int, CPUCompositeTransformType::InputDimension );
+  itkStaticConstMacro(SpaceDimension, unsigned int, CPUCompositeTransformType::InputDimension);
 
   /** Type GPU definitions for the transform. */
-  typedef TOutputTransformPrecisionType GPUScalarType;
-  typedef CompositeTransform< GPUScalarType, SpaceDimension >
-    GPUCompositeTransformType;
-  typedef typename GPUCompositeTransformType::Pointer GPUCompositeTransformPointer;
+  typedef TOutputTransformPrecisionType                     GPUScalarType;
+  typedef CompositeTransform<GPUScalarType, SpaceDimension> GPUCompositeTransformType;
+  typedef typename GPUCompositeTransformType::Pointer       GPUCompositeTransformPointer;
 
   /** Type definitions for the transform copier. */
-  typedef GPUTransformCopier< TTypeList, NDimensions, CPUTransformType, GPUScalarType >
-    GPUTransformCopierType;
-  typedef typename GPUTransformCopierType::Pointer             GPUTransformCopierPointer;
-  typedef typename GPUTransformCopierType::GPUTransformPointer GPUOutputTransformPointer;
+  typedef GPUTransformCopier<TTypeList, NDimensions, CPUTransformType, GPUScalarType> GPUTransformCopierType;
+  typedef typename GPUTransformCopierType::Pointer                                    GPUTransformCopierPointer;
+  typedef typename GPUTransformCopierType::GPUTransformPointer                        GPUOutputTransformPointer;
 
   /** Get/Set the input transform. */
-  itkSetConstObjectMacro( InputTransform, CPUCompositeTransformType );
+  itkSetConstObjectMacro(InputTransform, CPUCompositeTransformType);
 
   /** Compute of the output transform. */
-  itkGetModifiableObjectMacro( Output, GPUCompositeTransformType );
+  itkGetModifiableObjectMacro(Output, GPUCompositeTransformType);
 
   /** Get/Set the explicit mode. The default is true.
    * If the explicit mode has been set to false that means that early in the
@@ -116,29 +115,30 @@ public:
    * ObjectFactoryBase::RegisterFactory( GPUBSplineTransformFactory::New() );
    * ObjectFactoryBase::RegisterFactory( GPUEuler3DTransformFactory::New() );
    * ObjectFactoryBase::RegisterFactory( GPUSimilarity3DTransformFactory::New() ); */
-  itkGetConstMacro( ExplicitMode, bool );
-  itkSetMacro( ExplicitMode, bool );
+  itkGetConstMacro(ExplicitMode, bool);
+  itkSetMacro(ExplicitMode, bool);
 
   /** Update method. */
-  void Update( void );
+  void
+  Update(void);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   // Begin concept checking
-  itkConceptMacro( OutputTransformPrecisionTypeIsFloatingPointCheck,
-    ( Concept::IsFloatingPoint< TOutputTransformPrecisionType > ) );
+  itkConceptMacro(OutputTransformPrecisionTypeIsFloatingPointCheck,
+                  (Concept::IsFloatingPoint<TOutputTransformPrecisionType>));
   // End concept checking
 #endif
 
 protected:
-
   GPUCompositeTransformCopier();
   virtual ~GPUCompositeTransformCopier() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  virtual void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-
-  GPUCompositeTransformCopier( const Self & ); // purposely not implemented
-  void operator=( const Self & );              // purposely not implemented
+  GPUCompositeTransformCopier(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   CPUCompositeTransformConstPointer m_InputTransform;
   GPUCompositeTransformPointer      m_Output;
@@ -150,7 +150,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUCompositeTransformCopier.hxx"
+#  include "itkGPUCompositeTransformCopier.hxx"
 #endif
 
 #endif /* __itkGPUCompositeTransformCopier_h */

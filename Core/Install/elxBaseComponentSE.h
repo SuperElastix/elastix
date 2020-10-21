@@ -21,7 +21,7 @@
 #include "elxBaseComponent.h"
 #include "elxConfiguration.h"
 
- // ITK header files:
+// ITK header files:
 #include <itkMacro.h> // For ITK_DISALLOW_COPY_AND_ASSIGN.
 #include <itkWeakPointer.h>
 
@@ -43,7 +43,7 @@ namespace elastix
  * \ingroup Install
  */
 
-template< class TElastix >
+template <class TElastix>
 class BaseComponentSE : public BaseComponent
 {
 public:
@@ -54,8 +54,8 @@ public:
   typedef BaseComponent   Superclass;
 
   /** Elastix typedef's. */
-  typedef TElastix                        ElastixType;
-  typedef itk::WeakPointer< ElastixType > ElastixPointer;
+  typedef TElastix                      ElastixType;
+  typedef itk::WeakPointer<ElastixType> ElastixPointer;
 
   /** ConfigurationType. */
   typedef Configuration          ConfigurationType;
@@ -79,12 +79,14 @@ public:
    * Besides setting m_Elastix, this method also sets m_Configuration
    * and m_Registration.
    */
-  void SetElastix( ElastixType * _arg );
+  void
+  SetElastix(ElastixType * _arg);
 
   /** itkGetModifiableObjectMacro( Elastix, ElastixType );
    * without the itkDebug call.
    */
-  ElastixType * GetElastix( void ) const
+  ElastixType *
+  GetElastix(void) const
   {
     return this->m_Elastix.GetPointer();
   }
@@ -94,28 +96,30 @@ public:
    * The configuration object provides functionality to
    * read parameters and command line arguments.
    */
-  ConfigurationType * GetConfiguration( void ) const
+  ConfigurationType *
+  GetConfiguration(void) const
   {
     return this->m_Configuration.GetPointer();
   }
 
 
   /** Set the configuration. Added for transformix. */
-  void SetConfiguration( ConfigurationType * _arg );
+  void
+  SetConfiguration(ConfigurationType * _arg);
 
   /** Get a pointer to the Registration component.
    * This is a convenience function, since the registration
    * component is needed often by other components.
    * It could be accessed also via GetElastix->GetElxRegistrationBase().
    */
-  RegistrationPointer GetRegistration( void ) const
+  RegistrationPointer
+  GetRegistration(void) const
   {
     return this->m_Registration;
   }
 
 
 protected:
-
   BaseComponentSE() = default;
   ~BaseComponentSE() override = default;
 
@@ -124,10 +128,10 @@ protected:
   RegistrationPointer  m_Registration{};
 };
 
-} //end namespace elastix
+} // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxBaseComponentSE.hxx"
+#  include "elxBaseComponentSE.hxx"
 #endif
 
 #endif // end #ifndef __elxBaseComponentSE_h

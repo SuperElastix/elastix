@@ -27,10 +27,9 @@ namespace itk
  * ****************** Constructor *********************************
  */
 
-ScaledSingleValuedNonLinearOptimizer
-::ScaledSingleValuedNonLinearOptimizer()
+ScaledSingleValuedNonLinearOptimizer ::ScaledSingleValuedNonLinearOptimizer()
 {
-  this->m_Maximize           = false;
+  this->m_Maximize = false;
   this->m_ScaledCostFunction = ScaledCostFunctionType::New();
 
 } // end Constructor
@@ -41,13 +40,12 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::InitializeScales( void )
+ScaledSingleValuedNonLinearOptimizer ::InitializeScales(void)
 {
   /** NB: we assume the scales entered by the user are meant
    * as squared scales (following the ITK convention)!
    */
-  this->m_ScaledCostFunction->SetSquaredScales( this->GetScales() );
+  this->m_ScaledCostFunction->SetSquaredScales(this->GetScales());
   this->Modified();
 
 } // end InitializeScales()
@@ -58,11 +56,10 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::SetCostFunction( CostFunctionType * costFunction )
+ScaledSingleValuedNonLinearOptimizer ::SetCostFunction(CostFunctionType * costFunction)
 {
-  this->m_ScaledCostFunction->SetUnscaledCostFunction( costFunction );
-  this->Superclass::SetCostFunction( costFunction );
+  this->m_ScaledCostFunction->SetUnscaledCostFunction(costFunction);
+  this->Superclass::SetCostFunction(costFunction);
 
 } // end SetCostFunction()
 
@@ -72,10 +69,9 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::SetUseScales( bool arg )
+ScaledSingleValuedNonLinearOptimizer ::SetUseScales(bool arg)
 {
-  this->m_ScaledCostFunction->SetUseScales( arg );
+  this->m_ScaledCostFunction->SetUseScales(arg);
   this->Modified();
 
 } // end SetUseScales()
@@ -86,8 +82,7 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 bool
-ScaledSingleValuedNonLinearOptimizer
-::GetUseScales( void ) const
+ScaledSingleValuedNonLinearOptimizer ::GetUseScales(void) const
 {
   return this->m_ScaledCostFunction->GetUseScales();
 
@@ -99,10 +94,9 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 ScaledSingleValuedNonLinearOptimizer::MeasureType
-ScaledSingleValuedNonLinearOptimizer
-::GetScaledValue( const ParametersType & parameters ) const
+ScaledSingleValuedNonLinearOptimizer ::GetScaledValue(const ParametersType & parameters) const
 {
-  return this->m_ScaledCostFunction->GetValue( parameters );
+  return this->m_ScaledCostFunction->GetValue(parameters);
 
 } // end GetScaledValue()
 
@@ -112,12 +106,10 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::GetScaledDerivative(
-  const ParametersType & parameters,
-  DerivativeType & derivative ) const
+ScaledSingleValuedNonLinearOptimizer ::GetScaledDerivative(const ParametersType & parameters,
+                                                           DerivativeType &       derivative) const
 {
-  this->m_ScaledCostFunction->GetDerivative( parameters, derivative );
+  this->m_ScaledCostFunction->GetDerivative(parameters, derivative);
 
 } // end GetScaledDerivative()
 
@@ -127,14 +119,11 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::GetScaledValueAndDerivative(
-  const ParametersType & parameters,
-  MeasureType & value,
-  DerivativeType & derivative ) const
+ScaledSingleValuedNonLinearOptimizer ::GetScaledValueAndDerivative(const ParametersType & parameters,
+                                                                   MeasureType &          value,
+                                                                   DerivativeType &       derivative) const
 {
-  this->m_ScaledCostFunction
-    ->GetValueAndDerivative( parameters, value, derivative );
+  this->m_ScaledCostFunction->GetValueAndDerivative(parameters, value, derivative);
 
 } // end GetScaledValueAndDerivative()
 
@@ -144,20 +133,17 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 const ScaledSingleValuedNonLinearOptimizer::ParametersType &
-ScaledSingleValuedNonLinearOptimizer
-::GetCurrentPosition( void ) const
+ScaledSingleValuedNonLinearOptimizer ::GetCurrentPosition(void) const
 {
   /** Get the current unscaled position. */
-  const ParametersType & scaledCurrentPosition
-    = this->GetScaledCurrentPosition();
+  const ParametersType & scaledCurrentPosition = this->GetScaledCurrentPosition();
 
-  if( this->GetUseScales() )
+  if (this->GetUseScales())
   {
     /** Get the ScaledCurrentPosition and divide each
      * element through its scale. */
     this->m_UnscaledCurrentPosition = scaledCurrentPosition;
-    this->m_ScaledCostFunction
-      ->ConvertScaledToUnscaledParameters( this->m_UnscaledCurrentPosition );
+    this->m_ScaledCostFunction->ConvertScaledToUnscaledParameters(this->m_UnscaledCurrentPosition);
 
     return this->m_UnscaledCurrentPosition;
   }
@@ -177,10 +163,9 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::SetScaledCurrentPosition( const ParametersType & parameters )
+ScaledSingleValuedNonLinearOptimizer ::SetScaledCurrentPosition(const ParametersType & parameters)
 {
-  itkDebugMacro( "setting scaled current position to " << parameters );
+  itkDebugMacro("setting scaled current position to " << parameters);
   this->m_ScaledCurrentPosition = parameters; // slow copy
   this->Modified();
 
@@ -192,22 +177,20 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::SetCurrentPosition( const ParametersType & param )
+ScaledSingleValuedNonLinearOptimizer ::SetCurrentPosition(const ParametersType & param)
 {
   /** Multiply the argument by the scales and set it as the
    * the ScaledCurrentPosition.
    */
-  if( this->GetUseScales() )
+  if (this->GetUseScales())
   {
     ParametersType scaledParameters = param;
-    this->m_ScaledCostFunction
-      ->ConvertUnscaledToScaledParameters( scaledParameters );
-    this->SetScaledCurrentPosition( scaledParameters );
+    this->m_ScaledCostFunction->ConvertUnscaledToScaledParameters(scaledParameters);
+    this->SetScaledCurrentPosition(scaledParameters);
   }
   else
   {
-    this->SetScaledCurrentPosition( param );
+    this->SetScaledCurrentPosition(param);
   }
 
 } // end SetCurrentPosition()
@@ -218,17 +201,16 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::SetMaximize( bool _arg )
+ScaledSingleValuedNonLinearOptimizer ::SetMaximize(bool _arg)
 {
-  itkDebugMacro( "Setting Maximize to " << _arg );
-  if( this->m_Maximize != _arg )
+  itkDebugMacro("Setting Maximize to " << _arg);
+  if (this->m_Maximize != _arg)
   {
     this->m_Maximize = _arg;
-    this->m_ScaledCostFunction->SetNegateCostFunction( _arg );
+    this->m_ScaledCostFunction->SetNegateCostFunction(_arg);
     this->Modified();
   }
-}  // end SetMaximize()
+} // end SetMaximize()
 
 
 /**
@@ -236,20 +218,15 @@ ScaledSingleValuedNonLinearOptimizer
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer
-::PrintSelf( std::ostream & os, Indent indent ) const
+ScaledSingleValuedNonLinearOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
 {
   /** Call the superclass' PrintSelf. */
-  Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf(os, indent);
 
-  os << indent << "ScaledCurrentPosition: "
-     << this->m_ScaledCurrentPosition << std::endl;
-  os << indent << "UnscaledCurrentPosition: "
-     << this->m_UnscaledCurrentPosition << std::endl;
-  os << indent << "ScaledCostFunction: "
-     << this->m_ScaledCostFunction.GetPointer() << std::endl;
-  os << indent << "Maximize: "
-     << ( this->m_Maximize ? "true" : "false" ) << std::endl;
+  os << indent << "ScaledCurrentPosition: " << this->m_ScaledCurrentPosition << std::endl;
+  os << indent << "UnscaledCurrentPosition: " << this->m_UnscaledCurrentPosition << std::endl;
+  os << indent << "ScaledCostFunction: " << this->m_ScaledCostFunction.GetPointer() << std::endl;
+  os << indent << "Maximize: " << (this->m_Maximize ? "true" : "false") << std::endl;
 
 } // end PrintSelf()
 

@@ -51,79 +51,70 @@ typedef struct
 //------------------------------------------------------------------------------
 
 // IndexType
-template< typename ImageType >
+template <typename ImageType>
 void
-SetIndex( const typename ImageType::IndexType index,
-  cl_uint & oclindex )
+SetIndex(const typename ImageType::IndexType index, cl_uint & oclindex)
 {
-  oclindex = index[ 0 ];
+  oclindex = index[0];
 }
 
 
-template< typename ImageType >
+template <typename ImageType>
 void
-SetIndex( const typename ImageType::IndexType index,
-  cl_uint2 & oclindex )
+SetIndex(const typename ImageType::IndexType index, cl_uint2 & oclindex)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 2; i++ )
+  for (unsigned int i = 0; i < 2; i++)
   {
-    oclindex.s[ id++ ] = index[ i ];
+    oclindex.s[id++] = index[i];
   }
 }
 
 
-template< typename ImageType >
+template <typename ImageType>
 void
-SetIndex( const typename ImageType::IndexType index,
-  cl_uint4 & oclindex )
+SetIndex(const typename ImageType::IndexType index, cl_uint4 & oclindex)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 3; i++ )
+  for (unsigned int i = 0; i < 3; i++)
   {
-    oclindex.s[ id++ ] = index[ i ];
+    oclindex.s[id++] = index[i];
   }
-  oclindex.s[ 3 ] = 0;
+  oclindex.s[3] = 0;
 }
 
 
 // ContinuousIndexType
-template< typename TContinuousIndex >
+template <typename TContinuousIndex>
 void
-SetContinuousIndex(
-  const TContinuousIndex & cindex,
-  cl_float & oclindex )
+SetContinuousIndex(const TContinuousIndex & cindex, cl_float & oclindex)
 {
-  oclindex = cindex[ 0 ];
+  oclindex = cindex[0];
 }
 
 
-template< typename TContinuousIndex >
+template <typename TContinuousIndex>
 void
-SetContinuousIndex(
-  const TContinuousIndex & cindex,
-  cl_float2 & oclindex )
+SetContinuousIndex(const TContinuousIndex & cindex, cl_float2 & oclindex)
 {
-  oclindex.s[ 0 ] = cindex[ 0 ];
-  oclindex.s[ 1 ] = cindex[ 1 ];
+  oclindex.s[0] = cindex[0];
+  oclindex.s[1] = cindex[1];
 }
 
 
-template< typename TContinuousIndex >
+template <typename TContinuousIndex>
 void
-SetContinuousIndex(
-  const TContinuousIndex & cindex,
-  cl_float4 & oclindex )
+SetContinuousIndex(const TContinuousIndex & cindex, cl_float4 & oclindex)
 {
   unsigned int id = 0;
 
-  for( unsigned int i = 0; i < 3; i++ )
+  for (unsigned int i = 0; i < 3; i++)
   {
-    oclindex.s[ id++ ] = cindex[ i ];
+    oclindex.s[id++] = cindex[i];
   }
-  oclindex.s[ 3 ] = 0.0;
+  oclindex.s[3] = 0.0;
 }
 
 
@@ -132,25 +123,24 @@ SetContinuousIndex(
 //------------------------------------------------------------------------------
 namespace itk
 {
-template< typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction >
-GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentInterpolateImageFunction >
-::GPUInterpolateImageFunction()
+template <typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction>
+GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::GPUInterpolateImageFunction()
 {
   const unsigned int ImageDim = InputImageType::ImageDimension;
 
   this->m_ParametersDataManager->Initialize();
-  this->m_ParametersDataManager->SetBufferFlag( CL_MEM_READ_ONLY );
+  this->m_ParametersDataManager->SetBufferFlag(CL_MEM_READ_ONLY);
 
-  switch( ImageDim )
+  switch (ImageDim)
   {
     case 1:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUImageFunction1D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUImageFunction1D));
       break;
     case 2:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUImageFunction2D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUImageFunction2D));
       break;
     case 3:
-      this->m_ParametersDataManager->SetBufferSize( sizeof( GPUImageFunction3D ) );
+      this->m_ParametersDataManager->SetBufferSize(sizeof(GPUImageFunction3D));
       break;
     default:
       break;
@@ -161,59 +151,53 @@ GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentInterpolateImageFunc
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction >
+template <typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction>
 GPUDataManager::Pointer
-GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentInterpolateImageFunction >
-::GetParametersDataManager( void ) const
+GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::GetParametersDataManager(
+  void) const
 {
   const unsigned int ImageDim = InputImageType::ImageDimension;
 
-  switch( ImageDim )
+  switch (ImageDim)
   {
     case 1:
     {
       GPUImageFunction1D imageFunction;
 
-      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.start_index );
-      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
-        imageFunction.start_continuous_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_EndContinuousIndex,
-        imageFunction.end_continuous_index );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
+      SetIndex<InputImageType>(this->m_StartIndex, imageFunction.start_index);
+      SetIndex<InputImageType>(this->m_EndIndex, imageFunction.end_index);
+      SetContinuousIndex<ContinuousIndexType>(this->m_StartContinuousIndex, imageFunction.start_continuous_index);
+      SetContinuousIndex<ContinuousIndexType>(this->m_EndContinuousIndex, imageFunction.end_continuous_index);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&imageFunction);
     }
     break;
     case 2:
     {
       GPUImageFunction2D imageFunction;
 
-      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.start_index );
-      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
-        imageFunction.start_continuous_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_EndContinuousIndex,
-        imageFunction.end_continuous_index );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
+      SetIndex<InputImageType>(this->m_StartIndex, imageFunction.start_index);
+      SetIndex<InputImageType>(this->m_EndIndex, imageFunction.end_index);
+      SetContinuousIndex<ContinuousIndexType>(this->m_StartContinuousIndex, imageFunction.start_continuous_index);
+      SetContinuousIndex<ContinuousIndexType>(this->m_EndContinuousIndex, imageFunction.end_continuous_index);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&imageFunction);
     }
     break;
     case 3:
     {
       GPUImageFunction3D imageFunction;
 
-      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.start_index );
-      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
-        imageFunction.start_continuous_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_EndContinuousIndex,
-        imageFunction.end_continuous_index );
-      this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
+      SetIndex<InputImageType>(this->m_StartIndex, imageFunction.start_index);
+      SetIndex<InputImageType>(this->m_EndIndex, imageFunction.end_index);
+      SetContinuousIndex<ContinuousIndexType>(this->m_StartContinuousIndex, imageFunction.start_continuous_index);
+      SetContinuousIndex<ContinuousIndexType>(this->m_EndContinuousIndex, imageFunction.end_continuous_index);
+      this->m_ParametersDataManager->SetCPUBufferPointer(&imageFunction);
     }
     break;
     default:
       break;
   }
 
-  this->m_ParametersDataManager->SetGPUDirtyFlag( true );
+  this->m_ParametersDataManager->SetGPUDirtyFlag(true);
   this->m_ParametersDataManager->UpdateGPUBuffer();
 
   return this->m_ParametersDataManager;
@@ -221,12 +205,12 @@ GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentInterpolateImageFunc
 
 
 //------------------------------------------------------------------------------
-template< typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction >
+template <typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction>
 void
-GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentInterpolateImageFunction >
-::PrintSelf( std::ostream & os, Indent indent ) const
+GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::PrintSelf(std::ostream & os,
+                                                                                                Indent indent) const
 {
-  CPUSuperclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf(os, indent);
 }
 
 

@@ -17,4 +17,4 @@
  *=========================================================================*/
 #include "elxAdvancedBSplineTransform.h"
 
-elxInstallMacro( AdvancedBSplineTransform );
+elxInstallMacro(AdvancedBSplineTransform);

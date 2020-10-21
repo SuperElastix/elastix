@@ -69,77 +69,83 @@ namespace elastix
  */
 
 template <class TElastix>
-class PreconditionedGradientDescent :
-  public itk::AdaptiveStochasticPreconditionedGradientDescentOptimizer,
-  public OptimizerBase<TElastix>
+class PreconditionedGradientDescent
+  : public itk::AdaptiveStochasticPreconditionedGradientDescentOptimizer
+  , public OptimizerBase<TElastix>
 {
 public:
-
   /** Standard ITK.*/
-  typedef PreconditionedGradientDescent                             Self;
-  typedef AdaptiveStochasticPreconditionedGradientDescentOptimizer  Superclass1;
-  typedef OptimizerBase< TElastix >                                 Superclass2;
-  typedef itk::SmartPointer< Self >                                 Pointer;
-  typedef itk::SmartPointer< const Self >                           ConstPointer;
+  typedef PreconditionedGradientDescent                            Self;
+  typedef AdaptiveStochasticPreconditionedGradientDescentOptimizer Superclass1;
+  typedef OptimizerBase<TElastix>                                  Superclass2;
+  typedef itk::SmartPointer<Self>                                  Pointer;
+  typedef itk::SmartPointer<const Self>                            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PreconditionedGradientDescent,
-    AdaptiveStochasticPreconditionedGradientDescentOptimizer );
+  itkTypeMacro(PreconditionedGradientDescent, AdaptiveStochasticPreconditionedGradientDescentOptimizer);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer.
    * example: <tt>(Optimizer "PreconditionedGradientDescent")</tt>\n
    */
-  elxClassNameMacro( "PreconditionedGradientDescent" );
+  elxClassNameMacro("PreconditionedGradientDescent");
 
   /** Typedef's inherited from Superclass1, the AdaptiveStochasticPreconditionedGradientDescentOptimizer. */
-  typedef Superclass1::CostFunctionType     CostFunctionType;
-  typedef Superclass1::CostFunctionPointer  CostFunctionPointer;
-  typedef Superclass1::StopConditionType    StopConditionType;
+  typedef Superclass1::CostFunctionType    CostFunctionType;
+  typedef Superclass1::CostFunctionPointer CostFunctionPointer;
+  typedef Superclass1::StopConditionType   StopConditionType;
 
   /** Typedef's inherited from Superclass2, the elastix OptimizerBase. */
-  typedef typename Superclass2::ElastixType           ElastixType;
-  typedef typename Superclass2::ElastixPointer        ElastixPointer;
-  typedef typename Superclass2::ConfigurationType     ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType      RegistrationType;
-  typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType           ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Typedef for the ParametersType. */
-  typedef typename Superclass1::ParametersType        ParametersType;
+  typedef typename Superclass1::ParametersType ParametersType;
 
   /** Some typedefs for computing the SelfHessian */
-  typedef typename Superclass1::PreconditionValueType     PreconditionValueType;
-  typedef typename Superclass1::PreconditionType          PreconditionType;
-  //typedef typename Superclass1::EigenSystemType           EigenSystemType;
+  typedef typename Superclass1::PreconditionValueType PreconditionValueType;
+  typedef typename Superclass1::PreconditionType      PreconditionType;
+  // typedef typename Superclass1::EigenSystemType           EigenSystemType;
 
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed.
    */
-  virtual void BeforeRegistration( void );
-  virtual void BeforeEachResolution( void );
-  virtual void AfterEachResolution( void );
-  virtual void AfterEachIteration( void );
-  virtual void AfterRegistration( void );
+  virtual void
+  BeforeRegistration(void);
+  virtual void
+  BeforeEachResolution(void);
+  virtual void
+  AfterEachResolution(void);
+  virtual void
+  AfterEachIteration(void);
+  virtual void
+  AfterRegistration(void);
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation.
    */
-  virtual void StartOptimization( void );
+  virtual void
+  StartOptimization(void);
 
   /** Stop optimization and pass on exception. */
-  virtual void MetricErrorResponse( itk::ExceptionObject & err );
+  virtual void
+  MetricErrorResponse(itk::ExceptionObject & err);
 
   /** Add SetCurrentPositionPublic, which calls the protected
    * SetCurrentPosition of the itkAdaptiveStochasticPreconditionedGradientDescentOptimizer class.
    */
-  virtual void SetCurrentPositionPublic( const ParametersType & param )
+  virtual void
+  SetCurrentPositionPublic(const ParametersType & param)
   {
-    this->Superclass1::SetCurrentPosition( param );
+    this->Superclass1::SetCurrentPosition(param);
   }
 
   /** Set/Get whether automatic parameter estimation is desired.
@@ -151,14 +157,14 @@ public:
    * A usually suitable value for SP_A is 20, which is the
    * default setting, if not specified by the user.
    */
-  itkSetMacro( AutomaticParameterEstimation, bool );
-  itkGetConstMacro( AutomaticParameterEstimation, bool );
+  itkSetMacro(AutomaticParameterEstimation, bool);
+  itkGetConstMacro(AutomaticParameterEstimation, bool);
 
   /** Set the MaximumNumberOfSamplingAttempts. */
-  itkSetMacro( MaximumNumberOfSamplingAttempts, unsigned long );
+  itkSetMacro(MaximumNumberOfSamplingAttempts, unsigned long);
 
   /** Get the MaximumNumberOfSamplingAttempts. */
-  itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, unsigned long );
+  itkGetConstReferenceMacro(MaximumNumberOfSamplingAttempts, unsigned long);
 
   /** Set the SelfHessian as a preconditioning matrix and call Superclass' implementation.
    * Only done when m_PreconditionMatrixSet == false;
@@ -166,12 +172,15 @@ public:
    * SigmoidScale, SigmoidMax, SigmoidMin.
    * After that call Superclass' implementation.
    */
-  virtual void ResumeOptimization( void );
+  virtual void
+  ResumeOptimization(void);
 
 protected:
-
-  struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
-  typedef typename std::vector<SettingsType>          SettingsVectorType;
+  struct SettingsType
+  {
+    double a, A, alpha, fmax, fmin, omega;
+  };
+  typedef typename std::vector<SettingsType> SettingsVectorType;
 
   /** Other protected typedefs */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
@@ -180,43 +189,43 @@ protected:
   typedef typename ProgressCommand::Pointer                      ProgressCommandPointer;
 
   /** Samplers: */
-  typedef typename RegistrationType::FixedImageType   FixedImageType;
-  typedef typename RegistrationType::MovingImageType  MovingImageType;
-  typedef itk::ImageSamplerBase<FixedImageType>       ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer      ImageSamplerBasePointer;
-  typedef itk::ImageRandomSamplerBase<FixedImageType> ImageRandomSamplerBaseType;
-  typedef typename
-    ImageRandomSamplerBaseType::Pointer               ImageRandomSamplerBasePointer;
-  typedef itk::ImageRandomCoordinateSampler<
-    FixedImageType >                                  ImageRandomCoordinateSamplerType;
-  typedef typename
-    ImageRandomCoordinateSamplerType::Pointer         ImageRandomCoordinateSamplerPointer;
-  typedef itk::ImageGridSampler< FixedImageType >     ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer      ImageGridSamplerPointer;
+  typedef typename RegistrationType::FixedImageType          FixedImageType;
+  typedef typename RegistrationType::MovingImageType         MovingImageType;
+  typedef itk::ImageSamplerBase<FixedImageType>              ImageSamplerBaseType;
+  typedef typename ImageSamplerBaseType::Pointer             ImageSamplerBasePointer;
+  typedef itk::ImageRandomSamplerBase<FixedImageType>        ImageRandomSamplerBaseType;
+  typedef typename ImageRandomSamplerBaseType::Pointer       ImageRandomSamplerBasePointer;
+  typedef itk::ImageRandomCoordinateSampler<FixedImageType>  ImageRandomCoordinateSamplerType;
+  typedef typename ImageRandomCoordinateSamplerType::Pointer ImageRandomCoordinateSamplerPointer;
+  typedef itk::ImageGridSampler<FixedImageType>              ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer             ImageGridSamplerPointer;
 
   PreconditionedGradientDescent();
-  virtual ~PreconditionedGradientDescent() {};
+  virtual ~PreconditionedGradientDescent(){};
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;
 
   unsigned int m_NumberOfGradientMeasurements;
   unsigned int m_NumberOfSamplesForExactGradient;
-  double m_SigmoidScaleFactor;
+  double       m_SigmoidScaleFactor;
 
   /** RandomGenerator for AddRandomPerturbation. */
   RandomGeneratorPointer m_RandomGenerator;
 
   /** Get the SelfHessian from the metric and submit as Precondition matrix */
-  virtual void SetSelfHessian( void );
+  virtual void
+  SetSelfHessian(void);
 
   /** Print the contents of the settings vector to elxout. */
-  virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
+  virtual void
+  PrintSettingsVector(const SettingsVectorType & settings) const;
 
   /** Estimates some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale.
    */
-  virtual void AutomaticParameterEstimation( void );
+  virtual void
+  AutomaticParameterEstimation(void);
 
   /** Measure some derivatives, exact and approximated. Returns
    * the sigma1 and sigma2.
@@ -229,26 +238,25 @@ protected:
    * where g_n is the approximated gradient at mu_0.
    * NB: sigma1 = sqr(sigma_1), sigma2 = sqr(sigma_2), compared to my notes.
    */
-  virtual void SampleGradients( const ParametersType & mu0,
-    double & sigma1, double & sigma2 );
+  virtual void
+  SampleGradients(const ParametersType & mu0, double & sigma1, double & sigma2);
 
   /** Helper function, which calls GetScaledValueAndDerivative and does
    * some exception handling. Used by SampleGradients.
    */
-  virtual void GetScaledDerivativeWithExceptionHandling(
-    const ParametersType & parameters, DerivativeType & derivative );
+  virtual void
+  GetScaledDerivativeWithExceptionHandling(const ParametersType & parameters, DerivativeType & derivative);
 
   /** Helper function that adds a random perturbation delta to the input
    * parameters, with delta ~ sigma * N(0,I). Used by SampleGradients.
    */
-  virtual void AddRandomPerturbation(
-    const ParametersType & initialParameters,
-    ParametersType & perturbedParameters, double sigma );
+  virtual void
+  AddRandomPerturbation(const ParametersType & initialParameters, ParametersType & perturbedParameters, double sigma);
 
 private:
-
-  PreconditionedGradientDescent( const Self& ); // purposely not implemented
-  void operator=( const Self& );          // purposely not implemented
+  PreconditionedGradientDescent(const Self &); // purposely not implemented
+  void
+  operator=(const Self &); // purposely not implemented
 
   /** Private variables for the sampling attempts. */
   unsigned long m_MaximumNumberOfSamplingAttempts;
@@ -256,10 +264,10 @@ private:
   unsigned long m_PreviousErrorAtIteration;
 
   /** Private variables for self Hessian support. */
-  bool          m_PreconditionMatrixSet;
+  bool m_PreconditionMatrixSet;
 
-  bool          m_AutomaticParameterEstimation;
-  bool          m_AutomaticParameterEstimationDone;
+  bool m_AutomaticParameterEstimation;
+  bool m_AutomaticParameterEstimationDone;
 
 }; // end class PreconditionedGradientDescent
 
@@ -267,7 +275,7 @@ private:
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxPreconditionedGradientDescent.hxx"
+#  include "elxPreconditionedGradientDescent.hxx"
 #endif
 
 #endif // end #ifndef __elxPreconditionedGradientDescent_h

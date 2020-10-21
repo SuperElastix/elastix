@@ -28,12 +28,12 @@ namespace elastix
 Configuration::Configuration()
 {
   /** Initialize stuff. */
-  this->m_ParameterFileName     = "";
-  this->m_ParameterFileParser   = ParameterFileParserType::New();
+  this->m_ParameterFileName = "";
+  this->m_ParameterFileParser = ParameterFileParserType::New();
   this->m_ParameterMapInterface = ParameterMapInterfaceType::New();
 
-  this->m_IsInitialized              = false;
-  this->m_ElastixLevel               = 0;
+  this->m_IsInitialized = false;
+  this->m_ElastixLevel = 0;
   this->m_TotalNumberOfElastixLevels = 1;
 
 } // end Constructor()
@@ -44,23 +44,25 @@ Configuration::Configuration()
  */
 
 void
-Configuration
-::PrintParameterFile( void ) const
+Configuration ::PrintParameterFile(void) const
 {
   /** Read what's in the parameter file. */
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file. */
-  xl::xout[ "logonly" ] << std::endl << "=============== start of ParameterFile: "
-                        << this->GetParameterFileName() << " ===============" << std::endl;
+  xl::xout["logonly"] << std::endl
+                      << "=============== start of ParameterFile: " << this->GetParameterFileName()
+                      << " ===============" << std::endl;
 
   /** Write the parameter file. */
-  xl::xout[ "logonly" ] << params;
-  //std::cerr << params;
+  xl::xout["logonly"] << params;
+  // std::cerr << params;
 
   /** Separate clearly in log-file. */
-  xl::xout[ "logonly" ] << std::endl << "=============== end of ParameterFile: "
-                        << this->GetParameterFileName() << " ===============\n" << std::endl;
+  xl::xout["logonly"] << std::endl
+                      << "=============== end of ParameterFile: " << this->GetParameterFileName()
+                      << " ===============\n"
+                      << std::endl;
 
 } // end PrintParameterFile()
 
@@ -70,8 +72,7 @@ Configuration
  */
 
 int
-Configuration
-::BeforeAll( void )
+Configuration ::BeforeAll(void)
 {
   if (!BaseComponent::IsElastixLibrary())
   {
@@ -87,8 +88,7 @@ Configuration
  */
 
 int
-Configuration
-::BeforeAllTransformix( void )
+Configuration ::BeforeAllTransformix(void)
 {
   this->PrintParameterFile();
   return 0;
@@ -101,8 +101,7 @@ Configuration
  */
 
 int
-Configuration
-::Initialize( const CommandLineArgumentMapType & _arg )
+Configuration ::Initialize(const CommandLineArgumentMapType & _arg)
 {
   /** The first part is getting the command line arguments and setting them
    * in the configuration. From the command line arguments we find the name
@@ -120,57 +119,55 @@ Configuration
    * NOTE: this implies that one can not use "-tp" for elastix and
    * "-p" for transformix.
    */
-  std::string p  = this->GetCommandLineArgument( "-p" );
-  std::string tp = this->GetCommandLineArgument( "-tp" );
+  std::string p = this->GetCommandLineArgument("-p");
+  std::string tp = this->GetCommandLineArgument("-tp");
 
-  if( p != "" && tp == "" )
+  if (p != "" && tp == "")
   {
     /** elastix called Initialize(). */
-    this->SetParameterFileName( p.c_str() );
+    this->SetParameterFileName(p.c_str());
   }
-  else if( p == "" && tp != "" )
+  else if (p == "" && tp != "")
   {
     /** transformix called Initialize(). */
-    this->SetParameterFileName( tp.c_str() );
+    this->SetParameterFileName(tp.c_str());
   }
-  else if( p == "" && tp == "" )
+  else if (p == "" && tp == "")
   {
-    xl::xout[ "error" ] << "ERROR: No (Transform-)Parameter file has been entered" << std::endl;
-    xl::xout[ "error" ] << "for elastix: command line option \"-p\"" << std::endl;
-    xl::xout[ "error" ] << "for transformix: command line option \"-tp\"" << std::endl;
+    xl::xout["error"] << "ERROR: No (Transform-)Parameter file has been entered" << std::endl;
+    xl::xout["error"] << "for elastix: command line option \"-p\"" << std::endl;
+    xl::xout["error"] << "for transformix: command line option \"-tp\"" << std::endl;
     return 1;
   }
   else
   {
     /** Both "p" and "tp" are used, which is prohibited. */
-    xl::xout[ "error" ] << "ERROR: Both \"-p\" and \"-tp\" are used, "
-                        << "which is prohibited." << std::endl;
+    xl::xout["error"] << "ERROR: Both \"-p\" and \"-tp\" are used, "
+                      << "which is prohibited." << std::endl;
     return 1;
   }
 
   /** Read the ParameterFile. */
-  this->m_ParameterFileParser->SetParameterFileName( this->m_ParameterFileName );
+  this->m_ParameterFileParser->SetParameterFileName(this->m_ParameterFileName);
   try
   {
-    xl::xout[ "standard" ] << "Reading the elastix parameters from file ...\n" << std::endl;
+    xl::xout["standard"] << "Reading the elastix parameters from file ...\n" << std::endl;
     this->m_ParameterFileParser->ReadParameterFile();
   }
-  catch( itk::ExceptionObject & excp )
+  catch (itk::ExceptionObject & excp)
   {
-    xl::xout[ "error" ] << "ERROR: when reading the parameter file:\n"
-                        << excp << std::endl;
+    xl::xout["error"] << "ERROR: when reading the parameter file:\n" << excp << std::endl;
     return 1;
   }
 
   /** Connect the parameter file reader to the interface. */
-  this->m_ParameterMapInterface->SetParameterMap(
-    this->m_ParameterFileParser->GetParameterMap() );
+  this->m_ParameterMapInterface->SetParameterMap(this->m_ParameterFileParser->GetParameterMap());
 
   /** Silently check in the parameter file if error messages should be printed. */
-  this->m_ParameterMapInterface->SetPrintErrorMessages( false );
+  this->m_ParameterMapInterface->SetPrintErrorMessages(false);
   bool printErrorMessages = true;
-  this->ReadParameter( printErrorMessages, "PrintErrorMessages", 0, false );
-  this->m_ParameterMapInterface->SetPrintErrorMessages( printErrorMessages );
+  this->ReadParameter(printErrorMessages, "PrintErrorMessages", 0, false);
+  this->m_ParameterMapInterface->SetPrintErrorMessages(printErrorMessages);
 
   /** Set the initialized flag. */
   this->m_IsInitialized = true;
@@ -186,9 +183,8 @@ Configuration
  */
 
 int
-Configuration
-::Initialize( const CommandLineArgumentMapType & _arg,
-  const ParameterFileParserType::ParameterMapType & inputMap )
+Configuration ::Initialize(const CommandLineArgumentMapType &                _arg,
+                           const ParameterFileParserType::ParameterMapType & inputMap)
 {
   /** The first part is getting the command line arguments and setting them
    * in the configuration. From the command line arguments we find the name
@@ -199,13 +195,13 @@ Configuration
   /** Store the command line arguments. */
   this->m_CommandLineArgumentMap = _arg;
 
-  this->m_ParameterMapInterface->SetParameterMap( inputMap );
+  this->m_ParameterMapInterface->SetParameterMap(inputMap);
 
   /** Silently check in the parameter file if error messages should be printed. */
-  this->m_ParameterMapInterface->SetPrintErrorMessages( false );
+  this->m_ParameterMapInterface->SetPrintErrorMessages(false);
   bool printErrorMessages = true;
-  this->ReadParameter( printErrorMessages, "PrintErrorMessages", 0, false );
-  this->m_ParameterMapInterface->SetPrintErrorMessages( printErrorMessages );
+  this->ReadParameter(printErrorMessages, "PrintErrorMessages", 0, false);
+  this->m_ParameterMapInterface->SetPrintErrorMessages(printErrorMessages);
 
   /** Set the initialized flag. */
   this->m_IsInitialized = true;
@@ -221,8 +217,7 @@ Configuration
  */
 
 bool
-Configuration
-::IsInitialized( void ) const
+Configuration ::IsInitialized(void) const
 {
   return this->m_IsInitialized;
 
@@ -234,13 +229,12 @@ Configuration
  */
 
 std::string
-Configuration
-::GetCommandLineArgument( const std::string & key ) const
+Configuration ::GetCommandLineArgument(const std::string & key) const
 {
   const auto found = this->m_CommandLineArgumentMap.find(key);
 
   /** Check if the argument was given. If no return "". */
-  if( found == this->m_CommandLineArgumentMap.end() )
+  if (found == this->m_CommandLineArgumentMap.end())
   {
     return "";
   }
@@ -255,10 +249,9 @@ Configuration
  */
 
 void
-Configuration
-::SetCommandLineArgument( const std::string & key, const std::string & value )
+Configuration ::SetCommandLineArgument(const std::string & key, const std::string & value)
 {
-  this->m_CommandLineArgumentMap[ key ] = value;
+  this->m_CommandLineArgumentMap[key] = value;
 
 } // end SetCommandLineArgument()
 

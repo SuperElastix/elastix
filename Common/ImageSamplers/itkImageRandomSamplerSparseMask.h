@@ -34,23 +34,21 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageRandomSamplerSparseMask :
-  public ImageRandomSamplerBase< TInputImage >
+template <class TInputImage>
+class ImageRandomSamplerSparseMask : public ImageRandomSamplerBase<TInputImage>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageRandomSamplerSparseMask          Self;
-  typedef ImageRandomSamplerBase< TInputImage > Superclass;
-  typedef SmartPointer< Self >                  Pointer;
-  typedef SmartPointer< const Self >            ConstPointer;
+  typedef ImageRandomSamplerSparseMask        Self;
+  typedef ImageRandomSamplerBase<TInputImage> Superclass;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageRandomSamplerSparseMask, ImageRandomSamplerBase );
+  itkTypeMacro(ImageRandomSamplerSparseMask, ImageRandomSamplerBase);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -67,8 +65,7 @@ public:
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int,
-    Superclass::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** Other typdefs. */
   typedef typename InputImageType::IndexType InputImageIndexType;
@@ -79,8 +76,7 @@ public:
   typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
 
 protected:
-
-  typedef itk::ImageFullSampler< InputImageType >   InternalFullSamplerType;
+  typedef itk::ImageFullSampler<InputImageType>     InternalFullSamplerType;
   typedef typename InternalFullSamplerType::Pointer InternalFullSamplerPointer;
 
   /** The constructor. */
@@ -89,34 +85,35 @@ protected:
   ~ImageRandomSamplerSparseMask() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Function that does the work. */
-  void GenerateData( void ) override;
+  void
+  GenerateData(void) override;
 
   /** Multi-threaded functionality that does the work. */
-  void BeforeThreadedGenerateData( void ) override;
+  void
+  BeforeThreadedGenerateData(void) override;
 
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void
+  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
 
   RandomGeneratorPointer     m_RandomGenerator;
   InternalFullSamplerPointer m_InternalFullSampler;
 
 private:
-
   /** The private constructor. */
-  ImageRandomSamplerSparseMask( const Self & );  // purposely not implemented
+  ImageRandomSamplerSparseMask(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomSamplerSparseMask.hxx"
+#  include "itkImageRandomSamplerSparseMask.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomSamplerSparseMask_h

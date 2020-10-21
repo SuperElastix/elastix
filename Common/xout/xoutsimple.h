@@ -33,14 +33,13 @@ using namespace std;
  * \ingroup xout
  */
 
-template< class charT, class traits = char_traits< charT > >
-class xoutsimple : public xoutbase< charT, traits >
+template <class charT, class traits = char_traits<charT>>
+class xoutsimple : public xoutbase<charT, traits>
 {
 public:
-
   /** Typedef's.*/
-  typedef xoutsimple                Self;
-  typedef xoutbase< charT, traits > Superclass;
+  typedef xoutsimple              Self;
+  typedef xoutbase<charT, traits> Superclass;
 
   /** Typedefs of Superclass */
   using typename Superclass::ostream_type;
@@ -54,21 +53,27 @@ public:
   ~xoutsimple() override = default;
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
-  int AddOutput( const char * name, ostream_type * output ) override;
+  int
+  AddOutput(const char * name, ostream_type * output) override;
 
-  int AddOutput( const char * name, Superclass * output ) override;
+  int
+  AddOutput(const char * name, Superclass * output) override;
 
-  int RemoveOutput( const char * name ) override;
+  int
+  RemoveOutput(const char * name) override;
 
-  void SetOutputs( const CStreamMapType & outputmap ) override;
+  void
+  SetOutputs(const CStreamMapType & outputmap) override;
 
-  void SetOutputs( const XStreamMapType & outputmap ) override;
+  void
+  SetOutputs(const XStreamMapType & outputmap) override;
 
   /** Get the output maps. */
-  const CStreamMapType & GetCOutputs( void ) override;
+  const CStreamMapType &
+  GetCOutputs(void) override;
 
-  const XStreamMapType & GetXOutputs( void ) override;
-
+  const XStreamMapType &
+  GetXOutputs(void) override;
 };
 
 } // end namespace xoutlibrary

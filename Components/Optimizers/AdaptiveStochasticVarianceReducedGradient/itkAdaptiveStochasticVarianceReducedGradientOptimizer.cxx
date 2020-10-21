@@ -30,8 +30,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-AdaptiveStochasticVarianceReducedGradientOptimizer
-::AdaptiveStochasticVarianceReducedGradientOptimizer()
+AdaptiveStochasticVarianceReducedGradientOptimizer ::AdaptiveStochasticVarianceReducedGradientOptimizer()
 {
   this->m_UseAdaptiveStepSizes = true;
   this->m_SigmoidMax = 1.0;
@@ -45,36 +44,34 @@ AdaptiveStochasticVarianceReducedGradientOptimizer
  * ************************** UpdateCurrentTime ********************
  */
 
-void AdaptiveStochasticVarianceReducedGradientOptimizer
-::UpdateCurrentTime( void )
+void
+AdaptiveStochasticVarianceReducedGradientOptimizer ::UpdateCurrentTime(void)
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 
-  if( this->m_UseAdaptiveStepSizes )
+  if (this->m_UseAdaptiveStepSizes)
   {
-    if( this->GetCurrentInnerIteration() > 0 )
+    if (this->GetCurrentInnerIteration() > 0)
     {
       // if ( this->GetCurrentIteration() % this->GetInnerIterations() == 0)
       // {
-       ///** Make sigmoid function
-       // * Compute beta such that sigmoid(0)=0
-       // * We assume Max>0, min<0 */
+      ///** Make sigmoid function
+      // * Compute beta such that sigmoid(0)=0
+      // * We assume Max>0, min<0 */
       SigmoidType sigmoid;
-      sigmoid.SetOutputMaximum( this->GetSigmoidMax() );
-      sigmoid.SetOutputMinimum( this->GetSigmoidMin() );
-      sigmoid.SetAlpha( this->GetSigmoidScale() );
-      const double beta = this->GetSigmoidScale() *
-        std::log( -this->GetSigmoidMax() / this->GetSigmoidMin() );
-      sigmoid.SetBeta( beta );
+      sigmoid.SetOutputMaximum(this->GetSigmoidMax());
+      sigmoid.SetOutputMinimum(this->GetSigmoidMin());
+      sigmoid.SetAlpha(this->GetSigmoidScale());
+      const double beta = this->GetSigmoidScale() * std::log(-this->GetSigmoidMax() / this->GetSigmoidMin());
+      sigmoid.SetBeta(beta);
 
       ///** Formula (2) in Cruz */
-      const double inprod = inner_product(
-        this->m_PreviousGradient, this->GetGradient() );
-      this->m_CurrentTime += sigmoid( -inprod );
-      this->m_CurrentTime = std::max( 0.0, this->m_CurrentTime );
+      const double inprod = inner_product(this->m_PreviousGradient, this->GetGradient());
+      this->m_CurrentTime += sigmoid(-inprod);
+      this->m_CurrentTime = std::max(0.0, this->m_CurrentTime);
     }
     /** Save for next iteration */
-     //this->m_PrePreviousGradient = this->m_PreviousGradient;
+    // this->m_PrePreviousGradient = this->m_PreviousGradient;
     this->m_PreviousGradient = this->GetGradient();
   }
   else
@@ -82,7 +79,7 @@ void AdaptiveStochasticVarianceReducedGradientOptimizer
     /** Almost Robbins-Monro: time = time + E_0.
      * If you want the parameter estimation but no adaptive stuff,
      * this may be use useful:  */
-     //this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() ) / 2.0;
+    // this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() ) / 2.0;
     this->m_CurrentTime = 1.0;
   }
 
