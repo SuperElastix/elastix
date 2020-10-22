@@ -195,7 +195,7 @@ add_library( transformix_lib
 set_target_properties( transformix_lib PROPERTIES OUTPUT_NAME transformix )
 target_link_libraries( transformix_lib ${ELASTIX_TARGET_LINK_LIBRARIES} )
 
-set( ELASTIX_LIBRARIES elastix transformix PARENT_SCOPE )
+set( ELASTIX_LIBRARIES elastix_lib transformix_lib PARENT_SCOPE )
 
 if( MSVC )
   # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use
