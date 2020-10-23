@@ -81,7 +81,7 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: $(ELASTIX_BINARY_DIR)
-  - bash: ctest --config Release -VV -j 2
+  - bash: ctest -C Release -VV -j 2
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
 - job: macOS
@@ -120,6 +120,6 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: $(ELASTIX_BINARY_DIR)
-  - bash: ctest --config Release -VV -j 2
+  - bash: ctest -C Release -VV -j 2
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
