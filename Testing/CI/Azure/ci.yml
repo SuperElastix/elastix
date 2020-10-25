@@ -43,12 +43,9 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
-  - script: |
-      pushd "$(ELASTIX_BINARY_DIR)"
-      # We exclude two flaky tests whose output depend on the runtime environment which cause them to fail on Azure
-      ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
-      popd
+  - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
+    workingDirectory: $(ELASTIX_BINARY_DIR)
 - job: Ubuntu1604
   timeoutInMinutes: 0
   pool:
