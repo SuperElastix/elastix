@@ -3,6 +3,7 @@
 cmake_minimum_required( VERSION 3.10.2 )
 
 project( elastix )
+
 set(CMAKE_CXX_STANDARD 11)
 
 if( BUILD_SHARED_LIBS )
@@ -23,7 +24,7 @@ include( CTest )
 
 #---------------------------------------------------------------------
 # Find ITK.
-find_package( ITK 5.1.1 REQUIRED )
+find_package( ITK 5.1 REQUIRED )
 include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
