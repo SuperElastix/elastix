@@ -67,7 +67,7 @@ public:
   typedef itk::InterpolateImageFunction<InputImageType, CoordRepType> ITKBaseType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType *
+  ITKBaseType *
   GetAsITKBaseType(void)
   {
     return dynamic_cast<ITKBaseType *>(this);
@@ -75,7 +75,7 @@ public:
 
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType *
+  const ITKBaseType *
   GetAsITKBaseType(void) const
   {
     return dynamic_cast<const ITKBaseType *>(this);
