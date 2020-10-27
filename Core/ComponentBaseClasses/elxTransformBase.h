@@ -213,14 +213,14 @@ public:
   }
 
 
-  virtual const CombinationTransformType *
+  const CombinationTransformType *
   GetAsCombinationTransform(void) const
   {
     return dynamic_cast<const CombinationTransformType *>(this);
   }
 
 
-  virtual CombinationTransformType *
+  CombinationTransformType *
   GetAsCombinationTransform(void)
   {
     return dynamic_cast<CombinationTransformType *>(this);
@@ -236,7 +236,7 @@ public:
   /** Execute stuff before the actual transformation:
    * \li Check the appearance of inputpoints to be transformed.
    */
-  virtual int
+  int
   BeforeAllTransformix(void);
 
   /** Execute stuff before the actual registration:
@@ -252,15 +252,15 @@ public:
   AfterRegistrationBase(void) override;
 
   /** Get the initial transform. */
-  virtual const InitialTransformType *
+  const InitialTransformType *
   GetInitialTransform(void) const;
 
   /** Set the initial transform. */
-  virtual void
+  void
   SetInitialTransform(InitialTransformType * _arg);
 
   /** Set the TransformParametersFileName. */
-  virtual void
+  void
   SetTransformParametersFileName(const char * filename);
 
   /** Get the TransformParametersFileName. */
@@ -283,29 +283,29 @@ public:
   WriteToFile(void) const;
 
   /** Macro for reading and writing the transform parameters in WriteToFile or not. */
-  virtual void
+  void
   SetReadWriteTransformParameters(const bool _arg);
 
   /** Function to read the initial transform parameters from a file. */
-  virtual void
+  void
   ReadInitialTransformFromFile(const char * transformParameterFileName);
 
   /** Function to read the initial transform parameters from the internally stored
    * configuration object.
    */
-  virtual void
+  void
   ReadInitialTransformFromVector(const size_t index);
 
   /** Function to transform coordinates from fixed to moving image. */
-  virtual void
+  void
   TransformPoints(void) const;
 
   /** Function to transform coordinates from fixed to moving image. */
-  virtual void
+  void
   TransformPointsSomePoints(const std::string filename) const;
 
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
-  virtual void
+  void
   TransformPointsSomePointsVTK(const std::string filename) const;
 
   /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
@@ -322,21 +322,21 @@ public:
   void WriteDeformationFieldImage(typename DeformationFieldImageType::Pointer) const;
 
   /** Legacy function that calls GenerateDeformationFieldImage and WriteDeformationFieldImage. */
-  virtual void
+  void
   TransformPointsAllPoints(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
-  virtual void
+  void
   ComputeDeterminantOfSpatialJacobian(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
-  virtual void
+  void
   ComputeSpatialJacobian(void) const;
 
   /** Makes sure that the final parameters from the registration components
    * are copied, set, and stored.
    */
-  virtual void
+  void
   SetFinalParameters(void);
 
 protected:
