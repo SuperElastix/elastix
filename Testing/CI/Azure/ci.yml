@@ -120,6 +120,6 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: $(ELASTIX_BINARY_DIR)
-  - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
+  - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
