@@ -34,7 +34,7 @@ namespace itk
  *
  * \author F.F. Berendsen, Image Sciences Institute, UMC Utrecht, The Netherlands
  * \note If you use the MissingStructurePenalty anywhere we would appreciate if you cite the following article:\n
- * F.F. Berendsen, A.N.T.J. Kotte, A.A.C. de Leeuw, I.M. Jürgenliemk-Schulz,\n
+ * F.F. Berendsen, A.N.T.J. Kotte, A.A.C. de Leeuw, I.M. Juergenliemk-Schulz,\n
  * M.A. Viergever and J.P.W. Pluim "Registration of structurally dissimilar \n
  * images in MRI-based brachytherapy ", Phys. Med. Biol. 59 (2014) 4033-4045.\n
  * http://stacks.iop.org/0031-9155/59/4033
