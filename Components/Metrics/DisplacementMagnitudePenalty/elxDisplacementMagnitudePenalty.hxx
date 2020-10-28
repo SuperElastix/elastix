@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxDisplacementMagnitudePenalty_HXX__
-#define __elxDisplacementMagnitudePenalty_HXX__
+#ifndef elxDisplacementMagnitudePenalty_hxx
+#define elxDisplacementMagnitudePenalty_hxx
 
 #include "elxDisplacementMagnitudePenalty.h"
 #include "itkTimeProbe.h"
@@ -44,4 +44,4 @@ DisplacementMagnitudePenalty<TElastix>::Initialize(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxDisplacementMagnitudePenalty_HXX__
+#endif // end #ifndef elxDisplacementMagnitudePenalty_hxx

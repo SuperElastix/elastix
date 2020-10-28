@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNStandardTreeSearch_hxx
-#define __itkANNStandardTreeSearch_hxx
+#ifndef itkANNStandardTreeSearch_hxx
+#define itkANNStandardTreeSearch_hxx
 
 #include "itkANNStandardTreeSearch.h"
 
@@ -92,4 +92,4 @@ ANNStandardTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
 
 } // end namespace itk
 
-#endif // end #ifndef __itkANNStandardTreeSearch_hxx
+#endif // end #ifndef itkANNStandardTreeSearch_hxx

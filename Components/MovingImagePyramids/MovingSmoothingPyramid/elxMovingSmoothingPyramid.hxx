@@ -16,11 +16,11 @@
  *
  *=========================================================================*/
 
-#ifndef __elxMovingSmoothingPyramid_hxx
-#define __elxMovingSmoothingPyramid_hxx
+#ifndef elxMovingSmoothingPyramid_hxx
+#define elxMovingSmoothingPyramid_hxx
 
 #include "elxMovingSmoothingPyramid.h"
 
 // nothing
 
-#endif //#ifndef __elxMovingSmoothingPyramid_hxx
+#endif //#ifndef elxMovingSmoothingPyramid_hxx

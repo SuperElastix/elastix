@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxBSplineInterpolatorFloat_h
-#define __elxBSplineInterpolatorFloat_h
+#ifndef elxBSplineInterpolatorFloat_h
+#define elxBSplineInterpolatorFloat_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkBSplineInterpolateImageFunction.h"
@@ -128,4 +128,4 @@ private:
 #  include "elxBSplineInterpolatorFloat.hxx"
 #endif
 
-#endif // end #ifndef __elxBSplineInterpolatorFloat_h
+#endif // end #ifndef elxBSplineInterpolatorFloat_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
-#define __itkAdvancedMeanSquaresImageToImageMetric_h
+#ifndef itkAdvancedMeanSquaresImageToImageMetric_h
+#define itkAdvancedMeanSquaresImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -266,4 +266,4 @@ private:
 #  include "itkAdvancedMeanSquaresImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
+#endif // end #ifndef itkAdvancedMeanSquaresImageToImageMetric_h

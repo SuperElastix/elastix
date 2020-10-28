@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkCyclicGridScheduleComputer_hxx__
-#define __itkCyclicGridScheduleComputer_hxx__
+#ifndef itkCyclicGridScheduleComputer_hxx
+#define itkCyclicGridScheduleComputer_hxx
 
 #include "itkCyclicGridScheduleComputer.h"
 #include "itkConfigure.h"
@@ -125,4 +125,4 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>::ComputeBSplin
 
 } // end namespace itk
 
-#endif // end #ifndef __itkCyclicGridScheduleComputer_hxx__
+#endif // end #ifndef itkCyclicGridScheduleComputer_hxx

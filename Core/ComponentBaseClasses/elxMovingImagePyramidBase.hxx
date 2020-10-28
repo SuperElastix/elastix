@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxMovingImagePyramidBase_hxx
-#define __elxMovingImagePyramidBase_hxx
+#ifndef elxMovingImagePyramidBase_hxx
+#define elxMovingImagePyramidBase_hxx
 
 #include "elxMovingImagePyramidBase.h"
 #include "itkImageFileCastWriter.h"
@@ -204,4 +204,4 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filenam
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMovingImagePyramidBase_hxx
+#endif // end #ifndef elxMovingImagePyramidBase_hxx

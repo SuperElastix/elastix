@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elastix_h
-#define __elastix_h
+#ifndef elastix_h
+#define elastix_h
 
 #include <cassert>
 #include <ctime>

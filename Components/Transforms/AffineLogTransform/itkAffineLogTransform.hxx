@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAffineLogTransform_hxx
-#define __itkAffineLogTransform_hxx
+#ifndef itkAffineLogTransform_hxx
+#define itkAffineLogTransform_hxx
 
 #include "vnl/vnl_matrix_exp.h"
 #include "itkMath.h"

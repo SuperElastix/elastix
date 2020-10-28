@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedBSplineDeformableTransform_hxx
-#define __itkGPUAdvancedBSplineDeformableTransform_hxx
+#ifndef itkGPUAdvancedBSplineDeformableTransform_hxx
+#define itkGPUAdvancedBSplineDeformableTransform_hxx
 
 #include "itkGPUAdvancedBSplineDeformableTransform.h"
 
@@ -137,4 +137,4 @@ GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TP
 
 } // end namespace itk
 
-#endif /* __itkGPUAdvancedBSplineDeformableTransform_hxx */
+#endif /* itkGPUAdvancedBSplineDeformableTransform_hxx */

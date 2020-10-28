@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCompositeTransformBase_hxx
-#define __itkGPUCompositeTransformBase_hxx
+#ifndef itkGPUCompositeTransformBase_hxx
+#define itkGPUCompositeTransformBase_hxx
 
 #include "itkGPUCompositeTransformBase.h"
 
@@ -372,4 +372,4 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsBSplineTransform(const st
 
 } // end namespace itk
 
-#endif /* __itkGPUCompositeTransformBase_hxx */
+#endif /* itkGPUCompositeTransformBase_hxx */

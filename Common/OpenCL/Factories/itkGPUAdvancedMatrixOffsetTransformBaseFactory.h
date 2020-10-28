@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedMatrixOffsetTransformBaseFactory_h
-#define __itkGPUAdvancedMatrixOffsetTransformBaseFactory_h
+#ifndef itkGPUAdvancedMatrixOffsetTransformBaseFactory_h
+#define itkGPUAdvancedMatrixOffsetTransformBaseFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUAdvancedMatrixOffsetTransformBase.h"
@@ -103,4 +103,4 @@ private:
 #  include "itkGPUAdvancedMatrixOffsetTransformBaseFactory.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedMatrixOffsetTransformBaseFactory_h */
+#endif /* itkGPUAdvancedMatrixOffsetTransformBaseFactory_h */

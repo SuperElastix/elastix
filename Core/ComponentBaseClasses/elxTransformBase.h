@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTransformBase_h
-#define __elxTransformBase_h
+#ifndef elxTransformBase_h
+#define elxTransformBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -395,4 +395,4 @@ private:
 #  include "elxTransformBase.hxx"
 #endif
 
-#endif // end #ifndef __elxTransformBase_h
+#endif // end #ifndef elxTransformBase_h

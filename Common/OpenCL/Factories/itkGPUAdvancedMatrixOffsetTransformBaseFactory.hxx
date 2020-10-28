@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedMatrixOffsetTransformBaseFactory_hxx
-#define __itkGPUAdvancedMatrixOffsetTransformBaseFactory_hxx
+#ifndef itkGPUAdvancedMatrixOffsetTransformBaseFactory_hxx
+#define itkGPUAdvancedMatrixOffsetTransformBaseFactory_hxx
 
 #include "itkGPUAdvancedMatrixOffsetTransformBaseFactory.h"
 
@@ -75,4 +75,4 @@ GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUAdvancedMatrixOffsetTransformBaseFactory_hxx
+#endif // end #ifndef itkGPUAdvancedMatrixOffsetTransformBaseFactory_hxx

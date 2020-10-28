@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFixedSmoothingPyramid_h
-#define __elxFixedSmoothingPyramid_h
+#ifndef elxFixedSmoothingPyramid_h
+#define elxFixedSmoothingPyramid_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionGaussianSmoothingPyramidImageFilter.h"
@@ -105,4 +105,4 @@ private:
 #  include "elxFixedSmoothingPyramid.hxx"
 #endif
 
-#endif // end #ifndef __elxFixedSmoothingPyramid_h
+#endif // end #ifndef elxFixedSmoothingPyramid_h

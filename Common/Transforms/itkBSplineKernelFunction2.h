@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkBSplineKernelFunction2_h
-#define __itkBSplineKernelFunction2_h
+#ifndef itkBSplineKernelFunction2_h
+#define itkBSplineKernelFunction2_h
 
 #include "itkKernelFunctionBase2.h"
 #include "vnl/vnl_math.h"

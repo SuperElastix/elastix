@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkVarianceOverLastDimensionImageMetric_h
-#define __itkVarianceOverLastDimensionImageMetric_h
+#ifndef itkVarianceOverLastDimensionImageMetric_h
+#define itkVarianceOverLastDimensionImageMetric_h
 
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkImageRandomCoordinateSampler.h"
@@ -210,4 +210,4 @@ private:
 #  include "itkVarianceOverLastDimensionImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkVarianceOverLastDimensionImageMetric_h
+#endif // end #ifndef itkVarianceOverLastDimensionImageMetric_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLVector_hxx
-#define __itkOpenCLVector_hxx
+#ifndef itkOpenCLVector_hxx
+#define itkOpenCLVector_hxx
 
 #include "itkOpenCLVector.h"
 
@@ -168,4 +168,4 @@ OpenCLVector<T>::GetBuffer() const
 
 } // namespace itk
 
-#endif // __itkOpenCLVector_hxx
+#endif // itkOpenCLVector_hxx

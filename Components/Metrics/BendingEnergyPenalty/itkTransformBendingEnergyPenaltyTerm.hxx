@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkTransformBendingEnergyPenaltyTerm_hxx
-#define __itkTransformBendingEnergyPenaltyTerm_hxx
+#ifndef itkTransformBendingEnergyPenaltyTerm_hxx
+#define itkTransformBendingEnergyPenaltyTerm_hxx
 
 #include "itkTransformBendingEnergyPenaltyTerm.h"
 
@@ -817,4 +817,4 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetSelfHessian(cons
 
 } // end namespace itk
 
-#endif // #ifndef __itkTransformBendingEnergyPenaltyTerm_hxx
+#endif // #ifndef itkTransformBendingEnergyPenaltyTerm_hxx

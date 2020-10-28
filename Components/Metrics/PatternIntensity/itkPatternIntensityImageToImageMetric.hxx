@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPatternIntensityImageToImageMetric_hxx
-#define __itkPatternIntensityImageToImageMetric_hxx
+#ifndef itkPatternIntensityImageToImageMetric_hxx
+#define itkPatternIntensityImageToImageMetric_hxx
 
 #include "itkPatternIntensityImageToImageMetric.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
@@ -434,4 +434,4 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDeriva
 
 } // end namespace itk
 
-#endif // end __itkPatternIntensityImageToImageMetric_hxx
+#endif // end itkPatternIntensityImageToImageMetric_hxx

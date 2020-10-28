@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxBSplineStackTransform_h
-#define __elxBSplineStackTransform_h
+#ifndef elxBSplineStackTransform_h
+#define elxBSplineStackTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 
@@ -331,4 +331,4 @@ private:
 #  include "elxBSplineStackTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxBSplineStackTransform_h
+#endif // end #ifndef elxBSplineStackTransform_h

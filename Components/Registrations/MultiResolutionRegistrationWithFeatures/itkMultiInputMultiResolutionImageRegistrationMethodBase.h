@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMultiInputMultiResolutionImageRegistrationMethodBase_h
-#define __itkMultiInputMultiResolutionImageRegistrationMethodBase_h
+#ifndef itkMultiInputMultiResolutionImageRegistrationMethodBase_h
+#define itkMultiInputMultiResolutionImageRegistrationMethodBase_h
 
 #include "itkMultiResolutionImageRegistrationMethod2.h"
 #include "itkMultiInputImageToImageMetricBase.h"
@@ -331,4 +331,4 @@ private:
 #  include "itkMultiInputMultiResolutionImageRegistrationMethodBase.hxx"
 #endif
 
-#endif // end #ifndef __itkMultiInputMultiResolutionImageRegistrationMethodBase_h
+#endif // end #ifndef itkMultiInputMultiResolutionImageRegistrationMethodBase_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineDecompositionImageFilter_hxx
-#define __itkGPUBSplineDecompositionImageFilter_hxx
+#ifndef itkGPUBSplineDecompositionImageFilter_hxx
+#define itkGPUBSplineDecompositionImageFilter_hxx
 
 #include "itkGPUBSplineDecompositionImageFilter.h"
 #include "itkGPUCastImageFilter.h"
@@ -262,4 +262,4 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::PrintSelf(std::os
 
 } // end namespace itk
 
-#endif /* __itkGPUBSplineDecompositionImageFilter_hxx */
+#endif /* itkGPUBSplineDecompositionImageFilter_hxx */

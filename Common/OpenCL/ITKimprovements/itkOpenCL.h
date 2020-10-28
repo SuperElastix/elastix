@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCL_h
-#define __itkOpenCL_h
+#ifndef itkOpenCL_h
+#define itkOpenCL_h
 
 #include "itkOpenCLExport.h"
 
@@ -48,4 +48,4 @@ enum OpenCLVersion
 };
 } // end namespace itk
 
-#endif /* __itkOpenCL_h */
+#endif /* itkOpenCL_h */

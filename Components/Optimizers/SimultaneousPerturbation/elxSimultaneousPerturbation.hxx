@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxSimultaneousPerturbation_hxx
-#define __elxSimultaneousPerturbation_hxx
+#ifndef elxSimultaneousPerturbation_hxx
+#define elxSimultaneousPerturbation_hxx
 
 #include "elxSimultaneousPerturbation.h"
 #include <iomanip>
@@ -240,4 +240,4 @@ SimultaneousPerturbation<TElastix>::SetInitialPosition(const ParametersType & pa
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxSimultaneousPerturbation_hxx
+#endif // end #ifndef elxSimultaneousPerturbation_hxx

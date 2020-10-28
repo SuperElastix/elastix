@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTransformBendingEnergyPenaltyTerm_HXX__
-#define __elxTransformBendingEnergyPenaltyTerm_HXX__
+#ifndef elxTransformBendingEnergyPenaltyTerm_hxx
+#define elxTransformBendingEnergyPenaltyTerm_hxx
 
 #include "elxTransformBendingEnergyPenaltyTerm.h"
 #include "itkTimeProbe.h"
@@ -64,4 +64,4 @@ TransformBendingEnergyPenalty<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxTransformBendingEnergyPenaltyTerm_HXX__
+#endif // end #ifndef elxTransformBendingEnergyPenaltyTerm_hxx

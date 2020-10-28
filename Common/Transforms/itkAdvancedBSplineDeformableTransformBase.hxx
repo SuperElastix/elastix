@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedBSplineDeformableTransformBase_hxx
-#define __itkAdvancedBSplineDeformableTransformBase_hxx
+#ifndef itkAdvancedBSplineDeformableTransformBase_hxx
+#define itkAdvancedBSplineDeformableTransformBase_hxx
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
 #include "itkContinuousIndex.h"

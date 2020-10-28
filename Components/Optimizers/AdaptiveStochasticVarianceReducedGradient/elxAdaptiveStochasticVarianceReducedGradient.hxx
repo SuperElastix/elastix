@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdaptiveStochasticVarianceReducedGradient_hxx
-#define __elxAdaptiveStochasticVarianceReducedGradient_hxx
+#ifndef elxAdaptiveStochasticVarianceReducedGradient_hxx
+#define elxAdaptiveStochasticVarianceReducedGradient_hxx
 
 #include "elxAdaptiveStochasticVarianceReducedGradient.h"
 
@@ -1339,4 +1339,4 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AddRandomPerturbation(Param
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdaptiveStochasticVarianceReducedGradient_hxx
+#endif // end #ifndef elxAdaptiveStochasticVarianceReducedGradient_hxx

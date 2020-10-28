@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSumOfPairwiseCorrelationCoefficientsMetric_HXX__
-#define __itkSumOfPairwiseCorrelationCoefficientsMetric_HXX__
+#ifndef itkSumOfPairwiseCorrelationCoefficientsMetric_hxx
+#define itkSumOfPairwiseCorrelationCoefficientsMetric_hxx
 
 #include "itkSumOfPairwiseCorrelationCoefficientsMetric.h"
 
@@ -610,4 +610,4 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
 } // end namespace itk
 
-#endif // __itkSumOfPairwiseCorrelationCoefficientsMetric_HXX__
+#endif // itkSumOfPairwiseCorrelationCoefficientsMetric_hxx

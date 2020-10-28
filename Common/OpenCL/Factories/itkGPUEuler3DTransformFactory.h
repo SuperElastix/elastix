@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUEuler3DTransformFactory_h
-#define __itkGPUEuler3DTransformFactory_h
+#ifndef itkGPUEuler3DTransformFactory_h
+#define itkGPUEuler3DTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUEuler3DTransform.h"
@@ -95,4 +95,4 @@ private:
 #  include "itkGPUEuler3DTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUEuler3DTransformFactory_h */
+#endif /* itkGPUEuler3DTransformFactory_h */

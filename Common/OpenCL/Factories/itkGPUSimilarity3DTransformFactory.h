@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUSimilarity3DTransformFactory_h
-#define __itkGPUSimilarity3DTransformFactory_h
+#ifndef itkGPUSimilarity3DTransformFactory_h
+#define itkGPUSimilarity3DTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUSimilarity3DTransform.h"
@@ -95,4 +95,4 @@ private:
 #  include "itkGPUSimilarity3DTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUSimilarity3DTransformFactory_h */
+#endif /* itkGPUSimilarity3DTransformFactory_h */

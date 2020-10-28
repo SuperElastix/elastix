@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkQuasiNewtonLBFGSOptimizer_h
-#define __itkQuasiNewtonLBFGSOptimizer_h
+#ifndef itkQuasiNewtonLBFGSOptimizer_h
+#define itkQuasiNewtonLBFGSOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include "itkLineSearchOptimizer.h"
@@ -418,4 +418,4 @@ private:
 
 /*    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
-#endif //#ifndef __itkQuasiNewtonLBFGSOptimizer_h
+#endif //#ifndef itkQuasiNewtonLBFGSOptimizer_h

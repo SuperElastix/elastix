@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedSimilarity2DTransform_h
-#define __itkAdvancedSimilarity2DTransform_h
+#ifndef itkAdvancedSimilarity2DTransform_h
+#define itkAdvancedSimilarity2DTransform_h
 
 #include <iostream>
 #include "itkAdvancedRigid2DTransform.h"
@@ -258,4 +258,4 @@ private:
 #  include "itkAdvancedSimilarity2DTransform.hxx"
 #endif
 
-#endif /* __itkAdvancedSimilarity2DTransform_h */
+#endif /* itkAdvancedSimilarity2DTransform_h */

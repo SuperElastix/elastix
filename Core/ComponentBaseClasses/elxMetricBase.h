@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMetricBase_h
-#define __elxMetricBase_h
+#ifndef elxMetricBase_h
+#define elxMetricBase_h
 
 /** Needed for the macros. */
 #include "elxMacro.h"
@@ -249,4 +249,4 @@ private:
 #  include "elxMetricBase.hxx"
 #endif
 
-#endif // end #ifndef __elxMetricBase_h
+#endif // end #ifndef elxMetricBase_h

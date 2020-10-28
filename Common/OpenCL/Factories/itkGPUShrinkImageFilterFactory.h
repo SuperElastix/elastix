@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUShrinkImageFilterFactory_h
-#define __itkGPUShrinkImageFilterFactory_h
+#ifndef itkGPUShrinkImageFilterFactory_h
+#define itkGPUShrinkImageFilterFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUShrinkImageFilter.h"
@@ -128,4 +128,4 @@ private:
 #  include "itkGPUShrinkImageFilterFactory.hxx"
 #endif
 
-#endif // end #ifndef __itkGPUShrinkImageFilterFactory_h
+#endif // end #ifndef itkGPUShrinkImageFilterFactory_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLStringUtils_h
-#define __itkOpenCLStringUtils_h
+#ifndef itkOpenCLStringUtils_h
+#define itkOpenCLStringUtils_h
 
 #include "itkOpenCL.h"
 
@@ -69,4 +69,4 @@ opencl_get_device_info_is_string(const cl_device_id id, const cl_device_info nam
 
 } // end of namespace itk
 
-#endif /* __itkOpenCLStringUtils_h */
+#endif /* itkOpenCLStringUtils_h */

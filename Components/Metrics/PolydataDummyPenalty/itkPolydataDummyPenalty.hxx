@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPolydataDummyPenalty_hxx
-#define __itkPolydataDummyPenalty_hxx
+#ifndef itkPolydataDummyPenalty_hxx
+#define itkPolydataDummyPenalty_hxx
 
 #include "itkPolydataDummyPenalty.h"
 
@@ -255,4 +255,4 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::PrintSelf(std::ostream & os, Inden
 
 } // end namespace itk
 
-#endif // end #ifndef __itkPolydataDummyPenalty_hxx
+#endif // end #ifndef itkPolydataDummyPenalty_hxx

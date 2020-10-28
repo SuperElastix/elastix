@@ -35,8 +35,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkReducedDimensionBSplineInterpolateImageFunction_hxx
-#define __itkReducedDimensionBSplineInterpolateImageFunction_hxx
+#ifndef itkReducedDimensionBSplineInterpolateImageFunction_hxx
+#define itkReducedDimensionBSplineInterpolateImageFunction_hxx
 
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
 #include "itkImageLinearIteratorWithIndex.h"

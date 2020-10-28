@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLImageFormat_h
-#define __itkOpenCLImageFormat_h
+#ifndef itkOpenCLImageFormat_h
+#define itkOpenCLImageFormat_h
 
 #include "itkOpenCL.h"
 #include <ostream>
@@ -358,4 +358,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLImageFormat & f
 
 } // end namespace itk
 
-#endif /* __itkOpenCLImageFormat_h */
+#endif /* itkOpenCLImageFormat_h */

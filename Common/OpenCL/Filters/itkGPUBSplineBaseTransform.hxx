@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineBaseTransform_hxx
-#define __itkGPUBSplineBaseTransform_hxx
+#ifndef itkGPUBSplineBaseTransform_hxx
+#define itkGPUBSplineBaseTransform_hxx
 
 #include "itkGPUBSplineBaseTransform.h"
 
@@ -92,4 +92,4 @@ GPUBSplineBaseTransform<TScalarType, NDimensions>::GetSourceCode(std::string & s
 
 } // end namespace itk
 
-#endif /* __itkGPUBSplineBaseTransform_hxx */
+#endif /* itkGPUBSplineBaseTransform_hxx */

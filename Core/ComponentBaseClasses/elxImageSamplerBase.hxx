@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxImageSamplerBase_hxx
-#define __elxImageSamplerBase_hxx
+#ifndef elxImageSamplerBase_hxx
+#define elxImageSamplerBase_hxx
 
 #include "elxImageSamplerBase.h"
 
@@ -67,4 +67,4 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase(void)
 
 } // end namespace elastix
 
-#endif //#ifndef __elxImageSamplerBase_hxx
+#endif //#ifndef elxImageSamplerBase_hxx

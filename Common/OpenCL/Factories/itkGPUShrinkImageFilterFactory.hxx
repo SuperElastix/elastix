@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUShrinkImageFilterFactory_hxx
-#define __itkGPUShrinkImageFilterFactory_hxx
+#ifndef itkGPUShrinkImageFilterFactory_hxx
+#define itkGPUShrinkImageFilterFactory_hxx
 
 #include "itkGPUShrinkImageFilterFactory.h"
 
@@ -75,4 +75,4 @@ GPUShrinkImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register3D
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUShrinkImageFilterFactory_hxx
+#endif // end #ifndef itkGPUShrinkImageFilterFactory_hxx

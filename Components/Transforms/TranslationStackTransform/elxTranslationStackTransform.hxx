@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTranslationStackTransform_hxx
-#define __elxTranslationStackTransform_hxx
+#ifndef elxTranslationStackTransform_hxx
+#define elxTranslationStackTransform_hxx
 
 #include "elxTranslationStackTransform.h"
 
@@ -196,4 +196,4 @@ TranslationStackTransform<TElastix>::WriteToFile(const ParametersType & param) c
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxTranslationStackTransform_hxx
+#endif // end #ifndef elxTranslationStackTransform_hxx

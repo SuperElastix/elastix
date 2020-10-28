@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkVectorMeanDiffusionImageFilter_H__
-#define __itkVectorMeanDiffusionImageFilter_H__
+#ifndef itkVectorMeanDiffusionImageFilter_h
+#define itkVectorMeanDiffusionImageFilter_h
 
 #include "itkImageToImageFilter.h"
 #include "itkImage.h"
@@ -163,4 +163,4 @@ private:
 #  include "itkVectorMeanDiffusionImageFilter.hxx"
 #endif
 
-#endif // end #ifndef __itkVectorMeanDiffusionImageFilter_H__
+#endif // end #ifndef itkVectorMeanDiffusionImageFilter_h

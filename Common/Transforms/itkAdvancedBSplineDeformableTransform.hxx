@@ -33,8 +33,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedBSplineDeformableTransform_hxx
-#define __itkAdvancedBSplineDeformableTransform_hxx
+#ifndef itkAdvancedBSplineDeformableTransform_hxx
+#define itkAdvancedBSplineDeformableTransform_hxx
 
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkContinuousIndex.h"

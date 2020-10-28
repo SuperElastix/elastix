@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBinaryANNTreeSearchBase_hxx
-#define __itkBinaryANNTreeSearchBase_hxx
+#ifndef itkBinaryANNTreeSearchBase_hxx
+#define itkBinaryANNTreeSearchBase_hxx
 
 #include "itkBinaryANNTreeSearchBase.h"
 
@@ -94,4 +94,4 @@ template < class TBinaryTree >
 
 } // end namespace itk
 
-#endif // end #ifndef __itkBinaryANNTreeSearchBase_hxx
+#endif // end #ifndef itkBinaryANNTreeSearchBase_hxx

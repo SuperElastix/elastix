@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdaGrad_h
-#define __elxAdaGrad_h
+#ifndef elxAdaGrad_h
+#define elxAdaGrad_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdaptiveStepsizeOptimizer.h"
@@ -448,4 +448,4 @@ private:
 #  include "elxAdaGrad.hxx"
 #endif
 
-#endif // end #ifndef __elxAdaGrad_h
+#endif // end #ifndef elxAdaGrad_h

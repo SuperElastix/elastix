@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSumSquaredTissueVolumeDifferenceMetric_HXX__
-#define __elxSumSquaredTissueVolumeDifferenceMetric_HXX__
+#ifndef elxSumSquaredTissueVolumeDifferenceMetric_hxx
+#define elxSumSquaredTissueVolumeDifferenceMetric_hxx
 
 #include "elxSumSquaredTissueVolumeDifferenceMetric.h"
 
@@ -68,4 +68,4 @@ SumSquaredTissueVolumeDifferenceMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxSumSquaredTissueVolumeDifferenceMetric_HXX__
+#endif // end #ifndef elxSumSquaredTissueVolumeDifferenceMetric_hxx

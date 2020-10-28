@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkTransformBendingEnergyPenaltyTerm_h
-#define __itkTransformBendingEnergyPenaltyTerm_h
+#ifndef itkTransformBendingEnergyPenaltyTerm_h
+#define itkTransformBendingEnergyPenaltyTerm_h
 
 #include "itkTransformPenaltyTerm.h"
 #include "itkImageGridSampler.h"
@@ -193,4 +193,4 @@ private:
 #  include "itkTransformBendingEnergyPenaltyTerm.hxx"
 #endif
 
-#endif // #ifndef __itkTransformBendingEnergyPenaltyTerm_h
+#endif // #ifndef itkTransformBendingEnergyPenaltyTerm_h

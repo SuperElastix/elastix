@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxGridSampler_h
-#define __elxGridSampler_h
+#ifndef elxGridSampler_h
+#define elxGridSampler_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkImageGridSampler.h"
@@ -125,4 +125,4 @@ private:
 #  include "elxGridSampler.hxx"
 #endif
 
-#endif // end #ifndef __elxGridSampler_h
+#endif // end #ifndef elxGridSampler_h

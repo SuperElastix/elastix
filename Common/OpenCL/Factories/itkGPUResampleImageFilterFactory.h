@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUResampleImageFilterFactory_h
-#define __itkGPUResampleImageFilterFactory_h
+#ifndef itkGPUResampleImageFilterFactory_h
+#define itkGPUResampleImageFilterFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUResampleImageFilter.h"
@@ -166,4 +166,4 @@ private:
 #  include "itkGPUResampleImageFilterFactory.hxx"
 #endif
 
-#endif // end #ifndef __itkGPUResampleImageFilterFactory_h
+#endif // end #ifndef itkGPUResampleImageFilterFactory_h

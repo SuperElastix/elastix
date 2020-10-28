@@ -22,8 +22,8 @@
 // \note This work was funded by the Netherlands Organisation for
 // Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 //
-#ifndef __itkTestOutputWindow_h
-#define __itkTestOutputWindow_h
+#ifndef itkTestOutputWindow_h
+#define itkTestOutputWindow_h
 
 // ITK include files
 #include "itkOutputWindow.h"
@@ -77,4 +77,4 @@ private:
 
 } // end namespace itk
 
-#endif // __itkTestOutputWindow_h
+#endif // itkTestOutputWindow_h

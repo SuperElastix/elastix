@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedIdentityTransform_h
-#define __itkAdvancedIdentityTransform_h
+#ifndef itkAdvancedIdentityTransform_h
+#define itkAdvancedIdentityTransform_h
 
 #include "itkObject.h"
 #include "itkPoint.h"

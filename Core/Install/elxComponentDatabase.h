@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxComponentDatabase_h
-#define __elxComponentDatabase_h
+#ifndef elxComponentDatabase_h
+#define elxComponentDatabase_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -131,4 +131,4 @@ private:
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxComponentDatabase_h
+#endif // end #ifndef elxComponentDatabase_h

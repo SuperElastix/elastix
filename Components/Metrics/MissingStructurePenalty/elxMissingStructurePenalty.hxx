@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMissingStructurePenalty_HXX__
-#define __elxMissingStructurePenalty_HXX__
+#ifndef elxMissingStructurePenalty_hxx
+#define elxMissingStructurePenalty_hxx
 
 #include "elxMissingStructurePenalty.h"
 #include "itkTimeProbe.h"
@@ -556,4 +556,4 @@ the sequence of points to form a 2d connected polydata contour.
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMissingStructurePenalty_HXX__
+#endif // end #ifndef elxMissingStructurePenalty_hxx

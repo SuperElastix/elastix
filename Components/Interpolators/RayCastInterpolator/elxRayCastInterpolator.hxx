@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxRayCastInterpolator_hxx
-#define __elxRayCastInterpolator_hxx
+#ifndef elxRayCastInterpolator_hxx
+#define elxRayCastInterpolator_hxx
 
 #include "elxRayCastInterpolator.h"
 
@@ -116,4 +116,4 @@ RayCastInterpolator<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRayCastInterpolator_hxx
+#endif // end #ifndef elxRayCastInterpolator_hxx

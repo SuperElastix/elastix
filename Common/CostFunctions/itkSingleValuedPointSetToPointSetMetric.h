@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkSingleValuedPointSetToPointSetMetric_h
-#define __itkSingleValuedPointSetToPointSetMetric_h
+#ifndef itkSingleValuedPointSetToPointSetMetric_h
+#define itkSingleValuedPointSetToPointSetMetric_h
 
 #include "itkImageBase.h"
 #include "itkAdvancedTransform.h"

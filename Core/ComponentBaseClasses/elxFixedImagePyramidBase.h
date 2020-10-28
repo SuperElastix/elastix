@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFixedImagePyramidBase_h
-#define __elxFixedImagePyramidBase_h
+#ifndef elxFixedImagePyramidBase_h
+#define elxFixedImagePyramidBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -140,4 +140,4 @@ private:
 #  include "elxFixedImagePyramidBase.hxx"
 #endif
 
-#endif // end #ifndef __elxFixedImagePyramidBase_h
+#endif // end #ifndef elxFixedImagePyramidBase_h

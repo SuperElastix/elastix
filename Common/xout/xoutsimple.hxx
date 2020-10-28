@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutsimple_hxx
-#define __xoutsimple_hxx
+#ifndef xoutsimple_hxx
+#define xoutsimple_hxx
 
 #include "xoutsimple.h"
 
@@ -115,4 +115,4 @@ xoutsimple<charT, traits>::GetCOutputs(void) -> const CStreamMapType &
 
 } // end namespace xoutlibrary
 
-#endif // end #ifndef __xoutsimple_hxx
+#endif // end #ifndef xoutsimple_hxx

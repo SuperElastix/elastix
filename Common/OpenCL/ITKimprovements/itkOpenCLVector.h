@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLVector_h
-#define __itkOpenCLVector_h
+#ifndef itkOpenCLVector_h
+#define itkOpenCLVector_h
 
 #include "itkOpenCLVectorBase.h"
 #include "itkOpenCLBuffer.h"
@@ -168,4 +168,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLVector<dataType
 #  include "itkOpenCLVector.hxx"
 #endif
 
-#endif /* __itkOpenCLVector_h */
+#endif /* itkOpenCLVector_h */

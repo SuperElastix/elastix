@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUIdentityTransform_hxx
-#define __itkGPUIdentityTransform_hxx
+#ifndef itkGPUIdentityTransform_hxx
+#define itkGPUIdentityTransform_hxx
 
 #include "itkGPUIdentityTransform.h"
 #include "itkGPUMatrixOffsetTransformBase.h"
@@ -65,4 +65,4 @@ GPUIdentityTransform<TScalarType, NDimensions, TParentTransform>::PrintSelf(std:
 
 } // end namespace itk
 
-#endif /* __itkGPUIdentityTransform_hxx */
+#endif /* itkGPUIdentityTransform_hxx */

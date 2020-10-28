@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdaptiveStochasticLBFGS_hxx
-#define __elxAdaptiveStochasticLBFGS_hxx
+#ifndef elxAdaptiveStochasticLBFGS_hxx
+#define elxAdaptiveStochasticLBFGS_hxx
 
 #include "elxAdaptiveStochasticLBFGS.h"
 
@@ -1706,4 +1706,4 @@ AdaptiveStochasticLBFGS<TElastix>::ComputeSearchDirection(const DerivativeType &
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdaptiveStochasticLBFGS_hxx
+#endif // end #ifndef elxAdaptiveStochasticLBFGS_hxx

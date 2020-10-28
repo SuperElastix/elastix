@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedSimilarity3DTransform_h
-#define __itkAdvancedSimilarity3DTransform_h
+#ifndef itkAdvancedSimilarity3DTransform_h
+#define itkAdvancedSimilarity3DTransform_h
 
 #include <iostream>
 #include "itkAdvancedVersorRigid3DTransform.h"
@@ -180,4 +180,4 @@ private:
 #  include "itkAdvancedSimilarity3DTransform.hxx"
 #endif
 
-#endif /* __itkAdvancedSimilarity3DTransform_h */
+#endif /* itkAdvancedSimilarity3DTransform_h */

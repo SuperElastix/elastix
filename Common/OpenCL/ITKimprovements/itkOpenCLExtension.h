@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLExtension_h
-#define __itkOpenCLExtension_h
+#ifndef itkOpenCLExtension_h
+#define itkOpenCLExtension_h
 
 #include "itkOpenCL.h"
 
@@ -77,4 +77,4 @@
 #  define CL_PLATFORM_NOT_FOUND_KHR -1001
 #endif
 
-#endif /* __itkOpenCLExtension_h */
+#endif /* itkOpenCLExtension_h */

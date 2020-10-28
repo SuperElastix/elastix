@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxBaseComponent_h
-#define __elxBaseComponent_h
+#ifndef elxBaseComponent_h
+#define elxBaseComponent_h
 
 /**
  * ******************* elxBaseComponent.h *************************
@@ -172,4 +172,4 @@ private:
 /** Define an alias for the elastix namespace.*/
 namespace elx = elastix;
 
-#endif // end #ifndef __elxBaseComponent_h
+#endif // end #ifndef elxBaseComponent_h

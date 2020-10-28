@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxOptimizerBase_hxx
-#define __elxOptimizerBase_hxx
+#ifndef elxOptimizerBase_hxx
+#define elxOptimizerBase_hxx
 
 #include "elxOptimizerBase.h"
 
@@ -165,4 +165,4 @@ OptimizerBase<TElastix>::SetSinusScales(double amplitude, double frequency, unsi
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxOptimizerBase_hxx
+#endif // end #ifndef elxOptimizerBase_hxx

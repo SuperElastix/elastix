@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkThinPlateR2LogRSplineKernelTransform2_h
-#define __itkThinPlateR2LogRSplineKernelTransform2_h
+#ifndef itkThinPlateR2LogRSplineKernelTransform2_h
+#define itkThinPlateR2LogRSplineKernelTransform2_h
 
 #include "itkKernelTransform2.h"
 
@@ -126,4 +126,4 @@ private:
 #  include "itkThinPlateR2LogRSplineKernelTransform2.hxx"
 #endif
 
-#endif // __itkThinPlateR2LogRSplineKernelTransform2_h
+#endif // itkThinPlateR2LogRSplineKernelTransform2_h

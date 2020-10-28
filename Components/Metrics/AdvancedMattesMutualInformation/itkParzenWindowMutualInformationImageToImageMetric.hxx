@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef _itkParzenWindowMutualInformationImageToImageMetric_HXX__
-#define _itkParzenWindowMutualInformationImageToImageMetric_HXX__
+#ifndef itkParzenWindowMutualInformationImageToImageMetric_hxx
+#define itkParzenWindowMutualInformationImageToImageMetric_hxx
 
 #include "itkParzenWindowMutualInformationImageToImageMetric.h"
 
@@ -1110,4 +1110,4 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
 } // end namespace itk
 
-#endif // end #ifndef _itkParzenWindowMutualInformationImageToImageMetric_HXX__
+#endif // end #ifndef itkParzenWindowMutualInformationImageToImageMetric_hxx

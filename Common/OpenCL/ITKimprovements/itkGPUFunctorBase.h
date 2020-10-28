@@ -32,8 +32,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUFunctorBase_h
-#define __itkGPUFunctorBase_h
+#ifndef itkGPUFunctorBase_h
+#define itkGPUFunctorBase_h
 
 #include "itkOpenCLKernelManager.h"
 

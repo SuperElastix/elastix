@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkNDImageBase_h
-#define __itkNDImageBase_h
+#ifndef itkNDImageBase_h
+#define itkNDImageBase_h
 
 #include "itkImage.h"
 #include "itkArray.h"
@@ -291,4 +291,4 @@ NDImageBase<TPixel>::NewNDImage(unsigned int dim)
 
 } // end namespace itk
 
-#endif // end #ifndef __itkNDImageBase_h
+#endif // end #ifndef itkNDImageBase_h

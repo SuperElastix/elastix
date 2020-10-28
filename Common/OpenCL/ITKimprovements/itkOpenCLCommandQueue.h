@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLCommandQueue_h
-#define __itkOpenCLCommandQueue_h
+#ifndef itkOpenCLCommandQueue_h
+#define itkOpenCLCommandQueue_h
 
 #include "itkOpenCL.h"
 #include <ostream>
@@ -153,4 +153,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLCommandQueue & 
 
 } // end namespace itk
 
-#endif /* __itkOpenCLCommandQueue_h */
+#endif /* itkOpenCLCommandQueue_h */

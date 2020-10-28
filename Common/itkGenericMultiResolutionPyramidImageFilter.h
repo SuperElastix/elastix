@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGenericMultiResolutionPyramidImageFilter_h
-#define __itkGenericMultiResolutionPyramidImageFilter_h
+#ifndef itkGenericMultiResolutionPyramidImageFilter_h
+#define itkGenericMultiResolutionPyramidImageFilter_h
 
 #include "itkMultiResolutionPyramidImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"

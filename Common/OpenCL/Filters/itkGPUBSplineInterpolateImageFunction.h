@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineInterpolateImageFunction_h
-#define __itkGPUBSplineInterpolateImageFunction_h
+#ifndef itkGPUBSplineInterpolateImageFunction_h
+#define itkGPUBSplineInterpolateImageFunction_h
 
 #include "itkGPUInterpolateImageFunction.h"
 #include "itkGPUDataManager.h"
@@ -115,4 +115,4 @@ private:
 #  include "itkGPUBSplineInterpolateImageFunction.hxx"
 #endif
 
-#endif /* __itkGPUBSplineInterpolateImageFunction_h */
+#endif /* itkGPUBSplineInterpolateImageFunction_h */

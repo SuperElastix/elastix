@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxInstallFunctions_h
-#define __elxInstallFunctions_h
+#ifndef elxInstallFunctions_h
+#define elxInstallFunctions_h
 
 #include "elxComponentDatabase.h"
 
@@ -82,4 +82,4 @@ public:
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxInstallFunctions_h
+#endif // end #ifndef elxInstallFunctions_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkListSampleCArray_hxx
-#define __itkListSampleCArray_hxx
+#ifndef itkListSampleCArray_hxx
+#define itkListSampleCArray_hxx
 
 #include "itkListSampleCArray.h"
 #include "itkNumericTraits.h"
@@ -268,4 +268,4 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::PrintSelf(std::ostream & o
 } // end of namespace Statistics
 } // end of namespace itk
 
-#endif // end __itkListSampleCArray_hxx
+#endif // end itkListSampleCArray_hxx

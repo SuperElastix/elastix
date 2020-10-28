@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLSetup_h
-#define __itkOpenCLSetup_h
+#ifndef itkOpenCLSetup_h
+#define itkOpenCLSetup_h
 
 #include <string>
 

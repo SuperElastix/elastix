@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLKernelToImageBridge_hxx
-#define __itkOpenCLKernelToImageBridge_hxx
+#ifndef itkOpenCLKernelToImageBridge_hxx
+#define itkOpenCLKernelToImageBridge_hxx
 
 #include "itkOpenCLKernelToImageBridge.h"
 #include "itkOpenCLMacro.h"

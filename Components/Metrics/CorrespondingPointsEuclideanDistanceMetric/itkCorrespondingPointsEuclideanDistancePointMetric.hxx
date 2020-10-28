@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkCorrespondingPointsEuclideanDistancePointMetric_hxx
-#define __itkCorrespondingPointsEuclideanDistancePointMetric_hxx
+#ifndef itkCorrespondingPointsEuclideanDistancePointMetric_hxx
+#define itkCorrespondingPointsEuclideanDistancePointMetric_hxx
 
 #include "itkCorrespondingPointsEuclideanDistancePointMetric.h"
 
@@ -264,4 +264,4 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
 } // end namespace itk
 
-#endif // end #ifndef __itkCorrespondingPointsEuclideanDistancePointMetric_hxx
+#endif // end #ifndef itkCorrespondingPointsEuclideanDistancePointMetric_hxx

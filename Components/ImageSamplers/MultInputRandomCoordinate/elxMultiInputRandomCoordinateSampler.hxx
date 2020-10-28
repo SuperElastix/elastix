@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxMultiInputRandomCoordinateSampler_hxx
-#define __elxMultiInputRandomCoordinateSampler_hxx
+#ifndef elxMultiInputRandomCoordinateSampler_hxx
+#define elxMultiInputRandomCoordinateSampler_hxx
 
 #include "elxMultiInputRandomCoordinateSampler.h"
 
@@ -89,4 +89,4 @@ MultiInputRandomCoordinateSampler<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMultiInputRandomCoordinateSampler_hxx
+#endif // end #ifndef elxMultiInputRandomCoordinateSampler_hxx

@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkCenteredTransformInitializer2_hxx
-#define __itkCenteredTransformInitializer2_hxx
+#ifndef itkCenteredTransformInitializer2_hxx
+#define itkCenteredTransformInitializer2_hxx
 
 #include "itkCenteredTransformInitializer2.h"
 #include "itkImageMaskSpatialObject.h"
@@ -417,4 +417,4 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::PrintSelf(
 
 } // namespace itk
 
-#endif /* __itkCenteredTransformInitializer2_hxx */
+#endif /* itkCenteredTransformInitializer2_hxx */

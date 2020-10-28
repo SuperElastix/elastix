@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkStandardGradientDescentOptimizer_h
-#define __itkStandardGradientDescentOptimizer_h
+#ifndef itkStandardGradientDescentOptimizer_h
+#define itkStandardGradientDescentOptimizer_h
 
 #include "itkGradientDescentOptimizer2.h"
 
@@ -168,4 +168,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkStandardGradientDescentOptimizer_h
+#endif // end #ifndef itkStandardGradientDescentOptimizer_h

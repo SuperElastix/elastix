@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLGlobal_h
-#define __itkOpenCLGlobal_h
+#ifndef itkOpenCLGlobal_h
+#define itkOpenCLGlobal_h
 
 #include <memory>
 
@@ -57,4 +57,4 @@ OpenCLGetPtrHelper(const std::unique_ptr<TObjectType> & p)
 #define ITK_OPENCL_Q(Class) Class * const q = q_func()
 } // end namespace itk
 
-#endif /* __itkOpenCLGlobal_h */
+#endif /* itkOpenCLGlobal_h */

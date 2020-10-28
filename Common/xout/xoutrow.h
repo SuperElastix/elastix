@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutrow_h
-#define __xoutrow_h
+#ifndef xoutrow_h
+#define xoutrow_h
 
 #include "xoutbase.h"
 #include "xoutcell.h"
@@ -124,4 +124,4 @@ private:
 
 #include "xoutrow.hxx"
 
-#endif // end #ifndef __xoutrow_h
+#endif // end #ifndef xoutrow_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCastImageFilter_h
-#define __itkGPUCastImageFilter_h
+#ifndef itkGPUCastImageFilter_h
+#define itkGPUCastImageFilter_h
 
 #include "itkCastImageFilter.h"
 #include "itkSimpleDataObjectDecorator.h"
@@ -119,4 +119,4 @@ private:
 #  include "itkGPUCastImageFilter.hxx"
 #endif
 
-#endif /* __itkGPUCastImageFilter_h */
+#endif /* itkGPUCastImageFilter_h */

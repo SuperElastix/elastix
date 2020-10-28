@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMissingStructurePenalty_H__
-#define __elxMissingStructurePenalty_H__
+#ifndef elxMissingStructurePenalty_h
+#define elxMissingStructurePenalty_h
 
 #include "elxIncludes.h"
 #include "itkMissingStructurePenalty.h"
@@ -201,4 +201,4 @@ private:
 #  include "elxMissingStructurePenalty.hxx"
 #endif
 
-#endif // end #ifndef __elxMissingStructurePenalty_H__
+#endif // end #ifndef elxMissingStructurePenalty_h

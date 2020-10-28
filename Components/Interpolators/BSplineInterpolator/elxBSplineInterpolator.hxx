@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxBSplineInterpolator_hxx
-#define __elxBSplineInterpolator_hxx
+#ifndef elxBSplineInterpolator_hxx
+#define elxBSplineInterpolator_hxx
 
 #include "elxBSplineInterpolator.h"
 
@@ -58,4 +58,4 @@ BSplineInterpolator<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxBSplineInterpolator_hxx
+#endif // end #ifndef elxBSplineInterpolator_hxx

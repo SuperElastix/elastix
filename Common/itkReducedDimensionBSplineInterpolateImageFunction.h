@@ -35,8 +35,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkReducedDimensionBSplineInterpolateImageFunction_h
-#define __itkReducedDimensionBSplineInterpolateImageFunction_h
+#ifndef itkReducedDimensionBSplineInterpolateImageFunction_h
+#define itkReducedDimensionBSplineInterpolateImageFunction_h
 
 #include <vector>
 

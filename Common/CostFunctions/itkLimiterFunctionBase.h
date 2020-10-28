@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkLimiterFunctionBase_h
-#define __itkLimiterFunctionBase_h
+#ifndef itkLimiterFunctionBase_h
+#define itkLimiterFunctionBase_h
 
 #include "itkFunctionBase.h"
 #include "itkMacro.h"

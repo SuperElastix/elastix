@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedRigid2DTransform_h
-#define __itkAdvancedRigid2DTransform_h
+#ifndef itkAdvancedRigid2DTransform_h
+#define itkAdvancedRigid2DTransform_h
 
 #include <iostream>
 #include "itkAdvancedMatrixOffsetTransformBase.h"
@@ -361,4 +361,4 @@ AdvancedRigid2DTransform<TScalarType>::BackTransform(const OutputCovariantVector
 #  include "itkAdvancedRigid2DTransform.hxx"
 #endif
 
-#endif /* __itkAdvancedRigid2DTransform_h */
+#endif /* itkAdvancedRigid2DTransform_h */

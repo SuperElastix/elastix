@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef _itkParzenWindowHistogramImageToImageMetric_HXX__
-#define _itkParzenWindowHistogramImageToImageMetric_HXX__
+#ifndef itkParzenWindowHistogramImageToImageMetric_hxx
+#define itkParzenWindowHistogramImageToImageMetric_hxx
 
 #include "itkParzenWindowHistogramImageToImageMetric.h"
 
@@ -1637,4 +1637,4 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
 
 } // end namespace itk
 
-#endif // end #ifndef _itkParzenWindowHistogramImageToImageMetric_HXX__
+#endif // end #ifndef itkParzenWindowHistogramImageToImageMetric_hxx

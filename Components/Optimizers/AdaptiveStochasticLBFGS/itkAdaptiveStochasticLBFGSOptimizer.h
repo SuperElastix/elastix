@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdaptiveStochasticLBFGSOptimizer_h
-#define __itkAdaptiveStochasticLBFGSOptimizer_h
+#ifndef itkAdaptiveStochasticLBFGSOptimizer_h
+#define itkAdaptiveStochasticLBFGSOptimizer_h
 
 #include "../StandardStochasticGradientDescent/itkStandardStochasticGradientDescentOptimizer.h"
 

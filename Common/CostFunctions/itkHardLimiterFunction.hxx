@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkHardLimiterFunction_hxx
-#define __itkHardLimiterFunction_hxx
+#ifndef itkHardLimiterFunction_hxx
+#define itkHardLimiterFunction_hxx
 
 #include "itkHardLimiterFunction.h"
 #include "vnl/vnl_math.h"

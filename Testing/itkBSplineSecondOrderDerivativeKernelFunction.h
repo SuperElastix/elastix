@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBSplineSecondOrderDerivativeKernelFunction_h
-#define __itkBSplineSecondOrderDerivativeKernelFunction_h
+#ifndef itkBSplineSecondOrderDerivativeKernelFunction_h
+#define itkBSplineSecondOrderDerivativeKernelFunction_h
 
 #include "itkKernelFunctionBase.h"
 #include "itkBSplineKernelFunction.h"

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPreconditionedGradientDescent_hxx
-#define __elxPreconditionedGradientDescent_hxx
+#ifndef elxPreconditionedGradientDescent_hxx
+#define elxPreconditionedGradientDescent_hxx
 
 #include "elxPreconditionedGradientDescent.h"
 
@@ -810,4 +810,4 @@ PreconditionedGradientDescent<TElastix>::AddRandomPerturbation(const ParametersT
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxPreconditionedGradientDescent_hxx
+#endif // end #ifndef elxPreconditionedGradientDescent_hxx

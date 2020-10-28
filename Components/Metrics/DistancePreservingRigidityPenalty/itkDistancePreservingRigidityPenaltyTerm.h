@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkDistancePreservingRigidityPenaltyTerm_h
-#define __itkDistancePreservingRigidityPenaltyTerm_h
+#ifndef itkDistancePreservingRigidityPenaltyTerm_h
+#define itkDistancePreservingRigidityPenaltyTerm_h
 
 #include "itkTransformPenaltyTerm.h"
 
@@ -238,4 +238,4 @@ private:
 #  include "itkDistancePreservingRigidityPenaltyTerm.hxx"
 #endif
 
-#endif // #ifndef __itkDistancePreservingRigidityPenaltyTerm_h
+#endif // #ifndef itkDistancePreservingRigidityPenaltyTerm_h

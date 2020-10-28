@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkTransformToSpatialJacobianSource_hxx
-#define __itkTransformToSpatialJacobianSource_hxx
+#ifndef itkTransformToSpatialJacobianSource_hxx
+#define itkTransformToSpatialJacobianSource_hxx
 
 #include "itkTransformToSpatialJacobianSource.h"
 

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedEuler3DTransformFactory_h
-#define __itkGPUAdvancedEuler3DTransformFactory_h
+#ifndef itkGPUAdvancedEuler3DTransformFactory_h
+#define itkGPUAdvancedEuler3DTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUAdvancedEuler3DTransform.h"
@@ -95,4 +95,4 @@ private:
 #  include "itkGPUAdvancedEuler3DTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedEuler3DTransformFactory_h */
+#endif /* itkGPUAdvancedEuler3DTransformFactory_h */

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxQuasiNewtonLBFGS_h
-#define __elxQuasiNewtonLBFGS_h
+#ifndef elxQuasiNewtonLBFGS_h
+#define elxQuasiNewtonLBFGS_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkQuasiNewtonLBFGSOptimizer.h"
@@ -207,4 +207,4 @@ private:
 #  include "elxQuasiNewtonLBFGS.hxx"
 #endif
 
-#endif // end #ifndef __elxQuasiNewtonLBFGS_h
+#endif // end #ifndef elxQuasiNewtonLBFGS_h

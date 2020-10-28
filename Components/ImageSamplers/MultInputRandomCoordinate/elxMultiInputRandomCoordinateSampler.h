@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMultiInputRandomCoordinateSampler_h
-#define __elxMultiInputRandomCoordinateSampler_h
+#ifndef elxMultiInputRandomCoordinateSampler_h
+#define elxMultiInputRandomCoordinateSampler_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiInputImageRandomCoordinateSampler.h"
@@ -171,4 +171,4 @@ private:
 #  include "elxMultiInputRandomCoordinateSampler.hxx"
 #endif
 
-#endif // end #ifndef __elxMultiInputRandomCoordinateSampler_h
+#endif // end #ifndef elxMultiInputRandomCoordinateSampler_h

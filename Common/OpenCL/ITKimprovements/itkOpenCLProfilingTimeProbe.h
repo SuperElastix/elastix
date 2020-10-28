@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLProfilingTimeProbe_h
-#define __itkOpenCLProfilingTimeProbe_h
+#ifndef itkOpenCLProfilingTimeProbe_h
+#define itkOpenCLProfilingTimeProbe_h
 
 #include "itkOpenCLExport.h"
 #include "itkTimeProbe.h"
@@ -47,4 +47,4 @@ private:
 
 } // end namespace itk
 
-#endif //__itkOpenCLProfilingTimeProbe_h
+#endif //itkOpenCLProfilingTimeProbe_h

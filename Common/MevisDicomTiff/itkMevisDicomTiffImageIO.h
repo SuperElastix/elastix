@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMevisDicomTiffImageIO_h
-#define __itkMevisDicomTiffImageIO_h
+#ifndef itkMevisDicomTiffImageIO_h
+#define itkMevisDicomTiffImageIO_h
 
 #ifdef _MSC_VER
 #  pragma warning(disable : 4786)
@@ -192,4 +192,4 @@ private:
 
 } // end namespace itk
 
-#endif // __itkMevisDicomTiffImageIO_h
+#endif // itkMevisDicomTiffImageIO_h

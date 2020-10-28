@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNBruteForceTree_h
-#define __itkANNBruteForceTree_h
+#ifndef itkANNBruteForceTree_h
+#define itkANNBruteForceTree_h
 
 #include "itkBinaryANNTreeBase.h"
 
@@ -95,4 +95,4 @@ private:
 #  include "itkANNBruteForceTree.hxx"
 #endif
 
-#endif // end #ifndef __itkANNBruteForceTree_h
+#endif // end #ifndef itkANNBruteForceTree_h

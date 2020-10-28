@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkHardLimiterFunction_h
-#define __itkHardLimiterFunction_h
+#ifndef itkHardLimiterFunction_h
+#define itkHardLimiterFunction_h
 
 #include "itkLimiterFunctionBase.h"
 

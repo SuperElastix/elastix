@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAffineLogTransform_h
-#define __itkAffineLogTransform_h
+#ifndef itkAffineLogTransform_h
+#define itkAffineLogTransform_h
 
 #include <iostream>
 #include "itkAdvancedMatrixOffsetTransformBase.h"
@@ -120,4 +120,4 @@ private:
 #  include "itkAffineLogTransform.hxx"
 #endif
 
-#endif /* __itkAffineLogTransform_h */
+#endif /* itkAffineLogTransform_h */

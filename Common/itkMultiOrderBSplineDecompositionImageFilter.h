@@ -34,8 +34,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMultiOrderBSplineDecompositionImageFilter_h
-#define __itkMultiOrderBSplineDecompositionImageFilter_h
+#ifndef itkMultiOrderBSplineDecompositionImageFilter_h
+#define itkMultiOrderBSplineDecompositionImageFilter_h
 
 #include <vector>
 

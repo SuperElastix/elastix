@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRayCastInterpolator_h
-#define __elxRayCastInterpolator_h
+#ifndef elxRayCastInterpolator_h
+#define elxRayCastInterpolator_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
@@ -139,4 +139,4 @@ private:
 #  include "elxRayCastInterpolator.hxx"
 #endif
 
-#endif // end #ifndef __elxRayCastInterpolator_h
+#endif // end #ifndef elxRayCastInterpolator_h

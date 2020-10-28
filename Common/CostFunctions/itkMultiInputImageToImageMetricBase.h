@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMultiInputImageToImageMetricBase_h
-#define __itkMultiInputImageToImageMetricBase_h
+#ifndef itkMultiInputImageToImageMetricBase_h
+#define itkMultiInputImageToImageMetricBase_h
 
 #include "itkAdvancedImageToImageMetric.h"
 #include <vector>
@@ -420,4 +420,4 @@ private:
 #  include "itkMultiInputImageToImageMetricBase.hxx"
 #endif
 
-#endif // end #ifndef __itkMultiInputImageToImageMetricBase_h
+#endif // end #ifndef itkMultiInputImageToImageMetricBase_h

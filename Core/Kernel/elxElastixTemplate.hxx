@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxElastixTemplate_hxx
-#  define __elxElastixTemplate_hxx
+#ifndef elxElastixTemplate_hxx
+#  define elxElastixTemplate_hxx
 
 #  include "elxElastixTemplate.h"
 
@@ -1134,6 +1134,6 @@ ElastixTemplate<TFixedImage, TMovingImage>::SetOriginalFixedImageDirection(const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxElastixTemplate_hxx
+#endif // end #ifndef elxElastixTemplate_hxx
 
 #undef elxCheckAndSetComponentMacro

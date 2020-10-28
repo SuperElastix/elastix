@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLUserEvent_h
-#define __itkOpenCLUserEvent_h
+#ifndef itkOpenCLUserEvent_h
+#define itkOpenCLUserEvent_h
 
 #include "itkOpenCLEvent.h"
 
@@ -123,4 +123,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkOpenCLUserEvent_h */
+#endif /* itkOpenCLUserEvent_h */

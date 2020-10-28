@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedKappaStatisticMetric_H__
-#define __elxAdvancedKappaStatisticMetric_H__
+#ifndef elxAdvancedKappaStatisticMetric_h
+#define elxAdvancedKappaStatisticMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedKappaStatisticImageToImageMetric.h"
@@ -163,4 +163,4 @@ private:
 #  include "elxAdvancedKappaStatisticMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxAdvancedKappaStatisticMetric_H__
+#endif // end #ifndef elxAdvancedKappaStatisticMetric_h

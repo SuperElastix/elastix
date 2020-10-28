@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxStatisticalShapePenalty_HXX__
-#define __elxStatisticalShapePenalty_HXX__
+#ifndef elxStatisticalShapePenalty_hxx
+#define elxStatisticalShapePenalty_hxx
 
 #include "elxStatisticalShapePenalty.h"
 #include "itkTransformixInputPointFileReader.h"
@@ -389,4 +389,4 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxStatisticalShapePenalty_HXX__
+#endif // end #ifndef elxStatisticalShapePenalty_hxx

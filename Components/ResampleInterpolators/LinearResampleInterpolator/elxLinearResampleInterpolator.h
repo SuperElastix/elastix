@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxLinearResampleInterpolator_h
-#define __elxLinearResampleInterpolator_h
+#ifndef elxLinearResampleInterpolator_h
+#define elxLinearResampleInterpolator_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkLinearInterpolateImageFunction.h"
@@ -106,4 +106,4 @@ private:
 #  include "elxLinearResampleInterpolator.hxx"
 #endif
 
-#endif // end __elxLinearResampleInterpolator_h
+#endif // end elxLinearResampleInterpolator_h

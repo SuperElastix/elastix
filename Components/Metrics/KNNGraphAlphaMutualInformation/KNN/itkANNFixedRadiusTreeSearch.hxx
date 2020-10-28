@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNFixedRadiusTreeSearch_hxx
-#define __itkANNFixedRadiusTreeSearch_hxx
+#ifndef itkANNFixedRadiusTreeSearch_hxx
+#define itkANNFixedRadiusTreeSearch_hxx
 
 #include "itkANNFixedRadiusTreeSearch.h"
 
@@ -143,4 +143,4 @@ ANNFixedRadiusTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
 
 } // end namespace itk
 
-#endif // end #ifndef __itkANNFixedRadiusTreeSearch_hxx
+#endif // end #ifndef itkANNFixedRadiusTreeSearch_hxx

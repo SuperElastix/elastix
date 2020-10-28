@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSimplex_h
-#define __elxSimplex_h
+#ifndef elxSimplex_h
+#define elxSimplex_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAmoebaOptimizer.h"
@@ -118,4 +118,4 @@ private:
 #  include "elxSimplex.hxx"
 #endif
 
-#endif // end #ifndef __elxSimplex_h
+#endif // end #ifndef elxSimplex_h

@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxNearestNeighborInterpolator_hxx
-#define __elxNearestNeighborInterpolator_hxx
+#ifndef elxNearestNeighborInterpolator_hxx
+#define elxNearestNeighborInterpolator_hxx
 
 #include "elxNearestNeighborInterpolator.h"
 
@@ -28,4 +28,4 @@ namespace elastix
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxNearestNeighborInterpolator_hxx
+#endif // end #ifndef elxNearestNeighborInterpolator_hxx

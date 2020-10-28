@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxBaseComponentSE_h
-#define __elxBaseComponentSE_h
+#ifndef elxBaseComponentSE_h
+#define elxBaseComponentSE_h
 
 #include "elxBaseComponent.h"
 #include "elxConfiguration.h"
@@ -134,4 +134,4 @@ protected:
 #  include "elxBaseComponentSE.hxx"
 #endif
 
-#endif // end #ifndef __elxBaseComponentSE_h
+#endif // end #ifndef elxBaseComponentSE_h

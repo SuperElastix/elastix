@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxSimplex_hxx
-#define __elxSimplex_hxx
+#ifndef elxSimplex_hxx
+#define elxSimplex_hxx
 
 #include "elxSimplex.h"
 #include <iomanip>
@@ -178,4 +178,4 @@ Simplex<TElastix>::SetInitialPosition(const ParametersType & param)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxSimplex_hxx
+#endif // end #ifndef elxSimplex_hxx

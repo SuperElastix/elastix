@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLVectorTest_h
-#define __itkOpenCLVectorTest_h
+#ifndef itkOpenCLVectorTest_h
+#define itkOpenCLVectorTest_h
 
 #include "itkMacro.h"
 
@@ -26,4 +26,4 @@ namespace itk
 itkGPUKernelClassMacro(OpenCLVectorTestKernel);
 } // end namespace itk
 
-#endif /* __itkOpenCLVectorTest_h */
+#endif /* itkOpenCLVectorTest_h */

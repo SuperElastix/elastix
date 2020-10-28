@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBSplineInterpolationSecondOrderDerivativeWeightFunction_h
-#define __itkBSplineInterpolationSecondOrderDerivativeWeightFunction_h
+#ifndef itkBSplineInterpolationSecondOrderDerivativeWeightFunction_h
+#define itkBSplineInterpolationSecondOrderDerivativeWeightFunction_h
 
 #include "itkBSplineInterpolationWeightFunctionBase.h"
 #include "vnl/vnl_vector_fixed.h"

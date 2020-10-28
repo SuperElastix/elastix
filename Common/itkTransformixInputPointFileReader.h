@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkTransformixInputPointFileReader_h
-#define __itkTransformixInputPointFileReader_h
+#ifndef itkTransformixInputPointFileReader_h
+#define itkTransformixInputPointFileReader_h
 
 #include "itkMeshFileReaderBase.h"
 

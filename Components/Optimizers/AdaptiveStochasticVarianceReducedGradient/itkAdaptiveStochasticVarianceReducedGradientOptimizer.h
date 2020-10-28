@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdaptiveStochasticVarianceReducedGradientOptimizer_h
-#define __itkAdaptiveStochasticVarianceReducedGradientOptimizer_h
+#ifndef itkAdaptiveStochasticVarianceReducedGradientOptimizer_h
+#define itkAdaptiveStochasticVarianceReducedGradientOptimizer_h
 
 #include "itkStandardStochasticVarianceReducedGradientDescentOptimizer.h"
 
@@ -146,4 +146,4 @@ private:
 } // end namespace itk
 
 
-#endif // end #ifndef __itkAdaptiveStochasticVarianceReducedGradientOptimizer_h
+#endif // end #ifndef itkAdaptiveStochasticVarianceReducedGradientOptimizer_h

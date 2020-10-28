@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkTransformPenaltyTerm_hxx
-#define __itkTransformPenaltyTerm_hxx
+#ifndef itkTransformPenaltyTerm_hxx
+#define itkTransformPenaltyTerm_hxx
 
 #include "itkTransformPenaltyTerm.h"
 
@@ -68,4 +68,4 @@ TransformPenaltyTerm<TFixedImage, TScalarType>::CheckForBSplineTransform2(BSplin
 
 } // end namespace itk
 
-#endif // #ifndef __itkTransformPenaltyTerm_hxx
+#endif // #ifndef itkTransformPenaltyTerm_hxx

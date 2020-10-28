@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkCombinationImageToImageMetric_h
-#define __itkCombinationImageToImageMetric_h
+#ifndef itkCombinationImageToImageMetric_h
+#define itkCombinationImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedPointSetToPointSetMetric.h"
@@ -486,4 +486,4 @@ private:
 #  include "itkCombinationImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkCombinationImageToImageMetric_h
+#endif // end #ifndef itkCombinationImageToImageMetric_h

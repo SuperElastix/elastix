@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPCAMetric_h
-#define __itkPCAMetric_h
+#ifndef itkPCAMetric_h
+#define itkPCAMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -213,4 +213,4 @@ private:
 #  include "itkPCAMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkPCAMetric_h
+#endif // end #ifndef itkPCAMetric_h

@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkTransformixInputPointFileReader_hxx
-#define __itkTransformixInputPointFileReader_hxx
+#ifndef itkTransformixInputPointFileReader_hxx
+#define itkTransformixInputPointFileReader_hxx
 
 #include "itkTransformixInputPointFileReader.h"
 

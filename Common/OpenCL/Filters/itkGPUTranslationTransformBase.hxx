@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUTranslationTransformBase_hxx
-#define __itkGPUTranslationTransformBase_hxx
+#ifndef itkGPUTranslationTransformBase_hxx
+#define itkGPUTranslationTransformBase_hxx
 
 #include "itkGPUTranslationTransformBase.h"
 #include <iomanip>
@@ -200,4 +200,4 @@ GPUTranslationTransformBase<TScalarType, NDimensions>::GetSourceCode(std::string
 
 } // end namespace itk
 
-#endif /* __itkGPUTranslationTransformBase_hxx */
+#endif /* itkGPUTranslationTransformBase_hxx */

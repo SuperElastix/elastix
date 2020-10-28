@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGridScheduleComputer_H__
-#define __itkGridScheduleComputer_H__
+#ifndef itkGridScheduleComputer_h
+#define itkGridScheduleComputer_h
 
 #include "itkObject.h"
 #include "itkImageBase.h"
@@ -197,4 +197,4 @@ private:
 #  include "itkGridScheduleComputer.hxx"
 #endif
 
-#endif // end #ifndef __itkGridScheduleComputer_H__
+#endif // end #ifndef itkGridScheduleComputer_h

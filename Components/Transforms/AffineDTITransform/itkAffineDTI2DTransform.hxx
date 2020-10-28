@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAffineDTI2DTransform_hxx
-#define __itkAffineDTI2DTransform_hxx
+#ifndef itkAffineDTI2DTransform_hxx
+#define itkAffineDTI2DTransform_hxx
 
 #include "itkAffineDTI2DTransform.h"
 #include <cmath>

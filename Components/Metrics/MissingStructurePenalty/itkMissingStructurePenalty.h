@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMissingStructurePenalty_h
-#define __itkMissingStructurePenalty_h
+#ifndef itkMissingStructurePenalty_h
+#define itkMissingStructurePenalty_h
 
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 #include "itkPoint.h"

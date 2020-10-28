@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxOpenCLResampler_hxx
-#define __elxOpenCLResampler_hxx
+#ifndef elxOpenCLResampler_hxx
+#define elxOpenCLResampler_hxx
 
 #include "elxOpenCLResampler.h"
 #include "itkOpenCLLogger.h"
@@ -353,4 +353,4 @@ OpenCLResampler<TElastix>::ReportToLog(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxOpenCLResampler_hxx
+#endif // end #ifndef elxOpenCLResampler_hxx

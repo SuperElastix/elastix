@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUObjectFactoryBase_h
-#define __itkGPUObjectFactoryBase_h
+#ifndef itkGPUObjectFactoryBase_h
+#define itkGPUObjectFactoryBase_h
 
 #include "itkGPUSupportedImages.h"
 
@@ -96,4 +96,4 @@ private:
 #  include "itkGPUObjectFactoryBase.hxx"
 #endif
 
-#endif // end #ifndef __itkGPUObjectFactoryBase_h
+#endif // end #ifndef itkGPUObjectFactoryBase_h

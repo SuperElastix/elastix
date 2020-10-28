@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMultiBSplineDeformableTransformWithNormal_hxx
-#define __itkMultiBSplineDeformableTransformWithNormal_hxx
+#ifndef itkMultiBSplineDeformableTransformWithNormal_hxx
+#define itkMultiBSplineDeformableTransformWithNormal_hxx
 
 #include "itkMultiBSplineDeformableTransformWithNormal.h"
 #include "itkStatisticsImageFilter.h"
@@ -1114,4 +1114,4 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 } // end namespace itk
 
-#endif // end #ifndef __itkMultiBSplineDeformableTransformWithNormal_hxx
+#endif // end #ifndef itkMultiBSplineDeformableTransformWithNormal_hxx

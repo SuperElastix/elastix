@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxComponentLoader_h
-#define __elxComponentLoader_h
+#ifndef elxComponentLoader_h
+#define elxComponentLoader_h
 
 #include "elxComponentDatabase.h"
 #include "xoutmain.h"
@@ -88,4 +88,4 @@ private:
 
 } // end namespace elastix
 
-#endif // #ifndef __elxComponentLoader_h
+#endif // #ifndef elxComponentLoader_h

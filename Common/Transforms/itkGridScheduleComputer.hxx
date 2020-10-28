@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGridScheduleComputer_hxx__
-#define __itkGridScheduleComputer_hxx__
+#ifndef itkGridScheduleComputer_hxx
+#define itkGridScheduleComputer_hxx
 
 #include "itkGridScheduleComputer.h"
 
@@ -404,4 +404,4 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::PrintSelf(std::ostr
 
 } // end namespace itk
 
-#endif // end #ifndef __itkGridScheduleComputer_hxx__
+#endif // end #ifndef itkGridScheduleComputer_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxEulerStackTransform_hxx
-#define __elxEulerStackTransform_hxx
+#ifndef elxEulerStackTransform_hxx
+#define elxEulerStackTransform_hxx
 
 #include "elxEulerStackTransform.h"
 
@@ -544,4 +544,4 @@ EulerStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPo
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxEulerStackTransform_hxx
+#endif // end #ifndef elxEulerStackTransform_hxx

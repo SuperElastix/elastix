@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSumOfPairwiseCorrelationCoefficientsMetric_H__
-#define __itkSumOfPairwiseCorrelationCoefficientsMetric_H__
+#ifndef itkSumOfPairwiseCorrelationCoefficientsMetric_h
+#define itkSumOfPairwiseCorrelationCoefficientsMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -181,4 +181,4 @@ private:
 #  include "itkSumOfPairwiseCorrelationCoefficientsMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkSumOfPairwiseCorrelationCoefficientsMetric_H__
+#endif // end #ifndef itkSumOfPairwiseCorrelationCoefficientsMetric_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedMattesMutualInformationMetric_H__
-#define __elxAdvancedMattesMutualInformationMetric_H__
+#ifndef elxAdvancedMattesMutualInformationMetric_h
+#define elxAdvancedMattesMutualInformationMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkParzenWindowMutualInformationImageToImageMetric.h"
@@ -241,4 +241,4 @@ private:
 #  include "elxAdvancedMattesMutualInformationMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxAdvancedMattesMutualInformationMetric_H__
+#endif // end #ifndef elxAdvancedMattesMutualInformationMetric_h

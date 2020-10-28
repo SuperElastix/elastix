@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkUseMevisDicomTiff_h
-#define __itkUseMevisDicomTiff_h
+#ifndef itkUseMevisDicomTiff_h
+#define itkUseMevisDicomTiff_h
 
 /** Include this file in your main source code */
 

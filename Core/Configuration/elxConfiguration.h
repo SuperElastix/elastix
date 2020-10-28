@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxConfiguration_H__
-#define __elxConfiguration_H__
+#ifndef elxConfiguration_h
+#define elxConfiguration_h
 
 #include "itkObject.h"
 #include "elxBaseComponent.h"
@@ -276,4 +276,4 @@ private:
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxConfiguration_H__
+#endif // end #ifndef elxConfiguration_h

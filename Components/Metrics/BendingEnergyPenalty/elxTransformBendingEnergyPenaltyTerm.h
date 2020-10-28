@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTransformBendingEnergyPenaltyTerm_H__
-#define __elxTransformBendingEnergyPenaltyTerm_H__
+#ifndef elxTransformBendingEnergyPenaltyTerm_h
+#define elxTransformBendingEnergyPenaltyTerm_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkTransformBendingEnergyPenaltyTerm.h"
@@ -158,4 +158,4 @@ private:
 #  include "elxTransformBendingEnergyPenaltyTerm.hxx"
 #endif
 
-#endif // end #ifndef __elxTransformBendingEnergyPenaltyTerm_H__
+#endif // end #ifndef elxTransformBendingEnergyPenaltyTerm_h

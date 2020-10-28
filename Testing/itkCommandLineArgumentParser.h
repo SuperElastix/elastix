@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkCommandLineArgumentParser_h
-#define __itkCommandLineArgumentParser_h
+#ifndef itkCommandLineArgumentParser_h
+#define itkCommandLineArgumentParser_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -292,4 +292,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkCommandLineArgumentParser_h
+#endif // end #ifndef itkCommandLineArgumentParser_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkListSampleCArray_h
-#define __itkListSampleCArray_h
+#ifndef itkListSampleCArray_h
+#define itkListSampleCArray_h
 
 #include "itkObjectFactory.h"
 //#include "itkListSampleBase.h"
@@ -165,4 +165,4 @@ private:
 #  include "itkListSampleCArray.hxx"
 #endif
 
-#endif // end #ifndef __itkListSampleCArray_h
+#endif // end #ifndef itkListSampleCArray_h

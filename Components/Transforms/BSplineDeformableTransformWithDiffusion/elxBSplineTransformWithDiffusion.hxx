@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxBSplineTransformWithDiffusion_HXX__
-#define __elxBSplineTransformWithDiffusion_HXX__
+#ifndef elxBSplineTransformWithDiffusion_hxx
+#define elxBSplineTransformWithDiffusion_hxx
 
 #include "elxBSplineTransformWithDiffusion.h"
 
@@ -1419,4 +1419,4 @@ BSplineTransformWithDiffusion<TElastix>::TransformPoint(const InputPointType & p
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxBSplineTransformWithDiffusion_HXX__
+#endif // end #ifndef elxBSplineTransformWithDiffusion_hxx

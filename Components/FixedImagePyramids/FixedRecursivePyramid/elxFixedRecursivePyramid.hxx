@@ -16,11 +16,11 @@
  *
  *=========================================================================*/
 
-#ifndef __elxFixedRecursivePyramid_hxx
-#define __elxFixedRecursivePyramid_hxx
+#ifndef elxFixedRecursivePyramid_hxx
+#define elxFixedRecursivePyramid_hxx
 
 #include "elxFixedRecursivePyramid.h"
 
 // nothing
 
-#endif //#ifndef __elxFixedRecursivePyramid_hxx
+#endif //#ifndef elxFixedRecursivePyramid_hxx

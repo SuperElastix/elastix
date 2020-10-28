@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkRecursiveBSplineTransformImplementation_h
-#define __itkRecursiveBSplineTransformImplementation_h
+#ifndef itkRecursiveBSplineTransformImplementation_h
+#define itkRecursiveBSplineTransformImplementation_h
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
 
@@ -614,4 +614,4 @@ public:
 
 } // end namespace itk
 
-#endif /* __itkRecursiveBSplineTransformImplementation_h */
+#endif /* itkRecursiveBSplineTransformImplementation_h */

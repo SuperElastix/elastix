@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPURecursiveGaussianImageFilterFactory_hxx
-#define __itkGPURecursiveGaussianImageFilterFactory_hxx
+#ifndef itkGPURecursiveGaussianImageFilterFactory_hxx
+#define itkGPURecursiveGaussianImageFilterFactory_hxx
 
 #include "itkGPURecursiveGaussianImageFilterFactory.h"
 
@@ -109,4 +109,4 @@ GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>:
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPURecursiveGaussianImageFilterFactory_hxx
+#endif // end #ifndef itkGPURecursiveGaussianImageFilterFactory_hxx

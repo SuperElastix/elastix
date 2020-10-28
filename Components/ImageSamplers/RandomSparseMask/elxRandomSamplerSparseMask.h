@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRandomSamplerSparseMask_h
-#define __elxRandomSamplerSparseMask_h
+#ifndef elxRandomSamplerSparseMask_h
+#define elxRandomSamplerSparseMask_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkImageRandomSamplerSparseMask.h"
@@ -128,4 +128,4 @@ private:
 #  include "elxRandomSamplerSparseMask.hxx"
 #endif
 
-#endif // end #ifndef __elxRandomSamplerSparseMask_h
+#endif // end #ifndef elxRandomSamplerSparseMask_h

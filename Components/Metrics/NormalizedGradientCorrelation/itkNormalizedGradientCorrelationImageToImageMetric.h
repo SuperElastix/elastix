@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkNormalizedGradientCorrelationImageToImageMetric_h
-#define __itkNormalizedGradientCorrelationImageToImageMetric_h
+#ifndef itkNormalizedGradientCorrelationImageToImageMetric_h
+#define itkNormalizedGradientCorrelationImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSobelOperator.h"

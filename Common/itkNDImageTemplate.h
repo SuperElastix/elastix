@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkNDImageTemplate_h
-#define __itkNDImageTemplate_h
+#ifndef itkNDImageTemplate_h
+#define itkNDImageTemplate_h
 
 #include "itkNDImageBase.h"
 #include "itkImageFileReader.h"
@@ -281,4 +281,4 @@ private:
 #  include "itkNDImageTemplate.hxx"
 #endif
 
-#endif // end #ifndef __itkNDImageTemplate_h
+#endif // end #ifndef itkNDImageTemplate_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMacro_h
-#define __elxMacro_h
+#ifndef elxMacro_h
+#define elxMacro_h
 
 /** This include is only used to get rid of a MSVS compiler warning
  * when using std::copy. The warning is like:
@@ -331,4 +331,4 @@
 #  endif
 #endif
 
-#endif // end #ifndef __elxMacro_h
+#endif // end #ifndef elxMacro_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxNormalizedMutualInformationMetric_HXX__
-#define __elxNormalizedMutualInformationMetric_HXX__
+#ifndef elxNormalizedMutualInformationMetric_hxx
+#define elxNormalizedMutualInformationMetric_hxx
 
 #include "elxNormalizedMutualInformationMetric.h"
 
@@ -104,4 +104,4 @@ NormalizedMutualInformationMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxNormalizedMutualInformationMetric_HXX__
+#endif // end #ifndef elxNormalizedMutualInformationMetric_hxx

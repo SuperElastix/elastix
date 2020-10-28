@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFixedGenericPyramid_hxx
-#define __elxFixedGenericPyramid_hxx
+#ifndef elxFixedGenericPyramid_hxx
+#define elxFixedGenericPyramid_hxx
 
 #include "elxFixedGenericPyramid.h"
 
@@ -176,4 +176,4 @@ FixedGenericPyramid<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxFixedGenericPyramid_hxx
+#endif // end #ifndef elxFixedGenericPyramid_hxx

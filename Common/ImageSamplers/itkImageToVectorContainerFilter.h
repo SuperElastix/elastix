@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkImageToVectorContainerFilter_h
-#define __itkImageToVectorContainerFilter_h
+#ifndef itkImageToVectorContainerFilter_h
+#define itkImageToVectorContainerFilter_h
 
 #include "itkVectorContainerSource.h"
 #include "itkPlatformMultiThreader.h"
@@ -202,4 +202,4 @@ private:
 #  include "itkImageToVectorContainerFilter.hxx"
 #endif
 
-#endif // end #ifndef __itkImageToVectorContainerFilter_h
+#endif // end #ifndef itkImageToVectorContainerFilter_h

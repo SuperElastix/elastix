@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRSGDEachParameterApart_h
-#define __elxRSGDEachParameterApart_h
+#ifndef elxRSGDEachParameterApart_h
+#define elxRSGDEachParameterApart_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkRSGDEachParameterApartOptimizer.h"
@@ -148,4 +148,4 @@ private:
 #  include "elxRSGDEachParameterApart.hxx"
 #endif
 
-#endif // end #ifndef __elxRSGDEachParameterApart_h
+#endif // end #ifndef elxRSGDEachParameterApart_h

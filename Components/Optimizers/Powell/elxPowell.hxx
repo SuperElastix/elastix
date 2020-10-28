@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxPowell_hxx
-#define __elxPowell_hxx
+#ifndef elxPowell_hxx
+#define elxPowell_hxx
 
 #include "elxPowell.h"
 #include <iomanip>
@@ -166,4 +166,4 @@ Powell<TElastix>::SetInitialPosition(const ParametersType & param)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxPowell_hxx
+#endif // end #ifndef elxPowell_hxx

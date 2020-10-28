@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCompositeTransformFactory_h
-#define __itkGPUCompositeTransformFactory_h
+#ifndef itkGPUCompositeTransformFactory_h
+#define itkGPUCompositeTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUCompositeTransform.h"
@@ -103,4 +103,4 @@ private:
 #  include "itkGPUCompositeTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUCompositeTransformFactory_h */
+#endif /* itkGPUCompositeTransformFactory_h */

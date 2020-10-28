@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxNormalizedGradientCorrelationMetric_HXX__
-#define __elxNormalizedGradientCorrelationMetric_HXX__
+#ifndef elxNormalizedGradientCorrelationMetric_hxx
+#define elxNormalizedGradientCorrelationMetric_hxx
 
 #include "elxNormalizedGradientCorrelationMetric.h"
 #include "itkTimeProbe.h"
@@ -82,4 +82,4 @@ NormalizedGradientCorrelationMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxNormalizedGradientCorrelationMetric_HXX__
+#endif // end #ifndef elxNormalizedGradientCorrelationMetric_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __transformixlib_h
-#define __transformixlib_h
+#ifndef transformixlib_h
+#define transformixlib_h
 
 /**
  *  Includes
@@ -85,4 +85,4 @@ private:
 
 } // namespace transformix
 
-#endif // end #ifndef __transformixlib_h
+#endif // end #ifndef transformixlib_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxOpenCLResampler_h
-#define __elxOpenCLResampler_h
+#ifndef elxOpenCLResampler_h
+#define elxOpenCLResampler_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "elxOpenCLSupportedImageTypes.h"
@@ -187,4 +187,4 @@ private:
 #  include "elxOpenCLResampler.hxx"
 #endif
 
-#endif // end #ifndef __elxOpenCLResampler_h
+#endif // end #ifndef elxOpenCLResampler_h

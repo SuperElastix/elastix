@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTransformRigidityPenaltyTerm_HXX__
-#define __elxTransformRigidityPenaltyTerm_HXX__
+#ifndef elxTransformRigidityPenaltyTerm_hxx
+#define elxTransformRigidityPenaltyTerm_hxx
 
 #include "elxTransformRigidityPenaltyTerm.h"
 
@@ -285,4 +285,4 @@ TransformRigidityPenalty<TElastix>::AfterEachIteration(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxTransformRigidityPenaltyTerm_HXX__
+#endif // end #ifndef elxTransformRigidityPenaltyTerm_hxx

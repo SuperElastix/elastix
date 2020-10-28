@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPCAMetric_H__
-#define __elxPCAMetric_H__
+#ifndef elxPCAMetric_h
+#define elxPCAMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkPCAMetric_F_multithreaded.h"
@@ -184,4 +184,4 @@ private:
 #  include "elxPCAMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxPCAMetric_H__
+#endif // end #ifndef elxPCAMetric_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxConjugateGradient_h
-#define __elxConjugateGradient_h
+#ifndef elxConjugateGradient_h
+#define elxConjugateGradient_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkGenericConjugateGradientOptimizer.h"
@@ -210,4 +210,4 @@ private:
 #  include "elxConjugateGradient.hxx"
 #endif
 
-#endif // end #ifndef __elxConjugateGradient_h
+#endif // end #ifndef elxConjugateGradient_h

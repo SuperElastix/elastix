@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedRigid2DTransform_hxx
-#define __itkAdvancedRigid2DTransform_hxx
+#ifndef itkAdvancedRigid2DTransform_hxx
+#define itkAdvancedRigid2DTransform_hxx
 
 #include "itkAdvancedRigid2DTransform.h"
 #include "vnl/algo/vnl_svd_fixed.h"

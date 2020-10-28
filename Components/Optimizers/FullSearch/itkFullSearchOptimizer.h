@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkFullSearchOptimizer_h
-#define __itkFullSearchOptimizer_h
+#ifndef itkFullSearchOptimizer_h
+#define itkFullSearchOptimizer_h
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 #include "itkMapContainer.h"

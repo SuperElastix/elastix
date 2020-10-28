@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedImageToImageMetric_h
-#define __itkAdvancedImageToImageMetric_h
+#ifndef itkAdvancedImageToImageMetric_h
+#define itkAdvancedImageToImageMetric_h
 
 #include "itkImageToImageMetric.h"
 
@@ -584,4 +584,4 @@ private:
 #  include "itkAdvancedImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkAdvancedImageToImageMetric_h
+#endif // end #ifndef itkAdvancedImageToImageMetric_h

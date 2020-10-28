@@ -32,8 +32,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLKernelManager_h
-#define __itkOpenCLKernelManager_h
+#ifndef itkOpenCLKernelManager_h
+#define itkOpenCLKernelManager_h
 
 #include <itkLightObject.h>
 #include <itkObjectFactory.h>
@@ -177,4 +177,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkOpenCLKernelManager_h */
+#endif /* itkOpenCLKernelManager_h */

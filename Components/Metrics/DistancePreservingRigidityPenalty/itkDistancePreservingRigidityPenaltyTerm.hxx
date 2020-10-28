@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkDistancePreservingRigidityPenaltyTerm_hxx
-#define __itkDistancePreservingRigidityPenaltyTerm_hxx
+#ifndef itkDistancePreservingRigidityPenaltyTerm_hxx
+#define itkDistancePreservingRigidityPenaltyTerm_hxx
 
 #include "itkDistancePreservingRigidityPenaltyTerm.h"
 
@@ -525,4 +525,4 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::PrintSelf(std::
 
 } // end namespace itk
 
-#endif // #ifndef __itkDistancePreservingRigidityPenaltyTerm_hxx
+#endif // #ifndef itkDistancePreservingRigidityPenaltyTerm_hxx

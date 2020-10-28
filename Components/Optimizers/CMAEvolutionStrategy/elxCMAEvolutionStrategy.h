@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxCMAEvolutionStrategy_h
-#define __elxCMAEvolutionStrategy_h
+#ifndef elxCMAEvolutionStrategy_h
+#define elxCMAEvolutionStrategy_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkCMAEvolutionStrategyOptimizer.h"
@@ -195,4 +195,4 @@ private:
 #  include "elxCMAEvolutionStrategy.hxx"
 #endif
 
-#endif // end #ifndef __elxCMAEvolutionStrategy_h
+#endif // end #ifndef elxCMAEvolutionStrategy_h

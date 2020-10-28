@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkErodeMaskImageFilter_h
-#define __itkErodeMaskImageFilter_h
+#ifndef itkErodeMaskImageFilter_h
+#define itkErodeMaskImageFilter_h
 
 #include "itkImageToImageFilter.h"
 #include "itkMultiResolutionPyramidImageFilter.h"

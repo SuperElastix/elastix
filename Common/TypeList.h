@@ -56,8 +56,8 @@
 //     without express or implied warranty.
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TypeList_H__
-#define __TypeList_H__
+#ifndef TypeList_h
+#define TypeList_h
 
 #ifndef ELX_TEMPLATE_WORKAROUND
 #  ifdef _MSC_VER
@@ -926,4 +926,4 @@ struct DualVisitDimensionImpl<typelist::NullType, typelist::NullType, Dimension>
 
 } // namespace typelist
 
-#endif // __TypeList_H__
+#endif // TypeList_h

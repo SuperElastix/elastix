@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkMoreThuenteLineSearchOptimizer_h
-#define __itkMoreThuenteLineSearchOptimizer_h
+#ifndef itkMoreThuenteLineSearchOptimizer_h
+#define itkMoreThuenteLineSearchOptimizer_h
 
 #include "itkLineSearchOptimizer.h"
 
@@ -393,4 +393,4 @@ private:
 
 /*     ********** */
 
-#endif // #ifndef __itkMoreThuenteLineSearchOptimizer_h
+#endif // #ifndef itkMoreThuenteLineSearchOptimizer_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTransformRigidityPenaltyTerm_H__
-#define __elxTransformRigidityPenaltyTerm_H__
+#ifndef elxTransformRigidityPenaltyTerm_h
+#define elxTransformRigidityPenaltyTerm_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkTransformRigidityPenaltyTerm.h"
@@ -246,4 +246,4 @@ private:
 #  include "elxTransformRigidityPenaltyTerm.hxx"
 #endif
 
-#endif // end #ifndef __elxTransformRigidityPenaltyTerm_H__
+#endif // end #ifndef elxTransformRigidityPenaltyTerm_h

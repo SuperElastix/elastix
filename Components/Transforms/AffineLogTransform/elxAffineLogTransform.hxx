@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAffineLogTransform_hxx
-#define __elxAffineLogTransform_hxx
+#ifndef elxAffineLogTransform_hxx
+#define elxAffineLogTransform_hxx
 
 #include "elxAffineLogTransform.h"
 #include "itkContinuousIndex.h"

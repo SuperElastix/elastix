@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxFullSampler_hxx
-#define __elxFullSampler_hxx
+#ifndef elxFullSampler_hxx
+#define elxFullSampler_hxx
 
 #include "elxFullSampler.h"
 
@@ -28,4 +28,4 @@ namespace elastix
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxFullSampler_hxx
+#endif // end #ifndef elxFullSampler_hxx

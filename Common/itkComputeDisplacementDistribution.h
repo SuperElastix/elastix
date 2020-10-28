@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkComputeDisplacementDistribution_h
-#define __itkComputeDisplacementDistribution_h
+#ifndef itkComputeDisplacementDistribution_h
+#define itkComputeDisplacementDistribution_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 
@@ -231,4 +231,4 @@ private:
 #  include "itkComputeDisplacementDistribution.hxx"
 #endif
 
-#endif // end #ifndef __itkComputeDisplacementDistribution_h
+#endif // end #ifndef itkComputeDisplacementDistribution_h

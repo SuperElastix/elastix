@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNkDTree_h
-#define __itkANNkDTree_h
+#ifndef itkANNkDTree_h
+#define itkANNkDTree_h
 
 #include "itkBinaryANNTreeBase.h"
 
@@ -119,4 +119,4 @@ private:
 #  include "itkANNkDTree.hxx"
 #endif
 
-#endif // end #ifndef __itkANNkDTree_h
+#endif // end #ifndef itkANNkDTree_h

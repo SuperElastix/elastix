@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkCenteredTransformInitializer2_h
-#define __itkCenteredTransformInitializer2_h
+#ifndef itkCenteredTransformInitializer2_h
+#define itkCenteredTransformInitializer2_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -239,4 +239,4 @@ private:
 #  include "itkCenteredTransformInitializer2.hxx"
 #endif
 
-#endif /* __itkCenteredTransformInitializer2_h */
+#endif /* itkCenteredTransformInitializer2_h */

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkStatisticalShapePointPenalty_h
-#define __itkStatisticalShapePointPenalty_h
+#ifndef itkStatisticalShapePointPenalty_h
+#define itkStatisticalShapePointPenalty_h
 
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 

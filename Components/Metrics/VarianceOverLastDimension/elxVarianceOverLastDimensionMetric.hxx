@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxVarianceOverLastDimensionMetric_HXX__
-#define __elxVarianceOverLastDimensionMetric_HXX__
+#ifndef elxVarianceOverLastDimensionMetric_hxx
+#define elxVarianceOverLastDimensionMetric_hxx
 
 #include "elxVarianceOverLastDimensionMetric.h"
 #include "itkTimeProbe.h"
@@ -161,4 +161,4 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxVarianceOverLastDimensionMetric_HXX__
+#endif // end #ifndef elxVarianceOverLastDimensionMetric_hxx

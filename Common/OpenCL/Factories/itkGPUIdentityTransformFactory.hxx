@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUIdentityTransformFactory_hxx
-#define __itkGPUIdentityTransformFactory_hxx
+#ifndef itkGPUIdentityTransformFactory_hxx
+#define itkGPUIdentityTransformFactory_hxx
 
 #include "itkGPUIdentityTransformFactory.h"
 
@@ -75,4 +75,4 @@ GPUIdentityTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUIdentityTransformFactory_hxx
+#endif // end #ifndef itkGPUIdentityTransformFactory_hxx

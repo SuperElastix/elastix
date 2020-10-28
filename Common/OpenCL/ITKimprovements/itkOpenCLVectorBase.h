@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLVectorBase_h
-#define __itkOpenCLVectorBase_h
+#ifndef itkOpenCLVectorBase_h
+#define itkOpenCLVectorBase_h
 
 #include "itkOpenCLMemoryObject.h"
 
@@ -106,4 +106,4 @@ protected:
 
 } // end namespace itk
 
-#endif /* __itkOpenCLVectorBase_h */
+#endif /* itkOpenCLVectorBase_h */

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkImageToImageMetricWithFeatures_h
-#define __itkImageToImageMetricWithFeatures_h
+#ifndef itkImageToImageMetricWithFeatures_h
+#define itkImageToImageMetricWithFeatures_h
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkInterpolateImageFunction.h"
@@ -265,4 +265,4 @@ private:
 #  include "itkImageToImageMetricWithFeatures.hxx"
 #endif
 
-#endif // end #ifndef __itkImageToImageMetricWithFeatures_h
+#endif // end #ifndef itkImageToImageMetricWithFeatures_h

@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxEulerTransform_HXX_
-#define __elxEulerTransform_HXX_
+#ifndef elxEulerTransform_hxx
+#define elxEulerTransform_hxx
 
 #include "elxEulerTransform.h"
 #include "itkImageGridSampler.h"
@@ -511,4 +511,4 @@ EulerTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rota
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxEulerTransform_HXX_
+#endif // end #ifndef elxEulerTransform_hxx

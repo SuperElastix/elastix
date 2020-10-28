@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUEuler2DTransform_h
-#define __itkGPUEuler2DTransform_h
+#ifndef itkGPUEuler2DTransform_h
+#define itkGPUEuler2DTransform_h
 
 #include "itkEuler2DTransform.h"
 #include "itkGPUMatrixOffsetTransformBase.h"
@@ -91,4 +91,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUEuler2DTransform_h */
+#endif /* itkGPUEuler2DTransform_h */

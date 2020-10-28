@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTranslationTransform_HXX_
-#define __elxTranslationTransform_HXX_
+#ifndef elxTranslationTransform_hxx
+#define elxTranslationTransform_hxx
 
 #include "elxTranslationTransform.h"
 
@@ -106,4 +106,4 @@ TranslationTransformElastix<TElastix>::InitializeTransform(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxTranslationTransform_HXX_
+#endif // end #ifndef elxTranslationTransform_hxx

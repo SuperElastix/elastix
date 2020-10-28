@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFixedImagePyramidBase_hxx
-#define __elxFixedImagePyramidBase_hxx
+#ifndef elxFixedImagePyramidBase_hxx
+#define elxFixedImagePyramidBase_hxx
 
 #include "elxFixedImagePyramidBase.h"
 #include "itkImageFileCastWriter.h"
@@ -201,4 +201,4 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filename
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxFixedImagePyramidBase_hxx
+#endif // end #ifndef elxFixedImagePyramidBase_hxx

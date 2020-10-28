@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUNearestNeighborInterpolateImageFunction_hxx
-#define __itkGPUNearestNeighborInterpolateImageFunction_hxx
+#ifndef itkGPUNearestNeighborInterpolateImageFunction_hxx
+#define itkGPUNearestNeighborInterpolateImageFunction_hxx
 
 #include "itkGPUNearestNeighborInterpolateImageFunction.h"
 #include "itkGPUImageFunction.h"
@@ -71,4 +71,4 @@ GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::PrintSelf(st
 
 } // end namespace itk
 
-#endif /* __itkGPUNearestNeighborInterpolateImageFunction_hxx */
+#endif /* itkGPUNearestNeighborInterpolateImageFunction_hxx */

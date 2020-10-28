@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedTranslationTransform_h
-#define __itkGPUAdvancedTranslationTransform_h
+#ifndef itkGPUAdvancedTranslationTransform_h
+#define itkGPUAdvancedTranslationTransform_h
 
 #include "itkAdvancedTranslationTransform.h"
 #include "itkGPUTranslationTransformBase.h"
@@ -77,4 +77,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUAdvancedTranslationTransform_h */
+#endif /* itkGPUAdvancedTranslationTransform_h */

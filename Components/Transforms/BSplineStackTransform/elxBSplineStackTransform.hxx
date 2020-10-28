@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxBSplineStackTransform_hxx
-#define __elxBSplineStackTransform_hxx
+#ifndef elxBSplineStackTransform_hxx
+#define elxBSplineStackTransform_hxx
 
 #include "elxBSplineStackTransform.h"
 
@@ -857,4 +857,4 @@ BSplineStackTransform<TElastix>::CreateTransformParametersMap(const ParametersTy
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxBSplineStackTransform_hxx
+#endif // end #ifndef elxBSplineStackTransform_hxx

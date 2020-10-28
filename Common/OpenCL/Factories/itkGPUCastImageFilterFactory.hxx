@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCastImageFilterFactory_hxx
-#define __itkGPUCastImageFilterFactory_hxx
+#ifndef itkGPUCastImageFilterFactory_hxx
+#define itkGPUCastImageFilterFactory_hxx
 
 #include "itkGPUCastImageFilterFactory.h"
 
@@ -162,4 +162,4 @@ GPUCastImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUCastImageFilterFactory_hxx
+#endif // end #ifndef itkGPUCastImageFilterFactory_hxx

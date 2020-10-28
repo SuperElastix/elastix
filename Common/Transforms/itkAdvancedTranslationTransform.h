@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedTranslationTransform_h
-#define __itkAdvancedTranslationTransform_h
+#ifndef itkAdvancedTranslationTransform_h
+#define itkAdvancedTranslationTransform_h
 
 #include <iostream>
 #include "itkAdvancedTransform.h"
@@ -341,4 +341,4 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const Outp
 #  include "itkAdvancedTranslationTransform.hxx"
 #endif
 
-#endif /* __itkAdvancedTranslationTransform_h */
+#endif /* itkAdvancedTranslationTransform_h */

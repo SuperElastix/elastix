@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMultiResolutionRegistrationWithFeatures_H__
-#define __elxMultiResolutionRegistrationWithFeatures_H__
+#ifndef elxMultiResolutionRegistrationWithFeatures_h
+#define elxMultiResolutionRegistrationWithFeatures_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionImageRegistrationMethodWithFeatures.h"
@@ -204,4 +204,4 @@ private:
 #  include "elxMultiResolutionRegistrationWithFeatures.hxx"
 #endif
 
-#endif // end #ifndef __elxMultiResolutionRegistrationWithFeatures_H__
+#endif // end #ifndef elxMultiResolutionRegistrationWithFeatures_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMultiResolutionShrinkPyramidImageFilter_hxx
-#define __itkMultiResolutionShrinkPyramidImageFilter_hxx
+#ifndef itkMultiResolutionShrinkPyramidImageFilter_hxx
+#define itkMultiResolutionShrinkPyramidImageFilter_hxx
 
 #include "itkMultiResolutionShrinkPyramidImageFilter.h"
 

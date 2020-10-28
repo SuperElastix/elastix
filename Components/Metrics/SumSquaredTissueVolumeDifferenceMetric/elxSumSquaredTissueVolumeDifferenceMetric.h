@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSumSquaredTissueVolumeDifferenceMetric_H__
-#define __elxSumSquaredTissueVolumeDifferenceMetric_H__
+#ifndef elxSumSquaredTissueVolumeDifferenceMetric_h
+#define elxSumSquaredTissueVolumeDifferenceMetric_h
 
 #include "elxIncludes.h"
 #include "itkSumSquaredTissueVolumeDifferenceImageToImageMetric.h"
@@ -168,4 +168,4 @@ private:
 #  include "elxSumSquaredTissueVolumeDifferenceMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxSumSquaredTissueVolumeDifferenceMetric_H__
+#endif // end #ifndef elxSumSquaredTissueVolumeDifferenceMetric_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGenericMultiResolutionPyramidImageFilter_hxx
-#define __itkGenericMultiResolutionPyramidImageFilter_hxx
+#ifndef itkGenericMultiResolutionPyramidImageFilter_hxx
+#define itkGenericMultiResolutionPyramidImageFilter_hxx
 
 #include "itkGenericMultiResolutionPyramidImageFilter.h"
 
@@ -925,4 +925,4 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 
 } // end namespace itk
 
-#endif // end #ifndef __itkGenericMultiResolutionPyramidImageFilter_hxx
+#endif // end #ifndef itkGenericMultiResolutionPyramidImageFilter_hxx

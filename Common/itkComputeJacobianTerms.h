@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkComputeJacobianTerms_h
-#define __itkComputeJacobianTerms_h
+#ifndef itkComputeJacobianTerms_h
+#define itkComputeJacobianTerms_h
 
 #include "itkImageGridSampler.h"
 #include "itkImageRandomSamplerBase.h"
@@ -158,4 +158,4 @@ private:
 #  include "itkComputeJacobianTerms.hxx"
 #endif
 
-#endif // end #ifndef __itkComputeJacobianTerms_h
+#endif // end #ifndef itkComputeJacobianTerms_h

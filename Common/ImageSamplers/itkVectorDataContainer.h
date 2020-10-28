@@ -35,8 +35,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVectorDataContainer_h
-#define __itkVectorDataContainer_h
+#ifndef itkVectorDataContainer_h
+#define itkVectorDataContainer_h
 
 #include "itkDataObject.h"
 #include "itkObjectFactory.h"
@@ -503,4 +503,4 @@ public:
 #  include "itkVectorDataContainer.hxx"
 #endif
 
-#endif // end __itkVectorDataContainer_h
+#endif // end itkVectorDataContainer_h

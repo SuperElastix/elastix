@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkVarianceOverLastDimensionImageMetric_hxx
-#define __itkVarianceOverLastDimensionImageMetric_hxx
+#ifndef itkVarianceOverLastDimensionImageMetric_hxx
+#define itkVarianceOverLastDimensionImageMetric_hxx
 
 #include "itkVarianceOverLastDimensionImageMetric.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"

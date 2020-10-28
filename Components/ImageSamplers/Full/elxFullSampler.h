@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFullSampler_h
-#define __elxFullSampler_h
+#ifndef elxFullSampler_h
+#define elxFullSampler_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkImageFullSampler.h"
@@ -112,4 +112,4 @@ private:
 #  include "elxFullSampler.hxx"
 #endif
 
-#endif // end #ifndef __elxFullSampler_h
+#endif // end #ifndef elxFullSampler_h

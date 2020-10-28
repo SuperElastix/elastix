@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineInterpolateImageFunctionFactory_h
-#define __itkGPUBSplineInterpolateImageFunctionFactory_h
+#ifndef itkGPUBSplineInterpolateImageFunctionFactory_h
+#define itkGPUBSplineInterpolateImageFunctionFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUBSplineInterpolateImageFunction.h"
@@ -134,4 +134,4 @@ private:
 #  include "itkGPUBSplineInterpolateImageFunctionFactory.hxx"
 #endif
 
-#endif // end #ifndef __itkGPUBSplineInterpolateImageFunctionFactory_h
+#endif // end #ifndef itkGPUBSplineInterpolateImageFunctionFactory_h

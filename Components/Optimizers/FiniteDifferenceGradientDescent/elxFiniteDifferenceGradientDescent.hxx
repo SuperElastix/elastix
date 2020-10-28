@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxFiniteDifferenceGradientDescent_hxx
-#define __elxFiniteDifferenceGradientDescent_hxx
+#ifndef elxFiniteDifferenceGradientDescent_hxx
+#define elxFiniteDifferenceGradientDescent_hxx
 
 #include "elxFiniteDifferenceGradientDescent.h"
 #include <iomanip>
@@ -235,4 +235,4 @@ FiniteDifferenceGradientDescent<TElastix>::StartOptimization(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxFiniteDifferenceGradientDescent_hxx
+#endif // end #ifndef elxFiniteDifferenceGradientDescent_hxx

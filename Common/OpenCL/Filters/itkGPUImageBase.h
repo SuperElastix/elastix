@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUImageBase_h
-#define __itkGPUImageBase_h
+#ifndef itkGPUImageBase_h
+#define itkGPUImageBase_h
 
 #include "itkMacro.h"
 

@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkANNBinaryTreeCreator_h
-#define __itkANNBinaryTreeCreator_h
+#ifndef itkANNBinaryTreeCreator_h
+#define itkANNBinaryTreeCreator_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -114,4 +114,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkANNBinaryTreeCreator_h
+#endif // end #ifndef itkANNBinaryTreeCreator_h

@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkRSGDEachParameterApartBaseOptimizer_h
-#define __itkRSGDEachParameterApartBaseOptimizer_h
+#ifndef itkRSGDEachParameterApartBaseOptimizer_h
+#define itkRSGDEachParameterApartBaseOptimizer_h
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 
@@ -183,4 +183,4 @@ protected:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkRSGDEachParameterApartBaseOptimizer_h
+#endif // end #ifndef itkRSGDEachParameterApartBaseOptimizer_h

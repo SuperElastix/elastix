@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNFixedRadiusTreeSearch_h
-#define __itkANNFixedRadiusTreeSearch_h
+#ifndef itkANNFixedRadiusTreeSearch_h
+#define itkANNFixedRadiusTreeSearch_h
 
 #include "itkBinaryANNTreeSearchBase.h"
 
@@ -99,4 +99,4 @@ private:
 #  include "itkANNFixedRadiusTreeSearch.hxx"
 #endif
 
-#endif // end #ifndef __itkANNFixedRadiusTreeSearch_h
+#endif // end #ifndef itkANNFixedRadiusTreeSearch_h

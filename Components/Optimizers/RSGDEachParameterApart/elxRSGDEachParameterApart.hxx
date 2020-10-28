@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxRSGDEachParameterApart_hxx
-#define __elxRSGDEachParameterApart_hxx
+#ifndef elxRSGDEachParameterApart_hxx
+#define elxRSGDEachParameterApart_hxx
 
 #include "elxRSGDEachParameterApart.h"
 #include <iomanip>
@@ -214,4 +214,4 @@ RSGDEachParameterApart<TElastix>::SetInitialPosition(const ParametersType & para
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRSGDEachParameterApart_hxx
+#endif // end #ifndef elxRSGDEachParameterApart_hxx

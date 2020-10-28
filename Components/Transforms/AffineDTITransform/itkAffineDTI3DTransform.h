@@ -32,8 +32,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAffineDTI3DTransform_h
-#define __itkAffineDTI3DTransform_h
+#ifndef itkAffineDTI3DTransform_h
+#define itkAffineDTI3DTransform_h
 
 #include <iostream>
 #include "itkAdvancedMatrixOffsetTransformBase.h"
@@ -185,4 +185,4 @@ private:
 #  include "itkAffineDTI3DTransform.hxx"
 #endif
 
-#endif /* __itkAffineDTI3DTransform_h */
+#endif /* itkAffineDTI3DTransform_h */

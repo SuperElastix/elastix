@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLLogger_h
-#define __itkOpenCLLogger_h
+#ifndef itkOpenCLLogger_h
+#define itkOpenCLLogger_h
 
 #include "itkLoggerBase.h"
 #include "itkStdStreamLogOutput.h"
@@ -107,4 +107,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkOpenCLLogger_h
+#endif // end #ifndef itkOpenCLLogger_h

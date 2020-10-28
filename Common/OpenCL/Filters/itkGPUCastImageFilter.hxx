@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCastImageFilter_hxx
-#define __itkGPUCastImageFilter_hxx
+#ifndef itkGPUCastImageFilter_hxx
+#define itkGPUCastImageFilter_hxx
 
 #include "itkGPUCastImageFilter.h"
 #include "itkOpenCLUtil.h"
@@ -70,4 +70,4 @@ GPUCastImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 
 } // end of namespace itk
 
-#endif /* __itkGPUCastImageFilter_hxx */
+#endif /* itkGPUCastImageFilter_hxx */

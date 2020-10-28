@@ -23,8 +23,8 @@
 // Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 //
 
-#ifndef __itkOpenCLKernelToImageBridge_h
-#define __itkOpenCLKernelToImageBridge_h
+#ifndef itkOpenCLKernelToImageBridge_h
+#define itkOpenCLKernelToImageBridge_h
 
 #include "itkGPUImage.h"
 #include "itkGPUDataManager.h"
@@ -107,4 +107,4 @@ private:
 #  include "itkOpenCLKernelToImageBridge.hxx"
 #endif
 
-#endif /* __itkOpenCLKernelToImageBridge_h */
+#endif /* itkOpenCLKernelToImageBridge_h */

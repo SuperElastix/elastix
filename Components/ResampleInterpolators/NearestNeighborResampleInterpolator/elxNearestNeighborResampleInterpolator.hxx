@@ -16,11 +16,11 @@
  *
  *=========================================================================*/
 
-#ifndef __elxNearestNeighborResampleInterpolator_hxx
-#define __elxNearestNeighborResampleInterpolator_hxx
+#ifndef elxNearestNeighborResampleInterpolator_hxx
+#define elxNearestNeighborResampleInterpolator_hxx
 
 #include "elxNearestNeighborResampleInterpolator.h"
 
 // nothing
 
-#endif // end #ifndef __elxNearestNeighborResampleInterpolator_hxx
+#endif // end #ifndef elxNearestNeighborResampleInterpolator_hxx

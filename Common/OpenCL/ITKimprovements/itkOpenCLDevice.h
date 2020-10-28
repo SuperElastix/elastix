@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLDevice_h
-#define __itkOpenCLDevice_h
+#ifndef itkOpenCLDevice_h
+#define itkOpenCLDevice_h
 
 #include "itkOpenCLPlatform.h"
 #include "itkOpenCLSize.h"
@@ -875,4 +875,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
 
 } // end namespace itk
 
-#endif /* __itkOpenCLDevice_h */
+#endif /* itkOpenCLDevice_h */

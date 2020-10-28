@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUEuler3DTransformFactory_hxx
-#define __itkGPUEuler3DTransformFactory_hxx
+#ifndef itkGPUEuler3DTransformFactory_hxx
+#define itkGPUEuler3DTransformFactory_hxx
 
 #include "itkGPUEuler3DTransformFactory.h"
 
@@ -53,4 +53,4 @@ GPUEuler3DTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUEuler3DTransformFactory_hxx
+#endif // end #ifndef itkGPUEuler3DTransformFactory_hxx

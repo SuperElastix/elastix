@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFullSearchOptimizer_h
-#define __elxFullSearchOptimizer_h
+#ifndef elxFullSearchOptimizer_h
+#define elxFullSearchOptimizer_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkFullSearchOptimizer.h"
@@ -162,4 +162,4 @@ private:
 #  include "elxFullSearchOptimizer.hxx"
 #endif
 
-#endif // end #ifndef __elxFullSearchOptimizer_h
+#endif // end #ifndef elxFullSearchOptimizer_h

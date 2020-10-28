@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutbase_h
-#define __xoutbase_h
+#ifndef xoutbase_h
+#define xoutbase_h
 
 /** Get rid of warnings about too long variable names.*/
 #ifdef _MSC_VER
@@ -203,4 +203,4 @@ protected:
 
 #include "xoutbase.hxx"
 
-#endif // end #ifndef __xoutbase_h
+#endif // end #ifndef xoutbase_h

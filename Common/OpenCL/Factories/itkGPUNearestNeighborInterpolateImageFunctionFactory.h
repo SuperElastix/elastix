@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUNearestNeighborInterpolateImageFunctionFactory_h
-#define __itkGPUNearestNeighborInterpolateImageFunctionFactory_h
+#ifndef itkGPUNearestNeighborInterpolateImageFunctionFactory_h
+#define itkGPUNearestNeighborInterpolateImageFunctionFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUNearestNeighborInterpolateImageFunction.h"
@@ -132,4 +132,4 @@ private:
 #  include "itkGPUNearestNeighborInterpolateImageFunctionFactory.hxx"
 #endif
 
-#endif // end #ifndef __itkGPUNearestNeighborInterpolateImageFunctionFactory_h
+#endif // end #ifndef itkGPUNearestNeighborInterpolateImageFunctionFactory_h

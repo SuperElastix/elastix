@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedKappaStatisticMetric_HXX__
-#define __elxAdvancedKappaStatisticMetric_HXX__
+#ifndef elxAdvancedKappaStatisticMetric_hxx
+#define elxAdvancedKappaStatisticMetric_hxx
 
 #include "elxAdvancedKappaStatisticMetric.h"
 
@@ -74,4 +74,4 @@ AdvancedKappaStatisticMetric<TElastix>::BeforeRegistration(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdvancedKappaStatisticMetric_HXX__
+#endif // end #ifndef elxAdvancedKappaStatisticMetric_hxx

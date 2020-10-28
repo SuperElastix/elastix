@@ -36,8 +36,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMultiResolutionImageRegistrationMethod2_h
-#define __itkMultiResolutionImageRegistrationMethod2_h
+#ifndef itkMultiResolutionImageRegistrationMethod2_h
+#define itkMultiResolutionImageRegistrationMethod2_h
 
 #include "itkProcessObject.h"
 #include "itkAdvancedImageToImageMetric.h"
@@ -311,4 +311,4 @@ private:
 #  include "itkMultiResolutionImageRegistrationMethod2.hxx"
 #endif
 
-#endif // end #ifndef __itkMultiResolutionImageRegistrationMethod2_h
+#endif // end #ifndef itkMultiResolutionImageRegistrationMethod2_h

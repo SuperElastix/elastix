@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkCMAEvolutionStrategyOptimizer_h
-#define __itkCMAEvolutionStrategyOptimizer_h
+#ifndef itkCMAEvolutionStrategyOptimizer_h
+#define itkCMAEvolutionStrategyOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include <vector>
@@ -442,4 +442,4 @@ private:
 
 } // end namespace itk
 
-#endif //#ifndef __itkCMAEvolutionStrategyOptimizer_h
+#endif //#ifndef itkCMAEvolutionStrategyOptimizer_h

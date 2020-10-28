@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPreconditionedGradientDescentOptimizer_h
-#define __itkPreconditionedGradientDescentOptimizer_h
+#ifndef itkPreconditionedGradientDescentOptimizer_h
+#define itkPreconditionedGradientDescentOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include "itkArray2D.h"

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdaGrad_hxx
-#define __elxAdaGrad_hxx
+#ifndef elxAdaGrad_hxx
+#define elxAdaGrad_hxx
 
 #include "elxAdaGrad.h"
 
@@ -1012,4 +1012,4 @@ AdaGrad<TElastix>::AddRandomPerturbation(ParametersType & parameters, double sig
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdaGrad_hxx
+#endif // end #ifndef elxAdaGrad_hxx

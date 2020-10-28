@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUInterpolateImageFunction_hxx
-#define __itkGPUInterpolateImageFunction_hxx
+#ifndef itkGPUInterpolateImageFunction_hxx
+#define itkGPUInterpolateImageFunction_hxx
 
 #include "itkGPUInterpolateImageFunction.h"
 #include "itkOpenCLOstreamSupport.h"
@@ -216,4 +216,4 @@ GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunct
 
 } // end namespace itk
 
-#endif /* __itkGPUInterpolateImageFunction_hxx */
+#endif /* itkGPUInterpolateImageFunction_hxx */

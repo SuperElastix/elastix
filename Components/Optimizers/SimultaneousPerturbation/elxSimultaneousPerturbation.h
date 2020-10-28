@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSimultaneousPerturbation_h
-#define __elxSimultaneousPerturbation_h
+#ifndef elxSimultaneousPerturbation_h
+#define elxSimultaneousPerturbation_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkSPSAOptimizer.h"
@@ -161,4 +161,4 @@ private:
 #  include "elxSimultaneousPerturbation.hxx"
 #endif
 
-#endif // end #ifndef __elxSimultaneousPerturbation_h
+#endif // end #ifndef elxSimultaneousPerturbation_h

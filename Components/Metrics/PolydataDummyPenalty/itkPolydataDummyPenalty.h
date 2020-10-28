@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPolydataDummyPenalty_h
-#define __itkPolydataDummyPenalty_h
+#ifndef itkPolydataDummyPenalty_h
+#define itkPolydataDummyPenalty_h
 
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 #include "itkPoint.h"

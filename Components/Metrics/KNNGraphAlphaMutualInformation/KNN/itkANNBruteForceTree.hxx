@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNBruteForceTree_hxx
-#define __itkANNBruteForceTree_hxx
+#ifndef itkANNBruteForceTree_hxx
+#define itkANNBruteForceTree_hxx
 
 #include "itkANNBruteForceTree.h"
 #include "itkANNBinaryTreeCreator.h"
@@ -66,4 +66,4 @@ ANNBruteForceTree<TListSample>::GenerateTree(void)
 
 } // end namespace itk
 
-#endif // end #ifndef __itkANNBruteForceTree_hxx
+#endif // end #ifndef itkANNBruteForceTree_hxx

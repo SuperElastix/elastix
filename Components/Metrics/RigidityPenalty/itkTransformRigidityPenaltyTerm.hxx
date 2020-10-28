@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkTransformRigidityPenaltyTerm_hxx
-#define __itkTransformRigidityPenaltyTerm_hxx
+#ifndef itkTransformRigidityPenaltyTerm_hxx
+#define itkTransformRigidityPenaltyTerm_hxx
 
 #include "itkTransformRigidityPenaltyTerm.h"
 
@@ -2641,4 +2641,4 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
 
 } // end namespace itk
 
-#endif // #ifndef __itkTransformRigidityPenaltyTerm_hxx
+#endif // #ifndef itkTransformRigidityPenaltyTerm_hxx

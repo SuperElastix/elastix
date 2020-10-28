@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutcell_h
-#define __xoutcell_h
+#ifndef xoutcell_h
+#define xoutcell_h
 
 #include "xoutbase.h"
 #include <sstream>
@@ -63,4 +63,4 @@ private:
 
 #include "xoutcell.hxx"
 
-#endif // end #ifndef __xoutcell_h
+#endif // end #ifndef xoutcell_h

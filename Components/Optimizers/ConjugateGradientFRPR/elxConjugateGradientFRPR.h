@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxConjugateGradientFRPR_h
-#define __elxConjugateGradientFRPR_h
+#ifndef elxConjugateGradientFRPR_h
+#define elxConjugateGradientFRPR_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkFRPROptimizer.h"
@@ -229,4 +229,4 @@ private:
 #  include "elxConjugateGradientFRPR.hxx"
 #endif
 
-#endif // end #ifndef __elxConjugateGradientFRPR_h
+#endif // end #ifndef elxConjugateGradientFRPR_h

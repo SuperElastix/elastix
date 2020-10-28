@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCompositeTransformBase_h
-#define __itkGPUCompositeTransformBase_h
+#ifndef itkGPUCompositeTransformBase_h
+#define itkGPUCompositeTransformBase_h
 
 #include "itkGPUTransformBase.h"
 #include "itkTransform.h"
@@ -154,4 +154,4 @@ private:
 #  include "itkGPUCompositeTransformBase.hxx"
 #endif
 
-#endif /* __itkGPUCompositeTransformBase_h */
+#endif /* itkGPUCompositeTransformBase_h */

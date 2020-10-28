@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUMatrixOffsetTransformBase_h
-#define __itkGPUMatrixOffsetTransformBase_h
+#ifndef itkGPUMatrixOffsetTransformBase_h
+#define itkGPUMatrixOffsetTransformBase_h
 
 #include "itkGPUTransformBase.h"
 #include "itkMatrix.h"

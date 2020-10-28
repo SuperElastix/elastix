@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTransformBase_hxx
-#define __elxTransformBase_hxx
+#ifndef elxTransformBase_hxx
+#define elxTransformBase_hxx
 
 #include "elxTransformBase.h"
 
@@ -1871,4 +1871,4 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxTransformBase_hxx
+#endif // end #ifndef elxTransformBase_hxx

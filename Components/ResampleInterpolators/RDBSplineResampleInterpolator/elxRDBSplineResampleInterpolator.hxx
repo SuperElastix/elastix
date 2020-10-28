@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxReducedDimensionBSplineResampleInterpolator_hxx
-#define __elxReducedDimensionBSplineResampleInterpolator_hxx
+#ifndef elxReducedDimensionBSplineResampleInterpolator_hxx
+#define elxReducedDimensionBSplineResampleInterpolator_hxx
 
 #include "elxRDBSplineResampleInterpolator.h"
 
@@ -105,4 +105,4 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::WriteToFile(void) const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxReducedDimensionBSplineResampleInterpolator_hxx
+#endif // end #ifndef elxReducedDimensionBSplineResampleInterpolator_hxx

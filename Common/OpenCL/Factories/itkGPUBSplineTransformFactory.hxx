@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineTransformFactory_hxx
-#define __itkGPUBSplineTransformFactory_hxx
+#ifndef itkGPUBSplineTransformFactory_hxx
+#define itkGPUBSplineTransformFactory_hxx
 
 #include "itkGPUBSplineTransformFactory.h"
 
@@ -75,4 +75,4 @@ GPUBSplineTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUBSplineTransformFactory_hxx
+#endif // end #ifndef itkGPUBSplineTransformFactory_hxx

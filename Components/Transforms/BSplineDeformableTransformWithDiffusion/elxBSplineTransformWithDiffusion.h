@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxBSplineTransformWithDiffusion_H__
-#define __elxBSplineTransformWithDiffusion_H__
+#ifndef elxBSplineTransformWithDiffusion_h
+#define elxBSplineTransformWithDiffusion_h
 
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
@@ -411,4 +411,4 @@ private:
 #  include "elxBSplineTransformWithDiffusion.hxx"
 #endif
 
-#endif // end #ifndef __elxBSplineTransformWithDiffusion_H__
+#endif // end #ifndef elxBSplineTransformWithDiffusion_h

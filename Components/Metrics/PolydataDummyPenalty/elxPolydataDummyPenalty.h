@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPolydataDummyPenalty_H__
-#define __elxPolydataDummyPenalty_H__
+#ifndef elxPolydataDummyPenalty_h
+#define elxPolydataDummyPenalty_h
 
 #include "elxIncludes.h"
 #include "itkPolydataDummyPenalty.h"
@@ -219,4 +219,4 @@ private:
 #  include "elxPolydataDummyPenalty.hxx"
 #endif
 
-#endif // end #ifndef __elxPolydataDummyPenalty_H__
+#endif // end #ifndef elxPolydataDummyPenalty_h

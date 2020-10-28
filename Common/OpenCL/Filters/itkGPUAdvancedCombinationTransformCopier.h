@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedCombinationTransformCopier_h
-#define __itkGPUAdvancedCombinationTransformCopier_h
+#ifndef itkGPUAdvancedCombinationTransformCopier_h
+#define itkGPUAdvancedCombinationTransformCopier_h
 
 #include "itkGPUAdvancedCombinationTransform.h"
 
@@ -259,4 +259,4 @@ private:
 #  include "itkGPUAdvancedCombinationTransformCopier.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedCombinationTransformCopier_h */
+#endif /* itkGPUAdvancedCombinationTransformCopier_h */

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkParabolicErodeDilateImageFilter_h
-#define __itkParabolicErodeDilateImageFilter_h
+#ifndef itkParabolicErodeDilateImageFilter_h
+#define itkParabolicErodeDilateImageFilter_h
 
 #include "itkImageToImageFilter.h"
 #include "itkNumericTraits.h"

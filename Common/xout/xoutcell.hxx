@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutcell_hxx
-#define __xoutcell_hxx
+#ifndef xoutcell_hxx
+#define xoutcell_hxx
 
 #include "xoutcell.h"
 
@@ -74,4 +74,4 @@ xoutcell<charT, traits>::WriteBufferedData(void)
 
 } // end namespace xoutlibrary
 
-#endif // end #ifndef __xoutcell_hxx
+#endif // end #ifndef xoutcell_hxx

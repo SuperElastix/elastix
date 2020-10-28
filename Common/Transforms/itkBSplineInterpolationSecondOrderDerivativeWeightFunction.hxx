@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBSplineInterpolationSecondOrderDerivativeWeightFunction_hxx
-#define __itkBSplineInterpolationSecondOrderDerivativeWeightFunction_hxx
+#ifndef itkBSplineInterpolationSecondOrderDerivativeWeightFunction_hxx
+#define itkBSplineInterpolationSecondOrderDerivativeWeightFunction_hxx
 
 #include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h"
 #include "itkImage.h"

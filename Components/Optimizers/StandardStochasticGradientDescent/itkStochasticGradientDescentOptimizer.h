@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkStochasticGradientDescentOptimizer_h
-#define __itkStochasticGradientDescentOptimizer_h
+#ifndef itkStochasticGradientDescentOptimizer_h
+#define itkStochasticGradientDescentOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include "itkPlatformMultiThreader.h"

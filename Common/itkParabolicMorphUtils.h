@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkParabolicUtils_h
-#define __itkParabolicUtils_h
+#ifndef itkParabolicUtils_h
+#define itkParabolicUtils_h
 
 #include <itkArray.h>
 

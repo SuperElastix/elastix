@@ -22,8 +22,8 @@
  * and error printout information.
  */
 
-#ifndef __itkOpenCLMacro_h
-#define __itkOpenCLMacro_h
+#ifndef itkOpenCLMacro_h
+#define itkOpenCLMacro_h
 
 #include "itkMacro.h"
 #include "itkOpenCLExport.h"
@@ -159,4 +159,4 @@ public:
 };
 
 } // namespace itk
-#endif /* __itkOpenCLMacro_h */
+#endif /* itkOpenCLMacro_h */

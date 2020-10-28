@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedEuler2DTransformFactory_hxx
-#define __itkGPUAdvancedEuler2DTransformFactory_hxx
+#ifndef itkGPUAdvancedEuler2DTransformFactory_hxx
+#define itkGPUAdvancedEuler2DTransformFactory_hxx
 
 #include "itkGPUAdvancedEuler2DTransformFactory.h"
 
@@ -53,4 +53,4 @@ GPUAdvancedEuler2DTransformFactory2<NDimensions>::Register2D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUAdvancedEuler2DTransformFactory_hxx
+#endif // end #ifndef itkGPUAdvancedEuler2DTransformFactory_hxx

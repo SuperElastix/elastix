@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxResampleInterpolatorBase_hxx
-#define __elxResampleInterpolatorBase_hxx
+#ifndef elxResampleInterpolatorBase_hxx
+#define elxResampleInterpolatorBase_hxx
 
 #include "elxResampleInterpolatorBase.h"
 
@@ -76,4 +76,4 @@ ResampleInterpolatorBase<TElastix>::CreateTransformParametersMap(ParameterMapTyp
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxResampleInterpolatorBase_hxx
+#endif // end #ifndef elxResampleInterpolatorBase_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedBSplineTransform_h
-#define __elxAdvancedBSplineTransform_h
+#ifndef elxAdvancedBSplineTransform_h
+#define elxAdvancedBSplineTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
@@ -322,4 +322,4 @@ private:
 #  include "elxAdvancedBSplineTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxAdvancedBSplineTransform_h
+#endif // end #ifndef elxAdvancedBSplineTransform_h

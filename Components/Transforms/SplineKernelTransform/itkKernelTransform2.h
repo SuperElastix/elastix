@@ -31,8 +31,8 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkKernelTransform2_h
-#define __itkKernelTransform2_h
+#ifndef itkKernelTransform2_h
+#define itkKernelTransform2_h
 
 #include "itkAdvancedTransform.h"
 #include "itkPoint.h"
@@ -557,4 +557,4 @@ private:
 #  include "itkKernelTransform2.hxx"
 #endif
 
-#endif // __itkKernelTransform2_h
+#endif // itkKernelTransform2_h

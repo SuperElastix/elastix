@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxBSplineResampleInterpolator_hxx
-#define __elxBSplineResampleInterpolator_hxx
+#ifndef elxBSplineResampleInterpolator_hxx
+#define elxBSplineResampleInterpolator_hxx
 
 #include "elxBSplineResampleInterpolator.h"
 
@@ -119,4 +119,4 @@ BSplineResampleInterpolator<TElastix>::CreateTransformParametersMap(ParameterMap
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxBSplineResampleInterpolator_hxx
+#endif // end #ifndef elxBSplineResampleInterpolator_hxx

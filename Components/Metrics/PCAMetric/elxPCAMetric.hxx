@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPCAMetric_HXX__
-#define __elxPCAMetric_HXX__
+#ifndef elxPCAMetric_hxx
+#define elxPCAMetric_hxx
 
 #include "elxPCAMetric.h"
 #include "itkTimeProbe.h"
@@ -136,4 +136,4 @@ PCAMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxPCAMetric_HXX__
+#endif // end #ifndef elxPCAMetric_hxx

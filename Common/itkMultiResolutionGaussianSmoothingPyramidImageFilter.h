@@ -34,8 +34,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMultiResolutionGaussianSmoothingPyramidImageFilter_h
-#define __itkMultiResolutionGaussianSmoothingPyramidImageFilter_h
+#ifndef itkMultiResolutionGaussianSmoothingPyramidImageFilter_h
+#define itkMultiResolutionGaussianSmoothingPyramidImageFilter_h
 
 #include "itkMultiResolutionPyramidImageFilter.h"
 

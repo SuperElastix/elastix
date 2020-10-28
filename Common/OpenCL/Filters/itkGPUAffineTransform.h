@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAffineTransform_h
-#define __itkGPUAffineTransform_h
+#ifndef itkGPUAffineTransform_h
+#define itkGPUAffineTransform_h
 
 #include "itkAffineTransform.h"
 #include "itkGPUMatrixOffsetTransformBase.h"
@@ -94,4 +94,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUAffineTransform_h */
+#endif /* itkGPUAffineTransform_h */

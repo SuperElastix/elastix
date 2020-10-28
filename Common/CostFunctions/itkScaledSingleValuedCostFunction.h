@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkScaledSingleValuedCostFunction_h
-#define __itkScaledSingleValuedCostFunction_h
+#ifndef itkScaledSingleValuedCostFunction_h
+#define itkScaledSingleValuedCostFunction_h
 
 #include "itkSingleValuedCostFunction.h"
 #include "itkIntTypes.h" //temp, needed for IdentifierType
@@ -157,4 +157,4 @@ private:
 
 } // end namespace itk
 
-#endif // #ifndef __itkScaledSingleValuedCostFunction_h
+#endif // #ifndef itkScaledSingleValuedCostFunction_h

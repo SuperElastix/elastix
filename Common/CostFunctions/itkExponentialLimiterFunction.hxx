@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkExponentialLimiterFunction_hxx
-#define __itkExponentialLimiterFunction_hxx
+#ifndef itkExponentialLimiterFunction_hxx
+#define itkExponentialLimiterFunction_hxx
 
 #include "itkExponentialLimiterFunction.h"
 #include "vnl/vnl_math.h"

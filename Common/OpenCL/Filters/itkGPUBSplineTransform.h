@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineTransform_h
-#define __itkGPUBSplineTransform_h
+#ifndef itkGPUBSplineTransform_h
+#define itkGPUBSplineTransform_h
 
 #include "itkBSplineTransform.h"
 #include "itkGPUBSplineBaseTransform.h"
@@ -91,4 +91,4 @@ private:
 #  include "itkGPUBSplineTransform.hxx"
 #endif
 
-#endif /* __itkGPUBSplineTransform_h */
+#endif /* itkGPUBSplineTransform_h */

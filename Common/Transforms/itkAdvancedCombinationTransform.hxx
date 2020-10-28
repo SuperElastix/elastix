@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedCombinationTransform_hxx
-#define __itkAdvancedCombinationTransform_hxx
+#ifndef itkAdvancedCombinationTransform_hxx
+#define itkAdvancedCombinationTransform_hxx
 
 #include "itkAdvancedCombinationTransform.h"
 
@@ -1623,4 +1623,4 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
 
 } // end namespace itk
 
-#endif // end #ifndef __itkAdvancedCombinationTransform_hxx
+#endif // end #ifndef itkAdvancedCombinationTransform_hxx
