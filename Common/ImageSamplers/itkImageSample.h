@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageSample_h
-#define __ImageSample_h
+#ifndef itkImageSample_h
+#define itkImageSample_h
 
 #include "itkNumericTraits.h"
 
@@ -51,4 +51,4 @@ public:
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageSample_h
+#endif // end #ifndef itkImageSample_h

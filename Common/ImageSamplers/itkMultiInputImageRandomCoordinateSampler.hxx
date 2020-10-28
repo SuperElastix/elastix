@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __MultiInputImageRandomCoordinateSampler_hxx
-#define __MultiInputImageRandomCoordinateSampler_hxx
+#ifndef itkMultiInputImageRandomCoordinateSampler_hxx
+#define itkMultiInputImageRandomCoordinateSampler_hxx
 
 #include "itkMultiInputImageRandomCoordinateSampler.h"
 #include "vnl/vnl_inverse.h"
@@ -287,4 +287,4 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::PrintSelf(std::ostream & os
 
 } // end namespace itk
 
-#endif // end #ifndef __MultiInputImageRandomCoordinateSampler_hxx
+#endif // end #ifndef itkMultiInputImageRandomCoordinateSampler_hxx

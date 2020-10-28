@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageGridSampler_h
-#define __ImageGridSampler_h
+#ifndef itkImageGridSampler_h
+#define itkImageGridSampler_h
 
 #include "itkImageSamplerBase.h"
 
@@ -167,4 +167,4 @@ private:
 #  include "itkImageGridSampler.hxx"
 #endif
 
-#endif // end #ifndef __ImageGridSampler_h
+#endif // end #ifndef itkImageGridSampler_h

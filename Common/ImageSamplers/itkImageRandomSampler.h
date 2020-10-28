@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageRandomSampler_h
-#define __ImageRandomSampler_h
+#ifndef itkImageRandomSampler_h
+#define itkImageRandomSampler_h
 
 #include "itkImageRandomSamplerBase.h"
 
@@ -101,4 +101,4 @@ private:
 #  include "itkImageRandomSampler.hxx"
 #endif
 
-#endif // end #ifndef __ImageRandomSampler_h
+#endif // end #ifndef itkImageRandomSampler_h

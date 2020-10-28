@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageRandomCoordinateSampler_hxx
-#define __ImageRandomCoordinateSampler_hxx
+#ifndef itkImageRandomCoordinateSampler_hxx
+#define itkImageRandomCoordinateSampler_hxx
 
 #include "itkImageRandomCoordinateSampler.h"
 #include "vnl/vnl_math.h"
@@ -346,4 +346,4 @@ ImageRandomCoordinateSampler<TInputImage>::PrintSelf(std::ostream & os, Indent i
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageRandomCoordinateSampler_hxx
+#endif // end #ifndef itkImageRandomCoordinateSampler_hxx

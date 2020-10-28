@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageRandomSamplerBase_hxx
-#define __ImageRandomSamplerBase_hxx
+#ifndef itkImageRandomSamplerBase_hxx
+#define itkImageRandomSamplerBase_hxx
 
 #include "itkImageRandomSamplerBase.h"
 
@@ -88,4 +88,4 @@ ImageRandomSamplerBase<TInputImage>::PrintSelf(std::ostream & os, Indent indent)
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageRandomSamplerBase_hxx
+#endif // end #ifndef itkImageRandomSamplerBase_hxx

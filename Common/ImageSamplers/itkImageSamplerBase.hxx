@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageSamplerBase_hxx
-#define __ImageSamplerBase_hxx
+#ifndef itkImageSamplerBase_hxx
+#define itkImageSamplerBase_hxx
 
 #include "itkImageSamplerBase.h"
 
@@ -470,4 +470,4 @@ ImageSamplerBase<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageSamplerBase_hxx
+#endif // end #ifndef itkImageSamplerBase_hxx

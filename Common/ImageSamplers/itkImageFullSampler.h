@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageFullSampler_h
-#define __ImageFullSampler_h
+#ifndef itkImageFullSampler_h
+#define itkImageFullSampler_h
 
 #include "itkImageSamplerBase.h"
 
@@ -120,4 +120,4 @@ private:
 #  include "itkImageFullSampler.hxx"
 #endif
 
-#endif // end #ifndef __ImageFullSampler_h
+#endif // end #ifndef itkImageFullSampler_h

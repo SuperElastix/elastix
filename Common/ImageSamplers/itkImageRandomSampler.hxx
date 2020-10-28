@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageRandomSampler_hxx
-#define __ImageRandomSampler_hxx
+#ifndef itkImageRandomSampler_hxx
+#define itkImageRandomSampler_hxx
 
 #include "itkImageRandomSampler.h"
 
@@ -197,4 +197,4 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageRandomSampler_hxx
+#endif // end #ifndef itkImageRandomSampler_hxx

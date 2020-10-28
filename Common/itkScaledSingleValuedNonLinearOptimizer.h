@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ScaledSingleValuedNonLinearOptimizer_h
-#define __ScaledSingleValuedNonLinearOptimizer_h
+#ifndef itkScaledSingleValuedNonLinearOptimizer_h
+#define itkScaledSingleValuedNonLinearOptimizer_h
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 #include "itkScaledSingleValuedCostFunction.h"
@@ -197,4 +197,4 @@ private:
 
 } // end namespace itk
 
-#endif //#ifndef __ScaledSingleValuedNonLinearOptimizer_h
+#endif //#ifndef itkScaledSingleValuedNonLinearOptimizer_h

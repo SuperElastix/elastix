@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __MultiInputImageRandomCoordinateSampler_h
-#define __MultiInputImageRandomCoordinateSampler_h
+#ifndef itkMultiInputImageRandomCoordinateSampler_h
+#define itkMultiInputImageRandomCoordinateSampler_h
 
 #include "itkImageRandomSamplerBase.h"
 #include "itkInterpolateImageFunction.h"
@@ -150,4 +150,4 @@ private:
 #  include "itkMultiInputImageRandomCoordinateSampler.hxx"
 #endif
 
-#endif // end #ifndef __MultiInputImageRandomCoordinateSampler_h
+#endif // end #ifndef itkMultiInputImageRandomCoordinateSampler_h
