@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __PCAMetric_F_multithreaded_HXX__
-#define __PCAMetric_F_multithreaded_HXX__
+#ifndef itkPCAMetric_F_multithreaded_hxx
+#define itkPCAMetric_F_multithreaded_hxx
 
 #include "itkPCAMetric_F_multithreaded.h"
 
@@ -1154,4 +1154,4 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback(vo
 
 } // end namespace itk
 
-#endif // __PCAMetric_F_multithreaded_HXX__
+#endif // itkPCAMetric_F_multithreaded_hxx

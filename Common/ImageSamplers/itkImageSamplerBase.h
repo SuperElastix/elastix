@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageSamplerBase_h
-#define __ImageSamplerBase_h
+#ifndef itkImageSamplerBase_h
+#define itkImageSamplerBase_h
 
 #include "itkImageToVectorContainerFilter.h"
 #include "itkImageSample.h"
@@ -251,4 +251,4 @@ private:
 #  include "itkImageSamplerBase.hxx"
 #endif
 
-#endif // end #ifndef __ImageSamplerBase_h
+#endif // end #ifndef itkImageSamplerBase_h

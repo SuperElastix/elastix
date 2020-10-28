@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageRandomSamplerSparseMask_h
-#define __ImageRandomSamplerSparseMask_h
+#ifndef itkImageRandomSamplerSparseMask_h
+#define itkImageRandomSamplerSparseMask_h
 
 #include "itkImageRandomSamplerBase.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
@@ -116,4 +116,4 @@ private:
 #  include "itkImageRandomSamplerSparseMask.hxx"
 #endif
 
-#endif // end #ifndef __ImageRandomSamplerSparseMask_h
+#endif // end #ifndef itkImageRandomSamplerSparseMask_h

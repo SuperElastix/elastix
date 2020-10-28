@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageRandomSamplerSparseMask_hxx
-#define __ImageRandomSamplerSparseMask_hxx
+#ifndef itkImageRandomSamplerSparseMask_hxx
+#define itkImageRandomSamplerSparseMask_hxx
 
 #include "itkImageRandomSamplerSparseMask.h"
 
@@ -203,4 +203,4 @@ ImageRandomSamplerSparseMask<TInputImage>::PrintSelf(std::ostream & os, Indent i
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageRandomSamplerSparseMask_hxx
+#endif // end #ifndef itkImageRandomSamplerSparseMask_hxx

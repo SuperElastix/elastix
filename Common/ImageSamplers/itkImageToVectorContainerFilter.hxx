@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageToVectorContainerFilter_hxx
-#define __ImageToVectorContainerFilter_hxx
+#ifndef itkImageToVectorContainerFilter_hxx
+#define itkImageToVectorContainerFilter_hxx
 
 #include "itkImageToVectorContainerFilter.h"
 
@@ -289,4 +289,4 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallb
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageToVectorContainerFilter_hxx
+#endif // end #ifndef itkImageToVectorContainerFilter_hxx
