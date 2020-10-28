@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAffineDTITransform_HXX_
-#define __elxAffineDTITransform_HXX_
+#ifndef elxAffineDTITransform_hxx
+#define elxAffineDTITransform_hxx
 
 #include "elxAffineDTITransform.h"
 #include "itkContinuousIndex.h"
@@ -392,4 +392,4 @@ AffineDTITransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & 
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAffineDTITransform_HXX_
+#endif // end #ifndef elxAffineDTITransform_hxx

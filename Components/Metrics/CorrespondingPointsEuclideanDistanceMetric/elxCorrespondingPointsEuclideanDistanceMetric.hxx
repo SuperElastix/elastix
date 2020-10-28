@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxCorrespondingPointsEuclideanDistanceMetric_HXX__
-#define __elxCorrespondingPointsEuclideanDistanceMetric_HXX__
+#ifndef elxCorrespondingPointsEuclideanDistanceMetric_hxx
+#define elxCorrespondingPointsEuclideanDistanceMetric_hxx
 
 #include "elxCorrespondingPointsEuclideanDistanceMetric.h"
 #include "itkTransformixInputPointFileReader.h"
@@ -214,4 +214,4 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxCorrespondingPointsEuclideanDistanceMetric_HXX__
+#endif // end #ifndef elxCorrespondingPointsEuclideanDistanceMetric_hxx

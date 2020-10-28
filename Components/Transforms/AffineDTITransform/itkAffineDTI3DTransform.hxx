@@ -32,8 +32,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAffineDTI3DTransform_hxx
-#define __itkAffineDTI3DTransform_hxx
+#ifndef itkAffineDTI3DTransform_hxx
+#define itkAffineDTI3DTransform_hxx
 
 #include "itkAffineDTI3DTransform.h"
 #include <cmath>

@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkParameterMapInterface_h
-#define __itkParameterMapInterface_h
+#ifndef itkParameterMapInterface_h
+#define itkParameterMapInterface_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -410,4 +410,4 @@ private:
 
 } // end of namespace itk
 
-#endif // end __itkParameterMapInterface_h
+#endif // end itkParameterMapInterface_h

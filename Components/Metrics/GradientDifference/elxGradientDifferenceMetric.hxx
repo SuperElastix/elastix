@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxGradientDifferenceMetric_HXX__
-#define __elxGradientDifferenceMetric_HXX__
+#ifndef elxGradientDifferenceMetric_hxx
+#define elxGradientDifferenceMetric_hxx
 
 #include "elxGradientDifferenceMetric.h"
 #include "itkTimeProbe.h"
@@ -83,4 +83,4 @@ GradientDifferenceMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxGradientDifferenceMetric_HXX__
+#endif // end #ifndef elxGradientDifferenceMetric_hxx

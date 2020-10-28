@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxNormalizedMutualInformationMetric_H__
-#define __elxNormalizedMutualInformationMetric_H__
+#ifndef elxNormalizedMutualInformationMetric_h
+#define elxNormalizedMutualInformationMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkParzenWindowNormalizedMutualInformationImageToImageMetric.h"
@@ -189,4 +189,4 @@ private:
 #  include "elxNormalizedMutualInformationMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxNormalizedMutualInformationMetric_H__
+#endif // end #ifndef elxNormalizedMutualInformationMetric_h

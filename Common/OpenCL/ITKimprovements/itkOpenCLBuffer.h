@@ -32,8 +32,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLBuffer_h
-#define __itkOpenCLBuffer_h
+#ifndef itkOpenCLBuffer_h
+#define itkOpenCLBuffer_h
 
 #include "itkOpenCLMemoryObject.h"
 #include "itkOpenCLEvent.h"
@@ -391,4 +391,4 @@ public:
 
 } // end namespace itk
 
-#endif /* __itkOpenCLBuffer_h */
+#endif /* itkOpenCLBuffer_h */

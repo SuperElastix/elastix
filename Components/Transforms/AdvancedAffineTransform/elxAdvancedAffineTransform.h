@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedAffineTransform_H_
-#define __elxAdvancedAffineTransform_H_
+#ifndef elxAdvancedAffineTransform_h
+#define elxAdvancedAffineTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedMatrixOffsetTransformBase.h"
@@ -241,4 +241,4 @@ private:
 #  include "elxAdvancedAffineTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxAdvancedAffineTransform_H_
+#endif // end #ifndef elxAdvancedAffineTransform_h

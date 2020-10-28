@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLContext_h
-#define __itkOpenCLContext_h
+#ifndef itkOpenCLContext_h
+#define itkOpenCLContext_h
 
 #include "itkLightObject.h"
 #include "itkObjectFactory.h"
@@ -546,4 +546,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkOpenCLContext_h */
+#endif /* itkOpenCLContext_h */

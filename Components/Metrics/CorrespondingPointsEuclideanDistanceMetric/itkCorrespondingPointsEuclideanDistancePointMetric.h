@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkCorrespondingPointsEuclideanDistancePointMetric_h
-#define __itkCorrespondingPointsEuclideanDistancePointMetric_h
+#ifndef itkCorrespondingPointsEuclideanDistancePointMetric_h
+#define itkCorrespondingPointsEuclideanDistancePointMetric_h
 
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 #include "itkPoint.h"

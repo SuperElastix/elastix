@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedNormalizedCorrelationMetric_HXX__
-#define __elxAdvancedNormalizedCorrelationMetric_HXX__
+#ifndef elxAdvancedNormalizedCorrelationMetric_hxx
+#define elxAdvancedNormalizedCorrelationMetric_hxx
 
 #include "elxAdvancedNormalizedCorrelationMetric.h"
 #include "itkTimeProbe.h"
@@ -63,4 +63,4 @@ AdvancedNormalizedCorrelationMetric<TElastix>::Initialize(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdvancedNormalizedCorrelationMetric_HXX__
+#endif // end #ifndef elxAdvancedNormalizedCorrelationMetric_hxx

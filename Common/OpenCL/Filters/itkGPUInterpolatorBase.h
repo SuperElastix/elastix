@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUInterpolatorBase_h
-#define __itkGPUInterpolatorBase_h
+#ifndef itkGPUInterpolatorBase_h
+#define itkGPUInterpolatorBase_h
 
 #include "itkGPUDataManager.h"
 
@@ -61,4 +61,4 @@ protected:
 
 } // end namespace itk
 
-#endif /* __itkGPUInterpolatorBase_h */
+#endif /* itkGPUInterpolatorBase_h */

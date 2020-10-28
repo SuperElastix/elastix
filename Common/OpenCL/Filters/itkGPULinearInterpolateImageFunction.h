@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPULinearInterpolateImageFunction_h
-#define __itkGPULinearInterpolateImageFunction_h
+#ifndef itkGPULinearInterpolateImageFunction_h
+#define itkGPULinearInterpolateImageFunction_h
 
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkVersion.h"
@@ -83,4 +83,4 @@ private:
 #  include "itkGPULinearInterpolateImageFunction.hxx"
 #endif
 
-#endif /* __itkGPULinearInterpolateImageFunction_h */
+#endif /* itkGPULinearInterpolateImageFunction_h */

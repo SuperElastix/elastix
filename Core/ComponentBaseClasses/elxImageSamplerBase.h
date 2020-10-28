@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxImageSamplerBase_h
-#define __elxImageSamplerBase_h
+#ifndef elxImageSamplerBase_h
+#define elxImageSamplerBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -108,4 +108,4 @@ private:
 #  include "elxImageSamplerBase.hxx"
 #endif
 
-#endif // end #ifndef __elxImageSamplerBase_h
+#endif // end #ifndef elxImageSamplerBase_h

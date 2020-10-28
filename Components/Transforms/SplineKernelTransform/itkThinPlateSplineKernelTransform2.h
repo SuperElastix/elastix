@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkThinPlateSplineKernelTransform2_h
-#define __itkThinPlateSplineKernelTransform2_h
+#ifndef itkThinPlateSplineKernelTransform2_h
+#define itkThinPlateSplineKernelTransform2_h
 
 #include "itkKernelTransform2.h"
 
@@ -128,4 +128,4 @@ private:
 #  include "itkThinPlateSplineKernelTransform2.hxx"
 #endif
 
-#endif // __itkThinPlateSplineKernelTransform2_h
+#endif // itkThinPlateSplineKernelTransform2_h

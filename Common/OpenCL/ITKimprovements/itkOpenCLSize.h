@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLWorkSize_h
-#define __itkOpenCLWorkSize_h
+#ifndef itkOpenCLWorkSize_h
+#define itkOpenCLWorkSize_h
 
 #include "itkOpenCL.h"
 #include "itkSize.h"
@@ -262,4 +262,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLSize & size)
 
 } // end namespace itk
 
-#endif /* __itkOpenCLWorkSize_h */
+#endif /* itkOpenCLWorkSize_h */

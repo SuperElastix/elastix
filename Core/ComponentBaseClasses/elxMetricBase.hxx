@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMetricBase_hxx
-#define __elxMetricBase_hxx
+#ifndef elxMetricBase_hxx
+#define elxMetricBase_hxx
 
 #include "elxMetricBase.h"
 
@@ -362,4 +362,4 @@ MetricBase<TElastix>::GetAdvancedMetricImageSampler(void) const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMetricBase_hxx
+#endif // end #ifndef elxMetricBase_hxx

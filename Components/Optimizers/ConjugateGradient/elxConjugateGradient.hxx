@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxConjugateGradient_hxx
-#define __elxConjugateGradient_hxx
+#ifndef elxConjugateGradient_hxx
+#define elxConjugateGradient_hxx
 
 #include "elxConjugateGradient.h"
 #include <iomanip>
@@ -569,4 +569,4 @@ ConjugateGradient<TElastix>::GetLineSearchStopCondition(void) const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxConjugateGradient_hxx
+#endif // end #ifndef elxConjugateGradient_hxx

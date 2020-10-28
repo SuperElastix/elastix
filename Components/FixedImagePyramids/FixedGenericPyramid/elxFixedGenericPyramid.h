@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFixedGenericPyramid_h
-#define __elxFixedGenericPyramid_h
+#ifndef elxFixedGenericPyramid_h
+#define elxFixedGenericPyramid_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkGenericMultiResolutionPyramidImageFilter.h"
@@ -144,4 +144,4 @@ private:
 #  include "elxFixedGenericPyramid.hxx"
 #endif
 
-#endif // end #ifndef __elxFixedGenericPyramid_h
+#endif // end #ifndef elxFixedGenericPyramid_h

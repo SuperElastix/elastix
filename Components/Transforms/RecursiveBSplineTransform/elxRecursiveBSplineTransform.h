@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRecursiveBSplineTransform_h
-#define __elxRecursiveBSplineTransform_h
+#ifndef elxRecursiveBSplineTransform_h
+#define elxRecursiveBSplineTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
@@ -322,4 +322,4 @@ private:
 #  include "elxRecursiveBSplineTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxRecursiveBSplineTransform_h
+#endif // end #ifndef elxRecursiveBSplineTransform_h

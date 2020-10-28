@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedSimilarity3DTransform_h
-#define __itkGPUAdvancedSimilarity3DTransform_h
+#ifndef itkGPUAdvancedSimilarity3DTransform_h
+#define itkGPUAdvancedSimilarity3DTransform_h
 
 #include "itkAdvancedSimilarity3DTransform.h"
 #include "itkGPUMatrixOffsetTransformBase.h"
@@ -91,4 +91,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUAdvancedSimilarity3DTransform_h */
+#endif /* itkGPUAdvancedSimilarity3DTransform_h */

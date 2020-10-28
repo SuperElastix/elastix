@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedCombinationTransform_h
-#define __itkGPUAdvancedCombinationTransform_h
+#ifndef itkGPUAdvancedCombinationTransform_h
+#define itkGPUAdvancedCombinationTransform_h
 
 #include "itkAdvancedCombinationTransform.h"
 #include "itkGPUCompositeTransformBase.h"
@@ -91,4 +91,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUAdvancedCombinationTransform_h */
+#endif /* itkGPUAdvancedCombinationTransform_h */

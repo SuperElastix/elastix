@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxOpenCLMovingGenericPyramid_h
-#define __elxOpenCLMovingGenericPyramid_h
+#ifndef elxOpenCLMovingGenericPyramid_h
+#define elxOpenCLMovingGenericPyramid_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "elxMovingGenericPyramid.h"
@@ -146,4 +146,4 @@ private:
 #  include "elxOpenCLMovingGenericPyramid.hxx"
 #endif
 
-#endif // end #ifndef __elxOpenCLMovingGenericPyramid_h
+#endif // end #ifndef elxOpenCLMovingGenericPyramid_h

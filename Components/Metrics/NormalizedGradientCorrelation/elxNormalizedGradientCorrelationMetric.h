@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxNormalizedGradientCorrelationMetric_H__
-#define __elxNormalizedGradientCorrelationMetric_H__
+#ifndef elxNormalizedGradientCorrelationMetric_h
+#define elxNormalizedGradientCorrelationMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkNormalizedGradientCorrelationImageToImageMetric.h"
@@ -155,4 +155,4 @@ private:
 #  include "elxNormalizedGradientCorrelationMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxNormalizedGradientCorrelationMetric_H__
+#endif // end #ifndef elxNormalizedGradientCorrelationMetric_h

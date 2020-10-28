@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUMatrixOffsetTransformBase_hxx
-#define __itkGPUMatrixOffsetTransformBase_hxx
+#ifndef itkGPUMatrixOffsetTransformBase_hxx
+#define itkGPUMatrixOffsetTransformBase_hxx
 
 #include "itkGPUMatrixOffsetTransformBase.h"
 #include <iomanip>
@@ -293,4 +293,4 @@ GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::
 
 } // end namespace itk
 
-#endif /* __itkGPUMatrixOffsetTransformBase_hxx */
+#endif /* itkGPUMatrixOffsetTransformBase_hxx */

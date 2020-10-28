@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUResampleImageFilter_hxx
-#define __itkGPUResampleImageFilter_hxx
+#ifndef itkGPUResampleImageFilter_hxx
+#define itkGPUResampleImageFilter_hxx
 
 #include "itkGPUResampleImageFilter.h"
 
@@ -1152,4 +1152,4 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::P
 
 } // end namespace itk
 
-#endif /* __itkGPUResampleImageFilter_hxx */
+#endif /* itkGPUResampleImageFilter_hxx */

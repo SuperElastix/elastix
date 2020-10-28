@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMultiResolutionRegistration_HXX__
-#define __elxMultiResolutionRegistration_HXX__
+#ifndef elxMultiResolutionRegistration_hxx
+#define elxMultiResolutionRegistration_hxx
 
 #include "elxMultiResolutionRegistration.h"
 #include "vnl/vnl_math.h"
@@ -218,4 +218,4 @@ MultiResolutionRegistration<TElastix>::UpdateMasks(unsigned int level)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMultiResolutionRegistration_HXX__
+#endif // end #ifndef elxMultiResolutionRegistration_hxx

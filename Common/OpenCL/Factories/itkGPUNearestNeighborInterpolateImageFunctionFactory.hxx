@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUNearestNeighborInterpolateImageFunctionFactory_hxx
-#define __itkGPUNearestNeighborInterpolateImageFunctionFactory_hxx
+#ifndef itkGPUNearestNeighborInterpolateImageFunctionFactory_hxx
+#define itkGPUNearestNeighborInterpolateImageFunctionFactory_hxx
 
 #include "itkGPUNearestNeighborInterpolateImageFunctionFactory.h"
 
@@ -104,4 +104,4 @@ GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions>::Regi
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUNearestNeighborInterpolateImageFunctionFactory_hxx
+#endif // end #ifndef itkGPUNearestNeighborInterpolateImageFunctionFactory_hxx

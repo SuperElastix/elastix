@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxConjugateGradientFRPR_hxx
-#define __elxConjugateGradientFRPR_hxx
+#ifndef elxConjugateGradientFRPR_hxx
+#define elxConjugateGradientFRPR_hxx
 
 #include "elxConjugateGradientFRPR.h"
 #include <cmath>
@@ -370,4 +370,4 @@ ConjugateGradientFRPR<TElastix>::LineOptimize(ParametersType * p, ParametersType
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxConjugateGradientFRPR_hxx
+#endif // end #ifndef elxConjugateGradientFRPR_hxx

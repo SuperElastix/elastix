@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkTranslationTransformInitializer_h
-#define __itkTranslationTransformInitializer_h
+#ifndef itkTranslationTransformInitializer_h
+#define itkTranslationTransformInitializer_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -170,4 +170,4 @@ private:
 #  include "itkTranslationTransformInitializer.hxx"
 #endif
 
-#endif /* __itkTranslationTransformInitializer_h */
+#endif /* itkTranslationTransformInitializer_h */

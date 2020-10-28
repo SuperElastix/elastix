@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxDeformationFieldTransform_H__
-#define __elxDeformationFieldTransform_H__
+#ifndef elxDeformationFieldTransform_h
+#define elxDeformationFieldTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkDeformationFieldInterpolatingTransform.h"
@@ -161,4 +161,4 @@ private:
 #  include "elxDeformationFieldTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxDeformationFieldTransform_H__
+#endif // end #ifndef elxDeformationFieldTransform_h

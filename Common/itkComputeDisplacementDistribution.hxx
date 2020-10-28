@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkComputeDisplacementDistribution_hxx
-#define __itkComputeDisplacementDistribution_hxx
+#ifndef itkComputeDisplacementDistribution_hxx
+#define itkComputeDisplacementDistribution_hxx
 
 #include "itkComputeDisplacementDistribution.h"
 
@@ -660,4 +660,4 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::SampleFixedImageForJac
 
 } // end namespace itk
 
-#endif // end #ifndef __itkComputeDisplacementDistribution_hxx
+#endif // end #ifndef itkComputeDisplacementDistribution_hxx

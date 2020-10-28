@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineTransformFactory_h
-#define __itkGPUBSplineTransformFactory_h
+#ifndef itkGPUBSplineTransformFactory_h
+#define itkGPUBSplineTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUBSplineTransform.h"
@@ -118,4 +118,4 @@ private:
 #  include "itkGPUBSplineTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUBSplineTransformFactory_h */
+#endif /* itkGPUBSplineTransformFactory_h */

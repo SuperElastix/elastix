@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRegistrationBase_hxx
-#define __elxRegistrationBase_hxx
+#ifndef elxRegistrationBase_hxx
+#define elxRegistrationBase_hxx
 
 #include "elxRegistrationBase.h"
 
@@ -216,4 +216,4 @@ RegistrationBase<TElastix>::GenerateMovingMaskSpatialObject(const MovingMaskImag
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRegistrationBase_hxx
+#endif // end #ifndef elxRegistrationBase_hxx

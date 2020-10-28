@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxStatisticalShapePenalty_H__
-#define __elxStatisticalShapePenalty_H__
+#ifndef elxStatisticalShapePenalty_h
+#define elxStatisticalShapePenalty_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkStatisticalShapePointPenalty.h"
@@ -194,4 +194,4 @@ private:
 #  include "elxStatisticalShapePenalty.hxx"
 #endif
 
-#endif // end #ifndef __elxStatisticalShapePenalty_H__
+#endif // end #ifndef elxStatisticalShapePenalty_h

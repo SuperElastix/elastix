@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkTransformToDeterminantOfSpatialJacobianSource_hxx
-#define __itkTransformToDeterminantOfSpatialJacobianSource_hxx
+#ifndef itkTransformToDeterminantOfSpatialJacobianSource_hxx
+#define itkTransformToDeterminantOfSpatialJacobianSource_hxx
 
 #include "itkTransformToDeterminantOfSpatialJacobianSource.h"
 

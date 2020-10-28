@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutsimple_h
-#define __xoutsimple_h
+#ifndef xoutsimple_h
+#define xoutsimple_h
 
 #include "xoutbase.h"
 
@@ -80,4 +80,4 @@ public:
 
 #include "xoutsimple.hxx"
 
-#endif // end #ifndef __xoutsimple_h
+#endif // end #ifndef xoutsimple_h

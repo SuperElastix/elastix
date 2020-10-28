@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLSampler_h
-#define __itkOpenCLSampler_h
+#ifndef itkOpenCLSampler_h
+#define itkOpenCLSampler_h
 
 #include "itkOpenCL.h"
 #include <ostream>
@@ -207,4 +207,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLSampler & sampl
 
 } // end namespace itk
 
-#endif /* __itkOpenCLSampler_h */
+#endif /* itkOpenCLSampler_h */

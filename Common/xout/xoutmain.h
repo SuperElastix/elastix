@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutmain_h
-#define __xoutmain_h
+#ifndef xoutmain_h
+#define xoutmain_h
 
 /** Necessary includes for using xout. */
 #include "xoutbase.h"
@@ -48,4 +48,4 @@ xout_valid();
 
 } // end namespace xoutlibrary
 
-#endif // end #ifndef __xoutmain_h
+#endif // end #ifndef xoutmain_h

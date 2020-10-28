@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPURecursiveGaussianImageFilter_h
-#define __itkGPURecursiveGaussianImageFilter_h
+#ifndef itkGPURecursiveGaussianImageFilter_h
+#define itkGPURecursiveGaussianImageFilter_h
 
 #include "itkRecursiveGaussianImageFilter.h"
 #include "itkGPUInPlaceImageFilter.h"
@@ -97,4 +97,4 @@ private:
 #  include "itkGPURecursiveGaussianImageFilter.hxx"
 #endif
 
-#endif /* __itkGPURecursiveGaussianImageFilter_h */
+#endif /* itkGPURecursiveGaussianImageFilter_h */

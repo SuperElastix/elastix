@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkDisplacementMagnitudePenaltyTerm_h
-#define __itkDisplacementMagnitudePenaltyTerm_h
+#ifndef itkDisplacementMagnitudePenaltyTerm_h
+#define itkDisplacementMagnitudePenaltyTerm_h
 
 #include "itkTransformPenaltyTerm.h"
 
@@ -146,4 +146,4 @@ private:
 #  include "itkDisplacementMagnitudePenaltyTerm.hxx"
 #endif
 
-#endif // #ifndef __itkDisplacementMagnitudePenaltyTerm_h
+#endif // #ifndef itkDisplacementMagnitudePenaltyTerm_h

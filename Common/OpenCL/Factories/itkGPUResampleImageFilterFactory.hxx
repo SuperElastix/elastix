@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUResampleImageFilterFactory_hxx
-#define __itkGPUResampleImageFilterFactory_hxx
+#ifndef itkGPUResampleImageFilterFactory_hxx
+#define itkGPUResampleImageFilterFactory_hxx
 
 #include "itkGPUResampleImageFilterFactory.h"
 
@@ -75,4 +75,4 @@ GPUResampleImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUResampleImageFilterFactory_hxx
+#endif // end #ifndef itkGPUResampleImageFilterFactory_hxx

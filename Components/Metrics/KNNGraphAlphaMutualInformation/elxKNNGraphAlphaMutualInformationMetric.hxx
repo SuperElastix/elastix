@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
-#define __elxKNNGraphAlphaMutualInformationMetric_HXX__
+#ifndef elxKNNGraphAlphaMutualInformationMetric_hxx
+#define elxKNNGraphAlphaMutualInformationMetric_hxx
 
 #include "elxKNNGraphAlphaMutualInformationMetric.h"
 
@@ -218,4 +218,4 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
+#endif // end #ifndef elxKNNGraphAlphaMutualInformationMetric_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxElastixMain_h
-#define __elxElastixMain_h
+#ifndef elxElastixMain_h
+#define elxElastixMain_h
 
 #include "elxComponentDatabase.h"
 #include "elxComponentLoader.h"
@@ -434,4 +434,4 @@ private:
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxElastixMain_h
+#endif // end #ifndef elxElastixMain_h

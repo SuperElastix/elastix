@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUIdentityTransform_h
-#define __itkGPUIdentityTransform_h
+#ifndef itkGPUIdentityTransform_h
+#define itkGPUIdentityTransform_h
 
 #include "itkIdentityTransform.h"
 #include "itkVersion.h"
@@ -93,4 +93,4 @@ private:
 #  include "itkGPUIdentityTransform.hxx"
 #endif
 
-#endif /* __itkGPUIdentityTransform_h */
+#endif /* itkGPUIdentityTransform_h */

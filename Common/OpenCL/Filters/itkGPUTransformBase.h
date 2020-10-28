@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUTransformBase_h
-#define __itkGPUTransformBase_h
+#ifndef itkGPUTransformBase_h
+#define itkGPUTransformBase_h
 
 #include "itkGPUDataManager.h"
 
@@ -106,4 +106,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUTransformBase_h */
+#endif /* itkGPUTransformBase_h */

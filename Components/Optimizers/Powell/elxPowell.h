@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPowell_h
-#define __elxPowell_h
+#ifndef elxPowell_h
+#define elxPowell_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkPowellOptimizer.h"
@@ -118,4 +118,4 @@ private:
 #  include "elxPowell.hxx"
 #endif
 
-#endif // end #ifndef __elxPowell_h
+#endif // end #ifndef elxPowell_h

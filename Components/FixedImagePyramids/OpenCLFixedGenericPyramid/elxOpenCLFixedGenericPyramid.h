@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxOpenCLOpenCLFixedGenericPyramid_h
-#define __elxOpenCLOpenCLFixedGenericPyramid_h
+#ifndef elxOpenCLOpenCLFixedGenericPyramid_h
+#define elxOpenCLOpenCLFixedGenericPyramid_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "elxFixedGenericPyramid.h"
@@ -146,4 +146,4 @@ private:
 #  include "elxOpenCLFixedGenericPyramid.hxx"
 #endif
 
-#endif // end #ifndef __elxOpenCLOpenCLFixedGenericPyramid_h
+#endif // end #ifndef elxOpenCLOpenCLFixedGenericPyramid_h

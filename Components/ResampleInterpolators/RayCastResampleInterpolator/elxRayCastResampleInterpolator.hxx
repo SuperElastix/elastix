@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxRayCastResampleInterpolator_hxx
-#define __elxRayCastResampleInterpolator_hxx
+#ifndef elxRayCastResampleInterpolator_hxx
+#define elxRayCastResampleInterpolator_hxx
 
 #include "elxRayCastResampleInterpolator.h"
 #include "itkImageFileWriter.h"
@@ -187,4 +187,4 @@ RayCastResampleInterpolator<TElastix>::WriteToFile(void) const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRayCastResampleInterpolator_hxx
+#endif // end #ifndef elxRayCastResampleInterpolator_hxx

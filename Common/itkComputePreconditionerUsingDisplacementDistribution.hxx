@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkComputePreconditionerUsingDisplacementDistribution_hxx
-#define __itkComputePreconditionerUsingDisplacementDistribution_hxx
+#ifndef itkComputePreconditionerUsingDisplacementDistribution_hxx
+#define itkComputePreconditionerUsingDisplacementDistribution_hxx
 
 #include "itkComputePreconditionerUsingDisplacementDistribution.h"
 
@@ -1029,4 +1029,4 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
 
 } // end namespace itk
 
-#endif // end #ifndef __itkComputePreconditionerUsingDisplacementDistribution_hxx
+#endif // end #ifndef itkComputePreconditionerUsingDisplacementDistribution_hxx

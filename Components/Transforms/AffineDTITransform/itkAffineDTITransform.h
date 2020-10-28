@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAffineDTITransform_H__
-#define __itkAffineDTITransform_H__
+#ifndef itkAffineDTITransform_h
+#define itkAffineDTITransform_h
 
 #include "itkAffineDTI2DTransform.h"
 #include "itkAffineDTI3DTransform.h"
@@ -177,4 +177,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkAffineDTITransform_H__
+#endif // end #ifndef itkAffineDTITransform_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutbase_hxx
-#define __xoutbase_hxx
+#ifndef xoutbase_hxx
+#define xoutbase_hxx
 
 #include "xoutbase.h"
 
@@ -316,4 +316,4 @@ xoutbase<charT, traits>::GetCOutputs(void)
 
 } // end namespace xoutlibrary
 
-#endif // end #ifndef __xoutbase_hxx
+#endif // end #ifndef xoutbase_hxx

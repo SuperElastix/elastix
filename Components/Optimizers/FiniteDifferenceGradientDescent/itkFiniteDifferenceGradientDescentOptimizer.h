@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkFiniteDifferenceGradientDescentOptimizer_h
-#define __itkFiniteDifferenceGradientDescentOptimizer_h
+#ifndef itkFiniteDifferenceGradientDescentOptimizer_h
+#define itkFiniteDifferenceGradientDescentOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 
@@ -184,4 +184,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkFiniteDifferenceGradientDescentOptimizer_h
+#endif // end #ifndef itkFiniteDifferenceGradientDescentOptimizer_h

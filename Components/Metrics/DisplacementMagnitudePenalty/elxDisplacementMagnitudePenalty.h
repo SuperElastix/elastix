@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxDisplacementMagnitudePenalty_H__
-#define __elxDisplacementMagnitudePenalty_H__
+#ifndef elxDisplacementMagnitudePenalty_h
+#define elxDisplacementMagnitudePenalty_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkDisplacementMagnitudePenaltyTerm.h"
@@ -148,4 +148,4 @@ private:
 #  include "elxDisplacementMagnitudePenalty.hxx"
 #endif
 
-#endif // end #ifndef __elxDisplacementMagnitudePenalty_H__
+#endif // end #ifndef elxDisplacementMagnitudePenalty_h

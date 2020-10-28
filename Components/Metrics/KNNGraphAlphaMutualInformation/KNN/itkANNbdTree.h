@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNbdTree_h
-#define __itkANNbdTree_h
+#ifndef itkANNbdTree_h
+#define itkANNbdTree_h
 
 #include "itkANNkDTree.h"
 
@@ -99,4 +99,4 @@ private:
 #  include "itkANNbdTree.hxx"
 #endif
 
-#endif // end #ifndef __itkANNbdTree_h
+#endif // end #ifndef itkANNbdTree_h

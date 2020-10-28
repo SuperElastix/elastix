@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSplineKernelTransform_H_
-#define __elxSplineKernelTransform_H_
+#ifndef elxSplineKernelTransform_h
+#define elxSplineKernelTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkKernelTransform2.h"
@@ -265,4 +265,4 @@ private:
 #  include "elxSplineKernelTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxSplineKernelTransform_H_
+#endif // end #ifndef elxSplineKernelTransform_h

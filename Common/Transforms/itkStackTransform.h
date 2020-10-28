@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkStackTransform_h
-#define __itkStackTransform_h
+#ifndef itkStackTransform_h
+#define itkStackTransform_h
 
 #include "itkAdvancedTransform.h"
 #include "itkIndex.h"

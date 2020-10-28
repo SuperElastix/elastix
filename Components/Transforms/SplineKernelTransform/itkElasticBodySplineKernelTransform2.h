@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkElasticBodySplineKernelTransform2_h
-#define __itkElasticBodySplineKernelTransform2_h
+#ifndef itkElasticBodySplineKernelTransform2_h
+#define itkElasticBodySplineKernelTransform2_h
 
 #include "itkKernelTransform2.h"
 
@@ -164,4 +164,4 @@ private:
 #  include "itkElasticBodySplineKernelTransform2.hxx"
 #endif
 
-#endif // __itkElasticBodySplineKernelTransform2_h
+#endif // itkElasticBodySplineKernelTransform2_h

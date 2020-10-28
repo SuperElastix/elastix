@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkTranslationTransformInitializer_hxx
-#define __itkTranslationTransformInitializer_hxx
+#ifndef itkTranslationTransformInitializer_hxx
+#define itkTranslationTransformInitializer_hxx
 
 #include "itkTranslationTransformInitializer.h"
 #include "itkImageMaskSpatialObject.h"
@@ -239,4 +239,4 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::PrintSel
 
 } // namespace itk
 
-#endif /* __itkTranslationTransformInitializer_hxx */
+#endif /* itkTranslationTransformInitializer_hxx */

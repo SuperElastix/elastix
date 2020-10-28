@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkParzenWindowNormalizedMutualInformationImageToImageMetric_H__
-#define __itkParzenWindowNormalizedMutualInformationImageToImageMetric_H__
+#ifndef itkParzenWindowNormalizedMutualInformationImageToImageMetric_h
+#define itkParzenWindowNormalizedMutualInformationImageToImageMetric_h
 
 #include "itkParzenWindowHistogramImageToImageMetric.h"
 
@@ -208,4 +208,4 @@ private:
 #  include "itkParzenWindowNormalizedMutualInformationImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkParzenWindowNormalizedMutualInformationImageToImageMetric_H__
+#endif // end #ifndef itkParzenWindowNormalizedMutualInformationImageToImageMetric_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxIncludes_h
-#define __elxIncludes_h
+#ifndef elxIncludes_h
+#define elxIncludes_h
 
 /**
  * Include this file in your new components.
@@ -42,4 +42,4 @@
 /** Writing to screen and logfiles etc. */
 #include "xoutmain.h"
 
-#endif //#ifndef __elxIncludes_h
+#endif //#ifndef elxIncludes_h

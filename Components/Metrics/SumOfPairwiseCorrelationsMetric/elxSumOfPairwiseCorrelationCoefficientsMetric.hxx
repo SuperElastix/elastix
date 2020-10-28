@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSumOfPairwiseCorrelationCoefficientsMetric_HXX__
-#define __elxSumOfPairwiseCorrelationCoefficientsMetric_HXX__
+#ifndef elxSumOfPairwiseCorrelationCoefficientsMetric_hxx
+#define elxSumOfPairwiseCorrelationCoefficientsMetric_hxx
 
 #include "elxSumOfPairwiseCorrelationCoefficientsMetric.h"
 #include "itkTimeProbe.h"
@@ -132,4 +132,4 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxSumOfPairwiseCorrelationCoefficientsMetric_HXX__
+#endif // end #ifndef elxSumOfPairwiseCorrelationCoefficientsMetric_hxx

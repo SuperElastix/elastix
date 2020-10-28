@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBinaryTreeBase_hxx
-#define __itkBinaryTreeBase_hxx
+#ifndef itkBinaryTreeBase_hxx
+#define itkBinaryTreeBase_hxx
 
 #include "itkBinaryTreeBase.h"
 
@@ -102,4 +102,4 @@ BinaryTreeBase<TListSample>::PrintSelf(std::ostream & os, Indent indent) const
 
 } // end namespace itk
 
-#endif // end #ifndef __itkBinaryTreeBase_hxx
+#endif // end #ifndef itkBinaryTreeBase_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLPlatform_h
-#define __itkOpenCLPlatform_h
+#ifndef itkOpenCLPlatform_h
+#define itkOpenCLPlatform_h
 
 #include "itkOpenCL.h"
 
@@ -243,4 +243,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLPlatform & plat
 
 } // end namespace itk
 
-#endif /* __itkOpenCLPlatform_h */
+#endif /* itkOpenCLPlatform_h */

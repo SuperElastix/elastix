@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkSimilarityTransform_H__
-#define __itkSimilarityTransform_H__
+#ifndef itkSimilarityTransform_h
+#define itkSimilarityTransform_h
 
 #include "itkAdvancedSimilarity2DTransform.h"
 #include "itkAdvancedSimilarity3DTransform.h"
@@ -178,4 +178,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkSimilarityTransform_H__
+#endif // end #ifndef itkSimilarityTransform_h

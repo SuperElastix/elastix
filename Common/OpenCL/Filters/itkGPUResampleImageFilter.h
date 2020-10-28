@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUResampleImageFilter_h
-#define __itkGPUResampleImageFilter_h
+#ifndef itkGPUResampleImageFilter_h
+#define itkGPUResampleImageFilter_h
 
 #include "itkResampleImageFilter.h"
 
@@ -240,4 +240,4 @@ private:
 #  include "itkGPUResampleImageFilter.hxx"
 #endif
 
-#endif /* __itkGPUResampleImageFilter_h */
+#endif /* itkGPUResampleImageFilter_h */

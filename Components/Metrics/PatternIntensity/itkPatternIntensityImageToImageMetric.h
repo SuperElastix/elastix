@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPatternIntensityImageToImageMetric_h
-#define __itkPatternIntensityImageToImageMetric_h
+#ifndef itkPatternIntensityImageToImageMetric_h
+#define itkPatternIntensityImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -200,4 +200,4 @@ private:
 #  include "itkPatternIntensityImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkPatternIntensityImageToImageMetric_h
+#endif // end #ifndef itkPatternIntensityImageToImageMetric_h

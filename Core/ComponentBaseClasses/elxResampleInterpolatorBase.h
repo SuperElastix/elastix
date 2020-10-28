@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxResampleInterpolatorBase_h
-#define __elxResampleInterpolatorBase_h
+#ifndef elxResampleInterpolatorBase_h
+#define elxResampleInterpolatorBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -125,4 +125,4 @@ private:
 #  include "elxResampleInterpolatorBase.hxx"
 #endif
 
-#endif // end #ifndef __elxResampleInterpolatorBase_h
+#endif // end #ifndef elxResampleInterpolatorBase_h

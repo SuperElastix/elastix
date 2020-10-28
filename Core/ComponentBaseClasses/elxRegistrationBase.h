@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRegistrationBase_h
-#define __elxRegistrationBase_h
+#ifndef elxRegistrationBase_h
+#define elxRegistrationBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -223,4 +223,4 @@ private:
 #  include "elxRegistrationBase.hxx"
 #endif
 
-#endif // end #ifndef __elxRegistrationBase_h
+#endif // end #ifndef elxRegistrationBase_h

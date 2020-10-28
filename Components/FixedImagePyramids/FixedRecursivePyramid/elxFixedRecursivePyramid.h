@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFixedRecursivePyramid_h
-#define __elxFixedRecursivePyramid_h
+#ifndef elxFixedRecursivePyramid_h
+#define elxFixedRecursivePyramid_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkRecursiveMultiResolutionPyramidImageFilter.h"
@@ -103,4 +103,4 @@ private:
 #  include "elxFixedRecursivePyramid.hxx"
 #endif
 
-#endif // end #ifndef __elxFixedRecursivePyramid_h
+#endif // end #ifndef elxFixedRecursivePyramid_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBSplineInterpolationWeightFunction2_h
-#define __itkBSplineInterpolationWeightFunction2_h
+#ifndef itkBSplineInterpolationWeightFunction2_h
+#define itkBSplineInterpolationWeightFunction2_h
 
 #include "itkBSplineInterpolationWeightFunctionBase.h"
 

@@ -23,8 +23,8 @@
 // Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 //
 
-#ifndef __itkOpenCLOstreamSupport_h
-#define __itkOpenCLOstreamSupport_h
+#ifndef itkOpenCLOstreamSupport_h
+#define itkOpenCLOstreamSupport_h
 
 #include "itkOpenCL.h"
 
@@ -782,4 +782,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const cl_float16 & _v)
 
 } // end namespace itk
 
-#endif // /* __itkOpenCLOstreamSupport_h */
+#endif // /* itkOpenCLOstreamSupport_h */

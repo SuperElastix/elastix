@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkRecursiveBSplineTransform_h
-#define __itkRecursiveBSplineTransform_h
+#ifndef itkRecursiveBSplineTransform_h
+#define itkRecursiveBSplineTransform_h
 
 #include "itkAdvancedBSplineDeformableTransform.h"
 
@@ -209,4 +209,4 @@ private:
 #  include "itkRecursiveBSplineTransform.hxx"
 #endif
 
-#endif /* __itkRecursiveBSplineTransform_h */
+#endif /* itkRecursiveBSplineTransform_h */

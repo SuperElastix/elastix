@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkDeformationFieldRegulizer_HXX__
-#define __itkDeformationFieldRegulizer_HXX__
+#ifndef itkDeformationFieldRegulizer_hxx
+#define itkDeformationFieldRegulizer_hxx
 
 #include "itkDeformationFieldRegulizer.h"
 
@@ -131,4 +131,4 @@ DeformationFieldRegulizer<TAnyITKTransform>::UpdateIntermediaryDeformationFieldT
 
 } // end namespace itk
 
-#endif // end #ifndef __itkDeformationFieldRegulizer_HXX__
+#endif // end #ifndef itkDeformationFieldRegulizer_hxx

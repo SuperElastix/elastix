@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxWeightedCombinationTransform_HXX_
-#define __elxWeightedCombinationTransform_HXX_
+#ifndef elxWeightedCombinationTransform_hxx
+#define elxWeightedCombinationTransform_hxx
 
 #include "elxWeightedCombinationTransform.h"
 
@@ -303,4 +303,4 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxWeightedCombinationTransform_HXX_
+#endif // end #ifndef elxWeightedCombinationTransform_hxx

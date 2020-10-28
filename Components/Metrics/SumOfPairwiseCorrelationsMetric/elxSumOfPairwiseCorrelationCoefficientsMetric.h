@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSumOfPairwiseCorrelationCoefficientsMetric_H__
-#define __elxSumOfPairwiseCorrelationCoefficientsMetric_H__
+#ifndef elxSumOfPairwiseCorrelationCoefficientsMetric_h
+#define elxSumOfPairwiseCorrelationCoefficientsMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkSumOfPairwiseCorrelationCoefficientsMetric.h"
@@ -188,4 +188,4 @@ private:
 #  include "elxSumOfPairwiseCorrelationCoefficientsMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxSumOfPairwiseCorrelationCoefficientsMetric_H__
+#endif // end #ifndef elxSumOfPairwiseCorrelationCoefficientsMetric_h

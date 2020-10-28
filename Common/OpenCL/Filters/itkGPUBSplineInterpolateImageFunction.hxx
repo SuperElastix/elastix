@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineInterpolateImageFunction_hxx
-#define __itkGPUBSplineInterpolateImageFunction_hxx
+#ifndef itkGPUBSplineInterpolateImageFunction_hxx
+#define itkGPUBSplineInterpolateImageFunction_hxx
 
 #include "itkGPUBSplineInterpolateImageFunction.h"
 #include "itkGPUImageFunction.h"
@@ -106,4 +106,4 @@ GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::Pr
 
 } // end namespace itk
 
-#endif /* __itkGPUBSplineInterpolateImageFunction_hxx */
+#endif /* itkGPUBSplineInterpolateImageFunction_hxx */

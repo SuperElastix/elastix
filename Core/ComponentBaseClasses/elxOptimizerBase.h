@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxOptimizerBase_h
-#define __elxOptimizerBase_h
+#ifndef elxOptimizerBase_h
+#define elxOptimizerBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -147,4 +147,4 @@ private:
 #  include "elxOptimizerBase.hxx"
 #endif
 
-#endif // end #ifndef __elxOptimizerBase_h
+#endif // end #ifndef elxOptimizerBase_h

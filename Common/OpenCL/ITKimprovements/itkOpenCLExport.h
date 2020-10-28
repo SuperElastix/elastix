@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLExport_h
-#define __itkOpenCLExport_h
+#ifndef itkOpenCLExport_h
+#define itkOpenCLExport_h
 
 #include "itkConfigure.h"
 #include "itkMacro.h"
@@ -41,4 +41,4 @@
 #  endif
 #endif
 
-#endif /* __itkOpenCLExport_h */
+#endif /* itkOpenCLExport_h */

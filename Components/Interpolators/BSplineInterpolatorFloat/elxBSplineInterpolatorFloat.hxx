@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxBSplineInterpolatorFloat_hxx
-#define __elxBSplineInterpolatorFloat_hxx
+#ifndef elxBSplineInterpolatorFloat_hxx
+#define elxBSplineInterpolatorFloat_hxx
 
 #include "elxBSplineInterpolatorFloat.h"
 
@@ -56,4 +56,4 @@ BSplineInterpolatorFloat<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxBSplineInterpolatorFloat_hxx
+#endif // end #ifndef elxBSplineInterpolatorFloat_hxx

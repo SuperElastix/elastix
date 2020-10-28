@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxStandardGradientDescent_hxx
-#define __elxStandardGradientDescent_hxx
+#ifndef elxStandardGradientDescent_hxx
+#define elxStandardGradientDescent_hxx
 
 #include "elxStandardGradientDescent.h"
 #include <iomanip>
@@ -245,4 +245,4 @@ StandardGradientDescent<TElastix>::MetricErrorResponse(itk::ExceptionObject & er
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxStandardGradientDescent_hxx
+#endif // end #ifndef elxStandardGradientDescent_hxx

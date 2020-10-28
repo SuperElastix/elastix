@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkTransformPenaltyTerm_h
-#define __itkTransformPenaltyTerm_h
+#ifndef itkTransformPenaltyTerm_h
+#define itkTransformPenaltyTerm_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -150,4 +150,4 @@ private:
 #  include "itkTransformPenaltyTerm.hxx"
 #endif
 
-#endif // #ifndef __itkTransformPenaltyTerm_h
+#endif // #ifndef itkTransformPenaltyTerm_h

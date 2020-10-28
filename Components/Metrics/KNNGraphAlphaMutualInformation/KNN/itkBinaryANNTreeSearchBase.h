@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBinaryANNTreeSearchBase_h
-#define __itkBinaryANNTreeSearchBase_h
+#ifndef itkBinaryANNTreeSearchBase_h
+#define itkBinaryANNTreeSearchBase_h
 
 #include "itkBinaryTreeSearchBase.h"
 #include "itkBinaryANNTreeBase.h"
@@ -90,4 +90,4 @@ private:
 #  include "itkBinaryANNTreeSearchBase.hxx"
 #endif
 
-#endif // end #ifndef __itkBinaryANNTreeSearchBase_h
+#endif // end #ifndef itkBinaryANNTreeSearchBase_h

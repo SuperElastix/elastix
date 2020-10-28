@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxBSplineResampleInterpolatorFloat_hxx
-#define __elxBSplineResampleInterpolatorFloat_hxx
+#ifndef elxBSplineResampleInterpolatorFloat_hxx
+#define elxBSplineResampleInterpolatorFloat_hxx
 
 #include "elxBSplineResampleInterpolatorFloat.h"
 
@@ -92,4 +92,4 @@ BSplineResampleInterpolatorFloat<TElastix>::WriteToFile(void) const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxBSplineResampleInterpolatorFloat_hxx
+#endif // end #ifndef elxBSplineResampleInterpolatorFloat_hxx

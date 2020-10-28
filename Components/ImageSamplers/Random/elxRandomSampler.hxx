@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRandomSampler_hxx
-#define __elxRandomSampler_hxx
+#ifndef elxRandomSampler_hxx
+#define elxRandomSampler_hxx
 
 #include "elxRandomSampler.h"
 
@@ -45,4 +45,4 @@ RandomSampler<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRandomSampler_hxx
+#endif // end #ifndef elxRandomSampler_hxx

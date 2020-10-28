@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLEventTest_h
-#define __itkOpenCLEventTest_h
+#ifndef itkOpenCLEventTest_h
+#define itkOpenCLEventTest_h
 
 #include "itkMacro.h"
 
@@ -26,4 +26,4 @@ namespace itk
 itkGPUKernelClassMacro(OpenCLEventTestKernel);
 } // end namespace itk
 
-#endif /* __itkOpenCLEventTest_h */
+#endif /* itkOpenCLEventTest_h */

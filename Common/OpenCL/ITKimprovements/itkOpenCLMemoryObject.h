@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLMemoryObject_h
-#define __itkOpenCLMemoryObject_h
+#ifndef itkOpenCLMemoryObject_h
+#define itkOpenCLMemoryObject_h
 
 #include "itkOpenCLEventList.h"
 #include "itkOpenCLSize.h"
@@ -250,4 +250,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLMemoryObject & 
 
 } // end namespace itk
 
-#endif /* __itkOpenCLMemoryObject_h */
+#endif /* itkOpenCLMemoryObject_h */

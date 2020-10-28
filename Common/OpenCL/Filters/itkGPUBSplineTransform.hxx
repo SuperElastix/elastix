@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineTransform_hxx
-#define __itkGPUBSplineTransform_hxx
+#ifndef itkGPUBSplineTransform_hxx
+#define itkGPUBSplineTransform_hxx
 
 #include "itkGPUBSplineTransform.h"
 
@@ -134,4 +134,4 @@ GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::P
 
 } // end namespace itk
 
-#endif /* __itkGPUBSplineTransform_hxx */
+#endif /* itkGPUBSplineTransform_hxx */

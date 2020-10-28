@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkImageFileCastWriter_h
-#define __itkImageFileCastWriter_h
+#ifndef itkImageFileCastWriter_h
+#define itkImageFileCastWriter_h
 
 #include "itkImageFileWriter.h"
 #include "itkImageIOBase.h"
@@ -128,4 +128,4 @@ private:
 #  include "itkImageFileCastWriter.hxx"
 #endif
 
-#endif // __itkImageFileCastWriter_h
+#endif // itkImageFileCastWriter_h

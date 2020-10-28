@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLKernel_h
-#define __itkOpenCLKernel_h
+#ifndef itkOpenCLKernel_h
+#define itkOpenCLKernel_h
 
 #include "itkOpenCL.h"
 #include "itkOpenCLGlobal.h"
@@ -906,4 +906,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLKernel & kernel
 
 } // end namespace itk
 
-#endif /* __itkOpenCLKernel_h */
+#endif /* itkOpenCLKernel_h */

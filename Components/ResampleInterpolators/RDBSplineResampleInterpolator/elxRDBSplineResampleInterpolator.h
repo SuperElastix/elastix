@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxReducedDimensionBSplineResampleInterpolator_h
-#define __elxReducedDimensionBSplineResampleInterpolator_h
+#ifndef elxReducedDimensionBSplineResampleInterpolator_h
+#define elxReducedDimensionBSplineResampleInterpolator_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
@@ -141,4 +141,4 @@ private:
 #  include "elxRDBSplineResampleInterpolator.hxx"
 #endif
 
-#endif // end __elxReducedDimensionBSplineResampleInterpolator_h
+#endif // end elxReducedDimensionBSplineResampleInterpolator_h

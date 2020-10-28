@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkSingleValuedPointSetToPointSetMetric_hxx
-#define __itkSingleValuedPointSetToPointSetMetric_hxx
+#ifndef itkSingleValuedPointSetToPointSetMetric_hxx
+#define itkSingleValuedPointSetToPointSetMetric_hxx
 
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 
@@ -154,4 +154,4 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::PrintSelf
 
 } // end namespace itk
 
-#endif // end #ifndef __itkSingleValuedPointSetToPointSetMetric_hxx
+#endif // end #ifndef itkSingleValuedPointSetToPointSetMetric_hxx

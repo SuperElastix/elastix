@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedCombinationTransform_h
-#define __itkAdvancedCombinationTransform_h
+#ifndef itkAdvancedCombinationTransform_h
+#define itkAdvancedCombinationTransform_h
 
 #include "itkAdvancedTransform.h"
 #include "itkMacro.h"
@@ -620,4 +620,4 @@ private:
 #  include "itkAdvancedCombinationTransform.hxx"
 #endif
 
-#endif // end #ifndef __itkAdvancedCombinationTransform_h
+#endif // end #ifndef itkAdvancedCombinationTransform_h

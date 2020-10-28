@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxSimilarityTransform_HXX_
-#define __elxSimilarityTransform_HXX_
+#ifndef elxSimilarityTransform_hxx
+#define elxSimilarityTransform_hxx
 
 #include "elxSimilarityTransform.h"
 #include "itkContinuousIndex.h"
@@ -494,4 +494,4 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType &
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxSimilarityTransform_HXX_
+#endif // end #ifndef elxSimilarityTransform_hxx

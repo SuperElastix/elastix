@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxRegularStepGradientDescent_hxx
-#define __elxRegularStepGradientDescent_hxx
+#ifndef elxRegularStepGradientDescent_hxx
+#define elxRegularStepGradientDescent_hxx
 
 #include "elxRegularStepGradientDescent.h"
 #include <iomanip>
@@ -205,4 +205,4 @@ RegularStepGradientDescent<TElastix>::SetInitialPosition(const ParametersType & 
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRegularStepGradientDescent_hxx
+#endif // end #ifndef elxRegularStepGradientDescent_hxx

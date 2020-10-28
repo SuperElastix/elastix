@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMissingStructurePenalty_hxx
-#define __itkMissingStructurePenalty_hxx
+#ifndef itkMissingStructurePenalty_hxx
+#define itkMissingStructurePenalty_hxx
 
 #include "itkMissingStructurePenalty.h"
 #include <cmath>
@@ -362,4 +362,4 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::SubVector(const Vecto
 
 } // namespace itk
 
-#endif // end #ifndef __itkMissingStructurePenalty_hxx
+#endif // end #ifndef itkMissingStructurePenalty_hxx

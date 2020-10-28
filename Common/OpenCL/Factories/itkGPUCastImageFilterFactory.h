@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCastImageFilterFactory_h
-#define __itkGPUCastImageFilterFactory_h
+#ifndef itkGPUCastImageFilterFactory_h
+#define itkGPUCastImageFilterFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUCastImageFilter.h"
@@ -128,4 +128,4 @@ private:
 #  include "itkGPUCastImageFilterFactory.hxx"
 #endif
 
-#endif // end #ifndef __itkGPUCastImageFilterFactory_h
+#endif // end #ifndef itkGPUCastImageFilterFactory_h

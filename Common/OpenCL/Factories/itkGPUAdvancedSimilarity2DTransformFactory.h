@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedSimilarity2DTransformFactory_h
-#define __itkGPUAdvancedSimilarity2DTransformFactory_h
+#ifndef itkGPUAdvancedSimilarity2DTransformFactory_h
+#define itkGPUAdvancedSimilarity2DTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUAdvancedSimilarity2DTransform.h"
@@ -95,4 +95,4 @@ private:
 #  include "itkGPUAdvancedSimilarity2DTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedSimilarity2DTransformFactory_h */
+#endif /* itkGPUAdvancedSimilarity2DTransformFactory_h */

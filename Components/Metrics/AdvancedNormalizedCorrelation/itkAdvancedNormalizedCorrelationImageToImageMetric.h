@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
-#define __itkAdvancedNormalizedCorrelationImageToImageMetric_h
+#ifndef itkAdvancedNormalizedCorrelationImageToImageMetric_h
+#define itkAdvancedNormalizedCorrelationImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -284,4 +284,4 @@ private:
 #  include "itkAdvancedNormalizedCorrelationImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
+#endif // end #ifndef itkAdvancedNormalizedCorrelationImageToImageMetric_h

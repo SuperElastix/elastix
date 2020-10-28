@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxDistancePreservingRigidityPenaltyTerm_H__
-#define __elxDistancePreservingRigidityPenaltyTerm_H__
+#ifndef elxDistancePreservingRigidityPenaltyTerm_h
+#define elxDistancePreservingRigidityPenaltyTerm_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkDistancePreservingRigidityPenaltyTerm.h"
@@ -181,4 +181,4 @@ private:
 #  include "elxDistancePreservingRigidityPenaltyTerm.hxx"
 #endif
 
-#endif // end #ifndef __elxDistancePreservingRigidityPenaltyTerm_H__
+#endif // end #ifndef elxDistancePreservingRigidityPenaltyTerm_h

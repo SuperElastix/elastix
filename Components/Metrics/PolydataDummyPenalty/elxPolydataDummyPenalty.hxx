@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPolydataDummyPenalty_HXX__
-#define __elxPolydataDummyPenalty_HXX__
+#ifndef elxPolydataDummyPenalty_hxx
+#define elxPolydataDummyPenalty_hxx
 
 #include <typeinfo>
 
@@ -554,4 +554,4 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxPolydataDummyPenalty_HXX__
+#endif // end #ifndef elxPolydataDummyPenalty_hxx

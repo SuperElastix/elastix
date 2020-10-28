@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUTranslationTransformBase_h
-#define __itkGPUTranslationTransformBase_h
+#ifndef itkGPUTranslationTransformBase_h
+#define itkGPUTranslationTransformBase_h
 
 #include "itkGPUTransformBase.h"
 

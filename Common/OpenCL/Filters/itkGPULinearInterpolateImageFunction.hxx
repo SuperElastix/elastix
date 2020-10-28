@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPULinearInterpolateImageFunction_hxx
-#define __itkGPULinearInterpolateImageFunction_hxx
+#ifndef itkGPULinearInterpolateImageFunction_hxx
+#define itkGPULinearInterpolateImageFunction_hxx
 
 #include "itkGPULinearInterpolateImageFunction.h"
 #include "itkGPUImageFunction.h"
@@ -71,4 +71,4 @@ GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::PrintSelf(std::ostrea
 
 } // end namespace itk
 
-#endif /* __itkGPULinearInterpolateImageFunction_hxx */
+#endif /* itkGPULinearInterpolateImageFunction_hxx */

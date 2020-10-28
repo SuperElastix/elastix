@@ -16,11 +16,11 @@
  *
  *=========================================================================*/
 
-#ifndef __elxLinearResampleInterpolator_hxx
-#define __elxLinearResampleInterpolator_hxx
+#ifndef elxLinearResampleInterpolator_hxx
+#define elxLinearResampleInterpolator_hxx
 
 #include "elxLinearResampleInterpolator.h"
 
 // nothing
 
-#endif // end #ifndef __elxLinearResampleInterpolator_hxx
+#endif // end #ifndef elxLinearResampleInterpolator_hxx

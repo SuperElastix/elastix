@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMovingGenericPyramid_hxx
-#define __elxMovingGenericPyramid_hxx
+#ifndef elxMovingGenericPyramid_hxx
+#define elxMovingGenericPyramid_hxx
 
 #include "elxMovingGenericPyramid.h"
 
@@ -176,4 +176,4 @@ MovingGenericPyramid<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMovingGenericPyramid_hxx
+#endif // end #ifndef elxMovingGenericPyramid_hxx

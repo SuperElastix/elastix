@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMultiBSplineTransformWithNormal_hxx
-#define __elxMultiBSplineTransformWithNormal_hxx
+#ifndef elxMultiBSplineTransformWithNormal_hxx
+#define elxMultiBSplineTransformWithNormal_hxx
 
 #include "elxMultiBSplineTransformWithNormal.h"
 
@@ -792,4 +792,4 @@ MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMultiBSplineTransformWithNormal_hxx
+#endif // end #ifndef elxMultiBSplineTransformWithNormal_hxx

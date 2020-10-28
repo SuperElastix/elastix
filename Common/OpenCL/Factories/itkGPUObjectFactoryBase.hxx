@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUObjectFactoryBase_hxx
-#define __itkGPUObjectFactoryBase_hxx
+#ifndef itkGPUObjectFactoryBase_hxx
+#define itkGPUObjectFactoryBase_hxx
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkOpenCLContext.h"

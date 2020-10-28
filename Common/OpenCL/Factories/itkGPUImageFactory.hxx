@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUImageFactory_hxx
-#define __itkGPUImageFactory_hxx
+#ifndef itkGPUImageFactory_hxx
+#define itkGPUImageFactory_hxx
 
 #include "itkGPUImageFactory.h"
 
@@ -102,4 +102,4 @@ GPUImageFactory2<TTypeList, NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUImageFactory_hxx
+#endif // end #ifndef itkGPUImageFactory_hxx

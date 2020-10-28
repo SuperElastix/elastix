@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUTranslationTransformFactory_h
-#define __itkGPUTranslationTransformFactory_h
+#ifndef itkGPUTranslationTransformFactory_h
+#define itkGPUTranslationTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUTranslationTransform.h"
@@ -103,4 +103,4 @@ private:
 #  include "itkGPUTranslationTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUTranslationTransformFactory_h */
+#endif /* itkGPUTranslationTransformFactory_h */

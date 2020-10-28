@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxQuasiNewtonLBFGS_hxx
-#define __elxQuasiNewtonLBFGS_hxx
+#ifndef elxQuasiNewtonLBFGS_hxx
+#define elxQuasiNewtonLBFGS_hxx
 
 #include "elxQuasiNewtonLBFGS.h"
 #include <iomanip>
@@ -557,4 +557,4 @@ QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition(void) const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxQuasiNewtonLBFGS_hxx
+#endif // end #ifndef elxQuasiNewtonLBFGS_hxx

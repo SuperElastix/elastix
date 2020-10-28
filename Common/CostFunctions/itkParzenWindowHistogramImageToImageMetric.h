@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkParzenWindowHistogramImageToImageMetric_H__
-#define __itkParzenWindowHistogramImageToImageMetric_H__
+#ifndef itkParzenWindowHistogramImageToImageMetric_h
+#define itkParzenWindowHistogramImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkKernelFunctionBase2.h"
@@ -521,4 +521,4 @@ private:
 #  include "itkParzenWindowHistogramImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkParzenWindowHistogramImageToImageMetric_H__
+#endif // end #ifndef itkParzenWindowHistogramImageToImageMetric_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMultiMetricMultiResolutionRegistration_HXX__
-#define __elxMultiMetricMultiResolutionRegistration_HXX__
+#ifndef elxMultiMetricMultiResolutionRegistration_hxx
+#define elxMultiMetricMultiResolutionRegistration_hxx
 
 #include "elxMultiMetricMultiResolutionRegistration.h"
 #include "itkTimeProbe.h"
@@ -523,4 +523,4 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxMultiMetricMultiResolutionRegistration_HXX__
+#endif // end #ifndef elxMultiMetricMultiResolutionRegistration_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLBufferTest_h
-#define __itkOpenCLBufferTest_h
+#ifndef itkOpenCLBufferTest_h
+#define itkOpenCLBufferTest_h
 
 #include "itkMacro.h"
 
@@ -26,4 +26,4 @@ namespace itk
 itkGPUKernelClassMacro(OpenCLBufferTestKernel);
 } // end namespace itk
 
-#endif /* __itkOpenCLBufferTest_h */
+#endif /* itkOpenCLBufferTest_h */

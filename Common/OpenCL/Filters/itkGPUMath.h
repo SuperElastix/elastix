@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUMath_h
-#define __itkGPUMath_h
+#ifndef itkGPUMath_h
+#define itkGPUMath_h
 
 #include "itkMacro.h"
 

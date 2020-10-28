@@ -31,8 +31,8 @@
   PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkGradientDifferenceImageToImageMetric2_txx
-#define __itkGradientDifferenceImageToImageMetric2_txx
+#ifndef itkGradientDifferenceImageToImageMetric2_hxx
+#define itkGradientDifferenceImageToImageMetric2_hxx
 
 #include "itkGradientDifferenceImageToImageMetric2.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
@@ -526,4 +526,4 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
 
 } // end namespace itk
 
-#endif // end #ifndef __itkGradientDifferenceImageToImageMetric2_txx
+#endif // end #ifndef itkGradientDifferenceImageToImageMetric2_hxx

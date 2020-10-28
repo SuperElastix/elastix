@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdaptiveStochasticLBFGS_h
-#define __elxAdaptiveStochasticLBFGS_h
+#ifndef elxAdaptiveStochasticLBFGS_h
+#define elxAdaptiveStochasticLBFGS_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdaptiveStochasticLBFGSOptimizer.h"
@@ -461,4 +461,4 @@ private:
 #  include "elxAdaptiveStochasticLBFGS.hxx"
 #endif
 
-#endif // end #ifndef __elxAdaptiveStochasticLBFGS_h
+#endif // end #ifndef elxAdaptiveStochasticLBFGS_h

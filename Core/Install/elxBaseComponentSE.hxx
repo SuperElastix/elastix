@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxBaseComponentSE_hxx
-#define __elxBaseComponentSE_hxx
+#ifndef elxBaseComponentSE_hxx
+#define elxBaseComponentSE_hxx
 
 #include "elxBaseComponentSE.h"
 #include "itkObject.h"
@@ -81,4 +81,4 @@ BaseComponentSE<TElastix>::SetConfiguration(ConfigurationType * const _arg)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxBaseComponentSE_hxx
+#endif // end #ifndef elxBaseComponentSE_hxx

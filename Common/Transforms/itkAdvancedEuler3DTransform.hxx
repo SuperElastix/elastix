@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedEuler3DTransform_hxx
-#define __itkAdvancedEuler3DTransform_hxx
+#ifndef itkAdvancedEuler3DTransform_hxx
+#define itkAdvancedEuler3DTransform_hxx
 
 #include "itkAdvancedEuler3DTransform.h"
 

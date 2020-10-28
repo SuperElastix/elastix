@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedBSplineTransform_hxx
-#define __elxAdvancedBSplineTransform_hxx
+#ifndef elxAdvancedBSplineTransform_hxx
+#define elxAdvancedBSplineTransform_hxx
 
 #include "elxAdvancedBSplineTransform.h"
 
@@ -796,4 +796,4 @@ AdvancedBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWi
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdvancedBSplineTransform_hxx
+#endif // end #ifndef elxAdvancedBSplineTransform_hxx

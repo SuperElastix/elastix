@@ -32,8 +32,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedMatrixOffsetTransformBase_h
-#define __itkAdvancedMatrixOffsetTransformBase_h
+#ifndef itkAdvancedMatrixOffsetTransformBase_h
+#define itkAdvancedMatrixOffsetTransformBase_h
 
 #include <iostream>
 
@@ -573,4 +573,4 @@ private:
 #  include "itkAdvancedMatrixOffsetTransformBase.hxx"
 #endif
 
-#endif /* __itkAdvancedMatrixOffsetTransformBase_h */
+#endif /* itkAdvancedMatrixOffsetTransformBase_h */

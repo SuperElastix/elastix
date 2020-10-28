@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedBSplineDeformableTransform_h
-#define __itkAdvancedBSplineDeformableTransform_h
+#ifndef itkAdvancedBSplineDeformableTransform_h
+#define itkAdvancedBSplineDeformableTransform_h
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
 
@@ -348,4 +348,4 @@ private:
 #  include "itkAdvancedBSplineDeformableTransform.hxx"
 #endif
 
-#endif /* __itkAdvancedBSplineDeformableTransform_h */
+#endif /* itkAdvancedBSplineDeformableTransform_h */

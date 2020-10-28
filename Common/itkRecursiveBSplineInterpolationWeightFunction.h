@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkRecursiveBSplineInterpolationWeightFunction_h
-#define __itkRecursiveBSplineInterpolationWeightFunction_h
+#ifndef itkRecursiveBSplineInterpolationWeightFunction_h
+#define itkRecursiveBSplineInterpolationWeightFunction_h
 
 #include "itkBSplineInterpolationWeightFunction.h"
 

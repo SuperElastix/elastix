@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineDecompositionImageFilterFactory_hxx
-#define __itkGPUBSplineDecompositionImageFilterFactory_hxx
+#ifndef itkGPUBSplineDecompositionImageFilterFactory_hxx
+#define itkGPUBSplineDecompositionImageFilterFactory_hxx
 
 #include "itkGPUBSplineDecompositionImageFilterFactory.h"
 
@@ -103,4 +103,4 @@ GPUBSplineDecompositionImageFilterFactory2<TTypeListIn, TTypeListOut, NDimension
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUBSplineDecompositionImageFilterFactory_hxx
+#endif // end #ifndef itkGPUBSplineDecompositionImageFilterFactory_hxx

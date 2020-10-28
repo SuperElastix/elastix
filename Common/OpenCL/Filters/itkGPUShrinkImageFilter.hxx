@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUShrinkImageFilter_hxx
-#define __itkGPUShrinkImageFilter_hxx
+#ifndef itkGPUShrinkImageFilter_hxx
+#define itkGPUShrinkImageFilter_hxx
 
 #include "itkGPUShrinkImageFilter.h"
 #include "itkOpenCLUtil.h"
@@ -208,4 +208,4 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::PrintSelf(std::ostream & os, In
 
 } // end namespace itk
 
-#endif /* __itkGPUShrinkImageFilter_hxx */
+#endif /* itkGPUShrinkImageFilter_hxx */

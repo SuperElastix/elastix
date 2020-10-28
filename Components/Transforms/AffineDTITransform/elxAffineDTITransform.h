@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAffineDTITransform_H__
-#define __elxAffineDTITransform_H__
+#ifndef elxAffineDTITransform_h
+#define elxAffineDTITransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
@@ -235,4 +235,4 @@ private:
 #  include "elxAffineDTITransform.hxx"
 #endif
 
-#endif // end #ifndef __elxAffineDTITransform_H__
+#endif // end #ifndef elxAffineDTITransform_h

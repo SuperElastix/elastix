@@ -22,8 +22,8 @@
 // \note This work was funded by the Netherlands Organisation for
 // Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 //
-#ifndef __itkTestHelper_h
-#define __itkTestHelper_h
+#ifndef itkTestHelper_h
+#define itkTestHelper_h
 
 #include <string>
 #include <vector>
@@ -538,4 +538,4 @@ WriteLog(const std::string &                  filename,
 
 } // namespace itk
 
-#endif // end #ifndef __itkTestHelper_h
+#endif // end #ifndef itkTestHelper_h

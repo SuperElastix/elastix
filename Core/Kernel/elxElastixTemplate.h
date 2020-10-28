@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxElastixTemplate_h
-#define __elxElastixTemplate_h
+#ifndef elxElastixTemplate_h
+#define elxElastixTemplate_h
 
 #include "elxElastixBase.h"
 #include "itkObject.h"
@@ -320,4 +320,4 @@ private:
 #  include "elxElastixTemplate.hxx"
 #endif
 
-#endif // end #ifndef __elxElastixTemplate_h
+#endif // end #ifndef elxElastixTemplate_h

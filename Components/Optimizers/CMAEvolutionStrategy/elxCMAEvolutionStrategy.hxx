@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxCMAEvolutionStrategy_hxx
-#define __elxCMAEvolutionStrategy_hxx
+#ifndef elxCMAEvolutionStrategy_hxx
+#define elxCMAEvolutionStrategy_hxx
 
 #include "elxCMAEvolutionStrategy.h"
 #include <iomanip>
@@ -302,4 +302,4 @@ CMAEvolutionStrategy<TElastix>::AfterRegistration(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxCMAEvolutionStrategy_hxx
+#endif // end #ifndef elxCMAEvolutionStrategy_hxx

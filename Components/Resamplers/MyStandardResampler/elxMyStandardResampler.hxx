@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxMyStandardResampler_hxx
-#define __elxMyStandardResampler_hxx
+#ifndef elxMyStandardResampler_hxx
+#define elxMyStandardResampler_hxx
 
 #include "elxMyStandardResampler.h"
 

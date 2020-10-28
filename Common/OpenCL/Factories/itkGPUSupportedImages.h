@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUSupportedImages_h
-#define __itkGPUSupportedImages_h
+#ifndef itkGPUSupportedImages_h
+#define itkGPUSupportedImages_h
 
 #include "itkMacro.h"
 #include "TypeList.h"
@@ -45,4 +45,4 @@ typedef typelist::MakeTypeList<unsigned char, char, unsigned short, short, unsig
   OpenCLDefaultImageTypes;
 } // namespace itk
 
-#endif // end #ifndef __itkGPUSupportedImages_h
+#endif // end #ifndef itkGPUSupportedImages_h

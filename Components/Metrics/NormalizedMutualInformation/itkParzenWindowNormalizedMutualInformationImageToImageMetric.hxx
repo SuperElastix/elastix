@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef _itkParzenWindowNormalizedMutualInformationImageToImageMetric_HXX__
-#define _itkParzenWindowNormalizedMutualInformationImageToImageMetric_HXX__
+#ifndef itkParzenWindowNormalizedMutualInformationImageToImageMetric_hxx
+#define itkParzenWindowNormalizedMutualInformationImageToImageMetric_hxx
 
 #include "itkParzenWindowNormalizedMutualInformationImageToImageMetric.h"
 
@@ -276,4 +276,4 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
 
 } // end namespace itk
 
-#endif // end #ifndef _itkParzenWindowNormalizedMutualInformationImageToImageMetric_HXX__
+#endif // end #ifndef itkParzenWindowNormalizedMutualInformationImageToImageMetric_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineDecompositionImageFilter_h
-#define __itkGPUBSplineDecompositionImageFilter_h
+#ifndef itkGPUBSplineDecompositionImageFilter_h
+#define itkGPUBSplineDecompositionImageFilter_h
 
 #include "itkBSplineDecompositionImageFilter.h"
 #include "itkGPUInPlaceImageFilter.h"
@@ -95,4 +95,4 @@ private:
 #  include "itkGPUBSplineDecompositionImageFilter.hxx"
 #endif
 
-#endif /* __itkGPUBSplineDecompositionImageFilter_h */
+#endif /* itkGPUBSplineDecompositionImageFilter_h */

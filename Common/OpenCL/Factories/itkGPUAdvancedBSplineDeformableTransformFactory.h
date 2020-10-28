@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedBSplineDeformableTransformFactory_h
-#define __itkGPUAdvancedBSplineDeformableTransformFactory_h
+#ifndef itkGPUAdvancedBSplineDeformableTransformFactory_h
+#define itkGPUAdvancedBSplineDeformableTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUAdvancedBSplineDeformableTransform.h"
@@ -121,4 +121,4 @@ private:
 #  include "itkGPUAdvancedBSplineDeformableTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedBSplineDeformableTransformFactory_h */
+#endif /* itkGPUAdvancedBSplineDeformableTransformFactory_h */

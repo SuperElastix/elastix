@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedCompositeTransformFactory_hxx
-#define __itkGPUAdvancedCompositeTransformFactory_hxx
+#ifndef itkGPUAdvancedCompositeTransformFactory_hxx
+#define itkGPUAdvancedCompositeTransformFactory_hxx
 
 #include "itkGPUAdvancedCombinationTransformFactory.h"
 
@@ -75,4 +75,4 @@ GPUAdvancedCombinationTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUAdvancedCompositeTransformFactory_hxx
+#endif // end #ifndef itkGPUAdvancedCompositeTransformFactory_hxx

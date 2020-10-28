@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkDeformationFieldRegulizer_H__
-#define __itkDeformationFieldRegulizer_H__
+#ifndef itkDeformationFieldRegulizer_h
+#define itkDeformationFieldRegulizer_h
 
 #include "itkDeformationVectorFieldTransform.h"
 #include "itkImageRegionIterator.h"
@@ -139,4 +139,4 @@ private:
 #  include "itkDeformationFieldRegulizer.hxx"
 #endif
 
-#endif // end #ifndef __itkDeformationFieldRegulizer_H__
+#endif // end #ifndef itkDeformationFieldRegulizer_h

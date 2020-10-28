@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkDeformationVectorFieldTransform_hxx__
-#define __itkDeformationVectorFieldTransform_hxx__
+#ifndef itkDeformationVectorFieldTransform_hxx
+#define itkDeformationVectorFieldTransform_hxx
 
 #include "itkDeformationVectorFieldTransform.h"
 #include "itkImageRegionIterator.h"
@@ -147,4 +147,4 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::GetCoefficientVectorI
 
 } // end namespace itk
 
-#endif // end #ifndef __itkDeformationVectorFieldTransform_hxx__
+#endif // end #ifndef itkDeformationVectorFieldTransform_hxx

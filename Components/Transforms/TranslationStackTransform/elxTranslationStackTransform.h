@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTranslationStackTransform_h
-#define __elxTranslationStackTransform_h
+#ifndef elxTranslationStackTransform_h
+#define elxTranslationStackTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
@@ -182,4 +182,4 @@ private:
 #  include "elxTranslationStackTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxTranslationStackTransform_h
+#endif // end #ifndef elxTranslationStackTransform_h

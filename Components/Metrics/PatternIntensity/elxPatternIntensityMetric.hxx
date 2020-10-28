@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPatternIntensityMetric_HXX__
-#define __elxPatternIntensityMetric_HXX__
+#ifndef elxPatternIntensityMetric_hxx
+#define elxPatternIntensityMetric_hxx
 
 #include "elxPatternIntensityMetric.h"
 #include "itkTimeProbe.h"
@@ -96,4 +96,4 @@ PatternIntensityMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxPatternIntensityMetric_HXX__
+#endif // end #ifndef elxPatternIntensityMetric_hxx

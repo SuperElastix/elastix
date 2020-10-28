@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPreconditionedASGDOptimizer_h
-#define __itkPreconditionedASGDOptimizer_h
+#ifndef itkPreconditionedASGDOptimizer_h
+#define itkPreconditionedASGDOptimizer_h
 
 #include "../StandardGradientDescent/itkStandardGradientDescentOptimizer.h"
 
@@ -147,4 +147,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkPreconditionedASGDOptimizer_h
+#endif // end #ifndef itkPreconditionedASGDOptimizer_h

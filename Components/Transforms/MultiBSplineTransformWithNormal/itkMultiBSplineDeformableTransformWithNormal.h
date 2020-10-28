@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMultiBSplineDeformableTransformWithNormal_h
-#define __itkMultiBSplineDeformableTransformWithNormal_h
+#ifndef itkMultiBSplineDeformableTransformWithNormal_h
+#define itkMultiBSplineDeformableTransformWithNormal_h
 
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
@@ -529,4 +529,4 @@ private:
 #  include "itkMultiBSplineDeformableTransformWithNormal.hxx"
 #endif
 
-#endif // end __itkMultiBSplineDeformableTransformWithNormal_h
+#endif // end itkMultiBSplineDeformableTransformWithNormal_h

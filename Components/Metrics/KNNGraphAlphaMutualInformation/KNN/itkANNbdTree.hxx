@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkANNbdTree_hxx
-#define __itkANNbdTree_hxx
+#ifndef itkANNbdTree_hxx
+#define itkANNbdTree_hxx
 
 #include "itkANNbdTree.h"
 
@@ -127,4 +127,4 @@ ANNbdTree<TListSample>::PrintSelf(std::ostream & os, Indent indent) const
 
 } // end namespace itk
 
-#endif // end #ifndef __itkANNbdTree_hxx
+#endif // end #ifndef itkANNbdTree_hxx

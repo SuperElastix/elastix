@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUInterpolatorCopier_hxx
-#define __itkGPUInterpolatorCopier_hxx
+#ifndef itkGPUInterpolatorCopier_hxx
+#define itkGPUInterpolatorCopier_hxx
 
 #include "itkGPUInterpolatorCopier.h"
 

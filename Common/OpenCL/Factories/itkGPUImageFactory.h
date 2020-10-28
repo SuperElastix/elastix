@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUImageFactory_h
-#define __itkGPUImageFactory_h
+#ifndef itkGPUImageFactory_h
+#define itkGPUImageFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUImage.h"
@@ -100,4 +100,4 @@ private:
 #  include "itkGPUImageFactory.hxx"
 #endif
 
-#endif // end #ifndef __itkGPUImageFactory_h
+#endif // end #ifndef itkGPUImageFactory_h

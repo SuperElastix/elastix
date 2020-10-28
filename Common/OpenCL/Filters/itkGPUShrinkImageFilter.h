@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUShrinkImageFilter_h
-#define __itkGPUShrinkImageFilter_h
+#ifndef itkGPUShrinkImageFilter_h
+#define itkGPUShrinkImageFilter_h
 
 #include "itkShrinkImageFilter.h"
 
@@ -102,4 +102,4 @@ private:
 #  include "itkGPUShrinkImageFilter.hxx"
 #endif
 
-#endif /* __itkGPUShrinkImageFilter_h */
+#endif /* itkGPUShrinkImageFilter_h */

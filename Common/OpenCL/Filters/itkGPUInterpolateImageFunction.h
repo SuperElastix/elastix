@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUInterpolateImageFunction_h
-#define __itkGPUInterpolateImageFunction_h
+#ifndef itkGPUInterpolateImageFunction_h
+#define itkGPUInterpolateImageFunction_h
 
 #include "itkInterpolateImageFunction.h"
 #include "itkGPUInterpolatorBase.h"
@@ -82,4 +82,4 @@ private:
 #  include "itkGPUInterpolateImageFunction.hxx"
 #endif
 
-#endif /* __itkGPUInterpolateImageFunction_h */
+#endif /* itkGPUInterpolateImageFunction_h */

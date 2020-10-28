@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdaptiveStepsizeOptimizer_h
-#define __itkAdaptiveStepsizeOptimizer_h
+#ifndef itkAdaptiveStepsizeOptimizer_h
+#define itkAdaptiveStepsizeOptimizer_h
 
 #include "../StandardGradientDescent/itkStandardGradientDescentOptimizer.h"
 

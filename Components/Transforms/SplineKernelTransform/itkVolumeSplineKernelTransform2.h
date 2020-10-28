@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkVolumeSplineKernelTransform2_h
-#define __itkVolumeSplineKernelTransform2_h
+#ifndef itkVolumeSplineKernelTransform2_h
+#define itkVolumeSplineKernelTransform2_h
 
 #include "itkKernelTransform2.h"
 
@@ -124,4 +124,4 @@ private:
 #  include "itkVolumeSplineKernelTransform2.hxx"
 #endif
 
-#endif // __itkVolumeSplineKernelTransform2_h
+#endif // itkVolumeSplineKernelTransform2_h

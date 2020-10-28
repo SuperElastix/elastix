@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkBSplineDerivativeKernelFunction2_h
-#define __itkBSplineDerivativeKernelFunction2_h
+#ifndef itkBSplineDerivativeKernelFunction2_h
+#define itkBSplineDerivativeKernelFunction2_h
 
 #include "itkKernelFunctionBase2.h"
 #include "vnl/vnl_math.h"

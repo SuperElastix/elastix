@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxReducedDimensionBSplineInterpolator_hxx
-#define __elxReducedDimensionBSplineInterpolator_hxx
+#ifndef elxReducedDimensionBSplineInterpolator_hxx
+#define elxReducedDimensionBSplineInterpolator_hxx
 
 #include "elxReducedDimensionBSplineInterpolator.h"
 
@@ -56,4 +56,4 @@ ReducedDimensionBSplineInterpolator<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxReducedDimensionBSplineInterpolator_hxx
+#endif // end #ifndef elxReducedDimensionBSplineInterpolator_hxx

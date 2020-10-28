@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedTranslationTransformFactory_hxx
-#define __itkGPUAdvancedTranslationTransformFactory_hxx
+#ifndef itkGPUAdvancedTranslationTransformFactory_hxx
+#define itkGPUAdvancedTranslationTransformFactory_hxx
 
 #include "itkGPUAdvancedTranslationTransformFactory.h"
 
@@ -75,4 +75,4 @@ GPUAdvancedTranslationTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUAdvancedTranslationTransformFactory_hxx
+#endif // end #ifndef itkGPUAdvancedTranslationTransformFactory_hxx

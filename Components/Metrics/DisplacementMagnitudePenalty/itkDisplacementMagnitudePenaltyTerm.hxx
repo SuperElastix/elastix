@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkDisplacementMagnitudePenaltyTerm_hxx
-#define __itkDisplacementMagnitudePenaltyTerm_hxx
+#ifndef itkDisplacementMagnitudePenaltyTerm_hxx
+#define itkDisplacementMagnitudePenaltyTerm_hxx
 
 #include "itkDisplacementMagnitudePenaltyTerm.h"
 #include "itkVector.h"
@@ -248,4 +248,4 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
 
 } // end namespace itk
 
-#endif // #ifndef __itkDisplacementMagnitudePenaltyTerm_hxx
+#endif // #ifndef itkDisplacementMagnitudePenaltyTerm_hxx

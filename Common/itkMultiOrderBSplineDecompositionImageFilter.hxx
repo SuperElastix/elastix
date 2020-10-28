@@ -34,8 +34,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMultiOrderBSplineDecompositionImageFilter_hxx
-#define __itkMultiOrderBSplineDecompositionImageFilter_hxx
+#ifndef itkMultiOrderBSplineDecompositionImageFilter_hxx
+#define itkMultiOrderBSplineDecompositionImageFilter_hxx
 
 #include "itkMultiOrderBSplineDecompositionImageFilter.h"
 #include "itkImageRegionConstIteratorWithIndex.h"

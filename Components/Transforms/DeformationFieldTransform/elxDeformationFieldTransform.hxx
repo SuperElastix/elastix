@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxDeformationFieldTransform_HXX__
-#define __elxDeformationFieldTransform_HXX__
+#ifndef elxDeformationFieldTransform_hxx
+#define elxDeformationFieldTransform_hxx
 
 #include "elxDeformationFieldTransform.h"
 
@@ -225,4 +225,4 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxDeformationFieldTransform_HXX__
+#endif // end #ifndef elxDeformationFieldTransform_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxGradientDifferenceMetric_H__
-#define __elxGradientDifferenceMetric_H__
+#ifndef elxGradientDifferenceMetric_h
+#define elxGradientDifferenceMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkGradientDifferenceImageToImageMetric2.h"
@@ -156,4 +156,4 @@ private:
 #  include "elxGradientDifferenceMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxGradientDifferenceMetric_H__
+#endif // end #ifndef elxGradientDifferenceMetric_h

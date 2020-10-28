@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedMeanSquaresMetric_H__
-#define __elxAdvancedMeanSquaresMetric_H__
+#ifndef elxAdvancedMeanSquaresMetric_h
+#define elxAdvancedMeanSquaresMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
@@ -159,4 +159,4 @@ private:
 #  include "elxAdvancedMeanSquaresMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxAdvancedMeanSquaresMetric_H__
+#endif // end #ifndef elxAdvancedMeanSquaresMetric_h

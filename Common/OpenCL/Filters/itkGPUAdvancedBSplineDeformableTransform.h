@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedBSplineDeformableTransform_h
-#define __itkGPUAdvancedBSplineDeformableTransform_h
+#ifndef itkGPUAdvancedBSplineDeformableTransform_h
+#define itkGPUAdvancedBSplineDeformableTransform_h
 
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkGPUBSplineBaseTransform.h"
@@ -91,4 +91,4 @@ private:
 #  include "itkGPUAdvancedBSplineDeformableTransform.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedBSplineDeformableTransform_h */
+#endif /* itkGPUAdvancedBSplineDeformableTransform_h */

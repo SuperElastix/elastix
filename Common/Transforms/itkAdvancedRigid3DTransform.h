@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedRigid3DTransform_h
-#define __itkAdvancedRigid3DTransform_h
+#ifndef itkAdvancedRigid3DTransform_h
+#define itkAdvancedRigid3DTransform_h
 
 #include <iostream>
 #include "itkAdvancedMatrixOffsetTransformBase.h"
@@ -225,4 +225,4 @@ private:
 #  include "itkAdvancedRigid3DTransform.hxx"
 #endif
 
-#endif /* __itkAdvancedRigid3DTransform_h */
+#endif /* itkAdvancedRigid3DTransform_h */

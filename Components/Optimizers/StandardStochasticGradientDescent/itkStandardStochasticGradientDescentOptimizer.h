@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkStandardStochasticGradientOptimizer_h
-#define __itkStandardStochasticGradientOptimizer_h
+#ifndef itkStandardStochasticGradientOptimizer_h
+#define itkStandardStochasticGradientOptimizer_h
 
 #include "itkStochasticGradientDescentOptimizer.h"
 
@@ -177,4 +177,4 @@ private:
 } // end namespace itk
 
 
-#endif // end #ifndef __itkStandardStochasticGradientOptimizer_h
+#endif // end #ifndef itkStandardStochasticGradientOptimizer_h

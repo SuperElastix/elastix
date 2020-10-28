@@ -32,8 +32,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUDataManager_h
-#define __itkGPUDataManager_h
+#ifndef itkGPUDataManager_h
+#define itkGPUDataManager_h
 
 #include "itkObject.h"
 #include "itkDataObject.h"

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBinaryTreeSearchBase_hxx
-#define __itkBinaryTreeSearchBase_hxx
+#ifndef itkBinaryTreeSearchBase_hxx
+#define itkBinaryTreeSearchBase_hxx
 
 #include "itkBinaryTreeSearchBase.h"
 
@@ -76,4 +76,4 @@ BinaryTreeSearchBase<TBinaryTree>::GetBinaryTree(void) const
 
 } // end namespace itk
 
-#endif // end #ifndef __itkBinaryTreeSearchBase_hxx
+#endif // end #ifndef itkBinaryTreeSearchBase_hxx

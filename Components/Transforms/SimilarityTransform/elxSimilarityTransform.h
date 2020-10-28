@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSimilarityTransform_H__
-#define __elxSimilarityTransform_H__
+#ifndef elxSimilarityTransform_h
+#define elxSimilarityTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkSimilarityTransform.h"
@@ -248,4 +248,4 @@ private:
 #  include "elxSimilarityTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxSimilarityTransform_H__
+#endif // end #ifndef elxSimilarityTransform_h

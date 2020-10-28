@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkStatisticalShapePointPenalty_hxx
-#define __itkStatisticalShapePointPenalty_hxx
+#ifndef itkStatisticalShapePointPenalty_hxx
+#define itkStatisticalShapePointPenalty_hxx
 
 #include "itkStatisticalShapePointPenalty.h"
 #include <cmath>
@@ -1007,4 +1007,4 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::PrintSelf(std::os
 
 } // end namespace itk
 
-#endif // end #ifndef __itkStatisticalShapePointPenalty_hxx
+#endif // end #ifndef itkStatisticalShapePointPenalty_hxx

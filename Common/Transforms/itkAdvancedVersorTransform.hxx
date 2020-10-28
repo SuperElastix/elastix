@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedVersorTransform_hxx
-#define __itkAdvancedVersorTransform_hxx
+#ifndef itkAdvancedVersorTransform_hxx
+#define itkAdvancedVersorTransform_hxx
 
 #include "itkAdvancedVersorTransform.h"
 

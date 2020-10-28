@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkWeightedCombinationTransform_h
-#define __itkWeightedCombinationTransform_h
+#ifndef itkWeightedCombinationTransform_h
+#define itkWeightedCombinationTransform_h
 
 #include "itkAdvancedTransform.h"
 

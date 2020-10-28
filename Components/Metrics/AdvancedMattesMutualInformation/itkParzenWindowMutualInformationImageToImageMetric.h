@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkParzenWindowMutualInformationImageToImageMetric_H__
-#define __itkParzenWindowMutualInformationImageToImageMetric_H__
+#ifndef itkParzenWindowMutualInformationImageToImageMetric_h
+#define itkParzenWindowMutualInformationImageToImageMetric_h
 
 #include "itkParzenWindowHistogramImageToImageMetric.h"
 
@@ -293,4 +293,4 @@ private:
 #  include "itkParzenWindowMutualInformationImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkParzenWindowMutualInformationImageToImageMetric_H__
+#endif // end #ifndef itkParzenWindowMutualInformationImageToImageMetric_h

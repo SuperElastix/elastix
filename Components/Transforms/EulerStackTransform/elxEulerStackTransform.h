@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxEulerStackTransform_h
-#define __elxEulerStackTransform_h
+#ifndef elxEulerStackTransform_h
+#define elxEulerStackTransform_h
 
 #include "elxIncludes.h"
 /** Include itk transforms needed. */
@@ -257,4 +257,4 @@ private:
 #  include "elxEulerStackTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxEulerStackTransform_h
+#endif // end #ifndef elxEulerStackTransform_h

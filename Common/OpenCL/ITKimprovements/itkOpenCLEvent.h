@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLEvent_h
-#define __itkOpenCLEvent_h
+#ifndef itkOpenCLEvent_h
+#define itkOpenCLEvent_h
 
 #include "itkOpenCL.h"
 #include "itkOpenCLExtension.h"
@@ -406,4 +406,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLEvent & event)
 
 } // end namespace itk
 
-#endif /* __itkOpenCLEvent_h */
+#endif /* itkOpenCLEvent_h */

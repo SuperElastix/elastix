@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedBSplineDeformableTransformFactory_hxx
-#define __itkGPUAdvancedBSplineDeformableTransformFactory_hxx
+#ifndef itkGPUAdvancedBSplineDeformableTransformFactory_hxx
+#define itkGPUAdvancedBSplineDeformableTransformFactory_hxx
 
 #include "itkGPUAdvancedBSplineDeformableTransformFactory.h"
 
@@ -75,4 +75,4 @@ GPUAdvancedBSplineDeformableTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUAdvancedBSplineDeformableTransformFactory_hxx
+#endif // end #ifndef itkGPUAdvancedBSplineDeformableTransformFactory_hxx

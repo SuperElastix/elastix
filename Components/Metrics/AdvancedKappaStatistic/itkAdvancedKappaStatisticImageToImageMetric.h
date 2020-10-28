@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
-#define __itkAdvancedKappaStatisticImageToImageMetric_h
+#ifndef itkAdvancedKappaStatisticImageToImageMetric_h
+#define itkAdvancedKappaStatisticImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -268,4 +268,4 @@ private:
 #  include "itkAdvancedKappaStatisticImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
+#endif // end #ifndef itkAdvancedKappaStatisticImageToImageMetric_h

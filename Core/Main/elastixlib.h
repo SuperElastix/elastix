@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elastixlib_h
-#define __elastixlib_h
+#ifndef elastixlib_h
+#define elastixlib_h
 
 /*
  *  Includes

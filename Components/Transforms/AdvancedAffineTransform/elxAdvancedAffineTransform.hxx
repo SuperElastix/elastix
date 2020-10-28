@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxAdvancedAffineTransform_HXX_
-#define __elxAdvancedAffineTransform_HXX_
+#ifndef elxAdvancedAffineTransform_hxx
+#define elxAdvancedAffineTransform_hxx
 
 #include "elxAdvancedAffineTransform.h"
 #include "itkImageGridSampler.h"
@@ -510,4 +510,4 @@ AdvancedAffineTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointTy
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdvancedAffineTransform_HXX_
+#endif // end #ifndef elxAdvancedAffineTransform_hxx

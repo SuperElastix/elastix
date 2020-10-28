@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkRSGDEachParameterApartOptimizer_h
-#define __itkRSGDEachParameterApartOptimizer_h
+#ifndef itkRSGDEachParameterApartOptimizer_h
+#define itkRSGDEachParameterApartOptimizer_h
 
 #include "itkRSGDEachParameterApartBaseOptimizer.h"
 
@@ -89,4 +89,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkRSGDEachParameterApartOptimizer_h
+#endif // end #ifndef itkRSGDEachParameterApartOptimizer_h

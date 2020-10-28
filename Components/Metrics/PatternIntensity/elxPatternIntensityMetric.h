@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxPatternIntensityMetric_H__
-#define __elxPatternIntensityMetric_H__
+#ifndef elxPatternIntensityMetric_h
+#define elxPatternIntensityMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkPatternIntensityImageToImageMetric.h"
@@ -154,4 +154,4 @@ private:
 #  include "elxPatternIntensityMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxPatternIntensityMetric_H__
+#endif // end #ifndef elxPatternIntensityMetric_h

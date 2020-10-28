@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRecursiveBSplineTransform_hxx
-#define __elxRecursiveBSplineTransform_hxx
+#ifndef elxRecursiveBSplineTransform_hxx
+#define elxRecursiveBSplineTransform_hxx
 
 #include "elxRecursiveBSplineTransform.h"
 
@@ -795,4 +795,4 @@ RecursiveBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeW
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRecursiveBSplineTransform_hxx
+#endif // end #ifndef elxRecursiveBSplineTransform_hxx

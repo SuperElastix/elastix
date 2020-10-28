@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkUpsampleBSplineParametersFilter_h
-#define __itkUpsampleBSplineParametersFilter_h
+#ifndef itkUpsampleBSplineParametersFilter_h
+#define itkUpsampleBSplineParametersFilter_h
 
 #include "itkObject.h"
 #include "itkArray.h"
@@ -134,4 +134,4 @@ private:
 #  include "itkUpsampleBSplineParametersFilter.hxx"
 #endif
 
-#endif // end #ifndef __itkUpsampleBSplineParametersFilter_h
+#endif // end #ifndef itkUpsampleBSplineParametersFilter_h

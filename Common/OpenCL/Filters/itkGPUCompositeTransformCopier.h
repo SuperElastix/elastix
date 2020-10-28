@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUCompositeTransformCopier_h
-#define __itkGPUCompositeTransformCopier_h
+#ifndef itkGPUCompositeTransformCopier_h
+#define itkGPUCompositeTransformCopier_h
 
 #include "itkCompositeTransform.h"
 #include "itkGPUTransformCopier.h"
@@ -153,4 +153,4 @@ private:
 #  include "itkGPUCompositeTransformCopier.hxx"
 #endif
 
-#endif /* __itkGPUCompositeTransformCopier_h */
+#endif /* itkGPUCompositeTransformCopier_h */

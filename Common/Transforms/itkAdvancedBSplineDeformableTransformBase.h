@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdvancedBSplineDeformableTransformBase_h
-#define __itkAdvancedBSplineDeformableTransformBase_h
+#ifndef itkAdvancedBSplineDeformableTransformBase_h
+#define itkAdvancedBSplineDeformableTransformBase_h
 
 #include "itkAdvancedTransform.h"
 #include "itkImage.h"
@@ -391,4 +391,4 @@ private:
 #  include "itkAdvancedBSplineDeformableTransformBase.hxx"
 #endif
 
-#endif /* __itkAdvancedBSplineDeformableTransformBase_h */
+#endif /* itkAdvancedBSplineDeformableTransformBase_h */

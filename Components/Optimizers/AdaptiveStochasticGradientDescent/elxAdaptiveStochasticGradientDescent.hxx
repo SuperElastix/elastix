@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdaptiveStochasticGradientDescent_hxx
-#define __elxAdaptiveStochasticGradientDescent_hxx
+#ifndef elxAdaptiveStochasticGradientDescent_hxx
+#define elxAdaptiveStochasticGradientDescent_hxx
 
 #include "elxAdaptiveStochasticGradientDescent.h"
 
@@ -1074,4 +1074,4 @@ AdaptiveStochasticGradientDescent<TElastix>::AddRandomPerturbation(ParametersTyp
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdaptiveStochasticGradientDescent_hxx
+#endif // end #ifndef elxAdaptiveStochasticGradientDescent_hxx

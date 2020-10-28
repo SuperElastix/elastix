@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAffineTransformFactory_hxx
-#define __itkGPUAffineTransformFactory_hxx
+#ifndef itkGPUAffineTransformFactory_hxx
+#define itkGPUAffineTransformFactory_hxx
 
 #include "itkGPUAffineTransformFactory.h"
 
@@ -75,4 +75,4 @@ GPUAffineTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUAffineTransformFactory_hxx
+#endif // end #ifndef itkGPUAffineTransformFactory_hxx

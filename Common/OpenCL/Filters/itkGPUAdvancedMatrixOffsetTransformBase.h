@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedMatrixOffsetTransformBase_h
-#define __itkGPUAdvancedMatrixOffsetTransformBase_h
+#ifndef itkGPUAdvancedMatrixOffsetTransformBase_h
+#define itkGPUAdvancedMatrixOffsetTransformBase_h
 
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 #include "itkGPUMatrixOffsetTransformBase.h"
@@ -93,4 +93,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUAdvancedMatrixOffsetTransformBase_h */
+#endif /* itkGPUAdvancedMatrixOffsetTransformBase_h */

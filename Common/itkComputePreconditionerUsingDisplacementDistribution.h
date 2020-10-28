@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkComputePreconditionerUsingDisplacementDistribution_h
-#define __itkComputePreconditionerUsingDisplacementDistribution_h
+#ifndef itkComputePreconditionerUsingDisplacementDistribution_h
+#define itkComputePreconditionerUsingDisplacementDistribution_h
 
 #include "itkComputeDisplacementDistribution.h"
 
@@ -155,4 +155,4 @@ private:
 #  include "itkComputePreconditionerUsingDisplacementDistribution.hxx"
 #endif
 
-#endif // end #ifndef __itkComputePreconditionerUsingDisplacementDistribution_h
+#endif // end #ifndef itkComputePreconditionerUsingDisplacementDistribution_h

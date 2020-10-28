@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxProgressCommand_h
-#define __elxProgressCommand_h
+#ifndef elxProgressCommand_h
+#define elxProgressCommand_h
 
 #include "itkProcessObject.h"
 #include "itkCommand.h"
@@ -179,4 +179,4 @@ private:
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxProgressCommand_h
+#endif // end #ifndef elxProgressCommand_h

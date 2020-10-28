@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkGradientDifferenceImageToImageMetric2_h
-#define __itkGradientDifferenceImageToImageMetric2_h
+#ifndef itkGradientDifferenceImageToImageMetric2_h
+#define itkGradientDifferenceImageToImageMetric2_h
 
 #include "itkAdvancedImageToImageMetric.h"
 

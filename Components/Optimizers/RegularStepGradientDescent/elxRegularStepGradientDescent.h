@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRegularStepGradientDescent_h
-#define __elxRegularStepGradientDescent_h
+#ifndef elxRegularStepGradientDescent_h
+#define elxRegularStepGradientDescent_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkRegularStepGradientDescentOptimizer.h"
@@ -142,4 +142,4 @@ private:
 #  include "elxRegularStepGradientDescent.hxx"
 #endif
 
-#endif // end #ifndef __elxRegularStepGradientDescent_h
+#endif // end #ifndef elxRegularStepGradientDescent_h

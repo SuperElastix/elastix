@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxGridSampler_hxx
-#define __elxGridSampler_hxx
+#ifndef elxGridSampler_hxx
+#define elxGridSampler_hxx
 
 #include "elxGridSampler.h"
 
@@ -52,4 +52,4 @@ GridSampler<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxGridSampler_hxx
+#endif // end #ifndef elxGridSampler_hxx

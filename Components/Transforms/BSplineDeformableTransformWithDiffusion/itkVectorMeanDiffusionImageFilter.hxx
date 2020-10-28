@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef _itkVectorMeanDiffusionImageFilter_HXX__
-#define _itkVectorMeanDiffusionImageFilter_HXX__
+#ifndef itkVectorMeanDiffusionImageFilter_hxx
+#define itkVectorMeanDiffusionImageFilter_hxx
 
 #include "itkVectorMeanDiffusionImageFilter.h"
 
@@ -378,4 +378,4 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::FilterGrayValueIma
 
 } // end namespace itk
 
-#endif // end #ifndef _itkVectorMeanDiffusionImageFilter_HXX__
+#endif // end #ifndef itkVectorMeanDiffusionImageFilter_hxx

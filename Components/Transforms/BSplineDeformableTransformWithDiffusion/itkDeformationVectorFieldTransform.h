@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkDeformationVectorFieldTransform_h__
-#define __itkDeformationVectorFieldTransform_h__
+#ifndef itkDeformationVectorFieldTransform_h
+#define itkDeformationVectorFieldTransform_h
 
 #include "itkAdvancedBSplineDeformableTransform.h"
 
@@ -129,4 +129,4 @@ private:
 #  include "itkDeformationVectorFieldTransform.hxx"
 #endif
 
-#endif // end #ifndef __itkDeformationVectorFieldTransform_h__
+#endif // end #ifndef itkDeformationVectorFieldTransform_h

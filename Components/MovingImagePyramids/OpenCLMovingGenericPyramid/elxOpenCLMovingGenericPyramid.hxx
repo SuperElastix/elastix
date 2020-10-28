@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxOpenCLMovingGenericPyramid_hxx
-#define __elxOpenCLMovingGenericPyramid_hxx
+#ifndef elxOpenCLMovingGenericPyramid_hxx
+#define elxOpenCLMovingGenericPyramid_hxx
 
 #include "elxOpenCLSupportedImageTypes.h"
 #include "elxOpenCLMovingGenericPyramid.h"
@@ -348,4 +348,4 @@ OpenCLMovingGenericPyramid<TElastix>::ReportToLog(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxOpenCLMovingGenericPyramid_hxx
+#endif // end #ifndef elxOpenCLMovingGenericPyramid_hxx

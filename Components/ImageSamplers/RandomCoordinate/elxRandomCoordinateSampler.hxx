@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxRandomCoordinateSampler_hxx
-#define __elxRandomCoordinateSampler_hxx
+#ifndef elxRandomCoordinateSampler_hxx
+#define elxRandomCoordinateSampler_hxx
 
 #include "elxRandomCoordinateSampler.h"
 #include "itkLinearInterpolateImageFunction.h"
@@ -111,4 +111,4 @@ RandomCoordinateSampler<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRandomCoordinateSampler_hxx
+#endif // end #ifndef elxRandomCoordinateSampler_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLKernelToImageBridgeTest_h
-#define __itkOpenCLKernelToImageBridgeTest_h
+#ifndef itkOpenCLKernelToImageBridgeTest_h
+#define itkOpenCLKernelToImageBridgeTest_h
 
 #include "itkMacro.h"
 
@@ -27,4 +27,4 @@ namespace itk
 itkGPUKernelClassMacro(OpenCLKernelToImageBridgeTestKernel);
 } // end namespace itk
 
-#endif /* __itkOpenCLKernelToImageBridgeTest_h */
+#endif /* itkOpenCLKernelToImageBridgeTest_h */

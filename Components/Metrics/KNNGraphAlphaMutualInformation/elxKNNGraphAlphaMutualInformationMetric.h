@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxKNNGraphAlphaMutualInformationMetric_H__
-#define __elxKNNGraphAlphaMutualInformationMetric_H__
+#ifndef elxKNNGraphAlphaMutualInformationMetric_h
+#define elxKNNGraphAlphaMutualInformationMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
@@ -188,4 +188,4 @@ private:
 #  include "elxKNNGraphAlphaMutualInformationMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxKNNGraphAlphaMutualInformationMetric_H__
+#endif // end #ifndef elxKNNGraphAlphaMutualInformationMetric_h

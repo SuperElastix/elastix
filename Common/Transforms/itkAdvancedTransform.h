@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAdvancedTransform_h
-#define __itkAdvancedTransform_h
+#ifndef itkAdvancedTransform_h
+#define itkAdvancedTransform_h
 
 #include "itkTransform.h"
 #include "itkMatrix.h"

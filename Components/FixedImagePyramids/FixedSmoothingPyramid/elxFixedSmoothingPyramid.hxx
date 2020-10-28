@@ -16,12 +16,12 @@
  *
  *=========================================================================*/
 
-#ifndef __elxFixedSmoothingPyramid_hxx
-#define __elxFixedSmoothingPyramid_hxx
+#ifndef elxFixedSmoothingPyramid_hxx
+#define elxFixedSmoothingPyramid_hxx
 
 #include "elxFixedSmoothingPyramid.h"
 
 namespace elastix
 {} // end namespace elastix
 
-#endif //#ifndef __elxFixedSmoothingPyramid_hxx
+#endif //#ifndef elxFixedSmoothingPyramid_hxx

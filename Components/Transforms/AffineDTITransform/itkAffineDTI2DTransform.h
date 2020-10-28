@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAffineDTI2DTransform_h
-#define __itkAffineDTI2DTransform_h
+#ifndef itkAffineDTI2DTransform_h
+#define itkAffineDTI2DTransform_h
 
 #include <iostream>
 #include "itkAdvancedMatrixOffsetTransformBase.h"
@@ -170,4 +170,4 @@ private:
 #  include "itkAffineDTI2DTransform.hxx"
 #endif
 
-#endif /* __itkAffineDTI2DTransform_h */
+#endif /* itkAffineDTI2DTransform_h */

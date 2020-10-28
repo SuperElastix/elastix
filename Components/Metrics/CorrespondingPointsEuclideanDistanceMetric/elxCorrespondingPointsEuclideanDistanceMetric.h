@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxCorrespondingPointsEuclideanDistanceMetric_H__
-#define __elxCorrespondingPointsEuclideanDistanceMetric_H__
+#ifndef elxCorrespondingPointsEuclideanDistanceMetric_h
+#define elxCorrespondingPointsEuclideanDistanceMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkCorrespondingPointsEuclideanDistancePointMetric.h"
@@ -162,4 +162,4 @@ private:
 #  include "elxCorrespondingPointsEuclideanDistanceMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxCorrespondingPointsEuclideanDistanceMetric_H__
+#endif // end #ifndef elxCorrespondingPointsEuclideanDistanceMetric_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAffineTransformFactory_h
-#define __itkGPUAffineTransformFactory_h
+#ifndef itkGPUAffineTransformFactory_h
+#define itkGPUAffineTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUAffineTransform.h"
@@ -103,4 +103,4 @@ private:
 #  include "itkGPUAffineTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUAffineTransformFactory_h */
+#endif /* itkGPUAffineTransformFactory_h */

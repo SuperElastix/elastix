@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkExponentialLimiterFunction_h
-#define __itkExponentialLimiterFunction_h
+#ifndef itkExponentialLimiterFunction_h
+#define itkExponentialLimiterFunction_h
 
 #include "itkLimiterFunctionBase.h"
 

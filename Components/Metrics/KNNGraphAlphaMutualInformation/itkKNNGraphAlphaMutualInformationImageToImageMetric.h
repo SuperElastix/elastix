@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
-#define __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
+#ifndef itkKNNGraphAlphaMutualInformationImageToImageMetric_h
+#define itkKNNGraphAlphaMutualInformationImageToImageMetric_h
 
 /** Includes for the Superclass. */
 #include "itkMultiInputImageToImageMetricBase.h"
@@ -347,4 +347,4 @@ private:
 #  include "itkKNNGraphAlphaMutualInformationImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
+#endif // end #ifndef itkKNNGraphAlphaMutualInformationImageToImageMetric_h

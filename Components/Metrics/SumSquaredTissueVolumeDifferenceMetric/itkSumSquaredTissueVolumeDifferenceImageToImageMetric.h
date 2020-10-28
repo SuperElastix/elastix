@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h
-#define __itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h
+#ifndef itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h
+#define itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -256,4 +256,4 @@ private:
 #  include "itkSumSquaredTissueVolumeDifferenceImageToImageMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h
+#endif // end #ifndef itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h

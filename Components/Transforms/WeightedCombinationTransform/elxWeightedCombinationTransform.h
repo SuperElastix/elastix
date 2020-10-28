@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxWeightedCombinationTransform_H_
-#define __elxWeightedCombinationTransform_H_
+#ifndef elxWeightedCombinationTransform_h
+#define elxWeightedCombinationTransform_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkWeightedCombinationTransform.h"
@@ -227,4 +227,4 @@ private:
 #  include "elxWeightedCombinationTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxWeightedCombinationTransform_H_
+#endif // end #ifndef elxWeightedCombinationTransform_h

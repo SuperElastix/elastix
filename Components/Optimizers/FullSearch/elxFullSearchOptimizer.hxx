@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFullSearchOptimizer_hxx
-#define __elxFullSearchOptimizer_hxx
+#ifndef elxFullSearchOptimizer_hxx
+#define elxFullSearchOptimizer_hxx
 
 #include "elxFullSearchOptimizer.h"
 #include <iomanip>
@@ -336,4 +336,4 @@ FullSearch<TElastix>::CheckSearchSpaceRangeDefinition(const std::string & fullFi
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxFullSearchOptimizer_hxx
+#endif // end #ifndef elxFullSearchOptimizer_hxx

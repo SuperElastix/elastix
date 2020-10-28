@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPCAMetric2_HXX__
-#define __itkPCAMetric2_HXX__
+#ifndef itkPCAMetric2_hxx
+#define itkPCAMetric2_hxx
 
 #include "itkPCAMetric2.h"
 
@@ -686,4 +686,4 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
 } // end namespace itk
 
-#endif // __itkPCAMetric2_HXX__
+#endif // itkPCAMetric2_hxx

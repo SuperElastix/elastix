@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLSimpleTest_h
-#define __itkOpenCLSimpleTest_h
+#ifndef itkOpenCLSimpleTest_h
+#define itkOpenCLSimpleTest_h
 
 #include "itkMacro.h"
 
@@ -29,4 +29,4 @@ itkGPUKernelClassMacro(OpenCLSimpleTest1Kernel);
 itkGPUKernelClassMacro(OpenCLSimpleTest2Kernel);
 } // end namespace itk
 
-#endif /* __itkOpenCLSimpleTest_h */
+#endif /* itkOpenCLSimpleTest_h */

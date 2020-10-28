@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkVectorContainerSource_h
-#define __itkVectorContainerSource_h
+#ifndef itkVectorContainerSource_h
+#define itkVectorContainerSource_h
 
 #include "itkProcessObject.h"
 #include "itkDataObjectDecorator.h"
@@ -97,4 +97,4 @@ private:
 #  include "itkVectorContainerSource.hxx"
 #endif
 
-#endif // end #ifndef __itkVectorContainerSource_h
+#endif // end #ifndef itkVectorContainerSource_h

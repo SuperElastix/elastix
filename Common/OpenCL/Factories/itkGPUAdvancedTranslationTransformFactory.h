@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedTranslationTransformFactory_h
-#define __itkGPUAdvancedTranslationTransformFactory_h
+#ifndef itkGPUAdvancedTranslationTransformFactory_h
+#define itkGPUAdvancedTranslationTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUAdvancedTranslationTransform.h"
@@ -103,4 +103,4 @@ private:
 #  include "itkGPUAdvancedTranslationTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedTranslationTransformFactory_h */
+#endif /* itkGPUAdvancedTranslationTransformFactory_h */

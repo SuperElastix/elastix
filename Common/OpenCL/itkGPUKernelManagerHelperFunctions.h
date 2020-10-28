@@ -23,8 +23,8 @@
 // Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 //
 
-#ifndef __itkGPUKernelManagerHelperFunctions_h
-#define __itkGPUKernelManagerHelperFunctions_h
+#ifndef itkGPUKernelManagerHelperFunctions_h
+#define itkGPUKernelManagerHelperFunctions_h
 
 #include "itkGPUImage.h"
 
@@ -340,4 +340,4 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
 
 } // end namespace itk
 
-#endif /* __itkGPUKernelManagerHelperFunctions_h */
+#endif /* itkGPUKernelManagerHelperFunctions_h */

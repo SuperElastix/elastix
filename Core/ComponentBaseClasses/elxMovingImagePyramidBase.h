@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxMovingImagePyramidBase_h
-#define __elxMovingImagePyramidBase_h
+#ifndef elxMovingImagePyramidBase_h
+#define elxMovingImagePyramidBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -142,4 +142,4 @@ private:
 #  include "elxMovingImagePyramidBase.hxx"
 #endif
 
-#endif // end #ifndef __elxMovingImagePyramidBase_h
+#endif // end #ifndef elxMovingImagePyramidBase_h

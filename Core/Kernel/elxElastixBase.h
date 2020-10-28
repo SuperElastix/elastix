@@ -25,8 +25,8 @@
  * The Configuration object is stored in this class.
  */
 
-#ifndef __elxElastixBase_h
-#define __elxElastixBase_h
+#ifndef elxElastixBase_h
+#define elxElastixBase_h
 
 #include "elxBaseComponent.h"
 #include "elxComponentDatabase.h"
@@ -557,4 +557,4 @@ private:
 #undef elxSetObjectMacro
 #undef elxGetNumberOfMacro
 
-#endif // end #ifndef __elxElastixBase_h
+#endif // end #ifndef elxElastixBase_h

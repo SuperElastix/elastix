@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxDistancePreservingRigidityPenaltyTerm_HXX__
-#define __elxDistancePreservingRigidityPenaltyTerm_HXX__
+#ifndef elxDistancePreservingRigidityPenaltyTerm_hxx
+#define elxDistancePreservingRigidityPenaltyTerm_hxx
 
 #include "elxDistancePreservingRigidityPenaltyTerm.h"
 
@@ -148,4 +148,4 @@ DistancePreservingRigidityPenalty<TElastix>::Initialize(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxDistancePreservingRigidityPenaltyTerm_HXX__
+#endif // end #ifndef elxDistancePreservingRigidityPenaltyTerm_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUIdentityTransformFactory_h
-#define __itkGPUIdentityTransformFactory_h
+#ifndef itkGPUIdentityTransformFactory_h
+#define itkGPUIdentityTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUIdentityTransform.h"
@@ -103,4 +103,4 @@ private:
 #  include "itkGPUIdentityTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUIdentityTransformFactory_h */
+#endif /* itkGPUIdentityTransformFactory_h */

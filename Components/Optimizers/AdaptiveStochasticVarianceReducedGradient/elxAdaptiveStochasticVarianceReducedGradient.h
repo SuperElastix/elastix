@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdaptiveStochasticVarianceReducedGradient_h
-#define __elxAdaptiveStochasticVarianceReducedGradient_h
+#ifndef elxAdaptiveStochasticVarianceReducedGradient_h
+#define elxAdaptiveStochasticVarianceReducedGradient_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdaptiveStochasticVarianceReducedGradientOptimizer.h"
@@ -490,4 +490,4 @@ private:
 #  include "elxAdaptiveStochasticVarianceReducedGradient.hxx"
 #endif
 
-#endif // end #ifndef __elxAdaptiveStochasticVarianceReducedGradient_h
+#endif // end #ifndef elxAdaptiveStochasticVarianceReducedGradient_h

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxFiniteDifferenceGradientDescent_h
-#define __elxFiniteDifferenceGradientDescent_h
+#ifndef elxFiniteDifferenceGradientDescent_h
+#define elxFiniteDifferenceGradientDescent_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkFiniteDifferenceGradientDescentOptimizer.h"
@@ -157,4 +157,4 @@ private:
 #  include "elxFiniteDifferenceGradientDescent.hxx"
 #endif
 
-#endif // end #ifndef __elxFiniteDifferenceGradientDescent_h
+#endif // end #ifndef elxFiniteDifferenceGradientDescent_h

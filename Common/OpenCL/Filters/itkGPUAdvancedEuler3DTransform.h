@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedEuler3DTransform_h
-#define __itkGPUAdvancedEuler3DTransform_h
+#ifndef itkGPUAdvancedEuler3DTransform_h
+#define itkGPUAdvancedEuler3DTransform_h
 
 #include "itkAdvancedEuler3DTransform.h"
 #include "itkGPUMatrixOffsetTransformBase.h"
@@ -91,4 +91,4 @@ private:
 
 } // end namespace itk
 
-#endif /* __itkGPUAdvancedEuler3DTransform_h */
+#endif /* itkGPUAdvancedEuler3DTransform_h */

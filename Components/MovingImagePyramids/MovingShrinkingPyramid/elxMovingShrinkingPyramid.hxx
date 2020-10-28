@@ -16,12 +16,12 @@
  *
  *=========================================================================*/
 
-#ifndef __elxMovingShrinkingPyramid_hxx
-#define __elxMovingShrinkingPyramid_hxx
+#ifndef elxMovingShrinkingPyramid_hxx
+#define elxMovingShrinkingPyramid_hxx
 
 #include "elxMovingShrinkingPyramid.h"
 
 namespace elastix
 {} // end namespace elastix
 
-#endif //#ifndef __elxMovingShrinkingPyramid_hxx
+#endif //#ifndef elxMovingShrinkingPyramid_hxx

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkDeformationFieldInterpolatingTransform_h
-#define __itkDeformationFieldInterpolatingTransform_h
+#ifndef itkDeformationFieldInterpolatingTransform_h
+#define itkDeformationFieldInterpolatingTransform_h
 
 #include <iostream>
 #include "itkAdvancedTransform.h"
@@ -269,4 +269,4 @@ private:
 #  include "itkDeformationFieldInterpolatingTransform.hxx"
 #endif
 
-#endif /* __itkDeformationFieldInterpolatingTransform_h */
+#endif /* itkDeformationFieldInterpolatingTransform_h */

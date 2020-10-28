@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkNDImageTemplate_hxx
-#define __itkNDImageTemplate_hxx
+#ifndef itkNDImageTemplate_hxx
+#define itkNDImageTemplate_hxx
 
 #include "itkNDImageTemplate.h"
 
@@ -373,4 +373,4 @@ NDImageTemplate<TPixel, VDimension>::GetInputFileName(void)
 
 } // end namespace itk
 
-#endif // end #ifndef __itkNDImageTemplate_hxx
+#endif // end #ifndef itkNDImageTemplate_hxx

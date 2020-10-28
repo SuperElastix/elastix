@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxResamplerBase_hxx
-#define __elxResamplerBase_hxx
+#ifndef elxResamplerBase_hxx
+#define elxResamplerBase_hxx
 
 #include "elxResamplerBase.h"
 
@@ -827,4 +827,4 @@ ResamplerBase<TElastix>::ReleaseMemory(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxResamplerBase_hxx
+#endif // end #ifndef elxResamplerBase_hxx

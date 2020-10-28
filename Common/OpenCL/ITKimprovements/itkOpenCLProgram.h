@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLProgram_h
-#define __itkOpenCLProgram_h
+#ifndef itkOpenCLProgram_h
+#define itkOpenCLProgram_h
 
 #include "itkOpenCLDevice.h"
 #include "itkOpenCLKernel.h"
@@ -168,4 +168,4 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLProgram & progr
 
 } // end namespace itk
 
-#endif /* __itkOpenCLProgram_h */
+#endif /* itkOpenCLProgram_h */

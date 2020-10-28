@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUSimilarity3DTransformFactory_hxx
-#define __itkGPUSimilarity3DTransformFactory_hxx
+#ifndef itkGPUSimilarity3DTransformFactory_hxx
+#define itkGPUSimilarity3DTransformFactory_hxx
 
 #include "itkGPUSimilarity3DTransformFactory.h"
 
@@ -53,4 +53,4 @@ GPUSimilarity3DTransformFactory2<NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUSimilarity3DTransformFactory_hxx
+#endif // end #ifndef itkGPUSimilarity3DTransformFactory_hxx

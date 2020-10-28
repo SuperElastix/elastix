@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxVarianceOverLastDimensionMetric_H__
-#define __elxVarianceOverLastDimensionMetric_H__
+#ifndef elxVarianceOverLastDimensionMetric_h
+#define elxVarianceOverLastDimensionMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkVarianceOverLastDimensionImageMetric.h"
@@ -197,4 +197,4 @@ private:
 #  include "elxVarianceOverLastDimensionMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxVarianceOverLastDimensionMetric_H__
+#endif // end #ifndef elxVarianceOverLastDimensionMetric_h

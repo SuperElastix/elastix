@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxInstallAllComponents_h
-#define __elxInstallAllComponents_h
+#ifndef elxInstallAllComponents_h
+#define elxInstallAllComponents_h
 
 #include "elxComponentDatabase.h"
 
@@ -44,4 +44,4 @@ InstallAllComponents(elx::ComponentDatabase * _cdb)
 } // end InstallAllComponents
 
 
-#endif // #ifndef __elxInstallAllComponents_h
+#endif // #ifndef elxInstallAllComponents_h

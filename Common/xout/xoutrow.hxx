@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutrow_hxx
-#define __xoutrow_hxx
+#ifndef xoutrow_hxx
+#define xoutrow_hxx
 
 #include "xoutrow.h"
 
@@ -307,4 +307,4 @@ xoutrow<charT, traits>::SelectXCell(const char * name)
 
 } // end namespace xoutlibrary
 
-#endif // end #ifndef __xoutrow_hxx
+#endif // end #ifndef xoutrow_hxx

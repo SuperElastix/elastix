@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxNearestNeighborResampleInterpolator_h
-#define __elxNearestNeighborResampleInterpolator_h
+#ifndef elxNearestNeighborResampleInterpolator_h
+#define elxNearestNeighborResampleInterpolator_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkNearestNeighborInterpolateImageFunction.h"
@@ -106,4 +106,4 @@ private:
 #  include "elxNearestNeighborResampleInterpolator.hxx"
 #endif
 
-#endif // end __elxNearestNeighborResampleInterpolator_h
+#endif // end elxNearestNeighborResampleInterpolator_h

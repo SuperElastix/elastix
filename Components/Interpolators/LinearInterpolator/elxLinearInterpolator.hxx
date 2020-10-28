@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxLinearInterpolator_hxx
-#define __elxLinearInterpolator_hxx
+#ifndef elxLinearInterpolator_hxx
+#define elxLinearInterpolator_hxx
 
 #include "elxLinearInterpolator.h"
 
@@ -28,4 +28,4 @@ namespace elastix
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxLinearInterpolator_hxx
+#endif // end #ifndef elxLinearInterpolator_hxx

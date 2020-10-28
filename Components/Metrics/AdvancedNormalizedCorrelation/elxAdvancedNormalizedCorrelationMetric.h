@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedNormalizedCorrelationMetric_H__
-#define __elxAdvancedNormalizedCorrelationMetric_H__
+#ifndef elxAdvancedNormalizedCorrelationMetric_h
+#define elxAdvancedNormalizedCorrelationMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedNormalizedCorrelationImageToImageMetric.h"
@@ -157,4 +157,4 @@ private:
 #  include "elxAdvancedNormalizedCorrelationMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxAdvancedNormalizedCorrelationMetric_H__
+#endif // end #ifndef elxAdvancedNormalizedCorrelationMetric_h

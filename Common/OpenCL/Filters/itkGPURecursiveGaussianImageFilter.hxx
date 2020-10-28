@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPURecursiveGaussianImageFilter_hxx
-#define __itkGPURecursiveGaussianImageFilter_hxx
+#ifndef itkGPURecursiveGaussianImageFilter_hxx
+#define itkGPURecursiveGaussianImageFilter_hxx
 
 #include "itkGPURecursiveGaussianImageFilter.h"
 #include "itkOpenCLUtil.h"
@@ -249,4 +249,4 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::PrintSelf(std::ostre
 
 } // end namespace itk
 
-#endif /* __itkGPURecursiveGaussianImageFilter_hxx */
+#endif /* itkGPURecursiveGaussianImageFilter_hxx */

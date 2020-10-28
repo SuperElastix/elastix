@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxTransformixMain_H_
-#define __elxTransformixMain_H_
+#ifndef elxTransformixMain_h
+#define elxTransformixMain_h
 
 #include "elxElastixMain.h"
 
@@ -123,4 +123,4 @@ private:
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxTransformixMain_h
+#endif // end #ifndef elxTransformixMain_h

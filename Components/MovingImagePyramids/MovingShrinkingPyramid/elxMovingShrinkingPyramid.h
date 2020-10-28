@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMovingShrinkingPyramid_h
-#define __elxMovingShrinkingPyramid_h
+#ifndef elxMovingShrinkingPyramid_h
+#define elxMovingShrinkingPyramid_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionShrinkPyramidImageFilter.h"
@@ -103,4 +103,4 @@ private:
 #  include "elxMovingShrinkingPyramid.hxx"
 #endif
 
-#endif // end #ifndef __elxMovingShrinkingPyramid_h
+#endif // end #ifndef elxMovingShrinkingPyramid_h

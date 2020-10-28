@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUBSplineInterpolateImageFunctionFactory_hxx
-#define __itkGPUBSplineInterpolateImageFunctionFactory_hxx
+#ifndef itkGPUBSplineInterpolateImageFunctionFactory_hxx
+#define itkGPUBSplineInterpolateImageFunctionFactory_hxx
 
 #include "itkGPUBSplineInterpolateImageFunctionFactory.h"
 
@@ -102,4 +102,4 @@ GPUBSplineInterpolateImageFunctionFactory2<TTypeList, NDimensions>::Register3D()
 
 } // namespace itk
 
-#endif // end #ifndef __itkGPUBSplineInterpolateImageFunctionFactory_hxx
+#endif // end #ifndef itkGPUBSplineInterpolateImageFunctionFactory_hxx

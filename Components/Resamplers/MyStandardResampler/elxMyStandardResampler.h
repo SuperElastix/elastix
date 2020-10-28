@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxMyStandardResampler_h
-#define __elxMyStandardResampler_h
+#ifndef elxMyStandardResampler_h
+#define elxMyStandardResampler_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkResampleImageFilter.h"
@@ -108,4 +108,4 @@ private:
 #  include "elxMyStandardResampler.hxx"
 #endif
 
-#endif // end #ifndef __elxMyStandardResampler_h
+#endif // end #ifndef elxMyStandardResampler_h

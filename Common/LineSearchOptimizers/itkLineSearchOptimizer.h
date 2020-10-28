@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkLineSearchOptimizer_h
-#define __itkLineSearchOptimizer_h
+#ifndef itkLineSearchOptimizer_h
+#define itkLineSearchOptimizer_h
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 
@@ -153,4 +153,4 @@ private:
 
 } // end namespace itk
 
-#endif // #ifndef __itkLineSearchOptimizer_h
+#endif // #ifndef itkLineSearchOptimizer_h

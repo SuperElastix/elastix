@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxResamplerBase_h
-#define __elxResamplerBase_h
+#ifndef elxResamplerBase_h
+#define elxResamplerBase_h
 
 /** Needed for the macros */
 #include "elxMacro.h"
@@ -224,4 +224,4 @@ private:
 #  include "elxResamplerBase.hxx"
 #endif
 
-#endif // end #ifndef __elxResamplerBase_h
+#endif // end #ifndef elxResamplerBase_h

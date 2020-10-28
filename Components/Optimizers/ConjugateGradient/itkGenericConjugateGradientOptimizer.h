@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkGenericConjugateGradientOptimizer_h
-#define __itkGenericConjugateGradientOptimizer_h
+#ifndef itkGenericConjugateGradientOptimizer_h
+#define itkGenericConjugateGradientOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include "itkLineSearchOptimizer.h"
@@ -266,4 +266,4 @@ private:
 
 } // end namespace itk
 
-#endif //#ifndef __itkGenericConjugateGradientOptimizer_h
+#endif //#ifndef itkGenericConjugateGradientOptimizer_h

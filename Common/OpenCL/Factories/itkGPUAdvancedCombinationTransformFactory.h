@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkGPUAdvancedCombinationTransformFactory_h
-#define __itkGPUAdvancedCombinationTransformFactory_h
+#ifndef itkGPUAdvancedCombinationTransformFactory_h
+#define itkGPUAdvancedCombinationTransformFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
 #include "itkGPUAdvancedCombinationTransform.h"
@@ -103,4 +103,4 @@ private:
 #  include "itkGPUAdvancedCombinationTransformFactory.hxx"
 #endif
 
-#endif /* __itkGPUAdvancedCombinationTransformFactory_h */
+#endif /* itkGPUAdvancedCombinationTransformFactory_h */

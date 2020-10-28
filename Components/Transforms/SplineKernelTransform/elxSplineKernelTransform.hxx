@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxSplineKernelTransform_HXX_
-#define __elxSplineKernelTransform_HXX_
+#ifndef elxSplineKernelTransform_hxx
+#define elxSplineKernelTransform_hxx
 
 #include "elxSplineKernelTransform.h"
 #include "itkTransformixInputPointFileReader.h"
@@ -474,4 +474,4 @@ SplineKernelTransform<TElastix>::WriteToFile(const ParametersType & param) const
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxSplineKernelTransform_HXX_
+#endif // end #ifndef elxSplineKernelTransform_hxx

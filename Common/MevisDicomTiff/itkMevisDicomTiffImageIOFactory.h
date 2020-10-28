@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkMevisDicomTiffImageIOFactory_h
-#define __itkMevisDicomTiffImageIOFactory_h
+#ifndef itkMevisDicomTiffImageIOFactory_h
+#define itkMevisDicomTiffImageIOFactory_h
 
 #include "itkObjectFactoryBase.h"
 #include "itkImageIOBase.h"
@@ -73,4 +73,4 @@ private:
 
 } // end namespace itk
 
-#endif // end #ifndef __itkMevisDicomTiffImageIOFactory_h
+#endif // end #ifndef itkMevisDicomTiffImageIOFactory_h

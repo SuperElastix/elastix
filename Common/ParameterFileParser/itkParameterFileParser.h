@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkParameterFileParser_h
-#define __itkParameterFileParser_h
+#ifndef itkParameterFileParser_h
+#define itkParameterFileParser_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -159,4 +159,4 @@ private:
 
 } // end of namespace itk
 
-#endif // end __itkParameterFileParser_h
+#endif // end itkParameterFileParser_h

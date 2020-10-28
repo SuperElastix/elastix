@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxLinearInterpolator_h
-#define __elxLinearInterpolator_h
+#ifndef elxLinearInterpolator_h
+#define elxLinearInterpolator_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkLinearInterpolateImageFunction.h"
@@ -107,4 +107,4 @@ private:
 #  include "elxLinearInterpolator.hxx"
 #endif
 
-#endif // end #ifndef __elxLinearInterpolator_h
+#endif // end #ifndef elxLinearInterpolator_h

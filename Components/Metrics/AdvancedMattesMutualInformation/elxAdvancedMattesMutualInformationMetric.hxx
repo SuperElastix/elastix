@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedMattesMutualInformationMetric_HXX__
-#define __elxAdvancedMattesMutualInformationMetric_HXX__
+#ifndef elxAdvancedMattesMutualInformationMetric_hxx
+#define elxAdvancedMattesMutualInformationMetric_hxx
 
 #include "elxAdvancedMattesMutualInformationMetric.h"
 
@@ -180,4 +180,4 @@ AdvancedMattesMutualInformationMetric<TElastix>::Compute_c(unsigned long k) cons
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdvancedMattesMutualInformationMetric_HXX__
+#endif // end #ifndef elxAdvancedMattesMutualInformationMetric_hxx

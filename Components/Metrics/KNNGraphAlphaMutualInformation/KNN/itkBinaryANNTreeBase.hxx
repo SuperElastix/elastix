@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkBinaryANNTreeBase_hxx
-#define __itkBinaryANNTreeBase_hxx
+#ifndef itkBinaryANNTreeBase_hxx
+#define itkBinaryANNTreeBase_hxx
 
 #include "itkBinaryANNTreeBase.h"
 
@@ -33,4 +33,4 @@ BinaryANNTreeBase<TListSample>::BinaryANNTreeBase()
 
 } // end namespace itk
 
-#endif // end #ifndef __itkBinaryANNTreeBase_hxx
+#endif // end #ifndef itkBinaryANNTreeBase_hxx

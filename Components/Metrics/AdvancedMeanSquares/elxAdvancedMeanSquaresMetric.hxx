@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxAdvancedMeanSquaresMetric_HXX__
-#define __elxAdvancedMeanSquaresMetric_HXX__
+#ifndef elxAdvancedMeanSquaresMetric_hxx
+#define elxAdvancedMeanSquaresMetric_hxx
 
 #include "elxAdvancedMeanSquaresMetric.h"
 #include "itkTimeProbe.h"
@@ -90,4 +90,4 @@ AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAdvancedMeanSquaresMetric_HXX__
+#endif // end #ifndef elxAdvancedMeanSquaresMetric_hxx

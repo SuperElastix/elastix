@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxRandomSamplerSparseMask_hxx
-#define __elxRandomSamplerSparseMask_hxx
+#ifndef elxRandomSamplerSparseMask_hxx
+#define elxRandomSamplerSparseMask_hxx
 
 #include "elxRandomSamplerSparseMask.h"
 
@@ -46,4 +46,4 @@ RandomSamplerSparseMask<TElastix>::BeforeEachResolution(void)
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxRandomSamplerSparseMask_hxx
+#endif // end #ifndef elxRandomSamplerSparseMask_hxx

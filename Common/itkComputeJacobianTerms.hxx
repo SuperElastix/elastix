@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkComputeJacobianTerms_hxx
-#define __itkComputeJacobianTerms_hxx
+#ifndef itkComputeJacobianTerms_hxx
+#define itkComputeJacobianTerms_hxx
 
 #include "itkComputeJacobianTerms.h"
 
@@ -557,4 +557,4 @@ ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
 
 } // end namespace itk
 
-#endif // end #ifndef __itkComputeJacobianTerms_hxx
+#endif // end #ifndef itkComputeJacobianTerms_hxx
