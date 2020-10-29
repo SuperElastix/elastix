@@ -184,9 +184,9 @@ protected:
   mutable MappedMeshContainerPointer     m_MappedMeshContainer;
 
 private:
-  MeshPenalty(const Self &); // purposely not implemented
+  MeshPenalty(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

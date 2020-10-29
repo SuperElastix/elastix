@@ -107,9 +107,9 @@ protected:
 
 
 private:
-  BSplineKernelFunction2(const Self &); // purposely not implemented
+  BSplineKernelFunction2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Structures to control overloaded versions of Evaluate */
   struct DispatchBase

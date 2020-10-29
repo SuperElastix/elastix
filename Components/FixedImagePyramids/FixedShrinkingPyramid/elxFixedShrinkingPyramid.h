@@ -91,10 +91,10 @@ protected:
 
 private:
   /** The private constructor. */
-  FixedShrinkingPyramid(const Self &); // purposely not implemented
+  FixedShrinkingPyramid(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

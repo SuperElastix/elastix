@@ -80,9 +80,9 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  GPUIdentityTransform(const Self & other); // purposely not implemented
+  GPUIdentityTransform(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::vector<std::string> m_Sources;
 };

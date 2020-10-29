@@ -70,9 +70,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  TestOutputWindow(const Self &); // purposely not implemented
+  TestOutputWindow(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

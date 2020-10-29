@@ -84,9 +84,9 @@ protected:
   ANNBruteForceTreeType * m_ANNTree;
 
 private:
-  ANNBruteForceTree(const Self &); // purposely not implemented
+  ANNBruteForceTree(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

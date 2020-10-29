@@ -136,9 +136,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  GPUCompositeTransformCopier(const Self &); // purposely not implemented
+  GPUCompositeTransformCopier(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   CPUCompositeTransformConstPointer m_InputTransform;
   GPUCompositeTransformPointer      m_Output;

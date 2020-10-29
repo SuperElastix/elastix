@@ -146,9 +146,9 @@ protected:
   }
 
 private:
-  AdvancedVersorRigid3DTransform(const Self &); // purposely not implemented
+  AdvancedVersorRigid3DTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 // class AdvancedVersorRigid3DTransform

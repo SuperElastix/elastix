@@ -206,9 +206,9 @@ protected:
   LinearGenerateData(void);
 
 private:
-  TransformToSpatialJacobianSource(const Self &); // purposely not implemented
+  TransformToSpatialJacobianSource(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variables. */
   RegionType           m_OutputRegion;    // region of the output image

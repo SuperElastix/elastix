@@ -563,9 +563,9 @@ protected:
   double m_MovingLimitRangeRatio;
 
 private:
-  AdvancedImageToImageMetric(const Self &); // purposely not implemented
+  AdvancedImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Private member variables. */
   bool   m_UseImageSampler;

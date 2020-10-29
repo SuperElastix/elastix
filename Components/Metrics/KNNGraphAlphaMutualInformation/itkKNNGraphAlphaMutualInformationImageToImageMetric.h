@@ -276,9 +276,9 @@ protected:
   double m_AvoidDivisionBy;
 
 private:
-  KNNGraphAlphaMutualInformationImageToImageMetric(const Self &); // purposely not implemented
+  KNNGraphAlphaMutualInformationImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Typedef's for the computation of the derivative. */
   typedef typename Superclass::FixedImagePointType            FixedImagePointType;

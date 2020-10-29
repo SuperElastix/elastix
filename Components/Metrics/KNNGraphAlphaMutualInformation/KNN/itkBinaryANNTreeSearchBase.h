@@ -79,9 +79,9 @@ protected:
   typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
 
 private:
-  BinaryANNTreeSearchBase(const Self &); // purposely not implemented
+  BinaryANNTreeSearchBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

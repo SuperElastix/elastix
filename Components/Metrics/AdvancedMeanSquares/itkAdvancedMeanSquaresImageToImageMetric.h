@@ -250,9 +250,9 @@ protected:
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
 private:
-  AdvancedMeanSquaresImageToImageMetric(const Self &); // purposely not implemented
+  AdvancedMeanSquaresImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool         m_UseNormalization;
   double       m_SelfHessianSmoothingSigma;

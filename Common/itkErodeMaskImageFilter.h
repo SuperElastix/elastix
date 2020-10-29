@@ -133,9 +133,9 @@ protected:
   GenerateData(void) override;
 
 private:
-  ErodeMaskImageFilter(const Self &); // purposely not implemented
+  ErodeMaskImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool         m_IsMovingMask;
   unsigned int m_ResolutionLevel;

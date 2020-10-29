@@ -118,10 +118,10 @@ protected:
 
 private:
   /** The private constructor. */
-  DeformationFieldRegulizer(const Self &); // purposely not implemented
+  DeformationFieldRegulizer(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Declaration of members. */
   IntermediaryDFTransformPointer m_IntermediaryDeformationFieldTransform;

@@ -175,9 +175,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  StatisticalShapePointPenalty(const Self &); // purposely not implemented
+  StatisticalShapePointPenalty(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   void
   FillProposalVector(const OutputPointType & fixedPoint, const unsigned int vertexindex) const;

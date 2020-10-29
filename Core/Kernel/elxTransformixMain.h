@@ -116,9 +116,9 @@ protected:
   InitDBIndex(void) override;
 
 private:
-  TransformixMain(const Self &); // purposely not implemented
+  TransformixMain(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

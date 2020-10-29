@@ -380,9 +380,9 @@ protected:
   UpdateGridOffsetTable(void);
 
 private:
-  AdvancedBSplineDeformableTransformBase(const Self &); // purposely not implemented
+  AdvancedBSplineDeformableTransformBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // namespace itk

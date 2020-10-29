@@ -140,9 +140,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  RecursiveBSplineInterpolationWeightFunction(const Self &); // purposely not implemented
+  RecursiveBSplineInterpolationWeightFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Private members; We unfortunatly cannot use those of the superclass. */
   unsigned int m_NumberOfWeights;

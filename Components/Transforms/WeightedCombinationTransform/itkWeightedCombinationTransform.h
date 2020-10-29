@@ -245,9 +245,9 @@ protected:
   NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
 
 private:
-  WeightedCombinationTransform(const Self &); // purposely not implemented
+  WeightedCombinationTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool m_NormalizeWeights;
 };

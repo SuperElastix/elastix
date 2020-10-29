@@ -92,9 +92,9 @@ protected:
   Register3D();
 
 private:
-  GPUAdvancedCombinationTransformFactory2(const Self &); // purposely not implemented
+  GPUAdvancedCombinationTransformFactory2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

@@ -125,9 +125,9 @@ protected:
   ReleaseInputs();
 
 private:
-  GPUInPlaceImageFilter(const Self &); // purposely not implemented
+  GPUInPlaceImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

@@ -189,9 +189,9 @@ protected:
     override;
 
 private:
-  ConjugateGradient(const Self &); // purposely not implemented
+  ConjugateGradient(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   void
   InvokeIterationEvent(const itk::EventObject & event);

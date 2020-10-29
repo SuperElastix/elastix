@@ -159,10 +159,10 @@ protected:
 
 private:
   /** The private constructor. */
-  MultiInputRandomCoordinateSampler(const Self &); // purposely not implemented
+  MultiInputRandomCoordinateSampler(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

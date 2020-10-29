@@ -243,9 +243,9 @@ private:
                             TransformSpaceDimensionToType<3>);
 
 private:
-  GPUAdvancedCombinationTransformCopier(const Self &); // purposely not implemented
+  GPUAdvancedCombinationTransformCopier(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   CPUComboTransformConstPointer m_InputTransform;
   GPUComboTransformPointer      m_Output;

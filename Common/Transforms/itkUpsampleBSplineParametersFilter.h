@@ -112,9 +112,9 @@ protected:
   DoUpsampling(void);
 
 private:
-  UpsampleBSplineParametersFilter(const Self &); // purposely not implemented
+  UpsampleBSplineParametersFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Private member variables. */
   OriginType    m_CurrentGridOrigin;

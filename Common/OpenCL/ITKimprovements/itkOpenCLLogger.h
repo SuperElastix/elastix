@@ -93,9 +93,9 @@ protected:
 private:
   static Pointer m_Instance;
 
-  OpenCLLogger(const Self &); // purposely not implemented
+  OpenCLLogger(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::string m_FileName;
   std::string m_OutputDirectory;

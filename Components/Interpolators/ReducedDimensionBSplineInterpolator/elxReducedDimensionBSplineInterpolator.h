@@ -114,10 +114,10 @@ protected:
 
 private:
   /** The private constructor. */
-  ReducedDimensionBSplineInterpolator(const Self &); // purposely not implemented
+  ReducedDimensionBSplineInterpolator(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

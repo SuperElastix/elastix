@@ -70,9 +70,9 @@ protected:
   virtual ~GPUAdvancedTranslationTransform() {}
 
 private:
-  GPUAdvancedTranslationTransform(const Self & other); // purposely not implemented
+  GPUAdvancedTranslationTransform(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

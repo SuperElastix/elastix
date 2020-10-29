@@ -85,9 +85,9 @@ protected:
   {}
 
 private:
-  GPUObjectFactoryBase(const Self &); // purposely not implemented
+  GPUObjectFactoryBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

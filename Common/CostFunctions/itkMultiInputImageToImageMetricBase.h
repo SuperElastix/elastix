@@ -396,9 +396,9 @@ protected:
   BSplineInterpolatorVectorType m_BSplineInterpolatorVector;
 
 private:
-  MultiInputImageToImageMetricBase(const Self &); // purposely not implemented
+  MultiInputImageToImageMetricBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Private member variables. */
   FixedImageRegionType m_DummyFixedImageRegion;

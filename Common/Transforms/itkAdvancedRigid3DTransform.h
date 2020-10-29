@@ -214,9 +214,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  AdvancedRigid3DTransform(const Self &); // purposely not implemented
+  AdvancedRigid3DTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // namespace itk

@@ -83,9 +83,9 @@ protected:
   GetParametersDataManager(void) const override;
 
 private:
-  GPUTranslationTransformBase(const Self & other); // purposely not implemented
+  GPUTranslationTransformBase(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::vector<std::string> m_Sources;
 };

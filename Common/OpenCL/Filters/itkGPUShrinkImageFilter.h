@@ -88,9 +88,9 @@ protected:
   GPUGenerateData();
 
 private:
-  GPUShrinkImageFilter(const Self &); // purposely not implemented
+  GPUShrinkImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;

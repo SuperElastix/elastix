@@ -83,9 +83,9 @@ protected:
   GPUGenerateData();
 
 private:
-  GPURecursiveGaussianImageFilter(const Self &); // purposely not implemented
+  GPURecursiveGaussianImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;

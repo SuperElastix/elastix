@@ -132,9 +132,9 @@ protected:
   DerivativeType m_PreviousGradient;
 
 private:
-  AdaptiveStochasticGradientDescentOptimizer(const Self &); // purposely not implemented
+  AdaptiveStochasticGradientDescentOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Settings */
   bool   m_UseAdaptiveStepSizes;

@@ -299,9 +299,9 @@ protected:
   bool m_HasNonZeroJacobianOfSpatialHessian;
 
 private:
-  AdvancedTransform(const Self &); // purposely not implemented
+  AdvancedTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

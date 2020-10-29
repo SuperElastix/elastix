@@ -130,10 +130,10 @@ protected:
 
 private:
   /** The private constructor. */
-  OptimizerBase(const Self &); // purposely not implemented
+  OptimizerBase(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variable to store the user preference for using new
    * samples each iteration.

@@ -512,9 +512,9 @@ protected:
   ImageBasePointer                             m_LocalBases;
 
 private:
-  MultiBSplineDeformableTransformWithNormal(const Self &); // purposely not implemented
+  MultiBSplineDeformableTransformWithNormal(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   void
   DispatchParameters(const ParametersType & parameters);

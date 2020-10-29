@@ -239,9 +239,9 @@ protected:
   ProcessSearchSpaceChanges(void);
 
 private:
-  FullSearchOptimizer(const Self &); // purposely not implemented
+  FullSearchOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   unsigned long m_CurrentIteration;
 };

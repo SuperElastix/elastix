@@ -186,9 +186,9 @@ protected:
   typedef NeighborhoodOperatorImageFilter<MovedGradientImageType, MovedGradientImageType> MovedSobelFilter;
 
 private:
-  GradientDifferenceImageToImageMetric(const Self &); // purposely not implemented
+  GradientDifferenceImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** The variance of the moving image gradients. */
   mutable MovedGradientPixelType m_Variance[FixedImageDimension];

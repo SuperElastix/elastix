@@ -117,9 +117,9 @@ protected:
   ~ParameterFileParser() override;
 
 private:
-  ParameterFileParser(const Self &); // purposely not implemented
+  ParameterFileParser(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Performs the following checks:
    * - Is a filename is given

@@ -304,9 +304,9 @@ protected:
   PrecomputeJacobianOfSpatialJacobian(void);
 
 private:
-  AdvancedRigid2DTransform(const Self &); // purposely not implemented
+  AdvancedRigid2DTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   TScalarType m_Angle;
 };

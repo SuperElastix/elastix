@@ -184,9 +184,9 @@ protected:
   InitializeProgressVariables(void) override;
 
 private:
-  CMAEvolutionStrategy(const Self &); // purposely not implemented
+  CMAEvolutionStrategy(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

@@ -84,9 +84,9 @@ protected:
   virtual ~GPUEuler2DTransform() {}
 
 private:
-  GPUEuler2DTransform(const Self & other); // purposely not implemented
+  GPUEuler2DTransform(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

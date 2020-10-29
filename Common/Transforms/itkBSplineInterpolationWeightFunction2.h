@@ -90,9 +90,9 @@ protected:
                    OneDWeightsType &           weights1D) const override;
 
 private:
-  BSplineInterpolationWeightFunction2(const Self &); // purposely not implemented
+  BSplineInterpolationWeightFunction2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

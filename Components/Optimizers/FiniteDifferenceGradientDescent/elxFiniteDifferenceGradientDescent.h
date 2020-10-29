@@ -146,9 +146,9 @@ protected:
   bool m_ShowMetricValues;
 
 private:
-  FiniteDifferenceGradientDescent(const Self &); // purposely not implemented
+  FiniteDifferenceGradientDescent(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

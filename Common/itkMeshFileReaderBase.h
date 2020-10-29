@@ -88,9 +88,9 @@ protected:
   std::string m_FileName;
 
 private:
-  MeshFileReaderBase(const Self &); // purposely not implemented
+  MeshFileReaderBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

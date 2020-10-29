@@ -104,9 +104,9 @@ protected:
   ~ANNBinaryTreeCreator() override {}
 
 private:
-  ANNBinaryTreeCreator(const Self &); // purposely not implemented
+  ANNBinaryTreeCreator(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variables. */
   static unsigned int m_NumberOfANNBinaryTrees;

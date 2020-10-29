@@ -283,9 +283,9 @@ protected:
   std::string m_ProgramHelpText;
 
 private:
-  CommandLineArgumentParser(const Self &); // purposely not implemented
+  CommandLineArgumentParser(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 // end class CommandLineArgumentParser

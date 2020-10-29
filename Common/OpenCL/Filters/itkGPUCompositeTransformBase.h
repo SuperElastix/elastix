@@ -118,9 +118,9 @@ protected:
   GetParametersDataManager(const std::size_t index) const override;
 
 private:
-  GPUCompositeTransformBase(const Self & other); // purposely not implemented
+  GPUCompositeTransformBase(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** \internal
    * Returns true if the transform at \a index is identity transform,

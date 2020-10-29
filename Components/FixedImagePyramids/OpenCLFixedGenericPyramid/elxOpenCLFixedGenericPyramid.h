@@ -112,10 +112,10 @@ protected:
 
 private:
   /** The private constructor. */
-  OpenCLFixedGenericPyramid(const Self &); // purposely not implemented
+  OpenCLFixedGenericPyramid(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Register/Unregister factories. */
   void

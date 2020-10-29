@@ -163,9 +163,9 @@ protected:
   Compute_c(unsigned long k) const;
 
 private:
-  FiniteDifferenceGradientDescentOptimizer(const Self &); // purposely not implemented
+  FiniteDifferenceGradientDescentOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Private member variables.*/
   bool              m_Stop;

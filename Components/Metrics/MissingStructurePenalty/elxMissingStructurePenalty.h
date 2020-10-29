@@ -187,10 +187,10 @@ protected:
 
 private:
   /** The private constructor. */
-  MissingStructurePenalty(const Self &); // purposely not implemented
+  MissingStructurePenalty(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   unsigned int m_NumberOfMeshes;
 };

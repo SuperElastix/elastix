@@ -422,9 +422,9 @@ protected:
   TestConvergence(bool firstCheck);
 
 private:
-  CMAEvolutionStrategyOptimizer(const Self &); // purposely not implemented
+  CMAEvolutionStrategyOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Settings that are only inspected/changed by the associated get/set member functions. */
   unsigned long m_MaximumNumberOfIterations;

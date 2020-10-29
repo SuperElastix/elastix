@@ -132,10 +132,10 @@ protected:
 
 private:
   /** The private constructor. */
-  MovingGenericPyramid(const Self &); // purposely not implemented
+  MovingGenericPyramid(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

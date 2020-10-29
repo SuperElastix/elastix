@@ -137,9 +137,9 @@ protected:
   ~RSGDEachParameterApart() override {}
 
 private:
-  RSGDEachParameterApart(const Self &); // purposely not implemented
+  RSGDEachParameterApart(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

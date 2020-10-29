@@ -366,9 +366,9 @@ protected:
   ~ParameterMapInterface() override;
 
 private:
-  ParameterMapInterface(const Self &); // purposely not implemented
+  ParameterMapInterface(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variable to store the parameters. */
   ParameterMapType m_ParameterMap;

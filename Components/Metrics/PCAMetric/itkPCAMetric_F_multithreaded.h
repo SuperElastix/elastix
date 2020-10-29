@@ -220,9 +220,9 @@ protected:
   InitializeThreadingParameters(void) const override;
 
 private:
-  PCAMetric(const Self &); // purposely not implemented
+  PCAMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   unsigned int m_G;
   unsigned int m_LastDimIndex;

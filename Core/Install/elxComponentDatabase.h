@@ -124,9 +124,9 @@ private:
   CreatorMapType CreatorMap;
   IndexMapType   IndexMap;
 
-  ComponentDatabase(const Self &); // purposely not implemented
+  ComponentDatabase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

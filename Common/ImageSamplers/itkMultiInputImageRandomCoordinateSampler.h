@@ -136,10 +136,10 @@ protected:
 
 private:
   /** The private constructor. */
-  MultiInputImageRandomCoordinateSampler(const Self &); // purposely not implemented
+  MultiInputImageRandomCoordinateSampler(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool m_UseRandomSampleRegion;
 };

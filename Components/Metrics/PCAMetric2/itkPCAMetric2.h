@@ -152,9 +152,9 @@ protected:
                                         DerivativeType &                  imageJacobian) const override;
 
 private:
-  PCAMetric2(const Self &); // purposely not implemented
+  PCAMetric2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Sample n random numbers from 0..m and add them to the vector. */
   void

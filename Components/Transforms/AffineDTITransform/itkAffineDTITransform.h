@@ -170,9 +170,9 @@ protected:
   ~AffineDTITransform() override {}
 
 private:
-  AffineDTITransform(const Self &); // purposely not implemented
+  AffineDTITransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

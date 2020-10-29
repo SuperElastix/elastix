@@ -139,9 +139,9 @@ protected:
   std::string   m_StepSizeStrategy;
 
 private:
-  AdaptiveStochasticLBFGSOptimizer(const Self &); // purposely not implemented
+  AdaptiveStochasticLBFGSOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Settings */
 

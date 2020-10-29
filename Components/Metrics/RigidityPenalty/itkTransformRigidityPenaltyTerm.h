@@ -299,10 +299,10 @@ protected:
 
 private:
   /** The private constructor. */
-  TransformRigidityPenaltyTerm(const Self &); // purposely not implemented
+  TransformRigidityPenaltyTerm(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Internal function to dilate the rigidity images. */
   virtual void

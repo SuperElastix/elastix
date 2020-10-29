@@ -82,9 +82,9 @@ protected:
 
 
 private:
-  BSplineSecondOrderDerivativeKernelFunction(const Self &); // purposely not implemented
+  BSplineSecondOrderDerivativeKernelFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   typename KernelType::Pointer m_KernelFunction;
 };

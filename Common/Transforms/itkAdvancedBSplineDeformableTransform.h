@@ -333,9 +333,9 @@ protected:
   std::vector<std::vector<SODerivativeWeightsFunctionPointer>> m_SODerivativeWeightsFunctions;
 
 private:
-  AdvancedBSplineDeformableTransform(const Self &); // purposely not implemented
+  AdvancedBSplineDeformableTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   friend class MultiBSplineDeformableTransformWithNormal<ScalarType,
                                                          itkGetStaticConstMacro(SpaceDimension),

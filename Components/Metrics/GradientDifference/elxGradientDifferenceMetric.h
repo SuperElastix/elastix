@@ -144,10 +144,10 @@ protected:
 
 private:
   /** The private constructor. */
-  GradientDifferenceMetric(const Self &); // purposely not implemented
+  GradientDifferenceMetric(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

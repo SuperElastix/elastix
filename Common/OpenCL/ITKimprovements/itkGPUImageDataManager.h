@@ -98,9 +98,9 @@ protected:
   ~GPUImageDataManager() override {}
 
 private:
-  GPUImageDataManager(const Self &); // purposely not implemented
+  GPUImageDataManager(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   typename ImageType::Pointer m_Image;
 };

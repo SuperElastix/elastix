@@ -138,9 +138,9 @@ protected:
   GenerateData(void) override;
 
 private:
-  VectorMeanDiffusionImageFilter(const Self &); // purposely not implemented
+  VectorMeanDiffusionImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Declare member variables. */
   InputSizeType m_Radius;

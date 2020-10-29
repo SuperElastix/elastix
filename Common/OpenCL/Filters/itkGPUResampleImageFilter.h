@@ -178,9 +178,9 @@ protected:
   GetGPUBSplineBaseTransform(const std::size_t transformIndex);
 
 private:
-  GPUResampleImageFilter(const Self &); // purposely not implemented
+  GPUResampleImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   GPUInterpolatorBase * m_InterpolatorBase;
   GPUTransformBase *    m_TransformBase;

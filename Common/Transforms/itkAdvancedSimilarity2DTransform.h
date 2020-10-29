@@ -243,9 +243,9 @@ protected:
   PrecomputeJacobianOfSpatialJacobian(void) override;
 
 private:
-  AdvancedSimilarity2DTransform(const Self &); // purposely not implemented
+  AdvancedSimilarity2DTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   ScaleType m_Scale;
 };

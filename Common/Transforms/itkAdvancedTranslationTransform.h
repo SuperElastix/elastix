@@ -283,9 +283,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  AdvancedTranslationTransform(const Self &); // purposely not implemented
+  AdvancedTranslationTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   OutputVectorType m_Offset; // Offset of the transformation
 

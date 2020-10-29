@@ -177,10 +177,10 @@ protected:
 
 private:
   /** The private constructor. */
-  NormalizedMutualInformationMetric(const Self &); // purposely not implemented
+  NormalizedMutualInformationMetric(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

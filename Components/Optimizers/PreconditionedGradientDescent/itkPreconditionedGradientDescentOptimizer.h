@@ -220,9 +220,9 @@ protected:
   CholmodSolve(const DerivativeType & gradient, DerivativeType & searchDirection, int solveType = CHOLMOD_A);
 
 private:
-  PreconditionedGradientDescentOptimizer(const Self &); // purposely not implemented
+  PreconditionedGradientDescentOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool   m_Stop;
   double m_Value;

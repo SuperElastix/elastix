@@ -137,9 +137,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ListSampleCArray(const Self &); // purposely not implemented
+  ListSampleCArray(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** The internal storage of the data in a C array. */
   InternalDataContainerType m_InternalContainer;

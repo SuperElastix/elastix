@@ -157,9 +157,9 @@ protected:
 
 private:
   /** The private constructor and copy constructor. */
-  TranslationStackTransform(const Self &); // purposely not implemented
+  TranslationStackTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** The Translation stack transform. */
   TranslationStackTransformPointer m_TranslationStackTransform;

@@ -89,9 +89,9 @@ protected:
   double m_LTminLBinv;
 
 private:
-  ExponentialLimiterFunction(const Self &); // purposely not implemented
+  ExponentialLimiterFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

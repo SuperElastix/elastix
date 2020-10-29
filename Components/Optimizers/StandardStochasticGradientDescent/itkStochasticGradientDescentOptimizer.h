@@ -201,9 +201,9 @@ protected:
   unsigned long m_LBFGSMemory;
 
 private:
-  StochasticGradientDescentOptimizer(const Self &); // purposely not implemented
+  StochasticGradientDescentOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   // multi-threaded AdvanceOneStep:
   bool m_UseMultiThread;

@@ -112,10 +112,10 @@ protected:
 
 private:
   /** The private constructor. */
-  OpenCLMovingGenericPyramid(const Self &); // purposely not implemented
+  OpenCLMovingGenericPyramid(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Register/Unregister factories. */
   void

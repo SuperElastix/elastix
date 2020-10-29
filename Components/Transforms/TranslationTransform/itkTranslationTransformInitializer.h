@@ -149,9 +149,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  TranslationTransformInitializer(const Self &); // purposely not implemented
+  TranslationTransformInitializer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   TransformPointer   m_Transform;
   FixedImagePointer  m_FixedImage;

@@ -70,9 +70,9 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  GPULinearInterpolateImageFunction(const Self &); // purposely not implemented
+  GPULinearInterpolateImageFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::vector<std::string> m_Sources;
 };

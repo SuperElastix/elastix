@@ -238,9 +238,9 @@ protected:
   AfterThreadedGetValueAndDerivative(MeasureType & measure, DerivativeType & derivative) const override;
 
 private:
-  SumSquaredTissueVolumeDifferenceImageToImageMetric(const Self &); // purposely not implemented
+  SumSquaredTissueVolumeDifferenceImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Intensity value to use for air.  Default is -1000 */
   RealType m_AirValue;

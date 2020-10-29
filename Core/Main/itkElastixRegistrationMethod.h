@@ -253,9 +253,9 @@ protected:
   MakeOutput(DataObjectPointerArraySizeType idx) override;
 
 private:
-  ElastixRegistrationMethod(const Self &); // purposely not implemented
+  ElastixRegistrationMethod(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** MakeUniqueName. */
   std::string

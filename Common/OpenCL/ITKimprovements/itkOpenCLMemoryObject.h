@@ -185,9 +185,9 @@ private:
   OpenCLContext * m_Context;
   cl_mem          m_Id;
 
-  OpenCLMemoryObject(const Self & other); // purposely not implemented
+  OpenCLMemoryObject(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 /** Operator ==

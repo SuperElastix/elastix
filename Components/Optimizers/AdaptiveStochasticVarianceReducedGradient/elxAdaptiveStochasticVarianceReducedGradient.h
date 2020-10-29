@@ -440,9 +440,9 @@ protected:
   double m_NoiseFactor;
 
 private:
-  AdaptiveStochasticVarianceReducedGradient(const Self &); // purposely not implemented
+  AdaptiveStochasticVarianceReducedGradient(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   // multi-threaded AdvanceOneStep:
   struct MultiThreaderParameterType

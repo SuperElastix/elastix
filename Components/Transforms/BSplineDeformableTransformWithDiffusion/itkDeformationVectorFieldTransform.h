@@ -114,10 +114,10 @@ protected:
 
 private:
   /** The private constructor. */
-  DeformationVectorFieldTransform(const Self &); // purposely not implemented
+  DeformationVectorFieldTransform(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variables. */
   CoefficientImagePointer m_Images[SpaceDimension];

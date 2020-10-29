@@ -79,9 +79,9 @@ protected:
   double m_ErrorBound;
 
 private:
-  ANNStandardTreeSearch(const Self &); // purposely not implemented
+  ANNStandardTreeSearch(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

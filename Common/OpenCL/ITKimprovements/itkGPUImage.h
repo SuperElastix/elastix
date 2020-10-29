@@ -254,9 +254,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
-  GPUImage(const Self &); // purposely not implemented
+  GPUImage(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool m_Graft;
 

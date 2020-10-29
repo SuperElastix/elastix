@@ -155,9 +155,9 @@ protected:
   Register3D();
 
 private:
-  GPUResampleImageFilterFactory2(const Self &); // purposely not implemented
+  GPUResampleImageFilterFactory2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

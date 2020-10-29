@@ -216,9 +216,9 @@ protected:
   GenerateData(void) override;
 
 private:
-  ElastixFilter(const Self &); // purposely not implemented
+  ElastixFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** MakeUniqueName. */
   std::string

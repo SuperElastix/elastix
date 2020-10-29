@@ -300,9 +300,9 @@ protected:
 
 private:
   /** The private constructor and copy constructor. */
-  BSplineStackTransform(const Self &); // purposely not implemented
+  BSplineStackTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** The B-spline stack transform. */
   BSplineStackTransformPointer m_BSplineStackTransform;

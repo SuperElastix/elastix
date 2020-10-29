@@ -82,9 +82,9 @@ protected:
   StepAlongGradient(const DerivativeType & factor, const DerivativeType & transformedGradient) override;
 
 private:
-  RSGDEachParameterApartOptimizer(const Self &); // purposely not implemented
+  RSGDEachParameterApartOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

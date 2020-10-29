@@ -290,9 +290,9 @@ protected:
   ~StackTransform() override {}
 
 private:
-  StackTransform(const Self &); // purposely not implemented
+  StackTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   // Number of transforms and transform container
   unsigned int              m_NumberOfSubTransforms;

@@ -364,10 +364,10 @@ protected:
 
 private:
   /** The private constructor. */
-  BSplineTransformWithDiffusion(const Self &); // purposely not implemented
+  BSplineTransformWithDiffusion(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variables for diffusion. */
   DiffusionFilterPointer      m_Diffusion;

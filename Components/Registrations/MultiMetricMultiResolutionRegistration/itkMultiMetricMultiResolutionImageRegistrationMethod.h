@@ -336,9 +336,9 @@ protected:
   FixedImageRegionType m_NullFixedImageRegion;
 
 private:
-  MultiMetricMultiResolutionImageRegistrationMethod(const Self &); // purposely not implemented
+  MultiMetricMultiResolutionImageRegistrationMethod(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

@@ -182,10 +182,10 @@ protected:
 
 private:
   /** The private constructor. */
-  ScaledSingleValuedNonLinearOptimizer(const Self &); // purposely not implemented
+  ScaledSingleValuedNonLinearOptimizer(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Variable to store the CurrentPosition, when the function
    * GetCurrentPosition is called. This method needs a member variable,

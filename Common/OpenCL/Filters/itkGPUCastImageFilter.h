@@ -108,9 +108,9 @@ protected:
   GPUGenerateData(void);
 
 private:
-  GPUCastImageFilter(const Self &); // purposely not implemented
+  GPUCastImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end of namespace itk

@@ -139,9 +139,9 @@ protected:
   double m_CurrentTime;
 
 private:
-  StochasticPreconditionedGradientDescentOptimizer(const Self &); // purposely not implemented
+  StochasticPreconditionedGradientDescentOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /**Parameters, as described by Spall. */
   double m_Param_a;

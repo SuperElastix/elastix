@@ -83,9 +83,9 @@ protected:
   GenerateData(void) override;
 
 private:
-  MultiResolutionShrinkPyramidImageFilter(const Self &); // purposely not implemented
+  MultiResolutionShrinkPyramidImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // namespace itk

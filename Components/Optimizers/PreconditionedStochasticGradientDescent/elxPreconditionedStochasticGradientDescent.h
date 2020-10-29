@@ -406,9 +406,9 @@ protected:
   AddRandomPerturbation(ParametersType & parameters, double sigma);
 
 private:
-  PreconditionedStochasticGradientDescent(const Self &); // purposely not implemented
+  PreconditionedStochasticGradientDescent(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;
