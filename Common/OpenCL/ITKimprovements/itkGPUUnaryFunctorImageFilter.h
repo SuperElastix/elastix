@@ -136,9 +136,9 @@ protected:
   int m_UnaryFunctorImageFilterGPUKernelHandle;
 
 private:
-  GPUUnaryFunctorImageFilter(const Self &); // purposely not implemented
+  GPUUnaryFunctorImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   FunctorType m_Functor;
 };

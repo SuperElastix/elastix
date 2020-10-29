@@ -107,9 +107,9 @@ protected:
   PrecomputeJacobianOfSpatialJacobian(void);
 
 private:
-  AffineLogTransform(const Self &); // purposely not implemented
+  AffineLogTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   MatrixType m_MatrixLogDomain;
 };

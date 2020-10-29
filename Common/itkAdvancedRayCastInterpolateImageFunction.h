@@ -210,9 +210,9 @@ protected:
   InterpolatorPointer m_Interpolator;
 
 private:
-  AdvancedRayCastInterpolateImageFunction(const Self &); // purposely not implemented
+  AdvancedRayCastInterpolateImageFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   SizeType
   GetRadius() const override

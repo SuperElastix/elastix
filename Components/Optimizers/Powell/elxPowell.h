@@ -107,9 +107,9 @@ protected:
   ~Powell() override {}
 
 private:
-  Powell(const Self &); // purposely not implemented
+  Powell(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

@@ -214,9 +214,9 @@ protected:
   bool           m_CenterOfGravityUsesLowerThreshold;
 
 private:
-  CenteredTransformInitializer2(const Self &); // purposely not implemented
+  CenteredTransformInitializer2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   TransformPointer m_Transform;
 

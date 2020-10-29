@@ -211,11 +211,11 @@ protected:
 
 private:
   /** The private constructor. */
-  DistancePreservingRigidityPenaltyTerm(const Self &); // purposely not implemented
+  DistancePreservingRigidityPenaltyTerm(const Self &) = delete;
 
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variables. */
   BSplineTransformPointer m_BSplineTransform;

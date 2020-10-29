@@ -122,11 +122,11 @@ protected:
 
 private:
   /** The private constructor. */
-  RayCastInterpolator(const Self &); // purposely not implemented
+  RayCastInterpolator(const Self &) = delete;
 
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   EulerTransformPointer       m_PreTransform;
   TransformParametersType     m_PreParameters;

@@ -499,10 +499,10 @@ protected:
 
 private:
   /** The private constructor. */
-  ParzenWindowHistogramImageToImageMetric(const Self &); // purposely not implemented
+  ParzenWindowHistogramImageToImageMetric(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Variables that can/should be accessed by their Set/Get functions. */
   unsigned long m_NumberOfFixedHistogramBins;

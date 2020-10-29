@@ -280,9 +280,9 @@ protected:
   bool           m_Stop;
 
 private:
-  MultiResolutionImageRegistrationMethod2(const Self &); // purposely not implemented
+  MultiResolutionImageRegistrationMethod2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variables. */
   MetricPointer          m_Metric;

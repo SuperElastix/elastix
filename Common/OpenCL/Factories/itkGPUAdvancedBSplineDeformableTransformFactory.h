@@ -110,9 +110,9 @@ protected:
   Register3D();
 
 private:
-  GPUAdvancedBSplineDeformableTransformFactory2(const Self &); // purposely not implemented
+  GPUAdvancedBSplineDeformableTransformFactory2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

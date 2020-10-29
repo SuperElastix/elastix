@@ -236,10 +236,10 @@ protected:
 
 private:
   /** The private constructor. */
-  MultiMetricMultiResolutionRegistration(const Self &); // purposely not implemented
+  MultiMetricMultiResolutionRegistration(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

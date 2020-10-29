@@ -221,10 +221,10 @@ protected:
 
 private:
   /** The private constructor. */
-  AffineDTITransformElastix(const Self &); // purposely not implemented
+  AffineDTITransformElastix(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   AffineDTITransformPointer m_AffineDTITransform;
 };

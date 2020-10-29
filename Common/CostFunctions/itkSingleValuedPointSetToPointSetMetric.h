@@ -193,9 +193,9 @@ protected:
   bool m_UseMetricSingleThreaded;
 
 private:
-  SingleValuedPointSetToPointSetMetric(const Self &); // purposely not implemented
+  SingleValuedPointSetToPointSetMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

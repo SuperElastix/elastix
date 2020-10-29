@@ -99,9 +99,9 @@ protected:
   GetParametersDataManager(void) const override;
 
 private:
-  GPUMatrixOffsetTransformBase(const Self & other); // purposely not implemented
+  GPUMatrixOffsetTransformBase(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::vector<std::string> m_Sources;
 };

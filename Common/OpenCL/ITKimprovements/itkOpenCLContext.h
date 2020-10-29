@@ -500,9 +500,9 @@ protected:
   CreateOpenCLProgram(const std::string & filename, const std::string & source, const std::size_t sourceSize);
 
 private:
-  OpenCLContext(const Self & other); // purposely not implemented
+  OpenCLContext(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   ITK_OPENCL_DECLARE_PRIVATE(OpenCLContext)
 

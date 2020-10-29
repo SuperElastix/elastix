@@ -200,9 +200,9 @@ protected:
   unsigned long m_LBFGSMemory;
 
 private:
-  StochasticVarianceReducedGradientDescentOptimizer(const Self &); // purposely not implemented
+  StochasticVarianceReducedGradientDescentOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   // multi-threaded AdvanceOneStep:
   bool m_UseMultiThread;

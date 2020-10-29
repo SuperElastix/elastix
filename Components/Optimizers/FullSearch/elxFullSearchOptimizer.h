@@ -151,9 +151,9 @@ protected:
                                   const unsigned int  entry_nr) const;
 
 private:
-  FullSearch(const Self &); // purposely not implemented
+  FullSearch(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

@@ -99,9 +99,9 @@ protected:
   GPUDataManager::Pointer m_ParametersDataManager;
 
 private:
-  GPUTransformBase(const Self & other); // purposely not implemented
+  GPUTransformBase(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

@@ -196,10 +196,10 @@ protected:
 
 private:
   /** The private constructor. */
-  ParzenWindowNormalizedMutualInformationImageToImageMetric(const Self &); // purposely not implemented
+  ParzenWindowNormalizedMutualInformationImageToImageMetric(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

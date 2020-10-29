@@ -198,9 +198,9 @@ protected:
                                 const RegionType &           supportRegion) const override;
 
 private:
-  RecursiveBSplineTransform(const Self &); // purposely not implemented
+  RecursiveBSplineTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

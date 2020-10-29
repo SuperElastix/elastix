@@ -153,9 +153,9 @@ protected:
   bool m_UseConstantStep;
 
 private:
-  StandardGradientDescentOptimizer(const Self &); // purposely not implemented
+  StandardGradientDescentOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /**Parameters, as described by Spall.*/
   double m_Param_a;

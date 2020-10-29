@@ -142,10 +142,10 @@ protected:
 
 private:
   /** The private constructor. */
-  ScaledSingleValuedCostFunction(const Self &); // purposely not implemented
+  ScaledSingleValuedCostFunction(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Member variables. */
   ScalesType                      m_Scales;

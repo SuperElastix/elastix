@@ -250,9 +250,9 @@ protected:
   // virtual void PrintSelf(std::ostream& os, Indent indent) const = 0;
 
 private:
-  NDImageBase(const Self &); // purposely not implemented
+  NDImageBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

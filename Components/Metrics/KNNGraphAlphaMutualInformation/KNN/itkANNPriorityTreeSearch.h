@@ -87,9 +87,9 @@ protected:
   ANNkDTreeType * m_BinaryTreeAskDTree;
 
 private:
-  ANNPriorityTreeSearch(const Self &); // purposely not implemented
+  ANNPriorityTreeSearch(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

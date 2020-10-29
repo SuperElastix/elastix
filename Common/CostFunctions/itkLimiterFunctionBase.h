@@ -119,9 +119,9 @@ protected:
   InputType  m_LowerThreshold;
 
 private:
-  LimiterFunctionBase(const Self &); // purposely not implemented
+  LimiterFunctionBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

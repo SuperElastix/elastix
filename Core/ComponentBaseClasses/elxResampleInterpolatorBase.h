@@ -113,10 +113,10 @@ protected:
 
 private:
   /** The private constructor. */
-  ResampleInterpolatorBase(const Self &); // purposely not implemented
+  ResampleInterpolatorBase(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

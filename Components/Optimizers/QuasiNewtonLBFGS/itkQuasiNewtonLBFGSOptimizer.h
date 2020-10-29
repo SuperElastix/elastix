@@ -196,9 +196,9 @@ protected:
   TestConvergence(bool firstLineSearchDone);
 
 private:
-  QuasiNewtonLBFGSOptimizer(const Self &); // purposely not implemented
+  QuasiNewtonLBFGSOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   unsigned long              m_MaximumNumberOfIterations;
   double                     m_GradientMagnitudeTolerance;

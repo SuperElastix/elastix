@@ -157,10 +157,10 @@ protected:
 
 private:
   /** The private constructor. */
-  OpenCLResampler(const Self &); // purposely not implemented
+  OpenCLResampler(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Helper method to report switching to CPU mode. */
   void

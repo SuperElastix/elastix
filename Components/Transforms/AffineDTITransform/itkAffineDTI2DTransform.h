@@ -155,9 +155,9 @@ protected:
   PrecomputeJacobianOfSpatialJacobian(void);
 
 private:
-  AffineDTI2DTransform(const Self &); // purposely not implemented
+  AffineDTI2DTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   ScalarArrayType m_Angle;
   ScalarArrayType m_Shear;

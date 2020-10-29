@@ -541,9 +541,9 @@ protected:
   bool m_FastComputationPossible;
 
 private:
-  KernelTransform2(const Self &); // purposely not implemented
+  KernelTransform2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   TScalarType m_PoissonRatio;
 

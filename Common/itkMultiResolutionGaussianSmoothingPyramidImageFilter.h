@@ -201,9 +201,9 @@ protected:
   EnlargeOutputRequestedRegion(DataObject * output) override;
 
 private:
-  MultiResolutionGaussianSmoothingPyramidImageFilter(const Self &); // purposely not implemented
+  MultiResolutionGaussianSmoothingPyramidImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // namespace itk

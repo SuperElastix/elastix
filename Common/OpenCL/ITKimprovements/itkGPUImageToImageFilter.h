@@ -126,9 +126,9 @@ protected:
   typename OpenCLKernelManager::Pointer m_GPUKernelManager;
 
 private:
-  GPUImageToImageFilter(const Self &); // purposely not implemented
+  GPUImageToImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool m_GPUEnabled;
 };

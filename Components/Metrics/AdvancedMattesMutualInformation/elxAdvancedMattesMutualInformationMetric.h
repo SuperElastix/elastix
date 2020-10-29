@@ -226,10 +226,10 @@ protected:
 
 private:
   /** The private constructor. */
-  AdvancedMattesMutualInformationMetric(const Self &); // purposely not implemented
+  AdvancedMattesMutualInformationMetric(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   double m_Param_c;
   double m_Param_gamma;

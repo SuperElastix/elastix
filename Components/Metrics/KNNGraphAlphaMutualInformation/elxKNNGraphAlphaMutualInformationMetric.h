@@ -176,10 +176,10 @@ protected:
 
 private:
   /** The private constructor. */
-  KNNGraphAlphaMutualInformationMetric(const Self &); // purposely not implemented
+  KNNGraphAlphaMutualInformationMetric(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

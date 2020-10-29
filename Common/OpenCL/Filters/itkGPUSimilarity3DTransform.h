@@ -85,9 +85,9 @@ protected:
   virtual ~GPUSimilarity3DTransform() {}
 
 private:
-  GPUSimilarity3DTransform(const Self & other); // purposely not implemented
+  GPUSimilarity3DTransform(const Self & other) = delete;
   const Self &
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

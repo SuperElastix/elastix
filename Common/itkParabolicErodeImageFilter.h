@@ -82,9 +82,9 @@ protected:
   //   void PrintSelf(std::ostream& os, Indent indent) const;
 
 private:
-  ParabolicErodeImageFilter(const Self &); // purposely not implemented
+  ParabolicErodeImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

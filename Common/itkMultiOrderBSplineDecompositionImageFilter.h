@@ -163,9 +163,9 @@ protected:
   unsigned int m_IteratorDirection;           // Direction for iterator incrementing
 
 private:
-  MultiOrderBSplineDecompositionImageFilter(const Self &); // purposely not implemented
+  MultiOrderBSplineDecompositionImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Determines the poles for dimension given the Spline Order. */
   virtual void

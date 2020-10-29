@@ -144,10 +144,10 @@ protected:
 
 private:
   /** The private constructor. */
-  TranslationTransformElastix(const Self &); // purposely not implemented
+  TranslationTransformElastix(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

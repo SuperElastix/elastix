@@ -95,10 +95,10 @@ protected:
 
 private:
   /** The private constructor. */
-  LinearInterpolator(const Self &); // purposely not implemented
+  LinearInterpolator(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

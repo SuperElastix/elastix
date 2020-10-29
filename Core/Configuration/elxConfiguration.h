@@ -260,9 +260,9 @@ protected:
   PrintParameterFile(void) const;
 
 private:
-  Configuration(const Self &); // purposely not implemented
+  Configuration(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   CommandLineArgumentMapType   m_CommandLineArgumentMap;
   std::string                  m_ParameterFileName;

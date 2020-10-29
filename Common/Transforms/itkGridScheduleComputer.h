@@ -171,9 +171,9 @@ protected:
                         SpacingType &   finalGridSpacing) const;
 
 private:
-  GridScheduleComputer(const Self &); // purposely not implemented
+  GridScheduleComputer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Declare member variables, needed in functions. */
   OriginType    m_ImageOrigin;

@@ -107,9 +107,9 @@ protected:
   ~Simplex() override {}
 
 private:
-  Simplex(const Self &); // purposely not implemented
+  Simplex(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

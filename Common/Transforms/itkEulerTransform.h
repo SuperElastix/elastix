@@ -191,9 +191,9 @@ protected:
   ~EulerTransform() override {}
 
 private:
-  EulerTransform(const Self &); // purposely not implemented
+  EulerTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 template <class TScalarType>
@@ -259,9 +259,9 @@ protected:
   ~EulerTransform() override {}
 
 private:
-  EulerTransform(const Self &); // purposely not implemented
+  EulerTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

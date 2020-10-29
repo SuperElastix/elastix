@@ -462,9 +462,9 @@ protected:
   DerivativeType       m_NullDerivative;
 
 private:
-  CombinationImageToImageMetric(const Self &); // purposely not implemented
+  CombinationImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Initialize some multi-threading related parameters.
    * Overrides function in AdvancedImageToImageMetric, because

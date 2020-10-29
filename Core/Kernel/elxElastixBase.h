@@ -503,9 +503,9 @@ protected:
   GenerateDataObjectContainer(DataObjectPointer dataObject);
 
 private:
-  ElastixBase(const Self &); // purposely not implemented
+  ElastixBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   xl::xoutrow_type m_IterationInfo;
 

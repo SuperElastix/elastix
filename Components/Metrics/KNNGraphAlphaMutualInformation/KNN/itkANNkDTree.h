@@ -108,9 +108,9 @@ protected:
   BucketSizeType    m_BucketSize;
 
 private:
-  ANNkDTree(const Self &); // purposely not implemented
+  ANNkDTree(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

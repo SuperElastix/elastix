@@ -419,9 +419,9 @@ protected:
   AddRandomPerturbation(ParametersType & parameters, double sigma);
 
 private:
-  AdaGrad(const Self &); // purposely not implemented
+  AdaGrad(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;

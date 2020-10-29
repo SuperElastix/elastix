@@ -104,9 +104,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  BSplineInterpolationSecondOrderDerivativeWeightFunction(const Self &); // purposely not implemented
+  BSplineInterpolationSecondOrderDerivativeWeightFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   vnl_vector_fixed<double, 2> m_DerivativeDirections;
   bool                        m_EqualDerivativeDirections;

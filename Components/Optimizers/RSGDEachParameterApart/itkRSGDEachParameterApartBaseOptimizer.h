@@ -154,9 +154,9 @@ protected:
 
 
 private:
-  RSGDEachParameterApartBaseOptimizer(const Self &); // purposely not implemented
+  RSGDEachParameterApartBaseOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
 protected:
   DerivativeType m_Gradient;

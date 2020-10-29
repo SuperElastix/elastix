@@ -327,9 +327,9 @@ protected:
   ~AdvancedIdentityTransform() override {}
 
 private:
-  AdvancedIdentityTransform(const Self &); // purposely not implemented
+  AdvancedIdentityTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   JacobianType                  m_LocalJacobian;
   SpatialJacobianType           m_SpatialJacobian;

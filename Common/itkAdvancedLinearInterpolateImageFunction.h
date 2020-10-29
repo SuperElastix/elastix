@@ -120,9 +120,9 @@ protected:
   ~AdvancedLinearInterpolateImageFunction() override {}
 
 private:
-  AdvancedLinearInterpolateImageFunction(const Self &); // purposely not implemented
+  AdvancedLinearInterpolateImageFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Helper struct to select the correct dimension. */
   struct DispatchBase

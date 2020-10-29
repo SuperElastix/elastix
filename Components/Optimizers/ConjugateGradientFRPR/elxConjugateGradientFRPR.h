@@ -212,9 +212,9 @@ protected:
   LineOptimize(ParametersType * p, ParametersType xi, double * val);
 
 private:
-  ConjugateGradientFRPR(const Self &); // purposely not implemented
+  ConjugateGradientFRPR(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   bool m_LineOptimizing;
   bool m_LineBracketing;

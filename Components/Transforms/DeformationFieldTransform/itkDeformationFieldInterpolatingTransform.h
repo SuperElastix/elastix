@@ -258,9 +258,9 @@ protected:
   DeformationFieldInterpolatorPointer m_DeformationFieldInterpolator;
 
 private:
-  DeformationFieldInterpolatingTransform(const Self &); // purposely not implemented
+  DeformationFieldInterpolatingTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // namespace itk

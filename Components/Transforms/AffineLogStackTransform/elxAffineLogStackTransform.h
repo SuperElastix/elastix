@@ -184,9 +184,9 @@ protected:
 
 private:
   /** The private constructor and copy constructor. */
-  AffineLogStackTransform(const Self &); // purposely not implemented
+  AffineLogStackTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** The Affine stack transform. */
   AffineLogStackTransformPointer m_AffineLogStackTransform;

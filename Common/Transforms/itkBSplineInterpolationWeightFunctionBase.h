@@ -166,9 +166,9 @@ protected:
   typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
 
 private:
-  BSplineInterpolationWeightFunctionBase(const Self &); // purposely not implemented
+  BSplineInterpolationWeightFunctionBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Function to initialize the support region. */
   void

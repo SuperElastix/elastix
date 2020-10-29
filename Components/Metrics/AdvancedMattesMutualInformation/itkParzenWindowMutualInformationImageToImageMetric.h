@@ -254,10 +254,10 @@ protected:
 
 private:
   /** The private constructor. */
-  ParzenWindowMutualInformationImageToImageMetric(const Self &); // purposely not implemented
+  ParzenWindowMutualInformationImageToImageMetric(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Helper array for storing the values of the JointPDF ratios. */
   typedef double              PRatioType;

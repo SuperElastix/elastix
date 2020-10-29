@@ -153,9 +153,9 @@ protected:
   ~StandardGradientDescent() override {}
 
 private:
-  StandardGradientDescent(const Self &); // purposely not implemented
+  StandardGradientDescent(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Private variables for the sampling attempts. */
   unsigned long m_MaximumNumberOfSamplingAttempts;

@@ -234,9 +234,9 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  AdvancedNormalizedCorrelationImageToImageMetric(const Self &); // purposely not implemented
+  AdvancedNormalizedCorrelationImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   mutable bool m_SubtractMean;
 

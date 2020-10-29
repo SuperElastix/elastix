@@ -314,9 +314,9 @@ protected:
   FixedImageRegionType m_NullFixedImageRegion;
 
 private:
-  MultiInputMultiResolutionImageRegistrationMethodBase(const Self &); // purposely not implemented
+  MultiInputMultiResolutionImageRegistrationMethodBase(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   MultiInputMetricPointer m_MultiInputMetric;
 };

@@ -170,9 +170,9 @@ private:
   void
   SubVector(const VectorType & fullVector, SubVectorType & subVector, const unsigned int leaveOutIndex) const;
 
-  MissingVolumeMeshPenalty(const Self &); // purposely not implemented
+  MissingVolumeMeshPenalty(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

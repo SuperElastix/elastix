@@ -81,9 +81,9 @@ protected:
   GPUGenerateData(void);
 
 private:
-  GPUBSplineDecompositionImageFilter(const Self &); // purposely not implemented
+  GPUBSplineDecompositionImageFilter(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;

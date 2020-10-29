@@ -259,10 +259,10 @@ protected:
 
 private:
   /** The private constructor. */
-  MultiBSplineTransformWithNormal(const Self &); // purposely not implemented
+  MultiBSplineTransformWithNormal(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Private variables. */
   typename MultiBSplineTransformWithNormalCubicType::Pointer m_MultiBSplineTransformWithNormal;

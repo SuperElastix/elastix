@@ -408,9 +408,9 @@ protected:
   double  m_WindowScale;
 
 private:
-  AdaptiveStochasticLBFGS(const Self &); // purposely not implemented
+  AdaptiveStochasticLBFGS(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   // multi-threaded AdvanceOneStep:
   struct MultiThreaderParameterType

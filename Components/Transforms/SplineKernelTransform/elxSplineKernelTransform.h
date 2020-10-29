@@ -251,10 +251,10 @@ protected:
 
 private:
   /** The private constructor. */
-  SplineKernelTransform(const Self &); // purposely not implemented
+  SplineKernelTransform(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   std::string m_SplineKernelType;
 };

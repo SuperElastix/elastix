@@ -71,9 +71,9 @@ protected:
   GetParametersDataManager(void) const override;
 
 private:
-  GPUInterpolateImageFunction(const Self &); // purposely not implemented
+  GPUInterpolateImageFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

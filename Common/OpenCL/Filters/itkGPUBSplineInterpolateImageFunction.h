@@ -99,9 +99,9 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  GPUBSplineInterpolateImageFunction(const Self &); // purposely not implemented
+  GPUBSplineInterpolateImageFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   GPUCoefficientImagePointer m_GPUCoefficients;
   GPUDataManagerPointer      m_GPUCoefficientsImageBase;

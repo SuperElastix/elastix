@@ -84,9 +84,9 @@ protected:
   Register3D();
 
 private:
-  GPUEuler3DTransformFactory2(const Self &); // purposely not implemented
+  GPUEuler3DTransformFactory2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

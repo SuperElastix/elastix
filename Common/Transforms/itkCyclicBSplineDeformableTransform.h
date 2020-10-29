@@ -146,9 +146,9 @@ protected:
               RegionType &       outRegion2) const;
 
 private:
-  CyclicBSplineDeformableTransform(const Self &); // purposely not implemented
+  CyclicBSplineDeformableTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // namespace itk

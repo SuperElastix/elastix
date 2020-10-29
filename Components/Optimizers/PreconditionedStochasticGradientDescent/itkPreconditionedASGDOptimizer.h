@@ -134,9 +134,9 @@ protected:
   std::string    m_StepSizeStrategy;
 
 private:
-  PreconditionedASGDOptimizer(const Self &); // purposely not implemented
+  PreconditionedASGDOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   /** Settings */
   bool   m_UseAdaptiveStepSizes;

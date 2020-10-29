@@ -205,10 +205,10 @@ protected:
 
 private:
   /** The private constructor. */
-  PolydataDummyPenalty(const Self &); // purposely not implemented
+  PolydataDummyPenalty(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   unsigned int m_NumberOfMeshes;
 };

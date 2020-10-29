@@ -171,9 +171,9 @@ protected:
   ~SimilarityTransform() override {}
 
 private:
-  SimilarityTransform(const Self &); // purposely not implemented
+  SimilarityTransform(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

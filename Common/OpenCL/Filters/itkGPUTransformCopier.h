@@ -221,9 +221,9 @@ private:
                             TransformSpaceDimensionToType<3>);
 
 private:
-  GPUTransformCopier(const Self &); // purposely not implemented
+  GPUTransformCopier(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   CPUTransformConstPointer m_InputTransform;
   GPUTransformPointer      m_Output;

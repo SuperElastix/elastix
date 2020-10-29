@@ -150,9 +150,9 @@ protected:
   bool m_ShowMetricValues;
 
 private:
-  SimultaneousPerturbation(const Self &); // purposely not implemented
+  SimultaneousPerturbation(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

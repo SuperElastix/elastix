@@ -117,9 +117,9 @@ protected:
   ComputeDeformationContribution(const InputPointType & inputPoint, OutputPointType & result) const override;
 
 private:
-  ThinPlateSplineKernelTransform2(const Self &); // purposely not implemented
+  ThinPlateSplineKernelTransform2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // namespace itk

@@ -73,9 +73,9 @@ protected:
   ~HardLimiterFunction() override {}
 
 private:
-  HardLimiterFunction(const Self &); // purposely not implemented
+  HardLimiterFunction(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

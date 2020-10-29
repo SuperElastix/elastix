@@ -179,10 +179,10 @@ protected:
 
 private:
   /** The private constructor. */
-  TransformBendingEnergyPenaltyTerm(const Self &); // purposely not implemented
+  TransformBendingEnergyPenaltyTerm(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   unsigned int m_NumberOfSamplesForSelfHessian;
 };

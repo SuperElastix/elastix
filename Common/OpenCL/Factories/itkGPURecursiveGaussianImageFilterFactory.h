@@ -121,9 +121,9 @@ protected:
   Register3D();
 
 private:
-  GPURecursiveGaussianImageFilterFactory2(const Self &); // purposely not implemented
+  GPURecursiveGaussianImageFilterFactory2(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk

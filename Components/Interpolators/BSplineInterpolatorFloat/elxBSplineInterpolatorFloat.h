@@ -116,10 +116,10 @@ protected:
 
 private:
   /** The private constructor. */
-  BSplineInterpolatorFloat(const Self &); // purposely not implemented
+  BSplineInterpolatorFloat(const Self &) = delete;
   /** The private copy constructor. */
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

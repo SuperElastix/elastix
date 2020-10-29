@@ -171,9 +171,9 @@ protected:
   typedef NeighborhoodOperatorImageFilter<MovedGradientImageType, MovedGradientImageType> MovedSobelFilter;
 
 private:
-  NormalizedGradientCorrelationImageToImageMetric(const Self &); // purposely not implemented
+  NormalizedGradientCorrelationImageToImageMetric(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   ScalesType                  m_Scales;
   double                      m_DerivativeDelta;

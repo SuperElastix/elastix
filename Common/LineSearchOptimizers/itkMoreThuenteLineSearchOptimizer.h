@@ -272,9 +272,9 @@ protected:
   bool m_SafeGuardedStepFailed;
 
 private:
-  MoreThuenteLineSearchOptimizer(const Self &); // purposely not implemented
+  MoreThuenteLineSearchOptimizer(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   unsigned long m_MaximumNumberOfIterations;
   double        m_ValueTolerance;

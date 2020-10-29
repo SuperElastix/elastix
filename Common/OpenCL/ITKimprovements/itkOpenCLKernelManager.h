@@ -159,9 +159,9 @@ protected:
   ResetArguments(const std::size_t kernelIdx);
 
 private:
-  OpenCLKernelManager(const Self &); // purposely not implemented
+  OpenCLKernelManager(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 
   OpenCLContext * m_Context;
 

@@ -131,9 +131,9 @@ protected:
   ~RegularStepGradientDescent() override {}
 
 private:
-  RegularStepGradientDescent(const Self &); // purposely not implemented
+  RegularStepGradientDescent(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace elastix

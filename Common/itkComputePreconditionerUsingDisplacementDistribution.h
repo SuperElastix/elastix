@@ -144,9 +144,9 @@ protected:
   double m_ConditionNumber;
 
 private:
-  ComputePreconditionerUsingDisplacementDistribution(const Self &); // purposely not implemented
+  ComputePreconditionerUsingDisplacementDistribution(const Self &) = delete;
   void
-  operator=(const Self &); // purposely not implemented
+  operator=(const Self &) = delete;
 };
 
 } // end namespace itk
