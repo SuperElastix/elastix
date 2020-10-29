@@ -333,7 +333,7 @@ public:
    * This updates the Translation based on current center.
    */
   void
-  Compose(const Self * other, bool pre = 0);
+  Compose(const Self * other, bool pre = false);
 
   /** Transform by an affine transformation
    *
