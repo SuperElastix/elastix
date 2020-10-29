@@ -132,15 +132,12 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
 {
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
-  typedef ElastixMainType::ObjectPointer              ObjectPointer;
   typedef ElastixMainType::DataObjectContainerType    DataObjectContainerType;
   typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
   typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
 
   typedef ElastixMainType::ArgumentMapType ArgumentMapType;
   typedef ArgumentMapType::value_type      ArgumentMapEntryType;
-
-  typedef std::pair<std::string, std::string> ArgPairType;
 
   // Clear output transform parameters
   this->m_TransformParametersList.clear();

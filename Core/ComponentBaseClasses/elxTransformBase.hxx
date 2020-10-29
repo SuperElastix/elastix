@@ -1716,7 +1716,6 @@ void
 TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
 {
   typedef itk::ImageGridSampler<FixedImageType>               ImageSamplerType;
-  typedef typename ImageSamplerType::Pointer                  ImageSamplerPointer;
   typedef typename ImageSamplerType::ImageSampleContainerType ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer          ImageSampleContainerPointer;
   typedef typename ITKBaseType::JacobianType                  JacobianType;
@@ -1786,7 +1785,6 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
   typedef typename FixedImageType::SizeType   SizeType;
 
   typedef itk::ImageGridSampler<FixedImageType>               ImageSamplerType;
-  typedef typename ImageSamplerType::Pointer                  ImageSamplerPointer;
   typedef typename ImageSamplerType::ImageSampleContainerType ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer          ImageSampleContainerPointer;
   typedef typename ITKBaseType::JacobianType                  JacobianType;
