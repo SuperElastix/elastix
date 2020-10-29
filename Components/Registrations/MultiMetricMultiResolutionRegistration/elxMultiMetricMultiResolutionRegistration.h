@@ -235,9 +235,9 @@ protected:
   bool m_ShowExactMetricValue;
 
 private:
-  /** The private constructor. */
+  /** The deleted copy constructor. */
   MultiMetricMultiResolutionRegistration(const Self &) = delete;
-  /** The private copy constructor. */
+  /** The deleted assignment operator. */
   void
   operator=(const Self &) = delete;
 };

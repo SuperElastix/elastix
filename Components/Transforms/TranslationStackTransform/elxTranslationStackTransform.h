@@ -156,7 +156,7 @@ protected:
   ~TranslationStackTransform() override {}
 
 private:
-  /** The private constructor and copy constructor. */
+  /** The deleted copy constructor and assignment operator. */
   TranslationStackTransform(const Self &) = delete;
   void
   operator=(const Self &) = delete;

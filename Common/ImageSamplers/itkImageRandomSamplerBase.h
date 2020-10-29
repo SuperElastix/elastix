@@ -84,9 +84,9 @@ protected:
   std::vector<double> m_RandomNumberList;
 
 private:
-  /** The private constructor. */
+  /** The deleted copy constructor. */
   ImageRandomSamplerBase(const Self &) = delete;
-  /** The private copy constructor. */
+  /** The deleted assignment operator. */
   void
   operator=(const Self &) = delete;
 };

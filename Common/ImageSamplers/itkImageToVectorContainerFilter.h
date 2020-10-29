@@ -189,9 +189,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  /** The private constructor. */
+  /** The deleted copy constructor. */
   ImageToVectorContainerFilter(const Self &) = delete;
-  /** The private copy constructor. */
+  /** The deleted assignment operator. */
   void
   operator=(const Self &) = delete;
 };

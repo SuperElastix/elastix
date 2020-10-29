@@ -184,9 +184,9 @@ protected:
   ~VarianceOverLastDimensionMetric() override {}
 
 private:
-  /** The private constructor. */
+  /** The deleted copy constructor. */
   VarianceOverLastDimensionMetric(const Self &) = delete;
-  /** The private copy constructor. */
+  /** The deleted assignment operator. */
   void
   operator=(const Self &) = delete;
 };

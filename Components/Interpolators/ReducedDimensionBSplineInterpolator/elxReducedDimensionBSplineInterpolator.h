@@ -113,9 +113,9 @@ protected:
   ~ReducedDimensionBSplineInterpolator() override {}
 
 private:
-  /** The private constructor. */
+  /** The deleted copy constructor. */
   ReducedDimensionBSplineInterpolator(const Self &) = delete;
-  /** The private copy constructor. */
+  /** The deleted assignment operator. */
   void
   operator=(const Self &) = delete;
 };
