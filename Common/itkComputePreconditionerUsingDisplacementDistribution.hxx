@@ -736,13 +736,11 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
   typedef ImageRegionIteratorWithIndex<CoefficientImageType> IteratorType;
   typedef ImageLinearIteratorWithIndex<CoefficientImageType> ImageScanlineIteratorType;
   typedef ImageSliceIteratorWithIndex<CoefficientImageType>  SliceIteratorType;
-  typedef NeighborhoodIterator<CoefficientImageType>         NeighborhoodIteratorType;
 
   typedef CropImageFilter<CoefficientImageType, CoefficientImageType> CropImageFilterType;
   // typedef MirrorPadImageFilter<CoefficientImageType,CoefficientImageType> PadImageFilterType;
   typedef ZeroFluxNeumannPadImageFilter<CoefficientImageType, CoefficientImageType>         PadImageFilterType;
   typedef SmoothingRecursiveGaussianImageFilter<CoefficientImageType, CoefficientImageType> SmoothingFilterType;
-  typedef ImageFileWriter<CoefficientImageType>                                             WriterType;
 
   CombinationTransformType * testPtr_combo = dynamic_cast<CombinationTransformType *>(this->m_Transform.GetPointer());
   if (!testPtr_combo)
@@ -805,6 +803,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
     }
 
     // tmp write
+    //     typedef ImageFileWriter<CoefficientImageType> WriterType;
     //     typename WriterType::Pointer writer1 = WriterType::New();
     //     writer1->SetFileName( "P_0.mha" );
     //     writer1->SetInput( coefImage );
@@ -925,7 +924,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
     double tmp = 0.0;
     GridSizeType radius;
     radius.Fill(1);
-    NeighborhoodIteratorType nit(radius, coefImage, region2);
+    NeighborhoodIterator<CoefficientImageType> nit(radius, coefImage, region2);
     while (!nit.IsAtEnd())
     {
       if (nit.GetCenterPixel() > -0.5)

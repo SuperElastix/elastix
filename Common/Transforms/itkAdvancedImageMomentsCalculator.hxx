@@ -239,8 +239,6 @@ AdvancedImageMomentsCalculator<TImage>::BeforeThreadedCompute()
   m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
   m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
 
-  typedef typename ImageType::IndexType IndexType;
-
   if (!m_Image)
   {
     return;
@@ -304,8 +302,6 @@ template <typename TImage>
 void
 AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
 {
-  typedef typename ImageType::IndexType IndexType;
-
   if (!this->m_Image)
   {
     return;

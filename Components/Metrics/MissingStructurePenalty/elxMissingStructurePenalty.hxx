@@ -412,7 +412,6 @@ the sequence of points to form a 2d connected polydata contour.
   typedef typename FixedImageIndexType::IndexValueType       FixedImageIndexValueType;
   typedef typename MovingImageType::IndexType                MovingImageIndexType;
   typedef itk::ContinuousIndex<double, FixedImageDimension>  FixedImageContinuousIndexType;
-  typedef itk::ContinuousIndex<double, MovingImageDimension> MovingImageContinuousIndexType;
   typedef typename FixedImageType::DirectionType             FixedImageDirectionType;
 
   typedef unsigned char DummyIPPPixelType;
