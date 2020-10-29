@@ -114,53 +114,43 @@ ImageFileCastWriter<TInputImage>::GenerateData(void)
      * The imageIO's PixelType is also changed */
     if (this->m_OutputComponentType == "char")
     {
-      char dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<char>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "unsigned_char")
     {
-      unsigned char dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<unsigned char>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "short")
     {
-      short dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<short>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "unsigned_short")
     {
-      unsigned short dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<unsigned short>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "int")
     {
-      int dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<int>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "unsigned_int")
     {
-      unsigned int dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<unsigned int>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "long")
     {
-      long dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<long>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "unsigned_long")
     {
-      unsigned long dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<unsigned long>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "float")
     {
-      float dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<float>(inputAsDataObject);
     }
     else if (this->m_OutputComponentType == "double")
     {
-      double dummy;
-      convertedDataBuffer = this->ConvertScalarImage(inputAsDataObject, dummy);
+      convertedDataBuffer = this->ConvertScalarImage<double>(inputAsDataObject);
     }
 
     /** Do the writing */

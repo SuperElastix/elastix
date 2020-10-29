@@ -78,13 +78,15 @@ protected:
   void
   GenerateData(void) override;
 
+private:
+
   /** Templated function that casts the input image and returns a
    * a pointer to the PixelBuffer. Assumes scalar singlecomponent images
    * The buffer data is valid until this->m_Caster is destroyed or assigned
    * a new caster. The ImageIO's PixelType is also adapted by this function */
   template <class OutputComponentType>
   void *
-  ConvertScalarImage(const DataObject * inputImage, const OutputComponentType & itkNotUsed(dummy))
+  ConvertScalarImage(const DataObject * inputImage)
   {
     typedef Image<OutputComponentType, InputImageDimension>      DiskImageType;
     typedef typename PixelTraits<InputImagePixelType>::ValueType InputImageComponentType;
@@ -114,7 +116,6 @@ protected:
 
   ProcessObject::Pointer m_Caster;
 
-private:
   ImageFileCastWriter(const Self &) = delete;
   void
   operator=(const Self &) = delete;
