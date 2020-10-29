@@ -183,7 +183,7 @@ protected:
   ReadCenterOfRotationPoint(ReducedDimensionInputPointType & rotationPoint) const;
 
 private:
-  /** The private constructor and copy constructor. */
+  /** The deleted copy constructor and assignment operator. */
   AffineLogStackTransform(const Self &) = delete;
   void
   operator=(const Self &) = delete;

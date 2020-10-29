@@ -112,9 +112,9 @@ protected:
   ~ResampleInterpolatorBase() override {}
 
 private:
-  /** The private constructor. */
+  /** The deleted copy constructor. */
   ResampleInterpolatorBase(const Self &) = delete;
-  /** The private copy constructor. */
+  /** The deleted assignment operator. */
   void
   operator=(const Self &) = delete;
 };

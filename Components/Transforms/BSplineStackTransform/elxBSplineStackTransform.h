@@ -299,7 +299,7 @@ protected:
   PreComputeGridInformation(void);
 
 private:
-  /** The private constructor and copy constructor. */
+  /** The deleted copy constructor and assignment operator. */
   BSplineStackTransform(const Self &) = delete;
   void
   operator=(const Self &) = delete;
