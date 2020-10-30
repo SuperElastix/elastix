@@ -65,7 +65,7 @@ public:
   LoadComponents(const char * argv0);
 
   /** Function to unload components. */
-  virtual void
+  void
   UnloadComponents(void);
 
 protected:

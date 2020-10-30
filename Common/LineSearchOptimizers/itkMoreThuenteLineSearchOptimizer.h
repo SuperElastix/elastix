@@ -196,7 +196,7 @@ protected:
   CheckSettings(void);
 
   /** Initialize the interval of uncertainty etc. */
-  virtual void
+  void
   InitializeLineSearch(void);
 
   /** Set the minimum and maximum steps to correspond to the
