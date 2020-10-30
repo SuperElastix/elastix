@@ -85,8 +85,8 @@ public:
 protected:
   /** The constructor. */
   InterpolatorBase() {}
-  /** The destructor. */
-  ~InterpolatorBase() override {}
+  /** The destructor. Declared "pure virtual" to make this an abstract base class. */
+  ~InterpolatorBase() override = 0 {}
 
 private:
   /** The deleted copy constructor. */

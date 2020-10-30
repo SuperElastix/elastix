@@ -125,8 +125,8 @@ public:
 protected:
   /** The constructor. */
   MovingImagePyramidBase() {}
-  /** The destructor. */
-  ~MovingImagePyramidBase() override {}
+  /** The destructor. Declared "pure virtual" to make this an abstract base class. */
+  ~MovingImagePyramidBase() override = 0 {}
 
 private:
   /** The deleted copy constructor. */

@@ -342,8 +342,8 @@ public:
 protected:
   /** The default-constructor. */
   TransformBase() = default;
-  /** The destructor. */
-  ~TransformBase() override = default;
+  /** The destructor. Declared "pure virtual" to make this an abstract base class. */
+  ~TransformBase() override = 0 {}
 
   /** Estimate a scales vector
    * AutomaticScalesEstimation works like this:

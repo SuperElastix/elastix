@@ -108,8 +108,8 @@ public:
 protected:
   /** The constructor. */
   ResampleInterpolatorBase() {}
-  /** The destructor. */
-  ~ResampleInterpolatorBase() override {}
+  /** The destructor. Declared "pure virtual" to make this an abstract base class. */
+  ~ResampleInterpolatorBase() override = 0 {}
 
 private:
   /** The deleted copy constructor. */

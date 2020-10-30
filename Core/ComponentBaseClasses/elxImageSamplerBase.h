@@ -91,8 +91,8 @@ public:
 protected:
   /** The constructor. */
   ImageSamplerBase() {}
-  /** The destructor. */
-  ~ImageSamplerBase() override {}
+  /** The destructor. Declared "pure virtual" to make this an abstract base class. */
+  ~ImageSamplerBase() override = 0 {}
 
 private:
   /** The deleted copy constructor. */

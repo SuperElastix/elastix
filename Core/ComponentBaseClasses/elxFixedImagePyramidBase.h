@@ -123,8 +123,8 @@ public:
 protected:
   /** The constructor. */
   FixedImagePyramidBase() {}
-  /** The destructor. */
-  ~FixedImagePyramidBase() override {}
+  /** The destructor. Declared "pure virtual" to make this an abstract base class. */
+  ~FixedImagePyramidBase() override = 0 {}
 
 private:
   /** The deleted copy constructor. */

@@ -150,8 +150,8 @@ public:
 protected:
   /** The constructor. */
   RegistrationBase() {}
-  /** The destructor. */
-  ~RegistrationBase() override {}
+  /** The destructor. Declared "pure virtual" to make this an abstract base class. */
+  ~RegistrationBase() override = 0 {}
 
   /** Typedef's for mask support. */
   typedef typename ElastixType::MaskPixelType                                       MaskPixelType;
