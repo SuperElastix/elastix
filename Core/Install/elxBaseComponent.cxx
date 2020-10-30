@@ -129,7 +129,6 @@ BaseComponent::ConvertSecondsToDHMS(const double totalSeconds, const unsigned in
   if (minutes != 0 || nonzero)
   {
     make_string << minutes << "m";
-    nonzero = true;
   }
   make_string << std::showpoint << std::fixed << std::setprecision(precision);
   make_string << dSeconds << "s";
