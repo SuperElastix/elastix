@@ -160,7 +160,7 @@ public:
       temp->t_Optimizer = this;
 
       /** Call multi-threaded AdvanceOneStep(). */
-      this->m_Threader->SetSingleMethod(AdvanceOneStepThreaderCallback, (void *)(temp));
+      this->m_Threader->SetSingleMethod(AdvanceOneStepThreaderCallback, temp);
       this->m_Threader->SingleMethodExecute();
 
       delete temp;

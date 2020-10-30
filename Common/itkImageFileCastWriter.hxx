@@ -161,7 +161,7 @@ ImageFileCastWriter<TInputImage>::GenerateData(void)
   else
   {
     /** No casting needed or possible, just write */
-    const void * dataPtr = (const void *)input->GetBufferPointer();
+    const void * dataPtr = input->GetBufferPointer();
     this->GetModifiableImageIO()->Write(dataPtr);
   }
 }
