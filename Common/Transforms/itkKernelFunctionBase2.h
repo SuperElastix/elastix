@@ -60,8 +60,8 @@ public:
   Evaluate(const TRealValueType & u, TRealValueType * weights) const = 0;
 
 protected:
-  KernelFunctionBase2(){};
-  ~KernelFunctionBase2() override{};
+  KernelFunctionBase2()= default;;
+  ~KernelFunctionBase2() override= default;;
 };
 } // end namespace itk
 

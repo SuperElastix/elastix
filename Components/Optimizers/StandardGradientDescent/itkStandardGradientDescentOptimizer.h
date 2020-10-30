@@ -133,7 +133,7 @@ public:
 
 protected:
   StandardGradientDescentOptimizer();
-  ~StandardGradientDescentOptimizer() override {}
+  ~StandardGradientDescentOptimizer() override = default;
 
   /** Function to compute the parameter at time/iteration k. */
   virtual double

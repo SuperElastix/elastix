@@ -203,7 +203,7 @@ protected:
   DistancePreservingRigidityPenaltyTerm();
 
   /** The destructor. */
-  ~DistancePreservingRigidityPenaltyTerm() override {}
+  ~DistancePreservingRigidityPenaltyTerm() override = default;
 
   /** PrintSelf. */
   void

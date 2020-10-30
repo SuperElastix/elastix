@@ -133,7 +133,7 @@ public:
 
 protected:
   QuasiNewtonLBFGSOptimizer();
-  ~QuasiNewtonLBFGSOptimizer() override {}
+  ~QuasiNewtonLBFGSOptimizer() override = default;
 
   // \todo: should be implemented
   void

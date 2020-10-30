@@ -141,7 +141,7 @@ public:
 
 protected:
   FiniteDifferenceGradientDescent();
-  ~FiniteDifferenceGradientDescent() override {}
+  ~FiniteDifferenceGradientDescent() override = default;
 
   bool m_ShowMetricValues;
 

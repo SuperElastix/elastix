@@ -66,8 +66,8 @@ public:
   }
 
 protected:
-  GPUAdvancedTranslationTransform() {}
-  virtual ~GPUAdvancedTranslationTransform() {}
+  GPUAdvancedTranslationTransform() = default;
+  virtual ~GPUAdvancedTranslationTransform() = default;
 
 private:
   GPUAdvancedTranslationTransform(const Self & other) = delete;

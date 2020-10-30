@@ -133,7 +133,7 @@ protected:
   /** The constructor. */
   ScaledSingleValuedNonLinearOptimizer();
   /** The destructor. */
-  ~ScaledSingleValuedNonLinearOptimizer() override {}
+  ~ScaledSingleValuedNonLinearOptimizer() override = default;
 
   /** PrintSelf. */
   void

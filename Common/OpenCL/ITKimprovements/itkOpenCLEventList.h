@@ -38,7 +38,7 @@ public:
   typedef std::vector<cl_event> OpenCLEventListArrayType;
 
   /** Constructs an empty list of OpenCL events. */
-  OpenCLEventList() {}
+  OpenCLEventList() = default;
 
   /** Constructs a list of OpenCL events that contains event. If event is null,
    * this constructor will construct an empty list.

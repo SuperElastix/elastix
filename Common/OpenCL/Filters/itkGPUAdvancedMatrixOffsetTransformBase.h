@@ -82,8 +82,8 @@ public:
   }
 
 protected:
-  GPUAdvancedMatrixOffsetTransformBase() {}
-  virtual ~GPUAdvancedMatrixOffsetTransformBase() {}
+  GPUAdvancedMatrixOffsetTransformBase() = default;
+  virtual ~GPUAdvancedMatrixOffsetTransformBase() = default;
 
 private:
   GPUAdvancedMatrixOffsetTransformBase(const Self & other) = delete;

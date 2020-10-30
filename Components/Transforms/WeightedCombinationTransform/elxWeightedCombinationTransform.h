@@ -208,7 +208,7 @@ protected:
   /** The constructor. */
   WeightedCombinationTransformElastix();
   /** The destructor. */
-  ~WeightedCombinationTransformElastix() override {}
+  ~WeightedCombinationTransformElastix() override = default;
 
   WeightedCombinationTransformPointer m_WeightedCombinationTransform;
   std::vector<std::string>            m_SubTransformFileNames;

@@ -85,9 +85,9 @@ public:
 
 protected:
   /** The constructor. */
-  FixedRecursivePyramid() {}
+  FixedRecursivePyramid() = default;
   /** The destructor. */
-  ~FixedRecursivePyramid() override {}
+  ~FixedRecursivePyramid() override = default;
 
 private:
   /** The deleted copy constructor. */

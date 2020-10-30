@@ -64,7 +64,7 @@ protected:
   BinaryANNTreeBase();
 
   /** Destructor. */
-  ~BinaryANNTreeBase() override {}
+  ~BinaryANNTreeBase() override = default;
 
 private:
   BinaryANNTreeBase(const Self &) = delete;

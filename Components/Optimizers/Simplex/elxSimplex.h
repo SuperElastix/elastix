@@ -103,8 +103,8 @@ public:
   SetInitialPosition(const ParametersType & param) override;
 
 protected:
-  Simplex() {}
-  ~Simplex() override {}
+  Simplex() = default;
+  ~Simplex() override = default;
 
 private:
   Simplex(const Self &) = delete;

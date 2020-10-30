@@ -348,7 +348,7 @@ protected:
   MultiInputImageToImageMetricBase();
 
   /** Destructor. */
-  ~MultiInputImageToImageMetricBase() override {}
+  ~MultiInputImageToImageMetricBase() override = default;
 
   /** Typedef's from the Superclass. */
   typedef typename Superclass::MovingImagePointType           MovingImagePointType;

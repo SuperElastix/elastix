@@ -80,8 +80,8 @@ public:
   }
 
 protected:
-  GPUAdvancedEuler3DTransform() {}
-  virtual ~GPUAdvancedEuler3DTransform() {}
+  GPUAdvancedEuler3DTransform() = default;
+  virtual ~GPUAdvancedEuler3DTransform() = default;
 
 private:
   GPUAdvancedEuler3DTransform(const Self & other) = delete;

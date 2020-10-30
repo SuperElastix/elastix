@@ -149,7 +149,7 @@ public:
   {}
 
   /** Virtual destructor needed for subclasses. */
-  ~OpenCLCompileError() override {}
+  ~OpenCLCompileError() override = default;
 
   const char *
   GetNameOfClass() const override

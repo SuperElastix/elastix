@@ -161,7 +161,7 @@ public:
 
 protected:
   ConjugateGradient();
-  ~ConjugateGradient() override {}
+  ~ConjugateGradient() override = default;
 
   LineOptimizerPointer m_LineOptimizer;
 

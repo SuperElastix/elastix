@@ -143,7 +143,7 @@ protected:
   AdvancedEuler3DTransform(const MatrixType & matrix, const OutputPointType & offset);
   AdvancedEuler3DTransform(unsigned int paramsSpaceDims);
 
-  ~AdvancedEuler3DTransform() override {}
+  ~AdvancedEuler3DTransform() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

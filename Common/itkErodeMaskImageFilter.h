@@ -123,7 +123,7 @@ protected:
   ErodeMaskImageFilter();
 
   /** Destructor */
-  ~ErodeMaskImageFilter() override {}
+  ~ErodeMaskImageFilter() override = default;
 
   /** Standard pipeline method. While this class does not implement a
    * ThreadedGenerateData(), its GenerateData() delegates all

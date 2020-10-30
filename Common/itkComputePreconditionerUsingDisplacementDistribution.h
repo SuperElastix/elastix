@@ -119,7 +119,7 @@ public:
 
 protected:
   ComputePreconditionerUsingDisplacementDistribution();
-  ~ComputePreconditionerUsingDisplacementDistribution() override {}
+  ~ComputePreconditionerUsingDisplacementDistribution() override = default;
 
   typedef typename Superclass::FixedImageIndexType           FixedImageIndexType;
   typedef typename Superclass::FixedImagePointType           FixedImagePointType;

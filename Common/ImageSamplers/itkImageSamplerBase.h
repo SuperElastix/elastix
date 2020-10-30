@@ -184,7 +184,7 @@ protected:
   ImageSamplerBase();
 
   /** The destructor. */
-  ~ImageSamplerBase() override {}
+  ~ImageSamplerBase() override = default;
 
   /** PrintSelf. */
   void

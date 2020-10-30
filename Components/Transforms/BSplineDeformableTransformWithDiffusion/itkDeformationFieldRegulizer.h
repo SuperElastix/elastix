@@ -114,7 +114,7 @@ protected:
   /** The constructor. */
   DeformationFieldRegulizer();
   /** The destructor. */
-  ~DeformationFieldRegulizer() override {}
+  ~DeformationFieldRegulizer() override = default;
 
 private:
   /** The deleted copy constructor. */

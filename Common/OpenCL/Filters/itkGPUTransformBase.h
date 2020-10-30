@@ -94,7 +94,7 @@ public:
 
 protected:
   GPUTransformBase();
-  virtual ~GPUTransformBase() {}
+  virtual ~GPUTransformBase() = default;
 
   GPUDataManager::Pointer m_ParametersDataManager;
 

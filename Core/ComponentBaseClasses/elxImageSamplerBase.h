@@ -90,9 +90,9 @@ public:
 
 protected:
   /** The constructor. */
-  ImageSamplerBase() {}
+  ImageSamplerBase() = default;
   /** The destructor. */
-  ~ImageSamplerBase() override {}
+  ~ImageSamplerBase() override = default;
 
 private:
   /** The deleted copy constructor. */

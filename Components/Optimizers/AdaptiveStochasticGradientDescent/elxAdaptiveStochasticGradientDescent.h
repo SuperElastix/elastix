@@ -341,7 +341,7 @@ protected:
   typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   AdaptiveStochasticGradientDescent();
-  ~AdaptiveStochasticGradientDescent() override {}
+  ~AdaptiveStochasticGradientDescent() override = default;
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;

@@ -70,7 +70,7 @@ public:
 
 protected:
   BSplineInterpolationWeightFunction2();
-  ~BSplineInterpolationWeightFunction2() override {}
+  ~BSplineInterpolationWeightFunction2() override = default;
 
   /** Interpolation kernel types. */
   typedef typename Superclass::KernelType                       KernelType;

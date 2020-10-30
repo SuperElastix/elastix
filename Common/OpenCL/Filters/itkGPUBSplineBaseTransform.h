@@ -88,7 +88,7 @@ protected:
   SetSplineOrder(const unsigned int splineOrder);
 
   GPUBSplineBaseTransform();
-  ~GPUBSplineBaseTransform() override {}
+  ~GPUBSplineBaseTransform() override = default;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */

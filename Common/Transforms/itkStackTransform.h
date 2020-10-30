@@ -287,7 +287,7 @@ public:
 
 protected:
   StackTransform();
-  ~StackTransform() override {}
+  ~StackTransform() override = default;
 
 private:
   StackTransform(const Self &) = delete;

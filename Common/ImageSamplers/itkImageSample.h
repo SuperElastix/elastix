@@ -35,8 +35,8 @@ class ImageSample
 {
 public:
   // ImageSample():m_ImageValue(0.0){};
-  ImageSample() {}
-  ~ImageSample() {}
+  ImageSample() = default;
+  ~ImageSample() = default;
 
   /** Typedef's. */
   typedef TImage                                      ImageType;

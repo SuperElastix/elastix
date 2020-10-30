@@ -101,7 +101,7 @@ protected:
   UpsampleBSplineParametersFilter();
 
   /** Destructor. */
-  ~UpsampleBSplineParametersFilter() override {}
+  ~UpsampleBSplineParametersFilter() override = default;
 
   /** PrintSelf. */
   void

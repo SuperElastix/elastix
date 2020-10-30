@@ -173,7 +173,7 @@ protected:
 
 
   /** The destructor. */
-  ~NormalizedMutualInformationMetric() override {}
+  ~NormalizedMutualInformationMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

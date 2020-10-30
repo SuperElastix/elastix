@@ -212,7 +212,7 @@ protected:
   /** The constructor. */
   AffineDTITransformElastix();
   /** The destructor. */
-  ~AffineDTITransformElastix() override {}
+  ~AffineDTITransformElastix() override = default;
 
   /** Try to read the CenterOfRotationPoint from the transform parameter file
    * The CenterOfRotationPoint is already in world coordinates. */

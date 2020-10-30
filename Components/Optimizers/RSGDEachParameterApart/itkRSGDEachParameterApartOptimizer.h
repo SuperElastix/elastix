@@ -70,8 +70,8 @@ public:
   typedef CostFunctionType::Pointer    CostFunctionPointer;
 
 protected:
-  RSGDEachParameterApartOptimizer() {}
-  ~RSGDEachParameterApartOptimizer() override {}
+  RSGDEachParameterApartOptimizer() = default;
+  ~RSGDEachParameterApartOptimizer() override = default;
 
   /** Advance one step along the corrected gradient taking into
    * account the steplengths represented by the factor array.

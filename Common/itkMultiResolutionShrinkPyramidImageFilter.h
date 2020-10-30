@@ -75,8 +75,8 @@ public:
 #endif
 
 protected:
-  MultiResolutionShrinkPyramidImageFilter() {}
-  ~MultiResolutionShrinkPyramidImageFilter() override {}
+  MultiResolutionShrinkPyramidImageFilter() = default;
+  ~MultiResolutionShrinkPyramidImageFilter() override = default;
 
   /** Generate the output data. */
   void

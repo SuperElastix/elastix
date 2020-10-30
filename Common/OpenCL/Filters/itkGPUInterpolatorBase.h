@@ -54,7 +54,7 @@ public:
 
 protected:
   GPUInterpolatorBase();
-  virtual ~GPUInterpolatorBase() {}
+  virtual ~GPUInterpolatorBase() = default;
 
   GPUDataManager::Pointer m_ParametersDataManager;
 };

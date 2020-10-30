@@ -157,7 +157,7 @@ public:
   class Iterator
   {
   public:
-    Iterator() {}
+    Iterator() = default;
     Iterator(size_type d, const VectorIterator & i)
       : m_Pos(d)
       , m_Iter(i)
@@ -256,7 +256,7 @@ public:
   class ConstIterator
   {
   public:
-    ConstIterator() {}
+    ConstIterator() = default;
     ConstIterator(size_type d, const VectorConstIterator & i)
       : m_Pos(d)
       , m_Iter(i)

@@ -175,7 +175,7 @@ protected:
   TransformBendingEnergyPenaltyTerm();
 
   /** The destructor. */
-  ~TransformBendingEnergyPenaltyTerm() override {}
+  ~TransformBendingEnergyPenaltyTerm() override = default;
 
 private:
   /** The deleted copy constructor. */

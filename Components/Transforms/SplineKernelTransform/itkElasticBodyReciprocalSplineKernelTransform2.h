@@ -128,7 +128,7 @@ public:
 
 protected:
   ElasticBodyReciprocalSplineKernelTransform2();
-  ~ElasticBodyReciprocalSplineKernelTransform2() override {}
+  ~ElasticBodyReciprocalSplineKernelTransform2() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

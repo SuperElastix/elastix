@@ -136,9 +136,9 @@ public:
 
 protected:
   /** The constructor. */
-  NormalizedGradientCorrelationMetric() {}
+  NormalizedGradientCorrelationMetric() = default;
   /** The destructor. */
-  ~NormalizedGradientCorrelationMetric() override {}
+  ~NormalizedGradientCorrelationMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

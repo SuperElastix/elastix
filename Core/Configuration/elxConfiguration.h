@@ -250,7 +250,7 @@ public:
 
 protected:
   Configuration();
-  ~Configuration() override {}
+  ~Configuration() override = default;
 
   /** Print the parameter file to the log file. Called by BeforeAll().
    * This function is not really generic. It's just added because it needs to be

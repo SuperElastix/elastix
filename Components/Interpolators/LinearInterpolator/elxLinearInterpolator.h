@@ -89,9 +89,9 @@ public:
 
 protected:
   /** The constructor. */
-  LinearInterpolator() {}
+  LinearInterpolator() = default;
   /** The destructor. */
-  ~LinearInterpolator() override {}
+  ~LinearInterpolator() override = default;
 
 private:
   /** The deleted copy constructor. */

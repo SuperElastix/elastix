@@ -108,9 +108,9 @@ public:
 
 protected:
   /** The constructor. */
-  RandomSampler() {}
+  RandomSampler() = default;
   /** The destructor. */
-  ~RandomSampler() override {}
+  ~RandomSampler() override = default;
 
 private:
   /** The deleted copy constructor. */

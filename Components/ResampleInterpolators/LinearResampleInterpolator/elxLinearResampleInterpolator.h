@@ -88,9 +88,9 @@ public:
 
 protected:
   /** The constructor. */
-  LinearResampleInterpolator() {}
+  LinearResampleInterpolator() = default;
   /** The destructor. */
-  ~LinearResampleInterpolator() override {}
+  ~LinearResampleInterpolator() override = default;
 
 private:
   /** The deleted copy constructor. */

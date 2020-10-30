@@ -460,7 +460,7 @@ protected:
   PrecomputeJacobians(unsigned int paramDims);
 
   /** Destroy an AdvancedMatrixOffsetTransformBase object. */
-  ~AdvancedMatrixOffsetTransformBase() override {}
+  ~AdvancedMatrixOffsetTransformBase() override = default;
 
   /** Print contents of an AdvancedMatrixOffsetTransformBase. */
   void

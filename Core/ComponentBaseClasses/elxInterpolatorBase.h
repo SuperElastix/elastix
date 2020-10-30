@@ -84,9 +84,9 @@ public:
 
 protected:
   /** The constructor. */
-  InterpolatorBase() {}
+  InterpolatorBase() = default;
   /** The destructor. */
-  ~InterpolatorBase() override {}
+  ~InterpolatorBase() override = default;
 
 private:
   /** The deleted copy constructor. */

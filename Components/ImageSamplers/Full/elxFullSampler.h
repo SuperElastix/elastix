@@ -94,9 +94,9 @@ public:
 
 protected:
   /** The constructor. */
-  FullSampler() {}
+  FullSampler() = default;
   /** The destructor. */
-  ~FullSampler() override {}
+  ~FullSampler() override = default;
 
 private:
   /** The deleted copy constructor. */

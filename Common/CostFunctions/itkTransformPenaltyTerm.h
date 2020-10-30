@@ -127,10 +127,10 @@ protected:
   typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
 
   /** The constructor. */
-  TransformPenaltyTerm() {}
+  TransformPenaltyTerm() = default;
 
   /** The destructor. */
-  ~TransformPenaltyTerm() override {}
+  ~TransformPenaltyTerm() override = default;
 
   /** A function to check if the transform is B-spline, for speedup. */
   virtual bool

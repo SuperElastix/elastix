@@ -187,8 +187,8 @@ public:
 
 
 protected:
-  EulerTransform() {}
-  ~EulerTransform() override {}
+  EulerTransform() = default;
+  ~EulerTransform() override = default;
 
 private:
   EulerTransform(const Self &) = delete;
@@ -255,8 +255,8 @@ public:
 
 
 protected:
-  EulerTransform() {}
-  ~EulerTransform() override {}
+  EulerTransform() = default;
+  ~EulerTransform() override = default;
 
 private:
   EulerTransform(const Self &) = delete;

@@ -78,7 +78,7 @@ protected:
   BinaryTreeBase();
 
   /** Destructor. */
-  ~BinaryTreeBase() override {}
+  ~BinaryTreeBase() override = default;
 
   /** PrintSelf. */
   void

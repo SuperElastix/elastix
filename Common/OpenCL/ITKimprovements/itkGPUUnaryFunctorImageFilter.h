@@ -121,9 +121,9 @@ public:
 
 
 protected:
-  GPUUnaryFunctorImageFilter() {}
+  GPUUnaryFunctorImageFilter() = default;
 
-  virtual ~GPUUnaryFunctorImageFilter() {}
+  virtual ~GPUUnaryFunctorImageFilter() = default;
 
   virtual void
   GenerateOutputInformation();

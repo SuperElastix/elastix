@@ -106,10 +106,10 @@ public:
 
 protected:
   /** The constructor. */
-  RayCastInterpolator() {}
+  RayCastInterpolator() = default;
 
   /** The destructor. */
-  ~RayCastInterpolator() override {}
+  ~RayCastInterpolator() override = default;
 
   int
   BeforeAll(void) override;

@@ -40,7 +40,7 @@ ANNStandardTreeSearch<TBinaryTree>::ANNStandardTreeSearch()
 
 template <class TBinaryTree>
 ANNStandardTreeSearch<TBinaryTree>::~ANNStandardTreeSearch()
-{} // end Destructor
+= default; // end Destructor
 
 /**
  * ************************ Search *************************

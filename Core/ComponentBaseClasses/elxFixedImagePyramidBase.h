@@ -122,9 +122,9 @@ public:
 
 protected:
   /** The constructor. */
-  FixedImagePyramidBase() {}
+  FixedImagePyramidBase() = default;
   /** The destructor. */
-  ~FixedImagePyramidBase() override {}
+  ~FixedImagePyramidBase() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -134,7 +134,7 @@ protected:
   /** The constructor. */
   ScaledSingleValuedCostFunction();
   /** The destructor. */
-  ~ScaledSingleValuedCostFunction() override {}
+  ~ScaledSingleValuedCostFunction() override = default;
 
   /** PrintSelf. */
   void

@@ -185,7 +185,7 @@ public:
 
 protected:
   RecursiveBSplineTransform();
-  ~RecursiveBSplineTransform() override {}
+  ~RecursiveBSplineTransform() override = default;
 
   typedef typename Superclass::JacobianImageType JacobianImageType;
   typedef typename Superclass::JacobianPixelType JacobianPixelType;

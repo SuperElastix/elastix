@@ -140,7 +140,7 @@ public:
 
 protected:
   GPUResampleImageFilterFactory2();
-  virtual ~GPUResampleImageFilterFactory2() {}
+  virtual ~GPUResampleImageFilterFactory2() = default;
 
   /** Register methods for 1D. */
   virtual void

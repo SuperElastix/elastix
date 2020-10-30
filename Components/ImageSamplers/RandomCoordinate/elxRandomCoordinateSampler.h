@@ -146,9 +146,9 @@ public:
 
 protected:
   /** The constructor. */
-  RandomCoordinateSampler() {}
+  RandomCoordinateSampler() = default;
   /** The destructor. */
-  ~RandomCoordinateSampler() override {}
+  ~RandomCoordinateSampler() override = default;
 
 private:
   /** The deleted copy constructor. */

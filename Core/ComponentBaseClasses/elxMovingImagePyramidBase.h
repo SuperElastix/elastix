@@ -124,9 +124,9 @@ public:
 
 protected:
   /** The constructor. */
-  MovingImagePyramidBase() {}
+  MovingImagePyramidBase() = default;
   /** The destructor. */
-  ~MovingImagePyramidBase() override {}
+  ~MovingImagePyramidBase() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -145,7 +145,7 @@ public:
 
 protected:
   SimultaneousPerturbation();
-  ~SimultaneousPerturbation() override {}
+  ~SimultaneousPerturbation() override = default;
 
   bool m_ShowMetricValues;
 

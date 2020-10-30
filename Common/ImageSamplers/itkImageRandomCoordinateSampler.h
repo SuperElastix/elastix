@@ -106,7 +106,7 @@ protected:
   /** The constructor. */
   ImageRandomCoordinateSampler();
   /** The destructor. */
-  ~ImageRandomCoordinateSampler() override {}
+  ~ImageRandomCoordinateSampler() override = default;
 
   /** PrintSelf. */
   void

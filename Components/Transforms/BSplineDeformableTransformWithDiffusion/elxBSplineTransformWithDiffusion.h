@@ -357,7 +357,7 @@ protected:
   /** The constructor. */
   BSplineTransformWithDiffusion();
   /** The destructor. */
-  ~BSplineTransformWithDiffusion() override {}
+  ~BSplineTransformWithDiffusion() override = default;
 
   /** Member variables. */
   SpacingType m_GridSpacingFactor;

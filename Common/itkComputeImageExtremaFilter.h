@@ -92,7 +92,7 @@ public:
 
 protected:
   ComputeImageExtremaFilter();
-  ~ComputeImageExtremaFilter() override {}
+  ~ComputeImageExtremaFilter() override = default;
 
   /** Initialize some accumulators before the threads run. */
   void

@@ -74,7 +74,7 @@ public:
 
 protected:
   MeshFileReaderBase();
-  ~MeshFileReaderBase() override {}
+  ~MeshFileReaderBase() override = default;
 
   /** Test whether the given filename exist and it is readable,
    * this is intended to be called before attempting to use

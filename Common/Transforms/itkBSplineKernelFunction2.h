@@ -95,8 +95,8 @@ public:
 
 
 protected:
-  BSplineKernelFunction2() {}
-  ~BSplineKernelFunction2() override {}
+  BSplineKernelFunction2() = default;
+  ~BSplineKernelFunction2() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override

@@ -108,7 +108,7 @@ protected:
   /** The constructor. */
   OpenCLFixedGenericPyramid();
   /** The destructor. */
-  virtual ~OpenCLFixedGenericPyramid() {}
+  virtual ~OpenCLFixedGenericPyramid() = default;
 
 private:
   /** The deleted copy constructor. */

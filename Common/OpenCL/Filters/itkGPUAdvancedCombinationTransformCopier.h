@@ -143,7 +143,7 @@ public:
 
 protected:
   GPUAdvancedCombinationTransformCopier();
-  ~GPUAdvancedCombinationTransformCopier() override {}
+  ~GPUAdvancedCombinationTransformCopier() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

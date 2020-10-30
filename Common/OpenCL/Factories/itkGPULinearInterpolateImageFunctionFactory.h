@@ -102,7 +102,7 @@ public:
 
 protected:
   GPULinearInterpolateImageFunctionFactory2();
-  virtual ~GPULinearInterpolateImageFunctionFactory2() {}
+  virtual ~GPULinearInterpolateImageFunctionFactory2() = default;
 
   /** Register methods for 1D. */
   virtual void

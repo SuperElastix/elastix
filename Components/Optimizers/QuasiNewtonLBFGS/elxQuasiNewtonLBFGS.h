@@ -158,7 +158,7 @@ public:
 
 protected:
   QuasiNewtonLBFGS();
-  ~QuasiNewtonLBFGS() override {}
+  ~QuasiNewtonLBFGS() override = default;
 
   LineOptimizerPointer m_LineOptimizer;
 

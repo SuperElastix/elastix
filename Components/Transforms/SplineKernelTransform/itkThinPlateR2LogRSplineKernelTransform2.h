@@ -92,7 +92,7 @@ protected:
   ThinPlateR2LogRSplineKernelTransform2() { this->m_FastComputationPossible = true; }
 
 
-  ~ThinPlateR2LogRSplineKernelTransform2() override {}
+  ~ThinPlateR2LogRSplineKernelTransform2() override = default;
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited. */

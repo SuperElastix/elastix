@@ -87,9 +87,9 @@ public:
 
 protected:
   /** The constructor. */
-  FixedSmoothingPyramid() {}
+  FixedSmoothingPyramid() = default;
   /** The destructor. */
-  ~FixedSmoothingPyramid() override {}
+  ~FixedSmoothingPyramid() override = default;
 
 private:
   /** The deleted copy constructor. */

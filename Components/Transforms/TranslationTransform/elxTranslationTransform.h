@@ -138,7 +138,7 @@ protected:
   /** The constructor. */
   TranslationTransformElastix();
   /** The destructor. */
-  ~TranslationTransformElastix() override {}
+  ~TranslationTransformElastix() override = default;
 
   TranslationTransformPointer m_TranslationTransform;
 

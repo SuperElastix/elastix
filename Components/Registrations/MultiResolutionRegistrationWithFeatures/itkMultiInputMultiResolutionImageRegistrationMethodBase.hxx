@@ -77,7 +77,7 @@ itkImplementationSetMacro2(FixedImageInterpolator, FixedImageInterpolatorType *)
 template <typename TFixedImage, typename TMovingImage>
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::
   MultiInputMultiResolutionImageRegistrationMethodBase()
-{} // end Constructor()
+= default; // end Constructor()
 
 /**
  * **************** GetFixedImage **********************************

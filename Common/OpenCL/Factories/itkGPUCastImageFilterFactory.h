@@ -102,7 +102,7 @@ public:
 
 protected:
   GPUCastImageFilterFactory2();
-  virtual ~GPUCastImageFilterFactory2() {}
+  virtual ~GPUCastImageFilterFactory2() = default;
 
   /** Register methods for 1D. */
   virtual void

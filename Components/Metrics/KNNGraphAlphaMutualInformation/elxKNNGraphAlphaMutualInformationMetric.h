@@ -170,9 +170,9 @@ public:
 
 protected:
   /** The constructor. */
-  KNNGraphAlphaMutualInformationMetric() {}
+  KNNGraphAlphaMutualInformationMetric() = default;
   /** The destructor. */
-  ~KNNGraphAlphaMutualInformationMetric() override {}
+  ~KNNGraphAlphaMutualInformationMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

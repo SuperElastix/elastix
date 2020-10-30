@@ -244,8 +244,8 @@ public:
   NewNDImage(unsigned int dim);
 
 protected:
-  NDImageBase() {}
-  ~NDImageBase() override {}
+  NDImageBase() = default;
+  ~NDImageBase() override = default;
 
   // virtual void PrintSelf(std::ostream& os, Indent indent) const = 0;
 

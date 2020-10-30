@@ -90,7 +90,7 @@ protected:
   VolumeSplineKernelTransform2() { this->m_FastComputationPossible = true; }
 
 
-  ~VolumeSplineKernelTransform2() override {}
+  ~VolumeSplineKernelTransform2() override = default;
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited. */

@@ -92,7 +92,7 @@ public:
 
 protected:
   CorrespondingPointsEuclideanDistancePointMetric();
-  ~CorrespondingPointsEuclideanDistancePointMetric() override {}
+  ~CorrespondingPointsEuclideanDistancePointMetric() override = default;
 
 private:
   CorrespondingPointsEuclideanDistancePointMetric(const Self &) = delete;

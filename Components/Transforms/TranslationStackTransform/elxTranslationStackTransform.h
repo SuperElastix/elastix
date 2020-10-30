@@ -153,7 +153,7 @@ protected:
   TranslationStackTransform();
 
   /** The destructor. */
-  ~TranslationStackTransform() override {}
+  ~TranslationStackTransform() override = default;
 
 private:
   /** The deleted copy constructor and assignment operator. */

@@ -149,7 +149,7 @@ protected:
   AffineDTI3DTransform(const MatrixType & matrix, const OutputPointType & offset);
   AffineDTI3DTransform(unsigned int outputSpaceDims, unsigned int paramsSpaceDims);
 
-  ~AffineDTI3DTransform() {}
+  ~AffineDTI3DTransform() = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

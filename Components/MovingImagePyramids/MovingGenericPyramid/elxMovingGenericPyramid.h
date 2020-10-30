@@ -126,9 +126,9 @@ public:
 
 protected:
   /** The constructor. */
-  MovingGenericPyramid() {}
+  MovingGenericPyramid() = default;
   /** The destructor. */
-  ~MovingGenericPyramid() override {}
+  ~MovingGenericPyramid() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -32,7 +32,7 @@ namespace elastix
 
 template <class TElastix>
 BSplineStackTransform<TElastix>::BSplineStackTransform()
-{} // end Constructor()
+= default; // end Constructor()
 
 
 /**

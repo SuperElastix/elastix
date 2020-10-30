@@ -43,7 +43,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 template <class TScalarType, unsigned int NDimensions, class TComponentType>
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::
   ~DeformationFieldInterpolatingTransform()
-{} // end Destructor
+= default; // end Destructor
 
 // Transform a point
 template <class TScalarType, unsigned int NDimensions, class TComponentType>

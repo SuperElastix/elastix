@@ -126,9 +126,9 @@ public:
 
 protected:
   /** The constructor. */
-  FixedGenericPyramid() {}
+  FixedGenericPyramid() = default;
   /** The destructor. */
-  ~FixedGenericPyramid() override {}
+  ~FixedGenericPyramid() override = default;
 
 private:
   /** The deleted copy constructor. */

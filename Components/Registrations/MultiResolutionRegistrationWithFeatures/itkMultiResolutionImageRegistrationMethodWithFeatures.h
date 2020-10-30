@@ -99,10 +99,10 @@ public:
 
 protected:
   /** Constructor. */
-  MultiResolutionImageRegistrationMethodWithFeatures() {}
+  MultiResolutionImageRegistrationMethodWithFeatures() = default;
 
   /** Destructor. */
-  ~MultiResolutionImageRegistrationMethodWithFeatures() override {}
+  ~MultiResolutionImageRegistrationMethodWithFeatures() override = default;
 
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.

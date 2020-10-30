@@ -80,8 +80,8 @@ public:
   }
 
 protected:
-  GPUAdvancedSimilarity3DTransform() {}
-  virtual ~GPUAdvancedSimilarity3DTransform() {}
+  GPUAdvancedSimilarity3DTransform() = default;
+  virtual ~GPUAdvancedSimilarity3DTransform() = default;
 
 private:
   GPUAdvancedSimilarity3DTransform(const Self & other) = delete;

@@ -66,8 +66,8 @@ public:
   RegisterAll();
 
 protected:
-  GPUObjectFactoryBase() {}
-  ~GPUObjectFactoryBase() override {}
+  GPUObjectFactoryBase() = default;
+  ~GPUObjectFactoryBase() override = default;
 
   /** Register methods for 1D. */
   virtual void

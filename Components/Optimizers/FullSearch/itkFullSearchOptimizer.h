@@ -216,7 +216,7 @@ public:
 
 protected:
   FullSearchOptimizer();
-  ~FullSearchOptimizer() override {}
+  ~FullSearchOptimizer() override = default;
 
   // void PrintSelf(std::ostream& os, Indent indent) const;
 

@@ -137,10 +137,10 @@ public:
 
 protected:
   /** The constructor. */
-  GradientDifferenceMetric() {}
+  GradientDifferenceMetric() = default;
 
   /** The destructor. */
-  ~GradientDifferenceMetric() override {}
+  ~GradientDifferenceMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

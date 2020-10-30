@@ -291,7 +291,7 @@ protected:
   /** The constructor. */
   TransformRigidityPenaltyTerm();
   /** The destructor. */
-  ~TransformRigidityPenaltyTerm() override {}
+  ~TransformRigidityPenaltyTerm() override = default;
 
   /** PrintSelf. */
   void

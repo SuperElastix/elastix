@@ -87,7 +87,7 @@ public:
 
 protected:
   GPUMatrixOffsetTransformBase();
-  ~GPUMatrixOffsetTransformBase() override {}
+  ~GPUMatrixOffsetTransformBase() override = default;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */

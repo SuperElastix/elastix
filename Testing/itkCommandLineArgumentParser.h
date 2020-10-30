@@ -231,7 +231,7 @@ public:
 
 protected:
   CommandLineArgumentParser();
-  ~CommandLineArgumentParser() override {}
+  ~CommandLineArgumentParser() override = default;
 
   /** General functionality: find a key. */
   bool

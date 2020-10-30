@@ -139,7 +139,7 @@ public:
 
 protected:
   GradientDescentOptimizer2();
-  ~GradientDescentOptimizer2() override {}
+  ~GradientDescentOptimizer2() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

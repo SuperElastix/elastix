@@ -257,7 +257,7 @@ protected:
   KNNGraphAlphaMutualInformationImageToImageMetric();
 
   /** Destructor. */
-  ~KNNGraphAlphaMutualInformationImageToImageMetric() override {}
+  ~KNNGraphAlphaMutualInformationImageToImageMetric() override = default;
 
   /** PrintSelf. */
   void

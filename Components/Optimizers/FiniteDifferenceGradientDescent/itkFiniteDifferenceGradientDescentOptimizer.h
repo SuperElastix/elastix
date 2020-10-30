@@ -137,7 +137,7 @@ public:
 
 protected:
   FiniteDifferenceGradientDescentOptimizer();
-  ~FiniteDifferenceGradientDescentOptimizer() override {}
+  ~FiniteDifferenceGradientDescentOptimizer() override = default;
 
   /** PrintSelf method.*/
   void

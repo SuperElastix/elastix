@@ -282,7 +282,7 @@ public:
 
 protected:
   PreconditionedStochasticGradientDescent();
-  ~PreconditionedStochasticGradientDescent() override {}
+  ~PreconditionedStochasticGradientDescent() override = default;
 
   /** Protected typedefs */
   typedef typename RegistrationType::FixedImageType  FixedImageType;

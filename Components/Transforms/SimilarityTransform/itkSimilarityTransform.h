@@ -167,8 +167,8 @@ public:
   typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
 protected:
-  SimilarityTransform() {}
-  ~SimilarityTransform() override {}
+  SimilarityTransform() = default;
+  ~SimilarityTransform() override = default;
 
 private:
   SimilarityTransform(const Self &) = delete;

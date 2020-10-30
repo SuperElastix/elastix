@@ -227,7 +227,7 @@ public:
 
 protected:
   NDImageTemplate();
-  ~NDImageTemplate() override {}
+  ~NDImageTemplate() override = default;
 
   // virtual void PrintSelf(std::ostream& os, Indent indent) const;
 

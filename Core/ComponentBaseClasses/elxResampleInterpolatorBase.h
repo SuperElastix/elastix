@@ -107,9 +107,9 @@ public:
 
 protected:
   /** The constructor. */
-  ResampleInterpolatorBase() {}
+  ResampleInterpolatorBase() = default;
   /** The destructor. */
-  ~ResampleInterpolatorBase() override {}
+  ~ResampleInterpolatorBase() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -91,7 +91,7 @@ protected:
   ThinPlateSplineKernelTransform2() { this->m_FastComputationPossible = true; }
 
 
-  ~ThinPlateSplineKernelTransform2() override {}
+  ~ThinPlateSplineKernelTransform2() override = default;
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited.

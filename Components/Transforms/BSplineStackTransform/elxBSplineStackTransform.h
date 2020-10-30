@@ -292,7 +292,7 @@ protected:
   BSplineStackTransform();
 
   /** The destructor. */
-  ~BSplineStackTransform() override {}
+  ~BSplineStackTransform() override = default;
 
   /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
   virtual void

@@ -36,7 +36,7 @@ namespace elastix
 
 template <class TElastix>
 MultiBSplineTransformWithNormal<TElastix>::MultiBSplineTransformWithNormal()
-{} // end Constructor()
+= default; // end Constructor()
 
 /**
  * ************ InitializeBSplineTransform ***************

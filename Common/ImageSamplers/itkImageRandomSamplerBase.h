@@ -70,7 +70,7 @@ protected:
   ImageRandomSamplerBase();
 
   /** The destructor. */
-  ~ImageRandomSamplerBase() override {}
+  ~ImageRandomSamplerBase() override = default;
 
   /** Multi-threaded function that does the work. */
   void

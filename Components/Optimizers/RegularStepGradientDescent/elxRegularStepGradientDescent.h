@@ -127,8 +127,8 @@ public:
   SetInitialPosition(const ParametersType & param) override;
 
 protected:
-  RegularStepGradientDescent() {}
-  ~RegularStepGradientDescent() override {}
+  RegularStepGradientDescent() = default;
+  ~RegularStepGradientDescent() override = default;
 
 private:
   RegularStepGradientDescent(const Self &) = delete;

@@ -82,7 +82,7 @@ protected:
   /** The constructor. */
   ImageRandomSamplerSparseMask();
   /** The destructor. */
-  ~ImageRandomSamplerSparseMask() override {}
+  ~ImageRandomSamplerSparseMask() override = default;
 
   /** PrintSelf. */
   void

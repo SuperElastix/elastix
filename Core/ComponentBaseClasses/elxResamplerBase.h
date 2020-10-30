@@ -197,7 +197,7 @@ protected:
   /** The constructor. */
   ResamplerBase();
   /** The destructor. */
-  ~ResamplerBase() override {}
+  ~ResamplerBase() override = default;
 
   /** Method that sets the transform, the interpolator and the inputImage. */
   virtual void

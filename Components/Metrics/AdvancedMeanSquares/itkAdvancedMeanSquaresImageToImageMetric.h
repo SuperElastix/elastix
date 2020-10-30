@@ -188,7 +188,7 @@ public:
 
 protected:
   AdvancedMeanSquaresImageToImageMetric();
-  ~AdvancedMeanSquaresImageToImageMetric() override {}
+  ~AdvancedMeanSquaresImageToImageMetric() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

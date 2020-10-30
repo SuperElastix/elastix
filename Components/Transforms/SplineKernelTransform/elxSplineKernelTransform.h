@@ -209,7 +209,7 @@ protected:
   /** The constructor. */
   SplineKernelTransform();
   /** The destructor. */
-  ~SplineKernelTransform() override {}
+  ~SplineKernelTransform() override = default;
 
   typedef itk::ThinPlateSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
     TPKernelTransformType;

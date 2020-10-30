@@ -47,9 +47,9 @@ template <typename TInput, typename TOutput>
 class GPUCast : public GPUFunctorBase
 {
 public:
-  GPUCast() {}
+  GPUCast() = default;
 
-  ~GPUCast() override {}
+  ~GPUCast() override = default;
 
   /** Setup GPU kernel arguments for this functor.
    * Returns current argument index to set additional arguments in the GPU kernel.
@@ -100,7 +100,7 @@ public:
 
 protected:
   GPUCastImageFilter();
-  virtual ~GPUCastImageFilter() {}
+  virtual ~GPUCastImageFilter() = default;
 
   /** Unlike CPU version, GPU version of binary threshold filter is not
   multi-threaded */

@@ -227,10 +227,10 @@ public:
 
 protected:
   /** The constructor. */
-  TransformRigidityPenalty() {}
+  TransformRigidityPenalty() = default;
 
   /** The destructor. */
-  ~TransformRigidityPenalty() override {}
+  ~TransformRigidityPenalty() override = default;
 
 private:
   /** The deleted copy constructor. */

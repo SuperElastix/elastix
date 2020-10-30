@@ -158,7 +158,7 @@ protected:
   AdvancedVersorTransform();
 
   /** Destroy an AdvancedVersorTransform object */
-  ~AdvancedVersorTransform() {}
+  ~AdvancedVersorTransform() = default;
 
   /** This method must be made protected here because it is not a safe way of
    * initializing the Versor */

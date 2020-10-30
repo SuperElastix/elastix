@@ -116,7 +116,7 @@ public:
 
 protected:
   AdaptiveStochasticGradientDescentOptimizer();
-  ~AdaptiveStochasticGradientDescentOptimizer() override {}
+  ~AdaptiveStochasticGradientDescentOptimizer() override = default;
 
   /** Function to update the current time
    * If UseAdaptiveStepSizes is false this function just increments

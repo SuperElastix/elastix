@@ -149,9 +149,9 @@ public:
 
 protected:
   /** The constructor. */
-  RegistrationBase() {}
+  RegistrationBase() = default;
   /** The destructor. */
-  ~RegistrationBase() override {}
+  ~RegistrationBase() override = default;
 
   /** Typedef's for mask support. */
   typedef typename ElastixType::MaskPixelType                                       MaskPixelType;

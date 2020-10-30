@@ -111,7 +111,7 @@ protected:
   }
 
 
-  ~LimiterFunctionBase() override {}
+  ~LimiterFunctionBase() override = default;
 
   OutputType m_UpperBound;
   OutputType m_LowerBound;

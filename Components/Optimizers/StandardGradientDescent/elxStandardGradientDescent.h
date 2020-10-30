@@ -150,7 +150,7 @@ public:
 
 protected:
   StandardGradientDescent();
-  ~StandardGradientDescent() override {}
+  ~StandardGradientDescent() override = default;
 
 private:
   StandardGradientDescent(const Self &) = delete;

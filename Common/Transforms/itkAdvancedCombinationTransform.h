@@ -332,7 +332,7 @@ protected:
   AdvancedCombinationTransform();
 
   /** Destructor. */
-  ~AdvancedCombinationTransform() override {}
+  ~AdvancedCombinationTransform() override = default;
 
   /** Declaration of members. */
   InitialTransformPointer m_InitialTransform;

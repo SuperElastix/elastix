@@ -77,8 +77,8 @@ public:
       Here we prefer float in order to save memory.  */
 
 protected:
-  ParabolicErodeImageFilter() {}
-  ~ParabolicErodeImageFilter() override {}
+  ParabolicErodeImageFilter() = default;
+  ~ParabolicErodeImageFilter() override = default;
   //   void PrintSelf(std::ostream& os, Indent indent) const;
 
 private:

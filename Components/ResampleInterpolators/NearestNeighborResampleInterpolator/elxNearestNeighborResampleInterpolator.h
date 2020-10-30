@@ -88,9 +88,9 @@ public:
 
 protected:
   /** The constructor. */
-  NearestNeighborResampleInterpolator() {}
+  NearestNeighborResampleInterpolator() = default;
   /** The destructor. */
-  ~NearestNeighborResampleInterpolator() override {}
+  ~NearestNeighborResampleInterpolator() override = default;
 
 private:
   /** The deleted copy constructor. */

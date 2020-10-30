@@ -123,7 +123,7 @@ public:
 
 protected:
   RSGDEachParameterApartBaseOptimizer();
-  ~RSGDEachParameterApartBaseOptimizer() override {}
+  ~RSGDEachParameterApartBaseOptimizer() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

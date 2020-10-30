@@ -289,7 +289,7 @@ protected:
   RecursiveBSplineTransform();
 
   /** The destructor. */
-  ~RecursiveBSplineTransform() override {}
+  ~RecursiveBSplineTransform() override = default;
 
   /** Read user-specified grid spacing and call the itkGridScheduleComputer. */
   virtual void
