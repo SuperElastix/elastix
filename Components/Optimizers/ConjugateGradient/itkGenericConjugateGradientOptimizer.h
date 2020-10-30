@@ -130,7 +130,7 @@ public:
   itkGetConstMacro(MaxNrOfItWithoutImprovement, unsigned long);
 
   /** Setting: the definition of \f$\beta\f$, by default "DaiYuanHestenesStiefel" */
-  virtual void
+  void
   SetBetaDefinition(const BetaDefinitionType & arg);
 
   itkGetConstReferenceMacro(BetaDefinition, BetaDefinitionType);
@@ -175,7 +175,7 @@ protected:
    * pointer to a method that computes \f$\beta\f$.
    * Called in the constructor of this class, and possibly by subclasses.
    */
-  virtual void
+  void
   AddBetaDefinition(const BetaDefinitionType & name, ComputeBetaFunctionType function);
 
   /**

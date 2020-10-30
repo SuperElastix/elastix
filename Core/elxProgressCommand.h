@@ -113,7 +113,7 @@ public:
   ConnectObserver(itk::ProcessObject * filter);
 
   /** Disconnect an observer to a process object. */
-  virtual void
+  void
   DisconnectObserver(itk::ProcessObject * filter);
 
   /** Standard Command virtual methods. */
