@@ -90,9 +90,9 @@ public:
 
 protected:
   /** The constructor. */
-  ImageFullSampler() {}
+  ImageFullSampler() = default;
   /** The destructor. */
-  ~ImageFullSampler() override {}
+  ~ImageFullSampler() override = default;
 
   /** PrintSelf. */
   void

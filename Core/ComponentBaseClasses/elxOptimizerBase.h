@@ -116,7 +116,7 @@ protected:
   /** The constructor. */
   OptimizerBase();
   /** The destructor. */
-  ~OptimizerBase() override {}
+  ~OptimizerBase() override = default;
 
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.

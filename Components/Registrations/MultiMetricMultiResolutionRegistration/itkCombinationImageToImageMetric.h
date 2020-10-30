@@ -441,7 +441,7 @@ public:
 
 protected:
   CombinationImageToImageMetric();
-  ~CombinationImageToImageMetric() override {}
+  ~CombinationImageToImageMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

@@ -251,7 +251,7 @@ protected:
   MultiBSplineTransformWithNormal();
 
   /** The destructor. */
-  ~MultiBSplineTransformWithNormal() override {}
+  ~MultiBSplineTransformWithNormal() override = default;
 
   /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
   virtual void

@@ -176,8 +176,8 @@ public:
   AfterRegistration(void) override;
 
 protected:
-  CMAEvolutionStrategy() {}
-  ~CMAEvolutionStrategy() override {}
+  CMAEvolutionStrategy() = default;
+  ~CMAEvolutionStrategy() override = default;
 
   /** Call the superclass' implementation and print the value of some variables */
   void

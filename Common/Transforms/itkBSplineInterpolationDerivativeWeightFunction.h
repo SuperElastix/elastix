@@ -75,7 +75,7 @@ public:
 
 protected:
   BSplineInterpolationDerivativeWeightFunction();
-  ~BSplineInterpolationDerivativeWeightFunction() override {}
+  ~BSplineInterpolationDerivativeWeightFunction() override = default;
 
   /** Interpolation kernel types. */
   typedef typename Superclass::KernelType                       KernelType;

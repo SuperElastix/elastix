@@ -74,7 +74,7 @@ public:
 
 protected:
   GPUImageFactory2();
-  virtual ~GPUImageFactory2() {}
+  virtual ~GPUImageFactory2() = default;
 
   /** Register methods for 1D. */
   virtual void

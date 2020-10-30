@@ -124,7 +124,7 @@ public:
 
 protected:
   BSplineInterpolationWeightFunctionBase();
-  ~BSplineInterpolationWeightFunctionBase() override {}
+  ~BSplineInterpolationWeightFunctionBase() override = default;
 
   /** Interpolation kernel types. */
   typedef BSplineKernelFunction2<Self::SplineOrder>                      KernelType;

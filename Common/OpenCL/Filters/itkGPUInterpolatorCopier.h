@@ -127,7 +127,7 @@ public:
 
 protected:
   GPUInterpolatorCopier();
-  ~GPUInterpolatorCopier() override {}
+  ~GPUInterpolatorCopier() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

@@ -213,7 +213,7 @@ protected:
   /** The constructor. */
   MetricBase();
   /** The destructor. */
-  ~MetricBase() override {}
+  ~MetricBase() override = default;
 
   /**  Get the exact value. Mutual information computed over all points.
    * It is meant in situations when you optimize using just a subset of pixels,

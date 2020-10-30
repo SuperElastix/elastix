@@ -86,9 +86,9 @@ public:
 
 protected:
   /** The constructor. */
-  MovingSmoothingPyramid() {}
+  MovingSmoothingPyramid() = default;
   /** The destructor. */
-  ~MovingSmoothingPyramid() override {}
+  ~MovingSmoothingPyramid() override = default;
 
 private:
   /** The deleted copy constructor. */

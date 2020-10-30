@@ -191,7 +191,7 @@ protected:
   AdvancedRayCastInterpolateImageFunction();
 
   /// Destructor
-  ~AdvancedRayCastInterpolateImageFunction() override {}
+  ~AdvancedRayCastInterpolateImageFunction() override = default;
 
   /// Print the object
   void

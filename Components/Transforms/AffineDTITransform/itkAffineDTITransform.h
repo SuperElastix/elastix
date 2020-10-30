@@ -166,8 +166,8 @@ public:
   typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
 protected:
-  AffineDTITransform() {}
-  ~AffineDTITransform() override {}
+  AffineDTITransform() = default;
+  ~AffineDTITransform() override = default;
 
 private:
   AffineDTITransform(const Self &) = delete;

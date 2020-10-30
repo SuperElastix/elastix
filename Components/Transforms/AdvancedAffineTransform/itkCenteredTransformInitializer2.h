@@ -201,7 +201,7 @@ public:
 
 protected:
   CenteredTransformInitializer2();
-  ~CenteredTransformInitializer2() override {}
+  ~CenteredTransformInitializer2() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

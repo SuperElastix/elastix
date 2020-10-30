@@ -107,9 +107,9 @@ public:
 
 protected:
   /** The constructor. */
-  GridSampler() {}
+  GridSampler() = default;
   /** The destructor. */
-  ~GridSampler() override {}
+  ~GridSampler() override = default;
 
 private:
   /** The deleted copy constructor. */

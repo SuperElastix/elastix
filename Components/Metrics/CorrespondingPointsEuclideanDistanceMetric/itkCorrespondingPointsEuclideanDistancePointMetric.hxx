@@ -30,7 +30,7 @@ namespace itk
 template <class TFixedPointSet, class TMovingPointSet>
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,
                                                 TMovingPointSet>::CorrespondingPointsEuclideanDistancePointMetric()
-{} // end Constructor
+= default; // end Constructor
 
 /**
  * ******************* GetValue *******************

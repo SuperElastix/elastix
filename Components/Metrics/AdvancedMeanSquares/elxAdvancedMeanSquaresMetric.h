@@ -141,9 +141,9 @@ public:
 
 protected:
   /** The constructor. */
-  AdvancedMeanSquaresMetric() {}
+  AdvancedMeanSquaresMetric() = default;
   /** The destructor. */
-  ~AdvancedMeanSquaresMetric() override {}
+  ~AdvancedMeanSquaresMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

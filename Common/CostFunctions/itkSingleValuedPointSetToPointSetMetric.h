@@ -174,7 +174,7 @@ public:
 
 protected:
   SingleValuedPointSetToPointSetMetric();
-  ~SingleValuedPointSetToPointSetMetric() override {}
+  ~SingleValuedPointSetToPointSetMetric() override = default;
 
   /** PrintSelf. */
   void

@@ -179,9 +179,9 @@ public:
 
 protected:
   /** The constructor. */
-  VarianceOverLastDimensionMetric() {}
+  VarianceOverLastDimensionMetric() = default;
   /** The destructor. */
-  ~VarianceOverLastDimensionMetric() override {}
+  ~VarianceOverLastDimensionMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -216,7 +216,7 @@ protected:
   AdvancedMattesMutualInformationMetric();
 
   /** The destructor. */
-  ~AdvancedMattesMutualInformationMetric() override {}
+  ~AdvancedMattesMutualInformationMetric() override = default;
 
   unsigned long m_CurrentIteration;
 

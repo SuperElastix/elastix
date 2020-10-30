@@ -133,7 +133,7 @@ public:
 
 protected:
   FullSearch();
-  ~FullSearch() override {}
+  ~FullSearch() override = default;
 
   NDImagePointer m_OptimizationSurface;
 

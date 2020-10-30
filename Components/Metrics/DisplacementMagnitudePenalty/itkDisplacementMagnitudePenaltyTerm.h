@@ -127,7 +127,7 @@ protected:
   DisplacementMagnitudePenaltyTerm();
 
   /** The destructor. */
-  ~DisplacementMagnitudePenaltyTerm() override {}
+  ~DisplacementMagnitudePenaltyTerm() override = default;
 
   /** PrintSelf. *
   void PrintSelf( std::ostream& os, Indent indent ) const;*/

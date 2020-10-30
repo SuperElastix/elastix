@@ -72,7 +72,7 @@ protected:
   BSplineSecondOrderDerivativeKernelFunction() { m_KernelFunction = KernelType::New(); }
 
 
-  ~BSplineSecondOrderDerivativeKernelFunction() override {}
+  ~BSplineSecondOrderDerivativeKernelFunction() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override
   {

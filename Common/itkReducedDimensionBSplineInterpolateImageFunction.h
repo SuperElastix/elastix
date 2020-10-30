@@ -188,7 +188,7 @@ public:
 
 protected:
   ReducedDimensionBSplineInterpolateImageFunction();
-  ~ReducedDimensionBSplineInterpolateImageFunction() override {}
+  ~ReducedDimensionBSplineInterpolateImageFunction() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

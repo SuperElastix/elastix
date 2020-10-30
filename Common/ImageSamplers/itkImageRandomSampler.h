@@ -76,9 +76,9 @@ public:
 
 protected:
   /** The constructor. */
-  ImageRandomSampler() {}
+  ImageRandomSampler() = default;
   /** The destructor. */
-  ~ImageRandomSampler() override {}
+  ~ImageRandomSampler() override = default;
 
   /** Functions that do the work. */
   void

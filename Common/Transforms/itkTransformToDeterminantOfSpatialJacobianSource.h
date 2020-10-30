@@ -190,7 +190,7 @@ public:
 
 protected:
   TransformToDeterminantOfSpatialJacobianSource();
-  ~TransformToDeterminantOfSpatialJacobianSource() override {}
+  ~TransformToDeterminantOfSpatialJacobianSource() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

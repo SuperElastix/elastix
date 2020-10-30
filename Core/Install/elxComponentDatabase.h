@@ -117,8 +117,8 @@ public:
            ImageDimensionType               movingDimension) const;
 
 protected:
-  ComponentDatabase() {}
-  ~ComponentDatabase() override {}
+  ComponentDatabase() = default;
+  ~ComponentDatabase() override = default;
 
 private:
   CreatorMapType CreatorMap;

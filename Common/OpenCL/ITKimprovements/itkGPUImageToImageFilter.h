@@ -110,7 +110,7 @@ public:
 
 protected:
   GPUImageToImageFilter();
-  ~GPUImageToImageFilter() {}
+  ~GPUImageToImageFilter() = default;
 
   virtual void
   PrintSelf(std::ostream & os, Indent indent) const;

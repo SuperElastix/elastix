@@ -95,7 +95,7 @@ public:
 
 protected:
   GPUImageDataManager() { m_Image = nullptr; }
-  ~GPUImageDataManager() override {}
+  ~GPUImageDataManager() override = default;
 
 private:
   GPUImageDataManager(const Self &) = delete;

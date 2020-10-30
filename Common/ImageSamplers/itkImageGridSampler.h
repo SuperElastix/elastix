@@ -137,7 +137,7 @@ protected:
   ImageGridSampler();
 
   /** The destructor. */
-  ~ImageGridSampler() override {}
+  ~ImageGridSampler() override = default;
 
   /** PrintSelf. */
   void

@@ -137,7 +137,7 @@ public:
 
 protected:
   MultiOrderBSplineDecompositionImageFilter();
-  ~MultiOrderBSplineDecompositionImageFilter() override {}
+  ~MultiOrderBSplineDecompositionImageFilter() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

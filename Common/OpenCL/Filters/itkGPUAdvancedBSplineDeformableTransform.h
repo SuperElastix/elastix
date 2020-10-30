@@ -71,7 +71,7 @@ public:
 
 protected:
   GPUAdvancedBSplineDeformableTransform();
-  virtual ~GPUAdvancedBSplineDeformableTransform() {}
+  virtual ~GPUAdvancedBSplineDeformableTransform() = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

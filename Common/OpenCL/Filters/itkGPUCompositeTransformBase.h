@@ -104,8 +104,8 @@ public:
   IsBSplineTransform(const std::size_t index) const;
 
 protected:
-  GPUCompositeTransformBase() {}
-  ~GPUCompositeTransformBase() override {}
+  GPUCompositeTransformBase() = default;
+  ~GPUCompositeTransformBase() override = default;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */

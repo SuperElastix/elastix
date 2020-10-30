@@ -69,8 +69,8 @@ public:
   Evaluate(const InputType & input, DerivativeType & derivative) const override;
 
 protected:
-  HardLimiterFunction() {}
-  ~HardLimiterFunction() override {}
+  HardLimiterFunction() = default;
+  ~HardLimiterFunction() override = default;
 
 private:
   HardLimiterFunction(const Self &) = delete;

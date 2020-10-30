@@ -40,7 +40,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::MeshPenalty()
 
 template <class TFixedPointSet, class TMovingPointSet>
 MeshPenalty<TFixedPointSet, TMovingPointSet>::~MeshPenalty()
-{} // end Destructor
+= default; // end Destructor
 
 /**
  * *********************** Initialize *****************************

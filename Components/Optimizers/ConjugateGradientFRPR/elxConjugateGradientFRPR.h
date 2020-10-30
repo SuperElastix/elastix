@@ -146,7 +146,7 @@ public:
 
 protected:
   ConjugateGradientFRPR();
-  ~ConjugateGradientFRPR() override {}
+  ~ConjugateGradientFRPR() override = default;
 
   /** To store the latest computed derivative's magnitude */
   double m_CurrentDerivativeMagnitude;

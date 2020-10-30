@@ -90,8 +90,8 @@ public:
 
 
 protected:
-  BSplineDerivativeKernelFunction2() {}
-  ~BSplineDerivativeKernelFunction2() override {}
+  BSplineDerivativeKernelFunction2() = default;
+  ~BSplineDerivativeKernelFunction2() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override

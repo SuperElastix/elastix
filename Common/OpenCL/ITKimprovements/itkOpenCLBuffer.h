@@ -57,7 +57,7 @@ public:
   typedef OpenCLBuffer Self;
 
   /** Constructs a null OpenCL buffer object. */
-  OpenCLBuffer() {}
+  OpenCLBuffer() = default;
 
   /** Constructs an OpenCL buffer object that is initialized with the
    * native OpenCL identifier \a id, and associates it with \a context.

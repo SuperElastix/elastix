@@ -90,9 +90,9 @@ public:
 
 protected:
   /** The constructor. */
-  MyStandardResampler() {}
+  MyStandardResampler() = default;
   /** The destructor. */
-  ~MyStandardResampler() override {}
+  ~MyStandardResampler() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -293,7 +293,7 @@ public:
 protected:
   AdvancedTransform();
   AdvancedTransform(NumberOfParametersType numberOfParameters);
-  ~AdvancedTransform() override {}
+  ~AdvancedTransform() override = default;
 
   bool m_HasNonZeroSpatialHessian;
   bool m_HasNonZeroJacobianOfSpatialHessian;

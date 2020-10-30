@@ -265,7 +265,7 @@ protected:
   MultiInputMultiResolutionImageRegistrationMethodBase();
 
   /** Destructor. */
-  ~MultiInputMultiResolutionImageRegistrationMethodBase() override {}
+  ~MultiInputMultiResolutionImageRegistrationMethodBase() override = default;
 
   /** PrintSelf. */
   void

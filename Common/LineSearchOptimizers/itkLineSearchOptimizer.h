@@ -121,7 +121,7 @@ public:
 
 protected:
   LineSearchOptimizer();
-  ~LineSearchOptimizer() override {}
+  ~LineSearchOptimizer() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

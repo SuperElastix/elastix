@@ -153,9 +153,9 @@ public:
 
 protected:
   /** The constructor. */
-  MultiInputRandomCoordinateSampler() {}
+  MultiInputRandomCoordinateSampler() = default;
   /** The destructor. */
-  ~MultiInputRandomCoordinateSampler() override {}
+  ~MultiInputRandomCoordinateSampler() override = default;
 
 private:
   /** The deleted copy constructor. */

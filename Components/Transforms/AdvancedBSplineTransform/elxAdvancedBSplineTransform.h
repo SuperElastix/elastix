@@ -289,7 +289,7 @@ protected:
   AdvancedBSplineTransform();
 
   /** The destructor. */
-  ~AdvancedBSplineTransform() override {}
+  ~AdvancedBSplineTransform() override = default;
 
   /** Read user-specified grid spacing and call the itkGridScheduleComputer. */
   virtual void

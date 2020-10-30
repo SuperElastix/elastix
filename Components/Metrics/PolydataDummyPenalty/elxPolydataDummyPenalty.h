@@ -201,7 +201,7 @@ protected:
   /** The constructor. */
   PolydataDummyPenalty();
   /** The destructor. */
-  ~PolydataDummyPenalty() override {}
+  ~PolydataDummyPenalty() override = default;
 
 private:
   /** The deleted copy constructor. */

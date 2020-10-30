@@ -208,7 +208,7 @@ protected:
   /** The constructor. */
   MultiMetricMultiResolutionRegistration();
   /** The destructor. */
-  ~MultiMetricMultiResolutionRegistration() override {}
+  ~MultiMetricMultiResolutionRegistration() override = default;
 
   /** Typedef's for mask support. */
   typedef typename Superclass2::MaskPixelType                  MaskPixelType;

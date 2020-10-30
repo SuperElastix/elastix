@@ -110,9 +110,9 @@ public:
 
 protected:
   /** The constructor. */
-  BSplineInterpolatorFloat() {}
+  BSplineInterpolatorFloat() = default;
   /** The destructor. */
-  ~BSplineInterpolatorFloat() override {}
+  ~BSplineInterpolatorFloat() override = default;
 
 private:
   /** The deleted copy constructor. */

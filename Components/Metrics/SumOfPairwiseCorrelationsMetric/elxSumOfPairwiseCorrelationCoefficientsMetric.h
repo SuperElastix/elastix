@@ -168,10 +168,10 @@ public:
 
 protected:
   /** The constructor. */
-  SumOfPairwiseCorrelationCoefficientsMetric() {}
+  SumOfPairwiseCorrelationCoefficientsMetric() = default;
 
   /** The destructor. */
-  ~SumOfPairwiseCorrelationCoefficientsMetric() override {}
+  ~SumOfPairwiseCorrelationCoefficientsMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

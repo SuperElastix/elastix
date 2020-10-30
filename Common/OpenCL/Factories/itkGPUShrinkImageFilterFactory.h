@@ -102,7 +102,7 @@ public:
 
 protected:
   GPUShrinkImageFilterFactory2();
-  virtual ~GPUShrinkImageFilterFactory2() {}
+  virtual ~GPUShrinkImageFilterFactory2() = default;
 
   /** Register methods for 1D. */
   virtual void

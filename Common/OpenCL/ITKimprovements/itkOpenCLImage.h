@@ -43,7 +43,7 @@ public:
   typedef OpenCLMemoryObject Superclass;
 
   /** Constructs a null OpenCL image object. */
-  OpenCLImage() {}
+  OpenCLImage() = default;
 
   /** Constructs a OpenCL image object that is initialized with the
    * native OpenCL identifier \a id, and associates it with \a context.

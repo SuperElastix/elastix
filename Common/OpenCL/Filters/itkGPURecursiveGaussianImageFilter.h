@@ -74,7 +74,7 @@ public:
 
 protected:
   GPURecursiveGaussianImageFilter();
-  ~GPURecursiveGaussianImageFilter() {}
+  ~GPURecursiveGaussianImageFilter() = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

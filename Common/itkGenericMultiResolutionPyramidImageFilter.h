@@ -231,7 +231,7 @@ public:
 
 protected:
   GenericMultiResolutionPyramidImageFilter();
-  ~GenericMultiResolutionPyramidImageFilter() override {}
+  ~GenericMultiResolutionPyramidImageFilter() override = default;
 
   /** PrintSelf. */
   void

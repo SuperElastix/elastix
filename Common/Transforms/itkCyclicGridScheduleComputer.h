@@ -87,7 +87,7 @@ protected:
   CyclicGridScheduleComputer();
 
   /** The destructor. */
-  ~CyclicGridScheduleComputer() override {}
+  ~CyclicGridScheduleComputer() override = default;
 
 private:
   CyclicGridScheduleComputer(const Self &) = delete;

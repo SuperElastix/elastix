@@ -136,9 +136,9 @@ public:
 
 protected:
   /** The constructor. */
-  PatternIntensityMetric() {}
+  PatternIntensityMetric() = default;
   /** The destructor. */
-  ~PatternIntensityMetric() override {}
+  ~PatternIntensityMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

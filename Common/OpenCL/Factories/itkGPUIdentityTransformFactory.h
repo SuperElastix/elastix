@@ -74,7 +74,7 @@ public:
 
 protected:
   GPUIdentityTransformFactory2();
-  virtual ~GPUIdentityTransformFactory2() {}
+  virtual ~GPUIdentityTransformFactory2() = default;
 
   /** Typedef for real type list. */
   typedef typelist::MakeTypeList<float, double>::Type RealTypeList;

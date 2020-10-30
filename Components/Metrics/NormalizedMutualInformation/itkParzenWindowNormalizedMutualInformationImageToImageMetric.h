@@ -144,10 +144,10 @@ public:
 
 protected:
   /** The constructor. */
-  ParzenWindowNormalizedMutualInformationImageToImageMetric() {}
+  ParzenWindowNormalizedMutualInformationImageToImageMetric() = default;
 
   /** The destructor. */
-  ~ParzenWindowNormalizedMutualInformationImageToImageMetric() override {}
+  ~ParzenWindowNormalizedMutualInformationImageToImageMetric() override = default;
 
   /** Print Self. */
   void

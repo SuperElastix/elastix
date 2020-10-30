@@ -110,9 +110,9 @@ public:
 
 protected:
   /** The constructor. */
-  RandomSamplerSparseMask() {}
+  RandomSamplerSparseMask() = default;
   /** The destructor. */
-  ~RandomSamplerSparseMask() override {}
+  ~RandomSamplerSparseMask() override = default;
 
 private:
   /** The deleted copy constructor. */

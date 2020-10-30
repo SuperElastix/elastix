@@ -62,7 +62,7 @@ public:
 
 protected:
   GPUNearestNeighborInterpolateImageFunction();
-  ~GPUNearestNeighborInterpolateImageFunction() {}
+  ~GPUNearestNeighborInterpolateImageFunction() = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

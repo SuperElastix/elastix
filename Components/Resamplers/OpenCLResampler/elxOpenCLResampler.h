@@ -122,7 +122,7 @@ protected:
   /** The constructor. */
   OpenCLResampler();
   /** The destructor. */
-  virtual ~OpenCLResampler() {}
+  virtual ~OpenCLResampler() = default;
 
   /** This method performs all configuration for GPU resampler. */
   void

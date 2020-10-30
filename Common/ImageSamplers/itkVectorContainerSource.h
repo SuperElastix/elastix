@@ -73,7 +73,7 @@ protected:
   /** The constructor. */
   VectorContainerSource();
   /** The destructor. */
-  ~VectorContainerSource() override {}
+  ~VectorContainerSource() override = default;
 
   /** PrintSelf. */
   void

@@ -136,7 +136,7 @@ protected:
   /** The constructor. */
   DeformationFieldTransform();
   /** The destructor. */
-  ~DeformationFieldTransform() override {}
+  ~DeformationFieldTransform() override = default;
 
 private:
   /** The deleted copy constructor. */

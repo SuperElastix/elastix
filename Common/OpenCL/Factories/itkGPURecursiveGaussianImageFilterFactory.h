@@ -106,7 +106,7 @@ public:
 
 protected:
   GPURecursiveGaussianImageFilterFactory2();
-  virtual ~GPURecursiveGaussianImageFilterFactory2() {}
+  virtual ~GPURecursiveGaussianImageFilterFactory2() = default;
 
   /** Register methods for 1D. */
   virtual void

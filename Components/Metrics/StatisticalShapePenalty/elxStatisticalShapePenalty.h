@@ -176,9 +176,9 @@ public:
 
 protected:
   /** The constructor. */
-  StatisticalShapePenalty() {}
+  StatisticalShapePenalty() = default;
   /** The destructor. */
-  ~StatisticalShapePenalty() override {}
+  ~StatisticalShapePenalty() override = default;
 
 private:
   /** The deleted copy constructor. */

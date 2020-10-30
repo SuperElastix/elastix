@@ -108,9 +108,9 @@ public:
 
 protected:
   /** The constructor. */
-  ReducedDimensionBSplineInterpolator() {}
+  ReducedDimensionBSplineInterpolator() = default;
   /** The destructor. */
-  ~ReducedDimensionBSplineInterpolator() override {}
+  ~ReducedDimensionBSplineInterpolator() override = default;
 
 private:
   /** The deleted copy constructor. */

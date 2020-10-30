@@ -78,7 +78,7 @@ protected:
   ANNbdTree();
 
   /** Destructor. */
-  ~ANNbdTree() override {}
+  ~ANNbdTree() override = default;
 
   /** PrintSelf. */
   void

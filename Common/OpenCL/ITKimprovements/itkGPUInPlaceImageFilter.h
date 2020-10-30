@@ -91,8 +91,8 @@ public:
   typedef typename InputImageType::PixelType    InputImagePixelType;
 
 protected:
-  GPUInPlaceImageFilter() {}
-  ~GPUInPlaceImageFilter() {}
+  GPUInPlaceImageFilter() = default;
+  ~GPUInPlaceImageFilter() = default;
 
   virtual void
   PrintSelf(std::ostream & os, Indent indent) const;

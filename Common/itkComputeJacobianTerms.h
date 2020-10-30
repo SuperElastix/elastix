@@ -106,7 +106,7 @@ public:
 
 protected:
   ComputeJacobianTerms();
-  ~ComputeJacobianTerms() override {}
+  ~ComputeJacobianTerms() override = default;
 
   typename FixedImageType::ConstPointer m_FixedImage;
   FixedImageRegionType                  m_FixedImageRegion;

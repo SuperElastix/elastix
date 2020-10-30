@@ -123,9 +123,9 @@ public:
 
 protected:
   /** The constructor. */
-  ReducedDimensionBSplineResampleInterpolator() {}
+  ReducedDimensionBSplineResampleInterpolator() = default;
   /** The destructor. */
-  ~ReducedDimensionBSplineResampleInterpolator() override {}
+  ~ReducedDimensionBSplineResampleInterpolator() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -108,7 +108,7 @@ protected:
   /** The constructor. */
   OpenCLMovingGenericPyramid();
   /** The destructor. */
-  virtual ~OpenCLMovingGenericPyramid() {}
+  virtual ~OpenCLMovingGenericPyramid() = default;
 
 private:
   /** The deleted copy constructor. */

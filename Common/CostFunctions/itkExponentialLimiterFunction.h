@@ -78,7 +78,7 @@ public:
 
 protected:
   ExponentialLimiterFunction();
-  ~ExponentialLimiterFunction() override {}
+  ~ExponentialLimiterFunction() override = default;
 
   virtual void
   ComputeLimiterSettings(void);

@@ -214,7 +214,7 @@ protected:
   AdvancedSimilarity2DTransform();
   AdvancedSimilarity2DTransform(unsigned int spaceDimension, unsigned int parametersDimension);
 
-  ~AdvancedSimilarity2DTransform() override {}
+  ~AdvancedSimilarity2DTransform() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

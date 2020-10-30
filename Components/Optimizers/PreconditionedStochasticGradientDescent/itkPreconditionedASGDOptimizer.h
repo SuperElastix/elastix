@@ -116,7 +116,7 @@ public:
 
 protected:
   PreconditionedASGDOptimizer();
-  ~PreconditionedASGDOptimizer() override {}
+  ~PreconditionedASGDOptimizer() override = default;
 
   /** Function to update the current time
    * If UseAdaptiveStepSizes is false this function just increments

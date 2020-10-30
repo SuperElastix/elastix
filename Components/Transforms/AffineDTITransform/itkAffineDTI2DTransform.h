@@ -134,7 +134,7 @@ protected:
   AffineDTI2DTransform(const MatrixType & matrix, const OutputPointType & offset);
   AffineDTI2DTransform(unsigned int outputSpaceDims, unsigned int paramsSpaceDims);
 
-  ~AffineDTI2DTransform() override {}
+  ~AffineDTI2DTransform() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

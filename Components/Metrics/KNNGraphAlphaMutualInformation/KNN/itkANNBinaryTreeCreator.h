@@ -100,8 +100,8 @@ public:
   DecreaseReferenceCount(void);
 
 protected:
-  ANNBinaryTreeCreator() {}
-  ~ANNBinaryTreeCreator() override {}
+  ANNBinaryTreeCreator() = default;
+  ~ANNBinaryTreeCreator() override = default;
 
 private:
   ANNBinaryTreeCreator(const Self &) = delete;

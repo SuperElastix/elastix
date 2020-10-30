@@ -144,9 +144,9 @@ public:
 
 protected:
   /** The constructor. */
-  CorrespondingPointsEuclideanDistanceMetric() {}
+  CorrespondingPointsEuclideanDistanceMetric() = default;
   /** The destructor. */
-  ~CorrespondingPointsEuclideanDistanceMetric() override {}
+  ~CorrespondingPointsEuclideanDistanceMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -219,7 +219,7 @@ protected:
   EulerStackTransform();
 
   /** The destructor. */
-  ~EulerStackTransform() override {}
+  ~EulerStackTransform() override = default;
 
   /** Try to read the CenterOfRotationPoint from the transform parameter file
    * The CenterOfRotationPoint is already in world coordinates.

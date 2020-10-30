@@ -145,9 +145,9 @@ public:
 
 protected:
   /** The constructor. */
-  AdvancedKappaStatisticMetric() {}
+  AdvancedKappaStatisticMetric() = default;
   /** The destructor. */
-  ~AdvancedKappaStatisticMetric() override {}
+  ~AdvancedKappaStatisticMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

@@ -139,10 +139,10 @@ public:
 
 protected:
   /** The constructor. */
-  TransformBendingEnergyPenalty() {}
+  TransformBendingEnergyPenalty() = default;
 
   /** The destructor. */
-  ~TransformBendingEnergyPenalty() override {}
+  ~TransformBendingEnergyPenalty() override = default;
 
 private:
   /** The deleted copy constructor. */

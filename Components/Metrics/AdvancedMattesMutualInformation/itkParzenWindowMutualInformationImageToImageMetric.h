@@ -152,7 +152,7 @@ protected:
   ParzenWindowMutualInformationImageToImageMetric();
 
   /** The destructor. */
-  ~ParzenWindowMutualInformationImageToImageMetric() override {}
+  ~ParzenWindowMutualInformationImageToImageMetric() override = default;
 
   /** Protected Typedefs ******************/
 

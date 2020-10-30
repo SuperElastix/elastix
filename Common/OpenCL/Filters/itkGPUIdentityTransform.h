@@ -70,7 +70,7 @@ public:
 
 protected:
   GPUIdentityTransform();
-  ~GPUIdentityTransform() override {}
+  ~GPUIdentityTransform() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

@@ -155,10 +155,10 @@ public:
 
 protected:
   /** The constructor. */
-  MultiResolutionRegistrationWithFeatures() {}
+  MultiResolutionRegistrationWithFeatures() = default;
 
   /** The destructor. */
-  ~MultiResolutionRegistrationWithFeatures() override {}
+  ~MultiResolutionRegistrationWithFeatures() override = default;
 
   /** Typedef's for mask support. */
   typedef typename Superclass2::MaskPixelType                  MaskPixelType;

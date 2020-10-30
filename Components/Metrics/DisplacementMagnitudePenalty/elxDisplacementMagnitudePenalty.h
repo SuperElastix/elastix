@@ -129,10 +129,10 @@ public:
 
 protected:
   /** The constructor. */
-  DisplacementMagnitudePenalty() {}
+  DisplacementMagnitudePenalty() = default;
 
   /** The destructor. */
-  ~DisplacementMagnitudePenalty() override {}
+  ~DisplacementMagnitudePenalty() override = default;
 
 private:
   /** The deleted copy constructor. */

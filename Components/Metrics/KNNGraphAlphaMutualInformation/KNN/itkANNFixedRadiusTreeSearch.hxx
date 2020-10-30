@@ -41,7 +41,7 @@ ANNFixedRadiusTreeSearch<TBinaryTree>::ANNFixedRadiusTreeSearch()
 
 template <class TBinaryTree>
 ANNFixedRadiusTreeSearch<TBinaryTree>::~ANNFixedRadiusTreeSearch()
-{} // end Destructor
+= default; // end Destructor
 
 /**
  * ************************ Search *************************

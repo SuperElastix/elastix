@@ -246,7 +246,7 @@ protected:
   MultiResolutionImageRegistrationMethod2();
 
   /** Destructor. */
-  ~MultiResolutionImageRegistrationMethod2() override {}
+  ~MultiResolutionImageRegistrationMethod2() override = default;
 
   /** PrintSelf. */
   void

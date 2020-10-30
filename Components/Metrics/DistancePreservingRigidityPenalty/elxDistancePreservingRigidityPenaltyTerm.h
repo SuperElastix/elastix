@@ -162,10 +162,10 @@ public:
 
 protected:
   /** The constructor. */
-  DistancePreservingRigidityPenalty() {}
+  DistancePreservingRigidityPenalty() = default;
 
   /** The destructor. */
-  ~DistancePreservingRigidityPenalty() override {}
+  ~DistancePreservingRigidityPenalty() override = default;
 
 private:
   /** The deleted copy constructor. */

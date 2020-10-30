@@ -236,7 +236,7 @@ public:
 
 protected:
   WeightedCombinationTransform();
-  ~WeightedCombinationTransform() override {}
+  ~WeightedCombinationTransform() override = default;
 
   TransformContainerType m_TransformContainer;
   double                 m_SumOfWeights;

@@ -75,8 +75,8 @@ public:
 
 
 protected:
-  BSplineSecondOrderDerivativeKernelFunction2() {}
-  ~BSplineSecondOrderDerivativeKernelFunction2() override {}
+  BSplineSecondOrderDerivativeKernelFunction2() = default;
+  ~BSplineSecondOrderDerivativeKernelFunction2() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override

@@ -75,8 +75,8 @@ public:
   }
 
 protected:
-  GPUAdvancedCombinationTransform() {}
-  virtual ~GPUAdvancedCombinationTransform() {}
+  GPUAdvancedCombinationTransform() = default;
+  virtual ~GPUAdvancedCombinationTransform() = default;
   void
   PrintSelf(std::ostream & s, Indent indent) const override
   {

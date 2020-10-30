@@ -166,9 +166,9 @@ public:
 
 protected:
   /** The constructor. */
-  PCAMetric() {}
+  PCAMetric() = default;
   /** The destructor. */
-  ~PCAMetric() override {}
+  ~PCAMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

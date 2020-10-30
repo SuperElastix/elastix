@@ -85,9 +85,9 @@ public:
 
 protected:
   /** The constructor. */
-  FixedShrinkingPyramid() {}
+  FixedShrinkingPyramid() = default;
   /** The destructor. */
-  ~FixedShrinkingPyramid() override {}
+  ~FixedShrinkingPyramid() override = default;
 
 private:
   /** The deleted copy constructor. */

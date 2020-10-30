@@ -114,10 +114,10 @@ public:
 
 protected:
   /** The constructor. */
-  RayCastResampleInterpolator() {}
+  RayCastResampleInterpolator() = default;
 
   /** The destructor. */
-  ~RayCastResampleInterpolator() override {}
+  ~RayCastResampleInterpolator() override = default;
 
   /** Helper function to initialize the combination transform
    * with a pre-transform.

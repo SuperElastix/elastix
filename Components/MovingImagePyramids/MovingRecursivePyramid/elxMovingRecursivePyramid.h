@@ -84,9 +84,9 @@ public:
 
 protected:
   /** The constructor. */
-  MovingRecursivePyramid() {}
+  MovingRecursivePyramid() = default;
   /** The destructor. */
-  ~MovingRecursivePyramid() override {}
+  ~MovingRecursivePyramid() override = default;
 
 private:
   /** The deleted copy constructor. */

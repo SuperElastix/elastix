@@ -214,7 +214,7 @@ protected:
   /** The constructor. */
   SimilarityTransformElastix();
   /** The destructor. */
-  ~SimilarityTransformElastix() override {}
+  ~SimilarityTransformElastix() override = default;
 
   /** Try to read the CenterOfRotation from the transform parameter file
    * This is an index value, and, thus, converted to world coordinates.

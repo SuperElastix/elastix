@@ -139,9 +139,9 @@ public:
 
 protected:
   /** The constructor. */
-  AdvancedNormalizedCorrelationMetric() {}
+  AdvancedNormalizedCorrelationMetric() = default;
   /** The destructor. */
-  ~AdvancedNormalizedCorrelationMetric() override {}
+  ~AdvancedNormalizedCorrelationMetric() override = default;
 
 private:
   /** The deleted copy constructor. */

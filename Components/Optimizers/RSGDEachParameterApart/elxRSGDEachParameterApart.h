@@ -133,8 +133,8 @@ public:
   SetInitialPosition(const ParametersType & param) override;
 
 protected:
-  RSGDEachParameterApart() {}
-  ~RSGDEachParameterApart() override {}
+  RSGDEachParameterApart() = default;
+  ~RSGDEachParameterApart() override = default;
 
 private:
   RSGDEachParameterApart(const Self &) = delete;

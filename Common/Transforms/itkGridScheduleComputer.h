@@ -146,7 +146,7 @@ protected:
   GridScheduleComputer();
 
   /** The destructor. */
-  ~GridScheduleComputer() override {}
+  ~GridScheduleComputer() override = default;
 
   /** Declare member variables, needed for B-spline grid. */
   VectorSpacingType           m_GridSpacings;

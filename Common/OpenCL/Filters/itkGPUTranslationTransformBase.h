@@ -71,7 +71,7 @@ public:
 
 protected:
   GPUTranslationTransformBase();
-  ~GPUTranslationTransformBase() override {}
+  ~GPUTranslationTransformBase() override = default;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */

@@ -182,7 +182,7 @@ protected:
   /** The constructor. */
   ImageToVectorContainerFilter();
   /** The destructor. */
-  ~ImageToVectorContainerFilter() override {}
+  ~ImageToVectorContainerFilter() override = default;
 
   /** PrintSelf. */
   void

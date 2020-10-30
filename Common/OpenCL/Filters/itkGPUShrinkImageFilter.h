@@ -80,7 +80,7 @@ public:
 
 protected:
   GPUShrinkImageFilter();
-  ~GPUShrinkImageFilter() {}
+  ~GPUShrinkImageFilter() = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

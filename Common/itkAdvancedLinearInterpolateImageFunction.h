@@ -117,7 +117,7 @@ public:
 
 protected:
   AdvancedLinearInterpolateImageFunction();
-  ~AdvancedLinearInterpolateImageFunction() override {}
+  ~AdvancedLinearInterpolateImageFunction() override = default;
 
 private:
   AdvancedLinearInterpolateImageFunction(const Self &) = delete;

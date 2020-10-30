@@ -53,7 +53,7 @@ namespace itk
 template <class TInputImage, class TOutputImage>
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage,
                                                    TOutputImage>::MultiResolutionGaussianSmoothingPyramidImageFilter()
-{}
+= default;
 
 /*
  * Set the multi-resolution schedule

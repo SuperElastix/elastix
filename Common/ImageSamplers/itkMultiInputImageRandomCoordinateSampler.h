@@ -108,7 +108,7 @@ protected:
   MultiInputImageRandomCoordinateSampler();
 
   /** The destructor. */
-  ~MultiInputImageRandomCoordinateSampler() override {}
+  ~MultiInputImageRandomCoordinateSampler() override = default;
 
   /** PrintSelf. */
   void

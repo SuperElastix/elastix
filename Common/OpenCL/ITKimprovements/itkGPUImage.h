@@ -248,7 +248,7 @@ public:
 
 protected:
   GPUImage();
-  virtual ~GPUImage() {}
+  virtual ~GPUImage() = default;
 
   virtual void
   PrintSelf(std::ostream & os, Indent indent) const;

@@ -182,7 +182,7 @@ public:
 
 protected:
   TransformToSpatialJacobianSource();
-  ~TransformToSpatialJacobianSource() override {}
+  ~TransformToSpatialJacobianSource() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

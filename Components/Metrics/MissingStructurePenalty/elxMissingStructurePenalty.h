@@ -183,7 +183,7 @@ protected:
   /** The constructor. */
   MissingStructurePenalty();
   /** The destructor. */
-  ~MissingStructurePenalty() override {}
+  ~MissingStructurePenalty() override = default;
 
 private:
   /** The deleted copy constructor. */

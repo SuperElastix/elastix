@@ -32,7 +32,7 @@ namespace elastix
 
 template <class TElastix>
 RecursiveBSplineTransform<TElastix>::RecursiveBSplineTransform()
-{} // end Constructor()
+= default; // end Constructor()
 
 
 /**

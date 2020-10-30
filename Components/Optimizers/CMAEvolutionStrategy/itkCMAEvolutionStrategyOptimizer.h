@@ -317,7 +317,7 @@ protected:
   CMAEvolutionStrategyOptimizer();
 
   /** Destructor */
-  ~CMAEvolutionStrategyOptimizer() override {}
+  ~CMAEvolutionStrategyOptimizer() override = default;
 
   /** PrintSelf */
   void

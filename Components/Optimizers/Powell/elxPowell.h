@@ -103,8 +103,8 @@ public:
   SetInitialPosition(const ParametersType & param) override;
 
 protected:
-  Powell() {}
-  ~Powell() override {}
+  Powell() = default;
+  ~Powell() override = default;
 
 private:
   Powell(const Self &) = delete;

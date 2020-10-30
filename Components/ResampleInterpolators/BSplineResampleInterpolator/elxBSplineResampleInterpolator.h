@@ -129,9 +129,9 @@ public:
 
 protected:
   /** The constructor. */
-  BSplineResampleInterpolator() {}
+  BSplineResampleInterpolator() = default;
   /** The destructor. */
-  ~BSplineResampleInterpolator() override {}
+  ~BSplineResampleInterpolator() override = default;
 
 private:
   /** The deleted copy constructor. */

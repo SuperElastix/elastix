@@ -97,7 +97,7 @@ protected:
   AffineLogTransform(const MatrixType & matrix, const OutputPointType & offset);
   AffineLogTransform(unsigned int outputSpaceDims, unsigned int paramsSpaceDims);
 
-  ~AffineLogTransform() override {}
+  ~AffineLogTransform() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

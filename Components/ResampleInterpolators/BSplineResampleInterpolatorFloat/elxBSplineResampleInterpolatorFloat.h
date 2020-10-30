@@ -122,9 +122,9 @@ public:
 
 protected:
   /** The constructor. */
-  BSplineResampleInterpolatorFloat() {}
+  BSplineResampleInterpolatorFloat() = default;
   /** The destructor. */
-  ~BSplineResampleInterpolatorFloat() override {}
+  ~BSplineResampleInterpolatorFloat() override = default;
 
 private:
   /** The deleted copy constructor. */

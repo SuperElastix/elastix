@@ -118,7 +118,7 @@ public:
 
 protected:
   VectorMeanDiffusionImageFilter();
-  ~VectorMeanDiffusionImageFilter() override {}
+  ~VectorMeanDiffusionImageFilter() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

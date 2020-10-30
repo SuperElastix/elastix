@@ -294,7 +294,7 @@ public:
 
 protected:
   AdaGrad();
-  ~AdaGrad() override {}
+  ~AdaGrad() override = default;
 
   /** Protected typedefs */
   typedef typename RegistrationType::FixedImageType  FixedImageType;

@@ -106,7 +106,7 @@ public:
   SetInputImageContainer(DataObjectContainerType * inputImageContainer);
 
 protected:
-  TransformixMain() {}
+  TransformixMain() = default;
   ~TransformixMain() override;
 
   /** InitDBIndex sets m_DBIndex to the value obtained

@@ -324,7 +324,7 @@ protected:
   }
 
 
-  ~AdvancedIdentityTransform() override {}
+  ~AdvancedIdentityTransform() override = default;
 
 private:
   AdvancedIdentityTransform(const Self &) = delete;

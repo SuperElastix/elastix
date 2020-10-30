@@ -174,7 +174,7 @@ public:
 
 protected:
   MoreThuenteLineSearchOptimizer();
-  ~MoreThuenteLineSearchOptimizer() override {}
+  ~MoreThuenteLineSearchOptimizer() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
