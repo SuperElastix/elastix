@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdaptiveStepsizeOptimizer_cxx
-#define __itkAdaptiveStepsizeOptimizer_cxx
 
 #include "itkAdaptiveStepsizeOptimizer.h"
 
@@ -90,5 +88,3 @@ AdaptiveStepsizeOptimizer ::UpdateCurrentTime(void)
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkVoxelWiseASGDOptimizer_cxx

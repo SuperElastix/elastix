@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkFiniteDifferenceGradientDescentOptimizer_cxx
-#define __itkFiniteDifferenceGradientDescentOptimizer_cxx
-
 #include "itkFiniteDifferenceGradientDescentOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
@@ -288,5 +285,3 @@ FiniteDifferenceGradientDescentOptimizer ::Compute_c(unsigned long k) const
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkFiniteDifferenceGradientDescentOptimizer_cxx

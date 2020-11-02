@@ -21,9 +21,6 @@
  *
  */
 
-#ifndef __elxComponentDatabase_cxx
-#define __elxComponentDatabase_cxx
-
 #include "elxComponentDatabase.h"
 #include "xoutmain.h"
 
@@ -165,5 +162,3 @@ ComponentDatabase::GetIndex(const PixelTypeDescriptionType & fixedPixelType,
 
 
 } // end namespace elastix
-
-#endif // end ifndef __elxComponentDatabase_cxx

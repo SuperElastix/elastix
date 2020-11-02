@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkScaledSingleValuedNonLinearOptimizer_cxx
-#define __itkScaledSingleValuedNonLinearOptimizer_cxx
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 
@@ -232,5 +230,3 @@ ScaledSingleValuedNonLinearOptimizer ::PrintSelf(std::ostream & os, Indent inden
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkScaledSingleValuedNonLinearOptimizer_cxx

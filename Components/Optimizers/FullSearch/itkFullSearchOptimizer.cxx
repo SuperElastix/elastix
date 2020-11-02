@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkFullSearchOptimizer_cxx
-#define __itkFullSearchOptimizer_cxx
-
 #include "itkFullSearchOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
@@ -445,5 +442,3 @@ FullSearchOptimizer ::IndexToPoint(const SearchSpaceIndexType & index)
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkFullSearchOptimizer_cxx

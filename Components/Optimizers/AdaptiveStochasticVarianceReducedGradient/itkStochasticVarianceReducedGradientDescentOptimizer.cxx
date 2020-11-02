@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef _itkStochasticVarianceReducedGradientDescentOptimizer_cxx
-#define _itkStochasticVarianceReducedGradientDescentOptimizer_cxx
 
 #include "itkStochasticVarianceReducedGradientDescentOptimizer.h"
 
@@ -362,5 +360,3 @@ StochasticVarianceReducedGradientDescentOptimizer ::ThreadedAdvanceOneStep(Threa
 
 
 } // end namespace itk
-
-#endif

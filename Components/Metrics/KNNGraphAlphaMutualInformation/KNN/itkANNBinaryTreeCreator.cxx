@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkANNBinaryTreeCreator_cxx
-#define __itkANNBinaryTreeCreator_cxx
-
 #include "itkANNBinaryTreeCreator.h"
 
 namespace itk
@@ -126,5 +123,3 @@ ANNBinaryTreeCreator::DecreaseReferenceCount(void)
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkANNBinaryTreeCreator_cxx

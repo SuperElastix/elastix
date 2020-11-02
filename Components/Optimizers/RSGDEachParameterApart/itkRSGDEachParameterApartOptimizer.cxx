@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkRSGDEachParameterApartOptimizer_cxx
-#define __itkRSGDEachParameterApartOptimizer_cxx
-
 #include "itkRSGDEachParameterApartOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
@@ -55,5 +52,3 @@ RSGDEachParameterApartOptimizer ::StepAlongGradient(const DerivativeType & facto
 
 
 } // end namespace itk
-
-#endif

@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkPreconditionedASGDOptimizer_cxx
-#define __itkPreconditionedASGDOptimizer_cxx
 
 #include "itkPreconditionedASGDOptimizer.h"
 
@@ -90,5 +88,3 @@ PreconditionedASGDOptimizer ::UpdateCurrentTime(void)
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkVoxelWiseASGDOptimizer_cxx

@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdaptiveStochasticVarianceReducedGradientOptimizer_cxx
-#define __itkAdaptiveStochasticVarianceReducedGradientOptimizer_cxx
 
 #include "itkAdaptiveStochasticVarianceReducedGradientOptimizer.h"
 
@@ -87,5 +85,3 @@ AdaptiveStochasticVarianceReducedGradientOptimizer ::UpdateCurrentTime(void)
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkAdaptiveStochasticVarianceReducedGradientOptimizer_cxx

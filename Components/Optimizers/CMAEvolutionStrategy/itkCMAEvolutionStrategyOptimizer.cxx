@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkCMAEvolutionStrategyOptimizer_cxx
-#define __itkCMAEvolutionStrategyOptimizer_cxx
-
 #include "itkCMAEvolutionStrategyOptimizer.h"
 #include "itkSymmetricEigenAnalysis.h"
 #include "vnl/vnl_math.h"
@@ -1204,5 +1201,3 @@ CMAEvolutionStrategyOptimizer::TestConvergence(bool firstCheck)
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkCMAEvolutionStrategyOptimizer_cxx

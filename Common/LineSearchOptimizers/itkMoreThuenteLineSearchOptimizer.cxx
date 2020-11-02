@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkMoreThuenteLineSearchOptimizer_cxx
-#define __itkMoreThuenteLineSearchOptimizer_cxx
-
 #include "itkMoreThuenteLineSearchOptimizer.h"
 #include <cmath> // For abs.
 #include <limits>
@@ -948,5 +945,3 @@ MoreThuenteLineSearchOptimizer ::PrintSelf(std::ostream & os, Indent indent) con
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkMoreThuenteLineSearchOptimizer_cxx
