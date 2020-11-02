@@ -18,6 +18,6 @@ If you use this software anywhere we would appreciate if you cite the following 
 
 ## More information ##
 
-More information, including an extensive manual, can be found on the website: <https://elastix.lumc.nl/>.
+More information, including an extensive manual and model zoo, can be found on the website: <https://elastix.lumc.nl/>.
 
 You can also subscribe to the [mailing list](https://groups.google.com/forum/#!forum/elastix-imageregistration) for questions. Information on contributing to `elastix` can be found [here](CONTRIBUTING.md).
