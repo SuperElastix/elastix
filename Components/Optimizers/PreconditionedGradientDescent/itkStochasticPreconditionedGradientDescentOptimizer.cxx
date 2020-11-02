@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkStochasticPreconditionedGradientDescentOptimizer_cxx
-#define __itkStochasticPreconditionedGradientDescentOptimizer_cxx
 
 #include "itkStochasticPreconditionedGradientDescentOptimizer.h"
 #include "vnl/vnl_math.h"
@@ -93,5 +91,3 @@ StochasticPreconditionedGradientDescentOptimizer ::UpdateCurrentTime(void)
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkStochasticPreconditionedGradientDescentOptimizer_cxx

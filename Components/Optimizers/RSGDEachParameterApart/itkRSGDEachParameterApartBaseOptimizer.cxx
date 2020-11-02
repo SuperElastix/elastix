@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkRSGDEachParameterApartBaseOptimizer_cxx
-#define __itkRSGDEachParameterApartBaseOptimizer_cxx
-
 #include "itkRSGDEachParameterApartBaseOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
@@ -287,5 +284,3 @@ RSGDEachParameterApartBaseOptimizer ::PrintSelf(std::ostream & os, Indent indent
 
 
 } // end namespace itk
-
-#endif

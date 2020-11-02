@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkParameterFileParser_cxx
-#define __itkParameterFileParser_cxx
-
 #include "itkParameterFileParser.h"
 
 #include <itksys/SystemTools.hxx>
@@ -409,5 +406,3 @@ ParameterFileParser ::ReturnParameterFileAsString(void)
 
 
 } // end namespace itk
-
-#endif // end __itkParameterFileParser_cxx

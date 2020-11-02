@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkQuasiNewtonLBFGSOptimizer_cxx
-#define __itkQuasiNewtonLBFGSOptimizer_cxx
-
 #include "itkQuasiNewtonLBFGSOptimizer.h"
 #include "itkArray.h"
 #include "vnl/vnl_math.h"
@@ -444,5 +441,3 @@ QuasiNewtonLBFGSOptimizer::TestConvergence(bool firstLineSearchDone)
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkQuasiNewtonLBFGSOptimizer_cxx

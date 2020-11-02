@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkUseMevisDicomTiff_cxx
-#define __itkUseMevisDicomTiff_cxx
 
 #include "itkUseMevisDicomTiff.h"
 
@@ -37,6 +35,3 @@ RegisterMevisDicomTiff(void)
                                           itk::ObjectFactoryBase::INSERT_AT_FRONT);
 #endif
 }
-
-
-#endif

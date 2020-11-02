@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __elxComponentLoader_cxx
-#define __elxComponentLoader_cxx
-
 #include "elxComponentLoader.h"
 #include "elxSupportedImageTypes.h"
 #include "elxInstallFunctions.h"
@@ -182,5 +179,3 @@ ComponentLoader::UnloadComponents()
 
 
 } // end namespace elastix
-
-#endif //#ifndef __elxComponentLoader_cxx

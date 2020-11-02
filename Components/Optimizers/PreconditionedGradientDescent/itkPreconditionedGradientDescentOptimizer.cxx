@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef _itkPreconditionedGradientDescentOptimizer_cxx
-#define _itkPreconditionedGradientDescentOptimizer_cxx
 
 #include "itkPreconditionedGradientDescentOptimizer.h"
 
@@ -505,5 +503,3 @@ PreconditionedGradientDescentOptimizer ::SetPreconditionMatrix(PreconditionType 
 
 
 } // end namespace itk
-
-#endif

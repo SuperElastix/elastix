@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAdaptiveStochasticLBFGSOptimizer_cxx
-#define __itkAdaptiveStochasticLBFGSOptimizer_cxx
 
 #include "itkAdaptiveStochasticLBFGSOptimizer.h"
 
@@ -107,5 +105,3 @@ AdaptiveStochasticLBFGSOptimizer ::UpdateCurrentTime(void)
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkAdaptiveStochasticLBFGSOptimizer_cxx

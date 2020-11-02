@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef elxParameterObject_cxx
-#define elxParameterObject_cxx
 
 #include "elxParameterObject.h"
 
@@ -535,5 +533,3 @@ ParameterObject ::PrintSelf(std::ostream & os, itk::Indent indent) const
 
 
 } // namespace elastix
-
-#endif // elxParameterObject_cxx

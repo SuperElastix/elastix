@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkLineSearchOptimizer_cxx
-#define __itkLineSearchOptimizer_cxx
-
 #include "itkLineSearchOptimizer.h"
 #include "itkNumericTraits.h"
 
@@ -104,5 +101,3 @@ LineSearchOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkLineSearchOptimizer_cxx

@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __xoutmain_cxx
-#define __xoutmain_cxx
 
 #include "xoutmain.h"
 
@@ -45,5 +43,3 @@ xout_valid()
 
 
 } // namespace xoutlibrary
-
-#endif // end #ifndef __xoutmain_cxx

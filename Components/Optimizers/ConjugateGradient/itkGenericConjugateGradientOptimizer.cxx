@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkGenericConjugateGradientOptimizer_cxx
-#define __itkGenericConjugateGradientOptimizer_cxx
-
 #include "itkGenericConjugateGradientOptimizer.h"
 #include "vnl/vnl_math.h"
 
@@ -632,5 +629,3 @@ GenericConjugateGradientOptimizer ::PrintSelf(std::ostream & os, Indent indent) 
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkGenericConjugateGradientOptimizer_cxx

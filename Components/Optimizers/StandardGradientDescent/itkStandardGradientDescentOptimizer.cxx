@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkStandardGradientDescentOptimizer_cxx
-#define __itkStandardGradientDescentOptimizer_cxx
 
 #include "itkStandardGradientDescentOptimizer.h"
 #include "vnl/vnl_math.h"
@@ -103,5 +101,3 @@ StandardGradientDescentOptimizer ::UpdateCurrentTime(void)
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkStandardGradientDescentOptimizer_cxx

@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkScaledSingleValuedCostFunction_cxx
-#define __itkScaledSingleValuedCostFunction_cxx
 
 #include "itkScaledSingleValuedCostFunction.h"
 #include "vnl/vnl_math.h"
@@ -288,5 +286,3 @@ ScaledSingleValuedCostFunction ::PrintSelf(std::ostream & os, Indent indent) con
 
 
 } // end namespace itk
-
-#endif // #ifndef __itkScaledSingleValuedCostFunction_cxx
