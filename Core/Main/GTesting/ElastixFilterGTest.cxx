@@ -65,11 +65,9 @@ GTEST_TEST(ElastixFilter, Translation)
 
   const std::pair<std::string, std::string> parameterArray[] = {
     // Parameters in alphabetic order:
-    { "FixedImageDimension", std::to_string(ImageDimension) },
     { "ImageSampler", "Full" },
     { "MaximumNumberOfIterations", "2" },
     { "Metric", "AdvancedNormalizedCorrelation" },
-    { "MovingImageDimension", std::to_string(ImageDimension) },
     { "Optimizer", "AdaptiveStochasticGradientDescent" },
     { "Transform", "TranslationTransform" }
   };
