@@ -212,48 +212,11 @@ public:
     return dynamic_cast<const ITKBaseType *>(this);
   }
 
-
-  virtual const CombinationTransformType *
-  GetAsCombinationTransform(void) const
-  {
-    return dynamic_cast<const CombinationTransformType *>(this);
-  }
-
-
-  virtual CombinationTransformType *
-  GetAsCombinationTransform(void)
-  {
-    return dynamic_cast<CombinationTransformType *>(this);
-  }
-
-
-  /** Execute stuff before everything else:
-   * \li Check the appearance of an initial transform.
-   */
-  int
-  BeforeAllBase(void) override;
-
   /** Execute stuff before the actual transformation:
    * \li Check the appearance of inputpoints to be transformed.
    */
   virtual int
   BeforeAllTransformix(void);
-
-  /** Execute stuff before the actual registration:
-   * \li Set the initial transform and how to group transforms.
-   */
-  void
-  BeforeRegistrationBase(void) override;
-
-  /** Execute stuff after the registration:
-   * \li Get and set the final parameters for the resampler.
-   */
-  void
-  AfterRegistrationBase(void) override;
-
-  /** Get the initial transform. */
-  virtual const InitialTransformType *
-  GetInitialTransform(void) const;
 
   /** Set the initial transform. */
   virtual void
@@ -262,9 +225,6 @@ public:
   /** Set the TransformParametersFileName. */
   virtual void
   SetTransformParametersFileName(const char * filename);
-
-  /** Get the TransformParametersFileName. */
-  itkGetStringMacro(TransformParametersFileName);
 
   /** Function to read transform-parameters from a file. */
   virtual void
@@ -299,31 +259,6 @@ public:
   /** Function to transform coordinates from fixed to moving image. */
   virtual void
   TransformPoints(void) const;
-
-  /** Function to transform coordinates from fixed to moving image. */
-  virtual void
-  TransformPointsSomePoints(const std::string filename) const;
-
-  /** Function to transform coordinates from fixed to moving image, given as VTK file. */
-  virtual void
-  TransformPointsSomePointsVTK(const std::string filename) const;
-
-  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
-   *  into Generate* and Write* functions, since that would facilitate a proper library
-   *  interface. To keep everything functional during the transition period we need to
-   *  keep the orignal Compute* and TransformPoints* functions and let them just call
-   *  Generate* and Write*. These functions should be considered marked deprecated.
-   */
-
-  /** Function to transform all coordinates from fixed to moving image. */
-  typename DeformationFieldImageType::Pointer
-  GenerateDeformationFieldImage(void) const;
-
-  void WriteDeformationFieldImage(typename DeformationFieldImageType::Pointer) const;
-
-  /** Legacy function that calls GenerateDeformationFieldImage and WriteDeformationFieldImage. */
-  virtual void
-  TransformPointsAllPoints(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
   virtual void
@@ -365,6 +300,69 @@ protected:
   AutomaticScalesEstimationStackTransform(const unsigned int & numSubTransforms, ScalesType & scales) const;
 
 private:
+  virtual const CombinationTransformType *
+  GetAsCombinationTransform(void) const
+  {
+    return dynamic_cast<const CombinationTransformType *>(this);
+  }
+
+
+  virtual CombinationTransformType *
+  GetAsCombinationTransform(void)
+  {
+    return dynamic_cast<CombinationTransformType *>(this);
+  }
+
+  /** Execute stuff before everything else:
+   * \li Check the appearance of an initial transform.
+   */
+  int
+  BeforeAllBase(void) override;
+
+  /** Execute stuff before the actual registration:
+   * \li Set the initial transform and how to group transforms.
+   */
+  void
+  BeforeRegistrationBase(void) override;
+
+  /** Execute stuff after the registration:
+   * \li Get and set the final parameters for the resampler.
+   */
+  void
+  AfterRegistrationBase(void) override;
+
+  /** Get the initial transform. */
+  virtual const InitialTransformType *
+  GetInitialTransform(void) const;
+
+  /** Get the TransformParametersFileName. */
+  itkGetStringMacro(TransformParametersFileName);
+
+  /** Function to transform coordinates from fixed to moving image. */
+  virtual void
+  TransformPointsSomePoints(const std::string filename) const;
+
+  /** Function to transform coordinates from fixed to moving image, given as VTK file. */
+  virtual void
+  TransformPointsSomePointsVTK(const std::string filename) const;
+
+  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
+   *  into Generate* and Write* functions, since that would facilitate a proper library
+   *  interface. To keep everything functional during the transition period we need to
+   *  keep the orignal Compute* and TransformPoints* functions and let them just call
+   *  Generate* and Write*. These functions should be considered marked deprecated.
+   */
+
+  /** Function to transform all coordinates from fixed to moving image. */
+  typename DeformationFieldImageType::Pointer
+  GenerateDeformationFieldImage(void) const;
+
+  void WriteDeformationFieldImage(typename DeformationFieldImageType::Pointer) const;
+
+  /** Legacy function that calls GenerateDeformationFieldImage and WriteDeformationFieldImage. */
+  virtual void
+  TransformPointsAllPoints(void) const;
+
   /** Member variables. */
   std::unique_ptr<ParametersType> m_TransformParametersPointer{};
   std::string                     m_TransformParametersFileName;
