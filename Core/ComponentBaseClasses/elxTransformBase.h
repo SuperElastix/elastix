@@ -363,14 +363,6 @@ private:
   void
   TransformPointsAllPoints(void) const;
 
-  /** Member variables. */
-  std::unique_ptr<ParametersType> m_TransformParametersPointer{};
-  std::string                     m_TransformParametersFileName;
-  ParametersType                  m_FinalParameters;
-
-  /** Boolean to decide whether or not the transform parameters are written. */
-  bool m_ReadWriteTransformParameters{ true };
-
   std::string
   GetInitialTransformParametersFileName(void) const
   {
@@ -382,6 +374,14 @@ private:
     const Self * t0 = dynamic_cast<const Self *>(this->GetInitialTransform());
     return t0->GetTransformParametersFileName();
   }
+
+  /** Member variables. */
+  std::unique_ptr<ParametersType> m_TransformParametersPointer{};
+  std::string                     m_TransformParametersFileName;
+  ParametersType                  m_FinalParameters;
+
+  /** Boolean to decide whether or not the transform parameters are written. */
+  bool m_ReadWriteTransformParameters{ true };
 
   /** Boolean to decide whether or not the transform parameters are written in binary format. */
   bool m_UseBinaryFormatForTransformationParameters{};
