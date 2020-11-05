@@ -109,11 +109,11 @@ public:
 
   /** Get transform parameters of last registration step. */
   ParameterMapType
-  GetTransformParameterMap(void);
+  GetTransformParameterMap(void) const;
 
   /** Get transform parameters of all registration steps. */
   ParameterMapListType
-  GetTransformParameterMapList(void);
+  GetTransformParameterMapList(void) const;
 
 private:
   /* the result images */
