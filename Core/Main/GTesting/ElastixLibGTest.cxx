@@ -29,6 +29,109 @@
 
 #include <algorithm> // For transform.
 #include <array>
+#include <initializer_list>
+#include <limits>
+#include <vector>
+
+namespace
+{
+
+// Converts the specified strings to an array of double.
+// Assumes that each string represents a floating point number.
+template <unsigned VDimension>
+std::array<double, VDimension>
+ConvertStringsToArrayOfDouble(const std::vector<std::string> & strings)
+{
+  // Wrap ASSERT_EQ in a lambda, because it returns void!
+  [&strings] { ASSERT_EQ(strings.size(), VDimension); }();
+
+  std::array<double, VDimension> result;
+
+  for (std::size_t i{}; i < VDimension; ++i)
+  {
+    const auto & str = strings[i];
+    std::size_t  index{};
+    result[i] = std::stod(str, &index);
+
+    // Test that all characters have been processed, by std::stod.
+    [&str, index] { ASSERT_EQ(str.size(), index); }();
+  }
+
+  return result;
+}
+
+
+// Converts the specified array of double to itk::Offset, by rounding each element.
+template <std::size_t VDimension>
+itk::Offset<VDimension>
+ConvertArrayOfDoubleToOffset(const std::array<double, VDimension> & doubles)
+{
+  itk::Offset<VDimension> result;
+
+  for (std::size_t i{}; i < VDimension; ++i)
+  {
+    const auto roundedValue = std::round(doubles[i]);
+
+    // Wrap ASSERT calls in a lambda, because they return void!
+    [roundedValue] {
+      ASSERT_GE(roundedValue, std::numeric_limits<itk::OffsetValueType>::min());
+      ASSERT_LE(roundedValue, std::numeric_limits<itk::OffsetValueType>::max());
+    }();
+
+    result[i] = static_cast<itk::OffsetValueType>(roundedValue);
+  }
+
+  return result;
+}
+
+
+template <unsigned VDimension>
+void
+ExpectRoundedTransformParametersEqualOffset(const elastix::ELASTIX &        elastixObject,
+                                            const itk::Offset<VDimension> & offset)
+{
+  const auto transformParameterMaps = elastixObject.GetTransformParameterMapList();
+
+  ASSERT_TRUE(!transformParameterMaps.empty());
+  EXPECT_EQ(transformParameterMaps.size(), 1);
+
+  const auto & transformParameterMap = transformParameterMaps.front();
+  const auto   found = transformParameterMap.find("TransformParameters");
+  ASSERT_NE(found, transformParameterMap.cend());
+
+  const auto transformParameters = ConvertStringsToArrayOfDouble<VDimension>(found->second);
+  EXPECT_EQ(ConvertArrayOfDoubleToOffset(transformParameters), offset);
+}
+
+
+template <typename TPixel, unsigned int VImageDimension>
+void
+FillImageRegion(itk::Image<TPixel, VImageDimension> & image,
+                const itk::Index<VImageDimension> &   regionIndex,
+                const itk::Size<VImageDimension> &    regionSize)
+{
+  using ImageRegionRangeType = itk::Experimental::ImageRegionRange<itk::Image<TPixel, VImageDimension>>;
+  const ImageRegionRangeType imageRegionRange{ image, itk::ImageRegion<VImageDimension>{ regionIndex, regionSize } };
+  std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
+}
+
+template <unsigned VImageDimension>
+std::map<std::string, std::vector<std::string>>
+CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> initializerList)
+{
+  const std::vector<std::string> imageDimensionVector = { std::to_string(VImageDimension) };
+
+  std::map<std::string, std::vector<std::string>> result{ { "FixedImageDimension", imageDimensionVector },
+                                                          { "MovingImageDimension", imageDimensionVector } };
+
+  for (const auto & pair : initializerList)
+  {
+    [&pair, &result] { ASSERT_TRUE(result.insert({ pair.first, { pair.second } }).second); }();
+  }
+  return result;
+}
+
+} // namespace
 
 
 // Tests registering two small (5x6) binary images, using the example code from
@@ -39,19 +142,12 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   using RegistrationParametersContainerType = ELASTIX::ParameterMapListType;
   using ITKImageType = itk::Image<float>;
   constexpr auto ImageDimension = ITKImageType::ImageDimension;
-  using RegionType = itk::ImageRegion<ImageDimension>;
-  using SizeType = itk::Size<ImageDimension>;
-  using IndexType = itk::Index<ImageDimension>;
-  using OffsetType = itk::Offset<ImageDimension>;
-  using RegionRangeType = itk::Experimental::ImageRegionRange<ITKImageType>;
 
-  const std::pair<std::string, std::string> parameterArray[] = {
+  const auto parameters = CreateParameterMap<ImageDimension>({
     // Parameters with non-default values (A-Z):
-    { "FixedImageDimension", std::to_string(ImageDimension) },
     { "ImageSampler", "Full" },
     { "MaximumNumberOfIterations", "2" }, // Default value: 500
     { "Metric", "AdvancedNormalizedCorrelation" },
-    { "MovingImageDimension", std::to_string(ImageDimension) },
     { "NumberOfResolutions", "2" }, // Default value: 3
     { "Optimizer", "AdaptiveStochasticGradientDescent" },
     { "Transform", "TranslationTransform" },
@@ -89,35 +185,22 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
     { "UseDirectionCosines", "true" },
     { "UseMultiThreadingForMetrics", "true" },
     { "WriteResultImage", "true" },
-  };
+  });
 
-  std::map<std::string, std::vector<std::string>> parameters;
-
-  for (const auto & pair : parameterArray)
-  {
-    const auto result = parameters.insert({ pair.first, { pair.second } });
-
-    ASSERT_EQ(std::make_pair(pair, result.second), std::make_pair(pair, true));
-  }
-
-  const OffsetType translationOffset{ { 1, -2 } };
-  const auto       regionSize = SizeType::Filled(2);
-  const SizeType   imageSize{ { 5, 6 } };
-  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+  const itk::Size<ImageDimension>   imageSize{ { 5, 6 } };
+  const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);
+  const itk::Index<ImageDimension>  fixedImageRegionIndex{ { 1, 3 } };
+  const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
 
   const auto fixed_image = ITKImageType::New();
   fixed_image->SetRegions(imageSize);
   fixed_image->Allocate(true);
-  const RegionType      fixedImageRegion{ fixedImageRegionIndex, regionSize };
-  const RegionRangeType fixedImageRegionRange{ *fixed_image, fixedImageRegion };
-  std::fill(std::begin(fixedImageRegionRange), std::end(fixedImageRegionRange), 1.0f);
+  FillImageRegion(*fixed_image, fixedImageRegionIndex, regionSize);
 
   const auto moving_image = ITKImageType::New();
   moving_image->SetRegions(imageSize);
   moving_image->Allocate(true);
-  const RegionType      movingImageRegion{ fixedImageRegionIndex + translationOffset, regionSize };
-  const RegionRangeType movingImageRegionRange{ *moving_image, movingImageRegion };
-  std::fill(std::begin(movingImageRegionRange), std::end(movingImageRegionRange), 1.0f);
+  FillImageRegion(*moving_image, fixedImageRegionIndex + translationOffset, regionSize);
 
   const std::string output_directory(".");
   const bool        write_log_file{ false };
@@ -165,31 +248,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   // <<< Code snippet from Manual paragraph "Running elastix" ends here
   //////////////////////////////////////////////////////////////////////////
 
-  ASSERT_TRUE(!transform_parameters.empty());
-  EXPECT_EQ(transform_parameters.size(), 1);
-
-  const auto & first = transform_parameters.front();
-  const auto   found = first.find("TransformParameters");
-  ASSERT_NE(found, first.cend());
-
-  const auto & transformParameters = found->second;
-  ASSERT_EQ(transformParameters.size(), ImageDimension);
-
-  std::array<double, ImageDimension> estimatedTranslationOffset;
-
-  std::transform(transformParameters.cbegin(),
-                 transformParameters.cend(),
-                 estimatedTranslationOffset.begin(),
-                 [](const std::string & arg) { return std::stod(arg); });
-
-  OffsetType roundedTranslationOffset;
-
-  std::transform(estimatedTranslationOffset.cbegin(),
-                 estimatedTranslationOffset.cend(),
-                 roundedTranslationOffset.begin(),
-                 [](const double arg) { return static_cast<itk::OffsetValueType>(std::round(arg)); });
-
-  EXPECT_EQ(roundedTranslationOffset, translationOffset);
+  ExpectRoundedTransformParametersEqualOffset(elastix, translationOffset);
 }
 
 
@@ -201,22 +260,10 @@ GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovi
   constexpr auto ImageDimension = ImageType::ImageDimension;
   using SizeType = itk::Size<ImageDimension>;
 
-  const std::pair<std::string, std::string> parameterArray[] = {
-    // Parameters with non-default values (A-Z):
-    { "FixedImageDimension", std::to_string(ImageDimension) },
-    { "ImageSampler", "Full" },
-    { "Metric", "AdvancedNormalizedCorrelation" },
-    { "MovingImageDimension", std::to_string(ImageDimension) },
-    { "Optimizer", "AdaptiveStochasticGradientDescent" },
-    { "Transform", "TranslationTransform" }
-  };
-
-  std::map<std::string, std::vector<std::string>> parameters;
-
-  for (const auto & pair : parameterArray)
-  {
-    ASSERT_TRUE(parameters.insert({ pair.first, { pair.second } }).second);
-  }
+  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
+                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                                 { "Transform", "TranslationTransform" } });
 
   const auto indexValue = 1;
   const auto regionSizeValue = 2;
@@ -225,15 +272,12 @@ GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovi
   const auto image = ImageType::New();
   image->SetRegions(SizeType::Filled(imageSizeValue));
   image->Allocate(true);
-  const itk::ImageRegion<ImageDimension>               imageRegion{ { { indexValue, indexValue } },
-                                                      SizeType::Filled(regionSizeValue) };
-  const itk::Experimental::ImageRegionRange<ImageType> imageRegionRange{ *image, imageRegion };
-  std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1.0f);
+  FillImageRegion(*image, { { indexValue, indexValue } }, SizeType::Filled(regionSizeValue));
 
-  elastix::ELASTIX elastix;
-  ASSERT_EQ(elastix.RegisterImages(image, image, parameters, ".", false, false), 0);
+  elastix::ELASTIX elastixObject;
+  ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
 
-  const auto transformParameterMaps = elastix.GetTransformParameterMapList();
+  const auto transformParameterMaps = elastixObject.GetTransformParameterMapList();
 
   ASSERT_TRUE(!transformParameterMaps.empty());
   EXPECT_EQ(transformParameterMaps.size(), 1);
@@ -249,4 +293,39 @@ GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovi
   {
     EXPECT_EQ(transformParameter, "0");
   }
+}
+
+
+// Tests registering two small binary images.
+GTEST_TEST(ElastixLib, Translation3D)
+{
+  constexpr auto ImageDimension = 3;
+  using ImageType = itk::Image<float, ImageDimension>;
+
+  const auto parameterMap =
+    CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+                                         { "MaximumNumberOfIterations", "3" },
+                                         { "Metric", "AdvancedNormalizedCorrelation" },
+                                         { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                         { "Transform", "TranslationTransform" } });
+
+  const itk::Size<ImageDimension>   imageSize{ { 5, 7, 9 } };
+  const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);
+  const itk::Index<ImageDimension>  fixedImageRegionIndex{ { 1, 2, 3 } };
+  const itk::Offset<ImageDimension> translationOffset{ { 1, 2, 3 } };
+
+  const auto fixedImage = ImageType::New();
+  fixedImage->SetRegions(imageSize);
+  fixedImage->Allocate(true);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = ImageType::New();
+  movingImage->SetRegions(imageSize);
+  movingImage->Allocate(true);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  elastix::ELASTIX elastixObject;
+
+  ASSERT_EQ(elastixObject.RegisterImages(fixedImage, movingImage, parameterMap, ".", false, false), 0);
+  ExpectRoundedTransformParametersEqualOffset(elastixObject, translationOffset);
 }
