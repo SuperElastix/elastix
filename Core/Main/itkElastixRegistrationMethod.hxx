@@ -151,7 +151,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Elastix must always write result image to guarantee that the ITK pipeline is in a consistent state
-  parameterMapVector[parameterMapVector.size() - 1]["WriteResultImage"] = ParameterValueVectorType(1, "true");
+  parameterMapVector.back()["WriteResultImage"] = ParameterValueVectorType(1, "true");
 
   // Setup argument map
   ArgumentMapType argumentMap;
@@ -189,8 +189,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
       itkExceptionMacro("Output directory \"" << this->GetOutputDirectory() << "\" does not exist.");
     }
 
-    if (this->GetOutputDirectory()[this->GetOutputDirectory().size() - 1] != '/' &&
-        this->GetOutputDirectory()[this->GetOutputDirectory().size() - 1] != '\\')
+    if (this->GetOutputDirectory().back() != '/' && this->GetOutputDirectory().back() != '\\')
     {
       this->SetOutputDirectory(this->GetOutputDirectory() + "/");
     }
@@ -286,8 +285,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     }
 
     // TODO: Fix elastix corrupting default pixel value parameter
-    transformParameterMapVector[transformParameterMapVector.size() - 1]["DefaultPixelValue"] =
-      parameterMapVector[i]["DefaultPixelValue"];
+    transformParameterMapVector.back()["DefaultPixelValue"] = parameterMapVector[i]["DefaultPixelValue"];
   } // End loop over registrations
 
   // Save result image

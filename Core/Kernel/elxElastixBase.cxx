@@ -274,7 +274,7 @@ ElastixBase::BeforeAllBase(void)
   {
     /** Make sure that last character of the output folder equals a '/' or '\'. */
     std::string folder(check);
-    const char  last = folder[folder.size() - 1];
+    const char  last = folder.back();
     if (last != '/' && last != '\\')
     {
       folder.append("/");

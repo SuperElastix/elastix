@@ -291,7 +291,7 @@ CommandLineArgumentParser ::CheckForRequiredArguments() const
       {
         std::cerr << exactlyOneOf[j] << ", ";
       }
-      std::cerr << exactlyOneOf[exactlyOneOf.size() - 1] << "} is required, but none or multiple are specified.\n  "
+      std::cerr << exactlyOneOf.back() << "} is required, but none or multiple are specified.\n  "
                 << this->m_RequiredExactlyOneArguments[i].second << std::endl;
 
       allRequiredArgumentsSpecified = false;

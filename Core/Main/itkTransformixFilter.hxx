@@ -136,8 +136,7 @@ TransformixFilter<TMovingImage>::GenerateData()
   }
   else
   {
-    if (this->GetOutputDirectory()[this->GetOutputDirectory().size() - 1] != '/' &&
-        this->GetOutputDirectory()[this->GetOutputDirectory().size() - 1] != '\\')
+    if (this->GetOutputDirectory().back() != '/' && this->GetOutputDirectory().back() != '\\')
     {
       this->SetOutputDirectory(this->GetOutputDirectory() + "/");
     }
