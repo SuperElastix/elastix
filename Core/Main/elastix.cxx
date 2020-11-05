@@ -129,7 +129,7 @@ main(int argc, char ** argv)
       if (key == "-out")
       {
         /** Make sure that last character of the output folder equals a '/' or '\'. */
-        const char last = value[value.size() - 1];
+        const char last = value.back();
         if (last != '/' && last != '\\')
         {
           value.append("/");
