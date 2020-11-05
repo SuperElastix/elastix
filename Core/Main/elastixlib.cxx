@@ -64,6 +64,13 @@ ELASTIX::~ELASTIX()
  * ******************* GetResultImage ***********************
  */
 
+ELASTIX::ConstImagePointer
+ELASTIX::GetResultImage(void) const
+{
+  return this->m_ResultImage;
+} // end GetResultImage()
+
+
 ELASTIX::ImagePointer
 ELASTIX::GetResultImage(void)
 {
@@ -78,7 +85,7 @@ ELASTIX::GetResultImage(void)
 ELASTIX::ParameterMapType
 ELASTIX::GetTransformParameterMap(void) const
 {
-  return this->m_TransformParametersList[this->m_TransformParametersList.size() - 1];
+  return this->m_TransformParametersList.back();
 } // end GetTransformParameterMap()
 
 

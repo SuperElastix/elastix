@@ -63,6 +63,13 @@ TRANSFORMIX::~TRANSFORMIX()
  * ******************* GetResultImage ***********************
  */
 
+TRANSFORMIX::ConstImagePointer
+TRANSFORMIX::GetResultImage(void) const
+{
+  return this->m_ResultImage;
+} // end GetResultImage()
+
+
 TRANSFORMIX::ImagePointer
 TRANSFORMIX::GetResultImage(void)
 {
