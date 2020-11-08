@@ -36,6 +36,24 @@
 namespace
 {
 
+template <typename>
+constexpr const char *
+GetPixelTypeName() = delete;
+
+template <>
+constexpr const char *
+GetPixelTypeName<short>()
+{
+  return "short";
+}
+
+template <>
+constexpr const char *
+GetPixelTypeName<float>()
+{
+  return "float";
+}
+
 // Converts the specified strings to an array of double.
 // Assumes that each string represents a floating point number.
 template <unsigned VDimension>
@@ -130,6 +148,51 @@ CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> in
   }
   return result;
 }
+
+template <unsigned VImageDimension, typename TPixel = float>
+void
+Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
+{
+  using ImageType = itk::Image<TPixel, VImageDimension>;
+  using SizeType = itk::Size<VImageDimension>;
+
+  const auto parameterMap =
+    CreateParameterMap<VImageDimension>({ { "ImageSampler", "Full" },
+                                          { "FixedInternalImagePixelType", GetPixelTypeName<TPixel>() },
+                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                          { "MovingInternalImagePixelType", GetPixelTypeName<TPixel>() },
+                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                          { "Transform", "TranslationTransform" } });
+
+  const auto regionSizeValue = 2;
+  const auto imageSizeValue = 4;
+
+  const auto image = ImageType::New();
+  image->SetRegions(SizeType::Filled(imageSizeValue));
+  image->Allocate(true);
+  FillImageRegion(*image, itk::Index<VImageDimension>::Filled(1), SizeType::Filled(regionSizeValue));
+
+  elastix::ELASTIX elastixObject;
+  ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
+
+  const auto transformParameterMaps = elastixObject.GetTransformParameterMapList();
+
+  ASSERT_TRUE(!transformParameterMaps.empty());
+  EXPECT_EQ(transformParameterMaps.size(), 1);
+
+  const auto & transformParameterMap = transformParameterMaps.front();
+  const auto   found = transformParameterMap.find("TransformParameters");
+  ASSERT_NE(found, transformParameterMap.cend());
+
+  const auto & transformParameters = found->second;
+  ASSERT_EQ(transformParameters.size(), VImageDimension);
+
+  for (const auto & transformParameter : transformParameters)
+  {
+    EXPECT_EQ(transformParameter, "0");
+  }
+}
+
 
 } // namespace
 
@@ -254,45 +317,18 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
 
 // Tests that the TransformParameters of a translation are all zero when the
 // fixed and the moving image are the same.
-GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovingImage)
+GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
 {
-  using ImageType = itk::Image<float>;
-  constexpr auto ImageDimension = ImageType::ImageDimension;
-  using SizeType = itk::Size<ImageDimension>;
+  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<2>();
+  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<3>();
+}
 
-  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
-                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
-                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                                 { "Transform", "TranslationTransform" } });
 
-  const auto indexValue = 1;
-  const auto regionSizeValue = 2;
-  const auto imageSizeValue = 4;
-
-  const auto image = ImageType::New();
-  image->SetRegions(SizeType::Filled(imageSizeValue));
-  image->Allocate(true);
-  FillImageRegion(*image, { { indexValue, indexValue } }, SizeType::Filled(regionSizeValue));
-
-  elastix::ELASTIX elastixObject;
-  ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
-
-  const auto transformParameterMaps = elastixObject.GetTransformParameterMapList();
-
-  ASSERT_TRUE(!transformParameterMaps.empty());
-  EXPECT_EQ(transformParameterMaps.size(), 1);
-
-  const auto & transformParameterMap = transformParameterMaps.front();
-  const auto   found = transformParameterMap.find("TransformParameters");
-  ASSERT_NE(found, transformParameterMap.cend());
-
-  const auto & transformParameters = found->second;
-  ASSERT_EQ(transformParameters.size(), ImageDimension);
-
-  for (const auto & transformParameter : transformParameters)
-  {
-    EXPECT_EQ(transformParameter, "0");
-  }
+// Tests specifically for pixel type short that the TransformParameters of a
+// translation are all zero when the fixed and the moving image are the same.
+GTEST_TEST(ElastixLib, ForShortPixelsTransformParametersAreZeroWhenFixedImageIsMovingImage)
+{
+  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<3, short>();
 }
 
 
