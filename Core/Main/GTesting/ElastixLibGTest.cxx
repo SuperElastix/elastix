@@ -326,9 +326,17 @@ GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
 
 // Tests specifically for pixel type short that the TransformParameters of a
 // translation are all zero when the fixed and the moving image are the same.
-GTEST_TEST(ElastixLib, ForShortPixelsTransformParametersAreZeroWhenFixedImageIsMovingImage)
+GTEST_TEST(ElastixLib, ForThreeDimensionalShortPixelsTransformParametersAreZeroWhenFixedImageIsMovingImage)
 {
   Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<3, short>();
+}
+
+
+// Tests specifically for 4-D short that the TransformParameters of a
+// translation are all zero when the fixed and the moving image are the same.
+GTEST_TEST(ElastixLib, ForFourDimensionalShortPixelsTransformParametersAreZeroWhenFixedImageIsMovingImage)
+{
+  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<4, short>();
 }
 
 
