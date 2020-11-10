@@ -756,11 +756,8 @@ ElastixMain::LoadComponents(void)
     this->s_ComponentLoader->SetComponentDatabase(s_CDB);
   }
 
-  /** Get the current program. */
-  const char * argv0 = this->m_Configuration->GetCommandLineArgument("-argv0").c_str();
-
   /** Load the components. */
-  return this->s_ComponentLoader->LoadComponents(argv0);
+  return this->s_ComponentLoader->LoadComponents();
 
 } // end LoadComponents()
 

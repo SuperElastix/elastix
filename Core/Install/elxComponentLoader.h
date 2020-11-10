@@ -59,10 +59,9 @@ public:
   itkSetObjectMacro(ComponentDatabase, ComponentDatabaseType);
   itkGetModifiableObjectMacro(ComponentDatabase, ComponentDatabaseType);
 
-  /** Function to load components. The argv0 used to be useful
-   * to find the program directory, but is not used anymore. */
-  virtual int
-  LoadComponents(const char * argv0);
+  /** Function to load components. */
+  int
+  LoadComponents(void);
 
   /** Function to unload components. */
   void

@@ -128,7 +128,7 @@ ComponentLoader::InstallSupportedImageTypes(void)
  */
 
 int
-ComponentLoader::LoadComponents(const char * /** argv0 */)
+ComponentLoader::LoadComponents(void)
 {
   int installReturnCode = 0;
 
