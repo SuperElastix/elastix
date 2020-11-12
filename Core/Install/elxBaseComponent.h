@@ -159,6 +159,13 @@ public:
   static std::string
   ConvertSecondsToDHMS(const double totalSeconds, const unsigned int precision);
 
+  /** Convenience function to convert a boolean to a text string. */
+  static constexpr const char *
+  BoolToString(const bool arg)
+  {
+    return arg ? "true" : "false";
+  }
+
 protected:
   BaseComponent() = default;
   virtual ~BaseComponent() = default;
