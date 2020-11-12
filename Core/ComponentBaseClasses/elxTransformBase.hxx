@@ -658,15 +658,9 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
                  << std::endl;
 
   /** Write the way the transform parameters are written. */
-  transparOutput << "(UseBinaryFormatForTransformationParameters ";
-  if (this->m_UseBinaryFormatForTransformationParameters)
-  {
-    transparOutput << "\"true\")" << std::endl;
-  }
-  else
-  {
-    transparOutput << "\"false\")" << std::endl;
-  }
+  transparOutput << "(UseBinaryFormatForTransformationParameters \""
+                 << BaseComponent::BoolToString(this->m_UseBinaryFormatForTransformationParameters) << "\")"
+                 << std::endl;
 
   /** Write the way Transforms are combined.
    *  Set it to the default "Compose" when no combination transform is used. */
@@ -766,12 +760,8 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   /** Write whether the direction cosines should be taken into account.
    * This parameter is written from elastix 4.203.
    */
-  std::string useDirectionCosinesBool = "false";
-  if (this->GetElastix()->GetUseDirectionCosines())
-  {
-    useDirectionCosinesBool = "true";
-  }
-  transparOutput << "(UseDirectionCosines \"" << useDirectionCosinesBool << "\")" << std::endl;
+  transparOutput << "(UseDirectionCosines \""
+                 << BaseComponent::BoolToString(this->GetElastix()->GetUseDirectionCosines()) << "\")" << std::endl;
 
 } // end WriteToFile()
 
@@ -959,13 +949,8 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   /** Write whether the direction cosines should be taken into account.
    * This parameter is written from elastix 4.203.
    */
-  std::string useDirectionCosinesBool = "false";
-  if (this->GetElastix()->GetUseDirectionCosines())
-  {
-    useDirectionCosinesBool = "true";
-  }
   parameterName = "UseDirectionCosines";
-  parameterValues.push_back(useDirectionCosinesBool);
+  parameterValues.push_back(BaseComponent::BoolToString(this->GetElastix()->GetUseDirectionCosines()));
   paramsMap->insert(make_pair(parameterName, parameterValues));
   parameterValues.clear();
 
