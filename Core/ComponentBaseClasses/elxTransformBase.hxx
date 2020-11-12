@@ -616,16 +616,16 @@ template <class TElastix>
 void
 TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
 {
-  using namespace xl;
+  auto & transparOutput = xl::get_xout()["transpar"];
 
   /** Write the name of this transform. */
-  xout["transpar"] << "(Transform \"" << this->elxGetClassName() << "\")" << std::endl;
+  transparOutput << "(Transform \"" << this->elxGetClassName() << "\")" << std::endl;
 
   /** Get the number of parameters of this transform. */
   const unsigned int nrP = param.GetSize();
 
   /** Write the number of parameters of this transform. */
-  xout["transpar"] << "(NumberOfParameters " << nrP << ")" << std::endl;
+  transparOutput << "(NumberOfParameters " << nrP << ")" << std::endl;
 
   /** Write the parameters of this transform. */
   if (this->m_ReadWriteTransformParameters)
@@ -635,7 +635,7 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
       /** Writing in binary format is faster for large vectors, and slightly more accurate. */
       std::string dataFileName = this->GetTransformParametersFileName();
       dataFileName += ".dat";
-      xout["transpar"] << "(TransformParameters \"" << dataFileName << "\")" << std::endl;
+      transparOutput << "(TransformParameters \"" << dataFileName << "\")" << std::endl;
 
       std::ofstream outfile(dataFileName, std::ios_base::binary);
       outfile.write(reinterpret_cast<const char *>(param.data_block()), sizeof(ValueType) * nrP);
@@ -644,28 +644,28 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
     else
     {
       /** In this case, write in a normal way to the parameter file. */
-      xout["transpar"] << "(TransformParameters ";
+      transparOutput << "(TransformParameters ";
       for (unsigned int i = 0; i < nrP - 1; i++)
       {
-        xout["transpar"] << param[i] << " ";
+        transparOutput << param[i] << " ";
       }
-      xout["transpar"] << param[nrP - 1] << ")" << std::endl;
+      transparOutput << param[nrP - 1] << ")" << std::endl;
     }
   }
 
   /** Write the name of the parameters-file of the initial transform. */
-  xout["transpar"] << "(InitialTransformParametersFileName \"" << this->GetInitialTransformParametersFileName() << "\")"
-                   << std::endl;
+  transparOutput << "(InitialTransformParametersFileName \"" << this->GetInitialTransformParametersFileName() << "\")"
+                 << std::endl;
 
   /** Write the way the transform parameters are written. */
-  xout["transpar"] << "(UseBinaryFormatForTransformationParameters ";
+  transparOutput << "(UseBinaryFormatForTransformationParameters ";
   if (this->m_UseBinaryFormatForTransformationParameters)
   {
-    xout["transpar"] << "\"true\")" << std::endl;
+    transparOutput << "\"true\")" << std::endl;
   }
   else
   {
-    xout["transpar"] << "\"false\")" << std::endl;
+    transparOutput << "\"false\")" << std::endl;
   }
 
   /** Write the way Transforms are combined.
@@ -680,24 +680,24 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
     }
   }
 
-  xout["transpar"] << "(HowToCombineTransforms \"" << combinationMethod << "\")" << std::endl;
+  transparOutput << "(HowToCombineTransforms \"" << combinationMethod << "\")" << std::endl;
 
   /** Write image specific things. */
-  xout["transpar"] << std::endl << "// Image specific" << std::endl;
+  transparOutput << std::endl << "// Image specific" << std::endl;
 
   /** Write image dimensions. */
   unsigned int FixDim = FixedImageDimension;
   unsigned int MovDim = MovingImageDimension;
-  xout["transpar"] << "(FixedImageDimension " << FixDim << ")" << std::endl;
-  xout["transpar"] << "(MovingImageDimension " << MovDim << ")" << std::endl;
+  transparOutput << "(FixedImageDimension " << FixDim << ")" << std::endl;
+  transparOutput << "(MovingImageDimension " << MovDim << ")" << std::endl;
 
   /** Write image pixel types. */
   std::string fixpix = "float";
   std::string movpix = "float";
   this->m_Configuration->ReadParameter(fixpix, "FixedInternalImagePixelType", 0);
   this->m_Configuration->ReadParameter(movpix, "MovingInternalImagePixelType", 0);
-  xout["transpar"] << "(FixedInternalImagePixelType \"" << fixpix << "\")" << std::endl;
-  xout["transpar"] << "(MovingInternalImagePixelType \"" << movpix << "\")" << std::endl;
+  transparOutput << "(FixedInternalImagePixelType \"" << fixpix << "\")" << std::endl;
+  transparOutput << "(MovingInternalImagePixelType \"" << movpix << "\")" << std::endl;
 
   /** Get the Size, Spacing and Origin of the fixed image. */
   typedef typename FixedImageType::SizeType      FixedImageSizeType;
@@ -717,55 +717,55 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   this->GetElastix()->GetOriginalFixedImageDirection(direction);
 
   /** Write image Size. */
-  xout["transpar"] << "(Size ";
+  transparOutput << "(Size ";
   for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
   {
-    xout["transpar"] << size[i] << " ";
+    transparOutput << size[i] << " ";
   }
-  xout["transpar"] << size[FixedImageDimension - 1] << ")" << std::endl;
+  transparOutput << size[FixedImageDimension - 1] << ")" << std::endl;
 
   /** Write image Index. */
-  xout["transpar"] << "(Index ";
+  transparOutput << "(Index ";
   for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
   {
-    xout["transpar"] << index[i] << " ";
+    transparOutput << index[i] << " ";
   }
-  xout["transpar"] << index[FixedImageDimension - 1] << ")" << std::endl;
+  transparOutput << index[FixedImageDimension - 1] << ")" << std::endl;
 
   /** Set the precision of cout to 10, because Spacing and
    * Origin must have at least one digit precision.
    */
-  xout["transpar"] << std::setprecision(10);
+  transparOutput << std::setprecision(10);
 
   /** Write image Spacing. */
-  xout["transpar"] << "(Spacing ";
+  transparOutput << "(Spacing ";
   for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
   {
-    xout["transpar"] << spacing[i] << " ";
+    transparOutput << spacing[i] << " ";
   }
-  xout["transpar"] << spacing[FixedImageDimension - 1] << ")" << std::endl;
+  transparOutput << spacing[FixedImageDimension - 1] << ")" << std::endl;
 
   /** Write image Origin. */
-  xout["transpar"] << "(Origin ";
+  transparOutput << "(Origin ";
   for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
   {
-    xout["transpar"] << origin[i] << " ";
+    transparOutput << origin[i] << " ";
   }
-  xout["transpar"] << origin[FixedImageDimension - 1] << ")" << std::endl;
+  transparOutput << origin[FixedImageDimension - 1] << ")" << std::endl;
 
   /** Write direction cosines. */
-  xout["transpar"] << "(Direction";
+  transparOutput << "(Direction";
   for (unsigned int i = 0; i < FixedImageDimension; i++)
   {
     for (unsigned int j = 0; j < FixedImageDimension; j++)
     {
-      xout["transpar"] << " " << direction(j, i);
+      transparOutput << " " << direction(j, i);
     }
   }
-  xout["transpar"] << ")" << std::endl;
+  transparOutput << ")" << std::endl;
 
   /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
+  transparOutput << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
 
   /** Write whether the direction cosines should be taken into account.
    * This parameter is written from elastix 4.203.
@@ -775,7 +775,7 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   {
     useDirectionCosinesBool = "true";
   }
-  xout["transpar"] << "(UseDirectionCosines \"" << useDirectionCosinesBool << "\")" << std::endl;
+  transparOutput << "(UseDirectionCosines \"" << useDirectionCosinesBool << "\")" << std::endl;
 
 } // end WriteToFile()
 
