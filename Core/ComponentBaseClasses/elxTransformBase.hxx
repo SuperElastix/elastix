@@ -372,7 +372,7 @@ TransformBase<TElastix>::ReadFromFile(void)
     {
       std::string dataFileName = "";
       this->m_Configuration->ReadParameter(dataFileName, "TransformParameters", 0);
-      std::ifstream infile(dataFileName.c_str(), std::ios::in | std::ios::binary);
+      std::ifstream infile(dataFileName, std::ios_base::binary);
       infile.read(reinterpret_cast<char *>(this->m_TransformParametersPointer->data_block()),
                   sizeof(ValueType) * numberOfParameters);
       numberOfParametersFound = infile.gcount() / sizeof(ValueType); // for sanity check
@@ -637,7 +637,7 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
       dataFileName += ".dat";
       xout["transpar"] << "(TransformParameters \"" << dataFileName << "\")" << std::endl;
 
-      std::ofstream outfile(dataFileName.c_str(), ios::out | ios::binary);
+      std::ofstream outfile(dataFileName, std::ios_base::binary);
       outfile.write(reinterpret_cast<const char *>(param.data_block()), sizeof(ValueType) * nrP);
       outfile.close();
     }
@@ -1214,7 +1214,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string filename) c
   /** Create filename and file stream. */
   std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out");
   outputPointsFileName += "outputpoints.txt";
-  std::ofstream outputPointsFile(outputPointsFileName.c_str());
+  std::ofstream outputPointsFile(outputPointsFileName);
   outputPointsFile << std::showpoint << std::fixed;
   elxout << "  The transformed points are saved in: " << outputPointsFileName << std::endl;
 
