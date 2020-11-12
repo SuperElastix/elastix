@@ -700,20 +700,16 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   transparOutput << "(MovingInternalImagePixelType \"" << movpix << "\")" << std::endl;
 
   /** Get the Size, Spacing and Origin of the fixed image. */
-  typedef typename FixedImageType::SizeType      FixedImageSizeType;
-  typedef typename FixedImageType::IndexType     FixedImageIndexType;
-  typedef typename FixedImageType::SpacingType   FixedImageSpacingType;
-  typedef typename FixedImageType::PointType     FixedImageOriginType;
-  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
-  FixedImageSizeType    size = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  FixedImageIndexType   index = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
-  FixedImageSpacingType spacing = this->m_Elastix->GetFixedImage()->GetSpacing();
-  FixedImageOriginType  origin = this->m_Elastix->GetFixedImage()->GetOrigin();
+  const auto size = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  const auto index = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
+  const auto spacing = this->m_Elastix->GetFixedImage()->GetSpacing();
+  const auto origin = this->m_Elastix->GetFixedImage()->GetOrigin();
+
   /** The following line would be logically: */
   // FixedImageDirectionType direction =
   //  this->m_Elastix->GetFixedImage()->GetDirection();
   /** But to support the UseDirectionCosines option, we should do it like this: */
-  FixedImageDirectionType direction;
+  typename FixedImageType::DirectionType direction;
   this->GetElastix()->GetOriginalFixedImageDirection(direction);
 
   /** Write image Size. */
@@ -883,20 +879,15 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   parameterValues.clear();
 
   /** Get the Size, Spacing and Origin of the fixed image. */
-  typedef typename FixedImageType::SizeType      FixedImageSizeType;
-  typedef typename FixedImageType::IndexType     FixedImageIndexType;
-  typedef typename FixedImageType::SpacingType   FixedImageSpacingType;
-  typedef typename FixedImageType::PointType     FixedImageOriginType;
-  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
-  FixedImageSizeType    size = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  FixedImageIndexType   index = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
-  FixedImageSpacingType spacing = this->m_Elastix->GetFixedImage()->GetSpacing();
-  FixedImageOriginType  origin = this->m_Elastix->GetFixedImage()->GetOrigin();
+  const auto size = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  const auto index = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
+  const auto spacing = this->m_Elastix->GetFixedImage()->GetSpacing();
+  const auto origin = this->m_Elastix->GetFixedImage()->GetOrigin();
   /** The following line would be logically: */
   // FixedImageDirectionType direction =
   //  this->m_Elastix->GetFixedImage()->GetDirection();
   /** But to support the UseDirectionCosines option, we should do it like this: */
-  FixedImageDirectionType direction;
+  typename FixedImageType::DirectionType direction;
   this->GetElastix()->GetOriginalFixedImageDirection(direction);
 
   /** Write image Size. */
@@ -1062,15 +1053,12 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string filename) c
 {
   /** Typedef's. */
   typedef typename FixedImageType::RegionType                FixedImageRegionType;
-  typedef typename FixedImageType::PointType                 FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType               FixedImageSpacingType;
   typedef typename FixedImageType::IndexType                 FixedImageIndexType;
   typedef typename FixedImageIndexType::IndexValueType       FixedImageIndexValueType;
   typedef typename MovingImageType::IndexType                MovingImageIndexType;
   typedef typename MovingImageIndexType::IndexValueType      MovingImageIndexValueType;
   typedef itk::ContinuousIndex<double, FixedImageDimension>  FixedImageContinuousIndexType;
   typedef itk::ContinuousIndex<double, MovingImageDimension> MovingImageContinuousIndexType;
-  typedef typename FixedImageType::DirectionType             FixedImageDirectionType;
 
   typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>
@@ -1122,10 +1110,10 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string filename) c
    * which we can use to convert between points and indices.
    * By taking the image from the resampler output, the UseDirectionCosines
    * parameter is automatically taken into account. */
-  FixedImageRegionType    region;
-  FixedImageOriginType    origin = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
-  FixedImageSpacingType   spacing = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
-  FixedImageDirectionType direction = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
+  FixedImageRegionType region;
+  const auto           origin = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
+  const auto           spacing = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
+  const auto           direction = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
   region.SetIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
   region.SetSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
 
