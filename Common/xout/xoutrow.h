@@ -122,6 +122,4 @@ private:
 
 } // end namespace xoutlibrary
 
-#include "xoutrow.hxx"
-
 #endif // end #ifndef xoutrow_h

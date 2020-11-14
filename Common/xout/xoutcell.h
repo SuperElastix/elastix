@@ -61,6 +61,4 @@ private:
 
 } // end namespace xoutlibrary
 
-#include "xoutcell.hxx"
-
 #endif // end #ifndef xoutcell_h

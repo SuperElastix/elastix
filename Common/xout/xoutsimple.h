@@ -78,6 +78,4 @@ public:
 
 } // end namespace xoutlibrary
 
-#include "xoutsimple.hxx"
-
 #endif // end #ifndef xoutsimple_h

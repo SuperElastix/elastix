@@ -18,6 +18,11 @@
 
 #include "xoutmain.h"
 
+#include "xoutbase.hxx"
+#include "xoutcell.hxx"
+#include "xoutrow.hxx"
+#include "xoutsimple.hxx"
+
 namespace xoutlibrary
 {
 static xoutbase_type * local_xout = nullptr;
@@ -41,5 +46,11 @@ xout_valid()
   return local_xout != nullptr;
 }
 
+
+// Explicit template instantiations.
+template class xoutbase<char>;
+template class xoutcell<char>;
+template class xoutrow<char>;
+template class xoutsimple<char>;
 
 } // namespace xoutlibrary
