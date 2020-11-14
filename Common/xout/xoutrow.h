@@ -41,7 +41,7 @@ using namespace std;
  */
 
 template <class charT, class traits = char_traits<charT>>
-class xoutrow : public xoutbase<charT, traits>
+class xoutrow final : public xoutbase<charT, traits>
 {
 public:
   typedef xoutrow                 Self;

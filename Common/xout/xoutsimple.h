@@ -34,7 +34,7 @@ using namespace std;
  */
 
 template <class charT, class traits = char_traits<charT>>
-class xoutsimple : public xoutbase<charT, traits>
+class xoutsimple final : public xoutbase<charT, traits>
 {
 public:
   /** Typedef's.*/
