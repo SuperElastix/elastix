@@ -119,7 +119,7 @@ public:
   typedef typename CurrentTransformType::InverseTransformBasePointer CurrentTransformInverseTransformBasePointer;
 
   /** Set/Get a pointer to the InitialTransform. */
-  virtual void
+  void
   SetInitialTransform(InitialTransformType * _arg);
 
   itkGetModifiableObjectMacro(InitialTransform, InitialTransformType);
@@ -128,30 +128,30 @@ public:
    * Make sure to set the CurrentTransform before calling functions like
    * TransformPoint(), GetJacobian(), SetParameters() etc.
    */
-  virtual void
+  void
   SetCurrentTransform(CurrentTransformType * _arg);
 
   itkGetModifiableObjectMacro(CurrentTransform, CurrentTransformType);
 
   /** Return the number of sub-transforms. */
-  virtual SizeValueType
+  SizeValueType
   GetNumberOfTransforms(void) const;
 
   /** Get the Nth current transform.
    * Exact interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
    * \warning The bounds checking is performed.
    */
-  virtual const TransformTypePointer
+  const TransformTypePointer
   GetNthTransform(SizeValueType n) const;
 
   /** Control the way transforms are combined. */
-  virtual void
+  void
   SetUseComposition(bool _arg);
 
   itkGetConstMacro(UseComposition, bool);
 
   /** Control the way transforms are combined. */
-  virtual void
+  void
   SetUseAddition(bool _arg);
 
   itkGetConstMacro(UseAddition, bool);
@@ -228,7 +228,7 @@ public:
    * an inverse transform. An exception is thrown when no CurrentTransform
    * is set.
    */
-  virtual bool
+  bool
   GetInverse(Self * inverse) const;
 
   /** Return whether the transform is linear (or actually: affine)
@@ -247,7 +247,7 @@ public:
   bool
   GetHasNonZeroSpatialHessian(void) const override;
 
-  virtual bool
+  bool
   HasNonZeroJacobianOfSpatialHessian(void) const;
 
   /** Compute the (sparse) Jacobian of the transformation. */
@@ -341,11 +341,11 @@ protected:
   /** Set the SelectedTransformPointFunction and the
    * SelectedGetJacobianFunction.
    */
-  virtual void
+  void
   UpdateCombinationMethod(void);
 
   /** Throw an exception. */
-  virtual void
+  void
   NoCurrentTransformSet(void) const;
 
   /**  A pointer to one of the following functions:
@@ -574,7 +574,7 @@ protected:
                                             JacobianOfSpatialHessianType & jsh,
                                             NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const;
 
-  virtual inline void
+  inline void
   GetJacobianOfSpatialHessianUseComposition(const InputPointType &         ipp,
                                             SpatialHessianType &           sh,
                                             JacobianOfSpatialHessianType & jsh,
