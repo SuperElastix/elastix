@@ -334,10 +334,6 @@ protected:
   /** Destructor. */
   ~AdvancedCombinationTransform() override = default;
 
-  /** Declaration of members. */
-  InitialTransformPointer m_InitialTransform;
-  CurrentTransformPointer m_CurrentTransform;
-
   /** Set the SelectedTransformPointFunction and the
    * SelectedGetJacobianFunction.
    */
@@ -347,32 +343,6 @@ protected:
   /** Throw an exception. */
   void
   NoCurrentTransformSet(void) const;
-
-  /**  A pointer to one of the following functions:
-   * - TransformPointUseAddition,
-   * - TransformPointUseComposition,
-   * - TransformPointNoCurrentTransform
-   * - TransformPointNoInitialTransform.
-   */
-  TransformPointFunctionPointer m_SelectedTransformPointFunction;
-
-  /**  A pointer to one of the following functions:
-   * - GetJacobianUseAddition,
-   * - GetJacobianUseComposition,
-   * - GetJacobianNoCurrentTransform
-   * - GetJacobianNoInitialTransform.
-   */
-  // GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
-
-  /** More of these. */
-  GetSparseJacobianFunctionPointer                        m_SelectedGetSparseJacobianFunction;
-  EvaluateJacobianWithImageGradientProductFunctionPointer m_SelectedEvaluateJacobianWithImageGradientProductFunction;
-  GetSpatialJacobianFunctionPointer                       m_SelectedGetSpatialJacobianFunction;
-  GetSpatialHessianFunctionPointer                        m_SelectedGetSpatialHessianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer             m_SelectedGetJacobianOfSpatialJacobianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer2            m_SelectedGetJacobianOfSpatialJacobianFunction2;
-  GetJacobianOfSpatialHessianFunctionPointer              m_SelectedGetJacobianOfSpatialHessianFunction;
-  GetJacobianOfSpatialHessianFunctionPointer2             m_SelectedGetJacobianOfSpatialHessianFunction2;
 
   /** ************************************************
    * Methods to transform a point.
@@ -603,6 +573,38 @@ protected:
                                                 SpatialHessianType &           sh,
                                                 JacobianOfSpatialHessianType & jsh,
                                                 NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const;
+
+private:
+
+  /** Declaration of members. */
+  InitialTransformPointer m_InitialTransform;
+  CurrentTransformPointer m_CurrentTransform;
+
+  /**  A pointer to one of the following functions:
+   * - TransformPointUseAddition,
+   * - TransformPointUseComposition,
+   * - TransformPointNoCurrentTransform
+   * - TransformPointNoInitialTransform.
+   */
+  TransformPointFunctionPointer m_SelectedTransformPointFunction;
+
+  /**  A pointer to one of the following functions:
+   * - GetJacobianUseAddition,
+   * - GetJacobianUseComposition,
+   * - GetJacobianNoCurrentTransform
+   * - GetJacobianNoInitialTransform.
+   */
+  // GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
+
+  /** More of these. */
+  GetSparseJacobianFunctionPointer                        m_SelectedGetSparseJacobianFunction;
+  EvaluateJacobianWithImageGradientProductFunctionPointer m_SelectedEvaluateJacobianWithImageGradientProductFunction;
+  GetSpatialJacobianFunctionPointer                       m_SelectedGetSpatialJacobianFunction;
+  GetSpatialHessianFunctionPointer                        m_SelectedGetSpatialHessianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer             m_SelectedGetJacobianOfSpatialJacobianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer2            m_SelectedGetJacobianOfSpatialJacobianFunction2;
+  GetJacobianOfSpatialHessianFunctionPointer              m_SelectedGetJacobianOfSpatialHessianFunction;
+  GetJacobianOfSpatialHessianFunctionPointer2             m_SelectedGetJacobianOfSpatialHessianFunction2;
 
   /** How to combine the transformations. */
   bool m_UseAddition;
