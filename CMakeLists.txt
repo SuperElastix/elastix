@@ -22,8 +22,32 @@ include( CTest )
   #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
 
 #---------------------------------------------------------------------
+option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
+set(_GPU_depends "")
+if(ELASTIX_USE_OPENCL)
+  list(APPEND _GPU_depends ITKGPUCommon)
+endif()
+
 # Find ITK.
-find_package( ITK 5.1.1 REQUIRED )
+find_package( ITK 5.1.1 REQUIRED COMPONENTS
+    ITKCommon
+    ITKDistanceMap
+    ITKImageGrid
+    ITKImageIntensity
+    ITKIOImageBase
+    ITKIOMeshBase
+    ITKIOMeshOBJ
+    ITKIOMeta
+    ITKIOXML
+    ITKMathematicalMorphology
+    ITKOptimizers
+    ITKRegistrationCommon
+    ITKSmoothing
+    ITKTestKernel
+    ITKThresholding
+    ITKTransform
+    ${_GPU_depends}
+    )
 include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
@@ -40,8 +64,6 @@ include(elastixExportTarget)
 
 #---------------------------------------------------------------------
 # Find OpenCL.
-option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
-
 if( ELASTIX_USE_OPENCL )
   find_package( OpenCL REQUIRED QUIET )
 
