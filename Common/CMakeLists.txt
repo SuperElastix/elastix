@@ -85,6 +85,8 @@ set( CostFunctionFiles
 )
 
 set( TransformFiles
+  Transforms/elxTransformIO.h
+  Transforms/elxTransformIO.cxx
   Transforms/itkAdvancedBSplineDeformableTransformBase.h
   Transforms/itkAdvancedBSplineDeformableTransformBase.hxx
   Transforms/itkAdvancedBSplineDeformableTransform.h

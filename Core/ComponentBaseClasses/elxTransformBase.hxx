@@ -19,6 +19,7 @@
 #define elxTransformBase_hxx
 
 #include "elxTransformBase.h"
+#include "elxTransformIO.h"
 
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
@@ -38,6 +39,7 @@
 #include "itkTransformMeshFilter.h"
 #include "itkCommonEnums.h"
 
+#include <cassert>
 #include <fstream>
 #include <iomanip> // For setprecision.
 
@@ -650,6 +652,38 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
         transparOutput << param[i] << " ";
       }
       transparOutput << param[nrP - 1] << ")" << std::endl;
+    }
+  }
+
+  const auto transformOutputFileNameExtensions =
+    this->m_Configuration->GetValuesOfParameter("TransformOutputFileNameExtensions");
+
+  if (!transformOutputFileNameExtensions.empty())
+  {
+    elxout << "WARNING: Support for the parameter TransformOutputFileNameExtensions is still experimental!\n"
+      "Transform files stored by this feature may still be incomplete or incorrect!"<< std::endl;  
+
+    const itk::TransformBaseTemplate<double>* const thisAsITKBase = this->GetAsITKBaseType();
+    assert(thisAsITKBase != nullptr);
+
+    const auto correspondingItkTransform = TransformIO::CreateCorrespondingItkTransform(*this);
+
+    if (correspondingItkTransform != nullptr)
+    {
+      correspondingItkTransform->SetParameters(thisAsITKBase->GetParameters());
+      correspondingItkTransform->SetFixedParameters(thisAsITKBase->GetFixedParameters());
+    }
+    const itk::TransformBaseTemplate<double> & transformObject =
+      (correspondingItkTransform == nullptr) ? *thisAsITKBase : *correspondingItkTransform;
+    const auto fileNameWithoutExtension =
+      std::string(m_TransformParametersFileName, 0, m_TransformParametersFileName.rfind('.')) + "-experimental";
+
+    for (const auto & fileNameExtension : transformOutputFileNameExtensions)
+    {
+      if (!fileNameExtension.empty())
+      {
+        TransformIO::Write(transformObject, fileNameWithoutExtension + fileNameExtension);
+      }
     }
   }
 
