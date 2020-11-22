@@ -361,6 +361,15 @@ public:
                 const bool                 printThisErrorMessage,
                 std::string &              errorMessage) const;
 
+
+  /** Returns the values of the specified parameter. */
+  std::vector<std::string>
+  GetValues(const std::string & parameterName) const
+  {
+    const auto found = m_ParameterMap.find(parameterName);
+    return (found == m_ParameterMap.cend()) ? std::vector<std::string>{} : found->second;
+  }
+
 protected:
   ParameterMapInterface();
   ~ParameterMapInterface() override;
