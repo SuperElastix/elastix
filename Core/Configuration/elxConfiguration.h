@@ -227,6 +227,14 @@ public:
   }
 
 
+  /** Returns the values of the specified parameter (from the parameter file). */
+  std::vector<std::string>
+  GetValuesOfParameter(const std::string & parameterName) const
+  {
+    return m_ParameterMapInterface->GetValues(parameterName);
+  }
+
+
   /** Read a range of parameters from the parameter file. */
   template <class T>
   bool
