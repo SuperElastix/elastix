@@ -326,11 +326,22 @@ AffineLogStackTransform<TElastix>::SetScales(void)
   ScalesType                   newscales(N);
 
   /** Check if automatic scales estimation is desired. */
-  bool automaticScalesEstimationStackTransform = false;
+  bool automaticScalesEstimation = false;
   this->m_Configuration->ReadParameter(
-    automaticScalesEstimationStackTransform, "AutomaticScalesEstimationStackTransform", 0);
+    automaticScalesEstimation, "AutomaticScalesEstimation", 0);
+
+  /** Check also AutomaticScalesEstimationStackTransform for backwards compatability. */
+  bool automaticScalesEstimationStackTransform = false; 
+  this->m_Configuration->ReadParameter( 
+    automaticScalesEstimationStackTransform, "AutomaticScalesEstimationStackTransform", 0, false);
 
   if (automaticScalesEstimationStackTransform)
+  {
+    xl::xout["warning"] << "WARNING: AutomaticScalesEstimationStackTransform is deprecated, use AutomaticScalesEstimation instead." << std::endl;
+    automaticScalesEstimation = automaticScalesEstimationStackTransform;
+  }
+
+  if (automaticScalesEstimation)
   {
     elxout << "Scales are estimated automatically." << std::endl;
     this->AutomaticScalesEstimationStackTransform(this->m_AffineLogStackTransform->GetNumberOfSubTransforms(),
@@ -434,7 +445,7 @@ AffineLogStackTransform<TElastix>::SetScales(void)
                         << " has not been set properly.");
     }
 
-  } // end else: no automaticScalesEstimationStackTransform
+  } // end else: no automaticScalesEstimation
 
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
