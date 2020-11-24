@@ -47,7 +47,7 @@ elastix contains code from third parties that have different copyrights.
 
 They are:
 
-1) Insight Toolkit:   Copyright by the Insight Software Consortium
+1) Insight Toolkit:   Copyright by NumFOCUS
                       Distributed under the Apache 2.0 license.
                       Several files throughout elastix are derived from the
                       Insight Toolkit.
@@ -55,6 +55,6 @@ They are:
 2) ANN library:       Copyright by the University of Maryland.
                       Distributed under the GNU Lesser Public Licence.
                       The files can be found in the subdirectory
-                      Common/KNN/ann_1.1. Please read the content of the
-                      subdirectory for details.
+                      Components/Metrics/KNNGraphAlphaMutualInformation/KNN/ann_1.1.
+                      Please read the content of the subdirectory for details.
 
