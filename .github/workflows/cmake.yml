@@ -1,0 +1,158 @@
+name: CMake
+
+on: [push, pull_request]
+  
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        include:
+          - os: ubuntu-18.04
+            c-compiler: "gcc"
+            cxx-compiler: "g++"
+            itk-git-tag: "v5.1.1"
+            cmake-build-type: "MinSizeRel"
+            ANNLib: "libANNlib-5.0.so"
+            ANNLib2: "libANNlib-5.0.so.1"
+          - os: windows-2019
+            c-compiler: "cl.exe"
+            cxx-compiler: "cl.exe"
+            itk-git-tag: "v5.1.1"
+            cmake-build-type: "Release"
+            ANNLib: "ANNlib-5.0.dll"
+          - os: macos-10.15
+            c-compiler: "clang"  
+            cxx-compiler: "clang++"
+            itk-git-tag: "v5.1.1"  
+            cmake-build-type: "MinSizeRel"
+            ANNLib: "libANNlib-5.0.1.dylib"
+            ANNLib2: "libANNlib-5.0.dylib"
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Make directory structure
+      run: |
+        items=(*)
+        mkdir Elastix-source
+        mv ${items[*]} Elastix-source
+        mv .editorconfig Elastix-source
+        mv .clang-format Elastix-source
+      shell: bash
+      
+    - uses: actions/cache@v2
+      id: cache
+      with:
+        path: |
+          ITK-build
+          ITK-source
+        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}
+      
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install ninja
+        
+    
+    - name: Download ITK
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/InsightSoftwareConsortium/ITK.git --branch ${{ matrix.itk-git-tag }} --depth 1 ITK-source
+   
+    - name: Build ITK
+      if: steps.cache.outputs.cache-hit != 'true' && matrix.os != 'windows-2019'
+      run: |
+        mkdir ITK-build
+        cd ITK-build
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_LEGACY_REMOVE=ON -GNinja ../ITK-source
+        ninja
+        
+    - name: Build ITK
+      if: steps.cache.outputs.cache-hit != 'true' && matrix.os == 'windows-2019'
+      run: |
+        mkdir ITK-build
+        cd ITK-build
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_LEGACY_REMOVE=ON -GNinja ../ITK-source
+        ninja
+      shell: cmd
+
+    
+    - name: Build Elastix Unix
+      if: matrix.os != 'windows-2019'
+
+      run: |
+        mkdir Elastix-build
+        cd Elastix-build
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DITK_DIR=../ITK-build -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON -GNinja ../Elastix-source
+        ninja
+        
+    - name: Build Elastix Windows
+      if: matrix.os == 'windows-2019'
+      run: |
+        mkdir Elastix-build
+        cd Elastix-build
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DITK_DIR=../ITK-build -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON -GNinja ../Elastix-source
+        ninja
+      shell: cmd
+
+    - name: Test MacOs
+      if: matrix.os == 'macos-10.15'
+      run: |
+       cd Elastix-build
+       ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP"
+      
+    - name: Test Windows/Ubuntu
+      if: matrix.os != 'macos-10.15'
+      run: |
+        cd Elastix-build
+        ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
+      
+    - name: Prepare Artifacts Unix
+      if: matrix.os != 'windows-2019'
+      shell: bash
+      run: |
+        mkdir bin
+        mkdir lib
+        mkdir uploads
+        mv Elastix-build/bin/elastix bin
+        mv Elastix-build/bin/transformix bin
+        mv Elastix-build/bin/${{ matrix.ANNLib }} lib
+        mv Elastix-build/bin/${{ matrix.ANNLib2 }} lib
+        mv Elastix-source/NOTICE uploads
+        mv Elastix-source/LICENSE uploads
+        mv bin uploads
+        mv lib uploads
+      
+    - name: Prepare Artifacts Windows
+      if: matrix.os == 'windows-2019'
+      shell: bash
+      run: |
+        mkdir uploads
+        mv Elastix-source/NOTICE uploads
+        mv Elastix-source/LICENSE uploads
+        mv Elastix-build/bin/elastix.exe uploads
+        mv Elastix-build/bin/transformix.exe uploads
+        mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
+  
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v2
+      with: 
+        name: "${{ matrix.os }}"
+        path: uploads
+
+
