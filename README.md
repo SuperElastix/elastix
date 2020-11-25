@@ -16,6 +16,8 @@ If you use this software anywhere we would appreciate if you cite the following 
 - S. Klein, M. Staring, K. Murphy, M.A. Viergever, J.P.W. Pluim, "elastix: a toolbox for intensity based medical image registration," IEEE Transactions on Medical Imaging, vol. 29, no. 1, pp. 196 - 205, January 2010. [download](https://elastix.lumc.nl/marius/publications/2010_j_TMI.php) [doi](http://dx.doi.org/10.1109/TMI.2009.2035616)
 - D.P. Shamonin, E.E. Bron, B.P.F. Lelieveldt, M. Smits, S. Klein and M. Staring, "Fast Parallel Image Registration on CPU and GPU for Diagnostic Classification of Alzheimer’s Disease", Frontiers in Neuroinformatics, vol. 7, no. 50, pp. 1-15, January 2014. [download](https://elastix.lumc.nl/marius/publications/2014_j_FNI.php) [doi](http://dx.doi.org/10.3389/fninf.2013.00050)
 
+Specific components of elastix are made by many; The relevant citation can be found [here](https://github.com/SuperElastix/elastix/wiki/How-to-cite-elastix-(components)).
+
 ## More information ##
 
 More information, including an extensive manual and model zoo, can be found on the website: <https://elastix.lumc.nl/>.
