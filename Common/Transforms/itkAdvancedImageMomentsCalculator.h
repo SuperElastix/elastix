@@ -63,7 +63,7 @@ namespace itk
  * \ingroup ITKImageStatistics
  */
 template <typename TImage>
-class AdvancedImageMomentsCalculator : public Object
+class ITK_TEMPLATE_EXPORT AdvancedImageMomentsCalculator : public Object
 {
 public:
   /** Standard class typedefs. */

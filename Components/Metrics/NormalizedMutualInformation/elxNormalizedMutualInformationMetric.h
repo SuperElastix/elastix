@@ -70,7 +70,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class NormalizedMutualInformationMetric
+class ITK_TEMPLATE_EXPORT NormalizedMutualInformationMetric
   : public itk::ParzenWindowNormalizedMutualInformationImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
       typename MetricBase<TElastix>::MovingImageType>

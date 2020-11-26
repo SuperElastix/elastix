@@ -69,7 +69,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MetricBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT MetricBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK stuff. */

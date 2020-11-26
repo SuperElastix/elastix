@@ -34,7 +34,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class NormalizedGradientCorrelationMetric
+class ITK_TEMPLATE_EXPORT NormalizedGradientCorrelationMetric
   : public itk::NormalizedGradientCorrelationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                                 typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

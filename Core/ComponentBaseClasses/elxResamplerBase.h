@@ -70,7 +70,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class ResamplerBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT ResamplerBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK stuff. */

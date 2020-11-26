@@ -50,7 +50,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MultiResolutionRegistrationWithFeatures
+class ITK_TEMPLATE_EXPORT MultiResolutionRegistrationWithFeatures
   : public itk::MultiResolutionImageRegistrationMethodWithFeatures<typename RegistrationBase<TElastix>::FixedImageType,
                                                                    typename RegistrationBase<TElastix>::MovingImageType>
   , public RegistrationBase<TElastix>

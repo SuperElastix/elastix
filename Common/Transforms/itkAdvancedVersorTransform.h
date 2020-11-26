@@ -65,7 +65,7 @@ namespace itk
  **/
 template <class TScalarType = double>
 // Data type for scalars (float or double)
-class ITK_EXPORT AdvancedVersorTransform : public AdvancedRigid3DTransform<TScalarType>
+class ITK_TEMPLATE_EXPORT AdvancedVersorTransform : public AdvancedRigid3DTransform<TScalarType>
 {
 public:
   /** Standard Self Typedef */

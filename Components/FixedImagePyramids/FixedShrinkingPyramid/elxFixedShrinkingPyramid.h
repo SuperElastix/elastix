@@ -36,7 +36,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class FixedShrinkingPyramid
+class ITK_TEMPLATE_EXPORT FixedShrinkingPyramid
   : public itk::MultiResolutionShrinkPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
                                                         typename FixedImagePyramidBase<TElastix>::OutputImageType>
   , public FixedImagePyramidBase<TElastix>

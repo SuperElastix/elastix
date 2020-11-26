@@ -35,7 +35,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class RayCastResampleInterpolator
+class ITK_TEMPLATE_EXPORT RayCastResampleInterpolator
   : public itk::AdvancedRayCastInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
                                                         typename ResampleInterpolatorBase<TElastix>::CoordRepType>
   , public ResampleInterpolatorBase<TElastix>

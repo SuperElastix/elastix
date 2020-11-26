@@ -41,7 +41,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class ImageSamplerBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT ImageSamplerBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK-stuff. */

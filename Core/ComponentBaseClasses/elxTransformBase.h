@@ -130,7 +130,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class TransformBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT TransformBase : public BaseComponentSE<TElastix>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(TransformBase);

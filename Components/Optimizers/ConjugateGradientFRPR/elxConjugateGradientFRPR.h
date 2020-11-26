@@ -71,7 +71,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class ConjugateGradientFRPR
+class ITK_TEMPLATE_EXPORT ConjugateGradientFRPR
   : public itk::FRPROptimizer
   , public OptimizerBase<TElastix>
 {

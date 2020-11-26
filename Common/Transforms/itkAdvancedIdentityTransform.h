@@ -68,7 +68,7 @@ namespace itk
  *
  */
 template <class TScalarType, unsigned int NDimensions = 3>
-class AdvancedIdentityTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
+class ITK_TEMPLATE_EXPORT AdvancedIdentityTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
   /** Standard class typedefs. */

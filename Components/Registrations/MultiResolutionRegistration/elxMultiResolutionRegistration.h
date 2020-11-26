@@ -42,7 +42,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MultiResolutionRegistration
+class ITK_TEMPLATE_EXPORT MultiResolutionRegistration
   : public RegistrationBase<TElastix>::ITKBaseType
   , public RegistrationBase<TElastix>
 {

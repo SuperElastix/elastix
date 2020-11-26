@@ -37,7 +37,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class CorrespondingPointsEuclideanDistanceMetric
+class ITK_TEMPLATE_EXPORT CorrespondingPointsEuclideanDistanceMetric
   : public itk::CorrespondingPointsEuclideanDistancePointMetric<typename MetricBase<TElastix>::FixedPointSetType,
                                                                 typename MetricBase<TElastix>::MovingPointSetType>
   , public MetricBase<TElastix>

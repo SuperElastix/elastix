@@ -36,7 +36,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MovingRecursivePyramid
+class ITK_TEMPLATE_EXPORT MovingRecursivePyramid
   : public itk::RecursiveMultiResolutionPyramidImageFilter<typename MovingImagePyramidBase<TElastix>::InputImageType,
                                                            typename MovingImagePyramidBase<TElastix>::OutputImageType>
   , public MovingImagePyramidBase<TElastix>

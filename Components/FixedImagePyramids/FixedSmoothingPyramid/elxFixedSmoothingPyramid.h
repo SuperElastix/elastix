@@ -36,7 +36,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class FixedSmoothingPyramid
+class ITK_TEMPLATE_EXPORT FixedSmoothingPyramid
   : public itk::MultiResolutionGaussianSmoothingPyramidImageFilter<
       typename FixedImagePyramidBase<TElastix>::InputImageType,
       typename FixedImagePyramidBase<TElastix>::OutputImageType>

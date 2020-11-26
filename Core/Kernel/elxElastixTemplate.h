@@ -103,7 +103,7 @@ namespace elastix
  */
 
 template <class TFixedImage, class TMovingImage>
-class ElastixTemplate final : public ElastixBase
+class ITK_TEMPLATE_EXPORT ElastixTemplate final : public ElastixBase
 {
 public:
   /** Standard itk. */

@@ -41,7 +41,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class NearestNeighborResampleInterpolator
+class ITK_TEMPLATE_EXPORT NearestNeighborResampleInterpolator
   : public itk::NearestNeighborInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
                                                         typename ResampleInterpolatorBase<TElastix>::CoordRepType>
   , public ResampleInterpolatorBase<TElastix>

@@ -74,7 +74,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class AdvancedAffineTransformElastix
+class ITK_TEMPLATE_EXPORT AdvancedAffineTransformElastix
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>

@@ -41,7 +41,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class LinearResampleInterpolator
+class ITK_TEMPLATE_EXPORT LinearResampleInterpolator
   : public itk::LinearInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
                                                typename ResampleInterpolatorBase<TElastix>::CoordRepType>
   , public ResampleInterpolatorBase<TElastix>

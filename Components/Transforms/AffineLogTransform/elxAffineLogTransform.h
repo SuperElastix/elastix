@@ -40,7 +40,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class AffineLogTransformElastix
+class ITK_TEMPLATE_EXPORT AffineLogTransformElastix
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>

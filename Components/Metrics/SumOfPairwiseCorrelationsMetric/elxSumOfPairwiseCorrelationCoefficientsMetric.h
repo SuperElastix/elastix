@@ -60,7 +60,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class SumOfPairwiseCorrelationCoefficientsMetric
+class ITK_TEMPLATE_EXPORT SumOfPairwiseCorrelationCoefficientsMetric
   : public itk::SumOfPairwiseCorrelationCoefficientsMetric<typename MetricBase<TElastix>::FixedImageType,
                                                            typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

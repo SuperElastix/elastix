@@ -92,7 +92,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MultiMetricMultiResolutionRegistration
+class ITK_TEMPLATE_EXPORT MultiMetricMultiResolutionRegistration
   : public itk::MultiMetricMultiResolutionImageRegistrationMethod<typename RegistrationBase<TElastix>::FixedImageType,
                                                                   typename RegistrationBase<TElastix>::MovingImageType>
   , public RegistrationBase<TElastix>

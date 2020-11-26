@@ -109,7 +109,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class BSplineStackTransform
+class ITK_TEMPLATE_EXPORT BSplineStackTransform
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>

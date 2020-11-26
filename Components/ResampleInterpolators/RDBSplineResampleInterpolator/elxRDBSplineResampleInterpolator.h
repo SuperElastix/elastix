@@ -51,7 +51,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class ReducedDimensionBSplineResampleInterpolator
+class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineResampleInterpolator
   : public itk::ReducedDimensionBSplineInterpolateImageFunction<
       typename ResampleInterpolatorBase<TElastix>::InputImageType,
       typename ResampleInterpolatorBase<TElastix>::CoordRepType,

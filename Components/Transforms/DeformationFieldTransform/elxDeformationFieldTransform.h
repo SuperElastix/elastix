@@ -51,7 +51,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class DeformationFieldTransform
+class ITK_TEMPLATE_EXPORT DeformationFieldTransform
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>

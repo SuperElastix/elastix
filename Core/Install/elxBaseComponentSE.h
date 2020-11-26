@@ -44,7 +44,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class BaseComponentSE : public BaseComponent
+class ITK_TEMPLATE_EXPORT BaseComponentSE : public BaseComponent
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponentSE);
