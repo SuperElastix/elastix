@@ -65,7 +65,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MovingGenericPyramid
+class ITK_TEMPLATE_EXPORT MovingGenericPyramid
   : public itk::GenericMultiResolutionPyramidImageFilter<typename MovingImagePyramidBase<TElastix>::InputImageType,
                                                          typename MovingImagePyramidBase<TElastix>::OutputImageType>
   , public MovingImagePyramidBase<TElastix>

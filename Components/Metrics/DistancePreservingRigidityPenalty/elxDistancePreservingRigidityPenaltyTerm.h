@@ -61,7 +61,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class DistancePreservingRigidityPenalty
+class ITK_TEMPLATE_EXPORT DistancePreservingRigidityPenalty
   : public itk::DistancePreservingRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>
   , public MetricBase<TElastix>
 {

@@ -38,7 +38,7 @@ namespace itk
  */
 
 template <unsigned int OutputDimension, unsigned int SpaceDimension, unsigned int SplineOrder, class TScalar>
-class RecursiveBSplineTransformImplementation
+class ITK_TEMPLATE_EXPORT RecursiveBSplineTransformImplementation
 {
 public:
   /** Typedef related to the coordinate representation type and the weights type.

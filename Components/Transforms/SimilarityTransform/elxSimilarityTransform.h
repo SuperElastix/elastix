@@ -76,7 +76,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class SimilarityTransformElastix
+class ITK_TEMPLATE_EXPORT SimilarityTransformElastix
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>

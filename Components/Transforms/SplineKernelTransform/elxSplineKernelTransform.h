@@ -112,7 +112,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class SplineKernelTransform
+class ITK_TEMPLATE_EXPORT SplineKernelTransform
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>

@@ -123,7 +123,7 @@ public:
  */
 
 template <class TScalarType, unsigned int Dimension>
-class EulerTransform : public EulerGroupTemplate<TScalarType, Dimension>::EulerTransform_tmp
+class ITK_TEMPLATE_EXPORT EulerTransform : public EulerGroupTemplate<TScalarType, Dimension>::EulerTransform_tmp
 {
 public:
   /** Standard ITK-stuff. */

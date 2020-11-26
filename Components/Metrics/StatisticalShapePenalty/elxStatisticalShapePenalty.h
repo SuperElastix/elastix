@@ -55,7 +55,7 @@ using namespace itk;
  */
 
 template <class TElastix>
-class StatisticalShapePenalty
+class ITK_TEMPLATE_EXPORT StatisticalShapePenalty
   : public StatisticalShapePointPenalty<typename MetricBase<TElastix>::FixedPointSetType,
                                         typename MetricBase<TElastix>::MovingPointSetType>
   , public MetricBase<TElastix>

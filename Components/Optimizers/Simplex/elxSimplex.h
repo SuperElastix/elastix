@@ -38,7 +38,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class Simplex
+class ITK_TEMPLATE_EXPORT Simplex
   : public itk::AmoebaOptimizer
   , public OptimizerBase<TElastix>
 {

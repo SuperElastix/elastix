@@ -40,7 +40,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class ResampleInterpolatorBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT ResampleInterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK stuff. */

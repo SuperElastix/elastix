@@ -93,7 +93,8 @@ template <class TScalarType = double,        // Data type for scalars
           unsigned int NInputDimensions = 3, // Number of dimensions in the input space
           unsigned int NOutputDimensions = 3>
 // Number of dimensions in the output space
-class AdvancedMatrixOffsetTransformBase : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
+class ITK_TEMPLATE_EXPORT AdvancedMatrixOffsetTransformBase
+  : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
   /** Standard typedefs   */

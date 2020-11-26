@@ -34,7 +34,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class PatternIntensityMetric
+class ITK_TEMPLATE_EXPORT PatternIntensityMetric
   : public itk::PatternIntensityImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                    typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

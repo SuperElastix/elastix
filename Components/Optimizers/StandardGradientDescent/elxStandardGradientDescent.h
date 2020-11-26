@@ -65,7 +65,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class StandardGradientDescent
+class ITK_TEMPLATE_EXPORT StandardGradientDescent
   : public itk::StandardGradientDescentOptimizer
   , public OptimizerBase<TElastix>
 {

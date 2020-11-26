@@ -27,6 +27,7 @@
  * includes itkWin32Header.h.
  */
 #include "itkWin32Header.h"
+#include "itkMacro.h"
 
 /**
  * Macro for installing support new components
@@ -91,7 +92,7 @@
  */
 #define elxInstallMacro(_classname)                                                                                    \
   template <::elx::ComponentDatabase::IndexType VIndex>                                                                \
-  class _classname##_install                                                                                           \
+  class ITK_TEMPLATE_EXPORT _classname##_install                                                                       \
   {                                                                                                                    \
   public:                                                                                                              \
     typedef typename ::elx::ElastixTypedef<VIndex>::ElastixType ElastixType;                                           \

@@ -61,7 +61,7 @@ namespace elastix
 //  public MetricBase<TElastix>
 //
 template <class TElastix>
-class PolydataDummyPenalty
+class ITK_TEMPLATE_EXPORT PolydataDummyPenalty
   : public itk::MeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
                             typename MetricBase<TElastix>::MovingPointSetType>
   , public MetricBase<TElastix>

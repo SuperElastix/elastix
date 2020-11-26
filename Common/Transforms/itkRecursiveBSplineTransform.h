@@ -34,7 +34,8 @@ namespace itk
  */
 
 template <typename TScalarType = double, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3>
-class RecursiveBSplineTransform : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+class ITK_TEMPLATE_EXPORT RecursiveBSplineTransform
+  : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
 public:
   /** Standard class typedefs. */

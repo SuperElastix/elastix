@@ -37,7 +37,7 @@ namespace itk
  */
 
 template <typename TTransformScalarType, unsigned int VImageDimension>
-class GridScheduleComputer : public Object
+class ITK_TEMPLATE_EXPORT GridScheduleComputer : public Object
 {
 public:
   /** Standard class typedefs. */

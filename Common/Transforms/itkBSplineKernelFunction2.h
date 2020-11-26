@@ -56,7 +56,7 @@ namespace itk
  * \ingroup Functions
  */
 template <unsigned int VSplineOrder = 3>
-class ITK_EXPORT BSplineKernelFunction2 : public KernelFunctionBase2<double>
+class ITK_TEMPLATE_EXPORT BSplineKernelFunction2 : public KernelFunctionBase2<double>
 {
 public:
   /** Standard class typedefs. */

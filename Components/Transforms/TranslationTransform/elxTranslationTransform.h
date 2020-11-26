@@ -47,7 +47,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class TranslationTransformElastix
+class ITK_TEMPLATE_EXPORT TranslationTransformElastix
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>

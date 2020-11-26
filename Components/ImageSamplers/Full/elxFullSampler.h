@@ -41,7 +41,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class FullSampler
+class ITK_TEMPLATE_EXPORT FullSampler
   : public itk::ImageFullSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
   , public elx::ImageSamplerBase<TElastix>
 {

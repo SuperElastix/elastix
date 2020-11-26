@@ -51,7 +51,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MissingStructurePenalty
+class ITK_TEMPLATE_EXPORT MissingStructurePenalty
   : public itk::MissingVolumeMeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
                                          typename MetricBase<TElastix>::MovingPointSetType>
   , public MetricBase<TElastix>

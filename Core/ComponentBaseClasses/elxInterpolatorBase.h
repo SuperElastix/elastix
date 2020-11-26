@@ -41,7 +41,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class InterpolatorBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT InterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK-stuff. */

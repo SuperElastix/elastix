@@ -54,7 +54,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class FullSearch
+class ITK_TEMPLATE_EXPORT FullSearch
   : public itk::FullSearchOptimizer
   , public OptimizerBase<TElastix>
 {

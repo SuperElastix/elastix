@@ -79,7 +79,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class WeightedCombinationTransformElastix
+class ITK_TEMPLATE_EXPORT WeightedCombinationTransformElastix
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>

@@ -50,7 +50,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class OptimizerBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT OptimizerBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK-stuff. */

@@ -78,7 +78,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class EulerStackTransform
+class ITK_TEMPLATE_EXPORT EulerStackTransform
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>

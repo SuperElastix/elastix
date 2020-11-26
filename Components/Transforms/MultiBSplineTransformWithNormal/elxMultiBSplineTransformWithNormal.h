@@ -87,7 +87,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MultiBSplineTransformWithNormal
+class ITK_TEMPLATE_EXPORT MultiBSplineTransformWithNormal
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>

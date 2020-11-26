@@ -81,7 +81,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MultiInputRandomCoordinateSampler
+class ITK_TEMPLATE_EXPORT MultiInputRandomCoordinateSampler
   : public itk::MultiInputImageRandomCoordinateSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
   , public elx::ImageSamplerBase<TElastix>
 {

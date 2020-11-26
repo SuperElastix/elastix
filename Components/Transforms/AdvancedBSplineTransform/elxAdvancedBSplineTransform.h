@@ -106,7 +106,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class AdvancedBSplineTransform
+class ITK_TEMPLATE_EXPORT AdvancedBSplineTransform
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>

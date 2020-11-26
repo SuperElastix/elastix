@@ -71,7 +71,7 @@ namespace itk
  * \ingroup GeometricTransforms
  */
 template <class TOutputImage, class TTransformPrecisionType = double>
-class TransformToDeterminantOfSpatialJacobianSource : public ImageSource<TOutputImage>
+class ITK_TEMPLATE_EXPORT TransformToDeterminantOfSpatialJacobianSource : public ImageSource<TOutputImage>
 {
 public:
   /** Standard class typedefs. */
