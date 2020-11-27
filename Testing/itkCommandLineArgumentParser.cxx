@@ -27,7 +27,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-CommandLineArgumentParser ::CommandLineArgumentParser()
+CommandLineArgumentParser::CommandLineArgumentParser()
 {
   this->m_Argv.clear();
   this->m_ArgumentMap.clear();
@@ -41,7 +41,7 @@ CommandLineArgumentParser ::CommandLineArgumentParser()
  */
 
 void
-CommandLineArgumentParser ::SetCommandLineArguments(int argc, char ** argv)
+CommandLineArgumentParser::SetCommandLineArguments(int argc, char ** argv)
 {
   this->m_Argv.resize(argc);
   for (IndexType i = 0; i < static_cast<IndexType>(argc); i++)
@@ -58,7 +58,7 @@ CommandLineArgumentParser ::SetCommandLineArguments(int argc, char ** argv)
  */
 
 void
-CommandLineArgumentParser ::CreateArgumentMap(void)
+CommandLineArgumentParser::CreateArgumentMap(void)
 {
   for (IndexType i = 1; i < this->m_Argv.size(); ++i)
   {
@@ -77,7 +77,7 @@ CommandLineArgumentParser ::CreateArgumentMap(void)
  */
 
 bool
-CommandLineArgumentParser ::ArgumentExists(const std::string & key) const
+CommandLineArgumentParser::ArgumentExists(const std::string & key) const
 {
   if (this->m_ArgumentMap.count(key) == 0)
   {
@@ -93,7 +93,7 @@ CommandLineArgumentParser ::ArgumentExists(const std::string & key) const
  */
 
 void
-CommandLineArgumentParser ::PrintAllArguments() const
+CommandLineArgumentParser::PrintAllArguments() const
 {
   ArgumentMapType::const_iterator iter = this->m_ArgumentMap.begin();
 
@@ -110,7 +110,7 @@ CommandLineArgumentParser ::PrintAllArguments() const
  */
 
 bool
-CommandLineArgumentParser ::ExactlyOneExists(const std::vector<std::string> & keys) const
+CommandLineArgumentParser::ExactlyOneExists(const std::vector<std::string> & keys) const
 {
   unsigned int counter = 0;
   for (unsigned int i = 0; i < keys.size(); i++)
@@ -138,7 +138,7 @@ CommandLineArgumentParser ::ExactlyOneExists(const std::vector<std::string> & ke
  */
 
 bool
-CommandLineArgumentParser ::FindKey(const std::string & key, IndexType & keyIndex, IndexType & nextKeyIndex) const
+CommandLineArgumentParser::FindKey(const std::string & key, IndexType & keyIndex, IndexType & nextKeyIndex) const
 {
   /** Loop once over the arguments, to get the index of the key,
    * and that of the next key.
@@ -208,7 +208,7 @@ CommandLineArgumentParser::IsANumber(const std::string & arg) const
  */
 
 bool
-CommandLineArgumentParser ::StringCast(const std::string & parameterValue, std::string & casted) const
+CommandLineArgumentParser::StringCast(const std::string & parameterValue, std::string & casted) const
 {
   casted = parameterValue;
   return true;
@@ -221,7 +221,7 @@ CommandLineArgumentParser ::StringCast(const std::string & parameterValue, std::
  */
 
 void
-CommandLineArgumentParser ::MarkArgumentAsRequired(const std::string & argument, const std::string & helpText)
+CommandLineArgumentParser::MarkArgumentAsRequired(const std::string & argument, const std::string & helpText)
 {
   std::pair<std::string, std::string> requiredArgument;
   requiredArgument.first = argument;
@@ -236,7 +236,7 @@ CommandLineArgumentParser ::MarkArgumentAsRequired(const std::string & argument,
  */
 
 void
-CommandLineArgumentParser ::MarkExactlyOneOfArgumentsAsRequired(const std::vector<std::string> & arguments,
+CommandLineArgumentParser::MarkExactlyOneOfArgumentsAsRequired(const std::vector<std::string> & arguments,
                                                                 const std::string &              helpText)
 {
   std::pair<std::vector<std::string>, std::string> requiredArguments;
@@ -252,7 +252,7 @@ CommandLineArgumentParser ::MarkExactlyOneOfArgumentsAsRequired(const std::vecto
  */
 
 CommandLineArgumentParser::ReturnValue
-CommandLineArgumentParser ::CheckForRequiredArguments() const
+CommandLineArgumentParser::CheckForRequiredArguments() const
 {
   // If no arguments were specified at all, display the help text.
   if (this->m_Argv.size() == 1)

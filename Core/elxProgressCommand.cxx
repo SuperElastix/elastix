@@ -64,7 +64,7 @@ ProgressCommand::~ProgressCommand()
  */
 
 void
-ProgressCommand ::SetUpdateFrequency(const unsigned long numberOfVoxels, const unsigned long numberOfUpdates)
+ProgressCommand::SetUpdateFrequency(const unsigned long numberOfVoxels, const unsigned long numberOfUpdates)
 {
   /** Set the member variables. */
   this->m_NumberOfVoxels = numberOfVoxels;
@@ -96,7 +96,7 @@ ProgressCommand ::SetUpdateFrequency(const unsigned long numberOfVoxels, const u
  */
 
 void
-ProgressCommand ::ConnectObserver(itk::ProcessObject * filter)
+ProgressCommand::ConnectObserver(itk::ProcessObject * filter)
 {
   /** Disconnect from old observed filters. */
   this->DisconnectObserver(this->m_ObservedProcessObject);
@@ -117,7 +117,7 @@ ProgressCommand ::ConnectObserver(itk::ProcessObject * filter)
  */
 
 void
-ProgressCommand ::DisconnectObserver(itk::ProcessObject * filter)
+ProgressCommand::DisconnectObserver(itk::ProcessObject * filter)
 {
   if (this->m_StreamOutputIsConsole)
   {
@@ -137,7 +137,7 @@ ProgressCommand ::DisconnectObserver(itk::ProcessObject * filter)
  */
 
 void
-ProgressCommand ::Execute(itk::Object * caller, const itk::EventObject & event)
+ProgressCommand::Execute(itk::Object * caller, const itk::EventObject & event)
 {
   itk::ProcessObject * po = dynamic_cast<itk::ProcessObject *>(caller);
   if (!po)
@@ -158,7 +158,7 @@ ProgressCommand ::Execute(itk::Object * caller, const itk::EventObject & event)
  */
 
 void
-ProgressCommand ::Execute(const itk::Object * caller, const itk::EventObject & event)
+ProgressCommand::Execute(const itk::Object * caller, const itk::EventObject & event)
 {
   const itk::ProcessObject * po = dynamic_cast<const itk::ProcessObject *>(caller);
   if (!po)
@@ -179,7 +179,7 @@ ProgressCommand ::Execute(const itk::Object * caller, const itk::EventObject & e
  */
 
 void
-ProgressCommand ::PrintProgress(const float & progress) const
+ProgressCommand::PrintProgress(const float & progress) const
 {
   /** Print the progress to the screen. */
   const int progressInt = itk::Math::Round<float>(100 * progress);
@@ -200,7 +200,7 @@ ProgressCommand ::PrintProgress(const float & progress) const
  */
 
 void
-ProgressCommand ::UpdateAndPrintProgress(const unsigned long & currentVoxelNumber) const
+ProgressCommand::UpdateAndPrintProgress(const unsigned long & currentVoxelNumber) const
 {
   if (this->m_StreamOutputIsConsole)
   {
@@ -215,7 +215,7 @@ ProgressCommand ::UpdateAndPrintProgress(const unsigned long & currentVoxelNumbe
 
 
 ProgressCommand::Pointer
-ProgressCommand ::CreateAndSetUpdateFrequency(const unsigned long numberOfVoxels)
+ProgressCommand::CreateAndSetUpdateFrequency(const unsigned long numberOfVoxels)
 {
   const auto result = Self::New();
   result->Self::SetUpdateFrequency(numberOfVoxels, numberOfVoxels);
@@ -224,7 +224,7 @@ ProgressCommand ::CreateAndSetUpdateFrequency(const unsigned long numberOfVoxels
 }
 
 ProgressCommand::Pointer
-ProgressCommand ::CreateAndConnect(itk::ProcessObject & processObject)
+ProgressCommand::CreateAndConnect(itk::ProcessObject & processObject)
 {
   const auto result = Self::New();
   result->Self::ConnectObserver(&processObject);

@@ -28,7 +28,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-AdaptiveStochasticVarianceReducedGradientOptimizer ::AdaptiveStochasticVarianceReducedGradientOptimizer()
+AdaptiveStochasticVarianceReducedGradientOptimizer::AdaptiveStochasticVarianceReducedGradientOptimizer()
 {
   this->m_UseAdaptiveStepSizes = true;
   this->m_SigmoidMax = 1.0;
@@ -43,7 +43,7 @@ AdaptiveStochasticVarianceReducedGradientOptimizer ::AdaptiveStochasticVarianceR
  */
 
 void
-AdaptiveStochasticVarianceReducedGradientOptimizer ::UpdateCurrentTime(void)
+AdaptiveStochasticVarianceReducedGradientOptimizer::UpdateCurrentTime(void)
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

@@ -26,7 +26,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-LineSearchOptimizer ::LineSearchOptimizer()
+LineSearchOptimizer::LineSearchOptimizer()
 {
   this->m_CurrentStepLength = NumericTraits<double>::Zero;
   this->m_MinimumStepLength = NumericTraits<double>::Zero;
@@ -46,7 +46,7 @@ LineSearchOptimizer ::LineSearchOptimizer()
  */
 
 void
-LineSearchOptimizer ::SetCurrentStepLength(double step)
+LineSearchOptimizer::SetCurrentStepLength(double step)
 {
   itkDebugMacro("Setting current step length to " << step);
 
@@ -73,7 +73,7 @@ LineSearchOptimizer ::SetCurrentStepLength(double step)
  */
 
 double
-LineSearchOptimizer ::DirectionalDerivative(const DerivativeType & derivative) const
+LineSearchOptimizer::DirectionalDerivative(const DerivativeType & derivative) const
 {
   /** Easy, thanks to the functions defined in vnl_vector.h */
   return inner_product(derivative, this->GetLineSearchDirection());
@@ -86,7 +86,7 @@ LineSearchOptimizer ::DirectionalDerivative(const DerivativeType & derivative) c
  */
 
 void
-LineSearchOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
+LineSearchOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
   /** Call the superclass' PrintSelf. */
   Superclass::PrintSelf(os, indent);

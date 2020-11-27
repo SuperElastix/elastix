@@ -28,7 +28,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-AdaptiveStepsizeOptimizer ::AdaptiveStepsizeOptimizer()
+AdaptiveStepsizeOptimizer::AdaptiveStepsizeOptimizer()
 {
   this->m_UseAdaptiveStepSizes = true;
   this->m_SigmoidMax = 1.0;
@@ -43,7 +43,7 @@ AdaptiveStepsizeOptimizer ::AdaptiveStepsizeOptimizer()
  */
 
 void
-AdaptiveStepsizeOptimizer ::UpdateCurrentTime(void)
+AdaptiveStepsizeOptimizer::UpdateCurrentTime(void)
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

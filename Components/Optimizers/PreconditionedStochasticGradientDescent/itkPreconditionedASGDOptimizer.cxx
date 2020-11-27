@@ -28,7 +28,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-PreconditionedASGDOptimizer ::PreconditionedASGDOptimizer()
+PreconditionedASGDOptimizer::PreconditionedASGDOptimizer()
 {
   this->m_UseAdaptiveStepSizes = true;
   this->m_SigmoidMax = 1.0;
@@ -43,7 +43,7 @@ PreconditionedASGDOptimizer ::PreconditionedASGDOptimizer()
  */
 
 void
-PreconditionedASGDOptimizer ::UpdateCurrentTime(void)
+PreconditionedASGDOptimizer::UpdateCurrentTime(void)
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

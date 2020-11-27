@@ -27,7 +27,7 @@ namespace itk
  * ****************** Constructor *****************************
  */
 
-MoreThuenteLineSearchOptimizer ::MoreThuenteLineSearchOptimizer()
+MoreThuenteLineSearchOptimizer::MoreThuenteLineSearchOptimizer()
 {
   this->m_f = NumericTraits<MeasureType>::Zero;
   this->m_dg = 0.0;
@@ -50,7 +50,7 @@ MoreThuenteLineSearchOptimizer ::MoreThuenteLineSearchOptimizer()
  */
 
 void
-MoreThuenteLineSearchOptimizer ::SetInitialValue(MeasureType value)
+MoreThuenteLineSearchOptimizer::SetInitialValue(MeasureType value)
 {
   this->m_InitialValueProvided = true;
   this->m_f = value;
@@ -64,7 +64,7 @@ MoreThuenteLineSearchOptimizer ::SetInitialValue(MeasureType value)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::SetInitialDerivative(const DerivativeType & derivative)
+MoreThuenteLineSearchOptimizer::SetInitialDerivative(const DerivativeType & derivative)
 {
   this->m_InitialDerivativeProvided = true;
   this->m_g = derivative;
@@ -78,7 +78,7 @@ MoreThuenteLineSearchOptimizer ::SetInitialDerivative(const DerivativeType & der
  */
 
 void
-MoreThuenteLineSearchOptimizer ::GetCurrentValueAndDerivative(MeasureType & value, DerivativeType & derivative) const
+MoreThuenteLineSearchOptimizer::GetCurrentValueAndDerivative(MeasureType & value, DerivativeType & derivative) const
 {
   value = m_f;
   derivative = m_g;
@@ -91,7 +91,7 @@ MoreThuenteLineSearchOptimizer ::GetCurrentValueAndDerivative(MeasureType & valu
  */
 
 void
-MoreThuenteLineSearchOptimizer ::GetCurrentDerivative(DerivativeType & derivative) const
+MoreThuenteLineSearchOptimizer::GetCurrentDerivative(DerivativeType & derivative) const
 {
   derivative = m_g;
 
@@ -103,7 +103,7 @@ MoreThuenteLineSearchOptimizer ::GetCurrentDerivative(DerivativeType & derivativ
  */
 
 MoreThuenteLineSearchOptimizer::MeasureType
-MoreThuenteLineSearchOptimizer ::GetCurrentValue(void) const
+MoreThuenteLineSearchOptimizer::GetCurrentValue(void) const
 {
   return m_f;
 
@@ -115,7 +115,7 @@ MoreThuenteLineSearchOptimizer ::GetCurrentValue(void) const
  */
 
 double
-MoreThuenteLineSearchOptimizer ::GetCurrentDirectionalDerivative(void) const
+MoreThuenteLineSearchOptimizer::GetCurrentDirectionalDerivative(void) const
 {
   return m_dg;
 
@@ -127,7 +127,7 @@ MoreThuenteLineSearchOptimizer ::GetCurrentDirectionalDerivative(void) const
  */
 
 void
-MoreThuenteLineSearchOptimizer ::StartOptimization(void)
+MoreThuenteLineSearchOptimizer::StartOptimization(void)
 {
   this->CheckSettings();
 
@@ -175,7 +175,7 @@ MoreThuenteLineSearchOptimizer ::StartOptimization(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::StopOptimization(void)
+MoreThuenteLineSearchOptimizer::StopOptimization(void)
 {
   this->m_Stop = true;
   this->InvokeEvent(EndEvent());
@@ -188,7 +188,7 @@ MoreThuenteLineSearchOptimizer ::StopOptimization(void)
  */
 
 int
-MoreThuenteLineSearchOptimizer ::CheckSettings(void)
+MoreThuenteLineSearchOptimizer::CheckSettings(void)
 {
   if (this->GetCostFunction() == nullptr)
   {
@@ -231,7 +231,7 @@ MoreThuenteLineSearchOptimizer ::CheckSettings(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::GetInitialValueAndDerivative(void)
+MoreThuenteLineSearchOptimizer::GetInitialValueAndDerivative(void)
 {
 
   if (!(this->m_InitialValueProvided && this->m_InitialDerivativeProvided))
@@ -283,7 +283,7 @@ MoreThuenteLineSearchOptimizer ::GetInitialValueAndDerivative(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::InitializeLineSearch(void)
+MoreThuenteLineSearchOptimizer::InitializeLineSearch(void)
 {
   this->m_Stop = false;
   this->m_StopCondition = Unknown;
@@ -321,7 +321,7 @@ MoreThuenteLineSearchOptimizer ::InitializeLineSearch(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::UpdateIntervalMinimumAndMaximum(void)
+MoreThuenteLineSearchOptimizer::UpdateIntervalMinimumAndMaximum(void)
 {
   const double xtrapf = 4.0;
 
@@ -347,7 +347,7 @@ MoreThuenteLineSearchOptimizer ::UpdateIntervalMinimumAndMaximum(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::BoundStep(double & step) const
+MoreThuenteLineSearchOptimizer::BoundStep(double & step) const
 {
   step = std::max(step, this->GetMinimumStepLength());
   step = std::min(step, this->GetMaximumStepLength());
@@ -363,7 +363,7 @@ MoreThuenteLineSearchOptimizer ::BoundStep(double & step) const
  */
 
 void
-MoreThuenteLineSearchOptimizer ::PrepareForUnusualTermination(void)
+MoreThuenteLineSearchOptimizer::PrepareForUnusualTermination(void)
 {
   if ((this->m_brackt && (this->m_step <= this->m_stepmin || this->m_step >= this->m_stepmax)) ||
       this->m_CurrentIteration >= this->GetMaximumNumberOfIterations() - 1 || this->m_SafeGuardedStepFailed ||
@@ -382,7 +382,7 @@ MoreThuenteLineSearchOptimizer ::PrepareForUnusualTermination(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::ComputeCurrentValueAndDerivative(void)
+MoreThuenteLineSearchOptimizer::ComputeCurrentValueAndDerivative(void)
 {
   try
   {
@@ -405,7 +405,7 @@ MoreThuenteLineSearchOptimizer ::ComputeCurrentValueAndDerivative(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::TestConvergence(bool & stop)
+MoreThuenteLineSearchOptimizer::TestConvergence(bool & stop)
 {
   stop = false;
   const double & step = this->m_step;
@@ -463,7 +463,7 @@ MoreThuenteLineSearchOptimizer ::TestConvergence(bool & stop)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::ComputeNewStepAndInterval(void)
+MoreThuenteLineSearchOptimizer::ComputeNewStepAndInterval(void)
 {
   int returncode = 0;
 
@@ -549,7 +549,7 @@ MoreThuenteLineSearchOptimizer ::ComputeNewStepAndInterval(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer ::ForceSufficientDecreaseInIntervalWidth(void)
+MoreThuenteLineSearchOptimizer::ForceSufficientDecreaseInIntervalWidth(void)
 {
   if (this->m_brackt)
   {
@@ -575,7 +575,7 @@ MoreThuenteLineSearchOptimizer ::ForceSufficientDecreaseInIntervalWidth(void)
  */
 
 int
-MoreThuenteLineSearchOptimizer ::SafeGuardedStep(double &       stx,
+MoreThuenteLineSearchOptimizer::SafeGuardedStep(double &       stx,
                                                  double &       fx,
                                                  double &       dx,
                                                  double &       sty,
@@ -895,7 +895,7 @@ MoreThuenteLineSearchOptimizer ::SafeGuardedStep(double &       stx,
  */
 
 void
-MoreThuenteLineSearchOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
+MoreThuenteLineSearchOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
   /** Call the superclass' PrintSelf. */
   Superclass::PrintSelf(os, indent);

@@ -26,7 +26,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-StandardGradientDescentOptimizer ::StandardGradientDescentOptimizer()
+StandardGradientDescentOptimizer::StandardGradientDescentOptimizer()
 {
   this->m_Param_a = 1.0;
   this->m_Param_A = 1.0;
@@ -56,7 +56,7 @@ StandardGradientDescentOptimizer::StartOptimization(void)
  */
 
 void
-StandardGradientDescentOptimizer ::AdvanceOneStep(void)
+StandardGradientDescentOptimizer::AdvanceOneStep(void)
 {
   /** Decide which type of step size is chosen. */
   if (this->m_UseConstantStep)
@@ -80,7 +80,7 @@ StandardGradientDescentOptimizer ::AdvanceOneStep(void)
  */
 
 double
-StandardGradientDescentOptimizer ::Compute_a(double k) const
+StandardGradientDescentOptimizer::Compute_a(double k) const
 {
   return static_cast<double>(this->m_Param_a / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
@@ -92,7 +92,7 @@ StandardGradientDescentOptimizer ::Compute_a(double k) const
  */
 
 void
-StandardGradientDescentOptimizer ::UpdateCurrentTime(void)
+StandardGradientDescentOptimizer::UpdateCurrentTime(void)
 {
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;

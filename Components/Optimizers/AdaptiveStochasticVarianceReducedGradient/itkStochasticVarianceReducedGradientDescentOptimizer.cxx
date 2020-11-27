@@ -38,7 +38,7 @@ namespace itk
  * ****************** Constructor ************************
  */
 
-StochasticVarianceReducedGradientDescentOptimizer ::StochasticVarianceReducedGradientDescentOptimizer()
+StochasticVarianceReducedGradientDescentOptimizer::StochasticVarianceReducedGradientDescentOptimizer()
 {
   itkDebugMacro("Constructor");
 
@@ -62,7 +62,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::StochasticVarianceReducedGra
  */
 
 void
-StochasticVarianceReducedGradientDescentOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
+StochasticVarianceReducedGradientDescentOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
   this->Superclass::PrintSelf(os, indent);
 
@@ -83,7 +83,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::PrintSelf(std::ostream & os,
  */
 
 void
-StochasticVarianceReducedGradientDescentOptimizer ::StartOptimization(void)
+StochasticVarianceReducedGradientDescentOptimizer::StartOptimization(void)
 {
   itkDebugMacro("StartOptimization");
 
@@ -108,7 +108,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::StartOptimization(void)
  */
 
 void
-StochasticVarianceReducedGradientDescentOptimizer ::ResumeOptimization(void)
+StochasticVarianceReducedGradientDescentOptimizer::ResumeOptimization(void)
 {
   itkDebugMacro("ResumeOptimization");
 
@@ -169,7 +169,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::ResumeOptimization(void)
  */
 
 void
-StochasticVarianceReducedGradientDescentOptimizer ::MetricErrorResponse(ExceptionObject & err)
+StochasticVarianceReducedGradientDescentOptimizer::MetricErrorResponse(ExceptionObject & err)
 {
   /** An exception has occurred. Terminate immediately. */
   this->m_StopCondition = MetricError;
@@ -186,7 +186,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::MetricErrorResponse(Exceptio
  */
 
 void
-StochasticVarianceReducedGradientDescentOptimizer ::StopOptimization(void)
+StochasticVarianceReducedGradientDescentOptimizer::StopOptimization(void)
 {
   itkDebugMacro("StopOptimization");
 
@@ -200,7 +200,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::StopOptimization(void)
  */
 
 void
-StochasticVarianceReducedGradientDescentOptimizer ::AdvanceOneStep(void)
+StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStep(void)
 {
   itkDebugMacro("AdvanceOneStep");
 
@@ -314,7 +314,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::AdvanceOneStep(void)
  */
 
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
-StochasticVarianceReducedGradientDescentOptimizer ::AdvanceOneStepThreaderCallback(void * arg)
+StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStepThreaderCallback(void * arg)
 {
   /** Get the current thread id and user data. */
   ThreadInfoType *             infoStruct = static_cast<ThreadInfoType *>(arg);
@@ -334,7 +334,7 @@ StochasticVarianceReducedGradientDescentOptimizer ::AdvanceOneStepThreaderCallba
  */
 
 void
-StochasticVarianceReducedGradientDescentOptimizer ::ThreadedAdvanceOneStep(ThreadIdType     threadId,
+StochasticVarianceReducedGradientDescentOptimizer::ThreadedAdvanceOneStep(ThreadIdType     threadId,
                                                                            ParametersType & newPosition)
 {
   /** Compute the range for this thread. */

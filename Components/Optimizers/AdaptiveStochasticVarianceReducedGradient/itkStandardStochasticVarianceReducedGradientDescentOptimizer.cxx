@@ -27,7 +27,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-StandardStochasticVarianceReducedGradientOptimizer ::StandardStochasticVarianceReducedGradientOptimizer()
+StandardStochasticVarianceReducedGradientOptimizer::StandardStochasticVarianceReducedGradientOptimizer()
 {
   this->m_Param_a = 1.0;
   this->m_Param_A = 1.0;
@@ -56,7 +56,7 @@ StandardStochasticVarianceReducedGradientOptimizer::StartOptimization(void)
  */
 
 void
-StandardStochasticVarianceReducedGradientOptimizer ::AdvanceOneStep(void)
+StandardStochasticVarianceReducedGradientOptimizer::AdvanceOneStep(void)
 {
 
   this->SetLearningRate(this->Compute_a(this->m_CurrentTime));
@@ -73,7 +73,7 @@ StandardStochasticVarianceReducedGradientOptimizer ::AdvanceOneStep(void)
  */
 
 double
-StandardStochasticVarianceReducedGradientOptimizer ::Compute_a(double k) const
+StandardStochasticVarianceReducedGradientOptimizer::Compute_a(double k) const
 {
   return static_cast<double>(this->m_Param_a / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
@@ -85,7 +85,7 @@ StandardStochasticVarianceReducedGradientOptimizer ::Compute_a(double k) const
  */
 
 double
-StandardStochasticVarianceReducedGradientOptimizer ::Compute_beta(double k) const
+StandardStochasticVarianceReducedGradientOptimizer::Compute_beta(double k) const
 {
   return static_cast<double>(this->m_Param_beta / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
@@ -97,7 +97,7 @@ StandardStochasticVarianceReducedGradientOptimizer ::Compute_beta(double k) cons
  */
 
 void
-StandardStochasticVarianceReducedGradientOptimizer ::UpdateCurrentTime(void)
+StandardStochasticVarianceReducedGradientOptimizer::UpdateCurrentTime(void)
 {
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;

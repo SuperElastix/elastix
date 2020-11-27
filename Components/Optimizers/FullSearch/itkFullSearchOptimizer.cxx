@@ -28,7 +28,7 @@ namespace itk
 /**
  * ************************ Constructor **************************
  */
-FullSearchOptimizer ::FullSearchOptimizer()
+FullSearchOptimizer::FullSearchOptimizer()
 {
   itkDebugMacro("Constructor");
 
@@ -49,7 +49,7 @@ FullSearchOptimizer ::FullSearchOptimizer()
  * ***************** Start the optimization **********************
  */
 void
-FullSearchOptimizer ::StartOptimization(void)
+FullSearchOptimizer::StartOptimization(void)
 {
 
   itkDebugMacro("StartOptimization");
@@ -83,7 +83,7 @@ FullSearchOptimizer ::StartOptimization(void)
  * ******************** Resume the optimization ******************
  */
 void
-FullSearchOptimizer ::ResumeOptimization(void)
+FullSearchOptimizer::ResumeOptimization(void)
 {
 
   itkDebugMacro("ResumeOptimization");
@@ -146,7 +146,7 @@ FullSearchOptimizer ::ResumeOptimization(void)
  * ************************** Stop optimization ******************
  */
 void
-FullSearchOptimizer ::StopOptimization(void)
+FullSearchOptimizer::StopOptimization(void)
 {
 
   itkDebugMacro("StopOptimization");
@@ -177,7 +177,7 @@ FullSearchOptimizer ::StopOptimization(void)
  */
 
 void
-FullSearchOptimizer ::UpdateCurrentPosition(void)
+FullSearchOptimizer::UpdateCurrentPosition(void)
 {
 
   itkDebugMacro("Current position updated.");
@@ -242,7 +242,7 @@ FullSearchOptimizer ::UpdateCurrentPosition(void)
  * ********************* ProcessSearchSpaceChanges **************
  */
 void
-FullSearchOptimizer ::ProcessSearchSpaceChanges(void)
+FullSearchOptimizer::ProcessSearchSpaceChanges(void)
 {
   if (m_SearchSpace->GetMTime() > m_LastSearchSpaceChanges)
   {
@@ -281,7 +281,7 @@ FullSearchOptimizer ::ProcessSearchSpaceChanges(void)
  * Add a dimension to the SearchSpace
  */
 void
-FullSearchOptimizer ::AddSearchDimension(unsigned int   param_nr,
+FullSearchOptimizer::AddSearchDimension(unsigned int   param_nr,
                                          RangeValueType minimum,
                                          RangeValueType maximum,
                                          RangeValueType step)
@@ -311,7 +311,7 @@ FullSearchOptimizer ::AddSearchDimension(unsigned int   param_nr,
  * Remove a dimension from the SearchSpace
  */
 void
-FullSearchOptimizer ::RemoveSearchDimension(unsigned int param_nr)
+FullSearchOptimizer::RemoveSearchDimension(unsigned int param_nr)
 {
   if (m_SearchSpace)
   {
@@ -326,7 +326,7 @@ FullSearchOptimizer ::RemoveSearchDimension(unsigned int param_nr)
  * Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc.....
  */
 unsigned long
-FullSearchOptimizer ::GetNumberOfIterations(void)
+FullSearchOptimizer::GetNumberOfIterations(void)
 {
   SearchSpaceSizeType sssize = this->GetSearchSpaceSize();
   unsigned int        maxssdim = this->GetNumberOfSearchSpaceDimensions();
@@ -351,7 +351,7 @@ FullSearchOptimizer ::GetNumberOfIterations(void)
  * Get the Dimension of the SearchSpace.
  */
 unsigned int
-FullSearchOptimizer ::GetNumberOfSearchSpaceDimensions(void)
+FullSearchOptimizer::GetNumberOfSearchSpaceDimensions(void)
 {
   this->ProcessSearchSpaceChanges();
   return this->m_NumberOfSearchSpaceDimensions;
@@ -365,7 +365,7 @@ FullSearchOptimizer ::GetNumberOfSearchSpaceDimensions(void)
  * SearchSpaceDimension)
  */
 const FullSearchOptimizer::SearchSpaceSizeType &
-FullSearchOptimizer ::GetSearchSpaceSize(void)
+FullSearchOptimizer::GetSearchSpaceSize(void)
 {
   this->ProcessSearchSpaceChanges();
   return this->m_SearchSpaceSize;
@@ -376,7 +376,7 @@ FullSearchOptimizer ::GetSearchSpaceSize(void)
  * ********************* PointToPosition ************************
  */
 FullSearchOptimizer::ParametersType
-FullSearchOptimizer ::PointToPosition(const SearchSpacePointType & point)
+FullSearchOptimizer::PointToPosition(const SearchSpacePointType & point)
 {
   const unsigned int searchSpaceDimension = this->GetNumberOfSearchSpaceDimensions();
 
@@ -406,7 +406,7 @@ FullSearchOptimizer ::PointToPosition(const SearchSpacePointType & point)
  * ********************* IndexToPosition ************************
  */
 FullSearchOptimizer::ParametersType
-FullSearchOptimizer ::IndexToPosition(const SearchSpaceIndexType & index)
+FullSearchOptimizer::IndexToPosition(const SearchSpaceIndexType & index)
 {
   return this->PointToPosition(this->IndexToPoint(index));
 }
@@ -416,7 +416,7 @@ FullSearchOptimizer ::IndexToPosition(const SearchSpaceIndexType & index)
  * ********************* IndexToPoint ***************************
  */
 FullSearchOptimizer::SearchSpacePointType
-FullSearchOptimizer ::IndexToPoint(const SearchSpaceIndexType & index)
+FullSearchOptimizer::IndexToPoint(const SearchSpaceIndexType & index)
 {
 
   const unsigned int   searchSpaceDimension = this->GetNumberOfSearchSpaceDimensions();

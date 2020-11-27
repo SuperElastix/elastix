@@ -44,7 +44,7 @@ Configuration::Configuration()
  */
 
 void
-Configuration ::PrintParameterFile(void) const
+Configuration::PrintParameterFile(void) const
 {
   /** Read what's in the parameter file. */
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
@@ -72,7 +72,7 @@ Configuration ::PrintParameterFile(void) const
  */
 
 int
-Configuration ::BeforeAll(void)
+Configuration::BeforeAll(void)
 {
   if (!BaseComponent::IsElastixLibrary())
   {
@@ -88,7 +88,7 @@ Configuration ::BeforeAll(void)
  */
 
 int
-Configuration ::BeforeAllTransformix(void)
+Configuration::BeforeAllTransformix(void)
 {
   this->PrintParameterFile();
   return 0;
@@ -101,7 +101,7 @@ Configuration ::BeforeAllTransformix(void)
  */
 
 int
-Configuration ::Initialize(const CommandLineArgumentMapType & _arg)
+Configuration::Initialize(const CommandLineArgumentMapType & _arg)
 {
   /** The first part is getting the command line arguments and setting them
    * in the configuration. From the command line arguments we find the name
@@ -183,7 +183,7 @@ Configuration ::Initialize(const CommandLineArgumentMapType & _arg)
  */
 
 int
-Configuration ::Initialize(const CommandLineArgumentMapType &                _arg,
+Configuration::Initialize(const CommandLineArgumentMapType &                _arg,
                            const ParameterFileParserType::ParameterMapType & inputMap)
 {
   /** The first part is getting the command line arguments and setting them
@@ -217,7 +217,7 @@ Configuration ::Initialize(const CommandLineArgumentMapType &                _ar
  */
 
 bool
-Configuration ::IsInitialized(void) const
+Configuration::IsInitialized(void) const
 {
   return this->m_IsInitialized;
 
@@ -229,7 +229,7 @@ Configuration ::IsInitialized(void) const
  */
 
 std::string
-Configuration ::GetCommandLineArgument(const std::string & key) const
+Configuration::GetCommandLineArgument(const std::string & key) const
 {
   const auto found = this->m_CommandLineArgumentMap.find(key);
 
@@ -249,7 +249,7 @@ Configuration ::GetCommandLineArgument(const std::string & key) const
  */
 
 void
-Configuration ::SetCommandLineArgument(const std::string & key, const std::string & value)
+Configuration::SetCommandLineArgument(const std::string & key, const std::string & value)
 {
   this->m_CommandLineArgumentMap[key] = value;
 

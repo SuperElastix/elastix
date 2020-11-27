@@ -23,7 +23,7 @@
 namespace itk
 {
 
-MevisDicomTiffImageIOFactory ::MevisDicomTiffImageIOFactory()
+MevisDicomTiffImageIOFactory::MevisDicomTiffImageIOFactory()
 {
   this->RegisterOverride("itkImageIOBase",
                          "itkMevisDicomTiffImageIO",
@@ -36,14 +36,14 @@ MevisDicomTiffImageIOFactory ::MevisDicomTiffImageIOFactory()
 MevisDicomTiffImageIOFactory ::~MevisDicomTiffImageIOFactory() {}
 
 const char *
-MevisDicomTiffImageIOFactory ::GetITKSourceVersion(void) const
+MevisDicomTiffImageIOFactory::GetITKSourceVersion(void) const
 {
   return ITK_SOURCE_VERSION;
 }
 
 
 const char *
-MevisDicomTiffImageIOFactory ::GetDescription(void) const
+MevisDicomTiffImageIOFactory::GetDescription(void) const
 {
   return "Mevis Dicom/TIFF ImageIO Factory, allows the loading of Mevis images into insight";
 }

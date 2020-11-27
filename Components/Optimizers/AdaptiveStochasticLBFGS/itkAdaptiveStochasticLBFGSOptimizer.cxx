@@ -28,7 +28,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-AdaptiveStochasticLBFGSOptimizer ::AdaptiveStochasticLBFGSOptimizer()
+AdaptiveStochasticLBFGSOptimizer::AdaptiveStochasticLBFGSOptimizer()
 {
   this->m_UseAdaptiveStepSizes = true;
   this->m_SigmoidMax = 1.0;
@@ -44,7 +44,7 @@ AdaptiveStochasticLBFGSOptimizer ::AdaptiveStochasticLBFGSOptimizer()
  */
 
 void
-AdaptiveStochasticLBFGSOptimizer ::UpdateCurrentTime(void)
+AdaptiveStochasticLBFGSOptimizer::UpdateCurrentTime(void)
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 
