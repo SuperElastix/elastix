@@ -30,7 +30,7 @@ namespace itk
  * **************** Constructor ***************
  */
 
-ParameterFileParser ::ParameterFileParser() = default;
+ParameterFileParser::ParameterFileParser() = default;
 
 
 /**
@@ -45,7 +45,7 @@ ParameterFileParser ::~ParameterFileParser() = default;
  */
 
 const ParameterFileParser::ParameterMapType &
-ParameterFileParser ::GetParameterMap(void) const
+ParameterFileParser::GetParameterMap(void) const
 {
   return this->m_ParameterMap;
 
@@ -57,7 +57,7 @@ ParameterFileParser ::GetParameterMap(void) const
  */
 
 void
-ParameterFileParser ::ReadParameterFile(void)
+ParameterFileParser::ReadParameterFile(void)
 {
   /** Perform some basic checks. */
   this->BasicFileChecking();
@@ -101,7 +101,7 @@ ParameterFileParser ::ReadParameterFile(void)
  */
 
 void
-ParameterFileParser ::BasicFileChecking(void) const
+ParameterFileParser::BasicFileChecking(void) const
 {
   /** Check if the file name is given. */
   if (this->m_ParameterFileName.empty())
@@ -138,7 +138,7 @@ ParameterFileParser ::BasicFileChecking(void) const
  */
 
 bool
-ParameterFileParser ::CheckLine(const std::string & lineIn, std::string & lineOut) const
+ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut) const
 {
   /** Preprocessing of lineIn:
    * 1) Replace tabs with spaces
@@ -226,7 +226,7 @@ ParameterFileParser ::CheckLine(const std::string & lineIn, std::string & lineOu
  */
 
 void
-ParameterFileParser ::GetParameterFromLine(const std::string & fullLine, const std::string & line)
+ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const std::string & line)
 {
   /** A line has a parameter name followed by one or more parameters.
    * They are all separated by one or more spaces (all tabs have been
@@ -296,7 +296,7 @@ ParameterFileParser ::GetParameterFromLine(const std::string & fullLine, const s
  */
 
 void
-ParameterFileParser ::SplitLine(const std::string &        fullLine,
+ParameterFileParser::SplitLine(const std::string &        fullLine,
                                 const std::string &        line,
                                 std::vector<std::string> & splittedLine) const
 {
@@ -357,7 +357,7 @@ ParameterFileParser ::SplitLine(const std::string &        fullLine,
  */
 
 void
-ParameterFileParser ::ThrowException(const std::string & line, const std::string & hint) const
+ParameterFileParser::ThrowException(const std::string & line, const std::string & hint) const
 {
   /** Construct an error message. */
   const std::string errorMessage = "ERROR: the following line in your parameter file is invalid: \n\"" + line + "\"\n" +
@@ -374,7 +374,7 @@ ParameterFileParser ::ThrowException(const std::string & line, const std::string
  */
 
 std::string
-ParameterFileParser ::ReturnParameterFileAsString(void)
+ParameterFileParser::ReturnParameterFileAsString(void)
 {
   /** Perform some basic checks. */
   this->BasicFileChecking();

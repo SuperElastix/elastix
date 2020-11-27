@@ -596,7 +596,7 @@ GenericConjugateGradientOptimizer::TestConvergence(bool itkNotUsed(firstLineSear
  */
 
 void
-GenericConjugateGradientOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
+GenericConjugateGradientOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
   /** Call the superclass' PrintSelf. */
   Superclass::PrintSelf(os, indent);

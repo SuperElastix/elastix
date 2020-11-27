@@ -27,7 +27,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-StandardStochasticGradientOptimizer ::StandardStochasticGradientOptimizer()
+StandardStochasticGradientOptimizer::StandardStochasticGradientOptimizer()
 {
   this->m_Param_a = 1.0;
   this->m_Param_A = 1.0;
@@ -56,7 +56,7 @@ StandardStochasticGradientOptimizer::StartOptimization(void)
  */
 
 void
-StandardStochasticGradientOptimizer ::AdvanceOneStep(void)
+StandardStochasticGradientOptimizer::AdvanceOneStep(void)
 {
 
   this->SetLearningRate(this->Compute_a(this->m_CurrentTime));
@@ -73,7 +73,7 @@ StandardStochasticGradientOptimizer ::AdvanceOneStep(void)
  */
 
 double
-StandardStochasticGradientOptimizer ::Compute_a(double k) const
+StandardStochasticGradientOptimizer::Compute_a(double k) const
 {
   return static_cast<double>(this->m_Param_a / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
@@ -84,7 +84,7 @@ StandardStochasticGradientOptimizer ::Compute_a(double k) const
  */
 
 double
-StandardStochasticGradientOptimizer ::Compute_beta(double k) const
+StandardStochasticGradientOptimizer::Compute_beta(double k) const
 {
   return static_cast<double>(this->m_Param_beta / std::pow(this->m_Param_A + k + 1.0, this->m_Param_alpha));
 
@@ -96,7 +96,7 @@ StandardStochasticGradientOptimizer ::Compute_beta(double k) const
  */
 
 void
-StandardStochasticGradientOptimizer ::UpdateCurrentTime(void)
+StandardStochasticGradientOptimizer::UpdateCurrentTime(void)
 {
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;

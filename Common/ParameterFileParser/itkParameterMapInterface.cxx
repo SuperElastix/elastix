@@ -25,7 +25,7 @@ namespace itk
  * **************** Constructor ***************
  */
 
-ParameterMapInterface ::ParameterMapInterface()
+ParameterMapInterface::ParameterMapInterface()
 {
   this->m_ParameterMap.clear();
   this->m_PrintErrorMessages = true;
@@ -48,7 +48,7 @@ ParameterMapInterface ::~ParameterMapInterface()
  */
 
 void
-ParameterMapInterface ::SetParameterMap(const ParameterMapType & parMap)
+ParameterMapInterface::SetParameterMap(const ParameterMapType & parMap)
 {
   if (!parMap.empty())
   {
@@ -63,7 +63,7 @@ ParameterMapInterface ::SetParameterMap(const ParameterMapType & parMap)
  */
 
 std::size_t
-ParameterMapInterface ::CountNumberOfParameterEntries(const std::string & parameterName) const
+ParameterMapInterface::CountNumberOfParameterEntries(const std::string & parameterName) const
 {
   if (this->m_ParameterMap.count(parameterName))
   {
@@ -79,7 +79,7 @@ ParameterMapInterface ::CountNumberOfParameterEntries(const std::string & parame
  */
 
 bool
-ParameterMapInterface ::ReadParameter(bool &              parameterValue,
+ParameterMapInterface::ReadParameter(bool &              parameterValue,
                                       const std::string & parameterName,
                                       const unsigned int  entry_nr,
                                       const bool          printThisErrorMessage,
@@ -130,7 +130,7 @@ ParameterMapInterface ::ReadParameter(bool &              parameterValue,
  */
 
 bool
-ParameterMapInterface ::StringCast(const std::string & parameterValue, std::string & casted) const
+ParameterMapInterface::StringCast(const std::string & parameterValue, std::string & casted) const
 {
   casted = parameterValue;
   return true;
@@ -142,7 +142,7 @@ ParameterMapInterface ::StringCast(const std::string & parameterValue, std::stri
  */
 
 bool
-ParameterMapInterface ::ReadParameter(std::vector<std::string> & parameterValues,
+ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
                                       const std::string &        parameterName,
                                       const unsigned int         entry_nr_start,
                                       const unsigned int         entry_nr_end,

@@ -216,7 +216,7 @@ ElastixMain::~ElastixMain()
  */
 
 void
-ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap)
+ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap)
 {
 
   /** Initialize the configuration object with the
@@ -237,7 +237,7 @@ ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap)
  */
 
 void
-ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
+ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
@@ -256,7 +256,7 @@ ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap, const Pa
  */
 
 void
-ElastixMain ::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
+ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
 {
   this->m_Configurations.clear();
   this->m_Configurations.resize(inputMaps.size());
@@ -466,7 +466,7 @@ ElastixMain::Run(const ArgumentMapType & argmap)
  */
 
 int
-ElastixMain ::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
+ElastixMain::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
   this->EnterCommandLineArguments(argmap, inputMap);
   return this->Run();

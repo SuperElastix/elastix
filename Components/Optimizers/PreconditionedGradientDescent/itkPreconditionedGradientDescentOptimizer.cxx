@@ -43,7 +43,7 @@ my_cholmod_handler(int status, const char * file, int line, const char * message
  * ****************** Constructor ************************
  */
 
-PreconditionedGradientDescentOptimizer ::PreconditionedGradientDescentOptimizer()
+PreconditionedGradientDescentOptimizer::PreconditionedGradientDescentOptimizer()
 {
   itkDebugMacro("Constructor");
 
@@ -116,7 +116,7 @@ PreconditionedGradientDescentOptimizer ::~PreconditionedGradientDescentOptimizer
  */
 
 void
-PreconditionedGradientDescentOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
+PreconditionedGradientDescentOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
   this->Superclass::PrintSelf(os, indent);
 
@@ -135,7 +135,7 @@ PreconditionedGradientDescentOptimizer ::PrintSelf(std::ostream & os, Indent ind
  */
 
 void
-PreconditionedGradientDescentOptimizer ::StartOptimization(void)
+PreconditionedGradientDescentOptimizer::StartOptimization(void)
 {
   this->m_CurrentIteration = 0;
 
@@ -159,7 +159,7 @@ PreconditionedGradientDescentOptimizer ::StartOptimization(void)
  */
 
 void
-PreconditionedGradientDescentOptimizer ::ResumeOptimization(void)
+PreconditionedGradientDescentOptimizer::ResumeOptimization(void)
 {
   itkDebugMacro("ResumeOptimization");
 
@@ -214,7 +214,7 @@ PreconditionedGradientDescentOptimizer ::ResumeOptimization(void)
  */
 
 void
-PreconditionedGradientDescentOptimizer ::MetricErrorResponse(ExceptionObject & err)
+PreconditionedGradientDescentOptimizer::MetricErrorResponse(ExceptionObject & err)
 {
   /** An exception has occurred. Terminate immediately. */
   this->m_StopCondition = MetricError;
@@ -231,7 +231,7 @@ PreconditionedGradientDescentOptimizer ::MetricErrorResponse(ExceptionObject & e
  */
 
 void
-PreconditionedGradientDescentOptimizer ::StopOptimization(void)
+PreconditionedGradientDescentOptimizer::StopOptimization(void)
 {
   itkDebugMacro("StopOptimization");
 
@@ -245,7 +245,7 @@ PreconditionedGradientDescentOptimizer ::StopOptimization(void)
  */
 
 void
-PreconditionedGradientDescentOptimizer ::AdvanceOneStep(void)
+PreconditionedGradientDescentOptimizer::AdvanceOneStep(void)
 {
   typedef DerivativeType::ValueType      DerivativeValueType;
   typedef DerivativeType::const_iterator DerivativeIteratorType;
@@ -277,7 +277,7 @@ PreconditionedGradientDescentOptimizer ::AdvanceOneStep(void)
  */
 
 void
-PreconditionedGradientDescentOptimizer ::CholmodSolve(const DerivativeType & gradient,
+PreconditionedGradientDescentOptimizer::CholmodSolve(const DerivativeType & gradient,
                                                       DerivativeType &       searchDirection,
                                                       int                    solveType)
 {
@@ -355,7 +355,7 @@ PreconditionedGradientDescentOptimizer ::CholmodSolve(const DerivativeType & gra
  */
 
 void
-PreconditionedGradientDescentOptimizer ::SetPreconditionMatrix(PreconditionType & precondition)
+PreconditionedGradientDescentOptimizer::SetPreconditionMatrix(PreconditionType & precondition)
 {
   /** Compute and modify eigensystem of preconditioning matrix.
    * Does not take into account scales (yet)!

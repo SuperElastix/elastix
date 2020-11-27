@@ -31,7 +31,7 @@ namespace elastix
  */
 
 void
-ParameterObject ::SetParameterMap(const ParameterMapType & parameterMap)
+ParameterObject::SetParameterMap(const ParameterMapType & parameterMap)
 {
   ParameterMapVectorType parameterMapVector = ParameterMapVectorType(1, parameterMap);
   this->SetParameterMap(parameterMapVector);
@@ -42,7 +42,7 @@ ParameterObject ::SetParameterMap(const ParameterMapType & parameterMap)
  */
 
 void
-ParameterObject ::SetParameterMap(const unsigned int & index, const ParameterMapType & parameterMap)
+ParameterObject::SetParameterMap(const unsigned int & index, const ParameterMapType & parameterMap)
 {
   this->m_ParameterMap[index] = parameterMap;
 }
@@ -53,7 +53,7 @@ ParameterObject ::SetParameterMap(const unsigned int & index, const ParameterMap
  */
 
 void
-ParameterObject ::SetParameterMap(const ParameterMapVectorType & parameterMap)
+ParameterObject::SetParameterMap(const ParameterMapVectorType & parameterMap)
 {
   if (this->m_ParameterMap != parameterMap)
   {
@@ -68,7 +68,7 @@ ParameterObject ::SetParameterMap(const ParameterMapVectorType & parameterMap)
  */
 
 void
-ParameterObject ::AddParameterMap(const ParameterMapType & parameterMap)
+ParameterObject::AddParameterMap(const ParameterMapType & parameterMap)
 {
   this->m_ParameterMap.push_back(parameterMap);
   this->Modified();
@@ -80,7 +80,7 @@ ParameterObject ::AddParameterMap(const ParameterMapType & parameterMap)
  */
 
 const ParameterObject::ParameterMapType &
-ParameterObject ::GetParameterMap(const unsigned int & index) const
+ParameterObject::GetParameterMap(const unsigned int & index) const
 {
   return this->m_ParameterMap[index];
 }
@@ -91,7 +91,7 @@ ParameterObject ::GetParameterMap(const unsigned int & index) const
  */
 
 void
-ParameterObject ::SetParameter(const unsigned int &       index,
+ParameterObject::SetParameter(const unsigned int &       index,
                                const ParameterKeyType &   key,
                                const ParameterValueType & value)
 {
@@ -104,7 +104,7 @@ ParameterObject ::SetParameter(const unsigned int &       index,
  */
 
 void
-ParameterObject ::SetParameter(const unsigned int &             index,
+ParameterObject::SetParameter(const unsigned int &             index,
                                const ParameterKeyType &         key,
                                const ParameterValueVectorType & value)
 {
@@ -117,7 +117,7 @@ ParameterObject ::SetParameter(const unsigned int &             index,
  */
 
 void
-ParameterObject ::SetParameter(const ParameterKeyType & key, const ParameterValueType & value)
+ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValueType & value)
 {
   for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++)
   {
@@ -131,7 +131,7 @@ ParameterObject ::SetParameter(const ParameterKeyType & key, const ParameterValu
  */
 
 void
-ParameterObject ::SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value)
+ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value)
 {
   for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++)
   {
@@ -145,7 +145,7 @@ ParameterObject ::SetParameter(const ParameterKeyType & key, const ParameterValu
  */
 
 const ParameterObject::ParameterValueVectorType &
-ParameterObject ::GetParameter(const unsigned int & index, const ParameterKeyType & key)
+ParameterObject::GetParameter(const unsigned int & index, const ParameterKeyType & key)
 {
   return this->m_ParameterMap[index][key];
 }
@@ -156,7 +156,7 @@ ParameterObject ::GetParameter(const unsigned int & index, const ParameterKeyTyp
  */
 
 void
-ParameterObject ::RemoveParameter(const unsigned int & index, const ParameterKeyType & key)
+ParameterObject::RemoveParameter(const unsigned int & index, const ParameterKeyType & key)
 {
   this->m_ParameterMap[index].erase(key);
 }
@@ -167,7 +167,7 @@ ParameterObject ::RemoveParameter(const unsigned int & index, const ParameterKey
  */
 
 void
-ParameterObject ::RemoveParameter(const ParameterKeyType & key)
+ParameterObject::RemoveParameter(const ParameterKeyType & key)
 {
   for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++)
   {
@@ -181,7 +181,7 @@ ParameterObject ::RemoveParameter(const ParameterKeyType & key)
  */
 
 void
-ParameterObject ::ReadParameterFile(const ParameterFileNameType & parameterFileName)
+ParameterObject::ReadParameterFile(const ParameterFileNameType & parameterFileName)
 {
   ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
   parameterFileParser->SetParameterFileName(parameterFileName);
@@ -195,7 +195,7 @@ ParameterObject ::ReadParameterFile(const ParameterFileNameType & parameterFileN
  */
 
 void
-ParameterObject ::ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
+ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
 {
   if (parameterFileNameVector.size() == 0)
   {
@@ -221,7 +221,7 @@ ParameterObject ::ReadParameterFile(const ParameterFileNameVectorType & paramete
  */
 
 void
-ParameterObject ::AddParameterFile(const ParameterFileNameType & parameterFileName)
+ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileName)
 {
   ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
   parameterFileParser->SetParameterFileName(parameterFileName);
@@ -236,7 +236,7 @@ ParameterObject ::AddParameterFile(const ParameterFileNameType & parameterFileNa
 
 
 void
-ParameterObject ::WriteParameterFile(void)
+ParameterObject::WriteParameterFile(void)
 {
   ParameterFileNameVectorType parameterFileNameVector;
   for (unsigned int i = 0; i < m_ParameterMap.size(); ++i)
@@ -253,7 +253,7 @@ ParameterObject ::WriteParameterFile(void)
  */
 
 void
-ParameterObject ::WriteParameterFile(const ParameterMapType &      parameterMap,
+ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
                                      const ParameterFileNameType & parameterFileName)
 {
   std::ofstream parameterFile;
@@ -318,7 +318,7 @@ ParameterObject ::WriteParameterFile(const ParameterMapType &      parameterMap,
  */
 
 void
-ParameterObject ::WriteParameterFile(const ParameterFileNameType & parameterFileName)
+ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileName)
 {
   if (this->m_ParameterMap.size() == 0)
   {
@@ -340,7 +340,7 @@ ParameterObject ::WriteParameterFile(const ParameterFileNameType & parameterFile
  */
 
 void
-ParameterObject ::WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
+ParameterObject::WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
                                      const ParameterFileNameVectorType & parameterFileNameVector)
 {
   if (parameterMapVector.size() != parameterFileNameVector.size())
@@ -371,7 +371,7 @@ ParameterObject ::WriteParameterFile(const ParameterMapVectorType &      paramet
 
 
 void
-ParameterObject ::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
+ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
 {
   this->WriteParameterFile(this->m_ParameterMap, parameterFileNameVector);
 }
@@ -382,7 +382,7 @@ ParameterObject ::WriteParameterFile(const ParameterFileNameVectorType & paramet
  */
 
 const ParameterObject::ParameterMapType
-ParameterObject ::GetDefaultParameterMap(const std::string &  transformName,
+ParameterObject::GetDefaultParameterMap(const std::string &  transformName,
                                          const unsigned int & numberOfResolutions,
                                          const double &       finalGridSpacingInPhysicalUnits)
 {
@@ -496,7 +496,7 @@ ParameterObject ::GetDefaultParameterMap(const std::string &  transformName,
  */
 
 void
-ParameterObject ::PrintSelf(std::ostream & os, itk::Indent indent) const
+ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
 

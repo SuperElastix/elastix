@@ -26,7 +26,7 @@ namespace itk
  * **************** Constructor *****************************
  */
 
-ScaledSingleValuedCostFunction ::ScaledSingleValuedCostFunction()
+ScaledSingleValuedCostFunction::ScaledSingleValuedCostFunction()
 {
   this->m_UnscaledCostFunction = nullptr;
   this->m_UseScales = false;
@@ -40,7 +40,7 @@ ScaledSingleValuedCostFunction ::ScaledSingleValuedCostFunction()
  */
 
 ScaledSingleValuedCostFunction::MeasureType
-ScaledSingleValuedCostFunction ::GetValue(const ParametersType & parameters) const
+ScaledSingleValuedCostFunction::GetValue(const ParametersType & parameters) const
 {
   /** F(y)= f(y/s) */
 
@@ -78,7 +78,7 @@ ScaledSingleValuedCostFunction ::GetValue(const ParametersType & parameters) con
  */
 
 void
-ScaledSingleValuedCostFunction ::GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const
+ScaledSingleValuedCostFunction::GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const
 {
   /** dF/dy(y)= 1/s * df/dx(y/s) */
 
@@ -119,7 +119,7 @@ ScaledSingleValuedCostFunction ::GetDerivative(const ParametersType & parameters
  */
 
 void
-ScaledSingleValuedCostFunction ::GetValueAndDerivative(const ParametersType & parameters,
+ScaledSingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameters,
                                                        MeasureType &          value,
                                                        DerivativeType &       derivative) const
 {
@@ -165,7 +165,7 @@ ScaledSingleValuedCostFunction ::GetValueAndDerivative(const ParametersType & pa
  */
 
 unsigned int
-ScaledSingleValuedCostFunction ::GetNumberOfParameters(void) const
+ScaledSingleValuedCostFunction::GetNumberOfParameters(void) const
 {
   if (this->m_UnscaledCostFunction.IsNull())
   {
@@ -181,7 +181,7 @@ ScaledSingleValuedCostFunction ::GetNumberOfParameters(void) const
  */
 
 void
-ScaledSingleValuedCostFunction ::SetScales(const ScalesType & scales)
+ScaledSingleValuedCostFunction::SetScales(const ScalesType & scales)
 {
   itkDebugMacro("setting scales to " << scales);
   this->m_Scales = scales;
@@ -200,7 +200,7 @@ ScaledSingleValuedCostFunction ::SetScales(const ScalesType & scales)
  */
 
 void
-ScaledSingleValuedCostFunction ::SetSquaredScales(const ScalesType & squaredScales)
+ScaledSingleValuedCostFunction::SetSquaredScales(const ScalesType & squaredScales)
 {
   itkDebugMacro("setting squared scales to " << squaredScales);
   this->m_SquaredScales = squaredScales;
@@ -219,7 +219,7 @@ ScaledSingleValuedCostFunction ::SetSquaredScales(const ScalesType & squaredScal
  */
 
 void
-ScaledSingleValuedCostFunction ::ConvertScaledToUnscaledParameters(ParametersType & parameters) const
+ScaledSingleValuedCostFunction::ConvertScaledToUnscaledParameters(ParametersType & parameters) const
 {
   if (this->m_UseScales)
   {
@@ -245,7 +245,7 @@ ScaledSingleValuedCostFunction ::ConvertScaledToUnscaledParameters(ParametersTyp
  */
 
 void
-ScaledSingleValuedCostFunction ::ConvertUnscaledToScaledParameters(ParametersType & parameters) const
+ScaledSingleValuedCostFunction::ConvertUnscaledToScaledParameters(ParametersType & parameters) const
 {
   if (this->m_UseScales)
   {
@@ -271,7 +271,7 @@ ScaledSingleValuedCostFunction ::ConvertUnscaledToScaledParameters(ParametersTyp
  */
 
 void
-ScaledSingleValuedCostFunction ::PrintSelf(std::ostream & os, Indent indent) const
+ScaledSingleValuedCostFunction::PrintSelf(std::ostream & os, Indent indent) const
 {
   /** Call the superclass' PrintSelf. */
   Superclass::PrintSelf(os, indent);

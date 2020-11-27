@@ -28,7 +28,7 @@ namespace itk
  * This method will be overrided in non-vector spaces
  */
 void
-RSGDEachParameterApartOptimizer ::StepAlongGradient(const DerivativeType & factor,
+RSGDEachParameterApartOptimizer::StepAlongGradient(const DerivativeType & factor,
                                                     const DerivativeType & transformedGradient)
 {
 

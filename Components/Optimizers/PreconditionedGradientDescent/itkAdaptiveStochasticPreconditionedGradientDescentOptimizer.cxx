@@ -26,7 +26,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-AdaptiveStochasticPreconditionedGradientDescentOptimizer ::AdaptiveStochasticPreconditionedGradientDescentOptimizer()
+AdaptiveStochasticPreconditionedGradientDescentOptimizer::AdaptiveStochasticPreconditionedGradientDescentOptimizer()
 {
   this->m_UseAdaptiveStepSizes = true;
   this->m_SigmoidMax = 1.0;
@@ -40,7 +40,7 @@ AdaptiveStochasticPreconditionedGradientDescentOptimizer ::AdaptiveStochasticPre
  */
 
 void
-AdaptiveStochasticPreconditionedGradientDescentOptimizer ::UpdateCurrentTime(void)
+AdaptiveStochasticPreconditionedGradientDescentOptimizer::UpdateCurrentTime(void)
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

@@ -57,7 +57,7 @@ RSGDEachParameterApartBaseOptimizer ::RSGDEachParameterApartBaseOptimizer()
  * Start the optimization
  */
 void
-RSGDEachParameterApartBaseOptimizer ::StartOptimization(void)
+RSGDEachParameterApartBaseOptimizer::StartOptimization(void)
 {
 
   itkDebugMacro("StartOptimization");
@@ -83,7 +83,7 @@ RSGDEachParameterApartBaseOptimizer ::StartOptimization(void)
  * Resume the optimization
  */
 void
-RSGDEachParameterApartBaseOptimizer ::ResumeOptimization(void)
+RSGDEachParameterApartBaseOptimizer::ResumeOptimization(void)
 {
 
   itkDebugMacro("ResumeOptimization");
@@ -145,7 +145,7 @@ RSGDEachParameterApartBaseOptimizer ::ResumeOptimization(void)
  * Stop optimization
  */
 void
-RSGDEachParameterApartBaseOptimizer ::StopOptimization(void)
+RSGDEachParameterApartBaseOptimizer::StopOptimization(void)
 {
 
   itkDebugMacro("StopOptimization");
@@ -159,7 +159,7 @@ RSGDEachParameterApartBaseOptimizer ::StopOptimization(void)
  * Advance one Step following the gradient direction
  */
 void
-RSGDEachParameterApartBaseOptimizer ::AdvanceOneStep(void)
+RSGDEachParameterApartBaseOptimizer::AdvanceOneStep(void)
 {
 
   itkDebugMacro("AdvanceOneStep");
@@ -258,7 +258,7 @@ RSGDEachParameterApartBaseOptimizer ::AdvanceOneStep(void)
 
 
 void
-RSGDEachParameterApartBaseOptimizer ::PrintSelf(std::ostream & os, Indent indent) const
+RSGDEachParameterApartBaseOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
   os << indent << "MaximumStepLength: " << m_MaximumStepLength << std::endl;
