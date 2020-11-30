@@ -19,7 +19,7 @@ jobs:
             c-compiler: "gcc"
             cxx-compiler: "g++"
             itk-git-tag: "v5.1.1"
-            cmake-build-type: "MinSizeRel"
+            cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.so"
             ANNLib2: "libANNlib-5.0.so.1"
           - os: windows-2019
@@ -32,7 +32,7 @@ jobs:
             c-compiler: "clang"  
             cxx-compiler: "clang++"
             itk-git-tag: "v5.1.1"  
-            cmake-build-type: "MinSizeRel"
+            cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.1.dylib"
             ANNLib2: "libANNlib-5.0.dylib"
 
@@ -54,7 +54,7 @@ jobs:
         path: |
           ITK-build
           ITK-source
-        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}
+        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}
       
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
