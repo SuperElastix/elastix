@@ -148,7 +148,6 @@ public:
 protected:
   /** The constructor. */
   SumSquaredTissueVolumeDifferenceMetric() = default;
-  ;
   /** The destructor. */
   ~SumSquaredTissueVolumeDifferenceMetric() override = default;
 

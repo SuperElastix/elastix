@@ -61,9 +61,7 @@ public:
 
 protected:
   KernelFunctionBase2() = default;
-  ;
   ~KernelFunctionBase2() override = default;
-  ;
 };
 } // end namespace itk
 

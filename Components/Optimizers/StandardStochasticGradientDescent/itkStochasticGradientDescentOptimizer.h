@@ -172,7 +172,6 @@ public:
 protected:
   StochasticGradientDescentOptimizer();
   ~StochasticGradientDescentOptimizer() override = default;
-  ;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
