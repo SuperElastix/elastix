@@ -28,8 +28,7 @@ namespace itk
  */
 
 template <class TListSample>
-BinaryANNTreeBase<TListSample>::BinaryANNTreeBase()
-= default; // end Constructor
+BinaryANNTreeBase<TListSample>::BinaryANNTreeBase() = default; // end Constructor
 
 } // end namespace itk
 

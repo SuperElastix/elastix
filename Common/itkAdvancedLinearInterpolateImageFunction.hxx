@@ -30,8 +30,7 @@ namespace itk
  */
 
 template <class TInputImage, class TCoordRep>
-AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::AdvancedLinearInterpolateImageFunction()
-= default;
+AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::AdvancedLinearInterpolateImageFunction() = default;
 
 /**
  * ***************** EvaluateDerivativeAtContinuousIndex ***********************

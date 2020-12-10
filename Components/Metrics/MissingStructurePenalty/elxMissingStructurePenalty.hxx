@@ -405,14 +405,14 @@ Function to read 2d structures by reading elastix point files (transformix forma
 the sequence of points to form a 2d connected polydata contour.
   */
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType                FixedImageRegionType;
-  typedef typename FixedImageType::PointType                 FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType               FixedImageSpacingType;
-  typedef typename FixedImageType::IndexType                 FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType       FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType                MovingImageIndexType;
-  typedef itk::ContinuousIndex<double, FixedImageDimension>  FixedImageContinuousIndexType;
-  typedef typename FixedImageType::DirectionType             FixedImageDirectionType;
+  typedef typename FixedImageType::RegionType               FixedImageRegionType;
+  typedef typename FixedImageType::PointType                FixedImageOriginType;
+  typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
+  typedef typename FixedImageType::IndexType                FixedImageIndexType;
+  typedef typename FixedImageIndexType::IndexValueType      FixedImageIndexValueType;
+  typedef typename MovingImageType::IndexType               MovingImageIndexType;
+  typedef itk::ContinuousIndex<double, FixedImageDimension> FixedImageContinuousIndexType;
+  typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
 
   typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>

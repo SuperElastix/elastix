@@ -80,10 +80,10 @@ ParameterMapInterface::CountNumberOfParameterEntries(const std::string & paramet
 
 bool
 ParameterMapInterface::ReadParameter(bool &              parameterValue,
-                                      const std::string & parameterName,
-                                      const unsigned int  entry_nr,
-                                      const bool          printThisErrorMessage,
-                                      std::string &       errorMessage) const
+                                     const std::string & parameterName,
+                                     const unsigned int  entry_nr,
+                                     const bool          printThisErrorMessage,
+                                     std::string &       errorMessage) const
 {
   /** Translate the default boolean to string. */
   std::string parameterValueString;
@@ -143,11 +143,11 @@ ParameterMapInterface::StringCast(const std::string & parameterValue, std::strin
 
 bool
 ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
-                                      const std::string &        parameterName,
-                                      const unsigned int         entry_nr_start,
-                                      const unsigned int         entry_nr_end,
-                                      const bool                 printThisErrorMessage,
-                                      std::string &              errorMessage) const
+                                     const std::string &        parameterName,
+                                     const unsigned int         entry_nr_start,
+                                     const unsigned int         entry_nr_end,
+                                     const bool                 printThisErrorMessage,
+                                     std::string &              errorMessage) const
 {
   /** Reset the error message. */
   errorMessage = "";

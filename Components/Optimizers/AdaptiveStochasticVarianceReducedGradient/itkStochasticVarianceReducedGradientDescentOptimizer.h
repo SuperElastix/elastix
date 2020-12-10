@@ -170,7 +170,8 @@ public:
 
 protected:
   StochasticVarianceReducedGradientDescentOptimizer();
-  ~StochasticVarianceReducedGradientDescentOptimizer() override= default;;
+  ~StochasticVarianceReducedGradientDescentOptimizer() override = default;
+  ;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

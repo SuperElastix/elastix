@@ -58,8 +58,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 // Destructor
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::
-  ~MultiBSplineDeformableTransformWithNormal()
-= default;
+  ~MultiBSplineDeformableTransformWithNormal() = default;
 
 // Get the number of parameters
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>

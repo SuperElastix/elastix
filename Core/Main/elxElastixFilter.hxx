@@ -264,8 +264,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GenerateData(void)
     }
 
     // TODO: Fix elastix corrupting default pixel value parameter
-    transformParameterMapVector.back()["DefaultPixelValue"] =
-      parameterMapVector[i]["DefaultPixelValue"];
+    transformParameterMapVector.back()["DefaultPixelValue"] = parameterMapVector[i]["DefaultPixelValue"];
   } // End loop over registrations
 
   // Save result image

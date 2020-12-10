@@ -149,7 +149,7 @@ xoutManager::Guard::~Guard()
   // error: use of deleted function 'std::basic_ofstream<char>&
   // std::basic_ofstream<char>::operator=(const std::basic_ofstream<char>&)'
   g_data.~Data();
-  new( &g_data ) Data{};
+  new (&g_data) Data{};
 }
 
 

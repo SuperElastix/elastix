@@ -31,8 +31,8 @@ namespace itk
  */
 
 template <typename TTransformScalarType, unsigned int VImageDimension>
-CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>::CyclicGridScheduleComputer()
-= default; // end Constructor()
+CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>::CyclicGridScheduleComputer() =
+  default; // end Constructor()
 
 /**
  * ********************* ComputeBSplineGrid ****************************

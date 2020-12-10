@@ -73,8 +73,7 @@ AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform(unsigned int spa
 
 // Destructor
 template <class TScalarType>
-AdvancedRigid2DTransform<TScalarType>::~AdvancedRigid2DTransform()
-= default;
+AdvancedRigid2DTransform<TScalarType>::~AdvancedRigid2DTransform() = default;
 
 // Print self
 template <class TScalarType>

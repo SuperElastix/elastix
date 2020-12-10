@@ -92,8 +92,8 @@ ParameterObject::GetParameterMap(const unsigned int & index) const
 
 void
 ParameterObject::SetParameter(const unsigned int &       index,
-                               const ParameterKeyType &   key,
-                               const ParameterValueType & value)
+                              const ParameterKeyType &   key,
+                              const ParameterValueType & value)
 {
   this->m_ParameterMap[index][key] = ParameterValueVectorType(1, value);
 }
@@ -105,8 +105,8 @@ ParameterObject::SetParameter(const unsigned int &       index,
 
 void
 ParameterObject::SetParameter(const unsigned int &             index,
-                               const ParameterKeyType &         key,
-                               const ParameterValueVectorType & value)
+                              const ParameterKeyType &         key,
+                              const ParameterValueVectorType & value)
 {
   this->m_ParameterMap[index][key] = value;
 }
@@ -254,7 +254,7 @@ ParameterObject::WriteParameterFile(void)
 
 void
 ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
-                                     const ParameterFileNameType & parameterFileName)
+                                    const ParameterFileNameType & parameterFileName)
 {
   std::ofstream parameterFile;
   parameterFile.exceptions(std::ofstream::failbit | std::ofstream::badbit);
@@ -341,7 +341,7 @@ ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileN
 
 void
 ParameterObject::WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
-                                     const ParameterFileNameVectorType & parameterFileNameVector)
+                                    const ParameterFileNameVectorType & parameterFileNameVector)
 {
   if (parameterMapVector.size() != parameterFileNameVector.size())
   {
@@ -383,8 +383,8 @@ ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & paramete
 
 const ParameterObject::ParameterMapType
 ParameterObject::GetDefaultParameterMap(const std::string &  transformName,
-                                         const unsigned int & numberOfResolutions,
-                                         const double &       finalGridSpacingInPhysicalUnits)
+                                        const unsigned int & numberOfResolutions,
+                                        const double &       finalGridSpacingInPhysicalUnits)
 {
   // Parameters that depend on size and number of resolutions
   ParameterMapType parameterMap = ParameterMapType();

@@ -575,7 +575,6 @@ protected:
                                                 NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const;
 
 private:
-
   /** Declaration of members. */
   InitialTransformPointer m_InitialTransform;
   CurrentTransformPointer m_CurrentTransform;

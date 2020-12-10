@@ -29,7 +29,7 @@ namespace itk
  */
 void
 RSGDEachParameterApartOptimizer::StepAlongGradient(const DerivativeType & factor,
-                                                    const DerivativeType & transformedGradient)
+                                                   const DerivativeType & transformedGradient)
 {
 
   itkDebugMacro(<< "factor = " << factor << "  transformedGradient= " << transformedGradient);

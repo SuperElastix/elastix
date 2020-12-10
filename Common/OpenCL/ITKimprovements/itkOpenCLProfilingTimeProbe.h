@@ -47,4 +47,4 @@ private:
 
 } // end namespace itk
 
-#endif //itkOpenCLProfilingTimeProbe_h
+#endif // itkOpenCLProfilingTimeProbe_h

@@ -278,8 +278,8 @@ PreconditionedGradientDescentOptimizer::AdvanceOneStep(void)
 
 void
 PreconditionedGradientDescentOptimizer::CholmodSolve(const DerivativeType & gradient,
-                                                      DerivativeType &       searchDirection,
-                                                      int                    solveType)
+                                                     DerivativeType &       searchDirection,
+                                                     int                    solveType)
 {
   /** This function uses m_CholmodGradient, m_CholmodCommon and m_CholmodFactor,
    * and is therefore not thread-safe.
