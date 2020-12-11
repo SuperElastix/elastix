@@ -335,7 +335,7 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStepThreaderCallbac
 
 void
 StochasticVarianceReducedGradientDescentOptimizer::ThreadedAdvanceOneStep(ThreadIdType     threadId,
-                                                                           ParametersType & newPosition)
+                                                                          ParametersType & newPosition)
 {
   /** Compute the range for this thread. */
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();

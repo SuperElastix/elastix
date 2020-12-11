@@ -32,8 +32,7 @@ namespace elastix
  */
 
 template <class TElastix>
-AdvancedBSplineTransform<TElastix>::AdvancedBSplineTransform()
-= default; // end Constructor()
+AdvancedBSplineTransform<TElastix>::AdvancedBSplineTransform() = default; // end Constructor()
 
 
 /**

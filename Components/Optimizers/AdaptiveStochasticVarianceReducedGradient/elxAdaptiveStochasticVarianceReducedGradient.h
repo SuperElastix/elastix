@@ -366,7 +366,7 @@ protected:
   typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   AdaptiveStochasticVarianceReducedGradient();
-  ~AdaptiveStochasticVarianceReducedGradient() override= default;;
+  ~AdaptiveStochasticVarianceReducedGradient() override = default;
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;

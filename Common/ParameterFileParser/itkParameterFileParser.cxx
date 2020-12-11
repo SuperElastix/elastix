@@ -297,8 +297,8 @@ ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const st
 
 void
 ParameterFileParser::SplitLine(const std::string &        fullLine,
-                                const std::string &        line,
-                                std::vector<std::string> & splittedLine) const
+                               const std::string &        line,
+                               std::vector<std::string> & splittedLine) const
 {
   splittedLine.clear();
   splittedLine.resize(1);

@@ -385,14 +385,14 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   Floris: Mainly copied from elxTransformBase.hxx
   */
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType                FixedImageRegionType;
-  typedef typename FixedImageType::PointType                 FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType               FixedImageSpacingType;
-  typedef typename FixedImageType::IndexType                 FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType       FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType                MovingImageIndexType;
-  typedef itk::ContinuousIndex<double, FixedImageDimension>  FixedImageContinuousIndexType;
-  typedef typename FixedImageType::DirectionType             FixedImageDirectionType;
+  typedef typename FixedImageType::RegionType               FixedImageRegionType;
+  typedef typename FixedImageType::PointType                FixedImageOriginType;
+  typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
+  typedef typename FixedImageType::IndexType                FixedImageIndexType;
+  typedef typename FixedImageIndexType::IndexValueType      FixedImageIndexValueType;
+  typedef typename MovingImageType::IndexType               MovingImageIndexType;
+  typedef itk::ContinuousIndex<double, FixedImageDimension> FixedImageContinuousIndexType;
+  typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
 
   typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>

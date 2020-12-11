@@ -346,12 +346,11 @@ GTEST_TEST(ElastixLib, Translation3D)
   constexpr auto ImageDimension = 3;
   using ImageType = itk::Image<float, ImageDimension>;
 
-  const auto parameterMap =
-    CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
-                                         { "MaximumNumberOfIterations", "3" },
-                                         { "Metric", "AdvancedNormalizedCorrelation" },
-                                         { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                         { "Transform", "TranslationTransform" } });
+  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+                                                                 { "MaximumNumberOfIterations", "3" },
+                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
+                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                                 { "Transform", "TranslationTransform" } });
 
   const itk::Size<ImageDimension>   imageSize{ { 5, 7, 9 } };
   const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);

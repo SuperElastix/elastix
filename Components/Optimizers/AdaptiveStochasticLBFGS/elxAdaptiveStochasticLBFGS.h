@@ -297,7 +297,7 @@ protected:
   typedef itk::Array<double>          DiagonalMatrixType;
 
   AdaptiveStochasticLBFGS();
-  ~AdaptiveStochasticLBFGS() override= default;;
+  ~AdaptiveStochasticLBFGS() override = default;
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;

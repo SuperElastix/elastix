@@ -127,7 +127,7 @@ public:
 
 protected:
   StandardStochasticVarianceReducedGradientOptimizer();
-  ~StandardStochasticVarianceReducedGradientOptimizer() override= default;;
+  ~StandardStochasticVarianceReducedGradientOptimizer() override = default;
 
   /** Function to compute the step size for SGD at time/iteration k. */
   virtual double

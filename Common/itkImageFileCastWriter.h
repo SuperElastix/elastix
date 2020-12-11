@@ -79,7 +79,6 @@ protected:
   GenerateData(void) override;
 
 private:
-
   /** Templated function that casts the input image and returns a
    * a pointer to the PixelBuffer. Assumes scalar singlecomponent images
    * The buffer data is valid until this->m_Caster is destroyed or assigned

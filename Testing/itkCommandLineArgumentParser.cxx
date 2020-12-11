@@ -237,7 +237,7 @@ CommandLineArgumentParser::MarkArgumentAsRequired(const std::string & argument, 
 
 void
 CommandLineArgumentParser::MarkExactlyOneOfArgumentsAsRequired(const std::vector<std::string> & arguments,
-                                                                const std::string &              helpText)
+                                                               const std::string &              helpText)
 {
   std::pair<std::vector<std::string>, std::string> requiredArguments;
   requiredArguments.first = arguments;

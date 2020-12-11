@@ -120,8 +120,8 @@ ScaledSingleValuedCostFunction::GetDerivative(const ParametersType & parameters,
 
 void
 ScaledSingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameters,
-                                                       MeasureType &          value,
-                                                       DerivativeType &       derivative) const
+                                                      MeasureType &          value,
+                                                      DerivativeType &       derivative) const
 {
   /** F(y)= f(y/s) */
   /** dF/dy(y)= 1/s * df/dx(y/s) */

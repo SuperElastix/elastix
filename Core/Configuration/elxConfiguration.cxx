@@ -184,7 +184,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
 
 int
 Configuration::Initialize(const CommandLineArgumentMapType &                _arg,
-                           const ParameterFileParserType::ParameterMapType & inputMap)
+                          const ParameterFileParserType::ParameterMapType & inputMap)
 {
   /** The first part is getting the command line arguments and setting them
    * in the configuration. From the command line arguments we find the name

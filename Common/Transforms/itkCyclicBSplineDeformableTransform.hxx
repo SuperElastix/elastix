@@ -33,8 +33,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Cyclic
 
 /** Destructor. */
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::~CyclicBSplineDeformableTransform()
-= default;
+CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::~CyclicBSplineDeformableTransform() = default;
 
 /** Set the grid region. */
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>

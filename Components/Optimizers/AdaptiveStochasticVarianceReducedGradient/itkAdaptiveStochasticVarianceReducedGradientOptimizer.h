@@ -114,7 +114,7 @@ public:
 
 protected:
   AdaptiveStochasticVarianceReducedGradientOptimizer();
-  ~AdaptiveStochasticVarianceReducedGradientOptimizer() override= default;;
+  ~AdaptiveStochasticVarianceReducedGradientOptimizer() override = default;
 
   /** Function to update the current time
    * If UseAdaptiveStepSizes is false this function just increments

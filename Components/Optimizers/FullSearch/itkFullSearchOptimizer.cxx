@@ -282,9 +282,9 @@ FullSearchOptimizer::ProcessSearchSpaceChanges(void)
  */
 void
 FullSearchOptimizer::AddSearchDimension(unsigned int   param_nr,
-                                         RangeValueType minimum,
-                                         RangeValueType maximum,
-                                         RangeValueType step)
+                                        RangeValueType minimum,
+                                        RangeValueType maximum,
+                                        RangeValueType step)
 {
   if (!m_SearchSpace)
   {

@@ -105,7 +105,7 @@ ScaledSingleValuedNonLinearOptimizer::GetScaledValue(const ParametersType & para
 
 void
 ScaledSingleValuedNonLinearOptimizer::GetScaledDerivative(const ParametersType & parameters,
-                                                           DerivativeType &       derivative) const
+                                                          DerivativeType &       derivative) const
 {
   this->m_ScaledCostFunction->GetDerivative(parameters, derivative);
 
@@ -118,8 +118,8 @@ ScaledSingleValuedNonLinearOptimizer::GetScaledDerivative(const ParametersType &
 
 void
 ScaledSingleValuedNonLinearOptimizer::GetScaledValueAndDerivative(const ParametersType & parameters,
-                                                                   MeasureType &          value,
-                                                                   DerivativeType &       derivative) const
+                                                                  MeasureType &          value,
+                                                                  DerivativeType &       derivative) const
 {
   this->m_ScaledCostFunction->GetValueAndDerivative(parameters, value, derivative);
 

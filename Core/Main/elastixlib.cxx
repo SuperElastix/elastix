@@ -94,7 +94,7 @@ ELASTIX::GetTransformParameterMap(void) const
  */
 
 ELASTIX::ParameterMapListType
-ELASTIX::GetTransformParameterMapList(void) const 
+ELASTIX::GetTransformParameterMapList(void) const
 {
   return this->m_TransformParametersList;
 } // end GetTransformParameterMapList()

@@ -63,13 +63,12 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 
   const auto parameterObject = elastix::ParameterObject::New();
 
-  const std::pair<std::string, std::string> parameterArray[] = {
-    // Parameters in alphabetic order:
-    { "ImageSampler", "Full" },
-    { "MaximumNumberOfIterations", "2" },
-    { "Metric", "AdvancedNormalizedCorrelation" },
-    { "Optimizer", "AdaptiveStochasticGradientDescent" },
-    { "Transform", "TranslationTransform" }
+  const std::pair<std::string, std::string> parameterArray[] = { // Parameters in alphabetic order:
+                                                                 { "ImageSampler", "Full" },
+                                                                 { "MaximumNumberOfIterations", "2" },
+                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
+                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                                 { "Transform", "TranslationTransform" }
   };
 
   std::map<std::string, std::vector<std::string>> parameterMap;

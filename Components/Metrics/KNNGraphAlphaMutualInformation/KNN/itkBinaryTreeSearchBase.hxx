@@ -40,8 +40,7 @@ BinaryTreeSearchBase<TBinaryTree>::BinaryTreeSearchBase()
  */
 
 template <class TBinaryTree>
-BinaryTreeSearchBase<TBinaryTree>::~BinaryTreeSearchBase()
-= default; // end Destructor
+BinaryTreeSearchBase<TBinaryTree>::~BinaryTreeSearchBase() = default; // end Destructor
 
 /**
  * ************************ SetBinaryTree *************************
