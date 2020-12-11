@@ -143,13 +143,7 @@ xoutManager::xoutManager(const std::string & logFileName, const bool setupLoggin
 
 xoutManager::Guard::~Guard()
 {
-  // Destruct and reconstruct the data, in order to reset the output streams.
-  // Note: a simple assignment, `g_data = {}` would be preferable, but doing
-  // so triggered compilation errors on Linux / GCC 4.8:
-  // error: use of deleted function 'std::basic_ofstream<char>&
-  // std::basic_ofstream<char>::operator=(const std::basic_ofstream<char>&)'
-  g_data.~Data();
-  new (&g_data) Data{};
+  g_data = {};
 }
 
 
