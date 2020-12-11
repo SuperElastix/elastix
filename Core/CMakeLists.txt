@@ -164,6 +164,12 @@ set_target_properties( elastix_lib PROPERTIES OUTPUT_NAME elastix )
 target_compile_definitions( elastix_lib PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}" )
 target_link_libraries( elastix_lib ${ELASTIX_TARGET_LINK_LIBRARIES} )
 
+add_executable( ElastixLibBasedExe
+   Main/ElastixLibBasedExe.cxx
+)
+target_link_libraries( ElastixLibBasedExe elastix_lib )
+target_compile_definitions(ElastixLibBasedExe PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}")
+
 #---------------------------------------------------------------------
 # Create the transformix executable.
 

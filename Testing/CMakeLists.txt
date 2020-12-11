@@ -302,7 +302,7 @@ macro( elx_add_run_test testbasename howtocompare )
   # Set maximum test length to 10 minutes
   add_test( NAME ${testname}_OUTPUT
     CONFIGURATIONS Release
-    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/ElastixLibBasedExe
     ${elastixargs} -out ${output_dir} )
   set_tests_properties( ${testname}_OUTPUT
     PROPERTIES TIMEOUT 600 )
