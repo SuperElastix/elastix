@@ -316,7 +316,6 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
     if (testPtr)
     {
       this->m_FeatureInterpolatorsIsBSpline[i] = true;
-      this->m_FeatureInterpolatorsAreBSpline &= true;
       this->m_MovingFeatureBSplineInterpolators[i] = testPtr;
       itkDebugMacro(<< "Interpolator " << i << " is B-spline.");
     }

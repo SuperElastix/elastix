@@ -198,7 +198,6 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInte
 
     if (testPtr)
     {
-      this->m_InterpolatorsAreBSpline &= true;
       this->m_BSplineInterpolatorVector[i] = testPtr;
       itkDebugMacro(<< "Interpolator " << i << " is B-spline.");
     }
