@@ -244,7 +244,6 @@ protected:
   MovingFeatureInterpolatorVectorType m_MovingFeatureInterpolators;
 
   std::vector<bool>                    m_FeatureInterpolatorsIsBSpline;
-  bool                                 m_FeatureInterpolatorsAreBSpline;
   BSplineFeatureInterpolatorVectorType m_MovingFeatureBSplineInterpolators;
 
   /** Initialize variables for image derivative computation; this
