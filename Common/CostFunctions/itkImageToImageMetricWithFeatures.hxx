@@ -306,7 +306,6 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
    * Otherwise, an exception is thrown.
    */
   this->m_FeatureInterpolatorsIsBSpline.resize(this->m_NumberOfMovingFeatureImages, false);
-  this->m_FeatureInterpolatorsAreBSpline = true;
   this->m_MovingFeatureBSplineInterpolators.resize(this->m_NumberOfMovingFeatureImages);
   for (unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i)
   {
