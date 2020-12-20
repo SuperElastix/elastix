@@ -204,7 +204,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInte
     }
     else
     {
-      this->m_InterpolatorsAreBSpline &= false;
+      this->m_InterpolatorsAreBSpline = false;
       itkDebugMacro(<< "Interpolator " << i << " is NOT B-spline.");
       itkExceptionMacro(<< "Interpolator " << i << " is NOT B-spline.");
     }
