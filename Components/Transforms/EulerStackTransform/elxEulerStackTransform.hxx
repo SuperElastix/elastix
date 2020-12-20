@@ -235,7 +235,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
     const bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!foundI)
     {
-      centerGivenAsIndex &= false;
+      centerGivenAsIndex = false;
     }
 
     /** Check COR point: Returns zero when parameter was in the parameter file. */
@@ -243,7 +243,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
       this->m_Configuration->ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!foundP)
     {
-      centerGivenAsPoint &= false;
+      centerGivenAsPoint = false;
     }
   } // end loop over SpaceDimension
 
@@ -521,7 +521,7 @@ EulerStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPo
       this->m_Configuration->ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
     {
-      centerGivenAsPoint &= false;
+      centerGivenAsPoint = false;
     }
   }
 
