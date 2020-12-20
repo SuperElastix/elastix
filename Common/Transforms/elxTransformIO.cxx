@@ -29,8 +29,8 @@
 
 itk::TransformBaseTemplate<double>::Pointer
 elastix::TransformIO::CreateCorrespondingItkTransform(const elx::BaseComponent & elxTransform,
-                                                      const unsigned                             fixedImageDimension,
-                                                      const unsigned                             movingImageDimension)
+                                                      const unsigned             fixedImageDimension,
+                                                      const unsigned             movingImageDimension)
 {
   // Initialize the factory.
   itk::TransformFactoryBase::GetFactory();
@@ -52,8 +52,8 @@ elastix::TransformIO::CreateCorrespondingItkTransform(const elx::BaseComponent &
   }
   const auto substr = elxClassName.substr(0, transformSubstringPosition);
   const auto instanceName = (((substr == "Euler") || (substr == "Similarity"))
-                                ? (substr + std::to_string(fixedImageDimension) + 'D' + transformSubstring)
-                                : elxClassName) +
+                               ? (substr + std::to_string(fixedImageDimension) + 'D' + transformSubstring)
+                               : elxClassName) +
                             "_double_" + std::to_string(fixedImageDimension) + '_' +
                             std::to_string(movingImageDimension);
   const auto instance = itk::ObjectFactoryBase::CreateInstance(instanceName.c_str());

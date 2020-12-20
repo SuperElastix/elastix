@@ -35,14 +35,12 @@ public:
   }
 
   static void
-  SetParameters(const bool                                 fixed,
-                itk::TransformBaseTemplate<double> & transform,
+  SetParameters(const bool                               fixed,
+                itk::TransformBaseTemplate<double> &     transform,
                 const itk::OptimizerParameters<double> & parameters)
   {
     fixed ? transform.SetFixedParameters(parameters) : transform.SetParameters(parameters);
   }
-
-
 
 
   template <typename TElastixTransform>
@@ -53,8 +51,7 @@ public:
       elxTransform, TElastixTransform::FixedImageDimension, TElastixTransform::MovingImageDimension);
   }
 
-  static
-  void
+  static void
   Write(const itk::TransformBaseTemplate<double> & itkTransform, const std::string & fileName);
 
 private:

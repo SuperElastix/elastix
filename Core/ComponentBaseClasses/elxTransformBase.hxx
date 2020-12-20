@@ -661,9 +661,10 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   if (!transformOutputFileNameExtensions.empty())
   {
     elxout << "WARNING: Support for the parameter TransformOutputFileNameExtensions is still experimental!\n"
-      "Transform files stored by this feature may still be incomplete or incorrect!"<< std::endl;  
+              "Transform files stored by this feature may still be incomplete or incorrect!"
+           << std::endl;
 
-    const itk::TransformBaseTemplate<double>* const thisAsITKBase = this->GetAsITKBaseType();
+    const itk::TransformBaseTemplate<double> * const thisAsITKBase = this->GetAsITKBaseType();
     assert(thisAsITKBase != nullptr);
 
     const auto correspondingItkTransform = TransformIO::CreateCorrespondingItkTransform(*this);
