@@ -31,21 +31,32 @@ endif()
 # Find ITK.
 find_package( ITK 5.1.1 REQUIRED COMPONENTS
     ITKCommon
+    ITKDisplacementField
     ITKDistanceMap
+    ITKGDCM
+    ITKImageCompose
+    ITKImageFunction
+    ITKImageGradient
     ITKImageGrid
     ITKImageIntensity
+    ITKImageStatistics
     ITKIOImageBase
     ITKIOMeshBase
     ITKIOMeshOBJ
     ITKIOMeta
+    ITKIOTransformBase
     ITKIOXML
     ITKMathematicalMorphology
+    ITKMesh
     ITKOptimizers
     ITKRegistrationCommon
     ITKSmoothing
+    ITKSpatialObjects
+    ITKStatistics
     ITKTestKernel
     ITKThresholding
     ITKTransform
+    ITKTransformFactory
     ${_GPU_depends}
     )
 include( ${ITK_USE_FILE} )
