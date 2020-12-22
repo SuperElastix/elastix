@@ -1,4 +1,5 @@
 add_executable(CommonGTest
+  elxBaseComponentGTest.cxx
   elxTransformIOGTest.cxx
   itkComputeImageExtremaFilterGTest.cxx
   )

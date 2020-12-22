@@ -37,8 +37,13 @@
 #endif
 
 #include "itkMacro.h" // itkTypeMacroNoParent
+#include "itkMatrix.h"
+
+#include <vnl_vector.h>
 
 #include <string>
+#include <type_traits> // For is_integral and is_same.
+#include <vector>
 
 /** All elastix components should be in namespace elastix. */
 namespace elastix
@@ -155,6 +160,25 @@ public:
   static void
   InitializeElastixExecutable();
 
+
+  /** Overload set, similar to C++17 `std::size(const TContainer&)` (which can only be
+   * used within the implementation of elastix is upgraded to C++17 or higher).
+   */
+  template <typename TContainer, unsigned NDimension = TContainer::Dimension>
+  static std::size_t
+  GetNumberOfElements(const TContainer &)
+  {
+    return NDimension;
+  }
+
+  template <typename TValue>
+  static std::size_t
+  GetNumberOfElements(const vnl_vector<TValue> & vnlVector)
+  {
+    return vnlVector.size();
+  }
+
+
   /** Convenience function to convert seconds to day, hour, minute, second format. */
   static std::string
   ConvertSecondsToDHMS(const double totalSeconds, const unsigned int precision);
@@ -165,6 +189,79 @@ public:
   {
     return arg ? "true" : "false";
   }
+
+  /** Convenience function overload to convert a Boolean to a text string. */
+  static std::string
+  ToString(const bool arg)
+  {
+    return BoolToString(arg);
+  }
+
+  /** Convenience function overload to convert a floating point to a text string. */
+  static std::string
+  ToString(const double scalar)
+  {
+    std::ostringstream stringStream;
+    stringStream << scalar;
+    return stringStream.str();
+  }
+
+  /** Convenience function overload to convert an integer to a text string. */
+  template <typename TScalarValue>
+  static std::string
+  ToString(const TScalarValue scalar)
+  {
+    static_assert(std::is_integral<TScalarValue>::value, "An integer type expected!");
+    static_assert(!std::is_same<TScalarValue, bool>::value, "No bool expected!");
+    return std::to_string(scalar);
+  }
+
+
+  /** Convenience function overload to convert a container to a vector of
+   * text strings. The container may be an itk::Size, itk::Index,
+   * itk::Point<double,N>, or itk::Vector<double,N>, or
+   * itk::OptimizationParameters<double>.
+   *
+   * The C++ SFINAE idiom is being used to ensure that the argument type
+   * supports standard C++ iteration.
+   */
+  template <typename TContainer, typename SFINAE = typename TContainer::iterator>
+  static std::vector<std::string>
+  ToVectorOfStrings(const TContainer & container)
+  {
+    std::vector<std::string> result;
+
+    // Note: Uses TContainer::Dimension instead of container.size(),
+    // because itk::FixedArray::size() is not yet included with ITK 5.1.1.
+    result.reserve(GetNumberOfElements(container));
+
+    for (const auto element : container)
+    {
+      result.push_back(BaseComponent::ToString(element));
+    }
+    return result;
+  }
+
+  /** Convenience function overload to convert a 2-D matrix to a vector of
+   * text strings. Typically used for an itk::ImageBase::DirectionType.
+   */
+  template <typename T, unsigned int NRows, unsigned int NColumns>
+  static std::vector<std::string>
+  ToVectorOfStrings(const itk::Matrix<T, NRows, NColumns> & matrix)
+  {
+    std::vector<std::string> result;
+    result.reserve(NColumns * NRows);
+
+    for (unsigned column{}; column < NColumns; ++column)
+    {
+      for (unsigned row{}; row < NRows; ++row)
+      {
+        result.push_back(BaseComponent::ToString(matrix(row, column)));
+      }
+    }
+    return result;
+  }
+
 
 protected:
   BaseComponent() = default;
