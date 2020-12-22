@@ -41,6 +41,7 @@
 
 #include <vnl_vector.h>
 
+#include <iterator>
 #include <string>
 #include <type_traits> // For is_integral and is_same.
 #include <vector>
@@ -262,6 +263,15 @@ public:
     return result;
   }
 
+
+  /** Convenience function to concatenate two vectors. */
+  template <typename TValue>
+  static std::vector<TValue>
+  ConcatenateVectors(std::vector<TValue> vector1, std::vector<TValue> vector2)
+  {
+    vector1.insert(end(vector1), std::make_move_iterator(begin(vector2)), std::make_move_iterator(end(vector2)));
+    return vector1;
+  }
 
 protected:
   BaseComponent() = default;
