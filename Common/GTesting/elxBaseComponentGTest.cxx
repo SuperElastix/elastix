@@ -106,3 +106,24 @@ GTEST_TEST(BaseComponent, ToVectorOfStrings)
   EXPECT_EQ(elx::BaseComponent::ToVectorOfStrings(itk::ImageBase<>::DirectionType{}),
             VectorOfStrings({ "0", "0", "0", "0" }));
 }
+
+
+GTEST_TEST(BaseComponent, ConcatenateVectors)
+{
+  using VectorType = std::vector<std::string>;
+
+  const auto expectConcatenation = [](const VectorType & vector1, const VectorType & vector2) {
+    auto expectedResult = vector1;
+
+    for (const auto & element : vector2)
+    {
+      expectedResult.push_back(element);
+    }
+    EXPECT_EQ(elx::BaseComponent::ConcatenateVectors(vector1, vector2), expectedResult);
+  };
+
+  expectConcatenation({}, {});
+  expectConcatenation({ "1" }, {});
+  expectConcatenation({}, { "1" });
+  expectConcatenation({ "1" }, { "2", "3" });
+}
