@@ -18,20 +18,20 @@ jobs:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "v5.1.1"
+            itk-git-tag: "v5.1.2"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.so"
             ANNLib2: "libANNlib-5.0.so.1"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "v5.1.1"
+            itk-git-tag: "v5.1.2"
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.0.dll"
           - os: macos-10.15
             c-compiler: "clang"  
             cxx-compiler: "clang++"
-            itk-git-tag: "v5.1.1"  
+            itk-git-tag: "v5.1.2"  
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.1.dylib"
             ANNLib2: "libANNlib-5.0.dylib"
