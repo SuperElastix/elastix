@@ -58,6 +58,9 @@ find_package( ITK 5.1.1 REQUIRED COMPONENTS
     ITKTransform
     ITKTransformFactory
     ${_GPU_depends}
+    ITKImageIO
+    ITKTransformIO
+    ITKMeshIO
     )
 include( ${ITK_USE_FILE} )
 
