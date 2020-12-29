@@ -19,6 +19,7 @@
 // First include the header file to be tested:
 #include "elxTransformIO.h"
 
+#include "elxElastixMain.h" // For xoutManager.
 #include "elxElastixTemplate.h"
 #include "AdvancedAffineTransform/elxAdvancedAffineTransform.h"
 #include "AdvancedBSplineTransform/elxAdvancedBSplineTransform.h"
@@ -40,6 +41,8 @@
 
 #include <gtest/gtest.h>
 
+using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
+using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
 namespace
 {
@@ -165,6 +168,143 @@ struct WithDimension
 
       ASSERT_EQ(itkTransform->GetParameters(), parameters);
       ASSERT_EQ(itkTransform->GetFixedParameters(), fixedParameters);
+    }
+
+
+    static void
+    Test_CreateTransformParametersMap_for_default_transform(const ParameterMapType & expectedParameterMap)
+    {
+      SCOPED_TRACE(std::string("Function = ")
+                     .append(__func__)
+                     .append("\n  ElastixTransformType = ")
+                     .append(typeid(ElastixTransformType).name()));
+
+      const elx::xoutManager manager("", false, false);
+
+      const auto elastixObject = ElastixType<NDimension>::New();
+
+      // Note: SetConfiguration does not share ownership!
+      const auto configuration = elx::Configuration::New();
+      elastixObject->SetConfiguration(configuration);
+
+      const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
+      imageContainer->push_back(itk::Image<float, NDimension>::New());
+      elastixObject->SetFixedImageContainer(imageContainer);
+      elastixObject->SetMovingImageContainer(imageContainer);
+
+      const auto elxTransform = ElastixTransformType::New();
+      elxTransform->SetElastix(elastixObject);
+      elxTransform->BeforeAll();
+
+      ParameterMapType parameterMap;
+      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, &parameterMap);
+
+      for (const auto & expectedParameter : expectedParameterMap)
+      {
+        const auto found = parameterMap.find(expectedParameter.first);
+        const bool isExpectedKeyFound = found != end(parameterMap);
+
+        SCOPED_TRACE("Expected key = " + expectedParameter.first);
+        EXPECT_TRUE(isExpectedKeyFound);
+
+        if (isExpectedKeyFound)
+        {
+          EXPECT_EQ(expectedParameter.second, found->second);
+        }
+      }
+
+      const std::string expectedImageDimension{ char{ '0' + NDimension } };
+      const std::string expectedInternalImagePixelType = "float";
+      const std::string expectedZero = "0";
+      const std::string expectedOne = "1";
+
+      const std::pair<const std::string, ParameterValuesType> expectedTransformBaseParameters[] = {
+        { "Direction", ParameterValuesType(NDimension * NDimension, expectedZero) },
+        { "FixedImageDimension", { expectedImageDimension } },
+        { "FixedInternalImagePixelType", { expectedInternalImagePixelType } },
+        { "HowToCombineTransforms", { "Compose" } },
+        { "Index", { ParameterValuesType(NDimension, expectedZero) } },
+        { "InitialTransformParametersFileName", { "NoInitialTransform" } },
+        { "MovingImageDimension", { expectedImageDimension } },
+        { "MovingInternalImagePixelType", { expectedInternalImagePixelType } },
+        { "NumberOfParameters", { expectedZero } },
+        { "Origin", { ParameterValuesType(NDimension, expectedZero) } },
+        { "Size", { ParameterValuesType(NDimension, expectedZero) } },
+        { "Spacing", { ParameterValuesType(NDimension, expectedOne) } },
+        { "Transform", { elxTransform->elxGetClassName() } },
+        { "TransformParameters", {} },
+        { "UseDirectionCosines", { "true" } }
+      };
+
+      for (const auto & expectedTransformBaseParameter : expectedTransformBaseParameters)
+      {
+        const auto found = parameterMap.find(expectedTransformBaseParameter.first);
+        ASSERT_NE(found, end(parameterMap));
+        EXPECT_EQ(found->second, expectedTransformBaseParameter.second);
+      }
+
+      const std::size_t numberOfExpectedTransformBaseParameters{ GTEST_ARRAY_SIZE_(expectedTransformBaseParameters) };
+
+      EXPECT_GE(parameterMap.size(), numberOfExpectedTransformBaseParameters);
+      EXPECT_EQ(parameterMap.size() - numberOfExpectedTransformBaseParameters, expectedParameterMap.size());
+
+      ParameterMapType missingParameters;
+
+      for (const auto & parameter : parameterMap)
+      {
+        if (std::find(begin(expectedTransformBaseParameters), end(expectedTransformBaseParameters), parameter) ==
+              end(expectedTransformBaseParameters) &&
+            (expectedParameterMap.count(parameter.first) == 0))
+        {
+          EXPECT_TRUE(missingParameters.insert(parameter).second);
+        }
+      }
+      EXPECT_EQ(missingParameters, ParameterMapType{});
+    }
+
+    static void
+    Test_CreateTransformParametersMap_double_precision()
+    {
+      const elx::xoutManager manager("", false, false);
+
+      // Use double 0.1111111111111111 as test value.
+      constexpr auto testValue = 1.0 / 9.0;
+      constexpr auto expectedPrecision = 6;
+      EXPECT_EQ(expectedPrecision, std::ostringstream{}.precision());
+      const auto expectedString = "0." + std::string(expectedPrecision, '1');
+
+      const auto elastixObject = ElastixType<NDimension>::New();
+
+      // Note: SetConfiguration does not share ownership!
+      const auto configuration = elx::Configuration::New();
+      elastixObject->SetConfiguration(configuration);
+
+      const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
+      const auto image = itk::Image<float, NDimension>::New();
+      image->SetOrigin(testValue);
+      image->SetSpacing(testValue);
+      imageContainer->push_back(image);
+
+      elastixObject->SetFixedImageContainer(imageContainer);
+      elastixObject->SetMovingImageContainer(imageContainer);
+
+      const auto elxTransform = ElastixTransformType::New();
+      elxTransform->SetElastix(elastixObject);
+      elxTransform->BeforeAll();
+
+      ParameterMapType                       parameterMap;
+      const itk::OptimizerParameters<double> optimizerParameters(itk::Array<double>(vnl_vector<double>(2U, testValue)));
+      elxTransform->CreateTransformParametersMap(optimizerParameters, &parameterMap);
+
+      for (const auto key : { "TransformParameters", "Origin", "Spacing" })
+      {
+        const auto found = parameterMap.find(key);
+        ASSERT_NE(found, end(parameterMap));
+        for (const auto & actualString : found->second)
+        {
+          EXPECT_EQ(actualString, expectedString);
+        }
+      }
     }
   };
 
@@ -407,4 +547,63 @@ GTEST_TEST(TransformIO, CopyParametersToCorrespondingItkTransform)
 
   WithDimension<2>::WithElastixTransform<elx::EulerTransformElastix>::Test_copying_parameters<
     itk::Euler2DTransform<double>>();
+}
+
+
+GTEST_TEST(Transform, CreateTransformParametersMapForDefaultTransform)
+{
+  // TODO elx::BSplineStackTransform crashes on m_BSplineStackTransform->GetSubTransform(0).
+  {
+    constexpr auto            Dimension = 2;
+    const ParameterValuesType expectedZeros(Dimension, "0");
+    const ParameterValuesType expectedOnes(Dimension, "1");
+
+    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedAffineTransformElastix>::
+      Test_CreateTransformParametersMap_for_default_transform({ { "CenterOfRotationPoint", expectedZeros } });
+    WithDimension<Dimension>::WithElastixTransform<
+      elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({});
+    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedBSplineTransform>::
+      Test_CreateTransformParametersMap_for_default_transform({ { "BSplineTransformSplineOrder", { "3" } },
+                                                                { "GridDirection", { "1", "0", "0", "1" } },
+                                                                { "GridIndex", expectedZeros },
+                                                                { "GridOrigin", expectedZeros },
+                                                                { "GridSize", expectedZeros },
+                                                                { "GridSpacing", expectedOnes },
+                                                                { "UseCyclicTransform", { "false" } } });
+    WithDimension<Dimension>::WithElastixTransform<
+      elx::EulerTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({ { "CenterOfRotationPoint",
+                                                                                               expectedZeros } });
+  }
+  {
+    constexpr auto            Dimension = 3;
+    const ParameterValuesType expectedZeros(Dimension, "0");
+    const ParameterValuesType expectedOnes(Dimension, "1");
+
+    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedAffineTransformElastix>::
+      Test_CreateTransformParametersMap_for_default_transform({ { "CenterOfRotationPoint", expectedZeros } });
+    WithDimension<Dimension>::WithElastixTransform<
+      elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({});
+    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedBSplineTransform>::
+      Test_CreateTransformParametersMap_for_default_transform(
+        { { "BSplineTransformSplineOrder", { "3" } },
+          { "GridDirection", { "1", "0", "0", "0", "1", "0", "0", "0", "1" } },
+          { "GridIndex", expectedZeros },
+          { "GridOrigin", expectedZeros },
+          { "GridSize", expectedZeros },
+          { "GridSpacing", expectedOnes },
+          { "UseCyclicTransform", { "false" } } });
+    WithDimension<Dimension>::WithElastixTransform<elx::EulerTransformElastix>::
+      Test_CreateTransformParametersMap_for_default_transform(
+        { { "CenterOfRotationPoint", expectedZeros }, { "ComputeZYX", { "false" } } });
+  }
+}
+
+
+GTEST_TEST(Transform, CreateTransformParametersMapDoublePrecision)
+{
+  // Checks two different transform types, just to be sure.
+  WithDimension<2>::WithElastixTransform<
+    elx::AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_double_precision();
+  WithDimension<3>::WithElastixTransform<
+    elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_double_precision();
 }
