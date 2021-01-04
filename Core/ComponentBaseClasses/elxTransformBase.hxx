@@ -856,9 +856,9 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   const CombinationTransformType * dummyComboTransform = dynamic_cast<const CombinationTransformType *>(this);
   if (dummyComboTransform)
   {
-    if (dummyComboTransform->GetUseComposition())
+    if (dummyComboTransform->GetUseAddition())
     {
-      combinationMethod = "Compose";
+      combinationMethod = "Add";
     }
   }
 

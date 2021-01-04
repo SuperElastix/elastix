@@ -306,6 +306,44 @@ struct WithDimension
         }
       }
     }
+
+    static void
+    Test_CreateTransformParametersMap_SetUseAddition()
+    {
+      const elx::xoutManager manager("", false, false);
+
+      const auto elastixObject = ElastixType<NDimension>::New();
+
+      // Note: SetConfiguration does not share ownership!
+      const auto configuration = elx::Configuration::New();
+      elastixObject->SetConfiguration(configuration);
+
+      const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
+      const auto image = itk::Image<float, NDimension>::New();
+      imageContainer->push_back(image);
+
+      elastixObject->SetFixedImageContainer(imageContainer);
+      elastixObject->SetMovingImageContainer(imageContainer);
+
+      const auto elxTransform = ElastixTransformType::New();
+      elxTransform->SetElastix(elastixObject);
+      elxTransform->BeforeAll();
+
+      const auto expectHowToCombineTransforms = [&elxTransform](const char * const expectedParameterValue) {
+        ParameterMapType parameterMap;
+        elxTransform->CreateTransformParametersMap({}, &parameterMap);
+
+        const auto found = parameterMap.find("HowToCombineTransforms");
+        ASSERT_NE(found, end(parameterMap));
+        EXPECT_EQ(found->second, ParameterValuesType{ expectedParameterValue });
+      };
+
+      expectHowToCombineTransforms("Compose");
+      elxTransform->SetUseAddition(true);
+      expectHowToCombineTransforms("Add");
+      elxTransform->SetUseAddition(false);
+      expectHowToCombineTransforms("Compose");
+    }
   };
 
 
@@ -606,4 +644,14 @@ GTEST_TEST(Transform, CreateTransformParametersMapDoublePrecision)
     elx::AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_double_precision();
   WithDimension<3>::WithElastixTransform<
     elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_double_precision();
+}
+
+
+GTEST_TEST(Transform, CreateTransformParametersSetUseAddition)
+{
+  // Checks two different transform types, just to be sure.
+  WithDimension<2>::WithElastixTransform<
+    elx::AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_SetUseAddition();
+  WithDimension<3>::WithElastixTransform<
+    elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_SetUseAddition();
 }
