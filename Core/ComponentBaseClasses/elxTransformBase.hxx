@@ -809,185 +809,63 @@ template <class TElastix>
 void
 TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const
 {
-  std::ostringstream       tmpStream;
-  std::string              parameterName;
-  std::vector<std::string> parameterValues;
+  auto &       parameterMap = *paramsMap;
+  const auto & elastixObject = *(this->GetElastix());
 
-  /** Write the name of this transform. */
-  parameterName = "Transform";
-  parameterValues.push_back(this->elxGetClassName());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Get the number of parameters of this transform. */
-  unsigned int nrP = param.GetSize();
-
-  /** Write the number of parameters of this transform. */
-  parameterName = "NumberOfParameters";
-  tmpStream.str("");
-  tmpStream << nrP;
-  parameterValues.push_back(tmpStream.str());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Write the parameters of this transform. */
-  if (this->m_ReadWriteTransformParameters)
-  {
-    /** In this case, write in a normal way to the parameter file. */
-    parameterName = "TransformParameters";
-    for (unsigned int i = 0; i < nrP; i++)
-    {
-      tmpStream.str("");
-      tmpStream << param[i];
-      parameterValues.push_back(tmpStream.str());
-    }
-    paramsMap->insert(make_pair(parameterName, parameterValues));
-    parameterValues.clear();
-  }
-
-  /** Write the name of the parameters-file of the initial transform. */
-  parameterName = "InitialTransformParametersFileName";
-  parameterValues.push_back(this->GetInitialTransformParametersFileName());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Write the way Transforms are combined. */
-  std::string                      combinationMethod = "Compose";
-  const CombinationTransformType * dummyComboTransform = dynamic_cast<const CombinationTransformType *>(this);
-  if (dummyComboTransform)
-  {
-    if (dummyComboTransform->GetUseAddition())
-    {
-      combinationMethod = "Add";
-    }
-  }
-
-  parameterName = "HowToCombineTransforms";
-  parameterValues.push_back(combinationMethod);
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Write image specific things. */
-  // xout["transpar"] << std::endl << "// Image specific" << std::endl;
-
-  /** Write image dimensions. */
-  const unsigned int fixDim = FixedImageDimension;
-  const unsigned int movDim = MovingImageDimension;
-  parameterName = "FixedImageDimension";
-  tmpStream.str("");
-  tmpStream << fixDim;
-  parameterValues.push_back(tmpStream.str());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  parameterName = "MovingImageDimension";
-  tmpStream.str("");
-  tmpStream << movDim;
-  parameterValues.push_back(tmpStream.str());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
+  /** The way Transforms are combined. */
+  const auto combinationMethod = [this] {
+    const auto combinationTransform = dynamic_cast<const CombinationTransformType *>(this);
+    return ((combinationTransform != nullptr) && combinationTransform->GetUseAddition()) ? "Add" : "Compose";
+  }();
 
   /** Write image pixel types. */
   std::string fixpix = "float";
   std::string movpix = "float";
+
   this->m_Configuration->ReadParameter(fixpix, "FixedInternalImagePixelType", 0);
   this->m_Configuration->ReadParameter(movpix, "MovingInternalImagePixelType", 0);
 
-  parameterName = "FixedInternalImagePixelType";
-  parameterValues.push_back(fixpix);
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  parameterName = "MovingInternalImagePixelType";
-  parameterValues.push_back(movpix);
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
   /** Get the Size, Spacing and Origin of the fixed image. */
-  const auto size = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  const auto index = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
-  const auto spacing = this->m_Elastix->GetFixedImage()->GetSpacing();
-  const auto origin = this->m_Elastix->GetFixedImage()->GetOrigin();
+  const auto & fixedImage = *(this->m_Elastix->GetFixedImage());
+  const auto & largestPossibleRegion = fixedImage.GetLargestPossibleRegion();
+
   /** The following line would be logically: */
   // FixedImageDirectionType direction =
   //  this->m_Elastix->GetFixedImage()->GetDirection();
   /** But to support the UseDirectionCosines option, we should do it like this: */
   typename FixedImageType::DirectionType direction;
-  this->GetElastix()->GetOriginalFixedImageDirection(direction);
+  elastixObject.GetOriginalFixedImageDirection(direction);
 
-  /** Write image Size. */
-  parameterName = "Size";
-  for (unsigned int i = 0; i < FixedImageDimension; i++)
+  /** Write the name of this transform. */
+  parameterMap = { { "Transform", { this->elxGetClassName() } },
+                   { "NumberOfParameters", { BaseComponent::ToString(param.GetSize()) } },
+                   { "InitialTransformParametersFileName", { this->GetInitialTransformParametersFileName() } },
+                   { "HowToCombineTransforms", { combinationMethod } },
+                   { "FixedImageDimension", { BaseComponent::ToString(FixedImageDimension) } },
+                   { "MovingImageDimension", { BaseComponent::ToString(MovingImageDimension) } },
+                   { "FixedInternalImagePixelType", { fixpix } },
+                   { "MovingInternalImagePixelType", { movpix } },
+                   { "Size", BaseComponent::ToVectorOfStrings(largestPossibleRegion.GetSize()) },
+                   { "Index", BaseComponent::ToVectorOfStrings(largestPossibleRegion.GetIndex()) },
+                   { "Spacing", BaseComponent::ToVectorOfStrings(fixedImage.GetSpacing()) },
+                   { "Origin", BaseComponent::ToVectorOfStrings(fixedImage.GetOrigin()) },
+                   { "Direction", BaseComponent::ToVectorOfStrings(direction) },
+                   { "UseDirectionCosines", { BaseComponent::ToString(elastixObject.GetUseDirectionCosines()) } } };
+
+  /** Write the parameters of this transform. */
+  if (this->m_ReadWriteTransformParameters)
   {
-    tmpStream.str("");
-    tmpStream << size[i];
-    parameterValues.push_back(tmpStream.str());
+    /** In this case, write in a normal way to the parameter file. */
+    parameterMap["TransformParameters"] = { BaseComponent::ToVectorOfStrings(param) };
   }
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
 
-  /** Write image Index. */
-  parameterName = "Index";
-  for (unsigned int i = 0; i < FixedImageDimension; i++)
+  // Derived transform classes may add some extra parameters
+  for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
   {
-    tmpStream.str("");
-    tmpStream << index[i];
-    parameterValues.push_back(tmpStream.str());
+    const auto & key = keyAndValue.first;
+    assert(parameterMap.count(key) == 0);
+    parameterMap[key] = std::move(keyAndValue.second);
   }
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Set the precision of cout to 2, because Spacing and
-   * Origin must have at least one digit precision.
-   */
-  //  xout["transpar"] << std::setprecision(10);
-
-  /** Write image Spacing. */
-  parameterName = "Spacing";
-  for (unsigned int i = 0; i < FixedImageDimension; i++)
-  {
-    tmpStream.str("");
-    tmpStream << spacing[i];
-    parameterValues.push_back(tmpStream.str());
-  }
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Write image Origin. */
-  parameterName = "Origin";
-  for (unsigned int i = 0; i < FixedImageDimension; i++)
-  {
-    tmpStream.str("");
-    tmpStream << origin[i];
-    parameterValues.push_back(tmpStream.str());
-  }
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Write direction cosines. */
-  parameterName = "Direction";
-  for (unsigned int i = 0; i < FixedImageDimension; i++)
-  {
-    for (unsigned int j = 0; j < FixedImageDimension; j++)
-    {
-      tmpStream.str("");
-      tmpStream << direction(j, i);
-      parameterValues.push_back(tmpStream.str());
-    }
-  }
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-  /** Set the precision back to default value. */
-  //  xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
-
-  /** Write whether the direction cosines should be taken into account.
-   * This parameter is written from elastix 4.203.
-   */
-  parameterName = "UseDirectionCosines";
-  parameterValues.push_back(BaseComponent::BoolToString(this->GetElastix()->GetUseDirectionCosines()));
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
 
 } // end CreateTransformParametersMap()
 

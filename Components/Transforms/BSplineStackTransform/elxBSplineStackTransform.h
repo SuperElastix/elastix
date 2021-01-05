@@ -283,10 +283,6 @@ public:
   virtual void
   SetOptimizerScales(const unsigned int edgeWidth);
 
-  /** Function to create transform-parameters map */
-  void
-  CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const override;
-
 protected:
   /** The constructor. */
   BSplineStackTransform();
@@ -299,6 +295,10 @@ protected:
   PreComputeGridInformation(void);
 
 private:
+  /** Creates a map of the parameters specific for this (derived) transform type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap(void) const override;
+
   /** The deleted copy constructor and assignment operator. */
   BSplineStackTransform(const Self &) = delete;
   void

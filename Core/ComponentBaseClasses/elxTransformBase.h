@@ -231,7 +231,7 @@ public:
   ReadFromFile(void);
 
   /** Function to create transform-parameters map. */
-  virtual void
+  void
   CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const;
 
   /** Function to write transform-parameters to a file. */
@@ -373,6 +373,12 @@ private:
 
     const Self * t0 = dynamic_cast<const Self *>(this->GetInitialTransform());
     return t0->GetTransformParametersFileName();
+  }
+
+  virtual ParameterMapType
+  CreateDerivedTransformParametersMap(void) const
+  {
+    return {};
   }
 
   /** Member variables. */
