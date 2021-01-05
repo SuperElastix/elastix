@@ -135,34 +135,16 @@ AdvancedAffineTransformElastix<TElastix>::WriteToFile(const ParametersType & par
 
 
 /**
- * ************************* CreateTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParametersMap ************************
  */
 
 template <class TElastix>
-void
-AdvancedAffineTransformElastix<TElastix>::CreateTransformParametersMap(const ParametersType & param,
-                                                                       ParameterMapType *     paramsMap) const
+auto
+AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
-  std::ostringstream       tmpStream;
-  std::string              parameterName;
-  std::vector<std::string> parameterValues;
+  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(m_AffineTransform->GetCenter()) } };
 
-  /** Call the CreateTransformParametersMap from the TransformBase. */
-  this->Superclass2::CreateTransformParametersMap(param, paramsMap);
-
-  /** Get the center of rotation point and write it to file. */
-  InputPointType rotationPoint = this->m_AffineTransform->GetCenter();
-  parameterName = "CenterOfRotationPoint";
-  for (unsigned int i = 0; i < SpaceDimension; i++)
-  {
-    tmpStream.str("");
-    tmpStream << rotationPoint[i];
-    parameterValues.push_back(tmpStream.str());
-  }
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-} // end CreateTransformParametersMap()
+} // end CreateDerivedTransformParametersMap()
 
 
 /**

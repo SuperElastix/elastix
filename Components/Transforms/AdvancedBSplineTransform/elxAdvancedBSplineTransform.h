@@ -273,13 +273,6 @@ public:
   void
   WriteToFile(const ParametersType & param) const override;
 
-  /** Function to create transform-parameters map.
-   * Creates the TransformParametersmap as a vector and if wanted
-   * also as a deformation field.
-   */
-  void
-  CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const override;
-
   /** Set the scales of the edge B-spline coefficients to zero. */
   virtual void
   SetOptimizerScales(const unsigned int edgeWidth);
@@ -296,6 +289,10 @@ protected:
   PreComputeGridInformation(void);
 
 private:
+  /** Creates a map of the parameters specific for this (derived) transform type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap(void) const override;
+
   /** The deleted copy constructor. */
   AdvancedBSplineTransform(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -209,12 +209,6 @@ public:
   void
   WriteToFile(const ParametersType & param) const override;
 
-  /** Function to create transform-parameters map.
-   * Creates the TransformParametersmap
-   */
-  void
-  CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const override;
-
 protected:
   /** The constructor. */
   EulerTransformElastix();
@@ -230,6 +224,10 @@ protected:
   ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
 
 private:
+  /** Creates a map of the parameters specific for this (derived) transform type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap(void) const override;
+
   /** The deleted copy constructor. */
   EulerTransformElastix(const Self &) = delete;
   /** The deleted assignment operator. */
