@@ -197,6 +197,24 @@ EulerStackTransform<TElastix>::WriteToFile(const ParametersType & param) const
 
 
 /**
+ * ************************* CreateDerivedTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_EulerStackTransform;
+
+  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(m_EulerDummySubTransform->GetCenter()) },
+           { "StackSpacing", { BaseComponent::ToString(itkTransform.GetStackSpacing()) } },
+           { "StackOrigin", { BaseComponent::ToString(itkTransform.GetStackOrigin()) } },
+           { "NumberOfSubTransforms", { BaseComponent::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
+
+} // end CreateDerivedTransformParametersMap()
+
+
+/**
  * ********************* InitializeTransform ****************************
  */
 

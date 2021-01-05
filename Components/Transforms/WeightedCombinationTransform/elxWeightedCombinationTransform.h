@@ -136,6 +136,7 @@ public:
   /** Typedef's from the TransformBase class. */
   typedef typename Superclass2::ElastixType                ElastixType;
   typedef typename Superclass2::ElastixPointer             ElastixPointer;
+  typedef typename Superclass2::ParameterMapType           ParameterMapType;
   typedef typename Superclass2::ConfigurationType          ConfigurationType;
   typedef typename Superclass2::ConfigurationPointer       ConfigurationPointer;
   typedef typename Superclass2::RegistrationType           RegistrationType;
@@ -214,6 +215,10 @@ protected:
   std::vector<std::string>            m_SubTransformFileNames;
 
 private:
+  /** Creates a map of the parameters specific for this (derived) transform type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap(void) const override;
+
   /** The deleted copy constructor. */
   WeightedCombinationTransformElastix(const Self &) = delete;
   /** The deleted assignment operator. */

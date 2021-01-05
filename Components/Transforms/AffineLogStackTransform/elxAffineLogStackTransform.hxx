@@ -198,6 +198,24 @@ AffineLogStackTransform<TElastix>::WriteToFile(const ParametersType & param) con
 
 
 /**
+ * ************************* CreateDerivedTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+AffineLogStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_AffineLogStackTransform;
+
+  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(m_AffineLogDummySubTransform->GetCenter()) },
+           { "StackSpacing", { BaseComponent::ToString(itkTransform.GetStackSpacing()) } },
+           { "StackOrigin", { BaseComponent::ToString(itkTransform.GetStackOrigin()) } },
+           { "NumberOfSubTransforms", { BaseComponent::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
+
+} // end CreateDerivedTransformParametersMap()
+
+
+/**
  * ********************* InitializeTransform ****************************
  */
 

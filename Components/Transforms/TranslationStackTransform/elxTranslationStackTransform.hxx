@@ -194,6 +194,23 @@ TranslationStackTransform<TElastix>::WriteToFile(const ParametersType & param) c
 } // end WriteToFile()
 
 
+/**
+ * ************************* CustomizeTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+TranslationStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_TranslationStackTransform;
+
+  return { { "StackSpacing", { BaseComponent::ToString(itkTransform.GetStackSpacing()) } },
+           { "StackOrigin", { BaseComponent::ToString(itkTransform.GetStackOrigin()) } },
+           { "NumberOfSubTransforms", { BaseComponent::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
+
+} // end CustomizeTransformParametersMap()
+
+
 } // end namespace elastix
 
 #endif // end #ifndef elxTranslationStackTransform_hxx

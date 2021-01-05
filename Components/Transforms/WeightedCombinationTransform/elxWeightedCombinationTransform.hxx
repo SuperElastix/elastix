@@ -149,6 +149,21 @@ WeightedCombinationTransformElastix<TElastix>::WriteToFile(const ParametersType 
 
 
 /**
+ * ************************* CustomizeTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_WeightedCombinationTransform;
+
+  return { { "NormalizeCombinationWeights", { BaseComponent::ToString(itkTransform.GetNormalizeWeights()) } } };
+
+} // end CustomizeTransformParametersMap()
+
+
+/**
  * ************************* SetScales *********************
  */
 

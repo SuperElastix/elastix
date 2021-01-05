@@ -135,6 +135,19 @@ SimilarityTransformElastix<TElastix>::WriteToFile(const ParametersType & param) 
 
 
 /**
+ * ************************* CreateDerivedTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+SimilarityTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(m_SimilarityTransform->GetCenter()) } };
+
+} // end CreateDerivedTransformParametersMap()
+
+
+/**
  * ************************* InitializeTransform *********************
  */
 

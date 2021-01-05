@@ -143,6 +143,24 @@ AffineDTITransformElastix<TElastix>::WriteToFile(const ParametersType & param) c
 
 
 /**
+ * ************************* CreateDerivedTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+AffineDTITransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_AffineDTITransform;
+
+  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(itkTransform.GetCenter()) },
+           { "MatrixTranslation",
+             BaseComponent::ConcatenateVectors(BaseComponent::ToVectorOfStrings(itkTransform.GetMatrix()),
+                                               BaseComponent::ToVectorOfStrings(itkTransform.GetTranslation())) } };
+
+} // end CreateDerivedTransformParametersMap()
+
+
+/**
  * ************************* InitializeTransform *********************
  */
 

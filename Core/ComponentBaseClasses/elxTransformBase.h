@@ -376,11 +376,7 @@ private:
   }
 
   virtual ParameterMapType
-  CreateDerivedTransformParametersMap(void) const
-  {
-    return {};
-  }
-
+  CreateDerivedTransformParametersMap(void) const = 0;
   /** Member variables. */
   std::unique_ptr<ParametersType> m_TransformParametersPointer{};
   std::string                     m_TransformParametersFileName;

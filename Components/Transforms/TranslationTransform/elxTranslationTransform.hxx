@@ -104,6 +104,20 @@ TranslationTransformElastix<TElastix>::InitializeTransform(void)
 } // end InitializeTransform()
 
 
+/**
+ * ************************* CustomizeTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+TranslationTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  // This transform type has no specific extra parameters.
+  return {};
+
+} // end CustomizeTransformParametersMap()
+
+
 } // end namespace elastix
 
 #endif // end #ifndef elxTranslationTransform_hxx

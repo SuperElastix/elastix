@@ -223,6 +223,23 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
 } // end WriteToFile()
 
 
+/**
+ * ************************* CustomizeTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const std::string interpolatorName =
+    m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
+  const auto interpolationOrder = (interpolatorName == "LinearInterpolateImageFunction") ? 1U : 0U;
+
+  return { { "DeformationFieldInterpolationOrder", { BaseComponent::ToString(interpolationOrder) } } };
+
+} // end CustomizeTransformParametersMap()
+
+
 } // end namespace elastix
 
 #endif // end #ifndef elxDeformationFieldTransform_hxx

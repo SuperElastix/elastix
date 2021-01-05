@@ -706,6 +706,29 @@ MultiBSplineTransformWithNormal<TElastix>::WriteToFile(const ParametersType & pa
 
 
 /**
+ * ************************* CustomizeTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+MultiBSplineTransformWithNormal<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_MultiBSplineTransformWithNormal;
+  const auto   gridRegion = itkTransform.GetGridRegion();
+
+  // TODO If necessary, add possibly missing parameters:
+  // - "MultiBSplineTransformWithNormalLabels" (which is written by WriteToFile).
+  return { { "GridSize", BaseComponent::ToVectorOfStrings(gridRegion.GetSize()) },
+           { "GridIndex", BaseComponent::ToVectorOfStrings(gridRegion.GetIndex()) },
+           { "GridSpacing", BaseComponent::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
+           { "GridOrigin", BaseComponent::ToVectorOfStrings(itkTransform.GetGridOrigin()) },
+           { "GridDirection", BaseComponent::ToVectorOfStrings(itkTransform.GetGridDirection()) },
+           { "BSplineTransformSplineOrder", { BaseComponent::ToString(m_SplineOrder) } } };
+
+} // end CustomizeTransformParametersMap()
+
+
+/**
  * *********************** SetOptimizerScales ***********************
  *
  * Set the optimizer scales of the edge coefficients to infinity.
