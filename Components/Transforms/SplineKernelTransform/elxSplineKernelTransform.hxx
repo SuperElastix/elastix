@@ -472,6 +472,24 @@ SplineKernelTransform<TElastix>::WriteToFile(const ParametersType & param) const
 } // end WriteToFile()
 
 
+/**
+ * ************************* CustomizeTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+SplineKernelTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  auto & itkTransform = *m_KernelTransform;
+
+  return { { "SplineKernelType", { m_SplineKernelType } },
+           { "SplinePoissonRatio", { BaseComponent::ToString(itkTransform.GetPoissonRatio()) } },
+           { "SplineRelaxationFactor", { BaseComponent::ToString(itkTransform.GetStiffness()) } },
+           { "FixedImageLandmarks", BaseComponent::ToVectorOfStrings(itkTransform.GetFixedParameters()) } };
+
+} // end CustomizeTransformParametersMap()
+
+
 } // end namespace elastix
 
 #endif // end #ifndef elxSplineKernelTransform_hxx

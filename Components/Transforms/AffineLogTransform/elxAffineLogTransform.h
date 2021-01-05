@@ -97,6 +97,7 @@ public:
   /** Typedef's inherited from TransformBase. */
   typedef typename Superclass2::ElastixType              ElastixType;
   typedef typename Superclass2::ElastixPointer           ElastixPointer;
+  typedef typename Superclass2::ParameterMapType         ParameterMapType;
   typedef typename Superclass2::ConfigurationType        ConfigurationType;
   typedef typename Superclass2::ConfigurationPointer     ConfigurationPointer;
   typedef typename Superclass2::RegistrationType         RegistrationType;
@@ -184,6 +185,10 @@ protected:
   ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
 
 private:
+  /** Creates a map of the parameters specific for this (derived) transform type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap(void) const override;
+
   /** The deleted copy constructor. */
   AffineLogTransformElastix(const Self &) = delete;
   /** The deleted assignment operator. */

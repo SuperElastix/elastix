@@ -1074,6 +1074,29 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
 
 
 /**
+ * ************************* CustomizeTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_BSplineTransform;
+  const auto   gridRegion = itkTransform.GetGridRegion();
+
+  // TODO If necessary, add possibly missing parameters:
+  // - "DeformationFieldFileName" (which is written by WriteToFile).
+  // - "GridDirection" (as returned by RecursiveBSplineTransform).
+  // - "ThresholdBool", "ThresholdHU", etc. (as retrieved by ReadParameter).
+  return { { "GridSize", BaseComponent::ToVectorOfStrings(gridRegion.GetSize()) },
+           { "GridIndex", BaseComponent::ToVectorOfStrings(gridRegion.GetIndex()) },
+           { "GridSpacing", BaseComponent::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
+           { "GridOrigin", BaseComponent::ToVectorOfStrings(itkTransform.GetGridOrigin()) } };
+
+} // end CustomizeTransformParametersMap()
+
+
+/**
  * ******************* DiffuseDeformationField ******************
  */
 

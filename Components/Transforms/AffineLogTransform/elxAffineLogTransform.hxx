@@ -143,6 +143,24 @@ AffineLogTransformElastix<TElastix>::WriteToFile(const ParametersType & param) c
 
 
 /**
+ * ************************* CreateDerivedTransformParametersMap ************************
+ */
+
+template <class TElastix>
+auto
+AffineLogTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+{
+  const auto & itkTransform = *m_AffineLogTransform;
+
+  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(itkTransform.GetCenter()) },
+           { "MatrixTranslation",
+             BaseComponent::ConcatenateVectors(BaseComponent::ToVectorOfStrings(itkTransform.GetMatrix()),
+                                               BaseComponent::ToVectorOfStrings(itkTransform.GetTranslation())) } };
+
+} // end CreateDerivedTransformParametersMap()
+
+
+/**
  * ************************* InitializeTransform *********************
  */
 

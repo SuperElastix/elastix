@@ -21,11 +21,24 @@
 
 #include "elxElastixMain.h" // For xoutManager.
 #include "elxElastixTemplate.h"
+
 #include "AdvancedAffineTransform/elxAdvancedAffineTransform.h"
 #include "AdvancedBSplineTransform/elxAdvancedBSplineTransform.h"
+#include "AffineDTITransform/elxAffineDTITransform.h"
+#include "AffineLogStackTransform/elxAffineLogStackTransform.h"
+#include "AffineLogTransform/elxAffineLogTransform.h"
+#include "BSplineDeformableTransformWithDiffusion/elxBSplineTransformWithDiffusion.h"
+#include "BSplineStackTransform/elxBSplineStackTransform.h"
+#include "DeformationFieldTransform/elxDeformationFieldTransform.h"
+#include "EulerStackTransform/elxEulerStackTransform.h"
 #include "EulerTransform/elxEulerTransform.h"
+#include "MultiBSplineTransformWithNormal/elxMultiBSplineTransformWithNormal.h"
+#include "RecursiveBSplineTransform/elxRecursiveBSplineTransform.h"
 #include "SimilarityTransform/elxSimilarityTransform.h"
+#include "SplineKernelTransform/elxSplineKernelTransform.h"
+#include "TranslationStackTransform/elxTranslationStackTransform.h"
 #include "TranslationTransform/elxTranslationTransform.h"
+#include "WeightedCombinationTransform/elxWeightedCombinationTransform.h"
 
 #include <itkImage.h>
 #include <itkAffineTransform.h>
@@ -194,7 +207,16 @@ struct WithDimension
 
       const auto elxTransform = ElastixTransformType::New();
       elxTransform->SetElastix(elastixObject);
+
+      // BeforeAll() appears necessary to for MultiBSplineTransformWithNormal
+      // and AdvancedBSplineTransform to initialize the internal ITK
+      // transform of the elastix transform, by calling
+      // InitializeBSplineTransform(void)
       elxTransform->BeforeAll();
+
+      // Overrule the default-constructors of BSplineTransformWithDiffusion
+      // and DeformationFieldTransform which do SetReadWriteTransformParameters(false)
+      elxTransform->SetReadWriteTransformParameters(true);
 
       ParameterMapType parameterMap;
       elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, &parameterMap);
@@ -239,8 +261,14 @@ struct WithDimension
       for (const auto & expectedTransformBaseParameter : expectedTransformBaseParameters)
       {
         const auto found = parameterMap.find(expectedTransformBaseParameter.first);
-        ASSERT_NE(found, end(parameterMap));
-        EXPECT_EQ(found->second, expectedTransformBaseParameter.second);
+        SCOPED_TRACE("Expected key = " + expectedTransformBaseParameter.first);
+        const bool isExpectedKeyFound = found != end(parameterMap);
+        EXPECT_TRUE(isExpectedKeyFound);
+
+        if (isExpectedKeyFound)
+        {
+          EXPECT_EQ(found->second, expectedTransformBaseParameter.second);
+        }
       }
 
       const std::size_t numberOfExpectedTransformBaseParameters{ GTEST_ARRAY_SIZE_(expectedTransformBaseParameters) };
@@ -368,6 +396,128 @@ struct WithDimension
 
     const auto parameters = ElastixTransformType::New()->GetParameters();
     ASSERT_EQ(parameters, vnl_vector<double>(expectedParameters.data(), NExpectedParameters));
+  }
+
+  static void
+  Test_CreateTransformParametersMap_for_default_transform()
+  {
+    // Converts the specified string to an std::vector<std::string>. Each vector element contains a character of the
+    // specified string.
+    const auto toVectorOfStrings = [](const std::string & str) {
+      std::vector<std::string> result;
+      for (const char ch : str)
+      {
+        result.push_back({ ch });
+      }
+      return result;
+    };
+
+    // Concatenates n times the specified string.
+    const auto times = [](const unsigned n, const std::string & str) {
+      std::string result;
+
+      for (auto i = n; i > 0; --i)
+      {
+        result += str;
+      }
+      return result;
+    };
+
+    const std::string         expectedFalse("false");
+    const std::string         expectedZero("0");
+    const std::string         expectedOne("1");
+    const ParameterValuesType expectedZeros(NDimension, "0");
+    const ParameterValuesType expectedOnes(NDimension, "1");
+    const auto expectedMatrixTranslation = toVectorOfStrings(times(NDimension, '1' + std::string(NDimension, '0')));
+    const auto expectedGridDirection =
+      toVectorOfStrings(times(NDimension - 1, '1' + std::string(NDimension, '0')) + '1');
+
+    using namespace elx;
+
+    WithElastixTransform<AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "CenterOfRotationPoint", expectedZeros } });
+    WithElastixTransform<AdvancedBSplineTransform>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "BSplineTransformSplineOrder", { "3" } },
+        { "GridDirection", expectedGridDirection },
+        { "GridIndex", expectedZeros },
+        { "GridOrigin", expectedZeros },
+        { "GridSize", expectedZeros },
+        { "GridSpacing", expectedOnes },
+        { "UseCyclicTransform", { "false" } } });
+    WithElastixTransform<AffineDTITransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "CenterOfRotationPoint", expectedZeros }, { "MatrixTranslation", expectedMatrixTranslation } });
+    WithElastixTransform<AffineLogStackTransform>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
+        { "NumberOfSubTransforms", { expectedZero } },
+        { "StackOrigin", { expectedZero } },
+        { "StackSpacing", { expectedOne } } });
+    WithElastixTransform<AffineLogTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "CenterOfRotationPoint", expectedZeros }, { "MatrixTranslation", expectedMatrixTranslation } });
+
+    const auto skippedTest = [] {
+      // Appears to crash when internally calling GetSubTransform(0) while m_SubTransformContainer is still empty.
+      WithElastixTransform<BSplineStackTransform>::Test_CreateTransformParametersMap_for_default_transform({});
+    };
+    (void)skippedTest;
+
+    WithElastixTransform<BSplineTransformWithDiffusion>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "GridIndex", expectedZeros },
+        { "GridOrigin", expectedZeros },
+        { "GridSize", expectedZeros },
+        { "GridSpacing", expectedOnes } });
+    WithElastixTransform<DeformationFieldTransform>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "DeformationFieldInterpolationOrder", { expectedZero } } });
+    WithElastixTransform<EulerStackTransform>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
+        { "NumberOfSubTransforms", { expectedZero } },
+        { "StackOrigin", { expectedZero } },
+        { "StackSpacing", { expectedOne } } });
+
+    WithElastixTransform<EulerTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+      (NDimension == 3)
+        ? ParameterMapType{ { "CenterOfRotationPoint", expectedZeros }, { "ComputeZYX", { expectedFalse } } }
+        : ParameterMapType{ { "CenterOfRotationPoint", expectedZeros } });
+
+    [&expectedZeros, &expectedOnes] {
+      try
+      {
+        WithElastixTransform<MultiBSplineTransformWithNormal>::Test_CreateTransformParametersMap_for_default_transform(
+          { { "GridIndex", expectedZeros },
+            { "GridOrigin", expectedZeros },
+            { "GridSize", expectedZeros },
+            { "GridSpacing", expectedOnes } });
+      }
+      catch (const itk::ExceptionObject & exceptionObject)
+      {
+        // TODO Avoid this exception!
+        EXPECT_NE(std::strstr(exceptionObject.GetDescription(), "ERROR: Missing -labels argument!"), nullptr);
+        return;
+      }
+      EXPECT_FALSE("MultiBSplineTransformWithNormal::CreateTransformParametersMap is expected to throw an exception!");
+    }();
+
+    WithElastixTransform<RecursiveBSplineTransform>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "BSplineTransformSplineOrder", { "3" } },
+        { "GridDirection", expectedGridDirection },
+        { "GridIndex", expectedZeros },
+        { "GridOrigin", expectedZeros },
+        { "GridSize", expectedZeros },
+        { "GridSpacing", expectedOnes },
+        { "UseCyclicTransform", { expectedFalse } } });
+    WithElastixTransform<SimilarityTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "CenterOfRotationPoint", expectedZeros } });
+    WithElastixTransform<SplineKernelTransform>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "FixedImageLandmarks", {} },
+        { "SplineKernelType", { "unknown" } },
+        { "SplinePoissonRatio", { "0.3" } },
+        { "SplineRelaxationFactor", { expectedZero } } });
+    WithElastixTransform<TranslationStackTransform>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "NumberOfSubTransforms", { expectedZero } },
+        { "StackOrigin", { expectedZero } },
+        { "StackSpacing", { expectedOne } } });
+    WithElastixTransform<TranslationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({});
+    WithElastixTransform<WeightedCombinationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+      { { "NormalizeCombinationWeights", { expectedFalse } } });
   }
 };
 
@@ -590,50 +740,8 @@ GTEST_TEST(TransformIO, CopyParametersToCorrespondingItkTransform)
 
 GTEST_TEST(Transform, CreateTransformParametersMapForDefaultTransform)
 {
-  // TODO elx::BSplineStackTransform crashes on m_BSplineStackTransform->GetSubTransform(0).
-  {
-    constexpr auto            Dimension = 2;
-    const ParameterValuesType expectedZeros(Dimension, "0");
-    const ParameterValuesType expectedOnes(Dimension, "1");
-
-    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedAffineTransformElastix>::
-      Test_CreateTransformParametersMap_for_default_transform({ { "CenterOfRotationPoint", expectedZeros } });
-    WithDimension<Dimension>::WithElastixTransform<
-      elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({});
-    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedBSplineTransform>::
-      Test_CreateTransformParametersMap_for_default_transform({ { "BSplineTransformSplineOrder", { "3" } },
-                                                                { "GridDirection", { "1", "0", "0", "1" } },
-                                                                { "GridIndex", expectedZeros },
-                                                                { "GridOrigin", expectedZeros },
-                                                                { "GridSize", expectedZeros },
-                                                                { "GridSpacing", expectedOnes },
-                                                                { "UseCyclicTransform", { "false" } } });
-    WithDimension<Dimension>::WithElastixTransform<
-      elx::EulerTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({ { "CenterOfRotationPoint",
-                                                                                               expectedZeros } });
-  }
-  {
-    constexpr auto            Dimension = 3;
-    const ParameterValuesType expectedZeros(Dimension, "0");
-    const ParameterValuesType expectedOnes(Dimension, "1");
-
-    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedAffineTransformElastix>::
-      Test_CreateTransformParametersMap_for_default_transform({ { "CenterOfRotationPoint", expectedZeros } });
-    WithDimension<Dimension>::WithElastixTransform<
-      elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({});
-    WithDimension<Dimension>::WithElastixTransform<elx::AdvancedBSplineTransform>::
-      Test_CreateTransformParametersMap_for_default_transform(
-        { { "BSplineTransformSplineOrder", { "3" } },
-          { "GridDirection", { "1", "0", "0", "0", "1", "0", "0", "0", "1" } },
-          { "GridIndex", expectedZeros },
-          { "GridOrigin", expectedZeros },
-          { "GridSize", expectedZeros },
-          { "GridSpacing", expectedOnes },
-          { "UseCyclicTransform", { "false" } } });
-    WithDimension<Dimension>::WithElastixTransform<elx::EulerTransformElastix>::
-      Test_CreateTransformParametersMap_for_default_transform(
-        { { "CenterOfRotationPoint", expectedZeros }, { "ComputeZYX", { "false" } } });
-  }
+  WithDimension<2>::Test_CreateTransformParametersMap_for_default_transform();
+  WithDimension<3>::Test_CreateTransformParametersMap_for_default_transform();
 }
 
 
