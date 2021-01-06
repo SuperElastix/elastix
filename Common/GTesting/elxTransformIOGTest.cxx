@@ -295,11 +295,12 @@ struct WithDimension
     {
       const elx::xoutManager manager("", false, false);
 
-      // Use double 0.1111111111111111 as test value.
-      constexpr auto testValue = 1.0 / 9.0;
-      constexpr auto expectedPrecision = 6;
-      EXPECT_EQ(expectedPrecision, std::ostringstream{}.precision());
-      const auto expectedString = "0." + std::string(expectedPrecision, '1');
+      // Use 0.3333333333333333... as test value.
+      constexpr auto testValue = 1.0 / 3.0;
+      constexpr auto expectedPrecision = 16;
+      static_assert(expectedPrecision == std::numeric_limits<double>::digits10 + 1,
+                    "The expected precision for double floating point numbers");
+      const auto expectedString = "0." + std::string(expectedPrecision, '3');
 
       const auto elastixObject = ElastixType<NDimension>::New();
 

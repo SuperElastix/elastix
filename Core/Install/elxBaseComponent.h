@@ -200,12 +200,7 @@ public:
 
   /** Convenience function overload to convert a floating point to a text string. */
   static std::string
-  ToString(const double scalar)
-  {
-    std::ostringstream stringStream;
-    stringStream << scalar;
-    return stringStream.str();
-  }
+  ToString(double);
 
   /** Convenience function overload to convert an integer to a text string. */
   template <typename TScalarValue>
