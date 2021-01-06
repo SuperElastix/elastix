@@ -18,6 +18,8 @@
 
 #include "elxBaseComponent.h"
 
+#include "itkNumberToString.h"
+
 #include <cmath>   // For fmod.
 #include <iomanip> // For setprecision.
 #include <sstream> // For ostringstream.
@@ -137,6 +139,17 @@ BaseComponent::ConvertSecondsToDHMS(const double totalSeconds, const unsigned in
   return make_string.str();
 
 } // end ConvertSecondsToDHMS()
+
+
+/**
+ * ****************** ToString ****************************
+ */
+
+std::string
+BaseComponent::ToString(const double scalar)
+{
+  return itk::NumberToString<double>{}(scalar);
+}
 
 
 } // end namespace elastix
