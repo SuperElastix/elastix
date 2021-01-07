@@ -207,10 +207,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(const ParametersType & param) const override;
-
   /** Function to rotate center of rotation point using initial transformation. */
   virtual void
   InitialTransformCenter(ReducedDimensionInputPointType & point);

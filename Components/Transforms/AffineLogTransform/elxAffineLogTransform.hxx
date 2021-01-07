@@ -96,53 +96,6 @@ AffineLogTransformElastix<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
- */
-
-template <class TElastix>
-void
-AffineLogTransformElastix<TElastix>::WriteToFile(const ParametersType & param) const
-{
-  elxout << "WriteToFile" << std::endl;
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile(param);
-
-  /** Write AffineLogTransform specific things. */
-  xout["transpar"] << std::endl << "// AffineLogTransform specific" << std::endl;
-
-  /** Set the precision of cout to 10. */
-  xout["transpar"] << std::setprecision(10);
-
-  /** Get the center of rotation point and write it to file. */
-  InputPointType rotationPoint = this->m_AffineLogTransform->GetCenter();
-  xout["transpar"] << "(CenterOfRotationPoint ";
-  for (unsigned int i = 0; i < SpaceDimension - 1; i++)
-  {
-    xout["transpar"] << rotationPoint[i] << " ";
-  }
-  xout["transpar"] << rotationPoint[SpaceDimension - 1] << ")" << std::endl;
-
-  xout["transpar"] << "(MatrixTranslation";
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    for (unsigned int j = 0; j < SpaceDimension; ++j)
-    {
-      xout["transpar"] << " " << this->m_AffineLogTransform->GetMatrix()(i, j);
-    }
-  }
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    xout["transpar"] << " " << this->m_AffineLogTransform->GetTranslation()[i];
-  }
-  xout["transpar"] << ")" << std::endl;
-
-  /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
-
-} // end WriteToFile()
-
-
-/**
  * ************************* CreateDerivedTransformParametersMap ************************
  */
 

@@ -159,9 +159,6 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
 
   typedef itk::ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
 
-  /** Add some DeformationFieldTransform specific lines. */
-  xout["transpar"] << std::endl << "// DeformationFieldTransform specific" << std::endl;
-
   /** Get the last part of the filename of the transformParameter-file,
    * which is going to be part of the filename of the deformationField image.
    */
@@ -180,17 +177,6 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
   /** Write the interpolation order to file */
   std::string interpolatorName =
     this->m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
-
-  unsigned int interpolationOrder = 0;
-  if (interpolatorName == "NearestNeighborInterpolateImageFunction")
-  {
-    interpolationOrder = 0;
-  }
-  else if (interpolatorName == "LinearInterpolateImageFunction")
-  {
-    interpolationOrder = 1;
-  }
-  xout["transpar"] << "(DeformationFieldInterpolationOrder " << interpolationOrder << ")" << std::endl;
 
   /** Possibly change the direction cosines to there original value */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
@@ -235,6 +221,8 @@ DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap(void) c
     m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
   const auto interpolationOrder = (interpolatorName == "LinearInterpolateImageFunction") ? 1U : 0U;
 
+  // TODO If necessary, add possibly missing parameter:
+  // - "DeformationFieldFileName" (which is written by WriteToFile).
   return { { "DeformationFieldInterpolationOrder", { BaseComponent::ToString(interpolationOrder) } } };
 
 } // end CustomizeTransformParametersMap()

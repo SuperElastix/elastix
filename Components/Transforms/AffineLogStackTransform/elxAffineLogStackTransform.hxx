@@ -156,48 +156,6 @@ AffineLogStackTransform<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
- *
- * Saves the TransformParameters as a vector and if wanted
- * also as a deformation field.
- */
-
-template <class TElastix>
-void
-AffineLogStackTransform<TElastix>::WriteToFile(const ParametersType & param) const
-{
-
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile(param);
-
-  /** Add some AffineTransform specific lines. */
-  xout["transpar"] << std::endl << "// AffineLogStackTransform specific" << std::endl;
-
-  /** Set the precision of cout to 10. */
-  xout["transpar"] << std::setprecision(10);
-
-  /** Get the center of rotation point and write it to file. */
-  ReducedDimensionInputPointType rotationPoint = this->m_AffineLogDummySubTransform->GetCenter();
-  xout["transpar"] << "(CenterOfRotationPoint ";
-  for (unsigned int i = 0; i < ReducedSpaceDimension - 1; i++)
-  {
-    xout["transpar"] << rotationPoint[i] << " ";
-  }
-  xout["transpar"] << rotationPoint[ReducedSpaceDimension - 1] << ")" << std::endl;
-
-  /** Write the stack spacing, stack origin and number of sub transforms. */
-  xout["transpar"] << "(StackSpacing " << this->m_AffineLogStackTransform->GetStackSpacing() << ")" << std::endl;
-  xout["transpar"] << "(StackOrigin " << this->m_AffineLogStackTransform->GetStackOrigin() << ")" << std::endl;
-  xout["transpar"] << "(NumberOfSubTransforms " << this->m_AffineLogStackTransform->GetNumberOfSubTransforms() << ")"
-                   << std::endl;
-
-  /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
-
-} // end WriteToFile()
-
-
-/**
  * ************************* CreateDerivedTransformParametersMap ************************
  */
 
