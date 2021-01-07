@@ -193,13 +193,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file.
-   * It writes the names of the subTransform parameterFiles.
-   * and the NormalizeWeights option, and calls the superclass' implementation.
-   */
-  void
-  WriteToFile(const ParametersType & param) const override;
-
   /** Load from the parameter file a list of subtransforms. The filenames are
    * stored in the m_SubTransformFileNames list */
   virtual void

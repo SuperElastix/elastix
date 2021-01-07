@@ -103,38 +103,6 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
- */
-
-template <class TElastix>
-void
-AdvancedAffineTransformElastix<TElastix>::WriteToFile(const ParametersType & param) const
-{
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile(param);
-
-  /** Write AdvancedAffineTransform specific things. */
-  xout["transpar"] << std::endl << "// AdvancedAffineTransform specific" << std::endl;
-
-  /** Set the precision of cout to 10. */
-  xout["transpar"] << std::setprecision(10);
-
-  /** Get the center of rotation point and write it to file. */
-  InputPointType rotationPoint = this->m_AffineTransform->GetCenter();
-  xout["transpar"] << "(CenterOfRotationPoint ";
-  for (unsigned int i = 0; i < SpaceDimension - 1; i++)
-  {
-    xout["transpar"] << rotationPoint[i] << " ";
-  }
-  xout["transpar"] << rotationPoint[SpaceDimension - 1] << ")" << std::endl;
-
-  /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
-
-} // end WriteToFile()
-
-
-/**
  * ************************* CreateDerivedTransformParametersMap ************************
  */
 

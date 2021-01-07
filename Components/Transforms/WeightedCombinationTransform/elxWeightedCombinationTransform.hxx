@@ -116,39 +116,6 @@ WeightedCombinationTransformElastix<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
- */
-
-template <class TElastix>
-void
-WeightedCombinationTransformElastix<TElastix>::WriteToFile(const ParametersType & param) const
-{
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile(param);
-
-  /** Write WeightedCombinationTransform specific things. */
-  xout["transpar"] << std::endl << "// WeightedCombinationTransform specific" << std::endl;
-
-  /** Write normalize-weights option */
-  std::string normalizeString = "false";
-  if (this->m_WeightedCombinationTransform->GetNormalizeWeights())
-  {
-    normalizeString = "true";
-  }
-  xout["transpar"] << "(NormalizeCombinationWeights \"" << normalizeString << "\" )" << std::endl;
-
-  /** Write names of subtransforms */
-  xout["transpar"] << "(SubTransforms ";
-  for (unsigned int i = 0; i < this->m_SubTransformFileNames.size(); ++i)
-  {
-    xout["transpar"] << "\"" << this->m_SubTransformFileNames[i] << "\" ";
-  }
-  xout["transpar"] << ")" << std::endl;
-
-} // end WriteToFile()
-
-
-/**
  * ************************* CustomizeTransformParametersMap ************************
  */
 

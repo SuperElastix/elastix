@@ -167,34 +167,6 @@ TranslationStackTransform<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
- */
-
-template <class TElastix>
-void
-TranslationStackTransform<TElastix>::WriteToFile(const ParametersType & param) const
-{
-  xl::xout["error"] << "WriteToFile" << std::endl;
-
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile(param);
-
-  /** Add some TranslationTransform specific lines. */
-  xout["transpar"] << std::endl << "// TranslationStackTransform specific" << std::endl;
-
-  /** Write the stack spacing, stack origin and number of sub transforms. */
-  xout["transpar"] << "(StackSpacing " << this->m_TranslationStackTransform->GetStackSpacing() << ")" << std::endl;
-  xout["transpar"] << "(StackOrigin " << this->m_TranslationStackTransform->GetStackOrigin() << ")" << std::endl;
-  xout["transpar"] << "(NumberOfSubTransforms " << this->m_TranslationStackTransform->GetNumberOfSubTransforms() << ")"
-                   << std::endl;
-
-  /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
-
-} // end WriteToFile()
-
-
-/**
  * ************************* CustomizeTransformParametersMap ************************
  */
 

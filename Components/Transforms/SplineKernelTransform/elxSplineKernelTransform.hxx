@@ -439,40 +439,6 @@ SplineKernelTransform<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
- * Save the kernel type and the source landmarks
- */
-
-template <class TElastix>
-void
-SplineKernelTransform<TElastix>::WriteToFile(const ParametersType & param) const
-{
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile(param);
-
-  /** Add some SplineKernelTransform specific lines. */
-  xl::xout["transpar"] << std::endl << "// SplineKernelTransform specific" << std::endl;
-
-  /** Write the SplineKernelType of this transform. */
-  xl::xout["transpar"] << "(SplineKernelType \"" << this->m_SplineKernelType << "\")" << std::endl;
-
-  /** Write the relaxation and Poisson ratio parameters. */
-  xl::xout["transpar"] << "(SplinePoissonRatio " << this->m_KernelTransform->GetPoissonRatio() << ")" << std::endl;
-  xl::xout["transpar"] << "(SplineRelaxationFactor " << this->m_KernelTransform->GetStiffness() << ")" << std::endl;
-
-  /** Write the fixed image landmarks. */
-  const ParametersType & fixedParams = this->m_KernelTransform->GetFixedParameters();
-  xl::xout["transpar"] << "(FixedImageLandmarks ";
-  for (unsigned int i = 0; i < fixedParams.GetSize() - 1; ++i)
-  {
-    xl::xout["transpar"] << fixedParams[i] << " ";
-  }
-  xl::xout["transpar"] << fixedParams[fixedParams.GetSize() - 1] << ")" << std::endl;
-
-} // end WriteToFile()
-
-
-/**
  * ************************* CustomizeTransformParametersMap ************************
  */
 

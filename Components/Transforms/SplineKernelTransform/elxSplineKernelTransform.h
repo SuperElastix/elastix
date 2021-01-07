@@ -202,10 +202,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(const ParametersType & param) const override;
-
 protected:
   /** The constructor. */
   SplineKernelTransform();

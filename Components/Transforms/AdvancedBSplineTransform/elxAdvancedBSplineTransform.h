@@ -269,10 +269,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(const ParametersType & param) const override;
-
   /** Set the scales of the edge B-spline coefficients to zero. */
   virtual void
   SetOptimizerScales(const unsigned int edgeWidth);

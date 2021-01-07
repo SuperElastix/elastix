@@ -199,12 +199,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file.
-   * It writes the center of rotation to file and calls the superclass' implementation.
-   */
-  void
-  WriteToFile(const ParametersType & param) const override;
-
 protected:
   /** The constructor. */
   AdvancedAffineTransformElastix();

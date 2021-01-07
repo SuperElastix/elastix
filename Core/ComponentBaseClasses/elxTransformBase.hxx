@@ -596,14 +596,9 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
 {
   auto & transparOutput = xl::get_xout()["transpar"];
 
-  /** Write the name of this transform. */
-  transparOutput << "(Transform \"" << this->elxGetClassName() << "\")" << std::endl;
+  ParameterMapType parameterMap;
 
-  /** Get the number of parameters of this transform. */
-  const unsigned int nrP = param.GetSize();
-
-  /** Write the number of parameters of this transform. */
-  transparOutput << "(NumberOfParameters " << nrP << ")" << std::endl;
+  this->CreateTransformParametersMap(param, &parameterMap);
 
   /** Write the parameters of this transform. */
   if (this->m_ReadWriteTransformParameters)
@@ -613,21 +608,11 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
       /** Writing in binary format is faster for large vectors, and slightly more accurate. */
       std::string dataFileName = this->GetTransformParametersFileName();
       dataFileName += ".dat";
-      transparOutput << "(TransformParameters \"" << dataFileName << "\")" << std::endl;
+      parameterMap["TransformParameters"] = { dataFileName };
 
       std::ofstream outfile(dataFileName, std::ios_base::binary);
-      outfile.write(reinterpret_cast<const char *>(param.data_block()), sizeof(ValueType) * nrP);
+      outfile.write(reinterpret_cast<const char *>(param.data_block()), sizeof(ValueType) * param.size());
       outfile.close();
-    }
-    else
-    {
-      /** In this case, write in a normal way to the parameter file. */
-      transparOutput << "(TransformParameters ";
-      for (unsigned int i = 0; i < nrP - 1; i++)
-      {
-        transparOutput << param[i] << " ";
-      }
-      transparOutput << param[nrP - 1] << ")" << std::endl;
     }
   }
 
@@ -664,115 +649,20 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
     }
   }
 
-  /** Write the name of the parameters-file of the initial transform. */
-  transparOutput << "(InitialTransformParametersFileName \"" << this->GetInitialTransformParametersFileName() << "\")"
-                 << std::endl;
+  /** The way the transform parameters are written. */
+  parameterMap["UseBinaryFormatForTransformationParameters"] = { BaseComponent::ToString(
+    this->m_UseBinaryFormatForTransformationParameters) };
 
-  /** Write the way the transform parameters are written. */
-  transparOutput << "(UseBinaryFormatForTransformationParameters \""
-                 << BaseComponent::BoolToString(this->m_UseBinaryFormatForTransformationParameters) << "\")"
-                 << std::endl;
-
-  /** Write the way Transforms are combined.
-   *  Set it to the default "Compose" when no combination transform is used. */
-  std::string                      combinationMethod = "Compose";
-  const CombinationTransformType * dummyComboTransform = dynamic_cast<const CombinationTransformType *>(this);
-  if (dummyComboTransform)
+  for (const auto & parameter : parameterMap)
   {
-    if (dummyComboTransform->GetUseAddition())
+    transparOutput << '(' << parameter.first;
+
+    for (const auto & value : parameter.second)
     {
-      combinationMethod = "Add";
+      transparOutput << ' ' << (BaseComponent::IsNumber(value) ? value : ('"' + value + '"'));
     }
+    transparOutput << ")\n";
   }
-
-  transparOutput << "(HowToCombineTransforms \"" << combinationMethod << "\")" << std::endl;
-
-  /** Write image specific things. */
-  transparOutput << std::endl << "// Image specific" << std::endl;
-
-  /** Write image dimensions. */
-  unsigned int FixDim = FixedImageDimension;
-  unsigned int MovDim = MovingImageDimension;
-  transparOutput << "(FixedImageDimension " << FixDim << ")" << std::endl;
-  transparOutput << "(MovingImageDimension " << MovDim << ")" << std::endl;
-
-  /** Write image pixel types. */
-  std::string fixpix = "float";
-  std::string movpix = "float";
-  this->m_Configuration->ReadParameter(fixpix, "FixedInternalImagePixelType", 0);
-  this->m_Configuration->ReadParameter(movpix, "MovingInternalImagePixelType", 0);
-  transparOutput << "(FixedInternalImagePixelType \"" << fixpix << "\")" << std::endl;
-  transparOutput << "(MovingInternalImagePixelType \"" << movpix << "\")" << std::endl;
-
-  /** Get the Size, Spacing and Origin of the fixed image. */
-  const auto size = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  const auto index = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
-  const auto spacing = this->m_Elastix->GetFixedImage()->GetSpacing();
-  const auto origin = this->m_Elastix->GetFixedImage()->GetOrigin();
-
-  /** The following line would be logically: */
-  // FixedImageDirectionType direction =
-  //  this->m_Elastix->GetFixedImage()->GetDirection();
-  /** But to support the UseDirectionCosines option, we should do it like this: */
-  typename FixedImageType::DirectionType direction;
-  this->GetElastix()->GetOriginalFixedImageDirection(direction);
-
-  /** Write image Size. */
-  transparOutput << "(Size ";
-  for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
-  {
-    transparOutput << size[i] << " ";
-  }
-  transparOutput << size[FixedImageDimension - 1] << ")" << std::endl;
-
-  /** Write image Index. */
-  transparOutput << "(Index ";
-  for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
-  {
-    transparOutput << index[i] << " ";
-  }
-  transparOutput << index[FixedImageDimension - 1] << ")" << std::endl;
-
-  /** Set the precision of cout to 10, because Spacing and
-   * Origin must have at least one digit precision.
-   */
-  transparOutput << std::setprecision(10);
-
-  /** Write image Spacing. */
-  transparOutput << "(Spacing ";
-  for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
-  {
-    transparOutput << spacing[i] << " ";
-  }
-  transparOutput << spacing[FixedImageDimension - 1] << ")" << std::endl;
-
-  /** Write image Origin. */
-  transparOutput << "(Origin ";
-  for (unsigned int i = 0; i < FixedImageDimension - 1; i++)
-  {
-    transparOutput << origin[i] << " ";
-  }
-  transparOutput << origin[FixedImageDimension - 1] << ")" << std::endl;
-
-  /** Write direction cosines. */
-  transparOutput << "(Direction";
-  for (unsigned int i = 0; i < FixedImageDimension; i++)
-  {
-    for (unsigned int j = 0; j < FixedImageDimension; j++)
-    {
-      transparOutput << " " << direction(j, i);
-    }
-  }
-  transparOutput << ")" << std::endl;
-
-  /** Set the precision back to default value. */
-  transparOutput << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
-
-  /** Write whether the direction cosines should be taken into account.
-   * This parameter is written from elastix 4.203.
-   */
-  transparOutput << "(UseDirectionCosines \""
-                 << BaseComponent::BoolToString(this->GetElastix()->GetUseDirectionCosines()) << "\")" << std::endl;
 
 } // end WriteToFile()
 

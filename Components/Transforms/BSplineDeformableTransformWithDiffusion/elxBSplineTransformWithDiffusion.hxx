@@ -1022,54 +1022,6 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
     xl::xout["error"] << excp << std::endl;
   }
 
-  /** Get the GridSize, GridIndex, GridSpacing and
-   * GridOrigin of this transform.
-   */
-  SizeType    size = this->m_BSplineTransform->GetGridRegion().GetSize();
-  IndexType   index = this->m_BSplineTransform->GetGridRegion().GetIndex();
-  SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
-  OriginType  origin = this->m_BSplineTransform->GetGridOrigin();
-
-  /** Write the GridSize of this transform.*/
-  xout["transpar"] << "(GridSize ";
-  for (unsigned int i = 0; i < SpaceDimension - 1; i++)
-  {
-    xout["transpar"] << size[i] << " ";
-  }
-  xout["transpar"] << size[SpaceDimension - 1] << ")" << std::endl;
-
-  /** Write the GridIndex of this transform.*/
-  xout["transpar"] << "(GridIndex ";
-  for (unsigned int i = 0; i < SpaceDimension - 1; i++)
-  {
-    xout["transpar"] << index[i] << " ";
-  }
-  xout["transpar"] << index[SpaceDimension - 1] << ")" << std::endl;
-
-  /** Set the precision of cout to 2, because GridSpacing and
-   * GridOrigin must have at least one digit precision.
-   */
-  xout["transpar"] << std::setprecision(10);
-
-  /** Write the GridSpacing of this transform.*/
-  xout["transpar"] << "(GridSpacing ";
-  for (unsigned int i = 0; i < SpaceDimension - 1; i++)
-  {
-    xout["transpar"] << spacing[i] << " ";
-  }
-  xout["transpar"] << spacing[SpaceDimension - 1] << ")" << std::endl;
-
-  /** Write the GridOrigin of this transform.*/
-  xout["transpar"] << "(GridOrigin ";
-  for (unsigned int i = 0; i < SpaceDimension - 1; i++)
-  {
-    xout["transpar"] << origin[i] << " ";
-  }
-  xout["transpar"] << origin[SpaceDimension - 1] << ")" << std::endl;
-
-  /** Set the precision back to default value.*/
-  xout["transpar"] << std::setprecision(this->m_Elastix->GetDefaultOutputPrecision());
-
 } // end WriteToFile()
 
 
