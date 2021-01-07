@@ -22,6 +22,7 @@
 
 #include <cmath>   // For fmod.
 #include <iomanip> // For setprecision.
+#include <regex>
 #include <sstream> // For ostringstream.
 
 namespace
@@ -149,6 +150,54 @@ std::string
 BaseComponent::ToString(const double scalar)
 {
   return itk::NumberToString<double>{}(scalar);
+}
+
+bool
+BaseComponent::IsNumber(const std::string & str)
+{
+  auto       iter = str.cbegin();
+  const auto end = str.cend();
+
+  if (iter == end)
+  {
+    return false;
+  }
+  if (*iter == '-')
+  {
+    // Skip minus sign.
+    ++iter;
+
+    if (iter == end)
+    {
+      return false;
+    }
+  }
+
+  const auto isDigit = [](const char ch) { return (ch >= '0') && (ch <= '9'); };
+
+  if (!(isDigit(*iter) && isDigit(str.back())))
+  {
+    // Any number must start and end with a digit.
+    return false;
+  }
+  ++iter;
+
+  const auto numberOfChars = end - iter;
+  const auto numberOfDigits = std::count_if(iter, end, isDigit);
+
+  if (numberOfDigits == numberOfChars)
+  {
+    // Whole (integral) number, e.g.: 1234567890
+    return true;
+  }
+
+  if ((std::find(iter, end, '.') != end) && (numberOfDigits == (numberOfChars - 1)))
+  {
+    // Decimal notation, e.g.: 12345.67890
+    return true;
+  }
+  // Scientific notation, e.g.: -1.23e-89 (Note: `iter` has already parsed the optional minus sign and the first digit.
+  return std::regex_match(iter, end, std::regex("(\\.\\d+)?e[+-]\\d+"));
 }
 
 

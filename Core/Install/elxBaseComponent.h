@@ -268,6 +268,14 @@ public:
     return vector1;
   }
 
+
+  /** Convenience function which tells whether the argument may represent a number (either fixed point, floating point,
+   * or integer/whole number).
+   * \note IsNumber("NaN") and IsNumber("nan") return false.
+   */
+  static bool
+  IsNumber(const std::string &);
+
 protected:
   BaseComponent() = default;
   virtual ~BaseComponent() = default;

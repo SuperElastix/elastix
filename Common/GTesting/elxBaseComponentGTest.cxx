@@ -195,3 +195,71 @@ GTEST_TEST(BaseComponent, ConcatenateVectors)
   expectConcatenation({}, { "1" });
   expectConcatenation({ "1" }, { "2", "3" });
 }
+
+
+GTEST_TEST(BaseComponent, IsNumberReturnsFalseOnNonNumericString)
+{
+  using namespace elx;
+
+  const auto expect_IsNumber_returns_false = [](const std::string & str) {
+    SCOPED_TRACE(str);
+    EXPECT_FALSE(BaseComponent::IsNumber(str));
+  };
+
+  for (const auto str : { "", " ", "a", "A B C", "true", "false", "nan", "NaN" })
+  {
+    expect_IsNumber_returns_false(str);
+  }
+
+  for (const auto transformName : { "AffineDTITransform",
+                                    "AffineLogStackTransform",
+                                    "AffineLogTransform",
+                                    "AffineTransform",
+                                    "BSplineStackTransform",
+                                    "BSplineTransform",
+                                    "BSplineTransformWithDiffusion",
+                                    "DeformationFieldTransform",
+                                    "EulerStackTransform",
+                                    "EulerTransform",
+                                    "MultiBSplineTransformWithNormal",
+                                    "RecursiveBSplineTransform",
+                                    "SimilarityTransform",
+                                    "SplineKernelTransform",
+                                    "TranslationStackTransform",
+                                    "TranslationTransform",
+                                    "WeightedCombinationTransform" })
+  {
+    expect_IsNumber_returns_false(transformName);
+  }
+}
+
+
+GTEST_TEST(BaseComponent, IsNumberReturnsTrueOnNumericString)
+{
+  using namespace elx;
+
+  const auto expect_IsNumber_returns_true = [](const std::string & str) {
+    SCOPED_TRACE(str);
+    EXPECT_TRUE(BaseComponent::IsNumber(str));
+  };
+
+  for (int i{ -10 }; i < 10; ++i)
+  {
+    expect_IsNumber_returns_true(BaseComponent::ToString(i));
+  }
+
+  expect_IsNumber_returns_true("1e+21");
+  expect_IsNumber_returns_true("1e-7");
+
+  for (double d{ -1.0 }; d < 1.0; d += 0.1)
+  {
+    expect_IsNumber_returns_true(BaseComponent::ToString(d));
+  }
+
+  using limits = std::numeric_limits<double>;
+
+  for (const auto limit : { limits::min(), limits::max(), limits::epsilon(), limits::lowest(), limits::denorm_min() })
+  {
+    expect_IsNumber_returns_true(BaseComponent::ToString(limit));
+  }
+}
