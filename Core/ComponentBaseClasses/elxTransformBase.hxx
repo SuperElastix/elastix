@@ -522,12 +522,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformPara
    * the transformParameterFileName. */
   const auto configurationInitialTransform = Configuration::New();
 
-  /** Create argmapInitialTransform. */
-  CommandLineArgumentMapType argmapInitialTransform;
-  argmapInitialTransform.insert(CommandLineEntryType("-tp", transformParametersFileName));
-
-  int initfailure = configurationInitialTransform->Initialize(argmapInitialTransform);
-  if (initfailure != 0)
+  if (configurationInitialTransform->Initialize({ { "-tp", transformParametersFileName } }) != 0)
   {
     itkGenericExceptionMacro(<< "ERROR: Reading initial transform "
                              << "parameters failed: " << transformParametersFileName);
@@ -552,17 +547,14 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
   configurationInitialTransform->ReadParameter(initialTransformName, "Transform", 0);
 
   /** Create an InitialTransform. */
-  PtrToCreator testcreator = nullptr;
-  testcreator =
+  const PtrToCreator testcreator =
     this->GetElastix()->GetComponentDatabase()->GetCreator(initialTransformName, this->m_Elastix->GetDBIndex());
+  const ObjectType::Pointer initialTransform = (testcreator == nullptr) ? nullptr : testcreator();
 
-  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
-  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
-
-  Self * elx_initialTransform = dynamic_cast<Self *>(initialTransform.GetPointer());
+  const auto elx_initialTransform = dynamic_cast<Self *>(initialTransform.GetPointer());
 
   /** Call the ReadFromFile method of the initialTransform. */
-  if (elx_initialTransform)
+  if (elx_initialTransform != nullptr)
   {
     // elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
     elx_initialTransform->SetElastix(this->GetElastix());
@@ -570,13 +562,12 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
     elx_initialTransform->ReadFromFile();
 
     /** Set initial transform. */
-    InitialTransformType * testPointer = dynamic_cast<InitialTransformType *>(initialTransform.GetPointer());
-    if (testPointer)
+    const auto testPointer = dynamic_cast<InitialTransformType *>(initialTransform.GetPointer());
+    if (testPointer != nullptr)
     {
       this->SetInitialTransform(testPointer);
     }
-
-  } // end if
+  }
 
 } // end ReadInitialTransformFromConfiguration()
 
