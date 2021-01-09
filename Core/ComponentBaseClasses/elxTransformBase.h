@@ -300,6 +300,11 @@ protected:
   AutomaticScalesEstimationStackTransform(const unsigned int & numSubTransforms, ScalesType & scales) const;
 
 private:
+  /** Function to read the initial transform parameters from the specified configuration object.
+   */
+  void
+  ReadInitialTransformFromConfiguration(const Configuration::Pointer);
+
   const CombinationTransformType *
   GetAsCombinationTransform(void) const
   {
