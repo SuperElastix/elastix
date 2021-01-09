@@ -505,37 +505,8 @@ void
 TransformBase<TElastix>::ReadInitialTransformFromVector(const size_t index)
 {
   /** Retrieve configuration object from internally stored vector of configuration objects. */
-  const auto configurationInitialTransform = this->GetElastix()->GetConfiguration(index);
+  this->ReadInitialTransformFromConfiguration(this->GetElastix()->GetConfiguration(index));
 
-  /** Read the InitialTransform name. */
-  ComponentDescriptionType initialTransformName = "AffineTransform";
-  configurationInitialTransform->ReadParameter(initialTransformName, "Transform", 0);
-
-  /** Create an InitialTransform. */
-  PtrToCreator testcreator = nullptr;
-  testcreator =
-    this->GetElastix()->GetComponentDatabase()->GetCreator(initialTransformName, this->m_Elastix->GetDBIndex());
-  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
-  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
-
-  Self * elx_initialTransform = dynamic_cast<Self *>(initialTransform.GetPointer());
-
-  /** Call the ReadFromFile method of the initialTransform. */
-  if (elx_initialTransform)
-  {
-    // elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
-    elx_initialTransform->SetElastix(this->GetElastix());
-    elx_initialTransform->SetConfiguration(configurationInitialTransform);
-    elx_initialTransform->ReadFromFile();
-
-    /** Set initial transform. */
-    InitialTransformType * testPointer = dynamic_cast<InitialTransformType *>(initialTransform.GetPointer());
-    if (testPointer)
-    {
-      this->SetInitialTransform(testPointer);
-    }
-
-  } // end if
 } // end ReadInitialTransformFromVector()
 
 
@@ -562,6 +533,20 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformPara
                              << "parameters failed: " << transformParametersFileName);
   }
 
+  this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
+
+} // end ReadInitialTransformFromFile()
+
+
+/**
+ * ******************* ReadInitialTransformFromConfiguration *****************************
+ */
+
+template <class TElastix>
+void
+TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
+  const Configuration::Pointer configurationInitialTransform)
+{
   /** Read the InitialTransform name. */
   ComponentDescriptionType initialTransformName = "AffineTransform";
   configurationInitialTransform->ReadParameter(initialTransformName, "Transform", 0);
@@ -593,7 +578,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformPara
 
   } // end if
 
-} // end ReadInitialTransformFromFile()
+} // end ReadInitialTransformFromConfiguration()
 
 
 /**
