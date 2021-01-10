@@ -79,10 +79,6 @@ public:
   typedef Superclass::ImageDimensionType       ImageDimensionType;
   typedef Superclass::DBIndexType              DBIndexType;
 
-  /** Typedef for class that populates a ComponentDatabase. */
-  typedef Superclass::ComponentLoaderType    ComponentLoaderType;
-  typedef Superclass::ComponentLoaderPointer ComponentLoaderPointer;
-
   /** Typedef that is used in the elastix dll version. */
   typedef Superclass::ParameterMapType ParameterMapType;
 

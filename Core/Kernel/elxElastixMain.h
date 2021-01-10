@@ -19,7 +19,6 @@
 #define elxElastixMain_h
 
 #include "elxComponentDatabase.h"
-#include "elxComponentLoader.h"
 
 #include "elxElastixBase.h"
 #include "itkParameterMapInterface.h"
@@ -169,10 +168,6 @@ public:
   typedef ComponentDatabaseType::ImageDimensionType       ImageDimensionType;
   typedef ComponentDatabaseType::IndexType                DBIndexType;
 
-  /** Typedef for class that populates a ComponentDatabase. */
-  typedef ComponentLoader              ComponentLoaderType;
-  typedef ComponentLoaderType::Pointer ComponentLoaderPointer;
-
   /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
 
@@ -315,23 +310,9 @@ public:
   virtual void
   SetMaximumNumberOfThreads(void) const;
 
-  /** Functions to get/set the ComponentDatabase. */
-  static ComponentDatabase *
-  GetComponentDatabase(void)
-  {
-    return s_CDB.GetPointer();
-  }
-
-
-  static void
-  SetComponentDatabase(ComponentDatabase * arg)
-  {
-    if (s_CDB != arg)
-    {
-      s_CDB = arg;
-    }
-  }
-
+  /** Function to get the ComponentDatabase. */
+  static const ComponentDatabase &
+  GetComponentDatabase(void);
 
   /** GetTransformParametersMap */
   virtual ParameterMapType
@@ -379,11 +360,6 @@ protected:
   ParameterMapType m_TransformParametersMap;
 
   FlatDirectionCosinesType m_OriginalFixedImageDirection;
-
-  static ComponentDatabasePointer s_CDB;
-  static ComponentLoaderPointer   s_ComponentLoader;
-  virtual int
-  LoadComponents(void);
 
   /** InitDBIndex sets m_DBIndex by asking the ImageTypes
    * from the Configuration object and obtaining the corresponding

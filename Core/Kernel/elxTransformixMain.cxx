@@ -104,7 +104,6 @@ TransformixMain::Run(void)
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration(this->m_Configuration);
-  this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
   this->GetElastixBase()->SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. No default is specified for the Transform. */
@@ -268,31 +267,17 @@ TransformixMain::InitDBIndex(void)
       }
     }
 
-    /** Load the components. */
-    if (this->s_CDB.IsNull())
+    /** Get the DBIndex from the ComponentDatabase. */
+    this->m_DBIndex = this->GetComponentDatabase().GetIndex(this->m_FixedImagePixelType,
+                                                            this->m_FixedImageDimension,
+                                                            this->m_MovingImagePixelType,
+                                                            this->m_MovingImageDimension);
+    if (this->m_DBIndex == 0)
     {
-      int loadReturnCode = this->LoadComponents();
-      if (loadReturnCode != 0)
-      {
-        xl::xout["error"] << "Loading components failed" << std::endl;
-        return loadReturnCode;
-      }
+      xl::xout["error"] << "ERROR:" << std::endl;
+      xl::xout["error"] << "Something went wrong in the ComponentDatabase." << std::endl;
+      return 1;
     }
-
-    if (this->s_CDB.IsNotNull())
-    {
-      /** Get the DBIndex from the ComponentDatabase. */
-      this->m_DBIndex = this->s_CDB->GetIndex(this->m_FixedImagePixelType,
-                                              this->m_FixedImageDimension,
-                                              this->m_MovingImagePixelType,
-                                              this->m_MovingImageDimension);
-      if (this->m_DBIndex == 0)
-      {
-        xl::xout["error"] << "ERROR:" << std::endl;
-        xl::xout["error"] << "Something went wrong in the ComponentDatabase." << std::endl;
-        return 1;
-      }
-    } // end if s_CDB!=0
 
   } // end if m_Configuration->Initialized();
   else

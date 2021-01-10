@@ -198,14 +198,6 @@ public:
     return this->m_DBIndex;
   }
 
-
-  /** Functions to get/set the ComponentDatabase
-   * The component database contains pointers to functions
-   * that create components.
-   */
-  elxGetObjectMacro(ComponentDatabase, ComponentDatabaseType);
-  elxSetObjectMacro(ComponentDatabase, ComponentDatabaseType);
-
   /** Get the component containers.
    * The component containers store components, such as
    * the metric, in the form of an itk::Object::Pointer.
@@ -397,9 +389,8 @@ protected:
   ElastixBase();
   ~ElastixBase() override = default;
 
-  ConfigurationPointer     m_Configuration;
-  DBIndexType              m_DBIndex;
-  ComponentDatabasePointer m_ComponentDatabase;
+  ConfigurationPointer m_Configuration;
+  DBIndexType          m_DBIndex;
 
   FlatDirectionCosinesType m_OriginalFixedImageDirection;
 

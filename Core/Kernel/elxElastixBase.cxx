@@ -132,7 +132,6 @@ ElastixBase::ElastixBase()
 {
   /** Initialize. */
   this->m_Configuration = nullptr;
-  this->m_ComponentDatabase = nullptr;
   this->m_DBIndex = 0;
 
   /** The default output precision of elxout is set to 6. */
