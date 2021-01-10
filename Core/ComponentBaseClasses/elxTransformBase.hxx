@@ -19,6 +19,7 @@
 #define elxTransformBase_hxx
 
 #include "elxTransformBase.h"
+#include "elxElastixMain.h"
 #include "elxTransformIO.h"
 
 #include "itkPointSet.h"
@@ -548,7 +549,7 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
 
   /** Create an InitialTransform. */
   const PtrToCreator testcreator =
-    this->GetElastix()->GetComponentDatabase()->GetCreator(initialTransformName, this->m_Elastix->GetDBIndex());
+    ElastixMain::GetComponentDatabase().GetCreator(initialTransformName, this->m_Elastix->GetDBIndex());
   const ObjectType::Pointer initialTransform = (testcreator == nullptr) ? nullptr : testcreator();
 
   const auto elx_initialTransform = dynamic_cast<Self *>(initialTransform.GetPointer());

@@ -25,6 +25,7 @@
 #endif
 
 #include "elxElastixMain.h"
+#include "elxComponentLoader.h"
 
 #include "elxMacro.h"
 #include "itkPlatformMultiThreader.h"
@@ -182,12 +183,27 @@ ElastixMain::ElastixMain()
 
 
 /**
- * ****************** Initialization of static members *********
+ * ****************** GetComponentDatabase *********
  */
 
-// Both s_CDB and s_ComponentLoader are defaulted-constructed to null.
-ElastixMain::ComponentDatabasePointer ElastixMain::s_CDB;
-ElastixMain::ComponentLoaderPointer   ElastixMain::s_ComponentLoader;
+const ComponentDatabase &
+ElastixMain::GetComponentDatabase(void)
+{
+  // Improved thread-safety by using C++11 "magic statics".
+  static const auto componentDatabase = [] {
+    const auto componentDatabase = ComponentDatabase::New();
+    const auto componentLoader = ComponentLoader::New();
+    componentLoader->SetComponentDatabase(componentDatabase);
+
+    if (componentLoader->LoadComponents() != 0)
+    {
+      xout["error"] << "Loading components failed" << std::endl;
+    }
+    return componentDatabase;
+  }();
+  return *componentDatabase;
+}
+
 
 /**
  * ********************** Destructor ****************************
@@ -338,7 +354,6 @@ ElastixMain::Run(void)
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration(this->m_Configuration);
-  this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
   this->GetElastixBase()->SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. ImageSampler is not mandatory.
@@ -635,31 +650,17 @@ ElastixMain::InitDBIndex(void)
       }
     }
 
-    /** Load the components. */
-    if (this->s_CDB.IsNull())
+    /** Get the DBIndex from the ComponentDatabase. */
+    this->m_DBIndex = GetComponentDatabase().GetIndex(this->m_FixedImagePixelType,
+                                                      this->m_FixedImageDimension,
+                                                      this->m_MovingImagePixelType,
+                                                      this->m_MovingImageDimension);
+    if (this->m_DBIndex == 0)
     {
-      int loadReturnCode = this->LoadComponents();
-      if (loadReturnCode != 0)
-      {
-        xout["error"] << "Loading components failed" << std::endl;
-        return loadReturnCode;
-      }
+      xout["error"] << "ERROR:" << std::endl;
+      xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
+      return 1;
     }
-
-    if (this->s_CDB.IsNotNull())
-    {
-      /** Get the DBIndex from the ComponentDatabase. */
-      this->m_DBIndex = this->s_CDB->GetIndex(this->m_FixedImagePixelType,
-                                              this->m_FixedImageDimension,
-                                              this->m_MovingImagePixelType,
-                                              this->m_MovingImageDimension);
-      if (this->m_DBIndex == 0)
-      {
-        xout["error"] << "ERROR:" << std::endl;
-        xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
-        return 1;
-      }
-    } // end if s_CDB!=0
 
   } // end if m_Configuration->Initialized();
   else
@@ -728,35 +729,6 @@ ElastixMain::GetTotalNumberOfElastixLevels(void)
 
 
 /**
- * ********************* LoadComponents **************************
- *
- * Store the install function of each component in the
- * component database.
- */
-
-int
-ElastixMain::LoadComponents(void)
-{
-  /** Create a ComponentDatabase. */
-  if (this->s_CDB.IsNull())
-  {
-    this->s_CDB = ComponentDatabaseType::New();
-  }
-
-  /** Create a ComponentLoader and set the database. */
-  if (this->s_ComponentLoader.IsNull())
-  {
-    this->s_ComponentLoader = ComponentLoaderType::New();
-    this->s_ComponentLoader->SetComponentDatabase(s_CDB);
-  }
-
-  /** Load the components. */
-  return this->s_ComponentLoader->LoadComponents();
-
-} // end LoadComponents()
-
-
-/**
  * ************************* GetElastixBase ***************************
  */
 
@@ -786,7 +758,7 @@ ElastixMain::CreateComponent(const ComponentDescriptionType & name)
 {
   /** A pointer to the New() function. */
   PtrToCreator testcreator = nullptr;
-  testcreator = this->s_CDB->GetCreator(name, this->m_DBIndex);
+  testcreator = GetComponentDatabase().GetCreator(name, this->m_DBIndex);
 
   // Note that ObjectPointer() yields a default-constructed SmartPointer (null).
   ObjectPointer testpointer = testcreator ? testcreator() : ObjectPointer();

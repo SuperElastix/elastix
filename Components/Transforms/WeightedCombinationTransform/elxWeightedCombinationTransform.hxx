@@ -280,8 +280,7 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms(void)
     /** Create a SubTransform. */
     typename ObjectType::Pointer subTransform;
     PtrToCreator                 testcreator = nullptr;
-    testcreator =
-      this->GetElastix()->GetComponentDatabase()->GetCreator(subTransformName, this->m_Elastix->GetDBIndex());
+    testcreator = ElastixMain::GetComponentDatabase().GetCreator(subTransformName, this->m_Elastix->GetDBIndex());
 
     // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
     subTransform = testcreator ? testcreator() : typename ObjectType::Pointer();
