@@ -398,8 +398,7 @@ EulerStackTransform<TElastix>::SetScales(void)
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimation = false;
-  this->m_Configuration->ReadParameter(
-    automaticScalesEstimation, "AutomaticScalesEstimation", 0);
+  this->m_Configuration->ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
 
   /** Check also AutomaticScalesEstimationStackTransform for backwards compatability. */
   bool automaticScalesEstimationStackTransform = false;
@@ -408,7 +407,9 @@ EulerStackTransform<TElastix>::SetScales(void)
 
   if (automaticScalesEstimationStackTransform)
   {
-    xl::xout["warning"] << "WARNING: AutomaticScalesEstimationStackTransform is deprecated, use AutomaticScalesEstimation instead." << std::endl;
+    xl::xout["warning"]
+      << "WARNING: AutomaticScalesEstimationStackTransform is deprecated, use AutomaticScalesEstimation instead."
+      << std::endl;
     automaticScalesEstimation = automaticScalesEstimationStackTransform;
   }
 
