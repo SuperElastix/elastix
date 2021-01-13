@@ -158,7 +158,8 @@ WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParametersM
 {
   const auto & itkTransform = *m_WeightedCombinationTransform;
 
-  return { { "NormalizeCombinationWeights", { BaseComponent::ToString(itkTransform.GetNormalizeWeights()) } } };
+  return { { "NormalizeCombinationWeights", { BaseComponent::ToString(itkTransform.GetNormalizeWeights()) } },
+           { "SubTransforms", m_SubTransformFileNames } };
 
 } // end CustomizeTransformParametersMap()
 
