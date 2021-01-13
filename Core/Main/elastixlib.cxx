@@ -353,9 +353,6 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
   movingMaskContainer = nullptr;
   resultImageContainer = nullptr;
 
-  /** Close the modules. */
-  ElastixMainType::UnloadComponents();
-
   /** Exit and return the error code. */
   return 0;
 

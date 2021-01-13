@@ -63,10 +63,6 @@ public:
   int
   LoadComponents(void);
 
-  /** Function to unload components. */
-  void
-  UnloadComponents(void);
-
 protected:
   /** Standard constructor and destructor. */
   ComponentLoader();

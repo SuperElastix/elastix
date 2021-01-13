@@ -757,26 +757,6 @@ ElastixMain::LoadComponents(void)
 
 
 /**
- * ********************* UnloadComponents **************************
- */
-
-void
-ElastixMain::UnloadComponents(void)
-{
-  s_CDB = nullptr;
-  s_ComponentLoader->SetComponentDatabase(nullptr);
-
-  if (s_ComponentLoader)
-  {
-    s_ComponentLoader->UnloadComponents();
-  }
-
-  s_ComponentLoader = nullptr;
-
-} // end UnloadComponents()
-
-
-/**
  * ************************* GetElastixBase ***************************
  */
 

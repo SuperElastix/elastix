@@ -87,10 +87,7 @@ ComponentLoader::ComponentLoader()
  * ****************** Destructor *********************************
  */
 
-ComponentLoader::~ComponentLoader()
-{
-  this->UnloadComponents();
-}
+ComponentLoader::~ComponentLoader() = default;
 
 
 /**
@@ -159,23 +156,5 @@ ComponentLoader::LoadComponents(void)
   return 0;
 
 } // end LoadComponents
-
-
-/**
- * ****************** UnloadComponents ****************************
- */
-
-void
-ComponentLoader::UnloadComponents()
-{
-  /**
-   * This function used to be more useful when we still used .dll's.
-   */
-
-  // Not necessary I think:
-  // this->m_ComponentDatabase = 0;
-
-} // end UnloadComponents
-
 
 } // end namespace elastix

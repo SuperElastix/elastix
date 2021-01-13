@@ -230,7 +230,6 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
 
   /** Clean up. */
   transformix = nullptr;
-  TransformixMainType::UnloadComponents();
 
   /** Exit and return the error code. */
   return returndummy;
