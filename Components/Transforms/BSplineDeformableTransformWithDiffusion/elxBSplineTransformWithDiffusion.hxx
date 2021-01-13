@@ -991,7 +991,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
    */
   std::string                        ctpfn = this->GetElastix()->GetCurrentTransformParameterFileName();
   std::basic_string<char>::size_type pos = ctpfn.rfind("TransformParameters.");
-  std::string                        lastpart = ctpfn.substr(pos + 19, ctpfn.size() - pos - 19 - 4);
+  std::string lastpart = (pos == std::string::npos) ? "" : ctpfn.substr(pos + 19, ctpfn.size() - pos - 19 - 4);
 
   /** Write the filename of the deformationField image. */
   std::string resultImageFormat = "mhd";
