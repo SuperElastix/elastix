@@ -33,3 +33,4 @@ else
     .githooks/clangFormatWindows.exe -style=file -i --verbose $file;
   done
 fi
+git status
