@@ -335,9 +335,6 @@ main(int argc, char ** argv)
   fixedMaskContainer = nullptr;
   movingMaskContainer = nullptr;
 
-  /** Close the modules. */
-  ElastixMainType::UnloadComponents();
-
   /** Exit and return the error code. */
   return 0;
 

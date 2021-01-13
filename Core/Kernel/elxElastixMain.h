@@ -337,9 +337,6 @@ public:
   virtual ParameterMapType
   GetTransformParametersMap(void) const;
 
-  static void
-  UnloadComponents(void);
-
 protected:
   ElastixMain();
   ~ElastixMain() override;

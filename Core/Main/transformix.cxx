@@ -227,7 +227,6 @@ main(int argc, char ** argv)
 
   /** Clean up. */
   transformix = nullptr;
-  TransformixMainType::UnloadComponents();
 
   /** Exit and return the error code. */
   return returndummy;
