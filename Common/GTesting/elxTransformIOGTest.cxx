@@ -517,7 +517,7 @@ struct WithDimension
         { "StackSpacing", { expectedOne } } });
     WithElastixTransform<TranslationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({});
     WithElastixTransform<WeightedCombinationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
-      { { "NormalizeCombinationWeights", { expectedFalse } } });
+      { { "NormalizeCombinationWeights", { expectedFalse } }, { "SubTransforms", {} } });
   }
 };
 
