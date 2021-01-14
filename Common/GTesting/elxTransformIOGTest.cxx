@@ -478,23 +478,23 @@ struct WithDimension
         ? ParameterMapType{ { "CenterOfRotationPoint", expectedZeros }, { "ComputeZYX", { expectedFalse } } }
         : ParameterMapType{ { "CenterOfRotationPoint", expectedZeros } });
 
-    [&expectedZeros, &expectedOnes] {
-      try
-      {
-        WithElastixTransform<MultiBSplineTransformWithNormal>::Test_CreateTransformParametersMap_for_default_transform(
-          { { "GridIndex", expectedZeros },
-            { "GridOrigin", expectedZeros },
-            { "GridSize", expectedZeros },
-            { "GridSpacing", expectedOnes } });
-      }
-      catch (const itk::ExceptionObject & exceptionObject)
-      {
-        // TODO Avoid this exception!
-        EXPECT_NE(std::strstr(exceptionObject.GetDescription(), "ERROR: Missing -labels argument!"), nullptr);
-        return;
-      }
+    try
+    {
+      WithElastixTransform<MultiBSplineTransformWithNormal>::Test_CreateTransformParametersMap_for_default_transform(
+        { { "GridIndex", expectedZeros },
+          { "GridOrigin", expectedZeros },
+          { "GridSize", expectedZeros },
+          { "GridSpacing", expectedOnes },
+          { "BSplineTransformSplineOrder", { "3" } },
+          { "GridDirection", expectedGridDirection },
+          { "MultiBSplineTransformWithNormalLabels", { itksys::SystemTools::GetCurrentWorkingDirectory() } } });
       EXPECT_FALSE("MultiBSplineTransformWithNormal::CreateTransformParametersMap is expected to throw an exception!");
-    }();
+    }
+    catch (const itk::ExceptionObject & exceptionObject)
+    {
+      // TODO Avoid this exception!
+      EXPECT_NE(std::strstr(exceptionObject.GetDescription(), "ERROR: Missing -labels argument!"), nullptr);
+    }
 
     WithElastixTransform<RecursiveBSplineTransform>::Test_CreateTransformParametersMap_for_default_transform(
       { { "BSplineTransformSplineOrder", { "3" } },
