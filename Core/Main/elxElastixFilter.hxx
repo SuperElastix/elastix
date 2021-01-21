@@ -197,7 +197,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GenerateData(void)
   }
 
   // Setup xout
-  const elx::xoutManager manager(logFileName, this->GetLogToFile(), this->GetLogToConsole());
+  const auto sharedManager = xoutManager::GetSharedManager(logFileName, this->GetLogToFile(), this->GetLogToConsole());
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)

@@ -64,6 +64,9 @@ public:
   /** This explicit constructor does set up the "xout" output streams. */
   explicit xoutManager(const std::string & logfilename, const bool setupLogging, const bool setupCout);
 
+  static std::shared_ptr<const xoutManager>
+  GetSharedManager(const std::string & logFileName, const bool setupLogging, const bool setupCout);
+
   /** The default-constructor only just constructs a manager object */
   xoutManager() = default;
 
