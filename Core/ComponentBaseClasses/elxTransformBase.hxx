@@ -595,8 +595,6 @@ template <class TElastix>
 void
 TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
 {
-  auto & transparOutput = xl::get_xout()["transpar"];
-
   ParameterMapType parameterMap;
 
   this->CreateTransformParametersMap(param, &parameterMap);
@@ -654,16 +652,7 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   parameterMap["UseBinaryFormatForTransformationParameters"] = { BaseComponent::ToString(
     this->m_UseBinaryFormatForTransformationParameters) };
 
-  for (const auto & parameter : parameterMap)
-  {
-    transparOutput << '(' << parameter.first;
-
-    for (const auto & value : parameter.second)
-    {
-      transparOutput << ' ' << (BaseComponent::IsNumber(value) ? value : ('"' + value + '"'));
-    }
-    transparOutput << ")\n";
-  }
+  xl::xout["transpar"] << BaseComponent::ParameterMapToString(parameterMap);
 
 } // end WriteToFile()
 

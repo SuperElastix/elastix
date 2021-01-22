@@ -20,8 +20,10 @@
 
 #include "itkNumberToString.h"
 
+#include <cassert>
 #include <cmath>   // For fmod.
 #include <iomanip> // For setprecision.
+#include <numeric> // For accumulate.
 #include <regex>
 #include <sstream> // For ostringstream.
 
@@ -145,6 +147,59 @@ BaseComponent::ConvertSecondsToDHMS(const double totalSeconds, const unsigned in
 /**
  * ****************** ToString ****************************
  */
+
+std::string
+BaseComponent::ParameterMapToString(const ParameterMapType & parameterMap)
+{
+  const auto expectedNumberOfChars = std::accumulate(
+    parameterMap.cbegin(),
+    parameterMap.cend(),
+    std::size_t{},
+    [](const std::size_t numberOfChars, const std::pair<std::string, ParameterValuesType> & parameter) {
+      return numberOfChars +
+             std::accumulate(parameter.second.cbegin(),
+                             parameter.second.cend(),
+                             // Two parentheses and a linebreak are added for each parameter.
+                             parameter.first.size() + 3,
+                             [](const std::size_t numberOfCharsPerParameter, const std::string & value) {
+                               // A space character is added for each of the values.
+                               // Plus two double-quotes, if the value is not a number.
+                               return numberOfCharsPerParameter + value.size() +
+                                      (BaseComponent::IsNumber(value) ? 1 : 3);
+                             });
+    });
+
+  std::string result;
+  result.reserve(expectedNumberOfChars);
+
+  for (const auto & parameter : parameterMap)
+  {
+    result.push_back('(');
+    result.append(parameter.first);
+
+    for (const auto & value : parameter.second)
+    {
+      result.push_back(' ');
+
+      if (BaseComponent::IsNumber(value))
+      {
+        result.append(value);
+      }
+      else
+      {
+        result.push_back('"');
+        result.append(value);
+        result.push_back('"');
+      }
+    }
+    result.append(")\n");
+  }
+
+  // Assert that the correct number of characters was reserved.
+  assert(result.size() == expectedNumberOfChars);
+  return result;
+}
+
 
 std::string
 BaseComponent::ToString(const double scalar)

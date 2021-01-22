@@ -72,6 +72,53 @@ GTEST_TEST(BaseComponent, BoolToString)
 }
 
 
+GTEST_TEST(BaseComponent, ParameterMapToString)
+{
+  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({}), std::string{});
+  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({ { "A", {} } }), "(A)\n");
+  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({ { "Numbers", { "0", "1" } } }), "(Numbers 0 1)\n");
+  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({ { "Letters", { "a", "z" } } }), "(Letters \"a\" \"z\")\n");
+
+  // A realistic example:
+  const std::string expectedString = R"((Direction 0 0 0 0)
+(FixedImageDimension 2)
+(FixedInternalImagePixelType "float")
+(HowToCombineTransforms "Compose")
+(Index 0 0)
+(InitialTransformParametersFileName "NoInitialTransform")
+(MovingImageDimension 2)
+(MovingInternalImagePixelType "float")
+(NumberOfParameters 2)
+(Origin 0 0)
+(Size 0 0)
+(Spacing 1 1)
+(Transform "TranslationTransform")
+(TransformParameters 0 0)
+(UseBinaryFormatForTransformationParameters "false")
+(UseDirectionCosines "true")
+)";
+
+  EXPECT_EQ(
+    elx::BaseComponent::ParameterMapToString({ { "Direction", { "0", "0", "0", "0" } },
+                                               { "FixedImageDimension", { "2" } },
+                                               { "FixedInternalImagePixelType", { "float" } },
+                                               { "HowToCombineTransforms", { "Compose" } },
+                                               { "Index", { "0", "0" } },
+                                               { "InitialTransformParametersFileName", { "NoInitialTransform" } },
+                                               { "MovingImageDimension", { "2" } },
+                                               { "MovingInternalImagePixelType", { "float" } },
+                                               { "NumberOfParameters", { "2" } },
+                                               { "Origin", { "0", "0" } },
+                                               { "Size", { "0", "0" } },
+                                               { "Spacing", { "1", "1" } },
+                                               { "Transform", { "TranslationTransform" } },
+                                               { "TransformParameters", { "0", "0" } },
+                                               { "UseBinaryFormatForTransformationParameters", { "false" } },
+                                               { "UseDirectionCosines", { "true" } } }),
+    expectedString);
+}
+
+
 GTEST_TEST(BaseComponent, ToString)
 {
   // Note that this is different from std::to_string(false) and
