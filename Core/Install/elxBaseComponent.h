@@ -42,6 +42,7 @@
 #include <vnl_vector.h>
 
 #include <iterator>
+#include <map>
 #include <string>
 #include <type_traits> // For is_integral and is_same.
 #include <vector>
@@ -69,6 +70,10 @@ class BaseComponent
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponent);
+
+  /** Corresponds with typedefs from the elastix class itk::ParameterFileParser. */
+  using ParameterValuesType = std::vector<std::string>;
+  using ParameterMapType = std::map<std::string, ParameterValuesType>;
 
   /**
    * Callback methods that each component of elastix is supposed
@@ -190,6 +195,11 @@ public:
   {
     return arg ? "true" : "false";
   }
+
+
+  /** Converts the specified parameter map to a text string, according to the elastix parameter text file format. */
+  static std::string
+  ParameterMapToString(const ParameterMapType &);
 
   /** Convenience function overload to convert a Boolean to a text string. */
   static std::string
