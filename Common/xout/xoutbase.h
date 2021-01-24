@@ -179,6 +179,7 @@ protected:
   CStreamMapType m_CTargetCells;
   XStreamMapType m_XTargetCells;
 
+private:
   template <class T>
   Self &
   SendToTargets(const T & _arg)
