@@ -57,11 +57,17 @@ public:
   typedef typename CStreamMapType::value_type   CStreamMapEntryType;
   typedef typename XStreamMapType::value_type   XStreamMapEntryType;
 
-  /** Constructors */
-  xoutbase() = default;
-
   /** Destructor */
-  virtual ~xoutbase() = default;
+  virtual ~xoutbase()
+#if !defined(_MSC_VER) || (_MSC_VER >= 1920)
+    // Preferably declare the destructor pure virtual, to ensure that this is an
+    // abstract base class. Unfortunately, doing so appears to trigger a weird
+    // compilation error with old Visual C++ versions (before Visual Studio 2019),
+    // specifically when having an `#include <valarray>`, saying:
+    // > error C2259: 'xoutlibrary::xoutbase<char,std::char_traits<char>>': cannot instantiate abstract class
+    = 0
+#endif
+    ;
 
   /** The operator [] simply calls this->SelectXCell(cellname).
    * It returns an x-cell */
@@ -160,6 +166,9 @@ public:
   GetXOutputs(void);
 
 protected:
+  /** Default-constructor. Only to be used by its derived classes. */
+  xoutbase() = default;
+
   /** Returns a target cell. */
   virtual Self &
   SelectXCell(const char * name);
