@@ -22,7 +22,6 @@
 
 namespace xoutlibrary
 {
-using namespace std;
 
 /**
  * ************************ Constructor *************************
@@ -46,23 +45,18 @@ template <class charT, class traits>
 void
 xoutcell<charT, traits>::WriteBufferedData(void)
 {
-  /** Make sure all data is written to the string */
-  this->m_InternalBuffer << flush;
-
   const std::string strbuf = this->m_InternalBuffer.str();
-
-  const char * const charbuf = strbuf.c_str();
 
   /** Send the string to the outputs */
   for (const auto & output : this->m_COutputs)
   {
-    *(output.second) << charbuf << flush;
+    *(output.second) << strbuf << std::flush;
   }
 
   /** Send the string to the outputs */
   for (const auto & output : this->m_XOutputs)
   {
-    *(output.second) << charbuf;
+    *(output.second) << strbuf;
     output.second->WriteBufferedData();
   }
 
