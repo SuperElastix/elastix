@@ -25,6 +25,18 @@ namespace xoutlibrary
 using namespace std;
 
 /**
+ * ********************* Destructor *****************************
+ *
+ * The destructor is defined here, as it is declared pure virtual.
+ * (A pure virtual member function cannot be defined directly at
+ * its declaration, in C++11, apparently.)
+ */
+
+template <class charT, class traits>
+xoutbase<charT, traits>::~xoutbase() = default;
+
+
+/**
  * ********************* operator[] *****************************
  */
 

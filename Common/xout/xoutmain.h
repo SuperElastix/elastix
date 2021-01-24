@@ -37,11 +37,15 @@ typedef xoutsimple<char> xoutsimple_type;
 typedef xoutrow<char>    xoutrow_type;
 typedef xoutcell<char>   xoutcell_type;
 
-xoutbase_type &
+/** The main xout class */
+class xoutmain : public xoutbase_type
+{};
+
+xoutmain &
 get_xout(void);
 
 void
-set_xout(xoutbase_type * arg);
+set_xout(xoutmain * arg);
 
 bool
 xout_valid();

@@ -50,7 +50,7 @@ using namespace xl;
 struct Data
 {
   /** xout TargetCells. */
-  xoutbase_type   Xout;
+  xoutmain        Xout;
   xoutsimple_type WarningXout;
   xoutsimple_type ErrorXout;
   xoutsimple_type StandardXout;

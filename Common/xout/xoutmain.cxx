@@ -20,9 +20,9 @@
 
 namespace xoutlibrary
 {
-static xoutbase_type * local_xout = nullptr;
+static xoutmain * local_xout = nullptr;
 
-xoutbase_type &
+xoutmain &
 get_xout(void)
 {
   return *local_xout;
@@ -30,7 +30,7 @@ get_xout(void)
 
 
 void
-set_xout(xoutbase_type * arg)
+set_xout(xoutmain * arg)
 {
   local_xout = arg;
 }
