@@ -278,14 +278,8 @@ template <class charT, class traits>
 xoutbase<charT, traits> &
 xoutbase<charT, traits>::SelectXCell(const char * name)
 {
-  if (this->m_XTargetCells.count(name))
-  {
-    return *(this->m_XTargetCells[name]);
-  }
-  else
-  {
-    return *this;
-  }
+  const auto found = m_XTargetCells.find(name);
+  return (found == m_XTargetCells.end()) ? *this : *(found->second);
 
 } // end SelectXCell
 
