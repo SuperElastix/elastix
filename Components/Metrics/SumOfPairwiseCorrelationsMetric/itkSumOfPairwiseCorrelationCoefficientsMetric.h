@@ -25,8 +25,6 @@
 #include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkExtractImageFilter.h"
 
-using namespace std;
-
 namespace itk
 {
 template <class TFixedImage, class TMovingImage>
