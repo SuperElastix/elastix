@@ -310,7 +310,7 @@
  *
  *  NB: for error and warning messages, for writing to the
  *  transformparameterfile etc. do not use elxout, but
- *  xout["{error, warning, etc}"].
+ *  xl::xout["{error, warning, etc}"].
  *
  */
 #define elxout ::xl::xout["standard"]

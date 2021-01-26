@@ -60,9 +60,9 @@ FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration(void)
   }
 
   /** Add some target cells to xout["iteration"].*/
-  xout["iteration"].AddTargetCell("2:Metric");
-  xout["iteration"].AddTargetCell("3:Gain a_k");
-  xout["iteration"].AddTargetCell("4:||Gradient||");
+  xl::xout["iteration"].AddTargetCell("2:Metric");
+  xl::xout["iteration"].AddTargetCell("3:Gain a_k");
+  xl::xout["iteration"].AddTargetCell("4:||Gradient||");
 
   /** Format them as floats */
   xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;

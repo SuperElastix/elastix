@@ -329,8 +329,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
   }
   catch (itk::ExceptionObject & excp)
   {
-    xout["error"] << excp << std::endl;
-    xout["error"] << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << std::endl;
+    xl::xout["error"] << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Transforming points done, it took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
@@ -348,8 +348,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
   }
   catch (itk::ExceptionObject & excp)
   {
-    xout["error"] << excp << std::endl;
-    xout["error"] << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << std::endl;
+    xl::xout["error"] << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Computing determinant of spatial Jacobian done, it took "
@@ -368,8 +368,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
   }
   catch (itk::ExceptionObject & excp)
   {
-    xout["error"] << excp << std::endl;
-    xout["error"] << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << std::endl;
+    xl::xout["error"] << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Computing spatial Jacobian done, it took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2)
@@ -492,11 +492,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration(void)
   CallInEachComponent(&BaseComponentType::BeforeRegistration);
 
   /** Add a column to iteration with the iteration number. */
-  xout["iteration"].AddTargetCell("1:ItNr");
+  xl::xout["iteration"].AddTargetCell("1:ItNr");
 
   /** Add a column to iteration with timing information. */
-  xout["iteration"].AddTargetCell("Time[ms]");
-  xout["iteration"]["Time[ms]"] << std::showpoint << std::fixed << std::setprecision(1);
+  xl::xout["iteration"].AddTargetCell("Time[ms]");
+  xl::xout["iteration"]["Time[ms]"] << std::showpoint << std::fixed << std::setprecision(1);
 
   /** Print time for initializing. */
   this->m_Timer0.Stop();
@@ -630,7 +630,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
   /** Write the headers of the columns that are printed each iteration. */
   if (this->m_IterationCounter == 0)
   {
-    xout["iteration"]["WriteHeaders"];
+    xl::xout["iteration"]["WriteHeaders"];
   }
 
   /** Call all the AfterEachIteration() functions. */
@@ -639,14 +639,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
   CallInEachComponent(&BaseComponentType::AfterEachIteration);
 
   /** Write the iteration number to the table. */
-  xout["iteration"]["1:ItNr"] << m_IterationCounter;
+  xl::xout["iteration"]["1:ItNr"] << m_IterationCounter;
 
   /** Time in this iteration. */
   this->m_IterationTimer.Stop();
-  xout["iteration"]["Time[ms]"] << this->m_IterationTimer.GetMean() * 1000.0;
+  xl::xout["iteration"]["Time[ms]"] << this->m_IterationTimer.GetMean() * 1000.0;
 
   /** Write the iteration info of this iteration. */
-  xout["iteration"].WriteBufferedData();
+  xl::xout["iteration"].WriteBufferedData();
 
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
@@ -782,7 +782,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   transformParameterFile.open(fileName.c_str());
   if (!transformParameterFile.is_open())
   {
-    xout["error"] << "ERROR: File \"" << fileName << "\" could not be opened!" << std::endl;
+    xl::xout["error"] << "ERROR: File \"" << fileName << "\" could not be opened!" << std::endl;
   }
 
   /** This xout["transpar"] writes to the log and to the TransformParameter file. */
@@ -794,14 +794,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   }
 
   /** Format specifiers of the transformation parameter file. */
-  xout["transpar"] << std::showpoint;
-  xout["transpar"] << std::fixed;
-  xout["transpar"] << std::setprecision(this->GetDefaultOutputPrecision());
+  xl::xout["transpar"] << std::showpoint;
+  xl::xout["transpar"] << std::fixed;
+  xl::xout["transpar"] << std::setprecision(this->GetDefaultOutputPrecision());
 
   /** Separate clearly in log-file. */
   if (toLog)
   {
-    xout["logonly"] << "\n=============== start of TransformParameterFile ===============" << std::endl;
+    xl::xout["logonly"] << "\n=============== start of TransformParameterFile ===============" << std::endl;
   }
 
   /** Call all the WriteToFile() functions.
@@ -815,7 +815,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   /** Separate clearly in log-file. */
   if (toLog)
   {
-    xout["logonly"] << "\n=============== end of TransformParameterFile ===============" << std::endl;
+    xl::xout["logonly"] << "\n=============== end of TransformParameterFile ===============" << std::endl;
   }
 
   /** Remove the "transpar" writing field. */
@@ -1033,7 +1033,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
   using namespace xl;
 
   /** Remove the current iteration info output file, if any. */
-  xout["iteration"].RemoveOutput("IterationInfoFile");
+  xl::xout["iteration"].RemoveOutput("IterationInfoFile");
 
   if (this->m_IterationInfoFile.is_open())
   {
@@ -1051,12 +1051,12 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
   this->m_IterationInfoFile.open(fileName.c_str());
   if (!(this->m_IterationInfoFile.is_open()))
   {
-    xout["error"] << "ERROR: File \"" << fileName << "\" could not be opened!" << std::endl;
+    xl::xout["error"] << "ERROR: File \"" << fileName << "\" could not be opened!" << std::endl;
   }
   else
   {
     /** Add this file to the list of outputs of xout["iteration"]. */
-    xout["iteration"].AddOutput("IterationInfoFile", &(this->m_IterationInfoFile));
+    xl::xout["iteration"].AddOutput("IterationInfoFile", &(this->m_IterationInfoFile));
   }
 
 } // end OpenIterationInfoFile()

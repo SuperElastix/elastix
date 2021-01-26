@@ -36,9 +36,9 @@ void
 RSGDEachParameterApart<TElastix>::BeforeRegistration(void)
 {
   /** Add the target cell "stepsize" to xout["iteration"].*/
-  xout["iteration"].AddTargetCell("2:Metric");
-  xout["iteration"].AddTargetCell("3:StepSize");
-  xout["iteration"].AddTargetCell("4:||Gradient||");
+  xl::xout["iteration"].AddTargetCell("2:Metric");
+  xl::xout["iteration"].AddTargetCell("3:StepSize");
+  xl::xout["iteration"].AddTargetCell("4:||Gradient||");
 
   /** Format the metric and stepsize as floats */
   xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;

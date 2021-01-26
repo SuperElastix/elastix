@@ -118,8 +118,8 @@ elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
   returndummy |= xout.AddTargetCell("coutonly", &g_data.CoutOnlyXout);
 
   /** Format the output. */
-  xout["standard"] << std::fixed;
-  xout["standard"] << std::showpoint;
+  xl::xout["standard"] << std::fixed;
+  xl::xout["standard"] << std::showpoint;
 
   /** Return a value. */
   return returndummy;
@@ -197,7 +197,7 @@ ElastixMain::GetComponentDatabase(void)
 
     if (componentLoader->LoadComponents() != 0)
     {
-      xout["error"] << "Loading components failed" << std::endl;
+      xl::xout["error"] << "Loading components failed" << std::endl;
     }
     return componentDatabase;
   }();
@@ -235,8 +235,8 @@ ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap)
   int dummy = this->m_Configuration->Initialize(argmap);
   if (dummy)
   {
-    xout["error"] << "ERROR: Something went wrong during initialization "
-                  << "of the configuration object." << std::endl;
+    xl::xout["error"] << "ERROR: Something went wrong during initialization "
+                      << "of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineParameters()
@@ -255,7 +255,7 @@ ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap, const Par
   int dummy = this->m_Configuration->Initialize(argmap, inputMap);
   if (dummy)
   {
-    xout["error"] << "ERROR: Something went wrong during initialization of the configuration object." << std::endl;
+    xl::xout["error"] << "ERROR: Something went wrong during initialization of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineArguments()
@@ -280,8 +280,8 @@ ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap, const std
     int dummy = this->m_Configurations[i]->Initialize(argmap, inputMaps[i]);
     if (dummy)
     {
-      xout["error"] << "ERROR: Something went wrong during initialization of configuration object " << i << "."
-                    << std::endl;
+      xl::xout["error"] << "ERROR: Something went wrong during initialization of configuration object " << i << "."
+                        << std::endl;
     }
   }
 
@@ -388,8 +388,8 @@ ElastixMain::Run(void)
   /** Check if all component could be created. */
   if (errorCode != 0)
   {
-    xout["error"] << "ERROR:" << std::endl;
-    xout["error"] << "One or more components could not be created." << std::endl;
+    xl::xout["error"] << "ERROR:" << std::endl;
+    xl::xout["error"] << "One or more components could not be created." << std::endl;
     return 1;
   }
 
@@ -519,8 +519,8 @@ ElastixMain::InitDBIndex(void)
         /** Sanity check. */
         if (fixedImageFileName == "")
         {
-          xout["error"] << "ERROR: could not read fixed image." << std::endl;
-          xout["error"] << "  both -f and -f0 are unspecified" << std::endl;
+          xl::xout["error"] << "ERROR: could not read fixed image." << std::endl;
+          xl::xout["error"] << "  both -f and -f0 are unspecified" << std::endl;
           return 1;
         }
 
@@ -531,8 +531,8 @@ ElastixMain::InitDBIndex(void)
         }
         catch (itk::ExceptionObject & err)
         {
-          xout["error"] << "ERROR: could not read fixed image." << std::endl;
-          xout["error"] << err << std::endl;
+          xl::xout["error"] << "ERROR: could not read fixed image." << std::endl;
+          xl::xout["error"] << err << std::endl;
           return 1;
         }
 
@@ -549,12 +549,12 @@ ElastixMain::InitDBIndex(void)
         {
           if (fixDimParameterFile != this->m_FixedImageDimension)
           {
-            xout["error"] << "ERROR: problem defining fixed image dimension.\n"
-                          << "  The parameter file says:     " << fixDimParameterFile << "\n"
-                          << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
-                          << "  Note that from elastix 4.6 the parameter file definition \"FixedImageDimension\" "
-                          << "is not needed anymore.\n  Please remove this entry from your parameter file."
-                          << std::endl;
+            xl::xout["error"] << "ERROR: problem defining fixed image dimension.\n"
+                              << "  The parameter file says:     " << fixDimParameterFile << "\n"
+                              << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
+                              << "  Note that from elastix 4.6 the parameter file definition \"FixedImageDimension\" "
+                              << "is not needed anymore.\n  Please remove this entry from your parameter file."
+                              << std::endl;
             return 1;
           }
         }
@@ -567,8 +567,8 @@ ElastixMain::InitDBIndex(void)
       /** Just a sanity check, probably not needed. */
       if (this->m_FixedImageDimension == 0)
       {
-        xout["error"] << "ERROR:" << std::endl;
-        xout["error"] << "The FixedImageDimension is not given." << std::endl;
+        xl::xout["error"] << "ERROR:" << std::endl;
+        xl::xout["error"] << "The FixedImageDimension is not given." << std::endl;
         return 1;
       }
     }
@@ -596,8 +596,8 @@ ElastixMain::InitDBIndex(void)
         /** Sanity check. */
         if (movingImageFileName == "")
         {
-          xout["error"] << "ERROR: could not read moving image." << std::endl;
-          xout["error"] << "  both -m and -m0 are unspecified" << std::endl;
+          xl::xout["error"] << "ERROR: could not read moving image." << std::endl;
+          xl::xout["error"] << "  both -m and -m0 are unspecified" << std::endl;
           return 1;
         }
 
@@ -608,8 +608,8 @@ ElastixMain::InitDBIndex(void)
         }
         catch (itk::ExceptionObject & err)
         {
-          xout["error"] << "ERROR: could not read moving image." << std::endl;
-          xout["error"] << err << std::endl;
+          xl::xout["error"] << "ERROR: could not read moving image." << std::endl;
+          xl::xout["error"] << err << std::endl;
           return 1;
         }
 
@@ -626,12 +626,12 @@ ElastixMain::InitDBIndex(void)
         {
           if (movDimParameterFile != this->m_MovingImageDimension)
           {
-            xout["error"] << "ERROR: problem defining moving image dimension.\n"
-                          << "  The parameter file says:      " << movDimParameterFile << "\n"
-                          << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
-                          << "  Note that from elastix 4.6 the parameter file definition \"MovingImageDimension\" "
-                          << "is not needed anymore.\n  Please remove this entry from your parameter file."
-                          << std::endl;
+            xl::xout["error"] << "ERROR: problem defining moving image dimension.\n"
+                              << "  The parameter file says:      " << movDimParameterFile << "\n"
+                              << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
+                              << "  Note that from elastix 4.6 the parameter file definition \"MovingImageDimension\" "
+                              << "is not needed anymore.\n  Please remove this entry from your parameter file."
+                              << std::endl;
             return 1;
           }
         }
@@ -644,8 +644,8 @@ ElastixMain::InitDBIndex(void)
       /** Just a sanity check, probably not needed. */
       if (this->m_MovingImageDimension == 0)
       {
-        xout["error"] << "ERROR:" << std::endl;
-        xout["error"] << "The MovingImageDimension is not given." << std::endl;
+        xl::xout["error"] << "ERROR:" << std::endl;
+        xl::xout["error"] << "The MovingImageDimension is not given." << std::endl;
         return 1;
       }
     }
@@ -657,16 +657,16 @@ ElastixMain::InitDBIndex(void)
                                                       this->m_MovingImageDimension);
     if (this->m_DBIndex == 0)
     {
-      xout["error"] << "ERROR:" << std::endl;
-      xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
+      xl::xout["error"] << "ERROR:" << std::endl;
+      xl::xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
       return 1;
     }
 
   } // end if m_Configuration->Initialized();
   else
   {
-    xout["error"] << "ERROR:" << std::endl;
-    xout["error"] << "The configuration object has not been initialized." << std::endl;
+    xl::xout["error"] << "ERROR:" << std::endl;
+    xl::xout["error"] << "The configuration object has not been initialized." << std::endl;
     return 1;
   }
 
@@ -802,7 +802,7 @@ ElastixMain::CreateComponents(const std::string &              key,
   {
     if (mandatoryComponent)
     {
-      xout["error"] << "ERROR: the following component has not been specified: " << key << std::endl;
+      xl::xout["error"] << "ERROR: the following component has not been specified: " << key << std::endl;
       errorcode = 1;
       return objectContainer;
     }
@@ -821,8 +821,8 @@ ElastixMain::CreateComponents(const std::string &              key,
   }
   catch (itk::ExceptionObject & excp)
   {
-    xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
-    xout["error"] << excp << std::endl;
+    xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
+    xl::xout["error"] << excp << std::endl;
     errorcode = 1;
     return objectContainer;
   }
@@ -840,8 +840,8 @@ ElastixMain::CreateComponents(const std::string &              key,
       }
       catch (itk::ExceptionObject & excp)
       {
-        xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
-        xout["error"] << excp << std::endl;
+        xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
+        xl::xout["error"] << excp << std::endl;
         errorcode = 1;
         return objectContainer;
       }
