@@ -36,7 +36,7 @@ void
 DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
 {
   /** Read the fixed rigidity image. */
-  string segmentedImageName = "";
+  std::string segmentedImageName = "";
   this->GetConfiguration()->ReadParameter(
     segmentedImageName, "SegmentedImageName", this->GetComponentLabel(), 0, -1, false);
 
@@ -69,7 +69,7 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
   {
     /** Add information to the exception. */
     excp.SetLocation("MattesMutualInformationWithRigidityPenalty - BeforeRegistration()");
-    string err_str = excp.GetDescription();
+    std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while reading the segmented image.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */

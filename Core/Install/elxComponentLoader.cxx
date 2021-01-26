@@ -26,8 +26,6 @@
 
 namespace elastix
 {
-using namespace xl;
-
 /**
  * Definition of class template, needed in InstallSupportedImageTypes()
  */

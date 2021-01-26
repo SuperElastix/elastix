@@ -84,8 +84,6 @@ template <class TElastix>
 void
 CMAEvolutionStrategy<TElastix>::BeforeRegistration(void)
 {
-  using namespace xl;
-
   /** Add target cells to xout["iteration"].*/
   xl::xout["iteration"].AddTargetCell("2:Metric");
   xl::xout["iteration"].AddTargetCell("3:StepLength");
@@ -207,8 +205,6 @@ template <class TElastix>
 void
 CMAEvolutionStrategy<TElastix>::AfterEachIteration(void)
 {
-  using namespace xl;
-
   /** Print some information. */
   xl::xout["iteration"]["2:Metric"] << this->GetCurrentValue();
   xl::xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();

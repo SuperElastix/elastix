@@ -43,11 +43,11 @@ BSplineInterpolator<TElastix>::BeforeEachResolution(void)
   /** Check. */
   if (splineOrder == 0)
   {
-    elx::xout["warning"] << "\nWARNING: the BSplineInterpolationOrder is set to 0.\n"
-                         << "  It is not possible to take derivatives with this setting.\n"
-                         << "  Make sure you use a derivative free optimizer,\n"
-                         << "  or that you selected to use a gradient image in the metric.\n"
-                         << std::endl;
+    xl::xout["warning"] << "\nWARNING: the BSplineInterpolationOrder is set to 0.\n"
+                        << "  It is not possible to take derivatives with this setting.\n"
+                        << "  Make sure you use a derivative free optimizer,\n"
+                        << "  or that you selected to use a gradient image in the metric.\n"
+                        << std::endl;
   }
 
   /** Set the splineOrder. */

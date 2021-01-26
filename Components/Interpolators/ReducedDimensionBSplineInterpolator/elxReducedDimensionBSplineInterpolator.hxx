@@ -43,9 +43,9 @@ ReducedDimensionBSplineInterpolator<TElastix>::BeforeEachResolution(void)
   /** Check. */
   if (splineOrder == 0)
   {
-    elx::xout["warning"] << "WARNING: the BSplineInterpolationOrder is set to 0.\n"
-                         << "         It is not possible to take derivatives with this setting.\n"
-                         << "         Make sure you use a derivative free optimizer." << std::endl;
+    xl::xout["warning"] << "WARNING: the BSplineInterpolationOrder is set to 0.\n"
+                        << "         It is not possible to take derivatives with this setting.\n"
+                        << "         Make sure you use a derivative free optimizer." << std::endl;
   }
 
   /** Set the splineOrder. */
