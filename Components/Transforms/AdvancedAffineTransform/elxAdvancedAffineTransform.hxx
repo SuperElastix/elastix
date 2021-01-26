@@ -58,7 +58,7 @@ AdvancedAffineTransformElastix<TElastix>::BeforeRegistration(void)
 
   /** Print the elapsed time. */
   timer1.Stop();
-  elxout << "InitializeTransform took " << this->ConvertSecondsToDHMS(timer1.GetMean(), 2) << std::endl;
+  elxout << "InitializeTransform took " << Conversion::SecondsToDHMS(timer1.GetMean(), 2) << std::endl;
 
   /** Task 2 - Set the scales. */
   this->SetScales();
@@ -110,7 +110,7 @@ template <class TElastix>
 auto
 AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
-  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(m_AffineTransform->GetCenter()) } };
+  return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_AffineTransform->GetCenter()) } };
 
 } // end CreateDerivedTransformParametersMap()
 

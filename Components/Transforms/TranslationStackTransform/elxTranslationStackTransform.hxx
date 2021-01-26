@@ -176,9 +176,9 @@ TranslationStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) c
 {
   const auto & itkTransform = *m_TranslationStackTransform;
 
-  return { { "StackSpacing", { BaseComponent::ToString(itkTransform.GetStackSpacing()) } },
-           { "StackOrigin", { BaseComponent::ToString(itkTransform.GetStackOrigin()) } },
-           { "NumberOfSubTransforms", { BaseComponent::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
+  return { { "StackSpacing", { Conversion::ToString(itkTransform.GetStackSpacing()) } },
+           { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },
+           { "NumberOfSubTransforms", { Conversion::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
 
 } // end CustomizeTransformParametersMap()
 

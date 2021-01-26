@@ -605,7 +605,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation(void)
 
   timer_P.Stop();
   elxout << "  Computing the preconditioner took "
-    << this->ConvertSecondsToDHMS( timer_P.GetMean(), 6 )
+    << Conversion::SecondsToDHMS( timer_P.GetMean(), 6 )
     << std::endl;
 
 
@@ -645,7 +645,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation(void)
   computeDisplacementDistribution->Compute(
     this->GetScaledCurrentPosition(), jacg, maxJJ, maximumDisplacementEstimationMethod);
   timer4.Stop();
-  elxout << "  Computing the displacement distribution took " << this->ConvertSecondsToDHMS(timer4.GetMean(), 6)
+  elxout << "  Computing the displacement distribution took " << Conversion::SecondsToDHMS(timer4.GetMean(), 6)
          << std::endl;
 
   /** Sample the fixed image to estimate the noise factor. */
@@ -665,7 +665,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation(void)
   timer_noise.Stop();
   elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << std::endl;
   elxout << "  The NoiseFactor is: " << m_NoiseFactor << std::endl;
-  elxout << "  Compute the noise compensation took " << this->ConvertSecondsToDHMS(timer_noise.GetMean(), 6)
+  elxout << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer_noise.GetMean(), 6)
          << std::endl;
 
   // MS: the following can probably be removed or moved.
@@ -689,7 +689,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation(void)
   this->SetParam_a(a);
   /** Print the elapsed time. */
   timer.Stop();
-  elxout << "Automatic preconditioner estimation took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  elxout << "Automatic preconditioner estimation took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
 } // end AutomaticPreconditionerEstimation()
 

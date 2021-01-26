@@ -116,7 +116,7 @@ struct WithDimension
                      .append("\n  ElastixTransformType = ")
                      .append(typeid(ElastixTransformType).name())
                      .append("\n  fixed = ")
-                     .append(elx::BaseComponent::BoolToString(fixed)));
+                     .append(elx::Conversion::BoolToString(fixed)));
 
       const auto transform = ElastixTransformType::New();
       const auto parameters = elx::TransformIO::GetParameters(fixed, *transform);
@@ -135,7 +135,7 @@ struct WithDimension
                      .append("\n  TExpectedCorrespondingItkTransform = ")
                      .append(typeid(TExpectedCorrespondingItkTransform).name())
                      .append("\n  fixed = ")
-                     .append(elx::BaseComponent::BoolToString(fixed)));
+                     .append(elx::Conversion::BoolToString(fixed)));
 
       const auto elxTransform = ElastixTransformType::New();
       SCOPED_TRACE(fixed);

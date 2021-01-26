@@ -223,7 +223,7 @@ DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap(void) c
 
   // TODO If necessary, add possibly missing parameter:
   // - "DeformationFieldFileName" (which is written by WriteToFile).
-  return { { "DeformationFieldInterpolationOrder", { BaseComponent::ToString(interpolationOrder) } } };
+  return { { "DeformationFieldInterpolationOrder", { Conversion::ToString(interpolationOrder) } } };
 
 } // end CustomizeTransformParametersMap()
 

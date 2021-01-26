@@ -26,6 +26,8 @@ set( InstallFilesForExecutables
 set( InstallFilesForComponents
   Install/elxComponentDatabase.cxx
   Install/elxComponentDatabase.h
+  Install/elxConversion.cxx
+  Install/elxConversion.h
   Install/elxBaseComponent.cxx
   Install/elxBaseComponent.h
   Install/elxBaseComponentSE.h

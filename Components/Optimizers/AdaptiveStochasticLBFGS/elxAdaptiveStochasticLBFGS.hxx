@@ -895,7 +895,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation(void)
 
   /** Print the elapsed time. */
   timer1.Stop();
-  elxout << "Automatic parameter estimation took " << this->ConvertSecondsToDHMS(timer1.GetMean(), 6) << std::endl;
+  elxout << "Automatic parameter estimation took " << Conversion::SecondsToDHMS(timer1.GetMean(), 6) << std::endl;
 
 } // end AutomaticParameterEstimation()
 
@@ -958,7 +958,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal(void)
   timer2.Start();
   computeJacobianTerms->Compute(TrC, TrCC, maxJJ, maxJCJ);
   timer2.Stop();
-  elxout << "  Computing the Jacobian terms took " << this->ConvertSecondsToDHMS(timer2.GetMean(), 6) << std::endl;
+  elxout << "  Computing the Jacobian terms took " << Conversion::SecondsToDHMS(timer2.GetMean(), 6) << std::endl;
 
   /** Determine number of gradient measurements such that
    * E + 2\sqrt(Var) < K E
@@ -998,7 +998,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal(void)
   }
   this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
   timer3.Stop();
-  elxout << "  Sampling the gradients took " << this->ConvertSecondsToDHMS(timer3.GetMean(), 6) << std::endl;
+  elxout << "  Sampling the gradients took " << Conversion::SecondsToDHMS(timer3.GetMean(), 6) << std::endl;
 
   /** Determine parameter settings. */
   double sigma1 = 0.0;
@@ -1104,7 +1104,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
   computeDisplacementDistribution->Compute(
     this->GetScaledCurrentPosition(), jacg, maxJJ, maximumDisplacementEstimationMethod);
   timer4.Stop();
-  elxout << "  Computing the displacement distribution took " << this->ConvertSecondsToDHMS(timer4.GetMean(), 6)
+  elxout << "  Computing the displacement distribution took " << Conversion::SecondsToDHMS(timer4.GetMean(), 6)
          << std::endl;
 
   /** Initial of the variables. */
@@ -1143,7 +1143,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
     this->m_NoiseFactor = noisefactor;
     a = delta * std::pow(A + 1.0, alpha) / jacg * noisefactor;
     timer5.Stop();
-    elxout << "  Compute the noise compensation took " << this->ConvertSecondsToDHMS(timer5.GetMean(), 6) << std::endl;
+    elxout << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer5.GetMean(), 6) << std::endl;
   }
   else
   {

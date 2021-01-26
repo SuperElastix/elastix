@@ -164,10 +164,10 @@ EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -
 {
   const auto & itkTransform = *m_EulerStackTransform;
 
-  return { { "CenterOfRotationPoint", BaseComponent::ToVectorOfStrings(m_EulerDummySubTransform->GetCenter()) },
-           { "StackSpacing", { BaseComponent::ToString(itkTransform.GetStackSpacing()) } },
-           { "StackOrigin", { BaseComponent::ToString(itkTransform.GetStackOrigin()) } },
-           { "NumberOfSubTransforms", { BaseComponent::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
+  return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_EulerDummySubTransform->GetCenter()) },
+           { "StackSpacing", { Conversion::ToString(itkTransform.GetStackSpacing()) } },
+           { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },
+           { "NumberOfSubTransforms", { Conversion::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
 
 } // end CreateDerivedTransformParametersMap()
 

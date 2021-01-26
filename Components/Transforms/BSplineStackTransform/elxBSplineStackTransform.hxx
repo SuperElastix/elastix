@@ -659,16 +659,15 @@ BSplineStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const
 
   const auto gridRegion = firstSubTransform->GetGridRegion();
 
-  return { { "GridSize", BaseComponent::ToVectorOfStrings(gridRegion.GetSize()) },
-           { "GridIndex", BaseComponent::ToVectorOfStrings(gridRegion.GetIndex()) },
-           { "GridSpacing", BaseComponent::ToVectorOfStrings(firstSubTransform->GetGridSpacing()) },
-           { "GridOrigin", BaseComponent::ToVectorOfStrings(firstSubTransform->GetGridOrigin()) },
-           { "GridDirection", BaseComponent::ToVectorOfStrings(firstSubTransform->GetGridDirection()) },
-           { "BSplineTransformSplineOrder", { BaseComponent::ToString(m_SplineOrder) } },
-           { "StackSpacing", { BaseComponent::ToString(m_BSplineStackTransform->GetStackSpacing()) } },
-           { "StackOrigin", { BaseComponent::ToString(m_BSplineStackTransform->GetStackOrigin()) } },
-           { "NumberOfSubTransforms",
-             { BaseComponent::ToString(m_BSplineStackTransform->GetNumberOfSubTransforms()) } } };
+  return { { "GridSize", Conversion::ToVectorOfStrings(gridRegion.GetSize()) },
+           { "GridIndex", Conversion::ToVectorOfStrings(gridRegion.GetIndex()) },
+           { "GridSpacing", Conversion::ToVectorOfStrings(firstSubTransform->GetGridSpacing()) },
+           { "GridOrigin", Conversion::ToVectorOfStrings(firstSubTransform->GetGridOrigin()) },
+           { "GridDirection", Conversion::ToVectorOfStrings(firstSubTransform->GetGridDirection()) },
+           { "BSplineTransformSplineOrder", { Conversion::ToString(m_SplineOrder) } },
+           { "StackSpacing", { Conversion::ToString(m_BSplineStackTransform->GetStackSpacing()) } },
+           { "StackOrigin", { Conversion::ToString(m_BSplineStackTransform->GetStackOrigin()) } },
+           { "NumberOfSubTransforms", { Conversion::ToString(m_BSplineStackTransform->GetNumberOfSubTransforms()) } } };
 
 } // end CreateDerivedTransformParametersMap()
 

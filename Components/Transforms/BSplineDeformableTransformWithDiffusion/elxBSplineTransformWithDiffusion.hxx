@@ -1040,10 +1040,10 @@ BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap(voi
   // - "DeformationFieldFileName" (which is written by WriteToFile).
   // - "GridDirection" (as returned by RecursiveBSplineTransform).
   // - "ThresholdBool", "ThresholdHU", etc. (as retrieved by ReadParameter).
-  return { { "GridSize", BaseComponent::ToVectorOfStrings(gridRegion.GetSize()) },
-           { "GridIndex", BaseComponent::ToVectorOfStrings(gridRegion.GetIndex()) },
-           { "GridSpacing", BaseComponent::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
-           { "GridOrigin", BaseComponent::ToVectorOfStrings(itkTransform.GetGridOrigin()) } };
+  return { { "GridSize", Conversion::ToVectorOfStrings(gridRegion.GetSize()) },
+           { "GridIndex", Conversion::ToVectorOfStrings(gridRegion.GetIndex()) },
+           { "GridSpacing", Conversion::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
+           { "GridOrigin", Conversion::ToVectorOfStrings(itkTransform.GetGridOrigin()) } };
 
 } // end CustomizeTransformParametersMap()
 

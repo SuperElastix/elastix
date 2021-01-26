@@ -1,5 +1,5 @@
 add_executable(CommonGTest
-  elxBaseComponentGTest.cxx
+  elxConversionGTest.cxx
   elxElastixMainGTest.cxx
   elxTransformIOGTest.cxx
   itkComputeImageExtremaFilterGTest.cxx

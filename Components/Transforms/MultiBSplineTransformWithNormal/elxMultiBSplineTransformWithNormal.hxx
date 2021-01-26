@@ -630,12 +630,12 @@ MultiBSplineTransformWithNormal<TElastix>::CreateDerivedTransformParametersMap(v
   const auto & itkTransform = *m_MultiBSplineTransformWithNormal;
   const auto   gridRegion = itkTransform.GetGridRegion();
 
-  return { { "GridSize", BaseComponent::ToVectorOfStrings(gridRegion.GetSize()) },
-           { "GridIndex", BaseComponent::ToVectorOfStrings(gridRegion.GetIndex()) },
-           { "GridSpacing", BaseComponent::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
-           { "GridOrigin", BaseComponent::ToVectorOfStrings(itkTransform.GetGridOrigin()) },
-           { "GridDirection", BaseComponent::ToVectorOfStrings(itkTransform.GetGridDirection()) },
-           { "BSplineTransformSplineOrder", { BaseComponent::ToString(m_SplineOrder) } },
+  return { { "GridSize", Conversion::ToVectorOfStrings(gridRegion.GetSize()) },
+           { "GridIndex", Conversion::ToVectorOfStrings(gridRegion.GetIndex()) },
+           { "GridSpacing", Conversion::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
+           { "GridOrigin", Conversion::ToVectorOfStrings(itkTransform.GetGridOrigin()) },
+           { "GridDirection", Conversion::ToVectorOfStrings(itkTransform.GetGridDirection()) },
+           { "BSplineTransformSplineOrder", { Conversion::ToString(m_SplineOrder) } },
            { "MultiBSplineTransformWithNormalLabels", { itksys::SystemTools::CollapseFullPath(m_LabelsPath) } } };
 
 } // end CustomizeTransformParametersMap()

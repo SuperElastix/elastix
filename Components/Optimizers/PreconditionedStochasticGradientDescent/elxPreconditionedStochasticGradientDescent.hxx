@@ -600,7 +600,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   }
 
   timer_P.Stop();
-  elxout << "  Computing the preconditioner took " << this->ConvertSecondsToDHMS(timer_P.GetMean(), 6) << std::endl;
+  elxout << "  Computing the preconditioner took " << Conversion::SecondsToDHMS(timer_P.GetMean(), 6) << std::endl;
 
 #if 0
   elxout << std::scientific;
@@ -642,7 +642,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
     computeDisplacementDistribution->Compute(
       this->GetScaledCurrentPosition(), jacg, maxJJ, maximumDisplacementEstimationMethod);
     timer4.Stop();
-    elxout << "  Computing the displacement distribution took " << this->ConvertSecondsToDHMS(timer4.GetMean(), 6)
+    elxout << "  Computing the displacement distribution took " << Conversion::SecondsToDHMS(timer4.GetMean(), 6)
            << std::endl;
   }
 
@@ -663,7 +663,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   timer_noise.Stop();
   elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << std::endl;
   elxout << "  The NoiseFactor is: " << m_NoiseFactor << std::endl;
-  elxout << "  Compute the noise compensation took " << this->ConvertSecondsToDHMS(timer_noise.GetMean(), 6)
+  elxout << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer_noise.GetMean(), 6)
          << std::endl;
 
   // MS: the following can probably be removed or moved.
@@ -691,7 +691,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
 
   /** Print the elapsed time. */
   timer.Stop();
-  elxout << "Automatic preconditioner estimation took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  elxout << "Automatic preconditioner estimation took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
 } // end AutomaticPreconditionerEstimation()
 

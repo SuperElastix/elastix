@@ -331,7 +331,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
     xl::xout["error"] << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
-  elxout << "  Transforming points done, it took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  elxout << "  Transforming points done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
   /** Call ComputeDeterminantOfSpatialJacobian.
    * Actually we could loop over all transforms.
@@ -351,7 +351,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
   }
   timer.Stop();
   elxout << "  Computing determinant of spatial Jacobian done, it took "
-         << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
+         << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
   /** Call ComputeSpatialJacobian.
    * Actually we could loop over all transforms.
@@ -370,8 +370,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
     xl::xout["error"] << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
-  elxout << "  Computing spatial Jacobian done, it took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2)
-         << std::endl;
+  elxout << "  Computing spatial Jacobian done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
   /** Resample the image. */
   if (this->GetMovingImage() != nullptr)
@@ -401,7 +400,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
-    elxout << "  Resampling took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
+    elxout << "  Resampling took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
   }
 
   /** Return a value. */
@@ -731,8 +730,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration(void)
   }
 
   timer.Stop();
-  elxout << "\nCreating the TransformParameterFile took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2)
-         << std::endl;
+  elxout << "\nCreating the TransformParameterFile took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();

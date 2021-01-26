@@ -300,15 +300,10 @@ OpenCLResampler<TElastix>::WriteToFile(void) const
   this->Superclass2::WriteToFile();
 
   // Add some OpenCLResampler specific lines.
-  xl::xout["transpar"] << std::endl << "// OpenCLResampler specific" << std::endl;
-
-  // Write OpenCLResamplerUseOpenCL.
-  std::string useOpenCL = "false";
-  if (this->m_UseOpenCL)
-  {
-    useOpenCL = "true";
-  }
-  xl::xout["transpar"] << "(OpenCLResamplerUseOpenCL \"" << useOpenCL << "\")" << std::endl;
+  xout["transpar"] << std::endl
+                   << "// OpenCLResampler specific" << std::endl
+                   << "(OpenCLResamplerUseOpenCL \"" << Conversion::BoolToString(this->m_UseOpenCL) << "\")"
+                   << std::endl;
 
 } // end WriteToFile()
 
