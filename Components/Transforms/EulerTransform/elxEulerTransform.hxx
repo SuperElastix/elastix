@@ -113,12 +113,12 @@ auto
 EulerTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
   ParameterMapType parameterMap{ { "CenterOfRotationPoint",
-                                   BaseComponent::ToVectorOfStrings(m_EulerTransform->GetCenter()) } };
+                                   Conversion::ToVectorOfStrings(m_EulerTransform->GetCenter()) } };
 
   /** Write the ComputeZYX to file. */
   if (SpaceDimension == 3)
   {
-    parameterMap["ComputeZYX"] = { BaseComponent::ToString(m_EulerTransform->GetComputeZYX()) };
+    parameterMap["ComputeZYX"] = { Conversion::ToString(m_EulerTransform->GetComputeZYX()) };
   }
 
   return parameterMap;

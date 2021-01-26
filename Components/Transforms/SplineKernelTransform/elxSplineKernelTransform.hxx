@@ -236,7 +236,7 @@ SplineKernelTransform<TElastix>::DetermineSourceLandmarks(void)
   elxout << "  Setting the fixed image landmarks (requiring large matrix inversion) ..." << std::endl;
   this->m_KernelTransform->SetSourceLandmarks(landmarkPointSet);
   timer.Stop();
-  elxout << "  Setting the fixed image landmarks took: " << this->ConvertSecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  elxout << "  Setting the fixed image landmarks took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
 
 } // end DetermineSourceLandmarks()
 
@@ -269,8 +269,7 @@ SplineKernelTransform<TElastix>::DetermineTargetLandmarks(void)
   elxout << "  Setting the moving image landmarks ..." << std::endl;
   this->m_KernelTransform->SetTargetLandmarks(landmarkPointSet);
   timer.Stop();
-  elxout << "  Setting the moving image landmarks took: " << this->ConvertSecondsToDHMS(timer.GetMean(), 6)
-         << std::endl;
+  elxout << "  Setting the moving image landmarks took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
 
   return true;
 
@@ -449,9 +448,9 @@ SplineKernelTransform<TElastix>::CreateDerivedTransformParametersMap(void) const
   auto & itkTransform = *m_KernelTransform;
 
   return { { "SplineKernelType", { m_SplineKernelType } },
-           { "SplinePoissonRatio", { BaseComponent::ToString(itkTransform.GetPoissonRatio()) } },
-           { "SplineRelaxationFactor", { BaseComponent::ToString(itkTransform.GetStiffness()) } },
-           { "FixedImageLandmarks", BaseComponent::ToVectorOfStrings(itkTransform.GetFixedParameters()) } };
+           { "SplinePoissonRatio", { Conversion::ToString(itkTransform.GetPoissonRatio()) } },
+           { "SplineRelaxationFactor", { Conversion::ToString(itkTransform.GetStiffness()) } },
+           { "FixedImageLandmarks", Conversion::ToVectorOfStrings(itkTransform.GetFixedParameters()) } };
 
 } // end CustomizeTransformParametersMap()
 

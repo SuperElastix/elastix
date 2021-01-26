@@ -520,13 +520,13 @@ RecursiveBSplineTransform<TElastix>::CreateDerivedTransformParametersMap(void) c
 {
   const auto gridRegion = m_BSplineTransform->GetGridRegion();
 
-  return { { "GridSize", BaseComponent::ToVectorOfStrings(gridRegion.GetSize()) },
-           { "GridIndex", BaseComponent::ToVectorOfStrings(gridRegion.GetIndex()) },
-           { "GridSpacing", BaseComponent::ToVectorOfStrings(m_BSplineTransform->GetGridSpacing()) },
-           { "GridOrigin", BaseComponent::ToVectorOfStrings(m_BSplineTransform->GetGridOrigin()) },
-           { "GridDirection", BaseComponent::ToVectorOfStrings(m_BSplineTransform->GetGridDirection()) },
-           { "BSplineTransformSplineOrder", { BaseComponent::ToString(m_SplineOrder) } },
-           { "UseCyclicTransform", { BaseComponent::ToString(this->m_Cyclic) } } };
+  return { { "GridSize", Conversion::ToVectorOfStrings(gridRegion.GetSize()) },
+           { "GridIndex", Conversion::ToVectorOfStrings(gridRegion.GetIndex()) },
+           { "GridSpacing", Conversion::ToVectorOfStrings(m_BSplineTransform->GetGridSpacing()) },
+           { "GridOrigin", Conversion::ToVectorOfStrings(m_BSplineTransform->GetGridOrigin()) },
+           { "GridDirection", Conversion::ToVectorOfStrings(m_BSplineTransform->GetGridDirection()) },
+           { "BSplineTransformSplineOrder", { Conversion::ToString(m_SplineOrder) } },
+           { "UseCyclicTransform", { Conversion::ToString(this->m_Cyclic) } } };
 
 } // end CreateDerivedTransformParametersMap()
 

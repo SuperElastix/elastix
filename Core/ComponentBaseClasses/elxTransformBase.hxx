@@ -19,6 +19,8 @@
 #define elxTransformBase_hxx
 
 #include "elxTransformBase.h"
+
+#include "elxConversion.h"
 #include "elxElastixMain.h"
 #include "elxTransformIO.h"
 
@@ -649,10 +651,10 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   }
 
   /** The way the transform parameters are written. */
-  parameterMap["UseBinaryFormatForTransformationParameters"] = { BaseComponent::ToString(
+  parameterMap["UseBinaryFormatForTransformationParameters"] = { Conversion::ToString(
     this->m_UseBinaryFormatForTransformationParameters) };
 
-  xl::xout["transpar"] << BaseComponent::ParameterMapToString(parameterMap);
+  xl::xout["transpar"] << Conversion::ParameterMapToString(parameterMap);
 
 } // end WriteToFile()
 
@@ -694,25 +696,25 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
 
   /** Write the name of this transform. */
   parameterMap = { { "Transform", { this->elxGetClassName() } },
-                   { "NumberOfParameters", { BaseComponent::ToString(param.GetSize()) } },
+                   { "NumberOfParameters", { Conversion::ToString(param.GetSize()) } },
                    { "InitialTransformParametersFileName", { this->GetInitialTransformParametersFileName() } },
                    { "HowToCombineTransforms", { combinationMethod } },
-                   { "FixedImageDimension", { BaseComponent::ToString(FixedImageDimension) } },
-                   { "MovingImageDimension", { BaseComponent::ToString(MovingImageDimension) } },
+                   { "FixedImageDimension", { Conversion::ToString(FixedImageDimension) } },
+                   { "MovingImageDimension", { Conversion::ToString(MovingImageDimension) } },
                    { "FixedInternalImagePixelType", { fixpix } },
                    { "MovingInternalImagePixelType", { movpix } },
-                   { "Size", BaseComponent::ToVectorOfStrings(largestPossibleRegion.GetSize()) },
-                   { "Index", BaseComponent::ToVectorOfStrings(largestPossibleRegion.GetIndex()) },
-                   { "Spacing", BaseComponent::ToVectorOfStrings(fixedImage.GetSpacing()) },
-                   { "Origin", BaseComponent::ToVectorOfStrings(fixedImage.GetOrigin()) },
-                   { "Direction", BaseComponent::ToVectorOfStrings(direction) },
-                   { "UseDirectionCosines", { BaseComponent::ToString(elastixObject.GetUseDirectionCosines()) } } };
+                   { "Size", Conversion::ToVectorOfStrings(largestPossibleRegion.GetSize()) },
+                   { "Index", Conversion::ToVectorOfStrings(largestPossibleRegion.GetIndex()) },
+                   { "Spacing", Conversion::ToVectorOfStrings(fixedImage.GetSpacing()) },
+                   { "Origin", Conversion::ToVectorOfStrings(fixedImage.GetOrigin()) },
+                   { "Direction", Conversion::ToVectorOfStrings(direction) },
+                   { "UseDirectionCosines", { Conversion::ToString(elastixObject.GetUseDirectionCosines()) } } };
 
   /** Write the parameters of this transform. */
   if (this->m_ReadWriteTransformParameters)
   {
     /** In this case, write in a normal way to the parameter file. */
-    parameterMap["TransformParameters"] = { BaseComponent::ToVectorOfStrings(param) };
+    parameterMap["TransformParameters"] = { Conversion::ToVectorOfStrings(param) };
   }
 
   // Derived transform classes may add some extra parameters

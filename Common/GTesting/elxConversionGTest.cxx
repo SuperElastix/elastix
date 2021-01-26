@@ -17,7 +17,7 @@
  *=========================================================================*/
 
 // First include the header file to be tested:
-#include "elxBaseComponent.h"
+#include "elxConversion.h"
 
 #include <gtest/gtest.h>
 
@@ -32,26 +32,29 @@
 #include <itkSize.h>
 #include <itkVector.h>
 
+// The class to be tested.
+using elastix::Conversion;
+
 namespace
 {
 template <typename TContainer>
 void
 Expect_GetNumberOfElements_returns_size(const TContainer & container)
 {
-  EXPECT_EQ(elx::BaseComponent::GetNumberOfElements(container), container.size());
+  EXPECT_EQ(Conversion::GetNumberOfElements(container), container.size());
 }
 } // namespace
 
 
-GTEST_TEST(BaseComponent, GetNumberOfParameters)
+GTEST_TEST(Conversion, GetNumberOfParameters)
 {
   Expect_GetNumberOfElements_returns_size(itk::Size<>{});
   Expect_GetNumberOfElements_returns_size(itk::Index<>{});
 
   // Note: Currently we still support ITK 5.1.1, which does not yet have a
   // size() member function for itk::Point and itk::Vector.
-  EXPECT_EQ(elx::BaseComponent::GetNumberOfElements(itk::Point<double>{}), 3);
-  EXPECT_EQ(elx::BaseComponent::GetNumberOfElements(itk::Vector<double>{}), 3);
+  EXPECT_EQ(Conversion::GetNumberOfElements(itk::Point<double>{}), 3);
+  EXPECT_EQ(Conversion::GetNumberOfElements(itk::Vector<double>{}), 3);
 
   for (std::size_t i{}; i <= 2; ++i)
   {
@@ -60,24 +63,23 @@ GTEST_TEST(BaseComponent, GetNumberOfParameters)
 }
 
 
-GTEST_TEST(BaseComponent, BoolToString)
+GTEST_TEST(Conversion, BoolToString)
 {
   // Tests that BoolToString can be evaluated at compile-time.
-  static_assert((elx::BaseComponent::BoolToString(false) != nullptr) &&
-                  (elx::BaseComponent::BoolToString(true) != nullptr),
+  static_assert((Conversion::BoolToString(false) != nullptr) && (Conversion::BoolToString(true) != nullptr),
                 "BoolToString(bool) does not return nullptr");
 
-  EXPECT_EQ(elx::BaseComponent::BoolToString(false), std::string{ "false" });
-  EXPECT_EQ(elx::BaseComponent::BoolToString(true), std::string{ "true" });
+  EXPECT_EQ(Conversion::BoolToString(false), std::string{ "false" });
+  EXPECT_EQ(Conversion::BoolToString(true), std::string{ "true" });
 }
 
 
-GTEST_TEST(BaseComponent, ParameterMapToString)
+GTEST_TEST(Conversion, ParameterMapToString)
 {
-  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({}), std::string{});
-  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({ { "A", {} } }), "(A)\n");
-  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({ { "Numbers", { "0", "1" } } }), "(Numbers 0 1)\n");
-  EXPECT_EQ(elx::BaseComponent::ParameterMapToString({ { "Letters", { "a", "z" } } }), "(Letters \"a\" \"z\")\n");
+  EXPECT_EQ(Conversion::ParameterMapToString({}), std::string{});
+  EXPECT_EQ(Conversion::ParameterMapToString({ { "A", {} } }), "(A)\n");
+  EXPECT_EQ(Conversion::ParameterMapToString({ { "Numbers", { "0", "1" } } }), "(Numbers 0 1)\n");
+  EXPECT_EQ(Conversion::ParameterMapToString({ { "Letters", { "a", "z" } } }), "(Letters \"a\" \"z\")\n");
 
   // A realistic example:
   const std::string expectedString = R"((Direction 0 0 0 0)
@@ -98,8 +100,7 @@ GTEST_TEST(BaseComponent, ParameterMapToString)
 (UseDirectionCosines "true")
 )";
 
-  EXPECT_EQ(
-    elx::BaseComponent::ParameterMapToString({ { "Direction", { "0", "0", "0", "0" } },
+  EXPECT_EQ(Conversion::ParameterMapToString({ { "Direction", { "0", "0", "0", "0" } },
                                                { "FixedImageDimension", { "2" } },
                                                { "FixedInternalImagePixelType", { "float" } },
                                                { "HowToCombineTransforms", { "Compose" } },
@@ -115,50 +116,50 @@ GTEST_TEST(BaseComponent, ParameterMapToString)
                                                { "TransformParameters", { "0", "0" } },
                                                { "UseBinaryFormatForTransformationParameters", { "false" } },
                                                { "UseDirectionCosines", { "true" } } }),
-    expectedString);
+            expectedString);
 }
 
 
-GTEST_TEST(BaseComponent, ToString)
+GTEST_TEST(Conversion, ToString)
 {
   // Note that this is different from std::to_string(false) and
   // std::to_string(true), which return "0" and "1", respecively.
-  EXPECT_EQ(elx::BaseComponent::ToString(false), "false");
-  EXPECT_EQ(elx::BaseComponent::ToString(true), "true");
+  EXPECT_EQ(Conversion::ToString(false), "false");
+  EXPECT_EQ(Conversion::ToString(true), "true");
 
-  EXPECT_EQ(elx::BaseComponent::ToString(0), "0");
-  EXPECT_EQ(elx::BaseComponent::ToString(1), "1");
-  EXPECT_EQ(elx::BaseComponent::ToString(-1), "-1");
+  EXPECT_EQ(Conversion::ToString(0), "0");
+  EXPECT_EQ(Conversion::ToString(1), "1");
+  EXPECT_EQ(Conversion::ToString(-1), "-1");
 
-  EXPECT_EQ(elx::BaseComponent::ToString(std::numeric_limits<std::int64_t>::min()), "-9223372036854775808");
-  EXPECT_EQ(elx::BaseComponent::ToString(std::numeric_limits<std::uint64_t>::max()), "18446744073709551615");
+  EXPECT_EQ(Conversion::ToString(std::numeric_limits<std::int64_t>::min()), "-9223372036854775808");
+  EXPECT_EQ(Conversion::ToString(std::numeric_limits<std::uint64_t>::max()), "18446744073709551615");
 
   // Extensive tests of conversion from double to string:
 
   using DoubleLimits = std::numeric_limits<double>;
 
   // Note that this is different from std::to_string(0.5), which returns "0.500000"
-  EXPECT_EQ(elx::BaseComponent::ToString(0.5), "0.5");
+  EXPECT_EQ(Conversion::ToString(0.5), "0.5");
 
   constexpr auto expectedPrecision = 16;
   static_assert(expectedPrecision == std::numeric_limits<double>::digits10 + 1,
                 "The expected precision for double floating point numbers");
   const auto expectedString = "0." + std::string(expectedPrecision, '3');
 
-  EXPECT_EQ(elx::BaseComponent::ToString(+0.0), "0");
-  EXPECT_EQ(elx::BaseComponent::ToString(-0.0), "0");
-  EXPECT_EQ(elx::BaseComponent::ToString(+1.0), "1");
-  EXPECT_EQ(elx::BaseComponent::ToString(-1.0), "-1");
-  EXPECT_EQ(elx::BaseComponent::ToString(0.1), "0.1");
-  EXPECT_EQ(elx::BaseComponent::ToString(1.0 / 3.0), "0." + std::string(expectedPrecision, '3'));
+  EXPECT_EQ(Conversion::ToString(+0.0), "0");
+  EXPECT_EQ(Conversion::ToString(-0.0), "0");
+  EXPECT_EQ(Conversion::ToString(+1.0), "1");
+  EXPECT_EQ(Conversion::ToString(-1.0), "-1");
+  EXPECT_EQ(Conversion::ToString(0.1), "0.1");
+  EXPECT_EQ(Conversion::ToString(1.0 / 3.0), "0." + std::string(expectedPrecision, '3'));
 
   for (std::uint8_t exponent{ 20 }; exponent > 0; --exponent)
   {
     const auto power_of_ten = std::pow(10.0, exponent);
 
     // Test +/- 1000...000
-    EXPECT_EQ(elx::BaseComponent::ToString(power_of_ten), '1' + std::string(exponent, '0'));
-    EXPECT_EQ(elx::BaseComponent::ToString(-power_of_ten), "-1" + std::string(exponent, '0'));
+    EXPECT_EQ(Conversion::ToString(power_of_ten), '1' + std::string(exponent, '0'));
+    EXPECT_EQ(Conversion::ToString(-power_of_ten), "-1" + std::string(exponent, '0'));
   }
 
   for (std::uint8_t exponent{ 15 }; exponent > 0; --exponent)
@@ -166,8 +167,8 @@ GTEST_TEST(BaseComponent, ToString)
     const auto power_of_ten = std::pow(10.0, exponent);
 
     // Test +/- 999...999
-    EXPECT_EQ(elx::BaseComponent::ToString(power_of_ten - 1), std::string(exponent, '9'));
-    EXPECT_EQ(elx::BaseComponent::ToString(1 - power_of_ten), '-' + std::string(exponent, '9'));
+    EXPECT_EQ(Conversion::ToString(power_of_ten - 1), std::string(exponent, '9'));
+    EXPECT_EQ(Conversion::ToString(1 - power_of_ten), '-' + std::string(exponent, '9'));
   }
 
   for (std::int8_t exponent{ -6 }; exponent < 0; ++exponent)
@@ -175,8 +176,8 @@ GTEST_TEST(BaseComponent, ToString)
     const auto power_of_ten = std::pow(10.0, exponent);
 
     // Test +/- 0.000...001
-    EXPECT_EQ(elx::BaseComponent::ToString(power_of_ten), "0." + std::string(-1 - exponent, '0') + '1');
-    EXPECT_EQ(elx::BaseComponent::ToString(-power_of_ten), "-0." + std::string(-1 - exponent, '0') + '1');
+    EXPECT_EQ(Conversion::ToString(power_of_ten), "0." + std::string(-1 - exponent, '0') + '1');
+    EXPECT_EQ(Conversion::ToString(-power_of_ten), "-0." + std::string(-1 - exponent, '0') + '1');
   }
 
   for (std::int8_t exponent{ -16 }; exponent < 0; ++exponent)
@@ -184,46 +185,45 @@ GTEST_TEST(BaseComponent, ToString)
     const auto power_of_ten = std::pow(10.0, exponent);
 
     // Test +/- 0.999...999
-    EXPECT_EQ(elx::BaseComponent::ToString(1 - power_of_ten), "0." + std::string(-exponent, '9'));
-    EXPECT_EQ(elx::BaseComponent::ToString(power_of_ten - 1), "-0." + std::string(-exponent, '9'));
+    EXPECT_EQ(Conversion::ToString(1 - power_of_ten), "0." + std::string(-exponent, '9'));
+    EXPECT_EQ(Conversion::ToString(power_of_ten - 1), "-0." + std::string(-exponent, '9'));
   }
 
   // The first powers of ten that are represented by scientific "e" notation:
-  EXPECT_EQ(elx::BaseComponent::ToString(1e+21), "1e+21");
-  EXPECT_EQ(elx::BaseComponent::ToString(1e-7), "1e-7");
+  EXPECT_EQ(Conversion::ToString(1e+21), "1e+21");
+  EXPECT_EQ(Conversion::ToString(1e-7), "1e-7");
 
   // Test the most relevant constants from <limits>:
-  EXPECT_EQ(elx::BaseComponent::ToString(DoubleLimits::epsilon()), "2.220446049250313e-16");
-  EXPECT_EQ(elx::BaseComponent::ToString(DoubleLimits::min()), "2.2250738585072014e-308");
-  EXPECT_EQ(elx::BaseComponent::ToString(DoubleLimits::lowest()), "-1.7976931348623157e+308");
-  EXPECT_EQ(elx::BaseComponent::ToString(DoubleLimits::max()), "1.7976931348623157e+308");
-  EXPECT_EQ(elx::BaseComponent::ToString(DoubleLimits::quiet_NaN()), "NaN");
-  EXPECT_EQ(elx::BaseComponent::ToString(-DoubleLimits::quiet_NaN()), "NaN");
-  EXPECT_EQ(elx::BaseComponent::ToString(DoubleLimits::infinity()), "Infinity");
-  EXPECT_EQ(elx::BaseComponent::ToString(-DoubleLimits::infinity()), "-Infinity");
-  EXPECT_EQ(elx::BaseComponent::ToString(DoubleLimits::denorm_min()), "5e-324");
-  EXPECT_EQ(elx::BaseComponent::ToString(-DoubleLimits::denorm_min()), "-5e-324");
+  EXPECT_EQ(Conversion::ToString(DoubleLimits::epsilon()), "2.220446049250313e-16");
+  EXPECT_EQ(Conversion::ToString(DoubleLimits::min()), "2.2250738585072014e-308");
+  EXPECT_EQ(Conversion::ToString(DoubleLimits::lowest()), "-1.7976931348623157e+308");
+  EXPECT_EQ(Conversion::ToString(DoubleLimits::max()), "1.7976931348623157e+308");
+  EXPECT_EQ(Conversion::ToString(DoubleLimits::quiet_NaN()), "NaN");
+  EXPECT_EQ(Conversion::ToString(-DoubleLimits::quiet_NaN()), "NaN");
+  EXPECT_EQ(Conversion::ToString(DoubleLimits::infinity()), "Infinity");
+  EXPECT_EQ(Conversion::ToString(-DoubleLimits::infinity()), "-Infinity");
+  EXPECT_EQ(Conversion::ToString(DoubleLimits::denorm_min()), "5e-324");
+  EXPECT_EQ(Conversion::ToString(-DoubleLimits::denorm_min()), "-5e-324");
 }
 
 
-GTEST_TEST(BaseComponent, ToVectorOfStrings)
+GTEST_TEST(Conversion, ToVectorOfStrings)
 {
   using VectorOfStrings = std::vector<std::string>;
   using ArrayOfDoubles = std::array<double, 3>;
 
-  EXPECT_EQ(elx::BaseComponent::ToVectorOfStrings(itk::Size<>{ 1, 2 }), VectorOfStrings({ "1", "2" }));
-  EXPECT_EQ(elx::BaseComponent::ToVectorOfStrings(itk::Index<>{ 1, 2 }), VectorOfStrings({ "1", "2" }));
-  EXPECT_EQ(elx::BaseComponent::ToVectorOfStrings(itk::Point<double>(ArrayOfDoubles{ -0.5, 0.0, 0.25 })),
+  EXPECT_EQ(Conversion::ToVectorOfStrings(itk::Size<>{ 1, 2 }), VectorOfStrings({ "1", "2" }));
+  EXPECT_EQ(Conversion::ToVectorOfStrings(itk::Index<>{ 1, 2 }), VectorOfStrings({ "1", "2" }));
+  EXPECT_EQ(Conversion::ToVectorOfStrings(itk::Point<double>(ArrayOfDoubles{ -0.5, 0.0, 0.25 })),
             VectorOfStrings({ "-0.5", "0", "0.25" }));
-  EXPECT_EQ(elx::BaseComponent::ToVectorOfStrings(itk::Vector<double>(ArrayOfDoubles{ -0.5, 0.0, 0.25 }.data())),
+  EXPECT_EQ(Conversion::ToVectorOfStrings(itk::Vector<double>(ArrayOfDoubles{ -0.5, 0.0, 0.25 }.data())),
             VectorOfStrings({ "-0.5", "0", "0.25" }));
-  EXPECT_EQ(elx::BaseComponent::ToVectorOfStrings(itk::OptimizerParameters<double>{}), VectorOfStrings{});
-  EXPECT_EQ(elx::BaseComponent::ToVectorOfStrings(itk::ImageBase<>::DirectionType{}),
-            VectorOfStrings({ "0", "0", "0", "0" }));
+  EXPECT_EQ(Conversion::ToVectorOfStrings(itk::OptimizerParameters<double>{}), VectorOfStrings{});
+  EXPECT_EQ(Conversion::ToVectorOfStrings(itk::ImageBase<>::DirectionType{}), VectorOfStrings({ "0", "0", "0", "0" }));
 }
 
 
-GTEST_TEST(BaseComponent, ConcatenateVectors)
+GTEST_TEST(Conversion, ConcatenateVectors)
 {
   using VectorType = std::vector<std::string>;
 
@@ -234,7 +234,7 @@ GTEST_TEST(BaseComponent, ConcatenateVectors)
     {
       expectedResult.push_back(element);
     }
-    EXPECT_EQ(elx::BaseComponent::ConcatenateVectors(vector1, vector2), expectedResult);
+    EXPECT_EQ(Conversion::ConcatenateVectors(vector1, vector2), expectedResult);
   };
 
   expectConcatenation({}, {});
@@ -244,13 +244,11 @@ GTEST_TEST(BaseComponent, ConcatenateVectors)
 }
 
 
-GTEST_TEST(BaseComponent, IsNumberReturnsFalseOnNonNumericString)
+GTEST_TEST(Conversion, IsNumberReturnsFalseOnNonNumericString)
 {
-  using namespace elx;
-
   const auto expect_IsNumber_returns_false = [](const std::string & str) {
     SCOPED_TRACE(str);
-    EXPECT_FALSE(BaseComponent::IsNumber(str));
+    EXPECT_FALSE(Conversion::IsNumber(str));
   };
 
   for (const auto str : { "", " ", "a", "A B C", "true", "false", "nan", "NaN" })
@@ -281,18 +279,16 @@ GTEST_TEST(BaseComponent, IsNumberReturnsFalseOnNonNumericString)
 }
 
 
-GTEST_TEST(BaseComponent, IsNumberReturnsTrueOnNumericString)
+GTEST_TEST(Conversion, IsNumberReturnsTrueOnNumericString)
 {
-  using namespace elx;
-
   const auto expect_IsNumber_returns_true = [](const std::string & str) {
     SCOPED_TRACE(str);
-    EXPECT_TRUE(BaseComponent::IsNumber(str));
+    EXPECT_TRUE(Conversion::IsNumber(str));
   };
 
   for (int i{ -10 }; i < 10; ++i)
   {
-    expect_IsNumber_returns_true(BaseComponent::ToString(i));
+    expect_IsNumber_returns_true(Conversion::ToString(i));
   }
 
   expect_IsNumber_returns_true("1e+21");
@@ -300,13 +296,13 @@ GTEST_TEST(BaseComponent, IsNumberReturnsTrueOnNumericString)
 
   for (double d{ -1.0 }; d < 1.0; d += 0.1)
   {
-    expect_IsNumber_returns_true(BaseComponent::ToString(d));
+    expect_IsNumber_returns_true(Conversion::ToString(d));
   }
 
   using limits = std::numeric_limits<double>;
 
   for (const auto limit : { limits::min(), limits::max(), limits::epsilon(), limits::lowest(), limits::denorm_min() })
   {
-    expect_IsNumber_returns_true(BaseComponent::ToString(limit));
+    expect_IsNumber_returns_true(Conversion::ToString(limit));
   }
 }

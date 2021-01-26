@@ -19,6 +19,7 @@
 #define elxResamplerBase_hxx
 
 #include "elxResamplerBase.h"
+#include "elxConversion.h"
 
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
@@ -124,7 +125,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase(void)
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
-    elxout << "  Applying transform took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
+    elxout << "  Applying transform took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
   } // end if
 
@@ -254,7 +255,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase(void)
 
       /** Print the elapsed time for the resampling. */
       timer.Stop();
-      elxout << "  Applying final transform took " << this->ConvertSecondsToDHMS(timer.GetMean(), 2) << std::endl;
+      elxout << "  Applying final transform took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
     }
     else
     {

@@ -396,7 +396,7 @@ PreconditionedGradientDescent<TElastix>::SetSelfHessian(void)
   }
 
   timer.Stop();
-  elxout << "Computing SelfHessian took: " << this->ConvertSecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  elxout << "Computing SelfHessian took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
 
   timer.Start();
   elxout << "Computing Cholesky decomposition of SelfHessian." << std::endl;
@@ -406,7 +406,7 @@ PreconditionedGradientDescent<TElastix>::SetSelfHessian(void)
   elxout << "Condition number: " << this->GetConditionNumber() << std::endl;
   timer.Stop();
 
-  elxout << "Computing Cholesky decomposition took: " << this->ConvertSecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  elxout << "Computing Cholesky decomposition took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
 
 } // end SetSelfHessian()
 
@@ -506,7 +506,7 @@ PreconditionedGradientDescent<TElastix>::AutomaticParameterEstimation(void)
 
   /** Print the elapsed time. */
   timer.Stop();
-  elxout << "Automatic parameter estimation took " << this->ConvertSecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  elxout << "Automatic parameter estimation took " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
 
 } // end AutomaticParameterEstimation()
 

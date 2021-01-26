@@ -26,20 +26,10 @@
  * each component is supposed to have.
  *
  * The namespace alias elx is defined in this file.
- *
- * Some header files are included that most components need.
  */
 
 #include "itkMacro.h" // itkTypeMacroNoParent
-#include "itkMatrix.h"
-
-#include <vnl_vector.h>
-
-#include <iterator>
-#include <map>
 #include <string>
-#include <type_traits> // For is_integral and is_same.
-#include <vector>
 
 /** All elastix components should be in namespace elastix. */
 namespace elastix
@@ -64,10 +54,6 @@ class BaseComponent
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponent);
-
-  /** Corresponds with typedefs from the elastix class itk::ParameterFileParser. */
-  using ParameterValuesType = std::vector<std::string>;
-  using ParameterMapType = std::map<std::string, ParameterValuesType>;
 
   /**
    * Callback methods that each component of elastix is supposed
@@ -159,126 +145,6 @@ public:
 
   static void
   InitializeElastixExecutable();
-
-
-  /** Overload set, similar to C++17 `std::size(const TContainer&)` (which can only be
-   * used within the implementation of elastix is upgraded to C++17 or higher).
-   */
-  template <typename TContainer, unsigned NDimension = TContainer::Dimension>
-  static std::size_t
-  GetNumberOfElements(const TContainer &)
-  {
-    return NDimension;
-  }
-
-  template <typename TValue>
-  static std::size_t
-  GetNumberOfElements(const vnl_vector<TValue> & vnlVector)
-  {
-    return vnlVector.size();
-  }
-
-
-  /** Convenience function to convert seconds to day, hour, minute, second format. */
-  static std::string
-  ConvertSecondsToDHMS(const double totalSeconds, const unsigned int precision);
-
-  /** Convenience function to convert a boolean to a text string. */
-  static constexpr const char *
-  BoolToString(const bool arg)
-  {
-    return arg ? "true" : "false";
-  }
-
-
-  /** Converts the specified parameter map to a text string, according to the elastix parameter text file format. */
-  static std::string
-  ParameterMapToString(const ParameterMapType &);
-
-  /** Convenience function overload to convert a Boolean to a text string. */
-  static std::string
-  ToString(const bool arg)
-  {
-    return BoolToString(arg);
-  }
-
-  /** Convenience function overload to convert a floating point to a text string. */
-  static std::string
-  ToString(double);
-
-  /** Convenience function overload to convert an integer to a text string. */
-  template <typename TScalarValue>
-  static std::string
-  ToString(const TScalarValue scalar)
-  {
-    static_assert(std::is_integral<TScalarValue>::value, "An integer type expected!");
-    static_assert(!std::is_same<TScalarValue, bool>::value, "No bool expected!");
-    return std::to_string(scalar);
-  }
-
-
-  /** Convenience function overload to convert a container to a vector of
-   * text strings. The container may be an itk::Size, itk::Index,
-   * itk::Point<double,N>, or itk::Vector<double,N>, or
-   * itk::OptimizationParameters<double>.
-   *
-   * The C++ SFINAE idiom is being used to ensure that the argument type
-   * supports standard C++ iteration.
-   */
-  template <typename TContainer, typename SFINAE = typename TContainer::iterator>
-  static std::vector<std::string>
-  ToVectorOfStrings(const TContainer & container)
-  {
-    std::vector<std::string> result;
-
-    // Note: Uses TContainer::Dimension instead of container.size(),
-    // because itk::FixedArray::size() is not yet included with ITK 5.1.1.
-    result.reserve(GetNumberOfElements(container));
-
-    for (const auto element : container)
-    {
-      result.push_back(BaseComponent::ToString(element));
-    }
-    return result;
-  }
-
-  /** Convenience function overload to convert a 2-D matrix to a vector of
-   * text strings. Typically used for an itk::ImageBase::DirectionType.
-   */
-  template <typename T, unsigned int NRows, unsigned int NColumns>
-  static std::vector<std::string>
-  ToVectorOfStrings(const itk::Matrix<T, NRows, NColumns> & matrix)
-  {
-    std::vector<std::string> result;
-    result.reserve(NColumns * NRows);
-
-    for (unsigned column{}; column < NColumns; ++column)
-    {
-      for (unsigned row{}; row < NRows; ++row)
-      {
-        result.push_back(BaseComponent::ToString(matrix(row, column)));
-      }
-    }
-    return result;
-  }
-
-
-  /** Convenience function to concatenate two vectors. */
-  template <typename TValue>
-  static std::vector<TValue>
-  ConcatenateVectors(std::vector<TValue> vector1, std::vector<TValue> vector2)
-  {
-    vector1.insert(end(vector1), std::make_move_iterator(begin(vector2)), std::make_move_iterator(end(vector2)));
-    return vector1;
-  }
-
-
-  /** Convenience function which tells whether the argument may represent a number (either fixed point, floating point,
-   * or integer/whole number).
-   * \note IsNumber("NaN") and IsNumber("nan") return false.
-   */
-  static bool
-  IsNumber(const std::string &);
 
 protected:
   BaseComponent() = default;
