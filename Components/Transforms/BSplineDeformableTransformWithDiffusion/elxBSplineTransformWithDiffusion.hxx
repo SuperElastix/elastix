@@ -138,7 +138,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
   this->m_Configuration->ReadParameter(iterations, "NumberOfDiffusionIterations", 0);
   if (iterations < 1)
   {
-    xout["warning"] << "WARNING: NumberOfDiffusionIterations == 0" << std::endl;
+    xl::xout["warning"] << "WARNING: NumberOfDiffusionIterations == 0" << std::endl;
   }
 
   /** Get diffusion information: threshold information. */
@@ -181,7 +181,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
     this->m_Configuration->ReadParameter(this->m_MovingSegmentationFileName, "MovingSegmentationFileName", 0);
     if (m_MovingSegmentationFileName == "")
     {
-      xout["error"] << "ERROR: No MovingSegmentation filename specified." << std::endl;
+      xl::xout["error"] << "ERROR: No MovingSegmentation filename specified." << std::endl;
       /** Create and throw an exception. */
       itkExceptionMacro(<< "ERROR: No MovingSegmentation filename specified.");
     }
@@ -205,7 +205,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
     this->m_Configuration->ReadParameter(this->m_FixedSegmentationFileName, "FixedSegmentationFileName", 0);
     if (m_FixedSegmentationFileName == "")
     {
-      xout["error"] << "ERROR: No FixedSegmentation filename specified." << std::endl;
+      xl::xout["error"] << "ERROR: No FixedSegmentation filename specified." << std::endl;
       /** Create and throw an exception. */
       itkExceptionMacro(<< "ERROR: No FixedSegmentation filename specified.");
     }
@@ -313,8 +313,8 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
   }
   else
   {
-    xout["error"] << "ERROR: So what are you using for the GrayValueImage," << std::endl
-                  << "either a threshold or a segmentation, make a choice!" << std::endl;
+    xl::xout["error"] << "ERROR: So what are you using for the GrayValueImage," << std::endl
+                      << "either a threshold or a segmentation, make a choice!" << std::endl;
 
     /** Create and throw an exception. */
     itkExceptionMacro(<< "ERROR: Difficulty determining how to create the "
@@ -459,7 +459,7 @@ BSplineTransformWithDiffusion<TElastix>::AfterEachIteration(void)
   if (filterPattern != 1 && filterPattern != 2)
   {
     filterPattern = 1;
-    xout["warning"] << "WARNING: filterPattern set to 1" << std::endl;
+    xl::xout["warning"] << "WARNING: filterPattern set to 1" << std::endl;
   }
 
   /** Get the current iteration number. */
@@ -485,8 +485,8 @@ BSplineTransformWithDiffusion<TElastix>::AfterEachIteration(void)
     /** Checking DiffusionEachNIterations. */
     if (diffusionEachNIterations < 1)
     {
-      xout["warning"] << "WARNING: DiffusionEachNIterations < 1" << std::endl;
-      xout["warning"] << "\t\tDiffusionEachNIterations is set to 1" << std::endl;
+      xl::xout["warning"] << "WARNING: DiffusionEachNIterations < 1" << std::endl;
+      xl::xout["warning"] << "\t\tDiffusionEachNIterations is set to 1" << std::endl;
       diffusionEachNIterations = 1;
     }
 
@@ -845,8 +845,8 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
   /** Error checking ... */
   if (fileName == "")
   {
-    xout["error"] << "ERROR: DeformationFieldFileName not specified." << std::endl
-                  << "Unable to read and set the transform parameters." << std::endl;
+    xl::xout["error"] << "ERROR: DeformationFieldFileName not specified." << std::endl
+                      << "Unable to read and set the transform parameters." << std::endl;
     // \todo quit program nicely or throw an exception
   }
 
@@ -984,7 +984,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
   this->Superclass2::WriteToFile(param);
 
   /** Add some BSplineTransformWithDiffusion specific lines.*/
-  xout["transpar"] << std::endl << "// BSplineTransformWithDiffusion specific" << std::endl;
+  xl::xout["transpar"] << std::endl << "// BSplineTransformWithDiffusion specific" << std::endl;
 
   /** Get the last part of the filename of the transformParameter-file,
    * which is going to be part of the filename of the deformationField image.
@@ -999,7 +999,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
   std::ostringstream makeFileName("");
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "DeformationFieldImage" << lastpart << "."
                << resultImageFormat;
-  xout["transpar"] << "(DeformationFieldFileName \"" << makeFileName.str() << "\")" << std::endl;
+  xl::xout["transpar"] << "(DeformationFieldFileName \"" << makeFileName.str() << "\")" << std::endl;
 
   /** Write the deformation field image. */
   typename DeformationFieldWriterType::Pointer writer = DeformationFieldWriterType::New();

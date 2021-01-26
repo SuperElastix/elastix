@@ -88,17 +88,17 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration(void)
   {
     std::ostringstream makestring1;
     makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
-    xout["iteration"].AddTargetCell(makestring1.str().c_str());
+    xl::xout["iteration"].AddTargetCell(makestring1.str().c_str());
     xl::xout["iteration"][makestring1.str().c_str()] << std::showpoint << std::fixed;
 
     std::ostringstream makestring2;
     makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
-    xout["iteration"].AddTargetCell(makestring2.str().c_str());
+    xl::xout["iteration"].AddTargetCell(makestring2.str().c_str());
     xl::xout["iteration"][makestring2.str().c_str()] << std::showpoint << std::fixed;
 
     std::ostringstream makestring3;
     makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
-    xout["iteration"].AddTargetCell(makestring3.str().c_str());
+    xl::xout["iteration"].AddTargetCell(makestring3.str().c_str());
     xl::xout["iteration"][makestring3.str().c_str()] << std::showpoint << std::fixed << std::setprecision(1);
   }
 

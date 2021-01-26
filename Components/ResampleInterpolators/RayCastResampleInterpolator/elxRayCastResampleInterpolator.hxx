@@ -159,28 +159,28 @@ RayCastResampleInterpolator<TElastix>::WriteToFile(void) const
 
   PointType focalpoint = this->GetFocalPoint();
 
-  xout["transpar"] << "("
-                   << "FocalPoint ";
+  xl::xout["transpar"] << "("
+                       << "FocalPoint ";
   for (unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension(); i++)
   {
-    xout["transpar"] << focalpoint[i] << " ";
+    xl::xout["transpar"] << focalpoint[i] << " ";
   }
-  xout["transpar"] << ")" << std::endl;
+  xl::xout["transpar"] << ")" << std::endl;
 
   TransformParametersType preParameters = this->m_PreTransform->GetParameters();
 
-  xout["transpar"] << "("
-                   << "PreParameters ";
+  xl::xout["transpar"] << "("
+                       << "PreParameters ";
 
   unsigned int numberofparameters = preParameters.GetSize();
   for (unsigned int i = 0; i < numberofparameters; i++)
   {
-    xout["transpar"] << preParameters[i] << " ";
+    xl::xout["transpar"] << preParameters[i] << " ";
   }
-  xout["transpar"] << ")" << std::endl;
+  xl::xout["transpar"] << ")" << std::endl;
 
   double threshold = this->GetThreshold();
-  xout["transpar"] << "(Threshold " << threshold << ")" << std::endl;
+  xl::xout["transpar"] << "(Threshold " << threshold << ")" << std::endl;
 
 } // end WriteToFile()
 

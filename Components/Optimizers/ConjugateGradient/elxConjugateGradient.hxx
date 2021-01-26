@@ -181,24 +181,24 @@ ConjugateGradient<TElastix>::BeforeRegistration(void)
   using namespace xl;
 
   /** Add target cells to xout["iteration"].*/
-  xout["iteration"].AddTargetCell("1a:SrchDirNr");
-  xout["iteration"].AddTargetCell("1b:LineItNr");
-  xout["iteration"].AddTargetCell("2:Metric");
-  xout["iteration"].AddTargetCell("3:StepLength");
-  xout["iteration"].AddTargetCell("4a:||Gradient||");
-  xout["iteration"].AddTargetCell("4b:||SearchDir||");
-  xout["iteration"].AddTargetCell("4c:DirGradient");
-  xout["iteration"].AddTargetCell("5:Phase");
-  xout["iteration"].AddTargetCell("6a:Wolfe1");
-  xout["iteration"].AddTargetCell("6b:Wolfe2");
-  xout["iteration"].AddTargetCell("7:LinSrchStopCondition");
+  xl::xout["iteration"].AddTargetCell("1a:SrchDirNr");
+  xl::xout["iteration"].AddTargetCell("1b:LineItNr");
+  xl::xout["iteration"].AddTargetCell("2:Metric");
+  xl::xout["iteration"].AddTargetCell("3:StepLength");
+  xl::xout["iteration"].AddTargetCell("4a:||Gradient||");
+  xl::xout["iteration"].AddTargetCell("4b:||SearchDir||");
+  xl::xout["iteration"].AddTargetCell("4c:DirGradient");
+  xl::xout["iteration"].AddTargetCell("5:Phase");
+  xl::xout["iteration"].AddTargetCell("6a:Wolfe1");
+  xl::xout["iteration"].AddTargetCell("6b:Wolfe2");
+  xl::xout["iteration"].AddTargetCell("7:LinSrchStopCondition");
 
   /** Format the metric and stepsize as floats */
-  xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
-  xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
-  xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
-  xout["iteration"]["4c:DirGradient"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4c:DirGradient"] << std::showpoint << std::fixed;
 
   /** Check in the parameter file whether line search iterations should
    * be generated */
@@ -304,7 +304,7 @@ ConjugateGradient<TElastix>::AfterEachIteration(void)
 
   if (this->GetStartLineSearch())
   {
-    xout["iteration"]["1b:LineItNr"] << "start";
+    xl::xout["iteration"]["1b:LineItNr"] << "start";
   }
   else
   {
@@ -315,45 +315,45 @@ ConjugateGradient<TElastix>::AfterEachIteration(void)
      * line search iteration number (so the number of line search
      * iterations minus one) is printed out.
      */
-    xout["iteration"]["1b:LineItNr"] << this->m_LineOptimizer->GetCurrentIteration();
+    xl::xout["iteration"]["1b:LineItNr"] << this->m_LineOptimizer->GetCurrentIteration();
   }
 
   if (this->GetInLineSearch())
   {
-    xout["iteration"]["2:Metric"] << this->m_LineOptimizer->GetCurrentValue();
-    xout["iteration"]["3:StepLength"] << this->m_LineOptimizer->GetCurrentStepLength();
+    xl::xout["iteration"]["2:Metric"] << this->m_LineOptimizer->GetCurrentValue();
+    xl::xout["iteration"]["3:StepLength"] << this->m_LineOptimizer->GetCurrentStepLength();
     LineOptimizerType::DerivativeType cd;
     this->m_LineOptimizer->GetCurrentDerivative(cd);
-    xout["iteration"]["4a:||Gradient||"] << cd.magnitude();
-    xout["iteration"]["7:LinSrchStopCondition"] << "---";
+    xl::xout["iteration"]["4a:||Gradient||"] << cd.magnitude();
+    xl::xout["iteration"]["7:LinSrchStopCondition"] << "---";
   } // end if in line search
   else
   {
-    xout["iteration"]["2:Metric"] << this->GetCurrentValue();
-    xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();
-    xout["iteration"]["4a:||Gradient||"] << this->GetCurrentGradient().magnitude();
-    xout["iteration"]["7:LinSrchStopCondition"] << this->GetLineSearchStopCondition();
+    xl::xout["iteration"]["2:Metric"] << this->GetCurrentValue();
+    xl::xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();
+    xl::xout["iteration"]["4a:||Gradient||"] << this->GetCurrentGradient().magnitude();
+    xl::xout["iteration"]["7:LinSrchStopCondition"] << this->GetLineSearchStopCondition();
   } // end else (not in line search)
 
-  xout["iteration"]["1a:SrchDirNr"] << this->GetCurrentIteration();
-  xout["iteration"]["5:Phase"] << this->DeterminePhase();
-  xout["iteration"]["4b:||SearchDir||"] << this->m_SearchDirectionMagnitude;
-  xout["iteration"]["4c:DirGradient"] << this->m_LineOptimizer->GetCurrentDirectionalDerivative();
+  xl::xout["iteration"]["1a:SrchDirNr"] << this->GetCurrentIteration();
+  xl::xout["iteration"]["5:Phase"] << this->DeterminePhase();
+  xl::xout["iteration"]["4b:||SearchDir||"] << this->m_SearchDirectionMagnitude;
+  xl::xout["iteration"]["4c:DirGradient"] << this->m_LineOptimizer->GetCurrentDirectionalDerivative();
   if (this->m_LineOptimizer->GetSufficientDecreaseConditionSatisfied())
   {
-    xout["iteration"]["6a:Wolfe1"] << "true";
+    xl::xout["iteration"]["6a:Wolfe1"] << "true";
   }
   else
   {
-    xout["iteration"]["6a:Wolfe1"] << "false";
+    xl::xout["iteration"]["6a:Wolfe1"] << "false";
   }
   if (this->m_LineOptimizer->GetCurvatureConditionSatisfied())
   {
-    xout["iteration"]["6b:Wolfe2"] << "true";
+    xl::xout["iteration"]["6b:Wolfe2"] << "true";
   }
   else
   {
-    xout["iteration"]["6b:Wolfe2"] << "false";
+    xl::xout["iteration"]["6b:Wolfe2"] << "false";
   }
 
   if (!(this->GetInLineSearch()))

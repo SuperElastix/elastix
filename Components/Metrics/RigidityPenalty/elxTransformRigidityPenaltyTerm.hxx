@@ -144,12 +144,12 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
   }
 
   /** Add target cells to xout["iteration"]. */
-  xout["iteration"].AddTargetCell("Metric-LC");
-  xout["iteration"].AddTargetCell("Metric-OC");
-  xout["iteration"].AddTargetCell("Metric-PC");
-  xout["iteration"].AddTargetCell("||Gradient-LC||");
-  xout["iteration"].AddTargetCell("||Gradient-OC||");
-  xout["iteration"].AddTargetCell("||Gradient-PC||");
+  xl::xout["iteration"].AddTargetCell("Metric-LC");
+  xl::xout["iteration"].AddTargetCell("Metric-OC");
+  xl::xout["iteration"].AddTargetCell("Metric-PC");
+  xl::xout["iteration"].AddTargetCell("||Gradient-LC||");
+  xl::xout["iteration"].AddTargetCell("||Gradient-OC||");
+  xl::xout["iteration"].AddTargetCell("||Gradient-PC||");
 
   /** Format the metric as floats. */
   xl::xout["iteration"]["Metric-LC"] << std::showpoint << std::fixed << std::setprecision(10);

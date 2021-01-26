@@ -172,7 +172,7 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
   std::ostringstream makeFileName("");
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "DeformationFieldImage" << lastpart << "."
                << resultImageFormat;
-  xout["transpar"] << "(DeformationFieldFileName \"" << makeFileName.str() << "\")" << std::endl;
+  xl::xout["transpar"] << "(DeformationFieldFileName \"" << makeFileName.str() << "\")" << std::endl;
 
   /** Write the interpolation order to file */
   std::string interpolatorName =

@@ -80,13 +80,13 @@ ConjugateGradientFRPR<TElastix>::BeforeRegistration(void)
 {
 
   /** Add target cells to xout["iteration"].*/
-  xout["iteration"].AddTargetCell("1a:SrchDirNr");
-  xout["iteration"].AddTargetCell("1b:LineItNr");
-  xout["iteration"].AddTargetCell("2:Metric");
-  xout["iteration"].AddTargetCell("3:StepLength");
-  xout["iteration"].AddTargetCell("4a:||Gradient||");
-  xout["iteration"].AddTargetCell("4b:||SearchDir||");
-  xout["iteration"].AddTargetCell("5:Phase");
+  xl::xout["iteration"].AddTargetCell("1a:SrchDirNr");
+  xl::xout["iteration"].AddTargetCell("1b:LineItNr");
+  xl::xout["iteration"].AddTargetCell("2:Metric");
+  xl::xout["iteration"].AddTargetCell("3:StepLength");
+  xl::xout["iteration"].AddTargetCell("4a:||Gradient||");
+  xl::xout["iteration"].AddTargetCell("4b:||SearchDir||");
+  xl::xout["iteration"].AddTargetCell("5:Phase");
 
   /** Format some fields as floats */
   xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
