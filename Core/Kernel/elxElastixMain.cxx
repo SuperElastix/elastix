@@ -37,9 +37,6 @@
 
 namespace
 {
-
-using namespace xl;
-
 /**
  * ******************* Global variables *************************
  *
@@ -50,13 +47,13 @@ using namespace xl;
 struct Data
 {
   /** xout TargetCells. */
-  xoutmain        Xout;
-  xoutsimple_type WarningXout;
-  xoutsimple_type ErrorXout;
-  xoutsimple_type StandardXout;
-  xoutsimple_type CoutOnlyXout;
-  xoutsimple_type LogOnlyXout;
-  std::ofstream   LogFileStream;
+  xl::xoutmain        Xout;
+  xl::xoutsimple_type WarningXout;
+  xl::xoutsimple_type ErrorXout;
+  xl::xoutsimple_type StandardXout;
+  xl::xoutsimple_type CoutOnlyXout;
+  xl::xoutsimple_type LogOnlyXout;
+  std::ofstream       LogFileStream;
 };
 
 Data g_data;
@@ -90,11 +87,11 @@ elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
   /** Set std::cout and the logfile as outputs of xout. */
   if (setupLogging)
   {
-    returndummy |= xout.AddOutput("log", &g_data.LogFileStream);
+    returndummy |= xl::xout.AddOutput("log", &g_data.LogFileStream);
   }
   if (setupCout)
   {
-    returndummy |= xout.AddOutput("cout", &std::cout);
+    returndummy |= xl::xout.AddOutput("cout", &std::cout);
   }
 
   /** Set outputs of LogOnly and CoutOnly. */
@@ -102,20 +99,20 @@ elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
   returndummy |= g_data.CoutOnlyXout.AddOutput("cout", &std::cout);
 
   /** Copy the outputs to the warning-, error- and standard-xouts. */
-  g_data.WarningXout.SetOutputs(xout.GetCOutputs());
-  g_data.ErrorXout.SetOutputs(xout.GetCOutputs());
-  g_data.StandardXout.SetOutputs(xout.GetCOutputs());
+  g_data.WarningXout.SetOutputs(xl::xout.GetCOutputs());
+  g_data.ErrorXout.SetOutputs(xl::xout.GetCOutputs());
+  g_data.StandardXout.SetOutputs(xl::xout.GetCOutputs());
 
-  g_data.WarningXout.SetOutputs(xout.GetXOutputs());
-  g_data.ErrorXout.SetOutputs(xout.GetXOutputs());
-  g_data.StandardXout.SetOutputs(xout.GetXOutputs());
+  g_data.WarningXout.SetOutputs(xl::xout.GetXOutputs());
+  g_data.ErrorXout.SetOutputs(xl::xout.GetXOutputs());
+  g_data.StandardXout.SetOutputs(xl::xout.GetXOutputs());
 
   /** Link the warning-, error- and standard-xouts to xout. */
-  returndummy |= xout.AddTargetCell("warning", &g_data.WarningXout);
-  returndummy |= xout.AddTargetCell("error", &g_data.ErrorXout);
-  returndummy |= xout.AddTargetCell("standard", &g_data.StandardXout);
-  returndummy |= xout.AddTargetCell("logonly", &g_data.LogOnlyXout);
-  returndummy |= xout.AddTargetCell("coutonly", &g_data.CoutOnlyXout);
+  returndummy |= xl::xout.AddTargetCell("warning", &g_data.WarningXout);
+  returndummy |= xl::xout.AddTargetCell("error", &g_data.ErrorXout);
+  returndummy |= xl::xout.AddTargetCell("standard", &g_data.StandardXout);
+  returndummy |= xl::xout.AddTargetCell("logonly", &g_data.LogOnlyXout);
+  returndummy |= xl::xout.AddTargetCell("coutonly", &g_data.CoutOnlyXout);
 
   /** Format the output. */
   xl::xout["standard"] << std::fixed;

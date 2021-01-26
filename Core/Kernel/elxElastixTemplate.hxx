@@ -38,8 +38,6 @@
 
 namespace elastix
 {
-using namespace xl;
-
 /**
  * ********************** GetFixedImage *************************
  */
@@ -760,20 +758,18 @@ template <class TFixedImage, class TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const std::string fileName, const bool toLog)
 {
-  using namespace xl;
-
   /** Store CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = fileName;
 
   /** Create transformParameterFile and xout["transpar"]. */
-  xoutsimple_type transformationParameterInfo;
-  std::ofstream   transformParameterFile;
+  xl::xoutsimple_type transformationParameterInfo;
+  std::ofstream       transformParameterFile;
 
   /** Set up the "TransformationParameters" writing field. */
-  transformationParameterInfo.SetOutputs(xout.GetCOutputs());
-  transformationParameterInfo.SetOutputs(xout.GetXOutputs());
+  transformationParameterInfo.SetOutputs(xl::xout.GetCOutputs());
+  transformationParameterInfo.SetOutputs(xl::xout.GetXOutputs());
 
-  xout.AddTargetCell("transpar", &transformationParameterInfo);
+  xl::xout.AddTargetCell("transpar", &transformationParameterInfo);
 
   /** Set it in the Transform, for later use. */
   this->GetElxTransformBase()->SetTransformParametersFileName(fileName.c_str());
@@ -819,7 +815,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   }
 
   /** Remove the "transpar" writing field. */
-  xout.RemoveTargetCell("transpar");
+  xl::xout.RemoveTargetCell("transpar");
 
 } // end CreateTransformParameterFile()
 
@@ -1030,8 +1026,6 @@ template <class TFixedImage, class TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
 {
-  using namespace xl;
-
   /** Remove the current iteration info output file, if any. */
   xl::xout["iteration"].RemoveOutput("IterationInfoFile");
 

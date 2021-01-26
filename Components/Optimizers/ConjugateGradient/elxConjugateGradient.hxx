@@ -177,9 +177,6 @@ template <class TElastix>
 void
 ConjugateGradient<TElastix>::BeforeRegistration(void)
 {
-
-  using namespace xl;
-
   /** Add target cells to xout["iteration"].*/
   xl::xout["iteration"].AddTargetCell("1a:SrchDirNr");
   xl::xout["iteration"].AddTargetCell("1b:LineItNr");
@@ -297,9 +294,6 @@ template <class TElastix>
 void
 ConjugateGradient<TElastix>::AfterEachIteration(void)
 {
-
-  using namespace xl;
-
   /** Print some information. */
 
   if (this->GetStartLineSearch())

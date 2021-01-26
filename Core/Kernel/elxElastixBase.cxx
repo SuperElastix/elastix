@@ -452,13 +452,11 @@ ElastixBase::BeforeAllTransformixBase(void)
 void
 ElastixBase::BeforeRegistrationBase(void)
 {
-  using namespace xl;
-
   /** Set up the "iteration" writing field. */
-  this->m_IterationInfo.SetOutputs(xout.GetCOutputs());
-  this->m_IterationInfo.SetOutputs(xout.GetXOutputs());
+  this->m_IterationInfo.SetOutputs(xl::xout.GetCOutputs());
+  this->m_IterationInfo.SetOutputs(xl::xout.GetXOutputs());
 
-  xout.AddTargetCell("iteration", &this->m_IterationInfo);
+  xl::xout.AddTargetCell("iteration", &this->m_IterationInfo);
 
 } // end BeforeRegistrationBase()
 
