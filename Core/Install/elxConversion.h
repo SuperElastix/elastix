@@ -84,9 +84,13 @@ public:
     return BoolToString(arg);
   }
 
-  /** Convenience function overload to convert a floating point to a text string. */
+  /** Convenience function overload to convert a double precision floating point to a text string. */
   static std::string
   ToString(double);
+
+  /** Convenience function overload to convert a single precision floating point to a text string. */
+  static std::string
+  ToString(float);
 
   /** Convenience function overload to convert an integer to a text string. */
   template <typename TScalarValue>

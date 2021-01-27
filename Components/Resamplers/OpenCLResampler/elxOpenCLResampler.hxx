@@ -289,23 +289,16 @@ OpenCLResampler<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
+ * ************************* CreateDerivedTransformParametersMap ************************
  */
 
 template <class TElastix>
-void
-OpenCLResampler<TElastix>::WriteToFile(void) const
+auto
+OpenCLResampler<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
-  // Call the WriteToFile from the ResamplerBase.
-  this->Superclass2::WriteToFile();
+  return { { "OpenCLResamplerUseOpenCL", { Conversion::ToString(this->m_UseOpenCL) } } };
 
-  // Add some OpenCLResampler specific lines.
-  xl::xout["transpar"] << std::endl
-                       << "// OpenCLResampler specific" << std::endl
-                       << "(OpenCLResamplerUseOpenCL \"" << Conversion::BoolToString(this->m_UseOpenCL) << "\")"
-                       << std::endl;
-
-} // end WriteToFile()
+} // end CreateDerivedTransformParametersMap()
 
 
 /**

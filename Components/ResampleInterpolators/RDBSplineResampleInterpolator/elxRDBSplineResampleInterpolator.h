@@ -106,6 +106,7 @@ public:
   typedef typename Superclass2::RegistrationType     RegistrationType;
   typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  typedef typename Superclass2::ParameterMapType     ParameterMapType;
 
   /** Execute stuff before the actual registration:
    * \li Set the spline order.
@@ -117,10 +118,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(void) const override;
-
 protected:
   /** The constructor. */
   ReducedDimensionBSplineResampleInterpolator() = default;
@@ -128,6 +125,10 @@ protected:
   ~ReducedDimensionBSplineResampleInterpolator() override = default;
 
 private:
+  /** Creates a map of the parameters specific for this (derived) interpolator type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap() const override;
+
   /** The deleted copy constructor. */
   ReducedDimensionBSplineResampleInterpolator(const Self &) = delete;
   /** The deleted assignment operator. */

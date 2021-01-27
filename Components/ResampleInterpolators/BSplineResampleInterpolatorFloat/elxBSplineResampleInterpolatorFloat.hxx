@@ -72,22 +72,16 @@ BSplineResampleInterpolatorFloat<TElastix>::ReadFromFile(void)
 
 
 /**
- * ******************* WriteToFile ******************************
+ * ******************* CreateDerivedTransformParametersMap ******************************
  */
 
 template <class TElastix>
-void
-BSplineResampleInterpolatorFloat<TElastix>::WriteToFile(void) const
+auto
+BSplineResampleInterpolatorFloat<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
-  /** Call WriteTiFile of the ResamplerBase. */
-  this->Superclass2::WriteToFile();
+  return { { "FinalBSplineInterpolationOrder", { Conversion::ToString(this->GetSplineOrder()) } } };
 
-  /** The BSplineResampleInterpolator adds: */
-
-  /** Write the FinalBSplineInterpolationOrder. */
-  xl::xout["transpar"] << "(FinalBSplineInterpolationOrder " << this->GetSplineOrder() << ")" << std::endl;
-
-} // end WriteToFile()
+} // end CreateDerivedTransformParametersMap()
 
 
 } // end namespace elastix

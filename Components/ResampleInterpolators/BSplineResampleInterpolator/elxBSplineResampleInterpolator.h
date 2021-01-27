@@ -119,14 +119,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(void) const override;
-
-  /** Function to create transform parameters map. */
-  void
-  CreateTransformParametersMap(ParameterMapType * paramsMap) const override;
-
 protected:
   /** The constructor. */
   BSplineResampleInterpolator() = default;
@@ -134,6 +126,10 @@ protected:
   ~BSplineResampleInterpolator() override = default;
 
 private:
+  /** Creates a map of the parameters specific for this (derived) interpolator type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap() const override;
+
   /** The deleted copy constructor. */
   BSplineResampleInterpolator(const Self &) = delete;
   /** The deleted assignment operator. */

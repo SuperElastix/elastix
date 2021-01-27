@@ -689,30 +689,11 @@ template <class TElastix>
 void
 ResamplerBase<TElastix>::WriteToFile(void) const
 {
+  ParameterMapType parameterMap;
+  Self::CreateTransformParametersMap(&parameterMap);
+
   /** Write resampler specific things. */
-  xl::xout["transpar"] << std::endl << "// Resampler specific" << std::endl;
-
-  /** Write the name of the resampler. */
-  xl::xout["transpar"] << "(Resampler \"" << this->elxGetClassName() << "\")" << std::endl;
-
-  /** Write the DefaultPixelValue. */
-  xl::xout["transpar"] << "(DefaultPixelValue " << static_cast<double>(this->GetAsITKBaseType()->GetDefaultPixelValue())
-                       << ")" << std::endl;
-
-  /** Write the output image format. */
-  std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  xl::xout["transpar"] << "(ResultImageFormat \"" << resultImageFormat << "\")" << std::endl;
-
-  /** Write output pixel type. */
-  std::string resultImagePixelType = "short";
-  this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
-  xl::xout["transpar"] << "(ResultImagePixelType \"" << resultImagePixelType << "\")" << std::endl;
-
-  /** Write compression flag. */
-  std::string doCompression = "false";
-  this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
-  xl::xout["transpar"] << "(CompressResultImage \"" << doCompression << "\")" << std::endl;
+  xl::xout["transpar"] << ("\n// Resampler specific\n" + Conversion::ParameterMapToString(parameterMap));
 
 } // end WriteToFile()
 
@@ -725,46 +706,36 @@ template <class TElastix>
 void
 ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType * paramsMap) const
 {
-  std::string              parameterName;
-  std::vector<std::string> parameterValues;
+  auto & parameterMap = *paramsMap;
 
-  /** Write the name of this transform. */
-  parameterName = "Resampler";
-  parameterValues.push_back(this->elxGetClassName());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
+  /** Store the name of this transform. */
+  parameterMap["Resampler"] = { this->elxGetClassName() };
 
-  /** Write the DefaultPixelValue. */
-  parameterName = "DefaultPixelValue";
-  std::ostringstream strDefaultPixelValue;
-  strDefaultPixelValue << this->GetAsITKBaseType()->GetDefaultPixelValue();
-  parameterValues.push_back(strDefaultPixelValue.str());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
+  /** Store the DefaultPixelValue. */
+  parameterMap["DefaultPixelValue"] = { Conversion::ToString(this->GetAsITKBaseType()->GetDefaultPixelValue()) };
 
-  /** Write the output image format. */
+  /** Store the output image format. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  parameterName = "ResultImageFormat";
-  parameterValues.push_back(resultImageFormat);
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
+  parameterMap["ResultImageFormat"] = { resultImageFormat };
 
-  /** Write output pixel type. */
+  /** Store output pixel type. */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
-  parameterName = "ResultImagePixelType";
-  parameterValues.push_back(resultImagePixelType);
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
+  parameterMap["ResultImagePixelType"] = { resultImagePixelType };
 
-  /** Write compression flag. */
+  /** Store compression flag. */
   std::string doCompression = "false";
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
-  parameterName = "CompressResultImage";
-  parameterValues.push_back(doCompression);
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
+  parameterMap["CompressResultImage"] = { doCompression };
+
+  // Derived classes may add some extra parameters
+  for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
+  {
+    const auto & key = keyAndValue.first;
+    assert(parameterMap.count(key) == 0);
+    parameterMap[key] = std::move(keyAndValue.second);
+  }
 
 } // end CreateTransformParametersMap()
 
