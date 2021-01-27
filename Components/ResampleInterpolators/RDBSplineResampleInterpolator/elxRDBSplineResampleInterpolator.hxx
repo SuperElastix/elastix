@@ -85,22 +85,16 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile(void)
 
 
 /**
- * ******************* WriteToFile ******************************
+ * ******************* CreateDerivedTransformParametersMap ******************************
  */
 
 template <class TElastix>
-void
-ReducedDimensionBSplineResampleInterpolator<TElastix>::WriteToFile(void) const
+auto
+ReducedDimensionBSplineResampleInterpolator<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
-  /** Call WriteToFile of the ResamplerBase. */
-  this->Superclass2::WriteToFile();
+  return { { "FinalBSplineInterpolationOrder", { Conversion::ToString(this->GetSplineOrder()) } } };
 
-  /** The ReducedDimensionBSplineResampleInterpolator adds: */
-
-  /** Write the FinalBSplineInterpolationOrder. */
-  xl::xout["transpar"] << "(FinalBSplineInterpolationOrder " << this->GetSplineOrder() << ")" << std::endl;
-
-} // end WriteToFile()
+} // end CreateDerivedTransformParametersMap()
 
 
 } // end namespace elastix

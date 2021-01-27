@@ -71,50 +71,16 @@ BSplineResampleInterpolator<TElastix>::ReadFromFile(void)
 
 
 /**
- * ******************* WriteToFile ******************************
+ * ******************* CreateDerivedTransformParametersMap ******************************
  */
 
 template <class TElastix>
-void
-BSplineResampleInterpolator<TElastix>::WriteToFile(void) const
+auto
+BSplineResampleInterpolator<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
-  /** Call WriteToFile of the ResamplerBase. */
-  this->Superclass2::WriteToFile();
+  return { { "FinalBSplineInterpolationOrder", { Conversion::ToString(this->GetSplineOrder()) } } };
 
-  /** The BSplineResampleInterpolator adds: */
-
-  /** Write the FinalBSplineInterpolationOrder. */
-  xl::xout["transpar"] << "(FinalBSplineInterpolationOrder " << this->GetSplineOrder() << ")" << std::endl;
-
-} // end WriteToFile()
-
-
-/**
- * ******************* CreateTransformParametersMap ******************************
- */
-
-template <class TElastix>
-void
-BSplineResampleInterpolator<TElastix>::CreateTransformParametersMap(ParameterMapType * paramsMap) const
-{
-  std::ostringstream       tmpStream;
-  std::string              parameterName;
-  std::vector<std::string> parameterValues;
-
-  /** Call CreateTransformParametersMap of the ResamplerBase. */
-  this->Superclass2::CreateTransformParametersMap(paramsMap);
-
-  /** The BSplineResampleInterpolator adds: */
-
-  /** Write the FinalBSplineInterpolationOrder. */
-  parameterName = "FinalBSplineInterpolationOrder";
-  tmpStream.str("");
-  tmpStream << this->GetSplineOrder();
-  parameterValues.push_back(tmpStream.str());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
-
-} // end CreateTransformParametersMap()
+} // end CreateDerivedTransformParametersMap()
 
 
 } // end namespace elastix

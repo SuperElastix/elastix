@@ -114,10 +114,6 @@ public:
   virtual void
   ReadFromFile(void);
 
-  /** Function to write parameters to a file. */
-  virtual void
-  WriteToFile(void) const;
-
 protected:
   /** The constructor. */
   OpenCLResampler();
@@ -156,6 +152,10 @@ protected:
   typedef typename InterpolateCopierType::GPUExplicitInterpolatorPointer GPUExplicitInterpolatorPointer;
 
 private:
+  /** Creates a map of the parameters specific for this (derived) resampler type. */
+  ParameterMapType
+  CreateDerivedTransformParametersMap(void) const override;
+
   /** The deleted copy constructor. */
   OpenCLResampler(const Self &) = delete;
   /** The deleted assignment operator. */

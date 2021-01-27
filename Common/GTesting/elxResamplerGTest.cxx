@@ -91,7 +91,8 @@ struct WithDimension
   {
     WithResampler<elx::MyStandardResampler>::Test_CreateTransformParametersMap_for_default_resampler({});
 #ifdef ELASTIX_USE_OPENCL
-    WithResampler<elx::OpenCLResampler>::Test_CreateTransformParametersMap_for_default_resampler({});
+    WithResampler<elx::OpenCLResampler>::Test_CreateTransformParametersMap_for_default_resampler(
+      { { "OpenCLResamplerUseOpenCL", { "true" } } });
 #endif
   }
 };

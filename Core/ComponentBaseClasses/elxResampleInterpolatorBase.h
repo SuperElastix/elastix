@@ -98,11 +98,11 @@ public:
   ReadFromFile(void);
 
   /** Function to write transform-parameters to a file. */
-  virtual void
+  void
   WriteToFile(void) const;
 
   /** Function to create transform-parameters map. */
-  virtual void
+  void
   CreateTransformParametersMap(ParameterMapType * paramsMap) const;
 
 protected:
@@ -112,6 +112,12 @@ protected:
   ~ResampleInterpolatorBase() override = default;
 
 private:
+  virtual ParameterMapType
+  CreateDerivedTransformParametersMap() const
+  {
+    return {};
+  }
+
   /** The deleted copy constructor. */
   ResampleInterpolatorBase(const Self &) = delete;
   /** The deleted assignment operator. */

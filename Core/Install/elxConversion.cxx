@@ -145,6 +145,14 @@ Conversion::ToString(const double scalar)
   return itk::NumberToString<double>{}(scalar);
 }
 
+
+std::string
+Conversion::ToString(const float scalar)
+{
+  return itk::NumberToString<double>{}(scalar);
+}
+
+
 bool
 Conversion::IsNumber(const std::string & str)
 {

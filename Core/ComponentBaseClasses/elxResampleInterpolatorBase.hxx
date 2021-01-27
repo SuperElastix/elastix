@@ -45,11 +45,11 @@ template <class TElastix>
 void
 ResampleInterpolatorBase<TElastix>::WriteToFile(void) const
 {
-  /** Write ResampleInterpolator specific things. */
-  xl::xout["transpar"] << "\n// ResampleInterpolator specific" << std::endl;
+  ParameterMapType parameterMap;
+  this->CreateTransformParametersMap(&parameterMap);
 
-  /** Write the name of the resample-interpolator. */
-  xl::xout["transpar"] << "(ResampleInterpolator \"" << this->elxGetClassName() << "\")" << std::endl;
+  /** Write ResampleInterpolator specific things. */
+  xl::xout["transpar"] << ("\n// ResampleInterpolator specific\n" + Conversion::ParameterMapToString(parameterMap));
 
 } // end WriteToFile()
 
@@ -62,14 +62,18 @@ template <class TElastix>
 void
 ResampleInterpolatorBase<TElastix>::CreateTransformParametersMap(ParameterMapType * paramsMap) const
 {
-  std::string              parameterName;
-  std::vector<std::string> parameterValues;
+  auto & parameterMap = *paramsMap;
 
-  /** Write the name of this transform. */
-  parameterName = "ResampleInterpolator";
-  parameterValues.push_back(this->elxGetClassName());
-  paramsMap->insert(make_pair(parameterName, parameterValues));
-  parameterValues.clear();
+  /** Store the name of this transform. */
+  parameterMap["ResampleInterpolator"] = { this->elxGetClassName() };
+
+  // Derived classes may add some extra parameters
+  for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
+  {
+    const auto & key = keyAndValue.first;
+    assert(parameterMap.count(key) == 0);
+    parameterMap[key] = std::move(keyAndValue.second);
+  }
 
 } // end CreateTransformParametersMap()
 
