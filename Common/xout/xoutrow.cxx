@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef xoutrow_hxx
-#define xoutrow_hxx
 
 #include "xoutrow.h"
 
@@ -33,9 +31,8 @@ using namespace std;
  * cells are flushed.
  */
 
-template <class charT, class traits>
 void
-xoutrow<charT, traits>::WriteBufferedData(void)
+xoutrow::WriteBufferedData(void)
 {
   /** Write the cell-data to the outputs, separated by tabs. */
   auto xit = this->m_XTargetCells.begin();
@@ -65,15 +62,14 @@ xoutrow<charT, traits>::WriteBufferedData(void)
  * ******************** AddTargetCell ***************************
  */
 
-template <class charT, class traits>
 int
-xoutrow<charT, traits>::AddTargetCell(const char * name)
+xoutrow::AddTargetCell(const char * name)
 {
   if (this->m_CellMap.count(name) == 0)
   {
     /** A new cell (type xoutcell) is created. */
-    std::unique_ptr<XOutCellType> cell{ new XOutCellType };
-    auto &                        cellReference = *cell;
+    std::unique_ptr<xoutcell> cell{ new xoutcell };
+    auto &                    cellReference = *cell;
 
     /** Set the outputs equal to the outputs of this object. */
     cell->SetOutputs(this->m_COutputs);
@@ -99,9 +95,8 @@ xoutrow<charT, traits>::AddTargetCell(const char * name)
  * ********************* RemoveTargetCell ***********************
  */
 
-template <class charT, class traits>
 int
-xoutrow<charT, traits>::RemoveTargetCell(const char * name)
+xoutrow::RemoveTargetCell(const char * name)
 {
   int returndummy = 1;
 
@@ -124,9 +119,8 @@ xoutrow<charT, traits>::RemoveTargetCell(const char * name)
  * **************** SetTargetCells (xout objects) ***************
  */
 
-template <class charT, class traits>
 void
-xoutrow<charT, traits>::SetTargetCells(const XStreamMapType & cellmap)
+xoutrow::SetTargetCells(const XStreamMapType & cellmap)
 {
   /** Clean the this->m_CellMap (cells that are created using the
    * AddTarget(const char *) method.
@@ -143,12 +137,11 @@ xoutrow<charT, traits>::SetTargetCells(const XStreamMapType & cellmap)
 
 
 /**
- * ****************** AddOutput (ostream_type) ******************
+ * ****************** AddOutput (std::ostream) ******************
  */
 
-template <class charT, class traits>
 int
-xoutrow<charT, traits>::AddOutput(const char * name, ostream_type * output)
+xoutrow::AddOutput(const char * name, std::ostream * output)
 {
   int returndummy = 0;
 
@@ -169,9 +162,8 @@ xoutrow<charT, traits>::AddOutput(const char * name, ostream_type * output)
  * ********************** AddOutput (xoutbase) ******************
  */
 
-template <class charT, class traits>
 int
-xoutrow<charT, traits>::AddOutput(const char * name, Superclass * output)
+xoutrow::AddOutput(const char * name, Superclass * output)
 {
   int returndummy = 0;
 
@@ -192,9 +184,8 @@ xoutrow<charT, traits>::AddOutput(const char * name, Superclass * output)
  * ******************** RemoveOutput ****************************
  */
 
-template <class charT, class traits>
 int
-xoutrow<charT, traits>::RemoveOutput(const char * name)
+xoutrow::RemoveOutput(const char * name)
 {
   int returndummy = 0;
   /** Set the output in all cells. */
@@ -211,12 +202,11 @@ xoutrow<charT, traits>::RemoveOutput(const char * name)
 
 
 /**
- * ******************* SetOutputs (ostream_types) ***************
+ * ******************* SetOutputs (std::ostreams) ***************
  */
 
-template <class charT, class traits>
 void
-xoutrow<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
+xoutrow::SetOutputs(const CStreamMapType & outputmap)
 {
   /** Set the output in all cells. */
   for (const auto & cell : this->m_XTargetCells)
@@ -234,9 +224,8 @@ xoutrow<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
  * ******************* SetOutputs (xoutobjects) *****************
  */
 
-template <class charT, class traits>
 void
-xoutrow<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
+xoutrow::SetOutputs(const XStreamMapType & outputmap)
 {
   /** Set the output in all cells. */
   for (const auto & cell : this->m_XTargetCells)
@@ -254,9 +243,8 @@ xoutrow<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
  * ******************** WriteHeaders ****************************
  */
 
-template <class charT, class traits>
 void
-xoutrow<charT, traits>::WriteHeaders(void)
+xoutrow::WriteHeaders(void)
 {
   /** Copy '*this'. */
   Self headerwriter;
@@ -282,9 +270,8 @@ xoutrow<charT, traits>::WriteHeaders(void)
  * Returns a target cell.
  */
 
-template <class charT, class traits>
-xoutbase<charT, traits> &
-xoutrow<charT, traits>::SelectXCell(const char * name)
+xoutbase &
+xoutrow::SelectXCell(const char * name)
 {
   std::string cellname(name);
 
@@ -306,5 +293,3 @@ xoutrow<charT, traits>::SelectXCell(const char * name)
 
 
 } // end namespace xoutlibrary
-
-#endif // end #ifndef xoutrow_hxx

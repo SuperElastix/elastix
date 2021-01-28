@@ -760,8 +760,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   this->m_CurrentTransformParameterFileName = fileName;
 
   /** Create transformParameterFile and xout["transpar"]. */
-  xl::xoutsimple_type transformationParameterInfo;
-  std::ofstream       transformParameterFile;
+  xl::xoutsimple transformationParameterInfo;
+  std::ofstream  transformParameterFile;
 
   /** Set up the "TransformationParameters" writing field. */
   transformationParameterInfo.SetOutputs(xl::xout.GetCOutputs());

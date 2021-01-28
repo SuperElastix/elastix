@@ -40,21 +40,11 @@ using namespace std;
  * \ingroup xout
  */
 
-template <class charT, class traits = char_traits<charT>>
-class xoutrow : public xoutbase<charT, traits>
+class xoutrow : public xoutbase
 {
 public:
-  typedef xoutrow                 Self;
-  typedef xoutbase<charT, traits> Superclass;
-
-  /** Typedefs of Superclass */
-  using typename Superclass::ostream_type;
-  using typename Superclass::CStreamMapType;
-  using typename Superclass::XStreamMapType;
-
-
-  /** Extra typedefs */
-  typedef xoutcell<charT, traits> XOutCellType;
+  typedef xoutrow  Self;
+  typedef xoutbase Superclass;
 
   /** Constructor */
   xoutrow() = default;
@@ -94,7 +84,7 @@ public:
    * set the outputs of the TargetCells as well.
    */
   int
-  AddOutput(const char * name, ostream_type * output) override;
+  AddOutput(const char * name, std::ostream * output) override;
 
   int
   AddOutput(const char * name, Superclass * output) override;
@@ -117,11 +107,9 @@ protected:
   SelectXCell(const char * name) override;
 
 private:
-  std::map<std::string, std::unique_ptr<xoutbase<charT, traits>>> m_CellMap;
+  std::map<std::string, std::unique_ptr<xoutbase>> m_CellMap;
 };
 
 } // end namespace xoutlibrary
-
-#include "xoutrow.hxx"
 
 #endif // end #ifndef xoutrow_h

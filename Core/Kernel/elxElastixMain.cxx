@@ -47,13 +47,13 @@ namespace
 struct Data
 {
   /** xout TargetCells. */
-  xl::xoutmain        Xout;
-  xl::xoutsimple_type WarningXout;
-  xl::xoutsimple_type ErrorXout;
-  xl::xoutsimple_type StandardXout;
-  xl::xoutsimple_type CoutOnlyXout;
-  xl::xoutsimple_type LogOnlyXout;
-  std::ofstream       LogFileStream;
+  xl::xoutmain   Xout;
+  xl::xoutsimple WarningXout;
+  xl::xoutsimple ErrorXout;
+  xl::xoutsimple StandardXout;
+  xl::xoutsimple CoutOnlyXout;
+  xl::xoutsimple LogOnlyXout;
+  std::ofstream  LogFileStream;
 };
 
 Data g_data;

@@ -4,11 +4,12 @@ project( xout )
 
 set( xoutcfiles xoutmain.cxx xouttest.cxx )
 
-set( xouthxxfiles
-  xoutbase.hxx
-  xoutsimple.hxx
-  xoutrow.hxx
-  xoutcell.hxx )
+set( xoutcxxfiles
+  xoutbase.cxx
+  xoutmain.cxx
+  xoutsimple.cxx
+  xoutrow.cxx
+  xoutcell.cxx )
 
 set( xouthfiles
   xoutbase.h
@@ -18,7 +19,7 @@ set( xouthfiles
   xoutcell.h )
 
 # a lib defining the global variable xout.
-add_library( xoutlib STATIC xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
+add_library( xoutlib STATIC ${xoutcxxfiles} ${xouthfiles} )
 install( TARGETS xoutlib
   ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}

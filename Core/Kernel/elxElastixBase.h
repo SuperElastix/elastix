@@ -498,7 +498,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  xl::xoutrow_type m_IterationInfo;
+  xl::xoutrow m_IterationInfo;
 
   int m_DefaultOutputPrecision;
 

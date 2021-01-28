@@ -32,13 +32,9 @@ namespace xl = xoutlibrary;
 /** Typedefs for the most common use of xout */
 namespace xoutlibrary
 {
-typedef xoutbase<char>   xoutbase_type;
-typedef xoutsimple<char> xoutsimple_type;
-typedef xoutrow<char>    xoutrow_type;
-typedef xoutcell<char>   xoutcell_type;
 
 /** The main xout class */
-class xoutmain : public xoutbase_type
+class xoutmain : public xoutbase
 {};
 
 xoutmain &

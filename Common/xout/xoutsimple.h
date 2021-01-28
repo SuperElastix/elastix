@@ -33,18 +33,12 @@ using namespace std;
  * \ingroup xout
  */
 
-template <class charT, class traits = char_traits<charT>>
-class xoutsimple : public xoutbase<charT, traits>
+class xoutsimple : public xoutbase
 {
 public:
   /** Typedef's.*/
-  typedef xoutsimple              Self;
-  typedef xoutbase<charT, traits> Superclass;
-
-  /** Typedefs of Superclass */
-  using typename Superclass::ostream_type;
-  using typename Superclass::CStreamMapType;
-  using typename Superclass::XStreamMapType;
+  typedef xoutsimple Self;
+  typedef xoutbase   Superclass;
 
   /** Constructors */
   xoutsimple() = default;
@@ -54,7 +48,7 @@ public:
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
   int
-  AddOutput(const char * name, ostream_type * output) override;
+  AddOutput(const char * name, std::ostream * output) override;
 
   int
   AddOutput(const char * name, Superclass * output) override;
@@ -77,7 +71,5 @@ public:
 };
 
 } // end namespace xoutlibrary
-
-#include "xoutsimple.hxx"
 
 #endif // end #ifndef xoutsimple_h
