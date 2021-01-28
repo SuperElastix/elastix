@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef xoutsimple_hxx
-#define xoutsimple_hxx
 
 #include "xoutsimple.h"
 
@@ -25,12 +23,11 @@ namespace xoutlibrary
 using namespace std;
 
 /**
- * **************** AddOutput (ostream_type) ********************
+ * **************** AddOutput (std::ostream) ********************
  */
 
-template <class charT, class traits>
 int
-xoutsimple<charT, traits>::AddOutput(const char * name, ostream_type * output)
+xoutsimple::AddOutput(const char * name, std::ostream * output)
 {
   return this->AddTargetCell(name, output);
 
@@ -41,9 +38,8 @@ xoutsimple<charT, traits>::AddOutput(const char * name, ostream_type * output)
  * **************** AddOutput (xoutsimple) **********************
  */
 
-template <class charT, class traits>
 int
-xoutsimple<charT, traits>::AddOutput(const char * name, Superclass * output)
+xoutsimple::AddOutput(const char * name, Superclass * output)
 {
   return this->AddTargetCell(name, output);
 
@@ -54,9 +50,8 @@ xoutsimple<charT, traits>::AddOutput(const char * name, Superclass * output)
  * ***************** RemoveOutput *******************************
  */
 
-template <class charT, class traits>
 int
-xoutsimple<charT, traits>::RemoveOutput(const char * name)
+xoutsimple::RemoveOutput(const char * name)
 {
   return this->RemoveTargetCell(name);
 
@@ -64,12 +59,11 @@ xoutsimple<charT, traits>::RemoveOutput(const char * name)
 
 
 /**
- * **************** SetOutputs (ostream_types) ******************
+ * **************** SetOutputs (std::ostreams) ******************
  */
 
-template <class charT, class traits>
 void
-xoutsimple<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
+xoutsimple::SetOutputs(const CStreamMapType & outputmap)
 {
   this->SetTargetCells(outputmap);
 
@@ -80,9 +74,8 @@ xoutsimple<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
  * **************** SetOutputs (xoutobjects) ********************
  */
 
-template <class charT, class traits>
 void
-xoutsimple<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
+xoutsimple::SetOutputs(const XStreamMapType & outputmap)
 {
   this->SetTargetCells(outputmap);
 
@@ -93,9 +86,8 @@ xoutsimple<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
  * **************** GetOutputs (map of xoutobjects) *************
  */
 
-template <class charT, class traits>
 auto
-xoutsimple<charT, traits>::GetXOutputs(void) -> const XStreamMapType &
+xoutsimple::GetXOutputs(void) -> const XStreamMapType &
 {
   return this->m_XTargetCells;
 
@@ -105,14 +97,11 @@ xoutsimple<charT, traits>::GetXOutputs(void) -> const XStreamMapType &
  * **************** GetOutputs (map of c-streams) ***************
  */
 
-template <class charT, class traits>
 auto
-xoutsimple<charT, traits>::GetCOutputs(void) -> const CStreamMapType &
+xoutsimple::GetCOutputs(void) -> const CStreamMapType &
 {
   return this->m_CTargetCells;
 
 } // end GetCOutputs()
 
 } // end namespace xoutlibrary
-
-#endif // end #ifndef xoutsimple_hxx

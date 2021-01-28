@@ -37,41 +37,23 @@ using namespace std;
  * \ingroup xout
  */
 
-template <class charT, class traits = char_traits<charT>>
 class xoutbase
 {
 public:
   /** Typedef's.*/
   typedef xoutbase Self;
 
-  typedef traits                       traits_type;
-  typedef charT                        char_type;
-  typedef typename traits::int_type    int_type;
-  typedef typename traits::pos_type    pos_type;
-  typedef typename traits::off_type    off_type;
-  typedef basic_ostream<charT, traits> ostream_type;
-  typedef basic_ios<charT, traits>     ios_type;
-
-  typedef std::map<std::string, ostream_type *> CStreamMapType;
+  typedef std::map<std::string, std::ostream *> CStreamMapType;
   typedef std::map<std::string, Self *>         XStreamMapType;
-  typedef typename CStreamMapType::value_type   CStreamMapEntryType;
-  typedef typename XStreamMapType::value_type   XStreamMapEntryType;
+  typedef CStreamMapType::value_type            CStreamMapEntryType;
+  typedef XStreamMapType::value_type            XStreamMapEntryType;
 
   /** Destructor */
-  virtual ~xoutbase()
-#if !defined(_MSC_VER) || (_MSC_VER >= 1920)
-    // Preferably declare the destructor pure virtual, to ensure that this is an
-    // abstract base class. Unfortunately, doing so appears to trigger a weird
-    // compilation error with old Visual C++ versions (before Visual Studio 2019),
-    // specifically when having an `#include <valarray>`, saying:
-    // > error C2259: 'xoutlibrary::xoutbase<char,std::char_traits<char>>': cannot instantiate abstract class
-    = 0
-#endif
-    ;
+  virtual ~xoutbase() = 0;
 
   /** The operator [] simply calls this->SelectXCell(cellname).
    * It returns an x-cell */
-  inline Self & operator[](const char * cellname);
+  Self & operator[](const char * cellname);
 
   /**
    * the << operator. A templated member function, and some overloads.
@@ -96,14 +78,14 @@ public:
 
 
   Self &
-  operator<<(ostream_type & (*pf)(ostream_type &))
+  operator<<(std::ostream & (*pf)(std::ostream &))
   {
     return this->SendToTargets(pf);
   }
 
 
   Self &
-  operator<<(ios_type & (*pf)(ios_type &))
+  operator<<(std::ios & (*pf)(std::ios &))
   {
     return this->SendToTargets(pf);
   }
@@ -123,7 +105,7 @@ public:
    * Methods to Add and Remove target cells. They return 0 when successful.
    */
   virtual int
-  AddTargetCell(const char * name, ostream_type * cell);
+  AddTargetCell(const char * name, std::ostream * cell);
 
   virtual int
   AddTargetCell(const char * name, Self * cell);
@@ -144,7 +126,7 @@ public:
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
   virtual int
-  AddOutput(const char * name, ostream_type * output);
+  AddOutput(const char * name, std::ostream * output);
 
   virtual int
   AddOutput(const char * name, Self * output);
@@ -204,7 +186,5 @@ private:
 };
 
 } // end namespace xoutlibrary
-
-#include "xoutbase.hxx"
 
 #endif // end #ifndef xoutbase_h

@@ -35,13 +35,12 @@ using namespace std;
  * \ingroup xout
  */
 
-template <class charT, class traits = char_traits<charT>>
-class xoutcell : public xoutbase<charT, traits>
+class xoutcell : public xoutbase
 {
 public:
   /** Typdef's. */
-  typedef xoutcell                Self;
-  typedef xoutbase<charT, traits> Superclass;
+  typedef xoutcell Self;
+  typedef xoutbase Superclass;
 
   /** Constructors */
   xoutcell();
@@ -54,13 +53,11 @@ public:
   WriteBufferedData(void) override;
 
 private:
-  typedef std::basic_ostringstream<charT, traits> InternalBufferType;
+  typedef std::ostringstream InternalBufferType;
 
   InternalBufferType m_InternalBuffer;
 };
 
 } // end namespace xoutlibrary
-
-#include "xoutcell.hxx"
 
 #endif // end #ifndef xoutcell_h

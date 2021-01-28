@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef xoutcell_hxx
-#define xoutcell_hxx
 
 #include "xoutcell.h"
 
@@ -27,8 +25,7 @@ namespace xoutlibrary
  * ************************ Constructor *************************
  */
 
-template <class charT, class traits>
-xoutcell<charT, traits>::xoutcell()
+xoutcell::xoutcell()
 {
   this->AddTargetCell("InternalBuffer", &(this->m_InternalBuffer));
 
@@ -41,9 +38,8 @@ xoutcell<charT, traits>::xoutcell()
  * The buffered data is sent to the outputs.
  */
 
-template <class charT, class traits>
 void
-xoutcell<charT, traits>::WriteBufferedData(void)
+xoutcell::WriteBufferedData(void)
 {
   const std::string strbuf = this->m_InternalBuffer.str();
 
@@ -67,5 +63,3 @@ xoutcell<charT, traits>::WriteBufferedData(void)
 
 
 } // end namespace xoutlibrary
-
-#endif // end #ifndef xoutcell_hxx

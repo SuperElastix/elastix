@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef xoutbase_hxx
-#define xoutbase_hxx
 
 #include "xoutbase.h"
 
@@ -32,16 +30,14 @@ using namespace std;
  * its declaration, in C++11, apparently.)
  */
 
-template <class charT, class traits>
-xoutbase<charT, traits>::~xoutbase() = default;
+xoutbase::~xoutbase() = default;
 
 
 /**
  * ********************* operator[] *****************************
  */
 
-template <class charT, class traits>
-xoutbase<charT, traits> & xoutbase<charT, traits>::operator[](const char * cellname)
+xoutbase & xoutbase::operator[](const char * cellname)
 {
   return this->SelectXCell(cellname);
 
@@ -56,9 +52,8 @@ xoutbase<charT, traits> & xoutbase<charT, traits>::operator[](const char * celln
  * cells are flushed.
  */
 
-template <class charT, class traits>
 void
-xoutbase<charT, traits>::WriteBufferedData(void)
+xoutbase::WriteBufferedData(void)
 {
   /** Update the target c-streams. */
   for (const auto & cell : m_CTargetCells)
@@ -76,12 +71,11 @@ xoutbase<charT, traits>::WriteBufferedData(void)
 
 
 /**
- * **************** AddTargetCell (ostream_type) ****************
+ * **************** AddTargetCell (std::ostream) ****************
  */
 
-template <class charT, class traits>
 int
-xoutbase<charT, traits>::AddTargetCell(const char * name, ostream_type * cell)
+xoutbase::AddTargetCell(const char * name, std::ostream * cell)
 {
   int returndummy = 1;
 
@@ -105,9 +99,8 @@ xoutbase<charT, traits>::AddTargetCell(const char * name, ostream_type * cell)
  * **************** AddTargetCell (xoutbase) ********************
  */
 
-template <class charT, class traits>
 int
-xoutbase<charT, traits>::AddTargetCell(const char * name, Self * cell)
+xoutbase::AddTargetCell(const char * name, Self * cell)
 {
   int returndummy = 1;
 
@@ -131,9 +124,8 @@ xoutbase<charT, traits>::AddTargetCell(const char * name, Self * cell)
  * ***************** RemoveTargetCell ***************************
  */
 
-template <class charT, class traits>
 int
-xoutbase<charT, traits>::RemoveTargetCell(const char * name)
+xoutbase::RemoveTargetCell(const char * name)
 {
   int returndummy = 1;
 
@@ -153,12 +145,11 @@ xoutbase<charT, traits>::RemoveTargetCell(const char * name)
 
 
 /**
- * **************** SetTargetCells (ostream_types) **************
+ * **************** SetTargetCells (std::ostreams) **************
  */
 
-template <class charT, class traits>
 void
-xoutbase<charT, traits>::SetTargetCells(const CStreamMapType & cellmap)
+xoutbase::SetTargetCells(const CStreamMapType & cellmap)
 {
   this->m_CTargetCells = cellmap;
 
@@ -168,9 +159,9 @@ xoutbase<charT, traits>::SetTargetCells(const CStreamMapType & cellmap)
 /**
  * **************** SetTargetCells (xout objects) ***************
  */
-template <class charT, class traits>
+
 void
-xoutbase<charT, traits>::SetTargetCells(const XStreamMapType & cellmap)
+xoutbase::SetTargetCells(const XStreamMapType & cellmap)
 {
   this->m_XTargetCells = cellmap;
 
@@ -178,12 +169,11 @@ xoutbase<charT, traits>::SetTargetCells(const XStreamMapType & cellmap)
 
 
 /**
- * **************** AddOutput (ostream_type) ********************
+ * **************** AddOutput (std::ostream) ********************
  */
 
-template <class charT, class traits>
 int
-xoutbase<charT, traits>::AddOutput(const char * name, ostream_type * output)
+xoutbase::AddOutput(const char * name, std::ostream * output)
 {
   int returndummy = 1;
 
@@ -206,9 +196,8 @@ xoutbase<charT, traits>::AddOutput(const char * name, ostream_type * output)
  * **************** AddOutput (xoutbase) ************************
  */
 
-template <class charT, class traits>
 int
-xoutbase<charT, traits>::AddOutput(const char * name, Self * output)
+xoutbase::AddOutput(const char * name, Self * output)
 {
   int returndummy = 1;
 
@@ -231,9 +220,8 @@ xoutbase<charT, traits>::AddOutput(const char * name, Self * output)
  * *********************** RemoveOutput *************************
  */
 
-template <class charT, class traits>
 int
-xoutbase<charT, traits>::RemoveOutput(const char * name)
+xoutbase::RemoveOutput(const char * name)
 {
   int returndummy = 1;
 
@@ -255,12 +243,11 @@ xoutbase<charT, traits>::RemoveOutput(const char * name)
 
 
 /**
- * ******************* SetOutputs (ostream_types) ***************
+ * ******************* SetOutputs (std::ostreams) ***************
  */
 
-template <class charT, class traits>
 void
-xoutbase<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
+xoutbase::SetOutputs(const CStreamMapType & outputmap)
 {
   this->m_COutputs = outputmap;
 
@@ -271,9 +258,8 @@ xoutbase<charT, traits>::SetOutputs(const CStreamMapType & outputmap)
  * **************** SetOutputs (xoutobjects) ********************
  */
 
-template <class charT, class traits>
 void
-xoutbase<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
+xoutbase::SetOutputs(const XStreamMapType & outputmap)
 {
   this->m_XOutputs = outputmap;
 
@@ -286,9 +272,8 @@ xoutbase<charT, traits>::SetOutputs(const XStreamMapType & outputmap)
  * Returns a target cell.
  */
 
-template <class charT, class traits>
-xoutbase<charT, traits> &
-xoutbase<charT, traits>::SelectXCell(const char * name)
+xoutbase &
+xoutbase::SelectXCell(const char * name)
 {
   const auto found = m_XTargetCells.find(name);
   return (found == m_XTargetCells.end()) ? *this : *(found->second);
@@ -300,9 +285,8 @@ xoutbase<charT, traits>::SelectXCell(const char * name)
  * **************** GetOutputs (map of xoutobjects) *************
  */
 
-template <class charT, class traits>
-const typename xoutbase<charT, traits>::XStreamMapType &
-xoutbase<charT, traits>::GetXOutputs(void)
+const xoutbase::XStreamMapType &
+xoutbase::GetXOutputs(void)
 {
   return this->m_XOutputs;
 
@@ -312,14 +296,11 @@ xoutbase<charT, traits>::GetXOutputs(void)
  * **************** GetOutputs (map of c-streams) ***************
  */
 
-template <class charT, class traits>
-const typename xoutbase<charT, traits>::CStreamMapType &
-xoutbase<charT, traits>::GetCOutputs(void)
+const xoutbase::CStreamMapType &
+xoutbase::GetCOutputs(void)
 {
   return this->m_COutputs;
 
 } // end GetOutputs
 
 } // end namespace xoutlibrary
-
-#endif // end #ifndef xoutbase_hxx
