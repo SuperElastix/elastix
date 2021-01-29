@@ -1,6 +1,9 @@
 add_executable(CommonGTest
   elxConversionGTest.cxx
   elxElastixMainGTest.cxx
+  elxGTestUtilities.h
+  elxResampleInterpolatorGTest.cxx
+  elxResamplerGTest.cxx
   elxTransformIOGTest.cxx
   itkComputeImageExtremaFilterGTest.cxx
   )

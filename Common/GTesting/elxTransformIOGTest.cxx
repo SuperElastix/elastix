@@ -21,6 +21,7 @@
 
 #include "elxElastixMain.h" // For xoutManager.
 #include "elxElastixTemplate.h"
+#include "elxGTestUtilities.h"
 
 #include "AdvancedAffineTransform/elxAdvancedAffineTransform.h"
 #include "AdvancedBSplineTransform/elxAdvancedBSplineTransform.h"
@@ -185,7 +186,7 @@ struct WithDimension
 
 
     static void
-    Test_CreateTransformParametersMap_for_default_transform(const ParameterMapType & expectedParameterMap)
+    Test_CreateTransformParametersMap_for_default_transform(const ParameterMapType & expectedDerivedParameterMap)
     {
       SCOPED_TRACE(std::string("Function = ")
                      .append(__func__)
@@ -194,18 +195,10 @@ struct WithDimension
 
       const elx::xoutManager manager("", false, false);
 
-      const auto elastixObject = ElastixType<NDimension>::New();
-
-      // Note: SetConfiguration does not share ownership!
-      const auto configuration = elx::Configuration::New();
-      elastixObject->SetConfiguration(configuration);
-
-      const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
-      imageContainer->push_back(itk::Image<float, NDimension>::New());
-      elastixObject->SetFixedImageContainer(imageContainer);
-      elastixObject->SetMovingImageContainer(imageContainer);
-
       const auto elxTransform = ElastixTransformType::New();
+      const auto elastixObject = elx::GTestUtilities::CreateDefaultElastixObject<ElastixType<NDimension>>();
+
+      // Note: SetElastix does not take or share the ownership of its argument!
       elxTransform->SetElastix(elastixObject);
 
       // BeforeAll() appears necessary to for MultiBSplineTransformWithNormal
@@ -218,29 +211,15 @@ struct WithDimension
       // and DeformationFieldTransform which do SetReadWriteTransformParameters(false)
       elxTransform->SetReadWriteTransformParameters(true);
 
-      ParameterMapType parameterMap;
-      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, &parameterMap);
-
-      for (const auto & expectedParameter : expectedParameterMap)
-      {
-        const auto found = parameterMap.find(expectedParameter.first);
-        const bool isExpectedKeyFound = found != end(parameterMap);
-
-        SCOPED_TRACE("Expected key = " + expectedParameter.first);
-        EXPECT_TRUE(isExpectedKeyFound);
-
-        if (isExpectedKeyFound)
-        {
-          EXPECT_EQ(expectedParameter.second, found->second);
-        }
-      }
+      ParameterMapType actualParameterMap;
+      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, &actualParameterMap);
 
       const std::string expectedImageDimension{ char{ '0' + NDimension } };
       const std::string expectedInternalImagePixelType = "float";
       const std::string expectedZero = "0";
       const std::string expectedOne = "1";
 
-      const std::pair<const std::string, ParameterValuesType> expectedTransformBaseParameters[] = {
+      const ParameterMapType expectedBaseParameterMap = {
         { "Direction", ParameterValuesType(NDimension * NDimension, expectedZero) },
         { "FixedImageDimension", { expectedImageDimension } },
         { "FixedInternalImagePixelType", { expectedInternalImagePixelType } },
@@ -258,36 +237,9 @@ struct WithDimension
         { "UseDirectionCosines", { "true" } }
       };
 
-      for (const auto & expectedTransformBaseParameter : expectedTransformBaseParameters)
-      {
-        const auto found = parameterMap.find(expectedTransformBaseParameter.first);
-        SCOPED_TRACE("Expected key = " + expectedTransformBaseParameter.first);
-        const bool isExpectedKeyFound = found != end(parameterMap);
-        EXPECT_TRUE(isExpectedKeyFound);
-
-        if (isExpectedKeyFound)
-        {
-          EXPECT_EQ(found->second, expectedTransformBaseParameter.second);
-        }
-      }
-
-      const std::size_t numberOfExpectedTransformBaseParameters{ GTEST_ARRAY_SIZE_(expectedTransformBaseParameters) };
-
-      EXPECT_GE(parameterMap.size(), numberOfExpectedTransformBaseParameters);
-      EXPECT_EQ(parameterMap.size() - numberOfExpectedTransformBaseParameters, expectedParameterMap.size());
-
-      ParameterMapType missingParameters;
-
-      for (const auto & parameter : parameterMap)
-      {
-        if (std::find(begin(expectedTransformBaseParameters), end(expectedTransformBaseParameters), parameter) ==
-              end(expectedTransformBaseParameters) &&
-            (expectedParameterMap.count(parameter.first) == 0))
-        {
-          EXPECT_TRUE(missingParameters.insert(parameter).second);
-        }
-      }
-      EXPECT_EQ(missingParameters, ParameterMapType{});
+      elx::GTestUtilities::ExpectAllKeysUnique(expectedDerivedParameterMap, expectedBaseParameterMap);
+      EXPECT_EQ(actualParameterMap,
+                elx::GTestUtilities::MakeMergedMap(expectedDerivedParameterMap, expectedBaseParameterMap));
     }
 
     static void
@@ -303,10 +255,7 @@ struct WithDimension
       const auto expectedString = "0." + std::string(expectedPrecision, '3');
 
       const auto elastixObject = ElastixType<NDimension>::New();
-
-      // Note: SetConfiguration does not share ownership!
-      const auto configuration = elx::Configuration::New();
-      elastixObject->SetConfiguration(configuration);
+      elastixObject->SetConfiguration(elx::Configuration::New());
 
       const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
       const auto image = itk::Image<float, NDimension>::New();
@@ -341,21 +290,13 @@ struct WithDimension
     {
       const elx::xoutManager manager("", false, false);
 
-      const auto elastixObject = ElastixType<NDimension>::New();
-
-      // Note: SetConfiguration does not share ownership!
-      const auto configuration = elx::Configuration::New();
-      elastixObject->SetConfiguration(configuration);
-
-      const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
-      const auto image = itk::Image<float, NDimension>::New();
-      imageContainer->push_back(image);
-
-      elastixObject->SetFixedImageContainer(imageContainer);
-      elastixObject->SetMovingImageContainer(imageContainer);
-
       const auto elxTransform = ElastixTransformType::New();
+
+      const auto elastixObject = elx::GTestUtilities::CreateDefaultElastixObject<ElastixType<NDimension>>();
+
+      // Note: SetElastix does not take or share the ownership of its argument!
       elxTransform->SetElastix(elastixObject);
+
       elxTransform->BeforeAll();
 
       const auto expectHowToCombineTransforms = [&elxTransform](const char * const expectedParameterValue) {
