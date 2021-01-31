@@ -18,6 +18,7 @@
 #include "elxTransformIO.h"
 
 #include "elxBaseComponent.h"
+#include "elxConfiguration.h"
 
 #include "xoutmain.h"
 
@@ -75,4 +76,27 @@ elastix::TransformIO::Write(const itk::TransformBaseTemplate<double> & itkTransf
   {
     xl::xout["error"] << "Error trying to write " << fileName << ":\n" << stdException.what() << std::endl;
   }
+}
+
+
+std::string
+elastix::TransformIO::MakeDeformationFieldFileName(Configuration &     configuration,
+                                                   const std::string & transformParameterFileName)
+{
+  // Get the last part of the filename of the transformParameter-file,
+  // which is going to be part of the filename of the deformationField image.
+  const std::string            transformParameterBaseName = "TransformParameters";
+  const auto                   transformParameterBaseNameSize = transformParameterBaseName.size();
+  const std::string::size_type pos = transformParameterFileName.rfind(transformParameterBaseName + '.');
+  const std::string            lastpart =
+    (pos == std::string::npos)
+      ? ""
+      : transformParameterFileName.substr(pos + transformParameterBaseNameSize,
+                                          transformParameterFileName.size() - pos - transformParameterBaseNameSize - 4);
+
+  // Create the filename of the deformationField image.
+  std::string resultImageFormat = "mhd";
+  configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+
+  return configuration.GetCommandLineArgument("-out") + "DeformationFieldImage" + lastpart + "." + resultImageFormat;
 }

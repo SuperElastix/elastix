@@ -983,27 +983,9 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
   /** Call the WriteToFile from the TransformBase.*/
   this->Superclass2::WriteToFile(param);
 
-  /** Add some BSplineTransformWithDiffusion specific lines.*/
-  xl::xout["transpar"] << std::endl << "// BSplineTransformWithDiffusion specific" << std::endl;
-
-  /** Get the last part of the filename of the transformParameter-file,
-   * which is going to be part of the filename of the deformationField image.
-   */
-  std::string                        ctpfn = this->GetElastix()->GetCurrentTransformParameterFileName();
-  std::basic_string<char>::size_type pos = ctpfn.rfind("TransformParameters.");
-  std::string lastpart = (pos == std::string::npos) ? "" : ctpfn.substr(pos + 19, ctpfn.size() - pos - 19 - 4);
-
-  /** Write the filename of the deformationField image. */
-  std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  std::ostringstream makeFileName("");
-  makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "DeformationFieldImage" << lastpart << "."
-               << resultImageFormat;
-  xl::xout["transpar"] << "(DeformationFieldFileName \"" << makeFileName.str() << "\")" << std::endl;
-
   /** Write the deformation field image. */
   typename DeformationFieldWriterType::Pointer writer = DeformationFieldWriterType::New();
-  writer->SetFileName(makeFileName.str().c_str());
+  writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
   writer->SetInput(this->m_DiffusedField);
 
   /** Do the writing. */
@@ -1037,10 +1019,10 @@ BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap(voi
   const auto   gridRegion = itkTransform.GetGridRegion();
 
   // TODO If necessary, add possibly missing parameters:
-  // - "DeformationFieldFileName" (which is written by WriteToFile).
   // - "GridDirection" (as returned by RecursiveBSplineTransform).
   // - "ThresholdBool", "ThresholdHU", etc. (as retrieved by ReadParameter).
-  return { { "GridSize", Conversion::ToVectorOfStrings(gridRegion.GetSize()) },
+  return { { "DeformationFieldFileName", { TransformIO::MakeDeformationFieldFileName(*this) } },
+           { "GridSize", Conversion::ToVectorOfStrings(gridRegion.GetSize()) },
            { "GridIndex", Conversion::ToVectorOfStrings(gridRegion.GetIndex()) },
            { "GridSpacing", Conversion::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
            { "GridOrigin", Conversion::ToVectorOfStrings(itkTransform.GetGridOrigin()) } };
