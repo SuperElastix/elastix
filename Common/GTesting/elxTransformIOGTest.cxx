@@ -373,6 +373,7 @@ struct WithDimension
     const auto expectedMatrixTranslation = toVectorOfStrings(times(NDimension, '1' + std::string(NDimension, '0')));
     const auto expectedGridDirection =
       toVectorOfStrings(times(NDimension - 1, '1' + std::string(NDimension, '0')) + '1');
+    const std::string expectedDeformationFieldFileName("DeformationFieldImage.mhd");
 
     using namespace elx;
 
@@ -403,12 +404,14 @@ struct WithDimension
     (void)skippedTest;
 
     WithElastixTransform<BSplineTransformWithDiffusion>::Test_CreateTransformParametersMap_for_default_transform(
-      { { "GridIndex", expectedZeros },
+      { { "DeformationFieldFileName", { expectedDeformationFieldFileName } },
+        { "GridIndex", expectedZeros },
         { "GridOrigin", expectedZeros },
         { "GridSize", expectedZeros },
         { "GridSpacing", expectedOnes } });
     WithElastixTransform<DeformationFieldTransform>::Test_CreateTransformParametersMap_for_default_transform(
-      { { "DeformationFieldInterpolationOrder", { expectedZero } } });
+      { { "DeformationFieldFileName", { expectedDeformationFieldFileName } },
+        { "DeformationFieldInterpolationOrder", { expectedZero } } });
     WithElastixTransform<EulerStackTransform>::Test_CreateTransformParametersMap_for_default_transform(
       { { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
         { "NumberOfSubTransforms", { expectedZero } },

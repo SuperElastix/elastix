@@ -24,6 +24,7 @@
 namespace elastix
 {
 class BaseComponent;
+class Configuration;
 
 class TransformIO
 {
@@ -54,11 +55,23 @@ public:
   static void
   Write(const itk::TransformBaseTemplate<double> & itkTransform, const std::string & fileName);
 
+
+  /// Makes the deformation field file name, as used by BSplineTransformWithDiffusion and DeformationFieldTransform.
+  template <typename TElastixTransform>
+  static std::string
+  MakeDeformationFieldFileName(const TElastixTransform & elxTransform)
+  {
+    return MakeDeformationFieldFileName(*(elxTransform.GetConfiguration()),
+                                        elxTransform.GetElastix()->GetCurrentTransformParameterFileName());
+  }
+
 private:
   static itk::TransformBaseTemplate<double>::Pointer
   CreateCorrespondingItkTransform(const BaseComponent & elxTransform,
                                   const unsigned        fixedImageDimension,
                                   const unsigned        movingImageDimension);
+  static std::string
+  MakeDeformationFieldFileName(Configuration & configuration, const std::string & transformParameterFileName);
 };
 } // namespace elastix
 

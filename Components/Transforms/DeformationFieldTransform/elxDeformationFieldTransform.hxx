@@ -159,21 +159,6 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
 
   typedef itk::ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
 
-  /** Get the last part of the filename of the transformParameter-file,
-   * which is going to be part of the filename of the deformationField image.
-   */
-  std::string                        ctpfn = this->GetElastix()->GetCurrentTransformParameterFileName();
-  std::basic_string<char>::size_type pos = ctpfn.rfind("TransformParameters.");
-  std::string lastpart = (pos == std::string::npos) ? "" : ctpfn.substr(pos + 19, ctpfn.size() - pos - 19 - 4);
-
-  /** Create the filename of the deformationField image. */
-  std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  std::ostringstream makeFileName("");
-  makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "DeformationFieldImage" << lastpart << "."
-               << resultImageFormat;
-  xl::xout["transpar"] << "(DeformationFieldFileName \"" << makeFileName.str() << "\")" << std::endl;
-
   /** Write the interpolation order to file */
   std::string interpolatorName =
     this->m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
@@ -187,7 +172,7 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
   /** Write the deformation field image. */
   typedef itk::ImageFileWriter<DeformationFieldType> VectorWriterType;
   typename VectorWriterType::Pointer                 writer = VectorWriterType::New();
-  writer->SetFileName(makeFileName.str().c_str());
+  writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
   writer->SetInput(infoChanger->GetOutput());
 
   /** Do the writing. */
@@ -221,9 +206,8 @@ DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap(void) c
     m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
   const auto interpolationOrder = (interpolatorName == "LinearInterpolateImageFunction") ? 1U : 0U;
 
-  // TODO If necessary, add possibly missing parameter:
-  // - "DeformationFieldFileName" (which is written by WriteToFile).
-  return { { "DeformationFieldInterpolationOrder", { Conversion::ToString(interpolationOrder) } } };
+  return { { "DeformationFieldFileName", { TransformIO::MakeDeformationFieldFileName(*this) } },
+           { "DeformationFieldInterpolationOrder", { Conversion::ToString(interpolationOrder) } } };
 
 } // end CustomizeTransformParametersMap()
 
