@@ -487,13 +487,51 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformPara
    * the transformParameterFileName. */
   const auto configurationInitialTransform = Configuration::New();
 
-  if (configurationInitialTransform->Initialize({ { "-tp", transformParametersFileName } }) != 0)
+  try
   {
-    itkGenericExceptionMacro(<< "ERROR: Reading initial transform "
-                             << "parameters failed: " << transformParametersFileName);
-  }
+    const auto itkTransform = TransformIO::Read(transformParametersFileName);
 
-  this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
+    if (itkTransform != nullptr)
+    {
+      std::string fixedPixelType = "float";
+      std::string movingPixelType = "float";
+
+      this->m_Configuration->ReadParameter(fixedPixelType, "FixedInternalImagePixelType", 0);
+      this->m_Configuration->ReadParameter(movingPixelType, "MovingInternalImagePixelType", 0);
+
+      const auto transformBase =
+        TransformIO::CreateCorrespondingElxTransform(*itkTransform, fixedPixelType, movingPixelType);
+      const auto elxTransform = dynamic_cast<Self *>(transformBase.GetPointer());
+
+      if (elxTransform != nullptr)
+      {
+        transformBase->SetParameters(itkTransform->GetParameters());
+        transformBase->SetFixedParameters(itkTransform->GetFixedParameters());
+
+        elxTransform->SetElastix(this->GetElastix());
+        elxTransform->SetConfiguration(configurationInitialTransform);
+
+        const auto testPointer = dynamic_cast<InitialTransformType *>(transformBase.GetPointer());
+        if (testPointer != nullptr)
+        {
+          this->SetInitialTransform(testPointer);
+        }
+      }
+    }
+  }
+  catch (const std::exception &)
+  {
+    // Failed to read the file by ITK TransformIO, so now try to read the file according to the traditional elastix
+    // transform parameters txt file format.
+
+    if (configurationInitialTransform->Initialize({ { "-tp", transformParametersFileName } }) != 0)
+    {
+      itkGenericExceptionMacro(<< "ERROR: Reading initial transform "
+                               << "parameters failed: " << transformParametersFileName);
+    }
+
+    this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
+  }
 
 } // end ReadInitialTransformFromFile()
 
