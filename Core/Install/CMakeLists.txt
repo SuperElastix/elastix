@@ -15,7 +15,7 @@ mark_as_advanced( ELASTIX_IMAGE_3D_PIXELTYPES )
 set( ELASTIX_IMAGE_3D_PIXELTYPES "short" "float" CACHE STRING "Specify 3D pixel types" )
 
 mark_as_advanced( ELASTIX_IMAGE_4D_PIXELTYPES )
-set( ELASTIX_IMAGE_4D_PIXELTYPES "short" CACHE STRING "Specify 4D pixel types" )
+set( ELASTIX_IMAGE_4D_PIXELTYPES "short" "float" CACHE STRING "Specify 4D pixel types" )
 
 # Define supported dimensions and types for sanity checks.
 # Gives protection against typo's.
