@@ -25,22 +25,14 @@ namespace itk
  * **************** Constructor ***************
  */
 
-ParameterMapInterface::ParameterMapInterface()
-{
-  this->m_ParameterMap.clear();
-  this->m_PrintErrorMessages = true;
-
-} // end Constructor()
+ParameterMapInterface::ParameterMapInterface() = default;
 
 
 /**
  * **************** Destructor ***************
  */
 
-ParameterMapInterface ::~ParameterMapInterface()
-{
-  // empty
-} // end Destructor()
+ParameterMapInterface ::~ParameterMapInterface() = default;
 
 
 /**
@@ -130,7 +122,7 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
  */
 
 bool
-ParameterMapInterface::StringCast(const std::string & parameterValue, std::string & casted) const
+ParameterMapInterface::StringCast(const std::string & parameterValue, std::string & casted)
 {
   casted = parameterValue;
   return true;
