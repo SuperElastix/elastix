@@ -166,7 +166,7 @@ public:
     }
 
     /** Cast the string to type T. */
-    bool castSuccesful = this->StringCast(vec[entry_nr], parameterValue);
+    bool castSuccesful = Self::StringCast(vec[entry_nr], parameterValue);
 
     /** Check if the cast was successful. */
     if (!castSuccesful)
@@ -334,7 +334,7 @@ public:
     for (unsigned int i = entry_nr_start; i < entry_nr_end + 1; ++i)
     {
       /** Cast the string to type T. */
-      bool castSuccesful = this->StringCast(vec[i], parameterValues[j]);
+      bool castSuccesful = Self::StringCast(vec[i], parameterValues[j]);
       j++;
 
       /** Check if the cast was successful. */
@@ -383,15 +383,15 @@ private:
   /** Member variable to store the parameters. */
   ParameterMapType m_ParameterMap;
 
-  bool m_PrintErrorMessages;
+  bool m_PrintErrorMessages{ true };
 
   /** A templated function to cast strings to a type T.
    * Returns true when casting was successful and false otherwise.
    * We make use of the casting functionality of string streams.
    */
   template <class T>
-  bool
-  StringCast(const std::string & parameterValue, T & casted) const
+  static bool
+  StringCast(const std::string & parameterValue, T & casted)
   {
     // StringCast is only called by the templated ReadParameter<T>, while there
     // is a non-templated ReadParameter overload for `bool` parameter values.
@@ -419,8 +419,8 @@ private:
   /** Provide a specialization for std::string, since the general StringCast
    * (especially ss >> casted) will not work for strings containing spaces.
    */
-  bool
-  StringCast(const std::string & parameterValue, std::string & casted) const;
+  static bool
+  StringCast(const std::string & parameterValue, std::string & casted);
 };
 
 } // end of namespace itk
