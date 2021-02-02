@@ -93,13 +93,14 @@ public:
   ToString(float);
 
   /** Convenience function overload to convert an integer to a text string. */
-  template <typename TScalarValue>
+  template <typename TInteger>
   static std::string
-  ToString(const TScalarValue scalar)
+  ToString(const TInteger integerValue)
   {
-    static_assert(std::is_integral<TScalarValue>::value, "An integer type expected!");
-    static_assert(!std::is_same<TScalarValue, bool>::value, "No bool expected!");
-    return std::to_string(scalar);
+    static_assert(std::is_integral<TInteger>::value, "An integer type expected!");
+    static_assert(!std::is_same<TInteger, bool>::value, "No bool expected!");
+    static_assert(sizeof(TInteger) > 1, "ToString does not support (signed/unsigned) char!");
+    return std::to_string(integerValue);
   }
 
 

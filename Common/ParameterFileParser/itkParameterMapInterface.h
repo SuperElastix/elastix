@@ -27,6 +27,7 @@
 #include "itkParameterFileParser.h"
 
 #include <iostream>
+#include <type_traits> // For is_same.
 
 namespace itk
 {
@@ -392,15 +393,20 @@ private:
   bool
   StringCast(const std::string & parameterValue, T & casted) const
   {
+    // StringCast is only called by the templated ReadParameter<T>, while there
+    // is a non-templated ReadParameter overload for `bool` parameter values.
+    static_assert(!std::is_same<T, bool>::value, "StringCast does not support bool!");
+
     std::stringstream ss(parameterValue);
 
-    /** For (unsigned) char we need a workaround, because ">>" casts it wrongly.
+    /** We do not support (signed/unsigned) char, because does not appear
+     * necessary. Moreover the result of ">>" may be counter-intuitive.
      * It takes the first digit and thinks it is a char. For example:
-     * 84 becomes '8', which is asci number 56. So, as a workaround, we use
-     * the accumulate type, and then cast back to T.*/
-    typename NumericTraits<T>::AccumulateType tempCasted;
-    ss >> tempCasted;
-    casted = static_cast<T>(tempCasted);
+     * 84 becomes '8', which is ASCII number 56. */
+    static_assert(sizeof(T) > 1, "StringCast does not support (signed/unsigned) char!");
+
+    ss >> casted;
+
     if (ss.bad() || ss.fail())
     {
       return false;
