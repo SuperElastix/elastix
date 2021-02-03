@@ -49,8 +49,8 @@ Expect_GetNumberOfElements_returns_size(const TContainer & container)
 }
 
 template <typename TParameterValue>
-void
-Expect_lossless_round_trip_of_parameter_value(const TParameterValue & parameterValue)
+TParameterValue
+Expect_successful_round_trip_of_parameter_value(const TParameterValue & parameterValue)
 {
   const std::string                                  parameterName("Key");
   const itk::ParameterMapInterface::ParameterMapType parameterMap{ { parameterName,
@@ -64,14 +64,23 @@ Expect_lossless_round_trip_of_parameter_value(const TParameterValue & parameterV
   std::string errorMessage;
   try
   {
-    parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage);
+    EXPECT_TRUE(parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage));
   }
   catch (const itk::ExceptionObject & exceptionObject)
   {
     EXPECT_EQ(exceptionObject.what(), std::string{});
   }
   EXPECT_EQ(errorMessage, std::string{});
-  EXPECT_EQ(actualParameterValue, parameterValue);
+  return actualParameterValue;
+}
+
+
+template <typename TParameterValue>
+void
+Expect_lossless_round_trip_of_parameter_value(const TParameterValue & parameterValue)
+{
+  const TParameterValue & roundTrippedParameterValue = Expect_successful_round_trip_of_parameter_value(parameterValue);
+  EXPECT_EQ(roundTrippedParameterValue, parameterValue);
 }
 
 
@@ -126,7 +135,8 @@ Expect_lossless_round_trip_of_floating_point_parameter_values()
 
   using NumericLimits = std::numeric_limits<TFloatingPoint>;
 
-  Expect_lossless_round_trip_of_parameter_values<TFloatingPoint>({ NumericLimits::lowest(),
+  Expect_lossless_round_trip_of_parameter_values<TFloatingPoint>({ -NumericLimits::infinity(),
+                                                                   NumericLimits::lowest(),
                                                                    -1,
                                                                    -NumericLimits::epsilon(),
                                                                    -NumericLimits::min(),
@@ -137,7 +147,11 @@ Expect_lossless_round_trip_of_floating_point_parameter_values()
                                                                    NumericLimits::min(),
                                                                    NumericLimits::epsilon(),
                                                                    1,
-                                                                   NumericLimits::max() });
+                                                                   NumericLimits::max(),
+                                                                   NumericLimits::infinity() });
+
+  const TFloatingPoint & roundTrippedNaN = Expect_successful_round_trip_of_parameter_value(NumericLimits::quiet_NaN());
+  EXPECT_TRUE(std::isnan(roundTrippedNaN));
 }
 
 } // namespace
