@@ -17,48 +17,11 @@
  *=========================================================================*/
 
 #include "itkParameterMapInterface.h"
+
+// Standard C++ header files:
+#include <cmath>       // For fpclassify and FP_SUBNORMAL.
 #include <type_traits> // For is_floating_point.
-namespace
-{
-template <typename TFloatingPoint>
-bool
-StringCastNaN(const std::string & parameterValue, TFloatingPoint & casted)
-{
-  static_assert(std::is_floating_point<TFloatingPoint>::value,
-                "This function template only supports floating point types.");
 
-  if (parameterValue == "NaN")
-  {
-    casted = std::numeric_limits<TFloatingPoint>::quiet_NaN();
-    return true;
-  }
-  return false;
-}
-
-
-template <typename TFloatingPoint>
-bool
-StringCastInfinity(const std::string & parameterValue, TFloatingPoint & casted)
-{
-  static_assert(std::is_floating_point<TFloatingPoint>::value,
-                "This function template only supports floating point types.");
-
-  const auto infinity = std::numeric_limits<TFloatingPoint>::infinity();
-
-  if (parameterValue == "Infinity")
-  {
-    casted = infinity;
-    return true;
-  }
-  if (parameterValue == "-Infinity")
-  {
-    casted = -infinity;
-    return true;
-  }
-  return false;
-}
-
-} // namespace
 
 namespace itk
 {
@@ -171,21 +134,75 @@ ParameterMapInterface::StringCast(const std::string & parameterValue, std::strin
 } // end StringCast()
 
 
+template <typename TFloatingPoint>
+bool
+ParameterMapInterface::StringCastToFloatingPoint(const std::string & parameterValue, TFloatingPoint & casted)
+{
+  static_assert(std::is_floating_point<TFloatingPoint>::value,
+                "This function template only supports floating point types.");
+
+  using NumericLimits = std::numeric_limits<TFloatingPoint>;
+
+  if (parameterValue == "NaN")
+  {
+    casted = NumericLimits::quiet_NaN();
+    return true;
+  }
+  if (parameterValue == "Infinity")
+  {
+    casted = NumericLimits::infinity();
+    return true;
+  }
+  if (parameterValue == "-Infinity")
+  {
+    casted = -NumericLimits::infinity();
+    return true;
+  }
+  if (Self::StringCast<TFloatingPoint>(parameterValue, casted))
+  {
+    return true;
+  }
+
+#ifdef __clang__
+  TFloatingPoint     value{};
+  std::istringstream inputStream(parameterValue);
+
+  inputStream >> value;
+
+  // Note: For denormal (subnormal) floating point values, the failbit is
+  // intentionally ignored, as a workaround for a Clang std library bug:
+  // For Clang (tested on AppleClang 12.0.0.12000032 macos-10.15), the round trip
+  // appears troublesome for denorm_min, as std::istream::fail() appears to return true.
+  // See also LLVM Bug 39012 "ostream writes a double that istream can't read", reported
+  // by Daniel Cooke, 2018-09-20: "It appears libc++ incorrectly sets input stream
+  // failbit when reading subnormal floating point numbers."
+  // https://bugs.llvm.org/show_bug.cgi?id=39012
+
+  if ((!inputStream.bad()) && (std::fpclassify(value) == FP_SUBNORMAL))
+  {
+    casted = value;
+    return true;
+  }
+#endif
+
+  // Failed to convert the parameter value to the specified floating point type.
+  return false;
+
+} // end StringCastFloatingPoint()
+
+
 bool
 ParameterMapInterface::StringCast(const std::string & parameterValue, float & casted)
 {
-  return StringCastNaN(parameterValue, casted) || StringCastInfinity(parameterValue, casted) ||
-         Self::StringCast<float>(parameterValue, casted);
-
-} // end StringCast()
+  return Self::StringCastToFloatingPoint(parameterValue, casted);
+}
 
 
 bool
 ParameterMapInterface::StringCast(const std::string & parameterValue, double & casted)
 {
-  return StringCastNaN(parameterValue, casted) || StringCastInfinity(parameterValue, casted) ||
-         Self::StringCast<double>(parameterValue, casted);
-} // end StringCast()
+  return Self::StringCastToFloatingPoint(parameterValue, casted);
+}
 
 
 /**
