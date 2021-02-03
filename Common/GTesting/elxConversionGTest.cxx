@@ -19,10 +19,14 @@
 // First include the header file to be tested:
 #include "elxConversion.h"
 
+#include "itkParameterMapInterface.h"
+
 #include <gtest/gtest.h>
 
+#include <initializer_list>
 #include <limits>
 #include <string>
+#include <type_traits> // For is_floating_point.
 #include <vector>
 
 #include <itkImageBase.h>
@@ -43,6 +47,99 @@ Expect_GetNumberOfElements_returns_size(const TContainer & container)
 {
   EXPECT_EQ(Conversion::GetNumberOfElements(container), container.size());
 }
+
+template <typename TParameterValue>
+void
+Expect_lossless_round_trip_of_parameter_value(const TParameterValue & parameterValue)
+{
+  const std::string                                  parameterName("Key");
+  const itk::ParameterMapInterface::ParameterMapType parameterMap{ { parameterName,
+                                                                     { Conversion::ToString(parameterValue) } } };
+  const auto                                         parameterMapInterface = itk::ParameterMapInterface::New();
+
+  parameterMapInterface->SetParameterMap(parameterMap);
+
+  TParameterValue actualParameterValue{};
+
+  std::string errorMessage;
+  try
+  {
+    parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage);
+  }
+  catch (const itk::ExceptionObject & exceptionObject)
+  {
+    EXPECT_EQ(exceptionObject.what(), std::string{});
+  }
+  EXPECT_EQ(errorMessage, std::string{});
+  EXPECT_EQ(actualParameterValue, parameterValue);
+}
+
+
+template <typename TParameterValue>
+void
+Expect_lossless_round_trip_of_parameter_values(const std::initializer_list<TParameterValue> & parameterValues)
+{
+  for (const auto parameterValue : parameterValues)
+  {
+    Expect_lossless_round_trip_of_parameter_value(parameterValue);
+  }
+}
+
+
+template <typename TUnsignedInteger>
+void
+Expect_lossless_round_trip_of_unsigned_parameter_values()
+{
+  using NumericLimits = std::numeric_limits<TUnsignedInteger>;
+  static_assert(!NumericLimits::is_signed, "This function is only meant to test unsigned types!");
+
+  // Note: the static_cast for `NumericLimits::max() - 1` is a workaround for
+  // the following compile error from Visual C++ 2017:
+  // > error C2398: Element '3': conversion from 'int' to 'TUnsignedInteger' requires a narrowing conversion
+  Expect_lossless_round_trip_of_parameter_values<TUnsignedInteger>(
+    { 0, 1, static_cast<TUnsignedInteger>(NumericLimits::max() - 1), NumericLimits::max() });
+}
+
+
+template <typename TSignedInteger>
+void
+Expect_lossless_round_trip_of_signed_integer_parameter_values()
+{
+  using NumericLimits = std::numeric_limits<TSignedInteger>;
+
+  static_assert(NumericLimits::is_signed && NumericLimits::is_integer,
+                "This function is only meant to test signed integer types!");
+
+  const auto minValue = NumericLimits::min();
+  const auto maxValue = NumericLimits::max();
+
+  Expect_lossless_round_trip_of_parameter_values<TSignedInteger>(
+    { minValue, minValue + 1, -1, 0, 1, maxValue - 1, maxValue });
+}
+
+template <typename TFloatingPoint>
+void
+Expect_lossless_round_trip_of_floating_point_parameter_values()
+{
+  static_assert(std::is_floating_point<TFloatingPoint>::value,
+                "This function is only meant to test floating point types!");
+
+  using NumericLimits = std::numeric_limits<TFloatingPoint>;
+
+  Expect_lossless_round_trip_of_parameter_values<TFloatingPoint>({ NumericLimits::lowest(),
+                                                                   -1,
+                                                                   -NumericLimits::epsilon(),
+                                                                   -NumericLimits::min(),
+                                                                   -NumericLimits::denorm_min(),
+                                                                   -TFloatingPoint{}, // Minus zero
+                                                                   0,
+                                                                   NumericLimits::denorm_min(),
+                                                                   NumericLimits::min(),
+                                                                   NumericLimits::epsilon(),
+                                                                   1,
+                                                                   NumericLimits::max() });
+}
+
 } // namespace
 
 
@@ -304,5 +401,25 @@ GTEST_TEST(Conversion, IsNumberReturnsTrueOnNumericString)
   for (const auto limit : { limits::min(), limits::max(), limits::epsilon(), limits::lowest(), limits::denorm_min() })
   {
     expect_IsNumber_returns_true(Conversion::ToString(limit));
+  }
+}
+
+
+GTEST_TEST(Conversion, LosslessRoundTripOfParameterValue)
+{
+  Expect_lossless_round_trip_of_unsigned_parameter_values<unsigned>();
+  Expect_lossless_round_trip_of_unsigned_parameter_values<std::uint16_t>();
+  Expect_lossless_round_trip_of_unsigned_parameter_values<std::uintmax_t>();
+
+  Expect_lossless_round_trip_of_signed_integer_parameter_values<int>();
+  Expect_lossless_round_trip_of_signed_integer_parameter_values<std::int16_t>();
+  Expect_lossless_round_trip_of_signed_integer_parameter_values<std::intmax_t>();
+
+  Expect_lossless_round_trip_of_floating_point_parameter_values<float>();
+  Expect_lossless_round_trip_of_floating_point_parameter_values<double>();
+
+  for (const bool parameterValue : { false, true })
+  {
+    Expect_lossless_round_trip_of_parameter_value<bool>(parameterValue);
   }
 }
