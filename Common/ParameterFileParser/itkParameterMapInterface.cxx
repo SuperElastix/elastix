@@ -17,6 +17,48 @@
  *=========================================================================*/
 
 #include "itkParameterMapInterface.h"
+#include <type_traits> // For is_floating_point.
+namespace
+{
+template <typename TFloatingPoint>
+bool
+StringCastNaN(const std::string parameterValue, TFloatingPoint & casted)
+{
+  static_assert(std::is_floating_point<TFloatingPoint>::value,
+                "This function template only supports floating point types.");
+
+  if (parameterValue == "NaN")
+  {
+    casted = std::numeric_limits<TFloatingPoint>::quiet_NaN();
+    return true;
+  }
+  return false;
+}
+
+
+template <typename TFloatingPoint>
+bool
+StringCastInfinity(const std::string parameterValue, TFloatingPoint & casted)
+{
+  static_assert(std::is_floating_point<TFloatingPoint>::value,
+                "This function template only supports floating point types.");
+
+  const auto infinity = std::numeric_limits<TFloatingPoint>::infinity();
+
+  if (parameterValue == "Infinity")
+  {
+    casted = infinity;
+    return true;
+  }
+  if (parameterValue == "-Infinity")
+  {
+    casted = -infinity;
+    return true;
+  }
+  return false;
+}
+
+} // namespace
 
 namespace itk
 {
@@ -126,6 +168,23 @@ ParameterMapInterface::StringCast(const std::string & parameterValue, std::strin
 {
   casted = parameterValue;
   return true;
+} // end StringCast()
+
+
+bool
+ParameterMapInterface::StringCast(const std::string parameterValue, float & casted)
+{
+  return StringCastNaN(parameterValue, casted) || StringCastInfinity(parameterValue, casted) ||
+         Self::StringCast<float>(parameterValue, casted);
+
+} // end StringCast()
+
+
+bool
+ParameterMapInterface::StringCast(const std::string parameterValue, double & casted)
+{
+  return StringCastNaN(parameterValue, casted) || StringCastInfinity(parameterValue, casted) ||
+         Self::StringCast<double>(parameterValue, casted);
 } // end StringCast()
 
 
