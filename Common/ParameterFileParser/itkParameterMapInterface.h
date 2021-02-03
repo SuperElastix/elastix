@@ -425,10 +425,10 @@ private:
   /** Provide specializations for floating point types, to support NaN and infinity.
    */
   static bool
-  StringCast(const std::string parameterValue, double & casted);
+  StringCast(const std::string & parameterValue, double & casted);
 
   static bool
-  StringCast(const std::string parameterValue, float & casted);
+  StringCast(const std::string & parameterValue, float & casted);
 };
 
 } // end of namespace itk

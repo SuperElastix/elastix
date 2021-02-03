@@ -22,7 +22,7 @@ namespace
 {
 template <typename TFloatingPoint>
 bool
-StringCastNaN(const std::string parameterValue, TFloatingPoint & casted)
+StringCastNaN(const std::string & parameterValue, TFloatingPoint & casted)
 {
   static_assert(std::is_floating_point<TFloatingPoint>::value,
                 "This function template only supports floating point types.");
@@ -38,7 +38,7 @@ StringCastNaN(const std::string parameterValue, TFloatingPoint & casted)
 
 template <typename TFloatingPoint>
 bool
-StringCastInfinity(const std::string parameterValue, TFloatingPoint & casted)
+StringCastInfinity(const std::string & parameterValue, TFloatingPoint & casted)
 {
   static_assert(std::is_floating_point<TFloatingPoint>::value,
                 "This function template only supports floating point types.");
@@ -172,7 +172,7 @@ ParameterMapInterface::StringCast(const std::string & parameterValue, std::strin
 
 
 bool
-ParameterMapInterface::StringCast(const std::string parameterValue, float & casted)
+ParameterMapInterface::StringCast(const std::string & parameterValue, float & casted)
 {
   return StringCastNaN(parameterValue, casted) || StringCastInfinity(parameterValue, casted) ||
          Self::StringCast<float>(parameterValue, casted);
@@ -181,7 +181,7 @@ ParameterMapInterface::StringCast(const std::string parameterValue, float & cast
 
 
 bool
-ParameterMapInterface::StringCast(const std::string parameterValue, double & casted)
+ParameterMapInterface::StringCast(const std::string & parameterValue, double & casted)
 {
   return StringCastNaN(parameterValue, casted) || StringCastInfinity(parameterValue, casted) ||
          Self::StringCast<double>(parameterValue, casted);
