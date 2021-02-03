@@ -95,6 +95,19 @@ Expect_lossless_round_trip_of_parameter_values(const std::initializer_list<TPara
 }
 
 
+template <typename TParameterValue>
+void
+Expect_lossless_round_trip_of_positive_and_negative_parameter_values(
+  const std::initializer_list<TParameterValue> & parameterValues)
+{
+  for (const auto parameterValue : parameterValues)
+  {
+    Expect_lossless_round_trip_of_parameter_value<TParameterValue>(+parameterValue);
+    Expect_lossless_round_trip_of_parameter_value<TParameterValue>(-parameterValue);
+  }
+}
+
+
 template <typename TUnsignedInteger>
 void
 Expect_lossless_round_trip_of_unsigned_parameter_values()
@@ -135,20 +148,21 @@ Expect_lossless_round_trip_of_floating_point_parameter_values()
 
   using NumericLimits = std::numeric_limits<TFloatingPoint>;
 
-  Expect_lossless_round_trip_of_parameter_values<TFloatingPoint>({ -NumericLimits::infinity(),
-                                                                   NumericLimits::lowest(),
-                                                                   -1,
-                                                                   -NumericLimits::epsilon(),
-                                                                   -NumericLimits::min(),
-                                                                   -NumericLimits::denorm_min(),
-                                                                   -TFloatingPoint{}, // Minus zero
-                                                                   0,
-                                                                   NumericLimits::denorm_min(),
-                                                                   NumericLimits::min(),
-                                                                   NumericLimits::epsilon(),
-                                                                   1,
-                                                                   NumericLimits::max(),
-                                                                   NumericLimits::infinity() });
+  Expect_lossless_round_trip_of_positive_and_negative_parameter_values<TFloatingPoint>({ 0,
+  // Note: For Clang (tested on AppleClang 12.0.0.12000032 macos-10.15), the round trip
+  // appears troublesome for denorm_min, as std::istream::fail() appears to return true.
+  // See also LLVM Bug 39012 "ostream writes a double that istream can't read", reported
+  // by Daniel Cooke, 2018-09-20: "It appears libc++ incorrectly sets input stream
+  // failbit when reading subnormal floating point numbers."
+  // https://bugs.llvm.org/show_bug.cgi?id=39012
+#ifndef __clang__
+                                                                                         NumericLimits::denorm_min(),
+#endif
+                                                                                         NumericLimits::min(),
+                                                                                         NumericLimits::epsilon(),
+                                                                                         1,
+                                                                                         NumericLimits::max(),
+                                                                                         NumericLimits::infinity() });
 
   const TFloatingPoint & roundTrippedNaN = Expect_successful_round_trip_of_parameter_value(NumericLimits::quiet_NaN());
   EXPECT_TRUE(std::isnan(roundTrippedNaN));
