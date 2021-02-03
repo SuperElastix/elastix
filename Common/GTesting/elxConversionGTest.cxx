@@ -149,15 +149,7 @@ Expect_lossless_round_trip_of_floating_point_parameter_values()
   using NumericLimits = std::numeric_limits<TFloatingPoint>;
 
   Expect_lossless_round_trip_of_positive_and_negative_parameter_values<TFloatingPoint>({ 0,
-  // Note: For Clang (tested on AppleClang 12.0.0.12000032 macos-10.15), the round trip
-  // appears troublesome for denorm_min, as std::istream::fail() appears to return true.
-  // See also LLVM Bug 39012 "ostream writes a double that istream can't read", reported
-  // by Daniel Cooke, 2018-09-20: "It appears libc++ incorrectly sets input stream
-  // failbit when reading subnormal floating point numbers."
-  // https://bugs.llvm.org/show_bug.cgi?id=39012
-#ifndef __clang__
                                                                                          NumericLimits::denorm_min(),
-#endif
                                                                                          NumericLimits::min(),
                                                                                          NumericLimits::epsilon(),
                                                                                          1,

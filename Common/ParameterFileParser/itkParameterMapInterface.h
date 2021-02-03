@@ -424,6 +424,10 @@ private:
 
   /** Provide specializations for floating point types, to support NaN and infinity.
    */
+  template <typename TFloatingPoint>
+  static bool
+  StringCastToFloatingPoint(const std::string & parameterValue, TFloatingPoint & casted);
+
   static bool
   StringCast(const std::string & parameterValue, double & casted);
 
