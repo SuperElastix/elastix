@@ -399,11 +399,9 @@ private:
 
     std::stringstream ss(parameterValue);
 
-    /** We do not support (signed/unsigned) char, because does not appear
-     * necessary. Moreover the result of ">>" may be counter-intuitive.
-     * It takes the first digit and thinks it is a char. For example:
-     * 84 becomes '8', which is ASCII number 56. */
-    static_assert(sizeof(T) > 1, "StringCast does not support (signed/unsigned) char!");
+    // 8-bits (signed/unsigned) char types are supported by other StringCast
+    // overloads.
+    static_assert(sizeof(T) > 1, "This StringCast<T> overload does not support (signed/unsigned) char!");
 
     ss >> casted;
 
@@ -433,6 +431,22 @@ private:
 
   static bool
   StringCast(const std::string & parameterValue, float & casted);
+
+  /** Provide specializations for signed/unsigned char types, in order to
+   * process them as 8-bits integer types, rather than as character types.
+   */
+  template <typename TChar>
+  static bool
+  StringCastToCharType(const std::string & parameterValue, TChar & casted);
+
+  static bool
+  StringCast(const std::string & parameterValue, char & casted);
+
+  static bool
+  StringCast(const std::string & parameterValue, signed char & casted);
+
+  static bool
+  StringCast(const std::string & parameterValue, unsigned char & casted);
 };
 
 } // end of namespace itk

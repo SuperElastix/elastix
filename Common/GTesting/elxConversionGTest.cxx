@@ -433,12 +433,22 @@ GTEST_TEST(Conversion, IsNumberReturnsTrueOnNumericString)
 GTEST_TEST(Conversion, LosslessRoundTripOfParameterValue)
 {
   Expect_lossless_round_trip_of_unsigned_parameter_values<unsigned>();
+  Expect_lossless_round_trip_of_unsigned_parameter_values<std::uint8_t>();
   Expect_lossless_round_trip_of_unsigned_parameter_values<std::uint16_t>();
   Expect_lossless_round_trip_of_unsigned_parameter_values<std::uintmax_t>();
 
   Expect_lossless_round_trip_of_signed_integer_parameter_values<int>();
+  Expect_lossless_round_trip_of_signed_integer_parameter_values<std::int8_t>();
   Expect_lossless_round_trip_of_signed_integer_parameter_values<std::int16_t>();
   Expect_lossless_round_trip_of_signed_integer_parameter_values<std::intmax_t>();
+
+  // Note that the C++ Standard (C++11) does not specify whether `char` is a
+  // signed or an unsigned type, so it is tested here separately from
+  // `signed char` (int8_t) and `unsigned char` (uint8_t).
+  for (const char parameterValue : { std::numeric_limits<char>::min(), '\0', '\1', std::numeric_limits<char>::max() })
+  {
+    Expect_lossless_round_trip_of_parameter_value<char>(parameterValue);
+  }
 
   Expect_lossless_round_trip_of_floating_point_parameter_values<float>();
   Expect_lossless_round_trip_of_floating_point_parameter_values<double>();
