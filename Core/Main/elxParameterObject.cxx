@@ -409,7 +409,7 @@ ParameterObject::GetDefaultParameterMap(const std::string &  transformName,
 
   // Optimizer
   parameterMap["NumberOfSamplesForExactGradient"] = ParameterValueVectorType(1, "4096");
-  parameterMap["DefaultPixelValue"] = ParameterValueVectorType(1, "0.0");
+  parameterMap["DefaultPixelValue"] = ParameterValueVectorType(1, "0");
   parameterMap["AutomaticParameterEstimation"] = ParameterValueVectorType(1, "true");
 
   // Output
