@@ -248,6 +248,11 @@ GTEST_TEST(Conversion, ToString)
   EXPECT_EQ(Conversion::ToString(1), "1");
   EXPECT_EQ(Conversion::ToString(-1), "-1");
 
+  EXPECT_EQ(Conversion::ToString(char{}), "0");
+  EXPECT_EQ(Conversion::ToString(char{ 2 }), "2");
+  EXPECT_EQ(Conversion::ToString(std::numeric_limits<signed char>::min()), "-128");
+  EXPECT_EQ(Conversion::ToString(std::numeric_limits<unsigned char>::max()), "255");
+
   EXPECT_EQ(Conversion::ToString(std::numeric_limits<std::int64_t>::min()), "-9223372036854775808");
   EXPECT_EQ(Conversion::ToString(std::numeric_limits<std::uint64_t>::max()), "18446744073709551615");
 
