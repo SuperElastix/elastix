@@ -69,11 +69,11 @@ ResamplerBase<TElastix>::BeforeRegistrationBase(void)
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
    */
-  double defaultPixelValue = itk::NumericTraits<double>::Zero;
+  OutputPixelType defaultPixelValue{};
   this->m_Configuration->ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, false);
 
   /** Set the defaultPixelValue. */
-  this->GetAsITKBaseType()->SetDefaultPixelValue(static_cast<OutputPixelType>(defaultPixelValue));
+  this->GetAsITKBaseType()->SetDefaultPixelValue(defaultPixelValue);
 
 } // end BeforeRegistrationBase()
 
