@@ -99,7 +99,6 @@ public:
   {
     static_assert(std::is_integral<TInteger>::value, "An integer type expected!");
     static_assert(!std::is_same<TInteger, bool>::value, "No bool expected!");
-    static_assert(sizeof(TInteger) > 1, "ToString does not support (signed/unsigned) char!");
     return std::to_string(integerValue);
   }
 
