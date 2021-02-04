@@ -19,7 +19,8 @@
 #include "itkParameterMapInterface.h"
 
 // Standard C++ header files:
-#include <cmath>       // For fpclassify and FP_SUBNORMAL.
+#include <cmath> // For fpclassify and FP_SUBNORMAL.
+#include <limits>
 #include <type_traits> // For is_floating_point.
 
 
@@ -202,6 +203,49 @@ bool
 ParameterMapInterface::StringCast(const std::string & parameterValue, double & casted)
 {
   return Self::StringCastToFloatingPoint(parameterValue, casted);
+}
+
+
+template <typename TChar>
+bool
+ParameterMapInterface::StringCastToCharType(const std::string & parameterValue, TChar & casted)
+{
+  static_assert(sizeof(TChar) < sizeof(int), "StringCastCharType only supports character types smaller than int");
+
+  int temp{};
+
+  if (Self::StringCast<int>(parameterValue, temp))
+  {
+    // Check that `temp` can be copied losslessly to `casted`.
+    if ((temp >= std::numeric_limits<TChar>::lowest()) && (temp <= std::numeric_limits<TChar>::max()))
+    {
+      casted = static_cast<TChar>(temp);
+      return true;
+    }
+  }
+  return false;
+
+} // end StringCastCharType()
+
+
+bool
+ParameterMapInterface::StringCast(const std::string & parameterValue, char & casted)
+{
+  return StringCastToCharType(parameterValue, casted);
+}
+
+
+bool
+ParameterMapInterface::StringCast(const std::string & parameterValue, signed char & casted)
+{
+  return StringCastToCharType(parameterValue, casted);
+}
+
+
+bool
+ParameterMapInterface::StringCast(const std::string & parameterValue, unsigned char & casted)
+{
+  return StringCastToCharType(parameterValue, casted);
 }
 
 
