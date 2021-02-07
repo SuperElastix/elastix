@@ -581,7 +581,7 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
 
 template <class TElastix>
 void
-TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
+TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo, const ParametersType & param) const
 {
   ParameterMapType parameterMap;
 
@@ -640,7 +640,7 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
   parameterMap["UseBinaryFormatForTransformationParameters"] = { Conversion::ToString(
     this->m_UseBinaryFormatForTransformationParameters) };
 
-  xl::xout["transpar"] << Conversion::ParameterMapToString(parameterMap);
+  transformationParameterInfo << Conversion::ParameterMapToString(parameterMap);
 
   WriteDerivedTransformDataToFile();
 
