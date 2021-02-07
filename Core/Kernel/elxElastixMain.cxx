@@ -56,7 +56,7 @@ struct Data
   std::ofstream  LogFileStream;
 };
 
-Data g_data;
+thread_local Data g_data;
 
 } // end unnamed namespace
 

@@ -20,7 +20,7 @@
 
 namespace xoutlibrary
 {
-static xoutmain * local_xout = nullptr;
+thread_local static xoutmain * local_xout = nullptr;
 
 xoutmain &
 get_xout(void)
