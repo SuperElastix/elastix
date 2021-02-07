@@ -142,7 +142,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
+ * ************************* WriteDerivedTransformDataToFile ************************
  *
  * Saves the TransformParameters as a vector and if wanted
  * also as a deformation field.
@@ -150,12 +150,9 @@ DeformationFieldTransform<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 void
-DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) const
+DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile(void) const
 {
-  // \todo Finish and Test this WriteToFile function.
-
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile(param);
+  // \todo Finish and Test this function.
 
   typedef itk::ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
 
@@ -191,7 +188,7 @@ DeformationFieldTransform<TElastix>::WriteToFile(const ParametersType & param) c
     xl::xout["error"] << excp << std::endl;
   }
 
-} // end WriteToFile()
+} // end WriteDerivedTransformDataToFile()
 
 
 /**

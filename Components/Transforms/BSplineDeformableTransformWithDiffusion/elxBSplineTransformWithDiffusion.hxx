@@ -970,7 +970,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
 
 
 /**
- * ************************* WriteToFile ************************
+ * ************************* WriteDerivedTransformDataToFile ************************
  *
  * Saves the TransformParameters as a vector and if wanted
  * also as a deformation field.
@@ -978,11 +978,8 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & param) const
+BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile(void) const
 {
-  /** Call the WriteToFile from the TransformBase.*/
-  this->Superclass2::WriteToFile(param);
-
   /** Write the deformation field image. */
   typename DeformationFieldWriterType::Pointer writer = DeformationFieldWriterType::New();
   writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
@@ -996,7 +993,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
   catch (itk::ExceptionObject & excp)
   {
     /** Add information to the exception. */
-    excp.SetLocation("BSplineTransformWithDiffusion - WriteToFile()");
+    excp.SetLocation("BSplineTransformWithDiffusion - WriteDerivedTransformDataToFile()");
     std::string err_str = excp.GetDescription();
     err_str += "\nError while writing the deformationFieldImage.\n";
     excp.SetDescription(err_str);
@@ -1004,7 +1001,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteToFile(const ParametersType & para
     xl::xout["error"] << excp << std::endl;
   }
 
-} // end WriteToFile()
+} // end WriteDerivedTransformDataToFile()
 
 
 /**

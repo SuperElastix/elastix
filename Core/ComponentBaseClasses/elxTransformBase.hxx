@@ -642,6 +642,8 @@ TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
 
   xl::xout["transpar"] << Conversion::ParameterMapToString(parameterMap);
 
+  WriteDerivedTransformDataToFile();
+
 } // end WriteToFile()
 
 
