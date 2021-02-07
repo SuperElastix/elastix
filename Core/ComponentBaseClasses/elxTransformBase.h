@@ -238,10 +238,6 @@ public:
   virtual void
   WriteToFile(const ParametersType & param) const;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(void) const;
-
   /** Macro for reading and writing the transform parameters in WriteToFile or not. */
   void
   SetReadWriteTransformParameters(const bool _arg);

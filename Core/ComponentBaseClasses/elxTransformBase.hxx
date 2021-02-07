@@ -581,20 +581,6 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
 
 template <class TElastix>
 void
-TransformBase<TElastix>::WriteToFile(void) const
-{
-  /** Write the current set parameters to file. */
-  this->WriteToFile(this->GetAsITKBaseType()->GetParameters());
-
-} // end WriteToFile()
-
-
-/**
- * ******************* WriteToFile ******************************
- */
-
-template <class TElastix>
-void
 TransformBase<TElastix>::WriteToFile(const ParametersType & param) const
 {
   ParameterMapType parameterMap;
