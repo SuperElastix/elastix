@@ -235,7 +235,7 @@ public:
   CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const;
 
   /** Function to write transform-parameters to a file. */
-  virtual void
+  void
   WriteToFile(const ParametersType & param) const;
 
   /** Macro for reading and writing the transform parameters in WriteToFile or not. */
@@ -378,6 +378,12 @@ private:
 
   virtual ParameterMapType
   CreateDerivedTransformParametersMap(void) const = 0;
+
+  /** Allows a derived transform class to write its data to file, by overriding this member function. */
+  virtual void
+  WriteDerivedTransformDataToFile(void) const
+  {}
+
   /** Member variables. */
   std::unique_ptr<ParametersType> m_TransformParametersPointer{};
   std::string                     m_TransformParametersFileName;
