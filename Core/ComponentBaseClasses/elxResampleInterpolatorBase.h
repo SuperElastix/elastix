@@ -99,7 +99,7 @@ public:
 
   /** Function to write transform-parameters to a file. */
   void
-  WriteToFile(void) const;
+  WriteToFile(xl::xoutsimple & transformationParameterInfo) const;
 
   /** Function to create transform-parameters map. */
   void

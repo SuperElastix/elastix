@@ -759,15 +759,13 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   /** Store CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = fileName;
 
-  /** Create transformParameterFile and xout["transpar"]. */
+  /** Create transformParameterFile and transformationParameterInfo. */
   xl::xoutsimple transformationParameterInfo;
   std::ofstream  transformParameterFile;
 
   /** Set up the "TransformationParameters" writing field. */
   transformationParameterInfo.SetOutputs(xl::xout.GetCOutputs());
   transformationParameterInfo.SetOutputs(xl::xout.GetXOutputs());
-
-  xl::xout.AddTargetCell("transpar", &transformationParameterInfo);
 
   /** Set it in the Transform, for later use. */
   this->GetElxTransformBase()->SetTransformParametersFileName(fileName.c_str());
@@ -797,18 +795,16 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
    * Actually we could loop over all resample interpolators, resamplers,
    * and transforms etc. But for now, there seems to be no use yet for that.
    */
-  this->GetElxTransformBase()->WriteToFile(this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition());
-  this->GetElxResampleInterpolatorBase()->WriteToFile();
-  this->GetElxResamplerBase()->WriteToFile();
+  this->GetElxTransformBase()->WriteToFile(transformationParameterInfo,
+                                           this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition());
+  this->GetElxResampleInterpolatorBase()->WriteToFile(transformationParameterInfo);
+  this->GetElxResamplerBase()->WriteToFile(transformationParameterInfo);
 
   /** Separate clearly in log-file. */
   if (toLog)
   {
     xl::xout["logonly"] << "\n=============== end of TransformParameterFile ===============" << std::endl;
   }
-
-  /** Remove the "transpar" writing field. */
-  xl::xout.RemoveTargetCell("transpar");
 
 } // end CreateTransformParameterFile()
 

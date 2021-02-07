@@ -687,13 +687,13 @@ ResamplerBase<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::WriteToFile(void) const
+ResamplerBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo) const
 {
   ParameterMapType parameterMap;
   Self::CreateTransformParametersMap(&parameterMap);
 
   /** Write resampler specific things. */
-  xl::xout["transpar"] << ("\n// Resampler specific\n" + Conversion::ParameterMapToString(parameterMap));
+  transformationParameterInfo << ("\n// Resampler specific\n" + Conversion::ParameterMapToString(parameterMap));
 
 } // end WriteToFile()
 
