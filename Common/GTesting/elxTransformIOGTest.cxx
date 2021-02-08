@@ -72,7 +72,7 @@ using ExpectedParameters = std::array<double, N>;
 template <unsigned NDimension>
 struct WithDimension
 {
-  template <template <typename> typename TElastixTransform>
+  template <template <typename> class TElastixTransform>
   struct WithElastixTransform
   {
     using ElastixTransformType = TElastixTransform<ElastixType<NDimension>>;
@@ -325,7 +325,7 @@ struct WithDimension
   }
 
 
-  template <template <typename> typename TElastixTransform, std::size_t NExpectedParameters>
+  template <template <typename> class TElastixTransform, std::size_t NExpectedParameters>
   static void
   Expect_default_elastix_Parameters_equal(const ExpectedParameters<NExpectedParameters> & expectedParameters)
   {
@@ -467,7 +467,7 @@ struct WithDimension
 };
 
 
-template <template <typename> typename TElastixTransform>
+template <template <typename> class TElastixTransform>
 void
 Expect_default_elastix_FixedParameters_are_all_zero()
 {
@@ -477,7 +477,7 @@ Expect_default_elastix_FixedParameters_are_all_zero()
 }
 
 
-template <template <typename> typename TElastixTransform>
+template <template <typename> class TElastixTransform>
 void
 Expect_default_elastix_FixedParameters_empty()
 {
@@ -487,7 +487,7 @@ Expect_default_elastix_FixedParameters_empty()
 }
 
 
-template <template <typename> typename TElastixTransform>
+template <template <typename> class TElastixTransform>
 void
 Expect_default_elastix_Parameters_remain_the_same_when_set(const bool fixed)
 {

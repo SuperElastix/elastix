@@ -51,7 +51,7 @@ using ElastixType = elx::ElastixTemplate<itk::Image<float, NDimension>, itk::Ima
 template <unsigned NDimension>
 struct WithDimension
 {
-  template <template <typename> typename TInterpolatorTemplate>
+  template <template <typename> class TInterpolatorTemplate>
   struct WithInterpolator
   {
     using InterpolatorType = TInterpolatorTemplate<ElastixType<NDimension>>;

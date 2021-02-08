@@ -49,7 +49,7 @@ using ElastixType = elx::ElastixTemplate<itk::Image<float, NDimension>, itk::Ima
 template <unsigned NDimension>
 struct WithDimension
 {
-  template <template <typename> typename TResamplerTemplate>
+  template <template <typename> class TResamplerTemplate>
   struct WithResampler
   {
     using ResamplerType = TResamplerTemplate<ElastixType<NDimension>>;
