@@ -91,6 +91,23 @@ public:
     return this->m_Elastix.GetPointer();
   }
 
+  int
+  RemoveTargetCellFromIterationInfo(const char * const name)
+  {
+    return this->m_Elastix->GetIterationInfo().xl::xoutrow::RemoveTargetCell(name);
+  }
+
+  xl::xoutbase &
+  GetIterationInfoAt(const char * const name)
+  {
+    return this->m_Elastix->GetIterationInfoAt(name);
+  }
+
+  void
+  AddTargetCellToIterationInfo(const char * const name)
+  {
+    return this->m_Elastix->AddTargetCellToIterationInfo(name);
+  }
 
   /** itkGetModifiableObjectMacro(Configuration, ConfigurationType);
    * The configuration object provides functionality to

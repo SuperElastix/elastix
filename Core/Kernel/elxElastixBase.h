@@ -385,6 +385,24 @@ public:
   ConfigurationPointer
   GetConfiguration(const size_t index) const;
 
+  xl::xoutrow &
+  GetIterationInfo(void)
+  {
+    return m_IterationInfo;
+  }
+
+  xl::xoutbase &
+  GetIterationInfoAt(const char * const name)
+  {
+    return m_IterationInfo[name];
+  }
+
+  void
+  AddTargetCellToIterationInfo(const char * const name)
+  {
+    m_IterationInfo.xl::xoutrow::AddTargetCell(name);
+  }
+
 protected:
   ElastixBase();
   ~ElastixBase() override = default;
