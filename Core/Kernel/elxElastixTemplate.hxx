@@ -211,12 +211,6 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run(void)
     err_str += "\n\nError occurred during actual registration.";
     excp.SetDescription(err_str);
 
-    /** Clean up before returning - very important for exception safety of the xout global static object */
-    if (xl::xout_valid())
-    {
-      xl::xout.RemoveTargetCell("iteration");
-    }
-
     /** Pass the exception to a higher level. */
     throw excp;
   }

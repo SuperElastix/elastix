@@ -322,14 +322,11 @@ public:
   int
   BeforeAllTransformixBase(void);
 
-  /** Functions called before and after registration.
-   * They install/uninstall the xout["iteration"] field.
+  /** Function called before registration.
+   * It installs the IterationInfo field.
    */
   void
   BeforeRegistrationBase(void) override;
-
-  void
-  AfterRegistrationBase(void) override;
 
   ResultImageType *
   GetResultImage(const unsigned int idx = 0) const;
@@ -400,7 +397,7 @@ public:
   void
   AddTargetCellToIterationInfo(const char * const name)
   {
-    m_IterationInfo.xl::xoutrow::AddTargetCell(name);
+    m_IterationInfo.AddTargetCell(name);
   }
 
 protected:
