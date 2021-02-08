@@ -754,7 +754,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const std::string fileName, const bool toLog)
+ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const std::string & fileName, const bool toLog)
 {
   /** Store CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = fileName;

@@ -64,7 +64,7 @@ public:
   itkSetMacro(ShrinkingRule, ShrinkingRuleType);
   itkGetConstMacro(ShrinkingRule, ShrinkingRuleType);
   void
-  SetShrinkingRule(std::string rule);
+  SetShrinkingRule(const std::string & rule);
 
   std::string
   GetShrinkingRule(void);

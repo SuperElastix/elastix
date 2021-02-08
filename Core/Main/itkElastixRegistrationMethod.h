@@ -263,7 +263,7 @@ private:
 
   /** IsInputOfType. */
   bool
-  IsInputOfType(const DataObjectIdentifierType & InputOfType, DataObjectIdentifierType inputName) const;
+  IsInputOfType(const DataObjectIdentifierType & InputOfType, const DataObjectIdentifierType & inputName) const;
 
   /** GetNumberOfInputsOfType */
   unsigned int

@@ -345,11 +345,11 @@ private:
 
   /** Function to transform coordinates from fixed to moving image. */
   void
-  TransformPointsSomePoints(const std::string filename) const;
+  TransformPointsSomePoints(const std::string & filename) const;
 
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   void
-  TransformPointsSomePointsVTK(const std::string filename) const;
+  TransformPointsSomePointsVTK(const std::string & filename) const;
 
   /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
    *  into Generate* and Write* functions, since that would facilitate a proper library

@@ -68,7 +68,7 @@ public:
   itkSetMacro(SplittingRule, SplittingRuleType);
   itkGetConstMacro(SplittingRule, SplittingRuleType);
   void
-  SetSplittingRule(std::string rule);
+  SetSplittingRule(const std::string & rule);
 
   std::string
   GetSplittingRule(void);

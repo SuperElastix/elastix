@@ -266,7 +266,7 @@ private:
 
   /** CreateTransformParameterFile. */
   void
-  CreateTransformParameterFile(const std::string FileName, const bool ToLog);
+  CreateTransformParameterFile(const std::string & FileName, const bool ToLog);
 
   /** CreateTransformParametersMap. */
   void

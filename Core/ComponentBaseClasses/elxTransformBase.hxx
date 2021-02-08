@@ -805,7 +805,7 @@ TransformBase<TElastix>::TransformPoints(void) const
 
 template <class TElastix>
 void
-TransformBase<TElastix>::TransformPointsSomePoints(const std::string filename) const
+TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename) const
 {
   /** Typedef's. */
   typedef typename FixedImageType::RegionType                FixedImageRegionType;
@@ -1029,7 +1029,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string filename) c
 
 template <class TElastix>
 void
-TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string filename) const
+TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filename) const
 {
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
   typedef float DummyIPPPixelType;

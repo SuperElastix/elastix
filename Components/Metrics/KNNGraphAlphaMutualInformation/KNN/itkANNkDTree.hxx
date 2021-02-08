@@ -56,7 +56,7 @@ ANNkDTree<TListSample>::~ANNkDTree()
 
 template <class TListSample>
 void
-ANNkDTree<TListSample>::SetSplittingRule(std::string rule)
+ANNkDTree<TListSample>::SetSplittingRule(const std::string & rule)
 {
   if (rule == "ANN_KD_STD")
   {
