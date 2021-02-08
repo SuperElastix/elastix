@@ -84,7 +84,7 @@ TRANSFORMIX::GetResultImage(void)
 int
 TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
                             std::vector<ParameterMapType> & parameterMaps,
-                            std::string                     outputPath,
+                            const std::string &             outputPath,
                             bool                            performLogging,
                             bool                            performCout)
 {
