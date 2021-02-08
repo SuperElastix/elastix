@@ -489,11 +489,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration(void)
   CallInEachComponent(&BaseComponentType::BeforeRegistration);
 
   /** Add a column to iteration with the iteration number. */
-  xl::xout["iteration"].AddTargetCell("1:ItNr");
+  this->AddTargetCellToIterationInfo("1:ItNr");
 
   /** Add a column to iteration with timing information. */
-  xl::xout["iteration"].AddTargetCell("Time[ms]");
-  xl::xout["iteration"]["Time[ms]"] << std::showpoint << std::fixed << std::setprecision(1);
+  this->AddTargetCellToIterationInfo("Time[ms]");
+  this->GetIterationInfoAt("Time[ms]") << std::showpoint << std::fixed << std::setprecision(1);
 
   /** Print time for initializing. */
   this->m_Timer0.Stop();
@@ -627,7 +627,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
   /** Write the headers of the columns that are printed each iteration. */
   if (this->m_IterationCounter == 0)
   {
-    xl::xout["iteration"]["WriteHeaders"];
+    this->GetIterationInfoAt("WriteHeaders");
   }
 
   /** Call all the AfterEachIteration() functions. */
@@ -636,14 +636,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
   CallInEachComponent(&BaseComponentType::AfterEachIteration);
 
   /** Write the iteration number to the table. */
-  xl::xout["iteration"]["1:ItNr"] << m_IterationCounter;
+  this->GetIterationInfoAt("1:ItNr") << m_IterationCounter;
 
   /** Time in this iteration. */
   this->m_IterationTimer.Stop();
-  xl::xout["iteration"]["Time[ms]"] << this->m_IterationTimer.GetMean() * 1000.0;
+  this->GetIterationInfoAt("Time[ms]") << this->m_IterationTimer.GetMean() * 1000.0;
 
   /** Write the iteration info of this iteration. */
-  xl::xout["iteration"].WriteBufferedData();
+  this->GetIterationInfo().WriteBufferedData();
 
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
@@ -1016,7 +1016,7 @@ void
 ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
 {
   /** Remove the current iteration info output file, if any. */
-  xl::xout["iteration"].RemoveOutput("IterationInfoFile");
+  this->GetIterationInfo().RemoveOutput("IterationInfoFile");
 
   if (this->m_IterationInfoFile.is_open())
   {
@@ -1038,8 +1038,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
   }
   else
   {
-    /** Add this file to the list of outputs of xout["iteration"]. */
-    xl::xout["iteration"].AddOutput("IterationInfoFile", &(this->m_IterationInfoFile));
+    /** Add this file to the list of outputs of IterationInfo. */
+    this->GetIterationInfo().AddOutput("IterationInfoFile", &(this->m_IterationInfoFile));
   }
 
 } // end OpenIterationInfoFile()

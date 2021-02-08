@@ -177,25 +177,25 @@ template <class TElastix>
 void
 ConjugateGradient<TElastix>::BeforeRegistration(void)
 {
-  /** Add target cells to xout["iteration"].*/
-  xl::xout["iteration"].AddTargetCell("1a:SrchDirNr");
-  xl::xout["iteration"].AddTargetCell("1b:LineItNr");
-  xl::xout["iteration"].AddTargetCell("2:Metric");
-  xl::xout["iteration"].AddTargetCell("3:StepLength");
-  xl::xout["iteration"].AddTargetCell("4a:||Gradient||");
-  xl::xout["iteration"].AddTargetCell("4b:||SearchDir||");
-  xl::xout["iteration"].AddTargetCell("4c:DirGradient");
-  xl::xout["iteration"].AddTargetCell("5:Phase");
-  xl::xout["iteration"].AddTargetCell("6a:Wolfe1");
-  xl::xout["iteration"].AddTargetCell("6b:Wolfe2");
-  xl::xout["iteration"].AddTargetCell("7:LinSrchStopCondition");
+  /** Add target cells to IterationInfo.*/
+  this->AddTargetCellToIterationInfo("1a:SrchDirNr");
+  this->AddTargetCellToIterationInfo("1b:LineItNr");
+  this->AddTargetCellToIterationInfo("2:Metric");
+  this->AddTargetCellToIterationInfo("3:StepLength");
+  this->AddTargetCellToIterationInfo("4a:||Gradient||");
+  this->AddTargetCellToIterationInfo("4b:||SearchDir||");
+  this->AddTargetCellToIterationInfo("4c:DirGradient");
+  this->AddTargetCellToIterationInfo("5:Phase");
+  this->AddTargetCellToIterationInfo("6a:Wolfe1");
+  this->AddTargetCellToIterationInfo("6b:Wolfe2");
+  this->AddTargetCellToIterationInfo("7:LinSrchStopCondition");
 
   /** Format the metric and stepsize as floats */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4c:DirGradient"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3:StepLength") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4a:||Gradient||") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4b:||SearchDir||") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4c:DirGradient") << std::showpoint << std::fixed;
 
   /** Check in the parameter file whether line search iterations should
    * be generated */
@@ -298,7 +298,7 @@ ConjugateGradient<TElastix>::AfterEachIteration(void)
 
   if (this->GetStartLineSearch())
   {
-    xl::xout["iteration"]["1b:LineItNr"] << "start";
+    this->GetIterationInfoAt("1b:LineItNr") << "start";
   }
   else
   {
@@ -309,45 +309,45 @@ ConjugateGradient<TElastix>::AfterEachIteration(void)
      * line search iteration number (so the number of line search
      * iterations minus one) is printed out.
      */
-    xl::xout["iteration"]["1b:LineItNr"] << this->m_LineOptimizer->GetCurrentIteration();
+    this->GetIterationInfoAt("1b:LineItNr") << this->m_LineOptimizer->GetCurrentIteration();
   }
 
   if (this->GetInLineSearch())
   {
-    xl::xout["iteration"]["2:Metric"] << this->m_LineOptimizer->GetCurrentValue();
-    xl::xout["iteration"]["3:StepLength"] << this->m_LineOptimizer->GetCurrentStepLength();
+    this->GetIterationInfoAt("2:Metric") << this->m_LineOptimizer->GetCurrentValue();
+    this->GetIterationInfoAt("3:StepLength") << this->m_LineOptimizer->GetCurrentStepLength();
     LineOptimizerType::DerivativeType cd;
     this->m_LineOptimizer->GetCurrentDerivative(cd);
-    xl::xout["iteration"]["4a:||Gradient||"] << cd.magnitude();
-    xl::xout["iteration"]["7:LinSrchStopCondition"] << "---";
+    this->GetIterationInfoAt("4a:||Gradient||") << cd.magnitude();
+    this->GetIterationInfoAt("7:LinSrchStopCondition") << "---";
   } // end if in line search
   else
   {
-    xl::xout["iteration"]["2:Metric"] << this->GetCurrentValue();
-    xl::xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();
-    xl::xout["iteration"]["4a:||Gradient||"] << this->GetCurrentGradient().magnitude();
-    xl::xout["iteration"]["7:LinSrchStopCondition"] << this->GetLineSearchStopCondition();
+    this->GetIterationInfoAt("2:Metric") << this->GetCurrentValue();
+    this->GetIterationInfoAt("3:StepLength") << this->GetCurrentStepLength();
+    this->GetIterationInfoAt("4a:||Gradient||") << this->GetCurrentGradient().magnitude();
+    this->GetIterationInfoAt("7:LinSrchStopCondition") << this->GetLineSearchStopCondition();
   } // end else (not in line search)
 
-  xl::xout["iteration"]["1a:SrchDirNr"] << this->GetCurrentIteration();
-  xl::xout["iteration"]["5:Phase"] << this->DeterminePhase();
-  xl::xout["iteration"]["4b:||SearchDir||"] << this->m_SearchDirectionMagnitude;
-  xl::xout["iteration"]["4c:DirGradient"] << this->m_LineOptimizer->GetCurrentDirectionalDerivative();
+  this->GetIterationInfoAt("1a:SrchDirNr") << this->GetCurrentIteration();
+  this->GetIterationInfoAt("5:Phase") << this->DeterminePhase();
+  this->GetIterationInfoAt("4b:||SearchDir||") << this->m_SearchDirectionMagnitude;
+  this->GetIterationInfoAt("4c:DirGradient") << this->m_LineOptimizer->GetCurrentDirectionalDerivative();
   if (this->m_LineOptimizer->GetSufficientDecreaseConditionSatisfied())
   {
-    xl::xout["iteration"]["6a:Wolfe1"] << "true";
+    this->GetIterationInfoAt("6a:Wolfe1") << "true";
   }
   else
   {
-    xl::xout["iteration"]["6a:Wolfe1"] << "false";
+    this->GetIterationInfoAt("6a:Wolfe1") << "false";
   }
   if (this->m_LineOptimizer->GetCurvatureConditionSatisfied())
   {
-    xl::xout["iteration"]["6b:Wolfe2"] << "true";
+    this->GetIterationInfoAt("6b:Wolfe2") << "true";
   }
   else
   {
-    xl::xout["iteration"]["6b:Wolfe2"] << "false";
+    this->GetIterationInfoAt("6b:Wolfe2") << "false";
   }
 
   if (!(this->GetInLineSearch()))

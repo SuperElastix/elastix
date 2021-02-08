@@ -47,11 +47,11 @@ template <class TElastix>
 void
 FullSearch<TElastix>::BeforeRegistration(void)
 {
-  /** Add the target cells "ItNr" and "Metric" to xout["iteration"]. */
-  xl::xout["iteration"].AddTargetCell("2:Metric");
+  /** Add the target cells "ItNr" and "Metric" to IterationInfo. */
+  this->AddTargetCellToIterationInfo("2:Metric");
 
   /** Format the metric as floats. */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
 
 } // end BeforeRegistration
 
@@ -133,12 +133,12 @@ FullSearch<TElastix>::BeforeEachResolution(void)
       makeString.str("");
       makeString << prefix << ((entry_nr / 5) - 1) << ":" << name << ":" << param_nr;
 
-      /** Store the name and create a column in xout["iteration"]. */
+      /** Store the name and create a column in IterationInfo. */
       this->m_SearchSpaceDimensionNames[param_nr] = makeString.str();
-      xl::xout["iteration"].AddTargetCell(makeString.str().c_str());
+      this->AddTargetCellToIterationInfo(makeString.str().c_str());
 
       /** Format this xout iteration column as float. */
-      xl::xout["iteration"][makeString.str().c_str()] << std::showpoint << std::fixed;
+      this->GetIterationInfoAt(makeString.str().c_str()) << std::showpoint << std::fixed;
     }
   } // end while
 
@@ -186,7 +186,7 @@ void
 FullSearch<TElastix>::AfterEachIteration(void)
 {
   /** Print some information. */
-  xl::xout["iteration"]["2:Metric"] << this->GetValue();
+  this->GetIterationInfoAt("2:Metric") << this->GetValue();
 
   this->m_OptimizationSurface->SetPixel(this->GetCurrentIndexInSearchSpace(), this->GetValue());
 
@@ -196,7 +196,7 @@ FullSearch<TElastix>::AfterEachIteration(void)
 
   for (unsigned int dim = 0; dim < nrOfSSDims; dim++)
   {
-    xl::xout["iteration"][name_it->second.c_str()] << currentPoint[dim];
+    this->GetIterationInfoAt(name_it->second.c_str()) << currentPoint[dim];
     name_it++;
   }
 
@@ -276,11 +276,11 @@ FullSearch<TElastix>::AfterEachResolution(void)
   }
   elxout << "]\n" << std::endl;
 
-  /** Remove the columns from xout["iteration"]. */
+  /** Remove the columns from IterationInfo. */
   NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
   for (unsigned int dim = 0; dim < nrOfSSDims; dim++)
   {
-    xl::xout["iteration"].RemoveTargetCell(name_it->second.c_str());
+    this->RemoveTargetCellFromIterationInfo(name_it->second.c_str());
     name_it++;
   }
 

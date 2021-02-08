@@ -75,7 +75,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration(void)
     this->SetFixedImageRegion(this->GetElastix()->GetFixedImage(i)->GetBufferedRegion(), i);
   }
 
-  /** Add the target cells "Metric<i>" and "||Gradient<i>||" to xout["iteration"]
+  /** Add the target cells "Metric<i>" and "||Gradient<i>||" to IterationInfo
    * and format as floats.
    */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
@@ -88,18 +88,18 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration(void)
   {
     std::ostringstream makestring1;
     makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
-    xl::xout["iteration"].AddTargetCell(makestring1.str().c_str());
-    xl::xout["iteration"][makestring1.str().c_str()] << std::showpoint << std::fixed;
+    this->AddTargetCellToIterationInfo(makestring1.str().c_str());
+    this->GetIterationInfoAt(makestring1.str().c_str()) << std::showpoint << std::fixed;
 
     std::ostringstream makestring2;
     makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
-    xl::xout["iteration"].AddTargetCell(makestring2.str().c_str());
-    xl::xout["iteration"][makestring2.str().c_str()] << std::showpoint << std::fixed;
+    this->AddTargetCellToIterationInfo(makestring2.str().c_str());
+    this->GetIterationInfoAt(makestring2.str().c_str()) << std::showpoint << std::fixed;
 
     std::ostringstream makestring3;
     makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
-    xl::xout["iteration"].AddTargetCell(makestring3.str().c_str());
-    xl::xout["iteration"][makestring3.str().c_str()] << std::showpoint << std::fixed << std::setprecision(1);
+    this->AddTargetCellToIterationInfo(makestring3.str().c_str());
+    this->GetIterationInfoAt(makestring3.str().c_str()) << std::showpoint << std::fixed << std::setprecision(1);
   }
 
   /** Temporary? Use the multi-threaded version or not. */
@@ -124,7 +124,7 @@ template <class TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration(void)
 {
-  /** Print the submetric values and gradients to xout["iteration"]. */
+  /** Print the submetric values and gradients to IterationInfo. */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
   unsigned int       width = 0;
   for (unsigned int i = nrOfMetrics; i > 0; i /= 10)
@@ -135,15 +135,16 @@ MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration(void)
   {
     std::ostringstream makestring1;
     makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
-    xl::xout["iteration"][makestring1.str().c_str()] << this->GetCombinationMetric()->GetMetricValue(i);
+    this->GetIterationInfoAt(makestring1.str().c_str()) << this->GetCombinationMetric()->GetMetricValue(i);
 
     std::ostringstream makestring2;
     makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
-    xl::xout["iteration"][makestring2.str().c_str()] << this->GetCombinationMetric()->GetMetricDerivativeMagnitude(i);
+    this->GetIterationInfoAt(makestring2.str().c_str())
+      << this->GetCombinationMetric()->GetMetricDerivativeMagnitude(i);
 
     std::ostringstream makestring3;
     makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
-    xl::xout["iteration"][makestring3.str().c_str()] << this->GetCombinationMetric()->GetMetricComputationTime(i);
+    this->GetIterationInfoAt(makestring3.str().c_str()) << this->GetCombinationMetric()->GetMetricComputationTime(i);
   }
 
   if (this->m_ShowExactMetricValue)
@@ -162,7 +163,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration(void)
       }
     }
 
-    xl::xout["iteration"]["ExactMetric"] << currentExactMetricValue;
+    this->GetIterationInfoAt("ExactMetric") << currentExactMetricValue;
   }
 
 } // end AfterEachIteration()
@@ -247,11 +248,11 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution(void)
     std::string exactMetricColumn = "ExactMetric";
 
     /** Remove the ExactMetric-column, if it already existed. */
-    xl::xout["iteration"].RemoveTargetCell(exactMetricColumn.c_str());
+    this->RemoveTargetCellFromIterationInfo(exactMetricColumn.c_str());
 
     /** Create a new column in the iteration info table */
-    xl::xout["iteration"].AddTargetCell(exactMetricColumn.c_str());
-    xl::xout["iteration"][exactMetricColumn.c_str()] << std::showpoint << std::fixed;
+    this->AddTargetCellToIterationInfo(exactMetricColumn.c_str());
+    this->GetIterationInfoAt(exactMetricColumn.c_str()) << std::showpoint << std::fixed;
   }
 
 } // end BeforeEachResolution()
