@@ -143,21 +143,21 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
                         << "transform domain." << std::endl;
   }
 
-  /** Add target cells to xout["iteration"]. */
-  xl::xout["iteration"].AddTargetCell("Metric-LC");
-  xl::xout["iteration"].AddTargetCell("Metric-OC");
-  xl::xout["iteration"].AddTargetCell("Metric-PC");
-  xl::xout["iteration"].AddTargetCell("||Gradient-LC||");
-  xl::xout["iteration"].AddTargetCell("||Gradient-OC||");
-  xl::xout["iteration"].AddTargetCell("||Gradient-PC||");
+  /** Add target cells to IterationInfo. */
+  this->AddTargetCellToIterationInfo("Metric-LC");
+  this->AddTargetCellToIterationInfo("Metric-OC");
+  this->AddTargetCellToIterationInfo("Metric-PC");
+  this->AddTargetCellToIterationInfo("||Gradient-LC||");
+  this->AddTargetCellToIterationInfo("||Gradient-OC||");
+  this->AddTargetCellToIterationInfo("||Gradient-PC||");
 
   /** Format the metric as floats. */
-  xl::xout["iteration"]["Metric-LC"] << std::showpoint << std::fixed << std::setprecision(10);
-  xl::xout["iteration"]["Metric-OC"] << std::showpoint << std::fixed << std::setprecision(10);
-  xl::xout["iteration"]["Metric-PC"] << std::showpoint << std::fixed << std::setprecision(10);
-  xl::xout["iteration"]["||Gradient-LC||"] << std::showpoint << std::fixed << std::setprecision(10);
-  xl::xout["iteration"]["||Gradient-OC||"] << std::showpoint << std::fixed << std::setprecision(10);
-  xl::xout["iteration"]["||Gradient-PC||"] << std::showpoint << std::fixed << std::setprecision(10);
+  this->GetIterationInfoAt("Metric-LC") << std::showpoint << std::fixed << std::setprecision(10);
+  this->GetIterationInfoAt("Metric-OC") << std::showpoint << std::fixed << std::setprecision(10);
+  this->GetIterationInfoAt("Metric-PC") << std::showpoint << std::fixed << std::setprecision(10);
+  this->GetIterationInfoAt("||Gradient-LC||") << std::showpoint << std::fixed << std::setprecision(10);
+  this->GetIterationInfoAt("||Gradient-OC||") << std::showpoint << std::fixed << std::setprecision(10);
+  this->GetIterationInfoAt("||Gradient-PC||") << std::showpoint << std::fixed << std::setprecision(10);
 
 } // end BeforeRegistration()
 
@@ -272,13 +272,13 @@ void
 TransformRigidityPenalty<TElastix>::AfterEachIteration(void)
 {
   /** Print some information. */
-  xl::xout["iteration"]["Metric-LC"] << this->GetLinearityConditionValue();
-  xl::xout["iteration"]["Metric-OC"] << this->GetOrthonormalityConditionValue();
-  xl::xout["iteration"]["Metric-PC"] << this->GetPropernessConditionValue();
+  this->GetIterationInfoAt("Metric-LC") << this->GetLinearityConditionValue();
+  this->GetIterationInfoAt("Metric-OC") << this->GetOrthonormalityConditionValue();
+  this->GetIterationInfoAt("Metric-PC") << this->GetPropernessConditionValue();
 
-  xl::xout["iteration"]["||Gradient-LC||"] << this->GetLinearityConditionGradientMagnitude();
-  xl::xout["iteration"]["||Gradient-OC||"] << this->GetOrthonormalityConditionGradientMagnitude();
-  xl::xout["iteration"]["||Gradient-PC||"] << this->GetPropernessConditionGradientMagnitude();
+  this->GetIterationInfoAt("||Gradient-LC||") << this->GetLinearityConditionGradientMagnitude();
+  this->GetIterationInfoAt("||Gradient-OC||") << this->GetOrthonormalityConditionGradientMagnitude();
+  this->GetIterationInfoAt("||Gradient-PC||") << this->GetPropernessConditionGradientMagnitude();
 
 } // end AfterEachIteration()
 

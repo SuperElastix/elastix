@@ -58,7 +58,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase(void)
   exactMetricColumn += this->GetComponentLabel();
 
   /** Remove the ExactMetric-column, if it already existed. */
-  xl::xout["iteration"].RemoveTargetCell(exactMetricColumn.c_str());
+  this->RemoveTargetCellFromIterationInfo(exactMetricColumn.c_str());
 
   /** Read the parameter file: Show the exact metric in every iteration? */
   bool showExactMetricValue = false;
@@ -68,8 +68,8 @@ MetricBase<TElastix>::BeforeEachResolutionBase(void)
   if (showExactMetricValue)
   {
     /** Create a new column in the iteration info table */
-    xl::xout["iteration"].AddTargetCell(exactMetricColumn.c_str());
-    xl::xout["iteration"][exactMetricColumn.c_str()] << std::showpoint << std::fixed;
+    this->AddTargetCellToIterationInfo(exactMetricColumn.c_str());
+    this->GetIterationInfoAt(exactMetricColumn.c_str()) << std::showpoint << std::fixed;
   }
 
   /** Read the sample grid spacing for computing the "exact" metric */
@@ -194,7 +194,7 @@ MetricBase<TElastix>::AfterEachIterationBase(void)
     this->m_CurrentExactMetricValue =
       this->GetExactValue(this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition());
 
-    xl::xout["iteration"][exactMetricColumn.c_str()] << this->m_CurrentExactMetricValue;
+    this->GetIterationInfoAt(exactMetricColumn.c_str()) << this->m_CurrentExactMetricValue;
   }
 
 } // end AfterEachIterationBase()
