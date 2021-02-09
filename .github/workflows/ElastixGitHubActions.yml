@@ -153,16 +153,6 @@ jobs:
       with: 
         name: "${{ matrix.os }}"
         path: uploads
-    
-    - name: Set up QEMU
-#       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
-      if: matrix.os == 'ubuntu-18.04' 
-      uses: docker/setup-qemu-action@v1
-      
-    - name: Set up Docker Buildx
-#       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
-      if: matrix.os == 'ubuntu-18.04'
-      uses: docker/setup-buildx-action@v1
         
     - name: Login to Docker Hub
 #       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
@@ -175,15 +165,8 @@ jobs:
     - name: Build and push
 #       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
       if: matrix.os == 'ubuntu-18.04'
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: SuperElastix/elastix:latest
-
-    - name: Image digest
-#       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
-      if: matrix.os == 'ubuntu-18.04'
-      run: echo ${{ steps.docker_build.outputs.digest }}
+      run: |
+        docker build -t SuperElastix/elastix:latest .
+        docker push SuperElastix/elastix:latest
 
 
