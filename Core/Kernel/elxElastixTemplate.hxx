@@ -621,7 +621,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
   /** Write the headers of the columns that are printed each iteration. */
   if (this->m_IterationCounter == 0)
   {
-    this->GetIterationInfoAt("WriteHeaders");
+    this->GetIterationInfo().WriteHeaders();
   }
 
   /** Call all the AfterEachIteration() functions. */
