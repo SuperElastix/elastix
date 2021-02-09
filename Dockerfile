@@ -10,8 +10,4 @@ RUN apt-get -qq install wget libgomp1 -y
 COPY uploads/bin/* /usr/local/bin/
 COPY uploads/lib/* /usr/lib/
 
-# Copy license and notice
-COPY uploads/LICENSE /
-COPY uploads/NOTICE /
-
 CMD elastix
