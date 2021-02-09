@@ -166,7 +166,7 @@ jobs:
 #       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
       if: matrix.os == 'ubuntu-18.04'
       run: |
-        docker build -t SuperElastix/elastix:latest .
-        docker push SuperElastix/elastix:latest
+        docker build -t superelastix/elastix:latest .
+        docker push superelastix/elastix:latest
 
 
