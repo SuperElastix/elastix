@@ -13,3 +13,5 @@ COPY uploads/lib/* /usr/lib/
 # Copy license and notice
 COPY uploads/LICENSE /
 COPY uploads/NOTICE /
+
+CMD elastix
