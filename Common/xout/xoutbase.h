@@ -51,8 +51,7 @@ public:
   /** Destructor */
   virtual ~xoutbase() = 0;
 
-  /** The operator [] simply calls this->SelectXCell(cellname).
-   * It returns an x-cell */
+  /** The operator [] returns an x-cell */
   Self & operator[](const char * cellname);
 
   /**
@@ -150,10 +149,6 @@ public:
 protected:
   /** Default-constructor. Only to be used by its derived classes. */
   xoutbase() = default;
-
-  /** Returns a target cell. */
-  virtual Self &
-  SelectXCell(const char * name);
 
   /** Maps that contain the outputs. */
   CStreamMapType m_COutputs;

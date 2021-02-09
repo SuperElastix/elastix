@@ -39,7 +39,8 @@ xoutbase::~xoutbase() = default;
 
 xoutbase & xoutbase::operator[](const char * cellname)
 {
-  return this->SelectXCell(cellname);
+  const auto found = m_XTargetCells.find(cellname);
+  return (found == m_XTargetCells.end()) ? *this : *(found->second);
 
 } // end operator[]
 
@@ -264,21 +265,6 @@ xoutbase::SetOutputs(const XStreamMapType & outputmap)
   this->m_XOutputs = outputmap;
 
 } // end SetOutputs
-
-
-/**
- * ************************ SelectXCell *************************
- *
- * Returns a target cell.
- */
-
-xoutbase &
-xoutbase::SelectXCell(const char * name)
-{
-  const auto found = m_XTargetCells.find(name);
-  return (found == m_XTargetCells.end()) ? *this : *(found->second);
-
-} // end SelectXCell
 
 
 /**

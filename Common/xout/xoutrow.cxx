@@ -263,33 +263,4 @@ xoutrow::WriteHeaders(void)
 
 } // end WriteHeaders()
 
-
-/**
- * ********************* SelectXCell ****************************
- *
- * Returns a target cell.
- */
-
-xoutbase &
-xoutrow::SelectXCell(const char * name)
-{
-  std::string cellname(name);
-
-  /** Check if the name is "WriteHeaders". Then the method
-   * this->WriteHeaders() is invoked.
-   */
-  if (cellname == "WriteHeaders")
-  {
-    this->WriteHeaders();
-    return *this;
-  }
-  else
-  {
-    /** Call the Superclass's implementation. */
-    return this->Superclass::SelectXCell(name);
-  }
-
-} // end SelectXCell()
-
-
 } // end namespace xoutlibrary

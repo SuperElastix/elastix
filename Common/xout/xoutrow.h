@@ -58,9 +58,7 @@ public:
   void
   WriteBufferedData(void) override;
 
-  /** Writes the names of the target cells to the outputs;
-   * This method can also be executed by selecting the
-   * "WriteHeaders" target: xout["WriteHeaders"]
+  /** Writes the names of the target cells to the outputs.
    */
   virtual void
   WriteHeaders(void);
@@ -97,14 +95,6 @@ public:
 
   void
   SetOutputs(const XStreamMapType & outputmap) override;
-
-protected:
-  /** Returns a target cell.
-   * Extension: if input = "WriteHeaders" it calls
-   * this->WriteHeaders() and returns 'this'.
-   */
-  Superclass &
-  SelectXCell(const char * name) override;
 
 private:
   std::map<std::string, std::unique_ptr<xoutbase>> m_CellMap;
