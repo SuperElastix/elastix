@@ -63,7 +63,8 @@ jobs:
       with:
         path: |
           Elastix-build
-        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}   
+          uploads
+        key: ${{ matrix.os }}-${{ matrix.cmake-build-type }}   
         
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
