@@ -169,7 +169,7 @@ jobs:
       if: matrix.os == 'ubuntu-18.04'
       run: |
         ls
-        docker build -t superelastix/elastix:latest .
-        docker push superelastix/elastix:latest
+        docker build -t viktorvdv/elastix:latest .
+        docker push viktorvdv/elastix:latest
 
 
