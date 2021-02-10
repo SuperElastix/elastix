@@ -133,35 +133,35 @@ jobs:
         cd Elastix-build
         ctest -M Experimental -T Test -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
       
-    - name: Prepare Artifacts Unix
-      if: matrix.os != 'windows-2019'
-      shell: bash
-      run: |
-        ls
-        ls Elastix-build
-        ls Elastix-build/bin
-        mkdir bin
-        mkdir lib
-        mkdir uploads
-        mv Elastix-build/bin/elastix bin
-        mv Elastix-build/bin/transformix bin
-        mv Elastix-build/bin/${{ matrix.ANNLib }} lib
-        mv Elastix-build/bin/${{ matrix.ANNLib2 }} lib
-        mv Elastix-source/NOTICE uploads
-        mv Elastix-source/LICENSE uploads
-        mv bin uploads
-        mv lib uploads
+#     - name: Prepare Artifacts Unix
+#       if: matrix.os != 'windows-2019'
+#       shell: bash
+#       run: |
+#         ls
+#         ls Elastix-build
+#         ls Elastix-build/bin
+#         mkdir bin
+#         mkdir lib
+#         mkdir uploads
+#         mv Elastix-build/bin/elastix bin
+#         mv Elastix-build/bin/transformix bin
+#         mv Elastix-build/bin/${{ matrix.ANNLib }} lib
+#         mv Elastix-build/bin/${{ matrix.ANNLib2 }} lib
+#         mv Elastix-source/NOTICE uploads
+#         mv Elastix-source/LICENSE uploads
+#         mv bin uploads
+#         mv lib uploads
       
-    - name: Prepare Artifacts Windows
-      if: matrix.os == 'windows-2019'
-      shell: bash
-      run: |
-        mkdir uploads
-        mv Elastix-source/NOTICE uploads
-        mv Elastix-source/LICENSE uploads
-        mv Elastix-build/bin/elastix.exe uploads
-        mv Elastix-build/bin/transformix.exe uploads
-        mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
+#     - name: Prepare Artifacts Windows
+#       if: matrix.os == 'windows-2019'
+#       shell: bash
+#       run: |
+#         mkdir uploads
+#         mv Elastix-source/NOTICE uploads
+#         mv Elastix-source/LICENSE uploads
+#         mv Elastix-build/bin/elastix.exe uploads
+#         mv Elastix-build/bin/transformix.exe uploads
+#         mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
   
 #     - name: Publish Artifacts
 #       uses: actions/upload-artifact@v2
