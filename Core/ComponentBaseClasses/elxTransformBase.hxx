@@ -1415,7 +1415,10 @@ TransformBase<TElastix>::SetTransformParametersFileName(const char * filename)
     this->m_TransformParametersFileName = "";
   }
   ObjectType * thisAsObject = dynamic_cast<ObjectType *>(this);
-  thisAsObject->Modified();
+  if (thisAsObject != nullptr)
+  {
+    thisAsObject->Modified();
+  }
 
 } // end SetTransformParametersFileName()
 
@@ -1433,7 +1436,10 @@ TransformBase<TElastix>::SetReadWriteTransformParameters(const bool _arg)
   {
     this->m_ReadWriteTransformParameters = _arg;
     ObjectType * thisAsObject = dynamic_cast<ObjectType *>(this);
-    thisAsObject->Modified();
+    if (thisAsObject != nullptr)
+    {
+      thisAsObject->Modified();
+    }
   }
 
 } // end SetReadWriteTransformParameters()
