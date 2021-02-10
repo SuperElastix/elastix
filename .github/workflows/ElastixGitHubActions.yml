@@ -137,6 +137,8 @@ jobs:
       shell: bash
       run: |
         ls
+        ls Elastix-build
+        ls Elastix-build/bin
         mkdir bin
         mkdir lib
         mkdir uploads
