@@ -136,6 +136,7 @@ jobs:
       if: matrix.os != 'windows-2019'
       shell: bash
       run: |
+        ls
         mkdir bin
         mkdir lib
         mkdir uploads
