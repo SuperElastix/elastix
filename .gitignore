@@ -37,3 +37,4 @@ Makefile
 CMakeFiles/
 CTestTestfile.cmake
 .idea/
+.githooks/clangFormatMac
