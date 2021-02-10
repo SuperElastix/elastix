@@ -57,7 +57,14 @@ jobs:
           ITK-build
           ITK-source
         key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}
-      
+
+    - uses: actions/cache@v2
+      id: cache2
+      with:
+        path: |
+          Elastix-build
+        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}   
+        
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
@@ -94,7 +101,8 @@ jobs:
 
     
     - name: Build Elastix Unix
-      if: matrix.os != 'windows-2019'
+      if: steps.cache2.outputs.cache-hit != 'true' && matrix.os != 'windows-2019'
+#       if: matrix.os != 'windows-2019'
       run: |
         mkdir Elastix-build
         cd Elastix-build
@@ -118,7 +126,8 @@ jobs:
        ctest -M Experimental -T Test -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP"
       
     - name: Test Windows/Ubuntu
-      if: matrix.os != 'macos-10.15'
+#       if: matrix.os != 'macos-10.15'
+      if: steps.cache2.outputs.cache-hit != 'true' && matrix.os != 'windows-2019'
       run: |
         cd Elastix-build
         ctest -M Experimental -T Test -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
@@ -150,26 +159,28 @@ jobs:
         mv Elastix-build/bin/transformix.exe uploads
         mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
   
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v2
-      with: 
-        name: "${{ matrix.os }}"
-        path: uploads
+#     - name: Publish Artifacts
+#       uses: actions/upload-artifact@v2
+#       with: 
+#         name: "${{ matrix.os }}"
+#         path: uploads
         
-    - name: Login to Docker Hub
-#       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
-      if: matrix.os == 'ubuntu-18.04'
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#     - name: Login to Docker Hub
+# #       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
+#       if: matrix.os == 'ubuntu-18.04'
+#       uses: docker/login-action@v1
+#       with:
+#         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+#         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-    - name: Build and push
-#       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
-      if: matrix.os == 'ubuntu-18.04'
-      run: |
-        ls
-        docker build -t viktorvdv/elastix:latest .
-        docker push viktorvdv/elastix:latest
+#     - name: Build and push
+# #       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
+#       if: matrix.os == 'ubuntu-18.04'
+#       run: |
+#         ls
+#         mkdir output
+#         docker build -t viktorvdv/elastix:latest .
+#         docker run -u $UID:$GROUPS --mount type=bind,source="$(pwd)"/output,target=/out -v "$(pwd)"/Elastix-source/Testing/Data:/elastix/ viktorvdv/elastix:latest elastix -out /out/ -p /elastix/parameters.3D.NC.euler.ASGD.001.txt -f /elastix/3DCT_lung_baseline.mha -m /elastix/3DCT_lung_followup.mha
+#         docker push viktorvdv/elastix:latest
 
 
