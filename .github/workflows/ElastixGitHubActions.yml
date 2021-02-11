@@ -48,6 +48,8 @@ jobs:
         mv .editorconfig Elastix-source
         mv .clang-format Elastix-source
         mv Elastix-source/Dockerfile .
+        mkdir ${GITHUB_REF:10}
+        ls
       shell: bash
       
     - uses: actions/cache@v2
@@ -175,18 +177,13 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        
-        
-    - name: Set env
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
-      run: echo ::set-env name=TAG_NAME::$(echo ${GITHUB_REF:10})
 
     - name: Build and push
       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'     
       run: |
         mkdir output
-        docker build -t viktorvdv/elastix:$TAG_NAME .
-        docker run -u $UID:$GROUPS --mount type=bind,source="$(pwd)"/output,target=/out -v "$(pwd)"/Elastix-source/Testing/Data:/elastix/ viktorvdv/elastix:$TAG_NAME elastix -out /out/ -p /elastix/parameters.3D.NC.euler.ASGD.001.txt -f /elastix/3DCT_lung_baseline.mha -m /elastix/3DCT_lung_followup.mha
-        docker push viktorvdv/elastix:$TAG_NAME
+        docker build -t viktorvdv/elastix:${GITHUB_REF:10} .
+        docker run -u $UID:$GROUPS --mount type=bind,source="$(pwd)"/output,target=/out -v "$(pwd)"/Elastix-source/Testing/Data:/elastix/ viktorvdv/elastix:${GITHUB_REF:10} elastix -out /out/ -p /elastix/parameters.3D.NC.euler.ASGD.001.txt -f /elastix/3DCT_lung_baseline.mha -m /elastix/3DCT_lung_followup.mha
+        docker push viktorvdv/elastix:${GITHUB_REF:10}
 
 
