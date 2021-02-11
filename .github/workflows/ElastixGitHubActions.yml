@@ -48,8 +48,6 @@ jobs:
         mv .editorconfig Elastix-source
         mv .clang-format Elastix-source
         mv Elastix-source/Dockerfile .
-        mkdir ${GITHUB_REF:10}
-        ls
       shell: bash
       
     - uses: actions/cache@v2
