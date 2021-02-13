@@ -212,7 +212,7 @@ struct WithDimension
       elxTransform->SetReadWriteTransformParameters(true);
 
       ParameterMapType actualParameterMap;
-      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, &actualParameterMap);
+      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, actualParameterMap);
 
       const std::string expectedImageDimension{ char{ '0' + NDimension } };
       const std::string expectedInternalImagePixelType = "float";
@@ -272,7 +272,7 @@ struct WithDimension
 
       ParameterMapType                       parameterMap;
       const itk::OptimizerParameters<double> optimizerParameters(itk::Array<double>(vnl_vector<double>(2U, testValue)));
-      elxTransform->CreateTransformParametersMap(optimizerParameters, &parameterMap);
+      elxTransform->CreateTransformParametersMap(optimizerParameters, parameterMap);
 
       for (const auto key : { "TransformParameters", "Origin", "Spacing" })
       {
@@ -301,7 +301,7 @@ struct WithDimension
 
       const auto expectHowToCombineTransforms = [&elxTransform](const char * const expectedParameterValue) {
         ParameterMapType parameterMap;
-        elxTransform->CreateTransformParametersMap({}, &parameterMap);
+        elxTransform->CreateTransformParametersMap({}, parameterMap);
 
         const auto found = parameterMap.find("HowToCombineTransforms");
         ASSERT_NE(found, end(parameterMap));

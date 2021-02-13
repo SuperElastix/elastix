@@ -68,7 +68,7 @@ struct WithDimension
       const elx::ResampleInterpolatorBase<ElastixType<NDimension>> & interpolator = *newInterpolator;
 
       ParameterMapType actualParameterMap;
-      interpolator.CreateTransformParametersMap(&actualParameterMap);
+      interpolator.CreateTransformParametersMap(actualParameterMap);
 
       const ParameterMapType expectedBaseParameterMap = { { "ResampleInterpolator",
                                                             { interpolator.elxGetClassName() } } };

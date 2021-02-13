@@ -690,7 +690,7 @@ void
 ResamplerBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo) const
 {
   ParameterMapType parameterMap;
-  Self::CreateTransformParametersMap(&parameterMap);
+  Self::CreateTransformParametersMap(parameterMap);
 
   /** Write resampler specific things. */
   transformationParameterInfo << ("\n// Resampler specific\n" + Conversion::ParameterMapToString(parameterMap));
@@ -704,10 +704,8 @@ ResamplerBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType * paramsMap) const
+ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType & parameterMap) const
 {
-  auto & parameterMap = *paramsMap;
-
   /** Store the name of this transform. */
   parameterMap["Resampler"] = { this->elxGetClassName() };
 

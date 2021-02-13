@@ -812,9 +812,9 @@ void
 ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParametersMap(void)
 {
   this->GetElxTransformBase()->CreateTransformParametersMap(
-    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(), &this->m_TransformParametersMap);
-  this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap(&this->m_TransformParametersMap);
-  this->GetElxResamplerBase()->CreateTransformParametersMap(&this->m_TransformParametersMap);
+    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(), this->m_TransformParametersMap);
+  this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap(this->m_TransformParametersMap);
+  this->GetElxResamplerBase()->CreateTransformParametersMap(this->m_TransformParametersMap);
 
 } // end CreateTransformParametersMap()
 

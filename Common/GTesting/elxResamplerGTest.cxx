@@ -71,7 +71,7 @@ struct WithDimension
       resampler.SetElastix(elastixObject);
 
       ParameterMapType actualParameterMap;
-      resampler.CreateTransformParametersMap(&actualParameterMap);
+      resampler.CreateTransformParametersMap(actualParameterMap);
 
       const ParameterMapType expectedBaseParameterMap = { { "Resampler", { resampler.elxGetClassName() } },
                                                           { "DefaultPixelValue", { "0" } },
