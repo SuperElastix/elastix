@@ -179,7 +179,7 @@ public:
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(ParameterMapType * paramsMap) const;
+  CreateTransformParametersMap(ParameterMapType & parameterMap) const;
 
   /** Function to perform resample and write the result output image to a file. */
   virtual void

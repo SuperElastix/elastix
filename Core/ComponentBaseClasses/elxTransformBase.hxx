@@ -585,7 +585,7 @@ TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
 {
   ParameterMapType parameterMap;
 
-  this->CreateTransformParametersMap(param, &parameterMap);
+  this->CreateTransformParametersMap(param, parameterMap);
 
   /** Write the parameters of this transform. */
   if (this->m_ReadWriteTransformParameters)
@@ -653,9 +653,9 @@ TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
 
 template <class TElastix>
 void
-TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const
+TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & param,
+                                                      ParameterMapType &     parameterMap) const
 {
-  auto &       parameterMap = *paramsMap;
   const auto & elastixObject = *(this->GetElastix());
 
   /** The way Transforms are combined. */

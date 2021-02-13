@@ -232,7 +232,7 @@ public:
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const;
+  CreateTransformParametersMap(const ParametersType & param, ParameterMapType & parameterMap) const;
 
   /** Function to write transform-parameters to a file. */
   void
