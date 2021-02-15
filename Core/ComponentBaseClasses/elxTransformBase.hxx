@@ -217,19 +217,7 @@ TransformBase<TElastix>::BeforeRegistrationBase(void)
   std::string howToCombineTransforms = "Compose";
   this->m_Configuration->ReadParameter(howToCombineTransforms, "HowToCombineTransforms", 0, false);
 
-  /** Check if this is a CombinationTransform. */
-  CombinationTransformType * thisAsGrouper = dynamic_cast<CombinationTransformType *>(this);
-  if (thisAsGrouper)
-  {
-    if (howToCombineTransforms == "Compose")
-    {
-      thisAsGrouper->SetUseComposition(true);
-    }
-    else
-    {
-      thisAsGrouper->SetUseComposition(false);
-    }
-  }
+  this->GetAsCombinationTransform().SetUseComposition(howToCombineTransforms == "Compose");
 
   /** Set the initial transform. Elastix returns an itk::Object, so try to
    * cast it to an InitialTransformType, which is of type itk::Transform.
@@ -271,16 +259,7 @@ template <class TElastix>
 const typename TransformBase<TElastix>::InitialTransformType *
 TransformBase<TElastix>::GetInitialTransform(void) const
 {
-  /** Cast to a(n Advanced)CombinationTransform. */
-  const CombinationTransformType * thisAsGrouper = dynamic_cast<const CombinationTransformType *>(this);
-
-  /** Set the initial transform. */
-  if (thisAsGrouper)
-  {
-    return thisAsGrouper->GetInitialTransform();
-  }
-
-  return nullptr;
+  return this->GetAsCombinationTransform().GetInitialTransform();
 
 } // end GetInitialTransform()
 
@@ -293,14 +272,8 @@ template <class TElastix>
 void
 TransformBase<TElastix>::SetInitialTransform(InitialTransformType * _arg)
 {
-  /** Cast to a(n Advanced)CombinationTransform. */
-  CombinationTransformType * thisAsGrouper = dynamic_cast<CombinationTransformType *>(this);
-
   /** Set initial transform. */
-  if (thisAsGrouper)
-  {
-    thisAsGrouper->SetInitialTransform(_arg);
-  }
+  this->GetAsCombinationTransform().SetInitialTransform(_arg);
 
   // \todo AdvancedCombinationTransformType
 
@@ -477,18 +450,7 @@ TransformBase<TElastix>::ReadFromFile(void)
   /** Convert 'this' to a pointer to a CombinationTransform and set how
    * to combine the current transform with the initial transform.
    */
-  CombinationTransformType * thisAsGrouper = dynamic_cast<CombinationTransformType *>(this);
-  if (thisAsGrouper)
-  {
-    if (howToCombineTransforms == "Compose")
-    {
-      thisAsGrouper->SetUseComposition(true);
-    }
-    else
-    {
-      thisAsGrouper->SetUseComposition(false);
-    }
-  }
+  this->GetAsCombinationTransform().SetUseComposition(howToCombineTransforms == "Compose");
 
   /** Task 4 - Remember the name of the TransformParametersFileName.
    * This will be needed when another transform will use this transform
@@ -659,10 +621,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   const auto & elastixObject = *(this->GetElastix());
 
   /** The way Transforms are combined. */
-  const auto combinationMethod = [this] {
-    const auto combinationTransform = dynamic_cast<const CombinationTransformType *>(this);
-    return ((combinationTransform != nullptr) && combinationTransform->GetUseAddition()) ? "Add" : "Compose";
-  }();
+  const auto combinationMethod = this->GetAsCombinationTransform().GetUseAddition() ? "Add" : "Compose";
 
   /** Write image pixel types. */
   std::string fixpix = "float";
@@ -1050,7 +1009,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   /** Apply the transform. */
   elxout << "  The input points are transformed." << std::endl;
   const auto meshTransformer = TransformMeshFilterType::New();
-  meshTransformer->SetTransform(const_cast<CombinationTransformType *>(this->GetAsCombinationTransform()));
+  meshTransformer->SetTransform(&const_cast<CombinationTransformType &>(this->GetAsCombinationTransform()));
   meshTransformer->SetInput(meshReader->GetOutput());
   try
   {
@@ -1414,8 +1373,7 @@ TransformBase<TElastix>::SetTransformParametersFileName(const char * filename)
   {
     this->m_TransformParametersFileName = "";
   }
-  ObjectType * thisAsObject = dynamic_cast<ObjectType *>(this);
-  thisAsObject->Modified();
+  this->GetAsCombinationTransform().Modified();
 
 } // end SetTransformParametersFileName()
 
@@ -1432,8 +1390,7 @@ TransformBase<TElastix>::SetReadWriteTransformParameters(const bool _arg)
   if (this->m_ReadWriteTransformParameters != _arg)
   {
     this->m_ReadWriteTransformParameters = _arg;
-    ObjectType * thisAsObject = dynamic_cast<ObjectType *>(this);
-    thisAsObject->Modified();
+    this->GetAsCombinationTransform().Modified();
   }
 
 } // end SetReadWriteTransformParameters()

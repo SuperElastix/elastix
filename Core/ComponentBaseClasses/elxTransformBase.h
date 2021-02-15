@@ -201,7 +201,7 @@ public:
   ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetAsCombinationTransform());
   }
 
 
@@ -209,7 +209,7 @@ public:
   const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetAsCombinationTransform());
   }
 
   /** Execute stuff before the actual transformation:
@@ -301,18 +301,11 @@ private:
   void
   ReadInitialTransformFromConfiguration(const Configuration::Pointer);
 
-  const CombinationTransformType *
-  GetAsCombinationTransform(void) const
-  {
-    return dynamic_cast<const CombinationTransformType *>(this);
-  }
+  virtual const CombinationTransformType &
+  GetAsCombinationTransform(void) const = 0;
 
-
-  CombinationTransformType *
-  GetAsCombinationTransform(void)
-  {
-    return dynamic_cast<CombinationTransformType *>(this);
-  }
+  virtual CombinationTransformType &
+  GetAsCombinationTransform(void) = 0;
 
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
