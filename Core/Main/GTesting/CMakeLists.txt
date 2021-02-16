@@ -1,4 +1,5 @@
 add_executable(ElastixLibGTest
+  elxCoreMainGTestUtilities.h
   ElastixFilterGTest.cxx
   ElastixLibGTest.cxx
   itkElastixRegistrationMethodGTest.cxx

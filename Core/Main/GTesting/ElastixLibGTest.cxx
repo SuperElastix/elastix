@@ -20,9 +20,10 @@
 // First include the header file to be tested:
 #include "elastixlib.h"
 
+#include "elxCoreMainGTestUtilities.h"
+
 // ITK header files:
 #include <itkImage.h>
-#include <itkImageRegionRange.h>
 
 // GoogleTest header file:
 #include <gtest/gtest.h>
@@ -122,17 +123,6 @@ ExpectRoundedTransformParametersEqualOffset(const elastix::ELASTIX &        elas
 }
 
 
-template <typename TPixel, unsigned int VImageDimension>
-void
-FillImageRegion(itk::Image<TPixel, VImageDimension> & image,
-                const itk::Index<VImageDimension> &   regionIndex,
-                const itk::Size<VImageDimension> &    regionSize)
-{
-  using ImageRegionRangeType = itk::Experimental::ImageRegionRange<itk::Image<TPixel, VImageDimension>>;
-  const ImageRegionRangeType imageRegionRange{ image, itk::ImageRegion<VImageDimension>{ regionIndex, regionSize } };
-  std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
-}
-
 template <unsigned VImageDimension>
 std::map<std::string, std::vector<std::string>>
 CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> initializerList)
@@ -170,7 +160,8 @@ Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
   const auto image = ImageType::New();
   image->SetRegions(SizeType::Filled(imageSizeValue));
   image->Allocate(true);
-  FillImageRegion(*image, itk::Index<VImageDimension>::Filled(1), SizeType::Filled(regionSizeValue));
+  elx::CoreMainGTestUtilities::FillImageRegion(
+    *image, itk::Index<VImageDimension>::Filled(1), SizeType::Filled(regionSizeValue));
 
   elastix::ELASTIX elastixObject;
   ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
@@ -258,12 +249,12 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   const auto fixed_image = ITKImageType::New();
   fixed_image->SetRegions(imageSize);
   fixed_image->Allocate(true);
-  FillImageRegion(*fixed_image, fixedImageRegionIndex, regionSize);
+  elx::CoreMainGTestUtilities::FillImageRegion(*fixed_image, fixedImageRegionIndex, regionSize);
 
   const auto moving_image = ITKImageType::New();
   moving_image->SetRegions(imageSize);
   moving_image->Allocate(true);
-  FillImageRegion(*moving_image, fixedImageRegionIndex + translationOffset, regionSize);
+  elx::CoreMainGTestUtilities::FillImageRegion(*moving_image, fixedImageRegionIndex + translationOffset, regionSize);
 
   const std::string output_directory(".");
   const bool        write_log_file{ false };
@@ -360,12 +351,12 @@ GTEST_TEST(ElastixLib, Translation3D)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   elastix::ELASTIX elastixObject;
 
