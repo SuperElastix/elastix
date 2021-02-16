@@ -19,8 +19,11 @@
 
 // First include the header file to be tested:
 #include <elxElastixFilter.h>
+
+#include "elxCoreMainGTestUtilities.h"
+
+// ITK header file:
 #include <itkImage.h>
-#include <itkImageRegionRange.h>
 
 // GoogleTest header file:
 #include <gtest/gtest.h>
@@ -40,7 +43,6 @@ GTEST_TEST(ElastixFilter, Translation)
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
-  using RegionRangeType = itk::Experimental::ImageRegionRange<ImageType>;
 
   const OffsetType translationOffset{ { 1, -2 } };
   const auto       regionSize = SizeType::Filled(2);
@@ -50,16 +52,12 @@ GTEST_TEST(ElastixFilter, Translation)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  const RegionType      fixedImageRegion{ fixedImageRegionIndex, regionSize };
-  const RegionRangeType fixedImageRegionRange{ *fixedImage, fixedImageRegion };
-  std::fill(std::begin(fixedImageRegionRange), std::end(fixedImageRegionRange), 1.0f);
+  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  const RegionType      movingImageRegion{ fixedImageRegionIndex + translationOffset, regionSize };
-  const RegionRangeType movingImageRegionRange{ *movingImage, movingImageRegion };
-  std::fill(std::begin(movingImageRegionRange), std::end(movingImageRegionRange), 1.0f);
+  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto parameterObject = elastix::ParameterObject::New();
 
