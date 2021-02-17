@@ -131,6 +131,18 @@ protected:
   ~FixedGenericPyramid() override = default;
 
 private:
+  const Self &
+  GetAsMultiResolutionPyramidImageFilter(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsMultiResolutionPyramidImageFilter(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   FixedGenericPyramid(const Self &) = delete;
   /** The deleted assignment operator. */
