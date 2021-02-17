@@ -169,12 +169,9 @@ public:
 
   /** Other typedef's. */
   typedef itk::Object ObjectType;
-  typedef itk::AdvancedTransform<CoordRepType,
-                                 itkGetStaticConstMacro(FixedImageDimension),
-                                 itkGetStaticConstMacro(MovingImageDimension)>
-    ITKBaseType;
   typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
                                                                   CombinationTransformType;
+  typedef CombinationTransformType                                ITKBaseType;
   typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
 
   /** Typedef's for parameters. */
