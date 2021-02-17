@@ -158,6 +158,18 @@ protected:
   ~MultiInputRandomCoordinateSampler() override = default;
 
 private:
+  const Self &
+  GetAsITKImageSamplerBase(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsITKImageSamplerBase(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   MultiInputRandomCoordinateSampler(const Self &) = delete;
   /** The deleted assignment operator. */

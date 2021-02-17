@@ -65,19 +65,19 @@ public:
   /** ITKBaseType. */
   typedef itk::ImageSamplerBase<InputImageType> ITKBaseType;
 
-  /** Cast to ITKBaseType. */
+  /** Retrieves this object as ITKBaseType. */
   virtual ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetAsITKImageSamplerBase());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
   virtual const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetAsITKImageSamplerBase());
   }
 
 
@@ -95,6 +95,12 @@ protected:
   ~ImageSamplerBase() override = default;
 
 private:
+  virtual const itk::ImageSamplerBase<InputImageType> &
+  GetAsITKImageSamplerBase(void) const = 0;
+
+  virtual itk::ImageSamplerBase<InputImageType> &
+  GetAsITKImageSamplerBase(void) = 0;
+
   /** The deleted copy constructor. */
   ImageSamplerBase(const Self &) = delete;
   /** The deleted assignment operator. */

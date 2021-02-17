@@ -99,6 +99,18 @@ protected:
   ~FullSampler() override = default;
 
 private:
+  const Self &
+  GetAsITKImageSamplerBase(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsITKImageSamplerBase(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   FullSampler(const Self &) = delete;
   /** The deleted assignment operator. */
