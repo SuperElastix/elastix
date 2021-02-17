@@ -217,7 +217,7 @@ TransformBase<TElastix>::BeforeRegistrationBase(void)
   std::string howToCombineTransforms = "Compose";
   this->m_Configuration->ReadParameter(howToCombineTransforms, "HowToCombineTransforms", 0, false);
 
-  this->GetAsCombinationTransform().SetUseComposition(howToCombineTransforms == "Compose");
+  this->GetAsITKBaseType()->SetUseComposition(howToCombineTransforms == "Compose");
 
   /** Set the initial transform. Elastix returns an itk::Object, so try to
    * cast it to an InitialTransformType, which is of type itk::Transform.
@@ -259,7 +259,7 @@ template <class TElastix>
 const typename TransformBase<TElastix>::InitialTransformType *
 TransformBase<TElastix>::GetInitialTransform(void) const
 {
-  return this->GetAsCombinationTransform().GetInitialTransform();
+  return this->GetAsITKBaseType()->GetInitialTransform();
 
 } // end GetInitialTransform()
 
@@ -273,7 +273,7 @@ void
 TransformBase<TElastix>::SetInitialTransform(InitialTransformType * _arg)
 {
   /** Set initial transform. */
-  this->GetAsCombinationTransform().SetInitialTransform(_arg);
+  this->GetAsITKBaseType()->SetInitialTransform(_arg);
 
   // \todo AdvancedCombinationTransformType
 
@@ -450,7 +450,7 @@ TransformBase<TElastix>::ReadFromFile(void)
   /** Convert 'this' to a pointer to a CombinationTransform and set how
    * to combine the current transform with the initial transform.
    */
-  this->GetAsCombinationTransform().SetUseComposition(howToCombineTransforms == "Compose");
+  this->GetAsITKBaseType()->SetUseComposition(howToCombineTransforms == "Compose");
 
   /** Task 4 - Remember the name of the TransformParametersFileName.
    * This will be needed when another transform will use this transform
@@ -621,7 +621,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   const auto & elastixObject = *(this->GetElastix());
 
   /** The way Transforms are combined. */
-  const auto combinationMethod = this->GetAsCombinationTransform().GetUseAddition() ? "Add" : "Compose";
+  const auto combinationMethod = this->GetAsITKBaseType()->GetUseAddition() ? "Add" : "Compose";
 
   /** Write image pixel types. */
   std::string fixpix = "float";
@@ -1009,7 +1009,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   /** Apply the transform. */
   elxout << "  The input points are transformed." << std::endl;
   const auto meshTransformer = TransformMeshFilterType::New();
-  meshTransformer->SetTransform(&const_cast<CombinationTransformType &>(this->GetAsCombinationTransform()));
+  meshTransformer->SetTransform(const_cast<CombinationTransformType *>(this->GetAsITKBaseType()));
   meshTransformer->SetInput(meshReader->GetOutput());
   try
   {
@@ -1373,7 +1373,7 @@ TransformBase<TElastix>::SetTransformParametersFileName(const char * filename)
   {
     this->m_TransformParametersFileName = "";
   }
-  this->GetAsCombinationTransform().Modified();
+  this->GetAsITKBaseType()->Modified();
 
 } // end SetTransformParametersFileName()
 
@@ -1390,7 +1390,7 @@ TransformBase<TElastix>::SetReadWriteTransformParameters(const bool _arg)
   if (this->m_ReadWriteTransformParameters != _arg)
   {
     this->m_ReadWriteTransformParameters = _arg;
-    this->GetAsCombinationTransform().Modified();
+    this->GetAsITKBaseType()->Modified();
   }
 
 } // end SetReadWriteTransformParameters()
