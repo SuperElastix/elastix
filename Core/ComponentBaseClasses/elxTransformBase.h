@@ -197,19 +197,19 @@ public:
   /** Typedef that is used in the elastix dll version. */
   typedef typename TElastix::ParameterMapType ParameterMapType;
 
-  /** Cast to ITKBaseType. */
+  /** Retrieves this object as ITKBaseType. */
   ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return &(this->GetAsCombinationTransform());
+    return &(this->GetSelf());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
   const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return &(this->GetAsCombinationTransform());
+    return &(this->GetSelf());
   }
 
   /** Execute stuff before the actual transformation:
