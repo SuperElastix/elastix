@@ -158,6 +158,8 @@ protected:
   SetComponents(void);
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MultiResolutionRegistration(const Self &) = delete;
   /** The deleted assignment operator. */

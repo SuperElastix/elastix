@@ -151,6 +151,8 @@ protected:
   ~RandomCoordinateSampler() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   RandomCoordinateSampler(const Self &) = delete;
   /** The deleted assignment operator. */

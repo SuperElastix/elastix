@@ -296,6 +296,8 @@ protected:
   AutomaticScalesEstimationStackTransform(const unsigned int & numSubTransforms, ScalesType & scales) const;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** Function to read the initial transform parameters from the specified configuration object.
    */
   void

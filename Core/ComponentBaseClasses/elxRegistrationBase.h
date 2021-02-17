@@ -210,6 +210,8 @@ protected:
                                   unsigned int                   level) const;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   RegistrationBase(const Self &) = delete;
   /** The deleted assignment operator. */

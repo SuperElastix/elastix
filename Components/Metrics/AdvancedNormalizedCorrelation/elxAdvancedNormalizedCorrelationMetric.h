@@ -144,6 +144,8 @@ protected:
   ~AdvancedNormalizedCorrelationMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   AdvancedNormalizedCorrelationMetric(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -135,6 +135,8 @@ protected:
   ~DisplacementMagnitudePenalty() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   DisplacementMagnitudePenalty(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -94,6 +94,8 @@ protected:
   ~LinearInterpolator() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   LinearInterpolator(const Self &) = delete;
   /** The deleted assignment operator. */

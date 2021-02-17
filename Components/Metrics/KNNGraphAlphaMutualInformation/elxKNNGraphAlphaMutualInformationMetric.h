@@ -175,6 +175,8 @@ protected:
   ~KNNGraphAlphaMutualInformationMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   KNNGraphAlphaMutualInformationMetric(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -208,6 +208,8 @@ protected:
   std::vector<std::string>            m_SubTransformFileNames;
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

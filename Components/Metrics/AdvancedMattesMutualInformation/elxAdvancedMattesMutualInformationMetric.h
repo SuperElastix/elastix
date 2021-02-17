@@ -225,6 +225,8 @@ protected:
   Compute_c(unsigned long k) const;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   AdvancedMattesMutualInformationMetric(const Self &) = delete;
   /** The deleted assignment operator. */

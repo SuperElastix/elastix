@@ -191,6 +191,8 @@ protected:
   GetAndSetFixedImageInterpolators(void);
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MultiResolutionRegistrationWithFeatures(const Self &) = delete;
   /** The deleted assignment operator. */

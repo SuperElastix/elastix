@@ -90,6 +90,8 @@ protected:
   ~MovingShrinkingPyramid() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MovingShrinkingPyramid(const Self &) = delete;
   /** The deleted assignment operator. */

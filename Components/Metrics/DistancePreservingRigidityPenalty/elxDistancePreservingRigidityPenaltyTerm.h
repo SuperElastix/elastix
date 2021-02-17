@@ -168,6 +168,8 @@ protected:
   ~DistancePreservingRigidityPenalty() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   DistancePreservingRigidityPenalty(const Self &) = delete;
   /** The deleted assignment operator. */

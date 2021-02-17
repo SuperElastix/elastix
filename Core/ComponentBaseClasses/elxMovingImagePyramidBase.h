@@ -129,6 +129,8 @@ protected:
   ~MovingImagePyramidBase() override = default;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   MovingImagePyramidBase(const Self &) = delete;
   /** The deleted assignment operator. */

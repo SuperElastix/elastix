@@ -410,6 +410,8 @@ protected:
   AddRandomPerturbation(ParametersType & parameters, double sigma);
 
 private:
+  elxOverrideGetSelfMacro;
+
   AdaptiveStochasticGradientDescent(const Self &) = delete;
   void
   operator=(const Self &) = delete;

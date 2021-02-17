@@ -440,6 +440,8 @@ protected:
   double m_NoiseFactor;
 
 private:
+  elxOverrideGetSelfMacro;
+
   AdaptiveStochasticVarianceReducedGradient(const Self &) = delete;
   void
   operator=(const Self &) = delete;

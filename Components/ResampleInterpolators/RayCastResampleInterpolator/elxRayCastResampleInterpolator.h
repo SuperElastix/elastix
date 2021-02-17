@@ -124,6 +124,8 @@ protected:
   InitializeRayCastInterpolator(void);
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** Creates a map of the parameters specific for this (derived) interpolator type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;

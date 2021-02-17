@@ -136,6 +136,8 @@ protected:
   ~DeformationFieldTransform() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

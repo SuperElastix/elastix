@@ -137,6 +137,8 @@ protected:
   ~RSGDEachParameterApart() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   RSGDEachParameterApart(const Self &) = delete;
   void
   operator=(const Self &) = delete;

@@ -204,6 +204,8 @@ protected:
   ~PolydataDummyPenalty() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   PolydataDummyPenalty(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -89,6 +89,8 @@ protected:
   ~InterpolatorBase() override = default;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   InterpolatorBase(const Self &) = delete;
   /** The deleted assignment operator. */

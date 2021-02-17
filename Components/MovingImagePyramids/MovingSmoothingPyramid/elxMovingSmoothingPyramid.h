@@ -91,6 +91,8 @@ protected:
   ~MovingSmoothingPyramid() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MovingSmoothingPyramid(const Self &) = delete;
   /** The deleted assignment operator. */

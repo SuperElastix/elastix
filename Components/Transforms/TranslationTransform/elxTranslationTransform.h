@@ -144,6 +144,8 @@ protected:
   TranslationTransformPointer m_TranslationTransform;
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

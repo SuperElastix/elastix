@@ -115,6 +115,8 @@ protected:
   ~BSplineInterpolator() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   BSplineInterpolator(const Self &) = delete;
   /** The deleted assignment operator. */

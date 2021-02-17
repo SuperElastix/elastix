@@ -236,6 +236,8 @@ protected:
   unsigned int                     m_ExactMetricEachXNumberOfIterations;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   MetricBase(const Self &) = delete;
   /** The deleted assignment operator. */

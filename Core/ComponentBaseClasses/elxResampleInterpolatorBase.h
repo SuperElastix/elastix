@@ -112,6 +112,8 @@ protected:
   ~ResampleInterpolatorBase() override = default;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   virtual ParameterMapType
   CreateDerivedTransformParametersMap() const
   {

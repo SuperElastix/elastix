@@ -158,6 +158,8 @@ protected:
   ~MultiInputRandomCoordinateSampler() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MultiInputRandomCoordinateSampler(const Self &) = delete;
   /** The deleted assignment operator. */

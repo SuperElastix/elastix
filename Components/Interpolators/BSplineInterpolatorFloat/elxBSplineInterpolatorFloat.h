@@ -115,6 +115,8 @@ protected:
   ~BSplineInterpolatorFloat() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   BSplineInterpolatorFloat(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -113,6 +113,8 @@ protected:
   ~RandomSampler() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   RandomSampler(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -152,6 +152,8 @@ protected:
   ~SumSquaredTissueVolumeDifferenceMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   SumSquaredTissueVolumeDifferenceMetric(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -176,6 +176,8 @@ protected:
   ~NormalizedMutualInformationMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   NormalizedMutualInformationMetric(const Self &) = delete;
   /** The deleted assignment operator. */

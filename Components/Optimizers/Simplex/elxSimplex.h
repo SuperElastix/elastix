@@ -107,6 +107,8 @@ protected:
   ~Simplex() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   Simplex(const Self &) = delete;
   void
   operator=(const Self &) = delete;

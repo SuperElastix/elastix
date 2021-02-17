@@ -146,6 +146,8 @@ protected:
   ~AdvancedMeanSquaresMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   AdvancedMeanSquaresMetric(const Self &) = delete;
   /** The deleted assignment operator. */
