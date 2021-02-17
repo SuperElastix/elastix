@@ -21,6 +21,7 @@
 #include <iostream>
 #include <ostream>
 #include <map>
+#include <mutex>
 #include <string>
 
 namespace xoutlibrary
@@ -147,6 +148,11 @@ public:
   GetXOutputs(void);
 
 protected:
+  using LockGuardType = std::lock_guard<std::recursive_mutex>;
+
+  static std::recursive_mutex &
+  GetRecursiveMutex();
+
   /** Default-constructor. Only to be used by its derived classes. */
   xoutbase() = default;
 
@@ -164,6 +170,8 @@ private:
   Self &
   SendToTargets(const T & _arg)
   {
+    const LockGuardType mutexLock(GetRecursiveMutex());
+
     /** Send input to the target c-streams. */
     for (const auto & cell : m_CTargetCells)
     {

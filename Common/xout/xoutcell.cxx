@@ -41,6 +41,8 @@ xoutcell::xoutcell()
 void
 xoutcell::WriteBufferedData(void)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   const std::string strbuf = this->m_InternalBuffer.str();
 
   /** Send the string to the outputs */
