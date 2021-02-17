@@ -180,6 +180,8 @@ protected:
   ReadCenterOfRotationPoint(ReducedDimensionInputPointType & rotationPoint) const;
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

@@ -184,6 +184,8 @@ protected:
   InitializeProgressVariables(void) override;
 
 private:
+  elxOverrideGetSelfMacro;
+
   CMAEvolutionStrategy(const Self &) = delete;
   void
   operator=(const Self &) = delete;

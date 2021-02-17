@@ -184,6 +184,8 @@ protected:
   ~VarianceOverLastDimensionMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   VarianceOverLastDimensionMetric(const Self &) = delete;
   /** The deleted assignment operator. */

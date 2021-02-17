@@ -115,6 +115,8 @@ protected:
   ~RandomSamplerSparseMask() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   RandomSamplerSparseMask(const Self &) = delete;
   /** The deleted assignment operator. */

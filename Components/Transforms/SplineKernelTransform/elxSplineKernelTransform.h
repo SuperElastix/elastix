@@ -247,6 +247,8 @@ protected:
   KernelTransformPointer m_KernelTransform;
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

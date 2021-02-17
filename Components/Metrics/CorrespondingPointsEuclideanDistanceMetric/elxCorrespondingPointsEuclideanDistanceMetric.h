@@ -149,6 +149,8 @@ protected:
   ~CorrespondingPointsEuclideanDistanceMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   CorrespondingPointsEuclideanDistanceMetric(const Self &) = delete;
   /** The deleted assignment operator. */

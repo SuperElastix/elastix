@@ -207,6 +207,8 @@ protected:
   bool m_ShowProgress;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   virtual ParameterMapType
   CreateDerivedTransformParametersMap() const
   {

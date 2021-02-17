@@ -408,6 +408,8 @@ protected:
   double  m_WindowScale;
 
 private:
+  elxOverrideGetSelfMacro;
+
   AdaptiveStochasticLBFGS(const Self &) = delete;
   void
   operator=(const Self &) = delete;

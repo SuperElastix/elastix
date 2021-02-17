@@ -181,6 +181,8 @@ protected:
   ~StatisticalShapePenalty() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   StatisticalShapePenalty(const Self &) = delete;
   /** The deleted assignment operator. */

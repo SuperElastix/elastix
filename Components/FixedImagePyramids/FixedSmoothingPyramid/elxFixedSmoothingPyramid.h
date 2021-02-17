@@ -92,6 +92,8 @@ protected:
   ~FixedSmoothingPyramid() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   FixedSmoothingPyramid(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -235,6 +235,8 @@ protected:
   bool m_ShowExactMetricValue;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MultiMetricMultiResolutionRegistration(const Self &) = delete;
   /** The deleted assignment operator. */

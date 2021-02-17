@@ -151,6 +151,8 @@ protected:
                                   const unsigned int  entry_nr) const;
 
 private:
+  elxOverrideGetSelfMacro;
+
   FullSearch(const Self &) = delete;
   void
   operator=(const Self &) = delete;

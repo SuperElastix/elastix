@@ -90,6 +90,8 @@ protected:
   ~FixedRecursivePyramid() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   FixedRecursivePyramid(const Self &) = delete;
   /** The deleted assignment operator. */

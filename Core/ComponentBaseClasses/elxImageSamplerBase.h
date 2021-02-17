@@ -95,6 +95,8 @@ protected:
   ~ImageSamplerBase() override = default;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   ImageSamplerBase(const Self &) = delete;
   /** The deleted assignment operator. */

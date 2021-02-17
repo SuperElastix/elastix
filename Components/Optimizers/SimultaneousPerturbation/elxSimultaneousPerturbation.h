@@ -150,6 +150,8 @@ protected:
   bool m_ShowMetricValues;
 
 private:
+  elxOverrideGetSelfMacro;
+
   SimultaneousPerturbation(const Self &) = delete;
   void
   operator=(const Self &) = delete;

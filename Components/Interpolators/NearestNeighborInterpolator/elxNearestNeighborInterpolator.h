@@ -92,6 +92,8 @@ protected:
   ~NearestNeighborInterpolator() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   NearestNeighborInterpolator(const Self &) = delete;
   /** The deleted assignment operator. */

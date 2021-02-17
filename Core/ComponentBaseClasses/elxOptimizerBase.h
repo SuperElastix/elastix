@@ -129,6 +129,8 @@ protected:
   GetNewSamplesEveryIteration(void) const;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   OptimizerBase(const Self &) = delete;
   /** The deleted assignment operator. */

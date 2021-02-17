@@ -131,6 +131,8 @@ protected:
   ~RegularStepGradientDescent() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   RegularStepGradientDescent(const Self &) = delete;
   void
   operator=(const Self &) = delete;

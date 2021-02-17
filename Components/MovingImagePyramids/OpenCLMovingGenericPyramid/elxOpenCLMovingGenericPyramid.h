@@ -111,6 +111,8 @@ protected:
   virtual ~OpenCLMovingGenericPyramid() = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   OpenCLMovingGenericPyramid(const Self &) = delete;
   /** The deleted assignment operator. */

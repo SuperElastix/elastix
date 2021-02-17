@@ -419,6 +419,8 @@ protected:
   AddRandomPerturbation(ParametersType & parameters, double sigma);
 
 private:
+  elxOverrideGetSelfMacro;
+
   AdaGrad(const Self &) = delete;
   void
   operator=(const Self &) = delete;

@@ -131,6 +131,8 @@ protected:
   ~MovingGenericPyramid() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MovingGenericPyramid(const Self &) = delete;
   /** The deleted assignment operator. */

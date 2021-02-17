@@ -255,6 +255,8 @@ protected:
   PreComputeGridInformation(void);
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

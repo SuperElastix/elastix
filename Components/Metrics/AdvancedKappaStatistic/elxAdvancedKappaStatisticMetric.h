@@ -150,6 +150,8 @@ protected:
   ~AdvancedKappaStatisticMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   AdvancedKappaStatisticMetric(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -360,6 +360,8 @@ protected:
   SpacingType m_GridSpacingFactor;
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

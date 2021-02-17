@@ -154,6 +154,8 @@ protected:
   typedef typename InterpolateCopierType::GPUExplicitInterpolatorPointer GPUExplicitInterpolatorPointer;
 
 private:
+  elxOverrideGetSelfMacro;
+  elxOverrideGetSelfMacro;
   /** Creates a map of the parameters specific for this (derived) resampler type. */
   ParameterMapType
   CreateDerivedTransformParametersMap(void) const override;

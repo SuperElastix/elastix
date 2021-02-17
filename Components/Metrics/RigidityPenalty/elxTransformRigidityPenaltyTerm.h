@@ -233,6 +233,8 @@ protected:
   ~TransformRigidityPenalty() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   TransformRigidityPenalty(const Self &) = delete;
   /** The deleted assignment operator. */

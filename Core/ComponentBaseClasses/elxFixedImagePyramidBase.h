@@ -127,6 +127,8 @@ protected:
   ~FixedImagePyramidBase() override = default;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   FixedImagePyramidBase(const Self &) = delete;
   /** The deleted assignment operator. */

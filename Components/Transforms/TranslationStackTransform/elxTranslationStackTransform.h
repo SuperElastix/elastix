@@ -153,6 +153,8 @@ protected:
   ~TranslationStackTransform() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   const Self &
   GetAsCombinationTransform(void) const override
   {

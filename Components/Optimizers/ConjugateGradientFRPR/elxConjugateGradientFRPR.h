@@ -212,6 +212,8 @@ protected:
   LineOptimize(ParametersType * p, ParametersType xi, double * val);
 
 private:
+  elxOverrideGetSelfMacro;
+
   ConjugateGradientFRPR(const Self &) = delete;
   void
   operator=(const Self &) = delete;
