@@ -302,6 +302,22 @@
 #define elxOverrideGetConstMacro(name, type)                                                                           \
   type Get##name() const override { return this->m_##name; }
 
+/** Declares a pair of pure virtual member functions (overloaded for const
+ * and non-const) to get a reference to itself, of the specified type.
+ */
+#define elxDeclarePureVirtualGetSelfMacro(type)                                                                        \
+  virtual const type & GetSelf(void) const = 0;                                                                        \
+  virtual type &       GetSelf(void) = 0
+
+/** Defines a pair of overrides of GetSelf(void) (overloaded for const and
+ * non-const), which return a reference to itself. Declares a deleted static
+ * member function overload, just to allow macro calls to end with a semicolon.
+ */
+#define elxOverrideGetSelfMacro                                                                                        \
+  auto GetSelf(void) const->decltype(*this) override { return *this; }                                                 \
+  auto GetSelf(void)->decltype(*this) override { return *this; }                                                       \
+  static void                         GetSelf(const void *) = delete
+
 
 /**
  *  elxout
