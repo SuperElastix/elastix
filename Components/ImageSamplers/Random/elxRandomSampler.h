@@ -49,7 +49,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class RandomSampler
+class ITK_TEMPLATE_EXPORT RandomSampler
   : public itk::ImageRandomSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
   , public elx::ImageSamplerBase<TElastix>
 {

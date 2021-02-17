@@ -456,22 +456,8 @@ ElastixBase::BeforeRegistrationBase(void)
   this->m_IterationInfo.SetOutputs(xl::xout.GetCOutputs());
   this->m_IterationInfo.SetOutputs(xl::xout.GetXOutputs());
 
-  xl::xout.AddTargetCell("iteration", &this->m_IterationInfo);
-
 } // end BeforeRegistrationBase()
 
-
-/**
- * **************** AfterRegistrationBase ***********************
- */
-
-void
-ElastixBase::AfterRegistrationBase(void)
-{
-  /** Remove the "iteration" writing field. */
-  xl::xout.RemoveTargetCell("iteration");
-
-} // end AfterRegistrationBase()
 
 /**
  * ********************** GetResultImage *************************

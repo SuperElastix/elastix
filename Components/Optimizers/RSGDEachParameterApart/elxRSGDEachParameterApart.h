@@ -69,7 +69,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class RSGDEachParameterApart
+class ITK_TEMPLATE_EXPORT RSGDEachParameterApart
   : public itk::RSGDEachParameterApartOptimizer
   , public OptimizerBase<TElastix>
 {

@@ -44,7 +44,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class BaseComponentSE : public BaseComponent
+class ITK_TEMPLATE_EXPORT BaseComponentSE : public BaseComponent
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponentSE);
@@ -91,6 +91,23 @@ public:
     return this->m_Elastix.GetPointer();
   }
 
+  int
+  RemoveTargetCellFromIterationInfo(const char * const name)
+  {
+    return this->m_Elastix->GetIterationInfo().xl::xoutrow::RemoveTargetCell(name);
+  }
+
+  xl::xoutbase &
+  GetIterationInfoAt(const char * const name)
+  {
+    return this->m_Elastix->GetIterationInfoAt(name);
+  }
+
+  void
+  AddTargetCellToIterationInfo(const char * const name)
+  {
+    return this->m_Elastix->AddTargetCellToIterationInfo(name);
+  }
 
   /** itkGetModifiableObjectMacro(Configuration, ConfigurationType);
    * The configuration object provides functionality to

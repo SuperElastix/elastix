@@ -84,21 +84,21 @@ template <class TElastix>
 void
 CMAEvolutionStrategy<TElastix>::BeforeRegistration(void)
 {
-  /** Add target cells to xout["iteration"].*/
-  xl::xout["iteration"].AddTargetCell("2:Metric");
-  xl::xout["iteration"].AddTargetCell("3:StepLength");
-  xl::xout["iteration"].AddTargetCell("4:||Step||");
-  xl::xout["iteration"].AddTargetCell("5a:Sigma");
-  xl::xout["iteration"].AddTargetCell("5b:MaximumD");
-  xl::xout["iteration"].AddTargetCell("5c:MinimumD");
+  /** Add target cells to xout[IterationInfo.*/
+  this->AddTargetCellToIterationInfo("2:Metric");
+  this->AddTargetCellToIterationInfo("3:StepLength");
+  this->AddTargetCellToIterationInfo("4:||Step||");
+  this->AddTargetCellToIterationInfo("5a:Sigma");
+  this->AddTargetCellToIterationInfo("5b:MaximumD");
+  this->AddTargetCellToIterationInfo("5c:MinimumD");
 
   /** Format the metric and stepsize as floats */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4:||Step||"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["5a:Sigma"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["5b:MaximumD"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["5c:MinimumD"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3:StepLength") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4:||Step||") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("5a:Sigma") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("5b:MaximumD") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("5c:MinimumD") << std::showpoint << std::fixed;
 
 } // end BeforeRegistration
 
@@ -206,12 +206,12 @@ void
 CMAEvolutionStrategy<TElastix>::AfterEachIteration(void)
 {
   /** Print some information. */
-  xl::xout["iteration"]["2:Metric"] << this->GetCurrentValue();
-  xl::xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();
-  xl::xout["iteration"]["4:||Step||"] << this->GetCurrentScaledStep().magnitude();
-  xl::xout["iteration"]["5a:Sigma"] << this->GetCurrentSigma();
-  xl::xout["iteration"]["5b:MaximumD"] << this->GetCurrentMaximumD();
-  xl::xout["iteration"]["5c:MinimumD"] << this->GetCurrentMinimumD();
+  this->GetIterationInfoAt("2:Metric") << this->GetCurrentValue();
+  this->GetIterationInfoAt("3:StepLength") << this->GetCurrentStepLength();
+  this->GetIterationInfoAt("4:||Step||") << this->GetCurrentScaledStep().magnitude();
+  this->GetIterationInfoAt("5a:Sigma") << this->GetCurrentSigma();
+  this->GetIterationInfoAt("5b:MaximumD") << this->GetCurrentMaximumD();
+  this->GetIterationInfoAt("5c:MinimumD") << this->GetCurrentMinimumD();
 
   /** Select new samples if desired. These
    * will be used in the next iteration */

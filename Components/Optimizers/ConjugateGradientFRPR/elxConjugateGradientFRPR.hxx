@@ -79,20 +79,20 @@ void
 ConjugateGradientFRPR<TElastix>::BeforeRegistration(void)
 {
 
-  /** Add target cells to xout["iteration"].*/
-  xl::xout["iteration"].AddTargetCell("1a:SrchDirNr");
-  xl::xout["iteration"].AddTargetCell("1b:LineItNr");
-  xl::xout["iteration"].AddTargetCell("2:Metric");
-  xl::xout["iteration"].AddTargetCell("3:StepLength");
-  xl::xout["iteration"].AddTargetCell("4a:||Gradient||");
-  xl::xout["iteration"].AddTargetCell("4b:||SearchDir||");
-  xl::xout["iteration"].AddTargetCell("5:Phase");
+  /** Add target cells to IterationInfo.*/
+  this->AddTargetCellToIterationInfo("1a:SrchDirNr");
+  this->AddTargetCellToIterationInfo("1b:LineItNr");
+  this->AddTargetCellToIterationInfo("2:Metric");
+  this->AddTargetCellToIterationInfo("3:StepLength");
+  this->AddTargetCellToIterationInfo("4a:||Gradient||");
+  this->AddTargetCellToIterationInfo("4b:||SearchDir||");
+  this->AddTargetCellToIterationInfo("5:Phase");
 
   /** Format some fields as floats */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3:StepLength") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4a:||Gradient||") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4b:||SearchDir||") << std::showpoint << std::fixed;
 
   /** \todo: call the correct functions */
 
@@ -159,30 +159,30 @@ ConjugateGradientFRPR<TElastix>::AfterEachIteration(void)
 {
 
   /** Print some information. */
-  xl::xout["iteration"]["1a:SrchDirNr"] << this->GetCurrentIteration();
-  xl::xout["iteration"]["1b:LineItNr"] << this->GetCurrentLineIteration();
-  xl::xout["iteration"]["2:Metric"] << this->GetValue();
-  xl::xout["iteration"]["4b:||SearchDir||"] << this->GetCurrentSearchDirectionMagnitude();
-  xl::xout["iteration"]["5:Phase"] << this->DeterminePhase();
+  this->GetIterationInfoAt("1a:SrchDirNr") << this->GetCurrentIteration();
+  this->GetIterationInfoAt("1b:LineItNr") << this->GetCurrentLineIteration();
+  this->GetIterationInfoAt("2:Metric") << this->GetValue();
+  this->GetIterationInfoAt("4b:||SearchDir||") << this->GetCurrentSearchDirectionMagnitude();
+  this->GetIterationInfoAt("5:Phase") << this->DeterminePhase();
 
   /** If main iteration (NewDirection) */
   if ((!(this->GetLineBracketing())) && (!(this->GetLineOptimizing())))
   {
-    xl::xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();
-    xl::xout["iteration"]["4a:||Gradient||"] << this->GetCurrentDerivativeMagnitude();
+    this->GetIterationInfoAt("3:StepLength") << this->GetCurrentStepLength();
+    this->GetIterationInfoAt("4a:||Gradient||") << this->GetCurrentDerivativeMagnitude();
   }
   else
   {
     if (this->GetLineBracketing())
     {
-      xl::xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();
+      this->GetIterationInfoAt("3:StepLength") << this->GetCurrentStepLength();
     }
     else
     {
       /** No step length known now */
-      xl::xout["iteration"]["3:StepLength"] << "---";
+      this->GetIterationInfoAt("3:StepLength") << "---";
     }
-    xl::xout["iteration"]["4a:||Gradient||"] << "---";
+    this->GetIterationInfoAt("4a:||Gradient||") << "---";
   } // end if main iteration
 
 } // end AfterEachIteration

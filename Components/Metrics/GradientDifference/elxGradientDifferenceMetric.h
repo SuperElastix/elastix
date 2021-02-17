@@ -34,7 +34,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class GradientDifferenceMetric
+class ITK_TEMPLATE_EXPORT GradientDifferenceMetric
   : public itk::GradientDifferenceImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                      typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

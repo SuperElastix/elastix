@@ -88,7 +88,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class ConjugateGradient
+class ITK_TEMPLATE_EXPORT ConjugateGradient
   : public itk::GenericConjugateGradientOptimizer
   , public OptimizerBase<TElastix>
 {

@@ -98,6 +98,8 @@ public:
                                              GPUResamplerType;
   typedef typename GPUResamplerType::Pointer GPUResamplerPointer;
 
+  typedef typename Superclass2::ParameterMapType ParameterMapType;
+
   /** Set the transform. */
   virtual void
   SetTransform(const TransformType * _arg);

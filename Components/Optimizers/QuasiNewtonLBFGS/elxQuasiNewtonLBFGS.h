@@ -85,7 +85,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class QuasiNewtonLBFGS
+class ITK_TEMPLATE_EXPORT QuasiNewtonLBFGS
   : public itk::QuasiNewtonLBFGSOptimizer
   , public OptimizerBase<TElastix>
 {

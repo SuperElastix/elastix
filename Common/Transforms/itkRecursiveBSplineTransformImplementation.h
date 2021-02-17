@@ -20,6 +20,10 @@
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
 
+// Standard C++ header files:
+#include <cassert>
+#include <cstring> // For memcpy.
+
 namespace itk
 {
 
@@ -38,7 +42,7 @@ namespace itk
  */
 
 template <unsigned int OutputDimension, unsigned int SpaceDimension, unsigned int SplineOrder, class TScalar>
-class RecursiveBSplineTransformImplementation
+class ITK_TEMPLATE_EXPORT RecursiveBSplineTransformImplementation
 {
 public:
   /** Typedef related to the coordinate representation type and the weights type.
@@ -533,22 +537,13 @@ public:
      */
     if (OutputDimension == 3)
     {
-      jsh_tmp[0] = jsh[9];
-      jsh_tmp[1] = jsh[8];
-      jsh_tmp[2] = jsh[7];
-      jsh_tmp[3] = jsh_tmp[1];
-      jsh_tmp[4] = jsh[5];
-      jsh_tmp[5] = jsh[4];
-      jsh_tmp[6] = jsh_tmp[2];
-      jsh_tmp[7] = jsh_tmp[5];
-      jsh_tmp[8] = jsh[2];
+      const double tmp[] = { jsh[9], jsh[8], jsh[7], jsh[8], jsh[5], jsh[4], jsh[7], jsh[4], jsh[2] };
+      FastBitwiseCopy(jsh_tmp, tmp);
     }
     else if (OutputDimension == 2)
     {
-      jsh_tmp[0] = jsh[5];
-      jsh_tmp[1] = jsh[4];
-      jsh_tmp[2] = jsh_tmp[1];
-      jsh_tmp[3] = jsh[2];
+      const double tmp[] = { jsh[5], jsh[4], jsh[4], jsh[2] };
+      FastBitwiseCopy(jsh_tmp, tmp);
     }
     else // the general case
     {
@@ -609,6 +604,22 @@ public:
     jsh_out += OutputDimension * OutputDimension * OutputDimension;
 
   } // end GetJacobianOfSpatialHessian()
+
+
+private:
+  template <typename T>
+  static void
+  FastBitwiseCopy(T & destination, const T & source)
+  {
+    std::memcpy(&destination, &source, sizeof(T));
+  }
+
+  template <typename T1, typename T2>
+  static void
+  FastBitwiseCopy(const T1 &, const T2 &)
+  {
+    assert(!"This FastBitwiseCopy overload should not be called!");
+  }
 };
 
 

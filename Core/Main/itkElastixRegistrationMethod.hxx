@@ -743,7 +743,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::MakeUniqueName(const DataO
 template <typename TFixedImage, typename TMovingImage>
 bool
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::IsInputOfType(const DataObjectIdentifierType & inputType,
-                                                                    DataObjectIdentifierType         inputName) const
+                                                                    const DataObjectIdentifierType & inputName) const
 {
   return std::strncmp(inputType.c_str(), inputName.c_str(), std::min(inputType.size(), inputName.size())) == 0;
 }

@@ -80,7 +80,7 @@ namespace itk
  *
  */
 template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
-class AdvancedTransform : public Transform<TScalarType, NInputDimensions, NOutputDimensions>
+class ITK_TEMPLATE_EXPORT AdvancedTransform : public Transform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
   /** Standard class typedefs. */

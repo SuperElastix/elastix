@@ -43,13 +43,14 @@ ResampleInterpolatorBase<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 void
-ResampleInterpolatorBase<TElastix>::WriteToFile(void) const
+ResampleInterpolatorBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo) const
 {
   ParameterMapType parameterMap;
-  this->CreateTransformParametersMap(&parameterMap);
+  this->CreateTransformParametersMap(parameterMap);
 
   /** Write ResampleInterpolator specific things. */
-  xl::xout["transpar"] << ("\n// ResampleInterpolator specific\n" + Conversion::ParameterMapToString(parameterMap));
+  transformationParameterInfo << ("\n// ResampleInterpolator specific\n" +
+                                  Conversion::ParameterMapToString(parameterMap));
 
 } // end WriteToFile()
 
@@ -60,10 +61,8 @@ ResampleInterpolatorBase<TElastix>::WriteToFile(void) const
 
 template <class TElastix>
 void
-ResampleInterpolatorBase<TElastix>::CreateTransformParametersMap(ParameterMapType * paramsMap) const
+ResampleInterpolatorBase<TElastix>::CreateTransformParametersMap(ParameterMapType & parameterMap) const
 {
-  auto & parameterMap = *paramsMap;
-
   /** Store the name of this transform. */
   parameterMap["ResampleInterpolator"] = { this->elxGetClassName() };
 

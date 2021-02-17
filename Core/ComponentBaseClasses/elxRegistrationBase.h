@@ -72,7 +72,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class RegistrationBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT RegistrationBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK stuff. */

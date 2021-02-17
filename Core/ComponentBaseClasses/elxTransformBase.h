@@ -130,7 +130,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class TransformBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT TransformBase : public BaseComponentSE<TElastix>
 {
 public:
   ITK_DISALLOW_COPY_AND_ASSIGN(TransformBase);
@@ -201,7 +201,7 @@ public:
   ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetAsCombinationTransform());
   }
 
 
@@ -209,7 +209,7 @@ public:
   const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetAsCombinationTransform());
   }
 
   /** Execute stuff before the actual transformation:
@@ -232,15 +232,11 @@ public:
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(const ParametersType & param, ParameterMapType * paramsMap) const;
-
-  /** Function to write transform-parameters to a file. */
-  virtual void
-  WriteToFile(const ParametersType & param) const;
+  CreateTransformParametersMap(const ParametersType & param, ParameterMapType & parameterMap) const;
 
   /** Function to write transform-parameters to a file. */
   void
-  WriteToFile(void) const;
+  WriteToFile(xl::xoutsimple & transformationParameterInfo, const ParametersType & param) const;
 
   /** Macro for reading and writing the transform parameters in WriteToFile or not. */
   void
@@ -305,18 +301,11 @@ private:
   void
   ReadInitialTransformFromConfiguration(const Configuration::Pointer);
 
-  const CombinationTransformType *
-  GetAsCombinationTransform(void) const
-  {
-    return dynamic_cast<const CombinationTransformType *>(this);
-  }
+  virtual const CombinationTransformType &
+  GetAsCombinationTransform(void) const = 0;
 
-
-  CombinationTransformType *
-  GetAsCombinationTransform(void)
-  {
-    return dynamic_cast<CombinationTransformType *>(this);
-  }
+  virtual CombinationTransformType &
+  GetAsCombinationTransform(void) = 0;
 
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
@@ -345,11 +334,11 @@ private:
 
   /** Function to transform coordinates from fixed to moving image. */
   void
-  TransformPointsSomePoints(const std::string filename) const;
+  TransformPointsSomePoints(const std::string & filename) const;
 
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   void
-  TransformPointsSomePointsVTK(const std::string filename) const;
+  TransformPointsSomePointsVTK(const std::string & filename) const;
 
   /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
    *  into Generate* and Write* functions, since that would facilitate a proper library
@@ -382,6 +371,12 @@ private:
 
   virtual ParameterMapType
   CreateDerivedTransformParametersMap(void) const = 0;
+
+  /** Allows a derived transform class to write its data to file, by overriding this member function. */
+  virtual void
+  WriteDerivedTransformDataToFile(void) const
+  {}
+
   /** Member variables. */
   std::unique_ptr<ParametersType> m_TransformParametersPointer{};
   std::string                     m_TransformParametersFileName;

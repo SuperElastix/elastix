@@ -80,19 +80,19 @@ template <class TElastix>
 void
 AdaGrad<TElastix>::BeforeRegistration(void)
 {
-  /** Add the target cell "stepsize" to xout["iteration"]. */
-  xl::xout["iteration"].AddTargetCell("2:Metric");
-  xl::xout["iteration"].AddTargetCell("3a:Time");
-  xl::xout["iteration"].AddTargetCell("3b:StepSize");
-  xl::xout["iteration"].AddTargetCell("4a:||Gradient||");
-  xl::xout["iteration"].AddTargetCell("4b:||SearchDirection||");
+  /** Add the target cell "stepsize" to IterationInfo. */
+  this->AddTargetCellToIterationInfo("2:Metric");
+  this->AddTargetCellToIterationInfo("3a:Time");
+  this->AddTargetCellToIterationInfo("3b:StepSize");
+  this->AddTargetCellToIterationInfo("4a:||Gradient||");
+  this->AddTargetCellToIterationInfo("4b:||SearchDirection||");
 
   /** Format the metric and stepsize as floats. */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3a:Time"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3b:StepSize"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4b:||SearchDirection||"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3a:Time") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3b:StepSize") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4:||Gradient||") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4b:||SearchDirection||") << std::showpoint << std::fixed;
 
   this->m_SettingsVector.clear();
 
@@ -287,20 +287,20 @@ void
 AdaGrad<TElastix>::AfterEachIteration(void)
 {
   /** Print some information. */
-  xl::xout["iteration"]["2:Metric"] << this->GetValue();
-  xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
-  xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate() * this->m_NoiseFactor;
+  this->GetIterationInfoAt("2:Metric") << this->GetValue();
+  this->GetIterationInfoAt("3a:Time") << this->GetCurrentTime();
+  this->GetIterationInfoAt("3b:StepSize") << this->GetLearningRate() * this->m_NoiseFactor;
 
   bool asFastAsPossible = false;
   if (asFastAsPossible)
   {
-    xl::xout["iteration"]["4a:||Gradient||"] << "---";
-    xl::xout["iteration"]["4b:||SearchDirection||"] << "---";
+    this->GetIterationInfoAt("4a:||Gradient||") << "---";
+    this->GetIterationInfoAt("4b:||SearchDirection||") << "---";
   }
   else
   {
-    xl::xout["iteration"]["4a:||Gradient||"] << this->GetGradient().magnitude();
-    xl::xout["iteration"]["4b:||SearchDirection||"] << this->GetSearchDirection().magnitude();
+    this->GetIterationInfoAt("4a:||Gradient||") << this->GetGradient().magnitude();
+    this->GetIterationInfoAt("4b:||SearchDirection||") << this->GetSearchDirection().magnitude();
   }
 
   /** Select new spatial samples for the computation of the metric. */

@@ -42,7 +42,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TScalarType = double>
-class TransformPenaltyTerm : public AdvancedImageToImageMetric<TFixedImage, TFixedImage>
+class ITK_TEMPLATE_EXPORT TransformPenaltyTerm : public AdvancedImageToImageMetric<TFixedImage, TFixedImage>
 {
 public:
   /** Standard ITK stuff. */

@@ -64,7 +64,7 @@ public:
  * \ingroup Functions ImageInterpolators
  */
 template <class TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
-class BSplineInterpolationWeightFunctionBase
+class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunctionBase
   : public FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>, Array<double>>
 {
 public:

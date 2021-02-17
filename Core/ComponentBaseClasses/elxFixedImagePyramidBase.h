@@ -55,7 +55,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class FixedImagePyramidBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT FixedImagePyramidBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK-stuff. */

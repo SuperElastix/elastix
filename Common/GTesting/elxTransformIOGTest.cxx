@@ -72,7 +72,7 @@ using ExpectedParameters = std::array<double, N>;
 template <unsigned NDimension>
 struct WithDimension
 {
-  template <template <typename> typename TElastixTransform>
+  template <template <typename> class TElastixTransform>
   struct WithElastixTransform
   {
     using ElastixTransformType = TElastixTransform<ElastixType<NDimension>>;
@@ -212,7 +212,7 @@ struct WithDimension
       elxTransform->SetReadWriteTransformParameters(true);
 
       ParameterMapType actualParameterMap;
-      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, &actualParameterMap);
+      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, actualParameterMap);
 
       const std::string expectedImageDimension{ char{ '0' + NDimension } };
       const std::string expectedInternalImagePixelType = "float";
@@ -272,7 +272,7 @@ struct WithDimension
 
       ParameterMapType                       parameterMap;
       const itk::OptimizerParameters<double> optimizerParameters(itk::Array<double>(vnl_vector<double>(2U, testValue)));
-      elxTransform->CreateTransformParametersMap(optimizerParameters, &parameterMap);
+      elxTransform->CreateTransformParametersMap(optimizerParameters, parameterMap);
 
       for (const auto key : { "TransformParameters", "Origin", "Spacing" })
       {
@@ -301,7 +301,7 @@ struct WithDimension
 
       const auto expectHowToCombineTransforms = [&elxTransform](const char * const expectedParameterValue) {
         ParameterMapType parameterMap;
-        elxTransform->CreateTransformParametersMap({}, &parameterMap);
+        elxTransform->CreateTransformParametersMap({}, parameterMap);
 
         const auto found = parameterMap.find("HowToCombineTransforms");
         ASSERT_NE(found, end(parameterMap));
@@ -325,7 +325,7 @@ struct WithDimension
   }
 
 
-  template <template <typename> typename TElastixTransform, std::size_t NExpectedParameters>
+  template <template <typename> class TElastixTransform, std::size_t NExpectedParameters>
   static void
   Expect_default_elastix_Parameters_equal(const ExpectedParameters<NExpectedParameters> & expectedParameters)
   {
@@ -467,7 +467,7 @@ struct WithDimension
 };
 
 
-template <template <typename> typename TElastixTransform>
+template <template <typename> class TElastixTransform>
 void
 Expect_default_elastix_FixedParameters_are_all_zero()
 {
@@ -477,7 +477,7 @@ Expect_default_elastix_FixedParameters_are_all_zero()
 }
 
 
-template <template <typename> typename TElastixTransform>
+template <template <typename> class TElastixTransform>
 void
 Expect_default_elastix_FixedParameters_empty()
 {
@@ -487,7 +487,7 @@ Expect_default_elastix_FixedParameters_empty()
 }
 
 
-template <template <typename> typename TElastixTransform>
+template <template <typename> class TElastixTransform>
 void
 Expect_default_elastix_Parameters_remain_the_same_when_set(const bool fixed)
 {

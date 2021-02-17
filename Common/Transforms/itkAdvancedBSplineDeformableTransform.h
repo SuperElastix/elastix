@@ -130,7 +130,8 @@ template <class TScalarType = double,   // Data type for scalars
           unsigned int NDimensions = 3, // Number of dimensions
           unsigned int VSplineOrder = 3>
 // Spline order
-class AdvancedBSplineDeformableTransform : public AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
+class ITK_TEMPLATE_EXPORT AdvancedBSplineDeformableTransform
+  : public AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 {
 public:
   /** Standard class typedefs. */

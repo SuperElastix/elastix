@@ -756,7 +756,7 @@ ElastixFilter<TFixedImage, TMovingImage>::MakeUniqueName(const DataObjectIdentif
 template <typename TFixedImage, typename TMovingImage>
 bool
 ElastixFilter<TFixedImage, TMovingImage>::IsInputOfType(const DataObjectIdentifierType & inputType,
-                                                        DataObjectIdentifierType         inputName)
+                                                        const DataObjectIdentifierType & inputName)
 {
   return std::strncmp(inputType.c_str(), inputName.c_str(), std::min(inputType.size(), inputName.size())) == 0;
 } // end IsInputOfType()

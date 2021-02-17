@@ -35,15 +35,15 @@ template <class TElastix>
 void
 RegularStepGradientDescent<TElastix>::BeforeRegistration(void)
 {
-  /** Add the target cell "stepsize" to xout["iteration"].*/
-  xl::xout["iteration"].AddTargetCell("2:Metric");
-  xl::xout["iteration"].AddTargetCell("3:StepSize");
-  xl::xout["iteration"].AddTargetCell("4:||Gradient||");
+  /** Add the target cell "stepsize" to IterationInfo.*/
+  this->AddTargetCellToIterationInfo("2:Metric");
+  this->AddTargetCellToIterationInfo("3:StepSize");
+  this->AddTargetCellToIterationInfo("4:||Gradient||");
 
   /** Format the metric and stepsize as floats */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3:StepSize"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3:StepSize") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4:||Gradient||") << std::showpoint << std::fixed;
 
 } // end BeforeRegistration
 
@@ -101,9 +101,9 @@ void
 RegularStepGradientDescent<TElastix>::AfterEachIteration(void)
 {
   /** Print some information */
-  xl::xout["iteration"]["2:Metric"] << this->GetValue();
-  xl::xout["iteration"]["3:StepSize"] << this->GetCurrentStepLength();
-  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
+  this->GetIterationInfoAt("2:Metric") << this->GetValue();
+  this->GetIterationInfoAt("3:StepSize") << this->GetCurrentStepLength();
+  this->GetIterationInfoAt("4:||Gradient||") << this->GetGradient().magnitude();
 } // end AfterEachIteration
 
 

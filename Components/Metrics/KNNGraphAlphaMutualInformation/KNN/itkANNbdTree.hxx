@@ -41,7 +41,7 @@ ANNbdTree<TListSample>::ANNbdTree()
 
 template <class TListSample>
 void
-ANNbdTree<TListSample>::SetShrinkingRule(std::string rule)
+ANNbdTree<TListSample>::SetShrinkingRule(const std::string & rule)
 {
   if (rule == "ANN_BD_NONE")
   {

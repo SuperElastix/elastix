@@ -47,7 +47,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class TranslationTransformElastix
+class ITK_TEMPLATE_EXPORT TranslationTransformElastix
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>
@@ -144,6 +144,18 @@ protected:
   TranslationTransformPointer m_TranslationTransform;
 
 private:
+  const Self &
+  GetAsCombinationTransform(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsCombinationTransform(void) override
+  {
+    return *this;
+  }
+
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap(void) const override;

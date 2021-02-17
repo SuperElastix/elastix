@@ -36,7 +36,7 @@ namespace itk
  */
 
 template <class TArray, class TImage>
-class UpsampleBSplineParametersFilter : public Object
+class ITK_TEMPLATE_EXPORT UpsampleBSplineParametersFilter : public Object
 {
 public:
   /** Standard class typedefs. */

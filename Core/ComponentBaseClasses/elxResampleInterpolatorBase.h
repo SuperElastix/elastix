@@ -40,7 +40,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class ResampleInterpolatorBase : public BaseComponentSE<TElastix>
+class ITK_TEMPLATE_EXPORT ResampleInterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK stuff. */
@@ -99,11 +99,11 @@ public:
 
   /** Function to write transform-parameters to a file. */
   void
-  WriteToFile(void) const;
+  WriteToFile(xl::xoutsimple & transformationParameterInfo) const;
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(ParameterMapType * paramsMap) const;
+  CreateTransformParametersMap(ParameterMapType & parameterMap) const;
 
 protected:
   /** The constructor. */

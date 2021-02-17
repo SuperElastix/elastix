@@ -47,7 +47,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class SumSquaredTissueVolumeDifferenceMetric
+class ITK_TEMPLATE_EXPORT SumSquaredTissueVolumeDifferenceMetric
   : public itk::SumSquaredTissueVolumeDifferenceImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                                    typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

@@ -46,7 +46,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class AdvancedKappaStatisticMetric
+class ITK_TEMPLATE_EXPORT AdvancedKappaStatisticMetric
   : public itk::AdvancedKappaStatisticImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                          typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

@@ -49,7 +49,7 @@ using ElastixType = elx::ElastixTemplate<itk::Image<float, NDimension>, itk::Ima
 template <unsigned NDimension>
 struct WithDimension
 {
-  template <template <typename> typename TResamplerTemplate>
+  template <template <typename> class TResamplerTemplate>
   struct WithResampler
   {
     using ResamplerType = TResamplerTemplate<ElastixType<NDimension>>;
@@ -71,7 +71,7 @@ struct WithDimension
       resampler.SetElastix(elastixObject);
 
       ParameterMapType actualParameterMap;
-      resampler.CreateTransformParametersMap(&actualParameterMap);
+      resampler.CreateTransformParametersMap(actualParameterMap);
 
       const ParameterMapType expectedBaseParameterMap = { { "Resampler", { resampler.elxGetClassName() } },
                                                           { "DefaultPixelValue", { "0" } },

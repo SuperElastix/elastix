@@ -75,7 +75,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class AffineDTITransformElastix
+class ITK_TEMPLATE_EXPORT AffineDTITransformElastix
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>
@@ -215,6 +215,18 @@ protected:
   ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
 
 private:
+  const Self &
+  GetAsCombinationTransform(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsCombinationTransform(void) override
+  {
+    return *this;
+  }
+
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap(void) const override;

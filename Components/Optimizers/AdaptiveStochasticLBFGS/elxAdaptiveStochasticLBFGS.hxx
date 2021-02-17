@@ -97,19 +97,19 @@ template <class TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::BeforeRegistration(void)
 {
-  /** Add the target cell "stepsize" to xout["iteration"]. */
-  xl::xout["iteration"].AddTargetCell("2:Metric");
-  xl::xout["iteration"].AddTargetCell("3a:Time");
-  xl::xout["iteration"].AddTargetCell("3b:StepSize");
-  xl::xout["iteration"].AddTargetCell("4a:||Gradient||");
-  xl::xout["iteration"].AddTargetCell("4b:||SearchDir||");
+  /** Add the target cell "stepsize" to IterationInfo. */
+  this->AddTargetCellToIterationInfo("2:Metric");
+  this->AddTargetCellToIterationInfo("3a:Time");
+  this->AddTargetCellToIterationInfo("3b:StepSize");
+  this->AddTargetCellToIterationInfo("4a:||Gradient||");
+  this->AddTargetCellToIterationInfo("4b:||SearchDir||");
 
   /** Format the metric and stepsize as floats. */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3a:Time"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3b:StepSize"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3a:Time") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3b:StepSize") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4a:||Gradient||") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4b:||SearchDir||") << std::showpoint << std::fixed;
 
   this->m_SettingsVector.clear();
 
@@ -350,11 +350,11 @@ void
 AdaptiveStochasticLBFGS<TElastix>::AfterEachIteration(void)
 {
   /** Print some information. */
-  xl::xout["iteration"]["2:Metric"] << this->GetValue();
-  xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
-  xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
-  xl::xout["iteration"]["4a:||Gradient||"] << this->GetGradient().magnitude();
-  xl::xout["iteration"]["4b:||SearchDir||"] << this->m_SearchDir.magnitude();
+  this->GetIterationInfoAt("2:Metric") << this->GetValue();
+  this->GetIterationInfoAt("3a:Time") << this->GetCurrentTime();
+  this->GetIterationInfoAt("3b:StepSize") << this->GetLearningRate();
+  this->GetIterationInfoAt("4a:||Gradient||") << this->GetGradient().magnitude();
+  this->GetIterationInfoAt("4b:||SearchDir||") << this->m_SearchDir.magnitude();
 
   /** Select new spatial samples for the computation of the metric. */
   if (this->GetNewSamplesEveryIteration())

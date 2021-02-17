@@ -51,7 +51,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class DeformationFieldTransform
+class ITK_TEMPLATE_EXPORT DeformationFieldTransform
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>
@@ -129,10 +129,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(const ParametersType & param) const override;
-
 protected:
   /** The constructor. */
   DeformationFieldTransform();
@@ -140,9 +136,25 @@ protected:
   ~DeformationFieldTransform() override = default;
 
 private:
+  const Self &
+  GetAsCombinationTransform(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsCombinationTransform(void) override
+  {
+    return *this;
+  }
+
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap(void) const override;
+
+  /** Writes its deformation field to a file. */
+  void
+  WriteDerivedTransformDataToFile(void) const override;
 
   /** The deleted copy constructor. */
   DeformationFieldTransform(const Self &) = delete;

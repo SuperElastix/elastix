@@ -322,14 +322,11 @@ public:
   int
   BeforeAllTransformixBase(void);
 
-  /** Functions called before and after registration.
-   * They install/uninstall the xout["iteration"] field.
+  /** Function called before registration.
+   * It installs the IterationInfo field.
    */
   void
   BeforeRegistrationBase(void) override;
-
-  void
-  AfterRegistrationBase(void) override;
 
   ResultImageType *
   GetResultImage(const unsigned int idx = 0) const;
@@ -384,6 +381,24 @@ public:
   /** Return configuration from vector of configurations. Library only. */
   ConfigurationPointer
   GetConfiguration(const size_t index) const;
+
+  xl::xoutrow &
+  GetIterationInfo(void)
+  {
+    return m_IterationInfo;
+  }
+
+  xl::xoutbase &
+  GetIterationInfoAt(const char * const name)
+  {
+    return m_IterationInfo[name];
+  }
+
+  void
+  AddTargetCellToIterationInfo(const char * const name)
+  {
+    m_IterationInfo.AddTargetCell(name);
+  }
 
 protected:
   ElastixBase();

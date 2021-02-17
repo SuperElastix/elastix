@@ -322,10 +322,6 @@ public:
   void
   ReadFromFile(void) override;
 
-  /** Function to write transform-parameters to a file. */
-  void
-  WriteToFile(const ParametersType & param) const override;
-
   /** Diffuse the deformation field. */
   void
   DiffuseDeformationField(void);
@@ -364,9 +360,25 @@ protected:
   SpacingType m_GridSpacingFactor;
 
 private:
+  const Self &
+  GetAsCombinationTransform(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsCombinationTransform(void) override
+  {
+    return *this;
+  }
+
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap(void) const override;
+
+  /** Writes its deformation field to a file. */
+  void
+  WriteDerivedTransformDataToFile(void) const override;
 
   /** The deleted copy constructor. */
   BSplineTransformWithDiffusion(const Self &) = delete;

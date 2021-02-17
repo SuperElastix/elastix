@@ -73,7 +73,7 @@ namespace itk
  */
 template <class TScalarType = double>
 // Data type for scalars (float or double)
-class AdvancedRigid2DTransform
+class ITK_TEMPLATE_EXPORT AdvancedRigid2DTransform
   : public AdvancedMatrixOffsetTransformBase<TScalarType, 2, 2> // Dimensions of input and output spaces
 {
 public:

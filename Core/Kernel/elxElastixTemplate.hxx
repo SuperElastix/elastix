@@ -211,12 +211,6 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run(void)
     err_str += "\n\nError occurred during actual registration.";
     excp.SetDescription(err_str);
 
-    /** Clean up before returning - very important for exception safety of the xout global static object */
-    if (xl::xout_valid())
-    {
-      xl::xout.RemoveTargetCell("iteration");
-    }
-
     /** Pass the exception to a higher level. */
     throw excp;
   }
@@ -489,11 +483,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration(void)
   CallInEachComponent(&BaseComponentType::BeforeRegistration);
 
   /** Add a column to iteration with the iteration number. */
-  xl::xout["iteration"].AddTargetCell("1:ItNr");
+  this->AddTargetCellToIterationInfo("1:ItNr");
 
   /** Add a column to iteration with timing information. */
-  xl::xout["iteration"].AddTargetCell("Time[ms]");
-  xl::xout["iteration"]["Time[ms]"] << std::showpoint << std::fixed << std::setprecision(1);
+  this->AddTargetCellToIterationInfo("Time[ms]");
+  this->GetIterationInfoAt("Time[ms]") << std::showpoint << std::fixed << std::setprecision(1);
 
   /** Print time for initializing. */
   this->m_Timer0.Stop();
@@ -627,7 +621,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
   /** Write the headers of the columns that are printed each iteration. */
   if (this->m_IterationCounter == 0)
   {
-    xl::xout["iteration"]["WriteHeaders"];
+    this->GetIterationInfo().WriteHeaders();
   }
 
   /** Call all the AfterEachIteration() functions. */
@@ -636,14 +630,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
   CallInEachComponent(&BaseComponentType::AfterEachIteration);
 
   /** Write the iteration number to the table. */
-  xl::xout["iteration"]["1:ItNr"] << m_IterationCounter;
+  this->GetIterationInfoAt("1:ItNr") << m_IterationCounter;
 
   /** Time in this iteration. */
   this->m_IterationTimer.Stop();
-  xl::xout["iteration"]["Time[ms]"] << this->m_IterationTimer.GetMean() * 1000.0;
+  this->GetIterationInfoAt("Time[ms]") << this->m_IterationTimer.GetMean() * 1000.0;
 
   /** Write the iteration info of this iteration. */
-  xl::xout["iteration"].WriteBufferedData();
+  this->GetIterationInfo().WriteBufferedData();
 
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
@@ -754,20 +748,18 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const std::string fileName, const bool toLog)
+ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const std::string & fileName, const bool toLog)
 {
   /** Store CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = fileName;
 
-  /** Create transformParameterFile and xout["transpar"]. */
+  /** Create transformParameterFile and transformationParameterInfo. */
   xl::xoutsimple transformationParameterInfo;
   std::ofstream  transformParameterFile;
 
   /** Set up the "TransformationParameters" writing field. */
   transformationParameterInfo.SetOutputs(xl::xout.GetCOutputs());
   transformationParameterInfo.SetOutputs(xl::xout.GetXOutputs());
-
-  xl::xout.AddTargetCell("transpar", &transformationParameterInfo);
 
   /** Set it in the Transform, for later use. */
   this->GetElxTransformBase()->SetTransformParametersFileName(fileName.c_str());
@@ -797,18 +789,16 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
    * Actually we could loop over all resample interpolators, resamplers,
    * and transforms etc. But for now, there seems to be no use yet for that.
    */
-  this->GetElxTransformBase()->WriteToFile(this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition());
-  this->GetElxResampleInterpolatorBase()->WriteToFile();
-  this->GetElxResamplerBase()->WriteToFile();
+  this->GetElxTransformBase()->WriteToFile(transformationParameterInfo,
+                                           this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition());
+  this->GetElxResampleInterpolatorBase()->WriteToFile(transformationParameterInfo);
+  this->GetElxResamplerBase()->WriteToFile(transformationParameterInfo);
 
   /** Separate clearly in log-file. */
   if (toLog)
   {
     xl::xout["logonly"] << "\n=============== end of TransformParameterFile ===============" << std::endl;
   }
-
-  /** Remove the "transpar" writing field. */
-  xl::xout.RemoveTargetCell("transpar");
 
 } // end CreateTransformParameterFile()
 
@@ -822,9 +812,9 @@ void
 ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParametersMap(void)
 {
   this->GetElxTransformBase()->CreateTransformParametersMap(
-    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(), &this->m_TransformParametersMap);
-  this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap(&this->m_TransformParametersMap);
-  this->GetElxResamplerBase()->CreateTransformParametersMap(&this->m_TransformParametersMap);
+    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(), this->m_TransformParametersMap);
+  this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap(this->m_TransformParametersMap);
+  this->GetElxResamplerBase()->CreateTransformParametersMap(this->m_TransformParametersMap);
 
 } // end CreateTransformParametersMap()
 
@@ -1020,7 +1010,7 @@ void
 ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
 {
   /** Remove the current iteration info output file, if any. */
-  xl::xout["iteration"].RemoveOutput("IterationInfoFile");
+  this->GetIterationInfo().RemoveOutput("IterationInfoFile");
 
   if (this->m_IterationInfoFile.is_open())
   {
@@ -1042,8 +1032,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
   }
   else
   {
-    /** Add this file to the list of outputs of xout["iteration"]. */
-    xl::xout["iteration"].AddOutput("IterationInfoFile", &(this->m_IterationInfoFile));
+    /** Add this file to the list of outputs of IterationInfo. */
+    this->GetIterationInfo().AddOutput("IterationInfoFile", &(this->m_IterationInfoFile));
   }
 
 } // end OpenIterationInfoFile()

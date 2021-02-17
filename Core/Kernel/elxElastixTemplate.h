@@ -103,7 +103,7 @@ namespace elastix
  */
 
 template <class TFixedImage, class TMovingImage>
-class ElastixTemplate final : public ElastixBase
+class ITK_TEMPLATE_EXPORT ElastixTemplate final : public ElastixBase
 {
 public:
   /** Standard itk. */
@@ -266,7 +266,7 @@ private:
 
   /** CreateTransformParameterFile. */
   void
-  CreateTransformParameterFile(const std::string FileName, const bool ToLog);
+  CreateTransformParameterFile(const std::string & FileName, const bool ToLog);
 
   /** CreateTransformParametersMap. */
   void

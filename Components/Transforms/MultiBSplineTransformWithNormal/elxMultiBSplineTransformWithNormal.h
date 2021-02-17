@@ -87,7 +87,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class MultiBSplineTransformWithNormal
+class ITK_TEMPLATE_EXPORT MultiBSplineTransformWithNormal
   : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>
@@ -255,6 +255,18 @@ protected:
   PreComputeGridInformation(void);
 
 private:
+  const Self &
+  GetAsCombinationTransform(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsCombinationTransform(void) override
+  {
+    return *this;
+  }
+
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap(void) const override;

@@ -112,7 +112,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class CMAEvolutionStrategy
+class ITK_TEMPLATE_EXPORT CMAEvolutionStrategy
   : public itk::CMAEvolutionStrategyOptimizer
   , public OptimizerBase<TElastix>
 {

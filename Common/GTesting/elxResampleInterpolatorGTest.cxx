@@ -51,7 +51,7 @@ using ElastixType = elx::ElastixTemplate<itk::Image<float, NDimension>, itk::Ima
 template <unsigned NDimension>
 struct WithDimension
 {
-  template <template <typename> typename TInterpolatorTemplate>
+  template <template <typename> class TInterpolatorTemplate>
   struct WithInterpolator
   {
     using InterpolatorType = TInterpolatorTemplate<ElastixType<NDimension>>;
@@ -68,7 +68,7 @@ struct WithDimension
       const elx::ResampleInterpolatorBase<ElastixType<NDimension>> & interpolator = *newInterpolator;
 
       ParameterMapType actualParameterMap;
-      interpolator.CreateTransformParametersMap(&actualParameterMap);
+      interpolator.CreateTransformParametersMap(actualParameterMap);
 
       const ParameterMapType expectedBaseParameterMap = { { "ResampleInterpolator",
                                                             { interpolator.elxGetClassName() } } };

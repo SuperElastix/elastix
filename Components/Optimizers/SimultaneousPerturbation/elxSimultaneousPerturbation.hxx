@@ -57,15 +57,15 @@ SimultaneousPerturbation<TElastix>::BeforeRegistration(void)
     this->m_ShowMetricValues = true;
   }
 
-  /** Add the target cell "stepsize" to xout["iteration"].*/
-  xl::xout["iteration"].AddTargetCell("2:Metric");
-  xl::xout["iteration"].AddTargetCell("3:Gain a_k");
-  xl::xout["iteration"].AddTargetCell("4:||Gradient||");
+  /** Add the target cell "stepsize" to IterationInfo.*/
+  this->AddTargetCellToIterationInfo("2:Metric");
+  this->AddTargetCellToIterationInfo("3:Gain a_k");
+  this->AddTargetCellToIterationInfo("4:||Gradient||");
 
   /** Format the metric and stepsize as floats */
-  xl::xout["iteration"]["2:Metric"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3:Gain a_k"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("2:Metric") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("3:Gain a_k") << std::showpoint << std::fixed;
+  this->GetIterationInfoAt("4:||Gradient||") << std::showpoint << std::fixed;
 
 } // end BeforeRegistration
 
@@ -130,15 +130,15 @@ SimultaneousPerturbation<TElastix>::AfterEachIteration(void)
 
   if (this->m_ShowMetricValues)
   {
-    xl::xout["iteration"]["2:Metric"] << this->GetValue();
+    this->GetIterationInfoAt("2:Metric") << this->GetValue();
   }
   else
   {
-    xl::xout["iteration"]["2:Metric"] << "---";
+    this->GetIterationInfoAt("2:Metric") << "---";
   }
 
-  xl::xout["iteration"]["3:Gain a_k"] << this->GetLearningRate();
-  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
+  this->GetIterationInfoAt("3:Gain a_k") << this->GetLearningRate();
+  this->GetIterationInfoAt("4:||Gradient||") << this->GetGradientMagnitude();
 
   /** Select new spatial samples for the computation of the metric
    * \todo You may also choose to select new samples upon every evaluation

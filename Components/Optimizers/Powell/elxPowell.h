@@ -38,7 +38,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class Powell
+class ITK_TEMPLATE_EXPORT Powell
   : public itk::PowellOptimizer
   , public OptimizerBase<TElastix>
 {
