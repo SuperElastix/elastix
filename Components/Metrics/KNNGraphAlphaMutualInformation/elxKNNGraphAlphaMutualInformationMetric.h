@@ -175,6 +175,18 @@ protected:
   ~KNNGraphAlphaMutualInformationMetric() override = default;
 
 private:
+  const Self &
+  GetAsSingleValuedCostFunction(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsSingleValuedCostFunction(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   KNNGraphAlphaMutualInformationMetric(const Self &) = delete;
   /** The deleted assignment operator. */

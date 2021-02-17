@@ -132,19 +132,19 @@ public:
   /** Return type of GetValue */
   typedef typename ITKBaseType::MeasureType MeasureType;
 
-  /** Cast to ITKBaseType. */
+  /** Retrieves this object as ITKBaseType. */
   virtual ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetAsSingleValuedCostFunction());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
   virtual const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetAsSingleValuedCostFunction());
   }
 
 
@@ -236,6 +236,12 @@ protected:
   unsigned int                     m_ExactMetricEachXNumberOfIterations;
 
 private:
+  virtual const itk::SingleValuedCostFunction &
+  GetAsSingleValuedCostFunction(void) const = 0;
+
+  virtual itk::SingleValuedCostFunction &
+  GetAsSingleValuedCostFunction(void) = 0;
+
   /** The deleted copy constructor. */
   MetricBase(const Self &) = delete;
   /** The deleted assignment operator. */

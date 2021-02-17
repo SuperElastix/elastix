@@ -135,6 +135,18 @@ protected:
   ~DisplacementMagnitudePenalty() override = default;
 
 private:
+  const Self &
+  GetAsSingleValuedCostFunction(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsSingleValuedCostFunction(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   DisplacementMagnitudePenalty(const Self &) = delete;
   /** The deleted assignment operator. */

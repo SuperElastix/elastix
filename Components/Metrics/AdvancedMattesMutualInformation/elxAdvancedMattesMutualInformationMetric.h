@@ -225,6 +225,18 @@ protected:
   Compute_c(unsigned long k) const;
 
 private:
+  const Self &
+  GetAsSingleValuedCostFunction(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsSingleValuedCostFunction(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   AdvancedMattesMutualInformationMetric(const Self &) = delete;
   /** The deleted assignment operator. */

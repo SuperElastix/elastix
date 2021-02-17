@@ -174,6 +174,18 @@ protected:
   ~SumOfPairwiseCorrelationCoefficientsMetric() override = default;
 
 private:
+  const Self &
+  GetAsSingleValuedCostFunction(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsSingleValuedCostFunction(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   SumOfPairwiseCorrelationCoefficientsMetric(const Self &) = delete;
 
