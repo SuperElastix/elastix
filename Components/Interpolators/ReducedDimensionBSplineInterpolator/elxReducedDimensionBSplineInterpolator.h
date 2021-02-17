@@ -113,6 +113,18 @@ protected:
   ~ReducedDimensionBSplineInterpolator() override = default;
 
 private:
+  const Self &
+  GetAsInterpolateImageFunction(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsInterpolateImageFunction(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   ReducedDimensionBSplineInterpolator(const Self &) = delete;
   /** The deleted assignment operator. */

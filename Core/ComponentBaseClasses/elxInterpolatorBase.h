@@ -66,19 +66,19 @@ public:
   /** ITKBaseType. */
   typedef itk::InterpolateImageFunction<InputImageType, CoordRepType> ITKBaseType;
 
-  /** Cast to ITKBaseType. */
-  virtual ITKBaseType *
+  /** Retrieves this object as ITKBaseType. */
+  ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetAsInterpolateImageFunction());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType *
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
+  const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetAsInterpolateImageFunction());
   }
 
 
@@ -89,6 +89,12 @@ protected:
   ~InterpolatorBase() override = default;
 
 private:
+  virtual const itk::InterpolateImageFunction<InputImageType, CoordRepType> &
+  GetAsInterpolateImageFunction(void) const = 0;
+
+  virtual itk::InterpolateImageFunction<InputImageType, CoordRepType> &
+  GetAsInterpolateImageFunction(void) = 0;
+
   /** The deleted copy constructor. */
   InterpolatorBase(const Self &) = delete;
   /** The deleted assignment operator. */

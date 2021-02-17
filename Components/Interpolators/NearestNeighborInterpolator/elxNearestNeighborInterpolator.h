@@ -92,6 +92,18 @@ protected:
   ~NearestNeighborInterpolator() override = default;
 
 private:
+  const Self &
+  GetAsInterpolateImageFunction(void) const override
+  {
+    return *this;
+  }
+
+  Self &
+  GetAsInterpolateImageFunction(void) override
+  {
+    return *this;
+  }
+
   /** The deleted copy constructor. */
   NearestNeighborInterpolator(const Self &) = delete;
   /** The deleted assignment operator. */
