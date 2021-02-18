@@ -300,12 +300,6 @@ private:
   void
   ReadInitialTransformFromConfiguration(const Configuration::Pointer);
 
-  virtual const CombinationTransformType &
-  GetAsCombinationTransform(void) const = 0;
-
-  virtual CombinationTransformType &
-  GetAsCombinationTransform(void) = 0;
-
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
    */
