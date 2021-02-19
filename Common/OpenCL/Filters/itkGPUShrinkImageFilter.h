@@ -27,7 +27,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUShrinkImageFilter */
-itkGPUKernelClassMacro(GPUShrinkImageFilterKernel);
+class itkGPUKernelClassMacro(GPUShrinkImageFilterKernel);
 
 /** \class GPUShrinkImageFilter
  * \brief GPU version of ShrinkImageFilter.

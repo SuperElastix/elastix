@@ -23,7 +23,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for OpenCLVectorTest.cl kernel */
-itkGPUKernelClassMacro(OpenCLVectorTestKernel);
+class itkGPUKernelClassMacro(OpenCLVectorTestKernel);
 } // end namespace itk
 
 #endif /* itkOpenCLVectorTest_h */

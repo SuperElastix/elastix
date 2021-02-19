@@ -23,7 +23,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for itkGPUTranslationTransformBase */
-itkGPUKernelClassMacro(GPUTranslationTransformBaseKernel);
+class itkGPUKernelClassMacro(GPUTranslationTransformBaseKernel);
 
 /** \class GPUTranslationTransformBase
  * \brief Base class for all GPU translation transforms.

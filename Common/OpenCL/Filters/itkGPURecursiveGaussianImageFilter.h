@@ -24,7 +24,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPURecursiveGaussianImageFilter */
-itkGPUKernelClassMacro(GPURecursiveGaussianImageFilterKernel);
+class itkGPUKernelClassMacro(GPURecursiveGaussianImageFilterKernel);
 
 /** \class GPURecursiveGaussianImageFilter
  * \brief GPU version of RecursiveGaussianImageFilter.

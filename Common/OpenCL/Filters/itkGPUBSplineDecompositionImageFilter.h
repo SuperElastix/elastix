@@ -24,7 +24,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUBSplineDecompositionImageFilter */
-itkGPUKernelClassMacro(GPUBSplineDecompositionImageFilterKernel);
+class itkGPUKernelClassMacro(GPUBSplineDecompositionImageFilterKernel);
 
 /** \class GPUBSplineDecompositionImageFilter
  * \brief GPU version of BSplineDecompositionImageFilter.

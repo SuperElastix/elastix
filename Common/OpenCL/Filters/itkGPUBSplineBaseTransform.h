@@ -25,7 +25,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUBSplineTransform */
-itkGPUKernelClassMacro(GPUBSplineTransformKernel);
+class itkGPUKernelClassMacro(GPUBSplineTransformKernel);
 
 /** \class GPUBSplineBaseTransform
  * \brief GPU base class for the BSplineTransform.

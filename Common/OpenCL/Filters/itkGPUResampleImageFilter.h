@@ -30,7 +30,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUResampleImageFilter */
-itkGPUKernelClassMacro(GPUResampleImageFilterKernel);
+class itkGPUKernelClassMacro(GPUResampleImageFilterKernel);
 
 /** \class GPUResampleImageFilter
  * \brief GPU version of ResampleImageFilter.

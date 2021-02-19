@@ -27,7 +27,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUNearestNeighborInterpolateImageFunction */
-itkGPUKernelClassMacro(GPUNearestNeighborInterpolateImageFunctionKernel);
+class itkGPUKernelClassMacro(GPUNearestNeighborInterpolateImageFunctionKernel);
 
 /** \class GPUNearestNeighborInterpolateImageFunction
  * \brief GPU version of NearestNeighborInterpolateImageFunction.

@@ -26,7 +26,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for GPUIdentityTransform */
-itkGPUKernelClassMacro(GPUIdentityTransformKernel);
+class itkGPUKernelClassMacro(GPUIdentityTransformKernel);
 
 /** \class GPUIdentityTransform
  * \brief GPU version of IdentityTransform.

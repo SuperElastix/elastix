@@ -35,7 +35,7 @@ namespace itk
  */
 
 /** Create a helper GPU Kernel class for itkGPUImageFunction */
-itkGPUKernelClassMacro(GPUImageFunctionKernel);
+class itkGPUKernelClassMacro(GPUImageFunctionKernel);
 } // end namespace itk
 
 #endif /* itkGPUImageFunction_h */

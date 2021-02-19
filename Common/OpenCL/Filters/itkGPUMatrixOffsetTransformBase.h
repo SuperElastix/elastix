@@ -24,7 +24,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for itkGPUMatrixOffsetTransformBase */
-itkGPUKernelClassMacro(GPUMatrixOffsetTransformBaseKernel);
+class itkGPUKernelClassMacro(GPUMatrixOffsetTransformBaseKernel);
 
 /** \class GPUMatrixOffsetTransformBase
  * \brief Base version of the GPU MatrixOffsetTransform.

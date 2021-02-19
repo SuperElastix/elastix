@@ -23,7 +23,7 @@
 namespace itk
 {
 /** Create a helper GPU Kernel class for OpenCLEventTest.cl kernel */
-itkGPUKernelClassMacro(OpenCLEventTestKernel);
+class itkGPUKernelClassMacro(OpenCLEventTestKernel);
 } // end namespace itk
 
 #endif /* itkOpenCLEventTest_h */
