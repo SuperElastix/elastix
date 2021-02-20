@@ -43,7 +43,7 @@ GPUCastImageFilter<TInputImage, TOutputImage>::GPUCastImageFilter()
   GetTypenameInString(typeid(typename TOutputImage::PixelType), defines);
 
   // OpenCL kernel source
-  const char * GPUSource = GPUCastImageFilterKernel::GetOpenCLSource();
+  const char * GPUSource = GetOpenCLSourceOfGPUCastImageFilterKernel();
   // Build and create kernel
   const OpenCLProgram program = this->m_GPUKernelManager->BuildProgramFromSourceCode(GPUSource, defines.str());
   if (!program.IsNull())

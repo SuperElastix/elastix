@@ -22,8 +22,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for itkGPUTranslationTransformBase */
-itkGPUKernelClassMacro(GPUTranslationTransformBaseKernel);
+/** Returns the OpenCL source code for itkGPUTranslationTransformBase */
+const char *
+GetOpenCLSourceOfGPUTranslationTransformBaseKernel();
 
 /** \class GPUTranslationTransformBase
  * \brief Base class for all GPU translation transforms.

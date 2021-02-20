@@ -28,11 +28,11 @@ template <typename TInputImage, typename TCoordRep>
 GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GPULinearInterpolateImageFunction()
 {
   // Add GPUImageFunction implementation
-  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
+  const std::string sourcePath0(GetOpenCLSourceOfGPUImageFunctionKernel());
   this->m_Sources.push_back(sourcePath0);
 
   // Add GPULinearInterpolateImageFunction implementation
-  const std::string sourcePath1(GPULinearInterpolateImageFunctionKernel::GetOpenCLSource());
+  const std::string sourcePath1(GetOpenCLSourceOfGPULinearInterpolateImageFunctionKernel());
   this->m_Sources.push_back(sourcePath1);
 }
 

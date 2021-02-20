@@ -29,7 +29,7 @@ main(int argc, char * argv[])
     const std::list<itk::OpenCLDevice> devices = context->GetDevices();
 
     itk::OpenCLProgram program =
-      context->BuildProgramFromSourceCode(devices, itk::OpenCLKernelToImageBridgeTestKernel::GetOpenCLSource());
+      context->BuildProgramFromSourceCode(devices, itk::GetOpenCLSourceOfOpenCLKernelToImageBridgeTestKernel());
 
     if (program.IsNull())
     {

@@ -29,8 +29,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPUResampleImageFilter */
-itkGPUKernelClassMacro(GPUResampleImageFilterKernel);
+/** Returns the OpenCL source code for GPUResampleImageFilter */
+const char *
+GetOpenCLSourceOfGPUResampleImageFilterKernel();
 
 /** \class GPUResampleImageFilter
  * \brief GPU version of ResampleImageFilter.

@@ -108,15 +108,15 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
   this->m_Sources[this->m_SourceIndex++] = defines.str();
 
   // Get GPUMath source
-  const std::string oclMathSource(GPUMathKernel::GetOpenCLSource());
+  const std::string oclMathSource(GetOpenCLSourceOfGPUMathKernel());
   this->m_Sources[this->m_SourceIndex++] = oclMathSource;
 
   // Get GPUImageBase source
-  const std::string oclImageBaseSource(GPUImageBaseKernel::GetOpenCLSource());
+  const std::string oclImageBaseSource(GetOpenCLSourceOfGPUImageBaseKernel());
   this->m_Sources[this->m_SourceIndex++] = oclImageBaseSource;
 
   // Get GPUResampleImageFilter source
-  const std::string oclResampleImageFilterSource(GPUResampleImageFilterKernel::GetOpenCLSource());
+  const std::string oclResampleImageFilterSource(GetOpenCLSourceOfGPUResampleImageFilterKernel());
   this->m_Sources[this->m_SourceIndex++] = oclResampleImageFilterSource;
 
   // Construct ResampleImageFilter Pre code

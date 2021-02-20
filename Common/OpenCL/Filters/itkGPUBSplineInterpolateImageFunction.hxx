@@ -32,11 +32,11 @@ GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GP
   this->m_GPUCoefficientsImageBase = GPUDataManager::New();
 
   // Add GPUImageFunction implementation
-  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
+  const std::string sourcePath0(GetOpenCLSourceOfGPUImageFunctionKernel());
   this->m_Sources.push_back(sourcePath0);
 
   // Add GPUBSplineInterpolateImageFunction implementation
-  const std::string sourcePath1(GPUBSplineInterpolateImageFunctionKernel::GetOpenCLSource());
+  const std::string sourcePath1(GetOpenCLSourceOfGPUBSplineInterpolateImageFunctionKernel());
   this->m_Sources.push_back(sourcePath1);
 }
 

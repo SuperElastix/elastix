@@ -34,8 +34,9 @@ namespace itk
  * \ingroup GPUCommon
  */
 
-/** Create a helper GPU Kernel class for itkGPUMath */
-itkGPUKernelClassMacro(GPUMathKernel);
+/** Returns the OpenCL source code for itkGPUMath */
+const char *
+GetOpenCLSourceOfGPUMathKernel();
 } // end namespace itk
 
 #endif /* itkGPUMath_h */

@@ -46,7 +46,7 @@ main(int argc, char * argv[])
     const std::list<itk::OpenCLDevice> devices = context->GetDevices();
 
     itk::OpenCLProgram program =
-      context->BuildProgramFromSourceCode(devices, itk::OpenCLImageTestKernel::GetOpenCLSource());
+      context->BuildProgramFromSourceCode(devices, itk::GetOpenCLSourceOfOpenCLImageTestKernel());
 
     if (program.IsNull())
     {

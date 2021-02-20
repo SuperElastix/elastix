@@ -31,7 +31,7 @@ GPUBSplineBaseTransform<TScalarType, NDimensions>::GPUBSplineBaseTransform()
   this->m_SplineOrder = 3;
 
   // Add GPUBSplineTransform source
-  const std::string sourcePath(GPUBSplineTransformKernel::GetOpenCLSource());
+  const std::string sourcePath(GetOpenCLSourceOfGPUBSplineTransformKernel());
   this->m_Sources.push_back(sourcePath);
 }
 

@@ -27,8 +27,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPUCastImageFilter */
-itkGPUKernelClassMacro(GPUCastImageFilterKernel);
+/** Returns the OpenCL source code for GPUCastImageFilter */
+const char *
+GetOpenCLSourceOfGPUCastImageFilterKernel();
 
 /** \class GPUCastImageFilter
  * \brief GPU version of CastImageFilter.

@@ -33,7 +33,7 @@ main(int argc, char * argv[])
     devices = context->GetDevices();
 
     itk::OpenCLProgram programAllGPU =
-      context->BuildProgramFromSourceCode(devices, itk::OpenCLSimpleTest1Kernel::GetOpenCLSource());
+      context->BuildProgramFromSourceCode(devices, itk::GetOpenCLSourceOfOpenCLSimpleTest1Kernel());
 
     if (context.IsNull())
     {
@@ -52,7 +52,7 @@ main(int argc, char * argv[])
     context->Create(itk::OpenCLContext::SingleMaximumFlopsDevice);
     devices = context->GetDevices();
     itk::OpenCLProgram programMaxFlops =
-      context->BuildProgramFromSourceCode(devices, itk::OpenCLSimpleTest2Kernel::GetOpenCLSource());
+      context->BuildProgramFromSourceCode(devices, itk::GetOpenCLSourceOfOpenCLSimpleTest2Kernel());
 
     if (programMaxFlops.IsNull())
     {

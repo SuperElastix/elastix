@@ -59,7 +59,7 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPURecursiveGaussian
   GetTypenameInString(typeid(typename TOutputImage::PixelType), defines);
 
   // OpenCL kernel source
-  const char * GPUSource = GPURecursiveGaussianImageFilterKernel::GetOpenCLSource();
+  const char * GPUSource = GetOpenCLSourceOfGPURecursiveGaussianImageFilterKernel();
   // Build and create kernel
   OpenCLProgram program = this->m_GPUKernelManager->BuildProgramFromSourceCode(GPUSource, defines.str());
   if (!program.IsNull())

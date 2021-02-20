@@ -73,7 +73,7 @@ macro(write_opencl_kernel_to_file _opencl_file _src_var _group_name)
   set(${kernel_cxx_class_name}_KernelString
     "${${kernel_cxx_class_name}_KernelString}{\n\n")
   set(${kernel_cxx_class_name}_KernelString
-    "${${kernel_cxx_class_name}_KernelString}const char* ${kernel_cxx_class_name}::GetOpenCLSource()\n")
+    "${${kernel_cxx_class_name}_KernelString}const char* GetOpenCLSourceOf${kernel_cxx_class_name}()\n")
   set(${kernel_cxx_class_name}_KernelString
     "${${kernel_cxx_class_name}_KernelString}{\n")
 
@@ -142,7 +142,7 @@ macro(write_opencl_kernels_to_file _opencl_files _merge_to _src_var _group_name)
 
     # add const char* ${kernel_cxx_class_name}::GetOpenCLSource() here
     set(${OpenCLFileName}_KernelString
-      "${${OpenCLFileName}_KernelString}const char* ${OpenCLFileName}Kernel::GetOpenCLSource()\n")
+      "${${OpenCLFileName}_KernelString}const char* GetOpenCLSourceOf${kernel_cxx_class_name}()\n")
     set(${OpenCLFileName}_KernelString
       "${${OpenCLFileName}_KernelString}{\n")
 

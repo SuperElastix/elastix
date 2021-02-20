@@ -23,8 +23,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPURecursiveGaussianImageFilter */
-itkGPUKernelClassMacro(GPURecursiveGaussianImageFilterKernel);
+/** Returns the OpenCL source code for GPURecursiveGaussianImageFilter */
+const char *
+GetOpenCLSourceOfGPURecursiveGaussianImageFilterKernel();
 
 /** \class GPURecursiveGaussianImageFilter
  * \brief GPU version of RecursiveGaussianImageFilter.

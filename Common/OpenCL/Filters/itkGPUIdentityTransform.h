@@ -25,8 +25,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPUIdentityTransform */
-itkGPUKernelClassMacro(GPUIdentityTransformKernel);
+/** Returns the OpenCL source code for GPUIdentityTransform */
+const char *
+GetOpenCLSourceOfGPUIdentityTransformKernel();
 
 /** \class GPUIdentityTransform
  * \brief GPU version of IdentityTransform.

@@ -34,8 +34,9 @@ namespace itk
  * \ingroup GPUCommon
  */
 
-/** Create a helper GPU Kernel class for itkGPUImageFunction */
-itkGPUKernelClassMacro(GPUImageFunctionKernel);
+/** Returns the OpenCL source code for itkGPUImageFunction */
+const char *
+GetOpenCLSourceOfGPUImageFunctionKernel();
 } // end namespace itk
 
 #endif /* itkGPUImageFunction_h */

@@ -22,8 +22,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for OpenCLImageTest.cl kernel */
-itkGPUKernelClassMacro(OpenCLImageTestKernel);
+/** Returns the OpenCL source code for OpenCLImageTest.cl kernel */
+const char *
+GetOpenCLSourceOfOpenCLImageTestKernel();
 } // end namespace itk
 
 #endif /* itkOpenCLImageTest_h */

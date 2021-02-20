@@ -190,7 +190,7 @@ template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOut
 GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GPUMatrixOffsetTransformBase()
 {
   // Add GPUMatrixOffsetTransformBase source
-  const std::string sourcePath(GPUMatrixOffsetTransformBaseKernel::GetOpenCLSource());
+  const std::string sourcePath(GetOpenCLSourceOfGPUMatrixOffsetTransformBaseKernel());
   this->m_Sources.push_back(sourcePath);
 
   this->m_ParametersDataManager->Initialize();

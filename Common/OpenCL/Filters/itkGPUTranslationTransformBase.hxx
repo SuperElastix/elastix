@@ -105,7 +105,7 @@ template <typename TScalarType, unsigned int NDimensions>
 GPUTranslationTransformBase<TScalarType, NDimensions>::GPUTranslationTransformBase()
 {
   // Add GPUTranslationTransformBase source
-  const std::string sourcePath(GPUTranslationTransformBaseKernel::GetOpenCLSource());
+  const std::string sourcePath(GetOpenCLSourceOfGPUTranslationTransformBaseKernel());
   m_Sources.push_back(sourcePath);
 
   this->m_ParametersDataManager->Initialize();

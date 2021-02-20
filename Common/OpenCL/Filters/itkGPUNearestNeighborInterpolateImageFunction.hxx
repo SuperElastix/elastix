@@ -28,11 +28,11 @@ template <typename TInputImage, typename TCoordRep>
 GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::GPUNearestNeighborInterpolateImageFunction()
 {
   // Add GPUImageFunction implementation
-  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
+  const std::string sourcePath0(GetOpenCLSourceOfGPUImageFunctionKernel());
   this->m_Sources.push_back(sourcePath0);
 
   // Add GPUNearestNeighborInterpolateImageFunction implementation
-  const std::string sourcePath1(GPUNearestNeighborInterpolateImageFunctionKernel::GetOpenCLSource());
+  const std::string sourcePath1(GetOpenCLSourceOfGPUNearestNeighborInterpolateImageFunctionKernel());
   this->m_Sources.push_back(sourcePath1);
 }
 

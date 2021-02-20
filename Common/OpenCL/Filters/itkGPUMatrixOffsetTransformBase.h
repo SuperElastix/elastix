@@ -23,8 +23,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for itkGPUMatrixOffsetTransformBase */
-itkGPUKernelClassMacro(GPUMatrixOffsetTransformBaseKernel);
+/** Returns the OpenCL source code for itkGPUMatrixOffsetTransformBase */
+const char *
+GetOpenCLSourceOfGPUMatrixOffsetTransformBaseKernel();
 
 /** \class GPUMatrixOffsetTransformBase
  * \brief Base version of the GPU MatrixOffsetTransform.

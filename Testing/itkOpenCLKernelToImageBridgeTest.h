@@ -22,9 +22,10 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for OpenCLKernelToImageBridgeTest.cl kernel
+/** Returns the OpenCL source code for OpenCLKernelToImageBridgeTest.cl kernel
  */
-itkGPUKernelClassMacro(OpenCLKernelToImageBridgeTestKernel);
+const char *
+GetOpenCLSourceOfOpenCLKernelToImageBridgeTestKernel();
 } // end namespace itk
 
 #endif /* itkOpenCLKernelToImageBridgeTest_h */

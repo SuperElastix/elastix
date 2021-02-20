@@ -58,7 +58,7 @@ main(int argc, char * argv[])
 
     // Create program
     itk::OpenCLProgram program =
-      context->BuildProgramFromSourceCode(context->GetDevices(), itk::OpenCLEventTestKernel::GetOpenCLSource());
+      context->BuildProgramFromSourceCode(context->GetDevices(), itk::GetOpenCLSourceOfOpenCLEventTestKernel());
     if (program.IsNull())
     {
       if (context->GetDefaultDevice().HasCompiler())

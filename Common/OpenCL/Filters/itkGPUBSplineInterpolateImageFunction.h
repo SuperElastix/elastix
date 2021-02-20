@@ -27,8 +27,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPUBSplineInterpolateImageFunction */
-itkGPUKernelClassMacro(GPUBSplineInterpolateImageFunctionKernel);
+/** Returns the OpenCL source code for GPUBSplineInterpolateImageFunction */
+const char *
+GetOpenCLSourceOfGPUBSplineInterpolateImageFunctionKernel();
 
 /** \class GPUBSplineInterpolateImageFunction
  * \brief GPU version of BSplineInterpolateImageFunction.

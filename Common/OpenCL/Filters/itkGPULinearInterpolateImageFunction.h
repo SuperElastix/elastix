@@ -26,8 +26,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPULinearInterpolateImageFunction */
-itkGPUKernelClassMacro(GPULinearInterpolateImageFunctionKernel);
+/** Returns the OpenCL source code for GPULinearInterpolateImageFunction */
+const char *
+GetOpenCLSourceOfGPULinearInterpolateImageFunctionKernel();
 
 /** \class GPULinearInterpolateImageFunction
  * \brief GPU version of LinearInterpolateImageFunction.

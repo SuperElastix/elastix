@@ -26,8 +26,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPUShrinkImageFilter */
-itkGPUKernelClassMacro(GPUShrinkImageFilterKernel);
+/** Returns the OpenCL source code for GPUShrinkImageFilter */
+const char *
+GetOpenCLSourceOfGPUShrinkImageFilterKernel();
 
 /** \class GPUShrinkImageFilter
  * \brief GPU version of ShrinkImageFilter.

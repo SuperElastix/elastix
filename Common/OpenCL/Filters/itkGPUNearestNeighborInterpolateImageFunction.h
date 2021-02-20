@@ -26,8 +26,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPUNearestNeighborInterpolateImageFunction */
-itkGPUKernelClassMacro(GPUNearestNeighborInterpolateImageFunctionKernel);
+/** Returns the OpenCL source code for GPUNearestNeighborInterpolateImageFunction */
+const char *
+GetOpenCLSourceOfGPUNearestNeighborInterpolateImageFunctionKernel();
 
 /** \class GPUNearestNeighborInterpolateImageFunction
  * \brief GPU version of NearestNeighborInterpolateImageFunction.

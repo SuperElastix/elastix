@@ -28,7 +28,7 @@ template <typename TScalarType, unsigned int NDimensions, typename TParentTransf
 GPUIdentityTransform<TScalarType, NDimensions, TParentTransform>::GPUIdentityTransform()
 {
   // Add GPUIdentityTransform source
-  const std::string sourcePath(GPUIdentityTransformKernel::GetOpenCLSource());
+  const std::string sourcePath(GetOpenCLSourceOfGPUIdentityTransformKernel());
   this->m_Sources.push_back(sourcePath);
 }
 

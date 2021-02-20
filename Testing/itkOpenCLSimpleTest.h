@@ -22,11 +22,13 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for OpenCLSimpleTest1.cl kernel */
-itkGPUKernelClassMacro(OpenCLSimpleTest1Kernel);
+/** Returns the OpenCL source code for OpenCLSimpleTest1.cl kernel */
+const char *
+GetOpenCLSourceOfOpenCLSimpleTest1Kernel();
 
-/** Create a helper GPU Kernel class for OpenCLSimpleTest2.cl kernel */
-itkGPUKernelClassMacro(OpenCLSimpleTest2Kernel);
+/** Returns the OpenCL source code for OpenCLSimpleTest2.cl kernel */
+const char *
+GetOpenCLSourceOfOpenCLSimpleTest2Kernel();
 } // end namespace itk
 
 #endif /* itkOpenCLSimpleTest_h */

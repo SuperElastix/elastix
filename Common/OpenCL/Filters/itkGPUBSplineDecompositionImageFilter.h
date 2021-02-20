@@ -23,8 +23,9 @@
 
 namespace itk
 {
-/** Create a helper GPU Kernel class for GPUBSplineDecompositionImageFilter */
-itkGPUKernelClassMacro(GPUBSplineDecompositionImageFilterKernel);
+/** Returns the OpenCL source code for GPUBSplineDecompositionImageFilter */
+const char *
+GetOpenCLSourceOfGPUBSplineDecompositionImageFilterKernel();
 
 /** \class GPUBSplineDecompositionImageFilter
  * \brief GPU version of BSplineDecompositionImageFilter.
