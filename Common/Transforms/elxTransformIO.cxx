@@ -92,7 +92,7 @@ elastix::TransformIO::CreateCorrespondingElxTransform(const itk::TransformBaseTe
 
     if (object != nullptr)
     {
-      return dynamic_cast<itk::TransformBaseTemplate<double> *>(&*creator());
+      return dynamic_cast<itk::TransformBaseTemplate<double> *>(&*object);
     }
   }
   return nullptr;
