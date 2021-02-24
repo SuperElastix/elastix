@@ -43,7 +43,8 @@ namespace itk
  */
 
 template <class TScalarType = double, unsigned int NDimensions = 3>
-class ITK_TEMPLATE_EXPORT DeformationVectorFieldTransform : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0>
+class ITK_TEMPLATE_EXPORT DeformationVectorFieldTransform
+  : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0>
 {
 public:
   /** Standard class typedefs. */

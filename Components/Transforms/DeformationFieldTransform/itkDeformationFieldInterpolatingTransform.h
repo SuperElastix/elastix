@@ -43,7 +43,8 @@ template <class TScalarType = double,   // Data type for scalars (float or doubl
           unsigned int NDimensions = 3, // Number of input dimensions
           class TComponentType = double>
 // ComponentType of the deformation field
-class ITK_TEMPLATE_EXPORT DeformationFieldInterpolatingTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
+class ITK_TEMPLATE_EXPORT DeformationFieldInterpolatingTransform
+  : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
   /** Standard class typedefs. */

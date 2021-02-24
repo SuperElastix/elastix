@@ -53,7 +53,8 @@ namespace itk
  */
 
 template <class TFixedImage, class TMovingImage>
-class ITK_TEMPLATE_EXPORT AdvancedKappaStatisticImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
+class ITK_TEMPLATE_EXPORT AdvancedKappaStatisticImageToImageMetric
+  : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
   /** Standard class typedefs. */

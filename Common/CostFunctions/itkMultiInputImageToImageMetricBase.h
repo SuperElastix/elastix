@@ -46,7 +46,8 @@ namespace itk
  */
 
 template <class TFixedImage, class TMovingImage>
-class ITK_TEMPLATE_EXPORT MultiInputImageToImageMetricBase : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
+class ITK_TEMPLATE_EXPORT MultiInputImageToImageMetricBase
+  : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
   /** Standard class typedefs. */

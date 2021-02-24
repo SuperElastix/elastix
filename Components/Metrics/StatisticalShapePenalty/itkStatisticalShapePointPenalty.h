@@ -53,7 +53,8 @@ namespace itk
  */
 
 template <class TFixedPointSet, class TMovingPointSet>
-class ITK_TEMPLATE_EXPORT StatisticalShapePointPenalty : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
+class ITK_TEMPLATE_EXPORT StatisticalShapePointPenalty
+  : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:
   /** Standard class typedefs. */
