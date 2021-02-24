@@ -60,10 +60,10 @@ namespace itk
  * \ingroup ITKGPUCommon
  */
 template <typename TPixel, unsigned int NDimension>
-class GPUImage;
+class ITK_TEMPLATE_EXPORT GPUImage;
 
 template <typename ImageType>
-class ITKOpenCL_EXPORT GPUImageDataManager : public GPUDataManager
+class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUImageDataManager : public GPUDataManager
 {
   // allow GPUKernelManager to access GPU buffer pointer
   friend class OpenCLKernelManager;

@@ -58,7 +58,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TMovingImage>
-class SumSquaredTissueVolumeDifferenceImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
+class ITK_TEMPLATE_EXPORT SumSquaredTissueVolumeDifferenceImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
   /** Standard class typedefs. */

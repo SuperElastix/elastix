@@ -42,7 +42,7 @@ namespace itk
  */
 
 template <class TPixel, unsigned int VDimension>
-class NDImageTemplate : public NDImageBase<TPixel>
+class ITK_TEMPLATE_EXPORT NDImageTemplate : public NDImageBase<TPixel>
 {
 public:
   /** Standard class typedefs.*/
@@ -236,7 +236,7 @@ protected:
   ReaderPointer m_Reader;
 
   template <class TIn, class TOut>
-  class ConvertToDynamicArray
+  class ITK_TEMPLATE_EXPORT ConvertToDynamicArray
   {
   public:
     inline static TOut
@@ -253,7 +253,7 @@ protected:
   };
 
   template <class TIn, class TOut>
-  class ConvertToStaticArray
+  class ITK_TEMPLATE_EXPORT ConvertToStaticArray
   {
   public:
     inline static TOut

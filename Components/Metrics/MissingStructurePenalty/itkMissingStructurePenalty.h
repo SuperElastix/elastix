@@ -41,7 +41,7 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 template <class TFixedPointSet, class TMovingPointSet>
-class MissingVolumeMeshPenalty : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
+class ITK_TEMPLATE_EXPORT MissingVolumeMeshPenalty : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:
   /** Standard class typedefs. */

@@ -79,7 +79,7 @@ namespace itk
  * \ingroup CannotBeStreamed
  */
 template <class TInputImage, class TOutputImage>
-class ITK_EXPORT MultiOrderBSplineDecompositionImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT MultiOrderBSplineDecompositionImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   /** Standard class typedefs. */

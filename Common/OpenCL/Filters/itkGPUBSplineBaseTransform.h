@@ -39,7 +39,7 @@ itkGPUKernelClassMacro(GPUBSplineTransformKernel);
  * \ingroup GPUCommon
  */
 template <typename TScalarType = float, unsigned int NDimensions = 3>
-class ITK_EXPORT GPUBSplineBaseTransform : public GPUTransformBase
+class ITK_TEMPLATE_EXPORT GPUBSplineBaseTransform : public GPUTransformBase
 {
 public:
   /** Standard class typedefs. */

@@ -45,7 +45,7 @@
  * namespace elastix {
  *
  *   template <class TElastix>
- *     class MyMetric : public MetricBase<TElastix>,
+ *     class ITK_TEMPLATE_EXPORT MyMetric : public MetricBase<TElastix>,
  *      public itk::MattesMutualInformationImageToImageMetric
  *           < MetricBase<TElastix>::FixedImageType
  *             MetricBase<TElastix>::MovingImageType >
@@ -174,7 +174,7 @@
 
 #define elxPrepareImageTypeSupportMacro()                                                                              \
   template <::elx::ComponentDatabase::IndexType VIndex> /**unsigned int*/                                              \
-  class ElastixTypedef                                                                                                 \
+  class ITK_TEMPLATE_EXPORT ElastixTypedef                                                                                                 \
   {                                                                                                                    \
   public:                                                                                                              \
     /** In the specialisations of this template class */                                                               \
@@ -239,7 +239,7 @@
 
 #define elxSupportedImageTypeMacro(_fPixelType, _fDim, _mPixelType, _mDim, _VIndex)                                    \
   template <>                                                                                                          \
-  class ElastixTypedef<_VIndex>                                                                                        \
+  class ITK_TEMPLATE_EXPORT ElastixTypedef<_VIndex>                                                                                        \
   {                                                                                                                    \
   public:                                                                                                              \
     typedef ::itk::Image<_fPixelType, _fDim>                        FixedImageType;                                    \

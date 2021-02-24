@@ -42,7 +42,7 @@ itkGPUKernelClassMacro(GPUIdentityTransformKernel);
 template <typename TScalarType = float,
           unsigned int NDimensions = 3,
           typename TParentTransform = IdentityTransform<TScalarType, NDimensions>>
-class GPUIdentityTransform
+class ITK_TEMPLATE_EXPORT GPUIdentityTransform
   : public TParentTransform
   , public GPUTransformBase
 {

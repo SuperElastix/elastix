@@ -55,7 +55,7 @@ namespace itk
  */
 
 template <class TPixel>
-class NDImageBase : public Object
+class ITK_TEMPLATE_EXPORT NDImageBase : public Object
 {
 public:
   /** Standard class typedefs.*/

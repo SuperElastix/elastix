@@ -37,7 +37,7 @@ namespace itk
  */
 
 template <class TInputImage>
-class MultiInputImageRandomCoordinateSampler : public ImageRandomSamplerBase<TInputImage>
+class ITK_TEMPLATE_EXPORT MultiInputImageRandomCoordinateSampler : public ImageRandomSamplerBase<TInputImage>
 {
 public:
   /** Standard ITK-stuff. */

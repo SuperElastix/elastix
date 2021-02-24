@@ -31,7 +31,7 @@ namespace itk
  */
 
 template <class TImage>
-class ImageSample
+class ITK_TEMPLATE_EXPORT ImageSample
 {
 public:
   // ImageSample():m_ImageValue(0.0){};

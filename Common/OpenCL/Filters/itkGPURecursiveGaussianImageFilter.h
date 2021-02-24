@@ -39,7 +39,7 @@ itkGPUKernelClassMacro(GPURecursiveGaussianImageFilterKernel);
  * \ingroup GPUCommon
  */
 template <typename TInputImage, typename TOutputImage>
-class ITK_EXPORT GPURecursiveGaussianImageFilter
+class ITK_TEMPLATE_EXPORT GPURecursiveGaussianImageFilter
   : public GPUInPlaceImageFilter<TInputImage, TOutputImage, RecursiveGaussianImageFilter<TInputImage, TOutputImage>>
 {
 public:

@@ -70,7 +70,7 @@ namespace itk
  * \ingroup DataRepresentation
  */
 template <typename TElementIdentifier, typename TElement>
-class VectorDataContainer
+class ITK_TEMPLATE_EXPORT VectorDataContainer
   : public DataObject
   , public std::vector<TElement>
 {

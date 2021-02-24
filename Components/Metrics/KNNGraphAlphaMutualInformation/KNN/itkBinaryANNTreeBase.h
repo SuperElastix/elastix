@@ -34,7 +34,7 @@ namespace itk
  */
 
 template <class TListSample>
-class BinaryANNTreeBase : public BinaryTreeBase<TListSample>
+class ITK_TEMPLATE_EXPORT BinaryANNTreeBase : public BinaryTreeBase<TListSample>
 {
 public:
   /** Standard itk. */

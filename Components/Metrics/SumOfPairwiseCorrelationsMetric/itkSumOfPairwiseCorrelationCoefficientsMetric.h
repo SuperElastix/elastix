@@ -28,7 +28,7 @@
 namespace itk
 {
 template <class TFixedImage, class TMovingImage>
-class SumOfPairwiseCorrelationCoefficientsMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
+class ITK_TEMPLATE_EXPORT SumOfPairwiseCorrelationCoefficientsMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
   /** Standard class typedefs. */

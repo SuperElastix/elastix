@@ -33,7 +33,7 @@ namespace itk
  */
 
 template <class TListSample>
-class ANNFixedRadiusTreeSearch : public BinaryANNTreeSearchBase<TListSample>
+class ITK_TEMPLATE_EXPORT ANNFixedRadiusTreeSearch : public BinaryANNTreeSearchBase<TListSample>
 {
 public:
   /** Standard itk. */

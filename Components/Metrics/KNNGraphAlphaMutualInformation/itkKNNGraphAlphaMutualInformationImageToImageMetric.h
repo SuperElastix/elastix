@@ -71,7 +71,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TMovingImage>
-class KNNGraphAlphaMutualInformationImageToImageMetric
+class ITK_TEMPLATE_EXPORT KNNGraphAlphaMutualInformationImageToImageMetric
   : public MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>
 {
 public:

@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename TTypeList, typename NDimensions>
-class GPULinearInterpolateImageFunctionFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPULinearInterpolateImageFunctionFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPULinearInterpolateImageFunctionFactory2 Self;

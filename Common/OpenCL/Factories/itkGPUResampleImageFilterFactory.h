@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
-class GPUResampleImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPUResampleImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPUResampleImageFilterFactory2    Self;

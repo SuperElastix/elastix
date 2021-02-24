@@ -28,7 +28,7 @@ namespace itk
 {
 /** Recursive template to retrieve the number of B-spline indices at compile time. */
 template <unsigned int SplineOrder, unsigned int Dimension>
-class GetConstNumberOfIndicesHack
+class ITK_TEMPLATE_EXPORT GetConstNumberOfIndicesHack
 {
 public:
   typedef GetConstNumberOfIndicesHack<SplineOrder, Dimension - 1> OneDimensionLess;
@@ -36,7 +36,7 @@ public:
 };
 
 template <unsigned int SplineOrder>
-class GetConstNumberOfIndicesHack<SplineOrder, 0>
+class ITK_TEMPLATE_EXPORT GetConstNumberOfIndicesHack<SplineOrder, 0>
 {
 public:
   itkStaticConstMacro(Value, unsigned int, 1);
@@ -44,7 +44,7 @@ public:
 
 /** Recursive template to retrieve the number of B-spline weights at compile time. */
 template <unsigned int SplineOrder, unsigned int Dimension>
-class GetConstNumberOfWeightsHackRecursiveBSpline
+class ITK_TEMPLATE_EXPORT GetConstNumberOfWeightsHackRecursiveBSpline
 {
 public:
   itkStaticConstMacro(Value, unsigned int, (SplineOrder + 1) * Dimension);
@@ -68,7 +68,7 @@ public:
  * \ingroup ITKCommon
  */
 template <typename TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
-class RecursiveBSplineInterpolationWeightFunction
+class ITK_TEMPLATE_EXPORT RecursiveBSplineInterpolationWeightFunction
   : public BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
 {
 public:

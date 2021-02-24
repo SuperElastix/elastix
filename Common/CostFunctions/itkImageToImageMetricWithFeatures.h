@@ -38,7 +38,7 @@ template <class TFixedImage,
           class TMovingImage,
           class TFixedFeatureImage = TFixedImage,
           class TMovingFeatureImage = TMovingImage>
-class ImageToImageMetricWithFeatures : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
+class ITK_TEMPLATE_EXPORT ImageToImageMetricWithFeatures : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
   /** Standard class typedefs. */

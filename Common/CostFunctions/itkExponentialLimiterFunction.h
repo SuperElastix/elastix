@@ -40,7 +40,7 @@ namespace itk
  *
  */
 template <class TInput, unsigned int NDimension>
-class ExponentialLimiterFunction : public LimiterFunctionBase<TInput, NDimension>
+class ITK_TEMPLATE_EXPORT ExponentialLimiterFunction : public LimiterFunctionBase<TInput, NDimension>
 {
 public:
   /** Standard class typedefs. */

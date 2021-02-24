@@ -39,7 +39,7 @@ namespace itk
  *
  */
 template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
-class WeightedCombinationTransform : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
+class ITK_TEMPLATE_EXPORT WeightedCombinationTransform : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
   /** Standard class typedefs. */

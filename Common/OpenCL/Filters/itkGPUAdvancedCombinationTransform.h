@@ -37,7 +37,7 @@ namespace itk
 template <typename TScalarType = float,
           unsigned int NDimensions = 3,
           typename TParentTransform = AdvancedCombinationTransform<TScalarType, NDimensions>>
-class GPUAdvancedCombinationTransform
+class ITK_TEMPLATE_EXPORT GPUAdvancedCombinationTransform
   : public TParentTransform
   , public GPUCompositeTransformBase<TScalarType, NDimensions>
 {

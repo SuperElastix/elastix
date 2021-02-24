@@ -187,7 +187,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class AdaGrad
+class ITK_TEMPLATE_EXPORT AdaGrad
   : public itk::AdaptiveStepsizeOptimizer
   , public OptimizerBase<TElastix>
 {

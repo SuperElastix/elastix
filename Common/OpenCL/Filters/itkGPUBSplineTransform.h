@@ -38,7 +38,7 @@ template <typename TScalarType = float,
           unsigned int NDimensions = 3,
           unsigned int VSplineOrder = 3,
           typename TParentTransform = BSplineTransform<TScalarType, NDimensions, VSplineOrder>>
-class GPUBSplineTransform
+class ITK_TEMPLATE_EXPORT GPUBSplineTransform
   : public TParentTransform
   , public GPUBSplineBaseTransform<TScalarType, NDimensions>
 {

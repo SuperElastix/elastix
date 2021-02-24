@@ -29,7 +29,7 @@ namespace itk
  */
 
 template <class TOutputVectorContainer>
-class VectorContainerSource : public ProcessObject
+class ITK_TEMPLATE_EXPORT VectorContainerSource : public ProcessObject
 {
 public:
   /** Standard ITK-stuff. */

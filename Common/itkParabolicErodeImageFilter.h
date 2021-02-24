@@ -39,7 +39,7 @@ namespace itk
  * Australia.  <Richard.Beare@med.monash.edu.au>
  **/
 template <typename TInputImage, typename TOutputImage = TInputImage>
-class ParabolicErodeImageFilter : public ParabolicErodeDilateImageFilter<TInputImage, false, TOutputImage>
+class ITK_TEMPLATE_EXPORT ParabolicErodeImageFilter : public ParabolicErodeDilateImageFilter<TInputImage, false, TOutputImage>
 {
 
 public:

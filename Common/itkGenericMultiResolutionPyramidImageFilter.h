@@ -114,7 +114,7 @@ namespace itk
  * \ingroup ITKRegistrationCommon
  */
 template <class TInputImage, class TOutputImage, class TPrecisionType = double>
-class GenericMultiResolutionPyramidImageFilter : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT GenericMultiResolutionPyramidImageFilter : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 {
 public:
   /** Standard class typedefs. */

@@ -37,7 +37,7 @@ namespace itk
  *
  */
 template <class TInputImage>
-class ITKIOImageBase_HIDDEN ImageFileCastWriter : public ImageFileWriter<TInputImage>
+class ITK_TEMPLATE_EXPORT ITKIOImageBase_HIDDEN ImageFileCastWriter : public ImageFileWriter<TInputImage>
 {
 public:
   /** Standard class typedefs. */

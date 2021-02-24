@@ -41,7 +41,7 @@ template <typename TScalarType = float,      // Data type for scalars
           unsigned int NInputDimensions = 3, // Number of dimensions in the input space
           unsigned int NOutputDimensions = 3>
 // Number of dimensions in the output space
-class ITK_EXPORT GPUMatrixOffsetTransformBase : public GPUTransformBase
+class ITK_TEMPLATE_EXPORT GPUMatrixOffsetTransformBase : public GPUTransformBase
 {
 public:
   /** Standard typedefs   */

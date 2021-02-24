@@ -36,7 +36,7 @@ namespace itk
  * \ingroup PyramidImageFilter Multithreaded Streamed
  */
 template <class TInputImage, class TOutputImage>
-class MultiResolutionShrinkPyramidImageFilter : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT MultiResolutionShrinkPyramidImageFilter : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 {
 public:
   /** Standard class typedefs. */

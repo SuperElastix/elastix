@@ -31,7 +31,7 @@ namespace itk
  */
 
 template <class TInputImage, class TOutputVectorContainer>
-class ImageToVectorContainerFilter : public VectorContainerSource<TOutputVectorContainer>
+class ITK_TEMPLATE_EXPORT ImageToVectorContainerFilter : public VectorContainerSource<TOutputVectorContainer>
 {
 public:
   /** Standard ITK-stuff. */

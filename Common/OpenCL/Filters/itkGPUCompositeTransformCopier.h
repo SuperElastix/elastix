@@ -64,7 +64,7 @@ template <typename TTypeList,
           typename NDimensions,
           typename TCompositeTransform,
           typename TOutputTransformPrecisionType>
-class GPUCompositeTransformCopier : public Object
+class ITK_TEMPLATE_EXPORT GPUCompositeTransformCopier : public Object
 {
 public:
   /** Standard class typedefs. */
