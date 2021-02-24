@@ -337,8 +337,11 @@ TransformBase<TElastix>::ReadFromFile(void)
   this->m_Configuration->ReadParameter(
     useBinaryFormatForTransformationParameters, "UseBinaryFormatForTransformationParameters", 0);
 
+  std::string transformFileName;
+  this->m_Configuration->ReadParameter(transformFileName, "TransformFileName", 0, false);
+
   /** Read the TransformParameters. */
-  if (this->m_ReadWriteTransformParameters)
+  if (this->m_ReadWriteTransformParameters && transformFileName.empty())
   {
     /** Get the TransformParameters pointer. */
     this->m_TransformParametersPointer.reset(new ParametersType(numberOfParameters));

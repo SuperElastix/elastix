@@ -30,6 +30,8 @@
 #include "elxMacro.h"
 #include "itkPlatformMultiThreader.h"
 
+#include "elxTransformIO.h"
+
 #ifdef ELASTIX_USE_OPENCL
 #  include "itkOpenCLContext.h"
 #  include "itkOpenCLSetup.h"
@@ -812,7 +814,39 @@ ElastixMain::CreateComponents(const std::string &              key,
   /** Try creating the specified component. */
   try
   {
-    objectContainer->CreateElementAt(componentnr) = this->CreateComponent(componentName);
+    if ((key == "Transform") && (componentName == "File"))
+    {
+      std::string transformFileName;
+      this->m_Configuration->ReadParameter(transformFileName, "TransformFileName", componentnr, false);
+
+      if (!transformFileName.empty())
+      {
+        const auto itkTransform = TransformIO::Read(transformFileName);
+
+        if (itkTransform != nullptr)
+        {
+          std::string fixedPixelType = "float";
+          std::string movingPixelType = "float";
+
+          this->m_Configuration->ReadParameter(fixedPixelType, "FixedInternalImagePixelType", 0);
+          this->m_Configuration->ReadParameter(movingPixelType, "MovingInternalImagePixelType", 0);
+
+          const auto transformBase =
+            TransformIO::CreateCorrespondingElxTransform(*itkTransform, fixedPixelType, movingPixelType);
+
+          if (transformBase != nullptr)
+          {
+            transformBase->SetParameters(itkTransform->GetParameters());
+            transformBase->SetFixedParameters(itkTransform->GetFixedParameters());
+            objectContainer->CreateElementAt(componentnr) = transformBase;
+          }
+        }
+      }
+    }
+    else
+    {
+      objectContainer->CreateElementAt(componentnr) = this->CreateComponent(componentName);
+    }
   }
   catch (itk::ExceptionObject & excp)
   {

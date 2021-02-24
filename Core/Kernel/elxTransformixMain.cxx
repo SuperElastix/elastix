@@ -107,13 +107,14 @@ TransformixMain::Run(void)
   elastixBase.SetConfiguration(this->m_Configuration);
   elastixBase.SetDBIndex(this->m_DBIndex);
 
-  /** Populate the component containers. No default is specified for the Transform. */
+  /** Populate the component containers. */
   elastixBase.SetResampleInterpolatorContainer(
     this->CreateComponents("ResampleInterpolator", "FinalBSplineInterpolator", errorCode));
 
   elastixBase.SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
 
-  elastixBase.SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
+  /** By default, the transform is specified by an external file (.HDF5 or .TFM). */
+  elastixBase.SetTransformContainer(this->CreateComponents("Transform", "File", errorCode));
 
   /** Check if all components could be created. */
   if (errorCode != 0)
