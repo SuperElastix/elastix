@@ -222,7 +222,7 @@ public:
   /** Convenience function that returns the elastix component as
    * a pointer to an ElastixBaseType. Use only after having called run()!
    */
-  virtual ElastixBaseType *
+  ElastixBaseType &
   GetElastixBase(void) const;
 
   /** Get the final transform (the result of running elastix).
