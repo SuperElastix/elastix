@@ -348,7 +348,7 @@ ElastixMain::Run(void)
   /** Create a log file. */
   itk::CreateOpenCLLogger("elastix", this->m_Configuration->GetCommandLineArgument("-out"));
 #endif
-  auto & elastixBase = *(this->GetElastixBase());
+  auto & elastixBase = this->GetElastixBase();
 
   /** Set some information in the ElastixBase. */
   elastixBase.SetConfiguration(this->m_Configuration);
@@ -729,19 +729,17 @@ ElastixMain::GetTotalNumberOfElastixLevels(void)
  * ************************* GetElastixBase ***************************
  */
 
-ElastixMain::ElastixBaseType *
+ElastixMain::ElastixBaseType &
 ElastixMain::GetElastixBase(void) const
 {
-  ElastixBaseType * testpointer;
-
   /** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
-  testpointer = dynamic_cast<ElastixBaseType *>(this->m_Elastix.GetPointer());
-  if (!testpointer)
+  const auto testpointer = dynamic_cast<ElastixBaseType *>(this->m_Elastix.GetPointer());
+  if (testpointer == nullptr)
   {
     itkExceptionMacro(<< "Probably GetElastixBase() is called before having called Run()");
   }
 
-  return testpointer;
+  return *testpointer;
 
 } // end GetElastixBase()
 

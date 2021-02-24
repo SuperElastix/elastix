@@ -96,7 +96,7 @@ TransformixMain::Run(void)
   /** Create a log file. */
   itk::CreateOpenCLLogger("transformix", this->m_Configuration->GetCommandLineArgument("-out"));
 #endif
-  auto & elastixBase = *(this->GetElastixBase());
+  auto & elastixBase = this->GetElastixBase();
 
   if (BaseComponent::IsElastixLibrary())
   {
