@@ -28,10 +28,123 @@
 // GoogleTest header file:
 #include <gtest/gtest.h>
 
+#include <array>
 #include <algorithm> // For transform
 #include <map>
 #include <string>
 #include <utility> // For pair
+#include <vector>
+
+
+namespace
+{
+template <typename TImage>
+std::vector<std::string>
+GetTransformParameters(const elx::ElastixFilter<TImage, TImage> & filter)
+{
+  const auto transformParameterObject = filter.GetTransformParameterObject();
+
+  if (transformParameterObject != nullptr)
+  {
+    const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
+
+    if (transformParameterMaps.size() == 1)
+    {
+      const auto & transformParameterMap = transformParameterMaps.front();
+      const auto   found = transformParameterMap.find("TransformParameters");
+
+      if (found != transformParameterMap.cend())
+      {
+        return found->second;
+      }
+    }
+  }
+  return {};
+}
+
+
+void
+TestUpdatingMultipleFilters(const bool inParallel)
+{
+  // Create an array of black images (pixel value zero) with a little "white"
+  // region (pixel value 1) inside.
+  constexpr auto ImageDimension = 2;
+  using ImageType = itk::Image<float, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+
+  const auto imageSizeValue = 8;
+
+  const itk::ImageRegion<ImageDimension> imageRegion{ itk::Index<ImageDimension>::Filled(imageSizeValue / 2),
+                                                      SizeType::Filled(2) };
+
+  const auto                                     numberOfImages = 10;
+  std::array<ImageType::Pointer, numberOfImages> images;
+
+  std::generate(images.begin(), images.end(), ImageType::New);
+
+  for (const auto & image : images)
+  {
+    image->SetRegions(SizeType::Filled(imageSizeValue));
+    image->Allocate(true);
+    const itk::Experimental::ImageRegionRange<ImageType> imageRegionRange{ *image, imageRegion };
+    std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1.0f);
+  }
+
+  const auto parameterObject = elx::ParameterObject::New();
+  parameterObject->SetParameterMap(
+    elx::ParameterObject::ParameterMapType{ // Parameters in alphabetic order:
+                                            { "ImageSampler", { "Full" } },
+                                            { "MaximumNumberOfIterations", { "2" } },
+                                            { "Metric", { "AdvancedNormalizedCorrelation" } },
+                                            { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                            { "Transform", { "TranslationTransform" } },
+                                            { "WriteFinalTransformParameters", { "false" } } });
+
+  // Create a filter for each image, to register an image with the next one.
+  std::array<itk::SmartPointer<elx::ElastixFilter<ImageType, ImageType>>, numberOfImages> filters;
+  std::generate(filters.begin(), filters.end(), elx::ElastixFilter<ImageType, ImageType>::New);
+
+  for (auto i = 0; i < numberOfImages; ++i)
+  {
+    auto & filter = *(filters[i]);
+
+    filter.LogToConsoleOff();
+    filter.LogToFileOff();
+    filter.SetFixedImage(images[i]);
+    // Choose the next image (from the array of images) as moving image.
+    filter.SetMovingImage(images[(i + std::size_t{ 1 }) % numberOfImages]);
+    filter.SetParameterObject(parameterObject);
+  }
+
+  if (inParallel)
+  {
+    // Note: The OpenMP implementation of GCC (including GCC 5.5 and GCC 10.2)
+    // does not seem to support value-initialization of a for-loop index by
+    // empty pair of braces, as in `for (int i{}; i < n; ++i)`.
+#pragma omp parallel for
+    for (int i = 0; i < numberOfImages; ++i)
+    {
+      filters[i]->Update();
+    }
+  }
+  else
+  {
+    for (int i{}; i < numberOfImages; ++i)
+    {
+      filters[i]->Update();
+    }
+  }
+
+  // Check if the TransformParameters of each filter are as expected.
+  const std::vector<std::string> expectedTransformParameters(ImageDimension, "0");
+
+  for (const auto & filter : filters)
+  {
+    EXPECT_EQ(GetTransformParameters(*filter), expectedTransformParameters);
+  }
+}
+
+} // namespace
 
 
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
@@ -105,4 +218,16 @@ GTEST_TEST(ElastixFilter, Translation)
   {
     EXPECT_EQ(std::round(std::stod(transformParameters[i])), translationOffset[i]);
   }
+}
+
+
+GTEST_TEST(ElastixFilter, UpdateSerially)
+{
+  TestUpdatingMultipleFilters(false);
+}
+
+
+GTEST_TEST(ElastixFilter, UpdateInParallel)
+{
+  TestUpdatingMultipleFilters(true);
 }

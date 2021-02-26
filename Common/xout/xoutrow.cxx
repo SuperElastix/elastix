@@ -34,6 +34,8 @@ using namespace std;
 void
 xoutrow::WriteBufferedData(void)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   /** Write the cell-data to the outputs, separated by tabs. */
   auto xit = this->m_XTargetCells.begin();
   auto tmpIt = xit;
@@ -65,6 +67,8 @@ xoutrow::WriteBufferedData(void)
 int
 xoutrow::AddTargetCell(const char * name)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   if (this->m_CellMap.count(name) == 0)
   {
     /** A new cell (type xoutcell) is created. */
@@ -98,6 +102,8 @@ xoutrow::AddTargetCell(const char * name)
 int
 xoutrow::RemoveTargetCell(const char * name)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   int returndummy = 1;
 
   if (this->m_XTargetCells.erase(name) > 0)
@@ -122,6 +128,8 @@ xoutrow::RemoveTargetCell(const char * name)
 void
 xoutrow::SetTargetCells(const XStreamMapType & cellmap)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   /** Clean the this->m_CellMap (cells that are created using the
    * AddTarget(const char *) method.
    */
@@ -143,6 +151,8 @@ xoutrow::SetTargetCells(const XStreamMapType & cellmap)
 int
 xoutrow::AddOutput(const char * name, std::ostream * output)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   int returndummy = 0;
 
   /** Set the output in all cells. */
@@ -165,6 +175,8 @@ xoutrow::AddOutput(const char * name, std::ostream * output)
 int
 xoutrow::AddOutput(const char * name, Superclass * output)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   int returndummy = 0;
 
   /** Set the output in all cells. */
@@ -187,6 +199,8 @@ xoutrow::AddOutput(const char * name, Superclass * output)
 int
 xoutrow::RemoveOutput(const char * name)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   int returndummy = 0;
   /** Set the output in all cells. */
   for (const auto & cell : this->m_XTargetCells)
@@ -208,6 +222,8 @@ xoutrow::RemoveOutput(const char * name)
 void
 xoutrow::SetOutputs(const CStreamMapType & outputmap)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   /** Set the output in all cells. */
   for (const auto & cell : this->m_XTargetCells)
   {
@@ -227,6 +243,8 @@ xoutrow::SetOutputs(const CStreamMapType & outputmap)
 void
 xoutrow::SetOutputs(const XStreamMapType & outputmap)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   /** Set the output in all cells. */
   for (const auto & cell : this->m_XTargetCells)
   {
@@ -246,6 +264,8 @@ xoutrow::SetOutputs(const XStreamMapType & outputmap)
 void
 xoutrow::WriteHeaders(void)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   /** Copy '*this'. */
   Self headerwriter;
   headerwriter.SetTargetCells(this->m_XTargetCells);

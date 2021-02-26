@@ -56,6 +56,8 @@ xoutbase & xoutbase::operator[](const char * cellname)
 void
 xoutbase::WriteBufferedData(void)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   /** Update the target c-streams. */
   for (const auto & cell : m_CTargetCells)
   {
@@ -78,6 +80,8 @@ xoutbase::WriteBufferedData(void)
 int
 xoutbase::AddTargetCell(const char * name, std::ostream * cell)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   int returndummy = 1;
 
   if (this->m_XTargetCells.count(name))
@@ -103,6 +107,8 @@ xoutbase::AddTargetCell(const char * name, std::ostream * cell)
 int
 xoutbase::AddTargetCell(const char * name, Self * cell)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   int returndummy = 1;
 
   if (this->m_CTargetCells.count(name))
@@ -128,6 +134,8 @@ xoutbase::AddTargetCell(const char * name, Self * cell)
 int
 xoutbase::RemoveTargetCell(const char * name)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   int returndummy = 1;
 
   if (this->m_XTargetCells.erase(name) > 0)
@@ -152,6 +160,8 @@ xoutbase::RemoveTargetCell(const char * name)
 void
 xoutbase::SetTargetCells(const CStreamMapType & cellmap)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
+
   this->m_CTargetCells = cellmap;
 
 } // end SetTargetCells
@@ -164,6 +174,7 @@ xoutbase::SetTargetCells(const CStreamMapType & cellmap)
 void
 xoutbase::SetTargetCells(const XStreamMapType & cellmap)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
   this->m_XTargetCells = cellmap;
 
 } // end SetTargetCells
@@ -176,7 +187,8 @@ xoutbase::SetTargetCells(const XStreamMapType & cellmap)
 int
 xoutbase::AddOutput(const char * name, std::ostream * output)
 {
-  int returndummy = 1;
+  const LockGuardType mutexLock(GetRecursiveMutex());
+  int                 returndummy = 1;
 
   if (this->m_XOutputs.count(name))
   {
@@ -200,7 +212,8 @@ xoutbase::AddOutput(const char * name, std::ostream * output)
 int
 xoutbase::AddOutput(const char * name, Self * output)
 {
-  int returndummy = 1;
+  const LockGuardType mutexLock(GetRecursiveMutex());
+  int                 returndummy = 1;
 
   if (this->m_COutputs.count(name))
   {
@@ -224,7 +237,8 @@ xoutbase::AddOutput(const char * name, Self * output)
 int
 xoutbase::RemoveOutput(const char * name)
 {
-  int returndummy = 1;
+  const LockGuardType mutexLock(GetRecursiveMutex());
+  int                 returndummy = 1;
 
   if (this->m_XOutputs.count(name))
   {
@@ -250,6 +264,7 @@ xoutbase::RemoveOutput(const char * name)
 void
 xoutbase::SetOutputs(const CStreamMapType & outputmap)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
   this->m_COutputs = outputmap;
 
 } // end SetOutputs
@@ -262,6 +277,7 @@ xoutbase::SetOutputs(const CStreamMapType & outputmap)
 void
 xoutbase::SetOutputs(const XStreamMapType & outputmap)
 {
+  const LockGuardType mutexLock(GetRecursiveMutex());
   this->m_XOutputs = outputmap;
 
 } // end SetOutputs
@@ -288,5 +304,13 @@ xoutbase::GetCOutputs(void)
   return this->m_COutputs;
 
 } // end GetOutputs
+
+
+std::recursive_mutex &
+xoutbase::GetRecursiveMutex()
+{
+  static std::recursive_mutex mutex;
+  return mutex;
+}
 
 } // end namespace xoutlibrary

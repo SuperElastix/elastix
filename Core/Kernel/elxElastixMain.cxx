@@ -35,6 +35,9 @@
 #  include "itkOpenCLSetup.h"
 #endif
 
+#include <mutex>
+
+
 namespace
 {
 /**
@@ -138,6 +141,47 @@ xoutManager::xoutManager(const std::string & logFileName, const bool setupLoggin
     itkGenericExceptionMacro("Error while setting up xout");
   }
 }
+
+
+std::shared_ptr<const xoutManager>
+xoutManager::GetSharedManager(const std::string & logFileName, const bool setupLogging, const bool setupCout)
+{
+  const auto makeManagerPtrPair = [](const std::string & logFileName, const bool setupLogging, const bool setupCout) {
+    std::shared_ptr<const xoutManager> sharedPtr(new xoutManager(logFileName, setupLogging, setupCout));
+    std::weak_ptr<const xoutManager>   weakPtr(sharedPtr);
+    return std::make_pair(sharedPtr, weakPtr);
+  };
+
+  // Note that the initialization of this static variable is thread-safe,
+  // as supported by C++11 "magic statics".
+  static auto managerPtrPair = makeManagerPtrPair(logFileName, setupLogging, setupCout);
+
+  const struct ResetGuard
+  {
+    std::shared_ptr<const xoutManager> & sharedPtr;
+    ~ResetGuard() { sharedPtr.reset(); }
+  } resetGuard{ managerPtrPair.first };
+
+  const auto lockedSharedPtr = managerPtrPair.second.lock();
+
+  if (lockedSharedPtr == nullptr)
+  {
+    // Apply the "double-checked locking" design pattern.
+    static std::mutex                 managerMutex;
+    const std::lock_guard<std::mutex> lock(managerMutex);
+
+    const auto doubleCheckedLockedSharedPtr = managerPtrPair.second.lock();
+
+    if (doubleCheckedLockedSharedPtr == nullptr)
+    {
+      managerPtrPair = makeManagerPtrPair(logFileName, setupLogging, setupCout);
+      return managerPtrPair.second.lock();
+    }
+    return doubleCheckedLockedSharedPtr;
+  }
+  return lockedSharedPtr;
+}
+
 
 xoutManager::Guard::~Guard()
 {
