@@ -209,6 +209,14 @@ public:
     return &(this->GetSelf());
   }
 
+  /** Retrieves the transform. */
+  virtual itk::Transform<double, FixedImageDimension, MovingImageDimension> *
+  GetITKTransform(void)
+  {
+    return &(this->GetSelf());
+  }
+
+
   /** Execute stuff before the actual transformation:
    * \li Check the appearance of inputpoints to be transformed.
    */

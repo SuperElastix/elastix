@@ -278,7 +278,7 @@ ResamplerBase<TElastix>::SetComponents(void)
   /** Set the transform, the interpolator and the inputImage
    * (which is the moving image).
    */
-  this->GetAsITKBaseType()->SetTransform(dynamic_cast<TransformType *>(this->m_Elastix->GetElxTransformBase()));
+  this->GetAsITKBaseType()->SetTransform(this->m_Elastix->GetElxTransformBase()->GetITKTransform());
 
   this->GetAsITKBaseType()->SetInterpolator(
     dynamic_cast<InterpolatorType *>(this->m_Elastix->GetElxResampleInterpolatorBase()));
