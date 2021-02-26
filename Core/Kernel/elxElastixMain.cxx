@@ -47,7 +47,6 @@ namespace
 struct Data
 {
   /** xout TargetCells. */
-  xl::xoutmain   Xout;
   xl::xoutsimple WarningXout;
   xl::xoutsimple ErrorXout;
   xl::xoutsimple StandardXout;
@@ -71,7 +70,6 @@ int
 elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
 {
   int returndummy = 0;
-  set_xout(&g_data.Xout);
 
   if (setupLogging)
   {
@@ -141,6 +139,7 @@ xoutManager::xoutManager(const std::string & logFileName, const bool setupLoggin
 
 xoutManager::Guard::~Guard()
 {
+  xl::get_xout() = {};
   g_data = {};
 }
 

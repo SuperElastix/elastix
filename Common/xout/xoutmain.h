@@ -40,12 +40,6 @@ class xoutmain : public xoutbase
 xoutmain &
 get_xout(void);
 
-void
-set_xout(xoutmain * arg);
-
-bool
-xout_valid();
-
 } // end namespace xoutlibrary
 
 #endif // end #ifndef xoutmain_h
