@@ -150,6 +150,13 @@ public:
   itkGetConstMacro(LogToFile, bool);
   itkBooleanMacro(LogToFile);
 
+  /** Disables output to log and standard output. */
+  void
+  DisableOutput(void)
+  {
+    m_EnableOutput = false;
+  }
+
   /** To support outputs of different types (i.e. ResultImage and ResultDeformationField)
    * MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden.
    */
@@ -190,6 +197,7 @@ private:
   std::string m_OutputDirectory;
   std::string m_LogFileName;
 
+  bool m_EnableOutput{ true };
   bool m_LogToConsole;
   bool m_LogToFile;
 };

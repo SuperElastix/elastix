@@ -18,6 +18,8 @@
 #ifndef elxTransformixFilter_hxx
 #define elxTransformixFilter_hxx
 
+#include <memory> // For unique_ptr.
+
 namespace elastix
 {
 
@@ -147,7 +149,8 @@ TransformixFilter<TMovingImage>::GenerateData(void)
   }
 
   // Setup xout
-  const elx::xoutManager manager(logFileName, this->GetLogToFile(), this->GetLogToConsole());
+  const std::unique_ptr<const elx::xoutManager> manager(
+    m_EnableOutput ? new elx::xoutManager(logFileName, this->GetLogToFile(), this->GetLogToConsole()) : nullptr);
 
   // Instantiate transformix
   TransformixMainPointer transformix = TransformixMainType::New();
