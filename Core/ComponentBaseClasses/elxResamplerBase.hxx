@@ -346,17 +346,16 @@ void
 ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * filename, const bool & showProgress)
 {
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
-  typedef itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> RayCastInterpolatorType;
-  const RayCastInterpolatorType *                                                    testptr =
-    dynamic_cast<const RayCastInterpolatorType *>(this->GetAsITKBaseType()->GetInterpolator());
+  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
+    this->GetAsITKBaseType()->GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings.
    */
 
-  if (testptr)
+  if (testptr != nullptr)
   {
-    this->GetAsITKBaseType()->SetTransform((const_cast<RayCastInterpolatorType *>(testptr))->GetTransform());
+    this->GetAsITKBaseType()->SetTransform(testptr->GetTransform());
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
@@ -457,17 +456,15 @@ ResamplerBase<TElastix>::CreateItkResultImage(void)
   }
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
-  typedef itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> RayCastInterpolatorType;
-
-  const RayCastInterpolatorType * testptr =
-    dynamic_cast<const RayCastInterpolatorType *>(this->GetAsITKBaseType()->GetInterpolator());
+  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
+    this->GetAsITKBaseType()->GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings */
 
-  if (testptr)
+  if (testptr != nullptr)
   {
-    this->GetAsITKBaseType()->SetTransform((const_cast<RayCastInterpolatorType *>(testptr))->GetTransform());
+    this->GetAsITKBaseType()->SetTransform(testptr->GetTransform());
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
