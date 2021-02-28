@@ -180,7 +180,6 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filenam
   writer->SetUseCompression(doCompression);
 
   /** Do the writing. */
-  xl::xout["coutonly"] << std::flush;
   xl::xout["coutonly"] << "  Writing moving pyramid image ..." << std::endl;
   try
   {

@@ -399,7 +399,6 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   /** Do the writing. */
   if (showProgress)
   {
-    xl::xout["coutonly"] << std::flush;
     xl::xout["coutonly"] << "\n  Writing image ..." << std::endl;
   }
   try
