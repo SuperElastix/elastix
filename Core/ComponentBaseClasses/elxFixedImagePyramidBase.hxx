@@ -177,7 +177,6 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filename
   writer->SetUseCompression(doCompression);
 
   /** Do the writing. */
-  xl::xout["coutonly"] << std::flush;
   xl::xout["coutonly"] << "  Writing fixed pyramid image ..." << std::endl;
   try
   {
