@@ -66,7 +66,7 @@ public:
   static ObjectPointer
   Creator(void)
   {
-    return dynamic_cast<ObjectType *>(AnyItkObjectType::New().GetPointer());
+    return AnyItkObjectType::New().GetPointer();
   }
 
 
