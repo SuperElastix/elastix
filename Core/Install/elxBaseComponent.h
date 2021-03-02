@@ -146,6 +146,16 @@ public:
   static void
   InitializeElastixExecutable();
 
+  /** Similar to `dynamic_cast<ITKBaseType*>(baseComponent)`, but without
+   * using RTTI (run-time type information).
+   */
+  template <typename TBaseComponent>
+  static auto
+  AsITKBaseType(TBaseComponent * const baseComponent) -> decltype(baseComponent->GetAsITKBaseType())
+  {
+    return (baseComponent == nullptr) ? nullptr : baseComponent->GetAsITKBaseType();
+  }
+
 protected:
   BaseComponent() = default;
   virtual ~BaseComponent() = default;

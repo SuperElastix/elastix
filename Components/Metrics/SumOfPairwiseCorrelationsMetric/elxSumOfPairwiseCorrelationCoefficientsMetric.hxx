@@ -90,8 +90,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution(void)
   }
 
   /** Check if this transform is a B-spline transform. */
-  CombinationTransformType * testPtr1 =
-    dynamic_cast<CombinationTransformType *>(this->GetElastix()->GetElxTransformBase());
+  CombinationTransformType * testPtr1 = BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase());
   if (testPtr1)
   {
     /** Check for B-spline transform. */
