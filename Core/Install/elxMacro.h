@@ -306,8 +306,8 @@
  * and non-const) to get a reference to itself, of the specified type.
  */
 #define elxDeclarePureVirtualGetSelfMacro(type)                                                                        \
-  virtual const type & GetSelf(void) const = 0;                                                                        \
-  virtual type &       GetSelf(void) = 0
+  virtual const type & GetSelf(void) const override = 0;                                                               \
+  virtual type &       GetSelf(void) override = 0
 
 /** Defines a pair of overrides of GetSelf(void) (overloaded for const and
  * non-const), which return a reference to itself. Declares a deleted static

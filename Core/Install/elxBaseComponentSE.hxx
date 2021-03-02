@@ -43,12 +43,7 @@ BaseComponentSE<TElastix>::SetElastix(TElastix * const _arg)
       this->m_Configuration = _arg->GetConfiguration();
       this->m_Registration = _arg->GetElxRegistrationBase();
     }
-
-    const auto thisasobject = dynamic_cast<itk::Object *>(this);
-    if (thisasobject != nullptr)
-    {
-      thisasobject->Modified();
-    }
+    this->GetSelf().Modified();
   }
 
 } // end SetElastix
@@ -68,12 +63,7 @@ BaseComponentSE<TElastix>::SetConfiguration(ConfigurationType * const _arg)
   if (this->m_Configuration != _arg)
   {
     this->m_Configuration = _arg;
-
-    const auto thisasobject = dynamic_cast<itk::Object *>(this);
-    if (thisasobject != nullptr)
-    {
-      thisasobject->Modified();
-    }
+    this->GetSelf().Modified();
   }
 
 } // end SetConfiguration
