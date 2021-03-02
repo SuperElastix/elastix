@@ -143,6 +143,13 @@ protected:
   ElastixPointer       m_Elastix{};
   ConfigurationPointer m_Configuration{};
   RegistrationPointer  m_Registration{};
+
+private:
+  virtual const itk::Object &
+  GetSelf(void) const = 0;
+
+  virtual itk::Object &
+  GetSelf(void) = 0;
 };
 
 } // end namespace elastix
