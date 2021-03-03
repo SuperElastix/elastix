@@ -141,7 +141,7 @@ PolydataDummyPenalty<TElastix>::BeforeRegistration(void)
       this->ReadMesh(fixedMeshName, fixedMesh);
     }
 
-    meshPointerContainer->SetElement(meshNumber, dynamic_cast<MeshType *>(fixedMesh.GetPointer()));
+    meshPointerContainer->SetElement(meshNumber, fixedMesh.GetPointer());
   }
 
   this->SetFixedMeshContainer(meshPointerContainer);

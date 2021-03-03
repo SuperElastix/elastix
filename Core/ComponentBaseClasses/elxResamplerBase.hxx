@@ -283,7 +283,7 @@ ResamplerBase<TElastix>::SetComponents(void)
   this->GetAsITKBaseType()->SetInterpolator(
     BaseComponent::AsITKBaseType(this->m_Elastix->GetElxResampleInterpolatorBase()));
 
-  this->GetAsITKBaseType()->SetInput(dynamic_cast<InputImageType *>(this->m_Elastix->GetMovingImage()));
+  this->GetAsITKBaseType()->SetInput(this->m_Elastix->GetMovingImage());
 
 } // end SetComponents()
 
