@@ -638,7 +638,7 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization(void)
   for (unsigned int m = 0; m < M; ++m)
   {
     ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
-    originalSampler[m] = dynamic_cast<ImageSamplerBaseType *>(sampler.GetPointer());
+    originalSampler[m] = sampler.GetPointer();
   }
 
   /** Get the sampler that is used for the curvature pair update. */
@@ -653,7 +653,7 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization(void)
   for (unsigned int m = 0; m < M; ++m)
   {
     ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
-    curvatureSamplers[m] = dynamic_cast<ImageSamplerBaseType *>(sampler.GetPointer());
+    curvatureSamplers[m] = sampler.GetPointer();
     curvatureSamplers[m]->SetNumberOfSamples(this->m_NumberOfInnerLoopSamples);
   }
 

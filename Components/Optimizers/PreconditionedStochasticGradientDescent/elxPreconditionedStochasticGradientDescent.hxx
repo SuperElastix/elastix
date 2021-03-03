@@ -542,7 +542,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   for (unsigned int m = 0; m < M; ++m)
   {
     ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
-    originalSampler[m] = dynamic_cast<ImageSamplerBaseType *>(sampler.GetPointer());
+    originalSampler[m] = sampler.GetPointer();
   }
 
   /** Create a random sampler with more samples that can be used for the pre-conditioner computation. */
