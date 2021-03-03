@@ -1004,33 +1004,6 @@ AdaptiveStochasticGradientDescent<TElastix>::PrintSettingsVector(const SettingsV
 
 
 /**
- * ****************** CheckForAdvancedTransform **********************
- */
-
-template <class TElastix>
-void
-AdaptiveStochasticGradientDescent<TElastix>::CheckForAdvancedTransform(void)
-{
-  typename TransformType::Pointer transform = this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform();
-
-  AdvancedTransformType * testPtr = dynamic_cast<AdvancedTransformType *>(transform.GetPointer());
-  if (!testPtr)
-  {
-    this->m_AdvancedTransform = nullptr;
-    itkDebugMacro("Transform is not Advanced");
-    itkExceptionMacro(<< "The automatic parameter estimation of the ASGD "
-                      << "optimizer works only with advanced transforms");
-  }
-  else
-  {
-    this->m_AdvancedTransform = testPtr;
-    itkDebugMacro("Transform is Advanced");
-  }
-
-} // end CheckForAdvancedTransform()
-
-
-/**
  * *************** GetScaledDerivativeWithExceptionHandling ***************
  */
 
