@@ -574,7 +574,7 @@ TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
               "Transform files stored by this feature may still be incomplete or incorrect!"
            << std::endl;
 
-    const itk::TransformBaseTemplate<double> * const thisAsITKBase = this->GetAsITKBaseType();
+    const itk::TransformBase * const thisAsITKBase = this->GetAsITKBaseType();
     assert(thisAsITKBase != nullptr);
 
     const auto correspondingItkTransform = TransformIO::CreateCorrespondingItkTransform(*this);
@@ -584,7 +584,7 @@ TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
       correspondingItkTransform->SetParameters(thisAsITKBase->GetParameters());
       correspondingItkTransform->SetFixedParameters(thisAsITKBase->GetFixedParameters());
     }
-    const itk::TransformBaseTemplate<double> & transformObject =
+    const itk::TransformBase & transformObject =
       (correspondingItkTransform == nullptr) ? *thisAsITKBase : *correspondingItkTransform;
     const auto fileNameWithoutExtension =
       std::string(m_TransformParametersFileName, 0, m_TransformParametersFileName.rfind('.')) + "-experimental";
