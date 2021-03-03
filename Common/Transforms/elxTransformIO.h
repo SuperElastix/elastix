@@ -30,22 +30,20 @@ class TransformIO
 {
 public:
   static itk::OptimizerParameters<double>
-  GetParameters(const bool fixed, const itk::TransformBaseTemplate<double> & transform)
+  GetParameters(const bool fixed, const itk::TransformBase & transform)
   {
     return fixed ? transform.GetFixedParameters() : transform.GetParameters();
   }
 
   static void
-  SetParameters(const bool                               fixed,
-                itk::TransformBaseTemplate<double> &     transform,
-                const itk::OptimizerParameters<double> & parameters)
+  SetParameters(const bool fixed, itk::TransformBase & transform, const itk::OptimizerParameters<double> & parameters)
   {
     fixed ? transform.SetFixedParameters(parameters) : transform.SetParameters(parameters);
   }
 
 
   template <typename TElastixTransform>
-  static itk::TransformBaseTemplate<double>::Pointer
+  static itk::TransformBase::Pointer
   CreateCorrespondingItkTransform(const TElastixTransform & elxTransform)
   {
     return CreateCorrespondingItkTransform(
@@ -53,7 +51,7 @@ public:
   }
 
   static void
-  Write(const itk::TransformBaseTemplate<double> & itkTransform, const std::string & fileName);
+  Write(const itk::TransformBase & itkTransform, const std::string & fileName);
 
 
   /// Makes the deformation field file name, as used by BSplineTransformWithDiffusion and DeformationFieldTransform.
@@ -66,7 +64,7 @@ public:
   }
 
 private:
-  static itk::TransformBaseTemplate<double>::Pointer
+  static itk::TransformBase::Pointer
   CreateCorrespondingItkTransform(const BaseComponent & elxTransform,
                                   const unsigned        fixedImageDimension,
                                   const unsigned        movingImageDimension);
