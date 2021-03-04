@@ -235,6 +235,19 @@ public:
   }
 
 
+  /** Retrieves the values of the specified parameter (from the parameter file).
+   * Returns null when the parameter map does not contain the specified
+   * parameter. Throws an exception when it fails to convert each of the
+   * parameter values to the specified type `T`.
+   */
+  template <typename T>
+  std::unique_ptr<std::vector<T>>
+  RetrieveValuesOfParameter(const std::string & parameterName) const
+  {
+    return m_ParameterMapInterface->RetrieveValues<T>(parameterName);
+  }
+
+
   /** Read a range of parameters from the parameter file. */
   template <class T>
   bool
