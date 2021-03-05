@@ -19,6 +19,7 @@
 #include "elxConversion.h"
 
 #include <itkNumberToString.h>
+#include <itkOptimizerParameters.h>
 
 #include <cassert>
 #include <cmath>   // For fmod.
@@ -81,6 +82,17 @@ Conversion::SecondsToDHMS(const double totalSeconds, const unsigned int precisio
   return make_string.str();
 
 } // end SecondsToDHMS()
+
+
+/**
+ * ****************** ToOptimizerParameters ****************************
+ */
+
+itk::OptimizerParameters<double>
+Conversion::ToOptimizerParameters(const std::vector<double> & stdVector)
+{
+  return itk::OptimizerParameters<double>(itk::Array<double>(stdVector.data(), stdVector.size()));
+};
 
 
 /**

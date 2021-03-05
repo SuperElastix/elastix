@@ -25,6 +25,7 @@
 
 #include <initializer_list>
 #include <limits>
+#include <numeric> // For iota.
 #include <string>
 #include <type_traits> // For is_floating_point.
 #include <vector>
@@ -188,6 +189,33 @@ GTEST_TEST(Conversion, BoolToString)
 
   EXPECT_EQ(Conversion::BoolToString(false), std::string{ "false" });
   EXPECT_EQ(Conversion::BoolToString(true), std::string{ "true" });
+}
+
+
+GTEST_TEST(Conversion, ToOptimizerParameters)
+{
+  using OptimizerParametersType = itk::OptimizerParameters<double>;
+  using StdVectorType = std::vector<double>;
+
+  EXPECT_EQ(Conversion::ToOptimizerParameters(StdVectorType{}), OptimizerParametersType{});
+
+  // Sanity check: _not_ just every result from ToOptimizerParameters compares equal to any OptimizerParameters object!
+  EXPECT_NE(Conversion::ToOptimizerParameters(StdVectorType{ 0.0 }), OptimizerParametersType{});
+
+  for (const double value : { -1.0, 0.0, 1.0, DBL_MIN, DBL_MAX })
+  {
+    OptimizerParametersType expectedOptimizerParameters(1U);
+    expectedOptimizerParameters[0] = value;
+    EXPECT_EQ(Conversion::ToOptimizerParameters(StdVectorType{ value }), expectedOptimizerParameters);
+  }
+
+  StdVectorType stdVector(10U);
+  std::iota(stdVector.begin(), stdVector.end(), 1.0);
+
+  const auto optimizerParameters = Conversion::ToOptimizerParameters(stdVector);
+
+  ASSERT_EQ(optimizerParameters.size(), stdVector.size());
+  EXPECT_TRUE(std::equal(optimizerParameters.begin(), optimizerParameters.end(), stdVector.cbegin()));
 }
 
 
