@@ -24,9 +24,33 @@
 
 #include <itkTransformBase.h>
 #include <itkTransformFactoryBase.h>
+#include <itkTransformFileReader.h>
 #include <itkTransformFileWriter.h>
 
 #include <string>
+
+
+std::string
+elastix::TransformIO::ConvertITKNameOfClassToElastixClassName(const std::string & itkNameOfClass)
+{
+  // For example (ITK NameOfClass ==> elastix ClassName):
+  //
+  // "AffineTransform" ==> "AffineTransform"
+  // "Euler2DTransform" ==> "EulerTransform"
+  // "Similarity3DTransform" ==> "SimilarityTransform"
+
+  auto name = itkNameOfClass;
+
+  // Remove "nD" from ITK's "Euler2DTransform", "Similarity3DTransform", etc.
+  const auto found = std::min(name.find("2D"), name.find("3D"));
+
+  if (found != std::string::npos)
+  {
+    name.erase(found, 2);
+  }
+  return name;
+}
+
 
 itk::TransformBase::Pointer
 elastix::TransformIO::CreateCorrespondingItkTransform(const elx::BaseComponent & elxTransform,
@@ -61,6 +85,7 @@ elastix::TransformIO::CreateCorrespondingItkTransform(const elx::BaseComponent &
   return dynamic_cast<itk::TransformBase *>(instance.GetPointer());
 }
 
+
 void
 elastix::TransformIO::Write(const itk::TransformBase & itkTransform, const std::string & fileName)
 {
@@ -76,6 +101,24 @@ elastix::TransformIO::Write(const itk::TransformBase & itkTransform, const std::
   {
     xl::xout["error"] << "Error trying to write " << fileName << ":\n" << stdException.what() << std::endl;
   }
+}
+
+
+itk::SmartPointer<itk::TransformBase>
+elastix::TransformIO::Read(const std::string & fileName)
+{
+  const auto reader = itk::TransformFileReader::New();
+
+  reader->SetFileName(fileName);
+  reader->Update();
+
+  const auto transformList = reader->GetModifiableTransformList();
+  assert(transformList != nullptr);
+
+  // More than one transform is not yet supported.
+  assert(transformList->size() <= 1);
+
+  return transformList->empty() ? nullptr : transformList->front();
 }
 
 
