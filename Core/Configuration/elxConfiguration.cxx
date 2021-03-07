@@ -18,9 +18,59 @@
 
 #include "elxConfiguration.h"
 
+#include "elxConversion.h"
+#include "elxTransformIO.h"
+
 namespace elastix
 {
+namespace
+{
+itk::ParameterFileParser::ParameterMapType
+AddDataFromExternalTransformFile(const std::string &                        parameterFileName,
+                                 itk::ParameterFileParser::ParameterMapType parameterMap)
+{
+  const auto endOfParameterMap = parameterMap.end();
+  const auto transformParameter = parameterMap.find("Transform");
 
+  if ((transformParameter != endOfParameterMap) &&
+      (transformParameter->second == itk::ParameterFileParser::ParameterValuesType{ "File" }))
+  {
+    const auto transformFileNameParameter = parameterMap.find("TransformFileName");
+
+    if ((transformFileNameParameter != endOfParameterMap) && (transformFileNameParameter->second.size() == 1))
+    {
+      const auto & transformFileName = transformFileNameParameter->second.front();
+
+      if (!transformFileName.empty())
+      {
+        const bool transformFileNameSpecifiesFullPath = (transformFileName.front() == '/') ||
+                                                        (transformFileName.front() == '\\') ||
+                                                        (transformFileName.find(':') != std::string::npos);
+
+        const auto getDirectoryPath = [](const std::string & fileName) {
+          const auto foundPosition = fileName.find_last_of("/\\");
+          return (foundPosition == std::string::npos) ? std::string() : std::string(fileName, 0, foundPosition + 1);
+        };
+
+        const auto itkTransform = TransformIO::Read(
+          (transformFileNameSpecifiesFullPath ? "" : getDirectoryPath(parameterFileName)) + transformFileName);
+
+        if (itkTransform != nullptr)
+        {
+          transformParameter->second = { TransformIO::ConvertITKNameOfClassToElastixClassName(
+            itkTransform->GetNameOfClass()) };
+          parameterMap["ITKTransformParameters"] = Conversion::ToVectorOfStrings(itkTransform->GetParameters());
+          parameterMap["ITKTransformFixedParameters"] =
+            Conversion::ToVectorOfStrings(itkTransform->GetFixedParameters());
+          parameterMap["ITKTransformType"] = { itkTransform->GetTransformTypeAsString() };
+        }
+      }
+    }
+  }
+  return parameterMap;
+}
+
+} // namespace
 /**
  * ********************* Constructor ****************************
  */
@@ -161,7 +211,8 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   }
 
   /** Connect the parameter file reader to the interface. */
-  this->m_ParameterMapInterface->SetParameterMap(this->m_ParameterFileParser->GetParameterMap());
+  this->m_ParameterMapInterface->SetParameterMap(
+    AddDataFromExternalTransformFile(m_ParameterFileName, m_ParameterFileParser->GetParameterMap()));
 
   /** Silently check in the parameter file if error messages should be printed. */
   this->m_ParameterMapInterface->SetPrintErrorMessages(false);
@@ -195,7 +246,7 @@ Configuration::Initialize(const CommandLineArgumentMapType &                _arg
   /** Store the command line arguments. */
   this->m_CommandLineArgumentMap = _arg;
 
-  this->m_ParameterMapInterface->SetParameterMap(inputMap);
+  this->m_ParameterMapInterface->SetParameterMap(AddDataFromExternalTransformFile(m_ParameterFileName, inputMap));
 
   /** Silently check in the parameter file if error messages should be printed. */
   this->m_ParameterMapInterface->SetPrintErrorMessages(false);

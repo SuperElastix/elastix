@@ -328,67 +328,85 @@ TransformBase<TElastix>::ReadFromFile(void)
 
   /** Task 1 - Read the parameters from file. */
 
-  /** Get the number of TransformParameters. */
-  unsigned int numberOfParameters = 0;
-  this->m_Configuration->ReadParameter(numberOfParameters, "NumberOfParameters", 0);
-
-  /** Read the way the transform parameters are written. */
-  bool useBinaryFormatForTransformationParameters = false; // or the member?
-  this->m_Configuration->ReadParameter(
-    useBinaryFormatForTransformationParameters, "UseBinaryFormatForTransformationParameters", 0);
-
   /** Read the TransformParameters. */
   if (this->m_ReadWriteTransformParameters)
   {
-    /** Get the TransformParameters pointer. */
-    this->m_TransformParametersPointer.reset(new ParametersType(numberOfParameters));
+    const auto itkParameterValues =
+      this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformParameters");
 
-    /** Read the TransformParameters. */
-    std::size_t            numberOfParametersFound = 0;
-    std::vector<ValueType> vecPar;
-    if (useBinaryFormatForTransformationParameters)
+    if (itkParameterValues == nullptr)
     {
-      std::string dataFileName = "";
-      this->m_Configuration->ReadParameter(dataFileName, "TransformParameters", 0);
-      std::ifstream infile(dataFileName, std::ios_base::binary);
-      infile.read(reinterpret_cast<char *>(this->m_TransformParametersPointer->data_block()),
-                  sizeof(ValueType) * numberOfParameters);
-      numberOfParametersFound = infile.gcount() / sizeof(ValueType); // for sanity check
-      infile.close();
+      /** Get the number of TransformParameters. */
+      unsigned int numberOfParameters = 0;
+      this->m_Configuration->ReadParameter(numberOfParameters, "NumberOfParameters", 0);
+
+      /** Read the way the transform parameters are written. */
+      bool useBinaryFormatForTransformationParameters = false; // or the member?
+      this->m_Configuration->ReadParameter(
+        useBinaryFormatForTransformationParameters, "UseBinaryFormatForTransformationParameters", 0);
+
+      /** Get the TransformParameters pointer. */
+      this->m_TransformParametersPointer.reset(new ParametersType(numberOfParameters));
+
+      /** Read the TransformParameters. */
+      std::size_t            numberOfParametersFound = 0;
+      std::vector<ValueType> vecPar;
+      if (useBinaryFormatForTransformationParameters)
+      {
+        std::string dataFileName = "";
+        this->m_Configuration->ReadParameter(dataFileName, "TransformParameters", 0);
+        std::ifstream infile(dataFileName, std::ios_base::binary);
+        infile.read(reinterpret_cast<char *>(this->m_TransformParametersPointer->data_block()),
+                    sizeof(ValueType) * numberOfParameters);
+        numberOfParametersFound = infile.gcount() / sizeof(ValueType); // for sanity check
+        infile.close();
+      }
+      else
+      {
+        vecPar.resize(numberOfParameters, itk::NumericTraits<ValueType>::ZeroValue());
+        this->m_Configuration->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true);
+
+        /** Do not rely on vecPar.size(), since it is unchanged by ReadParameter(). */
+        numberOfParametersFound = this->m_Configuration->CountNumberOfParameterEntries("TransformParameters");
+      }
+
+      /** Sanity check. Are the number of found parameters the same as
+       * the number of specified parameters?
+       */
+      if (numberOfParametersFound != numberOfParameters)
+      {
+        std::ostringstream makeMessage("");
+        makeMessage << "\nERROR: Invalid transform parameter file!\n"
+                    << "The number of parameters in \"TransformParameters\" is " << numberOfParametersFound
+                    << ", which does not match the number specified in \"NumberOfParameters\" (" << numberOfParameters
+                    << ").\n"
+                    << "The transform parameters should be specified as:\n"
+                    << "  (TransformParameters num num ... num)\n"
+                    << "with " << numberOfParameters << " parameters." << std::endl;
+        itkExceptionMacro(<< makeMessage.str().c_str());
+      }
+
+      /** Copy to m_TransformParametersPointer. */
+      if (!useBinaryFormatForTransformationParameters)
+      {
+        // NOTE: we could avoid this by directly reading into the transform parameters,
+        // e.g. by overloading ReadParameter(), or use swap (?).
+        for (unsigned int i = 0; i < numberOfParameters; i++)
+        {
+          (*(this->m_TransformParametersPointer))[i] = vecPar[i];
+        }
+      }
     }
     else
     {
-      vecPar.resize(numberOfParameters, itk::NumericTraits<ValueType>::ZeroValue());
-      this->m_Configuration->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true);
+      m_TransformParametersPointer.reset(new ParametersType(Conversion::ToOptimizerParameters(*itkParameterValues)));
 
-      /** Do not rely on vecPar.size(), since it is unchanged by ReadParameter(). */
-      numberOfParametersFound = this->m_Configuration->CountNumberOfParameterEntries("TransformParameters");
-    }
+      const auto itkFixedParameterValues =
+        this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformParameters");
 
-    /** Sanity check. Are the number of found parameters the same as
-     * the number of specified parameters?
-     */
-    if (numberOfParametersFound != numberOfParameters)
-    {
-      std::ostringstream makeMessage("");
-      makeMessage << "\nERROR: Invalid transform parameter file!\n"
-                  << "The number of parameters in \"TransformParameters\" is " << numberOfParametersFound
-                  << ", which does not match the number specified in \"NumberOfParameters\" (" << numberOfParameters
-                  << ").\n"
-                  << "The transform parameters should be specified as:\n"
-                  << "  (TransformParameters num num ... num)\n"
-                  << "with " << numberOfParameters << " parameters." << std::endl;
-      itkExceptionMacro(<< makeMessage.str().c_str());
-    }
-
-    /** Copy to m_TransformParametersPointer. */
-    if (!useBinaryFormatForTransformationParameters)
-    {
-      // NOTE: we could avoid this by directly reading into the transform parameters,
-      // e.g. by overloading ReadParameter(), or use swap (?).
-      for (unsigned int i = 0; i < numberOfParameters; i++)
+      if (itkFixedParameterValues != nullptr)
       {
-        (*(this->m_TransformParametersPointer))[i] = vecPar[i];
+        GetSelf().SetFixedParameters(Conversion::ToOptimizerParameters(*itkFixedParameterValues));
       }
     }
 
