@@ -405,11 +405,9 @@ ElastixBase::BeforeAllTransformixBase(void)
   else
   {
     /** Make sure that last character of -out equals a '/'. */
-    std::string folder(check);
-    if (folder.find_last_of("/") != folder.size() - 1)
+    if (check.back() != '/')
     {
-      folder.append("/");
-      this->GetConfiguration()->SetCommandLineArgument("-out", folder.c_str());
+      this->GetConfiguration()->SetCommandLineArgument("-out", check + '/');
     }
     elxout << "-out      " << check << std::endl;
   }

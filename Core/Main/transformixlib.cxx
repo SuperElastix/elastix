@@ -120,7 +120,7 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
     value = outputPath;
 
     /** Make sure that last character of the output folder equals a '/'. */
-    if (value.find_last_of("/") != value.size() - 1)
+    if (outputPath.back() != '/')
     {
       value.append("/");
     }
