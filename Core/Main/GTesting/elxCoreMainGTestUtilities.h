@@ -25,7 +25,14 @@
 #include <itkSize.h>
 
 #include <algorithm> // For fill.
-#include <iterator>  // For begin and end.
+#include <map>
+#include <initializer_list>
+#include <iterator> // For begin and end.
+#include <vector>
+
+// GoogleTest header file:
+#include <gtest/gtest.h>
+
 
 namespace itk
 {
@@ -59,6 +66,32 @@ FillImageRegion(itk::Image<TPixel, VImageDimension> & image,
   std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
 }
 
+
+std::map<std::string, std::vector<std::string>> inline CreateParameterMap(
+  std::initializer_list<std::pair<std::string, std::string>> initializerList)
+{
+  std::map<std::string, std::vector<std::string>> result;
+
+  for (const auto & pair : initializerList)
+  {
+    [&pair, &result] { ASSERT_TRUE(result.insert({ pair.first, { pair.second } }).second); }();
+  }
+  return result;
+}
+
+
+template <unsigned VImageDimension>
+std::map<std::string, std::vector<std::string>>
+CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> initializerList)
+{
+  std::map<std::string, std::vector<std::string>> result = CreateParameterMap(initializerList);
+
+  for (const auto & key : { "FixedImageDimension", "MovingImageDimension" })
+  {
+    [&key, &result] { ASSERT_TRUE(result.insert({ key, { std::to_string(VImageDimension) } }).second); }();
+  }
+  return result;
+}
 
 } // namespace CoreMainGTestUtilities
 } // namespace elastix
