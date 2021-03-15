@@ -41,7 +41,7 @@ itkGPUKernelClassMacro(GPULinearInterpolateImageFunctionKernel);
  * \ingroup GPUCommon
  */
 template <typename TInputImage, typename TCoordRep = float>
-class ITK_TEMPLATE_EXPORT GPULinearInterpolateImageFunction
+class ITK_EXPORT GPULinearInterpolateImageFunction
   : public GPUInterpolateImageFunction<TInputImage, TCoordRep, LinearInterpolateImageFunction<TInputImage, TCoordRep>>
 {
 public:

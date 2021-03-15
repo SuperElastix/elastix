@@ -44,7 +44,7 @@ itkGPUKernelClassMacro(GPUResampleImageFilterKernel);
  * \ingroup GPUCommon
  */
 template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType = float>
-class ITK_TEMPLATE_EXPORT GPUResampleImageFilter
+class ITK_EXPORT GPUResampleImageFilter
   : public GPUImageToImageFilter<TInputImage,
                                  TOutputImage,
                                  ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>>

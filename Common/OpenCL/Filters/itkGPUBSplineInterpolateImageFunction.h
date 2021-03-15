@@ -42,7 +42,7 @@ itkGPUKernelClassMacro(GPUBSplineInterpolateImageFunctionKernel);
  * \ingroup GPUCommon
  */
 template <typename TInputImage, typename TCoordRep = float, typename TCoefficientType = float>
-class ITK_TEMPLATE_EXPORT GPUBSplineInterpolateImageFunction
+class ITK_EXPORT GPUBSplineInterpolateImageFunction
   : public GPUInterpolateImageFunction<TInputImage,
                                        TCoordRep,
                                        BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>

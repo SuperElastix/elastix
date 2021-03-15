@@ -41,7 +41,7 @@ itkGPUKernelClassMacro(GPUShrinkImageFilterKernel);
  * \ingroup GPUCommon
  */
 template <typename TInputImage, typename TOutputImage>
-class ITK_TEMPLATE_EXPORT GPUShrinkImageFilter
+class ITK_EXPORT GPUShrinkImageFilter
   : public GPUImageToImageFilter<TInputImage, TOutputImage, ShrinkImageFilter<TInputImage, TOutputImage>>
 {
 public:

@@ -38,7 +38,7 @@ itkGPUKernelClassMacro(GPUTranslationTransformBaseKernel);
  */
 template <typename TScalarType = float, // Data type for scalars
           unsigned int NDimensions = 3>
-class ITK_TEMPLATE_EXPORT GPUTranslationTransformBase : public GPUTransformBase
+class ITK_EXPORT GPUTranslationTransformBase : public GPUTransformBase
 {
 public:
   /** Standard typedefs   */

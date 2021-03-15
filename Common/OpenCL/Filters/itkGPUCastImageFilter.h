@@ -65,7 +65,7 @@ public:
 
 /** GPUCastImageFilter class definition */
 template <typename TInputImage, typename TOutputImage>
-class ITK_TEMPLATE_EXPORT GPUCastImageFilter
+class ITK_EXPORT GPUCastImageFilter
   : public GPUUnaryFunctorImageFilter<
       TInputImage,
       TOutputImage,
