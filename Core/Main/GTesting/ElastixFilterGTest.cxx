@@ -60,25 +60,12 @@ GTEST_TEST(ElastixFilter, Translation)
   elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto parameterObject = elastix::ParameterObject::New();
-
-  const std::pair<std::string, std::string> parameterArray[] = { // Parameters in alphabetic order:
-                                                                 { "ImageSampler", "Full" },
-                                                                 { "MaximumNumberOfIterations", "2" },
-                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
-                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                                 { "Transform", "TranslationTransform" }
-  };
-
-  std::map<std::string, std::vector<std::string>> parameterMap;
-
-  for (const auto & pair : parameterArray)
-  {
-    const auto result = parameterMap.insert({ pair.first, { pair.second } });
-
-    ASSERT_EQ(std::make_pair(pair, result.second), std::make_pair(pair, true));
-  }
-
-  parameterObject->SetParameterMap(parameterMap);
+  parameterObject->SetParameterMap(
+    elx::CoreMainGTestUtilities::CreateParameterMap({ { "ImageSampler", "Full" },
+                                                      { "MaximumNumberOfIterations", "2" },
+                                                      { "Metric", "AdvancedNormalizedCorrelation" },
+                                                      { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                      { "Transform", "TranslationTransform" } }));
 
   const auto filter = elastix::ElastixFilter<ImageType, ImageType>::New();
   ASSERT_NE(filter, nullptr);
