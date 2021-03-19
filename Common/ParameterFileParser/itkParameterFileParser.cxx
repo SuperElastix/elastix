@@ -264,20 +264,7 @@ ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const st
     this->ThrowException(fullLine, hint);
   }
 
-  /** 5) Perform checks on the parameter values. */
-  itksys::RegularExpression reInvalidCharacters2("[,;!@#$%&|<>?]");
-  for (const auto & parameterValue : parameterValues)
-  {
-    /** For all entries some characters are not allowed. */
-    if (reInvalidCharacters2.find(parameterValue))
-    {
-      const std::string hint =
-        "The parameter value \"" + parameterValue + "\" contains invalid characters (,;!@#$%&|<>?).";
-      this->ThrowException(fullLine, hint);
-    }
-  }
-
-  /** 6) Insert this combination in the parameter map. */
+  /** 5) Insert this combination in the parameter map. */
   if (this->m_ParameterMap.count(parameterName))
   {
     const std::string hint = "The parameter \"" + parameterName + "\" is specified more than once.";
