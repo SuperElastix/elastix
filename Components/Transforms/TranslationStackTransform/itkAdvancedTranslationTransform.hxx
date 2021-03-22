@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef _itkAdvancedTranslationTransform_txx
-#define _itkAdvancedTranslationTransform_txx
+#ifndef itkAdvancedTranslationTransform_hxx
+#define itkAdvancedTranslationTransform_hxx
 
 #include "itkAdvancedTranslationTransform.h"
 
