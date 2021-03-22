@@ -219,7 +219,9 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
   const auto filter1 = createFilter("TransformParameters.txt");
 
   for (const auto transformParameterFileName :
-       { "TransformParameters-link-to-ITK-tfm-file.txt", "TransformParameters-link-to-ITK-HDF5-file.txt" })
+       { "TransformParameters-link-to-ITK-tfm-file.txt",
+         "TransformParameters-link-to-ITK-HDF5-file.txt",
+         "TransformParameters-link-to-file-with-special-chars-in-path-name.txt" })
   {
     const auto filter2 = createFilter(transformParameterFileName);
 
