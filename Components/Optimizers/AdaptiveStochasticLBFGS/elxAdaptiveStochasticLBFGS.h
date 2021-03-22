@@ -315,10 +315,6 @@ protected:
 
   double m_SigmoidScaleFactor;
 
-  /** Check if the transform is an advanced transform. Called by Initialize. */
-  virtual void
-  CheckForAdvancedTransform(void);
-
   /** Print the contents of the settings vector to elxout. */
   virtual void
   PrintSettingsVector(const SettingsVectorType & settings) const;
@@ -408,6 +404,8 @@ protected:
   double  m_WindowScale;
 
 private:
+  elxOverrideGetSelfMacro;
+
   AdaptiveStochasticLBFGS(const Self &) = delete;
   void
   operator=(const Self &) = delete;

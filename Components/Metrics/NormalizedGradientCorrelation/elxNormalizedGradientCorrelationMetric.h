@@ -141,6 +141,8 @@ protected:
   ~NormalizedGradientCorrelationMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   NormalizedGradientCorrelationMetric(const Self &) = delete;
 

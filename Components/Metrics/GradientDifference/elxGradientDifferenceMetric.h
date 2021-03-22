@@ -143,6 +143,8 @@ protected:
   ~GradientDifferenceMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   GradientDifferenceMetric(const Self &) = delete;
   /** The deleted assignment operator. */

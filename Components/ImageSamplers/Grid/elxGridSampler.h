@@ -112,6 +112,8 @@ protected:
   ~GridSampler() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   GridSampler(const Self &) = delete;
   /** The deleted assignment operator. */

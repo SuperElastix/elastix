@@ -30,7 +30,6 @@
 
 #include <algorithm> // For transform.
 #include <array>
-#include <initializer_list>
 #include <limits>
 #include <vector>
 
@@ -123,22 +122,6 @@ ExpectRoundedTransformParametersEqualOffset(const elastix::ELASTIX &        elas
 }
 
 
-template <unsigned VImageDimension>
-std::map<std::string, std::vector<std::string>>
-CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> initializerList)
-{
-  const std::vector<std::string> imageDimensionVector = { std::to_string(VImageDimension) };
-
-  std::map<std::string, std::vector<std::string>> result{ { "FixedImageDimension", imageDimensionVector },
-                                                          { "MovingImageDimension", imageDimensionVector } };
-
-  for (const auto & pair : initializerList)
-  {
-    [&pair, &result] { ASSERT_TRUE(result.insert({ pair.first, { pair.second } }).second); }();
-  }
-  return result;
-}
-
 template <unsigned VImageDimension, typename TPixel = float>
 void
 Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
@@ -146,13 +129,13 @@ Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
   using ImageType = itk::Image<TPixel, VImageDimension>;
   using SizeType = itk::Size<VImageDimension>;
 
-  const auto parameterMap =
-    CreateParameterMap<VImageDimension>({ { "ImageSampler", "Full" },
-                                          { "FixedInternalImagePixelType", GetPixelTypeName<TPixel>() },
-                                          { "Metric", "AdvancedNormalizedCorrelation" },
-                                          { "MovingInternalImagePixelType", GetPixelTypeName<TPixel>() },
-                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                          { "Transform", "TranslationTransform" } });
+  const auto parameterMap = elx::CoreMainGTestUtilities::CreateParameterMap<VImageDimension>(
+    { { "ImageSampler", "Full" },
+      { "FixedInternalImagePixelType", GetPixelTypeName<TPixel>() },
+      { "Metric", "AdvancedNormalizedCorrelation" },
+      { "MovingInternalImagePixelType", GetPixelTypeName<TPixel>() },
+      { "Optimizer", "AdaptiveStochasticGradientDescent" },
+      { "Transform", "TranslationTransform" } });
 
   const auto regionSizeValue = 2;
   const auto imageSizeValue = 4;
@@ -197,7 +180,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   using ITKImageType = itk::Image<float>;
   constexpr auto ImageDimension = ITKImageType::ImageDimension;
 
-  const auto parameters = CreateParameterMap<ImageDimension>({
+  const auto parameters = elx::CoreMainGTestUtilities::CreateParameterMap<ImageDimension>({
     // Parameters with non-default values (A-Z):
     { "ImageSampler", "Full" },
     { "MaximumNumberOfIterations", "2" }, // Default value: 500
@@ -337,11 +320,12 @@ GTEST_TEST(ElastixLib, Translation3D)
   constexpr auto ImageDimension = 3;
   using ImageType = itk::Image<float, ImageDimension>;
 
-  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
-                                                                 { "MaximumNumberOfIterations", "3" },
-                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
-                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                                 { "Transform", "TranslationTransform" } });
+  const auto parameterMap = elx::CoreMainGTestUtilities::CreateParameterMap<ImageDimension>(
+    { { "ImageSampler", "Full" },
+      { "MaximumNumberOfIterations", "3" },
+      { "Metric", "AdvancedNormalizedCorrelation" },
+      { "Optimizer", "AdaptiveStochasticGradientDescent" },
+      { "Transform", "TranslationTransform" } });
 
   const itk::Size<ImageDimension>   imageSize{ { 5, 7, 9 } };
   const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);

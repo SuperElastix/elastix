@@ -28,6 +28,13 @@
 #include <type_traits> // For is_integral and is_same.
 #include <vector>
 
+namespace itk
+{
+// Forward declaration from ITK header <itkOptimizerParameters.h>.
+template <typename>
+class ITK_TEMPLATE_EXPORT OptimizerParameters;
+} // namespace itk
+
 namespace elastix
 {
 /**
@@ -72,6 +79,10 @@ public:
     return arg ? "true" : "false";
   }
 
+
+  /** Converts the specified `std::vector` to an OptimizerParameters object. */
+  static itk::OptimizerParameters<double>
+  ToOptimizerParameters(const std::vector<double> &);
 
   /** Converts the specified parameter map to a text string, according to the elastix parameter text file format. */
   static std::string

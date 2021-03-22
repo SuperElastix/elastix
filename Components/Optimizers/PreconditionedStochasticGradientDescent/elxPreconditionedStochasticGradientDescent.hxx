@@ -542,7 +542,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   for (unsigned int m = 0; m < M; ++m)
   {
     ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
-    originalSampler[m] = dynamic_cast<ImageSamplerBaseType *>(sampler.GetPointer());
+    originalSampler[m] = sampler.GetPointer();
   }
 
   /** Create a random sampler with more samples that can be used for the pre-conditioner computation. */
@@ -953,33 +953,6 @@ PreconditionedStochasticGradientDescent<TElastix>::PrintSettingsVector(const Set
   elxout << std::endl;
 
 } // end PrintSettingsVector()
-
-
-/**
- * ****************** CheckForAdvancedTransform **********************
- */
-
-template <class TElastix>
-void
-PreconditionedStochasticGradientDescent<TElastix>::CheckForAdvancedTransform(void)
-{
-  typename TransformType::Pointer transform = this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform();
-
-  AdvancedTransformType * testPtr = dynamic_cast<AdvancedTransformType *>(transform.GetPointer());
-  if (!testPtr)
-  {
-    this->m_AdvancedTransform = nullptr;
-    itkDebugMacro("Transform is not Advanced");
-    itkExceptionMacro(<< "The automatic parameter estimation of the ASGD "
-                      << "optimizer works only with advanced transforms");
-  }
-  else
-  {
-    this->m_AdvancedTransform = testPtr;
-    itkDebugMacro("Transform is Advanced");
-  }
-
-} // end CheckForAdvancedTransform()
 
 
 /**

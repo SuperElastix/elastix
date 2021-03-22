@@ -145,6 +145,8 @@ protected:
   ~TransformBendingEnergyPenalty() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   TransformBendingEnergyPenalty(const Self &) = delete;
   /** The deleted assignment operator. */

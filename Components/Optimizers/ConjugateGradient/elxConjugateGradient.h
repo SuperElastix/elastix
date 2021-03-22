@@ -189,6 +189,8 @@ protected:
     override;
 
 private:
+  elxOverrideGetSelfMacro;
+
   ConjugateGradient(const Self &) = delete;
   void
   operator=(const Self &) = delete;

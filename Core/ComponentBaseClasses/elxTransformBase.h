@@ -169,12 +169,9 @@ public:
 
   /** Other typedef's. */
   typedef itk::Object ObjectType;
-  typedef itk::AdvancedTransform<CoordRepType,
-                                 itkGetStaticConstMacro(FixedImageDimension),
-                                 itkGetStaticConstMacro(MovingImageDimension)>
-    ITKBaseType;
   typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
                                                                   CombinationTransformType;
+  typedef CombinationTransformType                                ITKBaseType;
   typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
 
   /** Typedef's for parameters. */
@@ -197,19 +194,19 @@ public:
   /** Typedef that is used in the elastix dll version. */
   typedef typename TElastix::ParameterMapType ParameterMapType;
 
-  /** Cast to ITKBaseType. */
+  /** Retrieves this object as ITKBaseType. */
   ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return &(this->GetAsCombinationTransform());
+    return &(this->GetSelf());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
   const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return &(this->GetAsCombinationTransform());
+    return &(this->GetSelf());
   }
 
   /** Execute stuff before the actual transformation:
@@ -296,16 +293,12 @@ protected:
   AutomaticScalesEstimationStackTransform(const unsigned int & numSubTransforms, ScalesType & scales) const;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** Function to read the initial transform parameters from the specified configuration object.
    */
   void
   ReadInitialTransformFromConfiguration(const Configuration::Pointer);
-
-  virtual const CombinationTransformType &
-  GetAsCombinationTransform(void) const = 0;
-
-  virtual CombinationTransformType &
-  GetAsCombinationTransform(void) = 0;
 
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.

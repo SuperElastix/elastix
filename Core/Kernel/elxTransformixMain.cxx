@@ -96,23 +96,24 @@ TransformixMain::Run(void)
   /** Create a log file. */
   itk::CreateOpenCLLogger("transformix", this->m_Configuration->GetCommandLineArgument("-out"));
 #endif
+  auto & elastixBase = this->GetElastixBase();
 
   if (BaseComponent::IsElastixLibrary())
   {
-    this->GetElastixBase()->SetConfigurations(this->m_Configurations);
+    elastixBase.SetConfigurations(this->m_Configurations);
   }
 
   /** Set some information in the ElastixBase. */
-  this->GetElastixBase()->SetConfiguration(this->m_Configuration);
-  this->GetElastixBase()->SetDBIndex(this->m_DBIndex);
+  elastixBase.SetConfiguration(this->m_Configuration);
+  elastixBase.SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. No default is specified for the Transform. */
-  this->GetElastixBase()->SetResampleInterpolatorContainer(
+  elastixBase.SetResampleInterpolatorContainer(
     this->CreateComponents("ResampleInterpolator", "FinalBSplineInterpolator", errorCode));
 
-  this->GetElastixBase()->SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
+  elastixBase.SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
 
-  this->GetElastixBase()->SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
+  elastixBase.SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
 
   /** Check if all components could be created. */
   if (errorCode != 0)
@@ -125,17 +126,17 @@ TransformixMain::Run(void)
   /** Set the images. If not set by the user, it is not a problem.
    * ElastixTemplate will try to load them from disk.
    */
-  this->GetElastixBase()->SetMovingImageContainer(this->GetModifiableMovingImageContainer());
+  elastixBase.SetMovingImageContainer(this->GetModifiableMovingImageContainer());
 
   /** Set the initial transform, if it happens to be there
    * \todo: Does this make sense for transformix?
    */
-  this->GetElastixBase()->SetInitialTransform(this->GetModifiableInitialTransform());
+  elastixBase.SetInitialTransform(this->GetModifiableInitialTransform());
 
   /** ApplyTransform! */
   try
   {
-    errorCode = this->GetElastixBase()->ApplyTransform();
+    errorCode = elastixBase.ApplyTransform();
   }
   catch (itk::ExceptionObject & excp)
   {
@@ -147,9 +148,9 @@ TransformixMain::Run(void)
   }
 
   /** Save the image container. */
-  this->SetMovingImageContainer(this->GetElastixBase()->GetMovingImageContainer());
-  this->SetResultImageContainer(this->GetElastixBase()->GetResultImageContainer());
-  this->SetResultDeformationFieldContainer(this->GetElastixBase()->GetResultDeformationFieldContainer());
+  this->SetMovingImageContainer(elastixBase.GetMovingImageContainer());
+  this->SetResultImageContainer(elastixBase.GetResultImageContainer());
+  this->SetResultDeformationFieldContainer(elastixBase.GetResultDeformationFieldContainer());
 
   return errorCode;
 

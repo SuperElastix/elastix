@@ -18,6 +18,8 @@
 #ifndef elxElastixFilter_hxx
 #define elxElastixFilter_hxx
 
+#include <memory> // For unique_ptr.
+
 namespace elastix
 {
 
@@ -197,7 +199,8 @@ ElastixFilter<TFixedImage, TMovingImage>::GenerateData(void)
   }
 
   // Setup xout
-  const elx::xoutManager manager(logFileName, this->GetLogToFile(), this->GetLogToConsole());
+  const std::unique_ptr<const elx::xoutManager> manager(
+    m_EnableOutput ? new elx::xoutManager(logFileName, this->GetLogToFile(), this->GetLogToConsole()) : nullptr);
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)

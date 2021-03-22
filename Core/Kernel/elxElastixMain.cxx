@@ -47,7 +47,6 @@ namespace
 struct Data
 {
   /** xout TargetCells. */
-  xl::xoutmain   Xout;
   xl::xoutsimple WarningXout;
   xl::xoutsimple ErrorXout;
   xl::xoutsimple StandardXout;
@@ -71,7 +70,6 @@ int
 elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
 {
   int returndummy = 0;
-  set_xout(&g_data.Xout);
 
   if (setupLogging)
   {
@@ -141,6 +139,7 @@ xoutManager::xoutManager(const std::string & logFileName, const bool setupLoggin
 
 xoutManager::Guard::~Guard()
 {
+  xl::get_xout() = {};
   g_data = {};
 }
 
@@ -348,39 +347,39 @@ ElastixMain::Run(void)
   /** Create a log file. */
   itk::CreateOpenCLLogger("elastix", this->m_Configuration->GetCommandLineArgument("-out"));
 #endif
+  auto & elastixBase = this->GetElastixBase();
 
   /** Set some information in the ElastixBase. */
-  this->GetElastixBase()->SetConfiguration(this->m_Configuration);
-  this->GetElastixBase()->SetDBIndex(this->m_DBIndex);
+  elastixBase.SetConfiguration(this->m_Configuration);
+  elastixBase.SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. ImageSampler is not mandatory.
    * No defaults are specified for ImageSampler, Metric, Transform
    * and Optimizer.
    */
-  this->GetElastixBase()->SetRegistrationContainer(
+  elastixBase.SetRegistrationContainer(
     this->CreateComponents("Registration", "MultiResolutionRegistration", errorCode));
 
-  this->GetElastixBase()->SetFixedImagePyramidContainer(
+  elastixBase.SetFixedImagePyramidContainer(
     this->CreateComponents("FixedImagePyramid", "FixedSmoothingImagePyramid", errorCode));
 
-  this->GetElastixBase()->SetMovingImagePyramidContainer(
+  elastixBase.SetMovingImagePyramidContainer(
     this->CreateComponents("MovingImagePyramid", "MovingSmoothingImagePyramid", errorCode));
 
-  this->GetElastixBase()->SetImageSamplerContainer(this->CreateComponents("ImageSampler", "", errorCode, false));
+  elastixBase.SetImageSamplerContainer(this->CreateComponents("ImageSampler", "", errorCode, false));
 
-  this->GetElastixBase()->SetInterpolatorContainer(
-    this->CreateComponents("Interpolator", "BSplineInterpolator", errorCode));
+  elastixBase.SetInterpolatorContainer(this->CreateComponents("Interpolator", "BSplineInterpolator", errorCode));
 
-  this->GetElastixBase()->SetMetricContainer(this->CreateComponents("Metric", "", errorCode));
+  elastixBase.SetMetricContainer(this->CreateComponents("Metric", "", errorCode));
 
-  this->GetElastixBase()->SetOptimizerContainer(this->CreateComponents("Optimizer", "", errorCode));
+  elastixBase.SetOptimizerContainer(this->CreateComponents("Optimizer", "", errorCode));
 
-  this->GetElastixBase()->SetResampleInterpolatorContainer(
+  elastixBase.SetResampleInterpolatorContainer(
     this->CreateComponents("ResampleInterpolator", "FinalBSplineInterpolator", errorCode));
 
-  this->GetElastixBase()->SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
+  elastixBase.SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
 
-  this->GetElastixBase()->SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
+  elastixBase.SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
 
   /** Check if all component could be created. */
   if (errorCode != 0)
@@ -393,24 +392,24 @@ ElastixMain::Run(void)
   /** Set the images and masks. If not set by the user, it is not a problem.
    * ElastixTemplate will try to load them from disk.
    */
-  this->GetElastixBase()->SetFixedImageContainer(this->GetModifiableFixedImageContainer());
-  this->GetElastixBase()->SetMovingImageContainer(this->GetModifiableMovingImageContainer());
-  this->GetElastixBase()->SetFixedMaskContainer(this->GetModifiableFixedMaskContainer());
-  this->GetElastixBase()->SetMovingMaskContainer(this->GetModifiableMovingMaskContainer());
-  this->GetElastixBase()->SetResultImageContainer(this->GetModifiableResultImageContainer());
+  elastixBase.SetFixedImageContainer(this->GetModifiableFixedImageContainer());
+  elastixBase.SetMovingImageContainer(this->GetModifiableMovingImageContainer());
+  elastixBase.SetFixedMaskContainer(this->GetModifiableFixedMaskContainer());
+  elastixBase.SetMovingMaskContainer(this->GetModifiableMovingMaskContainer());
+  elastixBase.SetResultImageContainer(this->GetModifiableResultImageContainer());
 
   /** Set the initial transform, if it happens to be there. */
-  this->GetElastixBase()->SetInitialTransform(this->GetModifiableInitialTransform());
+  elastixBase.SetInitialTransform(this->GetModifiableInitialTransform());
 
   /** Set the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false.
    */
-  this->GetElastixBase()->SetOriginalFixedImageDirectionFlat(this->GetOriginalFixedImageDirectionFlat());
+  elastixBase.SetOriginalFixedImageDirectionFlat(this->GetOriginalFixedImageDirectionFlat());
 
   /** Run elastix! */
   try
   {
-    errorCode = this->GetElastixBase()->Run();
+    errorCode = elastixBase.Run();
   }
   catch (itk::ExceptionObject & excp1)
   {
@@ -433,21 +432,21 @@ ElastixMain::Run(void)
   }
 
   /** Return the final transform. */
-  this->m_FinalTransform = this->GetElastixBase()->GetFinalTransform();
+  this->m_FinalTransform = elastixBase.GetFinalTransform();
 
   /** Get the transformation parameter map */
-  this->m_TransformParametersMap = this->GetElastixBase()->GetTransformParametersMap();
+  this->m_TransformParametersMap = elastixBase.GetTransformParametersMap();
 
   /** Store the images in ElastixMain. */
-  this->SetFixedImageContainer(this->GetElastixBase()->GetFixedImageContainer());
-  this->SetMovingImageContainer(this->GetElastixBase()->GetMovingImageContainer());
-  this->SetFixedMaskContainer(this->GetElastixBase()->GetFixedMaskContainer());
-  this->SetMovingMaskContainer(this->GetElastixBase()->GetMovingMaskContainer());
-  this->SetResultImageContainer(this->GetElastixBase()->GetResultImageContainer());
+  this->SetFixedImageContainer(elastixBase.GetFixedImageContainer());
+  this->SetMovingImageContainer(elastixBase.GetMovingImageContainer());
+  this->SetFixedMaskContainer(elastixBase.GetFixedMaskContainer());
+  this->SetMovingMaskContainer(elastixBase.GetMovingMaskContainer());
+  this->SetResultImageContainer(elastixBase.GetResultImageContainer());
 
   /** Store the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false. */
-  this->SetOriginalFixedImageDirectionFlat(this->GetElastixBase()->GetOriginalFixedImageDirectionFlat());
+  this->SetOriginalFixedImageDirectionFlat(elastixBase.GetOriginalFixedImageDirectionFlat());
 
   /** Return a value. */
   return errorCode;
@@ -729,19 +728,17 @@ ElastixMain::GetTotalNumberOfElastixLevels(void)
  * ************************* GetElastixBase ***************************
  */
 
-ElastixMain::ElastixBaseType *
+ElastixMain::ElastixBaseType &
 ElastixMain::GetElastixBase(void) const
 {
-  ElastixBaseType * testpointer;
-
   /** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
-  testpointer = dynamic_cast<ElastixBaseType *>(this->m_Elastix.GetPointer());
-  if (!testpointer)
+  const auto testpointer = dynamic_cast<ElastixBaseType *>(this->m_Elastix.GetPointer());
+  if (testpointer == nullptr)
   {
     itkExceptionMacro(<< "Probably GetElastixBase() is called before having called Run()");
   }
 
-  return testpointer;
+  return *testpointer;
 
 } // end GetElastixBase()
 

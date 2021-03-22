@@ -66,19 +66,19 @@ public:
   /** ITKBaseType. */
   typedef itk::InterpolateImageFunction<InputImageType, CoordRepType> ITKBaseType;
 
-  /** Cast to ITKBaseType. */
-  virtual ITKBaseType *
+  /** Retrieves this object as ITKBaseType. */
+  ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetSelf());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType *
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
+  const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetSelf());
   }
 
 
@@ -89,6 +89,8 @@ protected:
   ~InterpolatorBase() override = default;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   InterpolatorBase(const Self &) = delete;
   /** The deleted assignment operator. */

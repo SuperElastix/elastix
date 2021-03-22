@@ -186,6 +186,8 @@ protected:
     override;
 
 private:
+  elxOverrideGetSelfMacro;
+
   QuasiNewtonLBFGS(const Self &) = delete;
   void
   operator=(const Self &) = delete;

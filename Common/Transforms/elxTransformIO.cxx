@@ -28,7 +28,7 @@
 
 #include <string>
 
-itk::TransformBaseTemplate<double>::Pointer
+itk::TransformBase::Pointer
 elastix::TransformIO::CreateCorrespondingItkTransform(const elx::BaseComponent & elxTransform,
                                                       const unsigned             fixedImageDimension,
                                                       const unsigned             movingImageDimension)
@@ -58,11 +58,11 @@ elastix::TransformIO::CreateCorrespondingItkTransform(const elx::BaseComponent &
                             "_double_" + std::to_string(fixedImageDimension) + '_' +
                             std::to_string(movingImageDimension);
   const auto instance = itk::ObjectFactoryBase::CreateInstance(instanceName.c_str());
-  return dynamic_cast<itk::TransformBaseTemplate<double> *>(instance.GetPointer());
+  return dynamic_cast<itk::TransformBase *>(instance.GetPointer());
 }
 
 void
-elastix::TransformIO::Write(const itk::TransformBaseTemplate<double> & itkTransform, const std::string & fileName)
+elastix::TransformIO::Write(const itk::TransformBase & itkTransform, const std::string & fileName)
 {
   try
   {

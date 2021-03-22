@@ -121,6 +121,8 @@ protected:
   BeforeEachResolution(void) override;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   RayCastInterpolator(const Self &) = delete;
 

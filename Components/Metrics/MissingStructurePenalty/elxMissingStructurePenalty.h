@@ -186,6 +186,8 @@ protected:
   ~MissingStructurePenalty() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MissingStructurePenalty(const Self &) = delete;
   /** The deleted assignment operator. */

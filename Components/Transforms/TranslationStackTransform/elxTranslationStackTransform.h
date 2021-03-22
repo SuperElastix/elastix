@@ -153,17 +153,7 @@ protected:
   ~TranslationStackTransform() override = default;
 
 private:
-  const Self &
-  GetAsCombinationTransform(void) const override
-  {
-    return *this;
-  }
-
-  Self &
-  GetAsCombinationTransform(void) override
-  {
-    return *this;
-  }
+  elxOverrideGetSelfMacro;
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType

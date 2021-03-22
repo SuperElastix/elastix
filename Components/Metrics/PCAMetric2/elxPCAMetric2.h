@@ -172,6 +172,8 @@ protected:
   ~PCAMetric2() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   PCAMetric2(const Self &) = delete;
   /** The deleted assignment operator. */

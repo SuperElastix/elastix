@@ -153,6 +153,8 @@ protected:
   ~StandardGradientDescent() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   StandardGradientDescent(const Self &) = delete;
   void
   operator=(const Self &) = delete;

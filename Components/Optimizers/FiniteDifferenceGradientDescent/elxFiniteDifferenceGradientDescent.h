@@ -146,6 +146,8 @@ protected:
   bool m_ShowMetricValues;
 
 private:
+  elxOverrideGetSelfMacro;
+
   FiniteDifferenceGradientDescent(const Self &) = delete;
   void
   operator=(const Self &) = delete;

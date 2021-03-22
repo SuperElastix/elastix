@@ -99,6 +99,8 @@ protected:
   ~FullSampler() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   FullSampler(const Self &) = delete;
   /** The deleted assignment operator. */

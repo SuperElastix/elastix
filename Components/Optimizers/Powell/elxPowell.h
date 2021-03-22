@@ -107,6 +107,8 @@ protected:
   ~Powell() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   Powell(const Self &) = delete;
   void
   operator=(const Self &) = delete;

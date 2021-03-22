@@ -111,6 +111,8 @@ protected:
   virtual ~OpenCLFixedGenericPyramid() = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   OpenCLFixedGenericPyramid(const Self &) = delete;
   /** The deleted assignment operator. */

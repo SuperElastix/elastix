@@ -95,6 +95,8 @@ protected:
   ~MyStandardResampler() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   MyStandardResampler(const Self &) = delete;
   /** The deleted assignment operator. */

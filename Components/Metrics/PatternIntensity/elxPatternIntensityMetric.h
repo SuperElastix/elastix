@@ -141,6 +141,8 @@ protected:
   ~PatternIntensityMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   PatternIntensityMetric(const Self &) = delete;
   /** The deleted assignment operator. */

@@ -352,7 +352,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
   }
   else
   {
-    this->m_Resampler1->SetInput(dynamic_cast<MovingImageELXType *>(this->m_Elastix->GetMovingImage()));
+    this->m_Resampler1->SetInput(this->m_Elastix->GetMovingImage());
   }
 
   /** Get the default pixel value. */
@@ -1140,7 +1140,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
     {
       maximumImageFilter = MaximumImageFilterType::New();
       maximumImageFilter->SetInput(0, this->m_GrayValueImage1);
-      maximumImageFilter->SetInput(1, dynamic_cast<FixedImageELXType *>(this->m_Elastix->GetFixedImage()));
+      maximumImageFilter->SetInput(1, this->m_Elastix->GetFixedImage());
       this->m_GrayValueImage2 = maximumImageFilter->GetOutput();
 
       /** Do the maximum (OR filter). */

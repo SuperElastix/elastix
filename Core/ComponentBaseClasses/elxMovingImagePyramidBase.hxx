@@ -159,9 +159,8 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filenam
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
-  std::basic_string<char>::size_type       pos = resultImagePixelType.find(" ");
-  const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
-  if (pos != npos)
+  const std::string::size_type pos = resultImagePixelType.find(" ");
+  if (pos != std::string::npos)
   {
     resultImagePixelType.replace(pos, 1, "_");
   }
@@ -181,7 +180,6 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filenam
   writer->SetUseCompression(doCompression);
 
   /** Do the writing. */
-  xl::xout["coutonly"] << std::flush;
   xl::xout["coutonly"] << "  Writing moving pyramid image ..." << std::endl;
   try
   {

@@ -20,26 +20,14 @@
 
 namespace xoutlibrary
 {
-static xoutmain * local_xout = nullptr;
-
 xoutmain &
 get_xout(void)
 {
-  return *local_xout;
+  // Note: C++11 "magic statics" ensures that the construction of a local
+  // static variable like this is thread-safe.
+  static xoutmain local_xout;
+
+  return local_xout;
 }
-
-
-void
-set_xout(xoutmain * arg)
-{
-  local_xout = arg;
-}
-
-bool
-xout_valid()
-{
-  return local_xout != nullptr;
-}
-
 
 } // namespace xoutlibrary

@@ -254,6 +254,8 @@ protected:
   AddRandomPerturbation(const ParametersType & initialParameters, ParametersType & perturbedParameters, double sigma);
 
 private:
+  elxOverrideGetSelfMacro;
+
   PreconditionedGradientDescent(const Self &) = delete;
   void
   operator=(const Self &) = delete;

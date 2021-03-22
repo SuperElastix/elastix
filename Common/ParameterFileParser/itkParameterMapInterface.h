@@ -27,6 +27,7 @@
 #include "itkParameterFileParser.h"
 
 #include <iostream>
+#include <memory>      // For unique_ptr.
 #include <type_traits> // For is_same.
 
 namespace itk
@@ -370,6 +371,41 @@ public:
     const auto found = m_ParameterMap.find(parameterName);
     return (found == m_ParameterMap.cend()) ? std::vector<std::string>{} : found->second;
   }
+
+  /** Retrieves the values of the specified parameter. Returns null when the
+   * map does not contain the specified parameter. Throws an exception when
+   * it fails to convert each of the values to the specified type `T`.
+   */
+  template <typename T>
+  std::unique_ptr<std::vector<T>>
+  RetrieveValues(const std::string & parameterName) const
+  {
+    const auto found = m_ParameterMap.find(parameterName);
+    if (found == m_ParameterMap.end())
+    {
+      return nullptr;
+    }
+    std::vector<T> result;
+    result.reserve(found->second.size());
+
+    for (const std::string & str : found->second)
+    {
+      T value{};
+
+      if (Self::StringCast(str, value))
+      {
+        result.push_back(value);
+      }
+      else
+      {
+        const auto entry_nr = &str - found->second.data();
+        itkExceptionMacro(<< "Failed to cast parameter \"" << parameterName << "\" entry number " << entry_nr
+                          << " value \"" << str << "\" to type \"" << typeid(T).name() << "\"!");
+      }
+    }
+    return std::unique_ptr<std::vector<T>>(new std::vector<T>(std::move(result)));
+  }
+
 
 protected:
   ParameterMapInterface();

@@ -105,19 +105,19 @@ public:
   /** Typedef for mask erosion options */
   typedef std::vector<bool> UseMaskErosionArrayType;
 
-  /** Cast to ITKBaseType. */
-  virtual ITKBaseType *
+  /** Retrieves this object as ITKBaseType. */
+  ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetSelf());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType *
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
+  const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetSelf());
   }
 
 
@@ -210,6 +210,8 @@ protected:
                                   unsigned int                   level) const;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   RegistrationBase(const Self &) = delete;
   /** The deleted assignment operator. */

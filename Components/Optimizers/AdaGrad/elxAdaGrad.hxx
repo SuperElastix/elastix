@@ -541,7 +541,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation(void)
   for (unsigned int m = 0; m < M; ++m)
   {
     ImageSamplerBasePointer sampler = this->GetElastix()->GetElxMetricBase(m)->GetAdvancedMetricImageSampler();
-    originalSampler[m] = dynamic_cast<ImageSamplerBaseType *>(sampler.GetPointer());
+    originalSampler[m] = sampler.GetPointer();
   }
 
 #if 0
@@ -940,33 +940,6 @@ AdaGrad<TElastix>::PrintSettingsVector(const SettingsVectorType & settings) cons
   elxout << std::endl;
 
 } // end PrintSettingsVector()
-
-
-/**
- * ****************** CheckForAdvancedTransform **********************
- */
-
-template <class TElastix>
-void
-AdaGrad<TElastix>::CheckForAdvancedTransform(void)
-{
-  typename TransformType::Pointer transform = this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform();
-
-  AdvancedTransformType * testPtr = dynamic_cast<AdvancedTransformType *>(transform.GetPointer());
-  if (!testPtr)
-  {
-    this->m_AdvancedTransform = nullptr;
-    itkDebugMacro("Transform is not Advanced");
-    itkExceptionMacro(<< "The automatic parameter estimation of the ASGD "
-                      << "optimizer works only with advanced transforms");
-  }
-  else
-  {
-    this->m_AdvancedTransform = testPtr;
-    itkDebugMacro("Transform is Advanced");
-  }
-
-} // end CheckForAdvancedTransform()
 
 
 /**

@@ -174,6 +174,8 @@ protected:
   ~SumOfPairwiseCorrelationCoefficientsMetric() override = default;
 
 private:
+  elxOverrideGetSelfMacro;
+
   /** The deleted copy constructor. */
   SumOfPairwiseCorrelationCoefficientsMetric(const Self &) = delete;
 

@@ -278,12 +278,12 @@ ResamplerBase<TElastix>::SetComponents(void)
   /** Set the transform, the interpolator and the inputImage
    * (which is the moving image).
    */
-  this->GetAsITKBaseType()->SetTransform(dynamic_cast<TransformType *>(this->m_Elastix->GetElxTransformBase()));
+  this->GetAsITKBaseType()->SetTransform(BaseComponent::AsITKBaseType(this->m_Elastix->GetElxTransformBase()));
 
   this->GetAsITKBaseType()->SetInterpolator(
-    dynamic_cast<InterpolatorType *>(this->m_Elastix->GetElxResampleInterpolatorBase()));
+    BaseComponent::AsITKBaseType(this->m_Elastix->GetElxResampleInterpolatorBase()));
 
-  this->GetAsITKBaseType()->SetInput(dynamic_cast<InputImageType *>(this->m_Elastix->GetMovingImage()));
+  this->GetAsITKBaseType()->SetInput(this->m_Elastix->GetMovingImage());
 
 } // end SetComponents()
 
@@ -346,25 +346,23 @@ void
 ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * filename, const bool & showProgress)
 {
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
-  typedef itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> RayCastInterpolatorType;
-  const RayCastInterpolatorType *                                                    testptr =
-    dynamic_cast<const RayCastInterpolatorType *>(this->GetAsITKBaseType()->GetInterpolator());
+  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
+    this->GetAsITKBaseType()->GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings.
    */
 
-  if (testptr)
+  if (testptr != nullptr)
   {
-    this->GetAsITKBaseType()->SetTransform((const_cast<RayCastInterpolatorType *>(testptr))->GetTransform());
+    this->GetAsITKBaseType()->SetTransform(testptr->GetTransform());
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
-  std::basic_string<char>::size_type       pos = resultImagePixelType.find(" ");
-  const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
-  if (pos != npos)
+  const std::string::size_type pos = resultImagePixelType.find(" ");
+  if (pos != std::string::npos)
   {
     resultImagePixelType.replace(pos, 1, "_");
   }
@@ -401,7 +399,6 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   /** Do the writing. */
   if (showProgress)
   {
-    xl::xout["coutonly"] << std::flush;
     xl::xout["coutonly"] << "\n  Writing image ..." << std::endl;
   }
   try
@@ -457,20 +454,18 @@ ResamplerBase<TElastix>::CreateItkResultImage(void)
   }
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
-  typedef itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> RayCastInterpolatorType;
-
-  const RayCastInterpolatorType * testptr =
-    dynamic_cast<const RayCastInterpolatorType *>(this->GetAsITKBaseType()->GetInterpolator());
+  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
+    this->GetAsITKBaseType()->GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings */
 
-  if (testptr)
+  if (testptr != nullptr)
   {
-    this->GetAsITKBaseType()->SetTransform((const_cast<RayCastInterpolatorType *>(testptr))->GetTransform());
+    this->GetAsITKBaseType()->SetTransform(testptr->GetTransform());
   }
 
-  /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
+  /** Read output pixeltype from parameter the file. */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
 

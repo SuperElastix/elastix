@@ -85,19 +85,19 @@ public:
   /** Typedef's from ITKBaseType. */
   typedef typename ITKBaseType::ScheduleType ScheduleType;
 
-  /** Cast to ITKBaseType. */
-  virtual ITKBaseType *
+  /** Retrieves this object as ITKBaseType. */
+  ITKBaseType *
   GetAsITKBaseType(void)
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return &(this->GetSelf());
   }
 
 
-  /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType *
+  /** Retrieves this object as ITKBaseType, to use in const functions. */
+  const ITKBaseType *
   GetAsITKBaseType(void) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return &(this->GetSelf());
   }
 
 
@@ -129,6 +129,8 @@ protected:
   ~MovingImagePyramidBase() override = default;
 
 private:
+  elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
   /** The deleted copy constructor. */
   MovingImagePyramidBase(const Self &) = delete;
   /** The deleted assignment operator. */
