@@ -326,7 +326,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const Outp
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  include "itkAdvancedTranslationTransform.txx"
+#  include "itkAdvancedTranslationTransform.hxx"
 #endif
 
 #endif /* itkAdvancedTranslationTransform_h */
