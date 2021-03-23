@@ -4,12 +4,14 @@ add_executable(ElastixLibGTest
   ElastixFilterGTest.cxx
   ElastixLibGTest.cxx
   itkElastixRegistrationMethodGTest.cxx
+  itkTransformixFilterGTest.cxx
 )
 
 target_link_libraries( ElastixLibGTest
   GTest::GTest
   GTest::Main
   elastix_lib
+  transformix_lib
   ${ITK_LIBRARIES}
 )
 
