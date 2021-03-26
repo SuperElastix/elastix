@@ -20,7 +20,7 @@
 
 #include "itkMatrix.h"
 
-#include <vnl_vector.h>
+#include <vnl/vnl_vector.h>
 
 #include <iterator>
 #include <map>
