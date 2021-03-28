@@ -104,10 +104,6 @@ OpenCLLogger::Initialize()
   if (this->m_FileStream->fail())
   {
     itkExceptionMacro(<< "Unable to open file: " << logFileName);
-    delete this->m_FileStream;
-    this->m_FileStream = nullptr;
-    this->m_Created = false;
-    return;
   }
 
   // Create an ITK Logger
