@@ -274,7 +274,7 @@ TestInterpolators(void)
 
 
 int
-main(int argc, char ** argv)
+main(void)
 {
   // 2D tests
   bool success = TestInterpolators<2>();

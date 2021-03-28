@@ -507,7 +507,7 @@ TestGPUAdvancedTransformFactories()
 //------------------------------------------------------------------------------
 // This test validates GPU factory create process
 int
-main(int argc, char * argv[])
+main(void)
 {
   // Setup for debugging
   itk::SetupForDebugging();
