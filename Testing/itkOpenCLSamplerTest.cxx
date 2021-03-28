@@ -19,7 +19,7 @@
 #include "itkOpenCLSampler.h"
 
 int
-main(int argc, char * argv[])
+main(void)
 {
   itk::OpenCLSampler samplerNull;
 

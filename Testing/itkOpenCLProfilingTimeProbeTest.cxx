@@ -18,7 +18,7 @@
 #include "itkOpenCLProfilingTimeProbe.h"
 
 int
-main(int argc, char * argv[])
+main(void)
 {
   {
     itk::OpenCLProfilingTimeProbe timer("Hello ITK OpenCL!");

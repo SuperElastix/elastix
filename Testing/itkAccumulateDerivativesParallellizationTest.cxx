@@ -183,7 +183,7 @@ public:
 //-------------------------------------------------------------------------------------
 
 int
-main(int argc, char * argv[])
+main(void)
 {
   // Declare and setup
   std::cout << std::fixed << std::showpoint << std::setprecision(8);
