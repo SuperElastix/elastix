@@ -21,15 +21,23 @@
 // GoogleTest header file:
 #include <gtest/gtest.h>
 
+#include <cassert>
+#include <type_traits> // For is_same.
+
+
 namespace elastix
 {
 std::string
 CoreMainGTestUtilities::GetDataDirectoryPath()
 {
-  static_assert(ELX_CMAKE_SOURCE_DIR != nullptr, "The CMAKE_SOURCE_DIR must not be null");
-  const std::string sourceDirectoryPath = ELX_CMAKE_SOURCE_DIR;
-  [&sourceDirectoryPath] { ASSERT_FALSE(sourceDirectoryPath.empty()); }();
-  return sourceDirectoryPath + (sourceDirectoryPath.back() == '/' ? "" : "/") + "Testing/Data";
+  constexpr auto sourceDirectoryPath = ELX_CMAKE_SOURCE_DIR;
+  static_assert(std::is_same<decltype(sourceDirectoryPath), const char * const>(),
+                "CMAKE_SOURCE_DIR must be a character string!");
+  static_assert(sourceDirectoryPath != nullptr, "CMAKE_SOURCE_DIR must not be null!");
+  static_assert(*sourceDirectoryPath != '\0', "CMAKE_SOURCE_DIR must not be empty!");
+
+  const std::string str = sourceDirectoryPath;
+  return str + ((str.back() == '/') ? "" : "/") + "Testing/Data";
 }
 
 } // namespace elastix
