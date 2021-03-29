@@ -20,10 +20,10 @@ if(${USE_ActiveRegistrationModelShapeMetric} OR ${USE_ActiveRegistrationModelInt
   add_subdirectory(Statismo)
 endif()
 
-if(USE_ActiveRegistrationModelShapeMetric)
+if(${USE_ActiveRegistrationModelShapeMetric})
   target_link_libraries(ActiveRegistrationModelShapeMetric statismo_core ${Boost_LIBRARIES} ITKInternalEigen3::Eigen)
 endif()
 
-if(USE_ActiveRegistrationModelIntensityMetric)
+if(${USE_ActiveRegistrationModelIntensityMetric})
   target_link_libraries(ActiveRegistrationModelIntensityMetric statismo_core ${Boost_LIBRARIES} ITKInternalEigen3::Eigen)
 endif()
