@@ -20,6 +20,8 @@
 #define elxAdvancedAffineTransform_hxx
 
 #include "elxAdvancedAffineTransform.h"
+#include <elxConversion.h>
+
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
 
@@ -74,6 +76,22 @@ template <class TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::ReadFromFile(void)
 {
+  const auto itkParameterValues =
+    this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformParameters");
+
+  if (itkParameterValues != nullptr)
+  {
+    m_AffineTransform->SetParameters(Conversion::ToOptimizerParameters(*itkParameterValues));
+  }
+
+  const auto itkFixedParameterValues =
+    this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformFixedParameters");
+
+  if (itkFixedParameterValues != nullptr)
+  {
+    m_AffineTransform->SetFixedParameters(Conversion::ToOptimizerParameters(*itkFixedParameterValues));
+  }
+
   InputPointType centerOfRotationPoint;
   centerOfRotationPoint.Fill(0.0);
 
@@ -81,17 +99,20 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile(void)
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
-
-  if (!pointRead)
+  if (this->ReadCenterOfRotationPoint(centerOfRotationPoint))
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the "
-                      << "transform parameter file" << std::endl;
-    itkExceptionMacro(<< "Transform parameter file is corrupt.")
+    /** Set the center in this Transform. */
+    this->m_AffineTransform->SetCenter(centerOfRotationPoint);
   }
-
-  /** Set the center in this Transform. */
-  this->m_AffineTransform->SetCenter(centerOfRotationPoint);
+  else
+  {
+    if (itkFixedParameterValues == nullptr)
+    {
+      xl::xout["error"] << "ERROR: No center of rotation is specified in the "
+                        << "transform parameter file" << std::endl;
+      itkExceptionMacro(<< "Transform parameter file is corrupt.")
+    }
+  }
 
   /** Call the ReadFromFile from the TransformBase.
    * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation

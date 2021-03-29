@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 
+#define _USE_MATH_DEFINES // For M_PI_4.
 
 // First include the header file to be tested:
 #include <itkTransformixFilter.h>
@@ -25,6 +26,7 @@
 #include "elxCoreMainGTestUtilities.h"
 
 // ITK header files:
+#include <itkAffineTransform.h>
 #include <itkImage.h>
 #include <itkImageBufferRange.h>
 #include <itkResampleImageFilter.h>
@@ -34,6 +36,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm> // For equal and transform.
+#include <cmath>
 #include <map>
 #include <string>
 
@@ -81,6 +84,8 @@ ConvertToParameterValues(const T & container)
 }
 
 
+// Translates an image by the specified offset, using itk::TransformixFilter,
+// specifying "TranslationTransform" as Transform.
 template <typename TImage>
 itk::SmartPointer<TImage>
 TranslateImage(TImage & image, const typename TImage::OffsetType & translationOffset)
@@ -96,6 +101,7 @@ TranslateImage(TImage & image, const typename TImage::OffsetType & translationOf
                             { "Index", ParameterValuesType(ImageDimension, "0") },
                             { "NumberOfParameters", { std::to_string(ImageDimension) } },
                             { "Origin", ParameterValuesType(ImageDimension, "0") },
+                            { "ResampleInterpolator", { "FinalLinearInterpolator" } },
                             { "Size", ConvertToParameterValues(image.GetRequestedRegion().GetSize()) },
                             { "Transform", ParameterValuesType{ "TranslationTransform" } },
                             { "TransformParameters", ConvertToParameterValues(translationOffset) },
@@ -152,7 +158,7 @@ ExpectEqualImages(const TImage & actualImage, const TImage & expectedImage)
 
 template <typename TImage>
 void
-ExpectAlmostEqualPixelValues(const TImage & actualImage, const TImage & expectedImage)
+ExpectAlmostEqualPixelValues(const TImage & actualImage, const TImage & expectedImage, const double tolerance)
 {
   // ImageBufferRange is to be moved from namespace itk::Experimental
   // to namespace itk with ITK version 5.2.
@@ -171,9 +177,7 @@ ExpectAlmostEqualPixelValues(const TImage & actualImage, const TImage & expected
 
   for (const PixelType actualPixelValue : actualImageBufferRange)
   {
-    // No rounding errors are expected for the value 1.0 (one), but some
-    // small rounding errors around 0.0 (zero) are found acceptable.
-    EXPECT_LT(std::abs(actualPixelValue - *expectedImageIterator), std::numeric_limits<PixelType>::epsilon());
+    EXPECT_LE(std::abs(actualPixelValue - *expectedImageIterator), tolerance);
     ++expectedImageIterator;
   }
 }
@@ -183,7 +187,8 @@ template <typename TImage>
 void
 Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(
   TImage &                                                                       image,
-  const itk::Transform<double, TImage::ImageDimension, TImage::ImageDimension> & itkTransform)
+  const itk::Transform<double, TImage::ImageDimension, TImage::ImageDimension> & itkTransform,
+  const double                                                                   tolerance)
 {
   constexpr auto ImageDimension = TImage::ImageDimension;
   const auto     imageSize = image.GetRequestedRegion().GetSize();
@@ -209,6 +214,7 @@ Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(
       { "ITKTransformParameters", ConvertToParameterValues(itkTransform.GetParameters()) },
       { "ITKTransformFixedParameters", ConvertToParameterValues(itkTransform.GetFixedParameters()) },
       { "Origin", ParameterValuesType(ImageDimension, "0") },
+      { "ResampleInterpolator", { "FinalLinearInterpolator" } },
       { "Size", ConvertToParameterValues(imageSize) },
       { "Transform", ParameterValuesType{ transformClassName } },
       { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
@@ -216,7 +222,7 @@ Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(
 
   const auto & transformixOutput = elx::CoreMainGTestUtilities::Deref(transformixFilter->GetOutput());
   ExpectEqualImageBases(transformixOutput, resampleImageFilterOutput);
-  ExpectAlmostEqualPixelValues(transformixOutput, resampleImageFilterOutput);
+  ExpectAlmostEqualPixelValues(transformixOutput, resampleImageFilterOutput, tolerance);
 }
 
 } // namespace
@@ -246,8 +252,7 @@ GTEST_TEST(itkTransformixFilter, Translation2D)
 
   const auto transformedImage = TranslateImage(*movingImage, translationOffset);
 
-  ExpectEqualImageBases(*transformedImage, *fixedImage);
-  ExpectAlmostEqualPixelValues(*transformedImage, *fixedImage);
+  ExpectEqualImages(*transformedImage, *fixedImage);
 }
 
 
@@ -275,8 +280,7 @@ GTEST_TEST(itkTransformixFilter, Translation3D)
 
   const auto transformedImage = TranslateImage(*movingImage, translationOffset);
 
-  ExpectEqualImageBases(*transformedImage, *fixedImage);
-  ExpectAlmostEqualPixelValues(*transformedImage, *fixedImage);
+  ExpectEqualImages(*transformedImage, *fixedImage);
 }
 
 
@@ -313,6 +317,7 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
                               { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
                               { "Index", ParameterValuesType(ImageDimension, "0") },
                               { "Origin", ParameterValuesType(ImageDimension, "0") },
+                              { "ResampleInterpolator", { "FinalLinearInterpolator" } },
                               { "Size", ConvertToParameterValues(imageSize) },
                               { "Transform", ParameterValuesType{ "File" } },
                               { "TransformFileName", { transformFilePathName } },
@@ -344,7 +349,7 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform2D)
   ASSERT_NE(itkTransform, nullptr);
   itkTransform->SetOffset(itk::Vector<double, ImageDimension>(translationOffset.data()));
 
-  Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(*movingImage, *itkTransform);
+  Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(*movingImage, *itkTransform, 0.0F);
 }
 
 
@@ -368,5 +373,57 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform3D)
   ASSERT_NE(itkTransform, nullptr);
   itkTransform->SetOffset(itk::Vector<double, ImageDimension>(translationOffset.data()));
 
-  Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(*movingImage, *itkTransform);
+  Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(*movingImage, *itkTransform, 0.0F);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKAffineTransform2D)
+{
+  constexpr auto                    ImageDimension = 2U;
+  const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
+  const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);
+  const itk::Size<ImageDimension>   imageSize{ { 5, 6 } };
+  const itk::Index<ImageDimension>  index{ { 1, 3 } };
+
+  const auto image = itk::Image<float, ImageDimension>::New();
+  image->SetRegions(imageSize);
+  image->Allocate(true);
+  elx::CoreMainGTestUtilities::FillImageRegion(*image, index + translationOffset, regionSize);
+
+  const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
+  ASSERT_NE(itkTransform, nullptr);
+  itkTransform->SetTranslation(
+    itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, -2.0 }.data()));
+  itkTransform->SetCenter(itk::Point<double, ImageDimension>(std::array<double, ImageDimension>{ 2.5, 3.0 }));
+  itkTransform->Rotate2D(M_PI_4);
+
+  // A tolerance value that is just high enough to avoid test failures.
+  constexpr auto tolerance = 1.4e-06F;
+  Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(*image, *itkTransform, tolerance);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKAffineTransform3D)
+{
+  constexpr auto                    ImageDimension = 3U;
+  const itk::Offset<ImageDimension> translationOffset{ { 1, 2, 3 } };
+  const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);
+  const itk::Size<ImageDimension>   imageSize{ { 5, 7, 9 } };
+  const itk::Index<ImageDimension>  index{ { 1, 2, 3 } };
+
+  const auto image = itk::Image<float, ImageDimension>::New();
+  image->SetRegions(imageSize);
+  image->Allocate(true);
+  elx::CoreMainGTestUtilities::FillImageRegion(*image, index + translationOffset, regionSize);
+
+  const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
+  ASSERT_NE(itkTransform, nullptr);
+  itkTransform->SetTranslation(
+    itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, 2.0, 3.0 }.data()));
+  itkTransform->SetCenter(itk::Point<double, ImageDimension>(std::array<double, ImageDimension>{ 3.0, 2.0, 1.0 }));
+  itkTransform->Rotate3D(itk::Vector<double, ImageDimension>(1.0), M_PI_4);
+
+  // A tolerance value that is just high enough to avoid test failures.
+  constexpr auto tolerance = 2.0e-06F;
+  Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(*image, *itkTransform, tolerance);
 }
