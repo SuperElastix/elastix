@@ -37,7 +37,7 @@
 # Note: this script is based on the vxl_common.cmake script.
 #
 
-cmake_minimum_required( VERSION 2.8.3 )
+cmake_minimum_required( VERSION 3.10.2 )
 
 set( CTEST_PROJECT_NAME elastix )
 
@@ -69,12 +69,12 @@ endif()
 
 # Select a source directory name.
 if( NOT DEFINED CTEST_SOURCE_DIRECTORY )
-  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/elastix" )
+  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/Elastix-source" )
 endif()
 
-# Select a build directory name.
+# Select a build directory name
 if( NOT DEFINED CTEST_BINARY_DIRECTORY )
-  set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin )
+  set( CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/Elastix-build" )
 endif()
 make_directory( ${CTEST_BINARY_DIRECTORY} )
 
@@ -184,10 +184,6 @@ ${dashboard_cache}
 ")
 endmacro()
 
-# Start with a fresh build tree.
-message( "Clearing build tree..." )
-ctest_empty_binary_directory( ${CTEST_BINARY_DIRECTORY} )
-
 # Support each testing model
 if( dashboard_model STREQUAL Continuous )
   # Build once and then when updates are found.
@@ -204,8 +200,8 @@ if( dashboard_model STREQUAL Continuous )
     endif()
 
     # Check for changes
-    ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} RETURN_VALUE res )
-    message( "Found ${res} changed files" )
+    # ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} RETURN_VALUE res )
+    # message( "Found ${res} changed files" )
     # SK: Only do initial checkout at the first iteration.
     # After that, the CHECKOUT_COMMAND has to be removed, otherwise
     # "svn update" will never see any changes.
@@ -228,7 +224,7 @@ if( dashboard_model STREQUAL Continuous )
 else()
   write_cache()
   ctest_start( ${dashboard_model} )
-  ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT}/elastix )
+  # ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} )
   # run cmake twice; this seems to be necessary, otherwise the
   # KNN lib is not built
   ctest_configure()
