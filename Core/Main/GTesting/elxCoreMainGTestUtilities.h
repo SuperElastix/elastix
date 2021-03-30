@@ -48,6 +48,51 @@ namespace elastix
 namespace CoreMainGTestUtilities
 {
 
+/// Simple exception class, to be used by unit tests.
+class Exception : public std::exception
+{
+  const char * m_message = "";
+
+public:
+  explicit Exception(const char * const message)
+    : m_message(message)
+  {}
+
+  const char *
+  what() const noexcept override
+  {
+    return m_message;
+  }
+};
+
+
+/// Dereferences the specified pointer. Throws an `Exception` instead, when the pointer is null.
+template <typename T>
+T &
+Deref(T * ptr)
+{
+  if (ptr == nullptr)
+  {
+    throw Exception("Deref error: the pointer should not be null!");
+  }
+  return *ptr;
+}
+
+
+/// Returns a reference to the front of the specified container. Throws an
+/// `Exception` instead, when the container is empty.
+template <typename T>
+decltype(T().front())
+Front(T & container)
+{
+  if (container.empty())
+  {
+    throw Exception("Front error: the container should be non-empty!");
+  }
+  return container.front();
+}
+
+
 /// Fills the specified image region with pixel values 1.
 template <typename TPixel, unsigned int VImageDimension>
 void
@@ -92,6 +137,11 @@ CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> in
   }
   return result;
 }
+
+
+std::string
+GetDataDirectoryPath();
+
 
 } // namespace CoreMainGTestUtilities
 } // namespace elastix

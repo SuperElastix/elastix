@@ -19,7 +19,7 @@
 #include "itkTestHelper.h"
 
 int
-main(int argc, char * argv[])
+main(void)
 {
   itk::OpenCLContext::Pointer contextNull = itk::OpenCLContext::New();
 

@@ -25,7 +25,7 @@
 //-------------------------------------------------------------------------------------
 
 int
-main(int argc, char * argv[])
+main(void)
 {
   /** Some basic type definitions. */
   std::vector<unsigned int> splineOrders;

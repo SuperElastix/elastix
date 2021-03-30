@@ -31,7 +31,7 @@
 
 //-------------------------------------------------------------------------------------
 int
-main(int argc, char * argv[])
+main(void)
 {
   const unsigned int Dimension = 3;
   typedef float      ScalarType;

@@ -1,16 +1,21 @@
 add_executable(ElastixLibGTest
   elxCoreMainGTestUtilities.h
+  elxCoreMainGTestUtilities.cxx
   ElastixFilterGTest.cxx
   ElastixLibGTest.cxx
   itkElastixRegistrationMethodGTest.cxx
+  itkTransformixFilterGTest.cxx
 )
 
 target_link_libraries( ElastixLibGTest
   GTest::GTest
   GTest::Main
   elastix_lib
+  transformix_lib
   ${ITK_LIBRARIES}
 )
+
+target_compile_definitions(ElastixLibGTest PRIVATE ELX_CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 if( ELASTIX_USE_OPENCL )
   target_link_libraries( ElastixLibGTest elxOpenCL )

@@ -82,6 +82,11 @@ struct WithDimension
     Expect_CorrespondingItkTransform()
     {
       const auto elxTransform = ElastixTransformType::New();
+
+      EXPECT_EQ(elxTransform->elxGetClassName(),
+                elx::TransformIO::ConvertITKNameOfClassToElastixClassName(
+                  TExpectedCorrespondingItkTransform::New()->GetNameOfClass()));
+
       const auto itkTransform = elx::TransformIO::CreateCorrespondingItkTransform(*elxTransform);
       ASSERT_NE(itkTransform, nullptr);
 

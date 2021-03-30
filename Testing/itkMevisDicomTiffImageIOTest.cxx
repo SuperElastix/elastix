@@ -218,7 +218,7 @@ testMevis(void)
 
 
 int
-main(int argc, char * argv[])
+main(void)
 {
 
   /** Support Mevis Dicom Tiff (if selected in cmake) */

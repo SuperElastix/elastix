@@ -42,6 +42,12 @@ public:
   }
 
 
+  /// Converts the name of an ITK Transform class (as returned by
+  /// `GetNameOfClass()`) to the corresponding elastix class name
+  /// (as returned by `elxGetClassName()`).
+  static std::string
+  ConvertITKNameOfClassToElastixClassName(const std::string & itkNameOfClass);
+
   template <typename TElastixTransform>
   static itk::TransformBase::Pointer
   CreateCorrespondingItkTransform(const TElastixTransform & elxTransform)
@@ -53,6 +59,8 @@ public:
   static void
   Write(const itk::TransformBase & itkTransform, const std::string & fileName);
 
+  static itk::TransformBase::Pointer
+  Read(const std::string & fileName);
 
   /// Makes the deformation field file name, as used by BSplineTransformWithDiffusion and DeformationFieldTransform.
   template <typename TElastixTransform>
