@@ -23,7 +23,6 @@
 
 namespace xoutlibrary
 {
-using namespace std;
 
 /**
  * \class xoutcell

@@ -57,7 +57,7 @@ xoutcell::WriteBufferedData(void)
   }
 
   /** Empty the internal buffer */
-  this->m_InternalBuffer.str(string(""));
+  this->m_InternalBuffer.str(std::string(""));
 
 } // end WriteBufferedData
 

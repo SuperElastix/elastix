@@ -20,7 +20,6 @@
 
 namespace xoutlibrary
 {
-using namespace std;
 
 /**
  * ********************* Destructor *****************************
@@ -59,7 +58,7 @@ xoutbase::WriteBufferedData(void)
   /** Update the target c-streams. */
   for (const auto & cell : m_CTargetCells)
   {
-    *(cell.second) << flush;
+    *(cell.second) << std::flush;
   }
 
   /** WriteBufferedData of the target xout-objects. */

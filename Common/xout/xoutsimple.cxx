@@ -20,7 +20,6 @@
 
 namespace xoutlibrary
 {
-using namespace std;
 
 /**
  * **************** AddOutput (std::ostream) ********************

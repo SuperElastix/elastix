@@ -22,7 +22,6 @@
 
 namespace xoutlibrary
 {
-using namespace std;
 
 /**
  * \class xoutsimple

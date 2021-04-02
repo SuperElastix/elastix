@@ -25,7 +25,6 @@
 
 namespace xoutlibrary
 {
-using namespace std;
 
 /**
  * \class xoutbase
@@ -91,7 +90,7 @@ public:
 
 
   Self &
-  operator<<(ios_base & (*pf)(ios_base &))
+  operator<<(std::ios_base & (*pf)(std::ios_base &))
   {
     return this->SendToTargets(pf);
   }

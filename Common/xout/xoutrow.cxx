@@ -20,8 +20,6 @@
 
 namespace xoutlibrary
 {
-using namespace std;
-
 
 /**
  * ******************** WriteBufferedData ***********************
