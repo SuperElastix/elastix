@@ -402,7 +402,7 @@ TransformBase<TElastix>::ReadFromFile(void)
       m_TransformParametersPointer.reset(new ParametersType(Conversion::ToOptimizerParameters(*itkParameterValues)));
 
       const auto itkFixedParameterValues =
-        this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformParameters");
+        this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformFixedParameters");
 
       if (itkFixedParameterValues != nullptr)
       {
