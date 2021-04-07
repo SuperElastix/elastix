@@ -29,7 +29,7 @@ if(ELASTIX_USE_OPENCL)
 endif()
 
 # Find ITK.
-find_package( ITK 5.1.1 REQUIRED COMPONENTS
+find_package( ITK 5.2.0 REQUIRED COMPONENTS
     ITKCommon
     ITKDisplacementField
     ITKDistanceMap
