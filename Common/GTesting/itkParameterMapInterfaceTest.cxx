@@ -98,7 +98,15 @@ GTEST_TEST(ParameterMapInterface, RetrieveValuesThrowsExceptionWhenConversionFai
 {
   const auto        parameterMapInterface = ParameterMapInterface::New();
   const std::string parameterName("Key");
-  parameterMapInterface->SetParameterMap({ { parameterName, { "not-a-valid-floating-point-value" } } });
 
+  parameterMapInterface->SetParameterMap({ { parameterName, { "not-a-valid-floating-point-value" } } });
+  EXPECT_THROW(parameterMapInterface->RetrieveValues<double>(parameterName), itk::ExceptionObject);
+
+  // A typical input error where floating point value 1.25 might have been intended:
+  parameterMapInterface->SetParameterMap({ { parameterName, { "1,25" } } });
+  EXPECT_THROW(parameterMapInterface->RetrieveValues<double>(parameterName), itk::ExceptionObject);
+
+  // Either 2375 (using comma as thousands separator) or 2.375 might have been intended:
+  parameterMapInterface->SetParameterMap({ { parameterName, { "2,375" } } });
   EXPECT_THROW(parameterMapInterface->RetrieveValues<double>(parameterName), itk::ExceptionObject);
 }

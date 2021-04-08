@@ -18,10 +18,42 @@
 
 #include "itkParameterMapInterface.h"
 
+#include <double-conversion/double-conversion.h>
+
 // Standard C++ header files:
 #include <cmath> // For fpclassify and FP_SUBNORMAL.
 #include <limits>
 #include <type_traits> // For is_floating_point.
+
+
+namespace
+{
+
+template <typename TFloatingPoint>
+TFloatingPoint
+ConvertStringToFloatingPoint(const double_conversion::StringToDoubleConverter &, const char *, int, int *);
+
+template <>
+float
+ConvertStringToFloatingPoint(const double_conversion::StringToDoubleConverter & converter,
+                             const char * const                                 buffer,
+                             const int                                          length,
+                             int * const                                        processed_characters_count)
+{
+  return converter.StringToFloat(buffer, length, processed_characters_count);
+}
+
+template <>
+double
+ConvertStringToFloatingPoint(const double_conversion::StringToDoubleConverter & converter,
+                             const char * const                                 buffer,
+                             const int                                          length,
+                             int * const                                        processed_characters_count)
+{
+  return converter.StringToDouble(buffer, length, processed_characters_count);
+}
+
+} // namespace
 
 
 namespace itk
@@ -159,37 +191,31 @@ ParameterMapInterface::StringCastToFloatingPoint(const std::string & parameterVa
     casted = -NumericLimits::infinity();
     return true;
   }
-  if (Self::StringCast<TFloatingPoint>(parameterValue, casted))
+  const auto numberOfChars = parameterValue.size();
+
+  if (numberOfChars > std::numeric_limits<int>::max())
   {
-    return true;
+    return false;
   }
 
-#ifdef __clang__
-  TFloatingPoint     value{};
-  std::istringstream inputStream(parameterValue);
+  constexpr auto double_NaN = std::numeric_limits<double>::quiet_NaN();
+  int            processed_characters_count{};
 
-  inputStream >> value;
+  const double_conversion::StringToDoubleConverter converter(0, double_NaN, double_NaN, "inf", "nan");
 
-  // Note: For denormal (subnormal) floating point values, the failbit is
-  // intentionally ignored, as a workaround for a Clang std library bug:
-  // For Clang (tested on AppleClang 12.0.0.12000032 macos-10.15), the round trip
-  // appears troublesome for denorm_min, as std::istream::fail() appears to return true.
-  // See also LLVM Bug 39012 "ostream writes a double that istream can't read", reported
-  // by Daniel Cooke, 2018-09-20: "It appears libc++ incorrectly sets input stream
-  // failbit when reading subnormal floating point numbers."
-  // https://bugs.llvm.org/show_bug.cgi?id=39012
+  const auto conversionResult = ConvertStringToFloatingPoint<TFloatingPoint>(
+    converter, parameterValue.c_str(), static_cast<int>(numberOfChars), &processed_characters_count);
 
-  if ((!inputStream.bad()) && (std::fpclassify(value) == FP_SUBNORMAL))
+  if (std::isnan(conversionResult) || (processed_characters_count != static_cast<int>(numberOfChars)))
   {
-    casted = value;
-    return true;
+    // Conversion failed: the result is NaN (while `parameterValue` is not
+    // "NaN"), or the converter did not process all characters.
+    return false;
   }
-#endif
+  casted = conversionResult;
+  return true;
 
-  // Failed to convert the parameter value to the specified floating point type.
-  return false;
-
-} // end StringCastFloatingPoint()
+} // end StringCastToFloatingPoint()
 
 
 bool
