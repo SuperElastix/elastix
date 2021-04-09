@@ -140,6 +140,67 @@ Expect_lossless_round_trip_of_signed_integer_parameter_values()
     { minValue, minValue + 1, -1, 0, 1, maxValue - 1, maxValue });
 }
 
+
+template <typename TInteger>
+void
+Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer()
+{
+  using NumericLimits = std::numeric_limits<TInteger>;
+
+  const auto minValue = NumericLimits::min();
+  const auto maxValue = NumericLimits::max();
+
+  for (const TInteger integer : { minValue,
+                                  static_cast<TInteger>(minValue + 1),
+                                  TInteger{},
+                                  TInteger{ 1 },
+                                  static_cast<TInteger>(maxValue - 1),
+                                  maxValue })
+  {
+    for (unsigned numberOfTrailingZeros{}; numberOfTrailingZeros <= 2; ++numberOfTrailingZeros)
+    {
+      const std::string parameterName("Key");
+      const std::string parameterStringValue = std::to_string(integer) + '.' + std::string(numberOfTrailingZeros, '0');
+
+      const auto parameterMapInterface = itk::ParameterMapInterface::New();
+      parameterMapInterface->SetParameterMap({ { parameterName, { parameterStringValue } } });
+
+      TInteger actualParameterValue{};
+
+      std::string errorMessage;
+      EXPECT_TRUE(parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage));
+      EXPECT_EQ(errorMessage, std::string{});
+      EXPECT_EQ(actualParameterValue, integer);
+    }
+  }
+}
+
+
+template <typename TInteger>
+void
+Expect_parameter_with_decimal_point_and_non_zero_trailing_chars_can_not_be_read_as_integer()
+{
+  using NumericLimits = std::numeric_limits<TInteger>;
+
+  for (const TInteger integer : { NumericLimits::min(), TInteger{}, TInteger{ 1 }, NumericLimits::max() })
+  {
+    for (const auto trail : { " ", " 0", "1", "10", "A", "F" })
+    {
+      const std::string parameterName("Key");
+      const std::string parameterStringValue = std::to_string(integer) + '.' + trail;
+
+      const auto parameterMapInterface = itk::ParameterMapInterface::New();
+      parameterMapInterface->SetParameterMap({ { parameterName, { parameterStringValue } } });
+
+      TInteger actualParameterValue{};
+
+      std::string errorMessage;
+      EXPECT_THROW(parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage),
+                   itk::ExceptionObject);
+    }
+  }
+}
+
 template <typename TFloatingPoint>
 void
 Expect_lossless_round_trip_of_floating_point_parameter_values()
@@ -485,4 +546,21 @@ GTEST_TEST(Conversion, LosslessRoundTripOfParameterValue)
   {
     Expect_lossless_round_trip_of_parameter_value<bool>(parameterValue);
   }
+}
+
+
+GTEST_TEST(ParameterMapInterface, ParameterWithDecimalPointAndTrailingZerosCanBeReadAsInteger)
+{
+  Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<int>();
+  Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<std::int8_t>();
+  Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<std::intmax_t>();
+  Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<char>();
+  Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<unsigned>();
+  Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<std::uint8_t>();
+  Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<std::uintmax_t>();
+}
+
+GTEST_TEST(ParameterMapInterface, ParameterWithDecimalPointAndNonZeroTrailingCharsCanNotBeReadAsInteger)
+{
+  Expect_parameter_with_decimal_point_and_non_zero_trailing_chars_can_not_be_read_as_integer<int>();
 }
