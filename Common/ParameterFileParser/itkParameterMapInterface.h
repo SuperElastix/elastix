@@ -26,6 +26,7 @@
 
 #include "itkParameterFileParser.h"
 
+#include <algorithm> // For count.
 #include <iostream>
 #include <memory>      // For unique_ptr.
 #include <type_traits> // For is_same.
@@ -433,19 +434,23 @@ private:
     // is a non-templated ReadParameter overload for `bool` parameter values.
     static_assert(!std::is_same<T, bool>::value, "StringCast does not support bool!");
 
-    std::stringstream ss(parameterValue);
-
     // 8-bits (signed/unsigned) char types are supported by other StringCast
     // overloads.
     static_assert(sizeof(T) > 1, "This StringCast<T> overload does not support (signed/unsigned) char!");
 
-    ss >> casted;
+    auto inputStream = [&parameterValue] {
+      const auto decimalPointPos = parameterValue.find_first_of('.');
+      const bool hasDecimalPointAndTrailingZeros =
+        (decimalPointPos != std::string::npos) &&
+        (std::count(parameterValue.cbegin() + decimalPointPos + 1, parameterValue.cend(), '0') ==
+         (parameterValue.size() - decimalPointPos - 1));
+      return std::istringstream(hasDecimalPointAndTrailingZeros
+                                  ? std::string(parameterValue.cbegin(), parameterValue.cbegin() + decimalPointPos)
+                                  : parameterValue);
+    }();
 
-    if (ss.bad() || ss.fail())
-    {
-      return false;
-    }
-    return true;
+    // Note: `inputStream >> casted` evaluates to false when the `badbit` or the `failbit` is set.
+    return (inputStream >> casted) && inputStream.eof();
 
   } // end StringCast()
 
