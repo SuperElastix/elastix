@@ -161,7 +161,7 @@ Conversion::ToString(const double scalar)
 std::string
 Conversion::ToString(const float scalar)
 {
-  return itk::NumberToString<double>{}(scalar);
+  return itk::NumberToString<float>{}(scalar);
 }
 
 

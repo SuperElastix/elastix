@@ -415,6 +415,12 @@ GTEST_TEST(Conversion, ToString)
   EXPECT_EQ(Conversion::ToString(-DoubleLimits::infinity()), "-Infinity");
   EXPECT_EQ(Conversion::ToString(DoubleLimits::denorm_min()), "5e-324");
   EXPECT_EQ(Conversion::ToString(-DoubleLimits::denorm_min()), "-5e-324");
+
+  // Even though the IEEE float and double representations of 0.1 both have a
+  // small rounding error, we would rather not have 0.1 converted to a string
+  // like "0.10000000000000001", or even "0.10000000149011612".
+  EXPECT_EQ(Conversion::ToString(0.1), "0.1");
+  EXPECT_EQ(Conversion::ToString(0.1f), "0.1");
 }
 
 
