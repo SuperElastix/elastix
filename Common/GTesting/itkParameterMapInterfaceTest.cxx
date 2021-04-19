@@ -110,3 +110,20 @@ GTEST_TEST(ParameterMapInterface, RetrieveValuesThrowsExceptionWhenConversionFai
   parameterMapInterface->SetParameterMap({ { parameterName, { "2,375" } } });
   EXPECT_THROW(parameterMapInterface->RetrieveValues<double>(parameterName), itk::ExceptionObject);
 }
+
+
+GTEST_TEST(ParameterMapInterface, HasParameter)
+{
+  const auto        parameterMapInterface = ParameterMapInterface::New();
+  const std::string parameterName("Key");
+
+  EXPECT_FALSE(parameterMapInterface->HasParameter(parameterName));
+
+  parameterMapInterface->SetParameterMap({ { parameterName, {} } });
+  EXPECT_TRUE(parameterMapInterface->HasParameter(parameterName));
+
+  parameterMapInterface->SetParameterMap({ { parameterName, { "a", "b", "c" } } });
+  EXPECT_TRUE(parameterMapInterface->HasParameter(parameterName));
+
+  EXPECT_FALSE(parameterMapInterface->HasParameter("This-is-not-a-key-from-this-map-" + parameterName));
+}
