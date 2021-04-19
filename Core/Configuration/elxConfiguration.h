@@ -227,6 +227,14 @@ public:
   }
 
 
+  /** Tells whether its parameter map has the parameter with the given name. */
+  bool
+  HasParameter(const std::string & parameterName) const
+  {
+    return m_ParameterMapInterface->HasParameter(parameterName);
+  }
+
+
   /** Returns the values of the specified parameter (from the parameter file). */
   std::vector<std::string>
   GetValuesOfParameter(const std::string & parameterName) const

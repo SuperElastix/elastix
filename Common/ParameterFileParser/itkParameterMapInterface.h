@@ -104,6 +104,13 @@ public:
   itkSetMacro(PrintErrorMessages, bool);
   itkGetConstMacro(PrintErrorMessages, bool);
 
+  /** Tells whether this parameter map has the parameter with the given name. */
+  bool
+  HasParameter(const std::string & parameterName) const
+  {
+    return this->m_ParameterMap.count(parameterName) > 0;
+  }
+
   /** Get the number of entries for a given parameter. */
   std::size_t
   CountNumberOfParameterEntries(const std::string & parameterName) const;
