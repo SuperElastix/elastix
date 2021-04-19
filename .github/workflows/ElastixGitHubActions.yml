@@ -18,20 +18,20 @@ jobs:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "0fce3ff86b9242a298a55a42337769eca8e8a4c8"
+            itk-git-tag: "v5.2.0"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.so"
             ANNLib2: "libANNlib-5.0.so.1"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "0fce3ff86b9242a298a55a42337769eca8e8a4c8"
+            itk-git-tag: "v5.2.0"
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.0.dll"
           - os: macos-10.15
             c-compiler: "clang"  
             cxx-compiler: "clang++"
-            itk-git-tag: "0fce3ff86b9242a298a55a42337769eca8e8a4c8"
+            itk-git-tag: "v5.2.0"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.1.dylib"
             ANNLib2: "libANNlib-5.0.dylib"
@@ -91,7 +91,7 @@ jobs:
         mkdir ITK-build
         cd ITK-build
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK-source
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK-source
         ninja
       shell: cmd
       
@@ -106,8 +106,9 @@ jobs:
         file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}/Elastix-build" CTEST_BINARY_DIRECTORY)
         set(dashboard_source_name "${GITHUB_REPOSITORY}")
         set(branch "${GITHUB_REF#refs/heads/}")
+        set(sha "${GITHUB_SHA}")
         set(dashboard_model "Experimental")
-        set(CTEST_BUILD_NAME "${GITHUB_REPOSITORY}-${operating_system}-\${branch}")
+        set(CTEST_BUILD_NAME "${GITHUB_REPOSITORY}-${operating_system}-\${branch}-\${sha}")
         set(CTEST_UPDATE_VERSION_ONLY 1)
         set(CTEST_TEST_ARGS \${CTEST_TEST_ARGS} PARALLEL_LEVEL \${PARALLEL_LEVEL})
         set(CTEST_BUILD_CONFIGURATION "Release")

@@ -1,4 +1,5 @@
-# ITK Common Dashboard Script
+# elastix Common Dashboard Script
+# fork of ITK Common Dashboard Script at https://raw.githubusercontent.com/InsightSoftwareConsortium/ITK/dashboard/itk_common.cmake
 #
 # This script contains basic dashboard driver code common to all
 # clients.
@@ -134,6 +135,13 @@ if(NOT DEFINED CTEST_USE_LAUNCHERS)
     set(CTEST_USE_LAUNCHERS 1)
   endif()
 endif()
+
+# Tells CTest to not do a git pull, but to still record what version of the software it's building and testing
+# As explained by mail, by Zack Galbreath
+set(CTEST_UPDATE_VERSION_ONLY 1)
+
+# For CDash integration with GitHub: https://blog.kitware.com/cdash-integration-with-github
+set(CTEST_CHANGE_ID $ENV{CHANGE_ID})
 
 # Configure testing.
 if(NOT DEFINED CTEST_TEST_CTEST)

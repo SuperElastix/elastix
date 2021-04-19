@@ -200,8 +200,6 @@ if( dashboard_model STREQUAL Continuous )
     endif()
 
     # Check for changes
-    # ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} RETURN_VALUE res )
-    # message( "Found ${res} changed files" )
     # SK: Only do initial checkout at the first iteration.
     # After that, the CHECKOUT_COMMAND has to be removed, otherwise
     # "svn update" will never see any changes.
@@ -224,7 +222,6 @@ if( dashboard_model STREQUAL Continuous )
 else()
   write_cache()
   ctest_start( ${dashboard_model} )
-  # ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} )
   # run cmake twice; this seems to be necessary, otherwise the
   # KNN lib is not built
   ctest_configure()
