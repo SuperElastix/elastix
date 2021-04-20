@@ -13,25 +13,25 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        os: [macos-10.15, ubuntu-18.04, windows-2019]
         include:
           - os: ubuntu-18.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "v5.1.2"
+            itk-git-tag: "v5.2.0"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.so"
             ANNLib2: "libANNlib-5.0.so.1"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "v5.1.2"
+            itk-git-tag: "v5.2.0"
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.0.dll"
           - os: macos-10.15
             c-compiler: "clang"  
             cxx-compiler: "clang++"
-            itk-git-tag: "v5.1.2"  
+            itk-git-tag: "v5.2.0"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.0.1.dylib"
             ANNLib2: "libANNlib-5.0.dylib"
@@ -67,11 +67,15 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install ninja
         
-    
+    - name: Get specific version of CMake, Ninja
+      uses: lukka/get-cmake@v3.18.3
+      
     - name: Download ITK
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        git clone https://github.com/InsightSoftwareConsortium/ITK.git --branch ${{ matrix.itk-git-tag }} --depth 1 ITK-source
+        git clone https://github.com/InsightSoftwareConsortium/ITK.git ITK-source
+        cd ITK-source
+        git checkout ${{ matrix.itk-git-tag }}
    
     - name: Build ITK
       if: steps.cache.outputs.cache-hit != 'true' && matrix.os != 'windows-2019'
@@ -87,40 +91,61 @@ jobs:
         mkdir ITK-build
         cd ITK-build
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_LEGACY_REMOVE=ON -GNinja ../ITK-source
+        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK-source
         ninja
       shell: cmd
-
-    
-    - name: Build Elastix Unix
-      if: matrix.os != 'windows-2019'
+      
+    - name: Configure CTest script
+      shell: bash
       run: |
-        mkdir Elastix-build
-        cd Elastix-build
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DITK_DIR=../ITK-build -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON -GNinja ../Elastix-source
-        ninja
-        
-    - name: Build Elastix Windows
-      if: matrix.os == 'windows-2019'
-      run: |
-        mkdir Elastix-build
-        cd Elastix-build
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DITK_DIR=../ITK-build -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON -GNinja ../Elastix-source
-        ninja
-      shell: cmd
+        operating_system="${{ matrix.os }}"
+        cat > dashboard.cmake << EOF
+        set(CTEST_SITE "GitHubActions")
+        file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}" CTEST_DASHBOARD_ROOT)
+        file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}/Elastix-source" CTEST_SOURCE_DIRECTORY)
+        file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}/Elastix-build" CTEST_BINARY_DIRECTORY)
+        set(dashboard_source_name "${GITHUB_REPOSITORY}")
+        set(branch "${GITHUB_REF#refs/heads/}")
+        set(sha "${GITHUB_SHA}")
+        set(dashboard_model "Experimental")
+        set(CTEST_BUILD_NAME "${GITHUB_REPOSITORY}-${operating_system}-\${branch}-\${sha}")
+        set(CTEST_UPDATE_VERSION_ONLY 1)
+        set(CTEST_TEST_ARGS \${CTEST_TEST_ARGS} PARALLEL_LEVEL \${PARALLEL_LEVEL})
+        set(CTEST_BUILD_CONFIGURATION "Release")
+        set(CTEST_CMAKE_GENERATOR "Ninja")
+        set(dashboard_no_clean 1)
+        set(ENV{CC} ${{ matrix.c-compiler }})
+        set(ENV{CXX} ${{ matrix.cxx-compiler }})
+        if(WIN32)
+          set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\$ENV{PATH}")
+        endif()
+        set(dashboard_cache "
+        ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+        BUILD_TESTING:BOOL=ON
+        ")
+        string(TIMESTAMP build_date "%Y-%m-%d")
+        message("CDash Build Identifier: \${build_date} \${CTEST_BUILD_NAME}")
+        message("CTEST_SITE= \${CTEST_SITE}")
+        include(\${CTEST_SOURCE_DIRECTORY}/Testing/Dashboard/elxCommonCDash.cmake)
+        EOF
+        cat dashboard.cmake
 
     - name: Test MacOs
       if: matrix.os == 'macos-10.15'
       run: |
-       cd Elastix-build
-       ctest -M Experimental -T Test -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP"
+       ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
       
-    - name: Test Windows/Ubuntu
-      if: matrix.os != 'macos-10.15'
+    - name: Test Windows
+      if: matrix.os == 'windows-2019'
       run: |
-        cd Elastix-build
-        ctest -M Experimental -T Test -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
+      shell: cmd
+
+    - name: Test Ubuntu
+      if: matrix.os == 'ubuntu-18.04'
+      run: |
+        ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
       
     - name: Prepare Artifacts Unix
       if: matrix.os != 'windows-2019'
