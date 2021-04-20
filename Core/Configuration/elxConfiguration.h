@@ -154,7 +154,7 @@ public:
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
                 const unsigned int  entry_nr,
-                const bool          printThisErrorMessage)
+                const bool          printThisErrorMessage) const
   {
     std::string errorMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
@@ -171,7 +171,7 @@ public:
   /** Read a parameter from the parameter file. */
   template <class T>
   bool
-  ReadParameter(T & parameterValue, const std::string & parameterName, const unsigned int entry_nr)
+  ReadParameter(T & parameterValue, const std::string & parameterName, const unsigned int entry_nr) const
   {
     std::string errorMessage = "";
     bool found = this->m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, errorMessage);
