@@ -22,4 +22,10 @@ Specific components of elastix are made by many; The relevant citation can be fo
 
 More information, including an extensive manual and model zoo, can be found on the website: <https://elastix.lumc.nl/>.
 
+For a graphical user interface in a desktop application, see the [napari plugin](https://github.com/SuperElastix/elastix_napari).
+
+For a simple, Pythonic, pip-installable interface, see [itk-elastix](https://github.com/InsightSoftwareConsortium/ITKElastix).
+
+Interactive tutorials are available in [Jupyter notebooks](https://mybinder.org/v2/gh/InsightSoftwareConsortium/ITKElastix/master?urlpath=lab/tree/examples%2FITK_Example01_SimpleRegistration.ipynb).
+
 You can also subscribe to the [mailing list](https://groups.google.com/forum/#!forum/elastix-imageregistration) for questions. Information on contributing to `elastix` can be found [here](CONTRIBUTING.md).
