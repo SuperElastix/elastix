@@ -4,9 +4,16 @@
 
 # elastix image registration toolbox #
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/SuperElastix/elastix/raw/master/LICENSE)
+[![PyPI Version](https://img.shields.io/pypi/v/itk-elastix.svg)](https://pypi.python.org/pypi/itk-elastix)
+[![GitHub Actions](https://github.com/SuperElastix/elastix/workflows/Elastix/badge.svg)](https://github.com/SuperElastix/elastix/actions)
+[![Model Zoo](https://img.shields.io/badge/open-Model%20Zoo-blue.svg)](https://elastix.lumc.nl/modelzoo/)
+[![Docker](https://img.shields.io/badge/open-docker%20image-blueviolet.svg)](https://hub.docker.com/repository/docker/superelastix/elastix)
+
 Welcome to elastix: a toolbox for rigid and nonrigid registration of images.
 
-elastix is open source software, based on the well-known [Insight Segmentation and Registration Toolkit (ITK)](https://itk.org/). The software consists of a collection of algorithms that are commonly used to solve (medical) image registration problems. The modular design of elastix allows the user to quickly configure, test, and compare different registration methods for a specific application. A command-line interface enables automated processing of large numbers of data sets, by means of scripting. Nowadays elastix is accompanied by [SimpleElastix](http://simpleelastix.github.io/), making it available in languages like C++, Python, Java, R, Ruby, C# and Lua. A docker image of the latest elastix build is available as well on [dockerhub](https://hub.docker.com/repository/docker/superelastix/elastix).
+elastix is open source software, based on the well-known [Insight Segmentation and Registration Toolkit (ITK)](https://itk.org/). The software consists of a collection of algorithms that are commonly used to solve (medical) image registration problems. The modular design of elastix allows the user to quickly configure, test, and compare different registration methods for a specific application. A command-line interface enables automated processing of large numbers of data sets, by means of scripting. 
+Nowadays elastix is accompanied by [ITKElastix](https://github.com/InsightSoftwareConsortium/ITKElastix) making in available in Python ([on Pypi](https://pypi.org/project/itk-elastix/)) and by [SimpleElastix](http://simpleelastix.github.io/), making it available in languages like C++, Python, Java, R, Ruby, C# and Lua. A docker image of the latest elastix build is available as well on [dockerhub](https://hub.docker.com/repository/docker/superelastix/elastix) and several plugins exist for those who wish to use the functionality of elastix in a graphical user interface, among others a [napari](https://github.com/SuperElastix/elastix_napari) and an [3Dslicer](https://github.com/lassoan/SlicerElastix) plugin.
 
 ## Authors ##
 
