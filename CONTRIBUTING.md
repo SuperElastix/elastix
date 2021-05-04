@@ -60,7 +60,7 @@ commits, the message body should follow the following guidelines:
   readability.
   8. Be concise, but honor the change: if significant alternative solutions
   were available, explain why they were discarded.
-  9. If the commit refers to a topic discussed in [ITK's Discourse], or fixes
+  9. If the commit refers to a topic discussed in elastix' mailing list, or fixes
   a regression test, provide the link. If it fixes a compiler error, provide a
   minimal verbatim message of the compiler error. If the commit closes an
   issue, use the [GitHub issue closing
