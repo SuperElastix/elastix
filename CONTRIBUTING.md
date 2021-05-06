@@ -50,17 +50,15 @@ commits, the message body should follow the following guidelines:
   1. Leave a blank line between the subject and the body.
   This helps `git log` and `git rebase` work nicely, and allows to smooth
   generation of release notes.
-  2. Try to keep the subject line below 72 characters, ideally 50.
+  2. Try to keep the subject line below 73 characters.
   3. Capitalize the subject line.
   4. Do not end the subject line with a period.
-  5. Use the imperative mood in the subject line (e.g. `BUG: Fix spacing
-  not being considered.`).
-  6. Wrap the body at 80 characters.
-  7. Use semantic line feeds to separate different ideas, which improves the
+  5. Use the imperative mood in the subject line (e.g. `BUG: Add missing spacing`).
+  6. Use semantic line feeds to separate different ideas, which improves the
   readability.
-  8. Be concise, but honor the change: if significant alternative solutions
+  7. Be concise, but honor the change: if significant alternative solutions
   were available, explain why they were discarded.
-  9. If the commit refers to a topic discussed in elastix' mailing list, or fixes
+  8. If the commit refers to a topic discussed in elastix' mailing list, or fixes
   a regression test, provide the link. If it fixes a compiler error, provide a
   minimal verbatim message of the compiler error. If the commit closes an
   issue, use the [GitHub issue closing
