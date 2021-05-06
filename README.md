@@ -12,7 +12,7 @@
 
 Welcome to elastix: a toolbox for rigid and nonrigid registration of images.
 
-elastix is open source software, based on the well-known [Insight Segmentation and Registration Toolkit (ITK)](https://itk.org/). The software consists of a collection of algorithms that are commonly used to solve (medical) image registration problems. The modular design of elastix allows the user to quickly configure, test, and compare different registration methods for a specific application. A command-line interface enables automated processing of large numbers of data sets, by means of scripting. 
+elastix is open source software, based on the well-known [Insight Segmentation and Registration Toolkit (ITK)](https://itk.org/). The software consists of a collection of algorithms that are commonly used to solve (medical) image registration problems. The modular design of elastix allows the user to quickly configure, test, and compare different registration methods for a specific application. A command-line interface enables automated processing of large numbers of data sets, by means of scripting.
 Nowadays elastix is accompanied by [ITKElastix](https://github.com/InsightSoftwareConsortium/ITKElastix) making it available in Python ([on Pypi](https://pypi.org/project/itk-elastix/)) and by [SimpleElastix](http://simpleelastix.github.io/), making it available in languages like C++, Python, Java, R, Ruby, C# and Lua. A docker image of the latest elastix build is available as well on [dockerhub](https://hub.docker.com/repository/docker/superelastix/elastix). Several plugins exist for those who wish to use the functionality of elastix in a graphical user interface, among others a [napari](https://github.com/SuperElastix/elastix_napari) and a [3Dslicer](https://github.com/lassoan/SlicerElastix) plugin.
 
 ## Authors ##
@@ -28,10 +28,6 @@ Specific components of elastix are made by many; The relevant citation can be fo
 ## More information ##
 
 More information, including an extensive manual and model zoo, can be found on the [wiki](https://github.com/SuperElastix/elastix/wiki)
-
-For a graphical user interface in a desktop application, see the [napari plugin](https://github.com/SuperElastix/elastix_napari).
-
-For a simple, Pythonic, pip-installable interface, see [itk-elastix](https://github.com/InsightSoftwareConsortium/ITKElastix).
 
 Interactive tutorials are available in [Jupyter notebooks](https://mybinder.org/v2/gh/InsightSoftwareConsortium/ITKElastix/master?urlpath=lab/tree/examples%2FITK_Example01_SimpleRegistration.ipynb).
 
