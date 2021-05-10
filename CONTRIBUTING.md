@@ -43,11 +43,43 @@
   - PERF: for performance improvements
   - STYLE: a change that does not impact the logic or execution of the code (improve coding style, comments, documentation)
 
-* Ensure the PR adheres to our [coding conventions](#coding-conventions).
+The body of the message should clearly describe the motivation of the commit
+(**what**, **why**, and **how**). In order to ease the task of reviewing
+commits, the message body should follow the following guidelines:
 
-* We will review your PR and possibly suggest changes. We also have an automatic build and test system checking all PRs ([Travis-CI](https://travis-ci.org/)). When all lights are green, the PR will be merged.
+  1. Leave a blank line between the subject and the body.
+  This helps `git log` and `git rebase` work nicely, and allows to smooth
+  generation of release notes.
+  2. Try to keep the subject line below 73 characters.
+  3. Capitalize the subject line.
+  4. Do not end the subject line with a period.
+  5. Use the imperative mood in the subject line (e.g. `BUG: Add missing spacing`).
+  6. Use semantic line feeds to separate different ideas, which improves the
+  readability.
+  7. Be concise, but honor the change: if significant alternative solutions
+  were available, explain why they were discarded.
+  8. If the commit refers to a topic discussed in elastix' mailing list, or fixes
+  a regression test, provide the link. If it fixes a compiler error, provide a
+  minimal verbatim message of the compiler error. If the commit closes an
+  issue, use the [GitHub issue closing
+  keywords](https://help.github.com/en/articles/closing-issues-using-keywords).
+
+Keep in mind that the significant time is invested in reviewing commits and
+*pull requests*, so following these guidelines will greatly help the people
+doing reviews.
+
+These guidelines are largely inspired by Chris Beam's
+[How to Write a Commit Message](https://chris.beams.io/posts/git-commit/)
+post.
+
+
+* Ensure the PR adheres to our [coding conventions](#coding-conventions), the PR code format will be checked with clangFormat on the CI. The hook can be used locally, for details see below.
+
+* We will review your PR and possibly suggest changes. All PR will be tested on the GitHub Actions CI. When all lights are green, the PR will be merged.
 
 * More information on pull requests can be found [here](https://help.github.com/articles/creating-a-pull-request/) and [here](https://gist.github.com/Chaser324/ce0505fbed06b947d962).
+
+
 
 <!--
 ### **Do you want to contribute to the `elastix` documentation?*
