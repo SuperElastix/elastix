@@ -434,7 +434,7 @@ ElastixBase::BeforeAllTransformixBase(void)
   {
     xl::xout["warning"] << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
                         << "the UseDirectionCosines option to your parameter file! See\n"
-                        << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n"
+                        << "http://elastix.lumc.nl/whatsnew_04_3.php for more information.\n"
                         << std::endl;
   }
 
