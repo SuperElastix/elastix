@@ -369,6 +369,8 @@ PrintHelp(void)
   std::cout << "Optional extra commands:\n"
             << "  -fMask    mask for fixed image\n"
             << "  -mMask    mask for moving image\n"
+            << "  -fp       point set for fixed image\n"
+            << "  -mp       point set for moving image\n"
             << "  -t0       parameter file for initial transform\n"
             << "  -priority set the process priority to high, abovenormal, normal (default),\n"
             << "            belownormal, or idle (Windows only option)\n"
