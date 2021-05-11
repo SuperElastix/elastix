@@ -278,8 +278,10 @@ PrintHelp(void)
                "to use, with which parameters, etc. For a usable transform-parameter file, "
                "run elastix, and inspect the output file \"TransformParameters.0.txt\".\n\n";
 
-  std::cout << "Need further help?\n"
-               "Check the website http://elastix.isi.uu.nl, or mail elastix@bigr.nl."
+  std::cout << "Need further help? Please check:\n"
+               " * the elastix website: https://elastix.lumc.nl\n"
+               " * the source code repository site: https://github.com/SuperElastix/elastix\n"
+               " * the discussion forum: https://groups.google.com/g/elastix-imageregistration"
             << std::endl;
 
 } // end PrintHelp()
