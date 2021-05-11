@@ -352,36 +352,34 @@ PrintHelp(void)
   std::cout << "elastix version: " << ELASTIX_VERSION_STRING "\n\n";
 
   /** What is elastix? */
-  std::cout << "elastix registers a moving image to a fixed image.\n";
-  std::cout << "The registration-process is specified in the parameter file.\n";
-  std::cout << "  --help, -h displays this message and exit\n";
-  std::cout << "  --version  output version information and exit\n"
-            << "  --extended-version  output extended version information and exit\n"
-            << std::endl;
+  std::cout << "elastix registers a moving image to a fixed image.\n"
+            << "The registration-process is specified in the parameter file.\n"
+            << "  --help, -h displays this message and exit\n"
+            << "  --version  output version information and exit\n"
+            << "  --extended-version  output extended version information and exit\n\n";
 
   /** Mandatory arguments.*/
-  std::cout << "Call elastix from the command line with mandatory arguments:\n";
-  std::cout << "  -f        fixed image\n";
-  std::cout << "  -m        moving image\n";
-  std::cout << "  -out      output directory\n";
-  std::cout << "  -p        parameter file, elastix handles 1 or more \"-p\"\n" << std::endl;
+  std::cout << "Call elastix from the command line with mandatory arguments:\n"
+            << "  -f        fixed image\n"
+            << "  -m        moving image\n"
+            << "  -out      output directory\n"
+            << "  -p        parameter file, elastix handles 1 or more \"-p\"\n\n";
 
   /** Optional arguments.*/
-  std::cout << "Optional extra commands:\n";
-  std::cout << "  -fMask    mask for fixed image\n";
-  std::cout << "  -mMask    mask for moving image\n";
-  std::cout << "  -t0       parameter file for initial transform\n";
-  std::cout << "  -priority set the process priority to high, abovenormal, normal (default),\n"
-            << "            belownormal, or idle (Windows only option)\n";
-  std::cout << "  -threads  set the maximum number of threads of elastix\n" << std::endl;
+  std::cout << "Optional extra commands:\n"
+            << "  -fMask    mask for fixed image\n"
+            << "  -mMask    mask for moving image\n"
+            << "  -t0       parameter file for initial transform\n"
+            << "  -priority set the process priority to high, abovenormal, normal (default),\n"
+            << "            belownormal, or idle (Windows only option)\n"
+            << "  -threads  set the maximum number of threads of elastix\n\n";
 
   /** The parameter file.*/
   std::cout << "The parameter-file must contain all the information "
                "necessary for elastix to run properly. That includes which metric to "
                "use, which optimizer, which transform, etc. It must also contain "
                "information specific for the metric, optimizer, transform, etc. "
-               "For a usable parameter-file, see the website.\n"
-            << std::endl;
+               "For a usable parameter-file, see the website.\n\n";
 
   std::cout << "Need further help?\nCheck the website http://elastix.isi.uu.nl, "
                "or mail elastix@bigr.nl."
