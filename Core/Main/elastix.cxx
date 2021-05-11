@@ -381,8 +381,10 @@ PrintHelp(void)
                "information specific for the metric, optimizer, transform, etc. "
                "For a usable parameter-file, see the website.\n\n";
 
-  std::cout << "Need further help?\nCheck the website http://elastix.isi.uu.nl, "
-               "or mail elastix@bigr.nl."
+  std::cout << "Need further help? Please check:\n"
+               " * the elastix website: https://elastix.lumc.nl\n"
+               " * the source code repository site: https://github.com/SuperElastix/elastix\n"
+               " * the discussion forum: https://groups.google.com/g/elastix-imageregistration"
             << std::endl;
 
 } // end PrintHelp()
