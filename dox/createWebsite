@@ -64,7 +64,7 @@ exportdirlinux64="$exportbasedirlinux64/$tag"
 exportdirlinux32grid="$exportbasedirlinux32grid/$tag""linux32"
 svnurl="https://svn.bigr.nl/elastix"
 tempdir="d:/tk/elastixwebsite/$tag"
-websitebase="http://elastix.isi.uu.nl"
+websitebase="http://elastix.lumc.nl"
 copyright="$exportdirwin/src/CopyrightElastix.txt"
 
 
