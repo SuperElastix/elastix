@@ -88,15 +88,15 @@ SetKernelWithDirection(const typename ImageType::DirectionType & dir,
   {
     float        direction[4];
     unsigned int index = 0;
-    for (unsigned int i = 0; i < ImageDim; i++)
+    for (unsigned int i = 0; i < ImageDim; ++i)
     {
-      for (unsigned int j = 0; j < ImageDim; j++)
+      for (unsigned int j = 0; j < ImageDim; ++j)
       {
         direction[index] = static_cast<float>(dir[i][j]);
         index++;
       }
     }
-    for (unsigned int i = 0; i < 4; i++)
+    for (unsigned int i = 0; i < 4; ++i)
     {
       direction2d.s[i] = direction[i];
     }
@@ -106,19 +106,19 @@ SetKernelWithDirection(const typename ImageType::DirectionType & dir,
     // OpenCL does not support float9 therefore we are using float16
     float        direction[16];
     unsigned int index = 0;
-    for (unsigned int i = 0; i < ImageDim; i++)
+    for (unsigned int i = 0; i < ImageDim; ++i)
     {
-      for (unsigned int j = 0; j < ImageDim; j++)
+      for (unsigned int j = 0; j < ImageDim; ++j)
       {
         direction[index] = static_cast<float>(dir[i][j]);
         index++;
       }
     }
-    for (unsigned int i = 9; i < 16; i++)
+    for (unsigned int i = 9; i < 16; ++i)
     {
       direction[i] = 0.0f;
     }
-    for (unsigned int i = 0; i < 16; i++)
+    for (unsigned int i = 0; i < 16; ++i)
     {
       direction3d.s[i] = direction[i];
     }
@@ -177,7 +177,7 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
 
     typedef unsigned int size_type;
     size_type            size[ImageType::ImageDimension];
-    for (unsigned int i = 0; i < ImageDim; i++)
+    for (unsigned int i = 0; i < ImageDim; ++i)
     {
       if (image.IsNotNull())
       {
@@ -194,14 +194,14 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
     }
     else if (ImageDim == 2)
     {
-      for (unsigned int i = 0; i < ImageDim; i++)
+      for (unsigned int i = 0; i < ImageDim; ++i)
       {
         imageBase2D.Size.s[i] = size[i];
       }
     }
     else if (ImageDim == 3)
     {
-      for (unsigned int i = 0; i < ImageDim; i++)
+      for (unsigned int i = 0; i < ImageDim; ++i)
       {
         imageBase3D.Size.s[i] = size[i];
       }
@@ -209,7 +209,7 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
 
     // Set spacing
     float spacing[ImageType::ImageDimension];
-    for (unsigned int i = 0; i < ImageDim; i++)
+    for (unsigned int i = 0; i < ImageDim; ++i)
     {
       if (image.IsNotNull())
       {
@@ -226,14 +226,14 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
     }
     else if (ImageDim == 2)
     {
-      for (unsigned int i = 0; i < ImageDim; i++)
+      for (unsigned int i = 0; i < ImageDim; ++i)
       {
         imageBase2D.Spacing.s[i] = spacing[i];
       }
     }
     else if (ImageDim == 3)
     {
-      for (unsigned int i = 0; i < ImageDim; i++)
+      for (unsigned int i = 0; i < ImageDim; ++i)
       {
         imageBase3D.Spacing.s[i] = spacing[i];
       }
@@ -241,7 +241,7 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
 
     // Set origin
     float origin[ImageType::ImageDimension];
-    for (unsigned int i = 0; i < ImageDim; i++)
+    for (unsigned int i = 0; i < ImageDim; ++i)
     {
       if (image.IsNotNull())
       {
@@ -258,14 +258,14 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
     }
     else if (ImageDim == 2)
     {
-      for (unsigned int i = 0; i < ImageDim; i++)
+      for (unsigned int i = 0; i < ImageDim; ++i)
       {
         imageBase2D.Origin.s[i] = origin[i];
       }
     }
     else if (ImageDim == 3)
     {
-      for (unsigned int i = 0; i < ImageDim; i++)
+      for (unsigned int i = 0; i < ImageDim; ++i)
       {
         imageBase3D.Origin.s[i] = origin[i];
       }

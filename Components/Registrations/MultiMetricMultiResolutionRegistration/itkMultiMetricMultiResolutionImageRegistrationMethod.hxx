@@ -240,7 +240,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
       SizeType  inputSize = fixedImageRegion.GetSize();
       IndexType inputStart = fixedImageRegion.GetIndex();
       IndexType inputEnd = inputStart;
-      for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
+      for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; ++dim)
       {
         inputEnd[dim] += (inputSize[dim] - 1);
       }
@@ -267,7 +267,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
       fixpyr->GetInput()->TransformIndexToPhysicalPoint(inputStart, inputStartPoint);
       fixpyr->GetInput()->TransformIndexToPhysicalPoint(inputEnd, inputEndPoint);
 
-      for (unsigned int level = 0; level < this->GetNumberOfLevels(); level++)
+      for (unsigned int level = 0; level < this->GetNumberOfLevels(); ++level)
       {
         SizeType         size;
         IndexType        start;
@@ -282,7 +282,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
          */
         fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputStartPoint, startcindex);
         fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputEndPoint, endcindex);
-        for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
+        for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; ++dim)
         {
           start[dim] = static_cast<IndexValueType>(std::ceil(startcindex[dim]));
           size[dim] = std::max(
@@ -362,7 +362,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ge
   this->PrepareAllPyramids();
 
   /** Loop over the resolution levels. */
-  for (unsigned int currentLevel = 0; currentLevel < this->GetNumberOfLevels(); currentLevel++)
+  for (unsigned int currentLevel = 0; currentLevel < this->GetNumberOfLevels(); ++currentLevel)
   {
     this->SetCurrentLevel(currentLevel);
 

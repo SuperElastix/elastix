@@ -40,7 +40,7 @@ MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData
 
   /** Loop over all resolution levels. */
   unsigned int factors[ImageDimension];
-  for (unsigned int ilevel = 0; ilevel < this->m_NumberOfLevels; ilevel++)
+  for (unsigned int ilevel = 0; ilevel < this->m_NumberOfLevels; ++ilevel)
   {
     this->UpdateProgress(static_cast<float>(ilevel) / static_cast<float>(this->m_NumberOfLevels));
 
@@ -50,7 +50,7 @@ MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData
     outputPtr->Allocate();
 
     // compute and set shrink factors
-    for (unsigned int idim = 0; idim < ImageDimension; idim++)
+    for (unsigned int idim = 0; idim < ImageDimension; ++idim)
     {
       factors[idim] = this->m_Schedule[ilevel][idim];
     }

@@ -88,7 +88,7 @@ AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAnd
   /** Create a possibly mirrored version of x. */
   ContinuousIndexType xm = x;
   double              deriv_sign[ImageDimension];
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     deriv_sign[dim] = 1.0 / spacing[dim];
     if (x[dim] < this->m_StartIndex[dim])
@@ -117,7 +117,7 @@ AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAnd
   IndexType baseIndex;
   double    dist[ImageDimension];
   double    dinv[ImageDimension];
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     baseIndex[dim] = Math::Floor<IndexValueType>(xm[dim]);
 
@@ -170,7 +170,7 @@ AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAnd
   /** Create a possibly mirrored version of x. */
   ContinuousIndexType xm = x;
   double              deriv_sign[ImageDimension];
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     deriv_sign[dim] = 1.0 / spacing[dim];
     if (x[dim] < this->m_StartIndex[dim])
@@ -199,7 +199,7 @@ AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAnd
   IndexType baseIndex;
   double    dist[ImageDimension];
   double    dinv[ImageDimension];
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     baseIndex[dim] = Math::Floor<IndexValueType>(xm[dim]);
 

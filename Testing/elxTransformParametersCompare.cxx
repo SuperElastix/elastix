@@ -192,7 +192,7 @@ main(int argc, char ** argv)
   if (transformName != "BSplineTransform")
   {
     /** Now compare the two parameter vectors. */
-    for (unsigned int i = 0; i < numberOfParametersTest; i++)
+    for (unsigned int i = 0; i < numberOfParametersTest; ++i)
     {
       baselineNorm += vnl_math::sqr(parametersBaseline[i]);
       diffNorm += vnl_math::sqr(parametersBaseline[i] - parametersTest[i]);
@@ -220,13 +220,13 @@ main(int argc, char ** argv)
     gridOrigin.Fill(0.0);
     DirectionType gridDirection;
     gridDirection.SetIdentity();
-    for (unsigned int i = 0; i < dimension; i++)
+    for (unsigned int i = 0; i < dimension; ++i)
     {
       config->ReadParameter(gridSize[i], "GridSize", i, true, dummyErrorMessage);
       config->ReadParameter(gridIndex[i], "GridIndex", i, true, dummyErrorMessage);
       config->ReadParameter(gridSpacing[i], "GridSpacing", i, true, dummyErrorMessage);
       config->ReadParameter(gridOrigin[i], "GridOrigin", i, true, dummyErrorMessage);
-      for (unsigned int j = 0; j < dimension; j++)
+      for (unsigned int j = 0; j < dimension; ++j)
       {
         config->ReadParameter(gridDirection(j, i), "GridDirection", i * dimension + j, true, dummyErrorMessage);
       }
@@ -272,7 +272,7 @@ main(int argc, char ** argv)
     {
       /** Voxel content. */
       ScalarType diffNormTmp = itk::NumericTraits<ScalarType>::Zero;
-      for (unsigned int i = 0; i < dimension; i++)
+      for (unsigned int i = 0; i < dimension; ++i)
       {
         unsigned int j = index + i * numberParPerDim;
         diffNormTmp += vnl_math::sqr(parametersBaseline[j] - parametersTest[j]);
@@ -294,7 +294,7 @@ main(int argc, char ** argv)
         }
       } // end mask
 
-      for (unsigned int i = 0; i < dimension; i++)
+      for (unsigned int i = 0; i < dimension; ++i)
       {
         unsigned int j = index + i * numberParPerDim;
         baselineNorm += include * vnl_math::sqr(parametersBaseline[j]);

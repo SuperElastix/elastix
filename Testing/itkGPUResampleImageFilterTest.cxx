@@ -96,7 +96,7 @@ PrintTransform(typename TransformType::Pointer & transform)
   if (compositeTransform)
   {
     std::cout << " [";
-    for (std::size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++)
+    for (std::size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); ++i)
     {
       std::cout << compositeTransform->GetNthTransform(i)->GetNameOfClass();
       if (i != compositeTransform->GetNumberOfTransforms() - 1)
@@ -125,7 +125,7 @@ ComputeCenterOfTheImage(const typename InputImageType::ConstPointer & image)
 
   typedef itk::ContinuousIndex<double, InputImageType::ImageDimension> ContinuousIndexType;
   ContinuousIndexType                                                  centerAsContInd;
-  for (std::size_t i = 0; i < Dimension; i++)
+  for (std::size_t i = 0; i < Dimension; ++i)
   {
     centerAsContInd[i] = static_cast<double>(index[i]) + static_cast<double>(size[i] - 1) / 2.0;
   }
@@ -190,7 +190,7 @@ DefineAffineParameters(typename AffineTransformType::ParametersType & parameters
       0.0, 0.0, // translation
     };
 
-    for (std::size_t i = 0; i < 6; i++)
+    for (std::size_t i = 0; i < 6; ++i)
     {
       parameters[par++] = matrix[i];
     }
@@ -204,7 +204,7 @@ DefineAffineParameters(typename AffineTransformType::ParametersType & parameters
       -3.02,  1.3,    -0.045 // translation
     };
 
-    for (std::size_t i = 0; i < 12; i++)
+    for (std::size_t i = 0; i < 12; ++i)
     {
       parameters[par++] = matrix[i];
     }
@@ -222,7 +222,7 @@ DefineTranslationParameters(const std::size_t                                   
 
   // Setup parameters
   parameters.SetSize(Dimension);
-  for (std::size_t i = 0; i < Dimension; i++)
+  for (std::size_t i = 0; i < Dimension; ++i)
   {
     parameters[i] = (double)i * (double)transformIndex + (double)transformIndex;
   }
@@ -248,14 +248,14 @@ DefineBSplineParameters(const std::size_t                               transfor
   infile.open(parametersFileName.c_str());
 
   // Skip number of elements to make unique coefficients per each transformIndex
-  for (std::size_t n = 0; n < transformIndex; n++)
+  for (std::size_t n = 0; n < transformIndex; ++n)
   {
     double parValue;
     infile >> parValue;
   }
 
   // Read it
-  for (std::size_t n = 0; n < numberOfNodes * Dimension; n++)
+  for (std::size_t n = 0; n < numberOfNodes * Dimension; ++n)
   {
     double parValue;
     infile >> parValue;
@@ -291,14 +291,14 @@ DefineEulerParameters(const std::size_t transformIndex, typename EulerTransformT
   else if (Dimension == 3)
   {
     // See implementation of Rigid3DTransform::SetParameters()
-    for (std::size_t i = 0; i < 3; i++)
+    for (std::size_t i = 0; i < 3; ++i)
     {
       parameters[par] = angle;
       ++par;
     }
   }
 
-  for (std::size_t i = 0; i < Dimension; i++)
+  for (std::size_t i = 0; i < Dimension; ++i)
   {
     parameters[i + par] = (double)i * (double)transformIndex + (double)transformIndex;
   }
@@ -331,7 +331,7 @@ DefineSimilarityParameters(const std::size_t                                  tr
   else if (Dimension == 3)
   {
     // See implementation of Similarity3DTransform::SetParameters()
-    for (std::size_t i = 0; i < Dimension; i++)
+    for (std::size_t i = 0; i < Dimension; ++i)
     {
       parameters[i] = angle;
     }
@@ -339,7 +339,7 @@ DefineSimilarityParameters(const std::size_t                                  tr
   }
 
   // Translation
-  for (std::size_t i = 0; i < Dimension; i++)
+  for (std::size_t i = 0; i < Dimension; ++i)
   {
     parameters[i + Dimension] = -1.0 * ((double)i * (double)transformIndex + (double)transformIndex);
   }
@@ -445,7 +445,7 @@ SetTransform(const std::size_t                                            transf
 
     typedef typename BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
     PhysicalDimensionsType                                        gridSpacing;
-    for (unsigned int d = 0; d < Dimension; d++)
+    for (unsigned int d = 0; d < Dimension; ++d)
     {
       gridSpacing[d] = inputSpacing[d] * (inputSize[d] - 1.0);
     }
@@ -681,7 +681,7 @@ main(int argc, char * argv[])
   }
 
   // check for supported transforms
-  for (std::size_t i = 0; i < transforms.size(); i++)
+  for (std::size_t i = 0; i < transforms.size(); ++i)
   {
     const std::string transformName = transforms[i];
     if (transformName != "Affine" && transformName != "Translation" && transformName != "BSpline" &&
@@ -697,7 +697,7 @@ main(int argc, char * argv[])
 
   unsigned int runTimes = 1;
   std::string  parametersFileName = "";
-  for (std::size_t i = 0; i < transforms.size(); i++)
+  for (std::size_t i = 0; i < transforms.size(); ++i)
   {
     if (transforms[i] == "BSpline")
     {
@@ -821,7 +821,7 @@ main(int argc, char * argv[])
   std::stringstream              s;
   s << std::setprecision(4) << std::setiosflags(std::ios_base::fixed);
   double tmp1, tmp2;
-  for (std::size_t i = 0; i < Dimension; i++)
+  for (std::size_t i = 0; i < Dimension; ++i)
   {
     tmp1 = randomNum->GetUniformVariate(0.9, 1.1);
     tmp2 = inputSpacing[i] * tmp1;
@@ -835,7 +835,7 @@ main(int argc, char * argv[])
     s >> outputOrigin[i];
     s.clear();
 
-    for (unsigned int j = 0; j < Dimension; j++)
+    for (unsigned int j = 0; j < Dimension; ++j)
     {
       // tmp = randomNum->GetUniformVariate( 0.9 * inputOrigin[ i ], 1.1 *
       // inputOrigin[ i ] );
@@ -882,7 +882,7 @@ main(int argc, char * argv[])
     initialTransform = tmpTransform;
     cpuTransform = tmpTransform;
 
-    for (std::size_t i = 0; i < transforms.size(); i++)
+    for (std::size_t i = 0; i < transforms.size(); ++i)
     {
       if (i == 0)
       {
@@ -943,7 +943,7 @@ main(int argc, char * argv[])
   itk::TimeProbe cputimer;
   cputimer.Start();
 
-  for (std::size_t i = 0; i < runTimes; i++)
+  for (std::size_t i = 0; i < runTimes; ++i)
   {
     cpuFilter->SetInput(cpuReader->GetOutput());
     cpuFilter->SetTransform(cpuTransform);
@@ -1106,7 +1106,7 @@ main(int argc, char * argv[])
   // Time the filter, run on the GPU
   itk::TimeProbe gputimer;
   gputimer.Start();
-  for (std::size_t i = 0; i < runTimes; i++)
+  for (std::size_t i = 0; i < runTimes; ++i)
   {
     try
     {

@@ -118,7 +118,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::SetMeasurementVector(Insta
   unsigned int dim = this->GetMeasurementVectorSize();
   if (id < this->m_InternalContainerSize)
   {
-    for (unsigned int i = 0; i < dim; i++)
+    for (unsigned int i = 0; i < dim; ++i)
     {
       this->m_InternalContainer[id][i] = mv[i];
     }
@@ -207,7 +207,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::AllocateInternalContainer(
 {
   this->m_InternalContainer = new InternalDataType[size];
   InternalDataType p = new InternalValueType[size * dim];
-  for (unsigned long i = 0; i < size; i++)
+  for (unsigned long i = 0; i < size; ++i)
   {
     this->m_InternalContainer[i] = &(p[i * dim]);
   }

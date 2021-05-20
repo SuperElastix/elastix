@@ -291,7 +291,7 @@ AffineDTI3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
 
   /** Compute dR/dmu * (p-c) */
   const InputVectorType pp = p - this->GetCenter();
-  for (unsigned int dim = 0; dim < 9; dim++)
+  for (unsigned int dim = 0; dim < 9; ++dim)
   {
     const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i = 0; i < SpaceDimension; ++i)
@@ -302,7 +302,7 @@ AffineDTI3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
 
   // compute derivatives for the translation part
   const unsigned int blockOffset = 9;
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     j[dim][blockOffset + dim] = 1.0;
   }

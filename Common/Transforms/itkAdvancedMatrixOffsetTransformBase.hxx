@@ -92,7 +92,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   this->m_Offset = offset;
   this->m_Center.Fill(0);
   this->m_Translation.Fill(0);
-  for (unsigned int i = 0; i < NOutputDimensions; i++)
+  for (unsigned int i = 0; i < NOutputDimensions; ++i)
   {
     this->m_Translation[i] = offset[i];
   }
@@ -119,9 +119,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
    * such as the RigidTransform. */
   this->m_JacobianOfSpatialJacobian.resize(paramDims);
   unsigned int par = 0;
-  for (unsigned int row = 0; row < OutputSpaceDimension; row++)
+  for (unsigned int row = 0; row < OutputSpaceDimension; ++row)
   {
-    for (unsigned int col = 0; col < InputSpaceDimension; col++)
+    for (unsigned int col = 0; col < InputSpaceDimension; ++col)
     {
       if (par < paramDims)
       {
@@ -170,10 +170,10 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   unsigned int i, j;
 
   os << indent << "Matrix: " << std::endl;
-  for (i = 0; i < NInputDimensions; i++)
+  for (i = 0; i < NInputDimensions; ++i)
   {
     os << indent.GetNextIndent();
-    for (j = 0; j < NOutputDimensions; j++)
+    for (j = 0; j < NOutputDimensions; ++j)
     {
       os << m_Matrix[i][j] << " ";
     }
@@ -185,10 +185,10 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   os << indent << "Translation: " << m_Translation << std::endl;
 
   os << indent << "Inverse: " << std::endl;
-  for (i = 0; i < NInputDimensions; i++)
+  for (i = 0; i < NInputDimensions; ++i)
   {
     os << indent.GetNextIndent();
-    for (j = 0; j < NOutputDimensions; j++)
+    for (j = 0; j < NOutputDimensions; ++j)
     {
       os << this->GetInverseMatrix()[i][j] << " ";
     }
@@ -280,10 +280,10 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 {
   OutputCovariantVectorType result; // Converted vector
 
-  for (unsigned int i = 0; i < NOutputDimensions; i++)
+  for (unsigned int i = 0; i < NOutputDimensions; ++i)
   {
     result[i] = NumericTraits<ScalarType>::Zero;
-    for (unsigned int j = 0; j < NInputDimensions; j++)
+    for (unsigned int j = 0; j < NInputDimensions; ++j)
     {
       result[i] += this->GetInverseMatrix()[j][i] * vec[j]; // Inverse transposed
     }
@@ -349,7 +349,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 {
   this->m_FixedParameters = fp;
   InputPointType c;
-  for (unsigned int i = 0; i < NInputDimensions; i++)
+  for (unsigned int i = 0; i < NInputDimensions; ++i)
   {
     c[i] = this->m_FixedParameters[i];
   }
@@ -364,7 +364,7 @@ const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, 
   AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetFixedParameters(void) const
 {
   this->m_FixedParameters.SetSize(NInputDimensions);
-  for (unsigned int i = 0; i < NInputDimensions; i++)
+  for (unsigned int i = 0; i < NInputDimensions; ++i)
   {
     this->m_FixedParameters[i] = this->m_Center[i];
   }
@@ -379,9 +379,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   // Transfer the linear part
   unsigned int par = 0;
 
-  for (unsigned int row = 0; row < NOutputDimensions; row++)
+  for (unsigned int row = 0; row < NOutputDimensions; ++row)
   {
-    for (unsigned int col = 0; col < NInputDimensions; col++)
+    for (unsigned int col = 0; col < NInputDimensions; ++col)
     {
       this->m_Parameters[par] = m_Matrix[row][col];
       ++par;
@@ -389,7 +389,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   }
 
   // Transfer the constant part
-  for (unsigned int i = 0; i < NOutputDimensions; i++)
+  for (unsigned int i = 0; i < NOutputDimensions; ++i)
   {
     this->m_Parameters[par] = m_Translation[i];
     ++par;
@@ -417,9 +417,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
   this->m_Parameters = parameters;
 
-  for (unsigned int row = 0; row < NOutputDimensions; row++)
+  for (unsigned int row = 0; row < NOutputDimensions; ++row)
   {
-    for (unsigned int col = 0; col < NInputDimensions; col++)
+    for (unsigned int col = 0; col < NInputDimensions; ++col)
     {
       m_Matrix[row][col] = this->m_Parameters[par];
       ++par;
@@ -427,7 +427,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   }
 
   // Transfer the constant part
-  for (unsigned int i = 0; i < NOutputDimensions; i++)
+  for (unsigned int i = 0; i < NOutputDimensions; ++i)
   {
     m_Translation[i] = this->m_Parameters[par];
     ++par;
@@ -453,10 +453,10 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   const MatrixType & matrix = this->GetMatrix();
 
   OffsetType offset;
-  for (unsigned int i = 0; i < NOutputDimensions; i++)
+  for (unsigned int i = 0; i < NOutputDimensions; ++i)
   {
     offset[i] = m_Translation[i] + m_Center[i];
-    for (unsigned int j = 0; j < NInputDimensions; j++)
+    for (unsigned int j = 0; j < NInputDimensions; ++j)
     {
       offset[i] -= matrix[i][j] * m_Center[j];
     }
@@ -474,10 +474,10 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   const MatrixType & matrix = this->GetMatrix();
 
   OffsetType translation;
-  for (unsigned int i = 0; i < NOutputDimensions; i++)
+  for (unsigned int i = 0; i < NOutputDimensions; ++i)
   {
     translation[i] = m_Offset[i] - m_Center[i];
-    for (unsigned int j = 0; j < NInputDimensions; j++)
+    for (unsigned int j = 0; j < NInputDimensions; ++j)
     {
       translation[i] += matrix[i][j] * m_Center[j];
     }

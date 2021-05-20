@@ -481,13 +481,13 @@ AdvancedBSplineTransform<TElastix>::ReadFromFile(void)
   griddirection.SetIdentity();
 
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Configuration->ReadParameter(gridsize[i], "GridSize", i);
     this->m_Configuration->ReadParameter(gridindex[i], "GridIndex", i);
     this->m_Configuration->ReadParameter(gridspacing[i], "GridSpacing", i);
     this->m_Configuration->ReadParameter(gridorigin[i], "GridOrigin", i);
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_Configuration->ReadParameter(griddirection(j, i), "GridDirection", i * SpaceDimension + j);
     }

@@ -87,7 +87,7 @@ public:
     if (!this->m_CoefficientImages[0])
     {
       itkWarningMacro(<< "B-spline coefficients have not been set");
-      for (unsigned int j = 0; j < SpaceDimension; j++)
+      for (unsigned int j = 0; j < SpaceDimension; ++j)
       {
         outputPoint[j] = transformedPoint[j];
       }
@@ -125,7 +125,7 @@ public:
     unsigned long                               counter = 0;
     const PixelType *                           basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       iterator[j] = IteratorType(this->m_CoefficientImages[j], supportRegion);
     }
@@ -137,7 +137,7 @@ public:
       indices[counter] = &(iterator[0].Value()) - basePointer;
 
       // multiply weigth with coefficient to compute displacement
-      for (unsigned int j = 0; j < SpaceDimension; j++)
+      for (unsigned int j = 0; j < SpaceDimension; ++j)
       {
         outputPoint[j] += static_cast<ScalarType>(weights[counter] * iterator[j].Value());
         ++iterator[j];
@@ -147,7 +147,7 @@ public:
     } // end while
 
     // The output point is the start point + displacement.
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       outputPoint[j] += transformedPoint[j];
     }

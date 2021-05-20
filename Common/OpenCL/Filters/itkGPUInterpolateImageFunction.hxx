@@ -65,7 +65,7 @@ SetIndex(const typename ImageType::IndexType index, cl_uint2 & oclindex)
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     oclindex.s[id++] = index[i];
   }
@@ -78,7 +78,7 @@ SetIndex(const typename ImageType::IndexType index, cl_uint4 & oclindex)
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     oclindex.s[id++] = index[i];
   }
@@ -110,7 +110,7 @@ SetContinuousIndex(const TContinuousIndex & cindex, cl_float4 & oclindex)
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     oclindex.s[id++] = cindex[i];
   }

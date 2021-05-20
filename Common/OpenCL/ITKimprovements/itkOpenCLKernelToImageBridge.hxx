@@ -207,7 +207,7 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
         const typename ImageType::DirectionType & pp2i = image->GetPhysicalPointToIndex();
 
         // Set Size, Spacing, Origin
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; ++i)
         {
           imageBase2D.Size.s[i] = size[i];
           imageBase2D.Spacing.s[i] = spacing[i];
@@ -216,9 +216,9 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
 
         // Set Directions
         unsigned int index = 0;
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; ++i)
         {
-          for (unsigned int j = 0; j < ImageDimension; j++)
+          for (unsigned int j = 0; j < ImageDimension; ++j)
           {
             imageBase2D.Direction.s[index] = static_cast<float>(direction[i][j]);
             imageBase2D.IndexToPhysicalPoint.s[index] = static_cast<float>(i2pp[i][j]);
@@ -230,14 +230,14 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
       else
       {
         // Set Size, Spacing, Origin to zero
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; ++i)
         {
           imageBase2D.Size.s[i] = 0;
           imageBase2D.Spacing.s[i] = 0.0f;
           imageBase2D.Origin.s[i] = 0.0f;
         }
         // Set Directions to zero
-        for (unsigned int i = 0; i < 4; i++)
+        for (unsigned int i = 0; i < 4; ++i)
         {
           imageBase2D.Direction.s[i] = 0.0f;
           imageBase2D.IndexToPhysicalPoint.s[i] = 0.0f;
@@ -264,7 +264,7 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
         const typename ImageType::DirectionType & pp2i = image->GetPhysicalPointToIndex();
 
         // Set Size, Spacing, Origin
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; ++i)
         {
           imageBase3D.Size.s[i] = size[i];
           imageBase3D.Spacing.s[i] = spacing[i];
@@ -273,9 +273,9 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
 
         // Set Directions
         unsigned int index = 0;
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; ++i)
         {
-          for (unsigned int j = 0; j < ImageDimension; j++)
+          for (unsigned int j = 0; j < ImageDimension; ++j)
           {
             imageBase3D.Direction.s[index] = static_cast<float>(direction[i][j]);
             imageBase3D.IndexToPhysicalPoint.s[index] = static_cast<float>(i2pp[i][j]);
@@ -283,7 +283,7 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
             index++;
           }
         }
-        for (unsigned int i = 9; i < 16; i++)
+        for (unsigned int i = 9; i < 16; ++i)
         {
           imageBase3D.Direction.s[i] = 0.0f;
           imageBase3D.IndexToPhysicalPoint.s[i] = 0.0f;
@@ -293,14 +293,14 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
       else
       {
         // Set Size, Spacing, Origin to zero
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; ++i)
         {
           imageBase3D.Size.s[i] = 0;
           imageBase3D.Spacing.s[i] = 0.0f;
           imageBase3D.Origin.s[i] = 0.0f;
         }
         // Set Directions to zero
-        for (unsigned int i = 0; i < 16; i++)
+        for (unsigned int i = 0; i < 16; ++i)
         {
           imageBase3D.Direction.s[i] = 0.0f;
           imageBase3D.IndexToPhysicalPoint.s[i] = 0.0f;

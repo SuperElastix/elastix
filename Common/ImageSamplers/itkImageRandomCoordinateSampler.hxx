@@ -186,7 +186,7 @@ ImageRandomCoordinateSampler<TInputImage>::BeforeThreadedGenerateData(void)
   this->GenerateSampleRegion(smallestImageCIndex, largestImageCIndex, smallestCIndex, largestCIndex);
 
   /** Fill the list with random numbers. */
-  for (unsigned long i = 0; i < this->m_NumberOfSamples; i++)
+  for (unsigned long i = 0; i < this->m_NumberOfSamples; ++i)
   {
     this->GenerateRandomCoordinate(smallestCIndex, largestCIndex, randomCIndex);
     for (unsigned int j = 0; j < InputImageDimension; ++j)
@@ -198,7 +198,7 @@ ImageRandomCoordinateSampler<TInputImage>::BeforeThreadedGenerateData(void)
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
   this->m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
     this->m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
   }

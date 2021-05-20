@@ -871,7 +871,7 @@ MevisDicomTiffImageIO::Read(void * buffer)
       // case one both x,y is larger
       if (m_TileLength >= m_Length && m_TileWidth >= m_Width)
       {
-        for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+        for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); ++z0)
         {
           if (TIFFReadTile(m_TIFFImage, tilebuf, 0, 0, z0, 0) < 0)
           {
@@ -909,7 +909,7 @@ MevisDicomTiffImageIO::Read(void * buffer)
         const unsigned int tilexbytes = lenx * bytespersample;
 
         const bool my = (m_Length % m_TileLength == 0) ? true : false;
-        for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+        for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); ++z0)
         {
           for (unsigned int y0 = 0; y0 < (my ? m_Length : m_Length - m_TileLength); y0 += m_TileLength)
           {
@@ -973,7 +973,7 @@ MevisDicomTiffImageIO::Read(void * buffer)
         const unsigned leny = m_Length;
         const bool     mx = (m_Width % m_TileWidth == 0) ? true : false;
 
-        for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+        for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); ++z0)
         {
           for (unsigned int x0 = 0; x0 < (mx ? m_Width : m_Width - m_TileWidth); x0 += m_TileWidth)
           {
@@ -1043,7 +1043,7 @@ MevisDicomTiffImageIO::Read(void * buffer)
       const bool my = (m_Length % m_TileLength == 0) ? true : false;
 
       // fill everything inside ie from topleft
-      for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+      for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); ++z0)
       {
         for (unsigned int y0 = 0; y0 < (my ? m_Length : m_Length - m_TileLength); y0 += m_TileLength)
         {
@@ -2002,7 +2002,7 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     const bool mx = (m_Width % m_TileWidth == 0) ? true : false;
     const bool my = (m_Length % m_TileLength == 0) ? true : false;
 
-    for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+    for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); ++z0)
     {
       for (unsigned int y0 = 0; y0 < (my ? m_Length : m_Length - m_TileLength); y0 += m_TileLength)
       {

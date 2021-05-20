@@ -610,7 +610,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
          */
         movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex(cindex);
         MovingImageIndexType index;
-        for (unsigned int j = 0; j < MovingImageDimension; j++)
+        for (unsigned int j = 0; j < MovingImageDimension; ++j)
         {
           index[j] = static_cast<long>(Math::Round<double>(cindex[j]));
         }

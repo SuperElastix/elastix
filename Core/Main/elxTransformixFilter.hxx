@@ -318,13 +318,13 @@ TransformixFilter<TMovingImage>::GenerateOutputInformation(void)
   typename TMovingImage::PointType     outputOrigin;
   typename TMovingImage::DirectionType outputDirection;
 
-  for (unsigned int i = 0; i < TMovingImage::ImageDimension; i++)
+  for (unsigned int i = 0; i < TMovingImage::ImageDimension; ++i)
   {
     outputSpacing[i] = std::atof(spacingStrings[i].c_str());
     outputSize[i] = std::atoi(sizeStrings[i].c_str());
     outputStartIndex[i] = std::atoi(indexStrings[i].c_str());
     outputOrigin[i] = std::atof(originStrings[i].c_str());
-    for (unsigned int j = 0; j < TMovingImage::ImageDimension; j++)
+    for (unsigned int j = 0; j < TMovingImage::ImageDimension; ++j)
     {
       outputDirection(j, i) = std::atof(directionStrings[i * TMovingImage::ImageDimension + j].c_str());
     }

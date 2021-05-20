@@ -49,7 +49,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
   this->m_InputParametersPointer = &(this->m_InternalParametersBuffer);
 
   // Initialize coeffient images
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     this->m_WrappedImage[j] = ImageType::New();
     this->m_WrappedImage[j]->SetRegions(this->m_GridRegion);
@@ -80,13 +80,13 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
    */
   this->m_FixedParameters.SetSize(NDimensions * (NDimensions + 3));
   this->m_FixedParameters.Fill(0.0);
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[2 * NDimensions + i] = this->m_GridSpacing[i];
   }
-  for (unsigned int di = 0; di < NDimensions; di++)
+  for (unsigned int di = 0; di < NDimensions; ++di)
   {
-    for (unsigned int dj = 0; dj < NDimensions; dj++)
+    for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
       this->m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = this->m_GridDirection[di][dj];
     }
@@ -174,7 +174,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdateGridOffs
 {
   SizeType gridSize = this->m_GridRegion.GetSize();
   this->m_GridOffsetTable.Fill(1);
-  for (unsigned int j = 1; j < SpaceDimension; j++)
+  for (unsigned int j = 1; j < SpaceDimension; ++j)
   {
     this->m_GridOffsetTable[j] = this->m_GridOffsetTable[j - 1] * gridSize[j - 1];
   }
@@ -192,7 +192,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridSpacing
     this->m_GridSpacing = spacing;
 
     // set spacing for each coefficient and Jacobian image
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_WrappedImage[j]->SetSpacing(this->m_GridSpacing.GetDataPointer());
     }
@@ -214,7 +214,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridDirecti
     this->m_GridDirection = direction;
 
     // set direction for each coefficient and Jacobian image
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_WrappedImage[j]->SetDirection(this->m_GridDirection);
     }
@@ -236,7 +236,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridOrigin(
     this->m_GridOrigin = origin;
 
     // set spacing for each coefficient and jacobianimage
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_WrappedImage[j]->SetOrigin(this->m_GridOrigin.GetDataPointer());
     }
@@ -307,11 +307,11 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
   if (passedParameters.Size() == NDimensions * 3)
   {
     parameters.Fill(0.0);
-    for (unsigned int i = 0; i < 3 * NDimensions; i++)
+    for (unsigned int i = 0; i < 3 * NDimensions; ++i)
     {
       parameters[i] = passedParameters[i];
     }
-    for (unsigned int di = 0; di < NDimensions; di++)
+    for (unsigned int di = 0; di < NDimensions; ++di)
     {
       parameters[3 * NDimensions + (di * NDimensions + di)] = 1;
     }
@@ -323,7 +323,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
   }
   else
   {
-    for (unsigned int i = 0; i < NDimensions * (3 + NDimensions); i++)
+    for (unsigned int i = 0; i < NDimensions * (3 + NDimensions); ++i)
     {
       parameters[i] = passedParameters[i];
     }
@@ -340,7 +340,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
 
   /** Set the Grid Parameters */
   SizeType gridSize;
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     gridSize[i] = static_cast<int>(parameters[i]);
   }
@@ -349,23 +349,23 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
 
   /** Set the Origin Parameters */
   OriginType origin;
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     origin[i] = parameters[NDimensions + i];
   }
 
   /** Set the Spacing Parameters */
   SpacingType spacing;
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     spacing[i] = parameters[2 * NDimensions + i];
   }
 
   /** Set the Direction Parameters */
   DirectionType direction;
-  for (unsigned int di = 0; di < NDimensions; di++)
+  for (unsigned int di = 0; di < NDimensions; ++di)
   {
-    for (unsigned int dj = 0; dj < NDimensions; dj++)
+    for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
       direction[di][dj] = parameters[3 * NDimensions + (di * NDimensions + dj)];
     }
@@ -394,7 +394,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::WrapAsImages(v
   PixelType *  dataPointer = const_cast<PixelType *>((this->m_InputParametersPointer->data_block()));
   unsigned int numberOfPixels = this->m_GridRegion.GetNumberOfPixels();
 
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     this->m_WrappedImage[j]->GetPixelContainer()->SetImportPointer(dataPointer, numberOfPixels);
     dataPointer += numberOfPixels;
@@ -454,21 +454,21 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetFixedParame
 {
   RegionType resRegion = this->GetGridRegion();
 
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[i] = (resRegion.GetSize())[i];
   }
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[NDimensions + i] = (this->GetGridOrigin())[i];
   }
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[2 * NDimensions + i] = (this->GetGridSpacing())[i];
   }
-  for (unsigned int di = 0; di < NDimensions; di++)
+  for (unsigned int di = 0; di < NDimensions; ++di)
   {
-    for (unsigned int dj = 0; dj < NDimensions; dj++)
+    for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
       this->m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = (this->GetGridDirection())[di][dj];
     }
@@ -490,7 +490,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetCoefficient
     this->SetGridOrigin(images[0]->GetOrigin());
     this->UpdateGridOffsetTable();
 
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_CoefficientImages[j] = images[j];
     }
@@ -521,14 +521,14 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::PrintSelf(std:
   os << indent << "PointToIndexTransposed2:\n" << this->m_PointToIndexMatrixTransposed2 << std::endl;
 
   os << indent << "CoefficientImage: [ " << this->m_CoefficientImages[0].GetPointer();
-  for (unsigned int j = 1; j < SpaceDimension; j++)
+  for (unsigned int j = 1; j < SpaceDimension; ++j)
   {
     os << ", " << this->m_CoefficientImages[j].GetPointer();
   }
   os << " ]" << std::endl;
 
   os << indent << "WrappedImage: [ " << this->m_WrappedImage[0].GetPointer();
-  for (unsigned int j = 1; j < SpaceDimension; j++)
+  for (unsigned int j = 1; j < SpaceDimension; ++j)
   {
     os << ", " << this->m_WrappedImage[j].GetPointer();
   }
@@ -549,7 +549,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::InsideValidReg
   bool inside = true;
 
   /** Check if index can be evaluated given the current grid. */
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     if (index[j] < this->m_ValidRegionBegin[j] || index[j] >= this->m_ValidRegionEnd[j])
     {
@@ -570,14 +570,14 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::TransformPoint
 {
   Vector<double, SpaceDimension> tvector;
 
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     tvector[j] = point[j] - this->m_GridOrigin[j];
   }
 
   Vector<double, SpaceDimension> cvector = this->m_PointToIndexMatrix * tvector;
 
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     cindex[j] = static_cast<typename ContinuousIndexType::CoordRepType>(cvector[j]);
   }

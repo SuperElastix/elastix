@@ -120,7 +120,7 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateData(void)
     {
       // read point from textfile
       PointType point;
-      for (unsigned int j = 0; j < dimension; j++)
+      for (unsigned int j = 0; j < dimension; ++j)
       {
         if (!this->m_Reader.eof())
         {

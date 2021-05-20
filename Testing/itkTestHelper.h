@@ -479,7 +479,7 @@ WriteLog(const std::string &                  filename,
   }
 
   fout << filterName << s << dim << s;
-  for (unsigned int i = 0; i < dim; i++)
+  for (unsigned int i = 0; i < dim; ++i)
   {
     fout << imagesize.GetSize()[i];
     if (i < dim - 1)

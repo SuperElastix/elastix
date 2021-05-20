@@ -213,9 +213,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
     return;
   }
 
-  for (unsigned int level = 0; level < this->m_NumberOfLevels; level++)
+  for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
-    for (unsigned int dim = 0; dim < ImageDimension; dim++)
+    for (unsigned int dim = 0; dim < ImageDimension; ++dim)
     {
       this->m_SmoothingSchedule[level][dim] = schedule[level][dim];
 
@@ -627,7 +627,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   }
 
   // We have to set requestedRegion properly
-  for (unsigned int level = 0; level < this->m_NumberOfLevels; level++)
+  for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
     this->GetOutput(level)->SetRequestedRegionToLargestPossibleRegion();
   }
@@ -683,7 +683,7 @@ void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::ReleaseOutputs(void)
 {
   // release the memories if already has been allocated
-  for (unsigned int level = 0; level < this->m_NumberOfLevels; level++)
+  for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
     if (this->m_ComputeOnlyForCurrentLevel && level != this->m_CurrentLevel)
     {
@@ -756,9 +756,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   this->m_SmoothingSchedule = temp;
 
   unsigned int factors[ImageDimension];
-  for (unsigned int level = 0; level < this->m_NumberOfLevels; level++)
+  for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
-    for (unsigned int dim = 0; dim < ImageDimension; dim++)
+    for (unsigned int dim = 0; dim < ImageDimension; ++dim)
     {
       factors[dim] = this->m_Schedule[level][dim];
       this->m_SmoothingSchedule[level][dim] = this->GetDefaultSigma(level, dim, factors, spacing);
@@ -778,7 +778,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   SigmaArrayType &   sigmaArray) const
 {
   sigmaArray.Fill(0);
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     sigmaArray[dim] = this->m_SmoothingSchedule[level][dim];
   }
@@ -796,7 +796,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   RescaleFactorArrayType & shrinkFactors) const
 {
   shrinkFactors.Fill(0);
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     /** Here we would prefer to use m_RescaleSchedule.
      * Although it would require copying most of the methods
@@ -818,7 +818,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   const SigmaArrayType & sigmaArray) const
 {
   const ScalarRealType zero = NumericTraits<ScalarRealType>::Zero;
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     if (sigmaArray[dim] != zero)
     {
@@ -840,7 +840,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   const RescaleFactorArrayType & rescaleFactors) const
 {
   const ScalarRealType one = NumericTraits<ScalarRealType>::One;
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     if (rescaleFactors[dim] != one)
     {
@@ -862,7 +862,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 {
   // If for any level all sigma elements are not zeros then smooth are used in pipeline
   SigmaArrayType sigmaArray;
-  for (unsigned int level = 0; level < this->m_NumberOfLevels; level++)
+  for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
     this->GetSigma(level, sigmaArray);
     if (!this->AreSigmasAllZeros(sigmaArray))
@@ -884,7 +884,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 {
   // If for any level all rescale factors are not ones then rescale are used in pipeline
   RescaleFactorArrayType rescaleFactors;
-  for (unsigned int level = 0; level < this->m_NumberOfLevels; level++)
+  for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
     this->GetShrinkFactors(level, rescaleFactors);
     if (!this->AreRescaleFactorsAllOnes(rescaleFactors))

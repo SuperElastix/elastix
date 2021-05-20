@@ -52,7 +52,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::AdvancedTranslationTrans
   this->m_LocalJacobian.SetSize(SpaceDimension, ParametersDimension);
   this->m_LocalJacobian.Fill(0.0);
 
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_LocalJacobian(i, i) = 1.0;
   }
@@ -91,7 +91,7 @@ void
 AdvancedTranslationTransform<TScalarType, NDimensions>::SetParameters(const ParametersType & parameters)
 {
   bool modified = false;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     if (m_Offset[i] != parameters[i])
     {
@@ -111,7 +111,7 @@ template <class TScalarType, unsigned int NDimensions>
 const typename AdvancedTranslationTransform<TScalarType, NDimensions>::ParametersType &
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters(void) const
 {
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Parameters[i] = this->m_Offset[i];
   }
@@ -145,7 +145,7 @@ void
 AdvancedTranslationTransform<TScalarType, NDimensions>::Translate(const OutputVectorType & offset, bool)
 {
   ParametersType newOffset(SpaceDimension);
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     newOffset[i] = m_Offset[i] + offset[i];
   }

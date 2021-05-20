@@ -65,7 +65,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Inside
   bool inside = true;
 
   /** Check if index can be evaluated given the current grid. */
-  for (unsigned int j = 0; j < SpaceDimension - 1; j++)
+  for (unsigned int j = 0; j < SpaceDimension - 1; ++j)
   {
     if (index[j] < this->m_ValidRegionBegin[j] || index[j] >= this->m_ValidRegionEnd[j])
     {
@@ -154,7 +154,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   if (!this->m_CoefficientImages[0])
   {
     itkWarningMacro(<< "B-spline coefficients have not been set");
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       outputPoint[j] = transformedPoint[j];
     }
@@ -204,7 +204,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
 
     const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
-    for (unsigned int j = 0; j < SpaceDimension - 1; j++)
+    for (unsigned int j = 0; j < SpaceDimension - 1; ++j)
     {
       iterator[j] = IteratorType(this->m_CoefficientImages[j], supportRegions[r]);
     }
@@ -216,7 +216,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
       indices[counter] = &(iterator[0].Value()) - basePointer;
 
       /** Multiply weigth with coefficient to compute displacement. */
-      for (unsigned int j = 0; j < SpaceDimension - 1; j++)
+      for (unsigned int j = 0; j < SpaceDimension - 1; ++j)
       {
         outputPoint[j] += static_cast<ScalarType>(weights[counter] * iterator[j].Value());
         ++iterator[j];
@@ -227,7 +227,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   }
 
   /** The output point is the start point + displacement. */
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     outputPoint[j] += transformedPoint[j];
   }

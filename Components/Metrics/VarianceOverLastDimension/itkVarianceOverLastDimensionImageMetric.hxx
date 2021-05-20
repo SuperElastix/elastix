@@ -173,12 +173,12 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::EvaluateTransfo
   JacobianIteratorType                                   jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
+  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {
     const double           imDeriv = movingImageDerivative[dim];
     DerivativeIteratorType imjac = imageJacobian.begin();
 
-    for (unsigned int mu = 0; mu < sizeImageJacobian; mu++)
+    for (unsigned int mu = 0; mu < sizeImageJacobian; ++mu)
     {
       (*imjac) += (*jac) * imDeriv;
       ++imjac;

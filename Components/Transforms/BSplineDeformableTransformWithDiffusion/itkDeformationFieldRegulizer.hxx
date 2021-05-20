@@ -101,7 +101,7 @@ DeformationFieldRegulizer<TAnyITKTransform>::TransformPoint(const InputPointType
   oppDF = this->m_IntermediaryDeformationFieldTransform->TransformPoint(inputPoint);
 
   /** Add them: don't forget to subtract ipp. */
-  for (unsigned int i = 0; i < OutputSpaceDimension; i++)
+  for (unsigned int i = 0; i < OutputSpaceDimension; ++i)
   {
     opp[i] = oppAnyT[i] + oppDF[i] - inputPoint[i];
   }

@@ -133,7 +133,7 @@ SimilarityTransformElastix<TElastix>::InitializeTransform(void)
   InputPointType centerOfRotationPoint;
   bool           centerGivenAsIndex = true;
   bool           centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Initilialize. */
     centerOfRotationIndex[i] = 0;
@@ -308,14 +308,14 @@ SimilarityTransformElastix<TElastix>::SetScales(void)
     else if (SpaceDimension == 3)
     {
       newscales[6] = 10000.0;
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         newscales[i] = 100000.0;
       }
     }
 
     /** Get the scales from the parameter file. */
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
       this->GetConfiguration()->ReadParameter(newscales[i], "Scales", this->GetComponentLabel(), i, -1);
     }
@@ -342,7 +342,7 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
    */
   IndexType centerOfRotationIndex;
   bool      centerGivenAsIndex = true;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     centerOfRotationIndex[i] = 0;
 
@@ -369,7 +369,7 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
   SizeType      size;
   DirectionType direction;
   direction.SetIdentity();
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
     size[i] = 0;
@@ -388,7 +388,7 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
     this->m_Configuration->ReadParameter(origin[i], "Origin", i);
 
     /** Read direction cosines. Default identity */
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_Configuration->ReadParameter(direction(j, i), "Direction", i * SpaceDimension + j);
     }
@@ -396,7 +396,7 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
 
   /** Check for image size. */
   bool illegalSize = false;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     if (size[i] == 0)
     {
@@ -445,7 +445,7 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType &
    */
   InputPointType centerOfRotationPoint;
   bool           centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     centerOfRotationPoint[i] = 0;
 

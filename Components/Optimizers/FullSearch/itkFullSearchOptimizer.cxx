@@ -191,7 +191,7 @@ FullSearchOptimizer::UpdateCurrentPosition(void)
 
   /** Derive the index of the next search space point */
   bool JustSetPreviousDimToZero = true;
-  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ssdim++) // loop over all dimensions of the search space
+  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ++ssdim) // loop over all dimensions of the search space
   {
     /** if the full range of ssdim-1 has been searched (so, if its
      * index has just been set back to 0) then increase index[ssdim] */
@@ -224,7 +224,7 @@ FullSearchOptimizer::UpdateCurrentPosition(void)
    * The IndexToPoint and PointToParameter functions are not used here,
    * because we edit directly in the currentPosition (faster).
    */
-  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ssdim++)
+  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ++ssdim)
   {
     /** Transform the index to a point; point = min + step*index */
     RangeType range = it.Value();
@@ -260,7 +260,7 @@ FullSearchOptimizer::ProcessSearchSpaceChanges(void)
     /** Initialise an iterator over the search space map. */
     SearchSpaceIteratorType it(m_SearchSpace->Begin());
 
-    for (unsigned int ssdim = 0; ssdim < m_NumberOfSearchSpaceDimensions; ssdim++)
+    for (unsigned int ssdim = 0; ssdim < m_NumberOfSearchSpaceDimensions; ++ssdim)
     {
       RangeType range = it.Value();
       m_SearchSpaceSize[ssdim] = static_cast<unsigned long>((range[1] - range[0]) / range[2]) + 1;
@@ -335,7 +335,7 @@ FullSearchOptimizer::GetNumberOfIterations(void)
   if (maxssdim > 0)
   {
     nr_it = sssize[0];
-    for (unsigned int ssdim = 1; ssdim < maxssdim; ssdim++)
+    for (unsigned int ssdim = 1; ssdim < maxssdim; ++ssdim)
     {
       nr_it *= sssize[ssdim];
     }
@@ -388,7 +388,7 @@ FullSearchOptimizer::PointToPosition(const SearchSpacePointType & point)
   SearchSpaceIteratorType it(m_SearchSpace->Begin());
 
   /** Transform the index to a point in search space. */
-  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ssdim++)
+  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ++ssdim)
   {
     /** Update the array of parameters. */
     param[it.Index()] = point[ssdim];
@@ -426,7 +426,7 @@ FullSearchOptimizer::IndexToPoint(const SearchSpaceIndexType & index)
   SearchSpaceIteratorType it(m_SearchSpace->Begin());
 
   /** Transform the index to a point in search space. */
-  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ssdim++)
+  for (unsigned int ssdim = 0; ssdim < searchSpaceDimension; ++ssdim)
   {
     /** point = min + step*index */
     RangeType range = it.Value();

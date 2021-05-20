@@ -441,7 +441,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
               ty_neighbor = tindex_neighbor[1];
               tz_neighbor = tindex_neighbor[2];
 
-              for (unsigned dd = 0; dd < ImageDimension; dd++)
+              for (unsigned dd = 0; dd < ImageDimension; ++dd)
               {
                 ntindex_start[dd] = static_cast<ContinuousIndexValueType>(floor(tindex[dd])) - 1.0;
                 ntindex_neighbor_start[dd] = static_cast<ContinuousIndexValueType>(floor(tindex_neighbor[dd])) - 1.0;

@@ -139,7 +139,7 @@ ImageRandomSamplerSparseMask<TInputImage>::BeforeThreadedGenerateData(void)
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
   this->m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
     this->m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
   }

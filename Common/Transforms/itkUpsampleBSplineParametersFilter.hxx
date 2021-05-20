@@ -86,7 +86,7 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayT
   coeffs_in->SetRegions(this->m_CurrentGridRegion);
 
   /** Loop over dimension: each direction is upsampled separately. */
-  for (unsigned int j = 0; j < Dimension; j++)
+  for (unsigned int j = 0; j < Dimension; ++j)
   {
     /** Fill the coefficient image with parameter data. */
     coeffs_in->GetPixelContainer()->SetImportPointer(inputDataPointer, currentNumberOfPixels);

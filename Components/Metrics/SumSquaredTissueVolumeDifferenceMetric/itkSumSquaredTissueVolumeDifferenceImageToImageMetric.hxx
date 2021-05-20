@@ -734,12 +734,12 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::E
   JacobianIteratorType                                   jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
+  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {
     const double           imDeriv = movingImageDerivative[dim] / (this->m_TissueValue - this->m_AirValue);
     DerivativeIteratorType imjac = imageJacobian.begin();
 
-    for (unsigned int mu = 0; mu < sizeImageJacobian; mu++)
+    for (unsigned int mu = 0; mu < sizeImageJacobian; ++mu)
     {
       (*imjac) += (*jac) * imDeriv;
       ++imjac;
@@ -848,11 +848,11 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::
   const unsigned int sizejacobianOfSpatialJacobianDeterminant = jacobianOfSpatialJacobianDeterminant.GetSize();
 
   /** matrix product first, then trace. */
-  for (unsigned int mu = 0; mu < sizejacobianOfSpatialJacobianDeterminant; mu++)
+  for (unsigned int mu = 0; mu < sizejacobianOfSpatialJacobianDeterminant; ++mu)
   {
-    for (unsigned int diag = 0; diag < FixedImageDimension; diag++)
+    for (unsigned int diag = 0; diag < FixedImageDimension; ++diag)
     {
-      for (unsigned int idx = 0; idx < FixedImageDimension; idx++)
+      for (unsigned int idx = 0; idx < FixedImageDimension; ++idx)
       {
         (*jsjdit) += inverseSpatialJacobian(diag, idx) * (*jsjit)(idx, diag);
       }

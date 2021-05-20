@@ -84,7 +84,7 @@ Simplex<TElastix>::BeforeEachResolution(void)
     ParametersType initialsimplexdelta(numberofparameters);
     initialsimplexdelta.Fill(1);
 
-    for (unsigned int i = 0; i < numberofparameters; i++)
+    for (unsigned int i = 0; i < numberofparameters; ++i)
     {
       this->m_Configuration->ReadParameter(initialsimplexdelta[i], "InitialSimplexDelta", i);
     }

@@ -426,7 +426,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcPlanesAndCorners(void)
 
   int c1 = 0, c2 = 0, c3 = 0;
 
-  for (j = 0; j < 6; j++)
+  for (j = 0; j < 6; ++j)
   { // loop around for planes
     switch (j)
     { // which corners to take
@@ -527,7 +527,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
   double interceptx[6], intercepty[6], interceptz[6];
   double d[6];
 
-  for (j = 0; j < NoSides; j++)
+  for (j = 0; j < NoSides; ++j)
   {
 
     denom = (m_BoundingPlane[j][0] * m_RayDirectionInMM[0] + m_BoundingPlane[j][1] * m_RayDirectionInMM[1] +
@@ -553,7 +553,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
   }
 
   nSidesCrossed = 0;
-  for (j = 0; j < NoSides; j++)
+  for (j = 0; j < NoSides; ++j)
   {
 
     // Work out which corners to use
@@ -602,7 +602,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
     }
 
     // Calculate vectors from corner of ct volume to intercept.
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
       if (noInterFlag[j] == 1)
       {
@@ -619,7 +619,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
     }
 
     // Do cross product with these vectors
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
       if (i == 3)
       {
@@ -651,7 +651,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
     // if not, then the ray went through this plane
 
     crossFlag = 0;
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
       if ((cross[0][i] <= 0 && cross[1][i] <= 0 && cross[2][i] <= 0 && cross[3][i] <= 0)
 
@@ -693,12 +693,12 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
   if (nSidesCrossed >= 3)
   {
     maxInterDist = 0;
-    for (j = 0; j < nSidesCrossed - 1; j++)
+    for (j = 0; j < nSidesCrossed - 1; ++j)
     {
-      for (k = j + 1; k < nSidesCrossed; k++)
+      for (k = j + 1; k < nSidesCrossed; ++k)
       {
         interDist = 0;
-        for (i = 0; i < 3; i++)
+        for (i = 0; i < 3; ++i)
         {
           interDist += (cubeInter[j][i] - cubeInter[k][i]) * (cubeInter[j][i] - cubeInter[k][i]);
         }
@@ -1075,7 +1075,7 @@ RayCastHelper<TInputImage, TCoordRep>::Reset(void)
 
   if (m_ValidRay)
   {
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
       m_Position3Dvox[i] = m_RayVoxelStartPosition[i];
     }
@@ -1086,15 +1086,15 @@ RayCastHelper<TInputImage, TCoordRep>::Reset(void)
 
   else
   {
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
       m_RayVoxelStartPosition[i] = 0.;
     }
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
       m_RayVoxelEndPosition[i] = 0.;
     }
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
       m_VoxelIncrement[i] = 0.;
     }
@@ -1102,11 +1102,11 @@ RayCastHelper<TInputImage, TCoordRep>::Reset(void)
 
     m_TotalRayVoxelPlanes = 0;
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
       m_RayIntersectionVoxels[i] = nullptr;
     }
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
       m_RayIntersectionVoxelIndex[i] = 0;
     }
@@ -1388,7 +1388,7 @@ RayCastHelper<TInputImage, TCoordRep>::IntegrateAboveThreshold(double & integral
   /* Step along the ray as quickly as possible
      integrating the interpolated intensities. */
 
-  for (m_NumVoxelPlanesTraversed = 0; m_NumVoxelPlanesTraversed < m_TotalRayVoxelPlanes; m_NumVoxelPlanesTraversed++)
+  for (m_NumVoxelPlanesTraversed = 0; m_NumVoxelPlanesTraversed < m_TotalRayVoxelPlanes; ++m_NumVoxelPlanesTraversed)
   {
     intensity = this->GetCurrentIntensity();
 
@@ -1429,23 +1429,23 @@ RayCastHelper<TInputImage, TCoordRep>::ZeroState()
   m_VoxelDimensionInY = 0;
   m_VoxelDimensionInZ = 0;
 
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
     m_CurrentRayPositionInMM[i] = 0.;
   }
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
     m_RayDirectionInMM[i] = 0.;
   }
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
     m_RayVoxelStartPosition[i] = 0.;
   }
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
     m_RayVoxelEndPosition[i] = 0.;
   }
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
     m_VoxelIncrement[i] = 0.;
   }
@@ -1454,11 +1454,11 @@ RayCastHelper<TInputImage, TCoordRep>::ZeroState()
   m_TotalRayVoxelPlanes = 0;
   m_NumVoxelPlanesTraversed = -1;
 
-  for (i = 0; i < 4; i++)
+  for (i = 0; i < 4; ++i)
   {
     m_RayIntersectionVoxels[i] = nullptr;
   }
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 3; ++i)
   {
     m_RayIntersectionVoxelIndex[i] = 0;
   }

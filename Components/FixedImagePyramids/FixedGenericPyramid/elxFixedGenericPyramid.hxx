@@ -55,9 +55,9 @@ FixedGenericPyramid<TElastix>::SetFixedSchedule(void)
    * - FixedImagePyramidSchedule
    */
   bool foundRescale = true;
-  for (unsigned int i = 0; i < numberOfResolutions; i++)
+  for (unsigned int i = 0; i < numberOfResolutions; ++i)
   {
-    for (unsigned int j = 0; j < FixedImageDimension; j++)
+    for (unsigned int j = 0; j < FixedImageDimension; ++j)
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * FixedImageDimension + j;
@@ -92,9 +92,9 @@ FixedGenericPyramid<TElastix>::SetFixedSchedule(void)
    * - FixedImagePyramidSmoothingSchedule
    */
   bool foundSmoothing = true;
-  for (unsigned int i = 0; i < numberOfResolutions; i++)
+  for (unsigned int i = 0; i < numberOfResolutions; ++i)
   {
-    for (unsigned int j = 0; j < FixedImageDimension; j++)
+    for (unsigned int j = 0; j < FixedImageDimension; ++j)
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * FixedImageDimension + j;

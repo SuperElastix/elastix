@@ -705,7 +705,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
 
   const DerivativeValueType zero = NumericTraits<DerivativeValueType>::Zero;
   DerivativeValueType       sum1, sum2;
-  for (unsigned int j = jmin; j < jmax; j++)
+  for (unsigned int j = jmin; j < jmax; ++j)
   {
     sum1 = sum2 = zero;
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
@@ -854,7 +854,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGrad
     currIndex = mit.GetIndex();
     minusIndex = currIndex;
     plusIndex = currIndex;
-    for (unsigned int i = 0; i < MovingImageDimension; i++)
+    for (unsigned int i = 0; i < MovingImageDimension; ++i)
     {
       /** Check for being on the edge of the moving image. */
       if (currIndex[i] == movingIndex[i] || currIndex[i] == static_cast<int>(movingIndex[i] + movingSize[i] - 1))

@@ -163,7 +163,7 @@ main(int argc, char * argv[])
   std::cerr << "Matrix scalar type: " << typeid(ScalarType).name() << "\n" << std::endl;
 
   // Loop over usedNumberOfLandmarks
-  for (std::size_t i = 0; i < usedNumberOfLandmarks.size(); i++)
+  for (std::size_t i = 0; i < usedNumberOfLandmarks.size(); ++i)
   {
     itk::TimeProbesCollectorBase timeCollector;
 
@@ -174,7 +174,7 @@ main(int argc, char * argv[])
     /** Get subset. */
     PointsContainerPointer usedLandmarkPoints = PointsContainerType::New();
     PointSetType::Pointer  usedLandmarks = PointSetType::New();
-    for (unsigned long j = 0; j < numberOfLandmarks; j++)
+    for (unsigned long j = 0; j < numberOfLandmarks; ++j)
     {
       PointType tmp = (*sourceLandmarks->GetPoints())[j];
       usedLandmarkPoints->push_back(tmp);
@@ -302,14 +302,14 @@ main(int argc, char * argv[])
     jac1.SetSize(Dimension, numberOfLandmarks * Dimension);
     jac1.Fill(0.0);
     PointsIterator sp = usedLandmarks->GetPoints()->Begin();
-    for (unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++)
+    for (unsigned int lnd = 0; lnd < numberOfLandmarks; ++lnd)
     {
       kernelTransform->ComputeGPublic(p - sp->Value(), Gmatrix);
-      for (unsigned int dim = 0; dim < Dimension; dim++)
+      for (unsigned int dim = 0; dim < Dimension; ++dim)
       {
-        for (unsigned int odim = 0; odim < Dimension; odim++)
+        for (unsigned int odim = 0; odim < Dimension; ++odim)
         {
-          for (unsigned int lidx = 0; lidx < numberOfLandmarks * Dimension; lidx++)
+          for (unsigned int lidx = 0; lidx < numberOfLandmarks * Dimension; ++lidx)
           {
             jac1[odim][lidx] += Gmatrix(dim, odim) * lMatrixInverse2[lnd * Dimension + dim][lidx];
           }
@@ -318,11 +318,11 @@ main(int argc, char * argv[])
       ++sp;
     }
 
-    for (unsigned int odim = 0; odim < Dimension; odim++)
+    for (unsigned int odim = 0; odim < Dimension; ++odim)
     {
-      for (unsigned long lidx = 0; lidx < numberOfLandmarks * Dimension; lidx++)
+      for (unsigned long lidx = 0; lidx < numberOfLandmarks * Dimension; ++lidx)
       {
-        for (unsigned int dim = 0; dim < Dimension; dim++)
+        for (unsigned int dim = 0; dim < Dimension; ++dim)
         {
           jac1[odim][lidx] += p[dim] * lMatrixInverse2[(numberOfLandmarks + dim) * Dimension + odim][lidx];
         }

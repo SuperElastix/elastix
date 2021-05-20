@@ -194,7 +194,7 @@ FullSearch<TElastix>::AfterEachIteration(void)
   unsigned int         nrOfSSDims = currentPoint.GetSize();
   NameIteratorType     name_it = this->m_SearchSpaceDimensionNames.begin();
 
-  for (unsigned int dim = 0; dim < nrOfSSDims; dim++)
+  for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     this->GetIterationInfoAt(name_it->second.c_str()) << currentPoint[dim];
     name_it++;
@@ -263,14 +263,14 @@ FullSearch<TElastix>::AfterEachResolution(void)
 
   elxout << "Index of the point in the optimization surface image that has "
          << "the best metric value: [ ";
-  for (unsigned int dim = 0; dim < nrOfSSDims; dim++)
+  for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     elxout << bestIndex[dim] << " ";
   }
   elxout << "]" << std::endl;
 
   elxout << "The corresponding parameter values: [ ";
-  for (unsigned int dim = 0; dim < nrOfSSDims; dim++)
+  for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     elxout << bestPoint[dim] << " ";
   }
@@ -278,7 +278,7 @@ FullSearch<TElastix>::AfterEachResolution(void)
 
   /** Remove the columns from IterationInfo. */
   NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
-  for (unsigned int dim = 0; dim < nrOfSSDims; dim++)
+  for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     this->RemoveTargetCellFromIterationInfo(name_it->second.c_str());
     name_it++;

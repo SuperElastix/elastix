@@ -49,7 +49,7 @@ GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GetSourceCode(std::st
 
   // Create the source code
   std::ostringstream sources;
-  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
+  for (std::size_t i = 0; i < this->m_Sources.size(); ++i)
   {
     sources << this->m_Sources[i] << std::endl;
   }

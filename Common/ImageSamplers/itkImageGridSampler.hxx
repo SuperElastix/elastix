@@ -84,7 +84,7 @@ ImageGridSampler<TInputImage>::GenerateData(void)
   SampleGridIndexType        sampleGridIndex = this->GetCroppedInputImageRegion().GetIndex();
   const InputImageSizeType & inputImageSize = this->GetCroppedInputImageRegion().GetSize();
   unsigned long              numberOfSamplesOnGrid = 1;
-  for (unsigned int dim = 0; dim < InputImageDimension; dim++)
+  for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {
     /** The number of sample point along one dimension. */
     sampleGridSize[dim] = 1 + ((inputImageSize[dim] - 1) / this->GetSampleGridSpacing()[dim]);
@@ -115,13 +115,13 @@ ImageGridSampler<TInputImage>::GenerateData(void)
   if (mask.IsNull())
   {
     /** Ugly loop over the grid. */
-    for (unsigned int t = 0; t < dim_t; t++)
+    for (unsigned int t = 0; t < dim_t; ++t)
     {
-      for (unsigned int z = 0; z < dim_z; z++)
+      for (unsigned int z = 0; z < dim_z; ++z)
       {
-        for (unsigned int y = 0; y < sampleGridSize[1]; y++)
+        for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
         {
-          for (unsigned int x = 0; x < sampleGridSize[0]; x++)
+          for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
           {
             ImageSampleType tempsample;
 
@@ -163,13 +163,13 @@ ImageGridSampler<TInputImage>::GenerateData(void)
       mask->GetSource()->Update();
     }
     /* Ugly loop over the grid; checks also if a sample falls within the mask. */
-    for (unsigned int t = 0; t < dim_t; t++)
+    for (unsigned int t = 0; t < dim_t; ++t)
     {
-      for (unsigned int z = 0; z < dim_z; z++)
+      for (unsigned int z = 0; z < dim_z; ++z)
       {
-        for (unsigned int y = 0; y < sampleGridSize[1]; y++)
+        for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
         {
-          for (unsigned int x = 0; x < sampleGridSize[0]; x++)
+          for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
           {
             ImageSampleType tempsample;
 

@@ -65,7 +65,7 @@ ANNStandardTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
 
   /** Alocate memory for ANN query point and copy qp to it. */
   ANNPointType ANNQueryPoint = annAllocPt(dim);
-  for (int i = 0; i < dim; i++)
+  for (int i = 0; i < dim; ++i)
   {
     ANNQueryPoint[i] = qp[i];
   }

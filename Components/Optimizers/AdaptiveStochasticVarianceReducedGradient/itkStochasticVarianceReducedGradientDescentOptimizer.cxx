@@ -219,7 +219,7 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStep(void)
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
     /** Update the new position. */
-    for (unsigned int j = 0; j < spaceDimension; j++)
+    for (unsigned int j = 0; j < spaceDimension; ++j)
     {
       newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
     }
@@ -234,7 +234,7 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStep(void)
     const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
     omp_set_num_threads(nthreads);
 #  pragma omp parallel for
-    for (int j = 0; j < static_cast<int>(spaceDimension); j++)
+    for (int j = 0; j < static_cast<int>(spaceDimension); ++j)
     {
       newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
     }
@@ -351,7 +351,7 @@ StochasticVarianceReducedGradientDescentOptimizer::ThreadedAdvanceOneStep(Thread
   const DerivativeType & gradient = this->m_Gradient;
 
   /** Advance one step: mu_{k+1} = mu_k - a_k * gradient_k */
-  for (unsigned int j = jmin; j < jmax; j++)
+  for (unsigned int j = jmin; j < jmax; ++j)
   {
     newPosition[j] = currentPosition[j] - learningRate * gradient[j];
   }

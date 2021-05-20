@@ -233,7 +233,7 @@ OpenCLKernelManager::CheckArgumentReady(const std::size_t kernelId)
 {
   const std::size_t nArg = this->m_KernelArgumentReady[kernelId].size();
 
-  for (std::size_t i = 0; i < nArg; i++)
+  for (std::size_t i = 0; i < nArg; ++i)
   {
     if (!(this->m_KernelArgumentReady[kernelId][i].m_IsReady))
     {
@@ -256,7 +256,7 @@ OpenCLKernelManager::ResetArguments(const std::size_t kernelIdx)
 {
   const std::size_t nArg = this->m_KernelArgumentReady[kernelIdx].size();
 
-  for (std::size_t i = 0; i < nArg; i++)
+  for (std::size_t i = 0; i < nArg; ++i)
   {
     this->m_KernelArgumentReady[kernelIdx][i].m_IsReady = false;
     this->m_KernelArgumentReady[kernelIdx][i].m_GPUDataManager = (GPUDataManager::Pointer) nullptr;

@@ -177,14 +177,14 @@ RSGDEachParameterApartBaseOptimizer::AdvanceOneStep(void)
                       << ", but the NumberOfParameters for the CostFunction is " << spaceDimension << ".");
   }
 
-  for (unsigned int i = 0; i < spaceDimension; i++)
+  for (unsigned int i = 0; i < spaceDimension; ++i)
   {
     transformedGradient[i] = m_Gradient[i] / scales[i];
     previousTransformedGradient[i] = m_PreviousGradient[i] / scales[i];
   }
 
   double magnitudeSquare = 0;
-  for (unsigned int dim = 0; dim < spaceDimension; dim++)
+  for (unsigned int dim = 0; dim < spaceDimension; ++dim)
   {
     const double weighted = transformedGradient[dim];
     magnitudeSquare += weighted * weighted;
@@ -201,7 +201,7 @@ RSGDEachParameterApartBaseOptimizer::AdvanceOneStep(void)
 
   double sumOfCurrentStepLengths = 0.0;
   double biggestCurrentStepLength = 0.0;
-  for (unsigned int i = 0; i < spaceDimension; i++)
+  for (unsigned int i = 0; i < spaceDimension; ++i)
   {
     const bool signChange = (transformedGradient[i] * previousTransformedGradient[i]) < 0;
 
@@ -244,7 +244,7 @@ RSGDEachParameterApartBaseOptimizer::AdvanceOneStep(void)
 
   DerivativeType factor = DerivativeType(spaceDimension);
 
-  for (unsigned int i = 0; i < spaceDimension; i++)
+  for (unsigned int i = 0; i < spaceDimension; ++i)
   {
     factor[i] = direction * m_CurrentStepLengths[i] / m_GradientMagnitude;
   }

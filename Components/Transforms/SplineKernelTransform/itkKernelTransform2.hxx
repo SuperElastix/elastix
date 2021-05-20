@@ -192,12 +192,12 @@ KernelTransform2<TScalarType, NDimensions>::ComputeDeformationContribution(const
   PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
   GMatrixType    Gmatrix;
 
-  for (unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++)
+  for (unsigned long lnd = 0; lnd < numberOfLandmarks; ++lnd)
   {
     this->ComputeG(thisPoint - sp->Value(), Gmatrix);
-    for (unsigned int dim = 0; dim < NDimensions; dim++)
+    for (unsigned int dim = 0; dim < NDimensions; ++dim)
     {
-      for (unsigned int odim = 0; odim < NDimensions; odim++)
+      for (unsigned int odim = 0; odim < NDimensions; ++odim)
       {
         opp[odim] += Gmatrix(dim, odim) * this->m_DMatrix(dim, lnd);
       }
@@ -423,10 +423,10 @@ KernelTransform2<TScalarType, NDimensions>::ComputeP(void)
   this->m_PMatrix.set_size(NDimensions * numberOfLandmarks, NDimensions * (NDimensions + 1));
   this->m_PMatrix.fill(0.0f);
 
-  for (unsigned long i = 0; i < numberOfLandmarks; i++)
+  for (unsigned long i = 0; i < numberOfLandmarks; ++i)
   {
     this->m_SourceLandmarks->GetPoint(i, &p);
-    for (unsigned int j = 0; j < NDimensions; j++)
+    for (unsigned int j = 0; j < NDimensions; ++j)
     {
       temp = I * p[j];
       this->m_PMatrix.update(temp_ref, i * NDimensions, j * NDimensions);
@@ -454,16 +454,16 @@ KernelTransform2<TScalarType, NDimensions>::ComputeY(void)
   this->m_YMatrix.set_size(NDimensions * (numberOfLandmarks + NDimensions + 1), 1);
   this->m_YMatrix.fill(0.0);
 
-  for (unsigned long i = 0; i < numberOfLandmarks; i++)
+  for (unsigned long i = 0; i < numberOfLandmarks; ++i)
   {
-    for (unsigned int j = 0; j < NDimensions; j++)
+    for (unsigned int j = 0; j < NDimensions; ++j)
     {
       this->m_YMatrix.put(i * NDimensions + j, 0, displacement.Value()[j]);
     }
     displacement++;
   }
 
-  for (unsigned int i = 0; i < NDimensions * (NDimensions + 1); i++)
+  for (unsigned int i = 0; i < NDimensions * (NDimensions + 1); ++i)
   {
     this->m_YMatrix.put(numberOfLandmarks * NDimensions + i, 0, 0);
   }
@@ -485,25 +485,25 @@ KernelTransform2<TScalarType, NDimensions>::ReorganizeW(void)
   this->m_DMatrix.set_size(NDimensions, numberOfLandmarks);
   unsigned int ci = 0;
 
-  for (unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++)
+  for (unsigned long lnd = 0; lnd < numberOfLandmarks; ++lnd)
   {
-    for (unsigned int dim = 0; dim < NDimensions; dim++)
+    for (unsigned int dim = 0; dim < NDimensions; ++dim)
     {
       this->m_DMatrix(dim, lnd) = this->m_WMatrix(ci++, 0);
     }
   }
 
   // This matrix holds the rotational part of the Affine component
-  for (unsigned int j = 0; j < NDimensions; j++)
+  for (unsigned int j = 0; j < NDimensions; ++j)
   {
-    for (unsigned int i = 0; i < NDimensions; i++)
+    for (unsigned int i = 0; i < NDimensions; ++i)
     {
       this->m_AMatrix(i, j) = this->m_WMatrix(ci++, 0);
     }
   }
 
   // This vector holds the translational part of the Affine component
-  for (unsigned int k = 0; k < NDimensions; k++)
+  for (unsigned int k = 0; k < NDimensions; ++k)
   {
     this->m_BVector(k) = this->m_WMatrix(ci++, 0);
   }
@@ -528,16 +528,16 @@ KernelTransform2<TScalarType, NDimensions>::TransformPoint(const InputPointType 
   this->ComputeDeformationContribution(thisPoint, opp);
 
   // Add the rotational part of the Affine component
-  for (unsigned int j = 0; j < NDimensions; j++)
+  for (unsigned int j = 0; j < NDimensions; ++j)
   {
-    for (unsigned int i = 0; i < NDimensions; i++)
+    for (unsigned int i = 0; i < NDimensions; ++i)
     {
       opp[i] += this->m_AMatrix(i, j) * thisPoint[j];
     }
   }
 
   // This vector holds the translational part of the Affine component
-  for (unsigned int k = 0; k < NDimensions; k++)
+  for (unsigned int k = 0; k < NDimensions; ++k)
   {
     opp[k] += this->m_BVector(k) + thisPoint[k];
   }
@@ -588,7 +588,7 @@ KernelTransform2<TScalarType, NDimensions>::SetParameters(const ParametersType &
 
   while (itr != end)
   {
-    for (unsigned int dim = 0; dim < NDimensions; dim++)
+    for (unsigned int dim = 0; dim < NDimensions; ++dim)
     {
       landMark[dim] = parameters[pcounter];
       pcounter++;
@@ -633,7 +633,7 @@ KernelTransform2<TScalarType, NDimensions>::SetFixedParameters(const ParametersT
 
   while (itr != end)
   {
-    for (unsigned int dim = 0; dim < NDimensions; dim++)
+    for (unsigned int dim = 0; dim < NDimensions; ++dim)
     {
       landMark[dim] = parameters[pcounter];
       pcounter++;
@@ -673,7 +673,7 @@ KernelTransform2<TScalarType, NDimensions>::UpdateParameters(void)
   while (itr != end)
   {
     InputPointType landmark = itr.Value();
-    for (unsigned int dim = 0; dim < NDimensions; dim++)
+    for (unsigned int dim = 0; dim < NDimensions; ++dim)
     {
       this->m_Parameters[pcounter] = landmark[dim];
       pcounter++;
@@ -711,7 +711,7 @@ KernelTransform2<TScalarType, NDimensions>::GetFixedParameters(void) const
   while (itr != end)
   {
     InputPointType landmark = itr.Value();
-    for (unsigned int dim = 0; dim < NDimensions; dim++)
+    for (unsigned int dim = 0; dim < NDimensions; ++dim)
     {
       this->m_FixedParameters[pcounter] = landmark[dim];
       pcounter++;
@@ -742,14 +742,14 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
   // General route working for all kernels (but slow)
   if (!this->m_FastComputationPossible)
   {
-    for (unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++)
+    for (unsigned int lnd = 0; lnd < numberOfLandmarks; ++lnd)
     {
       this->ComputeG(p - sp->Value(), Gmatrix);
-      for (unsigned int dim = 0; dim < NDimensions; dim++)
+      for (unsigned int dim = 0; dim < NDimensions; ++dim)
       {
-        for (unsigned int odim = 0; odim < NDimensions; odim++)
+        for (unsigned int odim = 0; odim < NDimensions; ++odim)
         {
-          for (unsigned int lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++)
+          for (unsigned int lidx = 0; lidx < numberOfLandmarks * NDimensions; ++lidx)
           {
             jac[odim][lidx] += Gmatrix(dim, odim) * this->m_LMatrixInverse[lnd * NDimensions + dim][lidx];
           }
@@ -758,11 +758,11 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
       ++sp;
     }
 
-    for (unsigned int odim = 0; odim < NDimensions; odim++)
+    for (unsigned int odim = 0; odim < NDimensions; ++odim)
     {
-      for (unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++)
+      for (unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; ++lidx)
       {
-        for (unsigned int dim = 0; dim < NDimensions; dim++)
+        for (unsigned int dim = 0; dim < NDimensions; ++dim)
         {
           jac[odim][lidx] += p[dim] * this->m_LMatrixInverse[(numberOfLandmarks + dim) * NDimensions + odim][lidx];
         }
@@ -795,7 +795,7 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
   {
     // Precompute G's.
     std::vector<ScalarType> gVector(numberOfLandmarks);
-    for (unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++)
+    for (unsigned int lnd = 0; lnd < numberOfLandmarks; ++lnd)
     {
       // Property A: G = G(0,0) * I_d.
       this->ComputeG(p - sp->Value(), Gmatrix);
@@ -805,7 +805,7 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
 
     // Deformation part of the transform:
     sp = this->m_SourceLandmarks->GetPoints()->Begin();
-    for (unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++)
+    for (unsigned int lnd = 0; lnd < numberOfLandmarks; ++lnd)
     {
       // Property A: G = G(0,0) * I_d.
       ScalarType g = gVector[lnd];
@@ -814,13 +814,13 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
       unsigned int lIdx = lnd * NDimensions;
       ScalarType   linv = this->m_LMatrixInverse[lIdx][lIdx];
       // Property B: only access non-zero values
-      for (unsigned int dim = 0; dim < NDimensions; dim++)
+      for (unsigned int dim = 0; dim < NDimensions; ++dim)
       {
         jac[dim][lIdx + dim] += g * linv;
       }
 
       // Property C: Then process right of diagonal
-      for (unsigned int lidx = lnd + 1; lidx < numberOfLandmarks; lidx++)
+      for (unsigned int lidx = lnd + 1; lidx < numberOfLandmarks; ++lidx)
       {
         // Property C: Get G value at mirrored position
         ScalarType gSym = gVector[lidx];
@@ -830,7 +830,7 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
         ScalarType   linv = this->m_LMatrixInverse[lnd * NDimensions][lIdx];
 
         // Property B: only access non-zero values
-        for (unsigned int dim = 0; dim < NDimensions; dim++)
+        for (unsigned int dim = 0; dim < NDimensions; ++dim)
         {
           jac[dim][lIdx + dim] += g * linv;
           // Property C: mirroring
@@ -843,14 +843,14 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
     }
 
     // Affine part of the transform:
-    for (unsigned int odim = 0; odim < NDimensions; odim++)
+    for (unsigned int odim = 0; odim < NDimensions; ++odim)
     {
       const unsigned long index = (numberOfLandmarks + NDimensions) * NDimensions + odim;
 
-      for (unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++)
+      for (unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; ++lidx)
       {
         ScalarType tmp = 0.0;
-        for (unsigned int dim = 0; dim < NDimensions; dim++)
+        for (unsigned int dim = 0; dim < NDimensions; ++dim)
         {
           unsigned int indtmp = (numberOfLandmarks + dim) * NDimensions + odim;
           tmp += p[dim] * this->m_LMatrixInverse[indtmp][lidx];

@@ -115,9 +115,9 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule(void)
    * MovingImagePyramid<i>Schedule, for the i-th moving image pyramid used.
    */
   bool found = true;
-  for (unsigned int i = 0; i < numberOfResolutions; i++)
+  for (unsigned int i = 0; i < numberOfResolutions; ++i)
   {
-    for (unsigned int j = 0; j < MovingImageDimension; j++)
+    for (unsigned int j = 0; j < MovingImageDimension; ++j)
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * MovingImageDimension + j;

@@ -158,12 +158,12 @@ PCAMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   JacobianIteratorType                                   jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
+  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {
     const double           imDeriv = movingImageDerivative[dim];
     DerivativeIteratorType imjac = imageJacobian.begin();
 
-    for (unsigned int mu = 0; mu < sizeImageJacobian; mu++)
+    for (unsigned int mu = 0; mu < sizeImageJacobian; ++mu)
     {
       (*imjac) += (*jac) * imDeriv;
       ++imjac;
@@ -281,9 +281,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(this->m_G);
   mean.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; j++)
+    for (unsigned int j = 0; j < this->m_G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -293,9 +293,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
   Amm.fill(NumericTraits<RealType>::Zero);
 
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; j++)
+    for (unsigned int j = 0; j < this->m_G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -307,7 +307,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   vnl_diag_matrix<RealType> S(this->m_G);
   S.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int j = 0; j < this->m_G; j++)
+  for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -319,7 +319,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   vnl_symmetric_eigensystem<RealType> eig(K);
 
   RealType sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
-  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; i++)
+  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
   }
@@ -466,9 +466,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(this->m_G);
   mean.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; j++)
+    for (unsigned int j = 0; j < this->m_G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -478,9 +478,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** Calculate standard deviation from columns */
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
   Amm.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; j++)
+    for (unsigned int j = 0; j < this->m_G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -493,7 +493,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   vnl_diag_matrix<RealType> S(this->m_G);
   S.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int j = 0; j < this->m_G; j++)
+  for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -504,13 +504,13 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   vnl_symmetric_eigensystem<RealType> eig(K);
 
   RealType sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
-  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; i++)
+  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
   }
 
   MatrixType eigenVectorMatrix(this->m_G, this->m_NumEigenValues);
-  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; i++)
+  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     eigenVectorMatrix.set_column(i - 1, (eig.get_eigenvector(this->m_G - i)).normalize());
   }
@@ -529,7 +529,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** initialize */
   dSdmu_part1.fill(itk::NumericTraits<DerivativeValueType>::Zero);
 
-  for (unsigned int d = 0; d < this->m_G; d++)
+  for (unsigned int d = 0; d < this->m_G; ++d)
   {
     double S_sqr = S(d, d) * S(d, d);
     double S_qub = S_sqr * S(d, d);
@@ -578,7 +578,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
       /** build metric derivative components */
       for (unsigned int p = 0; p < nzjis[d].size(); ++p)
       {
-        for (unsigned int z = 0; z < this->m_NumEigenValues; z++)
+        for (unsigned int z = 0; z < this->m_NumEigenValues; ++z)
         {
           derivative[nzjis[d][p]] += vSAtmm[z][pixelIndex] * dMTdmu[p] * Sv[d][z] +
                                      vdSdmu_part1[z][d] * Atmm[d][pixelIndex] * dMTdmu[p] * CSv[d][z];
@@ -841,9 +841,9 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(this->m_G);
   mean.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; j++)
+    for (unsigned int j = 0; j < this->m_G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -853,9 +853,9 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   /** Calculate standard deviation from columns */
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
   Amm.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; j++)
+    for (unsigned int j = 0; j < this->m_G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -868,7 +868,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
 
   vnl_diag_matrix<RealType> S(this->m_G);
   S.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int j = 0; j < this->m_G; j++)
+  for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -880,7 +880,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
 
   RealType   sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
   MatrixType eigenVectorMatrix(this->m_G, this->m_NumEigenValues);
-  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; i++)
+  for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
     eigenVectorMatrix.set_column(i - 1, (eig.get_eigenvector(this->m_G - i)).normalize());
@@ -893,7 +893,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   /** Sub components of metric derivative */
   vnl_diag_matrix<DerivativeValueType> dSdmu_part1(this->m_G);
 
-  for (unsigned int d = 0; d < this->m_G; d++)
+  for (unsigned int d = 0; d < this->m_G; ++d)
   {
     double S_sqr = S(d, d) * S(d, d);
     double S_qub = S_sqr * S(d, d);
@@ -1006,7 +1006,7 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivative(ThreadIdType thr
       for (unsigned int p = 0; p < nzjis.size(); ++p)
       {
         DerivativeValueType tmp = 0.0;
-        for (unsigned int z = 0; z < this->m_NumEigenValues; z++)
+        for (unsigned int z = 0; z < this->m_NumEigenValues; ++z)
         {
           tmp += this->m_vSAtmm[z][pixelIndex] * imageJacobian[p] * this->m_Sv[d][z] +
                  this->m_vdSdmu_part1[z][d] * this->m_Atmm[d][pixelIndex] * imageJacobian[p] * this->m_CSv[d][z];

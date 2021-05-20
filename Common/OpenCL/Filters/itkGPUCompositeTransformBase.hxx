@@ -73,7 +73,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::GetSourceCode(std::string &
   bool bsplineLoaded = false;
 
   // Add sources based on Transform type
-  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
     if (this->IsIdentityTransform(i, true, source_i) && !identityLoaded)
     {
@@ -111,7 +111,7 @@ template <typename TScalarType, unsigned int NDimensions>
 bool
 GPUCompositeTransformBase<TScalarType, NDimensions>::HasIdentityTransform(void) const
 {
-  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
     if (this->IsIdentityTransform(i))
     {
@@ -128,7 +128,7 @@ template <typename TScalarType, unsigned int NDimensions>
 bool
 GPUCompositeTransformBase<TScalarType, NDimensions>::HasMatrixOffsetTransform(void) const
 {
-  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
     if (this->IsMatrixOffsetTransform(i))
     {
@@ -145,7 +145,7 @@ template <typename TScalarType, unsigned int NDimensions>
 bool
 GPUCompositeTransformBase<TScalarType, NDimensions>::HasTranslationTransform(void) const
 {
-  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
     if (this->IsTranslationTransform(i))
     {
@@ -162,7 +162,7 @@ template <typename TScalarType, unsigned int NDimensions>
 bool
 GPUCompositeTransformBase<TScalarType, NDimensions>::HasBSplineTransform(void) const
 {
-  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
     if (this->IsBSplineTransform(i))
     {

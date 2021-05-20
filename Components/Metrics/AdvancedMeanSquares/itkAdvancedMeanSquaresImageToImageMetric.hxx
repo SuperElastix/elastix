@@ -760,7 +760,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   if (!this->m_UseMultiThread && false) // force multi-threaded
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative * normal_sum;
-    for (ThreadIdType i = 1; i < numberOfThreads; i++)
+    for (ThreadIdType i = 1; i < numberOfThreads; ++i)
     {
       derivative += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative * normal_sum;
     }

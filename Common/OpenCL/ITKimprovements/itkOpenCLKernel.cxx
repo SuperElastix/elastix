@@ -1118,9 +1118,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixFloat2x2Type & value)
   const unsigned int nRows = MatrixFloat2x2Type::RowDimensions;
   const unsigned int nColumns = MatrixFloat2x2Type::ColumnDimensions;
 
-  for (unsigned int i = 0; i < nRows; i++)
+  for (unsigned int i = 0; i < nRows; ++i)
   {
-    for (unsigned int j = 0; j < nColumns; j++)
+    for (unsigned int j = 0; j < nColumns; ++j)
     {
       values.s[id] = value[i][j];
       id++;
@@ -1141,9 +1141,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble2x2Type & value)
   if (!this->m_DoubleAsFloat)
   {
     cl_double4 values;
-    for (unsigned int i = 0; i < nRows; i++)
+    for (unsigned int i = 0; i < nRows; ++i)
     {
-      for (unsigned int j = 0; j < nColumns; j++)
+      for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = value[i][j];
         id++;
@@ -1154,9 +1154,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble2x2Type & value)
   else
   {
     cl_float4 values;
-    for (unsigned int i = 0; i < nRows; i++)
+    for (unsigned int i = 0; i < nRows; ++i)
     {
-      for (unsigned int j = 0; j < nColumns; j++)
+      for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = static_cast<float>(value[i][j]);
         id++;
@@ -1177,9 +1177,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixFloat3x3Type & value)
   const unsigned int nRows = MatrixFloat3x3Type::RowDimensions;
   const unsigned int nColumns = MatrixFloat3x3Type::ColumnDimensions;
 
-  for (unsigned int i = 0; i < nRows; i++)
+  for (unsigned int i = 0; i < nRows; ++i)
   {
-    for (unsigned int j = 0; j < nColumns; j++)
+    for (unsigned int j = 0; j < nColumns; ++j)
     {
       values.s[id] = value[i][j];
       id++;
@@ -1201,9 +1201,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble3x3Type & value)
   {
     // OpenCL does not support double9 therefore we are using double16
     cl_double16 values;
-    for (unsigned int i = 0; i < nRows; i++)
+    for (unsigned int i = 0; i < nRows; ++i)
     {
-      for (unsigned int j = 0; j < nColumns; j++)
+      for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = value[i][j];
         id++;
@@ -1215,9 +1215,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble3x3Type & value)
   {
     // OpenCL does not support float9 therefore we are using float16
     cl_float16 values;
-    for (unsigned int i = 0; i < nRows; i++)
+    for (unsigned int i = 0; i < nRows; ++i)
     {
-      for (unsigned int j = 0; j < nColumns; j++)
+      for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = static_cast<float>(value[i][j]);
         id++;
@@ -1238,9 +1238,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixFloat4x4Type & value)
   const unsigned int nRows = MatrixFloat4x4Type::RowDimensions;
   const unsigned int nColumns = MatrixFloat4x4Type::ColumnDimensions;
 
-  for (unsigned int i = 0; i < nRows; i++)
+  for (unsigned int i = 0; i < nRows; ++i)
   {
-    for (unsigned int j = 0; j < nColumns; j++)
+    for (unsigned int j = 0; j < nColumns; ++j)
     {
       values.s[id] = value[i][j];
       id++;
@@ -1262,9 +1262,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble4x4Type & value)
   {
     // OpenCL does not support double9 therefore we are using double16
     cl_double16 values;
-    for (unsigned int i = 0; i < nRows; i++)
+    for (unsigned int i = 0; i < nRows; ++i)
     {
-      for (unsigned int j = 0; j < nColumns; j++)
+      for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = value[i][j];
         id++;
@@ -1276,9 +1276,9 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble4x4Type & value)
   {
     // OpenCL does not support float9 therefore we are using float16
     cl_float16 values;
-    for (unsigned int i = 0; i < nRows; i++)
+    for (unsigned int i = 0; i < nRows; ++i)
     {
-      for (unsigned int j = 0; j < nColumns; j++)
+      for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = static_cast<float>(value[i][j]);
         id++;

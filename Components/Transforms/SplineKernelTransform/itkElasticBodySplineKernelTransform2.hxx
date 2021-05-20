@@ -54,11 +54,11 @@ ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::ComputeG(const Inpu
   const TScalarType r = x.GetNorm();
   const TScalarType factor = -3.0 * r;
   const TScalarType radial = this->m_Alpha * r * r * r;
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     const typename InputVectorType::ValueType xi = x[i] * factor;
     // G is symmetric
-    for (unsigned int j = 0; j < i; j++)
+    for (unsigned int j = 0; j < i; ++j)
     {
       const TScalarType value = xi * x[j];
       GMatrix[i][j] = value;

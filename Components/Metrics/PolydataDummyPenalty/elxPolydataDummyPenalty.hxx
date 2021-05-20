@@ -87,7 +87,7 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase(void)
 
   this->m_NumberOfMeshes = 0;
 
-  for (char ch = 'A'; ch <= 'Z'; ch++)
+  for (char ch = 'A'; ch <= 'Z'; ++ch)
   {
     std::ostringstream fmeshArgument("-fmesh", std::ios_base::ate);
     /** Check for appearance of "-fmesh<[A-Z]><Metric>". */
@@ -463,7 +463,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   /** Read the input points, as index or as point. */
   if (!(ippReader->GetPointsAreIndices()))
   {
-    for (unsigned int j = 0; j < nrofpoints; j++)
+    for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** Compute index of nearest voxel in fixed image. */
       InputPointType point;
@@ -471,7 +471,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
       inputPointSet->GetPoint(j, &point);
       inputpointvec[j] = point;
       dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(fixedcindex[i]));
       }
@@ -479,7 +479,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   }
   else // so: inputasindex
   {
-    for (unsigned int j = 0; j < nrofpoints; j++)
+    for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** The read point from the inutPointSet is actually an index
        * Cast to the proper type.
@@ -487,7 +487,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
       InputPointType point;
       point.Fill(0.0f);
       inputPointSet->GetPoint(j, &point);
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(point[i]));
       }

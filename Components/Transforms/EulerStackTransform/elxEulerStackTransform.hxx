@@ -199,7 +199,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
   /** Try to read center of rotation point (COP) from parameter file. */
-  for (unsigned int i = 0; i < ReducedSpaceDimension; i++)
+  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     /** Initialize. */
     centerOfRotationIndex[i] = 0;
@@ -228,7 +228,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
   if (!centerGiven)
   {
     /** Use center of image as default center of rotation */
-    for (unsigned int k = 0; k < SpaceDimension; k++)
+    for (unsigned int k = 0; k < SpaceDimension; ++k)
     {
       centerOfRotationIndex[k] = (fixedImageSize[k] - 1.0f) / 2.0f;
     }
@@ -237,7 +237,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(
       centerOfRotationIndex, centerOfRotationPoint);
 
-    for (unsigned int k = 0; k < ReducedSpaceDimension; k++)
+    for (unsigned int k = 0; k < ReducedSpaceDimension; ++k)
     {
       redDimCenterOfRotationPoint[k] = redDimCenterOfRotationPoint[k];
     }
@@ -258,7 +258,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(
       centerOfRotationIndex, centerOfRotationPoint);
 
-    for (unsigned int k = 0; k < ReducedSpaceDimension; k++)
+    for (unsigned int k = 0; k < ReducedSpaceDimension; ++k)
     {
       redDimCenterOfRotationPoint[k] = centerOfRotationPoint[k];
     }
@@ -464,7 +464,7 @@ EulerStackTransform<TElastix>::SetScales(void)
     {
       newscales.Fill(1.0);
       /** In this case the third option is used. */
-      for (unsigned int i = 0; i < this->GetNumberOfParameters(); i++)
+      for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
       {
         this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }
@@ -502,7 +502,7 @@ EulerStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPo
    */
   ReducedDimensionInputPointType redDimCenterOfRotationPoint;
   bool                           centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < ReducedSpaceDimension; i++)
+  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     redDimCenterOfRotationPoint[i] = 0.0;
 

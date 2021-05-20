@@ -113,9 +113,9 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule(void)
    * FixedImagePyramid<i>Schedule, for the i-th fixed image pyramid used.
    */
   bool found = true;
-  for (unsigned int i = 0; i < numberOfResolutions; i++)
+  for (unsigned int i = 0; i < numberOfResolutions; ++i)
   {
-    for (unsigned int j = 0; j < FixedImageDimension; j++)
+    for (unsigned int j = 0; j < FixedImageDimension; ++j)
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * FixedImageDimension + j;

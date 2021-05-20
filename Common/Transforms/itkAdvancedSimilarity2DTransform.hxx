@@ -76,7 +76,7 @@ AdvancedSimilarity2DTransform<TScalarType>::SetParameters(const ParametersType &
 
   // Set translation
   OffsetType translation;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     translation[i] = parameters[i + 2];
   }
@@ -105,7 +105,7 @@ AdvancedSimilarity2DTransform<TScalarType>::GetParameters(void) const
 
   // Get the translation
   OffsetType translation = this->GetTranslation();
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Parameters[i + 2] = translation[i];
   }

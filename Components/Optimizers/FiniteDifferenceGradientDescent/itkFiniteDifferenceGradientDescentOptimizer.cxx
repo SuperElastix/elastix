@@ -156,7 +156,7 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization(void)
     /** Calculate the derivative; this may take a while... */
     try
     {
-      for (unsigned int j = 0; j < spaceDimension; j++)
+      for (unsigned int j = 0; j < spaceDimension; ++j)
       {
         param[j] += ck;
         valueplus = this->GetScaledValue(param);
@@ -242,7 +242,7 @@ FiniteDifferenceGradientDescentOptimizer::AdvanceOneStep(void)
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
   ParametersType newPosition(spaceDimension);
-  for (unsigned int j = 0; j < spaceDimension; j++)
+  for (unsigned int j = 0; j < spaceDimension; ++j)
   {
     newPosition[j] = currentPosition[j] - ak * this->m_Gradient[j];
   }

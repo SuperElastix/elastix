@@ -49,7 +49,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
   this->Superclass::Initialize();
 
   /** Check the fixed stuff. */
-  for (unsigned int i = 0; i < m_NumberOfFixedFeatureImages; i++)
+  for (unsigned int i = 0; i < m_NumberOfFixedFeatureImages; ++i)
   {
     /** Check if all the fixed feature images are set. */
     if (!this->m_FixedFeatureImages[i])
@@ -66,7 +66,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
   }
 
   /** Check the moving stuff. */
-  for (unsigned int i = 0; i < m_NumberOfMovingFeatureImages; i++)
+  for (unsigned int i = 0; i < m_NumberOfMovingFeatureImages; ++i)
   {
     /** Check if all the moving feature images are set. */
     if (!this->m_MovingFeatureImages[i])
@@ -344,22 +344,22 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
   os << indent << "NumberOfMovingFeatureImages: " << this->m_NumberOfMovingFeatureImages << std::endl;
 
   /** Print the feature image pointers. */
-  for (unsigned int i = 0; i < this->m_NumberOfFixedFeatureImages; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfFixedFeatureImages; ++i)
   {
     os << indent << "FixedFeatureImages[" << i << "]: " << this->m_FixedFeatureImages[i].GetPointer() << std::endl;
   }
-  for (unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i)
   {
     os << indent << "MovingFeatureImages[" << i << "]: " << this->m_MovingFeatureImages[i].GetPointer() << std::endl;
   }
 
   /** Print the feature interpolators pointers. */
-  for (unsigned int i = 0; i < this->m_NumberOfFixedFeatureImages; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfFixedFeatureImages; ++i)
   {
     os << indent << "FixedFeatureInterpolators[" << i << "]: " << this->m_FixedFeatureInterpolators[i].GetPointer()
        << std::endl;
   }
-  for (unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i)
   {
     os << indent << "MovingFeatureInterpolators[" << i << "]: " << this->m_MovingFeatureInterpolators[i].GetPointer()
        << std::endl;

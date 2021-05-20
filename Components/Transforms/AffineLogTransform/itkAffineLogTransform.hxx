@@ -43,7 +43,7 @@ AffineLogTransform<TScalarType, Dimension>::AffineLogTransform(const MatrixType 
   this->SetMatrix(matrix);
 
   OffsetType off;
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     off[i] = offset[i];
   }
@@ -74,9 +74,9 @@ AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType &
 
   MatrixType exponentMatrix;
 
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
-    for (unsigned int j = 0; j < Dimension; j++)
+    for (unsigned int j = 0; j < Dimension; ++j)
     {
       this->m_MatrixLogDomain(i, j) = parameters[k];
       k += 1;
@@ -91,7 +91,7 @@ AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType &
 
   OutputVectorType off;
 
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     off[i] = parameters[k];
     k += 1;
@@ -115,16 +115,16 @@ AffineLogTransform<TScalarType, Dimension>::GetParameters(void) const
 {
   unsigned int k = 0; // Dummy loop index
 
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
-    for (unsigned int j = 0; j < Dimension; j++)
+    for (unsigned int j = 0; j < Dimension; ++j)
     {
       this->m_Parameters[k] = this->m_MatrixLogDomain(i, j);
       k += 1;
     }
   }
 
-  for (unsigned int j = 0; j < Dimension; j++)
+  for (unsigned int j = 0; j < Dimension; ++j)
   {
     this->m_Parameters[k] = this->GetTranslation()[j];
     k += 1;
@@ -158,7 +158,7 @@ AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &  
 
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   const InputVectorType                 pp = p - this->GetCenter();
-  for (unsigned int dim = 0; dim < d * d; dim++)
+  for (unsigned int dim = 0; dim < d * d; ++dim)
   {
     const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i = 0; i < d; ++i)
@@ -169,7 +169,7 @@ AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &  
 
   // compute derivatives for the translation part
   const unsigned int blockOffset = d * d;
-  for (unsigned int dim = 0; dim < Dimension; dim++)
+  for (unsigned int dim = 0; dim < Dimension; ++dim)
   {
     j[dim][blockOffset + dim] = 1.0;
   }
@@ -203,16 +203,16 @@ AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(
   A_bar.fill(itk::NumericTraits<ScalarType>::Zero);
 
   // Fill A_bar top left and bottom right with A
-  for (unsigned int k = 0; k < d; k++)
+  for (unsigned int k = 0; k < d; ++k)
   {
-    for (unsigned int l = 0; l < d; l++)
+    for (unsigned int l = 0; l < d; ++l)
     {
       A_bar(k, l) = this->m_MatrixLogDomain(k, l);
     }
   }
-  for (unsigned int k = d; k < 2 * d; k++)
+  for (unsigned int k = d; k < 2 * d; ++k)
   {
-    for (unsigned int l = d; l < 2 * d; l++)
+    for (unsigned int l = d; l < 2 * d; ++l)
     {
       A_bar(k, l) = this->m_MatrixLogDomain(k - d, l - d);
     }
@@ -221,22 +221,22 @@ AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(
   unsigned int m = 0; // Dummy loop index
 
   // Non-translation derivatives
-  for (unsigned int i = 0; i < d; i++)
+  for (unsigned int i = 0; i < d; ++i)
   {
-    for (unsigned int j = 0; j < d; j++)
+    for (unsigned int j = 0; j < d; ++j)
     {
       dA(i, j) = 1;
-      for (unsigned int k = 0; k < d; k++)
+      for (unsigned int k = 0; k < d; ++k)
       {
-        for (unsigned int l = d; l < 2 * d; l++)
+        for (unsigned int l = d; l < 2 * d; ++l)
         {
           A_bar(k, l) = dA(k, (l - d));
         }
       }
       B_bar = vnl_matrix_exp(A_bar);
-      for (unsigned int k = 0; k < d; k++)
+      for (unsigned int k = 0; k < d; ++k)
       {
-        for (unsigned int l = d; l < 2 * d; l++)
+        for (unsigned int l = d; l < 2 * d; ++l)
         {
           dummymatrix(k, (l - d)) = B_bar(k, l);
         }

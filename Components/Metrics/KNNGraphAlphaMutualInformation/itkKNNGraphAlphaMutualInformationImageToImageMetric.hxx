@@ -394,7 +394,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   double       twoGamma = jointSize * (1.0 - this->m_Alpha);
 
   /** Loop over all query points, i.e. all samples. */
-  for (unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned long i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
     /** Get the i-th query point. */
     listSampleFixed->GetMeasurementVector(i, z_F);
@@ -430,7 +430,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
     AccumulateType Gamma_J = NumericTraits<AccumulateType>::Zero;
 
     /** Loop over the neighbours. */
-    for (unsigned int p = 0; p < k; p++)
+    for (unsigned int p = 0; p < k; ++p)
     {
       Gamma_F += std::sqrt(distances_F[p]);
       Gamma_M += std::sqrt(distances_M[p]);
@@ -624,7 +624,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   double       twoGamma = jointSize * (1.0 - this->m_Alpha);
 
   /** Loop over all query points, i.e. all samples. */
-  for (unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++)
+  for (unsigned long i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
     /** Get the i-th query point. */
     listSampleFixed->GetMeasurementVector(i, z_F);
@@ -648,7 +648,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
     dGamma_J.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
 
     /** Loop over the neighbours. */
-    for (unsigned int p = 0; p < k; p++)
+    for (unsigned int p = 0; p < k; ++p)
     {
       /** Get the neighbour point z_ip^M. */
       listSampleMoving->GetMeasurementVector(indices_M[p], z_M_ip);
@@ -830,7 +830,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
       listSampleJoint->SetMeasurement(this->m_NumberOfPixelsCounted, this->GetNumberOfFixedImages(), movingImageValue);
 
       /** Get and set the values of the fixed feature images. */
-      for (unsigned int j = 1; j < this->GetNumberOfFixedImages(); j++)
+      for (unsigned int j = 1; j < this->GetNumberOfFixedImages(); ++j)
       {
         fixedFeatureValue = this->m_FixedImageInterpolatorVector[j]->Evaluate(fixedPoint);
         listSampleFixed->SetMeasurement(this->m_NumberOfPixelsCounted, j, fixedFeatureValue);
@@ -838,7 +838,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
       }
 
       /** Get and set the values of the moving feature images. */
-      for (unsigned int j = 1; j < this->GetNumberOfMovingImages(); j++)
+      for (unsigned int j = 1; j < this->GetNumberOfMovingImages(); ++j)
       {
         movingFeatureValue = this->m_InterpolatorVector[j]->Evaluate(mappedPoint);
         listSampleMoving->SetMeasurement(this->m_NumberOfPixelsCounted, j, movingFeatureValue);

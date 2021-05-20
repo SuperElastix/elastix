@@ -467,7 +467,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
   // Create and allocate the deformation field buffer
   // The deformation field size equals the maximum chunk size
   std::size_t totalDFSize = 1;
-  for (unsigned int i = 0; i < InputImageDimension; i++)
+  for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
     totalDFSize *= maxChunkSize[i];
   }
@@ -559,7 +559,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
       break;
       case 2:
       {
-        for (unsigned int i = 0; i < 2; i++)
+        for (unsigned int i = 0; i < 2; ++i)
         {
           dfsize2D.s[i] = currentChunkRegion.GetSize(i);
           global2D[i] = local2D[i] * (unsigned int)ceil((float)dfsize2D.s[i] / (float)local2D[i]);
@@ -579,7 +579,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
       break;
       case 3:
       {
-        for (unsigned int i = 0; i < 3; i++)
+        for (unsigned int i = 0; i < 3; ++i)
         {
           dfsize3D.s[i] = currentChunkRegion.GetSize(i);
           global3D[i] = local3D[i] * (unsigned int)ceil((float)dfsize3D.s[i] / (float)local3D[i]);
@@ -840,7 +840,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
                                                  true);
 
   // Set the B-spline coefficient images to the kernel.
-  for (unsigned int i = 0; i < InputImageDimension; i++)
+  for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
     coefficient = gpuCoefficientImages[i];
     coefficientbase = gpuCoefficientImagesBases[i];
