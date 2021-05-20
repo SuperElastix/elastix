@@ -101,7 +101,7 @@ main(int argc, char * argv[])
   std::cout << "Testing the Recursive Gaussian filter, CPU vs GPU:\n";
   std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
 
-  for (unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; nThreads++)
+  for (unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; ++nThreads)
   {
     // Test CPU
     cputimer.Start();
@@ -190,7 +190,7 @@ main(int argc, char * argv[])
   std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
 
   // Check directions
-  for (direction = 0; direction < ImageDimension; direction++)
+  for (direction = 0; direction < ImageDimension; ++direction)
   {
     cputimer.Start();
     cpuFilter->SetNumberOfWorkUnits(maximumNumberOfThreads);

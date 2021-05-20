@@ -120,12 +120,12 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::EvaluateT
   JacobianIteratorType                                   jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
+  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {
     const double           imDeriv = movingImageDerivative[dim];
     DerivativeIteratorType imjac = imageJacobian.begin();
 
-    for (unsigned int mu = 0; mu < sizeImageJacobian; mu++)
+    for (unsigned int mu = 0; mu < sizeImageJacobian; ++mu)
     {
       (*imjac) += (*jac) * imDeriv;
       ++imjac;
@@ -241,9 +241,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
   mean.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -252,9 +252,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   MatrixType Amm(N, G);
   Amm.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -267,7 +267,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   vnl_diag_matrix<RealType> S(G);
   S.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int j = 0; j < G; j++)
+  for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -424,9 +424,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
   mean.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -435,9 +435,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
   MatrixType Amm(N, G);
   Amm.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -450,7 +450,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
   vnl_diag_matrix<RealType> S(G);
   S.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int j = 0; j < G; j++)
+  for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -470,7 +470,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   /** initialize */
   dSdmu_part1.fill(itk::NumericTraits<DerivativeValueType>::Zero);
 
-  for (unsigned int d = 0; d < G; d++)
+  for (unsigned int d = 0; d < G; ++d)
   {
     double S_sqr = S(d, d) * S(d, d);
     double S_qub = S_sqr * S(d, d);

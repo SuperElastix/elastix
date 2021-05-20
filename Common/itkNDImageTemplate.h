@@ -244,7 +244,7 @@ protected:
     {
       TOut out(VDimension);
 
-      for (unsigned int i = 0; i < VDimension; i++)
+      for (unsigned int i = 0; i < VDimension; ++i)
       {
         out[i] = in[i];
       }
@@ -261,7 +261,7 @@ protected:
     {
       TOut out;
 
-      for (unsigned int i = 0; i < VDimension; i++)
+      for (unsigned int i = 0; i < VDimension; ++i)
       {
         out[i] = in[i];
       }

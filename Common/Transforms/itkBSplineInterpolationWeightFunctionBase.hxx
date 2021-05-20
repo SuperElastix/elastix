@@ -185,11 +185,11 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   this->Compute1DWeights(cindex, startIndex, weights1D);
 
   /** Compute the vector of weights. */
-  for (unsigned int k = 0; k < this->m_NumberOfWeights; k++)
+  for (unsigned int k = 0; k < this->m_NumberOfWeights; ++k)
   {
     double                tmp1 = 1.0;
     const unsigned long * tmp2 = this->m_OffsetToIndexTable[k];
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       tmp1 *= weights1D[j][tmp2[j]];
     }

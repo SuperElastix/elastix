@@ -400,7 +400,7 @@ ImageSamplerBase<TInputImage>::BeforeThreadedGenerateData(void)
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
   this->m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
     this->m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
   }
@@ -418,7 +418,7 @@ ImageSamplerBase<TInputImage>::AfterThreadedGenerateData(void)
 {
   /** Get the combined number of samples. */
   this->m_NumberOfSamples = 0;
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
     this->m_NumberOfSamples += this->m_ThreaderSampleContainer[i]->Size();
   }
@@ -429,7 +429,7 @@ ImageSamplerBase<TInputImage>::AfterThreadedGenerateData(void)
   sampleContainer->reserve(this->m_NumberOfSamples);
 
   /** Combine the results of all threads. */
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++)
+  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
     sampleContainer->insert(
       sampleContainer->end(), this->m_ThreaderSampleContainer[i]->begin(), this->m_ThreaderSampleContainer[i]->end());

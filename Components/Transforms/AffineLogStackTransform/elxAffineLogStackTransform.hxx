@@ -200,7 +200,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   SizeType fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
-  for (unsigned int i = 0; i < ReducedSpaceDimension; i++)
+  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     /** Initialize. */
     centerOfRotationIndex[i] = 0;
@@ -242,7 +242,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   if (!centerGiven)
   {
     /** Use center of image as default center of rotation */
-    for (unsigned int k = 0; k < SpaceDimension; k++)
+    for (unsigned int k = 0; k < SpaceDimension; ++k)
     {
       centerOfRotationIndex[k] = (fixedImageSize[k] - 1.0) / 2.0;
     }
@@ -250,7 +250,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(
       centerOfRotationIndex, TransformedCenterOfRotation);
 
-    for (unsigned int k = 0; k < ReducedSpaceDimension; k++)
+    for (unsigned int k = 0; k < ReducedSpaceDimension; ++k)
     {
       RDTransformedCenterOfRotation[k] = TransformedCenterOfRotation[k];
     }
@@ -267,7 +267,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   {
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(
       centerOfRotationIndex, TransformedCenterOfRotation);
-    for (unsigned int k = 0; k < ReducedSpaceDimension; k++)
+    for (unsigned int k = 0; k < ReducedSpaceDimension; ++k)
     {
       RDTransformedCenterOfRotation[k] = TransformedCenterOfRotation[k];
     }
@@ -406,7 +406,7 @@ AffineLogStackTransform<TElastix>::SetScales(void)
     {
       newscales.Fill(1.0);
       /** In this case the third option is used. */
-      for (unsigned int i = 0; i < this->GetNumberOfParameters(); i++)
+      for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
       {
         this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }
@@ -444,7 +444,7 @@ AffineLogStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInp
    */
   ReducedDimensionInputPointType RDcenterOfRotationPoint;
   bool                           centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < ReducedSpaceDimension; i++)
+  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     RDcenterOfRotationPoint[i] = 0.0;
 

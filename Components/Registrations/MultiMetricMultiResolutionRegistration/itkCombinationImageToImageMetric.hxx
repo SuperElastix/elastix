@@ -52,7 +52,7 @@
   template <class TFixedImage, class TMovingImage>                                                                     \
   void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                      \
   {                                                                                                                    \
-    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); i++)                                                      \
+    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                      \
     {                                                                                                                  \
       this->Set##_name(_arg, i);                                                                                       \
     }                                                                                                                  \
@@ -75,7 +75,7 @@
   template <class TFixedImage, class TMovingImage>                                                                     \
   void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                      \
   {                                                                                                                    \
-    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); i++)                                                      \
+    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                      \
     {                                                                                                                  \
       this->Set##_name(_arg, i);                                                                                       \
     }                                                                                                                  \
@@ -164,7 +164,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream
 
   /** Add debugging information. */
   os << "NumberOfMetrics: " << this->m_NumberOfMetrics << std::endl;
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     os << "Metric " << i << ":\n";
     os << indent << "MetricPointer: " << this->m_Metrics[i].GetPointer() << "\n";
@@ -210,7 +210,7 @@ template <class TFixedImage, class TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetFixedImageRegion(const FixedImageRegionType _arg)
 {
-  for (unsigned int i = 0; i < this->GetNumberOfMetrics(); i++)
+  for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
   {
     this->SetFixedImageRegion(_arg, i);
   }
@@ -579,7 +579,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
   }
 
   /** Call Initialize for all metrics. */
-  for (unsigned int i = 0; i < this->GetNumberOfMetrics(); i++)
+  for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
   {
     SingleValuedCostFunctionType * costfunc = this->GetMetric(i);
     if (!costfunc)
@@ -665,7 +665,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const Paramet
   MeasureType measure = NumericTraits<MeasureType>::Zero;
 
   /** Compute, store and combine all metric values. */
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     /** Time the computation per metric. */
     itk::TimeProbe timer;
@@ -725,7 +725,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const Pa
   derivative.Fill(NumericTraits<MeasureType>::ZeroValue());
 
   /** Compute, store and combine all metric derivatives. */
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     /** Time the computation per metric. */
     itk::TimeProbe timer;
@@ -786,7 +786,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   /** This function must be called before the multi-threaded code.
    * It calls all the non thread-safe stuff.
    */
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     ImageMetricType *    testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(i));
     PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(i));
@@ -808,7 +808,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   this->InitializeThreadingParameters();
 
   /** Compute all metric values and derivatives. */
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     /** Compute ... */
     timer.Reset();
@@ -821,14 +821,14 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   }
 
   /** Compute the derivative magnitude. */
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     this->m_MetricDerivativesMagnitude[i] = this->m_MetricDerivatives[i].magnitude();
   }
 
   /** Combine the metric values. */
   value = NumericTraits<MeasureType>::Zero;
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     if (this->m_UseMetric[i])
     {
@@ -849,7 +849,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   }
 
   /** Then the remaining derivatives. */
-  for (unsigned int i = 1; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 1; i < this->m_NumberOfMetrics; ++i)
   {
     if (this->m_UseMetric[i])
     {
@@ -877,7 +877,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian(const T
 
   /** Add all metrics' selfhessians. */
   bool initialized = false;
-  for (unsigned int i = 0; i < this->m_NumberOfMetrics; i++)
+  for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     if (this->m_UseMetric[i])
     {

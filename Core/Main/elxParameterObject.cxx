@@ -119,7 +119,7 @@ ParameterObject::SetParameter(const unsigned int &             index,
 void
 ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValueType & value)
 {
-  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++)
+  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); ++index)
   {
     this->SetParameter(index, key, value);
   }
@@ -133,7 +133,7 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
 void
 ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value)
 {
-  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++)
+  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); ++index)
   {
     this->SetParameter(index, key, value);
   }
@@ -169,7 +169,7 @@ ParameterObject::RemoveParameter(const unsigned int & index, const ParameterKeyT
 void
 ParameterObject::RemoveParameter(const ParameterKeyType & key)
 {
-  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++)
+  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); ++index)
   {
     this->RemoveParameter(index, key);
   }

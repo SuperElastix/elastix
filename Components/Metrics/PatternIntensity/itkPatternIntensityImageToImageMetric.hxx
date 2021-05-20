@@ -401,7 +401,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(con
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   derivative = DerivativeType(numberOfParameters);
 
-  for (unsigned int i = 0; i < numberOfParameters; i++)
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
     testPoint[i] -= this->m_DerivativeDelta / std::sqrt(this->m_Scales[i]);
     const MeasureType valuep0 = this->GetValue(testPoint);

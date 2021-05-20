@@ -81,7 +81,7 @@ SetOffset2(const itk::Vector<TScalarType, 2> & offset, cl_float2 & ocloffset, Sp
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     ocloffset.s[id++] = offset[i];
   }
@@ -94,7 +94,7 @@ SetOffset3(const itk::Vector<TScalarType, 3> & offset, cl_float3 & ocloffset, Sp
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     ocloffset.s[id++] = offset[i];
   }
@@ -148,9 +148,9 @@ SetMatrix2(const itk::Matrix<TScalarType, 2, 2> & matrix,
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
-    for (unsigned int j = 0; j < 2; j++)
+    for (unsigned int j = 0; j < 2; ++j)
     {
       oclmatrix.s[id++] = matrix[i][j];
     }
@@ -167,14 +167,14 @@ SetMatrix3(const itk::Matrix<TScalarType, 3, 3> & matrix,
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
-    for (unsigned int j = 0; j < 3; j++)
+    for (unsigned int j = 0; j < 3; ++j)
     {
       oclmatrix.s[id++] = matrix[i][j];
     }
   }
-  for (unsigned int i = 9; i < 16; i++)
+  for (unsigned int i = 9; i < 16; ++i)
   {
     oclmatrix.s[i] = 0.0;
   }
@@ -282,7 +282,7 @@ GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::
   // Create the final source code
   std::ostringstream sources;
   // Add other sources
-  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
+  for (std::size_t i = 0; i < this->m_Sources.size(); ++i)
   {
     sources << this->m_Sources[i] << std::endl;
   }

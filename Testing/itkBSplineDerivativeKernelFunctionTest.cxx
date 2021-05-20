@@ -67,7 +67,7 @@ main(void)
   }
 
   /** For all spline orders. */
-  for (unsigned int so = 0; so < splineOrders.size(); so++)
+  for (unsigned int so = 0; so < splineOrders.size(); ++so)
   {
     std::cerr << "Evaluating spline order " << splineOrders[so] << std::endl;
 
@@ -96,7 +96,7 @@ main(void)
 
     /** Print header. */
     std::cerr << "eval at:";
-    for (unsigned int j = 0; j < u.size(); j++)
+    for (unsigned int j = 0; j < u.size(); ++j)
     {
       std::cerr << " " << u[j];
     }
@@ -105,7 +105,7 @@ main(void)
     /** Time the ITK implementation. */
     std::cerr << "ITK new:";
     clock_t startClock = clock();
-    for (unsigned int j = 0; j < u.size(); j++)
+    for (unsigned int j = 0; j < u.size(); ++j)
     {
       clock_t startClockRegion = clock();
       for (unsigned int i = 0; i < N; ++i)
@@ -121,7 +121,7 @@ main(void)
     /** Time the elx implementation. */
     std::cerr << "elastix:";
     startClock = clock();
-    for (unsigned int j = 0; j < u.size(); j++)
+    for (unsigned int j = 0; j < u.size(); ++j)
     {
       clock_t startClockRegion = clock();
       for (unsigned int i = 0; i < N; ++i)

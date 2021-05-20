@@ -75,7 +75,7 @@ SetOffset2(const itk::Vector<TScalarType, 2> & offset, cl_float2 & ocloffset, Sp
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     ocloffset.s[id++] = offset[i];
   }
@@ -88,7 +88,7 @@ SetOffset3(const itk::Vector<TScalarType, 3> & offset, cl_float4 & ocloffset, Sp
 {
   unsigned int id = 0;
 
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     ocloffset.s[id++] = offset[i];
   }
@@ -189,7 +189,7 @@ GPUTranslationTransformBase<TScalarType, NDimensions>::GetSourceCode(std::string
   // Create the final source code
   std::ostringstream sources;
   // Add other sources
-  for (std::size_t i = 0; i < this->m_Sources.size(); i++)
+  for (std::size_t i = 0; i < this->m_Sources.size(); ++i)
   {
     sources << this->m_Sources[i] << std::endl;
   }

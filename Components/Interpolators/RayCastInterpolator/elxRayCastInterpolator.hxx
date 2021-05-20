@@ -63,7 +63,7 @@ RayCastInterpolator<TElastix>::BeforeRegistration(void)
   TransformParametersType preParameters(numberofparameters);
   preParameters.Fill(0.0);
 
-  for (unsigned int i = 0; i < numberofparameters; i++)
+  for (unsigned int i = 0; i < numberofparameters; ++i)
   {
     bool ret =
       this->GetConfiguration()->ReadParameter(preParameters[i], "PreParameters", this->GetComponentLabel(), i, 0);
@@ -83,7 +83,7 @@ RayCastInterpolator<TElastix>::BeforeRegistration(void)
   PointType focalPoint;
   focalPoint.Fill(0.);
 
-  for (unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); i++)
+  for (unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); ++i)
   {
     bool ret = this->GetConfiguration()->ReadParameter(focalPoint[i], "FocalPoint", this->GetComponentLabel(), i, 0);
     if (!ret)

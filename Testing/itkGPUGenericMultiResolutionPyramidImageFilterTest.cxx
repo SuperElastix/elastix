@@ -105,9 +105,9 @@ main(int argc, char * argv[])
   RescaleScheduleType   rescaleSchedule(numberOfLevels, Dimension);
   SmoothingScheduleType smoothingSchedule(numberOfLevels, Dimension);
   double                tmp = 0.0;
-  for (unsigned int i = 0; i < numberOfLevels; i++)
+  for (unsigned int i = 0; i < numberOfLevels; ++i)
   {
-    for (unsigned int j = 0; j < Dimension; j++)
+    for (unsigned int j = 0; j < Dimension; ++j)
     {
       tmp = randomNum->GetUniformVariate(0, 8);
       rescaleSchedule[i][j] = static_cast<unsigned int>(tmp);
@@ -140,7 +140,7 @@ main(int argc, char * argv[])
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
   cputimer.Start();
-  for (unsigned int i = 0; i < runTimes; i++)
+  for (unsigned int i = 0; i < runTimes; ++i)
   {
     cpuFilter->SetInput(reader->GetOutput());
 
@@ -160,7 +160,7 @@ main(int argc, char * argv[])
     }
     else
     {
-      for (unsigned int j = 0; j < cpuFilter->GetNumberOfLevels(); j++)
+      for (unsigned int j = 0; j < cpuFilter->GetNumberOfLevels(); ++j)
       {
         cpuFilter->SetCurrentLevel(j);
         try
@@ -264,7 +264,7 @@ main(int argc, char * argv[])
   // Time the filter, run on the GPU
   itk::TimeProbe gputimer;
   gputimer.Start();
-  for (unsigned int i = 0; i < runTimes; i++)
+  for (unsigned int i = 0; i < runTimes; ++i)
   {
     gpuFilter->SetInput(gpuReader->GetOutput());
 
@@ -288,7 +288,7 @@ main(int argc, char * argv[])
     }
     else
     {
-      for (unsigned int j = 0; j < gpuFilter->GetNumberOfLevels(); j++)
+      for (unsigned int j = 0; j < gpuFilter->GetNumberOfLevels(); ++j)
       {
         gpuFilter->SetCurrentLevel(j);
         try

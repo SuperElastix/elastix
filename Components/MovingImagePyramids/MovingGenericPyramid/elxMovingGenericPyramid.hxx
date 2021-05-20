@@ -55,9 +55,9 @@ MovingGenericPyramid<TElastix>::SetMovingSchedule(void)
    * - MovingImagePyramidSchedule
    */
   bool foundRescale = true;
-  for (unsigned int i = 0; i < numberOfResolutions; i++)
+  for (unsigned int i = 0; i < numberOfResolutions; ++i)
   {
-    for (unsigned int j = 0; j < MovingImageDimension; j++)
+    for (unsigned int j = 0; j < MovingImageDimension; ++j)
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * MovingImageDimension + j;
@@ -92,9 +92,9 @@ MovingGenericPyramid<TElastix>::SetMovingSchedule(void)
    * - MovingImagePyramidSmoothingSchedule
    */
   bool foundSmoothing = true;
-  for (unsigned int i = 0; i < numberOfResolutions; i++)
+  for (unsigned int i = 0; i < numberOfResolutions; ++i)
   {
-    for (unsigned int j = 0; j < MovingImageDimension; j++)
+    for (unsigned int j = 0; j < MovingImageDimension; ++j)
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * MovingImageDimension + j;

@@ -89,7 +89,7 @@ main(int argc, char * argv[])
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
   cputimer.Start();
-  for (unsigned int i = 0; i < runTimes; i++)
+  for (unsigned int i = 0; i < runTimes; ++i)
   {
     cpuFilter->SetInput(reader->GetOutput());
     try
@@ -170,7 +170,7 @@ main(int argc, char * argv[])
   // Time the filter, run on the GPU
   itk::TimeProbe gputimer;
   gputimer.Start();
-  for (unsigned int i = 0; i < runTimes; i++)
+  for (unsigned int i = 0; i < runTimes; ++i)
   {
     gpuFilter->SetInput(gpuReader->GetOutput());
     try

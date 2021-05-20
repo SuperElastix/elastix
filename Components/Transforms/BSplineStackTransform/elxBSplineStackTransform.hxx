@@ -522,13 +522,13 @@ BSplineStackTransform<TElastix>::ReadFromFile(void)
   griddirection.SetIdentity();
 
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
-  for (unsigned int i = 0; i < ReducedSpaceDimension; i++)
+  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     dummy |= this->m_Configuration->ReadParameter(gridsize[i], "GridSize", i);
     dummy |= this->m_Configuration->ReadParameter(gridindex[i], "GridIndex", i);
     dummy |= this->m_Configuration->ReadParameter(gridspacing[i], "GridSpacing", i);
     dummy |= this->m_Configuration->ReadParameter(gridorigin[i], "GridOrigin", i);
-    for (unsigned int j = 0; j < ReducedSpaceDimension; j++)
+    for (unsigned int j = 0; j < ReducedSpaceDimension; ++j)
     {
       this->m_Configuration->ReadParameter(griddirection(j, i), "GridDirection", i * ReducedSpaceDimension + j);
     }

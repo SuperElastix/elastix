@@ -126,12 +126,12 @@ PCAMetric2<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   JacobianIteratorType                                   jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
+  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {
     const double           imDeriv = movingImageDerivative[dim];
     DerivativeIteratorType imjac = imageJacobian.begin();
 
-    for (unsigned int mu = 0; mu < sizeImageJacobian; mu++)
+    for (unsigned int mu = 0; mu < sizeImageJacobian; ++mu)
     {
       (*imjac) += (*jac) * imDeriv;
       ++imjac;
@@ -267,9 +267,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
   mean.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -279,9 +279,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   MatrixType Amm(N, G);
   Amm.fill(NumericTraits<RealType>::Zero);
 
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -293,7 +293,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
   MatrixType S(G, G);
   S.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int j = 0; j < G; j++)
+  for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -318,7 +318,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   // eigenvalue 29 has a weight of 1 and eigenvalue 0 has a weight of 30
 
   RealType sumWeightedEigenValues = itk::NumericTraits<RealType>::Zero;
-  for (unsigned int i = 0; i < G; i++)
+  for (unsigned int i = 0; i < G; ++i)
   {
     sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(G - i - 1);
   }
@@ -477,9 +477,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   /** Calculate mean of columns */
   vnl_vector<RealType> mean(G);
   mean.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -489,9 +489,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   /** Calculate standard deviation of columns */
   MatrixType Amm(N, G);
   Amm.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; j++)
+    for (unsigned int j = 0; j < G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -504,7 +504,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
   vnl_diag_matrix<RealType> S(G);
   S.fill(NumericTraits<RealType>::Zero);
-  for (unsigned int j = 0; j < G; j++)
+  for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -516,13 +516,13 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   vnl_symmetric_eigensystem<RealType> eig(K);
 
   RealType sumWeightedEigenValues = itk::NumericTraits<RealType>::Zero;
-  for (unsigned int i = 0; i < G; i++)
+  for (unsigned int i = 0; i < G; ++i)
   {
     sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(G - i - 1);
   }
 
   MatrixType eigenVectorMatrix(G, G);
-  for (unsigned int i = 0; i < G; i++)
+  for (unsigned int i = 0; i < G; ++i)
   {
     eigenVectorMatrix.set_column(i, (eig.get_eigenvector(G - i - 1)).normalize());
   }
@@ -541,7 +541,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   unsigned int startSamplesOK;
   startSamplesOK = 0;
 
-  for (unsigned int d = 0; d < G; d++)
+  for (unsigned int d = 0; d < G; ++d)
   {
     double S_sqr = S(d, d) * S(d, d);
     double S_qub = S_sqr * S(d, d);
@@ -594,7 +594,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
       /** build metric derivative components */
       for (unsigned int p = 0; p < nzjis[d].size(); ++p)
       {
-        for (unsigned int z = 0; z < G; z++)
+        for (unsigned int z = 0; z < G; ++z)
         {
           derivative[nzjis[d][p]] += z * (vSAtmm[z][pixelIndex] * dMTdmu[p] * Sv[d][z] +
                                           vdSdmu_part1[z][d] * Atmm[d][pixelIndex] * dMTdmu[p] * CSv[d][z]);

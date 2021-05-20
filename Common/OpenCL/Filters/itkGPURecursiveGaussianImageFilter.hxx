@@ -110,13 +110,13 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   }
 
   int imgSize[TInputImage::ImageDimension];
-  for (unsigned int i = 0; i < ImageDim; i++)
+  for (unsigned int i = 0; i < ImageDim; ++i)
   {
     imgSize[i] = outSize[i];
   }
 
   std::size_t globalSize1D = 0, globalSize2D[2];
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     globalSize2D[i] = 0;
   }
@@ -204,7 +204,7 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   this->m_GPUKernelManager->SetKernelArg(this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_float4), (void *)&BM);
 
   // Set image size
-  for (unsigned int i = 0; i < ImageDim; i++)
+  for (unsigned int i = 0; i < ImageDim; ++i)
   {
     this->m_GPUKernelManager->SetKernelArg(this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &(imgSize[i]));
   }

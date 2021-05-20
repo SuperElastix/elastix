@@ -238,7 +238,7 @@ AdvancedRigid2DTransform<TScalarType>::SetParameters(const ParametersType & para
 
   // Set translation
   OutputVectorType translation;
-  for (unsigned int i = 0; i < OutputSpaceDimension; i++)
+  for (unsigned int i = 0; i < OutputSpaceDimension; ++i)
   {
     translation[i] = parameters[i + 1];
   }
@@ -267,7 +267,7 @@ AdvancedRigid2DTransform<TScalarType>::GetParameters(void) const
   this->m_Parameters[0] = this->GetAngle();
 
   // Get the translation
-  for (unsigned int i = 0; i < OutputSpaceDimension; i++)
+  for (unsigned int i = 0; i < OutputSpaceDimension; ++i)
   {
     this->m_Parameters[i + 1] = this->GetTranslation()[i];
   }

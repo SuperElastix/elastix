@@ -526,7 +526,7 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale(void)
       {
         upsampledParameters.SetElement(i, tmp[0]);
       }
-      for (unsigned int k = 0; k < (SpaceDimension - 1); k++)
+      for (unsigned int k = 0; k < (SpaceDimension - 1); ++k)
       {
         upsampledParameters.SetElement(i + ((SpaceDimension - 1) * (l - 1) + 1 + k) * new_ParametersPerDimension,
                                        tmp[k + 1]);
@@ -576,13 +576,13 @@ MultiBSplineTransformWithNormal<TElastix>::ReadFromFile(void)
   griddirection.SetIdentity();
 
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Configuration->ReadParameter(gridsize[i], "GridSize", i);
     this->m_Configuration->ReadParameter(gridindex[i], "GridIndex", i);
     this->m_Configuration->ReadParameter(gridspacing[i], "GridSpacing", i);
     this->m_Configuration->ReadParameter(gridorigin[i], "GridOrigin", i);
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_Configuration->ReadParameter(griddirection(j, i), "GridDirection", i * SpaceDimension + j);
     }

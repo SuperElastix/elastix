@@ -71,7 +71,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::TransformRigidityPenalty
   /** Initialize dilation filter for the rigidity images. */
   this->m_FixedRigidityImageDilation.resize(FixedImageDimension);
   this->m_MovingRigidityImageDilation.resize(MovingImageDimension);
-  for (unsigned int i = 0; i < FixedImageDimension; i++)
+  for (unsigned int i = 0; i < FixedImageDimension; ++i)
   {
     this->m_FixedRigidityImageDilation[i] = nullptr;
     this->m_MovingRigidityImageDilation[i] = nullptr;
@@ -186,7 +186,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages(voi
     if (this->m_UseFixedRigidityImage)
     {
       /** Create the dilation filters for the fixedRigidityImage. */
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         this->m_FixedRigidityImageDilation[i] = DilateFilterType::New();
       }
@@ -195,7 +195,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages(voi
     if (this->m_UseMovingRigidityImage)
     {
       /** Create the dilation filter for the movingRigidityImage. */
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         this->m_MovingRigidityImageDilation[i] = DilateFilterType::New();
       }
@@ -210,7 +210,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages(voi
     }
 
     /** Set stuff for the separate dilation. */
-    for (unsigned int i = 0; i < FixedImageDimension; i++)
+    for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
       /** Create the structuring element. */
       radius.Fill(0);
@@ -485,7 +485,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
 
   /** Get a handle to the B-spline coefficient images. */
   std::vector<CoefficientImagePointer> inputImages(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     inputImages[i] = this->m_BSplineTransform->GetCoefficientImages()[i];
   }
@@ -534,7 +534,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     ui_FI(ImageDimension);
 
   /** For all dimensions ... */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     /** ... create the filtered images ... */
     ui_FA[i] = CoefficientImageType::New();
@@ -573,7 +573,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
    ************************************************************************* */
 
   /** Filter the inputImages. */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     ui_FA[i] = this->FilterSeparable(inputImages[i], Operators_A);
     ui_FB[i] = this->FilterSeparable(inputImages[i], Operators_B);
@@ -600,7 +600,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     itI(ImageDimension);
 
   /** Create iterators. */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     /** Create iterators. */
     itA[i] = CoefficientImageIteratorType(ui_FA[i], ui_FA[i]->GetLargestPossibleRegion());
@@ -679,7 +679,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       }
 
       /** Increase all iterators. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itA[i];
         ++itB[i];
@@ -699,7 +699,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
    ************************************************************************* */
 
   /** Reset all iterators. */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itA[i].GoToBegin();
     itB[i].GoToBegin();
@@ -746,7 +746,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       }
 
       /** Increase all iterators. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itA[i];
         ++itB[i];
@@ -774,7 +774,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     while (!itD[0].IsAtEnd())
     {
       /** Linearity condition part. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         this->m_LinearityConditionValue +=
           it_RCI.Get() * (+itD[i].Get() * itD[i].Get() + itE[i].Get() * itE[i].Get() + itG[i].Get() * itG[i].Get());
@@ -786,7 +786,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       } // end loop over i
 
       /** Increase all iterators. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itD[i];
         ++itE[i];
@@ -928,7 +928,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
   /** Get a handle to the B-spline coefficient images. */
   std::vector<CoefficientImagePointer> inputImages(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     inputImages[i] = this->m_BSplineTransform->GetCoefficientImages()[i];
   }
@@ -977,7 +977,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     ui_FI(ImageDimension);
 
   /** For all dimensions ... */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     /** ... create the filtered images ... */
     ui_FA[i] = CoefficientImageType::New();
@@ -1016,7 +1016,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
    ************************************************************************* */
 
   /** Filter the inputImages. */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     ui_FA[i] = this->FilterSeparable(inputImages[i], Operators_A);
     ui_FB[i] = this->FilterSeparable(inputImages[i], Operators_B);
@@ -1043,7 +1043,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     itI(ImageDimension);
 
   /** Create iterators. */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     /** Create iterators. */
     itA[i] = CoefficientImageIteratorType(ui_FA[i], ui_FA[i]->GetLargestPossibleRegion());
@@ -1076,11 +1076,11 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   /** Create orthonormality and properness parts. */
   std::vector<std::vector<CoefficientImagePointer>> OCparts(ImageDimension);
   std::vector<std::vector<CoefficientImagePointer>> PCparts(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     OCparts[i].resize(ImageDimension);
     PCparts[i].resize(ImageDimension);
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       OCparts[i][j] = CoefficientImageType::New();
       OCparts[i][j]->SetRegions(inputImages[0]->GetLargestPossibleRegion());
@@ -1094,10 +1094,10 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   /** Create linearity parts. */
   unsigned int                                      NofLParts = 3 * ImageDimension - 3;
   std::vector<std::vector<CoefficientImagePointer>> LCparts(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     LCparts[i].resize(NofLParts);
-    for (unsigned int j = 0; j < NofLParts; j++)
+    for (unsigned int j = 0; j < NofLParts; ++j)
     {
       LCparts[i][j] = CoefficientImageType::New();
       LCparts[i][j]->SetRegions(inputImages[0]->GetLargestPossibleRegion());
@@ -1109,19 +1109,19 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   std::vector<std::vector<CoefficientImageIteratorType>> itOCp(ImageDimension);
   std::vector<std::vector<CoefficientImageIteratorType>> itPCp(ImageDimension);
   std::vector<std::vector<CoefficientImageIteratorType>> itLCp(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itOCp[i].resize(ImageDimension);
     itPCp[i].resize(ImageDimension);
     itLCp[i].resize(NofLParts);
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       itOCp[i][j] = CoefficientImageIteratorType(OCparts[i][j], OCparts[i][j]->GetLargestPossibleRegion());
       itOCp[i][j].GoToBegin();
       itPCp[i][j] = CoefficientImageIteratorType(PCparts[i][j], PCparts[i][j]->GetLargestPossibleRegion());
       itPCp[i][j].GoToBegin();
     }
-    for (unsigned int j = 0; j < NofLParts; j++)
+    for (unsigned int j = 0; j < NofLParts; ++j)
     {
       itLCp[i][j] = CoefficientImageIteratorType(LCparts[i][j], LCparts[i][j]->GetLargestPossibleRegion());
       itLCp[i][j].GoToBegin();
@@ -1251,7 +1251,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       } // end if dim == 3
 
       /** Increase all iterators. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itA[i];
         ++itB[i];
@@ -1259,7 +1259,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         {
           ++itC[i];
         }
-        for (unsigned int j = 0; j < ImageDimension; j++)
+        for (unsigned int j = 0; j < ImageDimension; ++j)
         {
           ++itOCp[i][j];
         }
@@ -1275,7 +1275,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
    ************************************************************************* */
 
   /** Reset all iterators. */
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itA[i].GoToBegin();
     itB[i].GoToBegin();
@@ -1432,7 +1432,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       } // end if dim == 3
 
       /** Increase all iterators. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itA[i];
         ++itB[i];
@@ -1440,7 +1440,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         {
           ++itC[i];
         }
-        for (unsigned int j = 0; j < ImageDimension; j++)
+        for (unsigned int j = 0; j < ImageDimension; ++j)
         {
           ++itPCp[i][j];
         }
@@ -1463,7 +1463,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     while (!itLCp[0][0].IsAtEnd())
     {
       /** Linearity condition part. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         /** Calculate the value of the linearity condition. */
         this->m_LinearityConditionValue +=
@@ -1508,7 +1508,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       } // end if dim == 3
 
       /** Increase all iterators. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itD[i];
         ++itE[i];
@@ -1519,7 +1519,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
           ++itH[i];
           ++itI[i];
         }
-        for (unsigned int j = 0; j < NofLParts; j++)
+        for (unsigned int j = 0; j < NofLParts; ++j)
         {
           ++itLCp[i][j];
         }
@@ -1571,7 +1571,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   std::vector<CoefficientImagePointer> OCpartsF(ImageDimension);
   std::vector<CoefficientImagePointer> PCpartsF(ImageDimension);
   std::vector<CoefficientImagePointer> LCpartsF(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     OCpartsF[i] = CoefficientImageType::New();
     OCpartsF[i]->SetRegions(inputImages[0]->GetLargestPossibleRegion());
@@ -1590,19 +1590,19 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   std::vector<std::vector<NeighborhoodIteratorType>> nitLCp(ImageDimension);
   RadiusType                                         radius;
   radius.Fill(1);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     nitOCp[i].resize(ImageDimension);
     nitPCp[i].resize(ImageDimension);
     nitLCp[i].resize(NofLParts);
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       nitOCp[i][j] = NeighborhoodIteratorType(radius, OCparts[i][j], OCparts[i][j]->GetLargestPossibleRegion());
       nitOCp[i][j].GoToBegin();
       nitPCp[i][j] = NeighborhoodIteratorType(radius, PCparts[i][j], PCparts[i][j]->GetLargestPossibleRegion());
       nitPCp[i][j].GoToBegin();
     }
-    for (unsigned int j = 0; j < NofLParts; j++)
+    for (unsigned int j = 0; j < NofLParts; ++j)
     {
       nitLCp[i][j] = NeighborhoodIteratorType(radius, LCparts[i][j], LCparts[i][j]->GetLargestPossibleRegion());
       nitLCp[i][j].GoToBegin();
@@ -1613,7 +1613,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   std::vector<CoefficientImageIteratorType> itOCpf(ImageDimension);
   std::vector<CoefficientImageIteratorType> itPCpf(ImageDimension);
   std::vector<CoefficientImageIteratorType> itLCpf(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itOCpf[i] = CoefficientImageIteratorType(OCpartsF[i], OCpartsF[i]->GetLargestPossibleRegion());
     itOCpf[i].GoToBegin();
@@ -1666,7 +1666,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       std::vector<double> tmp(ImageDimension, 0.0);
 
       /** Loop over all dimensions. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         /** Loop over the neighborhood. */
         for (unsigned int k = 0; k < neighborhoodSize; ++k)
@@ -1693,10 +1693,10 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
       /** Increase all iterators. */
       ++nit_RCI;
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itOCpf[i];
-        for (unsigned int j = 0; j < ImageDimension; j++)
+        for (unsigned int j = 0; j < ImageDimension; ++j)
         {
           ++nitOCp[i][j];
         }
@@ -1719,7 +1719,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       std::vector<double> tmp(ImageDimension, 0.0);
 
       /** Loop over all dimensions. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         /** Loop over the neighborhood. */
         for (unsigned int k = 0; k < neighborhoodSize; ++k)
@@ -1746,10 +1746,10 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
       /** Increase all iterators. */
       ++nit_RCI;
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itPCpf[i];
-        for (unsigned int j = 0; j < ImageDimension; j++)
+        for (unsigned int j = 0; j < ImageDimension; ++j)
         {
           ++nitPCp[i][j];
         }
@@ -1771,7 +1771,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       std::vector<double> tmp(ImageDimension, 0.0);
 
       /** Loop over all dimensions. */
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         /** Loop over the neighborhood. */
         for (unsigned int k = 0; k < neighborhoodSize; ++k)
@@ -1807,10 +1807,10 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
       /** Increase all iterators. */
       ++nit_RCI;
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         ++itLCpf[i];
-        for (unsigned int j = 0; j < NofLParts; j++)
+        for (unsigned int j = 0; j < NofLParts; ++j)
         {
           ++nitLCp[i][j];
         }
@@ -1824,7 +1824,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
   /** Create derivative images, each holding a component of the vector field. */
   std::vector<CoefficientImagePointer> derivativeImages(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     derivativeImages[i] = CoefficientImageType::New();
     derivativeImages[i]->SetRegions(inputImages[i]->GetLargestPossibleRegion());
@@ -1833,7 +1833,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
   /** Create iterators over the derivative images. */
   std::vector<CoefficientImageIteratorType> itDIs(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itDIs[i] = CoefficientImageIteratorType(derivativeImages[i], derivativeImages[i]->GetLargestPossibleRegion());
     itDIs[i].GoToBegin();
@@ -1850,7 +1850,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   double      rigidityCoefficientSumSqr = rigidityCoefficientSum * rigidityCoefficientSum;
   while (!itDIs[0].IsAtEnd())
   {
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       ScalarType tmpDIs = NumericTraits<ScalarType>::Zero;
 
@@ -1896,7 +1896,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
   /** Rearrange to create a derivative. */
   unsigned int j = 0;
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itDIs[i].GoToBegin();
     while (!itDIs[i].IsAtEnd())
@@ -1965,7 +1965,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Create1DOperator(
 
   /** Get the image spacing factors that we are going to use. */
   std::vector<double> s(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     s[i] = spacing[i];
   }
@@ -2169,7 +2169,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FilterSeparable(
 {
   /** Create filters, supply them with boundary conditions and operators. */
   std::vector<typename NOIFType::Pointer> filters(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     filters[i] = NOIFType::New();
     filters[i]->SetOperator(Operators[i]);
@@ -2177,7 +2177,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FilterSeparable(
 
   /** Set up the mini-pipline. */
   filters[0]->SetInput(image);
-  for (unsigned int i = 1; i < ImageDimension; i++)
+  for (unsigned int i = 1; i < ImageDimension; ++i)
   {
     filters[i]->SetInput(filters[i - 1]->GetOutput());
   }
@@ -2209,7 +2209,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
 
   /** Get the image spacing factors that we are going to use. */
   std::vector<double> s(ImageDimension);
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     s[i] = spacing[i];
   }

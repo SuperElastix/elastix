@@ -710,7 +710,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointUseAdditio
   OutputPointType out = this->m_CurrentTransform->TransformPoint(point);
 
   /** Add them. */
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     out[i] += (out0[i] - point[i]);
   }

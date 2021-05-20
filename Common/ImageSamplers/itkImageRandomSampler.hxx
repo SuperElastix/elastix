@@ -175,7 +175,7 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
     /** Translate randomPosition to an index, copied from ImageRandomConstIteratorWithIndex. */
     unsigned long       residual;
     InputImageIndexType positionIndex;
-    for (unsigned int dim = 0; dim < InputImageDimension; dim++)
+    for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
     {
       const unsigned long sizeInThisDimension = regionSize[dim];
       residual = randomPosition % sizeInThisDimension;

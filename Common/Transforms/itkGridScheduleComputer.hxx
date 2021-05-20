@@ -300,7 +300,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::ApplyInitialTransfo
 
   /** Compute the new "ImageSpacing" in each dimension. */
   const double smallnumber = NumericTraits<double>::epsilon();
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     /** Compute the length of the fixed image (in mm) for dimension i. */
     double oldLength_i = this->m_ImageSpacing[i] * static_cast<double>(this->m_ImageRegion.GetSize()[i] - 1);

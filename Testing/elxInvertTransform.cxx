@@ -168,14 +168,14 @@ main(int argc, char * argv[])
 
   /** Convert to ParametersType. */
   ParametersType transformParameters(numberOfParameters);
-  for (unsigned int i = 0; i < numberOfParameters; i++)
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
     transformParameters[i] = vecPar[i];
   }
 
   /** Get center of rotation. */
   CenterType centerOfRotation;
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     config->ReadParameter(centerOfRotation[i], "CenterOfRotationPoint", i, dummyErrorMessage);
   }
@@ -260,7 +260,7 @@ main(int argc, char * argv[])
 
   /** In this case, write in a normal way to the parameter file. */
   outputTPFile << "(TransformParameters ";
-  for (unsigned int i = 0; i < numberOfParameters - 1; i++)
+  for (unsigned int i = 0; i < numberOfParameters - 1; ++i)
   {
     outputTPFile << transformParametersInv[i] << " ";
   }
@@ -287,7 +287,7 @@ main(int argc, char * argv[])
 
   /** Write image Size. */
   outputTPFile << "(Size ";
-  for (unsigned int i = 0; i < MovDim - 1; i++)
+  for (unsigned int i = 0; i < MovDim - 1; ++i)
   {
     outputTPFile << imageIOBase->GetDimensions(i) << " ";
   }
@@ -295,7 +295,7 @@ main(int argc, char * argv[])
 
   /** Write image Index. */
   outputTPFile << "(Index";
-  for (unsigned int i = 0; i < MovDim; i++)
+  for (unsigned int i = 0; i < MovDim; ++i)
   {
     outputTPFile << " 0";
   }
@@ -308,7 +308,7 @@ main(int argc, char * argv[])
 
   /** Write image Spacing. */
   outputTPFile << "(Spacing ";
-  for (unsigned int i = 0; i < MovDim - 1; i++)
+  for (unsigned int i = 0; i < MovDim - 1; ++i)
   {
     outputTPFile << imageIOBase->GetSpacing(i) << " ";
   }
@@ -316,7 +316,7 @@ main(int argc, char * argv[])
 
   /** Write image Origin. */
   outputTPFile << "(Origin ";
-  for (unsigned int i = 0; i < MovDim - 1; i++)
+  for (unsigned int i = 0; i < MovDim - 1; ++i)
   {
     outputTPFile << imageIOBase->GetOrigin(i) << " ";
   }
@@ -324,9 +324,9 @@ main(int argc, char * argv[])
 
   /** Write direction cosines. */
   outputTPFile << "(Direction";
-  for (unsigned int i = 0; i < MovDim; i++)
+  for (unsigned int i = 0; i < MovDim; ++i)
   {
-    for (unsigned int j = 0; j < MovDim; j++)
+    for (unsigned int j = 0; j < MovDim; ++j)
     {
       outputTPFile << " " << imageIOBase->GetDirection(i)[j];
     }
@@ -371,7 +371,7 @@ main(int argc, char * argv[])
   /** Write to file. */
   outputTPFile << "\n// " << transformType << " specific\n";
   outputTPFile << "(CenterOfRotationPoint";
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     outputTPFile << " " << centerOfRotationInv[i];
   }

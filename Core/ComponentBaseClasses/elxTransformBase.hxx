@@ -391,7 +391,7 @@ TransformBase<TElastix>::ReadFromFile(void)
       {
         // NOTE: we could avoid this by directly reading into the transform parameters,
         // e.g. by overloading ReadParameter(), or use swap (?).
-        for (unsigned int i = 0; i < numberOfParameters; i++)
+        for (unsigned int i = 0; i < numberOfParameters; ++i)
         {
           (*(this->m_TransformParametersPointer))[i] = vecPar[i];
         }
@@ -859,7 +859,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   /** Read the input points, as index or as point. */
   if (!(ippReader->GetPointsAreIndices()))
   {
-    for (unsigned int j = 0; j < nrofpoints; j++)
+    for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** Compute index of nearest voxel in fixed image. */
       InputPointType point;
@@ -867,7 +867,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
       inputPointSet->GetPoint(j, &point);
       inputpointvec[j] = point;
       dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
       }
@@ -875,7 +875,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   }
   else // so: inputasindex
   {
-    for (unsigned int j = 0; j < nrofpoints; j++)
+    for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** The read point from the inutPointSet is actually an index
        * Cast to the proper type.
@@ -883,7 +883,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
       InputPointType point;
       point.Fill(0.0f);
       inputPointSet->GetPoint(j, &point);
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(point[i]));
       }
@@ -894,14 +894,14 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
 
   /** Apply the transform. */
   elxout << "  The input points are transformed." << std::endl;
-  for (unsigned int j = 0; j < nrofpoints; j++)
+  for (unsigned int j = 0; j < nrofpoints; ++j)
   {
     /** Call TransformPoint. */
     outputpointvec[j] = this->GetAsITKBaseType()->TransformPoint(inputpointvec[j]);
 
     /** Transform back to index in fixed image domain. */
     dummyImage->TransformPhysicalPointToContinuousIndex(outputpointvec[j], fixedcindex);
-    for (unsigned int i = 0; i < FixedImageDimension; i++)
+    for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
       outputindexfixedvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
     }
@@ -910,7 +910,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     {
       /** Transform back to index in moving image domain. */
       movingImage->TransformPhysicalPointToContinuousIndex(outputpointvec[j], movingcindex);
-      for (unsigned int i = 0; i < MovingImageDimension; i++)
+      for (unsigned int i = 0; i < MovingImageDimension; ++i)
       {
         outputindexmovingvec[j][i] = static_cast<MovingImageIndexValueType>(itk::Math::Round<double>(movingcindex[i]));
       }
@@ -928,39 +928,39 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   elxout << "  The transformed points are saved in: " << outputPointsFileName << std::endl;
 
   /** Print the results. */
-  for (unsigned int j = 0; j < nrofpoints; j++)
+  for (unsigned int j = 0; j < nrofpoints; ++j)
   {
     /** The input index. */
     outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; i++)
+    for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
       outputPointsFile << inputindexvec[j][i] << " ";
     }
 
     /** The input point. */
     outputPointsFile << "]\t; InputPoint = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; i++)
+    for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
       outputPointsFile << inputpointvec[j][i] << " ";
     }
 
     /** The output index in fixed image. */
     outputPointsFile << "]\t; OutputIndexFixed = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; i++)
+    for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
       outputPointsFile << outputindexfixedvec[j][i] << " ";
     }
 
     /** The output point. */
     outputPointsFile << "]\t; OutputPoint = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; i++)
+    for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
       outputPointsFile << outputpointvec[j][i] << " ";
     }
 
     /** The output point minus the input point. */
     outputPointsFile << "]\t; Deformation = [ ";
-    for (unsigned int i = 0; i < MovingImageDimension; i++)
+    for (unsigned int i = 0; i < MovingImageDimension; ++i)
     {
       outputPointsFile << deformationvec[j][i] << " ";
     }
@@ -969,7 +969,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     {
       /** The output index in moving image. */
       outputPointsFile << "]\t; OutputIndexMoving = [ ";
-      for (unsigned int i = 0; i < MovingImageDimension; i++)
+      for (unsigned int i = 0; i < MovingImageDimension; ++i)
       {
         outputPointsFile << outputindexmovingvec[j][i] << " ";
       }

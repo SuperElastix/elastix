@@ -44,7 +44,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,
   this->m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
   this->m_DerivativeDelta = 0.001;
 
-  for (unsigned int iDimension = 0; iDimension < MovedImageDimension; iDimension++)
+  for (unsigned int iDimension = 0; iDimension < MovedImageDimension; ++iDimension)
   {
     this->m_MeanFixedGradient[iDimension] = 0;
     this->m_MeanMovedGradient[iDimension] = 0;
@@ -70,7 +70,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   this->m_CastFixedImageFilter->SetInput(this->m_FixedImage);
   this->m_CastFixedImageFilter->Update();
 
-  for (iFilter = 0; iFilter < FixedImageDimension; iFilter++)
+  for (iFilter = 0; iFilter < FixedImageDimension; ++iFilter)
   {
     this->m_FixedSobelOperators[iFilter].SetDirection(iFilter);
     this->m_FixedSobelOperators[iFilter].CreateDirectional();
@@ -106,7 +106,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
 
   this->m_CastMovedImageFilter->SetInput(this->m_TransformMovingImageFilter->GetOutput());
 
-  for (iFilter = 0; iFilter < MovedImageDimension; iFilter++)
+  for (iFilter = 0; iFilter < MovedImageDimension; ++iFilter)
   {
     this->m_MovedSobelOperators[iFilter].SetDirection(iFilter);
     this->m_MovedSobelOperators[iFilter].CreateDirectional();
@@ -145,7 +145,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   typename FixedGradientImageType::IndexType currentIndex;
   typename FixedGradientImageType::PointType point;
 
-  for (int iDimension = 0; iDimension < FixedImageDimension; iDimension++)
+  for (int iDimension = 0; iDimension < FixedImageDimension; ++iDimension)
   {
     this->m_FixedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
   }
@@ -159,7 +159,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
   bool                   sampleOK = false;
   FixedGradientPixelType fixedGradient[FixedImageDimension];
-  for (int i = 0; i < FixedImageDimension; i++)
+  for (int i = 0; i < FixedImageDimension; ++i)
   {
     fixedGradient[i] = 0.0;
   }
@@ -218,7 +218,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   typename MovedGradientImageType::IndexType currentIndex;
   typename MovedGradientImageType::PointType point;
 
-  for (int iDimension = 0; iDimension < MovedImageDimension; iDimension++)
+  for (int iDimension = 0; iDimension < MovedImageDimension; ++iDimension)
   {
     this->m_MovedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
   }
@@ -240,7 +240,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
   MovedGradientPixelType movedGradient[MovedImageDimension];
 
-  for (int i = 0; i < MovedImageDimension; i++)
+  for (int i = 0; i < MovedImageDimension; ++i)
   {
     movedGradient[i] = 0.0;
   }
@@ -309,7 +309,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   MeasureType NGautocorrelationmoving = NumericTraits<MeasureType>::Zero;
 
   /** Make sure all is updated */
-  for (int iDimension = 0; iDimension < FixedImageDimension; iDimension++)
+  for (int iDimension = 0; iDimension < FixedImageDimension; ++iDimension)
   {
     this->m_FixedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
     this->m_MovedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
@@ -411,7 +411,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   this->m_TransformMovingImageFilter->Modified();
   this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
 
-  for (iFilter = 0; iFilter < MovedImageDimension; iFilter++)
+  for (iFilter = 0; iFilter < MovedImageDimension; ++iFilter)
   {
     this->m_MovedSobelFilters[iFilter]->UpdateLargestPossibleRegion();
   }
@@ -457,7 +457,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetD
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   derivative = DerivativeType(numberOfParameters);
 
-  for (unsigned int i = 0; i < numberOfParameters; i++)
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
     testPoint[i] -= this->m_DerivativeDelta / std::sqrt(this->m_Scales[i]);
     const MeasureType valuep0 = this->GetValue(testPoint);

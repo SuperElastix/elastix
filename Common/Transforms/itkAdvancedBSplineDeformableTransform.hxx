@@ -87,7 +87,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
   this->m_InputParametersPointer = &(this->m_InternalParametersBuffer);
 
   // Initialize coefficient images
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     this->m_WrappedImage[j] = ImageType::New();
     this->m_WrappedImage[j]->SetRegions(this->m_GridRegion);
@@ -118,13 +118,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
    */
   this->m_FixedParameters.SetSize(NDimensions * (NDimensions + 3));
   this->m_FixedParameters.Fill(0.0);
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[2 * NDimensions + i] = this->m_GridSpacing[i];
   }
-  for (unsigned int di = 0; di < NDimensions; di++)
+  for (unsigned int di = 0; di < NDimensions; ++di)
   {
-    for (unsigned int dj = 0; dj < NDimensions; dj++)
+    for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
       this->m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = this->m_GridDirection[di][dj];
     }
@@ -157,7 +157,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
     this->m_GridRegion = region;
 
     // set regions for each coefficient and Jacobian image
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_WrappedImage[j]->SetRegions(this->m_GridRegion);
     }
@@ -175,7 +175,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
     typename RegionType::SizeType                   size = this->m_GridRegion.GetSize();
     typename RegionType::IndexType                  index = this->m_GridRegion.GetIndex();
     typedef typename ContinuousIndexType::ValueType CValueType;
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_ValidRegionBegin[j] =
         static_cast<CValueType>(index[j]) + (static_cast<CValueType>(SplineOrder) - 1.0) / 2.0;
@@ -227,7 +227,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   if (!this->m_CoefficientImages[0])
   {
     itkWarningMacro(<< "B-spline coefficients have not been set");
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       outputPoint[j] = transformedPoint[j];
     }
@@ -265,7 +265,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   unsigned long                                 counter = 0;
   const PixelType *                             basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     iterator[j] = IteratorType(this->m_CoefficientImages[j], supportRegion);
   }
@@ -279,7 +279,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
       indices[counter] = &(iterator[0].Value()) - basePointer;
 
       // multiply weight with coefficient to compute displacement
-      for (unsigned int j = 0; j < SpaceDimension; j++)
+      for (unsigned int j = 0; j < SpaceDimension; ++j)
       {
         outputPoint[j] += static_cast<ScalarType>(weights[counter] * iterator[j].Value());
         ++iterator[j];
@@ -287,7 +287,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
       ++counter;
     } // end of scanline
 
-    for (unsigned int j = 0; j < SpaceDimension; j++)
+    for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       iterator[j].NextLine();
     }
@@ -295,7 +295,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   } // end while
 
   // The output point is the start point + displacement.
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     outputPoint[j] += transformedPoint[j];
   }

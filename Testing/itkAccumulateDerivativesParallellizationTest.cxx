@@ -106,7 +106,7 @@ public:
     if (!this->m_UseMultiThreaded) // single threadedly
     {
       derivative = this->m_ThreaderDerivatives[0] * normal_sum;
-      for (ThreadIdType i = 1; i < this->m_NumberOfThreads; i++)
+      for (ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i)
       {
         derivative += this->m_ThreaderDerivatives[i] * normal_sum;
       }

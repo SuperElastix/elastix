@@ -110,7 +110,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData(v
   const typename GPUInputImage::SizeType  dataLength = inPtr->GetLargestPossibleRegion().GetSize();
   typename GPUOutputImage::SizeValueType  maxLength = 0;
 
-  for (std::size_t n = 0; n < InputImageDimension; n++)
+  for (std::size_t n = 0; n < InputImageDimension; ++n)
   {
     if (dataLength[n] > maxLength)
     {
@@ -134,7 +134,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData(v
   caster->Update();
 
   typename GPUInputImage::SizeType localSize, globalSize;
-  for (std::size_t i = 0; i < InputImageDimension; i++)
+  for (std::size_t i = 0; i < InputImageDimension; ++i)
   {
     localSize[i] = OpenCLGetLocalBlockSize(InputImageDimension);
     // total # of threads
@@ -153,7 +153,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData(v
 
   // set image size
   unsigned int imageSize[InputImageDimension];
-  for (std::size_t i = 0; i < InputImageDimension; i++)
+  for (std::size_t i = 0; i < InputImageDimension; ++i)
   {
     imageSize[i] = outSize[i];
   }
@@ -199,7 +199,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData(v
 
   // Loop over directions
   OpenCLEventList eventList;
-  for (std::size_t n = 0; n < InputImageDimension; n++)
+  for (std::size_t n = 0; n < InputImageDimension; ++n)
   {
     this->m_GPUKernelManager->SetKernelArg(this->m_FilterGPUKernelHandle, argidx, sizeof(cl_uint), &n);
 

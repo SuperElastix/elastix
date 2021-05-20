@@ -80,7 +80,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase(void)
 
     /** Read the desired grid spacing of the samples. */
     unsigned int spacing_dim;
-    for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
+    for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
     {
       spacing_dim = this->m_ExactMetricSampleGridSpacing[dim];
       this->GetConfiguration()->ReadParameter(

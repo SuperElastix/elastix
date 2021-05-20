@@ -63,13 +63,13 @@ VolumeSplineKernelTransform2<TScalarType, NDimensions>::ComputeDeformationContri
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   PointsIterator      sp = this->m_SourceLandmarks->GetPoints()->Begin();
 
-  for (unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++)
+  for (unsigned int lnd = 0; lnd < numberOfLandmarks; ++lnd)
   {
     InputVectorType   position = thisPoint - sp->Value();
     const TScalarType r = position.GetNorm();
     const TScalarType r3 = r * r * r;
 
-    for (unsigned int odim = 0; odim < NDimensions; odim++)
+    for (unsigned int odim = 0; odim < NDimensions; ++odim)
     {
       opp[odim] += r3 * this->m_DMatrix(odim, lnd);
     }

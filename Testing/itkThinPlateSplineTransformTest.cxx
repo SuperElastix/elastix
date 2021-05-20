@@ -86,7 +86,7 @@ main(int argc, char * argv[])
   /** Get subset. */
   PointsContainerPointer usedLandmarkPoints = PointsContainerType::New();
   PointSetType::Pointer  usedSourceLandmarks = PointSetType::New();
-  for (unsigned long j = 0; j < usedNumberOfLandmarks; j++)
+  for (unsigned long j = 0; j < usedNumberOfLandmarks; ++j)
   {
     PointType tmp = (*sourceLandmarks->GetPoints())[j];
     usedLandmarkPoints->push_back(tmp);
@@ -108,11 +108,11 @@ main(int argc, char * argv[])
   PointsContainerPointer       newTargetLandmarkPoints = PointsContainerType::New();
   MersenneTwisterType::Pointer mersenneTwister = MersenneTwisterType::New();
   mersenneTwister->Initialize(140377);
-  for (unsigned long j = 0; j < targetLandmarks->GetNumberOfPoints(); j++)
+  for (unsigned long j = 0; j < targetLandmarks->GetNumberOfPoints(); ++j)
   {
     PointType tmp = (*targetLandmarks->GetPoints())[j];
     PointType randomPoint;
-    for (unsigned int dim = 0; dim < Dimension; dim++)
+    for (unsigned int dim = 0; dim < Dimension; ++dim)
     {
       randomPoint[dim] = tmp[dim] + mersenneTwister->GetNormalVariate(1.0, 5.0);
     }

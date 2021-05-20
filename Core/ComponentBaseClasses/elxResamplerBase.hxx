@@ -607,7 +607,7 @@ ResamplerBase<TElastix>::ReadFromFile(void)
   SizeType        size;
   DirectionType   direction;
   direction.SetIdentity();
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     /** No default size. Read size from the parameter file. */
     this->m_Configuration->ReadParameter(size[i], "Size", i);
@@ -625,7 +625,7 @@ ResamplerBase<TElastix>::ReadFromFile(void)
     this->m_Configuration->ReadParameter(origin[i], "Origin", i);
 
     /** Read direction cosines. Default identity */
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       this->m_Configuration->ReadParameter(direction(j, i), "Direction", i * ImageDimension + j);
     }
@@ -633,7 +633,7 @@ ResamplerBase<TElastix>::ReadFromFile(void)
 
   /** Check for image size. */
   unsigned int sum = 0;
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     if (size[i] == 0)
     {

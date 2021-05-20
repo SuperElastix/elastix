@@ -44,7 +44,7 @@ void
 CommandLineArgumentParser::SetCommandLineArguments(int argc, char ** argv)
 {
   this->m_Argv.resize(argc);
-  for (IndexType i = 0; i < static_cast<IndexType>(argc); i++)
+  for (IndexType i = 0; i < static_cast<IndexType>(argc); ++i)
   {
     this->m_Argv[i] = argv[i];
   }
@@ -113,7 +113,7 @@ bool
 CommandLineArgumentParser::ExactlyOneExists(const std::vector<std::string> & keys) const
 {
   unsigned int counter = 0;
-  for (unsigned int i = 0; i < keys.size(); i++)
+  for (unsigned int i = 0; i < keys.size(); ++i)
   {
     if (this->ArgumentExists(keys[i]))
     {
@@ -146,7 +146,7 @@ CommandLineArgumentParser::FindKey(const std::string & key, IndexType & keyIndex
   bool keyFound = false;
   keyIndex = 0;
   nextKeyIndex = this->m_Argv.size();
-  for (IndexType i = 0; i < this->m_Argv.size(); i++)
+  for (IndexType i = 0; i < this->m_Argv.size(); ++i)
   {
     if (!keyFound && this->m_Argv[i] == key)
     {
@@ -287,7 +287,7 @@ CommandLineArgumentParser::CheckForRequiredArguments() const
     if (!this->ExactlyOneExists(exactlyOneOf))
     {
       std::cerr << "ERROR: Exactly one (1) of the arguments in {";
-      for (std::size_t j = 0; j < exactlyOneOf.size() - 1; j++)
+      for (std::size_t j = 0; j < exactlyOneOf.size() - 1; ++j)
       {
         std::cerr << exactlyOneOf[j] << ", ";
       }

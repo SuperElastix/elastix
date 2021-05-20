@@ -76,9 +76,9 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::S
 
   this->Modified();
   unsigned int level, dim;
-  for (level = 0; level < this->m_NumberOfLevels; level++)
+  for (level = 0; level < this->m_NumberOfLevels; ++level)
   {
-    for (dim = 0; dim < ImageDimension; dim++)
+    for (dim = 0; dim < ImageDimension; ++dim)
     {
       this->m_Schedule[level][dim] = schedule[level][dim];
     }
@@ -136,7 +136,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
   double       stdev[ImageDimension];
   SpacingType  spacing = inputPtr->GetSpacing();
 
-  for (ilevel = 0; ilevel < this->m_NumberOfLevels; ilevel++)
+  for (ilevel = 0; ilevel < this->m_NumberOfLevels; ++ilevel)
   {
 
     this->UpdateProgress(static_cast<float>(ilevel) / static_cast<float>(this->m_NumberOfLevels));
@@ -153,7 +153,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
     caster->Modified();
 
     // compute shrink factors and variances
-    for (idim = 0; idim < ImageDimension; idim++)
+    for (idim = 0; idim < ImageDimension; ++idim)
     {
       factors[idim] = this->m_Schedule[ilevel][idim];
       /** Compute the standard deviation: 0.5 * factor * spacing
@@ -238,7 +238,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
   OutputImagePointer outputPtr;
 
   unsigned int ilevel;
-  for (ilevel = 0; ilevel < this->m_NumberOfLevels; ilevel++)
+  for (ilevel = 0; ilevel < this->m_NumberOfLevels; ++ilevel)
   {
     /** The same as the input image for each resolution
      * \todo: is this not already done in the supersuperclass?  */
@@ -287,7 +287,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
     // set the requested regions for the other outputs to their
     // requested region
 
-    for (ilevel = 0; ilevel < this->m_NumberOfLevels; ilevel++)
+    for (ilevel = 0; ilevel < this->m_NumberOfLevels; ++ilevel)
     {
       if (ilevel == refLevel)
       {
@@ -309,7 +309,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
     /** Set them all to the same region */
     RegionType outputRegion = ptr->GetRequestedRegion();
 
-    for (ilevel = 0; ilevel < this->m_NumberOfLevels; ilevel++)
+    for (ilevel = 0; ilevel < this->m_NumberOfLevels; ++ilevel)
     {
       if (ilevel == refLevel)
       {

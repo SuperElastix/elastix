@@ -41,7 +41,7 @@ template <class type>
 bool
 std_first_of(const typename std::vector<type> & v, const std::size_t n, const type value)
 {
-  for (std::size_t i = 0; i < n; i++)
+  for (std::size_t i = 0; i < n; ++i)
   {
     if (v[i] != value)
     {

@@ -100,7 +100,7 @@ MissingStructurePenalty<TElastix>::BeforeAllBase(void)
 
   this->m_NumberOfMeshes = 0;
 
-  for (char ch = 'A'; ch <= 'Z'; ch++)
+  for (char ch = 'A'; ch <= 'Z'; ++ch)
   {
     std::ostringstream fmeshArgument("-fmesh", std::ios_base::ate);
     fmeshArgument << ch << metricNumber;
@@ -493,7 +493,7 @@ the sequence of points to form a 2d connected polydata contour.
   /** Read the input points, as index or as point. */
   if (!(ippReader->GetPointsAreIndices()))
   {
-    for (unsigned int j = 0; j < nrofpoints; j++)
+    for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** Compute index of nearest voxel in fixed image. */
       InputPointType point;
@@ -501,7 +501,7 @@ the sequence of points to form a 2d connected polydata contour.
       inputPointSet->GetPoint(j, &point);
       inputpointvec[j] = point;
       dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(fixedcindex[i]));
       }
@@ -509,7 +509,7 @@ the sequence of points to form a 2d connected polydata contour.
   }
   else // so: inputasindex
   {
-    for (unsigned int j = 0; j < nrofpoints; j++)
+    for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** The read point from the inutPointSet is actually an index
        * Cast to the proper type.
@@ -517,7 +517,7 @@ the sequence of points to form a 2d connected polydata contour.
       InputPointType point;
       point.Fill(0.0f);
       inputPointSet->GetPoint(j, &point);
-      for (unsigned int i = 0; i < FixedImageDimension; i++)
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(point[i]));
       }

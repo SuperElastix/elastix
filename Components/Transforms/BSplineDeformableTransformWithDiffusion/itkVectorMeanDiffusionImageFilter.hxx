@@ -201,7 +201,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData(void)
   double ci = 0.0;
 
   /** Loop over the number of iterations. */
-  for (unsigned int k = 0; k < this->GetNumberOfIterations(); k++)
+  for (unsigned int k = 0; k < this->GetNumberOfIterations(); ++k)
   {
     /** Reset the iterators. */
     nit.GoToBegin();
@@ -220,7 +220,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData(void)
       else
       {
         /** Initialize the sum to 0. */
-        for (j = 0; j < InputImageDimension; j++)
+        for (j = 0; j < InputImageDimension; ++j)
         {
           sum[j] = NumericTraits<double>::Zero;
         }
@@ -241,7 +241,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData(void)
 
           /** Calculate SUthis->m_i{ ci } and SUthis->m_i{ ci * x_i }. */
           sumc += ci;
-          for (j = 0; j < InputImageDimension; j++)
+          for (j = 0; j < InputImageDimension; ++j)
           {
             sum[j] += ci * static_cast<double>(pix[j]);
           }
@@ -249,7 +249,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData(void)
 
         /** Get the mean value by dividing by sumc. */
         InputPixelType mean;
-        for (j = 0; j < InputImageDimension; j++)
+        for (j = 0; j < InputImageDimension; ++j)
         {
           if (sumc < 0.00001)
           {

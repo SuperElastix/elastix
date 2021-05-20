@@ -141,7 +141,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
 
     typename MovingImageCalculatorType::VectorType movingCenter = m_MovingCalculator->GetCenterOfGravity();
 
-    for (unsigned int i = 0; i < InputSpaceDimension; i++)
+    for (unsigned int i = 0; i < InputSpaceDimension; ++i)
     {
       rotationCenter[i] = fixedCenter[i];
       translationVector[i] = movingCenter[i] - fixedCenter[i];
@@ -162,7 +162,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     InputPointType      centerMovingPoint;
     ContinuousIndexType centerMovingIndex;
 
-    for (unsigned int m = 0; m < InputSpaceDimension; m++)
+    for (unsigned int m = 0; m < InputSpaceDimension; ++m)
     {
       centerMovingIndex[m] = static_cast<ContinuousIndexValueType>(movingIndex[m]) +
                              static_cast<ContinuousIndexValueType>(movingSize[m] - 1) / 2.0;
@@ -179,7 +179,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     InputPointType                              originFixedPoint;
     m_FixedImage->TransformIndexToPhysicalPoint(fixedIndex, originFixedPoint);
 
-    for (unsigned int i = 0; i < InputSpaceDimension; i++)
+    for (unsigned int i = 0; i < InputSpaceDimension; ++i)
     {
       translationVector[i] = originMovingPoint[i] - originFixedPoint[i];
       rotationCenter[i] = centerMovingPoint[i] - translationVector[i];
@@ -309,7 +309,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
 
     // Compute center of the fixed image (mask bounding box) in physical units
     ContinuousIndex<double, InputSpaceDimension> fixedCenterCI;
-    for (unsigned int k = 0; k < InputSpaceDimension; k++)
+    for (unsigned int k = 0; k < InputSpaceDimension; ++k)
     {
       fixedCenterCI[k] = fixedRegion.GetIndex()[k] + (fixedRegion.GetSize()[k] - 1.0) / 2.0;
     }
@@ -328,7 +328,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
 
     // Compute center of the moving image (mask bounding box) in physical units
     ContinuousIndex<double, InputSpaceDimension> movingCenterCI;
-    for (unsigned int k = 0; k < InputSpaceDimension; k++)
+    for (unsigned int k = 0; k < InputSpaceDimension; ++k)
     {
       movingCenterCI[k] = movingRegion.GetIndex()[k] + (movingRegion.GetSize()[k] - 1.0) / 2.0;
     }
@@ -336,7 +336,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     this->m_MovingImage->TransformContinuousIndexToPhysicalPoint(movingCenterCI, centerMoving);
 
     // Compute the difference between the centers
-    for (unsigned int i = 0; i < InputSpaceDimension; i++)
+    for (unsigned int i = 0; i < InputSpaceDimension; ++i)
     {
       rotationCenter[i] = centerFixed[i];
       translationVector[i] = centerMoving[i] - centerFixed[i];

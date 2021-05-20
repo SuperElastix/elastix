@@ -1055,9 +1055,9 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
     /** Try to read direction cosines from (transform-)parameter file. */
     bool                    retdc = true;
     FixedImageDirectionType directionRead = direction;
-    for (unsigned int i = 0; i < FixedDimension; i++)
+    for (unsigned int i = 0; i < FixedDimension; ++i)
     {
-      for (unsigned int j = 0; j < FixedDimension; j++)
+      for (unsigned int j = 0; j < FixedDimension; ++j)
       {
         retdc &= this->m_Configuration->ReadParameter(directionRead(j, i), "Direction", i * FixedDimension + j, false);
       }
@@ -1072,9 +1072,9 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
   /** Only trust this when the fixed image exists. */
   if (this->m_OriginalFixedImageDirection.size() == FixedDimension * FixedDimension)
   {
-    for (unsigned int i = 0; i < FixedDimension; i++)
+    for (unsigned int i = 0; i < FixedDimension; ++i)
     {
-      for (unsigned int j = 0; j < FixedDimension; j++)
+      for (unsigned int j = 0; j < FixedDimension; ++j)
       {
         direction(j, i) = this->m_OriginalFixedImageDirection[i * FixedDimension + j];
       }
@@ -1098,9 +1098,9 @@ ElastixTemplate<TFixedImage, TMovingImage>::SetOriginalFixedImageDirection(const
 {
   /** flatten to 1d array */
   this->m_OriginalFixedImageDirection.resize(FixedDimension * FixedDimension);
-  for (unsigned int i = 0; i < FixedDimension; i++)
+  for (unsigned int i = 0; i < FixedDimension; ++i)
   {
-    for (unsigned int j = 0; j < FixedDimension; j++)
+    for (unsigned int j = 0; j < FixedDimension; ++j)
     {
       this->m_OriginalFixedImageDirection[i * FixedDimension + j] = arg(j, i);
     }

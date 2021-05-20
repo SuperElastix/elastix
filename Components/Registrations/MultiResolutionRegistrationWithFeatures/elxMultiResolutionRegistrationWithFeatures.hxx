@@ -202,7 +202,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageInterpolat
   typedef itk::BSplineInterpolateImageFunction<FixedImageType>      FixedImageInterpolatorType;
   typedef std::vector<typename FixedImageInterpolatorType::Pointer> FixedImageInterpolatorVectorType;
   FixedImageInterpolatorVectorType                                  interpolators(noFixIm);
-  for (unsigned int i = 0; i < noFixIm; i++)
+  for (unsigned int i = 0; i < noFixIm; ++i)
   {
     interpolators[i] = FixedImageInterpolatorType::New();
     interpolators[i]->SetSplineOrder(soFII[i]);

@@ -89,7 +89,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData(void)
   // Convert the factor for convenient multiplication
   typename TOutputImage::SizeType factorSize;
   const ShrinkFactorsType         shrinkFactors = this->GetShrinkFactors();
-  for (std::size_t i = 0; i < InputImageDimension; i++)
+  for (std::size_t i = 0; i < InputImageDimension; ++i)
   {
     factorSize[i] = shrinkFactors[i];
   }
@@ -114,7 +114,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData(void)
   // inputIndex = outputIndex * factorSize
   // is equivalent up to a fixed offset which we now compute
   OffsetValueType zeroOffset = 0;
-  for (std::size_t i = 0; i < InputImageDimension; i++)
+  for (std::size_t i = 0; i < InputImageDimension; ++i)
   {
     offsetIndex[i] = inputIndex[i] - outputIndex[i] * shrinkFactors[i];
     // It is plausible that due to small amounts of loss of numerical
@@ -129,7 +129,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData(void)
   const OpenCLSize localSize = OpenCLSize::GetLocalWorkSize(this->m_GPUKernelManager->GetContext()->GetDefaultDevice());
 
   typename GPUInputImage::SizeType globalSize;
-  for (std::size_t i = 0; i < InputImageDimension; i++)
+  for (std::size_t i = 0; i < InputImageDimension; ++i)
   {
     // total # of threads
     globalSize[i] =
@@ -145,7 +145,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData(void)
   // set arguments for image size/offset/shrinkfactors
   unsigned int inImageSize[InputImageDimension];
   unsigned int outImageSize[InputImageDimension];
-  for (unsigned int i = 0; i < InputImageDimension; i++)
+  for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
     inImageSize[i] = inSize[i];
     outImageSize[i] = outSize[i];
@@ -154,7 +154,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData(void)
   unsigned int offset[InputImageDimension];
   unsigned int shrinkfactors[InputImageDimension];
 
-  for (std::size_t i = 0; i < InputImageDimension; i++)
+  for (std::size_t i = 0; i < InputImageDimension; ++i)
   {
     offset[i] = offsetIndex[i];
     shrinkfactors[i] = factorSize[i];

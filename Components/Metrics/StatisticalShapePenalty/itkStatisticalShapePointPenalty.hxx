@@ -706,7 +706,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateL2(const un
 
   // loop over all shape coordinates of the aligned shape
   l2norm = 0; // initialize l2norm to zero
-  for (unsigned int index = 0; index < shapeLength; index++)
+  for (unsigned int index = 0; index < shapeLength; ++index)
   {
     // accumulate squared distances
     l2norm += this->m_ProposalVector[index] * this->m_ProposalVector[index];
@@ -728,7 +728,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::NormalizeProposal
   double & l2norm = this->m_ProposalVector[shapeLength + Self::FixedPointSetDimension];
 
   // loop over all shape coordinates of the aligned shape
-  for (unsigned int index = 0; index < shapeLength; index++)
+  for (unsigned int index = 0; index < shapeLength; ++index)
   {
     // normalize shape size by l2-norm
     this->m_ProposalVector[index] /= l2norm;
@@ -758,14 +758,14 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateL2AndNormal
       double & l2normDerivative = (**proposalDerivativeIt)[shapeLength + Self::FixedPointSetDimension];
       l2normDerivative = 0; // initialize to zero
       // loop over all shape coordinates of the aligned shape
-      for (unsigned int index = 0; index < shapeLength; index++)
+      for (unsigned int index = 0; index < shapeLength; ++index)
       {
         l2normDerivative += this->m_ProposalVector[index] * (**proposalDerivativeIt)[index];
       }
       l2normDerivative /= (l2norm * sqrt((double)(this->GetFixedPointSet()->GetNumberOfPoints())));
 
       // loop over all shape coordinates of the aligned shape
-      for (unsigned int index = 0; index < shapeLength; index++)
+      for (unsigned int index = 0; index < shapeLength; ++index)
       {
         // update normalized shape derivatives
         (**proposalDerivativeIt)[index] = (**proposalDerivativeIt)[index] / l2norm -

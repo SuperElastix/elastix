@@ -446,7 +446,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
     smm -= (sm * sm / N);
     sfm -= (sf * sm / N);
 
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); i++)
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
     {
       derivativeF[i] -= sf * differential[i] / N;
       derivativeM[i] -= sm * differential[i] / N;
@@ -460,7 +460,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   if (this->m_NumberOfPixelsCounted > 0 && denom < -1e-14)
   {
     value = sfm / denom;
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); i++)
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
     {
       derivative[i] = (derivativeF[i] - (sfm / smm) * derivativeM[i]) / denom;
     }

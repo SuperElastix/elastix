@@ -132,7 +132,7 @@ AffineDTITransformElastix<TElastix>::InitializeTransform(void)
   InputPointType centerOfRotationPoint;
   bool           centerGivenAsIndex = true;
   bool           centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Initialize. */
     centerOfRotationIndex[i] = 0;
@@ -293,7 +293,7 @@ AffineDTITransformElastix<TElastix>::SetScales(void)
   {
     /** Overrule the automatically estimated scales with the user-specified
      * scales. Values <= 0 are not used; the default is kept then. */
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); i++)
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
     {
       double scale_i = -1.0;
       this->m_Configuration->ReadParameter(scale_i, "Scales", i);
@@ -334,7 +334,7 @@ AffineDTITransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & 
    */
   InputPointType centerOfRotationPoint;
   bool           centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     centerOfRotationPoint[i] = 0;
 

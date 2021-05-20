@@ -39,7 +39,7 @@ RSGDEachParameterApartOptimizer::StepAlongGradient(const DerivativeType & factor
   ParametersType newPosition(spaceDimension);
   ParametersType currentPosition = this->GetCurrentPosition();
 
-  for (unsigned int j = 0; j < spaceDimension; j++)
+  for (unsigned int j = 0; j < spaceDimension; ++j)
   {
     /** Each parameters has its own factor! */
     newPosition[j] = currentPosition[j] + transformedGradient[j] * factor[j];

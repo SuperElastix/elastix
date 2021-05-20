@@ -155,7 +155,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform(void)
 
   bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Initialize. */
     centerOfRotationIndex[i] = 0;
@@ -395,7 +395,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales(void)
     if (count == 0)
     {
       /** In this case the first option is used. */
-      for (unsigned int i = 0; i < rotationPart; i++)
+      for (unsigned int i = 0; i < rotationPart; ++i)
       {
         newscales[i] = defaultScalingvalue;
       }
@@ -405,7 +405,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales(void)
       /** In this case the second option is used. */
       double scale = defaultScalingvalue;
       this->m_Configuration->ReadParameter(scale, "Scales", 0);
-      for (unsigned int i = 0; i < rotationPart; i++)
+      for (unsigned int i = 0; i < rotationPart; ++i)
       {
         newscales[i] = scale;
       }
@@ -413,7 +413,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales(void)
     else if (count == this->GetNumberOfParameters())
     {
       /** In this case the third option is used. */
-      for (unsigned int i = 0; i < this->GetNumberOfParameters(); i++)
+      for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
       {
         this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }
@@ -451,7 +451,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointTy
    */
   InputPointType centerOfRotationPoint;
   bool           centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     centerOfRotationPoint[i] = 0.0;
 

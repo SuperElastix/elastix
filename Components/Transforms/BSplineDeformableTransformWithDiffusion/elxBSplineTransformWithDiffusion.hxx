@@ -128,7 +128,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
   unsigned int radius1D = 1;
   this->m_Configuration->ReadParameter(radius1D, "Radius", 0);
   RadiusType radius;
-  for (unsigned int i = 0; i < this->FixedImageDimension; i++)
+  for (unsigned int i = 0; i < this->FixedImageDimension; ++i)
   {
     radius[i] = static_cast<long unsigned int>(radius1D);
   }
@@ -635,7 +635,7 @@ BSplineTransformWithDiffusion<TElastix>::SetInitialGrid(bool upsampleGridOption)
   this->m_GridSpacingFactor[0] = 8.0;
   this->m_Configuration->ReadParameter(this->m_GridSpacingFactor[0], "FinalGridSpacing", 0);
   this->m_GridSpacingFactor.Fill(this->m_GridSpacingFactor[0]);
-  for (unsigned int j = 1; j < SpaceDimension; j++)
+  for (unsigned int j = 1; j < SpaceDimension; ++j)
   {
     this->m_Configuration->ReadParameter(this->m_GridSpacingFactor[j], "FinalGridSpacing", j);
   }
@@ -648,7 +648,7 @@ BSplineTransformWithDiffusion<TElastix>::SetInitialGrid(bool upsampleGridOption)
   }
 
   /** Determine the correct grid size. */
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     gridspacing[j] = gridspacing[j] * this->m_GridSpacingFactor[j];
     gridorigin[j] -= gridspacing[j] * std::floor(static_cast<double>(SplineOrder) / 2.0);
@@ -711,7 +711,7 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale(void)
   this->m_GridSpacingFactor /= 2;
 
   /** Determine the correct grid size. */
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     gridspacingHigh[j] = gridspacingHigh[j] * this->m_GridSpacingFactor[j];
     gridoriginHigh[j] -= gridspacingHigh[j] * std::floor(static_cast<double>(SplineOrder) / 2.0);
@@ -751,7 +751,7 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale(void)
   unsigned int i = 0;
 
   /** Loop over dimension. */
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     /** Fill the coefficient image with parameter data (displacements
      * of the control points in the direction of dimension j).
@@ -896,7 +896,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
   gridorigin.Fill(0.0);
 
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Configuration->ReadParameter(gridsize[i], "GridSize", i);
     this->m_Configuration->ReadParameter(gridindex[i], "GridIndex", i);
@@ -1081,7 +1081,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
     /** Call TransformPoint. */
     outputPoint = this->TransformPoint(inputPoint);
     /** Calculate the difference. */
-    for (unsigned int i = 0; i < this->FixedImageDimension; i++)
+    for (unsigned int i = 0; i < this->FixedImageDimension; ++i)
     {
       diff_point[i] = outputPoint[i] - inputPoint[i];
     }

@@ -184,7 +184,7 @@ public:
     newSize = newSize > oldSize ? newSize : oldSize;
     arg.resize(newSize);
     IndexType j = 0;
-    for (IndexType i = keyIndex + 1; i < nextKeyIndex; i++)
+    for (IndexType i = keyIndex + 1; i < nextKeyIndex; ++i)
     {
       /** Cast the string to type T. */
       T    casted;

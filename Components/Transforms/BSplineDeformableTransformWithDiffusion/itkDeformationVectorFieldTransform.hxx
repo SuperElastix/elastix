@@ -34,7 +34,7 @@ template <class TScalarType, unsigned int NDimensions>
 DeformationVectorFieldTransform<TScalarType, NDimensions>::DeformationVectorFieldTransform()
 {
   /** Initialize m_Images. */
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Images[i] = nullptr;
   }
@@ -50,7 +50,7 @@ template <class TScalarType, unsigned int NDimensions>
 DeformationVectorFieldTransform<TScalarType, NDimensions>::~DeformationVectorFieldTransform()
 {
   /** Initialize m_Images. */
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Images[i] = nullptr;
   }
@@ -77,7 +77,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::SetCoefficientVectorI
   /** Create array of images representing the B-spline
    * coefficients in each dimension.
    */
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Images[i] = CoefficientImageType::New();
     this->m_Images[i]->SetRegions(vecImage->GetLargestPossibleRegion());
@@ -90,7 +90,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::SetCoefficientVectorI
   VectorIteratorType vecit(vecImage, vecImage->GetLargestPossibleRegion());
   vecit.GoToBegin();
   IteratorType it[SpaceDimension];
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     it[i] = IteratorType(this->m_Images[i], this->m_Images[i]->GetLargestPossibleRegion());
     it[i].GoToBegin();
@@ -101,7 +101,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::SetCoefficientVectorI
   while (!vecit.IsAtEnd())
   {
     vect = vecit.Get();
-    for (unsigned int i = 0; i < SpaceDimension; i++)
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
       it[i].Set(static_cast<CoefficientPixelType>(vect[i]));
       ++it[i];
@@ -135,7 +135,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::GetCoefficientVectorI
 
   /** Combine the coefficient images to a vector image. */
   typename ScalarImageCombineType::Pointer combiner = ScalarImageCombineType::New();
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     combiner->SetInput(i, coefImage[i]);
   }

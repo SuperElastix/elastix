@@ -217,7 +217,7 @@ GradientDescentOptimizer2 ::AdvanceOneStep(void)
   const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
   omp_set_num_threads(nthreads);
 #  pragma omp parallel for
-  for (int j = 0; j < static_cast<int>(spaceDimension); j++)
+  for (int j = 0; j < static_cast<int>(spaceDimension); ++j)
   {
     newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
   }

@@ -346,9 +346,9 @@ main(int argc, char * argv[])
   // JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianITK;
   // I believe there are future plans to re-enable local support B-splines
   double jacDiff = 0.0;
-  for (unsigned int i = 0; i < nzji.size(); i++)
+  for (unsigned int i = 0; i < nzji.size(); ++i)
   {
-    for (unsigned int j = 0; j < Dimension; j++)
+    for (unsigned int j = 0; j < Dimension; ++j)
     {
       jacDiff += vnl_math::sqr(jacobianElastix[j][i] - jacobianITK[j][nzji[i]]);
     }

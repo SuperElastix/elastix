@@ -184,7 +184,7 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::GenerateDa
   this->GetMultiThreader()->SetSingleMethod(this->ThreaderCallback, &str);
 
   // multithread the execution
-  for (unsigned int d = 0; d < ImageDimension; d++)
+  for (unsigned int d = 0; d < ImageDimension; ++d)
   {
     m_CurrentDimension = d;
     this->GetMultiThreader()->SingleMethodExecute();
@@ -202,10 +202,10 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ThreadedGe
   typename std::vector<unsigned int> NumberOfRows;
   InputSizeType                      size = outputRegionForThread.GetSize();
 
-  for (unsigned int i = 0; i < InputImageDimension; i++)
+  for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
     NumberOfRows.push_back(1);
-    for (unsigned int d = 0; d < InputImageDimension; d++)
+    for (unsigned int d = 0; d < InputImageDimension; ++d)
     {
       if (d != i)
       {
@@ -243,7 +243,7 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ThreadedGe
 
   // setup the progress reporting
   //   unsigned int numberOfLinesToProcess = 0;
-  //   for (unsigned  dd = 0; dd < imageDimension; dd++)
+  //   for (unsigned  dd = 0; dd < imageDimension; ++dd)
   //     {
   //     numberOfLinesToProcess += region.GetSize()[dd];
   //     }

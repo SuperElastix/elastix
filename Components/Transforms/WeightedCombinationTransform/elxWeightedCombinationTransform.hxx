@@ -162,7 +162,7 @@ WeightedCombinationTransformElastix<TElastix>::SetScales(void)
       /** Read the user-supplied values/ */
       std::vector<double> newscalesvec(N);
       this->m_Configuration->ReadParameter(newscalesvec, "Scales", 0, N - 1, true);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         newscales[i] = newscalesvec[i];
       }

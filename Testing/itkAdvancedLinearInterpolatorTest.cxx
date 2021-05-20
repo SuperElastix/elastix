@@ -128,9 +128,9 @@ TestInterpolators(void)
   {
     double darray2[12][2] = { { 0.1, 0.2 }, { 3.4, 5.8 }, { 4.0, 6.0 }, { 2.1, 8.0 },  { -0.1, -0.1 }, { 0.0, 0.0 },
                               { 1.3, 1.0 }, { 2.0, 5.7 }, { 9.5, 9.1 }, { 2.0, -0.1 }, { -0.1, 2.0 },  { 12.7, 15.3 } };
-    for (unsigned int i = 0; i < 12; i++)
+    for (unsigned int i = 0; i < 12; ++i)
     {
-      for (unsigned int j = 0; j < Dimension; j++)
+      for (unsigned int j = 0; j < Dimension; ++j)
       {
         darray1[i][j] = darray2[i][j];
       }
@@ -151,9 +151,9 @@ TestInterpolators(void)
     double darray2[12][3] = { { 0.1, 0.2, 0.1 },    { 3.4, 5.8, 4.7 },  { 4.0, 6.0, 5.0 },  { 2.1, 8.0, 3.4 },
                               { -0.1, -0.1, -0.1 }, { 0.0, 0.0, 0.0 },  { 1.3, 1.0, 1.4 },  { 2.0, 5.7, 7.5 },
                               { 9.5, 9.1, 9.3 },    { 2.0, -0.1, 5.3 }, { -0.1, 2.0, 4.0 }, { 12.7, 15.3, 14.1 } };
-    for (unsigned int i = 0; i < count; i++)
+    for (unsigned int i = 0; i < count; ++i)
     {
-      for (unsigned int j = 0; j < Dimension; j++)
+      for (unsigned int j = 0; j < Dimension; ++j)
       {
         darray1[i][j] = darray2[i][j];
       }
@@ -163,7 +163,7 @@ TestInterpolators(void)
   /** Compare results. */
   OutputType          valueLinA, valueBSpline, valueBSpline2;
   CovariantVectorType derivLinA, derivBSpline, derivBSpline2;
-  for (unsigned int i = 0; i < count; i++)
+  for (unsigned int i = 0; i < count; ++i)
   {
     ContinuousIndexType cindex(&darray1[i][0]);
 

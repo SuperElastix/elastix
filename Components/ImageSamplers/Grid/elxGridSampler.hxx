@@ -38,7 +38,7 @@ GridSampler<TElastix>::BeforeEachResolution(void)
 
   /** Read the desired grid spacing of the samples. */
   unsigned int spacing_dim;
-  for (unsigned int dim = 0; dim < InputImageDimension; dim++)
+  for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {
     spacing_dim = 2;
     this->GetConfiguration()->ReadParameter(

@@ -601,7 +601,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization(void)
 
     this->m_CurrentInnerIteration = 0;
 
-    for (unsigned i = 0; i < this->m_NumberOfInnerIterations; i++)
+    for (unsigned i = 0; i < this->m_NumberOfInnerIterations; ++i)
     {
       unsigned int itp = i;
 

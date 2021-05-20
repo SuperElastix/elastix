@@ -210,7 +210,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
   SizeType  inputSize = this->m_FixedImageRegion.GetSize();
   IndexType inputStart = this->m_FixedImageRegion.GetIndex();
   IndexType inputEnd = inputStart;
-  for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; ++dim)
   {
     inputEnd[dim] += (inputSize[dim] - 1);
   }
@@ -237,7 +237,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
   this->m_FixedImage->TransformIndexToPhysicalPoint(inputStart, inputStartPoint);
   this->m_FixedImage->TransformIndexToPhysicalPoint(inputEnd, inputEndPoint);
 
-  for (unsigned int level = 0; level < this->m_NumberOfLevels; level++)
+  for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
     SizeType         size;
     IndexType        start;
@@ -250,7 +250,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
      * floored. To see why, consider an image of 4 by 4, and its downsampled version of 2 by 2. */
     fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputStartPoint, startcindex);
     fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputEndPoint, endcindex);
-    for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
+    for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; ++dim)
     {
       start[dim] = static_cast<IndexValueType>(std::ceil(startcindex[dim]));
       size[dim] =
@@ -378,7 +378,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PrintSelf(st
   os << indent << "LastTransformParameters: " << this->m_LastTransformParameters << std::endl;
   os << indent << "FixedImageRegion: " << this->m_FixedImageRegion << std::endl;
 
-  for (unsigned int level = 0; level < this->m_FixedImageRegionPyramid.size(); level++)
+  for (unsigned int level = 0; level < this->m_FixedImageRegionPyramid.size(); ++level)
   {
     os << indent << "FixedImageRegion at level " << level << ": " << this->m_FixedImageRegionPyramid[level]
        << std::endl;
