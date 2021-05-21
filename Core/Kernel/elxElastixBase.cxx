@@ -17,6 +17,7 @@
  *=========================================================================*/
 #include "elxElastixBase.h"
 #include <Core/elxVersionMacros.h>
+#include "elxConversion.h"
 #include <sstream>
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
@@ -277,17 +278,7 @@ ElastixBase::BeforeAllBase(void)
     if (last != '/' && last != '\\')
     {
       folder.append("/");
-      folder = itksys::SystemTools::ConvertToOutputPath(folder.c_str());
-
-      /** Note that on Windows, in case the output folder contains a space,
-       * the path name is double quoted by ConvertToOutputPath, which is undesirable.
-       * So, we remove these quotes again.
-       */
-      if (itksys::SystemTools::StringStartsWith(folder.c_str(), "\"") &&
-          itksys::SystemTools::StringEndsWith(folder.c_str(), "\""))
-      {
-        folder = folder.substr(1, folder.length() - 2);
-      }
+      folder = Conversion::ToNativePathNameSeparators(folder);
 
       this->GetConfiguration()->SetCommandLineArgument("-out", folder.c_str());
     }

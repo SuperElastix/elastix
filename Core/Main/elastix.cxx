@@ -18,6 +18,7 @@
 
 // Elastix header files:
 #include "elastix.h"
+#include "elxConversion.h"
 #include "elxElastixMain.h"
 #include <Core/elxVersionMacros.h>
 #include "itkUseMevisDicomTiff.h"
@@ -134,16 +135,7 @@ main(int argc, char ** argv)
         {
           value.append("/");
         }
-        value = itksys::SystemTools::ConvertToOutputPath(value);
-
-        /** Note that on Windows, in case the output folder contains a space,
-         * the path name is double quoted by ConvertToOutputPath, which is undesirable.
-         * So, we remove these quotes again.
-         */
-        if (itksys::SystemTools::StringStartsWith(value, "\"") && itksys::SystemTools::StringEndsWith(value, "\""))
-        {
-          value = value.substr(1, value.length() - 2);
-        }
+        value = elx::Conversion::ToNativePathNameSeparators(value);
 
         /** Save this information. */
         outFolder = value;

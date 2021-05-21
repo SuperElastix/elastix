@@ -214,4 +214,25 @@ Conversion::IsNumber(const std::string & str)
 }
 
 
+std::string
+Conversion::ToNativePathNameSeparators(const std::string & pathName)
+{
+  constexpr char separators[] = { '/', '\\' };
+
+  constexpr auto nativateSeparatorIndex =
+#ifdef _WIN32
+    1;
+#else
+    0;
+#endif
+
+  constexpr char nativeSeparator = separators[nativateSeparatorIndex];
+  constexpr char nonNativeSeparator = separators[1 - nativateSeparatorIndex];
+
+  auto result = pathName;
+  std::replace(result.begin(), result.end(), nonNativeSeparator, nativeSeparator);
+  return result;
+}
+
+
 } // end namespace elastix
