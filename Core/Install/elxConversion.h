@@ -176,6 +176,12 @@ public:
    */
   static bool
   IsNumber(const std::string &);
+
+
+  /** Similar to Qt5 `QDir::toNativeSeparators(const QString &pathName)`.
+   */
+  static std::string
+  ToNativePathNameSeparators(const std::string &);
 };
 
 } // end namespace elastix

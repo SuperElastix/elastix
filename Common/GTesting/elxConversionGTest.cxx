@@ -555,6 +555,30 @@ GTEST_TEST(Conversion, LosslessRoundTripOfParameterValue)
 }
 
 
+GTEST_TEST(Conversion, ToNativePathNameSeparators)
+{
+  EXPECT_EQ(Conversion::ToNativePathNameSeparators(std::string{}), std::string{});
+  EXPECT_EQ(Conversion::ToNativePathNameSeparators(" "), std::string{ " " });
+
+  constexpr bool isBackslashNativeSeparator =
+#ifdef _WIN32
+    true;
+#else
+    false;
+#endif
+
+  constexpr char nativeSeparator = isBackslashNativeSeparator ? '\\' : '/';
+  constexpr char nonNativeSeparator = isBackslashNativeSeparator ? '/' : '\\';
+
+  EXPECT_EQ(Conversion::ToNativePathNameSeparators({ nativeSeparator }), std::string{ nativeSeparator });
+  EXPECT_EQ(Conversion::ToNativePathNameSeparators({ nonNativeSeparator }), std::string{ nativeSeparator });
+  EXPECT_EQ(Conversion::ToNativePathNameSeparators({ nonNativeSeparator, nativeSeparator }),
+            std::string(std::size_t{ 2 }, nativeSeparator));
+  EXPECT_EQ(Conversion::ToNativePathNameSeparators({ nativeSeparator, nonNativeSeparator }),
+            std::string(std::size_t{ 2 }, nativeSeparator));
+}
+
+
 GTEST_TEST(ParameterMapInterface, ParameterWithDecimalPointAndTrailingZerosCanBeReadAsInteger)
 {
   Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer<int>();
