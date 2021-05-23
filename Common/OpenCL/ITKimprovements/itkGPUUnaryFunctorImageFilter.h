@@ -123,13 +123,13 @@ public:
 protected:
   GPUUnaryFunctorImageFilter() = default;
 
-  virtual ~GPUUnaryFunctorImageFilter() = default;
+  ~GPUUnaryFunctorImageFilter() override = default;
 
-  virtual void
-  GenerateOutputInformation();
+  void
+  GenerateOutputInformation() override;
 
-  virtual void
-  GPUGenerateData();
+  void
+  GPUGenerateData() override;
 
   /** GPU kernel handle is defined here instead of in the child class
    * because GPUGenerateData() in this base class is used. */

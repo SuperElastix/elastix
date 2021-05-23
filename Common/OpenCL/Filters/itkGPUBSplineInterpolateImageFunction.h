@@ -76,8 +76,8 @@ public:
   typedef typename GPUDataManager::Pointer                GPUDataManagerPointer;
 
   /** Set the input image. This must be set by the user. */
-  virtual void
-  SetInputImage(const TInputImage * inputData);
+  void
+  SetInputImage(const TInputImage * inputData) override;
 
   /** Get the GPU coefficient image. */
   const GPUCoefficientImagePointer
@@ -89,7 +89,7 @@ public:
 
 protected:
   GPUBSplineInterpolateImageFunction();
-  ~GPUBSplineInterpolateImageFunction() = default;
+  ~GPUBSplineInterpolateImageFunction() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

@@ -63,15 +63,15 @@ public:
 
   /** This method sets the parameters of the transform. */
   void
-  SetParameters(const ParametersType & parameters);
+  SetParameters(const ParametersType & parameters) override;
 
   /** Set the array of coefficient images. */
   void
-  SetCoefficientImages(ImagePointer images[]);
+  SetCoefficientImages(ImagePointer images[]) override;
 
 protected:
   GPUAdvancedBSplineDeformableTransform();
-  virtual ~GPUAdvancedBSplineDeformableTransform() = default;
+  ~GPUAdvancedBSplineDeformableTransform() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

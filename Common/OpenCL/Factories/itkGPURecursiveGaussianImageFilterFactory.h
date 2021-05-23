@@ -44,7 +44,7 @@ public:
 
   /** Return a descriptive string describing the factory. */
   const char *
-  GetDescription() const
+  GetDescription() const override
   {
     return "A Factory for GPURecursiveGaussianImageFilter";
   }
@@ -106,19 +106,19 @@ public:
 
 protected:
   GPURecursiveGaussianImageFilterFactory2();
-  virtual ~GPURecursiveGaussianImageFilterFactory2() = default;
+  ~GPURecursiveGaussianImageFilterFactory2() override = default;
 
   /** Register methods for 1D. */
-  virtual void
-  Register1D();
+  void
+  Register1D() override;
 
   /** Register methods for 2D. */
-  virtual void
-  Register2D();
+  void
+  Register2D() override;
 
   /** Register methods for 3D. */
-  virtual void
-  Register3D();
+  void
+  Register3D() override;
 
 private:
   GPURecursiveGaussianImageFilterFactory2(const Self &) = delete;

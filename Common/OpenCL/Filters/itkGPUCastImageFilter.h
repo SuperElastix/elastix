@@ -100,12 +100,12 @@ public:
 
 protected:
   GPUCastImageFilter();
-  virtual ~GPUCastImageFilter() = default;
+  ~GPUCastImageFilter() override = default;
 
   /** Unlike CPU version, GPU version of binary threshold filter is not
   multi-threaded */
-  virtual void
-  GPUGenerateData(void);
+  void
+  GPUGenerateData(void) override;
 
 private:
   GPUCastImageFilter(const Self &) = delete;

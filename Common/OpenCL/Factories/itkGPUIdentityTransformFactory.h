@@ -44,7 +44,7 @@ public:
 
   /** Return a descriptive string describing the factory. */
   const char *
-  GetDescription() const
+  GetDescription() const override
   {
     return "A Factory for GPUIdentityTransform";
   }
@@ -74,22 +74,22 @@ public:
 
 protected:
   GPUIdentityTransformFactory2();
-  virtual ~GPUIdentityTransformFactory2() = default;
+  ~GPUIdentityTransformFactory2() override = default;
 
   /** Typedef for real type list. */
   typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
 
   /** Register methods for 1D. */
-  virtual void
-  Register1D();
+  void
+  Register1D() override;
 
   /** Register methods for 2D. */
-  virtual void
-  Register2D();
+  void
+  Register2D() override;
 
   /** Register methods for 3D. */
-  virtual void
-  Register3D();
+  void
+  Register3D() override;
 
 private:
   GPUIdentityTransformFactory2(const Self &) = delete;

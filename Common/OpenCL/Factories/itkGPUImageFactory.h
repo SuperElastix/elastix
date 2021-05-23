@@ -44,7 +44,7 @@ public:
 
   /** Return a descriptive string describing the factory. */
   const char *
-  GetDescription() const
+  GetDescription() const override
   {
     return "A Factory for GPUImage";
   }
@@ -74,19 +74,19 @@ public:
 
 protected:
   GPUImageFactory2();
-  virtual ~GPUImageFactory2() = default;
+  ~GPUImageFactory2() override = default;
 
   /** Register methods for 1D. */
-  virtual void
-  Register1D();
+  void
+  Register1D() override;
 
   /** Register methods for 2D. */
-  virtual void
-  Register2D();
+  void
+  Register2D() override;
 
   /** Register methods for 3D. */
-  virtual void
-  Register3D();
+  void
+  Register3D() override;
 
 private:
   GPUImageFactory2(const Self &) = delete;

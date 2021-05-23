@@ -80,12 +80,12 @@ public:
 
 protected:
   GPUShrinkImageFilter();
-  ~GPUShrinkImageFilter() = default;
+  ~GPUShrinkImageFilter() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  virtual void
-  GPUGenerateData();
+  void
+  GPUGenerateData() override;
 
 private:
   GPUShrinkImageFilter(const Self &) = delete;
