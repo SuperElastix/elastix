@@ -161,7 +161,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase(void)
     if (useMultiThreading)
     {
       std::string tmp = this->m_Configuration->GetCommandLineArgument("-threads");
-      if (tmp != "")
+      if (!tmp.empty())
       {
         const unsigned int nrOfThreads = atoi(tmp.c_str());
         thisAsAdvanced->SetNumberOfWorkUnits(nrOfThreads);

@@ -104,7 +104,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration(void)
 
   /** Temporary? Use the multi-threaded version or not. */
   std::string tmp = this->m_Configuration->GetCommandLineArgument("-mtcombo");
-  if (tmp == "true" || tmp == "")
+  if (tmp == "true" || tmp.empty())
   {
     this->GetCombinationMetric()->SetUseMultiThread(true);
   }

@@ -172,17 +172,17 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   std::string p = this->GetCommandLineArgument("-p");
   std::string tp = this->GetCommandLineArgument("-tp");
 
-  if (p != "" && tp == "")
+  if (!p.empty() && tp.empty())
   {
     /** elastix called Initialize(). */
     this->SetParameterFileName(p.c_str());
   }
-  else if (p == "" && tp != "")
+  else if (p.empty() && !tp.empty())
   {
     /** transformix called Initialize(). */
     this->SetParameterFileName(tp.c_str());
   }
-  else if (p == "" && tp == "")
+  else if (p.empty() && tp.empty())
   {
     xl::xout["error"] << "ERROR: No (Transform-)Parameter file has been entered" << std::endl;
     xl::xout["error"] << "for elastix: command line option \"-p\"" << std::endl;

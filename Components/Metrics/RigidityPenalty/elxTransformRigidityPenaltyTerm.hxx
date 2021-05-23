@@ -46,7 +46,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
   typedef typename ChangeInfoFilterType::Pointer               ChangeInfoFilterPointer;
   typedef typename RigidityImageType::DirectionType            DirectionType;
 
-  if (fixedRigidityImageName != "")
+  if (!fixedRigidityImageName.empty())
   {
     /** Use the FixedRigidityImage. */
     this->SetUseFixedRigidityImage(true);
@@ -93,7 +93,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
     movingRigidityImageName, "MovingRigidityImageName", this->GetComponentLabel(), 0, -1, false);
 
   typename RigidityImageReaderType::Pointer movingRigidityReader;
-  if (movingRigidityImageName != "")
+  if (!movingRigidityImageName.empty())
   {
     /** Use the movingRigidityImage. */
     this->SetUseMovingRigidityImage(true);
@@ -135,7 +135,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
   }
 
   /** Important check: at least one rigidity image must be given. */
-  if (fixedRigidityImageName == "" && movingRigidityImageName == "")
+  if (fixedRigidityImageName.empty() && movingRigidityImageName.empty())
   {
     xl::xout["warning"] << "WARNING: FixedRigidityImageName and "
                         << "MovingRigidityImage are both not supplied.\n"

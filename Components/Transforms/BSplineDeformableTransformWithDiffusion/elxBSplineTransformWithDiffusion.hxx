@@ -179,7 +179,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
   if (this->m_UseMovingSegmentation)
   {
     this->m_Configuration->ReadParameter(this->m_MovingSegmentationFileName, "MovingSegmentationFileName", 0);
-    if (m_MovingSegmentationFileName == "")
+    if (m_MovingSegmentationFileName.empty())
     {
       xl::xout["error"] << "ERROR: No MovingSegmentation filename specified." << std::endl;
       /** Create and throw an exception. */
@@ -203,7 +203,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
   if (this->m_UseFixedSegmentation)
   {
     this->m_Configuration->ReadParameter(this->m_FixedSegmentationFileName, "FixedSegmentationFileName", 0);
-    if (m_FixedSegmentationFileName == "")
+    if (m_FixedSegmentationFileName.empty())
     {
       xl::xout["error"] << "ERROR: No FixedSegmentation filename specified." << std::endl;
       /** Create and throw an exception. */
@@ -843,7 +843,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
   this->m_Configuration->ReadParameter(fileName, "DeformationFieldFileName", 0);
 
   /** Error checking ... */
-  if (fileName == "")
+  if (fileName.empty())
   {
     xl::xout["error"] << "ERROR: DeformationFieldFileName not specified." << std::endl
                       << "Unable to read and set the transform parameters." << std::endl;

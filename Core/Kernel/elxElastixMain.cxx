@@ -507,13 +507,13 @@ ElastixMain::InitDBIndex(void)
       {
         /** Get the fixed image file name. */
         std::string fixedImageFileName = this->m_Configuration->GetCommandLineArgument("-f");
-        if (fixedImageFileName == "")
+        if (fixedImageFileName.empty())
         {
           fixedImageFileName = this->m_Configuration->GetCommandLineArgument("-f0");
         }
 
         /** Sanity check. */
-        if (fixedImageFileName == "")
+        if (fixedImageFileName.empty())
         {
           xl::xout["error"] << "ERROR: could not read fixed image." << std::endl;
           xl::xout["error"] << "  both -f and -f0 are unspecified" << std::endl;
@@ -584,13 +584,13 @@ ElastixMain::InitDBIndex(void)
       {
         /** Get the moving image file name. */
         std::string movingImageFileName = this->m_Configuration->GetCommandLineArgument("-m");
-        if (movingImageFileName == "")
+        if (movingImageFileName.empty())
         {
           movingImageFileName = this->m_Configuration->GetCommandLineArgument("-m0");
         }
 
         /** Sanity check. */
-        if (movingImageFileName == "")
+        if (movingImageFileName.empty())
         {
           xl::xout["error"] << "ERROR: could not read moving image." << std::endl;
           xl::xout["error"] << "  both -m and -m0 are unspecified" << std::endl;
@@ -792,7 +792,7 @@ ElastixMain::CreateComponents(const std::string &              key,
    * flag is true, and not component was given by the user,
    * then elastix quits.
    */
-  if (!found && (defaultComponentName == ""))
+  if (!found && (defaultComponentName.empty()))
   {
     if (mandatoryComponent)
     {
@@ -886,7 +886,7 @@ ElastixMain::SetProcessPriority(void) const
     SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
 #endif
   }
-  else if (processPriority != "")
+  else if (!processPriority.empty())
   {
     xl::xout["warning"]
       << "Unsupported -priority value. Specify one of <high, abovenormal, normal, belownormal, idle, ''>." << std::endl;
@@ -906,7 +906,7 @@ ElastixMain::SetMaximumNumberOfThreads(void) const
   std::string maximumNumberOfThreadsString = this->m_Configuration->GetCommandLineArgument("-threads");
 
   /** If supplied, set the maximum number of threads. */
-  if (maximumNumberOfThreadsString != "")
+  if (!maximumNumberOfThreadsString.empty())
   {
     const int maximumNumberOfThreads = atoi(maximumNumberOfThreadsString.c_str());
     itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads(maximumNumberOfThreads);
@@ -954,7 +954,7 @@ ElastixMain::GetTransformParametersMap(void) const
 void
 ElastixMain::GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const
 {
-  if (filename != "")
+  if (!filename.empty())
   {
     /** Dummy image type. */
     const unsigned int                                 DummyDimension = 3;
