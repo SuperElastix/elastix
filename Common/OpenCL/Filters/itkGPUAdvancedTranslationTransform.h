@@ -59,15 +59,15 @@ public:
   typedef typename GPUSuperclass::CPUOutputVectorType CPUOutputVectorType;
 
   /** This method returns the CPU value of the offset of the TranslationTransform. */
-  virtual const CPUOutputVectorType &
-  GetCPUOffset(void) const
+  const CPUOutputVectorType &
+  GetCPUOffset(void) const override
   {
     return this->GetOffset();
   }
 
 protected:
   GPUAdvancedTranslationTransform() = default;
-  virtual ~GPUAdvancedTranslationTransform() = default;
+  ~GPUAdvancedTranslationTransform() override = default;
 
 private:
   GPUAdvancedTranslationTransform(const Self & other) = delete;

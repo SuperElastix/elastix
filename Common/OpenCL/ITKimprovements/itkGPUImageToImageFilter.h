@@ -99,24 +99,24 @@ public:
   itkGetConstMacro(GPUEnabled, bool);
   itkBooleanMacro(GPUEnabled);
 
-  virtual void
-  GraftOutput(DataObject * graft);
+  void
+  GraftOutput(DataObject * graft) override;
 
-  virtual void
-  GraftOutput(const DataObjectIdentifierType & key, DataObject * graft);
+  void
+  GraftOutput(const DataObjectIdentifierType & key, DataObject * graft) override;
 
-  virtual void
-  SetNumberOfWorkUnits(ThreadIdType _arg);
+  void
+  SetNumberOfWorkUnits(ThreadIdType _arg) override;
 
 protected:
   GPUImageToImageFilter();
-  ~GPUImageToImageFilter() = default;
+  ~GPUImageToImageFilter() override = default;
 
-  virtual void
-  PrintSelf(std::ostream & os, Indent indent) const;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  virtual void
-  GenerateData();
+  void
+  GenerateData() override;
 
   virtual void
   GPUGenerateData()

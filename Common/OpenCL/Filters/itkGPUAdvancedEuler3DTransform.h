@@ -59,29 +59,29 @@ public:
   typedef typename GPUSuperclass::CPUOutputVectorType  CPUOutputVectorType;
 
   /** Get CPU matrix of an MatrixOffsetTransformBase. */
-  virtual const CPUMatrixType &
-  GetCPUMatrix(void) const
+  const CPUMatrixType &
+  GetCPUMatrix(void) const override
   {
     return this->GetMatrix();
   }
 
   /** Get CPU inverse matrix of an MatrixOffsetTransformBase. */
-  virtual const CPUInverseMatrixType &
-  GetCPUInverseMatrix(void) const
+  const CPUInverseMatrixType &
+  GetCPUInverseMatrix(void) const override
   {
     return this->GetInverseMatrix();
   }
 
   /** Get CPU offset of an MatrixOffsetTransformBase. */
-  virtual const CPUOutputVectorType &
-  GetCPUOffset(void) const
+  const CPUOutputVectorType &
+  GetCPUOffset(void) const override
   {
     return this->GetOffset();
   }
 
 protected:
   GPUAdvancedEuler3DTransform() = default;
-  virtual ~GPUAdvancedEuler3DTransform() = default;
+  ~GPUAdvancedEuler3DTransform() override = default;
 
 private:
   GPUAdvancedEuler3DTransform(const Self & other) = delete;

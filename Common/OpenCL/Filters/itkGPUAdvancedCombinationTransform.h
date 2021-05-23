@@ -61,22 +61,22 @@ public:
   typedef typename GPUSuperclass::TransformTypeConstPointer TransformTypeConstPointer;
 
   /** Get number of transforms in composite transform. */
-  virtual SizeValueType
-  GetNumberOfTransforms(void) const
+  SizeValueType
+  GetNumberOfTransforms(void) const override
   {
     return CPUSuperclass::GetNumberOfTransforms();
   }
 
   /** Get the Nth transform. */
-  virtual const TransformTypePointer
-  GetNthTransform(SizeValueType n) const
+  const TransformTypePointer
+  GetNthTransform(SizeValueType n) const override
   {
     return CPUSuperclass::GetNthTransform(n);
   }
 
 protected:
   GPUAdvancedCombinationTransform() = default;
-  virtual ~GPUAdvancedCombinationTransform() = default;
+  ~GPUAdvancedCombinationTransform() override = default;
   void
   PrintSelf(std::ostream & s, Indent indent) const override
   {

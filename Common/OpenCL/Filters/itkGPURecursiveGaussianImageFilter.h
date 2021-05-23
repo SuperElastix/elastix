@@ -74,13 +74,13 @@ public:
 
 protected:
   GPURecursiveGaussianImageFilter();
-  ~GPURecursiveGaussianImageFilter() = default;
+  ~GPURecursiveGaussianImageFilter() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  virtual void
-  GPUGenerateData();
+  void
+  GPUGenerateData() override;
 
 private:
   GPURecursiveGaussianImageFilter(const Self &) = delete;

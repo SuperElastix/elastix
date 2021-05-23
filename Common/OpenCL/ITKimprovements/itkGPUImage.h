@@ -101,8 +101,8 @@ public:
   void
   AllocateGPU(void);
 
-  virtual void
-  Initialize(void);
+  void
+  Initialize(void) override;
 
   void
   FillBuffer(const TPixel & value);
@@ -133,10 +133,10 @@ public:
 
   /** Get CPU buffer pointer */
   TPixel *
-  GetBufferPointer(void);
+  GetBufferPointer(void) override;
 
   const TPixel *
-  GetBufferPointer(void) const;
+  GetBufferPointer(void) const override;
 
   /** Return the Pixel Accessor object */
   AccessorType
@@ -219,7 +219,7 @@ public:
    * CPU's time stamp will be increased after that.
    */
   void
-  DataHasBeenGenerated(void)
+  DataHasBeenGenerated(void) override
   {
     Superclass::DataHasBeenGenerated();
 
@@ -231,15 +231,15 @@ public:
 
 
   /** Graft the data and information from one GPUImage to another. */
-  virtual void
-  Graft(const DataObject * data);
+  void
+  Graft(const DataObject * data) override;
 
   void
   GraftITKImage(const DataObject * data);
 
   /** Whenever the image has been modified, set the GPU Buffer to dirty */
-  virtual void
-  Modified(void) const;
+  void
+  Modified(void) const override;
 
   /** Get matrices intended to help with the conversion of Index coordinates
    *  to PhysicalPoint coordinates */
@@ -248,10 +248,10 @@ public:
 
 protected:
   GPUImage();
-  virtual ~GPUImage() = default;
+  ~GPUImage() override = default;
 
-  virtual void
-  PrintSelf(std::ostream & os, Indent indent) const;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
   GPUImage(const Self &) = delete;

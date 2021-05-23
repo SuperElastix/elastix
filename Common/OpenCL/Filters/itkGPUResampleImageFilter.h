@@ -100,16 +100,16 @@ public:
   typedef GPUBSplineBaseTransform<InterpolatorPrecisionType, InputImageDimension> GPUBSplineBaseTransformType;
 
   /** Set the interpolator. */
-  virtual void
-  SetInterpolator(InterpolatorType * _arg);
+  void
+  SetInterpolator(InterpolatorType * _arg) override;
 
   /** Set the extrapolator. Not yet supported. */
-  virtual void
-  SetExtrapolator(ExtrapolatorType * _arg);
+  void
+  SetExtrapolator(ExtrapolatorType * _arg) override;
 
   /** Set the transform. */
-  virtual void
-  SetTransform(const TransformType * _arg);
+  void
+  SetTransform(const TransformType * _arg) override;
 
   /** Set/Get the requested number of splits on OpenCL device.
    * Only works for 3D images. For 1D, 2D are always equal 1. */
@@ -118,12 +118,12 @@ public:
 
 protected:
   GPUResampleImageFilter();
-  ~GPUResampleImageFilter() = default;
+  ~GPUResampleImageFilter() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  virtual void
-  GPUGenerateData(void);
+  void
+  GPUGenerateData(void) override;
 
   // Supported GPU transform types
   typedef enum

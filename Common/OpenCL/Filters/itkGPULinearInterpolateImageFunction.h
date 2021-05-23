@@ -60,7 +60,7 @@ public:
 
 protected:
   GPULinearInterpolateImageFunction();
-  ~GPULinearInterpolateImageFunction() = default;
+  ~GPULinearInterpolateImageFunction() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

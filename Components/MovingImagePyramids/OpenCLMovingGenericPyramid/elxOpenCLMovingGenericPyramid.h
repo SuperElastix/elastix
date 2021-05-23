@@ -89,8 +89,8 @@ public:
   typedef typename GPUPyramidType::Pointer                                                            GPUPyramidPointer;
 
   /** Do some things before registration. */
-  virtual void
-  BeforeRegistration(void);
+  void
+  BeforeRegistration(void) override;
 
   /** Function to read parameters from a file. */
   virtual void
@@ -102,13 +102,13 @@ protected:
   BeforeGenerateData(void);
 
   /** Executes GPU pyramid. */
-  virtual void
-  GenerateData(void);
+  void
+  GenerateData(void) override;
 
   /** The constructor. */
   OpenCLMovingGenericPyramid();
   /** The destructor. */
-  virtual ~OpenCLMovingGenericPyramid() = default;
+  ~OpenCLMovingGenericPyramid() override = default;
 
 private:
   elxOverrideGetSelfMacro;

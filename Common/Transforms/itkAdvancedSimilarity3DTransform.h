@@ -146,7 +146,7 @@ protected:
   AdvancedSimilarity3DTransform(unsigned int outputSpaceDim, unsigned int paramDim);
   AdvancedSimilarity3DTransform(const MatrixType & matrix, const OutputVectorType & offset);
   AdvancedSimilarity3DTransform();
-  ~AdvancedSimilarity3DTransform() = default;
+  ~AdvancedSimilarity3DTransform() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

@@ -132,7 +132,7 @@ protected:
   AdvancedVersorRigid3DTransform(unsigned int outputSpaceDim, unsigned int paramDim);
   AdvancedVersorRigid3DTransform(const MatrixType & matrix, const OutputVectorType & offset);
   AdvancedVersorRigid3DTransform();
-  ~AdvancedVersorRigid3DTransform() = default;
+  ~AdvancedVersorRigid3DTransform() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

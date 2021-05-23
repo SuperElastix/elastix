@@ -101,34 +101,34 @@ public:
   typedef typename Superclass2::ParameterMapType ParameterMapType;
 
   /** Set the transform. */
-  virtual void
-  SetTransform(const TransformType * _arg);
+  void
+  SetTransform(const TransformType * _arg) override;
 
   /** Set the interpolator. */
-  virtual void
-  SetInterpolator(InterpolatorType * _arg);
+  void
+  SetInterpolator(InterpolatorType * _arg) override;
 
   /** Do some things before registration. */
-  virtual void
-  BeforeRegistration(void);
+  void
+  BeforeRegistration(void) override;
 
   /** Function to read parameters from a file. */
-  virtual void
-  ReadFromFile(void);
+  void
+  ReadFromFile(void) override;
 
 protected:
   /** The constructor. */
   OpenCLResampler();
   /** The destructor. */
-  virtual ~OpenCLResampler() = default;
+  ~OpenCLResampler() override = default;
 
   /** This method performs all configuration for GPU resampler. */
   void
   BeforeGenerateData(void);
 
   /** Executes GPU resampler. */
-  virtual void
-  GenerateData(void);
+  void
+  GenerateData(void) override;
 
   /** Transform copier */
   typedef typename ResamplerBase<TElastix>::CoordRepType InterpolatorPrecisionType;
