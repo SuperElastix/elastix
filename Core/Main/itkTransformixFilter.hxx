@@ -178,7 +178,7 @@ TransformixFilter<TMovingImage>::GenerateData()
   ParameterMapVectorType transformParameterMapVector = transformParameterObject->GetParameterMap();
 
   // Assert user did not set empty parameter map
-  if (transformParameterMapVector.size() == 0)
+  if (transformParameterMapVector.empty())
   {
     itkExceptionMacro("Empty parameter map in parameter object.");
   }

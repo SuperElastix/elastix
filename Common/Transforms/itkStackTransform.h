@@ -162,7 +162,7 @@ public:
   NumberOfParametersType
   GetNumberOfParameters(void) const override
   {
-    if (this->m_SubTransformContainer.size() == 0)
+    if (this->m_SubTransformContainer.empty())
     {
       return 0;
     }

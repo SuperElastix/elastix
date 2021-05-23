@@ -197,7 +197,7 @@ ParameterObject::ReadParameterFile(const ParameterFileNameType & parameterFileNa
 void
 ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
 {
-  if (parameterFileNameVector.size() == 0)
+  if (parameterFileNameVector.empty())
   {
     itkExceptionMacro("Parameter filename container is empty.");
   }
@@ -320,7 +320,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
 void
 ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileName)
 {
-  if (this->m_ParameterMap.size() == 0)
+  if (this->m_ParameterMap.empty())
   {
     itkExceptionMacro("Error writing parameter map to disk: The parameter object is empty.");
   }

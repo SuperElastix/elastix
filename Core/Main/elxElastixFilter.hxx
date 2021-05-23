@@ -126,7 +126,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GenerateData(void)
     itkDynamicCastInDebugMode<ParameterObject *>(this->GetInput("ParameterObject"));
   ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMap();
 
-  if (parameterMapVector.size() == 0)
+  if (parameterMapVector.empty())
   {
     itkExceptionMacro("Empty parameter map in parameter object.");
   }

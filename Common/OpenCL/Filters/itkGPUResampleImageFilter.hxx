@@ -1000,7 +1000,7 @@ bool
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::HasTransform(
   const GPUTransformTypeEnum type) const
 {
-  if (this->m_FilterLoopGPUKernelHandle.size() == 0)
+  if (this->m_FilterLoopGPUKernelHandle.empty())
   {
     return false;
   }
@@ -1024,7 +1024,7 @@ int
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetTransformHandle(
   const GPUTransformTypeEnum type) const
 {
-  if (this->m_FilterLoopGPUKernelHandle.size() == 0)
+  if (this->m_FilterLoopGPUKernelHandle.empty())
   {
     return -1;
   }

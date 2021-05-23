@@ -75,7 +75,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile(void)
   /** Read deformationFieldImage-name from parameter-file. */
   std::string fileName = "";
   this->m_Configuration->ReadParameter(fileName, "DeformationFieldFileName", 0);
-  if (fileName == "")
+  if (fileName.empty())
   {
     xl::xout["error"]
       << "ERROR: the entry (DeformationFieldFileName \"...\") is missing in the transform parameter file!" << std::endl;

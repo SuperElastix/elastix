@@ -246,7 +246,7 @@ main(int argc, char ** argv)
     /** Read the mask image, if given. */
     MaskImageType::Pointer maskImage;
     MaskIteratorType       itM;
-    if (maskFileName != "")
+    if (!maskFileName.empty())
     {
       MaskReaderType::Pointer maskReader = MaskReaderType::New();
       maskReader->SetFileName(maskFileName);
@@ -282,7 +282,7 @@ main(int argc, char ** argv)
 
       /** Compare. */
       include = 1.0;
-      if (maskFileName != "")
+      if (!maskFileName.empty())
       {
         indexInCoefficientImage = it.GetIndex();
         coefImage->TransformIndexToPhysicalPoint(indexInCoefficientImage, physicalPoint);
@@ -304,7 +304,7 @@ main(int argc, char ** argv)
       /** Update iterators. */
       ++it;
       ++index;
-      if (maskFileName != "")
+      if (!maskFileName.empty())
       {
         ++itM;
       }
@@ -315,7 +315,7 @@ main(int argc, char ** argv)
 
     /** Create name for difference image. */
     std::string diffImageFileName = itksys::SystemTools::GetFilenamePath(testFileName);
-    if (diffImageFileName != "")
+    if (!diffImageFileName.empty())
     {
       diffImageFileName += "/";
     }

@@ -1135,7 +1135,7 @@ OpenCLContext::CreateProgramFromSourceCode(const std::string & sourceCode,
   // kernel code must exist in a text file separate from the code of the host.
   // Also the full path to the file has to be provided.
   const std::string fileName = GetOpenCLDebugFileName(oclSource);
-  if (prefixSourceCode != "")
+  if (!prefixSourceCode.empty())
   {
     std::ofstream debugfile(fileName.c_str());
     if (debugfile.is_open() == false)
@@ -1215,11 +1215,11 @@ OpenCLContext::CreateProgramFromSourceFile(const std::string & filename,
   // To work with the Intel SDK for OpenCL* - Debugger plug-in, the OpenCL*
   // kernel code must exist in a text file separate from the code of the host.
   // Also the full path to the file has to be provided.
-  if (prefixSourceCode != "")
+  if (!prefixSourceCode.empty())
   {
     fileName = GetOpenCLDebugFileName(oclSource);
   }
-  if (prefixSourceCode != "")
+  if (!prefixSourceCode.empty())
   {
     std::ofstream debugfile(fileName.c_str());
     if (debugfile.is_open() == false)

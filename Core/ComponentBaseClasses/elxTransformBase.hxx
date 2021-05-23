@@ -157,7 +157,7 @@ TransformBase<TElastix>::BeforeAllTransformix(void)
 
   /** Check for appearance of "-ipp". */
   check = this->m_Configuration->GetCommandLineArgument("-ipp");
-  if (check != "")
+  if (!check.empty())
   {
     elxout << "-ipp      " << check << std::endl;
     // Deprecated since elastix 4.3
@@ -166,7 +166,7 @@ TransformBase<TElastix>::BeforeAllTransformix(void)
 
   /** Check for appearance of "-def". */
   check = this->m_Configuration->GetCommandLineArgument("-def");
-  if (check == "")
+  if (check.empty())
   {
     elxout << "-def      unspecified, so no input points transformed" << std::endl;
   }
@@ -177,7 +177,7 @@ TransformBase<TElastix>::BeforeAllTransformix(void)
 
   /** Check for appearance of "-jac". */
   check = this->m_Configuration->GetCommandLineArgument("-jac");
-  if (check == "")
+  if (check.empty())
   {
     elxout << "-jac      unspecified, so no det(dT/dx) computed" << std::endl;
   }
@@ -188,7 +188,7 @@ TransformBase<TElastix>::BeforeAllTransformix(void)
 
   /** Check for appearance of "-jacmat". */
   check = this->m_Configuration->GetCommandLineArgument("-jacmat");
-  if (check == "")
+  if (check.empty())
   {
     elxout << "-jacmat   unspecified, so no dT/dx computed" << std::endl;
   }
@@ -712,18 +712,18 @@ TransformBase<TElastix>::TransformPoints(void) const
   std::string       def = this->GetConfiguration()->GetCommandLineArgument("-def");
 
   /** For backwards compatibility def = ipp. */
-  if (def != "" && ipp != "")
+  if (!def.empty() && !ipp.empty())
   {
     itkExceptionMacro(<< "ERROR: Can not use both \"-def\" and \"-ipp\"!\n"
                       << "  \"-ipp\" is deprecated, use only \"-def\".\n");
   }
-  else if (def == "" && ipp != "")
+  else if (def.empty() && !ipp.empty())
   {
     def = ipp;
   }
 
   /** If there is an input point-file? */
-  if (def != "" && def != "all")
+  if (!def.empty() && def != "all")
   {
     if (itksys::SystemTools::StringEndsWith(def.c_str(), ".vtk") ||
         itksys::SystemTools::StringEndsWith(def.c_str(), ".VTK"))
@@ -1199,7 +1199,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian(void) const
    * then and only then we continue.
    */
   std::string jac = this->GetConfiguration()->GetCommandLineArgument("-jac");
-  if (jac == "")
+  if (jac.empty())
   {
     elxout << "  The command-line option \"-jac\" is not used, "
            << "so no det(dT/dx) computed." << std::endl;

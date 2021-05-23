@@ -50,7 +50,7 @@ MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation(void)
   itkDebugMacro(<< "Reading file for GenerateOutputInformation(): " << this->m_FileName);
 
   /** Check to see if we can read the file given the name or prefix */
-  if (this->m_FileName == "")
+  if (this->m_FileName.empty())
   {
     throw MeshFileReaderException(__FILE__, __LINE__, "FileName must be specified", ITK_LOCATION);
   }

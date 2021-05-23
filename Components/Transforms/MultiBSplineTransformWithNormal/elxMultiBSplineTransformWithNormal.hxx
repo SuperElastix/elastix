@@ -91,7 +91,7 @@ MultiBSplineTransformWithNormal<TElastix>::BeforeAll(void)
     this->m_SplineOrder, "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true);
 
   this->m_LabelsPath = this->m_Configuration->GetCommandLineArgument("-labels");
-  if (this->m_LabelsPath != "")
+  if (!this->m_LabelsPath.empty())
   {
     typename itk::ImageFileReader<ImageLabelType>::Pointer reader = itk::ImageFileReader<ImageLabelType>::New();
     reader->SetFileName(this->m_LabelsPath);
@@ -599,7 +599,7 @@ MultiBSplineTransformWithNormal<TElastix>::ReadFromFile(void)
   /** Read the labels map */
   this->GetConfiguration()->ReadParameter(
     this->m_LabelsPath, "MultiBSplineTransformWithNormalLabels", this->GetComponentLabel(), 0, 0);
-  if (this->m_LabelsPath != "")
+  if (!this->m_LabelsPath.empty())
   {
     typename itk::ImageFileReader<ImageLabelType>::Pointer reader = itk::ImageFileReader<ImageLabelType>::New();
     reader->SetFileName(this->m_LabelsPath);

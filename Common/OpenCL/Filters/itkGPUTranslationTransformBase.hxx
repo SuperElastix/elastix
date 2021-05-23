@@ -181,7 +181,7 @@ template <typename TScalarType, unsigned int NDimensions>
 bool
 GPUTranslationTransformBase<TScalarType, NDimensions>::GetSourceCode(std::string & source) const
 {
-  if (this->m_Sources.size() == 0)
+  if (this->m_Sources.empty())
   {
     return false;
   }

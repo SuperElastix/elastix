@@ -51,14 +51,14 @@ GenerateFileNameContainer(const Configuration & configuration,
   argusedss << optionkey << 0;
   std::string argused = argusedss.str();
   std::string check = configuration.GetCommandLineArgument(argused.c_str());
-  if (check == "")
+  if (check.empty())
   {
     /** Try optionkey. */
     std::ostringstream argusedss2("");
     argusedss2 << optionkey;
     argused = argusedss2.str();
     check = configuration.GetCommandLineArgument(argused.c_str());
-    if (check == "")
+    if (check.empty())
     {
       /** Both failed; return an error message, if desired. */
       if (printerrors)
@@ -73,7 +73,7 @@ GenerateFileNameContainer(const Configuration & configuration,
   }
 
   /** Optionkey or optionkey0 is found. */
-  if (check != "")
+  if (!check.empty())
   {
     /** Print info, if desired. */
     if (printinfo)
@@ -96,7 +96,7 @@ GenerateFileNameContainer(const Configuration & configuration,
       argusedss2 << optionkey << i;
       argused = argusedss2.str();
       check = configuration.GetCommandLineArgument(argused.c_str());
-      if (check == "")
+      if (check.empty())
       {
         readsuccess = false;
       }
@@ -264,7 +264,7 @@ ElastixBase::BeforeAllBase(void)
    * Here we do it again. MS: WHY?
    */
   check = this->GetConfiguration()->GetCommandLineArgument("-out");
-  if (check == "")
+  if (check.empty())
   {
     xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
     returndummy |= 1;
@@ -302,7 +302,7 @@ ElastixBase::BeforeAllBase(void)
     std::ostringstream tempPname("");
     tempPname << "-p(" << i << ")";
     check = this->GetConfiguration()->GetCommandLineArgument(tempPname.str().c_str());
-    if (check == "")
+    if (check.empty())
     {
       loop = false;
     }
@@ -316,7 +316,7 @@ ElastixBase::BeforeAllBase(void)
   /** Check for appearance of "-priority", if this is a Windows station. */
 #ifdef _WIN32
   check = this->GetConfiguration()->GetCommandLineArgument("-priority");
-  if (check == "")
+  if (check.empty())
   {
     elxout << "-priority unspecified, so NORMAL process priority" << std::endl;
   }
@@ -328,7 +328,7 @@ ElastixBase::BeforeAllBase(void)
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
   check = this->GetConfiguration()->GetCommandLineArgument("-threads");
-  if (check == "")
+  if (check.empty())
   {
     elxout << "-threads  unspecified, so all available threads are used" << std::endl;
   }
@@ -397,7 +397,7 @@ ElastixBase::BeforeAllTransformixBase(void)
   }
   /** Check for appearance of "-out". */
   std::string check = this->GetConfiguration()->GetCommandLineArgument("-out");
-  if (check == "")
+  if (check.empty())
   {
     xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
     returndummy |= 1;
@@ -414,7 +414,7 @@ ElastixBase::BeforeAllTransformixBase(void)
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
   check = this->GetConfiguration()->GetCommandLineArgument("-threads");
-  if (check == "")
+  if (check.empty())
   {
     elxout << "-threads  unspecified, so all available threads are used" << std::endl;
   }

@@ -68,7 +68,7 @@ GetOpenCLMathAndOptimizationOptions(std::string & options)
 
 #ifndef OPENCL_OPTIMIZATION_OPT_DISABLE
 #  ifdef OPENCL_OPTIMIZATION_MAD_ENABLE
-  if (options.size() != 0)
+  if (!options.empty())
   {
     options.append(" ");
   }
@@ -262,7 +262,7 @@ OpenCLProgram::Build(const std::list<OpenCLDevice> & devices, const std::string 
   oclOptions = !extraBuildOptions.empty() ? oclOptions + " " + extraBuildOptions : oclOptions;
 
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-  if (GetFileName().size() > 0)
+  if (!GetFileName().empty())
   {
     const std::string message = "clBuildProgram from file '" + GetFileName() + "'";
     this->GetContext()->OpenCLDebug(message);
@@ -296,7 +296,7 @@ OpenCLProgram::Build(const std::list<OpenCLDevice> & devices, const std::string 
     error = clBuildProgram(this->m_Id, devs.size(), &devs[0], oclOptions.empty() ? 0 : &oclOptions[0], 0, 0);
   }
 #else
-  if (devs.size() == 0)
+  if (devs.empty())
   {
     error = clBuildProgram(this->m_Id, 0, 0, oclOptions.empty() ? 0 : &oclOptions[0], 0, 0);
   }

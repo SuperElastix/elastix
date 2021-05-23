@@ -912,7 +912,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
      << std::endl;
   os << indent << "SmoothingScheduleDefined: " << (this->m_SmoothingScheduleDefined ? "true" : "false") << std::endl;
   os << indent << "Smoothing Schedule: ";
-  if (this->m_SmoothingSchedule.size() == 0)
+  if (this->m_SmoothingSchedule.empty())
   {
     os << "Not set" << std::endl;
   }

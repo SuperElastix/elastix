@@ -38,7 +38,7 @@ template <typename TScalarType, unsigned int NDimensions, typename TParentTransf
 bool
 GPUIdentityTransform<TScalarType, NDimensions, TParentTransform>::GetSourceCode(std::string & source) const
 {
-  if (this->m_Sources.size() == 0)
+  if (this->m_Sources.empty())
   {
     return false;
   }
