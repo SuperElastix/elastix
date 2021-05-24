@@ -1,0 +1,13 @@
+ObjectType = Image
+NDims = 2
+BinaryData = True
+BinaryDataByteOrderMSB = False
+CompressedData = False
+TransformMatrix = 1 0 0 1
+Offset = 0 0
+CenterOfRotation = 0 0
+ElementSpacing = 1 1
+DimSize = 5 6
+AnatomicalOrientation = ??
+ElementType = MET_FLOAT
+ElementDataFile = 2D_2x2_square_object_at_(1,3).raw
