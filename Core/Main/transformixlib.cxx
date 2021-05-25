@@ -154,7 +154,7 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
   if (performLogging)
   {
     /** Check if the output directory exists. */
-    bool outFolderExists = itksys::SystemTools::FileIsDirectory(outFolder.c_str());
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory(outFolder);
     if (!outFolderExists)
     {
       if (performCout)

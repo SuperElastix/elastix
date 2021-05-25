@@ -51,14 +51,14 @@ GenerateFileNameContainer(const Configuration & configuration,
   std::ostringstream argusedss("");
   argusedss << optionkey << 0;
   std::string argused = argusedss.str();
-  std::string check = configuration.GetCommandLineArgument(argused.c_str());
+  std::string check = configuration.GetCommandLineArgument(argused);
   if (check.empty())
   {
     /** Try optionkey. */
     std::ostringstream argusedss2("");
     argusedss2 << optionkey;
     argused = argusedss2.str();
-    check = configuration.GetCommandLineArgument(argused.c_str());
+    check = configuration.GetCommandLineArgument(argused);
     if (check.empty())
     {
       /** Both failed; return an error message, if desired. */
@@ -96,7 +96,7 @@ GenerateFileNameContainer(const Configuration & configuration,
       std::ostringstream argusedss2("");
       argusedss2 << optionkey << i;
       argused = argusedss2.str();
-      check = configuration.GetCommandLineArgument(argused.c_str());
+      check = configuration.GetCommandLineArgument(argused);
       if (check.empty())
       {
         readsuccess = false;
@@ -280,7 +280,7 @@ ElastixBase::BeforeAllBase(void)
       folder.append("/");
       folder = Conversion::ToNativePathNameSeparators(folder);
 
-      this->GetConfiguration()->SetCommandLineArgument("-out", folder.c_str());
+      this->GetConfiguration()->SetCommandLineArgument("-out", folder);
     }
     elxout << "-out      " << check << std::endl;
   }
@@ -292,7 +292,7 @@ ElastixBase::BeforeAllBase(void)
   {
     std::ostringstream tempPname("");
     tempPname << "-p(" << i << ")";
-    check = this->GetConfiguration()->GetCommandLineArgument(tempPname.str().c_str());
+    check = this->GetConfiguration()->GetCommandLineArgument(tempPname.str());
     if (check.empty())
     {
       loop = false;

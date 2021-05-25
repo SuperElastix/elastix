@@ -53,7 +53,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
 
     /** Create the reader and set the filename. */
     fixedRigidityReader = RigidityImageReaderType::New();
-    fixedRigidityReader->SetFileName(fixedRigidityImageName.c_str());
+    fixedRigidityReader->SetFileName(fixedRigidityImageName);
 
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
@@ -100,7 +100,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
 
     /** Create the reader and set the filename. */
     movingRigidityReader = RigidityImageReaderType::New();
-    movingRigidityReader->SetFileName(movingRigidityImageName.c_str());
+    movingRigidityReader->SetFileName(movingRigidityImageName);
 
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();

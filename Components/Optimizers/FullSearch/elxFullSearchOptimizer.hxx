@@ -94,32 +94,32 @@ FullSearch<TElastix>::BeforeEachResolution(void)
 
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(name, fullFieldName.c_str(), entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), found, entry_nr);
+      found = this->GetConfiguration()->ReadParameter(name, fullFieldName, entry_nr, false);
+      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       entry_nr++;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(param_nr, fullFieldName.c_str(), entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), found, entry_nr);
+      found = this->GetConfiguration()->ReadParameter(param_nr, fullFieldName, entry_nr, false);
+      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       entry_nr++;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(minimum, fullFieldName.c_str(), entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), found, entry_nr);
+      found = this->GetConfiguration()->ReadParameter(minimum, fullFieldName, entry_nr, false);
+      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       entry_nr++;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(maximum, fullFieldName.c_str(), entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), found, entry_nr);
+      found = this->GetConfiguration()->ReadParameter(maximum, fullFieldName, entry_nr, false);
+      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       entry_nr++;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(stepsize, fullFieldName.c_str(), entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), found, entry_nr);
+      found = this->GetConfiguration()->ReadParameter(stepsize, fullFieldName, entry_nr, false);
+      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       entry_nr++;
     }
 

@@ -138,7 +138,7 @@ main(int argc, char * argv[])
   typedef itk::Image<short, Dimension>         DummyImageType;
   typedef itk::ImageFileReader<DummyImageType> ReaderType;
   ReaderType::Pointer                          testReader = ReaderType::New();
-  testReader->SetFileName(movingImageFileName.c_str());
+  testReader->SetFileName(movingImageFileName);
 
   /** Generate all information. */
   try

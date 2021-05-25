@@ -445,7 +445,7 @@ TransformBase<TElastix>::ReadFromFile(void)
        * is not the same as this transform parameter file. Otherwise,
        * we will have an infinite loop.
        */
-      std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName.c_str());
+      std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName);
       std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(this->m_Configuration->GetParameterFileName());
       if (fullFileName1 == fullFileName2)
       {

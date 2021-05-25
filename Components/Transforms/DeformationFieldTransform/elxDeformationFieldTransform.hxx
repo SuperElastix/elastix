@@ -91,7 +91,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile(void)
   infoChanger->SetInput(vectorReader->GetOutput());
 
   /** Read deformationFieldImage from file. */
-  vectorReader->SetFileName(fileName.c_str());
+  vectorReader->SetFileName(fileName);
   try
   {
     infoChanger->Update();

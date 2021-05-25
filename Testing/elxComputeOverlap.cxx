@@ -100,9 +100,9 @@ main(int argc, char ** argv)
 
   /** Create readers and an AND filter. */
   ImageReaderPointer reader1 = ImageReaderType::New();
-  reader1->SetFileName(inputFileNames[0].c_str());
+  reader1->SetFileName(inputFileNames[0]);
   ImageReaderPointer reader2 = ImageReaderType::New();
-  reader2->SetFileName(inputFileNames[1].c_str());
+  reader2->SetFileName(inputFileNames[1]);
   AndFilterPointer ANDFilter = AndFilterType::New();
   ANDFilter->SetInput1(reader2->GetOutput());
   ANDFilter->SetInput2(reader1->GetOutput());
