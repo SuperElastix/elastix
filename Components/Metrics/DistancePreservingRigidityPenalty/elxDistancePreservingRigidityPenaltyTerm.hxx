@@ -49,7 +49,7 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
 
   /** Create the reader and set the filename. */
   typename SegmentedImageReaderType::Pointer segmentedImageReader = SegmentedImageReaderType::New();
-  segmentedImageReader->SetFileName(segmentedImageName.c_str());
+  segmentedImageReader->SetFileName(segmentedImageName);
   segmentedImageReader->Update();
 
   /** Possibly overrule the direction cosines. */

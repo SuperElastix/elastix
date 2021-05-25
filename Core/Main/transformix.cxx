@@ -141,7 +141,7 @@ main(int argc, char ** argv)
   if (outFolderPresent)
   {
     /** Check if the output directory exists. */
-    bool outFolderExists = itksys::SystemTools::FileIsDirectory(outFolder.c_str());
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory(outFolder);
     if (!outFolderExists)
     {
       std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl;

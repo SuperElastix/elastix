@@ -190,7 +190,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
 
   // Build and create kernel
   const OpenCLProgram program =
-    this->m_PostKernelManager->BuildProgramFromSourceCode(resamplePostSource.str(), defines.c_str());
+    this->m_PostKernelManager->BuildProgramFromSourceCode(resamplePostSource.str(), defines);
   if (program.IsNull())
   {
     itkExceptionMacro(<< "Kernel has not been loaded from string:\n"
