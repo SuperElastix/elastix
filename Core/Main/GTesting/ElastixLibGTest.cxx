@@ -347,3 +347,45 @@ GTEST_TEST(ElastixLib, Translation3D)
   ASSERT_EQ(elastixObject.RegisterImages(fixedImage, movingImage, parameterMap, ".", false, false), 0);
   ExpectRoundedTransformParametersEqualOffset(elastixObject, translationOffset);
 }
+
+
+// Tests registering two small 3-D binary images, including only the pixels
+// of a single slice, by specifying a mask for the fixed image.
+GTEST_TEST(ElastixLib, SingleSliceMaskedTranslation3D)
+{
+  constexpr auto ImageDimension = 3;
+  using ImageType = itk::Image<float, ImageDimension>;
+
+  const auto parameterMap = elx::CoreMainGTestUtilities::CreateParameterMap<ImageDimension>(
+    { { "ImageSampler", "Full" },
+      { "MaximumNumberOfIterations", "3" },
+      { "Metric", "AdvancedNormalizedCorrelation" },
+      { "Optimizer", "AdaptiveStochasticGradientDescent" },
+      { "Transform", "TranslationTransform" } });
+
+  const itk::Size<ImageDimension>   imageSize{ { 5, 6, 8 } };
+  const itk::IndexValueType         z = imageSize[2] / 2;
+  const itk::Size<ImageDimension>   regionSize{ 2, 2, 1 };
+  const itk::Index<ImageDimension>  fixedImageRegionIndex{ { 1, 3, z } };
+  const itk::Offset<ImageDimension> translationOffset{ { 1, -2, 0 } };
+
+  const auto fixedImage = ImageType::New();
+  fixedImage->SetRegions(imageSize);
+  fixedImage->Allocate(true);
+  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto maskImage = itk::Image<unsigned char, ImageDimension>::New();
+  maskImage->SetRegions(imageSize);
+  maskImage->Allocate(true);
+  elx::CoreMainGTestUtilities::FillImageRegion(*maskImage, { 0, 0, z }, { imageSize[0], imageSize[1], 1 });
+
+  const auto movingImage = ImageType::New();
+  movingImage->SetRegions(imageSize);
+  movingImage->Allocate(true);
+  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  elastix::ELASTIX elastixObject;
+
+  ASSERT_EQ(elastixObject.RegisterImages(fixedImage, movingImage, parameterMap, ".", false, false, maskImage), 0);
+  ExpectRoundedTransformParametersEqualOffset(elastixObject, translationOffset);
+}
