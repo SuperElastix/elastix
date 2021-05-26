@@ -598,6 +598,10 @@ foreach( LIB IN LISTS AllComponentLibs )
   elastix_export_target( ${LIB} )
 endforeach()
 
+# It appears necessary for Windows Azure Pipelines, to replace backslashes by
+# forward slashes before using the ITK bin directory.
+string(REPLACE "\\" "/" ELASTIX_ITK_DIR ${ITK_DIR})
+
 configure_file( ${elastix_SOURCE_DIR}/ElastixConfig.cmake.in ${elastix_BINARY_DIR}/ElastixConfig.cmake @ONLY )
 configure_file( ${elastix_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${elastix_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
 configure_file( ${elastix_SOURCE_DIR}/UseElastix.cmake.in ${elastix_BINARY_DIR}/UseElastix.cmake @ONLY )
