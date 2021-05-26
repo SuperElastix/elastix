@@ -1,1 +1,1 @@
-This folder contains an example of an external project that uses code/libraries from elastix. It is meant to be built outside the elastix tree. You need to have compiled elastix first. Then run cmake with this folder as source directory. A small test executable will be created: elxtimertest.
+This folder contains an example of an external project that uses code/libraries from elastix. It is meant to be built outside the elastix tree. You need to have compiled elastix first. Then run cmake with this folder as source directory. A small test executable will be created.

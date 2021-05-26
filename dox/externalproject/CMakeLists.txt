@@ -1,29 +1,27 @@
 # Example project for using elastix code from external projects.
-PROJECT( elxExternalProject )
+project( elxExternalProject )
 
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.10.2 )
 
-# Find TIK
-FIND_PACKAGE( ITK REQUIRED )
-IF( ITK_FOUND )
-  INCLUDE( ${ITK_USE_FILE} )
-ENDIF( ITK_FOUND )
+find_package( Elastix REQUIRED )
 
-# find elastix
-SET( ELASTIX_BINARY_DIR "" CACHE PATH "Path to elastix binary folder" )
-SET( ELASTIX_USE_FILE ${ELASTIX_BINARY_DIR}/UseElastix.cmake )
-IF( EXISTS ${ELASTIX_USE_FILE} )
- MESSAGE( STATUS "Including Elastix settings." )
- INCLUDE( ${ELASTIX_USE_FILE} )
-ENDIF()
+# Elastix might use OpenMP.
+find_package( OpenMP QUIET )
+if( OPENMP_FOUND )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
+endif()
 
-# Build a small test executable (this test is basically the same as
-# the one found in the <elastix-dir>/Testing dir.
-ADD_EXECUTABLE( elxtimertest itkTimerTest.cxx )
+# Use the version of ITK from Elastix.
+set( ITK_DIR ${ELASTIX_ITK_DIR} )
+find_package( ITK REQUIRED )
 
-# Link to some libraries
-TARGET_LINK_LIBRARIES( elxtimertest
-  ITKCommon ITKBasicFilters elxCommon )
+include(${ELASTIX_CONFIG_TARGETS_FILE})
 
+# Build a small example executable.
+add_executable( elastix_translation_example ElastixTranslationExample.cxx )
 
+target_include_directories( elastix_translation_example
+  PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS} )
 
+target_link_libraries( elastix_translation_example
+  PRIVATE ${ITK_LIBRARIES} elastix_lib)

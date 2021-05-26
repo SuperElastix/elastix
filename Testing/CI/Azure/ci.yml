@@ -22,6 +22,7 @@ jobs:
   - script: |
       mkdir "$(ITK_BINARY_DIR)"
       mkdir "$(ELASTIX_BINARY_DIR)"
+      mkdir externalproject-build
     displayName: Make build directories
   - task: CMake@1
     displayName: 'CMake Generate ITK'
@@ -43,6 +44,19 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
+  - task: CMake@1
+    displayName: 'CMake Generate externalproject'
+    inputs:
+      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DElastix_DIR=$(ELASTIX_BINARY_DIR) "$(ELASTIX_SOURCE_DIR)/dox/externalproject"
+      workingDirectory: $(Agent.BuildDirectory)/externalproject-build
+  - task: CMake@1
+    displayName: 'CMake Build externalproject'
+    inputs:
+      cmakeArgs: --build . --config Release
+      workingDirectory: $(Agent.BuildDirectory)/externalproject-build
+  - bash: ../../../externalproject-build/Release/elastix_translation_example
+    displayName: 'Run externalproject'
+    workingDirectory: $(Agent.BuildDirectory)\Elastix-build\bin\Release
   - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
@@ -60,6 +74,7 @@ jobs:
   - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
+      mkdir externalproject-build
     displayName: Clone ITK
   - task: CMake@1
     displayName: 'CMake Generate ITK'
@@ -81,6 +96,18 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: $(ELASTIX_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Generate externalproject'
+    inputs:
+      cmakeArgs: -DElastix_DIR=$(Agent.BuildDirectory)/Elastix-build $(ELASTIX_SOURCE_DIR)/dox/externalproject
+      workingDirectory: $(Agent.BuildDirectory)/externalproject-build
+  - task: CMake@1
+    displayName: 'CMake Build externalproject'
+    inputs:
+      cmakeArgs: --build .
+      workingDirectory: $(Agent.BuildDirectory)/externalproject-build
+  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_translation_example
+    displayName: 'Run externalproject'
   - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
@@ -99,6 +126,7 @@ jobs:
   - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
+      mkdir externalproject-build
     displayName: Make build directories
   - task: CMake@1
     displayName: 'CMake Generate ITK'
@@ -120,6 +148,18 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: $(ELASTIX_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Generate externalproject'
+    inputs:
+      cmakeArgs: -DElastix_DIR=$(Agent.BuildDirectory)/Elastix-build $(ELASTIX_SOURCE_DIR)/dox/externalproject
+      workingDirectory: $(Agent.BuildDirectory)/externalproject-build
+  - task: CMake@1
+    displayName: 'CMake Build externalproject'
+    inputs:
+      cmakeArgs: --build .
+      workingDirectory: $(Agent.BuildDirectory)/externalproject-build
+  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_translation_example
+    displayName: 'Run externalproject'
   - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
