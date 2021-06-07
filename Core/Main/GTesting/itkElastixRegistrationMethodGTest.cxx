@@ -97,6 +97,74 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 }
 
 
+// Tests registering two images, having "WriteResultImage" set to false.
+GTEST_TEST(itkElastixRegistrationMethod, WriteResultImageFalse)
+{
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+  using RegionType = itk::ImageRegion<ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType translationOffset{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = ImageType::New();
+  fixedImage->SetRegions(imageSize);
+  fixedImage->Allocate(true);
+  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = ImageType::New();
+  movingImage->SetRegions(imageSize);
+  movingImage->Allocate(true);
+  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  const auto parameterObject = elastix::ParameterObject::New();
+  parameterObject->SetParameterMap(
+    elx::CoreMainGTestUtilities::CreateParameterMap({ { "ImageSampler", "Full" },
+                                                      { "MaximumNumberOfIterations", "2" },
+                                                      { "Metric", "AdvancedNormalizedCorrelation" },
+                                                      { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                      { "Transform", "TranslationTransform" },
+                                                      { "WriteResultImage", "false" } }));
+
+  const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
+  ASSERT_NE(filter, nullptr);
+
+  filter->SetFixedImage(fixedImage);
+  filter->SetMovingImage(movingImage);
+  filter->SetParameterObject(parameterObject);
+  filter->Update();
+
+  // Expect an empty output image.
+  const auto * const output = filter->GetOutput();
+  ASSERT_NE(output, nullptr);
+  EXPECT_EQ(output->GetBufferedRegion().GetSize(), ImageType::SizeType());
+  EXPECT_EQ(output->GetBufferPointer(), nullptr);
+
+  const auto   transformParameterObject = filter->GetTransformParameterObject();
+  const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
+
+  ASSERT_TRUE(!transformParameterMaps.empty());
+  EXPECT_EQ(transformParameterMaps.size(), 1);
+
+  const auto & transformParameterMap = transformParameterMaps.front();
+  const auto   found = transformParameterMap.find("TransformParameters");
+  ASSERT_NE(found, transformParameterMap.cend());
+
+  const auto & transformParameters = found->second;
+  ASSERT_EQ(transformParameters.size(), ImageDimension);
+
+  for (unsigned i{}; i < ImageDimension; ++i)
+  {
+    EXPECT_EQ(std::round(std::stod(transformParameters[i])), translationOffset[i]);
+  }
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 {
   // IndexRange is to be moved from namespace itk::Experimental

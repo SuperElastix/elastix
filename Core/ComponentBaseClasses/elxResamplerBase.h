@@ -38,6 +38,9 @@ namespace elastix
  *    result image is resampled and written. Choose from {"true", "false"} \n
  *    example: <tt>(WriteResultImage "false")</tt> \n
  *    The default is "true".
+ * \note When WriteResultImage is false, the executable will not write a
+ * result image, and the elastix library interface produces an empty image.
+ *
  * \parameter WriteResultImageAfterEachResolution: flag to determine if the intermediate
  *    result image is resampled and written after each resolution. Choose from {"true", "false"} \n
  *    example: <tt>(WriteResultImageAfterEachResolution "true" "false" "true")</tt> \n

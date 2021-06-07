@@ -38,6 +38,8 @@
 #include "elxPixelType.h"
 #include "itkElastixRegistrationMethod.h"
 
+#include <algorithm> // For find.
+
 namespace itk
 {
 
@@ -149,9 +151,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   {
     itkExceptionMacro("Empty parameter map in parameter object.");
   }
-
-  // Elastix must always write result image to guarantee that the ITK pipeline is in a consistent state
-  parameterMapVector.back()["WriteResultImage"] = ParameterValueVectorType(1, "true");
 
   // Setup argument map
   ArgumentMapType argumentMap;
@@ -296,7 +295,17 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
   else
   {
-    itkExceptionMacro("Errors occured during registration: Could not read result image.");
+    const auto & parameterMap = parameterMapVector.back();
+    const auto   endOfParameterMap = parameterMap.cend();
+    const bool   writeResultImage =
+      std::find(parameterMap.cbegin(),
+                endOfParameterMap,
+                typename ParameterMapType::value_type{ "WriteResultImage", { "false" } }) == endOfParameterMap;
+
+    if (writeResultImage)
+    {
+      itkExceptionMacro("Errors occured during registration: Could not read result image.");
+    }
   }
 
   // Save parameter map

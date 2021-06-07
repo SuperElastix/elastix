@@ -171,6 +171,8 @@ public:
   GetOutput(unsigned int idx) const;
   ResultImageType *
   GetOutput();
+
+  /* \note When "WriteResultImage" is false, the output image will be empty. */
   const ResultImageType *
   GetOutput() const;
 
