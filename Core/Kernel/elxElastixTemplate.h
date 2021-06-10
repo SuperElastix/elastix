@@ -51,7 +51,7 @@
  * The second retrieves the metric component from the MetricContainer
  * and casts it to a MetricBaseType*;
  *
- * This macro is #undef'ed at the end of this header file.
+ * This macro is \#undef'ed at the end of this header file.
  */
 
 #define elxGetBaseMacro(_name, _elxbasetype)                                                                           \
