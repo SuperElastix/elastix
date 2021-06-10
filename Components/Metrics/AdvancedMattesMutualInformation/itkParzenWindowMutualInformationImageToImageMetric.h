@@ -187,7 +187,7 @@ protected:
    *
    * Implements a version that only loops once over the samples, but uses
    * a large block of memory to explicitly store the joint histogram derivative.
-   * It's size is #FixedHistogramBins * #MovingHistogramBins * #parameters * float.
+   * It's size is \#FixedHistogramBins * \#MovingHistogramBins * \#parameters * float.
    */
   void
   GetValueAndAnalyticDerivative(const ParametersType & parameters,

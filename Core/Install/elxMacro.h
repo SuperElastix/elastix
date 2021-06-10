@@ -84,7 +84,7 @@
  * not less.
  *
  * Details: a function "int _classname##InstallComponent( _cdb )" is defined.
- * In this function a template is defined, _classname##_install<VIndex>.
+ * In this function a template is defined, _classname\#\#_install<VIndex>.
  * It contains the ElastixTypedef<VIndex>, and recursive function DO(cdb).
  * DO installs the component for all defined ElastixTypedefs (so for all
  * supported image types).

@@ -81,7 +81,7 @@ public:
    *     1 = error
    *    -2 = output folder does not exist
    *    \todo generate file elastix_errors.h containing error codedefines
-   *      (e.g. #define ELASTIX_NO_ERROR 0)
+   *      (e.g. \#define ELASTIX_NO_ERROR 0)
    */
   int
   RegisterImages(ImagePointer             fixedImage,
