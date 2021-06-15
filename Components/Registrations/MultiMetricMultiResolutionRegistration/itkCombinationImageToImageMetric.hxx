@@ -145,6 +145,9 @@ template <class TFixedImage, class TMovingImage>
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::CombinationImageToImageMetric()
 {
   this->m_NumberOfMetrics = 0;
+  this->m_NumberOfImageMetrics = 0;
+  this->m_NumberOfTransformMetrics = 0;
+  this->m_NumberOfPointSetMetrics = 0;
   this->m_UseRelativeWeights = false;
   this->ComputeGradientOff();
 
@@ -164,6 +167,9 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream
 
   /** Add debugging information. */
   os << "NumberOfMetrics: " << this->m_NumberOfMetrics << std::endl;
+  os << "NumberOfImageMetrics: " << this->m_NumberOfImageMetrics << std::endl;
+  os << "NumberOfTransformMetrics: " << this->m_NumberOfTransformMetrics << std::endl;
+  os << "NumberOfPointSetMetrics: " << this->m_NumberOfPointSetMetrics << std::endl;
   for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     os << "Metric " << i << ":\n";
@@ -280,6 +286,30 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
 
   if (metric != this->m_Metrics[pos])
   {
+    PointSetMetricType * testPtr1 = dynamic_cast<PointSetMetricType *>(metric);
+    TransformMetricType * testPtr2 = dynamic_cast<TransformMetricType *>(metric);
+    if (!this->m_Metrics[pos]) // if the metric has not been set
+    {
+      // Update numberOfMetric counters
+      if (testPtr1)
+      {
+        this->m_NumberOfPointSetMetrics++;
+      }
+      else if (testPtr2)
+      {
+        this->m_NumberOfTransformMetrics++;
+      }
+      else
+      {
+        this->m_NumberOfImageMetrics++;
+      }
+    }
+    else
+    {
+      // /TODO: Logic to update numberOfMetric counters if a metric is replaced?
+      // not needed for elastix exe ...   
+    }
+
     this->m_Metrics[pos] = metric;
     this->Modified();
   }
