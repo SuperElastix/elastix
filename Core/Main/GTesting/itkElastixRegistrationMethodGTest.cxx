@@ -167,11 +167,6 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImageFalse)
 
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 {
-  // IndexRange is to be moved from namespace itk::Experimental
-  // to namespace itk with ITK version 5.2.
-  using namespace itk;
-  using namespace itk::Experimental;
-
   constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -209,7 +204,8 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 
   const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
 
-  for (const auto index : ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+  for (const auto index :
+       itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
   {
     movingImage->FillBuffer(0);
     elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
@@ -238,11 +234,6 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTransformFile)
 {
-  // IndexRange is to be moved from namespace itk::Experimental
-  // to namespace itk with ITK version 5.2.
-  using namespace itk;
-  using namespace itk::Experimental;
-
   constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -294,7 +285,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
     const auto filter2 = createFilter(transformParameterFileName);
 
     for (const auto index :
-         ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+         itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
     {
       movingImage->FillBuffer(0);
       elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
