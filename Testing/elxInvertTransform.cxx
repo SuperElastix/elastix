@@ -167,11 +167,7 @@ main(int argc, char * argv[])
   config->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true, dummyErrorMessage);
 
   /** Convert to ParametersType. */
-  ParametersType transformParameters(numberOfParameters);
-  for (unsigned int i = 0; i < numberOfParameters; ++i)
-  {
-    transformParameters[i] = vecPar[i];
-  }
+  const ParametersType transformParameters(vecPar.data(), numberOfParameters);
 
   /** Get center of rotation. */
   CenterType centerOfRotation;

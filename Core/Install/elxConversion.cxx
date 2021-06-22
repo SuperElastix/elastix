@@ -91,7 +91,7 @@ Conversion::SecondsToDHMS(const double totalSeconds, const unsigned int precisio
 itk::OptimizerParameters<double>
 Conversion::ToOptimizerParameters(const std::vector<double> & stdVector)
 {
-  return itk::OptimizerParameters<double>(itk::Array<double>(stdVector.data(), stdVector.size()));
+  return itk::OptimizerParameters<double>(stdVector.data(), stdVector.size());
 };
 
 
