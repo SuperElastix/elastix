@@ -265,9 +265,7 @@ GTEST_TEST(Conversion, ToOptimizerParameters)
 
   for (const double value : { -1.0, 0.0, 1.0, DBL_MIN, DBL_MAX })
   {
-    OptimizerParametersType expectedOptimizerParameters(1U);
-    expectedOptimizerParameters[0] = value;
-    EXPECT_EQ(Conversion::ToOptimizerParameters(StdVectorType{ value }), expectedOptimizerParameters);
+    EXPECT_EQ(Conversion::ToOptimizerParameters(StdVectorType{ value }), OptimizerParametersType(1U, value));
   }
 
   StdVectorType stdVector(10U);

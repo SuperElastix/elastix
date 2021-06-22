@@ -199,9 +199,8 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
 #endif
 
   /** Loop over all voxels in the sample container. */
-  ParametersType binCount(P);
-  binCount.Fill(0.0);
-  unsigned int samplenr = 0; // needed for global value only
+  ParametersType binCount(P, 0.0);
+  unsigned int   samplenr = 0; // needed for global value only
 
   for (iter = begin; iter != end; ++iter)
   {
@@ -631,8 +630,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   JacobianType               jacjjacj(outdim, outdim);
   const double               sqrt2 = std::sqrt(static_cast<double>(2.0));
   NonZeroJacobianIndicesType jacind(sizejacind);
-  ParametersType             binCount(P);
-  binCount.Fill(0.0);
+  ParametersType             binCount(P, 0.0);
 
   /** Loop over all voxels in the sample container. */
   for (iter = begin; iter != end; ++iter)

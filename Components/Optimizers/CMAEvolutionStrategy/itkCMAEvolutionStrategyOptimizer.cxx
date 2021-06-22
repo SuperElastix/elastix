@@ -404,8 +404,7 @@ CMAEvolutionStrategyOptimizer::InitializeProgressVariables(void)
   this->m_Heaviside = 0.0;
 
   /** m_SearchDirs */
-  ParametersType zeroParam(N);
-  zeroParam.Fill(0.0);
+  const ParametersType zeroParam(N, 0.0);
   this->m_SearchDirs.clear();
   this->m_SearchDirs.resize(lambda, zeroParam);
 

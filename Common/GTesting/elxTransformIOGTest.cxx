@@ -275,9 +275,9 @@ struct WithDimension
       elxTransform->SetElastix(elastixObject);
       elxTransform->BeforeAll();
 
-      ParameterMapType                       parameterMap;
-      const itk::OptimizerParameters<double> optimizerParameters(itk::Array<double>(vnl_vector<double>(2U, testValue)));
-      elxTransform->CreateTransformParametersMap(optimizerParameters, parameterMap);
+      ParameterMapType parameterMap;
+
+      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>(2U, testValue), parameterMap);
 
       for (const auto key : { "TransformParameters", "Origin", "Spacing" })
       {
