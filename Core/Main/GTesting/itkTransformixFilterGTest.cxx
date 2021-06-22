@@ -160,11 +160,7 @@ template <typename TImage>
 void
 ExpectAlmostEqualPixelValues(const TImage & actualImage, const TImage & expectedImage, const double tolerance)
 {
-  // ImageBufferRange is to be moved from namespace itk::Experimental
-  // to namespace itk with ITK version 5.2.
-  using namespace itk;
-  using namespace itk::Experimental;
-  using ImageBufferRangeType = ImageBufferRange<const TImage>;
+  using ImageBufferRangeType = itk::ImageBufferRange<const TImage>;
 
   const ImageBufferRangeType actualImageBufferRange(actualImage);
   const ImageBufferRangeType expectedImageBufferRange(expectedImage);

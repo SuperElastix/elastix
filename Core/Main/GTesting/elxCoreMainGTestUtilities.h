@@ -34,15 +34,6 @@
 #include <gtest/gtest.h>
 
 
-namespace itk
-{
-namespace Experimental
-{
-// Workaround to allow using things that may be either in itk or in itk::Experimental.
-}
-} // namespace itk
-
-
 namespace elastix
 {
 namespace CoreMainGTestUtilities
@@ -100,13 +91,8 @@ FillImageRegion(itk::Image<TPixel, VImageDimension> & image,
                 const itk::Index<VImageDimension> &   regionIndex,
                 const itk::Size<VImageDimension> &    regionSize)
 {
-  // ImageRegionRange is to be moved from namespace itk::Experimental
-  // to namespace itk with ITK version 5.2.
-  using namespace itk;
-  using namespace itk::Experimental;
-
-  const ImageRegionRange<Image<TPixel, VImageDimension>> imageRegionRange{
-    image, ImageRegion<VImageDimension>{ regionIndex, regionSize }
+  const itk::ImageRegionRange<itk::Image<TPixel, VImageDimension>> imageRegionRange{
+    image, itk::ImageRegion<VImageDimension>{ regionIndex, regionSize }
   };
   std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
 }
