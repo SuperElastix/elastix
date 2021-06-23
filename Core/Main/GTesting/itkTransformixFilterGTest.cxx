@@ -44,6 +44,8 @@
 using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
 
+using elx::CoreMainGTestUtilities::Deref;
+
 namespace
 {
 elx::ParameterObject::Pointer
@@ -108,7 +110,7 @@ TranslateImage(TImage & image, const typename TImage::OffsetType & translationOf
                             { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
   filter->Update();
 
-  return &elx::CoreMainGTestUtilities::Deref(filter->GetOutput());
+  return &Deref(filter->GetOutput());
 }
 
 
@@ -198,7 +200,7 @@ Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(
   resampleImageFilter->SetTransform(&itkTransform);
   resampleImageFilter->SetSize(imageSize);
   resampleImageFilter->Update();
-  const auto & resampleImageFilterOutput = elx::CoreMainGTestUtilities::Deref(resampleImageFilter->GetOutput());
+  const auto & resampleImageFilterOutput = Deref(resampleImageFilter->GetOutput());
 
   const auto transformixFilter = itk::TransformixFilter<TImage>::New();
   ASSERT_NE(transformixFilter, nullptr);
@@ -216,7 +218,7 @@ Expect_TransformixFilter_output_almost_same_as_ResampleImageFilter(
       { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
   transformixFilter->Update();
 
-  const auto & transformixOutput = elx::CoreMainGTestUtilities::Deref(transformixFilter->GetOutput());
+  const auto & transformixOutput = Deref(transformixFilter->GetOutput());
   ExpectEqualImageBases(transformixOutput, resampleImageFilterOutput);
   ExpectAlmostEqualPixelValues(transformixOutput, resampleImageFilterOutput, tolerance);
 }
@@ -320,7 +322,7 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
                               { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
     filter->Update();
     const auto * const outputImage = filter->GetOutput();
-    ExpectEqualImages(elx::CoreMainGTestUtilities::Deref(outputImage), *expectedOutputImage);
+    ExpectEqualImages(Deref(outputImage), *expectedOutputImage);
   }
 }
 
