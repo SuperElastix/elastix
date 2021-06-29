@@ -842,3 +842,27 @@ GTEST_TEST(Transform, TransformedPointSameAsITKEuler3D)
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
 }
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKSimilarity2D)
+{
+  const auto itkTransform = itk::Similarity2DTransform<double>::New();
+  itkTransform->SetScale(0.75);
+  itkTransform->SetTranslation(MakeVector(1.0, 2.0));
+  itkTransform->SetCenter(MakePoint(0.5, 1.5));
+  itkTransform->SetAngle(M_PI_4);
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(*itkTransform);
+}
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKSimilarity3D)
+{
+  const auto itkTransform = itk::Similarity3DTransform<double>::New();
+  itkTransform->SetScale(0.75);
+  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform->SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(*itkTransform);
+}
