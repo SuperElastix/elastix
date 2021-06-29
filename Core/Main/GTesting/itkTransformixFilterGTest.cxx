@@ -27,6 +27,8 @@
 
 // ITK header files:
 #include <itkAffineTransform.h>
+#include <itkEuler2DTransform.h>
+#include <itkEuler3DTransform.h>
 #include <itkImage.h>
 #include <itkImageBufferRange.h>
 #include <itkNumberToString.h>
@@ -376,6 +378,28 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform3D)
   itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
   itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
   itkTransform->Rotate3D(itk::Vector<double, ImageDimension>(1.0), M_PI_4);
+
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKEulerTransform2D)
+{
+  const auto itkTransform = itk::Euler2DTransform<double>::New();
+  itkTransform->SetTranslation(MakeVector(1.0, -2.0));
+  itkTransform->SetCenter(MakePoint(2.5, 3.0));
+
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKEulerTransform3D)
+{
+  const auto itkTransform = itk::Euler3DTransform<double>::New();
+  itkTransform->SetTranslation(MakeVector(1.0, -2.0, 3.0));
+  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
