@@ -16,6 +16,8 @@
  *
  *=========================================================================*/
 
+#define _USE_MATH_DEFINES // For M_PI_4.
+
 // First include the header file to be tested:
 #include "elxTransformIO.h"
 
@@ -50,6 +52,7 @@
 #include <itkSimilarity3DTransform.h>
 #include <itkTranslationTransform.h>
 
+#include <cmath> // For M_PI_4.
 #include <typeinfo>
 #include <type_traits> // For is_same
 
@@ -504,6 +507,55 @@ Expect_default_elastix_Parameters_remain_the_same_when_set(const bool fixed)
     fixed);
 }
 
+
+template <template <typename> class TElastixTransform, typename TITKTransform>
+void
+Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTransform)
+{
+  const auto Dimension = TITKTransform::SpaceDimension;
+
+  const auto elxTransform = TElastixTransform<ElastixType<Dimension>>::New();
+
+  // Check that the elastix transform type corresponds with the ITK transform type.
+  EXPECT_EQ(elxTransform->elxGetClassName(),
+            elx::TransformIO::ConvertITKNameOfClassToElastixClassName(itkTransform.GetNameOfClass()));
+
+  elxTransform->SetParameters(itkTransform.GetParameters());
+  elxTransform->SetFixedParameters(itkTransform.GetFixedParameters());
+
+  unsigned numberOfTimesOutputDiffersFromInput{};
+  unsigned numberOfTimesOutputIsNonZero{};
+
+  // Test input point coordinates -0.5, 0.0, and 0.5, for each dimension.
+  for (const auto index : itk::ZeroBasedIndexRange<Dimension>(itk::Size<Dimension>::Filled(3)))
+  {
+    itk::Point<double, Dimension> inputPoint;
+    std::transform(
+      index.begin(), index.end(), inputPoint.begin(), [](const double value) { return (value / 2.0) - 1.0; });
+
+    const auto expectedOutputPoint = itkTransform.TransformPoint(inputPoint);
+
+    if (expectedOutputPoint != inputPoint)
+    {
+      ++numberOfTimesOutputDiffersFromInput;
+    }
+    if (expectedOutputPoint != itk::Point<double, Dimension>())
+    {
+      ++numberOfTimesOutputIsNonZero;
+    }
+
+    EXPECT_EQ(elxTransform->TransformPoint(inputPoint), expectedOutputPoint);
+  }
+
+  // If the output point would always equal the input point, either the test
+  // or the transform might not make much sense.
+  EXPECT_GT(numberOfTimesOutputDiffersFromInput, 0U);
+
+  // If the output point would always be zero (0, 0, 0), again, either the test
+  // or the transform might not make much sense.
+  EXPECT_GT(numberOfTimesOutputIsNonZero, 0U);
+}
+
 } // namespace
 
 
@@ -712,4 +764,54 @@ GTEST_TEST(Transform, CreateTransformParametersSetUseAddition)
     elx::AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_SetUseAddition();
   WithDimension<3>::WithElastixTransform<
     elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_SetUseAddition();
+}
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKTranslation2D)
+{
+  constexpr auto Dimension = 2U;
+
+  const auto itkTransform = itk::TranslationTransform<double, Dimension>::New();
+  itkTransform->SetOffset(std::array<double, Dimension>{ 1.0, 2.0 }.data());
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(*itkTransform);
+}
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKTranslation3D)
+{
+  constexpr auto Dimension = 3U;
+
+  const auto itkTransform = itk::TranslationTransform<double, Dimension>::New();
+  itkTransform->SetOffset(std::array<double, Dimension>{ 1.0, 2.0, 3.0 }.data());
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(*itkTransform);
+}
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKAffine2D)
+{
+  constexpr auto Dimension = 2U;
+
+  const auto itkTransform = itk::AffineTransform<double, Dimension>::New();
+  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0 }.data());
+  itkTransform->Scale(std::array<double, Dimension>{ 1.5, 1.75 }.data());
+  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 0.5, 1.5 }));
+  itkTransform->Rotate2D(M_PI_4);
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(*itkTransform);
+}
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
+{
+  constexpr auto Dimension = 3U;
+
+  const auto itkTransform = itk::AffineTransform<double, Dimension>::New();
+  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0, 3.0 }.data());
+  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 3.0, 2.0, 1.0 }));
+  itkTransform->Scale(std::array<double, Dimension>{ 1.25, 1.5, 1.75 }.data());
+  itkTransform->Rotate3D(itk::Vector<double, Dimension>(1.0), M_PI_4);
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(*itkTransform);
 }
