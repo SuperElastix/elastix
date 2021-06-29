@@ -271,6 +271,13 @@ protected:
   /** The destructor. */
   ~TransformBase() override = default;
 
+  /** Tells whether this transform is specified by TransformParameters from ITK */
+  bool
+  HasITKTransformParameters(void) const
+  {
+    return this->BaseComponentSE<TElastix>::m_Configuration->HasParameter("ITKTransformParameters");
+  }
+
   /** Estimate a scales vector
    * AutomaticScalesEstimation works like this:
    * \li N=10000 points are sampled on a uniform grid on the fixed image.
