@@ -22,13 +22,13 @@
 #include <itkTransformixFilter.h>
 #include <itkParameterFileParser.h>
 
-#include "elxTransformIO.h"
 #include "elxCoreMainGTestUtilities.h"
 
 // ITK header files:
 #include <itkAffineTransform.h>
 #include <itkImage.h>
 #include <itkImageBufferRange.h>
+#include <itkNumberToString.h>
 #include <itkResampleImageFilter.h>
 #include <itkTranslationTransform.h>
 
@@ -52,6 +52,20 @@ using elx::CoreMainGTestUtilities::Deref;
 
 namespace
 {
+// Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
+template <typename TPixel, unsigned VImageDimension>
+itk::SmartPointer<itk::Image<TPixel, VImageDimension>>
+CreateImageFilledWithSequenceOfNaturalNumbers(const itk::Size<VImageDimension> & imageSize)
+{
+  const auto image = itk::Image<TPixel, VImageDimension>::New();
+  image->SetRegions(imageSize);
+  image->Allocate();
+  const itk::ImageBufferRange<itk::Image<TPixel, VImageDimension>> imageBufferRange{ *image };
+  std::iota(imageBufferRange.begin(), imageBufferRange.end(), TPixel{ 1 });
+  return image;
+}
+
+
 elx::ParameterObject::Pointer
 CreateParameterObject(const ParameterMapType & parameterMap)
 {
@@ -81,11 +95,10 @@ ParameterValuesType
 ConvertToParameterValues(const T & container)
 {
   ParameterValuesType parameterValues(container.size());
-
   std::transform(std::begin(container),
                  std::end(container),
                  parameterValues.begin(),
-                 [](decltype(*std::begin(container)) inputValue) { return std::to_string(inputValue); });
+                 [](decltype(*std::begin(container)) inputValue) { return itk::NumberToString<double>{}(inputValue); });
   return parameterValues;
 }
 
@@ -118,56 +131,12 @@ TranslateImage(TImage & image, const typename TImage::OffsetType & translationOf
 }
 
 
-template <unsigned NImageDimension>
-void
-ExpectEqualImageBases(const itk::ImageBase<NImageDimension> & actualImageBase,
-                      const itk::ImageBase<NImageDimension> & expectedImageBase)
-{
-  EXPECT_EQ(actualImageBase.GetBufferedRegion(), expectedImageBase.GetBufferedRegion());
-  EXPECT_EQ(actualImageBase.GetSpacing(), expectedImageBase.GetSpacing());
-  EXPECT_EQ(actualImageBase.GetOrigin(), expectedImageBase.GetOrigin());
-  EXPECT_EQ(actualImageBase.GetDirection(), expectedImageBase.GetDirection());
-  EXPECT_EQ(actualImageBase.GetInverseDirection(), expectedImageBase.GetInverseDirection());
-}
-
-
 template <typename TPixel, unsigned int VImageDimension>
 void
 ExpectEqualImages(const itk::Image<TPixel, VImageDimension> & actualImage,
                   const itk::Image<TPixel, VImageDimension> & expectedImage)
 {
   EXPECT_EQ(actualImage, expectedImage);
-}
-
-
-template <typename TImage>
-void
-ExpectAlmostEqualPixelValues(const TImage & actualImage, const TImage & expectedImage, const double tolerance)
-{
-  // Expect the specified tolerance value to be greater than zero, otherwise
-  // `ExpectEqualImages` should have been called instead.
-  EXPECT_GT(tolerance, 0.0);
-
-  using ImageBufferRangeType = itk::ImageBufferRange<const TImage>;
-
-  const ImageBufferRangeType actualImageBufferRange(actualImage);
-  const ImageBufferRangeType expectedImageBufferRange(expectedImage);
-
-  ASSERT_EQ(actualImageBufferRange.size(), expectedImageBufferRange.size());
-
-  const auto beginOfExpectedImageBuffer = expectedImageBufferRange.cbegin();
-
-  // First expect that _not_ all pixel values are not _exactly_ equal,
-  // otherwise `ExpectEqualImages` should probably have been called instead!
-  EXPECT_FALSE(std::equal(actualImageBufferRange.cbegin(), actualImageBufferRange.cend(), beginOfExpectedImageBuffer));
-
-  auto expectedImageIterator = beginOfExpectedImageBuffer;
-
-  for (const typename TImage::PixelType actualPixelValue : actualImageBufferRange)
-  {
-    EXPECT_LE(std::abs(actualPixelValue - *expectedImageIterator), tolerance);
-    ++expectedImageIterator;
-  }
 }
 
 
@@ -189,6 +158,16 @@ CreateTransformixFilter(itk::Image<TPixel, VImageDimension> &                   
 {
   const auto filter = itk::TransformixFilter<itk::Image<TPixel, VImageDimension>>::New();
   filter->SetMovingImage(&image);
+
+  std::string transformName = itkTransform.GetNameOfClass();
+
+  const auto dimensionPosition = transformName.find(std::to_string(VImageDimension) + "DTransform");
+  if (dimensionPosition != std::string::npos)
+  {
+    // Erase "2D" or "3D".
+    transformName.erase(dimensionPosition, 2);
+  }
+
   filter->SetTransformParameterObject(CreateParameterObject(
     { // Parameters in alphabetic order:
       { "Direction", CreateDefaultDirectionParameterValues<VImageDimension>() },
@@ -198,7 +177,7 @@ CreateTransformixFilter(itk::Image<TPixel, VImageDimension> &                   
       { "Origin", ParameterValuesType(VImageDimension, "0") },
       { "ResampleInterpolator", { "FinalLinearInterpolator" } },
       { "Size", ConvertToParameterValues(image.GetBufferedRegion().GetSize()) },
-      { "Transform", { elx::TransformIO::ConvertITKNameOfClassToElastixClassName(itkTransform.GetNameOfClass()) } },
+      { "Transform", { transformName } },
       { "Spacing", ParameterValuesType(VImageDimension, "1") } }));
   filter->Update();
   return filter;
@@ -222,44 +201,26 @@ CreateResampleImageFilter(const itk::Image<TPixel, VImageDimension> &           
 template <typename TPixel, unsigned VImageDimension>
 void
 Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-  itk::Image<TPixel, VImageDimension> &                            image,
+  itk::Image<TPixel, VImageDimension> &                            inputImage,
   const itk::Transform<double, VImageDimension, VImageDimension> & itkTransform)
 {
-  const auto resampleImageFilter = CreateResampleImageFilter(image, itkTransform);
-  const auto transformixFilter = CreateTransformixFilter(image, itkTransform);
+  const auto resampleImageFilter = CreateResampleImageFilter(inputImage, itkTransform);
+  const auto transformixFilter = CreateTransformixFilter(inputImage, itkTransform);
 
   const auto & resampleImageFilterOutput = Deref(Deref(resampleImageFilter.GetPointer()).GetOutput());
   const auto & transformixFilterOutput = Deref(Deref(transformixFilter.GetPointer()).GetOutput());
 
-  // First just test that the output is not simply a black image, otherwise the
-  // test itself would be less interesting.
+  // Check that the ResampleImageFilter output isn't equal to the input image,
+  // otherwise the test itself would be less interesting.
+  EXPECT_NE(resampleImageFilterOutput, inputImage);
+
+  // Check that the output is not simply a black image, otherwise the test
+  // itself would be less interesting.
   EXPECT_TRUE(ImageBuffer_has_nonzero_pixel_values(transformixFilterOutput));
 
   ExpectEqualImages(transformixFilterOutput, resampleImageFilterOutput);
 }
 
-
-template <typename TPixel, unsigned VImageDimension>
-void
-Expect_TransformixFilter_output_almost_equals_ResampleImageFilter_output(
-  itk::Image<TPixel, VImageDimension> &                            image,
-  const itk::Transform<double, VImageDimension, VImageDimension> & itkTransform,
-  const double                                                     tolerance)
-{
-  const auto resampleImageFilter = CreateResampleImageFilter(image, itkTransform);
-  const auto transformixFilter = CreateTransformixFilter(image, itkTransform);
-
-  const auto & resampleImageFilterOutput = Deref(Deref(resampleImageFilter.GetPointer()).GetOutput());
-  const auto & transformixFilterOutput = Deref(Deref(transformixFilter.GetPointer()).GetOutput());
-
-  // First just test that the output is not simply a black image, otherwise the
-  // test itself would be less interesting.
-  EXPECT_TRUE(ImageBuffer_has_nonzero_pixel_values(transformixFilterOutput));
-  EXPECT_TRUE(ImageBuffer_has_nonzero_pixel_values(resampleImageFilterOutput));
-
-  ExpectEqualImageBases(transformixFilterOutput, resampleImageFilterOutput);
-  ExpectAlmostEqualPixelValues(transformixFilterOutput, resampleImageFilterOutput, tolerance);
-}
 
 } // namespace
 
@@ -368,98 +329,53 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
 GTEST_TEST(itkTransformixFilter, ITKTranslationTransform2D)
 {
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
-  using SizeType = itk::Size<ImageDimension>;
-
-  const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
-  const auto                        regionSize = SizeType::Filled(2);
-  const SizeType                    imageSize{ { 5, 6 } };
-  const itk::Index<ImageDimension>  fixedImageRegionIndex{ { 1, 3 } };
-
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto itkTransform = itk::TranslationTransform<double, ImageDimension>::New();
-  ASSERT_NE(itkTransform, nullptr);
-  itkTransform->SetOffset(itk::Vector<double, ImageDimension>(translationOffset.data()));
+  itkTransform->SetOffset(itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, -2.0 }.data()));
 
-  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(*movingImage, *itkTransform);
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6 }), *itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKTranslationTransform3D)
 {
   constexpr auto ImageDimension = 3U;
-  using ImageType = itk::Image<float, ImageDimension>;
-  using SizeType = itk::Size<ImageDimension>;
-
-  const itk::Offset<ImageDimension> translationOffset{ { 1, 2, 3 } };
-  const auto                        regionSize = SizeType::Filled(2);
-  const SizeType                    imageSize{ { 5, 7, 9 } };
-  const itk::Index<ImageDimension>  fixedImageRegionIndex{ { 1, 2, 3 } };
-
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto itkTransform = itk::TranslationTransform<double, ImageDimension>::New();
-  ASSERT_NE(itkTransform, nullptr);
-  itkTransform->SetOffset(itk::Vector<double, ImageDimension>(translationOffset.data()));
+  itkTransform->SetOffset(
+    itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, -2.0, 3.0 }.data()));
 
-  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(*movingImage, *itkTransform);
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6, 7 }), *itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKAffineTransform2D)
 {
-  constexpr auto                    ImageDimension = 2U;
-  const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
-  const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);
-  const itk::Size<ImageDimension>   imageSize{ { 5, 6 } };
-  const itk::Index<ImageDimension>  index{ { 1, 3 } };
-
-  const auto image = itk::Image<float, ImageDimension>::New();
-  image->SetRegions(imageSize);
-  image->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*image, index + translationOffset, regionSize);
+  constexpr auto ImageDimension = 2U;
 
   const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
-  ASSERT_NE(itkTransform, nullptr);
   itkTransform->SetTranslation(
     itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, -2.0 }.data()));
   itkTransform->SetCenter(itk::Point<double, ImageDimension>(std::array<double, ImageDimension>{ 2.5, 3.0 }));
   itkTransform->Rotate2D(M_PI_4);
 
-  // A tolerance value that is just high enough to avoid test failures.
-  constexpr auto tolerance = 1.4e-06F;
-  Expect_TransformixFilter_output_almost_equals_ResampleImageFilter_output(*image, *itkTransform, tolerance);
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6 }), *itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKAffineTransform3D)
 {
-  constexpr auto                    ImageDimension = 3U;
-  const itk::Offset<ImageDimension> translationOffset{ { 1, 2, 3 } };
-  const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);
-  const itk::Size<ImageDimension>   imageSize{ { 5, 7, 9 } };
-  const itk::Index<ImageDimension>  index{ { 1, 2, 3 } };
-
-  const auto image = itk::Image<float, ImageDimension>::New();
-  image->SetRegions(imageSize);
-  image->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*image, index + translationOffset, regionSize);
+  constexpr auto ImageDimension = 3U;
 
   const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
-  ASSERT_NE(itkTransform, nullptr);
   itkTransform->SetTranslation(
     itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, 2.0, 3.0 }.data()));
   itkTransform->SetCenter(itk::Point<double, ImageDimension>(std::array<double, ImageDimension>{ 3.0, 2.0, 1.0 }));
   itkTransform->Rotate3D(itk::Vector<double, ImageDimension>(1.0), M_PI_4);
 
-  // A tolerance value that is just high enough to avoid test failures.
-  constexpr auto tolerance = 2.0e-06F;
-  Expect_TransformixFilter_output_almost_equals_ResampleImageFilter_output(*image, *itkTransform, tolerance);
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6, 7 }), *itkTransform);
 }
