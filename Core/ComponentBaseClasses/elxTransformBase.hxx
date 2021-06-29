@@ -345,8 +345,8 @@ TransformBase<TElastix>::ReadFromFile(void)
       this->m_Configuration->ReadParameter(
         useBinaryFormatForTransformationParameters, "UseBinaryFormatForTransformationParameters", 0);
 
-      /** Get the TransformParameters pointer. */
-      this->m_TransformParametersPointer.reset(new ParametersType(numberOfParameters));
+      /** Get the TransformParameters. */
+      ParametersType transformParameters(numberOfParameters);
 
       /** Read the TransformParameters. */
       std::size_t            numberOfParametersFound = 0;
@@ -356,8 +356,7 @@ TransformBase<TElastix>::ReadFromFile(void)
         std::string dataFileName = "";
         this->m_Configuration->ReadParameter(dataFileName, "TransformParameters", 0);
         std::ifstream infile(dataFileName, std::ios_base::binary);
-        infile.read(reinterpret_cast<char *>(this->m_TransformParametersPointer->data_block()),
-                    sizeof(ValueType) * numberOfParameters);
+        infile.read(reinterpret_cast<char *>(transformParameters.data_block()), sizeof(ValueType) * numberOfParameters);
         numberOfParametersFound = infile.gcount() / sizeof(ValueType); // for sanity check
         infile.close();
       }
@@ -386,20 +385,22 @@ TransformBase<TElastix>::ReadFromFile(void)
         itkExceptionMacro(<< makeMessage.str().c_str());
       }
 
-      /** Copy to m_TransformParametersPointer. */
+      /** Copy to transformParameters. */
       if (!useBinaryFormatForTransformationParameters)
       {
         // NOTE: we could avoid this by directly reading into the transform parameters,
         // e.g. by overloading ReadParameter(), or use swap (?).
         for (unsigned int i = 0; i < numberOfParameters; ++i)
         {
-          (*(this->m_TransformParametersPointer))[i] = vecPar[i];
+          transformParameters[i] = vecPar[i];
         }
       }
+      /** Set the parameters into this transform. */
+      this->GetSelf().SetParameters(transformParameters);
     }
     else
     {
-      m_TransformParametersPointer.reset(new ParametersType(Conversion::ToOptimizerParameters(*itkParameterValues)));
+      this->GetSelf().SetParameters(Conversion::ToOptimizerParameters(*itkParameterValues));
 
       const auto itkFixedParameterValues =
         this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformFixedParameters");
@@ -410,8 +411,6 @@ TransformBase<TElastix>::ReadFromFile(void)
       }
     }
 
-    /** Set the parameters into this transform. */
-    this->GetAsITKBaseType()->SetParameters(*(this->m_TransformParametersPointer));
 
   } // end if this->m_ReadWriteTransformParameters
 

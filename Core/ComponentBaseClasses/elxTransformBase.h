@@ -32,8 +32,6 @@
 #include <itkImage.h>
 #include <itkOptimizerParameters.h>
 
-#include <memory> // For unique_ptr.
-
 namespace elastix
 {
 // using namespace itk; //Not here, because a TransformBase class was added to ITK...
@@ -371,9 +369,8 @@ private:
   {}
 
   /** Member variables. */
-  std::unique_ptr<ParametersType> m_TransformParametersPointer{};
-  std::string                     m_TransformParametersFileName;
-  ParametersType                  m_FinalParameters;
+  std::string    m_TransformParametersFileName;
+  ParametersType m_FinalParameters;
 
   /** Boolean to decide whether or not the transform parameters are written. */
   bool m_ReadWriteTransformParameters{ true };
