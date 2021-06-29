@@ -815,3 +815,27 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(*itkTransform);
 }
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
+{
+  constexpr auto Dimension = 2U;
+
+  const auto itkTransform = itk::Euler2DTransform<double>::New();
+  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0 }.data());
+  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 0.5, 1.5 }));
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
+}
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKEuler3D)
+{
+  constexpr auto Dimension = 3U;
+
+  const auto itkTransform = itk::Euler3DTransform<double>::New();
+  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0, 3.0 }.data());
+  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 3.0, 2.0, 1.0 }));
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
+}
