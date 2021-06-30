@@ -27,7 +27,7 @@ namespace itk
 
 /**
  * \class AffineDTIGroup
- * \brief This class only contains a dummy class.
+ * \brief This class only contains an alias template.
  *
  */
 
@@ -36,17 +36,12 @@ class AffineDTIGroup
 {
 public:
   template <class TScalarType>
-  class Dummy
-  {
-  public:
-    /** Typedef's.*/
-    typedef AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension> AffineDTITransform_tmp;
-  };
+  using TransformAlias = AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>;
 };
 
 /**
  * \class AffineDTIGroup<2>
- * \brief This class only contains a dummy class for the 2D case.
+ * \brief This class only contains an alias template for the 2D case.
  *
  */
 
@@ -55,17 +50,12 @@ class AffineDTIGroup<2>
 {
 public:
   template <class TScalarType>
-  class Dummy
-  {
-  public:
-    /** Typedef's.*/
-    typedef AffineDTI2DTransform<TScalarType> AffineDTITransform_tmp;
-  };
+  using TransformAlias = AffineDTI2DTransform<TScalarType>;
 };
 
 /**
  * \class AffineDTIGroup<3>
- * \brief This class only contains a dummy class for the 3D case.
+ * \brief This class only contains an alias template for the 3D case.
  *
  */
 
@@ -74,44 +64,16 @@ class AffineDTIGroup<3>
 {
 public:
   template <class TScalarType>
-  class Dummy
-  {
-  public:
-    /** Typedef's.*/
-    typedef AffineDTI3DTransform<TScalarType> AffineDTITransform_tmp;
-  };
+  using TransformAlias = AffineDTI3DTransform<TScalarType>;
 };
+
 
 /**
- * \class AffineDTIGroupTemplate
- * \brief This class templates the AffineDTIGroup over its dimension.
- *
+ * This alias templates the AffineDTIGroup over its dimension.
  */
-
 template <class TScalarType, unsigned int Dimension>
-class AffineDTIGroupTemplate
-{
-public:
-  typedef AffineDTIGroupTemplate Self;
-  typedef TScalarType            ScalarType;
-  itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
+using AffineDTIGroupTemplate = typename AffineDTIGroup<Dimension>::template TransformAlias<TScalarType>;
 
-  // This declaration of 'AffineDTI' does not work with the GCC compiler
-  //    typedef AffineDTIGroup<  itkGetStaticConstMacro( SpaceDimension ) >       AffineDTI;
-  // The following trick works though:
-  template <unsigned int D>
-  class AffineDTIGroupWrap
-  {
-  public:
-    typedef AffineDTIGroup<D> AffineDTI;
-  };
-
-  typedef AffineDTIGroupWrap<Dimension>                  AffineDTIGroupWrapInstance;
-  typedef typename AffineDTIGroupWrapInstance::AffineDTI AffineDTI;
-
-  typedef typename AffineDTI::template Dummy<ScalarType>  AffineDTIDummy;
-  typedef typename AffineDTIDummy::AffineDTITransform_tmp AffineDTITransform_tmp;
-};
 
 /**
  * \class AffineDTITransform
@@ -123,14 +85,14 @@ public:
  */
 
 template <class TScalarType, unsigned int Dimension>
-class AffineDTITransform : public AffineDTIGroupTemplate<TScalarType, Dimension>::AffineDTITransform_tmp
+class AffineDTITransform : public AffineDTIGroupTemplate<TScalarType, Dimension>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef AffineDTITransform                                                              Self;
-  typedef typename AffineDTIGroupTemplate<TScalarType, Dimension>::AffineDTITransform_tmp Superclass;
-  typedef SmartPointer<Self>                                                              Pointer;
-  typedef SmartPointer<const Self>                                                        ConstPointer;
+  typedef AffineDTITransform                             Self;
+  typedef AffineDTIGroupTemplate<TScalarType, Dimension> Superclass;
+  typedef SmartPointer<Self>                             Pointer;
+  typedef SmartPointer<const Self>                       ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

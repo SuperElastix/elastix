@@ -27,7 +27,7 @@ namespace itk
 
 /**
  * \class EulerGroup
- * \brief This class only contains a dummy class.
+ * \brief This class only contains an alias template.
  *
  */
 
@@ -36,17 +36,12 @@ class EulerGroup
 {
 public:
   template <class TScalarType>
-  class Dummy
-  {
-  public:
-    /** Typedef's.*/
-    typedef AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension> EulerTransform_tmp;
-  };
+  using TransformAlias = AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>;
 };
 
 /**
  * \class EulerGroup<2>
- * \brief This class only contains a dummy class for the 2D case.
+ * \brief This class only contains an alias template for the 2D case.
  *
  */
 
@@ -55,17 +50,12 @@ class EulerGroup<2>
 {
 public:
   template <class TScalarType>
-  class Dummy
-  {
-  public:
-    /** Typedef's.*/
-    typedef AdvancedRigid2DTransform<TScalarType> EulerTransform_tmp;
-  };
+  using TransformAlias = AdvancedRigid2DTransform<TScalarType>;
 };
 
 /**
  * \class EulerGroup<3>
- * \brief This class only contains a dummy class for the 3D case.
+ * \brief This class only contains an alias template for the 3D case.
  *
  */
 
@@ -74,44 +64,16 @@ class EulerGroup<3>
 {
 public:
   template <class TScalarType>
-  class Dummy
-  {
-  public:
-    /** Typedef's.*/
-    typedef AdvancedEuler3DTransform<TScalarType> EulerTransform_tmp;
-  };
+  using TransformAlias = AdvancedEuler3DTransform<TScalarType>;
 };
+
 
 /**
- * \class EulerGroupTemplate
- * \brief This class templates the EulerGroup over its dimension.
- *
+ * This alias templates the EulerGroup over its dimension.
  */
-
 template <class TScalarType, unsigned int Dimension>
-class EulerGroupTemplate
-{
-public:
-  typedef EulerGroupTemplate Self;
-  typedef TScalarType        ScalarType;
-  itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
+using EulerGroupTemplate = typename EulerGroup<Dimension>::template TransformAlias<TScalarType>;
 
-  // This declaration of 'Euler' does not work with the GCC compiler
-  //    typedef EulerGroup<  itkGetStaticConstMacro( SpaceDimension ) >       Euler;
-  // The following trick works though:
-  template <unsigned int D>
-  class EulerGroupWrap
-  {
-  public:
-    typedef EulerGroup<D> Euler;
-  };
-
-  typedef EulerGroupWrap<Dimension>              EulerGroupWrapInstance;
-  typedef typename EulerGroupWrapInstance::Euler Euler;
-
-  typedef typename Euler::template Dummy<ScalarType> EulerDummy;
-  typedef typename EulerDummy::EulerTransform_tmp    EulerTransform_tmp;
-};
 
 /**
  * \class EulerTransform
@@ -123,14 +85,14 @@ public:
  */
 
 template <class TScalarType, unsigned int Dimension>
-class ITK_TEMPLATE_EXPORT EulerTransform : public EulerGroupTemplate<TScalarType, Dimension>::EulerTransform_tmp
+class ITK_TEMPLATE_EXPORT EulerTransform : public EulerGroupTemplate<TScalarType, Dimension>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef EulerTransform                                                          Self;
-  typedef typename EulerGroupTemplate<TScalarType, Dimension>::EulerTransform_tmp Superclass;
-  typedef SmartPointer<Self>                                                      Pointer;
-  typedef SmartPointer<const Self>                                                ConstPointer;
+  typedef EulerTransform                             Self;
+  typedef EulerGroupTemplate<TScalarType, Dimension> Superclass;
+  typedef SmartPointer<Self>                         Pointer;
+  typedef SmartPointer<const Self>                   ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -197,14 +159,14 @@ private:
 };
 
 template <class TScalarType>
-class EulerTransform<TScalarType, 3> : public EulerGroupTemplate<TScalarType, 3>::EulerTransform_tmp
+class EulerTransform<TScalarType, 3> : public EulerGroupTemplate<TScalarType, 3>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef EulerTransform                                                  Self;
-  typedef typename EulerGroupTemplate<TScalarType, 3>::EulerTransform_tmp Superclass;
-  typedef SmartPointer<Self>                                              Pointer;
-  typedef SmartPointer<const Self>                                        ConstPointer;
+  typedef EulerTransform                     Self;
+  typedef EulerGroupTemplate<TScalarType, 3> Superclass;
+  typedef SmartPointer<Self>                 Pointer;
+  typedef SmartPointer<const Self>           ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
