@@ -62,35 +62,38 @@ template <class TElastix>
 void
 SimilarityTransformElastix<TElastix>::ReadFromFile(void)
 {
-  /** Variables. */
-  InputPointType centerOfRotationPoint;
-  centerOfRotationPoint.Fill(0.0);
-  bool indexRead = false;
-
-  /** Try first to read the CenterOfRotationPoint from the
-   * transform parameter file, this is the new, and preferred
-   * way, since elastix 3.402.
-   */
-  bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
-
-  /** If this did not succeed, probably a transform parameter file
-   * is trying to be read that was generated using an older elastix
-   * version. Try to read it as an index, and convert to point.
-   */
-  if (!pointRead)
+  if (!this->HasITKTransformParameters())
   {
-    indexRead = this->ReadCenterOfRotationIndex(centerOfRotationPoint);
-  }
+    /** Variables. */
+    InputPointType centerOfRotationPoint;
+    centerOfRotationPoint.Fill(0.0);
+    bool indexRead = false;
 
-  if (!pointRead && !indexRead)
-  {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the "
-                      << "transform parameter file." << std::endl;
-    itkExceptionMacro(<< "Transform parameter file is corrupt.")
-  }
+    /** Try first to read the CenterOfRotationPoint from the
+     * transform parameter file, this is the new, and preferred
+     * way, since elastix 3.402.
+     */
+    bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
 
-  /** Set the center in this Transform. */
-  this->m_SimilarityTransform->SetCenter(centerOfRotationPoint);
+    /** If this did not succeed, probably a transform parameter file
+     * is trying to be read that was generated using an older elastix
+     * version. Try to read it as an index, and convert to point.
+     */
+    if (!pointRead)
+    {
+      indexRead = this->ReadCenterOfRotationIndex(centerOfRotationPoint);
+    }
+
+    if (!pointRead && !indexRead)
+    {
+      xl::xout["error"] << "ERROR: No center of rotation is specified in the "
+                        << "transform parameter file." << std::endl;
+      itkExceptionMacro(<< "Transform parameter file is corrupt.")
+    }
+
+    /** Set the center in this Transform. */
+    this->m_SimilarityTransform->SetCenter(centerOfRotationPoint);
+  }
 
   /** Call the ReadFromFile from the TransformBase.
    * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
