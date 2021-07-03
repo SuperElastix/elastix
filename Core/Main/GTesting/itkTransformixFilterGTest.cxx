@@ -23,6 +23,7 @@
 #include <itkParameterFileParser.h>
 
 #include "elxCoreMainGTestUtilities.h"
+#include "GTesting/elxGTestUtilities.h"
 
 // ITK header files:
 #include <itkAffineTransform.h>
@@ -48,6 +49,8 @@ template <typename TPixel, unsigned VImageDimension>
 using ResampleImageFilterType =
   itk::ResampleImageFilter<itk::Image<TPixel, VImageDimension>, itk::Image<TPixel, VImageDimension>>;
 
+using elx::GTestUtilities::MakePoint;
+using elx::GTestUtilities::MakeVector;
 using elx::CoreMainGTestUtilities::Deref;
 
 namespace
@@ -331,7 +334,7 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform2D)
   constexpr auto ImageDimension = 2U;
 
   const auto itkTransform = itk::TranslationTransform<double, ImageDimension>::New();
-  itkTransform->SetOffset(itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, -2.0 }.data()));
+  itkTransform->SetOffset(MakeVector(1.0, -2.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6 }), *itkTransform);
@@ -343,8 +346,7 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform3D)
   constexpr auto ImageDimension = 3U;
 
   const auto itkTransform = itk::TranslationTransform<double, ImageDimension>::New();
-  itkTransform->SetOffset(
-    itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, -2.0, 3.0 }.data()));
+  itkTransform->SetOffset(MakeVector(1.0, -2.0, 3.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6, 7 }), *itkTransform);
@@ -356,9 +358,8 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform2D)
   constexpr auto ImageDimension = 2U;
 
   const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
-  itkTransform->SetTranslation(
-    itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, -2.0 }.data()));
-  itkTransform->SetCenter(itk::Point<double, ImageDimension>(std::array<double, ImageDimension>{ 2.5, 3.0 }));
+  itkTransform->SetTranslation(MakeVector(1.0, -2.0));
+  itkTransform->SetCenter(MakePoint(2.5, 3.0));
   itkTransform->Rotate2D(M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
@@ -371,9 +372,8 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform3D)
   constexpr auto ImageDimension = 3U;
 
   const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
-  itkTransform->SetTranslation(
-    itk::Vector<double, ImageDimension>(std::array<double, ImageDimension>{ 1.0, 2.0, 3.0 }.data()));
-  itkTransform->SetCenter(itk::Point<double, ImageDimension>(std::array<double, ImageDimension>{ 3.0, 2.0, 1.0 }));
+  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
   itkTransform->Rotate3D(itk::Vector<double, ImageDimension>(1.0), M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(

@@ -18,7 +18,9 @@
 #ifndef elxGTestUtilities_h
 #define elxGTestUtilities_h
 
+#include <itkPoint.h>
 #include <itkSmartPointer.h>
+#include <itkVector.h>
 
 // GoogleTest header file:
 #include <gtest/gtest.h>
@@ -79,6 +81,25 @@ CreateDefaultElastixObject()
 
   return elastixObject;
 }
+
+
+template <typename T, typename... TVariadic>
+auto
+MakeVector(const T firstValue, TVariadic... remainingValues) -> itk::Vector<T, 1 + sizeof...(remainingValues)>
+{
+  const T data[] = { firstValue, remainingValues... };
+  return data;
+}
+
+
+template <typename T, typename... TVariadic>
+auto
+MakePoint(const T firstValue, TVariadic... remainingValues) -> itk::Point<T, 1 + sizeof...(remainingValues)>
+{
+  const T data[] = { firstValue, remainingValues... };
+  return data;
+}
+
 
 } // namespace GTestUtilities
 } // namespace elastix

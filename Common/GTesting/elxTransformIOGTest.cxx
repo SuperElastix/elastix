@@ -61,6 +61,9 @@
 using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
 using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
+using elx::GTestUtilities::MakePoint;
+using elx::GTestUtilities::MakeVector;
+
 namespace
 {
 
@@ -772,7 +775,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation2D)
   constexpr auto Dimension = 2U;
 
   const auto itkTransform = itk::TranslationTransform<double, Dimension>::New();
-  itkTransform->SetOffset(std::array<double, Dimension>{ 1.0, 2.0 }.data());
+  itkTransform->SetOffset(MakeVector(1.0, 2.0));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(*itkTransform);
 }
@@ -783,7 +786,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation3D)
   constexpr auto Dimension = 3U;
 
   const auto itkTransform = itk::TranslationTransform<double, Dimension>::New();
-  itkTransform->SetOffset(std::array<double, Dimension>{ 1.0, 2.0, 3.0 }.data());
+  itkTransform->SetOffset(MakeVector(1.0, 2.0, 3.0));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(*itkTransform);
 }
@@ -794,9 +797,9 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine2D)
   constexpr auto Dimension = 2U;
 
   const auto itkTransform = itk::AffineTransform<double, Dimension>::New();
-  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0 }.data());
-  itkTransform->Scale(std::array<double, Dimension>{ 1.5, 1.75 }.data());
-  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 0.5, 1.5 }));
+  itkTransform->SetTranslation(MakeVector(1.0, 2.0));
+  itkTransform->Scale(MakeVector(1.5, 1.75));
+  itkTransform->SetCenter(MakePoint(0.5, 1.5));
   itkTransform->Rotate2D(M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(*itkTransform);
@@ -808,9 +811,9 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
   constexpr auto Dimension = 3U;
 
   const auto itkTransform = itk::AffineTransform<double, Dimension>::New();
-  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0, 3.0 }.data());
-  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 3.0, 2.0, 1.0 }));
-  itkTransform->Scale(std::array<double, Dimension>{ 1.25, 1.5, 1.75 }.data());
+  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform->Scale(MakeVector(1.25, 1.5, 1.75));
   itkTransform->Rotate3D(itk::Vector<double, Dimension>(1.0), M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(*itkTransform);
@@ -822,8 +825,8 @@ GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
   constexpr auto Dimension = 2U;
 
   const auto itkTransform = itk::Euler2DTransform<double>::New();
-  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0 }.data());
-  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 0.5, 1.5 }));
+  itkTransform->SetTranslation(MakeVector(1.0, 2.0));
+  itkTransform->SetCenter(MakePoint(0.5, 1.5));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
 }
@@ -834,8 +837,8 @@ GTEST_TEST(Transform, TransformedPointSameAsITKEuler3D)
   constexpr auto Dimension = 3U;
 
   const auto itkTransform = itk::Euler3DTransform<double>::New();
-  itkTransform->SetTranslation(std::array<double, Dimension>{ 1.0, 2.0, 3.0 }.data());
-  itkTransform->SetCenter(itk::Point<double, Dimension>(std::array<double, Dimension>{ 3.0, 2.0, 1.0 }));
+  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
 }
