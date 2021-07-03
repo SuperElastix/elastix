@@ -72,14 +72,14 @@ public:
   typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
   typedef typename Superclass::TransformCategoryEnum     TransformCategoryEnum;
 
-  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
-  typedef typename Superclass::MovingImageGradientType        MovingImageGradientType;
-  typedef typename Superclass::MovingImageGradientValueType   MovingImageGradientValueType;
+  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
+  typedef typename Superclass::MovingImageGradientType       MovingImageGradientType;
+  typedef typename Superclass::MovingImageGradientValueType  MovingImageGradientValueType;
 
   /** This method sets the parameters of the transform.
    * For a B-spline deformation transform, the parameters are the BSpline

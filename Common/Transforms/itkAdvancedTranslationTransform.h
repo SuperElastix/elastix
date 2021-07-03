@@ -100,12 +100,12 @@ public:
   typedef Point<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputPointType;
 
   /** AdvancedTransform typedefs */
-  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
 
   /** This method returns the value of the offset of the
    * AdvancedTranslationTransform.

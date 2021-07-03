@@ -121,12 +121,12 @@ public:
   typedef typename InverseTransformBaseType::Pointer    InverseTransformBasePointer;
 
   /** AdvancedTransform typedefs */
-  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
 
   /**  Method to transform a point. */
   OutputPointType

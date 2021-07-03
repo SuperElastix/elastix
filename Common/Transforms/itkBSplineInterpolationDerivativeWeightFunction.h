@@ -78,11 +78,11 @@ protected:
   ~BSplineInterpolationDerivativeWeightFunction() override = default;
 
   /** Interpolation kernel types. */
-  typedef typename Superclass::KernelType                       KernelType;
-  typedef typename Superclass::DerivativeKernelType             DerivativeKernelType;
-  typedef typename Superclass ::SecondOrderDerivativeKernelType SecondOrderDerivativeKernelType;
-  typedef typename Superclass::TableType                        TableType;
-  typedef typename Superclass::OneDWeightsType                  OneDWeightsType;
+  typedef typename Superclass::KernelType                      KernelType;
+  typedef typename Superclass::DerivativeKernelType            DerivativeKernelType;
+  typedef typename Superclass::SecondOrderDerivativeKernelType SecondOrderDerivativeKernelType;
+  typedef typename Superclass::TableType                       TableType;
+  typedef typename Superclass::OneDWeightsType                 OneDWeightsType;
 
   /** Compute the 1D weights, which are:
    * \f[ \beta( x[i] - startIndex[i] ), \beta( x[i] - startIndex[i] - 1 ),

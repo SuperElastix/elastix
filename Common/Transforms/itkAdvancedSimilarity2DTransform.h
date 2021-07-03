@@ -130,12 +130,12 @@ public:
   typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
 
-  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
 
   /** Set the Scale part of the transform. */
   void
