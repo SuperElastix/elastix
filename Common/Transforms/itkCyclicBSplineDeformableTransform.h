@@ -63,15 +63,15 @@ public:
   /** The B-spline order. */
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
-  typedef typename Superclass::JacobianType                   JacobianType;
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass ::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass ::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
-  typedef typename Superclass::ParametersType                 ParametersType;
-  typedef typename Superclass::NumberOfParametersType         NumberOfParametersType;
+  typedef typename Superclass::JacobianType                  JacobianType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
+  typedef typename Superclass::ParametersType                ParametersType;
+  typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType                       PixelType;

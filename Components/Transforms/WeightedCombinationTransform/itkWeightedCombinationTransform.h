@@ -65,8 +65,8 @@ public:
   typedef typename Superclass::JacobianType                  JacobianType;
   typedef typename Superclass::InputVectorType               InputVectorType;
   typedef typename Superclass::OutputVectorType              OutputVectorType;
-  typedef typename Superclass ::InputCovariantVectorType     InputCovariantVectorType;
-  typedef typename Superclass ::OutputCovariantVectorType    OutputCovariantVectorType;
+  typedef typename Superclass::InputCovariantVectorType      InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType     OutputCovariantVectorType;
   typedef typename Superclass::InputVnlVectorType            InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType           OutputVnlVectorType;
   typedef typename Superclass::InputPointType                InputPointType;
@@ -75,7 +75,7 @@ public:
   typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
   typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
   typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
 
   /** New typedefs in this class: */
   typedef Transform<TScalarType, NInputDimensions, NOutputDimensions> TransformType;
