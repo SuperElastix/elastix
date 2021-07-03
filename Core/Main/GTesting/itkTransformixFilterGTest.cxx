@@ -33,6 +33,8 @@
 #include <itkImageBufferRange.h>
 #include <itkNumberToString.h>
 #include <itkResampleImageFilter.h>
+#include <itkSimilarity2DTransform.h>
+#include <itkSimilarity3DTransform.h>
 #include <itkTranslationTransform.h>
 
 // GoogleTest header file:
@@ -400,6 +402,32 @@ GTEST_TEST(itkTransformixFilter, ITKEulerTransform3D)
   const auto itkTransform = itk::Euler3DTransform<double>::New();
   itkTransform->SetTranslation(MakeVector(1.0, -2.0, 3.0));
   itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
+
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKSimilarityTransform2D)
+{
+  const auto itkTransform = itk::Similarity2DTransform<double>::New();
+  itkTransform->SetScale(0.75);
+  itkTransform->SetTranslation(MakeVector(1.0, -2.0));
+  itkTransform->SetCenter(MakePoint(2.5, 3.0));
+  itkTransform->SetAngle(M_PI_4);
+
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKSimilarityTransform3D)
+{
+  const auto itkTransform = itk::Similarity3DTransform<double>::New();
+  itkTransform->SetScale(0.75);
+  itkTransform->SetTranslation(MakeVector(1.0, -2.0, 3.0));
+  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform->SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
