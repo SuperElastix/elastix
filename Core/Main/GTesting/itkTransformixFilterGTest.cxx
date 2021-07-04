@@ -50,6 +50,7 @@ using ResampleImageFilterType =
   itk::ResampleImageFilter<itk::Image<TPixel, VImageDimension>, itk::Image<TPixel, VImageDimension>>;
 
 using elx::GTestUtilities::MakePoint;
+using elx::GTestUtilities::MakeSize;
 using elx::GTestUtilities::MakeVector;
 using elx::CoreMainGTestUtilities::Deref;
 
@@ -337,7 +338,7 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform2D)
   itkTransform->SetOffset(MakeVector(1.0, -2.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6 }), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
 }
 
 
@@ -349,7 +350,7 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform3D)
   itkTransform->SetOffset(MakeVector(1.0, -2.0, 3.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6, 7 }), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
 }
 
 
@@ -363,7 +364,7 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform2D)
   itkTransform->Rotate2D(M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6 }), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
 }
 
 
@@ -377,5 +378,5 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform3D)
   itkTransform->Rotate3D(itk::Vector<double, ImageDimension>(1.0), M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float, ImageDimension>({ 5, 6, 7 }), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
 }
