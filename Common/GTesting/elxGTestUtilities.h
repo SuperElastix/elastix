@@ -19,6 +19,7 @@
 #define elxGTestUtilities_h
 
 #include <itkPoint.h>
+#include <itkSize.h>
 #include <itkSmartPointer.h>
 #include <itkVector.h>
 
@@ -98,6 +99,14 @@ MakePoint(const T firstValue, TVariadic... remainingValues) -> itk::Point<T, 1 +
 {
   const T data[] = { firstValue, remainingValues... };
   return data;
+}
+
+
+template <typename... T>
+constexpr itk::Size<sizeof...(T)>
+MakeSize(const T... values)
+{
+  return { static_cast<itk::SizeValueType>(values)... };
 }
 
 
