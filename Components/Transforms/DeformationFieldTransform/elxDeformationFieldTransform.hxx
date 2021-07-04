@@ -39,7 +39,6 @@ template <class TElastix>
 DeformationFieldTransform<TElastix>::DeformationFieldTransform()
 {
   /** Initialize. */
-  this->m_DeformationFieldInterpolatingTransform = DeformationFieldInterpolatingTransformType::New();
   this->SetCurrentTransform(this->m_DeformationFieldInterpolatingTransform);
 
   /** Make sure that the TransformBase::WriteToFile() does

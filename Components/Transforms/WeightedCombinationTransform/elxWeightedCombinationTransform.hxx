@@ -31,7 +31,6 @@ namespace elastix
 template <class TElastix>
 WeightedCombinationTransformElastix<TElastix>::WeightedCombinationTransformElastix()
 {
-  this->m_WeightedCombinationTransform = WeightedCombinationTransformType::New();
   this->SetCurrentTransform(this->m_WeightedCombinationTransform);
 } // end Constructor
 

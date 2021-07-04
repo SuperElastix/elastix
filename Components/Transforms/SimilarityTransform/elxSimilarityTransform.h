@@ -240,7 +240,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  SimilarityTransformPointer m_SimilarityTransform;
+  const SimilarityTransformPointer m_SimilarityTransform{ SimilarityTransformType::New() };
 };
 
 } // end namespace elastix

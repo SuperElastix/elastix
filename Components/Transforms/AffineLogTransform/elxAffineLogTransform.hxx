@@ -32,7 +32,6 @@ template <class TElastix>
 AffineLogTransformElastix<TElastix>::AffineLogTransformElastix()
 {
   elxout << "Constructor" << std::endl;
-  this->m_AffineLogTransform = AffineLogTransformType::New();
   this->SetCurrentTransform(this->m_AffineLogTransform);
 
 } // end Constructor

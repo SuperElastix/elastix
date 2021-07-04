@@ -30,7 +30,6 @@ namespace elastix
 template <class TElastix>
 TranslationTransformElastix<TElastix>::TranslationTransformElastix()
 {
-  this->m_TranslationTransform = TranslationTransformType::New();
   this->SetCurrentTransform(this->m_TranslationTransform);
 } // end Constructor
 

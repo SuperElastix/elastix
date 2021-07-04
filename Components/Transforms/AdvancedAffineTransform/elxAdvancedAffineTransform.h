@@ -226,7 +226,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  AffineTransformPointer m_AffineTransform;
+  const AffineTransformPointer m_AffineTransform{ AffineTransformType::New() };
 };
 
 } // end namespace elastix

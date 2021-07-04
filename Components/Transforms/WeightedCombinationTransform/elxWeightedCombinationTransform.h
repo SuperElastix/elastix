@@ -204,8 +204,8 @@ protected:
   /** The destructor. */
   ~WeightedCombinationTransformElastix() override = default;
 
-  WeightedCombinationTransformPointer m_WeightedCombinationTransform;
-  std::vector<std::string>            m_SubTransformFileNames;
+  const WeightedCombinationTransformPointer m_WeightedCombinationTransform{ WeightedCombinationTransformType::New() };
+  std::vector<std::string>                  m_SubTransformFileNames;
 
 private:
   elxOverrideGetSelfMacro;

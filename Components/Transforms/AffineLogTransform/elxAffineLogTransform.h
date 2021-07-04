@@ -191,7 +191,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  AffineLogTransformPointer m_AffineLogTransform;
+  const AffineLogTransformPointer m_AffineLogTransform{ AffineLogTransformType::New() };
 };
 
 } // end namespace elastix

@@ -141,7 +141,7 @@ protected:
   /** The destructor. */
   ~TranslationTransformElastix() override = default;
 
-  TranslationTransformPointer m_TranslationTransform;
+  const TranslationTransformPointer m_TranslationTransform{ TranslationTransformType::New() };
 
 private:
   elxOverrideGetSelfMacro;
