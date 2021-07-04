@@ -822,11 +822,10 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
 
 GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
 {
-  constexpr auto Dimension = 2U;
-
   const auto itkTransform = itk::Euler2DTransform<double>::New();
   itkTransform->SetTranslation(MakeVector(1.0, 2.0));
   itkTransform->SetCenter(MakePoint(0.5, 1.5));
+  itkTransform->SetAngle(M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
 }
@@ -834,11 +833,10 @@ GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
 
 GTEST_TEST(Transform, TransformedPointSameAsITKEuler3D)
 {
-  constexpr auto Dimension = 3U;
-
   const auto itkTransform = itk::Euler3DTransform<double>::New();
   itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
   itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform->SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
 }
