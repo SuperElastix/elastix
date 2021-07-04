@@ -165,13 +165,13 @@ private:
   unsigned int m_ReducedDimensionIndex;
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
-  bool m_SubtractMean;
+  bool m_SubtractMean{ false };
 
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize;
 
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
-  bool m_TransformIsStackTransform;
+  bool m_TransformIsStackTransform{ false };
 };
 
 } // end namespace itk

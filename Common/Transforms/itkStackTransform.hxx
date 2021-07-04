@@ -30,9 +30,6 @@ namespace itk
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::StackTransform()
   : Superclass(OutputSpaceDimension)
-  , m_NumberOfSubTransforms(0)
-  , m_StackSpacing(1.0)
-  , m_StackOrigin(0.0)
 {} // end Constructor
 
 
