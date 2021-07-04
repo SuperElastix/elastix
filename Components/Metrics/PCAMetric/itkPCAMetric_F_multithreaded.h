@@ -228,16 +228,16 @@ private:
   unsigned int m_LastDimIndex;
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
-  bool m_SubtractMean;
+  bool m_SubtractMean{ false };
 
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize;
 
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
-  bool m_TransformIsStackTransform;
+  bool m_TransformIsStackTransform{ false };
 
   /** Integer to indicate how many eigenvalues you want to use in the metric */
-  unsigned int m_NumEigenValues;
+  unsigned int m_NumEigenValues{ 6 };
 
   /** Matrices, needed for derivative calculation */
   mutable std::vector<unsigned int> m_PixelStartIndex;

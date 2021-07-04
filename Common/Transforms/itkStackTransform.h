@@ -295,11 +295,12 @@ private:
   operator=(const Self &) = delete;
 
   // Number of transforms and transform container
-  unsigned int              m_NumberOfSubTransforms;
+  unsigned int              m_NumberOfSubTransforms{ 0 };
   SubTransformContainerType m_SubTransformContainer;
 
   // Stack spacing and origin of last dimension
-  TScalarType m_StackSpacing, m_StackOrigin;
+  TScalarType m_StackSpacing{ 1.0 };
+  TScalarType m_StackOrigin{ 0.0 };
 };
 
 } // end namespace itk

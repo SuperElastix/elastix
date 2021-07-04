@@ -33,8 +33,6 @@ namespace itk
 
 template <class TFixedImage, class TMovingImage>
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::SumOfPairwiseCorrelationCoefficientsMetric()
-  : m_SubtractMean(true)
-  , m_TransformIsStackTransform(true)
 {
   this->SetUseImageSampler(true);
   this->SetUseFixedImageLimiter(false);

@@ -32,10 +32,6 @@ namespace itk
 
 template <class TFixedImage, class TMovingImage>
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::VarianceOverLastDimensionImageMetric()
-  : m_SampleLastDimensionRandomly(false)
-  , m_NumSamplesLastDimension(10)
-  , m_SubtractMean(false)
-  , m_TransformIsStackTransform(false)
 {
   this->SetUseImageSampler(true);
   this->SetUseFixedImageLimiter(false);
