@@ -391,6 +391,7 @@ GTEST_TEST(itkTransformixFilter, ITKEulerTransform2D)
   const auto itkTransform = itk::Euler2DTransform<double>::New();
   itkTransform->SetTranslation(MakeVector(1.0, -2.0));
   itkTransform->SetCenter(MakePoint(2.5, 3.0));
+  itkTransform->SetAngle(M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
@@ -402,6 +403,7 @@ GTEST_TEST(itkTransformixFilter, ITKEulerTransform3D)
   const auto itkTransform = itk::Euler3DTransform<double>::New();
   itkTransform->SetTranslation(MakeVector(1.0, -2.0, 3.0));
   itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform->SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
