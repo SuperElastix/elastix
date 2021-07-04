@@ -37,7 +37,6 @@ namespace elastix
 template <class TElastix>
 AdvancedAffineTransformElastix<TElastix>::AdvancedAffineTransformElastix()
 {
-  this->m_AffineTransform = AffineTransformType::New();
   this->SetCurrentTransform(this->m_AffineTransform);
 
 } // end Constructor

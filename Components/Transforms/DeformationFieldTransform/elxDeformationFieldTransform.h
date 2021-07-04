@@ -156,7 +156,9 @@ private:
 
   /** The transform that is set as current transform in the
    * CcombinationTransform */
-  DeformationFieldInterpolatingTransformPointer m_DeformationFieldInterpolatingTransform;
+  const DeformationFieldInterpolatingTransformPointer m_DeformationFieldInterpolatingTransform{
+    DeformationFieldInterpolatingTransformType::New()
+  };
 
   /** Original direction cosines; stored to facilitate UseDirectionCosines option. */
   DirectionType m_OriginalDeformationFieldDirection;

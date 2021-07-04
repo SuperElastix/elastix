@@ -227,7 +227,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  AffineDTITransformPointer m_AffineDTITransform;
+  const AffineDTITransformPointer m_AffineDTITransform{ AffineDTITransformType::New() };
 };
 
 } // end namespace elastix

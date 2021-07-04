@@ -230,7 +230,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  EulerTransformPointer m_EulerTransform;
+  const EulerTransformPointer m_EulerTransform{ EulerTransformType::New() };
 };
 
 } // end namespace elastix

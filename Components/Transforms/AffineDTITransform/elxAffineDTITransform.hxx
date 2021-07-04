@@ -31,7 +31,6 @@ namespace elastix
 template <class TElastix>
 AffineDTITransformElastix<TElastix>::AffineDTITransformElastix()
 {
-  this->m_AffineDTITransform = AffineDTITransformType::New();
   this->SetCurrentTransform(this->m_AffineDTITransform);
 
 } // end Constructor

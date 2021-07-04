@@ -32,7 +32,6 @@ namespace elastix
 template <class TElastix>
 SimilarityTransformElastix<TElastix>::SimilarityTransformElastix()
 {
-  this->m_SimilarityTransform = SimilarityTransformType::New();
   this->SetCurrentTransform(this->m_SimilarityTransform);
 
 } // end Constructor()
