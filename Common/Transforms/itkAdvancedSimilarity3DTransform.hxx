@@ -72,6 +72,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetScale(ScaleType scale)
 {
   m_Scale = scale;
   this->ComputeMatrix();
+  this->ComputeOffset();
 }
 
 
