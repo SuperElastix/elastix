@@ -33,7 +33,7 @@ namespace itk
  */
 
 template <class TListSample>
-class BinaryTreeBase : public DataObject
+class ITK_TEMPLATE_EXPORT BinaryTreeBase : public DataObject
 {
 public:
   /** Standard itk. */

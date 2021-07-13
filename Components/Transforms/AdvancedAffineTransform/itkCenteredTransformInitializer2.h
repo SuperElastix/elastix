@@ -89,7 +89,7 @@ namespace itk
  * \ingroup Transforms
  */
 template <class TTransform, class TFixedImage, class TMovingImage>
-class CenteredTransformInitializer2 : public Object
+class ITK_TEMPLATE_EXPORT CenteredTransformInitializer2 : public Object
 {
 public:
   /** Standard class typedefs. */

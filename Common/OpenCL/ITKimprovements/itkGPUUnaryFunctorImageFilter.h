@@ -60,7 +60,7 @@ template <typename TInputImage,
           typename TOutputImage,
           typename TFunction,
           typename TParentImageFilter = InPlaceImageFilter<TInputImage, TOutputImage>>
-class ITKOpenCL_EXPORT GPUUnaryFunctorImageFilter
+class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUUnaryFunctorImageFilter
   : public GPUInPlaceImageFilter<TInputImage, TOutputImage, TParentImageFilter>
 {
 public:

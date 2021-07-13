@@ -49,7 +49,7 @@ namespace itk
  * \ingroup OpenCL
  */
 template <typename T>
-class OpenCLVector : public OpenCLVectorBase
+class ITK_TEMPLATE_EXPORT OpenCLVector : public OpenCLVectorBase
 {
 public:
   /** Standard class typedefs. */

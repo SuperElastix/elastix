@@ -85,7 +85,7 @@ namespace typelist
  *     Tail (second element, can be another typelist)
  */
 template <typename H, typename T>
-struct TypeList
+struct ITK_TEMPLATE_EXPORT TypeList
 {
   typedef H Head;
   typedef T Tail;
@@ -136,7 +136,7 @@ template <typename T1 = NullType,
           typename T22 = NullType,
           typename T23 = NullType,
           typename T24 = NullType>
-struct MakeTypeList
+struct ITK_TEMPLATE_EXPORT MakeTypeList
 {
 private:
   typedef typename MakeTypeList<T2,
@@ -167,13 +167,13 @@ public:
   typedef TypeList<T1, TailType> Type;
 };
 template <>
-struct MakeTypeList<>
+struct ITK_TEMPLATE_EXPORT MakeTypeList<>
 {
   typedef NullType Type;
 };
 
 template <typename TTypeList>
-struct Length;
+struct ITK_TEMPLATE_EXPORT Length;
 /**\class Length
  * \brief Computes the length of a typelist
  *
@@ -187,7 +187,7 @@ struct Length;
  *
  */
 template <typename H, typename T>
-struct Length<TypeList<H, T>>
+struct ITK_TEMPLATE_EXPORT Length<TypeList<H, T>>
 {
   enum
   {
@@ -197,7 +197,7 @@ struct Length<TypeList<H, T>>
 
 /** \cond TYPELIST_IMPLEMENTATION */
 template <>
-struct Length<NullType>
+struct ITK_TEMPLATE_EXPORT Length<NullType>
 {
   enum
   {
@@ -221,28 +221,28 @@ struct Length<NullType>
  *
  */
 template <class TTypeList, unsigned int index>
-struct TypeAt;
+struct ITK_TEMPLATE_EXPORT TypeAt;
 
 template <class Head, class Tail>
-struct TypeAt<TypeList<Head, Tail>, 0>
+struct ITK_TEMPLATE_EXPORT TypeAt<TypeList<Head, Tail>, 0>
 {
   typedef Head Type;
 };
 
 template <class Head, class Tail, unsigned int i>
-struct TypeAt<TypeList<Head, Tail>, i>
+struct ITK_TEMPLATE_EXPORT TypeAt<TypeList<Head, Tail>, i>
 {
   typedef typename TypeAt<Tail, i - 1>::Type Type;
 };
 
 template <unsigned int i>
-struct TypeAt<NullType, i>
+struct ITK_TEMPLATE_EXPORT TypeAt<NullType, i>
 {
   typedef NullType Type;
 };
 
 template <class TTypeList1, class TTypeList2>
-struct Append;
+struct ITK_TEMPLATE_EXPORT Append;
 /**\class Append
  * \brief Appends a type or a typelist to another
  *
@@ -265,34 +265,34 @@ struct Append;
  *
  */
 template <class Head, class Tail, class T>
-struct Append<TypeList<Head, Tail>, T>
+struct ITK_TEMPLATE_EXPORT Append<TypeList<Head, Tail>, T>
 {
   typedef TypeList<Head, typename Append<Tail, T>::Type> Type;
 };
 
 /** \cond TYPELIST_IMPLEMENTATION */
 template <>
-struct Append<NullType, NullType>
+struct ITK_TEMPLATE_EXPORT Append<NullType, NullType>
 {
   typedef NullType Type;
 };
 template <class T>
-struct Append<NullType, T>
+struct ITK_TEMPLATE_EXPORT Append<NullType, T>
 {
   typedef TypeList<T, NullType> Type;
 };
 template <class T>
-struct Append<T, NullType>
+struct ITK_TEMPLATE_EXPORT Append<T, NullType>
 {
   typedef TypeList<T, NullType> Type;
 };
 template <class Head, class Tail>
-struct Append<NullType, TypeList<Head, Tail>>
+struct ITK_TEMPLATE_EXPORT Append<NullType, TypeList<Head, Tail>>
 {
   typedef TypeList<Head, Tail> Type;
 };
 template <class Head, class Tail>
-struct Append<TypeList<Head, Tail>, NullType>
+struct ITK_TEMPLATE_EXPORT Append<TypeList<Head, Tail>, NullType>
 {
   typedef TypeList<Head, Tail> Type;
 };
@@ -301,22 +301,22 @@ struct Append<TypeList<Head, Tail>, NullType>
  * \brief
  */
 template <class TList, class T>
-struct Erase;
+struct ITK_TEMPLATE_EXPORT Erase;
 
 template <class T>
-struct Erase<NullType, T>
+struct ITK_TEMPLATE_EXPORT Erase<NullType, T>
 {
   typedef NullType Type;
 };
 
 template <class T, class Tail>
-struct Erase<TypeList<T, Tail>, T>
+struct ITK_TEMPLATE_EXPORT Erase<TypeList<T, Tail>, T>
 {
   typedef Tail Type;
 };
 
 template <class Head, class Tail, class T>
-struct Erase<TypeList<Head, Tail>, T>
+struct ITK_TEMPLATE_EXPORT Erase<TypeList<Head, Tail>, T>
 {
   typedef TypeList<Head, typename Erase<Tail, T>::Type> Type;
 };
@@ -325,19 +325,19 @@ struct Erase<TypeList<Head, Tail>, T>
  * \brief
  */
 template <class TList, class T>
-struct EraseAll;
+struct ITK_TEMPLATE_EXPORT EraseAll;
 template <class T>
-struct EraseAll<NullType, T>
+struct ITK_TEMPLATE_EXPORT EraseAll<NullType, T>
 {
   typedef NullType Type;
 };
 template <class T, class Tail>
-struct EraseAll<TypeList<T, Tail>, T>
+struct ITK_TEMPLATE_EXPORT EraseAll<TypeList<T, Tail>, T>
 {
   typedef typename EraseAll<Tail, T>::Type Type;
 };
 template <class Head, class Tail, class T>
-struct EraseAll<TypeList<Head, Tail>, T>
+struct ITK_TEMPLATE_EXPORT EraseAll<TypeList<Head, Tail>, T>
 {
   typedef TypeList<Head, typename EraseAll<Tail, T>::Type> Type;
 };
@@ -346,16 +346,16 @@ struct EraseAll<TypeList<Head, Tail>, T>
  * \brief
  */
 template <class TList>
-struct NoDuplicates;
+struct ITK_TEMPLATE_EXPORT NoDuplicates;
 
 template <>
-struct NoDuplicates<NullType>
+struct ITK_TEMPLATE_EXPORT NoDuplicates<NullType>
 {
   typedef NullType Type;
 };
 
 template <class Head, class Tail>
-struct NoDuplicates<TypeList<Head, Tail>>
+struct ITK_TEMPLATE_EXPORT NoDuplicates<TypeList<Head, Tail>>
 {
 private:
   typedef typename NoDuplicates<Tail>::Type L1;
@@ -369,22 +369,22 @@ public:
  * \brief
  */
 template <class TList, class T, class U>
-struct Replace;
+struct ITK_TEMPLATE_EXPORT Replace;
 
 template <class T, class U>
-struct Replace<NullType, T, U>
+struct ITK_TEMPLATE_EXPORT Replace<NullType, T, U>
 {
   typedef NullType Type;
 };
 
 template <class T, class Tail, class U>
-struct Replace<TypeList<T, Tail>, T, U>
+struct ITK_TEMPLATE_EXPORT Replace<TypeList<T, Tail>, T, U>
 {
   typedef TypeList<U, Tail> Type;
 };
 
 template <class Head, class Tail, class T, class U>
-struct Replace<TypeList<Head, Tail>, T, U>
+struct ITK_TEMPLATE_EXPORT Replace<TypeList<Head, Tail>, T, U>
 {
   typedef TypeList<Head, typename Replace<Tail, T, U>::Type> Type;
 };
@@ -393,22 +393,22 @@ struct Replace<TypeList<Head, Tail>, T, U>
  * \brief
  */
 template <class TList, class T, class U>
-struct ReplaceAll;
+struct ITK_TEMPLATE_EXPORT ReplaceAll;
 
 template <class T, class U>
-struct ReplaceAll<NullType, T, U>
+struct ITK_TEMPLATE_EXPORT ReplaceAll<NullType, T, U>
 {
   typedef NullType Type;
 };
 
 template <class T, class Tail, class U>
-struct ReplaceAll<TypeList<T, Tail>, T, U>
+struct ITK_TEMPLATE_EXPORT ReplaceAll<TypeList<T, Tail>, T, U>
 {
   typedef TypeList<U, typename ReplaceAll<Tail, T, U>::Type> Type;
 };
 
 template <class Head, class Tail, class T, class U>
-struct ReplaceAll<TypeList<Head, Tail>, T, U>
+struct ITK_TEMPLATE_EXPORT ReplaceAll<TypeList<Head, Tail>, T, U>
 {
   typedef TypeList<Head, typename ReplaceAll<Tail, T, U>::Type> Type;
 };
@@ -417,16 +417,16 @@ struct ReplaceAll<TypeList<Head, Tail>, T, U>
  * \brief
  */
 template <class TList>
-struct Reverse;
+struct ITK_TEMPLATE_EXPORT Reverse;
 
 template <>
-struct Reverse<NullType>
+struct ITK_TEMPLATE_EXPORT Reverse<NullType>
 {
   typedef NullType Type;
 };
 
 template <class Head, class Tail>
-struct Reverse<TypeList<Head, Tail>>
+struct ITK_TEMPLATE_EXPORT Reverse<TypeList<Head, Tail>>
 {
   typedef typename Append<typename Reverse<Tail>::Type, Head>::Type Type;
 };
@@ -446,9 +446,9 @@ struct Reverse<TypeList<Head, Tail>>
  * returns the position of T in TList, or NullType if T is not found in TList
  */
 template <class TTypeList, class TType>
-struct IndexOf;
+struct ITK_TEMPLATE_EXPORT IndexOf;
 template <class TType>
-struct IndexOf<NullType, TType>
+struct ITK_TEMPLATE_EXPORT IndexOf<NullType, TType>
 {
   enum
   {
@@ -456,7 +456,7 @@ struct IndexOf<NullType, TType>
   };
 };
 template <class TType, class TTail>
-struct IndexOf<TypeList<TType, TTail>, TType>
+struct ITK_TEMPLATE_EXPORT IndexOf<TypeList<TType, TTail>, TType>
 {
   enum
   {
@@ -464,7 +464,7 @@ struct IndexOf<TypeList<TType, TTail>, TType>
   };
 };
 template <class Head, class TTail, class TType>
-struct IndexOf<TypeList<Head, TTail>, TType>
+struct ITK_TEMPLATE_EXPORT IndexOf<TypeList<Head, TTail>, TType>
 {
 private:
   enum
@@ -492,9 +492,9 @@ public:
  * evaluates to true if TList contains T, false otherwise.
  */
 template <class TTypeList, class TType>
-struct HasType;
+struct ITK_TEMPLATE_EXPORT HasType;
 template <class TType>
-struct HasType<NullType, TType>
+struct ITK_TEMPLATE_EXPORT HasType<NullType, TType>
 {
   enum
   {
@@ -502,7 +502,7 @@ struct HasType<NullType, TType>
   };
 };
 template <class TType, class TTail>
-struct HasType<TypeList<TType, TTail>, TType>
+struct ITK_TEMPLATE_EXPORT HasType<TypeList<TType, TTail>, TType>
 {
   enum
   {
@@ -510,7 +510,7 @@ struct HasType<TypeList<TType, TTail>, TType>
   };
 };
 template <class Head, class TTail, class TType>
-struct HasType<TypeList<Head, TTail>, TType>
+struct ITK_TEMPLATE_EXPORT HasType<TypeList<Head, TTail>, TType>
 {
   enum
   {
@@ -537,7 +537,7 @@ struct HasType<TypeList<Head, TTail>, TType>
  *
  */
 template <class TTypeList>
-struct Visit
+struct ITK_TEMPLATE_EXPORT Visit
 {
   template <class Predicate>
   void
@@ -564,7 +564,7 @@ struct Visit
 };
 
 template <>
-struct Visit<NullType>
+struct ITK_TEMPLATE_EXPORT Visit<NullType>
 {
   template <class Predicate>
   void
@@ -589,7 +589,7 @@ struct Visit<NullType>
  * \endcode
  */
 template <class TTypeList, unsigned int Dimension>
-struct VisitDimension
+struct ITK_TEMPLATE_EXPORT VisitDimension
 {
   template <class Predicate>
   void
@@ -616,7 +616,7 @@ struct VisitDimension
 };
 
 template <unsigned int Dimension>
-struct VisitDimension<NullType, Dimension>
+struct ITK_TEMPLATE_EXPORT VisitDimension<NullType, Dimension>
 {
   template <class Predicate>
   void
@@ -643,10 +643,10 @@ struct VisitDimension<NullType, Dimension>
  *
  */
 template <typename TLeftTypeList, typename TRightTypeList>
-struct DualVisitImpl;
+struct ITK_TEMPLATE_EXPORT DualVisitImpl;
 
 template <typename TLeftTypeList, typename TRightTypeList>
-struct DualVisit
+struct ITK_TEMPLATE_EXPORT DualVisit
 {
 
   template <typename Visitor>
@@ -681,7 +681,7 @@ struct DualVisit
  * the operator().
  */
 template <typename TLeftTypeList, typename TRightTypeList>
-struct DualVisitImpl
+struct ITK_TEMPLATE_EXPORT DualVisitImpl
 {
   template <typename Visitor>
   void
@@ -742,7 +742,7 @@ struct DualVisitImpl
 };
 
 template <typename TRightTypeList>
-struct DualVisitImpl<typelist::NullType, TRightTypeList>
+struct ITK_TEMPLATE_EXPORT DualVisitImpl<typelist::NullType, TRightTypeList>
 {
   template <typename Visitor>
   void
@@ -750,7 +750,7 @@ struct DualVisitImpl<typelist::NullType, TRightTypeList>
   {}
 };
 template <typename TLeftTypeList>
-struct DualVisitImpl<TLeftTypeList, typelist::NullType>
+struct ITK_TEMPLATE_EXPORT DualVisitImpl<TLeftTypeList, typelist::NullType>
 {
   template <typename Visitor>
   void
@@ -764,7 +764,7 @@ struct DualVisitImpl<TLeftTypeList, typelist::NullType>
 };
 
 template <>
-struct DualVisitImpl<typelist::NullType, typelist::NullType>
+struct ITK_TEMPLATE_EXPORT DualVisitImpl<typelist::NullType, typelist::NullType>
 {
   template <typename Visitor>
   void
@@ -793,10 +793,10 @@ struct DualVisitImpl<typelist::NullType, typelist::NullType>
  *
  */
 template <typename TLeftTypeList, typename TRightTypeList, unsigned int Dimension>
-struct DualVisitDimensionImpl;
+struct ITK_TEMPLATE_EXPORT DualVisitDimensionImpl;
 
 template <typename TLeftTypeList, typename TRightTypeList, unsigned int Dimension>
-struct DualVisitDimension
+struct ITK_TEMPLATE_EXPORT DualVisitDimension
 {
 
   template <typename Visitor>
@@ -831,7 +831,7 @@ struct DualVisitDimension
  * the operator().
  */
 template <typename TLeftTypeList, typename TRightTypeList, unsigned int Dimension>
-struct DualVisitDimensionImpl
+struct ITK_TEMPLATE_EXPORT DualVisitDimensionImpl
 {
   template <typename Visitor>
   void
@@ -892,7 +892,7 @@ struct DualVisitDimensionImpl
 };
 
 template <typename TRightTypeList, unsigned int Dimension>
-struct DualVisitDimensionImpl<typelist::NullType, TRightTypeList, Dimension>
+struct ITK_TEMPLATE_EXPORT DualVisitDimensionImpl<typelist::NullType, TRightTypeList, Dimension>
 {
   template <typename Visitor>
   void
@@ -900,7 +900,7 @@ struct DualVisitDimensionImpl<typelist::NullType, TRightTypeList, Dimension>
   {}
 };
 template <typename TLeftTypeList, unsigned int Dimension>
-struct DualVisitDimensionImpl<TLeftTypeList, typelist::NullType, Dimension>
+struct ITK_TEMPLATE_EXPORT DualVisitDimensionImpl<TLeftTypeList, typelist::NullType, Dimension>
 {
   template <typename Visitor>
   void
@@ -914,7 +914,7 @@ struct DualVisitDimensionImpl<TLeftTypeList, typelist::NullType, Dimension>
 };
 
 template <unsigned int Dimension>
-struct DualVisitDimensionImpl<typelist::NullType, typelist::NullType, Dimension>
+struct ITK_TEMPLATE_EXPORT DualVisitDimensionImpl<typelist::NullType, typelist::NullType, Dimension>
 {
   template <typename Visitor>
   void

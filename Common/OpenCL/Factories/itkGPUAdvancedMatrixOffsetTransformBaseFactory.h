@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename NDimensions>
-class GPUAdvancedMatrixOffsetTransformBaseFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPUAdvancedMatrixOffsetTransformBaseFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPUAdvancedMatrixOffsetTransformBaseFactory2 Self;

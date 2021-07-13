@@ -121,7 +121,7 @@ namespace itk
  * \ingroup PyramidImageFilter Multithreaded Streamed
  */
 template <class TInputImage, class TOutputImage>
-class MultiResolutionGaussianSmoothingPyramidImageFilter
+class ITK_TEMPLATE_EXPORT MultiResolutionGaussianSmoothingPyramidImageFilter
   : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 {
 public:

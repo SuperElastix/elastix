@@ -32,7 +32,7 @@ namespace itk
 
 /** Recursive template to retrieve the number of Bspline weights at compile time. */
 template <unsigned int SplineOrder, unsigned int Dimension>
-class GetConstNumberOfWeightsHack
+class ITK_TEMPLATE_EXPORT GetConstNumberOfWeightsHack
 {
 public:
   typedef GetConstNumberOfWeightsHack<SplineOrder, Dimension - 1> OneDimensionLess;
@@ -41,7 +41,7 @@ public:
 
 /** Partial template specialization to terminate the recursive loop. */
 template <unsigned int SplineOrder>
-class GetConstNumberOfWeightsHack<SplineOrder, 0>
+class ITK_TEMPLATE_EXPORT GetConstNumberOfWeightsHack<SplineOrder, 0>
 {
 public:
   itkStaticConstMacro(Value, unsigned long, 1);

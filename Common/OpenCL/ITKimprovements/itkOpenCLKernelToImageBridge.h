@@ -39,7 +39,7 @@ namespace itk
  * \ingroup OpenCL
  */
 template <typename TImage>
-class ITK_EXPORT OpenCLKernelToImageBridge
+class ITK_TEMPLATE_EXPORT OpenCLKernelToImageBridge
 {
 public:
   /** Standard class typedefs. */

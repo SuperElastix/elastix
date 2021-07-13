@@ -47,7 +47,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TScalarType>
-class TransformBendingEnergyPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
+class ITK_TEMPLATE_EXPORT TransformBendingEnergyPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
   /** Standard ITK stuff. */

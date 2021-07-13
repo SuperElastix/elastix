@@ -43,7 +43,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TTransform>
-class ComputeDisplacementDistribution : public ScaledSingleValuedNonLinearOptimizer
+class ITK_TEMPLATE_EXPORT ComputeDisplacementDistribution : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
   /** Standard ITK.*/

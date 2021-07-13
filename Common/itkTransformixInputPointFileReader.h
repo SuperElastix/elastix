@@ -43,7 +43,7 @@ namespace itk
  **/
 
 template <class TOutputMesh>
-class TransformixInputPointFileReader : public MeshFileReaderBase<TOutputMesh>
+class ITK_TEMPLATE_EXPORT TransformixInputPointFileReader : public MeshFileReaderBase<TOutputMesh>
 {
 public:
   /** Standard class typedefs. */

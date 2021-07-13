@@ -35,7 +35,7 @@ namespace itk
  * \ingroup GPUCommon
  */
 template <typename TScalarType = float, typename TParentTransform = AdvancedEuler3DTransform<TScalarType>>
-class GPUAdvancedEuler3DTransform
+class ITK_TEMPLATE_EXPORT GPUAdvancedEuler3DTransform
   : public TParentTransform
   , public GPUMatrixOffsetTransformBase<TScalarType, 3, 3>
 {

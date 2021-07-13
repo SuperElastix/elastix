@@ -94,7 +94,7 @@ namespace itk
 template <class TScalarType, // probably only float and double make sense here
           unsigned int NDimensions>
 // Number of dimensions
-class KernelTransform2 : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
+class ITK_TEMPLATE_EXPORT KernelTransform2 : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
   /** Standard class typedefs. */

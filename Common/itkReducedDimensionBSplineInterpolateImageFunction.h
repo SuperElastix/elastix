@@ -85,7 +85,7 @@ namespace itk
  * \ingroup ImageFunctions
  */
 template <class TImageType, class TCoordRep = double, class TCoefficientType = double>
-class ITK_EXPORT ReducedDimensionBSplineInterpolateImageFunction
+class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineInterpolateImageFunction
   : public InterpolateImageFunction<TImageType, TCoordRep>
 {
 public:

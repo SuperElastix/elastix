@@ -63,7 +63,7 @@ template <typename TTypeList,
           typename NDimensions,
           typename TAdvancedCombinationTransform,
           typename TOutputTransformPrecisionType>
-class GPUAdvancedCombinationTransformCopier : public Object
+class ITK_TEMPLATE_EXPORT GPUAdvancedCombinationTransformCopier : public Object
 {
 public:
   /** Standard class typedefs. */
@@ -171,7 +171,7 @@ private:
 
   /** Templated struct to capture the transform space dimension */
   template <unsigned int Dimension>
-  struct TransformSpaceDimensionToType
+  struct ITK_TEMPLATE_EXPORT TransformSpaceDimensionToType
   {};
 
   /** Copy method for Euler2D transform. */

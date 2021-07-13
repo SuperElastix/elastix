@@ -62,7 +62,7 @@ namespace itk
  * \ingroup GPUCommon
  */
 template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
-class GPUInterpolatorCopier : public Object
+class ITK_TEMPLATE_EXPORT GPUInterpolatorCopier : public Object
 {
 public:
   /** Standard class typedefs. */

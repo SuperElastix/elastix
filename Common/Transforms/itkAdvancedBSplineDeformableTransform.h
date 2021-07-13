@@ -47,7 +47,7 @@ namespace itk
 
 // Forward declarations for friendship
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-class MultiBSplineDeformableTransformWithNormal;
+class ITK_TEMPLATE_EXPORT MultiBSplineDeformableTransformWithNormal;
 
 /** \class AdvancedBSplineDeformableTransform
  * \brief Deformable transform using a B-spline representation

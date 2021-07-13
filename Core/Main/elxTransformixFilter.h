@@ -33,7 +33,7 @@ namespace elastix
 {
 
 template <typename TMovingImage>
-class ELASTIXLIB_API TransformixFilter : public itk::ImageSource<TMovingImage>
+class ITK_TEMPLATE_EXPORT ELASTIXLIB_API TransformixFilter : public itk::ImageSource<TMovingImage>
 {
 public:
   /** Standard ITK typedefs. */

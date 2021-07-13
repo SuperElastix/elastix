@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename NDimensions>
-class GPUSimilarity3DTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPUSimilarity3DTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPUSimilarity3DTransformFactory2  Self;

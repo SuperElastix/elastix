@@ -31,7 +31,7 @@
  * {
  *
  * template <class TElastix>
- * class MattesMetric :
+ * class ITK_TEMPLATE_EXPORT MattesMetric :
  * etc...
  */
 
