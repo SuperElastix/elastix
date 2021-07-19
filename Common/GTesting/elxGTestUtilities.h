@@ -18,6 +18,7 @@
 #ifndef elxGTestUtilities_h
 #define elxGTestUtilities_h
 
+#include <itkOptimizerParameters.h>
 #include <itkPoint.h>
 #include <itkSize.h>
 #include <itkSmartPointer.h>
@@ -25,6 +26,11 @@
 
 // GoogleTest header file:
 #include <gtest/gtest.h>
+
+#include <algorithm> // For generate_n.
+#include <cassert>
+#include <cfloat> // For DBL_MAX.
+#include <random>
 
 namespace elastix
 {
@@ -109,6 +115,24 @@ MakeSize(const T... values)
   return { static_cast<itk::SizeValueType>(values)... };
 }
 
+
+/// Returns an `OptimizerParameters` object, filled with pseudo random floating point numbers between the specified
+/// minimum and maximum value.
+inline itk::OptimizerParameters<double>
+GeneratePseudoRandomParameters(const unsigned numberOfParameters, const double minValue, const double maxValue = 1.0)
+{
+  assert(minValue < maxValue);
+  assert((maxValue - minValue) <= DBL_MAX);
+
+  itk::OptimizerParameters<double> parameters(numberOfParameters);
+
+  std::mt19937 randomNumberEngine;
+
+  std::generate_n(parameters.begin(), numberOfParameters, [&randomNumberEngine, minValue, maxValue] {
+    return std::uniform_real_distribution<>{ minValue, maxValue }(randomNumberEngine);
+  });
+  return parameters;
+}
 
 } // namespace GTestUtilities
 } // namespace elastix

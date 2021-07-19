@@ -27,6 +27,7 @@
 
 // ITK header files:
 #include <itkAffineTransform.h>
+#include <itkBSplineTransform.h>
 #include <itkEuler2DTransform.h>
 #include <itkEuler3DTransform.h>
 #include <itkImage.h>
@@ -43,6 +44,7 @@
 #include <algorithm> // For equal and transform.
 #include <cmath>
 #include <map>
+#include <random>
 #include <string>
 
 
@@ -56,10 +58,21 @@ using ResampleImageFilterType =
 using elx::GTestUtilities::MakePoint;
 using elx::GTestUtilities::MakeSize;
 using elx::GTestUtilities::MakeVector;
+using elx::GTestUtilities::GeneratePseudoRandomParameters;
 using elx::CoreMainGTestUtilities::Deref;
 
 namespace
 {
+template <unsigned NDimension>
+itk::Vector<double, NDimension>
+ConvertToItkVector(const itk::Size<NDimension> & size)
+{
+  itk::Vector<double, NDimension> result;
+  std::copy_n(size.begin(), NDimension, result.begin());
+  return result;
+}
+
+
 // Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
 template <typename TPixel, unsigned VImageDimension>
 itk::SmartPointer<itk::Image<TPixel, VImageDimension>>
@@ -433,4 +446,34 @@ GTEST_TEST(itkTransformixFilter, ITKSimilarityTransform3D)
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKBSplineTransform2D)
+{
+  const auto itkTransform = itk::BSplineTransform<double, 2>::New();
+
+  const auto imageSize = MakeSize(5, 6);
+
+  // Note that this unit test would fail if TransformDomainPhysicalDimensions would not be set.
+  itkTransform->SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
+  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize), *itkTransform);
+}
+
+
+GTEST_TEST(itkTransformixFilter, ITKBSplineTransform3D)
+{
+  const auto itkTransform = itk::BSplineTransform<double, 3>::New();
+
+  const auto imageSize = MakeSize(5, 6, 7);
+
+  // Note that this unit test would fail if TransformDomainPhysicalDimensions would not be set.
+  itkTransform->SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
+  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+
+  Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize), *itkTransform);
 }
