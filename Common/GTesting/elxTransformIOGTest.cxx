@@ -61,6 +61,7 @@
 using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
 using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
+using elx::GTestUtilities::GeneratePseudoRandomParameters;
 using elx::GTestUtilities::MakePoint;
 using elx::GTestUtilities::MakeVector;
 
@@ -517,26 +518,60 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
 {
   const auto Dimension = TITKTransform::SpaceDimension;
 
+  const auto elastixObject = elx::GTestUtilities::CreateDefaultElastixObject<ElastixType<Dimension>>();
+
   const auto elxTransform = TElastixTransform<ElastixType<Dimension>>::New();
 
   // Check that the elastix transform type corresponds with the ITK transform type.
   EXPECT_EQ(elxTransform->elxGetClassName(),
             elx::TransformIO::ConvertITKNameOfClassToElastixClassName(itkTransform.GetNameOfClass()));
 
-  elxTransform->SetParameters(itkTransform.GetParameters());
+  // Note: SetElastix does not take or share the ownership of its argument!
+  elxTransform->SetElastix(elastixObject);
+
+  // Necessary for AdvancedBSplineTransform, to avoid an exception, saying
+  // "No current transform set in the AdvancedCombinationTransform".
+  elxTransform->BeforeAll();
+
+  // SetFixedParameters before SetParameters, to avoid an exception from
+  // AdvancedBSplineTransform, saying "AdvancedBSplineDeformableTransform:
+  // Mismatched between parameters size 32 and region size 0"
   elxTransform->SetFixedParameters(itkTransform.GetFixedParameters());
+  elxTransform->SetParameters(itkTransform.GetParameters());
 
   unsigned numberOfTimesOutputDiffersFromInput{};
   unsigned numberOfTimesOutputIsNonZero{};
 
-  // Test input point coordinates -0.5, 0.0, and 0.5, for each dimension.
-  for (const auto index : itk::ZeroBasedIndexRange<Dimension>(itk::Size<Dimension>::Filled(3)))
+  using NumericLimits = std::numeric_limits<double>;
+
+  constexpr double testInputValues[] = { NumericLimits::lowest(),
+                                         -2.0,
+                                         -1.0,
+                                         -0.5,
+                                         -NumericLimits::min(),
+                                         -0.0,
+                                         0.0,
+                                         NumericLimits::min(),
+                                         0.5,
+                                         1.0 - NumericLimits::epsilon(), // Note: 1.0 fails on BSpline!!!
+                                         1.0 + 1.0e-14,
+                                         2.0,
+                                         NumericLimits::max() };
+
+  // Use the test input values as coordinates.
+  for (const auto index :
+       itk::ZeroBasedIndexRange<Dimension>(itk::Size<Dimension>::Filled(GTEST_ARRAY_SIZE_(testInputValues))))
   {
     itk::Point<double, Dimension> inputPoint;
-    std::transform(
-      index.begin(), index.end(), inputPoint.begin(), [](const double value) { return (value / 2.0) - 1.0; });
+    std::transform(index.begin(), index.end(), inputPoint.begin(), [&testInputValues](const itk::SizeValueType value) {
+      return testInputValues[value];
+    });
 
     const auto expectedOutputPoint = itkTransform.TransformPoint(inputPoint);
+    const auto actualOutputPoint = elxTransform->TransformPoint(inputPoint);
+
+    static_assert(std::is_same<decltype(actualOutputPoint), decltype(expectedOutputPoint)>::value,
+                  "elxTransform->TransformPoint must have the expected return type!");
 
     if (expectedOutputPoint != inputPoint)
     {
@@ -547,7 +582,17 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
       ++numberOfTimesOutputIsNonZero;
     }
 
-    EXPECT_EQ(elxTransform->TransformPoint(inputPoint), expectedOutputPoint);
+    const auto pointToString = [](const itk::Point<double, Dimension> & point) {
+      std::ostringstream stream;
+      stream << point;
+      return stream.str();
+    };
+
+    if (pointToString(actualOutputPoint) != pointToString(expectedOutputPoint))
+    {
+      // Consider two points significantly different when they have different string representations.
+      EXPECT_EQ(actualOutputPoint, expectedOutputPoint) << " inputPoint = " << inputPoint;
+    }
   }
 
   // If the output point would always equal the input point, either the test
@@ -863,4 +908,21 @@ GTEST_TEST(Transform, TransformedPointSameAsITKSimilarity3D)
   itkTransform->SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(*itkTransform);
+}
+
+
+GTEST_TEST(Transform, TransformedPointSameAsITKBSpline2D)
+{
+  const auto itkTransform = itk::BSplineTransform<double, 2>::New();
+  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(*itkTransform);
+}
+
+GTEST_TEST(Transform, TransformedPointSameAsITKBSpline3D)
+{
+  const auto itkTransform = itk::BSplineTransform<double, 3>::New();
+  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(*itkTransform);
 }
