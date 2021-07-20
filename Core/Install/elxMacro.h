@@ -45,7 +45,7 @@
  * namespace elastix {
  *
  *   template <class TElastix>
- *     class MyMetric : public MetricBase<TElastix>,
+ *     class ITK_TEMPLATE_EXPORT MyMetric : public MetricBase<TElastix>,
  *      public itk::MattesMutualInformationImageToImageMetric
  *           < MetricBase<TElastix>::FixedImageType
  *             MetricBase<TElastix>::MovingImageType >

@@ -36,7 +36,7 @@ namespace itk
  *
  */
 template <class TInput, unsigned int NDimension>
-class HardLimiterFunction : public LimiterFunctionBase<TInput, NDimension>
+class ITK_TEMPLATE_EXPORT HardLimiterFunction : public LimiterFunctionBase<TInput, NDimension>
 {
 public:
   /** Standard class typedefs. */

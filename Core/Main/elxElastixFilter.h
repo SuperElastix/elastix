@@ -33,7 +33,7 @@ namespace elastix
 {
 
 template <typename TFixedImage, typename TMovingImage>
-class ELASTIXLIB_API ElastixFilter : public itk::ImageSource<TFixedImage>
+class ITK_TEMPLATE_EXPORT ELASTIXLIB_API ElastixFilter : public itk::ImageSource<TFixedImage>
 {
 public:
   /** Standard ITK typedefs. */

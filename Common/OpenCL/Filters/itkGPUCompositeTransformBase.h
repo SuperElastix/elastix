@@ -35,7 +35,7 @@ namespace itk
  * \ingroup GPUCommon
  */
 template <typename TScalarType = float, unsigned int NDimensions = 3>
-class ITK_EXPORT GPUCompositeTransformBase : public GPUTransformBase
+class ITK_TEMPLATE_EXPORT GPUCompositeTransformBase : public GPUTransformBase
 {
 public:
   /** Standard class typedefs. */

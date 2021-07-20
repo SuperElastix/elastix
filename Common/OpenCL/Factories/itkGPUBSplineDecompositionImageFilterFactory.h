@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
-class GPUBSplineDecompositionImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPUBSplineDecompositionImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPUBSplineDecompositionImageFilterFactory2 Self;

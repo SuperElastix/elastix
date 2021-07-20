@@ -441,7 +441,7 @@ protected:
    * The original direction cosines are returned separately.
    */
   template <class TImage>
-  class MultipleImageLoader
+  class ITK_TEMPLATE_EXPORT MultipleImageLoader
   {
   public:
     typedef typename TImage::DirectionType DirectionType;

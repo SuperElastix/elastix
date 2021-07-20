@@ -34,7 +34,7 @@ namespace itk
  */
 
 template <class TOutputMesh>
-class MeshFileReaderBase : public MeshSource<TOutputMesh>
+class ITK_TEMPLATE_EXPORT MeshFileReaderBase : public MeshSource<TOutputMesh>
 {
 public:
   /** Standard class typedefs. */

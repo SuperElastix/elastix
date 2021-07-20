@@ -45,7 +45,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class OpenCLMovingGenericPyramid : public MovingGenericPyramid<TElastix>
+class ITK_TEMPLATE_EXPORT OpenCLMovingGenericPyramid : public MovingGenericPyramid<TElastix>
 {
 public:
   /** Standard ITK-stuff. */

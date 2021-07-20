@@ -56,7 +56,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TMovingImage>
-class CombinationImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
+class ITK_TEMPLATE_EXPORT CombinationImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
   /** Standard class typedefs. */

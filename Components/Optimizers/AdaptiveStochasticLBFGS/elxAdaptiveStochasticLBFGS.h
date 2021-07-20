@@ -100,7 +100,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class AdaptiveStochasticLBFGS
+class ITK_TEMPLATE_EXPORT AdaptiveStochasticLBFGS
   : public itk::AdaptiveStochasticLBFGSOptimizer
   , public OptimizerBase<TElastix>
 {

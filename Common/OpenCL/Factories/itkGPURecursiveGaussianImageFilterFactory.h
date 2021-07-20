@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
-class GPURecursiveGaussianImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPURecursiveGaussianImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPURecursiveGaussianImageFilterFactory2 Self;

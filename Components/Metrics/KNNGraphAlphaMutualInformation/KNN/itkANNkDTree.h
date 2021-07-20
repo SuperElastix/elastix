@@ -33,7 +33,7 @@ namespace itk
  */
 
 template <class TListSample>
-class ANNkDTree : public BinaryANNTreeBase<TListSample>
+class ITK_TEMPLATE_EXPORT ANNkDTree : public BinaryANNTreeBase<TListSample>
 {
 public:
   /** Standard itk. */

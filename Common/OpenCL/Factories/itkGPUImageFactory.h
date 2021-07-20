@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename TTypeList, typename NDimensions>
-class GPUImageFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPUImageFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPUImageFactory2                  Self;

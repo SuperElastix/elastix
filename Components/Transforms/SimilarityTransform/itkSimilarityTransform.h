@@ -33,7 +33,7 @@ namespace itk
  */
 
 template <unsigned int Dimension>
-class SimilarityGroup
+class ITK_TEMPLATE_EXPORT SimilarityGroup
 {
 public:
   template <class TScalarType>
@@ -47,7 +47,7 @@ public:
  */
 
 template <>
-class SimilarityGroup<2>
+class ITK_TEMPLATE_EXPORT SimilarityGroup<2>
 {
 public:
   template <class TScalarType>
@@ -61,7 +61,7 @@ public:
  */
 
 template <>
-class SimilarityGroup<3>
+class ITK_TEMPLATE_EXPORT SimilarityGroup<3>
 {
 public:
   template <class TScalarType>
@@ -86,7 +86,7 @@ using SimilarityGroupTemplate = typename SimilarityGroup<Dimension>::template Tr
  */
 
 template <class TScalarType, unsigned int Dimension>
-class SimilarityTransform : public SimilarityGroupTemplate<TScalarType, Dimension>
+class ITK_TEMPLATE_EXPORT SimilarityTransform : public SimilarityGroupTemplate<TScalarType, Dimension>
 {
 public:
   /** Standard ITK-stuff. */

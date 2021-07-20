@@ -39,7 +39,7 @@ namespace itk
  */
 
 template <class TInputImage>
-class ImageSamplerBase
+class ITK_TEMPLATE_EXPORT ImageSamplerBase
   : public ImageToVectorContainerFilter<TInputImage, VectorDataContainer<std::size_t, ImageSample<TInputImage>>>
 {
 public:

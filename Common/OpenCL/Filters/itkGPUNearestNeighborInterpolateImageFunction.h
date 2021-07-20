@@ -41,7 +41,7 @@ itkGPUKernelClassMacro(GPUNearestNeighborInterpolateImageFunctionKernel);
  * \ingroup GPUCommon
  */
 template <typename TInputImage, typename TCoordRep = float>
-class ITK_EXPORT GPUNearestNeighborInterpolateImageFunction
+class ITK_TEMPLATE_EXPORT GPUNearestNeighborInterpolateImageFunction
   : public GPUInterpolateImageFunction<TInputImage,
                                        TCoordRep,
                                        NearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>>

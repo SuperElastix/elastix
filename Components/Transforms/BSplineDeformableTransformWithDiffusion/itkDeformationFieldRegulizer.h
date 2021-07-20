@@ -38,7 +38,7 @@ namespace itk
  */
 
 template <class TAnyITKTransform>
-class DeformationFieldRegulizer : public TAnyITKTransform
+class ITK_TEMPLATE_EXPORT DeformationFieldRegulizer : public TAnyITKTransform
 {
 public:
   /** Standard itk. */
