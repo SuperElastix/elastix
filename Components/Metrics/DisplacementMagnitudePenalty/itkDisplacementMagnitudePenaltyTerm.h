@@ -31,7 +31,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TScalarType>
-class DisplacementMagnitudePenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
+class ITK_TEMPLATE_EXPORT DisplacementMagnitudePenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
   /** Standard ITK stuff. */

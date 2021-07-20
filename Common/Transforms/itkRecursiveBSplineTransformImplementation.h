@@ -372,7 +372,7 @@ public:
  */
 
 template <unsigned int OutputDimension, unsigned int SplineOrder, class TScalar>
-class RecursiveBSplineTransformImplementation<OutputDimension, 0, SplineOrder, TScalar>
+class ITK_TEMPLATE_EXPORT RecursiveBSplineTransformImplementation<OutputDimension, 0, SplineOrder, TScalar>
 {
 public:
   /** Typedef related to the coordinate representation type and the weights type.

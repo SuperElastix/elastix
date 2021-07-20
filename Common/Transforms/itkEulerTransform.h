@@ -32,7 +32,7 @@ namespace itk
  */
 
 template <unsigned int Dimension>
-class EulerGroup
+class ITK_TEMPLATE_EXPORT EulerGroup
 {
 public:
   template <class TScalarType>
@@ -46,7 +46,7 @@ public:
  */
 
 template <>
-class EulerGroup<2>
+class ITK_TEMPLATE_EXPORT EulerGroup<2>
 {
 public:
   template <class TScalarType>
@@ -60,7 +60,7 @@ public:
  */
 
 template <>
-class EulerGroup<3>
+class ITK_TEMPLATE_EXPORT EulerGroup<3>
 {
 public:
   template <class TScalarType>
@@ -159,7 +159,7 @@ private:
 };
 
 template <class TScalarType>
-class EulerTransform<TScalarType, 3> : public EulerGroupTemplate<TScalarType, 3>
+class ITK_TEMPLATE_EXPORT EulerTransform<TScalarType, 3> : public EulerGroupTemplate<TScalarType, 3>
 {
 public:
   /** Standard ITK-stuff. */

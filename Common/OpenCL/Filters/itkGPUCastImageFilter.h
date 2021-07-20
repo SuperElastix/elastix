@@ -44,7 +44,7 @@ itkGPUKernelClassMacro(GPUCastImageFilterKernel);
 namespace Functor
 {
 template <typename TInput, typename TOutput>
-class GPUCast : public GPUFunctorBase
+class ITK_TEMPLATE_EXPORT GPUCast : public GPUFunctorBase
 {
 public:
   GPUCast() = default;

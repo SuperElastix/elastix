@@ -38,7 +38,7 @@ itkGPUKernelClassMacro(GPUBSplineDecompositionImageFilterKernel);
  * \ingroup GPUCommon
  */
 template <typename TInputImage, typename TOutputImage>
-class ITK_EXPORT GPUBSplineDecompositionImageFilter
+class ITK_TEMPLATE_EXPORT GPUBSplineDecompositionImageFilter
   : public GPUImageToImageFilter<TInputImage, TOutputImage, BSplineDecompositionImageFilter<TInputImage, TOutputImage>>
 {
 public:

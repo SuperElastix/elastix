@@ -79,7 +79,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class KNNGraphAlphaMutualInformationMetric
+class ITK_TEMPLATE_EXPORT KNNGraphAlphaMutualInformationMetric
   : public itk::KNNGraphAlphaMutualInformationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                                  typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

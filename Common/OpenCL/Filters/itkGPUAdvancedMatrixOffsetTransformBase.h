@@ -37,7 +37,7 @@ namespace itk
 template <typename TScalarType = float,
           unsigned int NDimensions = 3,
           typename TParentTransform = AdvancedMatrixOffsetTransformBase<TScalarType, NDimensions, NDimensions>>
-class GPUAdvancedMatrixOffsetTransformBase
+class ITK_TEMPLATE_EXPORT GPUAdvancedMatrixOffsetTransformBase
   : public TParentTransform
   , public GPUMatrixOffsetTransformBase<TScalarType, NDimensions, NDimensions>
 {

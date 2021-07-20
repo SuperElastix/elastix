@@ -37,7 +37,7 @@ namespace itk
 template <typename TScalarType = float,
           unsigned int NDimensions = 3,
           typename TParentTransform = AdvancedTranslationTransform<TScalarType, NDimensions>>
-class GPUAdvancedTranslationTransform
+class ITK_TEMPLATE_EXPORT GPUAdvancedTranslationTransform
   : public TParentTransform
   , public GPUTranslationTransformBase<TScalarType, NDimensions>
 {

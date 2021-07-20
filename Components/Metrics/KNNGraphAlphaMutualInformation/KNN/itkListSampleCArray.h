@@ -42,7 +42,7 @@ namespace Statistics
  */
 
 template <class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType>
-class ListSampleCArray : public Sample<TMeasurementVector>
+class ITK_TEMPLATE_EXPORT ListSampleCArray : public Sample<TMeasurementVector>
 {
 public:
   /** Standard itk. */

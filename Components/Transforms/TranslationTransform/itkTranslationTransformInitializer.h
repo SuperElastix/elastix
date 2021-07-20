@@ -58,7 +58,7 @@ namespace itk
  * \ingroup Transforms
  */
 template <class TTransform, class TFixedImage, class TMovingImage>
-class TranslationTransformInitializer : public Object
+class ITK_TEMPLATE_EXPORT TranslationTransformInitializer : public Object
 {
 public:
   /** Standard class typedefs. */

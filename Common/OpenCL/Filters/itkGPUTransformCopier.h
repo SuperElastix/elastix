@@ -59,7 +59,7 @@ namespace itk
  * \ingroup GPUCommon
  */
 template <typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType>
-class GPUTransformCopier : public Object
+class ITK_TEMPLATE_EXPORT GPUTransformCopier : public Object
 {
 public:
   /** Standard class typedefs. */
@@ -149,7 +149,7 @@ private:
 
   /** Templated struct to capture the transform space dimension */
   template <unsigned int Dimension>
-  struct TransformSpaceDimensionToType
+  struct ITK_TEMPLATE_EXPORT TransformSpaceDimensionToType
   {};
 
   /** Copy method for Euler2D transform. */

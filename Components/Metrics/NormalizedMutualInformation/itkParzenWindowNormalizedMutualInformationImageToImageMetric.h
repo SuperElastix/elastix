@@ -69,7 +69,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TMovingImage>
-class ParzenWindowNormalizedMutualInformationImageToImageMetric
+class ITK_TEMPLATE_EXPORT ParzenWindowNormalizedMutualInformationImageToImageMetric
   : public ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:

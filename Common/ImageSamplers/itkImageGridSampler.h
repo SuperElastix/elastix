@@ -41,7 +41,7 @@ namespace itk
  */
 
 template <class TInputImage>
-class ImageGridSampler : public ImageSamplerBase<TInputImage>
+class ITK_TEMPLATE_EXPORT ImageGridSampler : public ImageSamplerBase<TInputImage>
 {
 public:
   /** Standard ITK-stuff. */

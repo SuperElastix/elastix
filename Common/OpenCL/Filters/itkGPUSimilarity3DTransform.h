@@ -35,7 +35,7 @@ namespace itk
  * \ingroup GPUCommon
  */
 template <typename TScalarType = float, typename TParentTransform = Similarity3DTransform<TScalarType>>
-class GPUSimilarity3DTransform
+class ITK_TEMPLATE_EXPORT GPUSimilarity3DTransform
   : public TParentTransform
   , public GPUMatrixOffsetTransformBase<TScalarType, 3, 3>
 {

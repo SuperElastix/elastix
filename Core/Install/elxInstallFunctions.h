@@ -43,7 +43,7 @@ namespace elastix
  */
 
 template <class TAnyItkObject>
-class InstallFunctions
+class ITK_TEMPLATE_EXPORT InstallFunctions
 {
 public:
   /** Standard.*/

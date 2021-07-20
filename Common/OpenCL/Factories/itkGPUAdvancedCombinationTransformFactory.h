@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename NDimensions>
-class GPUAdvancedCombinationTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPUAdvancedCombinationTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPUAdvancedCombinationTransformFactory2 Self;

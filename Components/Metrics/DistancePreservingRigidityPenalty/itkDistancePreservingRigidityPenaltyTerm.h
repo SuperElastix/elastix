@@ -73,7 +73,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TScalarType>
-class DistancePreservingRigidityPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
+class ITK_TEMPLATE_EXPORT DistancePreservingRigidityPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
   /** Standard itk stuff. */

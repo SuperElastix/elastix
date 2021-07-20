@@ -95,7 +95,7 @@ namespace itk
  * \ingroup RegistrationFilters
  */
 template <typename TFixedImage, typename TMovingImage>
-class MultiResolutionImageRegistrationMethod2 : public ProcessObject
+class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethod2 : public ProcessObject
 {
 public:
   /** Standard class typedefs. */

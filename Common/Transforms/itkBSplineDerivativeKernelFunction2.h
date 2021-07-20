@@ -110,7 +110,7 @@ private:
   struct DispatchBase
   {};
   template <unsigned int>
-  struct Dispatch : DispatchBase
+  struct ITK_TEMPLATE_EXPORT Dispatch : DispatchBase
   {};
 
   /** Zeroth order spline. */

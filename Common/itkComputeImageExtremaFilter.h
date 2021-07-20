@@ -45,7 +45,7 @@ namespace itk
  * \endwiki
  */
 template <typename TInputImage>
-class ComputeImageExtremaFilter : public StatisticsImageFilter<TInputImage>
+class ITK_TEMPLATE_EXPORT ComputeImageExtremaFilter : public StatisticsImageFilter<TInputImage>
 {
 public:
   /** Standard Self typedef */

@@ -59,7 +59,7 @@ namespace itk
 template <typename TInputImage,
           typename TOutputImage = TInputImage,
           typename TParentImageFilter = InPlaceImageFilter<TInputImage, TOutputImage>>
-class ITKOpenCL_EXPORT GPUInPlaceImageFilter
+class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUInPlaceImageFilter
   : public GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>
 {
 public:

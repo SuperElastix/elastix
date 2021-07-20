@@ -34,7 +34,7 @@ namespace itk
  *
  */
 template <typename TTypeList, typename NDimensions>
-class GPUNearestNeighborInterpolateImageFunctionFactory2 : public GPUObjectFactoryBase<NDimensions>
+class ITK_TEMPLATE_EXPORT GPUNearestNeighborInterpolateImageFunctionFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
   typedef GPUNearestNeighborInterpolateImageFunctionFactory2 Self;

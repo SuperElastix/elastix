@@ -45,7 +45,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class OpenCLFixedGenericPyramid : public FixedGenericPyramid<TElastix>
+class ITK_TEMPLATE_EXPORT OpenCLFixedGenericPyramid : public FixedGenericPyramid<TElastix>
 {
 public:
   /** Standard ITK-stuff. */

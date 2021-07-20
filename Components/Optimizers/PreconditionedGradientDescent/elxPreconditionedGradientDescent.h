@@ -69,7 +69,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class PreconditionedGradientDescent
+class ITK_TEMPLATE_EXPORT PreconditionedGradientDescent
   : public itk::AdaptiveStochasticPreconditionedGradientDescentOptimizer
   , public OptimizerBase<TElastix>
 {

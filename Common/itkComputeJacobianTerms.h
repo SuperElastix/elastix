@@ -34,7 +34,7 @@ namespace itk
  */
 
 template <class TFixedImage, class TTransform>
-class ComputeJacobianTerms : public Object
+class ITK_TEMPLATE_EXPORT ComputeJacobianTerms : public Object
 {
 public:
   /** Standard ITK.*/

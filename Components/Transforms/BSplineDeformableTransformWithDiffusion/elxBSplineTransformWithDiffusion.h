@@ -156,7 +156,7 @@ namespace elastix
  */
 
 template <class TElastix>
-class BSplineTransformWithDiffusion
+class ITK_TEMPLATE_EXPORT BSplineTransformWithDiffusion
   : public itk::DeformationFieldRegulizer<itk::AdvancedCombinationTransform<
       // BSplineCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
