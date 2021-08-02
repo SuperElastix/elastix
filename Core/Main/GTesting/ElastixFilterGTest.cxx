@@ -24,6 +24,7 @@
 
 // ITK header file:
 #include <itkImage.h>
+#include <itkIndexRange.h>
 
 // GoogleTest header file:
 #include <gtest/gtest.h>
@@ -94,8 +95,9 @@ GTEST_TEST(ElastixFilter, Translation)
   }
 }
 
-// Tests registering two images, having "WriteResultImage" set to false.
-GTEST_TEST(ElastixFilter, WriteResultImageFalse)
+
+// Tests registering two images, having "WriteResultImage" set.
+GTEST_TEST(ElastixFilter, WriteResultImage)
 {
   constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
@@ -119,44 +121,65 @@ GTEST_TEST(ElastixFilter, WriteResultImageFalse)
   movingImage->Allocate(true);
   elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  const auto parameterObject = elastix::ParameterObject::New();
-  parameterObject->SetParameterMap(
-    elx::CoreMainGTestUtilities::CreateParameterMap({ { "ImageSampler", "Full" },
-                                                      { "MaximumNumberOfIterations", "2" },
-                                                      { "Metric", "AdvancedNormalizedCorrelation" },
-                                                      { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                      { "Transform", "TranslationTransform" },
-                                                      { "WriteResultImage", "false" } }));
-
-  const auto filter = elx::ElastixFilter<ImageType, ImageType>::New();
-  ASSERT_NE(filter, nullptr);
-
-  filter->SetFixedImage(fixedImage);
-  filter->SetMovingImage(movingImage);
-  filter->SetParameterObject(parameterObject);
-  filter->Update();
-
-  // Expect an empty output image.
-  const auto * const output = filter->GetOutput();
-  ASSERT_NE(output, nullptr);
-  EXPECT_EQ(output->GetBufferedRegion().GetSize(), ImageType::SizeType());
-  EXPECT_EQ(output->GetBufferPointer(), nullptr);
-
-  const auto   transformParameterObject = filter->GetTransformParameterObject();
-  const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
-
-  ASSERT_TRUE(!transformParameterMaps.empty());
-  EXPECT_EQ(transformParameterMaps.size(), 1);
-
-  const auto & transformParameterMap = transformParameterMaps.front();
-  const auto   found = transformParameterMap.find("TransformParameters");
-  ASSERT_NE(found, transformParameterMap.cend());
-
-  const auto & transformParameters = found->second;
-  ASSERT_EQ(transformParameters.size(), ImageDimension);
-
-  for (unsigned i{}; i < ImageDimension; ++i)
+  for (const bool writeResultImage : { true, false })
   {
-    EXPECT_EQ(std::round(std::stod(transformParameters[i])), translationOffset[i]);
+    const auto parameterObject = elastix::ParameterObject::New();
+    parameterObject->SetParameterMap(elx::CoreMainGTestUtilities::CreateParameterMap(
+      { { "ImageSampler", "Full" },
+        { "MaximumNumberOfIterations", "2" },
+        { "Metric", "AdvancedNormalizedCorrelation" },
+        { "Optimizer", "AdaptiveStochasticGradientDescent" },
+        { "Transform", "TranslationTransform" },
+        { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
+
+    const auto filter = elx::ElastixFilter<ImageType, ImageType>::New();
+    ASSERT_NE(filter, nullptr);
+
+    filter->SetFixedImage(fixedImage);
+    filter->SetMovingImage(movingImage);
+    filter->SetParameterObject(parameterObject);
+    filter->Update();
+
+    const auto * const output = filter->GetOutput();
+    ASSERT_NE(output, nullptr);
+
+    const auto &       outputImageSize = output->GetBufferedRegion().GetSize();
+    const auto * const outputBufferPointer = output->GetBufferPointer();
+
+    if (writeResultImage)
+    {
+      EXPECT_EQ(outputImageSize, imageSize);
+      ASSERT_NE(outputBufferPointer, nullptr);
+
+      // When "WriteResultImage" is true, expect an output image that is very much like the fixed image.
+      for (const auto index : itk::ZeroBasedIndexRange<ImageDimension>(imageSize))
+      {
+        EXPECT_EQ(std::round(output->GetPixel(index)), std::round(fixedImage->GetPixel(index)));
+      }
+    }
+    else
+    {
+      // When "WriteResultImage" is false, expect an empty output image.
+      EXPECT_EQ(outputImageSize, ImageType::SizeType());
+      EXPECT_EQ(outputBufferPointer, nullptr);
+    }
+
+    const auto   transformParameterObject = filter->GetTransformParameterObject();
+    const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
+
+    ASSERT_TRUE(!transformParameterMaps.empty());
+    EXPECT_EQ(transformParameterMaps.size(), 1);
+
+    const auto & transformParameterMap = transformParameterMaps.front();
+    const auto   found = transformParameterMap.find("TransformParameters");
+    ASSERT_NE(found, transformParameterMap.cend());
+
+    const auto & transformParameters = found->second;
+    ASSERT_EQ(transformParameters.size(), ImageDimension);
+
+    for (unsigned i{}; i < ImageDimension; ++i)
+    {
+      EXPECT_EQ(std::round(std::stod(transformParameters[i])), translationOffset[i]);
+    }
   }
 }
