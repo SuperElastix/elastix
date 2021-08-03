@@ -35,21 +35,6 @@ FiniteDifferenceGradientDescentOptimizer::FiniteDifferenceGradientDescentOptimiz
 {
   itkDebugMacro("Constructor");
 
-  this->m_Stop = false;
-  this->m_NumberOfIterations = 100;
-  this->m_CurrentIteration = 0;
-  this->m_Value = 0.0;
-  this->m_StopCondition = MaximumNumberOfIterations;
-
-  this->m_GradientMagnitude = 0.0;
-  this->m_LearningRate = 0.0;
-  this->m_ComputeCurrentValue = false;
-  this->m_Param_a = 1.0;
-  this->m_Param_c = 1.0;
-  this->m_Param_A = 1.0;
-  this->m_Param_alpha = 0.602;
-  this->m_Param_gamma = 0.101;
-
 } // end Constructor
 
 

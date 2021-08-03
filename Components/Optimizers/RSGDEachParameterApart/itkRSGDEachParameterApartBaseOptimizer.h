@@ -162,23 +162,23 @@ protected:
   DerivativeType m_Gradient;
   DerivativeType m_PreviousGradient;
 
-  bool        m_Stop;
-  bool        m_Maximize;
-  MeasureType m_Value;
-  double      m_GradientMagnitudeTolerance;
-  double      m_MaximumStepLength;
-  double      m_MinimumStepLength;
+  bool        m_Stop{ false };
+  bool        m_Maximize{ false };
+  MeasureType m_Value{ 0.0 };
+  double      m_GradientMagnitudeTolerance{ 1e-4 };
+  double      m_MaximumStepLength{ 1.0 };
+  double      m_MinimumStepLength{ 1e-3 };
 
   /** All current step lengths */
   DerivativeType m_CurrentStepLengths;
   /** The average current step length */
-  double m_CurrentStepLength;
+  double m_CurrentStepLength{ 0 };
 
-  StopConditionType m_StopCondition;
-  unsigned long     m_NumberOfIterations;
-  unsigned long     m_CurrentIteration;
+  StopConditionType m_StopCondition{ MaximumNumberOfIterations };
+  unsigned long     m_NumberOfIterations{ 100 };
+  unsigned long     m_CurrentIteration{ 0 };
 
-  double m_GradientMagnitude;
+  double m_GradientMagnitude{ 0.0 };
 };
 
 } // end namespace itk

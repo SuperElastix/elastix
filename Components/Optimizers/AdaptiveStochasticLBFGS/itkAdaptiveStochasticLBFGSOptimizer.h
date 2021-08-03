@@ -134,8 +134,8 @@ protected:
   // DerivativeType m_PrePreviousGradient;
   unsigned long m_UpdateFrequenceL;
   bool          m_UseSearchDirForAdaptiveStepSize;
-  bool          m_UseAdaptiveStepSizes;
-  double        m_SearchLengthScale;
+  bool          m_UseAdaptiveStepSizes{ true };
+  double        m_SearchLengthScale{ 10 };
   std::string   m_StepSizeStrategy;
 
 private:
@@ -145,9 +145,9 @@ private:
 
   /** Settings */
 
-  double m_SigmoidMax;
-  double m_SigmoidMin;
-  double m_SigmoidScale;
+  double m_SigmoidMax{ 1.0 };
+  double m_SigmoidMin{ -0.8 };
+  double m_SigmoidScale{ 1e-8 };
 
 }; // end class AdaptiveStochasticLBFGSOptimizer
 

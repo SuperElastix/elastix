@@ -145,15 +145,15 @@ protected:
 
   // made protected so subclass can access
   DerivativeType m_Gradient;
-  double         m_LearningRate;
-  double         m_GradientMagnitude;
+  double         m_LearningRate{ 0.0 };
+  double         m_GradientMagnitude{ 0.0 };
 
   /** Boolean that says if the current value of
    * the metric has to be computed. This is not
    * necessary for optimisation; just nice for
    * progress information.
    */
-  bool m_ComputeCurrentValue;
+  bool m_ComputeCurrentValue{ false };
 
   // Functions to compute the parameters at iteration k.
   virtual double
@@ -168,18 +168,18 @@ private:
   operator=(const Self &) = delete;
 
   /** Private member variables.*/
-  bool              m_Stop;
-  double            m_Value;
-  StopConditionType m_StopCondition;
-  unsigned long     m_NumberOfIterations;
-  unsigned long     m_CurrentIteration;
+  bool              m_Stop{ false };
+  double            m_Value{ 0.0 };
+  StopConditionType m_StopCondition{ MaximumNumberOfIterations };
+  unsigned long     m_NumberOfIterations{ 100 };
+  unsigned long     m_CurrentIteration{ 0 };
 
   /**Parameters, as described by Spall.*/
-  double m_Param_a;
-  double m_Param_c;
-  double m_Param_A;
-  double m_Param_alpha;
-  double m_Param_gamma;
+  double m_Param_a{ 1.0 };
+  double m_Param_c{ 1.0 };
+  double m_Param_A{ 1.0 };
+  double m_Param_alpha{ 0.602 };
+  double m_Param_gamma{ 0.101 };
 };
 
 } // end namespace itk

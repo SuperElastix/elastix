@@ -28,14 +28,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-AdaptiveStochasticGradientDescentOptimizer::AdaptiveStochasticGradientDescentOptimizer()
-{
-  this->m_UseAdaptiveStepSizes = true;
-  this->m_SigmoidMax = 1.0;
-  this->m_SigmoidMin = -0.8;
-  this->m_SigmoidScale = 1e-8;
-
-} // end Constructor
+AdaptiveStochasticGradientDescentOptimizer::AdaptiveStochasticGradientDescentOptimizer() = default;
 
 
 /**

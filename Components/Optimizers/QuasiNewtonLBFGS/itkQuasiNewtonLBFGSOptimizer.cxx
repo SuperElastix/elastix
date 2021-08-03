@@ -31,21 +31,6 @@ QuasiNewtonLBFGSOptimizer::QuasiNewtonLBFGSOptimizer()
 {
   itkDebugMacro("Constructor");
 
-  this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
-  this->m_CurrentIteration = 0;
-  this->m_StopCondition = Unknown;
-  this->m_Stop = false;
-  this->m_CurrentStepLength = 0.0;
-  this->m_InLineSearch = false;
-  this->m_Point = 0;
-  this->m_PreviousPoint = 0;
-  this->m_Bound = 0;
-
-  this->m_MaximumNumberOfIterations = 100;
-  this->m_GradientMagnitudeTolerance = 1e-5;
-  this->m_LineSearchOptimizer = nullptr;
-  this->m_Memory = 5;
-
 } // end constructor
 
 

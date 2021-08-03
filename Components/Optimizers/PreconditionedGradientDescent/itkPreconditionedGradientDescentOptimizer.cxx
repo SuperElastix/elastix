@@ -47,17 +47,6 @@ PreconditionedGradientDescentOptimizer::PreconditionedGradientDescentOptimizer()
 {
   itkDebugMacro("Constructor");
 
-  this->m_LearningRate = 1.0;
-  this->m_NumberOfIterations = 100;
-  this->m_CurrentIteration = 0;
-  this->m_Value = 0.0;
-  this->m_StopCondition = MaximumNumberOfIterations;
-  this->m_DiagonalWeight = 1e-6;
-  this->m_MinimumGradientElementMagnitude = 1e-10;
-  this->m_LargestEigenValue = 1.0;
-  this->m_Sparsity = 1.0;
-  this->m_ConditionNumber = 1.0;
-
   /** Prepare cholmod */
   this->m_CholmodCommon = new cholmod_common;
   if (this->m_CholmodCommon)
@@ -75,9 +64,6 @@ PreconditionedGradientDescentOptimizer::PreconditionedGradientDescentOptimizer()
      */
     this->m_CholmodCommon->final_ll = 1;
   }
-
-  this->m_CholmodFactor = 0;
-  this->m_CholmodGradient = 0;
 
 } // end Constructor
 

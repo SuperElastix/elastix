@@ -144,15 +144,15 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   // made protected so subclass can access
-  double            m_Value;
+  double            m_Value{ 0.0 };
   DerivativeType    m_Gradient;
   DerivativeType    m_SearchDirection;
-  double            m_LearningRate;
-  StopConditionType m_StopCondition;
+  double            m_LearningRate{ 1.0 };
+  StopConditionType m_StopCondition{ MaximumNumberOfIterations };
 
-  bool          m_Stop;
-  unsigned long m_NumberOfIterations;
-  unsigned long m_CurrentIteration;
+  bool          m_Stop{ false };
+  unsigned long m_NumberOfIterations{ 100 };
+  unsigned long m_CurrentIteration{ 0 };
 
 private:
   GradientDescentOptimizer2(const Self &) = delete;

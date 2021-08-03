@@ -220,21 +220,21 @@ protected:
 
   // void PrintSelf(std::ostream& os, Indent indent) const;
 
-  bool              m_Maximize;
-  bool              m_Stop;
-  double            m_Value;
-  double            m_BestValue;
-  StopConditionType m_StopCondition;
+  bool              m_Maximize{ false };
+  bool              m_Stop{ false };
+  double            m_Value{ 0.0 };
+  double            m_BestValue{ 0.0 };
+  StopConditionType m_StopCondition{ FullRangeSearched };
 
-  SearchSpacePointer   m_SearchSpace;
+  SearchSpacePointer   m_SearchSpace{ nullptr };
   SearchSpacePointType m_CurrentPointInSearchSpace;
   SearchSpaceIndexType m_CurrentIndexInSearchSpace;
   SearchSpacePointType m_BestPointInSearchSpace;
   SearchSpaceIndexType m_BestIndexInSearchSpace;
   SearchSpaceSizeType  m_SearchSpaceSize;
-  unsigned int         m_NumberOfSearchSpaceDimensions;
+  unsigned int         m_NumberOfSearchSpaceDimensions{ 0 };
 
-  unsigned long m_LastSearchSpaceChanges;
+  unsigned long m_LastSearchSpaceChanges{ 0 };
   virtual void
   ProcessSearchSpaceChanges(void);
 
@@ -243,7 +243,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  unsigned long m_CurrentIteration;
+  unsigned long m_CurrentIteration{ 0 };
 };
 
 } // end namespace itk

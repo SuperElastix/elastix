@@ -30,20 +30,6 @@ GenericConjugateGradientOptimizer::GenericConjugateGradientOptimizer()
 {
   itkDebugMacro("Constructor");
 
-  this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
-  this->m_CurrentIteration = 0;
-  this->m_StopCondition = Unknown;
-  this->m_Stop = false;
-  this->m_CurrentStepLength = 0.0;
-  this->m_InLineSearch = false;
-  this->m_MaximumNumberOfIterations = 100;
-  this->m_ValueTolerance = 1e-5;
-  this->m_GradientMagnitudeTolerance = 1e-5;
-  this->m_MaxNrOfItWithoutImprovement = 10;
-  this->m_UseDefaultMaxNrOfItWithoutImprovement = true;
-  this->m_LineSearchOptimizer = nullptr;
-  this->m_PreviousGradientAndSearchDirValid = false;
-
   this->AddBetaDefinition("SteepestDescent", &Self::ComputeBetaSD);
   this->AddBetaDefinition("FletcherReeves", &Self::ComputeBetaFR);
   this->AddBetaDefinition("PolakRibiere", &Self::ComputeBetaPR);
@@ -109,7 +95,6 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
 {
   itkDebugMacro("ResumeOptimization");
 
-  this->m_Stop = false;
   this->m_StopCondition = Unknown;
   this->m_PreviousGradientAndSearchDirValid = false;
   const double TINY_NUMBER = 1e-20;
