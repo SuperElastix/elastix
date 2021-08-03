@@ -57,6 +57,15 @@ public:
 };
 
 
+/// Expect the specified condition to be false, and throw an exception if it is true.
+#define ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(condition)                                                       \
+  if (condition)                                                                                                       \
+  {                                                                                                                    \
+    EXPECT_FALSE(true) << "Expected to be false: " #condition;                                                         \
+    throw ::elastix::CoreMainGTestUtilities::Exception("Exception thrown because " #condition);                        \
+  }                                                                                                                    \
+  static_assert(true, "Expect a semi-colon ';' at the end of a macro call")
+
 /// Dereferences the specified pointer. Throws an `Exception` instead, when the pointer is null.
 template <typename T>
 T &
@@ -105,7 +114,7 @@ std::map<std::string, std::vector<std::string>> inline CreateParameterMap(
 
   for (const auto & pair : initializerList)
   {
-    [&pair, &result] { ASSERT_TRUE(result.insert({ pair.first, { pair.second } }).second); }();
+    EXPECT_TRUE(result.insert({ pair.first, { pair.second } }).second);
   }
   return result;
 }
@@ -119,7 +128,7 @@ CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> in
 
   for (const auto & key : { "FixedImageDimension", "MovingImageDimension" })
   {
-    [&key, &result] { ASSERT_TRUE(result.insert({ key, { std::to_string(VImageDimension) } }).second); }();
+    EXPECT_TRUE(result.insert({ key, { std::to_string(VImageDimension) } }).second);
   }
   return result;
 }

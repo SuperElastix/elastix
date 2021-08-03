@@ -60,8 +60,7 @@ template <unsigned VDimension>
 std::array<double, VDimension>
 ConvertStringsToArrayOfDouble(const std::vector<std::string> & strings)
 {
-  // Wrap ASSERT_EQ in a lambda, because it returns void!
-  [&strings] { ASSERT_EQ(strings.size(), VDimension); }();
+  ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(strings.size() != VDimension);
 
   std::array<double, VDimension> result;
 
@@ -72,7 +71,7 @@ ConvertStringsToArrayOfDouble(const std::vector<std::string> & strings)
     result[i] = std::stod(str, &index);
 
     // Test that all characters have been processed, by std::stod.
-    [&str, index] { ASSERT_EQ(str.size(), index); }();
+    EXPECT_EQ(index, str.size());
   }
 
   return result;

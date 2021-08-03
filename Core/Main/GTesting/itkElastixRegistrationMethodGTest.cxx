@@ -280,7 +280,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
 
   const auto createFilter = [fixedImage](const std::string & initialTransformParameterFileName) {
     const auto filter = RegistrationMethodType::New();
-    [filter] { ASSERT_NE(filter, nullptr); }();
+    ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(filter == nullptr);
     filter->SetFixedImage(fixedImage);
     filter->SetInitialTransformParameterFileName(elx::CoreMainGTestUtilities::GetDataDirectoryPath() +
                                                  "/Translation(1,-2)/" + initialTransformParameterFileName);
