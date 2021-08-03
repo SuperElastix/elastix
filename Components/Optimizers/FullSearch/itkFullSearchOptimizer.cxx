@@ -32,16 +32,6 @@ FullSearchOptimizer::FullSearchOptimizer()
 {
   itkDebugMacro("Constructor");
 
-  m_CurrentIteration = 0;
-  m_Maximize = false;
-  m_Value = 0.0;
-  m_BestValue = 0.0;
-  m_StopCondition = FullRangeSearched;
-  m_Stop = false;
-  m_NumberOfSearchSpaceDimensions = 0;
-  m_SearchSpace = nullptr;
-  m_LastSearchSpaceChanges = 0;
-
 } // end constructor
 
 

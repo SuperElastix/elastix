@@ -235,58 +235,58 @@ protected:
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
 
   /** The random number generator used to generate the offspring. */
-  RandomGeneratorType::Pointer m_RandomGenerator;
+  RandomGeneratorType::Pointer m_RandomGenerator{ RandomGeneratorType::GetInstance() };
 
   /** The value of the cost function at the current position */
-  MeasureType m_CurrentValue;
+  MeasureType m_CurrentValue{ 0.0 };
 
   /** The current iteration number */
-  unsigned long m_CurrentIteration;
+  unsigned long m_CurrentIteration{ 0 };
 
   /** The stop condition */
-  StopConditionType m_StopCondition;
+  StopConditionType m_StopCondition{ Unknown };
 
   /** Boolean that indicates whether the optimizer should stop */
-  bool m_Stop;
+  bool m_Stop{ false };
 
   /** Settings that may be changed by the optimizer: */
-  bool         m_UseCovarianceMatrixAdaptation;
-  unsigned int m_PopulationSize;
-  unsigned int m_NumberOfParents;
-  unsigned int m_UpdateBDPeriod;
+  bool         m_UseCovarianceMatrixAdaptation{ true };
+  unsigned int m_PopulationSize{ 0 };
+  unsigned int m_NumberOfParents{ 0 };
+  unsigned int m_UpdateBDPeriod{ 1 };
 
   /** Some other constants, without set/get methods
    * These settings have default values. */
 
   /** \f$\mu_{eff}\f$ */
-  double m_EffectiveMu;
+  double m_EffectiveMu{ 0.0 };
   /** \f$c_{\sigma}\f$ */
-  double m_ConjugateEvolutionPathConstant;
+  double m_ConjugateEvolutionPathConstant{ 0.0 };
   /** \f$d_{\sigma}\f$ */
-  double m_SigmaDampingConstant;
+  double m_SigmaDampingConstant{ 0.0 };
   /** \f$c_{cov}\f$ */
-  double m_CovarianceMatrixAdaptationConstant;
+  double m_CovarianceMatrixAdaptationConstant{ 0.0 };
   /** \f$c_c\f$ */
-  double m_EvolutionPathConstant;
+  double m_EvolutionPathConstant{ 0.0 };
   /** \f$\mu_{cov} = \mu_{eff}\f$ */
-  double m_CovarianceMatrixAdaptationWeight;
+  double m_CovarianceMatrixAdaptationWeight{ 0.0 };
   /** \f$chiN  = E( \|N(0,I)\|\f$ */
-  double m_ExpectationNormNormalDistribution;
+  double m_ExpectationNormNormalDistribution{ 0.0 };
   /** array of \f$w_i\f$ */
   RecombinationWeightsType m_RecombinationWeights;
   /** Length of the MeasureHistory deque */
-  unsigned long m_HistoryLength;
+  unsigned long m_HistoryLength{ 0 };
 
   /** The current value of Sigma */
-  double m_CurrentSigma;
+  double m_CurrentSigma{ 0.0 };
 
   /** The current minimum square root eigen value: */
-  double m_CurrentMinimumD;
+  double m_CurrentMinimumD{ 1.0 };
   /** The current maximum square root eigen value: */
-  double m_CurrentMaximumD;
+  double m_CurrentMaximumD{ 1.0 };
 
   /** \f$h_{\sigma}\f$ */
-  bool m_Heaviside;
+  bool m_Heaviside{ false };
 
   /** \f$d_i = x_i - m\f$ */
   ParameterContainerType m_SearchDirs;
@@ -427,17 +427,17 @@ private:
   operator=(const Self &) = delete;
 
   /** Settings that are only inspected/changed by the associated get/set member functions. */
-  unsigned long m_MaximumNumberOfIterations;
-  bool          m_UseDecayingSigma;
-  double        m_InitialSigma;
-  double        m_SigmaDecayA;
-  double        m_SigmaDecayAlpha;
-  std::string   m_RecombinationWeightsPreset;
-  double        m_MaximumDeviation;
-  double        m_MinimumDeviation;
-  double        m_PositionToleranceMax;
-  double        m_PositionToleranceMin;
-  double        m_ValueTolerance;
+  unsigned long m_MaximumNumberOfIterations{ 100 };
+  bool          m_UseDecayingSigma{ false };
+  double        m_InitialSigma{ 1.0 };
+  double        m_SigmaDecayA{ 50 };
+  double        m_SigmaDecayAlpha{ 0.602 };
+  std::string   m_RecombinationWeightsPreset{ "superlinear" };
+  double        m_MaximumDeviation{ std::numeric_limits<double>::max() };
+  double        m_MinimumDeviation{ 0.0 };
+  double        m_PositionToleranceMax{ 1e8 };
+  double        m_PositionToleranceMin{ 1e-12 };
+  double        m_ValueTolerance{ 1e-12 };
 };
 
 } // end namespace itk

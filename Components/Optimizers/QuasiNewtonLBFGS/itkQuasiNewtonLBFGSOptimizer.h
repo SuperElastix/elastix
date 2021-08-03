@@ -141,22 +141,22 @@ protected:
   {}
 
   DerivativeType    m_CurrentGradient;
-  MeasureType       m_CurrentValue;
-  unsigned long     m_CurrentIteration;
-  StopConditionType m_StopCondition;
-  bool              m_Stop;
-  double            m_CurrentStepLength;
+  MeasureType       m_CurrentValue{ 0.0 };
+  unsigned long     m_CurrentIteration{ 0 };
+  StopConditionType m_StopCondition{ Unknown };
+  bool              m_Stop{ false };
+  double            m_CurrentStepLength{ 0.0 };
 
   /** Is true when the LineSearchOptimizer has been started. */
-  bool m_InLineSearch;
+  bool m_InLineSearch{ false };
 
   RhoType m_Rho;
   SType   m_S;
   YType   m_Y;
 
-  unsigned int m_Point;
-  unsigned int m_PreviousPoint;
-  unsigned int m_Bound;
+  unsigned int m_Point{ 0 };
+  unsigned int m_PreviousPoint{ 0 };
+  unsigned int m_Bound{ 0 };
 
   itkSetMacro(InLineSearch, bool);
 
@@ -200,10 +200,10 @@ private:
   void
   operator=(const Self &) = delete;
 
-  unsigned long              m_MaximumNumberOfIterations;
-  double                     m_GradientMagnitudeTolerance;
-  LineSearchOptimizerPointer m_LineSearchOptimizer;
-  unsigned int               m_Memory;
+  unsigned long              m_MaximumNumberOfIterations{ 100 };
+  double                     m_GradientMagnitudeTolerance{ 1e-5 };
+  LineSearchOptimizerPointer m_LineSearchOptimizer{ nullptr };
+  unsigned int               m_Memory{ 5 };
 };
 
 } // end namespace itk

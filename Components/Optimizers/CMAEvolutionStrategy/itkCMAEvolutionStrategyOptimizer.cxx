@@ -36,44 +36,6 @@ CMAEvolutionStrategyOptimizer::CMAEvolutionStrategyOptimizer()
 {
   itkDebugMacro("Constructor");
 
-  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
-
-  this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
-  this->m_CurrentIteration = 0;
-  this->m_StopCondition = Unknown;
-  this->m_Stop = false;
-
-  this->m_UseCovarianceMatrixAdaptation = true;
-  this->m_PopulationSize = 0;
-  this->m_NumberOfParents = 0;
-  this->m_UpdateBDPeriod = 1;
-
-  this->m_EffectiveMu = 0.0;
-  this->m_ConjugateEvolutionPathConstant = 0.0;
-  this->m_SigmaDampingConstant = 0.0;
-  this->m_CovarianceMatrixAdaptationConstant = 0.0;
-  this->m_EvolutionPathConstant = 0.0;
-  this->m_CovarianceMatrixAdaptationWeight = 0.0;
-  this->m_ExpectationNormNormalDistribution = 0.0;
-  this->m_HistoryLength = 0;
-  this->m_CurrentMaximumD = 1.0;
-  this->m_CurrentMinimumD = 1.0;
-
-  this->m_CurrentSigma = 0.0;
-  this->m_Heaviside = false;
-
-  this->m_MaximumNumberOfIterations = 100;
-  this->m_UseDecayingSigma = false;
-  this->m_InitialSigma = 1.0;
-  this->m_SigmaDecayA = 50;
-  this->m_SigmaDecayAlpha = 0.602;
-  this->m_RecombinationWeightsPreset = "superlinear";
-  this->m_MaximumDeviation = NumericTraits<double>::max();
-  this->m_MinimumDeviation = 0.0;
-  this->m_PositionToleranceMin = 1e-12;
-  this->m_PositionToleranceMax = 1e8;
-  this->m_ValueTolerance = 1e-12;
-
 } // end constructor
 
 
@@ -185,7 +147,6 @@ CMAEvolutionStrategyOptimizer::ResumeOptimization()
 {
   itkDebugMacro("ResumeOptimization");
 
-  this->m_Stop = false;
   this->m_StopCondition = Unknown;
 
   this->InvokeEvent(StartEvent());

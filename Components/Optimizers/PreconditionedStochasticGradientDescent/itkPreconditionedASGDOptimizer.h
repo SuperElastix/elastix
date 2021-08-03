@@ -139,10 +139,10 @@ private:
   operator=(const Self &) = delete;
 
   /** Settings */
-  bool   m_UseAdaptiveStepSizes;
-  double m_SigmoidMax;
-  double m_SigmoidMin;
-  double m_SigmoidScale;
+  bool   m_UseAdaptiveStepSizes{ true };
+  double m_SigmoidMax{ 1.0 };
+  double m_SigmoidMin{ -0.8 };
+  double m_SigmoidScale{ 1e-8 };
 };
 
 } // end namespace itk

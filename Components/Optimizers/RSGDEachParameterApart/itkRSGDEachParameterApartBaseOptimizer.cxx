@@ -29,27 +29,7 @@ namespace itk
  */
 RSGDEachParameterApartBaseOptimizer ::RSGDEachParameterApartBaseOptimizer()
 {
-
   itkDebugMacro("Constructor");
-
-  m_Stop = false;
-  m_MaximumStepLength = 1.0;
-  m_MinimumStepLength = 1e-3;
-  m_GradientMagnitudeTolerance = 1e-4;
-  m_NumberOfIterations = 100;
-  m_CurrentIteration = 0;
-  m_Value = 0;
-  m_Maximize = false;
-  m_CostFunction = nullptr;
-
-  m_CurrentStepLengths.Fill(0.0f);
-  m_CurrentStepLength = 0;
-
-  m_StopCondition = MaximumNumberOfIterations;
-  m_Gradient.Fill(0.0f);
-  m_PreviousGradient.Fill(0.0f);
-
-  m_GradientMagnitude = 0.0;
 }
 
 

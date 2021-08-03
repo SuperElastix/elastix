@@ -27,16 +27,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-StandardStochasticGradientOptimizer::StandardStochasticGradientOptimizer()
-{
-  this->m_Param_a = 1.0;
-  this->m_Param_A = 1.0;
-  this->m_Param_alpha = 0.602;
-
-  this->m_CurrentTime = 0.0;
-  this->m_InitialTime = 0.0;
-
-} // end Constructor
+StandardStochasticGradientOptimizer::StandardStochasticGradientOptimizer() = default;
 
 
 /**

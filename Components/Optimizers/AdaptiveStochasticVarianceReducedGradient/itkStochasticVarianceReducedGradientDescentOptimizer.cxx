@@ -42,18 +42,6 @@ StochasticVarianceReducedGradientDescentOptimizer::StochasticVarianceReducedGrad
 {
   itkDebugMacro("Constructor");
 
-  this->m_LearningRate = 1.0;
-  this->m_NumberOfIterations = 100;
-  this->m_CurrentIteration = 0;
-  this->m_LBFGSMemory = 0;
-  this->m_Value = 0.0;
-  this->m_StopCondition = MaximumNumberOfIterations;
-
-  this->m_Threader = ThreaderType::New();
-  this->m_UseMultiThread = false;
-  this->m_UseOpenMP = false;
-  this->m_UseEigen = false;
-
 } // end Constructor
 
 

@@ -143,25 +143,25 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   DerivativeType    m_CurrentGradient;
-  MeasureType       m_CurrentValue;
-  unsigned long     m_CurrentIteration;
-  StopConditionType m_StopCondition;
-  bool              m_Stop;
-  double            m_CurrentStepLength;
+  MeasureType       m_CurrentValue{ 0.0 };
+  unsigned long     m_CurrentIteration{ 0 };
+  StopConditionType m_StopCondition{ Unknown };
+  bool              m_Stop{ false };
+  double            m_CurrentStepLength{ 0.0 };
 
   /** Flag that is true as long as the method
    * SetMaxNrOfItWithoutImprovement is never called */
-  bool m_UseDefaultMaxNrOfItWithoutImprovement;
+  bool m_UseDefaultMaxNrOfItWithoutImprovement{ true };
 
   /** Is true when the LineSearchOptimizer has been started. */
-  bool m_InLineSearch;
+  bool m_InLineSearch{ false };
   itkSetMacro(InLineSearch, bool);
 
   /** Flag that says if the previous gradient and search direction are known.
    * Typically 'true' at the start of optimization, or when a stopped optimisation
    * is resumed (in the latter case the previous gradient and search direction
    * may of course still be valid, but to be safe it is assumed that they are not). */
-  bool m_PreviousGradientAndSearchDirValid;
+  bool m_PreviousGradientAndSearchDirValid{ false };
 
   /** The name of the BetaDefinition */
   BetaDefinitionType m_BetaDefinition;
@@ -256,12 +256,12 @@ private:
   void
   operator=(const Self &) = delete;
 
-  unsigned long m_MaximumNumberOfIterations;
-  double        m_ValueTolerance;
-  double        m_GradientMagnitudeTolerance;
-  unsigned long m_MaxNrOfItWithoutImprovement;
+  unsigned long m_MaximumNumberOfIterations{ 100 };
+  double        m_ValueTolerance{ 1e-5 };
+  double        m_GradientMagnitudeTolerance{ 1e-5 };
+  unsigned long m_MaxNrOfItWithoutImprovement{ 10 };
 
-  LineSearchOptimizerPointer m_LineSearchOptimizer;
+  LineSearchOptimizerPointer m_LineSearchOptimizer{ nullptr };
 };
 
 } // end namespace itk

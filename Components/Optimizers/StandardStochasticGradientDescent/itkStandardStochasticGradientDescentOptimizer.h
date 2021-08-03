@@ -152,7 +152,7 @@ protected:
   UpdateCurrentTime(void);
 
   /** The current time, which serves as input for Compute_a */
-  double m_CurrentTime;
+  double m_CurrentTime{ 0.0 };
 
   /** Constant step size or others, different value of k. */
   bool m_UseConstantStep;
@@ -163,13 +163,13 @@ private:
   operator=(const Self &) = delete;
 
   /**Parameters, as described by Spall.*/
-  double m_Param_a;
+  double m_Param_a{ 1.0 };
   double m_Param_beta;
-  double m_Param_A;
-  double m_Param_alpha;
+  double m_Param_A{ 1.0 };
+  double m_Param_alpha{ 0.602 };
 
   /** Settings */
-  double m_InitialTime;
+  double m_InitialTime{ 0.0 };
 
 }; // end class StandardStochasticGradientOptimizer
 

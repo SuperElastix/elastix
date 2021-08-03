@@ -201,16 +201,16 @@ protected:
 
   // made protected so subclass can access
   DerivativeType    m_Gradient;
-  double            m_LearningRate;
-  StopConditionType m_StopCondition;
+  double            m_LearningRate{ 1.0 };
+  StopConditionType m_StopCondition{ MaximumNumberOfIterations };
   DerivativeType    m_SearchDirection;
-  double            m_LargestEigenValue;
-  double            m_ConditionNumber;
-  double            m_Sparsity;
+  double            m_LargestEigenValue{ 1.0 };
+  double            m_ConditionNumber{ 1.0 };
+  double            m_Sparsity{ 1.0 };
 
   cholmod_common * m_CholmodCommon;
-  cholmod_factor * m_CholmodFactor;
-  cholmod_sparse * m_CholmodGradient;
+  cholmod_factor * m_CholmodFactor{ nullptr };
+  cholmod_sparse * m_CholmodGradient{ nullptr };
 
   /** Solve Hx = g, using the Cholesky decomposition of the preconditioner.
    * Matlab notation: x = L'\(L\g) = Pg = searchDirection
@@ -224,14 +224,14 @@ private:
   void
   operator=(const Self &) = delete;
 
-  bool   m_Stop;
-  double m_Value;
+  bool   m_Stop{ false };
+  double m_Value{ 0.0 };
 
-  unsigned long m_NumberOfIterations;
-  unsigned long m_CurrentIteration;
+  unsigned long m_NumberOfIterations{ 100 };
+  unsigned long m_CurrentIteration{ 0 };
 
-  double m_DiagonalWeight;
-  double m_MinimumGradientElementMagnitude;
+  double m_DiagonalWeight{ 1e-6 };
+  double m_MinimumGradientElementMagnitude{ 1e-10 };
 };
 
 } // end namespace itk

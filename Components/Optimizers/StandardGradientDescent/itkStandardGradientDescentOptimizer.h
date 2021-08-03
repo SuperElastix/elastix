@@ -147,10 +147,10 @@ protected:
   UpdateCurrentTime(void);
 
   /** The current time, which serves as input for Compute_a */
-  double m_CurrentTime;
+  double m_CurrentTime{ 0.0 };
 
   /** Constant step size or others, different value of k. */
-  bool m_UseConstantStep;
+  bool m_UseConstantStep{ false };
 
 private:
   StandardGradientDescentOptimizer(const Self &) = delete;
@@ -158,12 +158,12 @@ private:
   operator=(const Self &) = delete;
 
   /**Parameters, as described by Spall.*/
-  double m_Param_a;
-  double m_Param_A;
-  double m_Param_alpha;
+  double m_Param_a{ 1.0 };
+  double m_Param_A{ 1.0 };
+  double m_Param_alpha{ 0.602 };
 
   /** Settings */
-  double m_InitialTime;
+  double m_InitialTime{ 0.0 };
 };
 
 } // end namespace itk
