@@ -158,7 +158,6 @@ private:
   void
   operator=(const Self &) = delete;
 
-protected:
   DerivativeType m_Gradient;
   DerivativeType m_PreviousGradient;
 
