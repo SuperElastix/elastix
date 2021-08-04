@@ -158,6 +158,15 @@ PreconditionedGradientDescentOptimizer::ResumeOptimization(void)
 
   while (!this->m_Stop)
   {
+    // Check m_CurrentIteration right at the start of the loop, ensuring that
+    // no step at all is performed when when m_NumberOfIterations is zero.
+    if (this->m_CurrentIteration >= this->m_NumberOfIterations)
+    {
+      this->m_StopCondition = MaximumNumberOfIterations;
+      this->StopOptimization();
+      break;
+    }
+
     try
     {
       this->GetScaledValueAndDerivative(this->GetScaledCurrentPosition(), this->m_Value, this->m_Gradient);
@@ -182,13 +191,6 @@ PreconditionedGradientDescentOptimizer::ResumeOptimization(void)
     }
 
     this->m_CurrentIteration++;
-
-    if (this->m_CurrentIteration >= this->m_NumberOfIterations)
-    {
-      this->m_StopCondition = MaximumNumberOfIterations;
-      this->StopOptimization();
-      break;
-    }
 
   } // end while
 

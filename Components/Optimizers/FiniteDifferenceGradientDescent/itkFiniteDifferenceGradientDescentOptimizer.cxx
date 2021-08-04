@@ -106,6 +106,15 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization(void)
   InvokeEvent(StartEvent());
   while (!this->m_Stop)
   {
+    // Check m_CurrentIteration right at the start of the loop, ensuring that
+    // no step at all is performed when when m_NumberOfIterations is zero.
+    if (this->m_CurrentIteration >= this->m_NumberOfIterations)
+    {
+      this->m_StopCondition = MaximumNumberOfIterations;
+      StopOptimization();
+      break;
+    }
+
     /** Get the Number of parameters.*/
     spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
@@ -179,13 +188,6 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization(void)
     this->AdvanceOneStep();
 
     this->m_CurrentIteration++;
-
-    if (this->m_CurrentIteration >= this->m_NumberOfIterations)
-    {
-      this->m_StopCondition = MaximumNumberOfIterations;
-      StopOptimization();
-      break;
-    }
 
   } // while !m_stop
 
