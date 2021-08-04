@@ -523,6 +523,15 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization(void)
   SizeValueType nrofsamplesCheck;
   while (!this->m_Stop)
   {
+    // Check m_CurrentIteration right at the start of the loop, ensuring that
+    // no step at all is performed when when m_NumberOfIterations is zero.
+    if (this->m_CurrentIteration >= this->m_NumberOfIterations)
+    {
+      this->m_StopCondition = MaximumNumberOfIterations;
+      this->StopOptimization();
+      break;
+    }
+
     /** The following code relies on the fact that all
      * components have been set up and that the initial
      * position has been set, so must be called in this
@@ -665,12 +674,6 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization(void)
     /** Reset the current time to initial time. */
     this->ResetCurrentTimeToInitialTime();
 
-    if (this->m_CurrentIteration >= this->m_NumberOfIterations)
-    {
-      this->m_StopCondition = MaximumNumberOfIterations;
-      this->StopOptimization();
-      break;
-    }
   } // end while
 
   timeCollector.Report(std::cout);

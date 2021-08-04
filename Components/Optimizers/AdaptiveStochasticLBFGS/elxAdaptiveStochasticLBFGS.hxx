@@ -660,6 +660,15 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization(void)
   /** Loop over the iterations. */
   while (!this->m_Stop)
   {
+    // Check m_CurrentIteration right at the start of the loop, ensuring that
+    // no step at all is performed when when m_NumberOfIterations is zero.
+    if (m_CurrentIteration >= m_NumberOfIterations)
+    {
+      this->m_StopCondition = MaximumNumberOfIterations;
+      this->StopOptimization();
+      break;
+    }
+
     /** Every iteration we update the mean position over a block of L iterations
      * with the previous position.
      */
@@ -811,12 +820,6 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization(void)
 
     this->m_CurrentIteration++;
 
-    if (m_CurrentIteration >= m_NumberOfIterations)
-    {
-      this->m_StopCondition = MaximumNumberOfIterations;
-      this->StopOptimization();
-      break;
-    }
   } // end while iterations
 
 } // end ResumeOptimization()
