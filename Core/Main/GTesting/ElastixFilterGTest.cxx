@@ -40,6 +40,7 @@ using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
 using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
+using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 
 
@@ -134,11 +135,9 @@ GTEST_TEST(ElastixFilter, WriteResultImage)
                               { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
     filter->Update();
 
-    const auto * const output = filter->GetOutput();
-    ASSERT_NE(output, nullptr);
-
-    const auto &       outputImageSize = output->GetBufferedRegion().GetSize();
-    const auto * const outputBufferPointer = output->GetBufferPointer();
+    const auto &       output = Deref(filter->GetOutput());
+    const auto &       outputImageSize = output.GetBufferedRegion().GetSize();
+    const auto * const outputBufferPointer = output.GetBufferPointer();
 
     if (writeResultImage)
     {
@@ -148,7 +147,7 @@ GTEST_TEST(ElastixFilter, WriteResultImage)
       // When "WriteResultImage" is true, expect an output image that is very much like the fixed image.
       for (const auto index : itk::ZeroBasedIndexRange<ImageDimension>(imageSize))
       {
-        EXPECT_EQ(std::round(output->GetPixel(index)), std::round(fixedImage->GetPixel(index)));
+        EXPECT_EQ(std::round(output.GetPixel(index)), std::round(fixedImage->GetPixel(index)));
       }
     }
     else
