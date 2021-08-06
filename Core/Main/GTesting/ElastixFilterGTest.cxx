@@ -36,6 +36,8 @@
 
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
+using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 
@@ -90,13 +92,8 @@ GTEST_TEST(ElastixFilter, Translation)
   const auto   found = transformParameterMap.find("TransformParameters");
   ASSERT_NE(found, transformParameterMap.cend());
 
-  const auto & transformParameters = found->second;
-  ASSERT_EQ(transformParameters.size(), ImageDimension);
-
-  for (unsigned i{}; i < ImageDimension; ++i)
-  {
-    EXPECT_EQ(std::round(std::stod(transformParameters[i])), translationOffset[i]);
-  }
+  const auto transformParameters = ConvertStringsToArrayOfDouble<ImageDimension>(found->second);
+  EXPECT_EQ(ConvertArrayOfDoubleToOffset(transformParameters), translationOffset);
 }
 
 
@@ -178,12 +175,7 @@ GTEST_TEST(ElastixFilter, WriteResultImage)
     const auto   found = transformParameterMap.find("TransformParameters");
     ASSERT_NE(found, transformParameterMap.cend());
 
-    const auto & transformParameters = found->second;
-    ASSERT_EQ(transformParameters.size(), ImageDimension);
-
-    for (unsigned i{}; i < ImageDimension; ++i)
-    {
-      EXPECT_EQ(std::round(std::stod(transformParameters[i])), translationOffset[i]);
-    }
+    const auto transformParameters = ConvertStringsToArrayOfDouble<ImageDimension>(found->second);
+    EXPECT_EQ(ConvertArrayOfDoubleToOffset(transformParameters), translationOffset);
   }
 }

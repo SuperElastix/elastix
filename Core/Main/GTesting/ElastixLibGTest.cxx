@@ -35,6 +35,8 @@
 
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
+using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 
@@ -58,50 +60,6 @@ constexpr const char *
 GetPixelTypeName<float>()
 {
   return "float";
-}
-
-// Converts the specified strings to an array of double.
-// Assumes that each string represents a floating point number.
-template <unsigned VDimension>
-std::array<double, VDimension>
-ConvertStringsToArrayOfDouble(const std::vector<std::string> & strings)
-{
-  ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(strings.size() != VDimension);
-
-  std::array<double, VDimension> result;
-
-  for (std::size_t i{}; i < VDimension; ++i)
-  {
-    const auto & str = strings[i];
-    std::size_t  index{};
-    result[i] = std::stod(str, &index);
-
-    // Test that all characters have been processed, by std::stod.
-    EXPECT_EQ(index, str.size());
-  }
-
-  return result;
-}
-
-
-// Converts the specified array of double to itk::Offset, by rounding each element.
-template <std::size_t VDimension>
-itk::Offset<VDimension>
-ConvertArrayOfDoubleToOffset(const std::array<double, VDimension> & doubles)
-{
-  itk::Offset<VDimension> result;
-
-  for (std::size_t i{}; i < VDimension; ++i)
-  {
-    const auto roundedValue = std::round(doubles[i]);
-
-    EXPECT_GE(roundedValue, std::numeric_limits<itk::OffsetValueType>::min());
-    EXPECT_LE(roundedValue, std::numeric_limits<itk::OffsetValueType>::max());
-
-    result[i] = static_cast<itk::OffsetValueType>(roundedValue);
-  }
-
-  return result;
 }
 
 
