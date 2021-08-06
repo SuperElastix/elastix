@@ -51,7 +51,6 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 {
   constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
-  using RegionType = itk::ImageRegion<ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -103,7 +102,6 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 {
   constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
-  using RegionType = itk::ImageRegion<ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
