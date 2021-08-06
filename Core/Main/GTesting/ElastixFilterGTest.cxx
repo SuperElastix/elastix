@@ -35,6 +35,11 @@
 #include <utility> // For pair
 
 
+// Using-declarations:
+using elx::CoreMainGTestUtilities::CreateParameterMap;
+using elx::CoreMainGTestUtilities::FillImageRegion;
+
+
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
 GTEST_TEST(ElastixFilter, Translation)
 {
@@ -53,20 +58,19 @@ GTEST_TEST(ElastixFilter, Translation)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto parameterObject = elastix::ParameterObject::New();
-  parameterObject->SetParameterMap(
-    elx::CoreMainGTestUtilities::CreateParameterMap({ { "ImageSampler", "Full" },
-                                                      { "MaximumNumberOfIterations", "2" },
-                                                      { "Metric", "AdvancedNormalizedCorrelation" },
-                                                      { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                      { "Transform", "TranslationTransform" } }));
+  parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
+                                                        { "MaximumNumberOfIterations", "2" },
+                                                        { "Metric", "AdvancedNormalizedCorrelation" },
+                                                        { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                        { "Transform", "TranslationTransform" } }));
 
   const auto filter = elastix::ElastixFilter<ImageType, ImageType>::New();
   ASSERT_NE(filter, nullptr);
@@ -114,23 +118,23 @@ GTEST_TEST(ElastixFilter, WriteResultImage)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   for (const bool writeResultImage : { true, false })
   {
     const auto parameterObject = elastix::ParameterObject::New();
-    parameterObject->SetParameterMap(elx::CoreMainGTestUtilities::CreateParameterMap(
-      { { "ImageSampler", "Full" },
-        { "MaximumNumberOfIterations", "2" },
-        { "Metric", "AdvancedNormalizedCorrelation" },
-        { "Optimizer", "AdaptiveStochasticGradientDescent" },
-        { "Transform", "TranslationTransform" },
-        { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
+    parameterObject->SetParameterMap(
+      CreateParameterMap({ { "ImageSampler", "Full" },
+                           { "MaximumNumberOfIterations", "2" },
+                           { "Metric", "AdvancedNormalizedCorrelation" },
+                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                           { "Transform", "TranslationTransform" },
+                           { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
 
     const auto filter = elx::ElastixFilter<ImageType, ImageType>::New();
     ASSERT_NE(filter, nullptr);

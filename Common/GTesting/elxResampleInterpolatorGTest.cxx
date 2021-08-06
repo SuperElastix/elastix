@@ -40,6 +40,12 @@
 using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
 using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
+
+// Using-declarations:
+using elx::GTestUtilities::ExpectAllKeysUnique;
+using elx::GTestUtilities::MakeMergedMap;
+
+
 namespace
 {
 
@@ -73,9 +79,8 @@ struct WithDimension
       const ParameterMapType expectedBaseParameterMap = { { "ResampleInterpolator",
                                                             { interpolator.elxGetClassName() } } };
 
-      elx::GTestUtilities::ExpectAllKeysUnique(expectedDerivedParameterMap, expectedBaseParameterMap);
-      EXPECT_EQ(actualParameterMap,
-                elx::GTestUtilities::MakeMergedMap(expectedDerivedParameterMap, expectedBaseParameterMap));
+      ExpectAllKeysUnique(expectedDerivedParameterMap, expectedBaseParameterMap);
+      EXPECT_EQ(actualParameterMap, MakeMergedMap(expectedDerivedParameterMap, expectedBaseParameterMap));
     }
   };
 

@@ -38,6 +38,13 @@
 using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
 using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
+
+// Using-declarations:
+using elx::GTestUtilities::CreateDefaultElastixObject;
+using elx::GTestUtilities::ExpectAllKeysUnique;
+using elx::GTestUtilities::MakeMergedMap;
+
+
 namespace
 {
 
@@ -65,7 +72,7 @@ struct WithDimension
       const auto                                    newResampler = ResamplerType::New();
       elx::ResamplerBase<ElastixType<NDimension>> & resampler = *newResampler;
 
-      const auto elastixObject = elx::GTestUtilities::CreateDefaultElastixObject<ElastixType<NDimension>>();
+      const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();
 
       // Note: SetElastix does not take or share the ownership of its argument!
       resampler.SetElastix(elastixObject);
@@ -79,9 +86,8 @@ struct WithDimension
                                                           { "ResultImagePixelType", { "short" } },
                                                           { "CompressResultImage", { "false" } } };
 
-      elx::GTestUtilities::ExpectAllKeysUnique(expectedDerivedParameterMap, expectedBaseParameterMap);
-      EXPECT_EQ(actualParameterMap,
-                elx::GTestUtilities::MakeMergedMap(expectedDerivedParameterMap, expectedBaseParameterMap));
+      ExpectAllKeysUnique(expectedDerivedParameterMap, expectedBaseParameterMap);
+      EXPECT_EQ(actualParameterMap, MakeMergedMap(expectedDerivedParameterMap, expectedBaseParameterMap));
     }
   };
 

@@ -33,6 +33,12 @@
 #include <limits>
 #include <vector>
 
+
+// Using-declarations:
+using elx::CoreMainGTestUtilities::CreateParameterMap;
+using elx::CoreMainGTestUtilities::FillImageRegion;
+
+
 namespace
 {
 
@@ -125,13 +131,13 @@ Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
   using ImageType = itk::Image<TPixel, VImageDimension>;
   using SizeType = itk::Size<VImageDimension>;
 
-  const auto parameterMap = elx::CoreMainGTestUtilities::CreateParameterMap<VImageDimension>(
-    { { "ImageSampler", "Full" },
-      { "FixedInternalImagePixelType", GetPixelTypeName<TPixel>() },
-      { "Metric", "AdvancedNormalizedCorrelation" },
-      { "MovingInternalImagePixelType", GetPixelTypeName<TPixel>() },
-      { "Optimizer", "AdaptiveStochasticGradientDescent" },
-      { "Transform", "TranslationTransform" } });
+  const auto parameterMap =
+    CreateParameterMap<VImageDimension>({ { "ImageSampler", "Full" },
+                                          { "FixedInternalImagePixelType", GetPixelTypeName<TPixel>() },
+                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                          { "MovingInternalImagePixelType", GetPixelTypeName<TPixel>() },
+                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                          { "Transform", "TranslationTransform" } });
 
   const auto regionSizeValue = 2;
   const auto imageSizeValue = 4;
@@ -139,8 +145,7 @@ Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
   const auto image = ImageType::New();
   image->SetRegions(SizeType::Filled(imageSizeValue));
   image->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(
-    *image, itk::Index<VImageDimension>::Filled(1), SizeType::Filled(regionSizeValue));
+  FillImageRegion(*image, itk::Index<VImageDimension>::Filled(1), SizeType::Filled(regionSizeValue));
 
   elastix::ELASTIX elastixObject;
   ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
@@ -176,7 +181,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   using ITKImageType = itk::Image<float>;
   constexpr auto ImageDimension = ITKImageType::ImageDimension;
 
-  const auto parameters = elx::CoreMainGTestUtilities::CreateParameterMap<ImageDimension>({
+  const auto parameters = CreateParameterMap<ImageDimension>({
     // Parameters with non-default values (A-Z):
     { "ImageSampler", "Full" },
     { "MaximumNumberOfIterations", "2" }, // Default value: 500
@@ -228,12 +233,12 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   const auto fixed_image = ITKImageType::New();
   fixed_image->SetRegions(imageSize);
   fixed_image->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixed_image, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixed_image, fixedImageRegionIndex, regionSize);
 
   const auto moving_image = ITKImageType::New();
   moving_image->SetRegions(imageSize);
   moving_image->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*moving_image, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*moving_image, fixedImageRegionIndex + translationOffset, regionSize);
 
   const std::string output_directory(".");
   const bool        write_log_file{ false };
@@ -316,12 +321,11 @@ GTEST_TEST(ElastixLib, Translation3D)
   constexpr auto ImageDimension = 3;
   using ImageType = itk::Image<float, ImageDimension>;
 
-  const auto parameterMap = elx::CoreMainGTestUtilities::CreateParameterMap<ImageDimension>(
-    { { "ImageSampler", "Full" },
-      { "MaximumNumberOfIterations", "3" },
-      { "Metric", "AdvancedNormalizedCorrelation" },
-      { "Optimizer", "AdaptiveStochasticGradientDescent" },
-      { "Transform", "TranslationTransform" } });
+  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+                                                                 { "MaximumNumberOfIterations", "3" },
+                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
+                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                                 { "Transform", "TranslationTransform" } });
 
   const itk::Size<ImageDimension>   imageSize{ { 5, 7, 9 } };
   const itk::Size<ImageDimension>   regionSize = itk::Size<ImageDimension>::Filled(2);
@@ -331,12 +335,12 @@ GTEST_TEST(ElastixLib, Translation3D)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   elastix::ELASTIX elastixObject;
 
@@ -352,12 +356,11 @@ GTEST_TEST(ElastixLib, SingleSliceMaskedTranslation3D)
   constexpr auto ImageDimension = 3;
   using ImageType = itk::Image<float, ImageDimension>;
 
-  const auto parameterMap = elx::CoreMainGTestUtilities::CreateParameterMap<ImageDimension>(
-    { { "ImageSampler", "Full" },
-      { "MaximumNumberOfIterations", "3" },
-      { "Metric", "AdvancedNormalizedCorrelation" },
-      { "Optimizer", "AdaptiveStochasticGradientDescent" },
-      { "Transform", "TranslationTransform" } });
+  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+                                                                 { "MaximumNumberOfIterations", "3" },
+                                                                 { "Metric", "AdvancedNormalizedCorrelation" },
+                                                                 { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                                 { "Transform", "TranslationTransform" } });
 
   const itk::Size<ImageDimension>   imageSize{ { 5, 6, 8 } };
   const itk::IndexValueType         z = imageSize[2] / 2;
@@ -368,17 +371,17 @@ GTEST_TEST(ElastixLib, SingleSliceMaskedTranslation3D)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto maskImage = itk::Image<unsigned char, ImageDimension>::New();
   maskImage->SetRegions(imageSize);
   maskImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*maskImage, { 0, 0, z }, { imageSize[0], imageSize[1], 1 });
+  FillImageRegion(*maskImage, { 0, 0, z }, { imageSize[0], imageSize[1], 1 });
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   elastix::ELASTIX elastixObject;
 

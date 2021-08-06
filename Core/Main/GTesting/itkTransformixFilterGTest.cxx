@@ -55,11 +55,15 @@ template <typename TPixel, unsigned VImageDimension>
 using ResampleImageFilterType =
   itk::ResampleImageFilter<itk::Image<TPixel, VImageDimension>, itk::Image<TPixel, VImageDimension>>;
 
+// Using-declarations:
+using elx::CoreMainGTestUtilities::Deref;
+using elx::CoreMainGTestUtilities::FillImageRegion;
+using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
+using elx::GTestUtilities::GeneratePseudoRandomParameters;
 using elx::GTestUtilities::MakePoint;
 using elx::GTestUtilities::MakeSize;
 using elx::GTestUtilities::MakeVector;
-using elx::GTestUtilities::GeneratePseudoRandomParameters;
-using elx::CoreMainGTestUtilities::Deref;
+
 
 namespace
 {
@@ -261,12 +265,12 @@ GTEST_TEST(itkTransformixFilter, Translation2D)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto transformedImage = TranslateImage(*movingImage, translationOffset);
 
@@ -289,12 +293,12 @@ GTEST_TEST(itkTransformixFilter, Translation3D)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto transformedImage = TranslateImage(*movingImage, translationOffset);
 
@@ -316,15 +320,14 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto expectedOutputImage = TranslateImage(*movingImage, translationOffset);
 
   for (const std::string transformFileName :
        { "ITK-Transform.tfm", "ITK-HDF5-Transform.h5", "Special characters [(0-9,;!@#$%&)]/ITK-Transform.tfm" })
   {
-    const auto transformFilePathName =
-      elx::CoreMainGTestUtilities::GetDataDirectoryPath() + "/Translation(1,-2)/" + transformFileName;
+    const auto transformFilePathName = GetDataDirectoryPath() + "/Translation(1,-2)/" + transformFileName;
 
     const auto filter = itk::TransformixFilter<ImageType>::New();
     ASSERT_NE(filter, nullptr);
