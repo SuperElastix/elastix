@@ -61,9 +61,15 @@
 using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
 using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
+
+// Using-declarations:
+using elx::GTestUtilities::CreateDefaultElastixObject;
+using elx::GTestUtilities::ExpectAllKeysUnique;
 using elx::GTestUtilities::GeneratePseudoRandomParameters;
+using elx::GTestUtilities::MakeMergedMap;
 using elx::GTestUtilities::MakePoint;
 using elx::GTestUtilities::MakeVector;
+
 
 namespace
 {
@@ -208,7 +214,7 @@ struct WithDimension
       const elx::xoutManager manager("", false, false);
 
       const auto elxTransform = ElastixTransformType::New();
-      const auto elastixObject = elx::GTestUtilities::CreateDefaultElastixObject<ElastixType<NDimension>>();
+      const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();
 
       // Note: SetElastix does not take or share the ownership of its argument!
       elxTransform->SetElastix(elastixObject);
@@ -249,9 +255,8 @@ struct WithDimension
         { "UseDirectionCosines", { "true" } }
       };
 
-      elx::GTestUtilities::ExpectAllKeysUnique(expectedDerivedParameterMap, expectedBaseParameterMap);
-      EXPECT_EQ(actualParameterMap,
-                elx::GTestUtilities::MakeMergedMap(expectedDerivedParameterMap, expectedBaseParameterMap));
+      ExpectAllKeysUnique(expectedDerivedParameterMap, expectedBaseParameterMap);
+      EXPECT_EQ(actualParameterMap, MakeMergedMap(expectedDerivedParameterMap, expectedBaseParameterMap));
     }
 
     static void
@@ -304,7 +309,7 @@ struct WithDimension
 
       const auto elxTransform = ElastixTransformType::New();
 
-      const auto elastixObject = elx::GTestUtilities::CreateDefaultElastixObject<ElastixType<NDimension>>();
+      const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();
 
       // Note: SetElastix does not take or share the ownership of its argument!
       elxTransform->SetElastix(elastixObject);
@@ -518,7 +523,7 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
 {
   const auto Dimension = TITKTransform::SpaceDimension;
 
-  const auto elastixObject = elx::GTestUtilities::CreateDefaultElastixObject<ElastixType<Dimension>>();
+  const auto elastixObject = CreateDefaultElastixObject<ElastixType<Dimension>>();
 
   const auto elxTransform = TElastixTransform<ElastixType<Dimension>>::New();
 

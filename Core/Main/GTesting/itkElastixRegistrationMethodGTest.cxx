@@ -35,6 +35,14 @@
 #include <utility> // For pair
 
 
+// Using-declarations:
+using elx::CoreMainGTestUtilities::CreateParameterMap;
+using elx::CoreMainGTestUtilities::Deref;
+using elx::CoreMainGTestUtilities::FillImageRegion;
+using elx::CoreMainGTestUtilities::Front;
+using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
+
+
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
 GTEST_TEST(itkElastixRegistrationMethod, Translation)
 {
@@ -53,20 +61,19 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto parameterObject = elastix::ParameterObject::New();
-  parameterObject->SetParameterMap(
-    elx::CoreMainGTestUtilities::CreateParameterMap({ { "ImageSampler", "Full" },
-                                                      { "MaximumNumberOfIterations", "2" },
-                                                      { "Metric", "AdvancedNormalizedCorrelation" },
-                                                      { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                      { "Transform", "TranslationTransform" } }));
+  parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
+                                                        { "MaximumNumberOfIterations", "2" },
+                                                        { "Metric", "AdvancedNormalizedCorrelation" },
+                                                        { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                        { "Transform", "TranslationTransform" } }));
 
   const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
   ASSERT_NE(filter, nullptr);
@@ -114,23 +121,23 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
   movingImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   for (const bool writeResultImage : { true, false })
   {
     const auto parameterObject = elastix::ParameterObject::New();
-    parameterObject->SetParameterMap(elx::CoreMainGTestUtilities::CreateParameterMap(
-      { { "ImageSampler", "Full" },
-        { "MaximumNumberOfIterations", "2" },
-        { "Metric", "AdvancedNormalizedCorrelation" },
-        { "Optimizer", "AdaptiveStochasticGradientDescent" },
-        { "Transform", "TranslationTransform" },
-        { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
+    parameterObject->SetParameterMap(
+      CreateParameterMap({ { "ImageSampler", "Full" },
+                           { "MaximumNumberOfIterations", "2" },
+                           { "Metric", "AdvancedNormalizedCorrelation" },
+                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                           { "Transform", "TranslationTransform" },
+                           { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
 
     const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
     ASSERT_NE(filter, nullptr);
@@ -201,7 +208,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
@@ -210,16 +217,14 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
   const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
   ASSERT_NE(filter, nullptr);
   filter->SetFixedImage(fixedImage);
-  filter->SetInitialTransformParameterFileName(elx::CoreMainGTestUtilities::GetDataDirectoryPath() +
-                                               "/Translation(1,-2)/TransformParameters.txt");
+  filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt");
 
   const auto parameterObject = elx::ParameterObject::New();
-  parameterObject->SetParameterMap(
-    elx::CoreMainGTestUtilities::CreateParameterMap({ { "ImageSampler", "Full" },
-                                                      { "MaximumNumberOfIterations", "2" },
-                                                      { "Metric", "AdvancedNormalizedCorrelation" },
-                                                      { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                      { "Transform", "TranslationTransform" } }));
+  parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
+                                                        { "MaximumNumberOfIterations", "2" },
+                                                        { "Metric", "AdvancedNormalizedCorrelation" },
+                                                        { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                        { "Transform", "TranslationTransform" } }));
   filter->SetParameterObject(parameterObject);
 
   const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
@@ -228,16 +233,15 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
        itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
   {
     movingImage->FillBuffer(0);
-    elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
+    FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
     filter->SetMovingImage(movingImage);
     filter->Update();
 
-    const elx::ParameterObject & transformParameterObject =
-      elx::CoreMainGTestUtilities::Deref(filter->GetTransformParameterObject());
-    const auto & transformParameterMaps = transformParameterObject.GetParameterMap();
+    const elx::ParameterObject & transformParameterObject = Deref(filter->GetTransformParameterObject());
+    const auto &                 transformParameterMaps = transformParameterObject.GetParameterMap();
     EXPECT_EQ(transformParameterMaps.size(), 1);
 
-    const auto & transformParameterMap = elx::CoreMainGTestUtilities::Front(transformParameterMaps);
+    const auto & transformParameterMap = Front(transformParameterMaps);
     const auto   found = transformParameterMap.find("TransformParameters");
     ASSERT_NE(found, transformParameterMap.cend());
 
@@ -270,7 +274,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
   fixedImage->Allocate(true);
-  elx::CoreMainGTestUtilities::FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
@@ -282,15 +286,14 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
     const auto filter = RegistrationMethodType::New();
     ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(filter == nullptr);
     filter->SetFixedImage(fixedImage);
-    filter->SetInitialTransformParameterFileName(elx::CoreMainGTestUtilities::GetDataDirectoryPath() +
-                                                 "/Translation(1,-2)/" + initialTransformParameterFileName);
+    filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/" +
+                                                 initialTransformParameterFileName);
     const auto parameterObject = elx::ParameterObject::New();
-    parameterObject->SetParameterMap(
-      elx::CoreMainGTestUtilities::CreateParameterMap({ { "ImageSampler", "Full" },
-                                                        { "MaximumNumberOfIterations", "2" },
-                                                        { "Metric", "AdvancedNormalizedCorrelation" },
-                                                        { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                        { "Transform", "TranslationTransform" } }));
+    parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
+                                                          { "MaximumNumberOfIterations", "2" },
+                                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                          { "Transform", "TranslationTransform" } }));
     filter->SetParameterObject(parameterObject);
     return filter;
   };
@@ -308,16 +311,15 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
          itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
     {
       movingImage->FillBuffer(0);
-      elx::CoreMainGTestUtilities::FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
+      FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
 
       const auto updateAndRetrieveTransformParameterMap = [movingImage](RegistrationMethodType & filter) {
         filter.SetMovingImage(movingImage);
         filter.Update();
-        const elx::ParameterObject & transformParameterObject =
-          elx::CoreMainGTestUtilities::Deref(filter.GetTransformParameterObject());
-        const auto & transformParameterMaps = transformParameterObject.GetParameterMap();
+        const elx::ParameterObject & transformParameterObject = Deref(filter.GetTransformParameterObject());
+        const auto &                 transformParameterMaps = transformParameterObject.GetParameterMap();
         EXPECT_EQ(transformParameterMaps.size(), 1);
-        return elx::CoreMainGTestUtilities::Front(transformParameterMaps);
+        return Front(transformParameterMaps);
       };
 
       const auto transformParameterMap1 = updateAndRetrieveTransformParameterMap(*filter1);
