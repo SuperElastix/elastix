@@ -38,7 +38,7 @@
 // Using-declarations:
 using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
 using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
-using elx::CoreMainGTestUtilities::CreateParameterMap;
+using elx::CoreMainGTestUtilities::CreateParameterObject;
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::Front;
@@ -70,19 +70,17 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
   movingImage->Allocate(true);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  const auto parameterObject = elastix::ParameterObject::New();
-  parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
-                                                        { "MaximumNumberOfIterations", "2" },
-                                                        { "Metric", "AdvancedNormalizedCorrelation" },
-                                                        { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                        { "Transform", "TranslationTransform" } }));
-
   const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
   ASSERT_NE(filter, nullptr);
 
   filter->SetFixedImage(fixedImage);
   filter->SetMovingImage(movingImage);
-  filter->SetParameterObject(parameterObject);
+  filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                     { "ImageSampler", "Full" },
+                                                     { "MaximumNumberOfIterations", "2" },
+                                                     { "Metric", "AdvancedNormalizedCorrelation" },
+                                                     { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                     { "Transform", "TranslationTransform" } }));
   filter->Update();
 
   const auto   transformParameterObject = filter->GetTransformParameterObject();
@@ -127,21 +125,19 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 
   for (const bool writeResultImage : { true, false })
   {
-    const auto parameterObject = elastix::ParameterObject::New();
-    parameterObject->SetParameterMap(
-      CreateParameterMap({ { "ImageSampler", "Full" },
-                           { "MaximumNumberOfIterations", "2" },
-                           { "Metric", "AdvancedNormalizedCorrelation" },
-                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                           { "Transform", "TranslationTransform" },
-                           { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
-
     const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
     ASSERT_NE(filter, nullptr);
 
     filter->SetFixedImage(fixedImage);
     filter->SetMovingImage(movingImage);
-    filter->SetParameterObject(parameterObject);
+    filter->SetParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "ImageSampler", "Full" },
+                              { "MaximumNumberOfIterations", "2" },
+                              { "Metric", "AdvancedNormalizedCorrelation" },
+                              { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                              { "Transform", "TranslationTransform" },
+                              { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
     filter->Update();
 
     const auto * const output = filter->GetOutput();
@@ -211,13 +207,12 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
   filter->SetFixedImage(fixedImage);
   filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt");
 
-  const auto parameterObject = elx::ParameterObject::New();
-  parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
-                                                        { "MaximumNumberOfIterations", "2" },
-                                                        { "Metric", "AdvancedNormalizedCorrelation" },
-                                                        { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                        { "Transform", "TranslationTransform" } }));
-  filter->SetParameterObject(parameterObject);
+  filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                     { "ImageSampler", "Full" },
+                                                     { "MaximumNumberOfIterations", "2" },
+                                                     { "Metric", "AdvancedNormalizedCorrelation" },
+                                                     { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                     { "Transform", "TranslationTransform" } }));
 
   const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
 
@@ -279,13 +274,12 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
     filter->SetFixedImage(fixedImage);
     filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/" +
                                                  initialTransformParameterFileName);
-    const auto parameterObject = elx::ParameterObject::New();
-    parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
-                                                          { "MaximumNumberOfIterations", "2" },
-                                                          { "Metric", "AdvancedNormalizedCorrelation" },
-                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                          { "Transform", "TranslationTransform" } }));
-    filter->SetParameterObject(parameterObject);
+    filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                       { "ImageSampler", "Full" },
+                                                       { "MaximumNumberOfIterations", "2" },
+                                                       { "Metric", "AdvancedNormalizedCorrelation" },
+                                                       { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                       { "Transform", "TranslationTransform" } }));
     return filter;
   };
 

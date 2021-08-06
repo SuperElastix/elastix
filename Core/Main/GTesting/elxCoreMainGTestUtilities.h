@@ -19,6 +19,8 @@
 #ifndef elxCoreMainGTestUtilities_h
 #define elxCoreMainGTestUtilities_h
 
+#include <elxParameterObject.h>
+
 #include <itkImage.h>
 #include <itkImageRegionRange.h>
 #include <itkIndex.h>
@@ -179,6 +181,15 @@ CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> in
     EXPECT_TRUE(result.insert({ key, { std::to_string(VImageDimension) } }).second);
   }
   return result;
+}
+
+
+ParameterObject::Pointer inline CreateParameterObject(
+  std::initializer_list<std::pair<std::string, std::string>> initializerList)
+{
+  const auto parameterObject = ParameterObject::New();
+  parameterObject->SetParameterMap(CreateParameterMap(initializerList));
+  return parameterObject;
 }
 
 
