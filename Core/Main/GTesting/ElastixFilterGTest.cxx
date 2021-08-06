@@ -38,7 +38,7 @@
 // Using-declarations:
 using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
 using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
-using elx::CoreMainGTestUtilities::CreateParameterMap;
+using elx::CoreMainGTestUtilities::CreateParameterObject;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 
 
@@ -67,19 +67,17 @@ GTEST_TEST(ElastixFilter, Translation)
   movingImage->Allocate(true);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  const auto parameterObject = elastix::ParameterObject::New();
-  parameterObject->SetParameterMap(CreateParameterMap({ { "ImageSampler", "Full" },
-                                                        { "MaximumNumberOfIterations", "2" },
-                                                        { "Metric", "AdvancedNormalizedCorrelation" },
-                                                        { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                        { "Transform", "TranslationTransform" } }));
-
   const auto filter = elastix::ElastixFilter<ImageType, ImageType>::New();
   ASSERT_NE(filter, nullptr);
 
   filter->SetFixedImage(fixedImage);
   filter->SetMovingImage(movingImage);
-  filter->SetParameterObject(parameterObject);
+  filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                     { "ImageSampler", "Full" },
+                                                     { "MaximumNumberOfIterations", "2" },
+                                                     { "Metric", "AdvancedNormalizedCorrelation" },
+                                                     { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                     { "Transform", "TranslationTransform" } }));
   filter->Update();
 
   const auto   transformParameterObject = filter->GetTransformParameterObject();
@@ -124,21 +122,19 @@ GTEST_TEST(ElastixFilter, WriteResultImage)
 
   for (const bool writeResultImage : { true, false })
   {
-    const auto parameterObject = elastix::ParameterObject::New();
-    parameterObject->SetParameterMap(
-      CreateParameterMap({ { "ImageSampler", "Full" },
-                           { "MaximumNumberOfIterations", "2" },
-                           { "Metric", "AdvancedNormalizedCorrelation" },
-                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                           { "Transform", "TranslationTransform" },
-                           { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
-
     const auto filter = elx::ElastixFilter<ImageType, ImageType>::New();
     ASSERT_NE(filter, nullptr);
 
     filter->SetFixedImage(fixedImage);
     filter->SetMovingImage(movingImage);
-    filter->SetParameterObject(parameterObject);
+    filter->SetParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "ImageSampler", "Full" },
+                              { "MaximumNumberOfIterations", "2" },
+                              { "Metric", "AdvancedNormalizedCorrelation" },
+                              { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                              { "Transform", "TranslationTransform" },
+                              { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
     filter->Update();
 
     const auto * const output = filter->GetOutput();
