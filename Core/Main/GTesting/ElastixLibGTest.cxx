@@ -89,11 +89,8 @@ ConvertArrayOfDoubleToOffset(const std::array<double, VDimension> & doubles)
   {
     const auto roundedValue = std::round(doubles[i]);
 
-    // Wrap ASSERT calls in a lambda, because they return void!
-    [roundedValue] {
-      ASSERT_GE(roundedValue, std::numeric_limits<itk::OffsetValueType>::min());
-      ASSERT_LE(roundedValue, std::numeric_limits<itk::OffsetValueType>::max());
-    }();
+    EXPECT_GE(roundedValue, std::numeric_limits<itk::OffsetValueType>::min());
+    EXPECT_LE(roundedValue, std::numeric_limits<itk::OffsetValueType>::max());
 
     result[i] = static_cast<itk::OffsetValueType>(roundedValue);
   }
