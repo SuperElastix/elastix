@@ -36,6 +36,7 @@
 
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
 using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
@@ -70,8 +71,7 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
   movingImage->Allocate(true);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
-  ASSERT_NE(filter, nullptr);
+  const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
 
   filter->SetFixedImage(fixedImage);
   filter->SetMovingImage(movingImage);
@@ -125,8 +125,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 
   for (const bool writeResultImage : { true, false })
   {
-    const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
-    ASSERT_NE(filter, nullptr);
+    const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
 
     filter->SetFixedImage(fixedImage);
     filter->SetMovingImage(movingImage);
@@ -202,8 +201,8 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
   movingImage->SetRegions(imageSize);
   movingImage->Allocate();
 
-  const auto filter = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
-  ASSERT_NE(filter, nullptr);
+  const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+
   filter->SetFixedImage(fixedImage);
   filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt");
 
@@ -269,8 +268,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
   const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
 
   const auto createFilter = [fixedImage](const std::string & initialTransformParameterFileName) {
-    const auto filter = RegistrationMethodType::New();
-    ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(filter == nullptr);
+    const auto filter = CheckNew<RegistrationMethodType>();
     filter->SetFixedImage(fixedImage);
     filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/" +
                                                  initialTransformParameterFileName);

@@ -98,6 +98,18 @@ Front(T & container)
 }
 
 
+template <typename T>
+itk::SmartPointer<T>
+CheckNew()
+{
+  const auto ptr = T::New();
+  if (ptr == nullptr)
+  {
+    throw Exception("New() error: should not return null!");
+  }
+  return ptr;
+}
+
 /// Fills the specified image region with pixel values 1.
 template <typename TPixel, unsigned int VImageDimension>
 void

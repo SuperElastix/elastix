@@ -36,6 +36,7 @@
 
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
 using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
@@ -67,8 +68,7 @@ GTEST_TEST(ElastixFilter, Translation)
   movingImage->Allocate(true);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  const auto filter = elastix::ElastixFilter<ImageType, ImageType>::New();
-  ASSERT_NE(filter, nullptr);
+  const auto filter = CheckNew<elx::ElastixFilter<ImageType, ImageType>>();
 
   filter->SetFixedImage(fixedImage);
   filter->SetMovingImage(movingImage);
@@ -122,8 +122,7 @@ GTEST_TEST(ElastixFilter, WriteResultImage)
 
   for (const bool writeResultImage : { true, false })
   {
-    const auto filter = elx::ElastixFilter<ImageType, ImageType>::New();
-    ASSERT_NE(filter, nullptr);
+    const auto filter = CheckNew<elx::ElastixFilter<ImageType, ImageType>>();
 
     filter->SetFixedImage(fixedImage);
     filter->SetMovingImage(movingImage);
