@@ -35,10 +35,10 @@
 
 
 // Using-declarations:
-using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
-using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
+using elx::CoreMainGTestUtilities::ConvertToOffset;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::FillImageRegion;
+using elx::CoreMainGTestUtilities::GetTransformParametersFromMaps;
 
 
 namespace
@@ -68,17 +68,8 @@ void
 ExpectRoundedTransformParametersEqualOffset(const elastix::ELASTIX &        elastixObject,
                                             const itk::Offset<VDimension> & offset)
 {
-  const auto transformParameterMaps = elastixObject.GetTransformParameterMapList();
-
-  ASSERT_TRUE(!transformParameterMaps.empty());
-  EXPECT_EQ(transformParameterMaps.size(), 1);
-
-  const auto & transformParameterMap = transformParameterMaps.front();
-  const auto   found = transformParameterMap.find("TransformParameters");
-  ASSERT_NE(found, transformParameterMap.cend());
-
-  const auto transformParameters = ConvertStringsToArrayOfDouble<VDimension>(found->second);
-  EXPECT_EQ(ConvertArrayOfDoubleToOffset(transformParameters), offset);
+  const auto transformParameters = GetTransformParametersFromMaps(elastixObject.GetTransformParameterMapList());
+  EXPECT_EQ(ConvertToOffset<VDimension>(transformParameters), offset);
 }
 
 
@@ -108,21 +99,11 @@ Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
   elastix::ELASTIX elastixObject;
   ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
 
-  const auto transformParameterMaps = elastixObject.GetTransformParameterMapList();
-
-  ASSERT_TRUE(!transformParameterMaps.empty());
-  EXPECT_EQ(transformParameterMaps.size(), 1);
-
-  const auto & transformParameterMap = transformParameterMaps.front();
-  const auto   found = transformParameterMap.find("TransformParameters");
-  ASSERT_NE(found, transformParameterMap.cend());
-
-  const auto & transformParameters = found->second;
-  ASSERT_EQ(transformParameters.size(), VImageDimension);
+  const auto transformParameters = GetTransformParametersFromMaps(elastixObject.GetTransformParameterMapList());
 
   for (const auto & transformParameter : transformParameters)
   {
-    EXPECT_EQ(transformParameter, "0");
+    EXPECT_EQ(transformParameter, 0.0);
   }
 }
 
