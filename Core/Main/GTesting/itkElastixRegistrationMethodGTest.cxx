@@ -87,6 +87,103 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 }
 
 
+// Tests "MaximumNumberOfIterations" value "0"
+GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
+{
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType translationOffset{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = ImageType::New();
+  fixedImage->SetRegions(imageSize);
+  fixedImage->Allocate(true);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = ImageType::New();
+  movingImage->SetRegions(imageSize);
+  movingImage->Allocate(true);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  for (const auto optimizer :
+       { "AdaptiveStochasticGradientDescent", "FiniteDifferenceGradientDescent", "StandardGradientDescent" })
+  {
+    const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+
+    filter->SetFixedImage(fixedImage);
+    filter->SetMovingImage(movingImage);
+    filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                       { "ImageSampler", "Full" },
+                                                       { "MaximumNumberOfIterations", "0" },
+                                                       { "Metric", "AdvancedNormalizedCorrelation" },
+                                                       { "Optimizer", optimizer },
+                                                       { "Transform", "TranslationTransform" } }));
+    filter->Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(*filter);
+
+    for (const auto & transformParameter : transformParameters)
+    {
+      EXPECT_EQ(transformParameter, 0.0);
+    }
+  }
+}
+
+
+// Tests "AutomaticTransformInitializationMethod" "CenterOfGravity".
+GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterOfGravity)
+{
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType translationOffset{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = ImageType::New();
+  fixedImage->SetRegions(imageSize);
+  fixedImage->Allocate(true);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = ImageType::New();
+  movingImage->SetRegions(imageSize);
+  movingImage->Allocate(true);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  for (const bool automaticTransformInitialization : { false, true })
+  {
+    const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+
+    filter->SetFixedImage(fixedImage);
+    filter->SetMovingImage(movingImage);
+    filter->SetParameterObject(CreateParameterObject(
+      { // Parameters in alphabetic order:
+        { "AutomaticTransformInitialization", automaticTransformInitialization ? "true" : "false" },
+        { "AutomaticTransformInitializationMethod", "CenterOfGravity" },
+        { "ImageSampler", "Full" },
+        { "MaximumNumberOfIterations", "0" },
+        { "Metric", "AdvancedNormalizedCorrelation" },
+        { "Optimizer", "AdaptiveStochasticGradientDescent" },
+        { "Transform", "TranslationTransform" } }));
+    filter->Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(*filter);
+    const auto estimatedOffset = ConvertToOffset<ImageDimension>(transformParameters);
+    EXPECT_EQ(estimatedOffset == translationOffset, automaticTransformInitialization);
+  }
+}
+
+
 // Tests registering two images, having "WriteResultImage" set.
 GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 {
