@@ -37,13 +37,13 @@
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
-using elx::CoreMainGTestUtilities::ConvertArrayOfDoubleToOffset;
-using elx::CoreMainGTestUtilities::ConvertStringsToArrayOfDouble;
+using elx::CoreMainGTestUtilities::ConvertToOffset;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::Front;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
+using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
 
 
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
@@ -82,18 +82,8 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
                                                      { "Transform", "TranslationTransform" } }));
   filter->Update();
 
-  const auto   transformParameterObject = filter->GetTransformParameterObject();
-  const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
-
-  ASSERT_TRUE(!transformParameterMaps.empty());
-  EXPECT_EQ(transformParameterMaps.size(), 1);
-
-  const auto & transformParameterMap = transformParameterMaps.front();
-  const auto   found = transformParameterMap.find("TransformParameters");
-  ASSERT_NE(found, transformParameterMap.cend());
-
-  const auto transformParameters = ConvertStringsToArrayOfDouble<ImageDimension>(found->second);
-  EXPECT_EQ(ConvertArrayOfDoubleToOffset(transformParameters), translationOffset);
+  const auto transformParameters = GetTransformParametersFromFilter(*filter);
+  EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
 }
 
 
@@ -159,18 +149,8 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
       EXPECT_EQ(outputBufferPointer, nullptr);
     }
 
-    const auto   transformParameterObject = filter->GetTransformParameterObject();
-    const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
-
-    ASSERT_TRUE(!transformParameterMaps.empty());
-    EXPECT_EQ(transformParameterMaps.size(), 1);
-
-    const auto & transformParameterMap = transformParameterMaps.front();
-    const auto   found = transformParameterMap.find("TransformParameters");
-    ASSERT_NE(found, transformParameterMap.cend());
-
-    const auto transformParameters = ConvertStringsToArrayOfDouble<ImageDimension>(found->second);
-    EXPECT_EQ(ConvertArrayOfDoubleToOffset(transformParameters), translationOffset);
+    const auto transformParameters = GetTransformParametersFromFilter(*filter);
+    EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
   }
 }
 
@@ -219,15 +199,8 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
     filter->SetMovingImage(movingImage);
     filter->Update();
 
-    const elx::ParameterObject & transformParameterObject = Deref(filter->GetTransformParameterObject());
-    const auto &                 transformParameterMaps = transformParameterObject.GetParameterMap();
-    EXPECT_EQ(transformParameterMaps.size(), 1);
-
-    const auto & transformParameterMap = Front(transformParameterMaps);
-    const auto   found = transformParameterMap.find("TransformParameters");
-    ASSERT_NE(found, transformParameterMap.cend());
-
-    const auto transformParameters = ConvertStringsToArrayOfDouble<ImageDimension>(found->second);
+    const auto transformParameters = GetTransformParametersFromFilter(*filter);
+    ASSERT_EQ(transformParameters.size(), ImageDimension);
 
     for (unsigned i{}; i < ImageDimension; ++i)
     {

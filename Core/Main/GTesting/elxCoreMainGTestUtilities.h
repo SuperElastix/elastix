@@ -26,7 +26,7 @@
 #include <itkIndex.h>
 #include <itkSize.h>
 
-#include <algorithm> // For fill.
+#include <algorithm> // For fill and transform.
 #include <array>
 #include <cmath> // For round.
 #include <map>
@@ -124,45 +124,45 @@ FillImageRegion(itk::Image<TPixel, VImageDimension> & image,
 }
 
 
-// Converts the specified strings to an array of double.
+// Converts the specified strings to a vector of double.
 // Assumes that each string represents a floating point number.
-template <unsigned VDimension>
-std::array<double, VDimension>
-ConvertStringsToArrayOfDouble(const std::vector<std::string> & strings)
+inline std::vector<double>
+ConvertStringsToVectorOfDouble(const std::vector<std::string> & strings)
 {
-  ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(strings.size() != VDimension);
+  std::vector<double> result(strings.size());
 
-  std::array<double, VDimension> result;
-
-  for (std::size_t i{}; i < VDimension; ++i)
-  {
-    const auto & str = strings[i];
-    std::size_t  index{};
-    result[i] = std::stod(str, &index);
+  std::transform(strings.cbegin(), strings.cend(), result.begin(), [](const std::string & str) {
+    std::size_t index{};
+    const auto  result = std::stod(str, &index);
 
     // Test that all characters have been processed, by std::stod.
     EXPECT_EQ(index, str.size());
-  }
+    return result;
+  });
 
   return result;
 }
 
 
-// Converts the specified array of double to itk::Offset, by rounding each element.
+// Converts the specified vector of double to itk::Offset, by rounding each element.
 template <std::size_t VDimension>
 itk::Offset<VDimension>
-ConvertArrayOfDoubleToOffset(const std::array<double, VDimension> & doubles)
+ConvertToOffset(const std::vector<double> & doubles)
 {
-  itk::Offset<VDimension> result;
+  ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(doubles.size() != VDimension);
 
-  for (std::size_t i{}; i < VDimension; ++i)
+  itk::Offset<VDimension> result;
+  std::size_t             i{};
+
+  for (const double value : doubles)
   {
-    const auto roundedValue = std::round(doubles[i]);
+    const auto roundedValue = std::round(value);
 
     EXPECT_GE(roundedValue, std::numeric_limits<itk::OffsetValueType>::min());
     EXPECT_LE(roundedValue, std::numeric_limits<itk::OffsetValueType>::max());
 
     result[i] = static_cast<itk::OffsetValueType>(roundedValue);
+    ++i;
   }
 
   return result;
@@ -202,6 +202,38 @@ ParameterObject::Pointer inline CreateParameterObject(
   const auto parameterObject = ParameterObject::New();
   parameterObject->SetParameterMap(CreateParameterMap(initializerList));
   return parameterObject;
+}
+
+
+inline std::vector<double>
+GetTransformParametersFromMaps(const std::vector<ParameterObject::ParameterMapType> & transformParameterMaps)
+{
+  // For the time being, only support a single parameter map here.
+  EXPECT_EQ(transformParameterMaps.size(), 1);
+
+  if (transformParameterMaps.empty())
+  {
+    throw Exception("Error: GetTransformParametersFromMaps should not return an empty ParameterMap!");
+  }
+
+  const auto & transformParameterMap = transformParameterMaps.front();
+  const auto   found = transformParameterMap.find("TransformParameters");
+
+  if (found == transformParameterMap.cend())
+  {
+    throw Exception("Error: GetTransformParametersFromMaps did not find TransformParameters!");
+  }
+  return ConvertStringsToVectorOfDouble(found->second);
+}
+
+
+template <typename TFilter>
+std::vector<double>
+GetTransformParametersFromFilter(TFilter & filter)
+{
+  const auto   transformParameterObject = filter.GetTransformParameterObject();
+  const auto & transformParameterMaps = Deref(transformParameterObject).GetParameterMap();
+  return GetTransformParametersFromMaps(transformParameterMaps);
 }
 
 
