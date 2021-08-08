@@ -21,6 +21,7 @@
 #include <itkElastixRegistrationMethod.h>
 
 #include "elxCoreMainGTestUtilities.h"
+#include "GTesting/elxGTestUtilities.h"
 
 // ITK header file:
 #include <itkImage.h>
@@ -44,6 +45,7 @@ using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::Front;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
+using elx::GTestUtilities::MakePoint;
 
 
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
@@ -248,6 +250,78 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 
     const auto transformParameters = GetTransformParametersFromFilter(*filter);
     EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
+  }
+}
+
+
+// Tests that the origin of the output image is equal to the origin of the fixed image (by default).
+GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
+{
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType translationOffset{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 12, 16 } };
+  const IndexType  fixedImageRegionIndex{ { 3, 9 } };
+
+  const auto fixedImage = ImageType::New();
+  fixedImage->SetRegions(imageSize);
+  fixedImage->Allocate(true);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = ImageType::New();
+  movingImage->SetRegions(imageSize);
+  movingImage->Allocate(true);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  for (const auto fixedImageOrigin : { MakePoint(-1.0, -2.0), ImageType::PointType(), MakePoint(0.25, 0.75) })
+  {
+    fixedImage->SetOrigin(fixedImageOrigin);
+
+    for (const auto movingImageOrigin : { MakePoint(-1.0, -2.0), ImageType::PointType(), MakePoint(0.25, 0.75) })
+    {
+      movingImage->SetOrigin(movingImageOrigin);
+
+      const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+
+      filter->SetFixedImage(fixedImage);
+      filter->SetMovingImage(movingImage);
+      filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                         { "ImageSampler", "Full" },
+                                                         { "MaximumNumberOfIterations", "2" },
+                                                         { "Metric", "AdvancedNormalizedCorrelation" },
+                                                         { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                         { "Transform", "TranslationTransform" } }));
+      filter->Update();
+
+      const auto & output = Deref(filter->GetOutput());
+
+      // The most essential check of this test.
+      EXPECT_EQ(output.GetOrigin(), fixedImageOrigin);
+
+      ASSERT_EQ(output.GetBufferedRegion().GetSize(), imageSize);
+      ASSERT_NE(output.GetBufferPointer(), nullptr);
+
+      // Expect an output image that is very much like the fixed image.
+      for (const auto & index : itk::ZeroBasedIndexRange<ImageDimension>(imageSize))
+      {
+        EXPECT_EQ(std::round(output.GetPixel(index)), std::round(fixedImage->GetPixel(index)));
+      }
+
+      const auto transformParameters = GetTransformParametersFromFilter(*filter);
+
+      ASSERT_EQ(transformParameters.size(), ImageDimension);
+
+      for (std::size_t i{}; i < ImageDimension; ++i)
+      {
+        EXPECT_EQ(std::round(transformParameters[i] + fixedImageOrigin[i] - movingImageOrigin[i]),
+                  translationOffset[i]);
+      }
+    }
   }
 }
 
