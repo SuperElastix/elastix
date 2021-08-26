@@ -149,8 +149,10 @@ TransformixFilter<TMovingImage>::GenerateData(void)
   }
 
   // Setup xout
-  const std::unique_ptr<const elx::xoutManager> manager(
-    m_EnableOutput ? new elx::xoutManager(logFileName, this->GetLogToFile(), this->GetLogToConsole()) : nullptr);
+  const auto manager =
+    m_EnableOutput
+      ? std::make_unique<const elx::xoutManager>(logFileName, this->GetLogToFile(), this->GetLogToConsole())
+      : std::unique_ptr<const elx::xoutManager>();
 
   // Instantiate transformix
   TransformixMainPointer transformix = TransformixMainType::New();

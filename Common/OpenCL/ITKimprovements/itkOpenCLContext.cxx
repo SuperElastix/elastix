@@ -137,7 +137,7 @@ GetOpenCLDebugFileName(const std::string & source)
 
 //------------------------------------------------------------------------------
 OpenCLContext::OpenCLContext()
-  : d_ptr(new OpenCLContextPimpl())
+  : d_ptr(std::make_unique<OpenCLContextPimpl>())
 {}
 
 //------------------------------------------------------------------------------

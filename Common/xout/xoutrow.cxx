@@ -66,8 +66,8 @@ xoutrow::AddTargetCell(const char * name)
   if (this->m_CellMap.count(name) == 0)
   {
     /** A new cell (type xoutcell) is created. */
-    std::unique_ptr<xoutcell> cell{ new xoutcell };
-    auto &                    cellReference = *cell;
+    auto   cell = std::make_unique<xoutcell>();
+    auto & cellReference = *cell;
 
     /** Set the outputs equal to the outputs of this object. */
     cell->SetOutputs(this->m_COutputs);
