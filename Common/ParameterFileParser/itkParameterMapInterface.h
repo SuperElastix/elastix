@@ -411,7 +411,7 @@ public:
                           << " value \"" << str << "\" to type \"" << typeid(T).name() << "\"!");
       }
     }
-    return std::unique_ptr<std::vector<T>>(new std::vector<T>(std::move(result)));
+    return std::make_unique<std::vector<T>>(std::move(result));
   }
 
 

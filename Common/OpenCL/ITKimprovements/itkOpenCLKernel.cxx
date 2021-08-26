@@ -105,21 +105,21 @@ OpenCLKernelSetArgsMacroCXX(cl_uchar, cl_uchar2, cl_uchar4, cl_uchar8, cl_uchar1
 
   //------------------------------------------------------------------------------
   OpenCLKernel::OpenCLKernel()
-  : d_ptr(new OpenCLKernelPimpl(0, 0))
+  : d_ptr(std::make_unique<OpenCLKernelPimpl>(nullptr, nullptr))
   , m_KernelId(0)
   , m_DoubleAsFloat(true)
 {}
 
 //------------------------------------------------------------------------------
 OpenCLKernel::OpenCLKernel(OpenCLContext * context, const cl_kernel id)
-  : d_ptr(new OpenCLKernelPimpl(context, id))
+  : d_ptr(std::make_unique<OpenCLKernelPimpl>(context, id))
   , m_KernelId(id)
   , m_DoubleAsFloat(true)
 {}
 
 //------------------------------------------------------------------------------
 OpenCLKernel::OpenCLKernel(const OpenCLKernel & other)
-  : d_ptr(new OpenCLKernelPimpl(other.d_ptr.get()))
+  : d_ptr(std::make_unique<OpenCLKernelPimpl>(other.d_ptr.get()))
   , m_KernelId(other.m_KernelId)
   , m_DoubleAsFloat(true)
 {}
