@@ -122,6 +122,8 @@ jobs:
         endif()
         set(dashboard_cache "
         ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+        ELASTIX_USE_GTEST:BOOL=ON
+        USE_ALL_COMPONENTS:BOOL=ON
         BUILD_TESTING:BOOL=ON
         ")
         string(TIMESTAMP build_date "%Y-%m-%d")
