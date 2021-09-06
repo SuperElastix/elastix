@@ -129,31 +129,6 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::PrintSelf(std::ostream &
 }
 
 
-// Compose with another affine transformation
-template <class TScalarType, unsigned int NDimensions>
-void
-AdvancedTranslationTransform<TScalarType, NDimensions>::Compose(const Self * other, bool)
-{
-  this->Translate(other->m_Offset);
-  return;
-}
-
-
-// Compose with a translation
-template <class TScalarType, unsigned int NDimensions>
-void
-AdvancedTranslationTransform<TScalarType, NDimensions>::Translate(const OutputVectorType & offset, bool)
-{
-  ParametersType newOffset(SpaceDimension);
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    newOffset[i] = m_Offset[i] + offset[i];
-  }
-  this->SetParameters(newOffset);
-  return;
-}
-
-
 // Transform a point
 template <class TScalarType, unsigned int NDimensions>
 auto
@@ -191,21 +166,6 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformCovariantVector
   const InputCovariantVectorType & vect) const -> OutputCovariantVectorType
 {
   return vect;
-}
-
-
-// return an inverse transformation
-template <class TScalarType, unsigned int NDimensions>
-bool
-AdvancedTranslationTransform<TScalarType, NDimensions>::GetInverse(Self * inverse) const
-{
-  if (!inverse)
-  {
-    return false;
-  }
-
-  inverse->m_Offset = -m_Offset;
-  return true;
 }
 
 

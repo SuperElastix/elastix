@@ -135,17 +135,6 @@ public:
     return;
   }
 
-  /** Compose with another AdvancedTranslationTransform. */
-  void
-  Compose(const Self * other, bool pre = false);
-
-  /** Compose affine transformation with a translation.
-   * This method modifies self to include a translation of the
-   * origin.  The translation is precomposed with self if pre is
-   * true, and postcomposed otherwise. */
-  void
-  Translate(const OutputVectorType & offset, bool pre = false);
-
   /** Transform by an affine transformation.
    * This method applies the affine transform given by self to a
    * given point or vector, returning the transformed point or
@@ -161,28 +150,6 @@ public:
 
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType & vector) const override;
-
-  /** This method finds the point or vector that maps to a given
-   * point or vector under the affine transformation defined by
-   * self.  If no such point exists, an exception is thrown. */
-  inline InputPointType
-  BackTransform(const OutputPointType & point) const;
-
-  inline InputVectorType
-  BackTransform(const OutputVectorType & vector) const;
-
-  inline InputVnlVectorType
-  BackTransform(const OutputVnlVectorType & vector) const;
-
-  inline InputCovariantVectorType
-  BackTransform(const OutputCovariantVectorType & vector) const;
-
-  /** Find inverse of an affine transformation.
-   * This method creates and returns a new AdvancedTranslationTransform object
-   * which is the inverse of self.  If self is not invertible,
-   * false is returned.  */
-  bool
-  GetInverse(Self * inverse) const;
 
   /** Compute the Jacobian of the transformation. */
   void
@@ -298,41 +265,6 @@ private:
 };
 
 // class AdvancedTranslationTransform
-
-// Back transform a point
-template <class TScalarType, unsigned int NDimensions>
-inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputPointType
-AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputPointType & point) const
-{
-  return point - m_Offset;
-}
-
-
-// Back transform a vector
-template <class TScalarType, unsigned int NDimensions>
-inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputVectorType
-AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputVectorType & vect) const
-{
-  return vect;
-}
-
-
-// Back transform a vnl_vector
-template <class TScalarType, unsigned int NDimensions>
-inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputVnlVectorType
-AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputVnlVectorType & vect) const
-{
-  return vect;
-}
-
-
-// Back Transform a CovariantVector
-template <class TScalarType, unsigned int NDimensions>
-inline typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputCovariantVectorType
-AdvancedTranslationTransform<TScalarType, NDimensions>::BackTransform(const OutputCovariantVectorType & vect) const
-{
-  return vect;
-}
 
 
 } // namespace itk
