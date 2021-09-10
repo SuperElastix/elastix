@@ -28,6 +28,7 @@
 // ITK header files:
 #include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
+#include <itkCompositeTransform.h>
 #include <itkEuler2DTransform.h>
 #include <itkEuler3DTransform.h>
 #include <itkImage.h>
@@ -56,6 +57,7 @@ using ResampleImageFilterType =
   itk::ResampleImageFilter<itk::Image<TPixel, VImageDimension>, itk::Image<TPixel, VImageDimension>>;
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
@@ -179,9 +181,11 @@ ImageBuffer_has_nonzero_pixel_values(const TImage & image)
 template <typename TPixel, unsigned VImageDimension>
 itk::SmartPointer<itk::TransformixFilter<itk::Image<TPixel, VImageDimension>>>
 CreateTransformixFilter(itk::Image<TPixel, VImageDimension> &                            image,
-                        const itk::Transform<double, VImageDimension, VImageDimension> & itkTransform)
+                        const itk::Transform<double, VImageDimension, VImageDimension> & itkTransform,
+                        const std::string & initialTransformParametersFileName = "NoInitialTransform",
+                        const std::string & howToCombineTransforms = "Compose")
 {
-  const auto filter = itk::TransformixFilter<itk::Image<TPixel, VImageDimension>>::New();
+  const auto filter = CheckNew<itk::TransformixFilter<itk::Image<TPixel, VImageDimension>>>();
   filter->SetMovingImage(&image);
 
   std::string transformName = itkTransform.GetNameOfClass();
@@ -196,7 +200,9 @@ CreateTransformixFilter(itk::Image<TPixel, VImageDimension> &                   
   filter->SetTransformParameterObject(CreateParameterObject(
     { // Parameters in alphabetic order:
       { "Direction", CreateDefaultDirectionParameterValues<VImageDimension>() },
+      { "HowToCombineTransforms", { howToCombineTransforms } },
       { "Index", ParameterValuesType(VImageDimension, "0") },
+      { "InitialTransformParametersFileName", { initialTransformParametersFileName } },
       { "ITKTransformParameters", ConvertToParameterValues(itkTransform.GetParameters()) },
       { "ITKTransformFixedParameters", ConvertToParameterValues(itkTransform.GetFixedParameters()) },
       { "Origin", ParameterValuesType(VImageDimension, "0") },
@@ -206,6 +212,21 @@ CreateTransformixFilter(itk::Image<TPixel, VImageDimension> &                   
       { "Spacing", ParameterValuesType(VImageDimension, "1") } }));
   filter->Update();
   return filter;
+}
+
+
+template <typename TPixel, unsigned VImageDimension>
+itk::SmartPointer<itk::Image<TPixel, VImageDimension>>
+RetrieveOutputFromTransformixFilter(itk::Image<TPixel, VImageDimension> &                            image,
+                                    const itk::Transform<double, VImageDimension, VImageDimension> & itkTransform,
+                                    const std::string & initialTransformParametersFileName = "NoInitialTransform",
+                                    const std::string & howToCombineTransforms = "Compose")
+{
+  const auto transformixFilter =
+    CreateTransformixFilter(image, itkTransform, initialTransformParametersFileName, howToCombineTransforms);
+  const auto output = transformixFilter->GetOutput();
+  EXPECT_NE(output, nullptr);
+  return output;
 }
 
 
@@ -246,6 +267,63 @@ Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
   ExpectEqualImages(transformixFilterOutput, resampleImageFilterOutput);
 }
 
+
+// Creates a transform of the specified (typically derived) type, and implicitly converts to an itk::Transform pointer.
+template <typename TTransform>
+itk::SmartPointer<itk::Transform<typename TTransform::ParametersValueType,
+                                 TTransform::InputSpaceDimension,
+                                 TTransform::OutputSpaceDimension>>
+CreateTransform()
+{
+  return TTransform::New();
+}
+
+
+// Creates a matrix-and-offset-transform of the specified (typically derived) type, and implicitly converts to
+// an itk::MatrixOffsetTransformBase pointer.
+template <typename TTransform>
+itk::SmartPointer<itk::MatrixOffsetTransformBase<typename TTransform::ParametersValueType,
+                                                 TTransform::InputSpaceDimension,
+                                                 TTransform::OutputSpaceDimension>>
+CreateMatrixOffsetTransform()
+{
+  return TTransform::New();
+}
+
+template <typename TImage>
+void
+ExpectAlmostEqualPixelValues(const TImage & actualImage, const TImage & expectedImage, const double tolerance)
+{
+  // Expect the specified tolerance value to be greater than zero, otherwise
+  // `ExpectEqualImages` should have been called instead.
+  EXPECT_GT(tolerance, 0.0);
+
+  using ImageBufferRangeType = itk::ImageBufferRange<const TImage>;
+
+  const ImageBufferRangeType actualImageBufferRange(actualImage);
+  const ImageBufferRangeType expectedImageBufferRange(expectedImage);
+
+  ASSERT_EQ(actualImageBufferRange.size(), expectedImageBufferRange.size());
+
+  const auto beginOfExpectedImageBuffer = expectedImageBufferRange.cbegin();
+
+  // First expect that _not_ all pixel values are not _exactly_ equal,
+  // otherwise `ExpectEqualImages` should probably have been called instead!
+  EXPECT_FALSE(std::equal(actualImageBufferRange.cbegin(), actualImageBufferRange.cend(), beginOfExpectedImageBuffer));
+
+  auto expectedImageIterator = beginOfExpectedImageBuffer;
+
+  const itk::ZeroBasedIndexRange<TImage::ImageDimension> indexRange(actualImage.GetBufferedRegion().GetSize());
+  auto                                                   indexIterator = indexRange.cbegin();
+  for (const typename TImage::PixelType actualPixelValue : actualImageBufferRange)
+  {
+    EXPECT_LE(std::abs(actualPixelValue - *expectedImageIterator), tolerance)
+      << " actualPixelValue = " << actualPixelValue << "; expectedPixelValue = " << *expectedImageIterator
+      << " index = " << *indexIterator;
+    ++expectedImageIterator;
+    ++indexIterator;
+  }
+}
 
 } // namespace
 
@@ -479,4 +557,157 @@ GTEST_TEST(itkTransformixFilter, ITKBSplineTransform3D)
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
     *CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize), *itkTransform);
+}
+
+
+GTEST_TEST(itkTransformixFilter, CombineTranslationAndDefaultTransform)
+{
+  const auto     imageSize = MakeSize(5, 6);
+  const auto     inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize);
+  constexpr auto dimension = decltype(imageSize)::Dimension;
+
+  using ParametersValueType = double;
+
+  // Create a translated image, which is the expected output image.
+  const auto translationTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
+  translationTransform->SetOffset(MakeVector(1, -2));
+  const auto   resampleImageFilter = CreateResampleImageFilter(*inputImage, *translationTransform);
+  const auto & expectedOutputImage = Deref(resampleImageFilter->GetOutput());
+
+  const std::string initialTransformParametersFileName =
+    GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt";
+
+  for (const auto defaultTransform : { CreateTransform<itk::AffineTransform<ParametersValueType, dimension>>(),
+                                       CreateTransform<itk::BSplineTransform<ParametersValueType, dimension>>(),
+                                       CreateTransform<itk::Euler2DTransform<ParametersValueType>>(),
+                                       CreateTransform<itk::Similarity2DTransform<ParametersValueType>>(),
+                                       CreateTransform<itk::TranslationTransform<ParametersValueType, dimension>>() })
+  {
+    const auto actualOutputImage =
+      RetrieveOutputFromTransformixFilter(*inputImage, *defaultTransform, initialTransformParametersFileName);
+    EXPECT_EQ(*actualOutputImage, expectedOutputImage);
+  }
+
+  const auto defaultTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
+
+  for (const std::string transformParameterFileName :
+       { "TransformParameters-link-to-ITK-tfm-file.txt",
+         "TransformParameters-link-to-ITK-HDF5-file.txt",
+         "TransformParameters-link-to-file-with-special-chars-in-path-name.txt" })
+  {
+    const auto actualOutputImage = RetrieveOutputFromTransformixFilter(
+      *inputImage, *defaultTransform, GetDataDirectoryPath() + "/Translation(1,-2)/" + transformParameterFileName);
+    EXPECT_EQ(*actualOutputImage, expectedOutputImage);
+  }
+}
+
+
+GTEST_TEST(itkTransformixFilter, CombineTranslationAndInverseTranslation)
+{
+  const auto imageSize = MakeSize(5, 6);
+  enum
+  {
+    dimension = decltype(imageSize)::Dimension
+  };
+
+  const auto inputImage = itk::Image<float, dimension>::New();
+  inputImage->SetRegions(imageSize);
+  inputImage->Allocate(true);
+  FillImageRegion(*inputImage, { 2, 1 }, itk::Size<dimension>::Filled(2));
+
+  using ParametersValueType = double;
+
+  const std::string initialTransformParametersFileName =
+    GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt";
+
+  const auto offset = MakeVector(1.0, -2.0);
+  const auto inverseOffset = -offset;
+
+  // Sanity check: when only an identity transform is applied, the transform from the TransformParameters.txt file
+  // makes the output image unequal to the input image.
+  const auto identityTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
+
+  EXPECT_NE(*(RetrieveOutputFromTransformixFilter(*inputImage, *identityTransform, initialTransformParametersFileName)),
+            *inputImage);
+
+  // The inverse of the transform from the TransformParameters.txt file.
+  const auto inverseTranslationTransform = [inverseOffset] {
+    const auto transform = itk::TranslationTransform<ParametersValueType, dimension>::New();
+    transform->SetOffset(inverseOffset);
+    return transform;
+  }();
+
+  EXPECT_EQ(*(RetrieveOutputFromTransformixFilter(
+              *inputImage, *inverseTranslationTransform, initialTransformParametersFileName)),
+            *inputImage);
+
+  for (const auto matrixOffsetTransform :
+       { CreateMatrixOffsetTransform<itk::AffineTransform<ParametersValueType, dimension>>(),
+         CreateMatrixOffsetTransform<itk::Euler2DTransform<ParametersValueType>>(),
+         CreateMatrixOffsetTransform<itk::Similarity2DTransform<ParametersValueType>>() })
+  {
+    matrixOffsetTransform->SetOffset(inverseOffset);
+    EXPECT_EQ(
+      *(RetrieveOutputFromTransformixFilter(*inputImage, *matrixOffsetTransform, initialTransformParametersFileName)),
+      *inputImage);
+  }
+
+  const auto inverseBSplineTransform = [imageSize, inverseOffset] {
+    const auto transform = itk::BSplineTransform<ParametersValueType, dimension>::New();
+    transform->SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
+
+    const auto                       numberOfParameters = transform->GetParameters().size();
+    itk::OptimizerParameters<double> parameters(numberOfParameters, inverseOffset[1]);
+    std::fill_n(parameters.begin(), numberOfParameters / 2, inverseOffset[0]);
+    transform->SetParameters(parameters);
+    return transform;
+  }();
+
+  const auto inverseBSplineOutputImage = RetrieveOutputFromTransformixFilter(
+    *inputImage, *inverseBSplineTransform, initialTransformParametersFileName, "Add");
+  ExpectAlmostEqualPixelValues(*inverseBSplineOutputImage, *inputImage, 1e-15);
+}
+
+
+GTEST_TEST(itkTransformixFilter, CombineTranslationAndScale)
+{
+  const auto imageSize = MakeSize(5, 6);
+  enum
+  {
+    dimension = decltype(imageSize)::Dimension
+  };
+  const auto inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize);
+
+  using ParametersValueType = double;
+
+  const std::string initialTransformParametersFileName =
+    GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt";
+
+  const auto scaleTransform = itk::AffineTransform<ParametersValueType, dimension>::New();
+  scaleTransform->Scale(2.0);
+
+  const auto translationTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
+  translationTransform->SetOffset(MakeVector(1.0, -2.0));
+
+  const auto transformixOutput =
+    RetrieveOutputFromTransformixFilter(*inputImage, *scaleTransform, initialTransformParametersFileName);
+
+  const auto translationAndScaleTransform = itk::CompositeTransform<double, 2>::New();
+  translationAndScaleTransform->AddTransform(translationTransform);
+  translationAndScaleTransform->AddTransform(scaleTransform);
+
+  const auto scaleAndTranslationTransform = itk::CompositeTransform<double, 2>::New();
+  scaleAndTranslationTransform->AddTransform(scaleTransform);
+  scaleAndTranslationTransform->AddTransform(translationTransform);
+
+  // Expect that Transformix output is unequal (!) to the output of the corresponding ITK translation + scale composite
+  // transform.
+  EXPECT_NE(Deref(transformixOutput.GetPointer()),
+            *(CreateResampleImageFilter(*inputImage, *translationAndScaleTransform)->GetOutput()));
+
+  // Expect that Transformix output is equal to the output of the corresponding ITK scale + translation composite
+  // transform (in that order). Note that itk::CompositeTransform processed the transforms in reverse order (compared to
+  // elastix).
+  EXPECT_EQ(Deref(transformixOutput.GetPointer()),
+            *(CreateResampleImageFilter(*inputImage, *scaleAndTranslationTransform)->GetOutput()));
 }
