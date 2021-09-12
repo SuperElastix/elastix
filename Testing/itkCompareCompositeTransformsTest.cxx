@@ -52,12 +52,12 @@ main(void)
   typedef itk::AdvancedBSplineDeformableTransform<ScalarType, Dimension, 3>        AdvancedBSplineTransformType;
 
   // Define ITK transforms
-  AffineTransformType::Pointer      affine = AffineTransformType::New();
-  TranslationTransformType::Pointer translation = TranslationTransformType::New();
-  BSplineTransformType::Pointer     bspline = BSplineTransformType::New();
+  const auto affine = AffineTransformType::New();
+  const auto translation = TranslationTransformType::New();
+  const auto bspline = BSplineTransformType::New();
 
   // Define ITK composite transform and test it
-  CompositeTransformType::Pointer composite = CompositeTransformType::New();
+  const auto composite = CompositeTransformType::New();
 
   if (composite->GetNumberOfTransforms() != 0)
   {
@@ -76,12 +76,12 @@ main(void)
   }
 
   // Define elastix advanced composite transforms
-  AdvancedAffineTransformType::Pointer      advancedAffine = AdvancedAffineTransformType::New();
-  AdvancedTranslationTransformType::Pointer advancedTranslation = AdvancedTranslationTransformType::New();
-  AdvancedBSplineTransformType::Pointer     advancedBSpline = AdvancedBSplineTransformType::New();
+  const auto advancedAffine = AdvancedAffineTransformType::New();
+  const auto advancedTranslation = AdvancedTranslationTransformType::New();
+  const auto advancedBSpline = AdvancedBSplineTransformType::New();
 
   // Define elastix advanced composite transform and test it
-  AdvancedCombinationTransformType::Pointer advancedComposite = AdvancedCombinationTransformType::New();
+  const auto advancedComposite = AdvancedCombinationTransformType::New();
   if (advancedComposite->GetNumberOfTransforms() != 0)
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
@@ -97,7 +97,7 @@ main(void)
   }
 
   // Define the next one
-  AdvancedCombinationTransformType::Pointer advancedCompositeTranslation = AdvancedCombinationTransformType::New();
+  const auto advancedCompositeTranslation = AdvancedCombinationTransformType::New();
   advancedCompositeTranslation->SetCurrentTransform(advancedTranslation);
   advancedComposite->SetInitialTransform(advancedCompositeTranslation);
 
@@ -114,7 +114,7 @@ main(void)
   }
 
   // Define the next one
-  AdvancedCombinationTransformType::Pointer advancedCompositeBSpline = AdvancedCombinationTransformType::New();
+  const auto advancedCompositeBSpline = AdvancedCombinationTransformType::New();
   advancedCompositeBSpline->SetCurrentTransform(advancedBSpline);
   advancedCompositeTranslation->SetInitialTransform(advancedCompositeBSpline);
 
