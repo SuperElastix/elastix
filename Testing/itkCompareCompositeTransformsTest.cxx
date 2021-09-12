@@ -28,14 +28,27 @@
 #include "itkAdvancedCombinationTransform.h"
 
 #include <iomanip>
+#include <type_traits> // For std::is_base.
+
+namespace
+{
+const unsigned int Dimension = 3;
+typedef float      ScalarType;
+
+template <typename TDerivedTransform>
+bool
+IsDerivedTransformOfType(const itk::SmartPointer<itk::Transform<ScalarType, Dimension, Dimension>> & ptr)
+{
+  static_assert(std::is_base_of<itk::Transform<ScalarType, Dimension, Dimension>, TDerivedTransform>::value,
+                "TDerivedTransform must be derived from itk::Transform!");
+  return dynamic_cast<const TDerivedTransform *>(ptr.GetPointer()) != nullptr;
+}
+} // namespace
 
 //-------------------------------------------------------------------------------------
 int
 main(void)
 {
-  const unsigned int Dimension = 3;
-  typedef float      ScalarType;
-
   // ITK transform typedefs
   // typedef itk::Transform< ScalarType, Dimension, Dimension > TransformType;
   typedef itk::AffineTransform<ScalarType, Dimension>      AffineTransformType;
@@ -137,75 +150,56 @@ main(void)
   }
 
   // Checks for GetNthTransform for itk::CompositeTransform
-  const AffineTransformType * isAffine =
-    dynamic_cast<const AffineTransformType *>(composite->GetNthTransform(0).GetPointer());
-  if (!isAffine)
+  if (!IsDerivedTransformOfType<AffineTransformType>(composite->GetNthTransform(0)))
   {
     std::cerr << "Error expecting AffineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const TranslationTransformType * isTranslation =
-    dynamic_cast<const TranslationTransformType *>(composite->GetNthTransform(1).GetPointer());
-  if (!isTranslation)
+  if (!IsDerivedTransformOfType<TranslationTransformType>(composite->GetNthTransform(1)))
   {
     std::cerr << "Error expecting TranslationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const BSplineTransformType * isBSpline =
-    dynamic_cast<const BSplineTransformType *>(composite->GetNthTransform(2).GetPointer());
-  if (!isBSpline)
+  if (!IsDerivedTransformOfType<BSplineTransformType>(composite->GetNthTransform(2)))
   {
     std::cerr << "Error expecting BSplineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
   // Checks for GetNthTransform for itk::AdvancedCombinationTransform
-  const AdvancedAffineTransformType * isAdvancedAffine0 =
-    dynamic_cast<const AdvancedAffineTransformType *>(advancedComposite->GetNthTransform(0).GetPointer());
-  if (!isAdvancedAffine0)
+  if (!IsDerivedTransformOfType<AdvancedAffineTransformType>(advancedComposite->GetNthTransform(0)))
   {
     std::cerr << "Error expecting AdvancedAffineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedTranslationTransformType * isAdvancedTranslation0 =
-    dynamic_cast<const AdvancedTranslationTransformType *>(advancedComposite->GetNthTransform(1).GetPointer());
-  if (!isAdvancedTranslation0)
+  if (!IsDerivedTransformOfType<AdvancedTranslationTransformType>(advancedComposite->GetNthTransform(1)))
   {
     std::cerr << "Error expecting AdvancedTranslationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedBSplineTransformType * isAdvancedBSpline0 =
-    dynamic_cast<const AdvancedBSplineTransformType *>(advancedComposite->GetNthTransform(2).GetPointer());
-  if (!isAdvancedBSpline0)
+  if (!IsDerivedTransformOfType<AdvancedBSplineTransformType>(advancedComposite->GetNthTransform(2)))
   {
     std::cerr << "Error expecting AdvancedBSplineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedTranslationTransformType * isAdvancedTranslation1 =
-    dynamic_cast<const AdvancedTranslationTransformType *>(
-      advancedCompositeTranslation->GetNthTransform(0).GetPointer());
-  if (!isAdvancedTranslation1)
+  if (!IsDerivedTransformOfType<AdvancedTranslationTransformType>(advancedCompositeTranslation->GetNthTransform(0)))
   {
     std::cerr << "Error expecting AdvancedTranslationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedBSplineTransformType * isAdvancedBSpline1 =
-    dynamic_cast<const AdvancedBSplineTransformType *>(advancedCompositeTranslation->GetNthTransform(1).GetPointer());
-  if (!isAdvancedBSpline1)
+  if (!IsDerivedTransformOfType<AdvancedBSplineTransformType>(advancedCompositeTranslation->GetNthTransform(1)))
   {
     std::cerr << "Error expecting AdvancedBSplineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedBSplineTransformType * isAdvancedBSpline2 =
-    dynamic_cast<const AdvancedBSplineTransformType *>(advancedCompositeBSpline->GetNthTransform(0).GetPointer());
-  if (!isAdvancedBSpline2)
+  if (!IsDerivedTransformOfType<AdvancedBSplineTransformType>(advancedCompositeBSpline->GetNthTransform(0)))
   {
     std::cerr << "Error expecting AdvancedBSplineTransform." << std::endl;
     return EXIT_FAILURE;
