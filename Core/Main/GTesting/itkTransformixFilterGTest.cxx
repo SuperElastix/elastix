@@ -59,6 +59,7 @@ using ResampleImageFilterType =
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::Deref;
+using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
 using elx::GTestUtilities::GeneratePseudoRandomParameters;
@@ -253,8 +254,8 @@ Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
   const auto resampleImageFilter = CreateResampleImageFilter(inputImage, itkTransform);
   const auto transformixFilter = CreateTransformixFilter(inputImage, itkTransform);
 
-  const auto & resampleImageFilterOutput = Deref(Deref(resampleImageFilter.GetPointer()).GetOutput());
-  const auto & transformixFilterOutput = Deref(Deref(transformixFilter.GetPointer()).GetOutput());
+  const auto & resampleImageFilterOutput = Deref(DerefSmartPointer(resampleImageFilter).GetOutput());
+  const auto & transformixFilterOutput = Deref(DerefSmartPointer(transformixFilter).GetOutput());
 
   // Check that the ResampleImageFilter output isn't equal to the input image,
   // otherwise the test itself would be less interesting.
@@ -702,12 +703,12 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndScale)
 
   // Expect that Transformix output is unequal (!) to the output of the corresponding ITK translation + scale composite
   // transform.
-  EXPECT_NE(Deref(transformixOutput.GetPointer()),
+  EXPECT_NE(DerefSmartPointer(transformixOutput),
             *(CreateResampleImageFilter(*inputImage, *translationAndScaleTransform)->GetOutput()));
 
   // Expect that Transformix output is equal to the output of the corresponding ITK scale + translation composite
   // transform (in that order). Note that itk::CompositeTransform processed the transforms in reverse order (compared to
   // elastix).
-  EXPECT_EQ(Deref(transformixOutput.GetPointer()),
+  EXPECT_EQ(DerefSmartPointer(transformixOutput),
             *(CreateResampleImageFilter(*inputImage, *scaleAndTranslationTransform)->GetOutput()));
 }
