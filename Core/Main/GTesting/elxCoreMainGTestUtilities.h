@@ -33,6 +33,7 @@
 #include <initializer_list>
 #include <iterator> // For begin and end.
 #include <string>
+#include <type_traits> // For is_pointer.
 #include <vector>
 
 // GoogleTest header file:
@@ -71,14 +72,30 @@ public:
   }                                                                                                                    \
   static_assert(true, "Expect a semi-colon ';' at the end of a macro call")
 
-/// Dereferences the specified pointer. Throws an `Exception` instead, when the pointer is null.
-template <typename T>
-T &
-Deref(T * ptr)
+/// Dereferences the specified raw pointer. Throws an `Exception` instead, when the pointer is null.
+template <typename TRawPointer>
+decltype(auto)
+Deref(const TRawPointer ptr)
 {
+  static_assert(std::is_pointer<TRawPointer>::value, "For smart pointers, use DerefSmartPointer instead!");
+
   if (ptr == nullptr)
   {
     throw Exception("Deref error: the pointer should not be null!");
+  }
+  return *ptr;
+}
+
+
+template <typename TSmartPointer>
+decltype(auto)
+DerefSmartPointer(const TSmartPointer & ptr)
+{
+  static_assert(!std::is_pointer<TSmartPointer>::value, "For raw pointers, use Deref instead!");
+
+  if (ptr == nullptr)
+  {
+    throw Exception("Deref error: the (smart) pointer should not be null!");
   }
   return *ptr;
 }
