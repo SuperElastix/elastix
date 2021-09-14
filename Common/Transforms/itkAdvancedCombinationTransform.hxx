@@ -30,30 +30,7 @@ namespace itk
 template <typename TScalarType, unsigned int NDimensions>
 AdvancedCombinationTransform<TScalarType, NDimensions>::AdvancedCombinationTransform()
   : Superclass(NDimensions)
-{
-  /** Initialize. */
-  this->m_InitialTransform = nullptr;
-  this->m_CurrentTransform = nullptr;
-
-  /** Set composition by default. */
-  this->m_UseAddition = false;
-  this->m_UseComposition = true;
-
-  /** Set everything to have no current transform. */
-  this->m_SelectedTransformPointFunction = &Self::TransformPointNoCurrentTransform;
-  //   this->m_SelectedGetJacobianFunction
-  //     = &Self::GetJacobianNoCurrentTransform;
-  this->m_SelectedGetSparseJacobianFunction = &Self::GetJacobianNoCurrentTransform;
-  this->m_SelectedEvaluateJacobianWithImageGradientProductFunction =
-    &Self::EvaluateJacobianWithImageGradientProductNoInitialTransform;
-  this->m_SelectedGetSpatialJacobianFunction = &Self::GetSpatialJacobianNoCurrentTransform;
-  this->m_SelectedGetSpatialHessianFunction = &Self::GetSpatialHessianNoCurrentTransform;
-  this->m_SelectedGetJacobianOfSpatialJacobianFunction = &Self::GetJacobianOfSpatialJacobianNoCurrentTransform;
-  this->m_SelectedGetJacobianOfSpatialJacobianFunction2 = &Self::GetJacobianOfSpatialJacobianNoCurrentTransform;
-  this->m_SelectedGetJacobianOfSpatialHessianFunction = &Self::GetJacobianOfSpatialHessianNoCurrentTransform;
-  this->m_SelectedGetJacobianOfSpatialHessianFunction2 = &Self::GetJacobianOfSpatialHessianNoCurrentTransform;
-
-} // end Constructor
+{}
 
 
 /**

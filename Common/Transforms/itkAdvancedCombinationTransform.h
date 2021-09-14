@@ -550,8 +550,8 @@ protected:
 
 private:
   /** Declaration of members. */
-  InitialTransformPointer m_InitialTransform;
-  CurrentTransformPointer m_CurrentTransform;
+  InitialTransformPointer m_InitialTransform{ nullptr };
+  CurrentTransformPointer m_CurrentTransform{ nullptr };
 
   /** Typedefs for function pointers. */
   typedef OutputPointType (Self::*TransformPointFunctionPointer)(const InputPointType &) const;
@@ -585,7 +585,7 @@ private:
    * - TransformPointNoCurrentTransform
    * - TransformPointNoInitialTransform.
    */
-  TransformPointFunctionPointer m_SelectedTransformPointFunction;
+  TransformPointFunctionPointer m_SelectedTransformPointFunction{ &Self::TransformPointNoCurrentTransform };
 
   /**  A pointer to one of the following functions:
    * - GetJacobianUseAddition,
@@ -595,19 +595,29 @@ private:
    */
   // GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
 
-  /** More of these. */
-  GetSparseJacobianFunctionPointer                        m_SelectedGetSparseJacobianFunction;
-  EvaluateJacobianWithImageGradientProductFunctionPointer m_SelectedEvaluateJacobianWithImageGradientProductFunction;
-  GetSpatialJacobianFunctionPointer                       m_SelectedGetSpatialJacobianFunction;
-  GetSpatialHessianFunctionPointer                        m_SelectedGetSpatialHessianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer             m_SelectedGetJacobianOfSpatialJacobianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer2            m_SelectedGetJacobianOfSpatialJacobianFunction2;
-  GetJacobianOfSpatialHessianFunctionPointer              m_SelectedGetJacobianOfSpatialHessianFunction;
-  GetJacobianOfSpatialHessianFunctionPointer2             m_SelectedGetJacobianOfSpatialHessianFunction2;
+  /** More of these. Set everything to have no current transform. */
+  GetSparseJacobianFunctionPointer m_SelectedGetSparseJacobianFunction{ &Self::GetJacobianNoCurrentTransform };
+  EvaluateJacobianWithImageGradientProductFunctionPointer m_SelectedEvaluateJacobianWithImageGradientProductFunction{
+    &Self::EvaluateJacobianWithImageGradientProductNoInitialTransform
+  };
+  GetSpatialJacobianFunctionPointer m_SelectedGetSpatialJacobianFunction{ &Self::GetSpatialJacobianNoCurrentTransform };
+  GetSpatialHessianFunctionPointer  m_SelectedGetSpatialHessianFunction{ &Self::GetSpatialHessianNoCurrentTransform };
+  GetJacobianOfSpatialJacobianFunctionPointer m_SelectedGetJacobianOfSpatialJacobianFunction{
+    &Self::GetJacobianOfSpatialJacobianNoCurrentTransform
+  };
+  GetJacobianOfSpatialJacobianFunctionPointer2 m_SelectedGetJacobianOfSpatialJacobianFunction2{
+    &Self::GetJacobianOfSpatialJacobianNoCurrentTransform
+  };
+  GetJacobianOfSpatialHessianFunctionPointer m_SelectedGetJacobianOfSpatialHessianFunction{
+    &Self::GetJacobianOfSpatialHessianNoCurrentTransform
+  };
+  GetJacobianOfSpatialHessianFunctionPointer2 m_SelectedGetJacobianOfSpatialHessianFunction2{
+    &Self::GetJacobianOfSpatialHessianNoCurrentTransform
+  };
 
-  /** How to combine the transformations. */
-  bool m_UseAddition;
-  bool m_UseComposition;
+  /** How to combine the transformations. Composition by default. */
+  bool m_UseAddition{ false };
+  bool m_UseComposition{ true };
 
 private:
   AdvancedCombinationTransform(const Self &) = delete;
