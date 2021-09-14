@@ -301,32 +301,6 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override;
 
-  /** Typedefs for function pointers. */
-  typedef OutputPointType (Self::*TransformPointFunctionPointer)(const InputPointType &) const;
-  typedef void (Self::*GetSparseJacobianFunctionPointer)(const InputPointType &,
-                                                         JacobianType &,
-                                                         NonZeroJacobianIndicesType &) const;
-  typedef void (Self::*EvaluateJacobianWithImageGradientProductFunctionPointer)(const InputPointType &,
-                                                                                const MovingImageGradientType &,
-                                                                                DerivativeType &,
-                                                                                NonZeroJacobianIndicesType &) const;
-  typedef void (Self::*GetSpatialJacobianFunctionPointer)(const InputPointType &, SpatialJacobianType &) const;
-  typedef void (Self::*GetSpatialHessianFunctionPointer)(const InputPointType &, SpatialHessianType &) const;
-  typedef void (Self::*GetJacobianOfSpatialJacobianFunctionPointer)(const InputPointType &,
-                                                                    JacobianOfSpatialJacobianType &,
-                                                                    NonZeroJacobianIndicesType &) const;
-  typedef void (Self::*GetJacobianOfSpatialJacobianFunctionPointer2)(const InputPointType &,
-                                                                     SpatialJacobianType &,
-                                                                     JacobianOfSpatialJacobianType &,
-                                                                     NonZeroJacobianIndicesType &) const;
-  typedef void (Self::*GetJacobianOfSpatialHessianFunctionPointer)(const InputPointType &,
-                                                                   JacobianOfSpatialHessianType &,
-                                                                   NonZeroJacobianIndicesType &) const;
-  typedef void (Self::*GetJacobianOfSpatialHessianFunctionPointer2)(const InputPointType &,
-                                                                    SpatialHessianType &,
-                                                                    JacobianOfSpatialHessianType &,
-                                                                    NonZeroJacobianIndicesType &) const;
-
 protected:
   /** Constructor. */
   AdvancedCombinationTransform();
@@ -578,6 +552,32 @@ private:
   /** Declaration of members. */
   InitialTransformPointer m_InitialTransform;
   CurrentTransformPointer m_CurrentTransform;
+
+  /** Typedefs for function pointers. */
+  typedef OutputPointType (Self::*TransformPointFunctionPointer)(const InputPointType &) const;
+  typedef void (Self::*GetSparseJacobianFunctionPointer)(const InputPointType &,
+                                                         JacobianType &,
+                                                         NonZeroJacobianIndicesType &) const;
+  typedef void (Self::*EvaluateJacobianWithImageGradientProductFunctionPointer)(const InputPointType &,
+                                                                                const MovingImageGradientType &,
+                                                                                DerivativeType &,
+                                                                                NonZeroJacobianIndicesType &) const;
+  typedef void (Self::*GetSpatialJacobianFunctionPointer)(const InputPointType &, SpatialJacobianType &) const;
+  typedef void (Self::*GetSpatialHessianFunctionPointer)(const InputPointType &, SpatialHessianType &) const;
+  typedef void (Self::*GetJacobianOfSpatialJacobianFunctionPointer)(const InputPointType &,
+                                                                    JacobianOfSpatialJacobianType &,
+                                                                    NonZeroJacobianIndicesType &) const;
+  typedef void (Self::*GetJacobianOfSpatialJacobianFunctionPointer2)(const InputPointType &,
+                                                                     SpatialJacobianType &,
+                                                                     JacobianOfSpatialJacobianType &,
+                                                                     NonZeroJacobianIndicesType &) const;
+  typedef void (Self::*GetJacobianOfSpatialHessianFunctionPointer)(const InputPointType &,
+                                                                   JacobianOfSpatialHessianType &,
+                                                                   NonZeroJacobianIndicesType &) const;
+  typedef void (Self::*GetJacobianOfSpatialHessianFunctionPointer2)(const InputPointType &,
+                                                                    SpatialHessianType &,
+                                                                    JacobianOfSpatialHessianType &,
+                                                                    NonZeroJacobianIndicesType &) const;
 
   /**  A pointer to one of the following functions:
    * - TransformPointUseAddition,
