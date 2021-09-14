@@ -314,10 +314,6 @@ protected:
   void
   UpdateCombinationMethod(void);
 
-  /** Throw an exception. */
-  void
-  NoCurrentTransformSet(void) const;
-
   /** ************************************************
    * Methods to transform a point.
    */
@@ -549,6 +545,9 @@ protected:
                                                 NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const;
 
 private:
+  /** Exception text. */
+  constexpr static const char * NoCurrentTransformSet = "No current transform set in the AdvancedCombinationTransform";
+
   /** Declaration of members. */
   InitialTransformPointer m_InitialTransform{ nullptr };
   CurrentTransformPointer m_CurrentTransform{ nullptr };
