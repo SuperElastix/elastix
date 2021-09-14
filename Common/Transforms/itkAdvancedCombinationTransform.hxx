@@ -60,10 +60,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetNumberOfParameters(vo
   else
   {
     /** Throw an exception. */
-    this->NoCurrentTransformSet();
-
-    /** dummy return. */
-    return this->m_Parameters.GetSize();
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
 
 } // end GetNumberOfParameters()
@@ -166,10 +163,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetNumberOfNonZeroJacobi
   else
   {
     /** Throw an exception. */
-    this->NoCurrentTransformSet();
-
-    /** dummy return. */
-    return this->m_Parameters.GetSize();
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
 
 } // end GetNumberOfNonZeroJacobianIndices()
@@ -237,10 +231,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetParameters(void) cons
   else
   {
     /** Throw an exception. */
-    this->NoCurrentTransformSet();
-
-    /** dummy return. */
-    return this->m_Parameters;
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
 
 } // end GetParameters()
@@ -261,10 +252,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetFixedParameters(void)
   else
   {
     /** Throw an exception. */
-    this->NoCurrentTransformSet();
-
-    /** dummy return. */
-    return this->m_FixedParameters;
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
 
 } // end GetFixedParameters()
@@ -286,7 +274,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::SetParameters(const Para
   else
   {
     /** Throw an exception. */
-    this->NoCurrentTransformSet();
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
 
 } // end SetParameters()
@@ -309,7 +297,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::SetFixedParameters(const
   else
   {
     /** Throw an exception. */
-    this->NoCurrentTransformSet();
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
 
 } // end SetFixedParameters()
@@ -332,7 +320,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::SetParametersByValue(con
   else
   {
     /** Throw an exception. */
-    this->NoCurrentTransformSet();
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
 
 } // end SetParametersByValue()
@@ -354,8 +342,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetInverse(Self * invers
   else if (this->m_CurrentTransform.IsNull())
   {
     /** No current transform has been set. Throw an exception. */
-    this->NoCurrentTransformSet();
-    return false;
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
   else if (this->m_InitialTransform.IsNull())
   {
@@ -427,8 +414,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetHasNonZeroSpatialHess
   if (this->m_CurrentTransform.IsNull())
   {
     /** No current transform has been set. Throw an exception. */
-    this->NoCurrentTransformSet();
-    return false;
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
   else if (this->m_InitialTransform.IsNull())
   {
@@ -457,8 +443,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::HasNonZeroJacobianOfSpat
   if (this->m_CurrentTransform.IsNull())
   {
     /** No current transform has been set. Throw an exception. */
-    this->NoCurrentTransformSet();
-    return false;
+    itkExceptionMacro(<< NoCurrentTransformSet);
   }
   else if (this->m_InitialTransform.IsNull())
   {
@@ -639,19 +624,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::UpdateCombinationMethod(
 
 
 /**
- * ************* NoCurrentTransformSet **********************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::NoCurrentTransformSet(void) const
-{
-  itkExceptionMacro(<< "No current transform set in the AdvancedCombinationTransform");
-
-} // end NoCurrentTransformSet()
-
-
-/**
  *
  * ***********************************************************
  * ***** Functions that implement the:
@@ -734,10 +706,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointNoCurrentT
   const InputPointType & point) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
-
-  /** dummy return. */
-  return point;
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end TransformPointNoCurrentTransform()
 
@@ -802,7 +771,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianNoCurrentTran
   NonZeroJacobianIndicesType & itkNotUsed(nonZeroJacobianIndices)) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end GetJacobianNoCurrentTransform()
 
@@ -874,7 +843,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImag
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end EvaluateJacobianWithImageGradientProductNoCurrentTransform()
 
@@ -941,7 +910,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobianNoCurr
   SpatialJacobianType &  itkNotUsed(sj)) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end GetSpatialJacobianNoCurrentTransform()
 
@@ -1035,7 +1004,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessianNoCurre
   SpatialHessianType &   itkNotUsed(sh)) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end GetSpatialHessianNoCurrentTransform()
 
@@ -1172,7 +1141,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   NonZeroJacobianIndicesType &    itkNotUsed(nonZeroJacobianIndices)) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end GetJacobianOfSpatialJacobianNoCurrentTransform()
 
@@ -1190,7 +1159,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   NonZeroJacobianIndicesType &    itkNotUsed(nonZeroJacobianIndices)) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end GetJacobianOfSpatialJacobianNoCurrentTransform()
 
@@ -1416,7 +1385,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
   NonZeroJacobianIndicesType &   itkNotUsed(nonZeroJacobianIndices)) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end GetJacobianOfSpatialHessianNoCurrentTransform()
 
@@ -1434,7 +1403,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
   NonZeroJacobianIndicesType &   itkNotUsed(nonZeroJacobianIndices)) const
 {
   /** Throw an exception. */
-  this->NoCurrentTransformSet();
+  itkExceptionMacro(<< NoCurrentTransformSet);
 
 } // end GetJacobianOfSpatialHessianNoCurrentTransform()
 
