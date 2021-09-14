@@ -100,7 +100,7 @@ protected:
     : DataObject()
     , VectorType()
   {}
-  VectorDataContainer(size_type n)
+  explicit VectorDataContainer(size_type n)
     : DataObject()
     , VectorType(n)
   {}

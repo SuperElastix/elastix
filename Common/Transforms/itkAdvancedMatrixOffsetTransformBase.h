@@ -453,7 +453,7 @@ protected:
    * transformation in the appropriate number of dimensions.
    */
   AdvancedMatrixOffsetTransformBase(const MatrixType & matrix, const OutputVectorType & offset);
-  AdvancedMatrixOffsetTransformBase(unsigned int paramDims);
+  explicit AdvancedMatrixOffsetTransformBase(unsigned int paramDims);
   AdvancedMatrixOffsetTransformBase();
 
   /** Called by constructors: */

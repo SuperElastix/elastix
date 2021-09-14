@@ -141,7 +141,7 @@ public:
 protected:
   AdvancedEuler3DTransform();
   AdvancedEuler3DTransform(const MatrixType & matrix, const OutputPointType & offset);
-  AdvancedEuler3DTransform(unsigned int paramsSpaceDims);
+  explicit AdvancedEuler3DTransform(unsigned int paramsSpaceDims);
 
   ~AdvancedEuler3DTransform() override = default;
 
