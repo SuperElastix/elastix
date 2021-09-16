@@ -166,11 +166,10 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Other typedef's. */
-  typedef itk::Object ObjectType;
-  typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
-                                                                  CombinationTransformType;
-  typedef CombinationTransformType                                ITKBaseType;
-  typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
+  typedef itk::Object                                                                ObjectType;
+  typedef itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension> CombinationTransformType;
+  typedef CombinationTransformType                                                   ITKBaseType;
+  typedef typename CombinationTransformType::InitialTransformType                    InitialTransformType;
 
   /** Typedef's for parameters. */
   using ValueType = double;

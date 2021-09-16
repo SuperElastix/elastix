@@ -78,15 +78,15 @@ public:
   itkSetMacro(ImageRegion, RegionType);
   itkSetMacro(UseMask, bool);
 
-  typedef SpatialObject<itkGetStaticConstMacro(ImageDimension)> ImageMaskType;
-  typedef typename ImageMaskType::Pointer                       ImageMaskPointer;
-  typedef typename ImageMaskType::ConstPointer                  ImageMaskConstPointer;
+  typedef SpatialObject<Self::ImageDimension>  ImageMaskType;
+  typedef typename ImageMaskType::Pointer      ImageMaskPointer;
+  typedef typename ImageMaskType::ConstPointer ImageMaskConstPointer;
   itkSetConstObjectMacro(ImageMask, ImageMaskType);
   itkGetConstObjectMacro(ImageMask, ImageMaskType);
 
-  typedef ImageMaskSpatialObject<itkGetStaticConstMacro(ImageDimension)> ImageSpatialMaskType;
-  typedef typename ImageSpatialMaskType::Pointer                         ImageSpatialMaskPointer;
-  typedef typename ImageSpatialMaskType::ConstPointer                    ImageSpatialMaskConstPointer;
+  typedef ImageMaskSpatialObject<Self::ImageDimension> ImageSpatialMaskType;
+  typedef typename ImageSpatialMaskType::Pointer       ImageSpatialMaskPointer;
+  typedef typename ImageSpatialMaskType::ConstPointer  ImageSpatialMaskConstPointer;
   itkSetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
   itkGetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
 

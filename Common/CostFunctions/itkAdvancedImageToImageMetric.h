@@ -127,8 +127,8 @@ public:
   typedef typename DerivativeType::ValueType                DerivativeValueType;
   typedef typename Superclass::ParametersType               ParametersType;
 
-  typedef ImageMaskSpatialObject<itkGetStaticConstMacro(FixedImageDimension)>  FixedImageMaskSpatialObject2Type;
-  typedef ImageMaskSpatialObject<itkGetStaticConstMacro(MovingImageDimension)> MovingImageMaskSpatialObject2Type;
+  typedef ImageMaskSpatialObject<Self::FixedImageDimension>  FixedImageMaskSpatialObject2Type;
+  typedef ImageMaskSpatialObject<Self::MovingImageDimension> MovingImageMaskSpatialObject2Type;
 
   /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType             FixedImagePixelType;

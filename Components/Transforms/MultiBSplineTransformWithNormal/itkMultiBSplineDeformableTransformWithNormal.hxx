@@ -350,7 +350,7 @@ template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::UpdateLocalBases()
 {
-  typedef itk::Image<double, itkGetStaticConstMacro(SpaceDimension)>                    ImageDoubleType;
+  typedef itk::Image<double, Self::SpaceDimension>                                      ImageDoubleType;
   typedef itk::ConstantPadImageFilter<ImageLabelType, ImageLabelType>                   PadFilterType;
   typedef itk::ApproximateSignedDistanceMapImageFilter<ImageLabelType, ImageDoubleType> DistFilterType;
   typedef itk::SmoothingRecursiveGaussianImageFilter<ImageDoubleType, ImageDoubleType>  SmoothFilterType;
@@ -487,25 +487,25 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   for (unsigned i = 0; i < ParametersPerDimension; ++i)
   {
     VectorType tmp = bases[i][0] * parameters.GetElement(i);
-    for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
+    for (unsigned d = 0; d < Self::SpaceDimension; ++d)
     {
       m_Para[0].SetElement(i + d * ParametersPerDimension, tmp[d]);
     }
 
     for (unsigned l = 1; l <= m_NbLabels; ++l)
     {
-      for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
+      for (unsigned d = 0; d < Self::SpaceDimension; ++d)
       {
         tmp[d] = 0;
       }
 
-      for (unsigned d = 1; d < itkGetStaticConstMacro(SpaceDimension); ++d)
+      for (unsigned d = 1; d < Self::SpaceDimension; ++d)
       {
-        tmp += bases[i][d] * parameters.GetElement(i + ((itkGetStaticConstMacro(SpaceDimension) - 1) * (l - 1) + d) *
-                                                         ParametersPerDimension);
+        tmp +=
+          bases[i][d] * parameters.GetElement(i + ((Self::SpaceDimension - 1) * (l - 1) + d) * ParametersPerDimension);
       }
 
-      for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
+      for (unsigned d = 0; d < Self::SpaceDimension; ++d)
       {
         m_Para[l].SetElement(i + d * ParametersPerDimension, tmp[d]);
       }

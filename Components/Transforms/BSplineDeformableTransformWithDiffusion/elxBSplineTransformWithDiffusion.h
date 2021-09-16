@@ -256,10 +256,10 @@ public:
   typedef typename ElastixType::MovingImageType MovingImageELXType;
 
   /** Other typedef's.*/
-  typedef itk::Image<short, itkGetStaticConstMacro(SpaceDimension)> DummyImageType;
-  typedef itk::ImageRegionConstIterator<DummyImageType>             DummyIteratorType;
-  typedef typename BSplineTransformType::Pointer                    BSplineTransformPointer;
-  typedef typename Superclass1::Superclass                          GenericDeformationFieldRegulizer;
+  typedef itk::Image<short, Self::SpaceDimension>       DummyImageType;
+  typedef itk::ImageRegionConstIterator<DummyImageType> DummyIteratorType;
+  typedef typename BSplineTransformType::Pointer        BSplineTransformPointer;
+  typedef typename Superclass1::Superclass              GenericDeformationFieldRegulizer;
 
   /** Typedef's for the diffusion of the deformation field. */
   typedef itk::ImageFileReader<VectorImageType>        VectorReaderType;

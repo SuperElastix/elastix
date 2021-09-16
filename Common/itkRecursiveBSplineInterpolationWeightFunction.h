@@ -98,12 +98,10 @@ public:
   // typedef typename Superclass::
 
   /** Get number of hacks. */
-  typedef GetConstNumberOfWeightsHackRecursiveBSpline<itkGetStaticConstMacro(SplineOrder),
-                                                      itkGetStaticConstMacro(SpaceDimension)>
+  typedef GetConstNumberOfWeightsHackRecursiveBSpline<Self::SplineOrder, Self::SpaceDimension>
     GetConstNumberOfWeightsHackRecursiveBSplineType;
   itkStaticConstMacro(NumberOfWeights, unsigned int, GetConstNumberOfWeightsHackRecursiveBSplineType::Value);
-  typedef GetConstNumberOfIndicesHack<itkGetStaticConstMacro(SplineOrder), itkGetStaticConstMacro(SpaceDimension)>
-    GetConstNumberOfIndicesHackType;
+  typedef GetConstNumberOfIndicesHack<Self::SplineOrder, Self::SpaceDimension> GetConstNumberOfIndicesHackType;
   itkStaticConstMacro(NumberOfIndices, unsigned int, GetConstNumberOfIndicesHackType::Value);
 
   /** Get number of indices. */
@@ -150,10 +148,9 @@ private:
   SizeType     m_SupportSize;
 
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction2<itkGetStaticConstMacro(SplineOrder)>           KernelType;
-  typedef BSplineDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)> DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)>
-    SecondOrderDerivativeKernelType;
+  typedef BSplineKernelFunction2<Self::SplineOrder>                      KernelType;
+  typedef BSplineDerivativeKernelFunction2<Self::SplineOrder>            DerivativeKernelType;
+  typedef BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder> SecondOrderDerivativeKernelType;
 
   /** Interpolation kernel. */
   typename KernelType::Pointer                      m_Kernel;

@@ -59,9 +59,9 @@ public:
    * this mask will be considered for the computation of the Jacobian terms.
    */
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
-  typedef SpatialObject<itkGetStaticConstMacro(FixedImageDimension)> FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer                       FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer                  FixedImageMaskConstPointer;
+  typedef SpatialObject<Self::FixedImageDimension>  FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer      FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer FixedImageMaskConstPointer;
 
   typedef ScaledSingleValuedNonLinearOptimizer ScaledSingleValuedNonLinearOptimizerType;
   typedef typename ScaledSingleValuedNonLinearOptimizerType ::ScaledCostFunctionPointer ScaledCostFunctionPointer;

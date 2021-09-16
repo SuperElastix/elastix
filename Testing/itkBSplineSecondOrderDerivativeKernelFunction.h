@@ -67,7 +67,7 @@ public:
 
 
 protected:
-  typedef BSplineKernelFunction<itkGetStaticConstMacro(SplineOrder) - 2> KernelType;
+  typedef BSplineKernelFunction<Self::SplineOrder - 2> KernelType;
 
   BSplineSecondOrderDerivativeKernelFunction() { m_KernelFunction = KernelType::New(); }
 

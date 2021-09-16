@@ -159,9 +159,9 @@ public:
   GetFixedParameters(void) const override;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType                       PixelType;
-  typedef Image<PixelType, itkGetStaticConstMacro(SpaceDimension)> ImageType;
-  typedef typename ImageType::Pointer                              ImagePointer;
+  typedef typename ParametersType::ValueType     PixelType;
+  typedef Image<PixelType, Self::SpaceDimension> ImageType;
+  typedef typename ImageType::Pointer            ImagePointer;
 
   /** Get the array of coefficient images. */
   virtual const ImagePointer *
@@ -185,7 +185,7 @@ public:
   SetCoefficientImages(ImagePointer images[]);
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef ImageRegion<itkGetStaticConstMacro(SpaceDimension)> RegionType;
+  typedef ImageRegion<Self::SpaceDimension> RegionType;
 
   typedef typename RegionType::IndexType    IndexType;
   typedef typename RegionType::SizeType     SizeType;
@@ -361,8 +361,8 @@ protected:
   const ParametersType * m_InputParametersPointer;
 
   /** Jacobian as SpaceDimension number of images. */
-  typedef typename JacobianType::ValueType                                 JacobianPixelType;
-  typedef Image<JacobianPixelType, itkGetStaticConstMacro(SpaceDimension)> JacobianImageType;
+  typedef typename JacobianType::ValueType               JacobianPixelType;
+  typedef Image<JacobianPixelType, Self::SpaceDimension> JacobianImageType;
 
   typename JacobianImageType::Pointer m_JacobianImage[NDimensions];
 

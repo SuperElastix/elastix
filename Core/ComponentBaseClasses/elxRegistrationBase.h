@@ -154,15 +154,15 @@ protected:
   ~RegistrationBase() override = default;
 
   /** Typedef's for mask support. */
-  typedef typename ElastixType::MaskPixelType                                       MaskPixelType;
-  typedef typename ElastixType::FixedMaskType                                       FixedMaskImageType;
-  typedef typename ElastixType::MovingMaskType                                      MovingMaskImageType;
-  typedef typename FixedMaskImageType::Pointer                                      FixedMaskImagePointer;
-  typedef typename MovingMaskImageType::Pointer                                     MovingMaskImagePointer;
-  typedef itk::ImageMaskSpatialObject<itkGetStaticConstMacro(FixedImageDimension)>  FixedMaskSpatialObjectType;
-  typedef itk::ImageMaskSpatialObject<itkGetStaticConstMacro(MovingImageDimension)> MovingMaskSpatialObjectType;
-  typedef typename FixedMaskSpatialObjectType::Pointer                              FixedMaskSpatialObjectPointer;
-  typedef typename MovingMaskSpatialObjectType::Pointer                             MovingMaskSpatialObjectPointer;
+  typedef typename ElastixType::MaskPixelType                     MaskPixelType;
+  typedef typename ElastixType::FixedMaskType                     FixedMaskImageType;
+  typedef typename ElastixType::MovingMaskType                    MovingMaskImageType;
+  typedef typename FixedMaskImageType::Pointer                    FixedMaskImagePointer;
+  typedef typename MovingMaskImageType::Pointer                   MovingMaskImagePointer;
+  typedef itk::ImageMaskSpatialObject<Self::FixedImageDimension>  FixedMaskSpatialObjectType;
+  typedef itk::ImageMaskSpatialObject<Self::MovingImageDimension> MovingMaskSpatialObjectType;
+  typedef typename FixedMaskSpatialObjectType::Pointer            FixedMaskSpatialObjectPointer;
+  typedef typename MovingMaskSpatialObjectType::Pointer           MovingMaskSpatialObjectPointer;
 
   typedef typename ITKBaseType::FixedImagePyramidType  FixedImagePyramidType;
   typedef typename ITKBaseType::MovingImagePyramidType MovingImagePyramidType;

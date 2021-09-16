@@ -84,20 +84,20 @@ public:
   typedef typename Superclass::JacobianType JacobianType;
 
   /** Standard vector type for this class. */
-  typedef Vector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputVectorType;
-  typedef Vector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputVectorType;
+  typedef Vector<TScalarType, Self::SpaceDimension> InputVectorType;
+  typedef Vector<TScalarType, Self::SpaceDimension> OutputVectorType;
 
   /** Standard covariant vector type for this class. */
-  typedef CovariantVector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputCovariantVectorType;
-  typedef CovariantVector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputCovariantVectorType;
+  typedef CovariantVector<TScalarType, Self::SpaceDimension> InputCovariantVectorType;
+  typedef CovariantVector<TScalarType, Self::SpaceDimension> OutputCovariantVectorType;
 
   /** Standard vnl_vector type for this class. */
-  typedef vnl_vector_fixed<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputVnlVectorType;
-  typedef vnl_vector_fixed<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputVnlVectorType;
+  typedef vnl_vector_fixed<TScalarType, Self::SpaceDimension> InputVnlVectorType;
+  typedef vnl_vector_fixed<TScalarType, Self::SpaceDimension> OutputVnlVectorType;
 
   /** Standard coordinate point type for this class. */
-  typedef Point<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputPointType;
-  typedef Point<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputPointType;
+  typedef Point<TScalarType, Self::SpaceDimension> InputPointType;
+  typedef Point<TScalarType, Self::SpaceDimension> OutputPointType;
 
   /** AdvancedTransform typedefs */
   typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;

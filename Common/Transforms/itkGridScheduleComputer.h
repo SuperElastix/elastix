@@ -56,27 +56,26 @@ public:
   itkStaticConstMacro(Dimension, unsigned int, VImageDimension);
 
   /** Typedef's. */
-  typedef TTransformScalarType                         TransformScalarType;
-  typedef ImageBase<itkGetStaticConstMacro(Dimension)> ImageBaseType;
-  typedef typename ImageBaseType::PointType            PointType;
-  typedef typename ImageBaseType::PointType            OriginType;
-  typedef typename ImageBaseType::SpacingType          SpacingType;
-  typedef typename ImageBaseType::DirectionType        DirectionType;
-  typedef typename ImageBaseType::SizeType             SizeType;
-  typedef typename ImageBaseType::SizeValueType        SizeValueType;
-  typedef typename ImageBaseType::RegionType           RegionType;
-  typedef SpacingType                                  GridSpacingFactorType;
-  typedef std::vector<OriginType>                      VectorOriginType;
-  typedef std::vector<SpacingType>                     VectorSpacingType;
-  typedef std::vector<DirectionType>                   VectorDirectionType;
-  typedef std::vector<RegionType>                      VectorRegionType;
-  typedef std::vector<GridSpacingFactorType>           VectorGridSpacingFactorType;
+  typedef TTransformScalarType                  TransformScalarType;
+  typedef ImageBase<Self::Dimension>            ImageBaseType;
+  typedef typename ImageBaseType::PointType     PointType;
+  typedef typename ImageBaseType::PointType     OriginType;
+  typedef typename ImageBaseType::SpacingType   SpacingType;
+  typedef typename ImageBaseType::DirectionType DirectionType;
+  typedef typename ImageBaseType::SizeType      SizeType;
+  typedef typename ImageBaseType::SizeValueType SizeValueType;
+  typedef typename ImageBaseType::RegionType    RegionType;
+  typedef SpacingType                           GridSpacingFactorType;
+  typedef std::vector<OriginType>               VectorOriginType;
+  typedef std::vector<SpacingType>              VectorSpacingType;
+  typedef std::vector<DirectionType>            VectorDirectionType;
+  typedef std::vector<RegionType>               VectorRegionType;
+  typedef std::vector<GridSpacingFactorType>    VectorGridSpacingFactorType;
 
   /** Typedefs for the initial transform. */
-  typedef Transform<TransformScalarType, itkGetStaticConstMacro(Dimension), itkGetStaticConstMacro(Dimension)>
-                                               TransformType;
-  typedef typename TransformType::Pointer      TransformPointer;
-  typedef typename TransformType::ConstPointer TransformConstPointer;
+  typedef Transform<TransformScalarType, Self::Dimension, Self::Dimension> TransformType;
+  typedef typename TransformType::Pointer                                  TransformPointer;
+  typedef typename TransformType::ConstPointer                             TransformConstPointer;
 
   /** Set the ImageOrigin. */
   itkSetMacro(ImageOrigin, OriginType);

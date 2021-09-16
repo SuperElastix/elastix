@@ -89,9 +89,7 @@ public:
   itkStaticConstMacro(MovingPointSetDimension, unsigned int, TMovingPointSet::PointDimension);
 
   /**  More typedefs. */
-  typedef AdvancedTransform<CoordinateRepresentationType,
-                            itkGetStaticConstMacro(FixedPointSetDimension),
-                            itkGetStaticConstMacro(MovingPointSetDimension)>
+  typedef AdvancedTransform<CoordinateRepresentationType, Self::FixedPointSetDimension, Self::MovingPointSetDimension>
                                                   TransformType;
   typedef typename TransformType::Pointer         TransformPointer;
   typedef typename TransformType::InputPointType  InputPointType;
@@ -99,12 +97,12 @@ public:
   typedef typename TransformType::ParametersType  TransformParametersType;
   typedef typename TransformType::JacobianType    TransformJacobianType;
 
-  typedef SpatialObject<itkGetStaticConstMacro(FixedPointSetDimension)>  FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer                           FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer                      FixedImageMaskConstPointer;
-  typedef SpatialObject<itkGetStaticConstMacro(MovingPointSetDimension)> MovingImageMaskType;
-  typedef typename MovingImageMaskType::Pointer                          MovingImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer                     MovingImageMaskConstPointer;
+  typedef SpatialObject<Self::FixedPointSetDimension>  FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer         FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer    FixedImageMaskConstPointer;
+  typedef SpatialObject<Self::MovingPointSetDimension> MovingImageMaskType;
+  typedef typename MovingImageMaskType::Pointer        MovingImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer   MovingImageMaskConstPointer;
 
   /**  Type of the measure. */
   typedef Superclass::MeasureType            MeasureType;

@@ -85,17 +85,17 @@ public:
   typedef double ScalarType;
 
   /** Standard vector type within this class. */
-  typedef Vector<ScalarType, itkGetStaticConstMacro(ImageDimension)> VectorType;
+  typedef Vector<ScalarType, Self::ImageDimension> VectorType;
 
   /** Spatial Object type within this class. */
-  typedef SpatialObject<itkGetStaticConstMacro(ImageDimension)> SpatialObjectType;
+  typedef SpatialObject<Self::ImageDimension> SpatialObjectType;
 
   /** Spatial Object member types used within this class. */
   typedef typename SpatialObjectType::Pointer      SpatialObjectPointer;
   typedef typename SpatialObjectType::ConstPointer SpatialObjectConstPointer;
 
   /** Standard matrix type within this class. */
-  typedef Matrix<ScalarType, itkGetStaticConstMacro(ImageDimension), itkGetStaticConstMacro(ImageDimension)> MatrixType;
+  typedef Matrix<ScalarType, Self::ImageDimension, Self::ImageDimension> MatrixType;
 
   /** Standard image type within this class. */
   typedef TImage ImageType;
@@ -105,8 +105,8 @@ public:
   typedef typename ImageType::ConstPointer ImageConstPointer;
 
   /** Affine transform for mapping to and from principal axis */
-  typedef AffineTransform<double, itkGetStaticConstMacro(ImageDimension)> AffineTransformType;
-  typedef typename AffineTransformType::Pointer                           AffineTransformPointer;
+  typedef AffineTransform<double, Self::ImageDimension> AffineTransformType;
+  typedef typename AffineTransformType::Pointer         AffineTransformPointer;
 
   /** Set the input image. */
   virtual void
@@ -122,7 +122,7 @@ public:
 
   /** Set the spatial object mask. */
   virtual void
-  SetSpatialObjectMask(const SpatialObject<itkGetStaticConstMacro(ImageDimension)> * so)
+  SetSpatialObjectMask(const SpatialObject<Self::ImageDimension> * so)
   {
     if (m_SpatialObjectMask != so)
     {

@@ -359,9 +359,7 @@ protected:
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
   typedef typename TransformType::ScalarType CoordinateRepresentationType;
-  typedef itk::AdvancedTransform<CoordinateRepresentationType,
-                                 itkGetStaticConstMacro(FixedImageDimension),
-                                 itkGetStaticConstMacro(MovingImageDimension)>
+  typedef itk::AdvancedTransform<CoordinateRepresentationType, Self::FixedImageDimension, Self::MovingImageDimension>
                                                                      AdvancedTransformType;
   typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 

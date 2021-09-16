@@ -114,10 +114,9 @@ public:
     RecursiveBSplineWeightFunctionType; // TODO: get rid of this and use the kernels directly.
 
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction2<itkGetStaticConstMacro(SplineOrder)>           KernelType;
-  typedef BSplineDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)> DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction2<itkGetStaticConstMacro(SplineOrder)>
-    SecondOrderDerivativeKernelType;
+  typedef BSplineKernelFunction2<Self::SplineOrder>                      KernelType;
+  typedef BSplineDerivativeKernelFunction2<Self::SplineOrder>            DerivativeKernelType;
+  typedef BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder> SecondOrderDerivativeKernelType;
 
   /** Interpolation kernel. */
   typename KernelType::Pointer                      m_Kernel;

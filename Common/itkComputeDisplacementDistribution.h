@@ -72,10 +72,10 @@ public:
    * this mask will be considered for the computation of the Jacobian terms.
    */
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
-  typedef SpatialObject<itkGetStaticConstMacro(FixedImageDimension)> FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer                       FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer                  FixedImageMaskConstPointer;
-  typedef typename TransformType::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef SpatialObject<Self::FixedImageDimension>           FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer               FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer          FixedImageMaskConstPointer;
+  typedef typename TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
   itkSetConstObjectMacro(FixedImage, FixedImageType);

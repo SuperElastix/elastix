@@ -100,7 +100,7 @@ public:
   typedef typename ContinuousIndexType::ValueType  ContinuousIndexValueType;
 
   /** Derivative typedef support */
-  typedef CovariantVector<OutputType, itkGetStaticConstMacro(ImageDimension)> CovariantVectorType;
+  typedef CovariantVector<OutputType, Self::ImageDimension> CovariantVectorType;
 
   /** Method to compute the derivative. */
   CovariantVectorType

@@ -144,34 +144,33 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   typedef itk::AdvancedBSplineDeformableTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                      itkGetStaticConstMacro(SpaceDimension)>
+                                                      Self::SpaceDimension>
                                                      BSplineTransformBaseType;
   typedef typename BSplineTransformBaseType::Pointer BSplineTransformBasePointer;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
   typedef itk::AdvancedBSplineDeformableTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                      itkGetStaticConstMacro(ReducedSpaceDimension)>
+                                                      Self::ReducedSpaceDimension>
                                                                      ReducedDimensionBSplineTransformBaseType;
   typedef typename ReducedDimensionBSplineTransformBaseType::Pointer ReducedDimensionBSplineTransformBasePointer;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                              itkGetStaticConstMacro(SpaceDimension),
-                              itkGetStaticConstMacro(SpaceDimension)>
+  typedef itk::
+    StackTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, Self::SpaceDimension>
                                                       BSplineStackTransformType;
   typedef typename BSplineStackTransformType::Pointer BSplineStackTransformPointer;
 
   /** Typedef for supported BSplineTransform types. */
   typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  itkGetStaticConstMacro(ReducedSpaceDimension),
+                                                  Self::ReducedSpaceDimension,
                                                   1>
     BSplineTransformLinearType;
   typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  itkGetStaticConstMacro(ReducedSpaceDimension),
+                                                  Self::ReducedSpaceDimension,
                                                   2>
     BSplineTransformQuadraticType;
   typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  itkGetStaticConstMacro(ReducedSpaceDimension),
+                                                  Self::ReducedSpaceDimension,
                                                   3>
     BSplineTransformCubicType;
 
@@ -205,13 +204,13 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Reduced dimension image typedefs. */
-  typedef itk::Image<PixelType, itkGetStaticConstMacro(ReducedSpaceDimension)> ReducedDimensionImageType;
-  typedef itk::ImageRegion<itkGetStaticConstMacro(ReducedSpaceDimension)>      ReducedDimensionRegionType;
-  typedef typename ReducedDimensionRegionType::SizeType                        ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType                       ReducedDimensionIndexType;
-  typedef typename ReducedDimensionImageType::SpacingType                      ReducedDimensionSpacingType;
-  typedef typename ReducedDimensionImageType::DirectionType                    ReducedDimensionDirectionType;
-  typedef typename ReducedDimensionImageType::PointType                        ReducedDimensionOriginType;
+  typedef itk::Image<PixelType, Self::ReducedSpaceDimension> ReducedDimensionImageType;
+  typedef itk::ImageRegion<Self::ReducedSpaceDimension>      ReducedDimensionRegionType;
+  typedef typename ReducedDimensionRegionType::SizeType      ReducedDimensionSizeType;
+  typedef typename ReducedDimensionRegionType::IndexType     ReducedDimensionIndexType;
+  typedef typename ReducedDimensionImageType::SpacingType    ReducedDimensionSpacingType;
+  typedef typename ReducedDimensionImageType::DirectionType  ReducedDimensionDirectionType;
+  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionOriginType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
   typedef itk::GridScheduleComputer<CoordRepType, ReducedSpaceDimension>                  GridScheduleComputerType;

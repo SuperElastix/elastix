@@ -116,9 +116,8 @@ public:
   /** Other typedef's. */
   typedef itk::Object ObjectType;
 
-  typedef itk::AdvancedCombinationTransform<CoordRepType, itkGetStaticConstMacro(FixedImageDimension)>
-                                                                  CombinationTransformType;
-  typedef typename CombinationTransformType::InitialTransformType InitialTransformType;
+  typedef itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension> CombinationTransformType;
+  typedef typename CombinationTransformType::InitialTransformType                    InitialTransformType;
 
   /** Typedefs inherited from elastix. */
   typedef typename Superclass2::ElastixType          ElastixType;

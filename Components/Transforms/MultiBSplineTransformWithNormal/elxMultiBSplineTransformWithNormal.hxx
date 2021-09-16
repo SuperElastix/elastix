@@ -420,12 +420,12 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale(void)
   this->m_GridUpsampler->SetRequiredGridRegion(requiredGridRegion);
   this->m_GridUpsampler->SetRequiredGridDirection(requiredGridDirection);
 
-  typedef itk::Vector<double, itkGetStaticConstMacro(SpaceDimension)> VectorType;
+  typedef itk::Vector<double, Self::SpaceDimension> VectorType;
 
-  typedef itk::Vector<VectorType, itkGetStaticConstMacro(SpaceDimension)> BaseType;
-  typedef itk::Image<BaseType, itkGetStaticConstMacro(SpaceDimension)>    ImageBaseType;
-  typedef typename ImageBaseType::Pointer                                 ImageBasePointer;
-  typedef typename ImageBaseType::PixelContainer                          BaseContainer;
+  typedef itk::Vector<VectorType, Self::SpaceDimension> BaseType;
+  typedef itk::Image<BaseType, Self::SpaceDimension>    ImageBaseType;
+  typedef typename ImageBaseType::Pointer               ImageBasePointer;
+  typedef typename ImageBaseType::PixelContainer        BaseContainer;
 
   ImageBasePointer      Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
   const BaseContainer & bases = *Bases->GetPixelContainer();
@@ -453,7 +453,7 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale(void)
   ImageBasePointer      new_Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
   const BaseContainer & new_bases = *new_Bases->GetPixelContainer();
 
-  typedef itk::Image<unsigned char, itkGetStaticConstMacro(SpaceDimension)> ImageLabelType;
+  typedef itk::Image<unsigned char, Self::SpaceDimension> ImageLabelType;
   typename ImageLabelType::Pointer labels1 = this->m_MultiBSplineTransformWithNormal->GetLabels();
   typename itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::Pointer filter =
     itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();

@@ -119,17 +119,17 @@ public:
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   itkStaticConstMacro(MovedImageDimension, unsigned int, MovingImageType::ImageDimension);
 
-  typedef typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension>  CombinationTransformType;
-  typedef typename CombinationTransformType::Pointer                                   CombinationTransformPointer;
-  typedef itk::Image<FixedImagePixelType, itkGetStaticConstMacro(FixedImageDimension)> TransformedMovingImageType;
-  typedef itk::ResampleImageFilter<MovingImageType, TransformedMovingImageType>        TransformMovingImageFilterType;
+  typedef typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension> CombinationTransformType;
+  typedef typename CombinationTransformType::Pointer                                  CombinationTransformPointer;
+  typedef itk::Image<FixedImagePixelType, Self::FixedImageDimension>                  TransformedMovingImageType;
+  typedef itk::ResampleImageFilter<MovingImageType, TransformedMovingImageType>       TransformMovingImageFilterType;
   typedef typename itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, ScalarType> RayCastInterpolatorType;
   typedef typename RayCastInterpolatorType::Pointer                                          RayCastInterpolatorPointer;
-  typedef itk::Image<RealType, itkGetStaticConstMacro(FixedImageDimension)>                  FixedGradientImageType;
+  typedef itk::Image<RealType, Self::FixedImageDimension>                                    FixedGradientImageType;
   typedef itk::CastImageFilter<FixedImageType, FixedGradientImageType>                       CastFixedImageFilterType;
   typedef typename CastFixedImageFilterType::Pointer                               CastFixedImageFilterPointer;
   typedef typename FixedGradientImageType::PixelType                               FixedGradientPixelType;
-  typedef itk::Image<RealType, itkGetStaticConstMacro(MovedImageDimension)>        MovedGradientImageType;
+  typedef itk::Image<RealType, Self::MovedImageDimension>                          MovedGradientImageType;
   typedef itk::CastImageFilter<TransformedMovingImageType, MovedGradientImageType> CastMovedImageFilterType;
   typedef typename CastMovedImageFilterType::Pointer                               CastMovedImageFilterPointer;
   typedef typename MovedGradientImageType::PixelType                               MovedGradientPixelType;
@@ -208,10 +208,9 @@ private:
   /** The Sobel gradients of the fixed image */
   CastFixedImageFilterPointer m_CastFixedImageFilter;
 
-  SobelOperator<FixedGradientPixelType, itkGetStaticConstMacro(FixedImageDimension)>
-    m_FixedSobelOperators[FixedImageDimension];
+  SobelOperator<FixedGradientPixelType, Self::FixedImageDimension> m_FixedSobelOperators[FixedImageDimension];
 
-  typename FixedSobelFilter::Pointer m_FixedSobelFilters[itkGetStaticConstMacro(FixedImageDimension)];
+  typename FixedSobelFilter::Pointer m_FixedSobelFilters[Self::FixedImageDimension];
 
   ZeroFluxNeumannBoundaryCondition<MovedGradientImageType> m_MovedBoundCond;
   ZeroFluxNeumannBoundaryCondition<FixedGradientImageType> m_FixedBoundCond;
@@ -219,10 +218,9 @@ private:
   /** The Sobel gradients of the moving image */
   CastMovedImageFilterPointer m_CastMovedImageFilter;
 
-  SobelOperator<MovedGradientPixelType, itkGetStaticConstMacro(MovedImageDimension)>
-    m_MovedSobelOperators[MovedImageDimension];
+  SobelOperator<MovedGradientPixelType, Self::MovedImageDimension> m_MovedSobelOperators[MovedImageDimension];
 
-  typename MovedSobelFilter::Pointer m_MovedSobelFilters[itkGetStaticConstMacro(MovedImageDimension)];
+  typename MovedSobelFilter::Pointer m_MovedSobelFilters[Self::MovedImageDimension];
 
   ScalesType                  m_Scales;
   double                      m_DerivativeDelta;

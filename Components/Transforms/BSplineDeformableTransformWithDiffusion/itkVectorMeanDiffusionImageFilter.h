@@ -73,13 +73,13 @@ public:
   typedef typename InputImageType::PixelType InputPixelType;
   typedef typename InputPixelType::ValueType ValueType;
   // typedef typename NumericTraits<InputPixelType>::RealType    InputRealType;
-  typedef typename InputImageType::RegionType                         InputImageRegionType;
-  typedef typename InputImageType::SizeType                           InputSizeType;
-  typedef typename InputImageType::IndexType                          IndexType;
-  typedef Vector<double, itkGetStaticConstMacro(InputImageDimension)> VectorRealType;
-  typedef Image<double, itkGetStaticConstMacro(InputImageDimension)>  DoubleImageType;
-  typedef typename DoubleImageType::Pointer                           DoubleImagePointer;
-  typedef typename GrayValueImageType::PixelType                      GrayValuePixelType;
+  typedef typename InputImageType::RegionType       InputImageRegionType;
+  typedef typename InputImageType::SizeType         InputSizeType;
+  typedef typename InputImageType::IndexType        IndexType;
+  typedef Vector<double, Self::InputImageDimension> VectorRealType;
+  typedef Image<double, Self::InputImageDimension>  DoubleImageType;
+  typedef typename DoubleImageType::Pointer         DoubleImagePointer;
+  typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
 
   /** Typedef for the rescale intensity filter. */
   typedef RescaleIntensityImageFilter<GrayValueImageType, DoubleImageType> RescaleImageFilterType;

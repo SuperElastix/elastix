@@ -139,12 +139,10 @@ public:
   typedef typename Superclass::InternalMatrixType            InternalMatrixType;
 
   /** Standard matrix type for this class. */
-  typedef Matrix<TScalarType, itkGetStaticConstMacro(OutputSpaceDimension), itkGetStaticConstMacro(InputSpaceDimension)>
-    MatrixType;
+  typedef Matrix<TScalarType, Self::OutputSpaceDimension, Self::InputSpaceDimension> MatrixType;
 
   /** Standard inverse matrix type for this class. */
-  typedef Matrix<TScalarType, itkGetStaticConstMacro(InputSpaceDimension), itkGetStaticConstMacro(OutputSpaceDimension)>
-    InverseMatrixType;
+  typedef Matrix<TScalarType, Self::InputSpaceDimension, Self::OutputSpaceDimension> InverseMatrixType;
 
   /** Typedefs. */
   typedef InputPointType   CenterType;

@@ -84,8 +84,7 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** The number of weights as a static const. */
-  typedef GetConstNumberOfWeightsHack<itkGetStaticConstMacro(SplineOrder), itkGetStaticConstMacro(SpaceDimension)>
-    GetConstNumberOfWeightsHackType;
+  typedef GetConstNumberOfWeightsHack<Self::SplineOrder, Self::SpaceDimension> GetConstNumberOfWeightsHackType;
   itkStaticConstMacro(NumberOfWeights, unsigned long, GetConstNumberOfWeightsHackType::Value);
 
   /** OutputType typedef support. */
@@ -142,8 +141,7 @@ protected:
    * The Matrix is at least twice as fast as std::vector< vnl_vector< double > >,
    * probably because of the fixed size at compile time.
    */
-  typedef Matrix<double, itkGetStaticConstMacro(SpaceDimension), itkGetStaticConstMacro(SplineOrder) + 1>
-    OneDWeightsType;
+  typedef Matrix<double, Self::SpaceDimension, Self::SplineOrder + 1> OneDWeightsType;
 
   /** Compute the 1D weights. */
   virtual void

@@ -208,15 +208,11 @@ protected:
   /** The destructor. */
   ~SplineKernelTransform() override = default;
 
-  typedef itk::ThinPlateSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
-    TPKernelTransformType;
-  typedef itk::ThinPlateR2LogRSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
-                                                                                                  TPRKernelTransformType;
-  typedef itk::VolumeSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)> VKernelTransformType;
-  typedef itk::ElasticBodySplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
-    EBKernelTransformType;
-  typedef itk::ElasticBodyReciprocalSplineKernelTransform2<CoordRepType, itkGetStaticConstMacro(SpaceDimension)>
-    EBRKernelTransformType;
+  typedef itk::ThinPlateSplineKernelTransform2<CoordRepType, Self::SpaceDimension>             TPKernelTransformType;
+  typedef itk::ThinPlateR2LogRSplineKernelTransform2<CoordRepType, Self::SpaceDimension>       TPRKernelTransformType;
+  typedef itk::VolumeSplineKernelTransform2<CoordRepType, Self::SpaceDimension>                VKernelTransformType;
+  typedef itk::ElasticBodySplineKernelTransform2<CoordRepType, Self::SpaceDimension>           EBKernelTransformType;
+  typedef itk::ElasticBodyReciprocalSplineKernelTransform2<CoordRepType, Self::SpaceDimension> EBRKernelTransformType;
 
   /** Create an instance of a kernel transform. Returns false if the
    * kernelType is unknown.

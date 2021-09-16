@@ -131,9 +131,9 @@ public:
   typedef SingleValuedCostFunction                       SingleValuedCostFunctionType;
   typedef typename SingleValuedCostFunctionType::Pointer SingleValuedCostFunctionPointer;
 
-  typedef typename FixedImageType::PixelType                               FixedImagePixelType;
-  typedef typename MovingImageType::RegionType                             MovingImageRegionType;
-  typedef FixedArray<double, itkGetStaticConstMacro(MovingImageDimension)> MovingImageDerivativeScalesType;
+  typedef typename FixedImageType::PixelType             FixedImagePixelType;
+  typedef typename MovingImageType::RegionType           MovingImageRegionType;
+  typedef FixedArray<double, Self::MovingImageDimension> MovingImageDerivativeScalesType;
 
   /** Typedef for the PointSetMetric. */
   typedef PointSet<CoordinateRepresentationType,

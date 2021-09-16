@@ -140,35 +140,29 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   typedef itk::AdvancedBSplineDeformableTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                      itkGetStaticConstMacro(SpaceDimension)>
+                                                      Self::SpaceDimension>
                                                      BSplineTransformBaseType;
   typedef typename BSplineTransformBaseType::Pointer BSplineTransformBasePointer;
 
   /** Typedef for supported BSplineTransform types. */
-  typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  itkGetStaticConstMacro(SpaceDimension),
-                                                  1>
-    BSplineTransformLinearType;
-  typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  itkGetStaticConstMacro(SpaceDimension),
-                                                  2>
-    BSplineTransformQuadraticType;
-  typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  itkGetStaticConstMacro(SpaceDimension),
-                                                  3>
-    BSplineTransformCubicType;
-  typedef itk::CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                itkGetStaticConstMacro(SpaceDimension),
-                                                1>
-    CyclicBSplineTransformLinearType;
-  typedef itk::CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                itkGetStaticConstMacro(SpaceDimension),
-                                                2>
-    CyclicBSplineTransformQuadraticType;
-  typedef itk::CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                itkGetStaticConstMacro(SpaceDimension),
-                                                3>
-    CyclicBSplineTransformCubicType;
+  typedef itk::
+    AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 1>
+      BSplineTransformLinearType;
+  typedef itk::
+    AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 2>
+      BSplineTransformQuadraticType;
+  typedef itk::
+    AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 3>
+      BSplineTransformCubicType;
+  typedef itk::
+    CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 1>
+      CyclicBSplineTransformLinearType;
+  typedef itk::
+    CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 2>
+      CyclicBSplineTransformQuadraticType;
+  typedef itk::
+    CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 3>
+      CyclicBSplineTransformCubicType;
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;

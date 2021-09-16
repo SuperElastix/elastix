@@ -87,12 +87,9 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Typedefs for transform. */
-  typedef AdvancedTransform<TTransformPrecisionType,
-                            itkGetStaticConstMacro(ImageDimension),
-                            itkGetStaticConstMacro(ImageDimension)>
-                                                      TransformType;
-  typedef typename TransformType::ConstPointer        TransformPointerType;
-  typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
+  typedef AdvancedTransform<TTransformPrecisionType, Self::ImageDimension, Self::ImageDimension> TransformType;
+  typedef typename TransformType::ConstPointer                                                   TransformPointerType;
+  typedef typename TransformType::SpatialJacobianType                                            SpatialJacobianType;
 
   /** Typedefs for output image. */
   typedef typename OutputImageType::PixelType PixelType;
@@ -106,7 +103,7 @@ public:
   typedef typename OutputImageType::DirectionType DirectionType;
 
   /** Typedefs for base image. */
-  typedef ImageBase<itkGetStaticConstMacro(ImageDimension)> ImageBaseType;
+  typedef ImageBase<Self::ImageDimension> ImageBaseType;
 
   /** Set the coordinate transformation.
    * Set the coordinate transform to use for resampling.  Note that this must
