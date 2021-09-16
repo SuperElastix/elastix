@@ -45,8 +45,9 @@ public:
   DO(const ComponentDescriptionType & name, ComponentDatabase * cdb)
   {
     int dummy1 = InstallFunctions<ElastixType>::InstallComponent(name, VIndex, cdb);
-    int dummy2 = cdb->SetIndex(ET::fPixelTypeAsString(), ET::fDim(), ET::mPixelTypeAsString(), ET::mDim(), VIndex);
-    if (ElastixTypedef<VIndex + 1>::Defined())
+    int dummy2 = cdb->SetIndex(
+      ET::FixedPixelTypeString, ET::FixedDimension, ET::MovingPixelTypeString, ET::MovingDimension, VIndex);
+    if (ElastixTypedef<VIndex + 1>::IsDefined)
     {
       return _installsupportedimagesrecursively<VIndex + 1>::DO(name, cdb);
     }
