@@ -53,7 +53,7 @@ namespace elastix
 class BaseComponent
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponent);
+  ITK_DISALLOW_COPY_AND_MOVE(BaseComponent);
 
   /**
    * Callback methods that each component of elastix is supposed

@@ -22,7 +22,7 @@
 #include "elxConfiguration.h"
 
 // ITK header files:
-#include <itkMacro.h> // For ITK_DISALLOW_COPY_AND_ASSIGN.
+#include <itkMacro.h> // For ITK_DISALLOW_COPY_AND_MOVE.
 #include <itkWeakPointer.h>
 
 namespace elastix
@@ -47,7 +47,7 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT BaseComponentSE : public BaseComponent
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponentSE);
+  ITK_DISALLOW_COPY_AND_MOVE(BaseComponentSE);
 
   /** Standard stuff. */
   typedef BaseComponentSE Self;

@@ -131,7 +131,7 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT TransformBase : public BaseComponentSE<TElastix>
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(TransformBase);
+  ITK_DISALLOW_COPY_AND_MOVE(TransformBase);
 
   /** Standard ITK stuff. */
   typedef TransformBase             Self;

@@ -63,7 +63,7 @@ template <class T>
 class PixelTypeChangeCommand : public Command
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(PixelTypeChangeCommand);
+  ITK_DISALLOW_COPY_AND_MOVE(PixelTypeChangeCommand);
 
   /** Standard class typedefs. */
   typedef PixelTypeChangeCommand  Self;

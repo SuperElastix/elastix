@@ -59,7 +59,7 @@ xoutSetup(const char * logfilename, bool setupLogging, bool setupCout);
 class xoutManager
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(xoutManager);
+  ITK_DISALLOW_COPY_AND_MOVE(xoutManager);
 
   /** This explicit constructor does set up the "xout" output streams. */
   explicit xoutManager(const std::string & logfilename, const bool setupLogging, const bool setupCout);
@@ -73,7 +73,7 @@ public:
 private:
   struct Guard
   {
-    ITK_DISALLOW_COPY_AND_ASSIGN(Guard);
+    ITK_DISALLOW_COPY_AND_MOVE(Guard);
     Guard() = default;
     ~Guard();
   };
