@@ -121,21 +121,21 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   typedef itk::AdvancedBSplineDeformableTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                      itkGetStaticConstMacro(SpaceDimension)>
+                                                      Self::SpaceDimension>
                                                      BSplineTransformBaseType;
   typedef typename BSplineTransformBaseType::Pointer BSplineTransformBasePointer;
 
   /** Typedef for supported BSplineTransform types. */
   typedef itk::MultiBSplineDeformableTransformWithNormal<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                         itkGetStaticConstMacro(SpaceDimension),
+                                                         Self::SpaceDimension,
                                                          1>
     MultiBSplineTransformWithNormalLinearType;
   typedef itk::MultiBSplineDeformableTransformWithNormal<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                         itkGetStaticConstMacro(SpaceDimension),
+                                                         Self::SpaceDimension,
                                                          2>
     MultiBSplineTransformWithNormalQuadraticType;
   typedef itk::MultiBSplineDeformableTransformWithNormal<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                         itkGetStaticConstMacro(SpaceDimension),
+                                                         Self::SpaceDimension,
                                                          3>
     MultiBSplineTransformWithNormalCubicType;
 
@@ -188,8 +188,8 @@ public:
   typedef typename GridUpsamplerType::Pointer                             GridUpsamplerPointer;
 
   /** Typdef's for the Image of Labels */
-  typedef itk::Image<unsigned char, itkGetStaticConstMacro(SpaceDimension)> ImageLabelType;
-  typedef typename ImageLabelType::Pointer                                  ImageLabelPointer;
+  typedef itk::Image<unsigned char, Self::SpaceDimension> ImageLabelType;
+  typedef typename ImageLabelType::Pointer                ImageLabelPointer;
 
   /** Execute stuff before anything else is done:
    * \li Initialize the right BSplineTransform.

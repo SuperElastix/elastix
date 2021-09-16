@@ -170,19 +170,19 @@ public:
   itkSetObjectMacro(BSplineTransform, BSplineTransformType);
 
   /** B-spline knot image */
-  typedef Image<signed short, itkGetStaticConstMacro(MovingImageDimension)> BSplineKnotImageType;
-  typedef typename BSplineKnotImageType::Pointer                            BSplineKnotImagePointer;
-  typedef typename BSplineKnotImageType::RegionType                         BSplineKnotImageRegionType;
+  typedef Image<signed short, Self::MovingImageDimension> BSplineKnotImageType;
+  typedef typename BSplineKnotImageType::Pointer          BSplineKnotImagePointer;
+  typedef typename BSplineKnotImageType::RegionType       BSplineKnotImageRegionType;
 
   /** penalty grid image */
-  typedef Image<signed short, itkGetStaticConstMacro(MovingImageDimension)> PenaltyGridImageType;
-  typedef typename PenaltyGridImageType::Pointer                            PenaltyGridImagePointer;
-  typedef typename PenaltyGridImageType::RegionType                         PenaltyGridImageRegionType;
+  typedef Image<signed short, Self::MovingImageDimension> PenaltyGridImageType;
+  typedef typename PenaltyGridImageType::Pointer          PenaltyGridImagePointer;
+  typedef typename PenaltyGridImageType::RegionType       PenaltyGridImageRegionType;
 
   /** Define the segmented image. */
-  typedef Image<signed short, itkGetStaticConstMacro(MovingImageDimension)> SegmentedImageType;
-  typedef typename SegmentedImageType::Pointer                              SegmentedImagePointer;
-  typedef typename SegmentedImageType::RegionType                           SegmentedImageRegionType;
+  typedef Image<signed short, Self::MovingImageDimension> SegmentedImageType;
+  typedef typename SegmentedImageType::Pointer            SegmentedImagePointer;
+  typedef typename SegmentedImageType::RegionType         SegmentedImageRegionType;
 
   /** Connect the Segmented Image. */
   itkSetObjectMacro(SegmentedImage, SegmentedImageType);

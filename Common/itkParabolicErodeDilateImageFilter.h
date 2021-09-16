@@ -103,7 +103,7 @@ public:
       Here we prefer float in order to save memory.  */
 
   typedef typename NumericTraits<PixelType>::FloatType InternalRealType;
-  // typedef typename Image<InternalRealType, itkGetStaticConstMacro(ImageDimension) >   RealImageType;
+  // typedef typename Image<InternalRealType, Self::ImageDimension >   RealImageType;
 
   // set all of the scales the same
   void
@@ -123,9 +123,7 @@ public:
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro(SameDimension,
-                  (Concept::SameDimension<itkGetStaticConstMacro(InputImageDimension),
-                                          itkGetStaticConstMacro(OutputImageDimension)>));
+  itkConceptMacro(SameDimension, (Concept::SameDimension<Self::InputImageDimension, Self::OutputImageDimension>));
 
   itkConceptMacro(Comparable, (Concept::Comparable<PixelType>));
 

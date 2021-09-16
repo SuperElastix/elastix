@@ -72,12 +72,11 @@ public:
   typedef typename Superclass::OutputPointType           OutputPointType;
 
   /** Typedef's needed in this class. */
-  typedef DeformationVectorFieldTransform<ScalarType, itkGetStaticConstMacro(InputSpaceDimension)>
-                                                                            IntermediaryDFTransformType;
-  typedef typename IntermediaryDFTransformType::Pointer                     IntermediaryDFTransformPointer;
-  typedef typename IntermediaryDFTransformType ::CoefficientVectorImageType VectorImageType;
-  typedef typename VectorImageType::PixelType                               VectorPixelType;
-  typedef ImageRegionIterator<VectorImageType>                              IteratorType;
+  typedef DeformationVectorFieldTransform<ScalarType, Self::InputSpaceDimension> IntermediaryDFTransformType;
+  typedef typename IntermediaryDFTransformType::Pointer                          IntermediaryDFTransformPointer;
+  typedef typename IntermediaryDFTransformType ::CoefficientVectorImageType      VectorImageType;
+  typedef typename VectorImageType::PixelType                                    VectorPixelType;
+  typedef ImageRegionIterator<VectorImageType>                                   IteratorType;
 
   /** Typedef's for the vectorImage. */
   typedef typename VectorImageType::RegionType  RegionType;

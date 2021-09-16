@@ -201,21 +201,14 @@ public:
   TransformPoint(const InputPointType & point) const override;
 
   /** Interpolation weights function type. */
-  typedef BSplineInterpolationWeightFunction2<ScalarType,
-                                              itkGetStaticConstMacro(SpaceDimension),
-                                              itkGetStaticConstMacro(SplineOrder)>
-                                                            WeightsFunctionType;
+  typedef BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, Self::SplineOrder> WeightsFunctionType;
   typedef typename WeightsFunctionType::Pointer             WeightsFunctionPointer;
   typedef typename WeightsFunctionType::WeightsType         WeightsType;
   typedef typename WeightsFunctionType::ContinuousIndexType ContinuousIndexType;
-  typedef BSplineInterpolationDerivativeWeightFunction<ScalarType,
-                                                       itkGetStaticConstMacro(SpaceDimension),
-                                                       itkGetStaticConstMacro(SplineOrder)>
+  typedef BSplineInterpolationDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>
                                                           DerivativeWeightsFunctionType;
   typedef typename DerivativeWeightsFunctionType::Pointer DerivativeWeightsFunctionPointer;
-  typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType,
-                                                                  itkGetStaticConstMacro(SpaceDimension),
-                                                                  itkGetStaticConstMacro(SplineOrder)>
+  typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>
                                                             SODerivativeWeightsFunctionType;
   typedef typename SODerivativeWeightsFunctionType::Pointer SODerivativeWeightsFunctionPointer;
 
@@ -338,9 +331,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  friend class MultiBSplineDeformableTransformWithNormal<ScalarType,
-                                                         itkGetStaticConstMacro(SpaceDimension),
-                                                         itkGetStaticConstMacro(SplineOrder)>;
+  friend class MultiBSplineDeformableTransformWithNormal<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
 };
 
 } // namespace itk

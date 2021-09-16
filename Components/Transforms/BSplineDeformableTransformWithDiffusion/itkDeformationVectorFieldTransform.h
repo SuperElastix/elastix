@@ -82,9 +82,9 @@ public:
   typedef typename Superclass::ImagePointer CoefficientImagePointer;
 
   /** Typedef's for VectorImage. */
-  typedef Vector<float, itkGetStaticConstMacro(SpaceDimension)>                     CoefficientVectorPixelType;
-  typedef Image<CoefficientVectorPixelType, itkGetStaticConstMacro(SpaceDimension)> CoefficientVectorImageType;
-  typedef typename CoefficientVectorImageType::Pointer                              CoefficientVectorImagePointer;
+  typedef Vector<float, Self::SpaceDimension>                     CoefficientVectorPixelType;
+  typedef Image<CoefficientVectorPixelType, Self::SpaceDimension> CoefficientVectorImageType;
+  typedef typename CoefficientVectorImageType::Pointer            CoefficientVectorImagePointer;
 
   /** Set the coefficient image as a deformation field.
    * The superclass provides a similar function (SetCoeffficientImage),

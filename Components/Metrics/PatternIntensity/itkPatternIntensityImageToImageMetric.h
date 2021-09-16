@@ -106,9 +106,9 @@ public:
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
-  typedef itk::Image<FixedImagePixelType, itkGetStaticConstMacro(FixedImageDimension)> TransformedMovingImageType;
-  typedef typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension>  CombinationTransformType;
-  typedef typename CombinationTransformType::Pointer                                   CombinationTransformPointer;
+  typedef itk::Image<FixedImagePixelType, Self::FixedImageDimension>                  TransformedMovingImageType;
+  typedef typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension> CombinationTransformType;
+  typedef typename CombinationTransformType::Pointer                                  CombinationTransformPointer;
   typedef typename itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, ScalarType> RayCastInterpolatorType;
   typedef typename RayCastInterpolatorType::Pointer                                          RayCastInterpolatorPointer;
   typedef itk::ResampleImageFilter<MovingImageType, TransformedMovingImageType> TransformMovingImageFilterType;

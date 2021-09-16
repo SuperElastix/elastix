@@ -79,9 +79,7 @@ public:
   typedef typename Superclass::InputVectorPixelType          InputVectorPixelType;
 
   /** Sub transform types, having a reduced dimension. */
-  typedef AdvancedTransform<TScalarType,
-                            itkGetStaticConstMacro(ReducedInputSpaceDimension),
-                            itkGetStaticConstMacro(ReducedOutputSpaceDimension)>
+  typedef AdvancedTransform<TScalarType, Self::ReducedInputSpaceDimension, Self::ReducedOutputSpaceDimension>
                                                   SubTransformType;
   typedef typename SubTransformType::Pointer      SubTransformPointer;
   typedef std::vector<SubTransformPointer>        SubTransformContainerType;

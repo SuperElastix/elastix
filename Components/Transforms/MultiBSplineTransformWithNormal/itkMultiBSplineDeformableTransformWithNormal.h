@@ -83,11 +83,8 @@ public:
   typedef typename Superclass::InternalMatrixType            InternalMatrixType;
 
   /** Interpolation weights function type. */
-  typedef BSplineInterpolationWeightFunction2<ScalarType,
-                                              itkGetStaticConstMacro(SpaceDimension),
-                                              itkGetStaticConstMacro(SplineOrder)>
-                                                    WeightsFunctionType;
-  typedef typename WeightsFunctionType::WeightsType WeightsType;
+  typedef BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, Self::SplineOrder> WeightsFunctionType;
+  typedef typename WeightsFunctionType::WeightsType                                                WeightsType;
 
   /** This method sets the parameters of the transform.
    * For a BSpline deformation transform, the parameters are the BSpline
@@ -167,9 +164,9 @@ public:
   GetFixedParameters(void) const override;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType                       PixelType;
-  typedef Image<PixelType, itkGetStaticConstMacro(SpaceDimension)> ImageType;
-  typedef typename ImageType::Pointer                              ImagePointer;
+  typedef typename ParametersType::ValueType     PixelType;
+  typedef Image<PixelType, Self::SpaceDimension> ImageType;
+  typedef typename ImageType::Pointer            ImagePointer;
 
   /** Get the array of coefficient images. */
   // virtual ImagePointer * GetCoefficientImage( void )
@@ -191,7 +188,7 @@ public:
   // virtual void SetCoefficientImage( ImagePointer images[] );
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef ImageRegion<itkGetStaticConstMacro(SpaceDimension)> RegionType;
+  typedef ImageRegion<Self::SpaceDimension> RegionType;
 
   typedef typename RegionType::IndexType    IndexType;
   typedef typename RegionType::SizeType     SizeType;
@@ -229,19 +226,19 @@ public:
   GetGridOrigin(void) const;
 
   /** Typedef of the label image. */
-  typedef Image<unsigned char, itkGetStaticConstMacro(SpaceDimension)> ImageLabelType;
-  typedef typename ImageLabelType::Pointer                             ImageLabelPointer;
+  typedef Image<unsigned char, Self::SpaceDimension> ImageLabelType;
+  typedef typename ImageLabelType::Pointer           ImageLabelPointer;
 
   typedef itk::NearestNeighborInterpolateImageFunction<ImageLabelType, TScalarType> ImageLabelInterpolator;
   typedef typename ImageLabelInterpolator::Pointer                                  ImageLabelInterpolatorPointer;
 
   /** Typedef of the Normal Grid. */
-  typedef Vector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> VectorType;
-  typedef Vector<VectorType, itkGetStaticConstMacro(SpaceDimension)>  BaseType;
-  typedef Image<VectorType, itkGetStaticConstMacro(SpaceDimension)>   ImageVectorType;
-  typedef typename ImageVectorType::Pointer                           ImageVectorPointer;
-  typedef Image<BaseType, itkGetStaticConstMacro(SpaceDimension)>     ImageBaseType;
-  typedef typename ImageBaseType::Pointer                             ImageBasePointer;
+  typedef Vector<TScalarType, Self::SpaceDimension> VectorType;
+  typedef Vector<VectorType, Self::SpaceDimension>  BaseType;
+  typedef Image<VectorType, Self::SpaceDimension>   ImageVectorType;
+  typedef typename ImageVectorType::Pointer         ImageVectorPointer;
+  typedef Image<BaseType, Self::SpaceDimension>     ImageBaseType;
+  typedef typename ImageBaseType::Pointer           ImageBasePointer;
 
   /** This method specifies the label image. */
   void
@@ -498,10 +495,7 @@ protected:
   /** Internal parameters buffer. */
   ParametersType m_InternalParametersBuffer;
 
-  typedef AdvancedBSplineDeformableTransform<TScalarType,
-                                             itkGetStaticConstMacro(SpaceDimension),
-                                             itkGetStaticConstMacro(SplineOrder)>
-    TransformType;
+  typedef AdvancedBSplineDeformableTransform<TScalarType, Self::SpaceDimension, Self::SplineOrder> TransformType;
 
   unsigned char                                m_NbLabels;
   ImageLabelPointer                            m_Labels;

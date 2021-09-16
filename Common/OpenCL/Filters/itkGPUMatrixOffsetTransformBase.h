@@ -67,11 +67,9 @@ public:
   itkStaticConstMacro(ParametersDimension, unsigned int, NOutputDimensions *(NInputDimensions + 1));
 
   /** Standard matrix type for this class */
-  typedef Matrix<TScalarType, itkGetStaticConstMacro(OutputSpaceDimension), itkGetStaticConstMacro(InputSpaceDimension)>
-    CPUMatrixType;
-  typedef Matrix<TScalarType, itkGetStaticConstMacro(InputSpaceDimension), itkGetStaticConstMacro(OutputSpaceDimension)>
-                                                                            CPUInverseMatrixType;
-  typedef Vector<TScalarType, itkGetStaticConstMacro(OutputSpaceDimension)> CPUOutputVectorType;
+  typedef Matrix<TScalarType, Self::OutputSpaceDimension, Self::InputSpaceDimension> CPUMatrixType;
+  typedef Matrix<TScalarType, Self::InputSpaceDimension, Self::OutputSpaceDimension> CPUInverseMatrixType;
+  typedef Vector<TScalarType, Self::OutputSpaceDimension>                            CPUOutputVectorType;
 
   /** Get CPU matrix of an MatrixOffsetTransformBase. */
   virtual const CPUMatrixType &

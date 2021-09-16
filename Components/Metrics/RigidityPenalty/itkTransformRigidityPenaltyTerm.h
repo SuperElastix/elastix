@@ -154,7 +154,7 @@ public:
   typedef typename CoefficientImageType::SpacingType CoefficientImageSpacingType;
 
   /** Typedef support for neighborhoods, filters, etc. */
-  typedef Neighborhood<ScalarType, itkGetStaticConstMacro(FixedImageDimension)>       NeighborhoodType;
+  typedef Neighborhood<ScalarType, Self::FixedImageDimension>                         NeighborhoodType;
   typedef typename NeighborhoodType::SizeType                                         NeighborhoodSizeType;
   typedef ImageRegionIterator<CoefficientImageType>                                   CoefficientImageIteratorType;
   typedef NeighborhoodOperatorImageFilter<CoefficientImageType, CoefficientImageType> NOIFType;
@@ -162,16 +162,15 @@ public:
   typedef typename NeighborhoodIteratorType::RadiusType                               RadiusType;
 
   /** Typedef's for the construction of the rigidity image. */
-  typedef CoefficientImageType                   RigidityImageType;
-  typedef typename RigidityImageType::Pointer    RigidityImagePointer;
-  typedef typename RigidityImageType::PixelType  RigidityPixelType;
-  typedef typename RigidityImageType::RegionType RigidityImageRegionType;
-  typedef typename RigidityImageType::IndexType  RigidityImageIndexType;
-  typedef typename RigidityImageType::PointType  RigidityImagePointType;
-  typedef ImageRegionIterator<RigidityImageType> RigidityImageIteratorType;
-  typedef BinaryBallStructuringElement<RigidityPixelType, itkGetStaticConstMacro(FixedImageDimension)>
-                                                                                                   StructuringElementType;
-  typedef typename StructuringElementType::RadiusType                                              SERadiusType;
+  typedef CoefficientImageType                                                       RigidityImageType;
+  typedef typename RigidityImageType::Pointer                                        RigidityImagePointer;
+  typedef typename RigidityImageType::PixelType                                      RigidityPixelType;
+  typedef typename RigidityImageType::RegionType                                     RigidityImageRegionType;
+  typedef typename RigidityImageType::IndexType                                      RigidityImageIndexType;
+  typedef typename RigidityImageType::PointType                                      RigidityImagePointType;
+  typedef ImageRegionIterator<RigidityImageType>                                     RigidityImageIteratorType;
+  typedef BinaryBallStructuringElement<RigidityPixelType, Self::FixedImageDimension> StructuringElementType;
+  typedef typename StructuringElementType::RadiusType                                SERadiusType;
   typedef GrayscaleDilateImageFilter<RigidityImageType, RigidityImageType, StructuringElementType> DilateFilterType;
   typedef typename DilateFilterType::Pointer                                                       DilateFilterPointer;
 

@@ -151,8 +151,8 @@ public:
   typedef ScheduleType            RescaleScheduleType;
 
   /** Define the type for the sigma array. */
-  typedef FixedArray<ScalarRealType, itkGetStaticConstMacro(ImageDimension)> SigmaArrayType;
-  typedef SigmaArrayType                                                     RescaleFactorArrayType;
+  typedef FixedArray<ScalarRealType, Self::ImageDimension> SigmaArrayType;
+  typedef SigmaArrayType                                   RescaleFactorArrayType;
 
   /** Set a multi-resolution schedule. The input schedule must have only
    * ImageDimension number of columns and NumberOfLevels number of rows. For

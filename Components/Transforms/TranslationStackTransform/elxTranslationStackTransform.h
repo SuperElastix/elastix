@@ -88,21 +88,19 @@ public:
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            itkGetStaticConstMacro(SpaceDimension)>
+  typedef itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>
                                                      TranslationTransformType;
   typedef typename TranslationTransformType::Pointer TranslationTransformPointer;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
   typedef itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            itkGetStaticConstMacro(ReducedSpaceDimension)>
+                                            Self::ReducedSpaceDimension>
                                                                      ReducedDimensionTranslationTransformType;
   typedef typename ReducedDimensionTranslationTransformType::Pointer ReducedDimensionTranslationTransformPointer;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                              itkGetStaticConstMacro(SpaceDimension),
-                              itkGetStaticConstMacro(SpaceDimension)>
+  typedef itk::
+    StackTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, Self::SpaceDimension>
                                                           TranslationStackTransformType;
   typedef typename TranslationStackTransformType::Pointer TranslationStackTransformPointer;
 

@@ -84,11 +84,10 @@ public:
 
   typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
-  typedef TComponentType DeformationFieldComponentType;
-  typedef Vector<DeformationFieldComponentType, itkGetStaticConstMacro(OutputSpaceDimension)>
-                                                                                         DeformationFieldVectorType;
-  typedef Image<DeformationFieldVectorType, itkGetStaticConstMacro(InputSpaceDimension)> DeformationFieldType;
-  typedef typename DeformationFieldType::Pointer                                         DeformationFieldPointer;
+  typedef TComponentType                                                    DeformationFieldComponentType;
+  typedef Vector<DeformationFieldComponentType, Self::OutputSpaceDimension> DeformationFieldVectorType;
+  typedef Image<DeformationFieldVectorType, Self::InputSpaceDimension>      DeformationFieldType;
+  typedef typename DeformationFieldType::Pointer                            DeformationFieldPointer;
 
   typedef VectorInterpolateImageFunction<DeformationFieldType, ScalarType> DeformationFieldInterpolatorType;
   typedef typename DeformationFieldInterpolatorType::Pointer               DeformationFieldInterpolatorPointer;

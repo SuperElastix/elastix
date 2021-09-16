@@ -88,13 +88,12 @@ public:
                                                       EulerTransformType;
   typedef typename EulerTransformType::ParametersType TransformParametersType;
   typedef typename EulerTransformType::Pointer        EulerTransformPointer;
-  typedef typename itk::AdvancedTransform<typename InterpolatorBase<TElastix>::CoordRepType,
-                                          itkGetStaticConstMacro(ImageDimension),
-                                          itkGetStaticConstMacro(ImageDimension)>
+  typedef typename itk::
+    AdvancedTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension, Self::ImageDimension>
                                                   AdvancedTransformType;
   typedef typename AdvancedTransformType::Pointer AdvancedTransformPointer;
-  typedef typename itk::AdvancedCombinationTransform<typename InterpolatorBase<TElastix>::CoordRepType,
-                                                     itkGetStaticConstMacro(ImageDimension)>
+  typedef
+    typename itk::AdvancedCombinationTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension>
                                                      CombinationTransformType;
   typedef typename CombinationTransformType::Pointer CombinationTransformPointer;
 

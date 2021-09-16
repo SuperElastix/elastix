@@ -125,8 +125,8 @@ public:
   typedef ImageLinearIteratorWithIndex<TImageType> Iterator;
 
   /** Internal Coefficient typedef support */
-  typedef TCoefficientType                                                   CoefficientDataType;
-  typedef Image<CoefficientDataType, itkGetStaticConstMacro(ImageDimension)> CoefficientImageType;
+  typedef TCoefficientType                                 CoefficientDataType;
+  typedef Image<CoefficientDataType, Self::ImageDimension> CoefficientImageType;
 
   /** Define filter for calculating the BSpline coefficients */
   typedef MultiOrderBSplineDecompositionImageFilter<TImageType, CoefficientImageType> CoefficientFilter;
@@ -145,7 +145,7 @@ public:
   EvaluateAtContinuousIndex(const ContinuousIndexType & index) const override;
 
   /** Derivative typedef support */
-  typedef CovariantVector<OutputType, itkGetStaticConstMacro(ImageDimension)> CovariantVectorType;
+  typedef CovariantVector<OutputType, Self::ImageDimension> CovariantVectorType;
 
   CovariantVectorType
   EvaluateDerivative(const PointType & point) const

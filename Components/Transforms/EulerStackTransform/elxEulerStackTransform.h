@@ -112,15 +112,13 @@ public:
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                              itkGetStaticConstMacro(SpaceDimension)>
+  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>
                                                       EulerTransformType;
   typedef typename EulerTransformType::Pointer        EulerTransformPointer;
   typedef typename EulerTransformType::InputPointType InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
-  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                              itkGetStaticConstMacro(ReducedSpaceDimension)>
+  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>
                                                                ReducedDimensionEulerTransformType;
   typedef typename ReducedDimensionEulerTransformType::Pointer ReducedDimensionEulerTransformPointer;
 
@@ -128,9 +126,8 @@ public:
   typedef typename ReducedDimensionEulerTransformType::InputPointType   ReducedDimensionInputPointType;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                              itkGetStaticConstMacro(SpaceDimension),
-                              itkGetStaticConstMacro(SpaceDimension)>
+  typedef itk::
+    StackTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, Self::SpaceDimension>
                                                     EulerStackTransformType;
   typedef typename EulerStackTransformType::Pointer EulerStackTransformPointer;
 
@@ -153,15 +150,15 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Reduced Dimension typedef's. */
-  typedef float                                                                PixelType;
-  typedef itk::Image<PixelType, itkGetStaticConstMacro(ReducedSpaceDimension)> ReducedDimensionImageType;
-  typedef itk::ImageRegion<itkGetStaticConstMacro(ReducedSpaceDimension)>      ReducedDimensionRegionType;
-  typedef typename ReducedDimensionImageType::PointType                        ReducedDimensionPointType;
-  typedef typename ReducedDimensionImageType::SizeType                         ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType                       ReducedDimensionIndexType;
-  typedef typename ReducedDimensionImageType::SpacingType                      ReducedDimensionSpacingType;
-  typedef typename ReducedDimensionImageType::DirectionType                    ReducedDimensionDirectionType;
-  typedef typename ReducedDimensionImageType::PointType                        ReducedDimensionOriginType;
+  typedef float                                              PixelType;
+  typedef itk::Image<PixelType, Self::ReducedSpaceDimension> ReducedDimensionImageType;
+  typedef itk::ImageRegion<Self::ReducedSpaceDimension>      ReducedDimensionRegionType;
+  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionPointType;
+  typedef typename ReducedDimensionImageType::SizeType       ReducedDimensionSizeType;
+  typedef typename ReducedDimensionRegionType::IndexType     ReducedDimensionIndexType;
+  typedef typename ReducedDimensionImageType::SpacingType    ReducedDimensionSpacingType;
+  typedef typename ReducedDimensionImageType::DirectionType  ReducedDimensionDirectionType;
+  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionOriginType;
 
   /** For scales setting in the optimizer */
   typedef typename Superclass2::ScalesType ScalesType;

@@ -65,8 +65,8 @@ public:
   typedef typename Superclass::InputType  InputType;
   typedef typename Superclass::OutputType OutputType;
 
-  typedef OutputType                                                              DerivativeValueType;
-  typedef CovariantVector<DerivativeValueType, itkGetStaticConstMacro(Dimension)> DerivativeType;
+  typedef OutputType                                            DerivativeValueType;
+  typedef CovariantVector<DerivativeValueType, Self::Dimension> DerivativeType;
 
   /** Limit the input value. */
   OutputType

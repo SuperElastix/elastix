@@ -74,9 +74,9 @@ public:
   typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType                       PixelType;
-  typedef Image<PixelType, itkGetStaticConstMacro(SpaceDimension)> ImageType;
-  typedef typename ImageType::Pointer                              ImagePointer;
+  typedef typename ParametersType::ValueType     PixelType;
+  typedef Image<PixelType, Self::SpaceDimension> ImageType;
+  typedef typename ImageType::Pointer            ImagePointer;
 
   typedef typename Superclass::RegionType              RegionType;
   typedef typename RegionType::IndexType               IndexType;
@@ -94,9 +94,7 @@ public:
   typedef typename Superclass::JacobianImageType       JacobianImageType;
   typedef typename Superclass::JacobianPixelType       JacobianPixelType;
   typedef typename Superclass::WeightsFunctionType     WeightsFunctionType;
-  typedef BSplineInterpolationWeightFunction2<ScalarType,
-                                              itkGetStaticConstMacro(SpaceDimension) - 1,
-                                              itkGetStaticConstMacro(SplineOrder)>
+  typedef BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension - 1, Self::SplineOrder>
                                                                RedWeightsFunctionType;
   typedef typename RedWeightsFunctionType::ContinuousIndexType RedContinuousIndexType;
 

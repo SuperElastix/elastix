@@ -334,15 +334,12 @@ protected:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
   typedef typename TransformType::ScalarType CoordinateRepresentationType;
 
-  typedef itk::AdvancedTransform<CoordinateRepresentationType,
-                                 itkGetStaticConstMacro(FixedImageDimension),
-                                 itkGetStaticConstMacro(MovingImageDimension)>
+  typedef itk::AdvancedTransform<CoordinateRepresentationType, Self::FixedImageDimension, Self::MovingImageDimension>
                                                                      AdvancedTransformType;
   typedef typename AdvancedTransformType::Pointer                    AdvancedTransformPointer;
   typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
-  typedef itk::AdvancedBSplineDeformableTransformBase<CoordinateRepresentationType,
-                                                      itkGetStaticConstMacro(FixedImageDimension)>
+  typedef itk::AdvancedBSplineDeformableTransformBase<CoordinateRepresentationType, Self::FixedImageDimension>
                                                                    AdvancedBSplineDeformableTransformType;
   typedef typename AdvancedBSplineDeformableTransformType::Pointer BSplineTransformBasePointer;
 
