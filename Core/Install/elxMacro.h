@@ -102,7 +102,7 @@
     {                                                                                                                  \
       ComponentDescriptionType name = ::elx::_classname<ElastixType>::elxGetClassNameStatic();                         \
       int dummy = ::elx::InstallFunctions<::elx::_classname<ElastixType>>::InstallComponent(name, VIndex, cdb);        \
-      if (::elx::ElastixTypedef<VIndex + 1>::Defined())                                                                \
+      if (::elx::ElastixTypedef<VIndex + 1>::IsDefined)                                                                \
       {                                                                                                                \
         return _classname##_install<VIndex + 1>::DO(cdb);                                                              \
       }                                                                                                                \
@@ -179,35 +179,13 @@
   public:                                                                                                              \
     /** In the specialisations of this template class */                                                               \
     /** this typedef will make sense */                                                                                \
-    typedef ::itk::Object                                      ElastixType;                                            \
-    typedef ::elx::ComponentDatabase::PixelTypeDescriptionType PixelTypeString;                                        \
-    static PixelTypeString                                                                                             \
-    fPixelTypeAsString(void)                                                                                           \
-    {                                                                                                                  \
-      return PixelTypeString("");                                                                                      \
-    }                                                                                                                  \
-    static PixelTypeString                                                                                             \
-    mPixelTypeAsString(void)                                                                                           \
-    {                                                                                                                  \
-      return PixelTypeString("");                                                                                      \
-    }                                                                                                                  \
-    static unsigned int                                                                                                \
-    fDim(void)                                                                                                         \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
-    static unsigned int                                                                                                \
-    mDim(void)                                                                                                         \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
-    /** In the specialisations of this template class*/                                                                \
-    /** this function will return 'true' */                                                                            \
-    static bool                                                                                                        \
-    Defined(void)                                                                                                      \
-    {                                                                                                                  \
-      return false;                                                                                                    \
-    }                                                                                                                  \
+    typedef ::itk::Object         ElastixType;                                                                         \
+    constexpr static const char * FixedPixelTypeString{ "" };                                                          \
+    constexpr static const char * MovingPixelTypeString{ "" };                                                         \
+    constexpr static unsigned int FixedDimension{ 0 };                                                                 \
+    constexpr static unsigned int MovingDimension{ 0 };                                                                \
+    /** In the specialisations of this template class, this value will be 'true' */                                    \
+    constexpr static bool IsDefined{ false };                                                                          \
   }
 
 /**
@@ -245,32 +223,11 @@
     typedef ::itk::Image<_fPixelType, _fDim>                        FixedImageType;                                    \
     typedef ::itk::Image<_mPixelType, _mDim>                        MovingImageType;                                   \
     typedef ::elx::ElastixTemplate<FixedImageType, MovingImageType> ElastixType;                                       \
-    typedef ::elx::ComponentDatabase::PixelTypeDescriptionType      PixelTypeString;                                   \
-    static PixelTypeString                                                                                             \
-    fPixelTypeAsString(void)                                                                                           \
-    {                                                                                                                  \
-      return PixelTypeString(#_fPixelType);                                                                            \
-    }                                                                                                                  \
-    static PixelTypeString                                                                                             \
-    mPixelTypeAsString(void)                                                                                           \
-    {                                                                                                                  \
-      return PixelTypeString(#_mPixelType);                                                                            \
-    }                                                                                                                  \
-    static unsigned int                                                                                                \
-    fDim(void)                                                                                                         \
-    {                                                                                                                  \
-      return _fDim;                                                                                                    \
-    }                                                                                                                  \
-    static unsigned int                                                                                                \
-    mDim(void)                                                                                                         \
-    {                                                                                                                  \
-      return _mDim;                                                                                                    \
-    }                                                                                                                  \
-    static bool                                                                                                        \
-    Defined(void)                                                                                                      \
-    {                                                                                                                  \
-      return true;                                                                                                     \
-    }                                                                                                                  \
+    constexpr static const char *                                   FixedPixelTypeString{ #_fPixelType };              \
+    constexpr static const char *                                   MovingPixelTypeString{ #_mPixelType };             \
+    constexpr static unsigned int                                   FixedDimension{ _fDim };                           \
+    constexpr static unsigned int                                   MovingDimension{ _mDim };                          \
+    constexpr static bool                                           IsDefined{ true };                                 \
   }
 
 /**
