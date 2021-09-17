@@ -257,6 +257,10 @@ GetTransformParametersFromFilter(TFilter & filter)
 std::string
 GetDataDirectoryPath();
 
+// Returns CMAKE_BINARY_DIR: the path to the top level of the elastix build tree (without trailing slash).
+std::string
+GetBinaryDirectoryPath();
+
 } // namespace CoreMainGTestUtilities
 } // namespace elastix
 

@@ -40,4 +40,19 @@ CoreMainGTestUtilities::GetDataDirectoryPath()
   return str + ((str.back() == '/') ? "" : "/") + "Testing/Data";
 }
 
+std::string
+CoreMainGTestUtilities::GetBinaryDirectoryPath()
+{
+  constexpr auto binaryDirectoryPath = ELX_CMAKE_BINARY_DIR;
+  static_assert(std::is_same<decltype(binaryDirectoryPath), const char * const>(),
+                "CMAKE_BINARY_DIR must be a character string!");
+  static_assert(binaryDirectoryPath != nullptr, "CMAKE_BINARY_DIR must not be null!");
+  static_assert(*binaryDirectoryPath != '\0', "CMAKE_BINARY_DIR must not be empty!");
+
+  const std::string str = binaryDirectoryPath;
+  const char        back = str.back();
+
+  return (back == '/') || (back == '\\') ? std::string(str.cbegin(), str.cend() - 1) : str;
+}
+
 } // namespace elastix
