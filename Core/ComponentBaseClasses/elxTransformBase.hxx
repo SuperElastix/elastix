@@ -422,7 +422,7 @@ TransformBase<TElastix>::ReadFromFile(void)
     // The value of "InitialTransformParametersFileName" is either an index
     // (size_t) into the vector of configuration objects, or the file name of
     // a transform parameters file. If it is an index, call
-    // ReadInitialTransformFromVector, otherwise call ReadInitialTransformFromFile.
+    // ReadInitialTransformFromConfiguration, otherwise call ReadInitialTransformFromFile.
 
     /** Get initial transform index number. */
     std::istringstream to_size_t(fileName);
@@ -432,7 +432,8 @@ TransformBase<TElastix>::ReadFromFile(void)
     if (to_size_t.eof() && !to_size_t.fail())
     {
       /** We can safely read the initial transform. */
-      this->ReadInitialTransformFromVector(index);
+      // Retrieve configuration object from internally stored vector of configuration objects.
+      this->ReadInitialTransformFromConfiguration(this->GetElastix()->GetConfiguration(index));
     }
     else
     {
@@ -472,20 +473,6 @@ TransformBase<TElastix>::ReadFromFile(void)
   this->SetTransformParametersFileName(this->GetConfiguration()->GetCommandLineArgument("-tp").c_str());
 
 } // end ReadFromFile()
-
-
-/**
- * ******************* ReadInitialTransformFromVector *****************************
- */
-
-template <class TElastix>
-void
-TransformBase<TElastix>::ReadInitialTransformFromVector(const size_t index)
-{
-  /** Retrieve configuration object from internally stored vector of configuration objects. */
-  this->ReadInitialTransformFromConfiguration(this->GetElastix()->GetConfiguration(index));
-
-} // end ReadInitialTransformFromVector()
 
 
 /**
