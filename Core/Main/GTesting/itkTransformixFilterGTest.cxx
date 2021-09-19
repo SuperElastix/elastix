@@ -58,6 +58,7 @@ using ResampleImageFilterType =
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
+using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
@@ -77,20 +78,6 @@ ConvertToItkVector(const itk::Size<NDimension> & size)
   itk::Vector<double, NDimension> result;
   std::copy_n(size.begin(), NDimension, result.begin());
   return result;
-}
-
-
-// Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
-template <typename TPixel, unsigned VImageDimension>
-itk::SmartPointer<itk::Image<TPixel, VImageDimension>>
-CreateImageFilledWithSequenceOfNaturalNumbers(const itk::Size<VImageDimension> & imageSize)
-{
-  const auto image = itk::Image<TPixel, VImageDimension>::New();
-  image->SetRegions(imageSize);
-  image->Allocate();
-  const itk::ImageBufferRange<itk::Image<TPixel, VImageDimension>> imageBufferRange{ *image };
-  std::iota(imageBufferRange.begin(), imageBufferRange.end(), TPixel{ 1 });
-  return image;
 }
 
 
