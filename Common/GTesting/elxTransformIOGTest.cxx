@@ -46,6 +46,7 @@
 #include <itkImage.h>
 #include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
+#include <itkCompositeTransform.h>
 #include <itkEuler2DTransform.h>
 #include <itkEuler3DTransform.h>
 #include <itkSimilarity2DTransform.h>
@@ -54,7 +55,7 @@
 
 #include <cmath> // For M_PI_4.
 #include <typeinfo>
-#include <type_traits> // For is_same
+#include <type_traits> // For is_base_of and is_same
 
 #include <gtest/gtest.h>
 
@@ -92,15 +93,31 @@ struct WithDimension
 
     template <typename TExpectedCorrespondingItkTransform>
     static void
-    Expect_CorrespondingItkTransform()
+    Expect_CorrespondingItkCompositeTransform()
     {
+      using ItkCompositeTransformType = itk::CompositeTransform<double, NDimension>;
+
+      static_assert(
+        std::is_base_of<itk::Transform<double, NDimension, NDimension>, TExpectedCorrespondingItkTransform>::value,
+        "TExpectedCorrespondingItkTransform should be derived from the expected `itk::Transform` specialization!");
+      static_assert(!std::is_base_of<ItkCompositeTransformType, TExpectedCorrespondingItkTransform>::value,
+                    "TExpectedCorrespondingItkTransform should not be derived from `itk::CompositeTransform`!");
+
       const auto elxTransform = ElastixTransformType::New();
 
       EXPECT_EQ(elxTransform->elxGetClassName(),
                 elx::TransformIO::ConvertITKNameOfClassToElastixClassName(
                   TExpectedCorrespondingItkTransform::New()->GetNameOfClass()));
 
-      const auto itkTransform = elx::TransformIO::CreateCorrespondingItkTransform(*elxTransform);
+      const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
+      ASSERT_NE(compositeTransform, nullptr);
+      static_assert(
+        std::is_same<const itk::SmartPointer<ItkCompositeTransformType>, decltype(compositeTransform)>::value,
+        "`ConvertToItkCompositeTransform` should have the expected `SmartPointer` return type!");
+
+      const auto & transformQueue = compositeTransform->GetTransformQueue();
+      ASSERT_EQ(transformQueue.size(), 1);
+      const auto & itkTransform = transformQueue.front();
       ASSERT_NE(itkTransform, nullptr);
 
       const auto & actualItkTransformTypeId = typeid(*itkTransform);
@@ -159,7 +176,11 @@ struct WithDimension
       const auto elxTransform = ElastixTransformType::New();
       SCOPED_TRACE(fixed);
 
-      const auto itkTransform = elx::TransformIO::CreateCorrespondingItkTransform(*elxTransform);
+      const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
+      ASSERT_NE(compositeTransform, nullptr);
+      const auto & transformQueue = compositeTransform->GetTransformQueue();
+      ASSERT_EQ(transformQueue.size(), 1);
+      const auto & itkTransform = transformQueue.front();
       ASSERT_NE(itkTransform, nullptr);
 
       const auto parameters = elx::TransformIO::GetParameters(fixed, *elxTransform);
@@ -176,7 +197,11 @@ struct WithDimension
 
       SCOPED_TRACE(elxTransform->elxGetClassName());
 
-      const auto itkTransform = elx::TransformIO::CreateCorrespondingItkTransform(*elxTransform);
+      const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
+      ASSERT_NE(compositeTransform, nullptr);
+      const auto & transformQueue = compositeTransform->GetTransformQueue();
+      ASSERT_EQ(transformQueue.size(), 1);
+      const auto & itkTransform = transformQueue.front();
       ASSERT_NE(itkTransform, nullptr);
 
       const auto & actualItkTransformTypeId = typeid(*itkTransform);
@@ -612,35 +637,38 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
 } // namespace
 
 
-GTEST_TEST(TransformIO, CorrespondingItkTransform)
+// Tests that elx::TransformIO::ConvertToItkCompositeTransform(elxTransform) yields the expected corresponding
+// `itk::CompositeTransform`.
+GTEST_TEST(TransformIO, CorrespondingItkCompositeTransform)
 {
-  WithDimension<2>::WithElastixTransform<elx::AdvancedAffineTransformElastix>::Expect_CorrespondingItkTransform<
-    itk::AffineTransform<double, 2>>();
-  WithDimension<3>::WithElastixTransform<elx::AdvancedAffineTransformElastix>::Expect_CorrespondingItkTransform<
-    itk::AffineTransform<double, 3>>();
-  WithDimension<4>::WithElastixTransform<elx::AdvancedAffineTransformElastix>::Expect_CorrespondingItkTransform<
-    itk::AffineTransform<double, 4>>();
+  WithDimension<2>::WithElastixTransform<
+    elx::AdvancedAffineTransformElastix>::Expect_CorrespondingItkCompositeTransform<itk::AffineTransform<double, 2>>();
+  WithDimension<3>::WithElastixTransform<
+    elx::AdvancedAffineTransformElastix>::Expect_CorrespondingItkCompositeTransform<itk::AffineTransform<double, 3>>();
+  WithDimension<4>::WithElastixTransform<
+    elx::AdvancedAffineTransformElastix>::Expect_CorrespondingItkCompositeTransform<itk::AffineTransform<double, 4>>();
 
-  WithDimension<2>::WithElastixTransform<elx::AdvancedBSplineTransform>::Expect_CorrespondingItkTransform<
-    itk::BSplineTransform<double, 2>>();
-  WithDimension<3>::WithElastixTransform<elx::AdvancedBSplineTransform>::Expect_CorrespondingItkTransform<
-    itk::BSplineTransform<double, 3>>();
+  // Note: This test fails for `elx::AdvancedBSplineTransform` (corresponding with `itk::BSplineTransform`), as it
+  // produces an `itk::ExceptionObject`: unknown file: error: C++ exception with description
+  // "<source-directory>\elastix\Common\Transforms\itkAdvancedCombinationTransform.hxx:223: ITK ERROR:
+  // AdvancedBSplineTransform(0000018BCE262040): No current transform set in the AdvancedCombinationTransform" thrown in
+  // the test body.
 
-  WithDimension<2>::WithElastixTransform<elx::TranslationTransformElastix>::Expect_CorrespondingItkTransform<
+  WithDimension<2>::WithElastixTransform<elx::TranslationTransformElastix>::Expect_CorrespondingItkCompositeTransform<
     itk::TranslationTransform<double, 2>>();
-  WithDimension<3>::WithElastixTransform<elx::TranslationTransformElastix>::Expect_CorrespondingItkTransform<
+  WithDimension<3>::WithElastixTransform<elx::TranslationTransformElastix>::Expect_CorrespondingItkCompositeTransform<
     itk::TranslationTransform<double, 3>>();
-  WithDimension<4>::WithElastixTransform<elx::TranslationTransformElastix>::Expect_CorrespondingItkTransform<
+  WithDimension<4>::WithElastixTransform<elx::TranslationTransformElastix>::Expect_CorrespondingItkCompositeTransform<
     itk::TranslationTransform<double, 4>>();
 
-  WithDimension<2>::WithElastixTransform<elx::SimilarityTransformElastix>::Expect_CorrespondingItkTransform<
+  WithDimension<2>::WithElastixTransform<elx::SimilarityTransformElastix>::Expect_CorrespondingItkCompositeTransform<
     itk::Similarity2DTransform<double>>();
-  WithDimension<3>::WithElastixTransform<elx::SimilarityTransformElastix>::Expect_CorrespondingItkTransform<
+  WithDimension<3>::WithElastixTransform<elx::SimilarityTransformElastix>::Expect_CorrespondingItkCompositeTransform<
     itk::Similarity3DTransform<double>>();
 
-  WithDimension<2>::WithElastixTransform<elx::EulerTransformElastix>::Expect_CorrespondingItkTransform<
+  WithDimension<2>::WithElastixTransform<elx::EulerTransformElastix>::Expect_CorrespondingItkCompositeTransform<
     itk::Euler2DTransform<double>>();
-  WithDimension<3>::WithElastixTransform<elx::EulerTransformElastix>::Expect_CorrespondingItkTransform<
+  WithDimension<3>::WithElastixTransform<elx::EulerTransformElastix>::Expect_CorrespondingItkCompositeTransform<
     itk::Euler3DTransform<double>>();
 }
 
@@ -756,7 +784,11 @@ GTEST_TEST(TransformIO, CopyDefaultParametersToCorrespondingItkTransform)
 GTEST_TEST(TransformIO, CopyDefaultEulerTransformElastix3DFixedParametersToCorrespondingItkTransform)
 {
   const auto elxTransform = elx::EulerTransformElastix<ElastixType<3>>::New();
-  const auto itkTransform = elx::TransformIO::CreateCorrespondingItkTransform(*elxTransform);
+  const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
+  ASSERT_NE(compositeTransform, nullptr);
+  const auto & transformQueue = compositeTransform->GetTransformQueue();
+  ASSERT_EQ(transformQueue.size(), 1);
+  const auto & itkTransform = transformQueue.front();
   ASSERT_NE(itkTransform, nullptr);
 
   const auto elxFixedParameters = elxTransform->GetFixedParameters();

@@ -58,36 +58,70 @@ elastix::TransformIO::ConvertITKNameOfClassToElastixClassName(const std::string 
 
 
 itk::TransformBase::Pointer
-elastix::TransformIO::CreateCorrespondingItkTransform(const elx::BaseComponent & elxTransform,
-                                                      const unsigned             fixedImageDimension,
-                                                      const unsigned             movingImageDimension)
+elastix::TransformIO::ConvertItkTransformBaseToSingleItkTransform(const itk::TransformBase & elxTransform)
 {
-  // Initialize the factory.
-  itk::TransformFactoryBase::GetFactory();
+  // itk::TransformBase::GetNameOfClass() may yield a string like the following, for an elastix ITK transform:
+  // - "AdvancedMatrixOffsetTransformBase"
+  // - "AdvancedTranslationTransform"
+  // - "SimilarityTransform"
+  // - "EulerTransform"
+  // - "AdvancedBSplineDeformableTransform"
+  std::string name = elxTransform.GetNameOfClass();
 
-  // The string returned by elxGetClassName() corresponds to ITK's GetNameOfClass(),
-  // for AffineTransform, BSplineTransform, and TranslationTransform.
-  // Note that for EulerTransform and SimilarityTransform, ITK has "2D"
-  // or "3D" inserted in the class name.
-  // For other transforms, the correspondence between elastix and ITK class names
-  // appears less obvious.
+  if (name == "AdvancedMatrixOffsetTransformBase")
+  {
+    name = "AffineTransform";
+  }
+  else
+  {
+    if (name == "AdvancedBSplineDeformableTransform")
+    {
+      name = "BSplineTransform";
+    }
+    else
+    {
+      const std::string advancedSubstring = "Advanced";
 
-  const std::string elxClassName = elxTransform.elxGetClassName();
+      if ((name.size() > advancedSubstring.size()) &&
+          std::equal(name.cbegin(), name.cbegin() + advancedSubstring.size(), advancedSubstring.cbegin()))
+      {
+        name.erase(0, advancedSubstring.size());
+      }
+    }
+  }
+
   const std::string transformSubstring = "Transform";
-  const auto        transformSubstringPosition = elxClassName.find(transformSubstring);
+  const auto        transformSubstringPosition = name.find(transformSubstring);
 
   if (transformSubstringPosition == std::string::npos)
   {
     return nullptr;
   }
-  const auto substr = elxClassName.substr(0, transformSubstringPosition);
+  const auto inputSpaceDimension = elxTransform.GetInputSpaceDimension();
+  const auto outputSpaceDimension = elxTransform.GetOutputSpaceDimension();
+
+  // For EulerTransform and SimilarityTransform, ITK has "2D"
+  // or "3D" inserted in the class name.
+
+  const auto substr = name.substr(0, transformSubstringPosition);
   const auto instanceName = (((substr == "Euler") || (substr == "Similarity"))
-                               ? (substr + std::to_string(fixedImageDimension) + 'D' + transformSubstring)
-                               : elxClassName) +
-                            "_double_" + std::to_string(fixedImageDimension) + '_' +
-                            std::to_string(movingImageDimension);
+                               ? (substr + std::to_string(inputSpaceDimension) + 'D' + transformSubstring)
+                               : name) +
+                            "_double_" + std::to_string(inputSpaceDimension) + '_' +
+                            std::to_string(outputSpaceDimension);
+
+  // Initialize the factory.
+  itk::TransformFactoryBase::GetFactory();
+
   const auto instance = itk::ObjectFactoryBase::CreateInstance(instanceName.c_str());
-  return dynamic_cast<itk::TransformBase *>(instance.GetPointer());
+  const auto itkTransform = dynamic_cast<itk::TransformBase *>(instance.GetPointer());
+  if (itkTransform == nullptr)
+  {
+    return nullptr;
+  }
+  itkTransform->SetFixedParameters(elxTransform.GetFixedParameters());
+  itkTransform->SetParameters(elxTransform.GetParameters());
+  return itkTransform;
 }
 
 
