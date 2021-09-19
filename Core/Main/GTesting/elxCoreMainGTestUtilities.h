@@ -22,6 +22,7 @@
 #include <elxParameterObject.h>
 
 #include <itkImage.h>
+#include <itkImageBufferRange.h>
 #include <itkImageRegionRange.h>
 #include <itkIndex.h>
 #include <itkSize.h>
@@ -29,9 +30,10 @@
 #include <algorithm> // For fill and transform.
 #include <array>
 #include <cmath> // For round.
-#include <map>
 #include <initializer_list>
 #include <iterator> // For begin and end.
+#include <map>
+#include <numeric> // For iota.
 #include <string>
 #include <type_traits> // For is_pointer.
 #include <vector>
@@ -251,6 +253,21 @@ GetTransformParametersFromFilter(TFilter & filter)
   const auto   transformParameterObject = filter.GetTransformParameterObject();
   const auto & transformParameterMaps = Deref(transformParameterObject).GetParameterMap();
   return GetTransformParametersFromMaps(transformParameterMaps);
+}
+
+
+// Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
+template <typename TPixel, unsigned VImageDimension>
+auto
+CreateImageFilledWithSequenceOfNaturalNumbers(const itk::Size<VImageDimension> & imageSize)
+{
+  using ImageType = itk::Image<TPixel, VImageDimension>;
+  const auto image = ImageType::New();
+  image->SetRegions(imageSize);
+  image->Allocate();
+  const itk::ImageBufferRange<ImageType> imageBufferRange{ *image };
+  std::iota(imageBufferRange.begin(), imageBufferRange.end(), TPixel{ 1 });
+  return image;
 }
 
 
