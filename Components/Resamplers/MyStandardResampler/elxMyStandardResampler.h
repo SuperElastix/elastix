@@ -69,7 +69,7 @@ public:
   typedef typename Superclass1::TransformType           TransformType;
   typedef typename Superclass1::TransformPointerType    TransformPointerType;
   typedef typename Superclass1::InterpolatorType        InterpolatorType;
-  typedef typename Superclass1::InterpolatorPointerType InterpolatePointerType;
+  typedef typename Superclass1::InterpolatorPointerType InterpolatorPointerType;
   typedef typename Superclass1::SizeType                SizeType;
   typedef typename Superclass1::IndexType               IndexType;
   typedef typename Superclass1::PixelType               PixelType;
