@@ -62,9 +62,10 @@ class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineResampleInterpolator
 public:
   /** Standard ITK-stuff. */
   typedef ReducedDimensionBSplineResampleInterpolator Self;
-  typedef itk::BSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
-                                               typename ResampleInterpolatorBase<TElastix>::CoordRepType,
-                                               double>
+  typedef itk::ReducedDimensionBSplineInterpolateImageFunction<
+    typename ResampleInterpolatorBase<TElastix>::InputImageType,
+    typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+    double>
                                              Superclass1;
   typedef ResampleInterpolatorBase<TElastix> Superclass2;
   typedef itk::SmartPointer<Self>            Pointer;
