@@ -50,7 +50,7 @@ public:
   itkTypeMacro(MeshFileReaderBase, MeshSource);
 
   /** Some convenient typedefs. */
-  typedef typename Superclass::DataObjectPointer DatabObjectPointer;
+  typedef typename Superclass::DataObjectPointer DataObjectPointer;
   typedef typename Superclass::OutputMeshType    OutputMeshType;
   typedef typename Superclass::OutputMeshPointer OutputMeshPointer;
 

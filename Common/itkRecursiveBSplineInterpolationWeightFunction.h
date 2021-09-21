@@ -95,7 +95,6 @@ public:
   typedef typename Superclass::IndexType           IndexType;
   typedef typename Superclass::SizeType            SizeType;
   typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
-  // typedef typename Superclass::
 
   /** Get number of hacks. */
   typedef GetConstNumberOfWeightsHackRecursiveBSpline<Self::SplineOrder, Self::SpaceDimension>
