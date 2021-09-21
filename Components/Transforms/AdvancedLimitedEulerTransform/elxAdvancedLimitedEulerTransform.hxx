@@ -161,169 +161,36 @@ AdvancedLimitedEulerTransformElastix< TElastix >
 
 
 /**
- * ************************* WriteToFile ************************
+ * ************************* CreateDerivedTransformParametersMap ************************
  */
-
-template< class TElastix >
-void
-AdvancedLimitedEulerTransformElastix< TElastix >
-::WriteToFile( const ParametersType & param ) const
+template <class TElastix>
+auto
+AdvancedLimitedEulerTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
-  /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::WriteToFile( param );
+  ParameterMapType parameterMap{
+    { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_LimitedEulerTransform->GetCenter()) },
+    { "SharpnessOfLimits", { Conversion::ToString(m_LimitedEulerTransform->GetSharpnessOfLimits()) } },
+    { "UpperLimits", Conversion::ToVectorOfStrings(m_LimitedEulerTransform->GetUpperLimits()) },
+    { "LowerLimits", Conversion::ToVectorOfStrings(m_LimitedEulerTransform->GetLowerLimits()) },
+    { "UpperLimitsReached", Conversion::ToVectorOfStrings(m_LimitedEulerTransform->GetUpperLimitsReached()) },
+    { "LowerLimitsReached", Conversion::ToVectorOfStrings(m_LimitedEulerTransform->GetLowerLimitsReached()) }
+  };
 
-  /** Write LimitedEulerTransform specific things. */
-  xout[ "transpar" ] << std::endl << "// AdvancedLimitedEulerTransform specific" << std::endl;
-
-  /** Set the precision of cout to 10. */
-  xout[ "transpar" ] << std::setprecision( 10 );
-
-  /** Get the center of rotation point and write it to file. */
-  InputPointType rotationPoint = this->m_LimitedEulerTransform->GetCenter();
-  xout[ "transpar" ] << "(CenterOfRotationPoint ";
-  for( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  if (SpaceDimension == 3)
   {
-    xout[ "transpar" ] << rotationPoint[ i ] << " ";
+    parameterMap["ComputeZYX"] = { Conversion::ToString(m_LimitedEulerTransform->GetComputeZYX()) };
   }
-  xout[ "transpar" ] << rotationPoint[ SpaceDimension - 1 ] << ")" << std::endl;
-
-  /** Set the precision back to default value. */
-  xout[ "transpar" ] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
-
-  /** Write the ComputeZYX to file. */
-  if( SpaceDimension == 3 )
-  {
-    std::string computeZYX = "false";
-    if( this->m_LimitedEulerTransform->GetComputeZYX() )
-    {
-      computeZYX = "true";
-    }
-    xout[ "transpar" ] << "(ComputeZYX \"" << computeZYX << "\")" << std::endl;
-  }
-
-  /** Set the precision of cout to 10. */
-  xout[ "transpar" ] << std::setprecision( 10 );
-
-  /** Write SharpnessOfLimits to file. */
-  ScalarType sharpnessOfLimits = this->m_LimitedEulerTransform->GetSharpnessOfLimits();
-  xout[ "transpar" ] << "(SharpnessOfLimits \"" << sharpnessOfLimits << "\")" << std::endl;
-
-  /** Write UpperLimits to file. */
-  ParametersType upperLimits = this->m_LimitedEulerTransform->GetUpperLimits();
-  xout[ "transpar" ] << "(UpperLimits ";
-  for( unsigned int i = 0; i < 5; i++ )
-  {
-    xout[ "transpar" ] << upperLimits[ i ] << " ";
-  }
-  xout[ "transpar" ] << upperLimits[ 5 ] << ")" << std::endl;
-
-  /** Write LowerLimits to file. */
-  ParametersType lowerLimits = this->m_LimitedEulerTransform->GetLowerLimits();
-  xout[ "transpar" ] << "(LowerLimits ";
-  for( unsigned int i = 0; i < 5; i++ )
-  {
-    xout[ "transpar" ] << lowerLimits[ i ] << " ";
-  }
-  xout[ "transpar" ] << lowerLimits[ 5 ] << ")" << std::endl;
-
-  /** Write LowerLimitsReached to file. */
-  ParametersType lowerLimitsReached = this->m_LimitedEulerTransform->GetLowerLimitsReached();
-  xout["transpar"] << "(LowerLimitsReached ";
-  for (unsigned int i = 0; i < 5; i++)
-  {
-    xout["transpar"] << lowerLimitsReached[i] << " ";
-  }
-  xout["transpar"] << lowerLimitsReached[5] << ")" << std::endl;
-  
-  /** Write UpperLimitsReached to file. */
-  ParametersType upperLimitsReached = this->m_LimitedEulerTransform->GetUpperLimitsReached();
-  xout["transpar"] << "(UpperLimitsReached ";
-  for (unsigned int i = 0; i < 5; i++)
-  {
-    xout["transpar"] << upperLimitsReached[i] << " ";
-  }
-  xout["transpar"] << upperLimitsReached[5] << ")" << std::endl;
-  
-  /** Set the precision back to default value. */
-  xout[ "transpar" ] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
-
-} // end WriteToFile()
-
+  return parameterMap;
+} // end CreateDerivedTransformParametersMap()
 
 /**
- * ************************* CreateTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParametersMap ************************
  */
-
-template< class TElastix >
-void
-AdvancedLimitedEulerTransformElastix< TElastix >
-::CreateTransformParametersMap(
-  const ParametersType & param,
-  ParameterMapType * paramsMap ) const
-{
-  std::ostringstream         tmpStream;
-  std::string                parameterName;
-  std::vector< std::string > parameterValues;
-
-  /** Call the CreateTransformParametersMap from the TransformBase. */
-  this->Superclass2::CreateTransformParametersMap( param, paramsMap );
-
-  /** Get the center of rotation point and write it to file. */
-  parameterName = "CenterOfRotationPoint";
-  InputPointType rotationPoint = this->m_LimitedEulerTransform->GetCenter();
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
-  {
-    tmpStream.str( "" ); tmpStream << rotationPoint[ i ];
-    parameterValues.push_back( tmpStream.str() );
-  }
-  paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();
-
-  /** Write the ComputeZYX to file. */
-  if( SpaceDimension == 3 )
-  {
-    parameterName = "ComputeZYX";
-    std::string computeZYX = "false";
-    if( this->m_LimitedEulerTransform->GetComputeZYX() )
-    {
-      computeZYX = "true";
-    }
-    parameterValues.push_back( computeZYX );
-    paramsMap->insert( make_pair( parameterName, parameterValues ) );
-    parameterValues.clear();
-  }
-
-  /** Write SharpnessOfLimits to file. */
-  parameterName = "SharpnessOfLimits";
-  ScalarType sharpnessOfLimits = this->m_LimitedEulerTransform->GetSharpnessOfLimits();
-  tmpStream.str( "" ); tmpStream << sharpnessOfLimits;
-  parameterValues.push_back( tmpStream.str() );
-  paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();
-
-  /** Get the UpperLimits and write it to file. */
-  parameterName = "UpperLimits";
-  ParametersType upperLimits = this->m_LimitedEulerTransform->GetUpperLimits();
-  for( unsigned int i = 0; i < 6; i++ )
-  {
-    tmpStream.str( "" ); tmpStream << upperLimits[ i ];
-    parameterValues.push_back( tmpStream.str() );
-  }
-  paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();
-
-  /** Get the LowerLimits and write it to file. */
-  parameterName = "LowerLimits";
-  ParametersType lowerLimits = this->m_LimitedEulerTransform->GetLowerLimits();
-  for( unsigned int i = 0; i < 6; i++ )
-  {
-    tmpStream.str( "" ); tmpStream << lowerLimits[ i ];
-    parameterValues.push_back( tmpStream.str() );
-  }
-  paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();
-
-} // end CreateTransformParametersMap()
+template <class TElastix>
+auto
+AdvancedLimitedEulerTransformElastix<TElastix>::AfterRegistration(void) -> void
+{ 
+} // end AfterRegistration()
 
 
 /**

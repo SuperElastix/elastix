@@ -223,16 +223,14 @@ public:
    */
   void ReadFromFile( void ) override;
 
-  /** Function to write transform-parameters to a file.
-   * It writes the center of rotation to file and calls the superclass' implementation.
-   */
-  void WriteToFile( const ParametersType & param ) const override;
-
   /** Function to create transform-parameters map.
    * Creates the TransformParametersmap
    */
-  void CreateTransformParametersMap(
-    const ParametersType & param, ParameterMapType * paramsMap ) const override;
+  ParameterMapType
+  CreateDerivedTransformParametersMap(void) const override;
+
+  void
+  AfterRegistration(void) override;
 
 protected:
 
@@ -249,6 +247,7 @@ protected:
   virtual bool ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const;
 
 private:
+  elxOverrideGetSelfMacro;
 
   /** The private constructor. */
   AdvancedLimitedEulerTransformElastix( const Self & );  // purposely not implemented
