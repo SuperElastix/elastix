@@ -18,7 +18,7 @@
 
 #include "itkParameterMapInterface.h"
 
-#include <double-conversion/double-conversion.h>
+#include <double-conversion.h>
 
 // Standard C++ header files:
 #include <cmath> // For fpclassify and FP_SUBNORMAL.
