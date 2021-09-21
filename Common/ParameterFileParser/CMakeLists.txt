@@ -14,6 +14,12 @@ install( TARGETS param
   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
   RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
 
+# Support #include <double-conversion.h>, which is either in the root of the
+# ITK install directory (its "install prefix"), or at the following location
+# of the ITK source tree (which is the parent directory of "{ITK_CMAKE_DIR}"):
+target_include_directories( param PRIVATE
+  ${ITK_CMAKE_DIR}/../Modules/ThirdParty/DoubleConversion/src/double-conversion )
+
 target_link_libraries( param ${ITK_LIBRARIES} )
 
 # Group in IDE's like Visual Studio
