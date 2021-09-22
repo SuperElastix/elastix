@@ -116,7 +116,7 @@ public:
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
 
-  using typename Superclass::InverseTransformBaseType;
+  typedef typename Superclass::InverseTransformBaseType InverseTransformBaseType;
   using typename Superclass::InverseTransformBasePointer;
 
   /** Transform typedefs for the from Superclass. */

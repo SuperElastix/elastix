@@ -93,14 +93,14 @@ public:
   using typename Superclass::SpatialHessianType;
   using typename Superclass::JacobianOfSpatialHessianType;
   using typename Superclass::InternalMatrixType;
-  using typename Superclass::InverseTransformBaseType;
+  typedef typename Superclass::InverseTransformBaseType InverseTransformBaseType;
   using typename Superclass::InverseTransformBasePointer;
   using typename Superclass::TransformCategoryEnum;
   using typename Superclass::MovingImageGradientType;
   using typename Superclass::MovingImageGradientValueType;
 
   /** Transform typedefs for the from Superclass. */
-  using typename Superclass::TransformType;
+  typedef typename Superclass::TransformType   TransformType;
   typedef typename TransformType::Pointer      TransformTypePointer;
   typedef typename TransformType::ConstPointer TransformTypeConstPointer;
 
