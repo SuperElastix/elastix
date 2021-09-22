@@ -177,8 +177,8 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  using typename Superclass2::ITKBaseType;
-  using typename Superclass2::CombinationTransformType;
+  typedef typename Superclass2::ITKBaseType              ITKBaseType;
+  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
   typedef itk::GridScheduleComputer<CoordRepType, SpaceDimension>         GridScheduleComputerType;

@@ -126,7 +126,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  using typename Superclass2::ITKBaseType;
+  typedef typename Superclass2::ITKBaseType ITKBaseType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
 

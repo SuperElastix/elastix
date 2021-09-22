@@ -151,7 +151,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  using typename Superclass2::ITKBaseType;
+  typedef typename Superclass2::ITKBaseType ITKBaseType;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
