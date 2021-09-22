@@ -79,10 +79,10 @@ public:
   itkNewMacro(Self);
   itkTypeMacro(MoreThuenteLineSearchOptimizer, LineSearchOptimizer);
 
-  typedef Superclass::MeasureType      MeasureType;
-  typedef Superclass::ParametersType   ParametersType;
-  typedef Superclass::DerivativeType   DerivativeType;
-  typedef Superclass::CostFunctionType CostFunctionType;
+  using Superclass::MeasureType;
+  using Superclass::ParametersType;
+  using Superclass::DerivativeType;
+  using Superclass::CostFunctionType;
 
   typedef enum
   {

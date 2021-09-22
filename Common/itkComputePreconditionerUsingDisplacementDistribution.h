@@ -54,19 +54,19 @@ public:
   itkTypeMacro(ComputePreconditionerUsingDisplacementDistribution, ComputeDisplacementDistribution);
 
   /** typedef  */
-  typedef typename Superclass::FixedImageType       FixedImageType;
-  typedef typename Superclass::FixedImagePixelType  FixedImagePixelType;
-  typedef typename Superclass::TransformType        TransformType;
-  typedef typename Superclass::TransformPointer     TransformPointer;
-  typedef typename Superclass::FixedImageRegionType FixedImageRegionType;
-  typedef typename Superclass::ParametersType       ParametersType;
-  typedef typename Superclass::DerivativeType       DerivativeType;
-  typedef typename Superclass::ScalesType           ScalesType;
+  using typename Superclass::FixedImageType;
+  using typename Superclass::FixedImagePixelType;
+  using typename Superclass::TransformType;
+  using typename Superclass::TransformPointer;
+  using typename Superclass::FixedImageRegionType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::ScalesType;
 
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::FixedImageMaskConstPointer FixedImageMaskConstPointer;
-  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  using typename Superclass::FixedImageMaskType;
+  using typename Superclass::FixedImageMaskPointer;
+  using typename Superclass::FixedImageMaskConstPointer;
+  using typename Superclass::NonZeroJacobianIndicesType;
 
   // check
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
@@ -121,23 +121,23 @@ protected:
   ComputePreconditionerUsingDisplacementDistribution();
   ~ComputePreconditionerUsingDisplacementDistribution() override = default;
 
-  typedef typename Superclass::FixedImageIndexType           FixedImageIndexType;
-  typedef typename Superclass::FixedImagePointType           FixedImagePointType;
-  typedef typename Superclass::JacobianType                  JacobianType;
-  typedef typename Superclass::JacobianValueType             JacobianValueType;
-  typedef typename Superclass::ImageSamplerBaseType          ImageSamplerBaseType;
-  typedef typename Superclass::ImageSamplerBasePointer       ImageSamplerBasePointer;
-  typedef typename Superclass::ImageFullSamplerType          ImageFullSamplerType;
-  typedef typename Superclass::ImageFullSamplerPointer       ImageFullSamplerPointer;
-  typedef typename Superclass::ImageRandomSamplerBaseType    ImageRandomSamplerBaseType;
-  typedef typename Superclass::ImageRandomSamplerBasePointer ImageRandomSamplerBasePointer;
-  typedef typename Superclass::ImageGridSamplerType          ImageGridSamplerType;
-  typedef typename Superclass::ImageGridSamplerPointer       ImageGridSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType      ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer   ImageSampleContainerPointer;
-  typedef typename Superclass::TransformJacobianType         TransformJacobianType;
-  typedef typename Superclass::CoordinateRepresentationType  CoordinateRepresentationType;
-  typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
+  using typename Superclass::FixedImageIndexType;
+  using typename Superclass::FixedImagePointType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::JacobianValueType;
+  using typename Superclass::ImageSamplerBaseType;
+  using typename Superclass::ImageSamplerBasePointer;
+  using typename Superclass::ImageFullSamplerType;
+  using typename Superclass::ImageFullSamplerPointer;
+  using typename Superclass::ImageRandomSamplerBaseType;
+  using typename Superclass::ImageRandomSamplerBasePointer;
+  using typename Superclass::ImageGridSamplerType;
+  using typename Superclass::ImageGridSamplerPointer;
+  using typename Superclass::ImageSampleContainerType;
+  using typename Superclass::ImageSampleContainerPointer;
+  using typename Superclass::TransformJacobianType;
+  using typename Superclass::CoordinateRepresentationType;
+  using typename Superclass::NumberOfParametersType;
 
   double m_MaximumStepLength;
   double m_RegularizationKappa;

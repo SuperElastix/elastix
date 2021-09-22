@@ -79,28 +79,28 @@ public:
   elxClassNameMacro("FullSearch");
 
   /** Typedef's inherited from Superclass1.*/
-  typedef Superclass1::CostFunctionType        CostFunctionType;
-  typedef Superclass1::CostFunctionPointer     CostFunctionPointer;
-  typedef Superclass1::ParametersType          ParametersType;
-  typedef Superclass1::MeasureType             MeasureType;
-  typedef Superclass1::ParameterValueType      ParameterValueType;
-  typedef Superclass1::RangeValueType          RangeValueType;
-  typedef Superclass1::RangeType               RangeType;
-  typedef Superclass1::SearchSpaceType         SearchSpaceType;
-  typedef Superclass1::SearchSpacePointer      SearchSpacePointer;
-  typedef Superclass1::SearchSpaceIteratorType SearchSpaceIteratorType;
-  typedef Superclass1::SearchSpacePointType    SearchSpacePointType;
-  typedef Superclass1::SearchSpaceIndexType    SearchSpaceIndexType;
-  typedef Superclass1::SearchSpaceSizeType     SearchSpaceSizeType;
+  using Superclass1::CostFunctionType;
+  using Superclass1::CostFunctionPointer;
+  using Superclass1::ParametersType;
+  using Superclass1::MeasureType;
+  using Superclass1::ParameterValueType;
+  using Superclass1::RangeValueType;
+  using Superclass1::RangeType;
+  using Superclass1::SearchSpaceType;
+  using Superclass1::SearchSpacePointer;
+  using Superclass1::SearchSpaceIteratorType;
+  using Superclass1::SearchSpacePointType;
+  using Superclass1::SearchSpaceIndexType;
+  using Superclass1::SearchSpaceSizeType;
 
   /** Typedef's inherited from Elastix.*/
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
   /** To store the results of the full search */
   typedef itk::NDImageBase<float>       NDImageType;

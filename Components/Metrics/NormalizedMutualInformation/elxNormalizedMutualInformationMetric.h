@@ -99,45 +99,45 @@ public:
   elxClassNameMacro("NormalizedMutualInformation");
 
   /** Typedefs from the superclass. */
-  typedef typename Superclass1::CoordinateRepresentationType    CoordinateRepresentationType;
-  typedef typename Superclass1::MovingImageType                 MovingImageType;
-  typedef typename Superclass1::MovingImagePixelType            MovingImagePixelType;
-  typedef typename Superclass1::MovingImageConstPointer         MovingImageConstPointer;
-  typedef typename Superclass1::FixedImageType                  FixedImageType;
-  typedef typename Superclass1::FixedImageConstPointer          FixedImageConstPointer;
-  typedef typename Superclass1::FixedImageRegionType            FixedImageRegionType;
-  typedef typename Superclass1::TransformType                   TransformType;
-  typedef typename Superclass1::TransformPointer                TransformPointer;
-  typedef typename Superclass1::InputPointType                  InputPointType;
-  typedef typename Superclass1::OutputPointType                 OutputPointType;
-  typedef typename Superclass1::TransformParametersType         TransformParametersType;
-  typedef typename Superclass1::TransformJacobianType           TransformJacobianType;
-  typedef typename Superclass1::InterpolatorType                InterpolatorType;
-  typedef typename Superclass1::InterpolatorPointer             InterpolatorPointer;
-  typedef typename Superclass1::RealType                        RealType;
-  typedef typename Superclass1::GradientPixelType               GradientPixelType;
-  typedef typename Superclass1::GradientImageType               GradientImageType;
-  typedef typename Superclass1::GradientImagePointer            GradientImagePointer;
-  typedef typename Superclass1::GradientImageFilterType         GradientImageFilterType;
-  typedef typename Superclass1::GradientImageFilterPointer      GradientImageFilterPointer;
-  typedef typename Superclass1::FixedImageMaskType              FixedImageMaskType;
-  typedef typename Superclass1::FixedImageMaskPointer           FixedImageMaskPointer;
-  typedef typename Superclass1::MovingImageMaskType             MovingImageMaskType;
-  typedef typename Superclass1::MovingImageMaskPointer          MovingImageMaskPointer;
-  typedef typename Superclass1::MeasureType                     MeasureType;
-  typedef typename Superclass1::DerivativeType                  DerivativeType;
-  typedef typename Superclass1::ParametersType                  ParametersType;
-  typedef typename Superclass1::FixedImagePixelType             FixedImagePixelType;
-  typedef typename Superclass1::MovingImageRegionType           MovingImageRegionType;
-  typedef typename Superclass1::ImageSamplerType                ImageSamplerType;
-  typedef typename Superclass1::ImageSamplerPointer             ImageSamplerPointer;
-  typedef typename Superclass1::ImageSampleContainerType        ImageSampleContainerType;
-  typedef typename Superclass1::ImageSampleContainerPointer     ImageSampleContainerPointer;
-  typedef typename Superclass1::FixedImageLimiterType           FixedImageLimiterType;
-  typedef typename Superclass1::MovingImageLimiterType          MovingImageLimiterType;
-  typedef typename Superclass1::FixedImageLimiterOutputType     FixedImageLimiterOutputType;
-  typedef typename Superclass1::MovingImageLimiterOutputType    MovingImageLimiterOutputType;
-  typedef typename Superclass1::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  using typename Superclass1::CoordinateRepresentationType;
+  using typename Superclass1::MovingImageType;
+  using typename Superclass1::MovingImagePixelType;
+  using typename Superclass1::MovingImageConstPointer;
+  using typename Superclass1::FixedImageType;
+  using typename Superclass1::FixedImageConstPointer;
+  using typename Superclass1::FixedImageRegionType;
+  using typename Superclass1::TransformType;
+  using typename Superclass1::TransformPointer;
+  using typename Superclass1::InputPointType;
+  using typename Superclass1::OutputPointType;
+  using typename Superclass1::TransformParametersType;
+  using typename Superclass1::TransformJacobianType;
+  using typename Superclass1::InterpolatorType;
+  using typename Superclass1::InterpolatorPointer;
+  using typename Superclass1::RealType;
+  using typename Superclass1::GradientPixelType;
+  using typename Superclass1::GradientImageType;
+  using typename Superclass1::GradientImagePointer;
+  using typename Superclass1::GradientImageFilterType;
+  using typename Superclass1::GradientImageFilterPointer;
+  using typename Superclass1::FixedImageMaskType;
+  using typename Superclass1::FixedImageMaskPointer;
+  using typename Superclass1::MovingImageMaskType;
+  using typename Superclass1::MovingImageMaskPointer;
+  using typename Superclass1::MeasureType;
+  using typename Superclass1::DerivativeType;
+  using typename Superclass1::ParametersType;
+  using typename Superclass1::FixedImagePixelType;
+  using typename Superclass1::MovingImageRegionType;
+  using typename Superclass1::ImageSamplerType;
+  using typename Superclass1::ImageSamplerPointer;
+  using typename Superclass1::ImageSampleContainerType;
+  using typename Superclass1::ImageSampleContainerPointer;
+  using typename Superclass1::FixedImageLimiterType;
+  using typename Superclass1::MovingImageLimiterType;
+  using typename Superclass1::FixedImageLimiterOutputType;
+  using typename Superclass1::MovingImageLimiterOutputType;
+  using typename Superclass1::MovingImageDerivativeScalesType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
@@ -146,13 +146,13 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedef's inherited from Elastix. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
   /** Execute stuff before each new pyramid resolution:
    * \li Set the number of histogram bins.

@@ -141,7 +141,7 @@ public:
   itkTypeMacro(TransformBase, BaseComponentSE);
 
   /** Typedef from Superclass. */
-  typedef typename Superclass::RegistrationType RegistrationType;
+  using typename Superclass::RegistrationType;
 
   typedef Configuration ::CommandLineArgumentMapType CommandLineArgumentMapType;
   typedef Configuration ::CommandLineEntryType       CommandLineEntryType;

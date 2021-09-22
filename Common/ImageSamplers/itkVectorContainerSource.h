@@ -45,7 +45,7 @@ public:
   itkTypeMacro(VectorContainerSource, ProcessObject);
 
   /** Some convenient typedefs. */
-  typedef typename Superclass::DataObjectPointer      DataObjectPointer;
+  using typename Superclass::DataObjectPointer;
   typedef TOutputVectorContainer                      OutputVectorContainerType;
   typedef typename OutputVectorContainerType::Pointer OutputVectorContainerPointer;
 

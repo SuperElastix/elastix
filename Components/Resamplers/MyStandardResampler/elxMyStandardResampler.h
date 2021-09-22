@@ -61,30 +61,30 @@ public:
   elxClassNameMacro("DefaultResampler");
 
   /** Typedef's inherited from the superclass. */
-  typedef typename Superclass1::InputImageType          InputImageType;
-  typedef typename Superclass1::OutputImageType         OutputImageType;
-  typedef typename Superclass1::InputImagePointer       InputImagePointer;
-  typedef typename Superclass1::OutputImagePointer      OutputImagePointer;
-  typedef typename Superclass1::InputImageRegionType    InputImageRegionType;
-  typedef typename Superclass1::TransformType           TransformType;
-  typedef typename Superclass1::TransformPointerType    TransformPointerType;
-  typedef typename Superclass1::InterpolatorType        InterpolatorType;
-  typedef typename Superclass1::InterpolatorPointerType InterpolatorPointerType;
-  typedef typename Superclass1::SizeType                SizeType;
-  typedef typename Superclass1::IndexType               IndexType;
-  typedef typename Superclass1::PixelType               PixelType;
-  typedef typename Superclass1::OutputImageRegionType   OutputImageRegionType;
-  typedef typename Superclass1::SpacingType             SpacingType;
-  typedef typename Superclass1::OriginPointType         OriginPointType;
+  using typename Superclass1::InputImageType;
+  using typename Superclass1::OutputImageType;
+  using typename Superclass1::InputImagePointer;
+  using typename Superclass1::OutputImagePointer;
+  using typename Superclass1::InputImageRegionType;
+  using typename Superclass1::TransformType;
+  using typename Superclass1::TransformPointerType;
+  using typename Superclass1::InterpolatorType;
+  using typename Superclass1::InterpolatorPointerType;
+  using typename Superclass1::SizeType;
+  using typename Superclass1::IndexType;
+  using typename Superclass1::PixelType;
+  using typename Superclass1::OutputImageRegionType;
+  using typename Superclass1::SpacingType;
+  using typename Superclass1::OriginPointType;
 
   /** Typedef's from the ResamplerBase. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
   /* Nothing to add. In the baseclass already everything is done what should be done. */
 

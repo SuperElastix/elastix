@@ -55,25 +55,25 @@ public:
   itkTypeMacro(MeshPenalty, SingleValuedPointSetToPointSetMetric);
 
   /** Types transferred from the base class */
-  typedef typename Superclass::TransformType           TransformType;
-  typedef typename Superclass::TransformPointer        TransformPointer;
-  typedef typename Superclass::TransformParametersType TransformParametersType;
-  typedef typename Superclass::TransformJacobianType   TransformJacobianType;
+  using typename Superclass::TransformType;
+  using typename Superclass::TransformPointer;
+  using typename Superclass::TransformParametersType;
+  using typename Superclass::TransformJacobianType;
 
-  typedef typename Superclass::MeasureType         MeasureType;
-  typedef typename Superclass::DerivativeType      DerivativeType;
-  typedef typename Superclass::DerivativeValueType DerivativeValueType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::DerivativeValueType;
 
   /** Typedefs. */
-  typedef typename Superclass::InputPointType         InputPointType;
-  typedef typename Superclass::OutputPointType        OutputPointType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
   typedef typename InputPointType::CoordRepType       CoordRepType;
   typedef vnl_vector<CoordRepType>                    VnlVectorType;
   typedef typename TransformType::InputPointType      FixedImagePointType;
   typedef typename TransformType::OutputPointType     MovingImagePointType;
   typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
 
-  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  using typename Superclass::NonZeroJacobianIndicesType;
 
   /** Constants for the pointset dimensions. */
   itkStaticConstMacro(FixedPointSetDimension, unsigned int, Superclass::FixedPointSetDimension);

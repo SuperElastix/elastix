@@ -75,10 +75,10 @@ public:
   itkTypeMacro(ScaledSingleValuedNonLinearOptimizer, SingleValuedNonLinearOptimizer);
 
   /** Typedefs inherited from the superclass. */
-  typedef Superclass::MeasureType      MeasureType;
-  typedef Superclass::ParametersType   ParametersType;
-  typedef Superclass::DerivativeType   DerivativeType;
-  typedef Superclass::CostFunctionType CostFunctionType;
+  using Superclass::MeasureType;
+  using Superclass::ParametersType;
+  using Superclass::DerivativeType;
+  using Superclass::CostFunctionType;
 
   typedef NonLinearOptimizer::ScalesType  ScalesType;
   typedef ScaledSingleValuedCostFunction  ScaledCostFunctionType;

@@ -62,8 +62,8 @@ public:
   itkStaticConstMacro(Dimension, unsigned int, NDimension);
 
   /** Superclass' typedefs */
-  typedef typename Superclass::InputType  InputType;
-  typedef typename Superclass::OutputType OutputType;
+  using typename Superclass::InputType;
+  using typename Superclass::OutputType;
 
   typedef OutputType                                            DerivativeValueType;
   typedef CovariantVector<DerivativeValueType, Self::Dimension> DerivativeType;

@@ -63,37 +63,37 @@ public:
   /** The B-spline order. */
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
-  typedef typename Superclass::JacobianType                  JacobianType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
-  typedef typename Superclass::ParametersType                ParametersType;
-  typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::InternalMatrixType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::NumberOfParametersType;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType     PixelType;
   typedef Image<PixelType, Self::SpaceDimension> ImageType;
   typedef typename ImageType::Pointer            ImagePointer;
 
-  typedef typename Superclass::RegionType              RegionType;
-  typedef typename RegionType::IndexType               IndexType;
-  typedef typename RegionType::SizeType                SizeType;
-  typedef typename ImageType::SpacingType              SpacingType;
-  typedef typename ImageType::DirectionType            DirectionType;
-  typedef typename ImageType::PointType                OriginType;
-  typedef typename RegionType::IndexType               GridOffsetType;
-  typedef typename Superclass::InputPointType          InputPointType;
-  typedef typename Superclass::OutputPointType         OutputPointType;
-  typedef typename Superclass::WeightsType             WeightsType;
-  typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
-  typedef typename Superclass::ContinuousIndexType     ContinuousIndexType;
-  typedef typename Superclass::ScalarType              ScalarType;
-  typedef typename Superclass::JacobianImageType       JacobianImageType;
-  typedef typename Superclass::JacobianPixelType       JacobianPixelType;
-  typedef typename Superclass::WeightsFunctionType     WeightsFunctionType;
+  using typename Superclass::RegionType;
+  typedef typename RegionType::IndexType    IndexType;
+  typedef typename RegionType::SizeType     SizeType;
+  typedef typename ImageType::SpacingType   SpacingType;
+  typedef typename ImageType::DirectionType DirectionType;
+  typedef typename ImageType::PointType     OriginType;
+  typedef typename RegionType::IndexType    GridOffsetType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::WeightsType;
+  using typename Superclass::ParameterIndexArrayType;
+  using typename Superclass::ContinuousIndexType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::JacobianImageType;
+  using typename Superclass::JacobianPixelType;
+  using typename Superclass::WeightsFunctionType;
   typedef BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension - 1, Self::SplineOrder>
                                                                RedWeightsFunctionType;
   typedef typename RedWeightsFunctionType::ContinuousIndexType RedContinuousIndexType;

@@ -91,10 +91,10 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Typedefs from superclass*/
-  typedef typename Superclass::WeightsType         WeightsType;
-  typedef typename Superclass::IndexType           IndexType;
-  typedef typename Superclass::SizeType            SizeType;
-  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+  using typename Superclass::WeightsType;
+  using typename Superclass::IndexType;
+  using typename Superclass::SizeType;
+  using typename Superclass::ContinuousIndexType;
 
   /** Get number of hacks. */
   typedef GetConstNumberOfWeightsHackRecursiveBSpline<Self::SplineOrder, Self::SpaceDimension>

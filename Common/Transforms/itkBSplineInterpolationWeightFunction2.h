@@ -63,22 +63,22 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Typedefs from Superclass. */
-  typedef typename Superclass::WeightsType         WeightsType;
-  typedef typename Superclass::IndexType           IndexType;
-  typedef typename Superclass::SizeType            SizeType;
-  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+  using typename Superclass::WeightsType;
+  using typename Superclass::IndexType;
+  using typename Superclass::SizeType;
+  using typename Superclass::ContinuousIndexType;
 
 protected:
   BSplineInterpolationWeightFunction2();
   ~BSplineInterpolationWeightFunction2() override = default;
 
   /** Interpolation kernel types. */
-  typedef typename Superclass::KernelType                      KernelType;
-  typedef typename Superclass::DerivativeKernelType            DerivativeKernelType;
-  typedef typename Superclass::SecondOrderDerivativeKernelType SecondOrderDerivativeKernelType;
-  typedef typename Superclass::TableType                       TableType;
-  typedef typename Superclass::OneDWeightsType                 OneDWeightsType;
-  typedef typename Superclass::WeightArrayType                 WeightArrayType;
+  using typename Superclass::KernelType;
+  using typename Superclass::DerivativeKernelType;
+  using typename Superclass::SecondOrderDerivativeKernelType;
+  using typename Superclass::TableType;
+  using typename Superclass::OneDWeightsType;
+  using typename Superclass::WeightArrayType;
 
   /* Compute the 1D weights, which are:
    * [ \beta^3( x[i] - startIndex[i] ), \beta^3( x[i] - startIndex[i] - 1 ),

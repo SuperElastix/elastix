@@ -78,9 +78,9 @@ public:
   itkTypeMacro(GPUImageToImageFilter, TParentImageFilter);
 
   /** Superclass typedefs. */
-  typedef typename Superclass::DataObjectIdentifierType DataObjectIdentifierType;
-  typedef typename Superclass::OutputImageRegionType    OutputImageRegionType;
-  typedef typename Superclass::OutputImagePixelType     OutputImagePixelType;
+  using typename Superclass::DataObjectIdentifierType;
+  using typename Superclass::OutputImageRegionType;
+  using typename Superclass::OutputImagePixelType;
 
   /** Some convenient typedefs. */
   typedef TInputImage                           InputImageType;

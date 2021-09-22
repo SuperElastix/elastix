@@ -66,10 +66,10 @@ public:
   } StopConditionType;
 
   /* Typedefs inherited from superclass */
-  typedef Superclass::ParametersType      ParametersType;
-  typedef Superclass::CostFunctionType    CostFunctionType;
-  typedef Superclass::CostFunctionPointer CostFunctionPointer;
-  typedef Superclass::MeasureType         MeasureType;
+  using Superclass::ParametersType;
+  using Superclass::CostFunctionType;
+  using Superclass::CostFunctionPointer;
+  using Superclass::MeasureType;
 
   typedef ParametersType::ValueType             ParameterValueType; // = double
   typedef ParameterValueType                    RangeValueType;

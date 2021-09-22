@@ -132,22 +132,22 @@ public:
   typedef typename EulerStackTransformType::Pointer EulerStackTransformPointer;
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass1::ParametersType         ParametersType;
-  typedef typename Superclass1::NumberOfParametersType NumberOfParametersType;
+  using typename Superclass1::ParametersType;
+  using typename Superclass1::NumberOfParametersType;
 
   /** Typedef's from TransformBase. */
-  typedef typename Superclass2::ElastixType              ElastixType;
-  typedef typename Superclass2::ElastixPointer           ElastixPointer;
-  typedef typename Superclass2::ParameterMapType         ParameterMapType;
-  typedef typename Superclass2::ConfigurationType        ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer     ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType         RegistrationType;
-  typedef typename Superclass2::RegistrationPointer      RegistrationPointer;
-  typedef typename Superclass2::CoordRepType             CoordRepType;
-  typedef typename Superclass2::FixedImageType           FixedImageType;
-  typedef typename Superclass2::MovingImageType          MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ParameterMapType;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::CoordRepType;
+  using typename Superclass2::FixedImageType;
+  using typename Superclass2::MovingImageType;
+  using typename Superclass2::ITKBaseType;
+  using typename Superclass2::CombinationTransformType;
 
   /** Reduced Dimension typedef's. */
   typedef float                                              PixelType;
@@ -161,7 +161,7 @@ public:
   typedef typename ReducedDimensionImageType::PointType      ReducedDimensionOriginType;
 
   /** For scales setting in the optimizer */
-  typedef typename Superclass2::ScalesType ScalesType;
+  using typename Superclass2::ScalesType;
 
   /** Other typedef's. */
   typedef typename FixedImageType::IndexType                                 IndexType;

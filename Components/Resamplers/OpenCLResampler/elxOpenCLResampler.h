@@ -78,15 +78,15 @@ public:
   elxClassNameMacro("OpenCLResampler");
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass1::InterpolatorType InterpolatorType;
-  typedef typename Superclass1::TransformType    TransformType;
+  using typename Superclass1::InterpolatorType;
+  using typename Superclass1::TransformType;
 
-  typedef typename Superclass1::InputImageType InputImageType;
-  typedef typename InputImageType::PixelType   InputImagePixelType;
+  using typename Superclass1::InputImageType;
+  typedef typename InputImageType::PixelType InputImagePixelType;
 
-  typedef typename Superclass1::OutputImageType OutputImageType;
-  typedef typename OutputImageType::PixelType   OutputImagePixelType;
-  typedef typename OutputImageType::RegionType  OutputImageRegionType;
+  using typename Superclass1::OutputImageType;
+  typedef typename OutputImageType::PixelType  OutputImagePixelType;
+  typedef typename OutputImageType::RegionType OutputImageRegionType;
 
   /** GPU Typedefs for GPU image and GPU resampler. */
   typedef itk::GPUImage<InputImagePixelType, InputImageType::ImageDimension>   GPUInputImageType;
@@ -98,7 +98,7 @@ public:
                                              GPUResamplerType;
   typedef typename GPUResamplerType::Pointer GPUResamplerPointer;
 
-  typedef typename Superclass2::ParameterMapType ParameterMapType;
+  using typename Superclass2::ParameterMapType;
 
   /** Set the transform. */
   void

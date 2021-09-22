@@ -96,23 +96,23 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass1::InputImageType         InputImageType;
-  typedef typename Superclass1::OutputImageType        OutputImageType;
-  typedef typename Superclass1::InputImagePointer      InputImagePointer;
-  typedef typename Superclass1::OutputImagePointer     OutputImagePointer;
-  typedef typename Superclass1::InputImageConstPointer InputImageConstPointer;
-  typedef typename Superclass1::ScheduleType           ScheduleType;
-  typedef typename Superclass1::RescaleScheduleType    RescaleScheduleType;
-  typedef typename Superclass1::SmoothingScheduleType  SmoothingScheduleType;
+  using typename Superclass1::InputImageType;
+  using typename Superclass1::OutputImageType;
+  using typename Superclass1::InputImagePointer;
+  using typename Superclass1::OutputImagePointer;
+  using typename Superclass1::InputImageConstPointer;
+  using typename Superclass1::ScheduleType;
+  using typename Superclass1::RescaleScheduleType;
+  using typename Superclass1::SmoothingScheduleType;
 
   /** Typedefs inherited from Elastix. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
   /** Method for setting the schedule. Override from FixedImagePyramidBase,
    * since we now have two schedules, rescaling and smoothing.

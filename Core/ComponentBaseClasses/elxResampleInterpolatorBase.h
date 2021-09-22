@@ -51,12 +51,12 @@ public:
   itkTypeMacro(ResampleInterpolatorBase, BaseComponentSE);
 
   /** Typedef's from superclass. */
-  typedef typename Superclass::ElastixType          ElastixType;
-  typedef typename Superclass::ElastixPointer       ElastixPointer;
-  typedef typename Superclass::ConfigurationType    ConfigurationType;
-  typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass::RegistrationType     RegistrationType;
-  typedef typename Superclass::RegistrationPointer  RegistrationPointer;
+  using typename Superclass::ElastixType;
+  using typename Superclass::ElastixPointer;
+  using typename Superclass::ConfigurationType;
+  using typename Superclass::ConfigurationPointer;
+  using typename Superclass::RegistrationType;
+  using typename Superclass::RegistrationPointer;
 
   /** Typedef's from elastix. */
   typedef typename ElastixType::MovingImageType InputImageType;

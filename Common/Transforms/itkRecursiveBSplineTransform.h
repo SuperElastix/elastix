@@ -57,58 +57,58 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Standard scalar type for this class. */
-  typedef typename Superclass::ScalarType                ScalarType;
-  typedef typename Superclass::ParametersType            ParametersType;
-  typedef typename Superclass::ParametersValueType       ParametersValueType;
-  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
-  typedef typename Superclass::DerivativeType            DerivativeType;
-  typedef typename Superclass::JacobianType              JacobianType;
-  typedef typename Superclass::InputVectorType           InputVectorType;
-  typedef typename Superclass::OutputVectorType          OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
-  typedef typename Superclass::InputPointType            InputPointType;
-  typedef typename Superclass::OutputPointType           OutputPointType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
+  using typename Superclass::NumberOfParametersType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputCovariantVectorType;
+  using typename Superclass::InputVnlVectorType;
+  using typename Superclass::OutputVnlVectorType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename Superclass::PixelType    PixelType;
-  typedef typename Superclass::ImageType    ImageType;
-  typedef typename Superclass::ImagePointer ImagePointer;
-  // typedef typename Superclass::CoefficientImageArray CoefficientImageArray;
+  using typename Superclass::PixelType;
+  using typename Superclass::ImageType;
+  using typename Superclass::ImagePointer;
+  // using typename Superclass::CoefficientImageArray;
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef typename Superclass::RegionType          RegionType;
-  typedef typename Superclass::IndexType           IndexType;
-  typedef typename Superclass::SizeType            SizeType;
-  typedef typename Superclass::SpacingType         SpacingType;
-  typedef typename Superclass::DirectionType       DirectionType;
-  typedef typename Superclass::OriginType          OriginType;
-  typedef typename Superclass::GridOffsetType      GridOffsetType;
+  using typename Superclass::RegionType;
+  using typename Superclass::IndexType;
+  using typename Superclass::SizeType;
+  using typename Superclass::SpacingType;
+  using typename Superclass::DirectionType;
+  using typename Superclass::OriginType;
+  using typename Superclass::GridOffsetType;
   typedef typename GridOffsetType::OffsetValueType OffsetValueType;
 
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
-  typedef typename Superclass::MovingImageGradientType       MovingImageGradientType;
-  typedef typename Superclass::MovingImageGradientValueType  MovingImageGradientValueType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::InternalMatrixType;
+  using typename Superclass::MovingImageGradientType;
+  using typename Superclass::MovingImageGradientValueType;
 
   /** Interpolation weights function type. */
-  typedef typename Superclass::WeightsFunctionType                WeightsFunctionType;
-  typedef typename Superclass::WeightsFunctionPointer             WeightsFunctionPointer;
-  typedef typename Superclass::WeightsType                        WeightsType;
-  typedef typename Superclass::ContinuousIndexType                ContinuousIndexType;
-  typedef typename Superclass::DerivativeWeightsFunctionType      DerivativeWeightsFunctionType;
-  typedef typename Superclass::DerivativeWeightsFunctionPointer   DerivativeWeightsFunctionPointer;
-  typedef typename Superclass::SODerivativeWeightsFunctionType    SODerivativeWeightsFunctionType;
-  typedef typename Superclass::SODerivativeWeightsFunctionPointer SODerivativeWeightsFunctionPointer;
+  using typename Superclass::WeightsFunctionType;
+  using typename Superclass::WeightsFunctionPointer;
+  using typename Superclass::WeightsType;
+  using typename Superclass::ContinuousIndexType;
+  using typename Superclass::DerivativeWeightsFunctionType;
+  using typename Superclass::DerivativeWeightsFunctionPointer;
+  using typename Superclass::SODerivativeWeightsFunctionType;
+  using typename Superclass::SODerivativeWeightsFunctionPointer;
 
   /** Parameter index array type. */
-  typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
+  using typename Superclass::ParameterIndexArrayType;
 
   typedef typename itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>
     RecursiveBSplineWeightFunctionType; // TODO: get rid of this and use the kernels directly.
@@ -187,8 +187,8 @@ protected:
   RecursiveBSplineTransform();
   ~RecursiveBSplineTransform() override = default;
 
-  typedef typename Superclass::JacobianImageType JacobianImageType;
-  typedef typename Superclass::JacobianPixelType JacobianPixelType;
+  using typename Superclass::JacobianImageType;
+  using typename Superclass::JacobianPixelType;
 
   typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
 

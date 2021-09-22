@@ -113,21 +113,21 @@ public:
   elxClassNameMacro("ConjugateGradient");
 
   /** Typedef's inherited from Superclass1.*/
-  typedef Superclass1::CostFunctionType    CostFunctionType;
-  typedef Superclass1::CostFunctionPointer CostFunctionPointer;
-  typedef Superclass1::StopConditionType   StopConditionType;
-  typedef Superclass1::ParametersType      ParametersType;
-  typedef Superclass1::DerivativeType      DerivativeType;
-  typedef Superclass1::ScalesType          ScalesType;
+  using Superclass1::CostFunctionType;
+  using Superclass1::CostFunctionPointer;
+  using Superclass1::StopConditionType;
+  using Superclass1::ParametersType;
+  using Superclass1::DerivativeType;
+  using Superclass1::ScalesType;
 
   /** Typedef's inherited from Elastix.*/
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
   /** Extra typedefs */
   typedef itk::MoreThuenteLineSearchOptimizer    LineOptimizerType;

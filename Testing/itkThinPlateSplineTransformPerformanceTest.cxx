@@ -49,10 +49,10 @@ public:
   itkTypeMacro(KernelTransformPublic, ThinPlateSplineKernelTransform2);
   itkNewMacro(Self);
 
-  typedef typename Superclass::PointSetType    PointSetType;
-  typedef typename Superclass::LMatrixType     LMatrixType;
-  typedef typename Superclass::GMatrixType     GMatrixType;
-  typedef typename Superclass::InputVectorType InputVectorType;
+  using typename Superclass::PointSetType;
+  using typename Superclass::LMatrixType;
+  using typename Superclass::GMatrixType;
+  using typename Superclass::InputVectorType;
 
   void
   SetSourceLandmarksPublic(PointSetType * landmarks)

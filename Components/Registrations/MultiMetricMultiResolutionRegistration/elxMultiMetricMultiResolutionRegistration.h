@@ -126,56 +126,56 @@ public:
   /** Typedef's inherited from Superclass1. */
 
   /**  Type of the Fixed image. */
-  typedef typename Superclass1::FixedImageType         FixedImageType;
-  typedef typename Superclass1::FixedImageConstPointer FixedImageConstPointer;
-  typedef typename Superclass1::FixedImageRegionType   FixedImageRegionType;
+  using typename Superclass1::FixedImageType;
+  using typename Superclass1::FixedImageConstPointer;
+  using typename Superclass1::FixedImageRegionType;
 
   /**  Type of the Moving image. */
-  typedef typename Superclass1::MovingImageType         MovingImageType;
-  typedef typename Superclass1::MovingImageConstPointer MovingImageConstPointer;
+  using typename Superclass1::MovingImageType;
+  using typename Superclass1::MovingImageConstPointer;
 
   /**  Type of the metric. */
-  typedef typename Superclass1::MetricType    MetricType;
-  typedef typename Superclass1::MetricPointer MetricPointer;
+  using typename Superclass1::MetricType;
+  using typename Superclass1::MetricPointer;
 
   /**  Type of the Transform . */
-  typedef typename Superclass1::TransformType    TransformType;
-  typedef typename Superclass1::TransformPointer TransformPointer;
+  using typename Superclass1::TransformType;
+  using typename Superclass1::TransformPointer;
 
   /**  Type of the Interpolator. */
-  typedef typename Superclass1::InterpolatorType    InterpolatorType;
-  typedef typename Superclass1::InterpolatorPointer InterpolatorPointer;
+  using typename Superclass1::InterpolatorType;
+  using typename Superclass1::InterpolatorPointer;
 
   /**  Type of the optimizer. */
-  typedef typename Superclass1::OptimizerType    OptimizerType;
-  typedef typename Superclass1::OptimizerPointer OptimizerPointer;
+  using typename Superclass1::OptimizerType;
+  using typename Superclass1::OptimizerPointer;
 
   /** Type of the Fixed image multiresolution pyramid. */
-  typedef typename Superclass1::FixedImagePyramidType    FixedImagePyramidType;
-  typedef typename Superclass1::FixedImagePyramidPointer FixedImagePyramidPointer;
+  using typename Superclass1::FixedImagePyramidType;
+  using typename Superclass1::FixedImagePyramidPointer;
 
   /** Type of the moving image multiresolution pyramid. */
-  typedef typename Superclass1::MovingImagePyramidType    MovingImagePyramidType;
-  typedef typename Superclass1::MovingImagePyramidPointer MovingImagePyramidPointer;
+  using typename Superclass1::MovingImagePyramidType;
+  using typename Superclass1::MovingImagePyramidPointer;
 
   /** Type of the Transformation parameters. This is the same type used to
    *  represent the search space of the optimization algorithm.
    */
-  typedef typename Superclass1::ParametersType ParametersType;
+  using typename Superclass1::ParametersType;
 
   /** The CombinationMetric type, which is used internally by the Superclass1. */
-  typedef typename Superclass1::CombinationMetricType    CombinationMetricType;
-  typedef typename Superclass1::CombinationMetricPointer CombinationMetricPointer;
+  using typename Superclass1::CombinationMetricType;
+  using typename Superclass1::CombinationMetricPointer;
 
   /** Typedef's from Elastix. */
-  typedef typename Superclass2::ElastixType             ElastixType;
-  typedef typename Superclass2::ElastixPointer          ElastixPointer;
-  typedef typename Superclass2::ConfigurationType       ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer    ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType        RegistrationType;
-  typedef typename Superclass2::RegistrationPointer     RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType             ITKBaseType;
-  typedef typename Superclass2::UseMaskErosionArrayType UseMaskErosionArrayType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
+  using typename Superclass2::UseMaskErosionArrayType;
 
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, Superclass2::FixedImageDimension);
@@ -211,15 +211,15 @@ protected:
   ~MultiMetricMultiResolutionRegistration() override = default;
 
   /** Typedef's for mask support. */
-  typedef typename Superclass2::MaskPixelType                  MaskPixelType;
-  typedef typename Superclass2::FixedMaskImageType             FixedMaskImageType;
-  typedef typename Superclass2::MovingMaskImageType            MovingMaskImageType;
-  typedef typename Superclass2::FixedMaskImagePointer          FixedMaskImagePointer;
-  typedef typename Superclass2::MovingMaskImagePointer         MovingMaskImagePointer;
-  typedef typename Superclass2::FixedMaskSpatialObjectType     FixedMaskSpatialObjectType;
-  typedef typename Superclass2::MovingMaskSpatialObjectType    MovingMaskSpatialObjectType;
-  typedef typename Superclass2::FixedMaskSpatialObjectPointer  FixedMaskSpatialObjectPointer;
-  typedef typename Superclass2::MovingMaskSpatialObjectPointer MovingMaskSpatialObjectPointer;
+  using typename Superclass2::MaskPixelType;
+  using typename Superclass2::FixedMaskImageType;
+  using typename Superclass2::MovingMaskImageType;
+  using typename Superclass2::FixedMaskImagePointer;
+  using typename Superclass2::MovingMaskImagePointer;
+  using typename Superclass2::FixedMaskSpatialObjectType;
+  using typename Superclass2::MovingMaskSpatialObjectType;
+  using typename Superclass2::FixedMaskSpatialObjectPointer;
+  using typename Superclass2::MovingMaskSpatialObjectPointer;
 
   /** Function to update masks. */
   void

@@ -59,17 +59,17 @@ public:
   itkStaticConstMacro(OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension);
 
   /** Typedef's inherited from Superclass. */
-  typedef typename Superclass::ScalarType                ScalarType;
-  typedef typename Superclass::ParametersType            ParametersType;
-  typedef typename Superclass::JacobianType              JacobianType;
-  typedef typename Superclass::InputVectorType           InputVectorType;
-  typedef typename Superclass::OutputVectorType          OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
-  typedef typename Superclass::InputPointType            InputPointType;
-  typedef typename Superclass::OutputPointType           OutputPointType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputCovariantVectorType;
+  using typename Superclass::InputVnlVectorType;
+  using typename Superclass::OutputVnlVectorType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
 
   /** Typedef's needed in this class. */
   typedef DeformationVectorFieldTransform<ScalarType, Self::InputSpaceDimension> IntermediaryDFTransformType;

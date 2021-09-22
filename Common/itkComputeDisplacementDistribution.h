@@ -64,9 +64,9 @@ public:
   typedef TTransform                          TransformType;
   typedef typename TransformType::Pointer     TransformPointer;
   typedef typename FixedImageType::RegionType FixedImageRegionType;
-  typedef Superclass::ParametersType          ParametersType;
-  typedef Superclass::DerivativeType          DerivativeType;
-  typedef Superclass::ScalesType              ScalesType;
+  using Superclass::ParametersType;
+  using Superclass::DerivativeType;
+  using Superclass::ScalesType;
 
   /** Type for the mask of the fixed image. Only pixels that are "inside"
    * this mask will be considered for the computation of the Jacobian terms.

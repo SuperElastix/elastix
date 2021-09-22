@@ -136,12 +136,12 @@ public:
   itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Inherit types from Superclass. */
-  typedef typename Superclass::ScheduleType                 ScheduleType;
-  typedef typename Superclass::InputImageType               InputImageType;
-  typedef typename Superclass::OutputImageType              OutputImageType;
-  typedef typename Superclass::InputImagePointer            InputImagePointer;
-  typedef typename Superclass::OutputImagePointer           OutputImagePointer;
-  typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
+  using typename Superclass::ScheduleType;
+  using typename Superclass::InputImageType;
+  using typename Superclass::OutputImageType;
+  using typename Superclass::InputImagePointer;
+  using typename Superclass::OutputImagePointer;
+  using typename Superclass::InputImageConstPointer;
   typedef typename Superclass::InputImageType::SpacingType  SpacingType;
   typedef typename InputImageType::PixelType                PixelType;
   typedef typename NumericTraits<PixelType>::ScalarRealType ScalarRealType;

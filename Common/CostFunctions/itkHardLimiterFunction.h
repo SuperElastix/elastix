@@ -55,10 +55,10 @@ public:
   itkStaticConstMacro(Dimension, unsigned int, Superclass::Dimension);
 
   /** Superclass' typedefs */
-  typedef typename Superclass::InputType           InputType;
-  typedef typename Superclass::OutputType          OutputType;
-  typedef typename Superclass::DerivativeValueType DerivativeValueType;
-  typedef typename Superclass::DerivativeType      DerivativeType;
+  using typename Superclass::InputType;
+  using typename Superclass::OutputType;
+  using typename Superclass::DerivativeValueType;
+  using typename Superclass::DerivativeType;
 
   /** Limit the input value */
   OutputType

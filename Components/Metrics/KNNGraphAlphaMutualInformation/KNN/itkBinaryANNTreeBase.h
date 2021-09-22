@@ -47,10 +47,10 @@ public:
   itkTypeMacro(BinaryANNTreeBase, BinaryTreeBase);
 
   /** Typedefs from Superclass. */
-  typedef typename Superclass::SampleType                 SampleType;
-  typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
-  typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
-  typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
+  using typename Superclass::SampleType;
+  using typename Superclass::MeasurementVectorType;
+  using typename Superclass::MeasurementVectorSizeType;
+  using typename Superclass::TotalAbsoluteFrequencyType;
 
   /** Typedef */
   typedef ANNpointSet ANNPointSetType;

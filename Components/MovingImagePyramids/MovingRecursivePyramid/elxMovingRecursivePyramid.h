@@ -67,20 +67,20 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from Superclass1. */
-  typedef typename Superclass1::InputImageType         InputImageType;
-  typedef typename Superclass1::OutputImageType        OutputImageType;
-  typedef typename Superclass1::InputImagePointer      InputImagePointer;
-  typedef typename Superclass1::OutputImagePointer     OutputImagePointer;
-  typedef typename Superclass1::InputImageConstPointer InputImageConstPointer;
+  using typename Superclass1::InputImageType;
+  using typename Superclass1::OutputImageType;
+  using typename Superclass1::InputImagePointer;
+  using typename Superclass1::OutputImagePointer;
+  using typename Superclass1::InputImageConstPointer;
 
   /** Typedefs inherited from Elastix. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
 protected:
   /** The constructor. */

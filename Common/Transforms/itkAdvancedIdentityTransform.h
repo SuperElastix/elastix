@@ -92,12 +92,12 @@ public:
   typedef TScalarType ScalarType;
 
   /** Type of the input parameters. */
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::TransformCategoryEnum  TransformCategoryEnum;
+  using typename Superclass::ParametersType;
+  using typename Superclass::NumberOfParametersType;
+  using typename Superclass::TransformCategoryEnum;
 
   /** Type of the Jacobian matrix. */
-  typedef typename Superclass::JacobianType JacobianType;
+  using typename Superclass::JacobianType;
 
   /** Standard vector type for this class. */
   typedef Vector<TScalarType, Self::InputSpaceDimension>  InputVectorType;
@@ -117,16 +117,16 @@ public:
 
   /** Base inverse transform type. This type should not be changed to the
    * concrete inverse transform type or inheritance would be lost.*/
-  typedef typename Superclass::InverseTransformBaseType InverseTransformBaseType;
-  typedef typename InverseTransformBaseType::Pointer    InverseTransformBasePointer;
+  using typename Superclass::InverseTransformBaseType;
+  typedef typename InverseTransformBaseType::Pointer InverseTransformBasePointer;
 
   /** AdvancedTransform typedefs */
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::InternalMatrixType;
 
   /**  Method to transform a point. */
   OutputPointType

@@ -100,24 +100,24 @@ public:
   itkStaticConstMacro(OutputSpaceDimension, unsigned int, NOutputDimensions);
 
   /** Typedefs from the Superclass. */
-  typedef typename Superclass::ScalarType                ScalarType;
-  typedef typename Superclass::ParametersType            ParametersType;
-  typedef typename Superclass::FixedParametersType       FixedParametersType;
-  typedef typename Superclass::ParametersValueType       ParametersValueType;
-  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
-  typedef typename Superclass::DerivativeType            DerivativeType;
-  typedef typename Superclass::JacobianType              JacobianType;
-  typedef typename Superclass::InputVectorType           InputVectorType;
-  typedef typename Superclass::OutputVectorType          OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
-  typedef typename Superclass::InputPointType            InputPointType;
-  typedef typename Superclass::OutputPointType           OutputPointType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::FixedParametersType;
+  using typename Superclass::ParametersValueType;
+  using typename Superclass::NumberOfParametersType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputCovariantVectorType;
+  using typename Superclass::InputVnlVectorType;
+  using typename Superclass::OutputVnlVectorType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
 
-  typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
-  typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
+  using typename Superclass::InverseTransformBaseType;
+  using typename Superclass::InverseTransformBasePointer;
 
   /** Transform typedefs for the from Superclass. */
   typedef Transform<TScalarType, NInputDimensions, NOutputDimensions> TransformType;

@@ -76,53 +76,53 @@ public:
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Typedefs from the superclass. */
-  typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType              MovingImageType;
-  typedef typename Superclass::MovingImagePixelType         MovingImagePixelType;
-  // typedef typename Superclass::MovingImagePointer         MovingImagePointer;
-  typedef typename Superclass::MovingImageConstPointer MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType          FixedImageType;
-  // typedef typename Superclass::FixedImagePointer          FixedImagePointer;
-  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::AdvancedTransformType      TransformType;
-  typedef typename TransformType::Pointer                 TransformPointer;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::InterpolatorType           InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-  typedef typename Superclass::RealType                   RealType;
-  typedef typename Superclass::GradientPixelType          GradientPixelType;
-  typedef typename Superclass::GradientImageType          GradientImageType;
-  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
-  typedef typename Superclass::ParametersType             ParametersType;
+  using typename Superclass::CoordinateRepresentationType;
+  using typename Superclass::MovingImageType;
+  using typename Superclass::MovingImagePixelType;
+  // using typename Superclass::MovingImagePointer;
+  using typename Superclass::MovingImageConstPointer;
+  using typename Superclass::FixedImageType;
+  // using typename Superclass::FixedImagePointer;
+  using typename Superclass::FixedImageConstPointer;
+  using typename Superclass::FixedImageRegionType;
+  typedef typename Superclass::AdvancedTransformType TransformType;
+  typedef typename TransformType::Pointer            TransformPointer;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::TransformParametersType;
+  using typename Superclass::TransformJacobianType;
+  using typename Superclass::InterpolatorType;
+  using typename Superclass::InterpolatorPointer;
+  using typename Superclass::RealType;
+  using typename Superclass::GradientPixelType;
+  using typename Superclass::GradientImageType;
+  using typename Superclass::GradientImagePointer;
+  using typename Superclass::GradientImageFilterType;
+  using typename Superclass::GradientImageFilterPointer;
+  using typename Superclass::FixedImageMaskType;
+  using typename Superclass::FixedImageMaskPointer;
+  using typename Superclass::MovingImageMaskType;
+  using typename Superclass::MovingImageMaskPointer;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::DerivativeValueType;
+  using typename Superclass::ParametersType;
 
   /** Some typedefs for computing the SelfHessian */
-  typedef typename Superclass::HessianValueType HessianValueType;
-  typedef typename Superclass::HessianType      HessianType;
+  using typename Superclass::HessianValueType;
+  using typename Superclass::HessianType;
 
   /**
-  typedef typename Superclass::ImageSamplerType             ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer          ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType        FixedImageLimiterType;
-  typedef typename Superclass::FixedImageLimiterOutputType  FixedImageLimiterOutputType;
-  typedef typename Superclass::MovingImageLimiterType       MovingImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
-  typedef typename Superclass::ScalarType                   ScalarType;
-  typedef typename Superclass::AdvancedTransformType        AdvancedTransformType;
+  using typename Superclass::ImageSamplerType;
+  using typename Superclass::ImageSamplerPointer;
+  using typename Superclass::ImageSampleContainerType;
+  using typename Superclass::ImageSampleContainerPointer;
+  using typename Superclass::FixedImageLimiterType;
+  using typename Superclass::FixedImageLimiterOutputType;
+  using typename Superclass::MovingImageLimiterType;
+  using typename Superclass::MovingImageLimiterOutputType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::AdvancedTransformType;
   */
 
   /** Typedefs for the metrics. */
@@ -157,8 +157,8 @@ public:
   typedef SingleValuedPointSetToPointSetMetric<FixedPointSetType, MovingPointSetType> PointSetMetricType;
 
   /** Typedefs for multi-threading. */
-  typedef typename Superclass::ThreaderType   ThreaderType;
-  typedef typename Superclass::ThreadInfoType ThreadInfoType;
+  using typename Superclass::ThreaderType;
+  using typename Superclass::ThreadInfoType;
 
   /**
    * Get and set the metrics and their weights.

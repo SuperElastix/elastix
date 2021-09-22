@@ -77,27 +77,27 @@ public:
   itkNewMacro(Self);
 
   /** OutputType typedef support. */
-  typedef typename Superclass::OutputType OutputType;
+  using typename Superclass::OutputType;
 
   /** InputImageType typedef support. */
-  typedef typename Superclass::InputImageType  InputImageType;
+  using typename Superclass::InputImageType;
   typedef typename InputImageType::SpacingType InputImageSpacingType;
 
   /** InputPixelType typedef support. */
-  typedef typename Superclass::InputPixelType InputPixelType;
+  using typename Superclass::InputPixelType;
 
   /** RealType typedef support. */
-  typedef typename Superclass::RealType RealType;
+  using typename Superclass::RealType;
 
   /** Dimension underlying input image. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Index typedef support. */
-  typedef typename Superclass::IndexType IndexType;
+  using typename Superclass::IndexType;
 
   /** ContinuousIndex typedef support. */
-  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
-  typedef typename ContinuousIndexType::ValueType  ContinuousIndexValueType;
+  using typename Superclass::ContinuousIndexType;
+  typedef typename ContinuousIndexType::ValueType ContinuousIndexValueType;
 
   /** Derivative typedef support */
   typedef CovariantVector<OutputType, Self::ImageDimension> CovariantVectorType;

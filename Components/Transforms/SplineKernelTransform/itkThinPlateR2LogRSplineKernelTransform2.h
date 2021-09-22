@@ -67,26 +67,26 @@ public:
   itkTypeMacro(ThinPlateR2LogRSplineKernelTransform2, KernelTransform2);
 
   /** Scalar type. */
-  typedef typename Superclass::ScalarType ScalarType;
+  using typename Superclass::ScalarType;
 
   /** Parameters type. */
-  typedef typename Superclass::ParametersType ParametersType;
+  using typename Superclass::ParametersType;
 
   /** Jacobian Type */
-  typedef typename Superclass::JacobianType JacobianType;
+  using typename Superclass::JacobianType;
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, Superclass::SpaceDimension);
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
-  typedef typename Superclass::InputPointType            InputPointType;
-  typedef typename Superclass::OutputPointType           OutputPointType;
-  typedef typename Superclass::InputVectorType           InputVectorType;
-  typedef typename Superclass::OutputVectorType          OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::PointsIterator            PointsIterator;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputCovariantVectorType;
+  using typename Superclass::PointsIterator;
 
 protected:
   ThinPlateR2LogRSplineKernelTransform2() { this->m_FastComputationPossible = true; }
@@ -96,7 +96,7 @@ protected:
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited. */
-  typedef typename Superclass::GMatrixType GMatrixType;
+  using typename Superclass::GMatrixType;
 
   /** Compute G(x)
    * For the thin plate spline, this is:

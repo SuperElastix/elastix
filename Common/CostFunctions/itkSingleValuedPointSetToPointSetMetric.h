@@ -105,10 +105,10 @@ public:
   typedef typename MovingImageMaskType::ConstPointer   MovingImageMaskConstPointer;
 
   /**  Type of the measure. */
-  typedef Superclass::MeasureType            MeasureType;
-  typedef Superclass::DerivativeType         DerivativeType;
+  using Superclass::MeasureType;
+  using Superclass::DerivativeType;
   typedef typename DerivativeType::ValueType DerivativeValueType;
-  typedef Superclass::ParametersType         ParametersType;
+  using Superclass::ParametersType;
 
   /** Typedefs for support of sparse Jacobians and compact support of transformations. */
   typedef typename TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;

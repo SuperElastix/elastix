@@ -83,27 +83,27 @@ public:
   elxClassNameMacro("StatisticalShapePenalty");
 
   /** Typedefs from the superclass. */
-  typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass1::FixedPointSetType            FixedPointSetType;
-  typedef typename Superclass1::FixedPointSetConstPointer    FixedPointSetConstPointer;
-  typedef typename Superclass1::MovingPointSetType           MovingPointSetType;
-  typedef typename Superclass1::MovingPointSetConstPointer   MovingPointSetConstPointer;
+  using typename Superclass1::CoordinateRepresentationType;
+  using typename Superclass1::FixedPointSetType;
+  using typename Superclass1::FixedPointSetConstPointer;
+  using typename Superclass1::MovingPointSetType;
+  using typename Superclass1::MovingPointSetConstPointer;
 
-  //  typedef typename Superclass1::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass1::TransformType           TransformType;
-  typedef typename Superclass1::TransformPointer        TransformPointer;
-  typedef typename Superclass1::InputPointType          InputPointType;
-  typedef typename Superclass1::OutputPointType         OutputPointType;
-  typedef typename Superclass1::TransformParametersType TransformParametersType;
-  typedef typename Superclass1::TransformJacobianType   TransformJacobianType;
-  //  typedef typename Superclass1::RealType                   RealType;
-  typedef typename Superclass1::FixedImageMaskType     FixedImageMaskType;
-  typedef typename Superclass1::FixedImageMaskPointer  FixedImageMaskPointer;
-  typedef typename Superclass1::MovingImageMaskType    MovingImageMaskType;
-  typedef typename Superclass1::MovingImageMaskPointer MovingImageMaskPointer;
-  typedef typename Superclass1::MeasureType            MeasureType;
-  typedef typename Superclass1::DerivativeType         DerivativeType;
-  typedef typename Superclass1::ParametersType         ParametersType;
+  //  using typename Superclass1::FixedImageRegionType;
+  using typename Superclass1::TransformType;
+  using typename Superclass1::TransformPointer;
+  using typename Superclass1::InputPointType;
+  using typename Superclass1::OutputPointType;
+  using typename Superclass1::TransformParametersType;
+  using typename Superclass1::TransformJacobianType;
+  //  using typename Superclass1::RealType;
+  using typename Superclass1::FixedImageMaskType;
+  using typename Superclass1::FixedImageMaskPointer;
+  using typename Superclass1::MovingImageMaskType;
+  using typename Superclass1::MovingImageMaskPointer;
+  using typename Superclass1::MeasureType;
+  using typename Superclass1::DerivativeType;
+  using typename Superclass1::ParametersType;
 
   typedef typename OutputPointType::CoordRepType CoordRepType;
   typedef vnl_vector<CoordRepType>               VnlVectorType;
@@ -119,15 +119,15 @@ public:
   typedef typename CombinationTransformType::InitialTransformType                    InitialTransformType;
 
   /** Typedefs inherited from elastix. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
-  typedef typename Superclass2::FixedImageType       FixedImageType;
-  typedef typename Superclass2::MovingImageType      MovingImageType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
+  using typename Superclass2::FixedImageType;
+  using typename Superclass2::MovingImageType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);

@@ -53,10 +53,10 @@ public:
   itkTypeMacro(ImageFileCastWriter, ImageFileWriter);
 
   /** Some convenient typedefs. */
-  typedef typename Superclass::InputImageType       InputImageType;
-  typedef typename Superclass::InputImagePointer    InputImagePointer;
-  typedef typename Superclass::InputImageRegionType InputImageRegionType;
-  typedef typename Superclass::InputImagePixelType  InputImagePixelType;
+  using typename Superclass::InputImageType;
+  using typename Superclass::InputImagePointer;
+  using typename Superclass::InputImageRegionType;
+  using typename Superclass::InputImagePixelType;
 
   itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);
 

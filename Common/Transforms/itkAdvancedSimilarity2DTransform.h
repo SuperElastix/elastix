@@ -98,44 +98,44 @@ public:
   itkStaticConstMacro(ParametersDimension, unsigned int, 4);
 
   /** Scalar type. */
-  typedef typename Superclass::ScalarType ScalarType;
-  typedef TScalarType                     ScaleType;
+  using typename Superclass::ScalarType;
+  typedef TScalarType ScaleType;
 
   /** Parameters type. */
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::NumberOfParametersType;
 
   /** Jacobian type. */
-  typedef typename Superclass::JacobianType JacobianType;
+  using typename Superclass::JacobianType;
 
   /** Offset type. */
-  typedef typename Superclass::OffsetType OffsetType;
+  using typename Superclass::OffsetType;
 
   /** Matrix type. */
-  typedef typename Superclass::MatrixType MatrixType;
+  using typename Superclass::MatrixType;
 
   /** Point type. */
-  typedef typename Superclass::InputPointType  InputPointType;
-  typedef typename Superclass::OutputPointType OutputPointType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
 
   /** Vector type. */
-  typedef typename Superclass::InputVectorType  InputVectorType;
-  typedef typename Superclass::OutputVectorType OutputVectorType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
 
   /** CovariantVector type. */
-  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputCovariantVectorType;
 
   /** VnlVector type. */
-  typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
+  using typename Superclass::InputVnlVectorType;
+  using typename Superclass::OutputVnlVectorType;
 
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::InternalMatrixType;
 
   /** Set the Scale part of the transform. */
   void

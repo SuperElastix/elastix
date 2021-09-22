@@ -79,14 +79,14 @@ public:
   itkTypeMacro(StandardGradientDescentOptimizer, GradientDescentOptimizer2);
 
   /** Typedefs inherited from the superclass. */
-  typedef Superclass::MeasureType               MeasureType;
-  typedef Superclass::ParametersType            ParametersType;
-  typedef Superclass::DerivativeType            DerivativeType;
-  typedef Superclass::CostFunctionType          CostFunctionType;
-  typedef Superclass::ScalesType                ScalesType;
-  typedef Superclass::ScaledCostFunctionType    ScaledCostFunctionType;
-  typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
-  typedef Superclass::StopConditionType         StopConditionType;
+  using Superclass::MeasureType;
+  using Superclass::ParametersType;
+  using Superclass::DerivativeType;
+  using Superclass::CostFunctionType;
+  using Superclass::ScalesType;
+  using Superclass::ScaledCostFunctionType;
+  using Superclass::ScaledCostFunctionPointer;
+  using Superclass::StopConditionType;
 
   /** Set/Get a. */
   itkSetMacro(Param_a, double);

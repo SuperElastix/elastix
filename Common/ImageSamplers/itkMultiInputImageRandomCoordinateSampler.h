@@ -53,23 +53,23 @@ public:
   itkTypeMacro(MultiInputImageRandomCoordinateSampler, ImageRandomSamplerBase);
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass::DataObjectPointer            DataObjectPointer;
-  typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
-  typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
-  typedef typename Superclass::InputImageType               InputImageType;
-  typedef typename Superclass::InputImagePointer            InputImagePointer;
-  typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
-  typedef typename Superclass::InputImageRegionType         InputImageRegionType;
-  typedef typename Superclass::InputImagePixelType          InputImagePixelType;
-  typedef typename Superclass::ImageSampleType              ImageSampleType;
-  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
-  typedef typename Superclass::MaskType                     MaskType;
-  typedef typename Superclass::InputImageSizeType           InputImageSizeType;
-  typedef typename InputImageType::SpacingType              InputImageSpacingType;
-  typedef typename Superclass::InputImageIndexType          InputImageIndexType;
-  typedef typename Superclass::InputImagePointType          InputImagePointType;
-  typedef typename Superclass::InputImagePointValueType     InputImagePointValueType;
-  typedef typename Superclass::ImageSampleValueType         ImageSampleValueType;
+  using typename Superclass::DataObjectPointer;
+  using typename Superclass::OutputVectorContainerType;
+  using typename Superclass::OutputVectorContainerPointer;
+  using typename Superclass::InputImageType;
+  using typename Superclass::InputImagePointer;
+  using typename Superclass::InputImageConstPointer;
+  using typename Superclass::InputImageRegionType;
+  using typename Superclass::InputImagePixelType;
+  using typename Superclass::ImageSampleType;
+  using typename Superclass::ImageSampleContainerType;
+  using typename Superclass::MaskType;
+  using typename Superclass::InputImageSizeType;
+  typedef typename InputImageType::SpacingType InputImageSpacingType;
+  using typename Superclass::InputImageIndexType;
+  using typename Superclass::InputImagePointType;
+  using typename Superclass::InputImagePointValueType;
+  using typename Superclass::ImageSampleValueType;
 
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);

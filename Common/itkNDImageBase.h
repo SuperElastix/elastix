@@ -107,7 +107,7 @@ public:
 
   /** Region typedef support. A region is used to specify a subset of an image. */
 
-  // typedef typename Superclass::RegionType  RegionType;
+  // using typename Superclass::RegionType;
 
   /** \todo an NDRegionType should first be declared, in the same way as NDImage
    * use SetRegions(size) for now. then knowlegde of the RegionType is not
