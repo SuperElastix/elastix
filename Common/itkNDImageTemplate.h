@@ -63,30 +63,30 @@ public:
 
   itkStaticConstMacro(Dimension, unsigned int, VDimension);
 
-  typedef typename Superclass::DataObjectType    DataObjectType;
-  typedef typename Superclass::DataObjectPointer DataObjectPointer;
+  using typename Superclass::DataObjectType;
+  using typename Superclass::DataObjectPointer;
 
   /** Type definitions like normal itkImages, independent of the dimension */
-  typedef typename Superclass::PixelType                  PixelType;
-  typedef typename Superclass::ValueType                  ValueType;
-  typedef typename Superclass::InternalPixelType          InternalPixelType;
-  typedef typename Superclass::AccessorType               AccessorType;
-  typedef typename Superclass::PixelContainer             PixelContainer;
-  typedef typename Superclass::PixelContainerPointer      PixelContainerPointer;
-  typedef typename Superclass::PixelContainerConstPointer PixelContainerConstPointer;
+  using typename Superclass::PixelType;
+  using typename Superclass::ValueType;
+  using typename Superclass::InternalPixelType;
+  using typename Superclass::AccessorType;
+  using typename Superclass::PixelContainer;
+  using typename Superclass::PixelContainerPointer;
+  using typename Superclass::PixelContainerConstPointer;
 
-  typedef typename Superclass::SpacingValueType SpacingValueType;
-  typedef typename Superclass::PointValueType   PointValueType;
-  typedef typename Superclass::IndexValueType   IndexValueType;
-  typedef typename Superclass::SizeValueType    SizeValueType;
-  typedef typename Superclass::OffsetValueType  OffsetValueType;
+  using typename Superclass::SpacingValueType;
+  using typename Superclass::PointValueType;
+  using typename Superclass::IndexValueType;
+  using typename Superclass::SizeValueType;
+  using typename Superclass::OffsetValueType;
 
   /** ND versions of the index and sizetypes etc. */
-  typedef typename Superclass::IndexType   IndexType;
-  typedef typename Superclass::SizeType    SizeType;
-  typedef typename Superclass::SpacingType SpacingType;
-  typedef typename Superclass::PointType   PointType;
-  typedef typename Superclass::OffsetType  OffsetType;
+  using typename Superclass::IndexType;
+  using typename Superclass::SizeType;
+  using typename Superclass::SpacingType;
+  using typename Superclass::PointType;
+  using typename Superclass::OffsetType;
 
   /** Typedefs dependent on the dimension */
   typedef Image<TPixel, VDimension>    ImageType;

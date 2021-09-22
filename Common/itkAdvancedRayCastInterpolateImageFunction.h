@@ -96,25 +96,25 @@ public:
   itkNewMacro(Self);
 
   /** OutputType typedef support. */
-  typedef typename Superclass::OutputType OutputType;
+  using typename Superclass::OutputType;
 
   /** InputImageType typedef support. */
-  typedef typename Superclass::InputImageType InputImageType;
+  using typename Superclass::InputImageType;
 
   /** RealType typedef support. */
-  typedef typename Superclass::RealType RealType;
+  using typename Superclass::RealType;
 
   /** Dimension underlying input image. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Point typedef support. */
-  typedef typename Superclass::PointType PointType;
+  using typename Superclass::PointType;
 
   /** Index typedef support. */
-  typedef typename Superclass::IndexType IndexType;
+  using typename Superclass::IndexType;
 
   /** ContinuousIndex typedef support. */
-  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+  using typename Superclass::ContinuousIndexType;
 
   /** \brief
    * Interpolate the image at a point position.

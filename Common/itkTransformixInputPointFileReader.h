@@ -59,9 +59,9 @@ public:
   itkTypeMacro(TransformixInputPointFileReader, MeshFileReaderBase);
 
   /** Some convenient typedefs. */
-  typedef typename Superclass::DataObjectPointer DataObjectPointer;
-  typedef typename Superclass::OutputMeshType    OutputMeshType;
-  typedef typename Superclass::OutputMeshPointer OutputMeshPointer;
+  using typename Superclass::DataObjectPointer;
+  using typename Superclass::OutputMeshType;
+  using typename Superclass::OutputMeshPointer;
 
   /** Get whether the read points are indices; actually we should store this as a kind
    * of meta data in the output, but i don't understand this concept yet...

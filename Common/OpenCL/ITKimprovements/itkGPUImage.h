@@ -75,20 +75,20 @@ public:
 
   itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
 
-  typedef typename Superclass::PixelType         PixelType;
-  typedef typename Superclass::ValueType         ValueType;
-  typedef typename Superclass::InternalPixelType InternalPixelType;
-  typedef typename Superclass::IOPixelType       IOPixelType;
-  typedef typename Superclass::DirectionType     DirectionType;
-  typedef typename Superclass::SpacingType       SpacingType;
-  typedef typename Superclass::PixelContainer    PixelContainer;
-  typedef typename Superclass::SizeType          SizeType;
-  typedef typename Superclass::IndexType         IndexType;
-  typedef typename Superclass::OffsetType        OffsetType;
-  typedef typename Superclass::RegionType        RegionType;
-  typedef typename PixelContainer::Pointer       PixelContainerPointer;
-  typedef typename PixelContainer::ConstPointer  PixelContainerConstPointer;
-  typedef typename Superclass::AccessorType      AccessorType;
+  using typename Superclass::PixelType;
+  using typename Superclass::ValueType;
+  using typename Superclass::InternalPixelType;
+  using typename Superclass::IOPixelType;
+  using typename Superclass::DirectionType;
+  using typename Superclass::SpacingType;
+  using typename Superclass::PixelContainer;
+  using typename Superclass::SizeType;
+  using typename Superclass::IndexType;
+  using typename Superclass::OffsetType;
+  using typename Superclass::RegionType;
+  typedef typename PixelContainer::Pointer      PixelContainerPointer;
+  typedef typename PixelContainer::ConstPointer PixelContainerConstPointer;
+  using typename Superclass::AccessorType;
 
   typedef DefaultPixelAccessorFunctor<Self> AccessorFunctorType;
 

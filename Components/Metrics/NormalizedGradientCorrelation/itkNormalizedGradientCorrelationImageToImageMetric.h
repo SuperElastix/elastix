@@ -62,30 +62,30 @@ public:
 #if defined(_MSC_VER) && (_MSC_VER == 1300)
   typedef double RealType;
 #else
-  typedef typename Superclass::RealType RealType;
+  using typename Superclass::RealType;
 #endif
 
-  typedef typename Superclass::TransformType           TransformType;
-  typedef typename TransformType::ScalarType           ScalarType;
-  typedef typename Superclass::TransformPointer        TransformPointer;
-  typedef typename TransformType::ConstPointer         TransformConstPointer;
-  typedef typename Superclass::TransformParametersType TransformParametersType;
-  typedef typename Superclass::TransformJacobianType   TransformJacobianType;
-  typedef typename Superclass::InterpolatorType        InterpolatorType;
-  typedef typename InterpolatorType::Pointer           InterpolatorPointer;
-  typedef typename Superclass::MeasureType             MeasureType;
-  typedef typename Superclass::DerivativeType          DerivativeType;
-  typedef typename Superclass::FixedImageType          FixedImageType;
-  typedef typename Superclass::FixedImageRegionType    FixedImageRegionType;
-  typedef typename Superclass::MovingImageType         MovingImageType;
-  typedef typename Superclass::MovingImageRegionType   MovingImageRegionType;
-  typedef typename Superclass::FixedImageConstPointer  FixedImageConstPointer;
-  typedef typename Superclass::MovingImageConstPointer MovingImageConstPointer;
-  typedef typename Superclass::MovingImagePointer      MovingImagePointer;
-  typedef typename TFixedImage::PixelType              FixedImagePixelType;
-  typedef typename TMovingImage::PixelType             MovedImagePixelType;
-  typedef typename itk::Optimizer                      OptimizerType;
-  typedef typename OptimizerType::ScalesType           ScalesType;
+  using typename Superclass::TransformType;
+  typedef typename TransformType::ScalarType ScalarType;
+  using typename Superclass::TransformPointer;
+  typedef typename TransformType::ConstPointer TransformConstPointer;
+  using typename Superclass::TransformParametersType;
+  using typename Superclass::TransformJacobianType;
+  using typename Superclass::InterpolatorType;
+  typedef typename InterpolatorType::Pointer InterpolatorPointer;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::FixedImageType;
+  using typename Superclass::FixedImageRegionType;
+  using typename Superclass::MovingImageType;
+  using typename Superclass::MovingImageRegionType;
+  using typename Superclass::FixedImageConstPointer;
+  using typename Superclass::MovingImageConstPointer;
+  using typename Superclass::MovingImagePointer;
+  typedef typename TFixedImage::PixelType    FixedImagePixelType;
+  typedef typename TMovingImage::PixelType   MovedImagePixelType;
+  typedef typename itk::Optimizer            OptimizerType;
+  typedef typename OptimizerType::ScalesType ScalesType;
 
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
 

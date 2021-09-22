@@ -106,26 +106,26 @@ public:
   /** Typedefs inherited from the superclass. */
 
   /** These are both in Rigid2D and Euler3D. */
-  typedef typename Superclass::ScalarType                ScalarType;
-  typedef typename Superclass::ParametersType            ParametersType;
-  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
-  typedef typename Superclass::JacobianType              JacobianType;
-  typedef typename Superclass::OffsetType                OffsetType;
-  typedef typename Superclass::InputPointType            InputPointType;
-  typedef typename Superclass::OutputPointType           OutputPointType;
-  typedef typename Superclass::InputVectorType           InputVectorType;
-  typedef typename Superclass::OutputVectorType          OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::NumberOfParametersType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::OffsetType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputCovariantVectorType;
+  using typename Superclass::InputVnlVectorType;
+  using typename Superclass::OutputVnlVectorType;
 
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::InternalMatrixType;
 
   /** Make sure SetComputeZYX() is available, also in 2D,
    * in which case, its just a dummy function.

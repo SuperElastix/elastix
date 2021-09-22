@@ -153,44 +153,44 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Typedefs from Superclass. */
-  typedef typename Superclass::ParametersType            ParametersType;
-  typedef typename Superclass::ParametersValueType       ParametersValueType;
-  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
-  typedef typename Superclass::DerivativeType            DerivativeType;
-  typedef typename Superclass::JacobianType              JacobianType;
-  typedef typename Superclass::ScalarType                ScalarType;
-  typedef typename Superclass::InputPointType            InputPointType;
-  typedef typename Superclass::OutputPointType           OutputPointType;
-  typedef typename Superclass::InputVectorType           InputVectorType;
-  typedef typename Superclass::OutputVectorType          OutputVectorType;
-  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
-  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
+  using typename Superclass::NumberOfParametersType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
+  using typename Superclass::InputVnlVectorType;
+  using typename Superclass::OutputVnlVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputCovariantVectorType;
 
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
-  typedef typename Superclass::MovingImageGradientType       MovingImageGradientType;
-  typedef typename Superclass::MovingImageGradientValueType  MovingImageGradientValueType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::InternalMatrixType;
+  using typename Superclass::MovingImageGradientType;
+  using typename Superclass::MovingImageGradientValueType;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename Superclass::PixelType    PixelType;
-  typedef typename Superclass::ImageType    ImageType;
-  typedef typename Superclass::ImagePointer ImagePointer;
+  using typename Superclass::PixelType;
+  using typename Superclass::ImageType;
+  using typename Superclass::ImagePointer;
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef typename Superclass::RegionType RegionType;
+  using typename Superclass::RegionType;
 
-  typedef typename Superclass::IndexType      IndexType;
-  typedef typename Superclass::SizeType       SizeType;
-  typedef typename Superclass::SpacingType    SpacingType;
-  typedef typename Superclass::DirectionType  DirectionType;
-  typedef typename Superclass::OriginType     OriginType;
-  typedef typename Superclass::GridOffsetType GridOffsetType;
+  using typename Superclass::IndexType;
+  using typename Superclass::SizeType;
+  using typename Superclass::SpacingType;
+  using typename Superclass::DirectionType;
+  using typename Superclass::OriginType;
+  using typename Superclass::GridOffsetType;
 
   /** This method specifies the region over which the grid resides. */
   void
@@ -213,7 +213,7 @@ public:
   typedef typename SODerivativeWeightsFunctionType::Pointer SODerivativeWeightsFunctionPointer;
 
   /** Parameter index array type. */
-  typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
+  using typename Superclass::ParameterIndexArrayType;
 
   /** Transform points by a B-spline deformable transformation.
    * On return, weights contains the interpolation weights used to compute the
@@ -315,8 +315,8 @@ protected:
   ComputeNonZeroJacobianIndices(NonZeroJacobianIndicesType & nonZeroJacobianIndices,
                                 const RegionType &           supportRegion) const override;
 
-  typedef typename Superclass::JacobianImageType JacobianImageType;
-  typedef typename Superclass::JacobianPixelType JacobianPixelType;
+  using typename Superclass::JacobianImageType;
+  using typename Superclass::JacobianPixelType;
 
   /** Pointer to function used to compute B-spline interpolation weights.
    * For each direction we create a different weights function for thread-

@@ -37,8 +37,8 @@ public:
   typedef SmartPointer<Self>                                    Pointer;
   typedef SmartPointer<const Self>                              ConstPointer;
 
-  typedef typename Superclass::FixedImageRegionType FixedImageRegionType;
-  typedef typename FixedImageRegionType::SizeType   FixedImageSizeType;
+  using typename Superclass::FixedImageRegionType;
+  typedef typename FixedImageRegionType::SizeType FixedImageSizeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -54,44 +54,44 @@ public:
   itkSetMacro(TransformIsStackTransform, bool);
 
   /** Typedefs from the superclass. */
-  typedef typename Superclass::CoordinateRepresentationType    CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType                 MovingImageType;
-  typedef typename Superclass::MovingImagePixelType            MovingImagePixelType;
-  typedef typename Superclass::MovingImageConstPointer         MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType                  FixedImageType;
-  typedef typename Superclass::FixedImageConstPointer          FixedImageConstPointer;
-  typedef typename Superclass::TransformType                   TransformType;
-  typedef typename Superclass::TransformPointer                TransformPointer;
-  typedef typename Superclass::InputPointType                  InputPointType;
-  typedef typename Superclass::OutputPointType                 OutputPointType;
-  typedef typename Superclass::TransformParametersType         TransformParametersType;
-  typedef typename Superclass::TransformJacobianType           TransformJacobianType;
-  typedef typename Superclass::InterpolatorType                InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer             InterpolatorPointer;
-  typedef typename Superclass::RealType                        RealType;
-  typedef typename Superclass::GradientPixelType               GradientPixelType;
-  typedef typename Superclass::GradientImageType               GradientImageType;
-  typedef typename Superclass::GradientImagePointer            GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType         GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer      GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType              FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer           FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType             MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer          MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                     MeasureType;
-  typedef typename Superclass::DerivativeType                  DerivativeType;
-  typedef typename Superclass::ParametersType                  ParametersType;
-  typedef typename Superclass::FixedImagePixelType             FixedImagePixelType;
-  typedef typename Superclass::MovingImageRegionType           MovingImageRegionType;
-  typedef typename Superclass::ImageSamplerType                ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer             ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType        ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer     ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType           FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType          MovingImageLimiterType;
-  typedef typename Superclass::FixedImageLimiterOutputType     FixedImageLimiterOutputType;
-  typedef typename Superclass::MovingImageLimiterOutputType    MovingImageLimiterOutputType;
-  typedef typename Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  using typename Superclass::CoordinateRepresentationType;
+  using typename Superclass::MovingImageType;
+  using typename Superclass::MovingImagePixelType;
+  using typename Superclass::MovingImageConstPointer;
+  using typename Superclass::FixedImageType;
+  using typename Superclass::FixedImageConstPointer;
+  using typename Superclass::TransformType;
+  using typename Superclass::TransformPointer;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::TransformParametersType;
+  using typename Superclass::TransformJacobianType;
+  using typename Superclass::InterpolatorType;
+  using typename Superclass::InterpolatorPointer;
+  using typename Superclass::RealType;
+  using typename Superclass::GradientPixelType;
+  using typename Superclass::GradientImageType;
+  using typename Superclass::GradientImagePointer;
+  using typename Superclass::GradientImageFilterType;
+  using typename Superclass::GradientImageFilterPointer;
+  using typename Superclass::FixedImageMaskType;
+  using typename Superclass::FixedImageMaskPointer;
+  using typename Superclass::MovingImageMaskType;
+  using typename Superclass::MovingImageMaskPointer;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::FixedImagePixelType;
+  using typename Superclass::MovingImageRegionType;
+  using typename Superclass::ImageSamplerType;
+  using typename Superclass::ImageSamplerPointer;
+  using typename Superclass::ImageSampleContainerType;
+  using typename Superclass::ImageSampleContainerPointer;
+  using typename Superclass::FixedImageLimiterType;
+  using typename Superclass::MovingImageLimiterType;
+  using typename Superclass::FixedImageLimiterOutputType;
+  using typename Superclass::MovingImageLimiterOutputType;
+  using typename Superclass::MovingImageDerivativeScalesType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
@@ -129,18 +129,18 @@ protected:
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass */
-  typedef typename Superclass::FixedImageIndexType      FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType     MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType      FixedImagePointType;
+  using typename Superclass::FixedImageIndexType;
+  using typename Superclass::FixedImageIndexValueType;
+  using typename Superclass::MovingImageIndexType;
+  using typename Superclass::FixedImagePointType;
   typedef typename itk::ContinuousIndex<CoordinateRepresentationType, FixedImageDimension>
-                                                                   FixedImageContinuousIndexType;
-  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
-  typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
-  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
+    FixedImageContinuousIndexType;
+  using typename Superclass::MovingImagePointType;
+  using typename Superclass::MovingImageContinuousIndexType;
+  using typename Superclass::BSplineInterpolatorType;
+  using typename Superclass::CentralDifferenceGradientFilterType;
+  using typename Superclass::MovingImageDerivativeType;
+  using typename Superclass::NonZeroJacobianIndicesType;
 
   /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed

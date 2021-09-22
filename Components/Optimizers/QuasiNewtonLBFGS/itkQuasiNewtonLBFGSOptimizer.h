@@ -66,12 +66,12 @@ public:
   itkNewMacro(Self);
   itkTypeMacro(QuasiNewtonLBFGSOptimizer, ScaledSingleValuedNonLinearOptimizer);
 
-  typedef Superclass::ParametersType         ParametersType;
-  typedef Superclass::DerivativeType         DerivativeType;
-  typedef Superclass::CostFunctionType       CostFunctionType;
-  typedef Superclass::ScaledCostFunctionType ScaledCostFunctionType;
-  typedef Superclass::MeasureType            MeasureType;
-  typedef Superclass::ScalesType             ScalesType;
+  using Superclass::ParametersType;
+  using Superclass::DerivativeType;
+  using Superclass::CostFunctionType;
+  using Superclass::ScaledCostFunctionType;
+  using Superclass::MeasureType;
+  using Superclass::ScalesType;
 
   typedef Array<double>               RhoType;
   typedef std::vector<ParametersType> SType;

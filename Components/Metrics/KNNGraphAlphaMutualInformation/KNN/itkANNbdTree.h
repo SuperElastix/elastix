@@ -49,14 +49,14 @@ public:
   itkTypeMacro(ANNbdTree, ANNkDTree);
 
   /** Typedef's from Superclass. */
-  typedef typename Superclass::SampleType                 SampleType;
-  typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
-  typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
-  typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
-  typedef typename Superclass::ANNPointSetType            ANNPointSetType;
-  typedef typename Superclass::ANNkDTreeType              ANNkDTreeType;
-  typedef typename Superclass::SplittingRuleType          SplittingRuleType;
-  typedef typename Superclass::BucketSizeType             BucketSizeType;
+  using typename Superclass::SampleType;
+  using typename Superclass::MeasurementVectorType;
+  using typename Superclass::MeasurementVectorSizeType;
+  using typename Superclass::TotalAbsoluteFrequencyType;
+  using typename Superclass::ANNPointSetType;
+  using typename Superclass::ANNkDTreeType;
+  using typename Superclass::SplittingRuleType;
+  using typename Superclass::BucketSizeType;
 
   typedef ANNshrinkRule ShrinkingRuleType;
 

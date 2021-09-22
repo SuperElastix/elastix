@@ -87,32 +87,32 @@ public:
   itkTypeMacro(MultiInputMultiResolutionImageRegistrationMethodBase, MultiResolutionImageRegistrationMethod2);
 
   /**  Superclass types */
-  typedef typename Superclass::FixedImageType              FixedImageType;
-  typedef typename Superclass::FixedImageConstPointer      FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType        FixedImageRegionType;
-  typedef typename Superclass::FixedImageRegionPyramidType FixedImageRegionPyramidType;
-  typedef typename Superclass::MovingImageType             MovingImageType;
-  typedef typename Superclass::MovingImageConstPointer     MovingImageConstPointer;
+  using typename Superclass::FixedImageType;
+  using typename Superclass::FixedImageConstPointer;
+  using typename Superclass::FixedImageRegionType;
+  using typename Superclass::FixedImageRegionPyramidType;
+  using typename Superclass::MovingImageType;
+  using typename Superclass::MovingImageConstPointer;
 
-  typedef typename Superclass::MetricType                MetricType;
-  typedef typename Superclass::MetricPointer             MetricPointer;
-  typedef typename Superclass::TransformType             TransformType;
-  typedef typename Superclass::TransformPointer          TransformPointer;
-  typedef typename Superclass::InterpolatorType          InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer       InterpolatorPointer;
-  typedef typename Superclass::OptimizerType             OptimizerType;
-  typedef typename OptimizerType::Pointer                OptimizerPointer;
-  typedef typename Superclass::FixedImagePyramidType     FixedImagePyramidType;
-  typedef typename Superclass::FixedImagePyramidPointer  FixedImagePyramidPointer;
-  typedef typename Superclass::MovingImagePyramidType    MovingImagePyramidType;
-  typedef typename Superclass::MovingImagePyramidPointer MovingImagePyramidPointer;
+  using typename Superclass::MetricType;
+  using typename Superclass::MetricPointer;
+  using typename Superclass::TransformType;
+  using typename Superclass::TransformPointer;
+  using typename Superclass::InterpolatorType;
+  using typename Superclass::InterpolatorPointer;
+  using typename Superclass::OptimizerType;
+  typedef typename OptimizerType::Pointer OptimizerPointer;
+  using typename Superclass::FixedImagePyramidType;
+  using typename Superclass::FixedImagePyramidPointer;
+  using typename Superclass::MovingImagePyramidType;
+  using typename Superclass::MovingImagePyramidPointer;
 
-  typedef typename Superclass::TransformOutputType         TransformOutputType;
-  typedef typename Superclass::TransformOutputPointer      TransformOutputPointer;
-  typedef typename Superclass::TransformOutputConstPointer TransformOutputConstPointer;
+  using typename Superclass::TransformOutputType;
+  using typename Superclass::TransformOutputPointer;
+  using typename Superclass::TransformOutputConstPointer;
 
-  typedef typename Superclass::ParametersType    ParametersType;
-  typedef typename Superclass::DataObjectPointer DataObjectPointer;
+  using typename Superclass::ParametersType;
+  using typename Superclass::DataObjectPointer;
 
   typedef std::vector<FixedImageRegionPyramidType> FixedImageRegionPyramidVectorType;
 

@@ -57,14 +57,14 @@ public:
   itkTypeMacro(ImageSamplerBase, ImageToVectorContainerFilter);
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass::DataObjectPointer            DataObjectPointer;
-  typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
-  typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
-  typedef typename Superclass::InputImageType               InputImageType;
-  typedef typename Superclass::InputImagePointer            InputImagePointer;
-  typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
-  typedef typename Superclass::InputImageRegionType         InputImageRegionType;
-  typedef typename Superclass::InputImagePixelType          InputImagePixelType;
+  using typename Superclass::DataObjectPointer;
+  using typename Superclass::OutputVectorContainerType;
+  using typename Superclass::OutputVectorContainerPointer;
+  using typename Superclass::InputImageType;
+  using typename Superclass::InputImagePointer;
+  using typename Superclass::InputImageConstPointer;
+  using typename Superclass::InputImageRegionType;
+  using typename Superclass::InputImagePixelType;
 
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);

@@ -66,8 +66,8 @@ public:
   itkTypeMacro(RSGDEachParameterApartOptimizer, RSGDEachParameterApartBaseOptimizer);
 
   /** Cost function typedefs. */
-  typedef Superclass::CostFunctionType CostFunctionType;
-  typedef CostFunctionType::Pointer    CostFunctionPointer;
+  using Superclass::CostFunctionType;
+  typedef CostFunctionType::Pointer CostFunctionPointer;
 
 protected:
   RSGDEachParameterApartOptimizer() = default;

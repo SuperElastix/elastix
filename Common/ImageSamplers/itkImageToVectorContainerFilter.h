@@ -47,9 +47,9 @@ public:
   itkTypeMacro(ImageToVectorContainerFilter, VectorContainerSource);
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass::DataObjectPointer            DataObjectPointer;
-  typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
-  typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
+  using typename Superclass::DataObjectPointer;
+  using typename Superclass::OutputVectorContainerType;
+  using typename Superclass::OutputVectorContainerPointer;
 
   /** Some Image related typedefs. */
   typedef TInputImage                           InputImageType;

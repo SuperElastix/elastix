@@ -85,29 +85,29 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedef's inherited from the superclass. */
-  typedef typename Superclass1::OutputType               OutputType;
-  typedef typename Superclass1::InputImageType           InputImageType;
-  typedef typename Superclass1::IndexType                IndexType;
-  typedef typename Superclass1::ContinuousIndexType      ContinuousIndexType;
-  typedef typename Superclass1::PointType                PointType;
-  typedef typename Superclass1::Iterator                 Iterator;
-  typedef typename Superclass1::CoefficientDataType      CoefficientDataType;
-  typedef typename Superclass1::CoefficientImageType     CoefficientImageType;
-  typedef typename Superclass1::CoefficientFilter        CoefficientFilter;
-  typedef typename Superclass1::CoefficientFilterPointer CoefficientFilterPointer;
-  typedef typename Superclass1::CovariantVectorType      CovariantVectorType;
+  using typename Superclass1::OutputType;
+  using typename Superclass1::InputImageType;
+  using typename Superclass1::IndexType;
+  using typename Superclass1::ContinuousIndexType;
+  using typename Superclass1::PointType;
+  using typename Superclass1::Iterator;
+  using typename Superclass1::CoefficientDataType;
+  using typename Superclass1::CoefficientImageType;
+  using typename Superclass1::CoefficientFilter;
+  using typename Superclass1::CoefficientFilterPointer;
+  using typename Superclass1::CovariantVectorType;
 
   /** Typedef's from ResampleInterpolatorBase. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef typename Superclass2::ParameterMapType ParameterMapType;
+  using typename Superclass2::ParameterMapType;
 
   /** Execute stuff before the actual registration:
    * \li Set the spline order.

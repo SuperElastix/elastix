@@ -72,8 +72,8 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass1::ImageDimension);
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass1::InputImageType             InputImageType;
-  typedef typename Superclass1::OutputImageType            OutputImageType;
+  using typename Superclass1::InputImageType;
+  using typename Superclass1::OutputImageType;
   typedef typename Superclass1::InputImageType::PixelType  InputImagePixelType;
   typedef typename Superclass1::OutputImageType::PixelType OutputImagePixelType;
 

@@ -53,34 +53,34 @@ public:
   /** Typedef's from Superclass. */
 
   /** typedef's from itk base Object. */
-  typedef Superclass::ObjectType        ObjectType;
-  typedef Superclass::ObjectPointer     ObjectPointer;
-  typedef Superclass::DataObjectType    DataObjectType;
-  typedef Superclass::DataObjectPointer DataObjectPointer;
+  using Superclass::ObjectType;
+  using Superclass::ObjectPointer;
+  using Superclass::DataObjectType;
+  using Superclass::DataObjectPointer;
 
   /** Elastix components. */
-  typedef Superclass::ElastixBaseType            ElastixBaseType;
-  typedef Superclass::ConfigurationType          ConfigurationType;
-  typedef Superclass::ArgumentMapType            ArgumentMapType;
-  typedef Superclass::ConfigurationPointer       ConfigurationPointer;
-  typedef Superclass::ObjectContainerType        ObjectContainerType;
-  typedef Superclass::DataObjectContainerType    DataObjectContainerType;
-  typedef Superclass::ObjectContainerPointer     ObjectContainerPointer;
-  typedef Superclass::DataObjectContainerPointer DataObjectContainerPointer;
+  using Superclass::ElastixBaseType;
+  using Superclass::ConfigurationType;
+  using Superclass::ArgumentMapType;
+  using Superclass::ConfigurationPointer;
+  using Superclass::ObjectContainerType;
+  using Superclass::DataObjectContainerType;
+  using Superclass::ObjectContainerPointer;
+  using Superclass::DataObjectContainerPointer;
 
   /** Typedefs for the database that holds pointers to New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
    */
-  typedef Superclass::ComponentDatabaseType    ComponentDatabaseType;
-  typedef Superclass::ComponentDatabasePointer ComponentDatabasePointer;
-  typedef Superclass::PtrToCreator             PtrToCreator;
-  typedef Superclass::ComponentDescriptionType ComponentDescriptionType;
-  typedef Superclass::PixelTypeDescriptionType PixelTypeDescriptionType;
-  typedef Superclass::ImageDimensionType       ImageDimensionType;
-  typedef Superclass::DBIndexType              DBIndexType;
+  using Superclass::ComponentDatabaseType;
+  using Superclass::ComponentDatabasePointer;
+  using Superclass::PtrToCreator;
+  using Superclass::ComponentDescriptionType;
+  using Superclass::PixelTypeDescriptionType;
+  using Superclass::ImageDimensionType;
+  using Superclass::DBIndexType;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef Superclass::ParameterMapType ParameterMapType;
+  using Superclass::ParameterMapType;
 
   /** Overwrite Run() from base-class. */
   int

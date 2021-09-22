@@ -57,26 +57,26 @@ public:
   itkStaticConstMacro(ReducedOutputSpaceDimension, unsigned int, NOutputDimensions - 1);
 
   /** Typedefs from the Superclass. */
-  typedef typename Superclass::ScalarType                    ScalarType;
-  typedef typename Superclass::ParametersType                ParametersType;
-  typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
-  typedef typename Superclass::ParametersValueType           ParametersValueType;
-  typedef typename Superclass::JacobianType                  JacobianType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::InputPointType                InputPointType;
-  typedef typename Superclass::InputVectorType               InputVectorType;
-  typedef typename Superclass::OutputVectorType              OutputVectorType;
-  typedef typename Superclass::InputVnlVectorType            InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType           OutputVnlVectorType;
-  typedef typename Superclass::OutputCovariantVectorType     OutputCovariantVectorType;
-  typedef typename Superclass::InputCovariantVectorType      InputCovariantVectorType;
-  typedef typename Superclass::OutputPointType               OutputPointType;
-  typedef typename Superclass::OutputVectorPixelType         OutputVectorPixelType;
-  typedef typename Superclass::InputVectorPixelType          InputVectorPixelType;
+  using typename Superclass::ScalarType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::NumberOfParametersType;
+  using typename Superclass::ParametersValueType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::InputVectorType;
+  using typename Superclass::OutputVectorType;
+  using typename Superclass::InputVnlVectorType;
+  using typename Superclass::OutputVnlVectorType;
+  using typename Superclass::OutputCovariantVectorType;
+  using typename Superclass::InputCovariantVectorType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::OutputVectorPixelType;
+  using typename Superclass::InputVectorPixelType;
 
   /** Sub transform types, having a reduced dimension. */
   typedef AdvancedTransform<TScalarType, Self::ReducedInputSpaceDimension, Self::ReducedOutputSpaceDimension>

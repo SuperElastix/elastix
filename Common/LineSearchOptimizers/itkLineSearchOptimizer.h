@@ -45,10 +45,10 @@ public:
   // itkNewMacro(Self); because this is an abstract base class.
   itkTypeMacro(LineSearchOptimizer, SingleValuedNonLinearOptimizer);
 
-  typedef Superclass::MeasureType      MeasureType;
-  typedef Superclass::ParametersType   ParametersType;
-  typedef Superclass::DerivativeType   DerivativeType;
-  typedef Superclass::CostFunctionType CostFunctionType;
+  using Superclass::MeasureType;
+  using Superclass::ParametersType;
+  using Superclass::DerivativeType;
+  using Superclass::CostFunctionType;
 
   /** Set/Get the LineSearchDirection */
   virtual void

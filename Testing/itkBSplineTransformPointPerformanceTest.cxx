@@ -44,17 +44,17 @@ public:
   itkNewMacro(Self);
   itkTypeMacro(BSplineTransform_TEST, AdvancedBSplineDeformableTransform);
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
-  typedef typename Superclass::InputPointType          InputPointType;
-  typedef typename Superclass::OutputPointType         OutputPointType;
-  typedef typename Superclass::IndexType               IndexType;
-  typedef typename Superclass::ContinuousIndexType     ContinuousIndexType;
-  typedef typename Superclass::WeightsFunctionType     WeightsFunctionType;
-  typedef typename Superclass::WeightsType             WeightsType;
-  typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
-  typedef typename Superclass::ImageType               ImageType;
-  typedef typename Superclass::RegionType              RegionType;
-  typedef typename Superclass::PixelType               PixelType;
-  typedef typename Superclass::ScalarType              ScalarType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
+  using typename Superclass::IndexType;
+  using typename Superclass::ContinuousIndexType;
+  using typename Superclass::WeightsFunctionType;
+  using typename Superclass::WeightsType;
+  using typename Superclass::ParameterIndexArrayType;
+  using typename Superclass::ImageType;
+  using typename Superclass::RegionType;
+  using typename Superclass::PixelType;
+  using typename Superclass::ScalarType;
 
   /** Transform points by a B-spline deformable transformation. */
   OutputPointType

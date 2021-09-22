@@ -72,16 +72,16 @@ public:
   itkStaticConstMacro(ParametersDimension, unsigned int, NDimensions);
 
   /** Standard scalar type for this class. */
-  typedef typename Superclass::ScalarType ScalarType;
+  using typename Superclass::ScalarType;
 
   /** Standard parameters container. */
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::FixedParametersType    FixedParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::TransformCategoryEnum  TransformCategoryEnum;
+  using typename Superclass::ParametersType;
+  using typename Superclass::FixedParametersType;
+  using typename Superclass::NumberOfParametersType;
+  using typename Superclass::TransformCategoryEnum;
 
   /** Standard Jacobian container. */
-  typedef typename Superclass::JacobianType JacobianType;
+  using typename Superclass::JacobianType;
 
   /** Standard vector type for this class. */
   typedef Vector<TScalarType, Self::SpaceDimension> InputVectorType;
@@ -100,12 +100,12 @@ public:
   typedef Point<TScalarType, Self::SpaceDimension> OutputPointType;
 
   /** AdvancedTransform typedefs */
-  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+  using typename Superclass::SpatialJacobianType;
+  using typename Superclass::JacobianOfSpatialJacobianType;
+  using typename Superclass::SpatialHessianType;
+  using typename Superclass::JacobianOfSpatialHessianType;
+  using typename Superclass::InternalMatrixType;
 
   /** This method returns the value of the offset of the
    * AdvancedTranslationTransform.

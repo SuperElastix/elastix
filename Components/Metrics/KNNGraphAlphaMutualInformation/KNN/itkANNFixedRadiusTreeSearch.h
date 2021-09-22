@@ -49,19 +49,19 @@ public:
   itkTypeMacro(ANNFixedRadiusTreeSearch, BinaryANNTreeSearchBase);
 
   /** Typedef's from Superclass. */
-  typedef typename Superclass::ListSampleType        ListSampleType;
-  typedef typename Superclass::BinaryTreeType        BinaryTreeType;
-  typedef typename Superclass::MeasurementVectorType MeasurementVectorType;
-  typedef typename Superclass::IndexArrayType        IndexArrayType;
-  typedef typename Superclass::DistanceArrayType     DistanceArrayType;
+  using typename Superclass::ListSampleType;
+  using typename Superclass::BinaryTreeType;
+  using typename Superclass::MeasurementVectorType;
+  using typename Superclass::IndexArrayType;
+  using typename Superclass::DistanceArrayType;
 
-  typedef typename Superclass::ANNPointType         ANNPointType;         // double *
-  typedef typename Superclass::ANNIndexType         ANNIndexType;         // int
-  typedef typename Superclass::ANNIndexArrayType    ANNIndexArrayType;    // int *
-  typedef typename Superclass::ANNDistanceType      ANNDistanceType;      // double
-  typedef typename Superclass::ANNDistanceArrayType ANNDistanceArrayType; // double *
+  using typename Superclass::ANNPointType;         // double *
+  using typename Superclass::ANNIndexType;         // int
+  using typename Superclass::ANNIndexArrayType;    // int *
+  using typename Superclass::ANNDistanceType;      // double
+  using typename Superclass::ANNDistanceArrayType; // double *
 
-  typedef typename Superclass::BinaryANNTreeType BinaryANNTreeType;
+  using typename Superclass::BinaryANNTreeType;
 
   /** Set and get the error bound eps. */
   itkSetClampMacro(ErrorBound, double, 0.0, 1e14);

@@ -52,9 +52,9 @@ public:
   itkTypeMacro(ScaledSingleValuedCostFunction, SingleValuedCostFunction);
 
   /** Typedefs inherited from the superclass. */
-  typedef Superclass::MeasureType    MeasureType;
-  typedef Superclass::DerivativeType DerivativeType;
-  typedef Superclass::ParametersType ParametersType;
+  using Superclass::MeasureType;
+  using Superclass::DerivativeType;
+  using Superclass::ParametersType;
   // temporary, untill it is fixed in the ITK4
   // typedef IdentifierType NumberOfParametersType; // temp, copied from itk::TransformBase
   typedef unsigned int        NumberOfParametersType; // temp, copied from itk::CostFunction

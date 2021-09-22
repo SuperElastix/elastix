@@ -63,17 +63,17 @@ public:
   /** Image related typedefs. */
   typedef typename TInputImage::Pointer InputImagePointer;
 
-  typedef typename Superclass::RegionType RegionType;
-  typedef typename Superclass::SizeType   SizeType;
-  typedef typename Superclass::IndexType  IndexType;
-  typedef typename Superclass::PixelType  PixelType;
+  using typename Superclass::RegionType;
+  using typename Superclass::SizeType;
+  using typename Superclass::IndexType;
+  using typename Superclass::PixelType;
   typedef typename TInputImage::PointType PointType;
 
   /** Image related typedefs. */
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Type to use for computations. */
-  typedef typename Superclass::RealType RealType;
+  using typename Superclass::RealType;
 
   itkSetMacro(ImageRegion, RegionType);
   itkSetMacro(UseMask, bool);

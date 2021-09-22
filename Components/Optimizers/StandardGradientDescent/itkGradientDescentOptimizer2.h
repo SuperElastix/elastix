@@ -67,13 +67,13 @@ public:
   itkTypeMacro(GradientDescentOptimizer2, ScaledSingleValuedNonLinearOptimizer);
 
   /** Typedefs inherited from the superclass. */
-  typedef Superclass::MeasureType               MeasureType;
-  typedef Superclass::ParametersType            ParametersType;
-  typedef Superclass::DerivativeType            DerivativeType;
-  typedef Superclass::CostFunctionType          CostFunctionType;
-  typedef Superclass::ScalesType                ScalesType;
-  typedef Superclass::ScaledCostFunctionType    ScaledCostFunctionType;
-  typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
+  using Superclass::MeasureType;
+  using Superclass::ParametersType;
+  using Superclass::DerivativeType;
+  using Superclass::CostFunctionType;
+  using Superclass::ScalesType;
+  using Superclass::ScaledCostFunctionType;
+  using Superclass::ScaledCostFunctionPointer;
 
   /** Codes of stopping conditions
    * The MinimumStepSize stopcondition never occurs, but may

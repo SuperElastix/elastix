@@ -102,24 +102,24 @@ public:
   itkNewMacro(Self);
 
   /** OutputType typedef support. */
-  typedef typename Superclass::OutputType OutputType;
+  using typename Superclass::OutputType;
 
   using SizeType = typename TImageType::SizeType;
 
   /** InputImageType typedef support. */
-  typedef typename Superclass::InputImageType InputImageType;
+  using typename Superclass::InputImageType;
 
   /** Dimension underlying input image. */
   itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
 
   /** Index typedef support. */
-  typedef typename Superclass::IndexType IndexType;
+  using typename Superclass::IndexType;
 
   /** ContinuousIndex typedef support. */
-  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+  using typename Superclass::ContinuousIndexType;
 
   /** PointType typedef support */
-  typedef typename Superclass::PointType PointType;
+  using typename Superclass::PointType;
 
   /** Iterator typedef support */
   typedef ImageLinearIteratorWithIndex<TImageType> Iterator;

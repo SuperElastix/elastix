@@ -70,25 +70,25 @@ public:
   itkTypeMacro(StatisticalShapePointPenalty, SingleValuedPointSetToPointSetMetric);
 
   /** Types transferred from the base class */
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  using typename Superclass::TransformType;
+  using typename Superclass::TransformPointer;
+  using typename Superclass::TransformParametersType;
+  using typename Superclass::TransformJacobianType;
+  using typename Superclass::NonZeroJacobianIndicesType;
 
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
-  typedef typename Superclass::FixedPointSetType          FixedPointSetType;
-  typedef typename Superclass::MovingPointSetType         MovingPointSetType;
-  typedef typename Superclass::FixedPointSetConstPointer  FixedPointSetConstPointer;
-  typedef typename Superclass::MovingPointSetConstPointer MovingPointSetConstPointer;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::DerivativeValueType;
+  using typename Superclass::FixedPointSetType;
+  using typename Superclass::MovingPointSetType;
+  using typename Superclass::FixedPointSetConstPointer;
+  using typename Superclass::MovingPointSetConstPointer;
 
-  typedef typename Superclass::PointIterator     PointIterator;
-  typedef typename Superclass::PointDataIterator PointDataIterator;
+  using typename Superclass::PointIterator;
+  using typename Superclass::PointDataIterator;
 
-  typedef typename Superclass::InputPointType  InputPointType;
-  typedef typename Superclass::OutputPointType OutputPointType;
+  using typename Superclass::InputPointType;
+  using typename Superclass::OutputPointType;
 
   typedef typename OutputPointType::CoordRepType CoordRepType;
   typedef vnl_vector<CoordRepType>               VnlVectorType;

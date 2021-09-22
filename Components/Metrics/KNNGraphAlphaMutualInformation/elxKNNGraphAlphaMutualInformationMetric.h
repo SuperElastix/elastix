@@ -107,17 +107,17 @@ public:
   elxClassNameMacro("KNNGraphAlphaMutualInformation");
 
   /** Typedefs inherited from the superclass.*/
-  typedef typename Superclass1::TransformType           TransformType;
-  typedef typename Superclass1::TransformPointer        TransformPointer;
-  typedef typename Superclass1::TransformJacobianType   TransformJacobianType;
-  typedef typename Superclass1::InterpolatorType        InterpolatorType;
-  typedef typename Superclass1::MeasureType             MeasureType;
-  typedef typename Superclass1::DerivativeType          DerivativeType;
-  typedef typename Superclass1::ParametersType          ParametersType;
-  typedef typename Superclass1::FixedImageType          FixedImageType;
-  typedef typename Superclass1::MovingImageType         MovingImageType;
-  typedef typename Superclass1::FixedImageConstPointer  FixedImageConstPointer;
-  typedef typename Superclass1::MovingImageConstPointer MovingImageConstPointer;
+  using typename Superclass1::TransformType;
+  using typename Superclass1::TransformPointer;
+  using typename Superclass1::TransformJacobianType;
+  using typename Superclass1::InterpolatorType;
+  using typename Superclass1::MeasureType;
+  using typename Superclass1::DerivativeType;
+  using typename Superclass1::ParametersType;
+  using typename Superclass1::FixedImageType;
+  using typename Superclass1::MovingImageType;
+  using typename Superclass1::FixedImageConstPointer;
+  using typename Superclass1::MovingImageConstPointer;
 
   /** The fixed image dimension */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
@@ -125,13 +125,13 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedef's inherited from Elastix. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  using typename Superclass2::ElastixType;
+  using typename Superclass2::ElastixPointer;
+  using typename Superclass2::ConfigurationType;
+  using typename Superclass2::ConfigurationPointer;
+  using typename Superclass2::RegistrationType;
+  using typename Superclass2::RegistrationPointer;
+  using typename Superclass2::ITKBaseType;
 
   /** Typedefs for feature images. */
   typedef FixedImageType  FixedFeatureImageType;
