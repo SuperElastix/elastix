@@ -264,7 +264,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 unsigned int
-PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename MeshType::Pointer & mesh)
+PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
 
   typedef itk::MeshFileReader<MeshType> MeshReaderType;
