@@ -277,7 +277,7 @@ MissingStructurePenalty<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 unsigned int
-MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename MeshType::Pointer & mesh)
+MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
   typedef itk::MeshFileReader<MeshType> MeshReaderType;
 

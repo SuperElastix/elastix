@@ -92,8 +92,8 @@ DeformationFieldRegulizer<TAnyITKTransform>::InitializeDeformationFields(void)
  */
 
 template <class TAnyITKTransform>
-typename DeformationFieldRegulizer<TAnyITKTransform>::OutputPointType
-DeformationFieldRegulizer<TAnyITKTransform>::TransformPoint(const InputPointType & inputPoint) const
+auto
+DeformationFieldRegulizer<TAnyITKTransform>::TransformPoint(const InputPointType & inputPoint) const -> OutputPointType
 {
   /** Get the outputpoint of any ITK Transform and the deformation field. */
   OutputPointType oppAnyT, oppDF, opp;

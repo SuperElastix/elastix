@@ -1363,8 +1363,8 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
  */
 
 template <class TElastix>
-typename BSplineTransformWithDiffusion<TElastix>::OutputPointType
-BSplineTransformWithDiffusion<TElastix>::TransformPoint(const InputPointType & point) const
+auto
+BSplineTransformWithDiffusion<TElastix>::TransformPoint(const InputPointType & point) const -> OutputPointType
 {
   return this->GenericDeformationFieldRegulizer::TransformPoint(point);
 
