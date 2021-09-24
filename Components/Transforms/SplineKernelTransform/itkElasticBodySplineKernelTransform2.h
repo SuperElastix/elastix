@@ -97,7 +97,7 @@ public:
 
 
   /** Get alpha */
-  elxOverrideGetConstMacro(Alpha, TScalarType);
+  itkGetConstMacro(Alpha, TScalarType);
 
   /** Convenience method */
   void
