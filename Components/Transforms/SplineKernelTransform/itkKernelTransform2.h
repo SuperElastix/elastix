@@ -282,11 +282,6 @@ public:
   virtual void
   SetAlpha(TScalarType itkNotUsed(Alpha))
   {}
-  virtual TScalarType
-  GetAlpha(void) const
-  {
-    return -1.0;
-  }
 
   /** This method makes only sense for the ElasticBody splines.
    * Declare here, so that you can always call it if you don't know
