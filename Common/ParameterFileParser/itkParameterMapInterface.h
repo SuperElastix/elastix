@@ -437,9 +437,8 @@ private:
   static bool
   StringCast(const std::string & parameterValue, T & casted)
   {
-    // StringCast is only called by the templated ReadParameter<T>, while there
-    // is a non-templated ReadParameter overload for `bool` parameter values.
-    static_assert(!std::is_same<T, bool>::value, "StringCast does not support bool!");
+    // Conversion to bool is supported by another StringCast overload.
+    static_assert(!std::is_same<T, bool>::value, "This StringCast<T> overload does not support bool!");
 
     // 8-bits (signed/unsigned) char types are supported by other StringCast
     // overloads.
@@ -495,6 +494,10 @@ private:
 
   static bool
   StringCast(const std::string & parameterValue, unsigned char & casted);
+
+  /** Overload to cast a string to a bool. Returns true when casting was successful and false otherwise. */
+  static bool
+  StringCast(const std::string & parameterValue, bool & casted);
 };
 
 } // end of namespace itk

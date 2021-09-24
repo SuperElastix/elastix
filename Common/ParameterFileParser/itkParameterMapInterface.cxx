@@ -131,15 +131,8 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
 
   /** Translate the read-in string to boolean. */
   parameterValue = false;
-  if (parameterValueString == "true")
-  {
-    parameterValue = true;
-  }
-  else if (parameterValueString == "false")
-  {
-    parameterValue = false;
-  }
-  else
+
+  if (!StringCast(parameterValueString, parameterValue))
   {
     /** Trying to read a string other than "true" or "false" as a boolean. */
     std::stringstream ss;
@@ -272,6 +265,23 @@ bool
 ParameterMapInterface::StringCast(const std::string & parameterValue, unsigned char & casted)
 {
   return StringCastToCharType(parameterValue, casted);
+}
+
+
+bool
+ParameterMapInterface::StringCast(const std::string & parameterValue, bool & casted)
+{
+  if (parameterValue == "false")
+  {
+    casted = false;
+    return true;
+  }
+  if (parameterValue == "true")
+  {
+    casted = true;
+    return true;
+  }
+  return false;
 }
 
 
