@@ -125,8 +125,6 @@ public:
   }
 
 
-  // itkGetMacro( SplineOrder, unsigned int * );
-
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
   itkConceptMacro(DimensionCheck, (Concept::SameDimension<ImageDimension, OutputImageDimension>));
