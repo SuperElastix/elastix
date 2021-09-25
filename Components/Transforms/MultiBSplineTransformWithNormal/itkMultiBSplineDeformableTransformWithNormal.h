@@ -244,7 +244,7 @@ public:
   void
   SetLabels(ImageLabelType * labels);
 
-  itkGetMacro(Labels, ImageLabelType *);
+  itkGetConstMacro(Labels, ImageLabelType *);
 
   itkGetConstMacro(NbLabels, unsigned char);
 
@@ -252,7 +252,7 @@ public:
   void
   UpdateLocalBases(void);
 
-  itkGetMacro(LocalBases, ImageBaseType *);
+  itkGetConstMacro(LocalBases, ImageBaseType *);
 
   /** Parameter index array type. */
   typedef Array<unsigned long> ParameterIndexArrayType;

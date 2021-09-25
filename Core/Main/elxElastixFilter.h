@@ -154,7 +154,7 @@ public:
 
   /** Set/Get/Remove initial transform parameter filename. */
   itkSetMacro(InitialTransformParameterFileName, std::string);
-  itkGetMacro(InitialTransformParameterFileName, std::string);
+  itkGetConstMacro(InitialTransformParameterFileName, std::string);
   virtual void
   RemoveInitialTransformParameterFileName(void)
   {
@@ -163,7 +163,7 @@ public:
 
   /** Set/Get/Remove fixed point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
-  itkGetMacro(FixedPointSetFileName, std::string);
+  itkGetConstMacro(FixedPointSetFileName, std::string);
   void
   RemoveFixedPointSetFileName(void)
   {
@@ -172,7 +172,7 @@ public:
 
   /** Set/Get/Remove moving point set filename. */
   itkSetMacro(MovingPointSetFileName, std::string);
-  itkGetMacro(MovingPointSetFileName, std::string);
+  itkGetConstMacro(MovingPointSetFileName, std::string);
   void
   RemoveMovingPointSetFileName(void)
   {
@@ -181,7 +181,7 @@ public:
 
   /** Set/Get/Remove output directory. */
   itkSetMacro(OutputDirectory, std::string);
-  itkGetMacro(OutputDirectory, std::string);
+  itkGetConstMacro(OutputDirectory, std::string);
   void
   RemoveOutputDirectory()
   {
@@ -214,7 +214,7 @@ public:
   }
 
   itkSetMacro(NumberOfThreads, int);
-  itkGetMacro(NumberOfThreads, int);
+  itkGetConstMacro(NumberOfThreads, int);
 
 protected:
   ElastixFilter(void);

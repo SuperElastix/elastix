@@ -118,41 +118,41 @@ public:
 
   /** Set/Get the shrinkageIntensity parameter. */
   itkSetClampMacro(ShrinkageIntensity, MeasureType, 0.0, 1.0);
-  itkGetMacro(ShrinkageIntensity, MeasureType);
+  itkGetConstMacro(ShrinkageIntensity, MeasureType);
 
   itkSetMacro(ShrinkageIntensityNeedsUpdate, bool);
   itkBooleanMacro(ShrinkageIntensityNeedsUpdate);
 
   /** Set/Get the BaseVariance parameter. */
   itkSetClampMacro(BaseVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
-  itkGetMacro(BaseVariance, MeasureType);
+  itkGetConstMacro(BaseVariance, MeasureType);
 
   itkSetMacro(BaseVarianceNeedsUpdate, bool);
   itkBooleanMacro(BaseVarianceNeedsUpdate);
 
   itkSetClampMacro(CentroidXVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
-  itkGetMacro(CentroidXVariance, MeasureType);
+  itkGetConstMacro(CentroidXVariance, MeasureType);
 
   itkSetClampMacro(CentroidYVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
-  itkGetMacro(CentroidYVariance, MeasureType);
+  itkGetConstMacro(CentroidYVariance, MeasureType);
 
   itkSetClampMacro(CentroidZVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
-  itkGetMacro(CentroidZVariance, MeasureType);
+  itkGetConstMacro(CentroidZVariance, MeasureType);
 
   itkSetClampMacro(SizeVariance, MeasureType, -1.0, NumericTraits<MeasureType>::max());
-  itkGetMacro(SizeVariance, MeasureType);
+  itkGetConstMacro(SizeVariance, MeasureType);
 
   itkSetMacro(VariancesNeedsUpdate, bool);
   itkBooleanMacro(VariancesNeedsUpdate);
 
   itkSetClampMacro(CutOffValue, MeasureType, 0.0, NumericTraits<MeasureType>::max());
-  itkGetMacro(CutOffValue, MeasureType);
+  itkGetConstMacro(CutOffValue, MeasureType);
 
   itkSetClampMacro(CutOffSharpness,
                    MeasureType,
                    NumericTraits<MeasureType>::NonpositiveMin(),
                    NumericTraits<MeasureType>::max());
-  itkGetMacro(CutOffSharpness, MeasureType);
+  itkGetConstMacro(CutOffSharpness, MeasureType);
 
   itkSetMacro(ShapeModelCalculation, int);
   itkGetConstReferenceMacro(ShapeModelCalculation, int);

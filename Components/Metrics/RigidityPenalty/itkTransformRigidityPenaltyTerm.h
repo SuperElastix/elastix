@@ -206,15 +206,15 @@ public:
 
   /** Set/Get the weight of the linearity condition part. */
   itkSetClampMacro(LinearityConditionWeight, ScalarType, 0.0, NumericTraits<ScalarType>::max());
-  itkGetMacro(LinearityConditionWeight, ScalarType);
+  itkGetConstMacro(LinearityConditionWeight, ScalarType);
 
   /** Set/Get the weight of the orthonormality condition part. */
   itkSetClampMacro(OrthonormalityConditionWeight, ScalarType, 0.0, NumericTraits<ScalarType>::max());
-  itkGetMacro(OrthonormalityConditionWeight, ScalarType);
+  itkGetConstMacro(OrthonormalityConditionWeight, ScalarType);
 
   /** Set/Get the weight of the properness condition part. */
   itkSetClampMacro(PropernessConditionWeight, ScalarType, 0.0, NumericTraits<ScalarType>::max());
-  itkGetMacro(PropernessConditionWeight, ScalarType);
+  itkGetConstMacro(PropernessConditionWeight, ScalarType);
 
   /** Set the usage of the linearity condition part. */
   itkSetMacro(UseLinearityCondition, bool);

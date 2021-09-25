@@ -85,7 +85,7 @@ public:
 
   /** Set/Get/Remove moving point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
-  itkGetMacro(FixedPointSetFileName, std::string);
+  itkGetConstMacro(FixedPointSetFileName, std::string);
   virtual void
   RemoveFixedPointSetFileName()
   {

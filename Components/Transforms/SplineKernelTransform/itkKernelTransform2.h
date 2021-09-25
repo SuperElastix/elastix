@@ -271,7 +271,7 @@ public:
   }
 
 
-  itkGetMacro(Stiffness, double);
+  itkGetConstMacro(Stiffness, double);
 
   /** This method makes only sense for the ElasticBody splines.
    * Declare here, so that you can always call it if you don't know

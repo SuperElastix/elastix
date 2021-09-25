@@ -134,7 +134,7 @@ public:
   MarkExactlyOneOfArgumentsAsRequired(const std::vector<std::string> & arguments, const std::string & helpText = "");
 
   itkSetMacro(ProgramHelpText, std::string);
-  itkGetMacro(ProgramHelpText, std::string);
+  itkGetConstMacro(ProgramHelpText, std::string);
 
   /** Get command line argument if arg is a vector type. */
   template <class T>

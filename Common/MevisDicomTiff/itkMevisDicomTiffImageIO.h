@@ -115,9 +115,9 @@ public:
 
   itkNewMacro(Self);
   itkTypeMacro(MevisDicomTiffImageIO, Superclass);
-  itkGetMacro(RescaleSlope, double);
-  itkGetMacro(RescaleIntercept, double);
-  itkGetMacro(GantryTilt, double);
+  itkGetConstMacro(RescaleSlope, double);
+  itkGetConstMacro(RescaleIntercept, double);
+  itkGetConstMacro(GantryTilt, double);
 
   virtual bool
   CanReadFile(const char *);
