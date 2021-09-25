@@ -196,7 +196,7 @@ public:
   /** Get the Sampled Segmented Image. */
   itkGetModifiableObjectMacro(SampledSegmentedImage, SegmentedImageType);
 
-  itkGetMacro(NumberOfRigidGrids, unsigned int);
+  itkGetConstMacro(NumberOfRigidGrids, unsigned int);
 
 protected:
   /** The constructor. */

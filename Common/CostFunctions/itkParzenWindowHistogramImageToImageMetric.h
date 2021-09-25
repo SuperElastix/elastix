@@ -167,7 +167,7 @@ public:
    * should at least be equal to four.
    */
   itkSetClampMacro(NumberOfFixedHistogramBins, unsigned long, 4, NumericTraits<unsigned long>::max());
-  itkGetMacro(NumberOfFixedHistogramBins, unsigned long);
+  itkGetConstMacro(NumberOfFixedHistogramBins, unsigned long);
 
   /** Number of bins to use for the moving image in the histogram.
    * Typical value is 32.  The minimum value is 4 due to the padding
@@ -176,7 +176,7 @@ public:
    * should at least be equal to four.
    */
   itkSetClampMacro(NumberOfMovingHistogramBins, unsigned long, 4, NumericTraits<unsigned long>::max());
-  itkGetMacro(NumberOfMovingHistogramBins, unsigned long);
+  itkGetConstMacro(NumberOfMovingHistogramBins, unsigned long);
 
   /** The B-spline order of the fixed Parzen window; default: 0 */
   itkSetClampMacro(FixedKernelBSplineOrder, unsigned int, 0, 3);

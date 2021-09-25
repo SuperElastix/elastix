@@ -200,7 +200,7 @@ public:
 
   /** Set and Get the UseRelativeWeights variable. */
   itkSetMacro(UseRelativeWeights, bool);
-  itkGetMacro(UseRelativeWeights, bool);
+  itkGetConstMacro(UseRelativeWeights, bool);
 
   /** Select which metrics are used.
    * This is useful in case you want to compute a certain measure, but not

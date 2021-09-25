@@ -153,11 +153,11 @@ public:
 
   /** Set/get the air intensity value */
   itkSetMacro(AirValue, RealType);
-  itkGetMacro(AirValue, RealType);
+  itkGetConstMacro(AirValue, RealType);
 
   /** Set/get the tissue intensity value */
   itkSetMacro(TissueValue, RealType);
-  itkGetMacro(TissueValue, RealType);
+  itkGetConstMacro(TissueValue, RealType);
 
 protected:
   SumSquaredTissueVolumeDifferenceImageToImageMetric();

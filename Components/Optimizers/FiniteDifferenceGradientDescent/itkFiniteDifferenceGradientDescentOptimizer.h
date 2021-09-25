@@ -109,23 +109,23 @@ public:
 
   /** Set/Get a. */
   itkSetMacro(Param_a, double);
-  itkGetMacro(Param_a, double);
+  itkGetConstMacro(Param_a, double);
 
   /** Set/Get c. */
   itkSetMacro(Param_c, double);
-  itkGetMacro(Param_c, double);
+  itkGetConstMacro(Param_c, double);
 
   /** Set/Get A. */
   itkSetMacro(Param_A, double);
-  itkGetMacro(Param_A, double);
+  itkGetConstMacro(Param_A, double);
 
   /** Set/Get alpha. */
   itkSetMacro(Param_alpha, double);
-  itkGetMacro(Param_alpha, double);
+  itkGetConstMacro(Param_alpha, double);
 
   /** Set/Get gamma. */
   itkSetMacro(Param_gamma, double);
-  itkGetMacro(Param_gamma, double);
+  itkGetConstMacro(Param_gamma, double);
 
   itkGetConstMacro(ComputeCurrentValue, bool);
   itkSetMacro(ComputeCurrentValue, bool);

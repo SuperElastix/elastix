@@ -176,10 +176,10 @@ public:
   itkSetMacro(MovingImagePixelType, PixelTypeDescriptionType);
   itkSetMacro(FixedImageDimension, ImageDimensionType);
   itkSetMacro(MovingImageDimension, ImageDimensionType);
-  itkGetMacro(FixedImagePixelType, PixelTypeDescriptionType);
-  itkGetMacro(MovingImagePixelType, PixelTypeDescriptionType);
-  itkGetMacro(FixedImageDimension, ImageDimensionType);
-  itkGetMacro(MovingImageDimension, ImageDimensionType);
+  itkGetConstMacro(FixedImagePixelType, PixelTypeDescriptionType);
+  itkGetConstMacro(MovingImagePixelType, PixelTypeDescriptionType);
+  itkGetConstMacro(FixedImageDimension, ImageDimensionType);
+  itkGetConstMacro(MovingImageDimension, ImageDimensionType);
 
   /** Set/Get functions for the fixed and moving images
    * (if these are not used, elastix tries to read them from disk,
