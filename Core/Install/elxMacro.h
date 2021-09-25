@@ -253,12 +253,6 @@
   static const char * elxGetClassNameStatic(void) { return _name; }                                                    \
   const char *        elxGetClassName(void) const override { return _name; }
 
-/** Get built-in type.  Creates an override of the virtual member Get"name"()
- * This is the "const" form of the itkGetMacro.  It should be used unless
- * the member can be changed through the "Get" access routine. */
-#define elxOverrideGetConstMacro(name, type)                                                                           \
-  type Get##name() const override { return this->m_##name; }
-
 /** Declares a pair of pure virtual member functions (overloaded for const
  * and non-const) to get a reference to itself, of the specified type.
  */
