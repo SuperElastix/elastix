@@ -198,28 +198,24 @@ public:
   virtual void
   SetGridRegion(const RegionType & region) = 0;
 
-  // itkGetMacro( GridRegion, RegionType );
   itkGetConstMacro(GridRegion, RegionType);
 
   /** This method specifies the grid spacing or resolution. */
   virtual void
   SetGridSpacing(const SpacingType & spacing);
 
-  // itkGetMacro( GridSpacing, SpacingType );
   itkGetConstMacro(GridSpacing, SpacingType);
 
   /** This method specifies the grid directions . */
   virtual void
   SetGridDirection(const DirectionType & direction);
 
-  // itkGetMacro( GridDirection, DirectionType );
   itkGetConstMacro(GridDirection, DirectionType);
 
   /** This method specifies the grid origin. */
   virtual void
   SetGridOrigin(const OriginType & origin);
 
-  // itkGetMacro( GridOrigin, OriginType );
   itkGetConstMacro(GridOrigin, OriginType);
 
   /** Parameter index array type. */
