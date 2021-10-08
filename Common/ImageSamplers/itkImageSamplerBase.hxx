@@ -79,8 +79,8 @@ ImageSamplerBase<TInputImage>::SetMask(const MaskType * _arg, unsigned int pos)
  */
 
 template <class TInputImage>
-const typename ImageSamplerBase<TInputImage>::MaskType *
-ImageSamplerBase<TInputImage>::GetMask(unsigned int pos) const
+auto
+ImageSamplerBase<TInputImage>::GetMask(unsigned int pos) const -> const MaskType *
 {
   if (this->m_MaskVector.size() < pos + 1)
   {
@@ -139,8 +139,8 @@ ImageSamplerBase<TInputImage>::SetInputImageRegion(const InputImageRegionType _a
  */
 
 template <class TInputImage>
-const typename ImageSamplerBase<TInputImage>::InputImageRegionType &
-ImageSamplerBase<TInputImage>::GetInputImageRegion(unsigned int pos) const
+auto
+ImageSamplerBase<TInputImage>::GetInputImageRegion(unsigned int pos) const -> const InputImageRegionType &
 {
   if (this->m_InputImageRegionVector.size() < pos + 1)
   {

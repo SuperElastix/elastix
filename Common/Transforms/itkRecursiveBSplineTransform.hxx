@@ -46,8 +46,9 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::RecursiveBSplineT
  */
 
 template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
-typename RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::OutputPointType
+auto
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(const InputPointType & point) const
+  -> OutputPointType
 {
   /** Define some constants. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;

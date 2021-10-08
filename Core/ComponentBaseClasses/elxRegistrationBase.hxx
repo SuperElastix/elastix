@@ -95,11 +95,11 @@ RegistrationBase<TElastix>::ReadMaskParameters(UseMaskErosionArrayType & useMask
  */
 
 template <class TElastix>
-typename RegistrationBase<TElastix>::FixedMaskSpatialObjectPointer
+auto
 RegistrationBase<TElastix>::GenerateFixedMaskSpatialObject(const FixedMaskImageType *    maskImage,
                                                            bool                          useMaskErosion,
                                                            const FixedImagePyramidType * pyramid,
-                                                           unsigned int                  level) const
+                                                           unsigned int level) const -> FixedMaskSpatialObjectPointer
 {
   FixedMaskSpatialObjectPointer fixedMaskSpatialObject; // default-constructed (null)
   if (!maskImage)
@@ -157,11 +157,11 @@ RegistrationBase<TElastix>::GenerateFixedMaskSpatialObject(const FixedMaskImageT
  */
 
 template <class TElastix>
-typename RegistrationBase<TElastix>::MovingMaskSpatialObjectPointer
+auto
 RegistrationBase<TElastix>::GenerateMovingMaskSpatialObject(const MovingMaskImageType *    maskImage,
                                                             bool                           useMaskErosion,
                                                             const MovingImagePyramidType * pyramid,
-                                                            unsigned int                   level) const
+                                                            unsigned int level) const -> MovingMaskSpatialObjectPointer
 {
   MovingMaskSpatialObjectPointer movingMaskSpatialObject; // default-constructed (null)
   if (!maskImage)

@@ -244,9 +244,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 // Transform a point
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::OutputPointType
+auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
-  const InputPointType & point) const
+  const InputPointType & point) const -> OutputPointType
 {
   return m_Matrix * point + m_Offset;
 }
@@ -254,9 +254,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 // Transform a vector
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::OutputVectorType
+auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformVector(
-  const InputVectorType & vect) const
+  const InputVectorType & vect) const -> OutputVectorType
 {
   return m_Matrix * vect;
 }
@@ -264,9 +264,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 // Transform a vnl_vector_fixed
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::OutputVnlVectorType
+auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformVector(
-  const InputVnlVectorType & vect) const
+  const InputVnlVectorType & vect) const -> OutputVnlVectorType
 {
   return m_Matrix * vect;
 }
@@ -274,9 +274,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 // Transform a CovariantVector
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::OutputCovariantVectorType
+auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformCovariantVector(
-  const InputCovariantVectorType & vec) const
+  const InputCovariantVectorType & vec) const -> OutputCovariantVectorType
 {
   OutputCovariantVectorType result; // Converted vector
 
@@ -294,8 +294,9 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 // Recompute the inverse matrix (internal)
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::InverseMatrixType &
+auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetInverseMatrix(void) const
+  -> const InverseMatrixType &
 {
   // If the transform has been modified we recompute the inverse
   if (m_InverseMatrixMTime != m_MatrixMTime)
@@ -373,8 +374,9 @@ const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, 
 
 // Get parameters
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::ParametersType &
+auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(void) const
+  -> const ParametersType &
 {
   // Transfer the linear part
   unsigned int par = 0;

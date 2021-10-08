@@ -110,8 +110,8 @@ AffineDTI2DTransform<TScalarType>::SetParameters(const ParametersType & paramete
 
 // Get Parameters
 template <class TScalarType>
-const typename AffineDTI2DTransform<TScalarType>::ParametersType &
-AffineDTI2DTransform<TScalarType>::GetParameters(void) const
+auto
+AffineDTI2DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
 {
   this->m_Parameters[0] = this->m_Angle[0];
   this->m_Parameters[1] = this->m_Shear[0];

@@ -139,9 +139,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-typename ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::OutputType
+auto
 ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::EvaluateAtContinuousIndex(
-  const ContinuousIndexType & x) const
+  const ContinuousIndexType & x) const -> OutputType
 {
   /** Allocate memory on the stack: */
   const unsigned int maxSplineOrder = 5;
@@ -188,9 +188,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-typename ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::CovariantVectorType
+auto
 ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::
-  EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x) const
+  EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x) const -> CovariantVectorType
 {
   /** Allocate memory on the stack: */
   const unsigned int maxSplineOrder = 5;

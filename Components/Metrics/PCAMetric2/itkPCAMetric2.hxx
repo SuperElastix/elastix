@@ -144,8 +144,8 @@ PCAMetric2<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
  */
 
 template <class TFixedImage, class TMovingImage>
-typename PCAMetric2<TFixedImage, TMovingImage>::MeasureType
-PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & parameters) const
+auto
+PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
   bool UseGetValueAndDerivative = false;

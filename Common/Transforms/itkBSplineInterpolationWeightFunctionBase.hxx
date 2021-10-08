@@ -145,9 +145,9 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
  */
 
 template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-typename BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::WeightsType
+auto
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
-  const ContinuousIndexType & cindex) const
+  const ContinuousIndexType & cindex) const -> WeightsType
 {
   /** Construct arguments for the Evaluate function that really does the work. */
   WeightsType weights(this->m_NumberOfWeights);

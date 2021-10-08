@@ -126,8 +126,8 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::os
  */
 
 template <class TFixedImage, class TMovingImage>
-typename PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
-PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() const
+auto
+PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() const -> MeasureType
 {
   MeasureType measure = NumericTraits<MeasureType>::Zero;
   MeasureType diff = NumericTraits<MeasureType>::Zero;
@@ -219,9 +219,9 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() 
  */
 
 template <class TFixedImage, class TMovingImage>
-typename PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(const TransformParametersType & parameters,
-                                                                             float scalingfactor) const
+                                                                             float scalingfactor) const -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -330,9 +330,9 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(con
  */
 
 template <class TFixedImage, class TMovingImage>
-typename PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );

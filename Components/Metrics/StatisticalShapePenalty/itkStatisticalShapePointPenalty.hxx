@@ -342,9 +342,9 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
  */
 
 template <class TFixedPointSet, class TMovingPointSet>
-typename StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::MeasureType
+auto
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   /** Sanity checks. */
   FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();

@@ -258,8 +258,8 @@ AdvancedRigid2DTransform<TScalarType>::SetParameters(const ParametersType & para
 
 // Get Parameters
 template <class TScalarType>
-const typename AdvancedRigid2DTransform<TScalarType>::ParametersType &
-AdvancedRigid2DTransform<TScalarType>::GetParameters(void) const
+auto
+AdvancedRigid2DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
 

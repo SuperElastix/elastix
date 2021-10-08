@@ -52,8 +52,8 @@ ExponentialLimiterFunction<TInput, NDimension>::Initialize(void)
  */
 
 template <class TInput, unsigned int NDimension>
-typename ExponentialLimiterFunction<TInput, NDimension>::OutputType
-ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const
+auto
+ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const -> OutputType
 {
   /** Apply a soft limit if the input is larger than the UpperThreshold */
   const double diffU = static_cast<double>(input - this->m_UpperThreshold);
@@ -79,8 +79,9 @@ ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input
  */
 
 template <class TInput, unsigned int NDimension>
-typename ExponentialLimiterFunction<TInput, NDimension>::OutputType
+auto
 ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input, DerivativeType & derivative) const
+  -> OutputType
 {
   /** Apply a soft limit if the input is larger than the UpperThreshold */
   const double diffU = static_cast<double>(input - this->m_UpperThreshold);

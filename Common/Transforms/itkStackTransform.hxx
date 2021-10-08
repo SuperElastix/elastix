@@ -67,8 +67,8 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(
  */
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-const typename StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::ParametersType &
-StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(void) const
+auto
+StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(void) const -> const ParametersType &
 {
   this->m_Parameters.SetSize(this->GetNumberOfParameters());
 
@@ -92,8 +92,9 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(
  */
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-typename StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::OutputPointType
+auto
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(const InputPointType & ipp) const
+  -> OutputPointType
 {
   /** Reduce dimension of input point. */
   SubTransformInputPointType ippr;
@@ -173,8 +174,9 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(co
  */
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-typename StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::NumberOfParametersType
+auto
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetNumberOfNonZeroJacobianIndices(void) const
+  -> NumberOfParametersType
 {
   return this->m_SubTransformContainer[0]->GetNumberOfNonZeroJacobianIndices();
 

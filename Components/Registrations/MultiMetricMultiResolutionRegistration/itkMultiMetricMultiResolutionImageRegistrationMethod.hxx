@@ -47,8 +47,8 @@
 /** Macro that implements the get methods. */
 #define itkImplementationGetMacro(_name, _type1, _type2)                                                               \
   template <typename TFixedImage, typename TMovingImage>                                                               \
-  _type1 typename MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::_type2                 \
-    MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const   \
+  auto MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Get##_name(unsigned int pos)      \
+    const->_type1 _type2                                                                                               \
   {                                                                                                                    \
     if (pos >= this->GetNumberOf##_name##s())                                                                          \
     {                                                                                                                  \
@@ -98,9 +98,9 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,
  */
 
 template <typename TFixedImage, typename TMovingImage>
-const typename MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::FixedImageRegionType &
+auto
 MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::GetFixedImageRegion(
-  unsigned int pos) const
+  unsigned int pos) const -> const FixedImageRegionType &
 {
   if (pos >= this->GetNumberOfFixedImageRegions())
   {

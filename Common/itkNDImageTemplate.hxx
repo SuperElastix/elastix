@@ -115,15 +115,15 @@ NDImageTemplate<TPixel, VDimension>::GetBufferPointer() const
 
 
 template <class TPixel, unsigned int VDimension>
-typename NDImageTemplate<TPixel, VDimension>::PixelContainer *
-NDImageTemplate<TPixel, VDimension>::GetPixelContainer()
+auto
+NDImageTemplate<TPixel, VDimension>::GetPixelContainer() -> PixelContainer *
 {
   return this->m_Image->GetPixelContainer();
 }
 
 template <class TPixel, unsigned int VDimension>
-const typename NDImageTemplate<TPixel, VDimension>::PixelContainer *
-NDImageTemplate<TPixel, VDimension>::GetPixelContainer() const
+auto
+NDImageTemplate<TPixel, VDimension>::GetPixelContainer() const -> const PixelContainer *
 {
   return this->m_Image->GetPixelContainer();
 }
@@ -137,16 +137,16 @@ NDImageTemplate<TPixel, VDimension>::SetPixelContainer(PixelContainer * containe
 
 
 template <class TPixel, unsigned int VDimension>
-typename NDImageTemplate<TPixel, VDimension>::AccessorType
-NDImageTemplate<TPixel, VDimension>::GetPixelAccessor(void)
+auto
+NDImageTemplate<TPixel, VDimension>::GetPixelAccessor(void) -> AccessorType
 {
   return this->m_Image->GetPixelAccessor();
 }
 
 
 template <class TPixel, unsigned int VDimension>
-const typename NDImageTemplate<TPixel, VDimension>::AccessorType
-NDImageTemplate<TPixel, VDimension>::GetPixelAccessor(void) const
+auto
+NDImageTemplate<TPixel, VDimension>::GetPixelAccessor(void) const -> const AccessorType
 {
   return this->m_Image->GetPixelAccessor();
 }
@@ -169,16 +169,16 @@ NDImageTemplate<TPixel, VDimension>::SetOrigin(const PointType & origin)
 
 
 template <class TPixel, unsigned int VDimension>
-typename NDImageTemplate<TPixel, VDimension>::SpacingType
-NDImageTemplate<TPixel, VDimension>::GetSpacing(void)
+auto
+NDImageTemplate<TPixel, VDimension>::GetSpacing(void) -> SpacingType
 {
   return ConvertToDynamicArray<SpacingTypeD, SpacingType>::DO(this->m_Image->GetSpacing());
 }
 
 
 template <class TPixel, unsigned int VDimension>
-typename NDImageTemplate<TPixel, VDimension>::PointType
-NDImageTemplate<TPixel, VDimension>::GetOrigin(void)
+auto
+NDImageTemplate<TPixel, VDimension>::GetOrigin(void) -> PointType
 {
   return ConvertToDynamicArray<PointTypeD, PointType>::DO(this->m_Image->GetOrigin());
 }
@@ -193,23 +193,23 @@ NDImageTemplate<TPixel, VDimension>::CopyInformation(const DataObject * data)
 
 
 template <class TPixel, unsigned int VDimension>
-const typename NDImageTemplate<TPixel, VDimension>::OffsetValueType *
-NDImageTemplate<TPixel, VDimension>::GetOffsetTable() const
+auto
+NDImageTemplate<TPixel, VDimension>::GetOffsetTable() const -> const OffsetValueType *
 {
   return this->m_Image->GetOffsetTable();
 }
 
 template <class TPixel, unsigned int VDimension>
-typename NDImageTemplate<TPixel, VDimension>::OffsetValueType
-NDImageTemplate<TPixel, VDimension>::ComputeOffset(const IndexType & ind) const
+auto
+NDImageTemplate<TPixel, VDimension>::ComputeOffset(const IndexType & ind) const -> OffsetValueType
 {
   return this->m_Image->ComputeOffset(ConvertToStaticArray<IndexType, IndexTypeD>::DO(ind));
 }
 
 
 template <class TPixel, unsigned int VDimension>
-typename NDImageTemplate<TPixel, VDimension>::IndexType
-NDImageTemplate<TPixel, VDimension>::ComputeIndex(OffsetValueType offset) const
+auto
+NDImageTemplate<TPixel, VDimension>::ComputeIndex(OffsetValueType offset) const -> IndexType
 {
   return ConvertToDynamicArray<IndexTypeD, IndexType>::DO(this->m_Image->ComputeIndex(offset));
 }

@@ -187,8 +187,8 @@ AdvancedSimilarity3DTransform<TScalarType>::SetParameters(const ParametersType &
 //
 
 template <class TScalarType>
-const typename AdvancedSimilarity3DTransform<TScalarType>::ParametersType &
-AdvancedSimilarity3DTransform<TScalarType>::GetParameters(void) const
+auto
+AdvancedSimilarity3DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
 

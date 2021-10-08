@@ -336,10 +336,10 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance
  */
 
 template <class TFixedImage, class TMovingImage>
-typename GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
   const TransformParametersType & parameters,
-  const double *                  subtractionFactor) const
+  const double *                  subtractionFactor) const -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -444,9 +444,9 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
  */
 
 template <class TFixedImage, class TMovingImage>
-typename GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   unsigned int iFilter;
   unsigned int iDimension;

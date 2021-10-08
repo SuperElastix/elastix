@@ -62,8 +62,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 // Get the number of parameters
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::NumberOfParametersType
+auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParameters(void) const
+  -> NumberOfParametersType
 {
   if (m_NbLabels > 0)
   {
@@ -79,9 +80,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 // Get the number of parameters per dimension
 // FIXME :  Do we need to declare this function ?
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::NumberOfParametersType
+auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParametersPerDimension(
-  void) const
+  void) const -> NumberOfParametersType
 {
   // FIXME : Depends on which dimension we are speaking here. should check it
   if (m_NbLabels > 0)
@@ -114,8 +115,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 #define GET_FIRST_LABEL(FUNC, TYPE)                                                                                    \
   template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                                    \
-  typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::TYPE                     \
-    MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Get##FUNC() const               \
+  auto MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Get##FUNC() const->TYPE      \
   {                                                                                                                    \
     return m_Trans[0]->Get##FUNC();                                                                                    \
   }
@@ -585,8 +585,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-const typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::ParametersType &
+auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetParameters(void) const
+  -> const ParametersType &
 {
   /** NOTE: For efficiency, this class does not keep a copy of the parameters -
    * it just keeps pointer to input parameters.
@@ -602,8 +603,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-const typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::ParametersType &
+auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetFixedParameters(void) const
+  -> const ParametersType &
 {
   return (m_Trans[0]->GetFixedParameters());
 }
@@ -649,9 +651,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::OutputPointType
+auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
-  const InputPointType & point) const
+  const InputPointType & point) const -> OutputPointType
 {
   int lidx = 0;
   this->PointToLabel(point, lidx);
@@ -666,9 +668,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 // template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-// const typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::JacobianType&
+// auto
 // MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
-//::GetJacobian( const InputPointType & point ) const
+//::GetJacobian( const InputPointType & point ) const -> const JacobianType&
 //{
 //  this->m_Jacobian.set_size(SpaceDimension, this->GetNumberOfParameters());
 //  this->m_Jacobian.Fill(0.0);

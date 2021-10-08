@@ -61,8 +61,9 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
  */
 
 template <class TFixedImage, class TScalarType>
-typename DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::MeasureType
+auto
 DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;

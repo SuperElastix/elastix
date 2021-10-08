@@ -125,9 +125,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(s
  */
 
 template <class TFixedImage, class TMovingImage>
-typename AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 

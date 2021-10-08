@@ -232,8 +232,8 @@ TransformixFilter<TMovingImage>::GenerateData(void)
  */
 
 template <typename TMovingImage>
-typename TransformixFilter<TMovingImage>::DataObjectPointer
-TransformixFilter<TMovingImage>::MakeOutput(const DataObjectIdentifierType & key)
+auto
+TransformixFilter<TMovingImage>::MakeOutput(const DataObjectIdentifierType & key) -> DataObjectPointer
 {
   if (key == "ResultImage")
   {
@@ -369,8 +369,8 @@ TransformixFilter<TMovingImage>::SetMovingImage(TMovingImage * inputImage)
  */
 
 template <typename TMovingImage>
-typename TransformixFilter<TMovingImage>::InputImageConstPointer
-TransformixFilter<TMovingImage>::GetMovingImage(void)
+auto
+TransformixFilter<TMovingImage>::GetMovingImage(void) -> InputImageConstPointer
 {
   return itkDynamicCastInDebugMode<TMovingImage *>(this->GetInput("InputImage"));
 } // end GetMovingImage()
@@ -405,8 +405,8 @@ TransformixFilter<TMovingImage>::SetTransformParameterObject(ParameterObjectPoin
  */
 
 template <typename TMovingImage>
-typename TransformixFilter<TMovingImage>::ParameterObjectType *
-TransformixFilter<TMovingImage>::GetTransformParameterObject(void)
+auto
+TransformixFilter<TMovingImage>::GetTransformParameterObject(void) -> ParameterObjectType *
 {
   return dynamic_cast<ParameterObjectType *>(this->GetInput("TransformParameterObject"));
 } // end GetTransformParameterObject()
@@ -417,8 +417,8 @@ TransformixFilter<TMovingImage>::GetTransformParameterObject(void)
  */
 
 template <typename TMovingImage>
-const typename TransformixFilter<TMovingImage>::ParameterObjectType *
-TransformixFilter<TMovingImage>::GetTransformParameterObject(void) const
+auto
+TransformixFilter<TMovingImage>::GetTransformParameterObject(void) const -> const ParameterObjectType *
 {
   return dynamic_cast<const ParameterObjectType *>(this->GetInput("TransformParameterObject"));
 } // end GetTransformParameterObject()
@@ -428,8 +428,8 @@ TransformixFilter<TMovingImage>::GetTransformParameterObject(void) const
  *  ********************* GetOutputDeformationField *********************
  */
 template <typename TMovingImage>
-typename TransformixFilter<TMovingImage>::OutputDeformationFieldType *
-TransformixFilter<TMovingImage>::GetOutputDeformationField()
+auto
+TransformixFilter<TMovingImage>::GetOutputDeformationField() -> OutputDeformationFieldType *
 {
 
   return itkDynamicCastInDebugMode<OutputDeformationFieldType *>(
@@ -440,8 +440,8 @@ TransformixFilter<TMovingImage>::GetOutputDeformationField()
  *  ********************* GetOutputDeformationField *********************
  */
 template <typename TMovingImage>
-const typename TransformixFilter<TMovingImage>::OutputDeformationFieldType *
-TransformixFilter<TMovingImage>::GetOutputDeformationField() const
+auto
+TransformixFilter<TMovingImage>::GetOutputDeformationField() const -> const OutputDeformationFieldType *
 {
 
   return itkDynamicCastInDebugMode<const OutputDeformationFieldType *>(

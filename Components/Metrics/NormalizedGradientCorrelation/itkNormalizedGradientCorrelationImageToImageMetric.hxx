@@ -288,9 +288,9 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  */
 
 template <class TFixedImage, class TMovingImage>
-typename NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   this->SetTransformParameters(parameters);
   this->m_TransformMovingImageFilter->Modified();
@@ -387,9 +387,9 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  */
 
 template <class TFixedImage, class TMovingImage>
-typename NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );

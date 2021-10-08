@@ -54,8 +54,9 @@ GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::Se
 
 //------------------------------------------------------------------------------
 template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
-const typename GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GPUCoefficientImagePointer
+auto
 GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GetGPUCoefficients() const
+  -> const GPUCoefficientImagePointer
 {
   return this->m_GPUCoefficients;
 }
@@ -63,8 +64,9 @@ GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::Ge
 
 //------------------------------------------------------------------------------
 template <typename TInputImage, typename TCoordRep, typename TCoefficientType>
-const typename GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GPUDataManagerPointer
+auto
 GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>::GetGPUCoefficientsImageBase() const
+  -> const GPUDataManagerPointer
 {
   return this->m_GPUCoefficientsImageBase;
 }

@@ -189,9 +189,9 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::EvaluateTransfo
  */
 
 template <class TFixedImage, class TMovingImage>
-typename VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 

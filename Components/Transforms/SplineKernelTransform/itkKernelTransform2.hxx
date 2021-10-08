@@ -520,8 +520,8 @@ KernelTransform2<TScalarType, NDimensions>::ReorganizeW(void)
  */
 
 template <class TScalarType, unsigned int NDimensions>
-typename KernelTransform2<TScalarType, NDimensions>::OutputPointType
-KernelTransform2<TScalarType, NDimensions>::TransformPoint(const InputPointType & thisPoint) const
+auto
+KernelTransform2<TScalarType, NDimensions>::TransformPoint(const InputPointType & thisPoint) const -> OutputPointType
 {
   OutputPointType opp;
   opp.Fill(NumericTraits<typename OutputPointType::ValueType>::ZeroValue());
@@ -689,8 +689,8 @@ KernelTransform2<TScalarType, NDimensions>::UpdateParameters(void)
  */
 
 template <class TScalarType, unsigned int NDimensions>
-const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
-KernelTransform2<TScalarType, NDimensions>::GetParameters(void) const
+auto
+KernelTransform2<TScalarType, NDimensions>::GetParameters(void) const -> const ParametersType &
 {
   return this->m_Parameters;
 } // end GetParameters()
@@ -700,8 +700,8 @@ KernelTransform2<TScalarType, NDimensions>::GetParameters(void) const
  */
 
 template <class TScalarType, unsigned int NDimensions>
-const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
-KernelTransform2<TScalarType, NDimensions>::GetFixedParameters(void) const
+auto
+KernelTransform2<TScalarType, NDimensions>::GetFixedParameters(void) const -> const ParametersType &
 {
   this->m_FixedParameters = ParametersType(this->m_SourceLandmarks->GetNumberOfPoints() * NDimensions);
   PointsIterator itr = this->m_SourceLandmarks->GetPoints()->Begin();

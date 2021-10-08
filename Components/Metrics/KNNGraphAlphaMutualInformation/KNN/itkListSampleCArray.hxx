@@ -73,8 +73,9 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(Insta
  */
 
 template <class TMeasurementVector, class TInternalValue>
-const typename ListSampleCArray<TMeasurementVector, TInternalValue>::MeasurementVectorType &
+auto
 ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(InstanceIdentifier id) const
+  -> const MeasurementVectorType &
 {
   if (id < this->m_InternalContainerSize)
   {
@@ -236,8 +237,8 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::DeallocateInternalContaine
  */
 
 template <class TMeasurementVector, class TInternalValue>
-typename ListSampleCArray<TMeasurementVector, TInternalValue>::AbsoluteFrequencyType
-ListSampleCArray<TMeasurementVector, TInternalValue>::GetFrequency(InstanceIdentifier id) const
+auto
+ListSampleCArray<TMeasurementVector, TInternalValue>::GetFrequency(InstanceIdentifier id) const -> AbsoluteFrequencyType
 {
   if (id < this->m_InternalContainerSize)
   {

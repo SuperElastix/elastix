@@ -83,8 +83,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
  */
 
 template <typename TFixedImage, typename TMovingImage>
-const typename MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::FixedImageType *
+auto
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::GetFixedImage(unsigned int pos) const
+  -> const FixedImageType *
 {
   if (pos >= this->GetNumberOfFixedImages())
   {
@@ -102,8 +103,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
  */
 
 template <typename TFixedImage, typename TMovingImage>
-const typename MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::MovingImageType *
+auto
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::GetMovingImage(unsigned int pos) const
+  -> const MovingImageType *
 {
   if (pos >= this->GetNumberOfMovingImages())
   {
@@ -121,8 +123,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
  */
 
 template <typename TFixedImage, typename TMovingImage>
-typename MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::InterpolatorType *
+auto
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::GetInterpolator(unsigned int pos) const
+  -> InterpolatorType *
 {
   if (pos >= this->GetNumberOfInterpolators())
   {
@@ -140,9 +143,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
  */
 
 template <typename TFixedImage, typename TMovingImage>
-typename MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::FixedImageInterpolatorType *
+auto
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::GetFixedImageInterpolator(
-  unsigned int pos) const
+  unsigned int pos) const -> FixedImageInterpolatorType *
 {
   if (pos >= this->GetNumberOfFixedImageInterpolators())
   {
@@ -160,9 +163,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
  */
 
 template <typename TFixedImage, typename TMovingImage>
-typename MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::FixedImagePyramidType *
+auto
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::GetFixedImagePyramid(
-  unsigned int pos) const
+  unsigned int pos) const -> FixedImagePyramidType *
 {
   if (pos >= this->GetNumberOfFixedImagePyramids())
   {
@@ -180,9 +183,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
  */
 
 template <typename TFixedImage, typename TMovingImage>
-typename MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::MovingImagePyramidType *
+auto
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::GetMovingImagePyramid(
-  unsigned int pos) const
+  unsigned int pos) const -> MovingImagePyramidType *
 {
   if (pos >= this->GetNumberOfMovingImagePyramids())
   {
@@ -200,9 +203,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
  */
 
 template <typename TFixedImage, typename TMovingImage>
-const typename MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::FixedImageRegionType &
+auto
 MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::GetFixedImageRegion(
-  unsigned int pos) const
+  unsigned int pos) const -> const FixedImageRegionType &
 {
   if (pos >= this->GetNumberOfFixedImageRegions())
   {

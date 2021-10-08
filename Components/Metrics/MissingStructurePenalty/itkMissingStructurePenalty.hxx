@@ -97,8 +97,9 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
  */
 
 template <class TFixedPointSet, class TMovingPointSet>
-typename MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::MeasureType
+auto
 MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParametersType & parameters) const
+  -> MeasureType
 {
   /** Sanity checks. */
   FixedMeshContainerConstPointer fixedMeshContainer = this->GetFixedMeshContainer();

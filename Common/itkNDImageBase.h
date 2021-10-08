@@ -263,8 +263,8 @@ namespace itk
 {
 
 template <class TPixel>
-typename NDImageBase<TPixel>::Pointer
-NDImageBase<TPixel>::NewNDImage(unsigned int dim)
+auto
+NDImageBase<TPixel>::NewNDImage(unsigned int dim) -> Pointer
 {
   switch (dim)
   {

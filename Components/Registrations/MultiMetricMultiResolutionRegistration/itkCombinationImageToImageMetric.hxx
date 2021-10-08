@@ -84,8 +84,7 @@
 /** for getting const object, implement one method */
 #define itkImplementationGetConstObjectMacro1(_name, _type)                                                            \
   template <class TFixedImage, class TMovingImage>                                                                     \
-  const typename CombinationImageToImageMetric<TFixedImage, TMovingImage>::_type *                                     \
-    CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const                       \
+  auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type *     \
   {                                                                                                                    \
     const ImageMetricType * testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));                    \
     if (testPtr1)                                                                                                      \
@@ -100,8 +99,7 @@
 
 #define itkImplementationGetConstObjectMacro2(_name, _type)                                                            \
   template <class TFixedImage, class TMovingImage>                                                                     \
-  const typename CombinationImageToImageMetric<TFixedImage, TMovingImage>::_type *                                     \
-    CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const                       \
+  auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type *     \
   {                                                                                                                    \
     const ImageMetricType *    testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));                 \
     const PointSetMetricType * testPtr2 = dynamic_cast<const PointSetMetricType *>(this->GetMetric(pos));              \
@@ -223,8 +221,9 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetFixedImageRegion(co
  */
 
 template <class TFixedImage, class TMovingImage>
-const typename CombinationImageToImageMetric<TFixedImage, TMovingImage>::FixedImageRegionType &
+auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetFixedImageRegion(unsigned int pos) const
+  -> const FixedImageRegionType &
 {
   const ImageMetricType * testPtr = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));
   if (testPtr)
@@ -292,8 +291,9 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
  */
 
 template <class TFixedImage, class TMovingImage>
-typename CombinationImageToImageMetric<TFixedImage, TMovingImage>::SingleValuedCostFunctionType *
+auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetric(unsigned int pos) const
+  -> SingleValuedCostFunctionType *
 {
   if (pos >= this->GetNumberOfMetrics())
   {
@@ -458,8 +458,8 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetUseMetric(unsigned 
  */
 
 template <class TFixedImage, class TMovingImage>
-typename CombinationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
-CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricValue(unsigned int pos) const
+auto
+CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricValue(unsigned int pos) const -> MeasureType
 {
   if (pos >= this->GetNumberOfMetrics())
   {
@@ -478,8 +478,9 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricValue(unsigne
  */
 
 template <class TFixedImage, class TMovingImage>
-const typename CombinationImageToImageMetric<TFixedImage, TMovingImage>::DerivativeType &
+auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricDerivative(unsigned int pos) const
+  -> const DerivativeType &
 {
   if (pos >= this->GetNumberOfMetrics())
   {
@@ -658,8 +659,9 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetFinalMetricWeight(u
  */
 
 template <class TFixedImage, class TMovingImage>
-typename CombinationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   /** Initialise. */
   MeasureType measure = NumericTraits<MeasureType>::Zero;

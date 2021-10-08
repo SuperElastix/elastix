@@ -178,9 +178,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std:
  */
 
 template <class TFixedImage, class TMovingImage>
-typename AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
@@ -271,9 +271,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
  */
 
 template <class TFixedImage, class TMovingImage>
-typename AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   /** Option for now to still use the single threaded code. */
   if (!this->m_UseMultiThread)

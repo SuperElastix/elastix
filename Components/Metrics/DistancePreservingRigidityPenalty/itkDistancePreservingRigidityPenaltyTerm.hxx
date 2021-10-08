@@ -161,8 +161,9 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize(void
  */
 
 template <class TFixedImage, class TScalarType>
-typename DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::MeasureType
+auto
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   /** Set output values to zero. */
   this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;

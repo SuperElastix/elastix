@@ -39,8 +39,8 @@ BinaryTreeBase<TListSample>::BinaryTreeBase()
  */
 
 template <class TListSample>
-typename BinaryTreeBase<TListSample>::TotalAbsoluteFrequencyType
-BinaryTreeBase<TListSample>::GetNumberOfDataPoints(void) const
+auto
+BinaryTreeBase<TListSample>::GetNumberOfDataPoints(void) const -> TotalAbsoluteFrequencyType
 {
   if (this->m_Sample)
   {
@@ -56,8 +56,8 @@ BinaryTreeBase<TListSample>::GetNumberOfDataPoints(void) const
  */
 
 template <class TListSample>
-typename BinaryTreeBase<TListSample>::TotalAbsoluteFrequencyType
-BinaryTreeBase<TListSample>::GetActualNumberOfDataPoints(void) const
+auto
+BinaryTreeBase<TListSample>::GetActualNumberOfDataPoints(void) const -> TotalAbsoluteFrequencyType
 {
   if (this->m_Sample)
   {
@@ -73,8 +73,8 @@ BinaryTreeBase<TListSample>::GetActualNumberOfDataPoints(void) const
  */
 
 template <class TListSample>
-typename BinaryTreeBase<TListSample>::MeasurementVectorSizeType
-BinaryTreeBase<TListSample>::GetDataDimension(void) const
+auto
+BinaryTreeBase<TListSample>::GetDataDimension(void) const -> MeasurementVectorSizeType
 {
   if (this->m_Sample)
   {

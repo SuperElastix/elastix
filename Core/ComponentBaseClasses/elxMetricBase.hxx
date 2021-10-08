@@ -231,8 +231,8 @@ MetricBase<TElastix>::SelectNewSamples(void)
  */
 
 template <class TElastix>
-typename MetricBase<TElastix>::MeasureType
-MetricBase<TElastix>::GetExactValue(const ParametersType & parameters)
+auto
+MetricBase<TElastix>::GetExactValue(const ParametersType & parameters) -> MeasureType
 {
   /** Get the current image sampler. */
   typename ImageSamplerBaseType::Pointer currentSampler = this->GetAdvancedMetricImageSampler();
@@ -337,8 +337,8 @@ MetricBase<TElastix>::SetAdvancedMetricImageSampler(ImageSamplerBaseType * sampl
  */
 
 template <class TElastix>
-typename MetricBase<TElastix>::ImageSamplerBaseType *
-MetricBase<TElastix>::GetAdvancedMetricImageSampler(void) const
+auto
+MetricBase<TElastix>::GetAdvancedMetricImageSampler(void) const -> ImageSamplerBaseType *
 {
   /** Cast this to AdvancedMetricType. */
   const AdvancedMetricType * thisAsMetricWithSampler = dynamic_cast<const AdvancedMetricType *>(this);
