@@ -256,8 +256,8 @@ TransformBase<TElastix>::BeforeRegistrationBase(void)
  */
 
 template <class TElastix>
-const typename TransformBase<TElastix>::InitialTransformType *
-TransformBase<TElastix>::GetInitialTransform(void) const
+auto
+TransformBase<TElastix>::GetInitialTransform(void) const -> const InitialTransformType *
 {
   return this->GetAsITKBaseType()->GetInitialTransform();
 
@@ -1075,8 +1075,8 @@ TransformBase<TElastix>::TransformPointsAllPoints(void) const
  */
 
 template <class TElastix>
-typename TransformBase<TElastix>::DeformationFieldImageType::Pointer
-TransformBase<TElastix>::GenerateDeformationFieldImage(void) const
+auto
+TransformBase<TElastix>::GenerateDeformationFieldImage(void) const -> typename DeformationFieldImageType::Pointer
 {
   /** Typedef's. */
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;

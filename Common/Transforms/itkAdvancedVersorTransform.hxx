@@ -98,8 +98,8 @@ AdvancedVersorTransform<TScalarType>::SetParameters(const ParametersType & param
 
 /** Set Parameters */
 template <class TScalarType>
-const typename AdvancedVersorTransform<TScalarType>::ParametersType &
-AdvancedVersorTransform<TScalarType>::GetParameters(void) const
+auto
+AdvancedVersorTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
 {
   this->m_Parameters[0] = this->m_Versor.GetRight()[0];
   this->m_Parameters[1] = this->m_Versor.GetRight()[1];

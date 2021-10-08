@@ -66,9 +66,9 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::P
  */
 
 template <class TFixedImage, class TMovingImage>
-typename SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
@@ -160,9 +160,9 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
  */
 
 template <class TFixedImage, class TMovingImage>
-typename SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
 
   /** Option for now to still use the single threaded code. */

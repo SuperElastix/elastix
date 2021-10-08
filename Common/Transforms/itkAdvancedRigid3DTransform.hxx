@@ -161,8 +161,8 @@ AdvancedRigid3DTransform<TScalarType>::Translate(const OffsetType & offset, bool
 
 // Back transform a point
 template <class TScalarType>
-typename AdvancedRigid3DTransform<TScalarType>::InputPointType
-AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputPointType & point) const
+auto
+AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputPointType & point) const -> InputPointType
 {
   itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
                      "to generate an inverse transform and then perform the transform using that inverted transform.");
@@ -172,8 +172,8 @@ AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputPointType & poi
 
 // Back transform a vector
 template <class TScalarType>
-typename AdvancedRigid3DTransform<TScalarType>::InputVectorType
-AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVectorType & vect) const
+auto
+AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVectorType & vect) const -> InputVectorType
 {
   itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
                      "to generate an inverse transform and then perform the transform using that inverted transform.");
@@ -183,8 +183,8 @@ AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVectorType & ve
 
 // Back transform a vnl_vector
 template <class TScalarType>
-typename AdvancedRigid3DTransform<TScalarType>::InputVnlVectorType
-AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVnlVectorType & vect) const
+auto
+AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVnlVectorType & vect) const -> InputVnlVectorType
 {
   itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
                      "to generate an inverse transform and then perform the transform using that inverted transform.");
@@ -194,8 +194,9 @@ AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVnlVectorType &
 
 // Back Transform a CovariantVector
 template <class TScalarType>
-typename AdvancedRigid3DTransform<TScalarType>::InputCovariantVectorType
+auto
 AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputCovariantVectorType & vect) const
+  -> InputCovariantVectorType
 {
   itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
                      "to generate an inverse transform and then perform the transform using that inverted transform.");

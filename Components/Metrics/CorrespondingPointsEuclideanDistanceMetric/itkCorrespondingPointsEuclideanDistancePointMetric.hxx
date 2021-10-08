@@ -37,9 +37,9 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,
  */
 
 template <class TFixedPointSet, class TMovingPointSet>
-typename CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::MeasureType
+auto
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   /** Sanity checks. */
   FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();

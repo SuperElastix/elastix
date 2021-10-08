@@ -284,9 +284,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Ini
  */
 
 template <class TFixedImage, class TMovingImage>
-typename KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   /** Initialize some variables. */
   MeasureType measure = NumericTraits<MeasureType>::Zero;

@@ -49,8 +49,9 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::TransformBendingEne
  */
 
 template <class TFixedImage, class TScalarType>
-typename TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::MeasureType
+auto
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;

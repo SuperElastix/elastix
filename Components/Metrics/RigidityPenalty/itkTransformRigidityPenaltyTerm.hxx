@@ -460,8 +460,8 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FillRigidityCoefficientI
  */
 
 template <class TFixedImage, class TScalarType>
-typename TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::MeasureType
-TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const
+auto
+TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const -> MeasureType
 {
   /** Fill the rigidity image based on the current transform parameters. */
   this->FillRigidityCoefficientImage(parameters);
@@ -2162,10 +2162,10 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Create1DOperator(
  */
 
 template <class TFixedImage, class TScalarType>
-typename TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CoefficientImagePointer
+auto
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FilterSeparable(
   const CoefficientImageType *          image,
-  const std::vector<NeighborhoodType> & Operators) const
+  const std::vector<NeighborhoodType> & Operators) const -> CoefficientImagePointer
 {
   /** Create filters, supply them with boundary conditions and operators. */
   std::vector<typename NOIFType::Pointer> filters(ImageDimension);

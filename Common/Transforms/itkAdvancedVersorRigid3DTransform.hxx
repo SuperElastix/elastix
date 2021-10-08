@@ -120,8 +120,8 @@ AdvancedVersorRigid3DTransform<TScalarType>::SetParameters(const ParametersType 
 //
 
 template <class TScalarType>
-const typename AdvancedVersorRigid3DTransform<TScalarType>::ParametersType &
-AdvancedVersorRigid3DTransform<TScalarType>::GetParameters(void) const
+auto
+AdvancedVersorRigid3DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
 

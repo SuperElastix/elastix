@@ -108,8 +108,8 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::SetParameters(const Para
 
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions>
-const typename AdvancedTranslationTransform<TScalarType, NDimensions>::ParametersType &
-AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters(void) const
+auto
+AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters(void) const -> const ParametersType &
 {
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
@@ -156,8 +156,9 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::Translate(const OutputVe
 
 // Transform a point
 template <class TScalarType, unsigned int NDimensions>
-typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputPointType
+auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformPoint(const InputPointType & point) const
+  -> OutputPointType
 {
   return point + m_Offset;
 }
@@ -165,8 +166,9 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformPoint(const Inp
 
 // Transform a vector
 template <class TScalarType, unsigned int NDimensions>
-typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputVectorType
+auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const InputVectorType & vect) const
+  -> OutputVectorType
 {
   return vect;
 }
@@ -174,8 +176,9 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const In
 
 // Transform a vnl_vector_fixed
 template <class TScalarType, unsigned int NDimensions>
-typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputVnlVectorType
+auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const InputVnlVectorType & vect) const
+  -> OutputVnlVectorType
 {
   return vect;
 }
@@ -183,9 +186,9 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const In
 
 // Transform a CovariantVector
 template <class TScalarType, unsigned int NDimensions>
-typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputCovariantVectorType
+auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformCovariantVector(
-  const InputCovariantVectorType & vect) const
+  const InputCovariantVectorType & vect) const -> OutputCovariantVectorType
 {
   return vect;
 }

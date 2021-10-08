@@ -48,8 +48,8 @@ VectorContainerSource<TOutputVectorContainer>::VectorContainerSource()
  */
 
 template <class TOutputVectorContainer>
-typename VectorContainerSource<TOutputVectorContainer>::DataObjectPointer
-VectorContainerSource<TOutputVectorContainer>::MakeOutput(unsigned int itkNotUsed(idx))
+auto
+VectorContainerSource<TOutputVectorContainer>::MakeOutput(unsigned int itkNotUsed(idx)) -> DataObjectPointer
 {
   return static_cast<DataObject *>(TOutputVectorContainer::New().GetPointer());
 } // end MakeOutput()
@@ -60,8 +60,8 @@ VectorContainerSource<TOutputVectorContainer>::MakeOutput(unsigned int itkNotUse
  */
 
 template <class TOutputVectorContainer>
-typename VectorContainerSource<TOutputVectorContainer>::OutputVectorContainerType *
-VectorContainerSource<TOutputVectorContainer>::GetOutput(void)
+auto
+VectorContainerSource<TOutputVectorContainer>::GetOutput(void) -> OutputVectorContainerType *
 {
   if (this->GetNumberOfOutputs() < 1)
   {
@@ -76,8 +76,8 @@ VectorContainerSource<TOutputVectorContainer>::GetOutput(void)
  */
 
 template <class TOutputVectorContainer>
-typename VectorContainerSource<TOutputVectorContainer>::OutputVectorContainerType *
-VectorContainerSource<TOutputVectorContainer>::GetOutput(unsigned int idx)
+auto
+VectorContainerSource<TOutputVectorContainer>::GetOutput(unsigned int idx) -> OutputVectorContainerType *
 {
   return static_cast<OutputVectorContainerType *>(this->ProcessObject::GetOutput(idx));
 } // end GetOutput()

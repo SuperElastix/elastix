@@ -82,9 +82,9 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
  */
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-typename WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::OutputPointType
+auto
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
-  const InputPointType & ipp) const
+  const InputPointType & ipp) const -> OutputPointType
 {
   OutputPointType opp;
   opp.Fill(0.0);

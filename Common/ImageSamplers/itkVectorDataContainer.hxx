@@ -54,8 +54,8 @@ namespace itk
  * reference.
  */
 template <typename TElementIdentifier, typename TElement>
-typename VectorDataContainer<TElementIdentifier, TElement>::Element &
-VectorDataContainer<TElementIdentifier, TElement>::ElementAt(ElementIdentifier id)
+auto
+VectorDataContainer<TElementIdentifier, TElement>::ElementAt(ElementIdentifier id) -> Element &
 {
   this->Modified();
   return this->VectorType::operator[](id);
@@ -68,8 +68,8 @@ VectorDataContainer<TElementIdentifier, TElement>::ElementAt(ElementIdentifier i
  *
  */
 template <typename TElementIdentifier, typename TElement>
-const typename VectorDataContainer<TElementIdentifier, TElement>::Element &
-VectorDataContainer<TElementIdentifier, TElement>::ElementAt(ElementIdentifier id) const
+auto
+VectorDataContainer<TElementIdentifier, TElement>::ElementAt(ElementIdentifier id) const -> const Element &
 {
   return this->VectorType::operator[](id);
 }
@@ -83,8 +83,8 @@ VectorDataContainer<TElementIdentifier, TElement>::ElementAt(ElementIdentifier i
  * reference.
  */
 template <typename TElementIdentifier, typename TElement>
-typename VectorDataContainer<TElementIdentifier, TElement>::Element &
-VectorDataContainer<TElementIdentifier, TElement>::CreateElementAt(ElementIdentifier id)
+auto
+VectorDataContainer<TElementIdentifier, TElement>::CreateElementAt(ElementIdentifier id) -> Element &
 {
   if (id >= this->VectorType::size())
   {
@@ -99,8 +99,8 @@ VectorDataContainer<TElementIdentifier, TElement>::CreateElementAt(ElementIdenti
  * It is assumed that the index exists.
  */
 template <typename TElementIdentifier, typename TElement>
-typename VectorDataContainer<TElementIdentifier, TElement>::Element
-VectorDataContainer<TElementIdentifier, TElement>::GetElement(ElementIdentifier id) const
+auto
+VectorDataContainer<TElementIdentifier, TElement>::GetElement(ElementIdentifier id) const -> Element
 {
   return this->VectorType::operator[](id);
 }
@@ -220,8 +220,8 @@ VectorDataContainer<TElementIdentifier, TElement>::DeleteIndex(ElementIdentifier
  * Get a begin const iterator for the vector.
  */
 template <typename TElementIdentifier, typename TElement>
-typename VectorDataContainer<TElementIdentifier, TElement>::ConstIterator
-VectorDataContainer<TElementIdentifier, TElement>::Begin(void) const
+auto
+VectorDataContainer<TElementIdentifier, TElement>::Begin(void) const -> ConstIterator
 {
   return ConstIterator(0, this->VectorType::begin());
 }
@@ -231,8 +231,8 @@ VectorDataContainer<TElementIdentifier, TElement>::Begin(void) const
  * Get an end const iterator for the vector.
  */
 template <typename TElementIdentifier, typename TElement>
-typename VectorDataContainer<TElementIdentifier, TElement>::ConstIterator
-VectorDataContainer<TElementIdentifier, TElement>::End(void) const
+auto
+VectorDataContainer<TElementIdentifier, TElement>::End(void) const -> ConstIterator
 {
   return ConstIterator(this->VectorType::size() - 1, this->VectorType::end());
 }
@@ -242,8 +242,8 @@ VectorDataContainer<TElementIdentifier, TElement>::End(void) const
  * Get a begin iterator for the vector.
  */
 template <typename TElementIdentifier, typename TElement>
-typename VectorDataContainer<TElementIdentifier, TElement>::Iterator
-VectorDataContainer<TElementIdentifier, TElement>::Begin(void)
+auto
+VectorDataContainer<TElementIdentifier, TElement>::Begin(void) -> Iterator
 {
   return Iterator(0, this->VectorType::begin());
 }
@@ -253,8 +253,8 @@ VectorDataContainer<TElementIdentifier, TElement>::Begin(void)
  * Get an end iterator for the vector.
  */
 template <typename TElementIdentifier, typename TElement>
-typename VectorDataContainer<TElementIdentifier, TElement>::Iterator
-VectorDataContainer<TElementIdentifier, TElement>::End(void)
+auto
+VectorDataContainer<TElementIdentifier, TElement>::End(void) -> Iterator
 {
   return Iterator(this->VectorType::size() - 1, this->VectorType::end());
 }

@@ -113,8 +113,8 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
  */
 
 template <class TFixedPointSet, class TMovingPointSet>
-typename MeshPenalty<TFixedPointSet, TMovingPointSet>::MeasureType
-MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParametersType & parameters) const
+auto
+MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParametersType & parameters) const -> MeasureType
 {
   /** Sanity checks. */
   FixedMeshContainerConstPointer fixedMeshContainer = this->GetFixedMeshContainer();

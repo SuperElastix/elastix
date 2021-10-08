@@ -74,9 +74,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Init
  */
 
 template <class TFixedImage, class TMovingImage>
-typename ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const ParametersType & parameters) const
+  const ParametersType & parameters) const -> MeasureType
 {
   /** Construct the JointPDF and Alpha. */
   this->ComputePDFs(parameters);

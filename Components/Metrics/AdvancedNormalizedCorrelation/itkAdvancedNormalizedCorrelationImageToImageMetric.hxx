@@ -181,9 +181,9 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Upda
  */
 
 template <class TFixedImage, class TMovingImage>
-typename AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 

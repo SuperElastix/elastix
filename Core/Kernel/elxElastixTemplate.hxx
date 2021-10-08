@@ -43,8 +43,8 @@ namespace elastix
  */
 
 template <class TFixedImage, class TMovingImage>
-typename ElastixTemplate<TFixedImage, TMovingImage>::FixedImageType *
-ElastixTemplate<TFixedImage, TMovingImage>::GetFixedImage(unsigned int idx) const
+auto
+ElastixTemplate<TFixedImage, TMovingImage>::GetFixedImage(unsigned int idx) const -> FixedImageType *
 {
   if (idx < this->GetNumberOfFixedImages())
   {
@@ -60,8 +60,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetFixedImage(unsigned int idx) cons
  */
 
 template <class TFixedImage, class TMovingImage>
-typename ElastixTemplate<TFixedImage, TMovingImage>::MovingImageType *
-ElastixTemplate<TFixedImage, TMovingImage>::GetMovingImage(unsigned int idx) const
+auto
+ElastixTemplate<TFixedImage, TMovingImage>::GetMovingImage(unsigned int idx) const -> MovingImageType *
 {
   if (idx < this->GetNumberOfMovingImages())
   {
@@ -77,8 +77,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetMovingImage(unsigned int idx) con
  */
 
 template <class TFixedImage, class TMovingImage>
-typename ElastixTemplate<TFixedImage, TMovingImage>::FixedMaskType *
-ElastixTemplate<TFixedImage, TMovingImage>::GetFixedMask(unsigned int idx) const
+auto
+ElastixTemplate<TFixedImage, TMovingImage>::GetFixedMask(unsigned int idx) const -> FixedMaskType *
 {
   if (idx < this->GetNumberOfFixedMasks())
   {
@@ -94,8 +94,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetFixedMask(unsigned int idx) const
  */
 
 template <class TFixedImage, class TMovingImage>
-typename ElastixTemplate<TFixedImage, TMovingImage>::MovingMaskType *
-ElastixTemplate<TFixedImage, TMovingImage>::GetMovingMask(unsigned int idx) const
+auto
+ElastixTemplate<TFixedImage, TMovingImage>::GetMovingMask(unsigned int idx) const -> MovingMaskType *
 {
   if (idx < this->GetNumberOfMovingMasks())
   {

@@ -305,9 +305,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
 
 // Transform a point
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-typename AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::OutputPointType
+auto
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
-  const InputPointType & point) const
+  const InputPointType & point) const -> OutputPointType
 {
   /** Allocate memory on the stack: */
   const unsigned long                         numberOfWeights = WeightsFunctionType::NumberOfWeights;
@@ -342,9 +342,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetN
  */
 
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-typename AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::NumberOfParametersType
+auto
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetNumberOfNonZeroJacobianIndices(
-  void) const
+  void) const -> NumberOfParametersType
 {
   return this->m_WeightsFunction->GetNumberOfWeights() * SpaceDimension;
 } // end GetNumberOfNonZeroJacobianIndices()

@@ -121,8 +121,8 @@ AdvancedEuler3DTransform<TScalarType>::SetParameters(const ParametersType & para
 
 // Get Parameters
 template <class TScalarType>
-const typename AdvancedEuler3DTransform<TScalarType>::ParametersType &
-AdvancedEuler3DTransform<TScalarType>::GetParameters(void) const
+auto
+AdvancedEuler3DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
 {
   this->m_Parameters[0] = m_AngleX;
   this->m_Parameters[1] = m_AngleY;

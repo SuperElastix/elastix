@@ -46,9 +46,9 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 
 // Transform a point
 template <class TScalarType, unsigned int NDimensions, class TComponentType>
-typename DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::OutputPointType
+auto
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::TransformPoint(
-  const InputPointType & point) const
+  const InputPointType & point) const -> OutputPointType
 {
   InputContinuousIndexType cindex;
   this->m_DeformationFieldInterpolator->ConvertPointToContinuousIndex(point, cindex);

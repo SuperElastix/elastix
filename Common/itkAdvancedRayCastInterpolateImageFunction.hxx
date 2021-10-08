@@ -1516,8 +1516,8 @@ AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::PrintSelf(std::
    ----------------------------------------------------------------------- */
 
 template <class TInputImage, class TCoordRep>
-typename AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::OutputType
-AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::Evaluate(const PointType & point) const
+auto
+AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::Evaluate(const PointType & point) const -> OutputType
 {
   double integral = 0;
 
@@ -1538,9 +1538,9 @@ AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::Evaluate(const 
 
 
 template <class TInputImage, class TCoordRep>
-typename AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::OutputType
+auto
 AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateAtContinuousIndex(
-  const ContinuousIndexType & index) const
+  const ContinuousIndexType & index) const -> OutputType
 {
   OutputPointType point;
   this->m_Image->TransformContinuousIndexToPhysicalPoint(index, point);

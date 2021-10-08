@@ -74,9 +74,9 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
  */
 
 template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-typename RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::WeightsType
+auto
 RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
-  const ContinuousIndexType & index) const
+  const ContinuousIndexType & index) const -> WeightsType
 {
   WeightsType weights(this->m_NumberOfWeights);
   IndexType   startIndex;

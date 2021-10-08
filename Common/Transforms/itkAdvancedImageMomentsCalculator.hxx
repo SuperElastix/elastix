@@ -444,8 +444,8 @@ AdvancedImageMomentsCalculator<TImage>::DoPostProcessing()
 //---------------------------------------------------------------------
 // Get sum of intensities
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::ScalarType
-AdvancedImageMomentsCalculator<TImage>::GetTotalMass() const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetTotalMass() const -> ScalarType
 {
   if (!m_Valid)
   {
@@ -457,8 +457,8 @@ AdvancedImageMomentsCalculator<TImage>::GetTotalMass() const
 //--------------------------------------------------------------------
 // Get first moments about origin, in index coordinates
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::VectorType
-AdvancedImageMomentsCalculator<TImage>::GetFirstMoments() const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetFirstMoments() const -> VectorType
 {
   if (!m_Valid)
   {
@@ -470,8 +470,8 @@ AdvancedImageMomentsCalculator<TImage>::GetFirstMoments() const
 //--------------------------------------------------------------------
 // Get second moments about origin, in index coordinates
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::MatrixType
-AdvancedImageMomentsCalculator<TImage>::GetSecondMoments() const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetSecondMoments() const -> MatrixType
 {
   if (!m_Valid)
   {
@@ -483,8 +483,8 @@ AdvancedImageMomentsCalculator<TImage>::GetSecondMoments() const
 //--------------------------------------------------------------------
 // Get center of gravity, in physical coordinates
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::VectorType
-AdvancedImageMomentsCalculator<TImage>::GetCenterOfGravity() const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetCenterOfGravity() const -> VectorType
 {
   if (!m_Valid)
   {
@@ -496,8 +496,8 @@ AdvancedImageMomentsCalculator<TImage>::GetCenterOfGravity() const
 //--------------------------------------------------------------------
 // Get second central moments, in physical coordinates
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::MatrixType
-AdvancedImageMomentsCalculator<TImage>::GetCentralMoments() const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetCentralMoments() const -> MatrixType
 {
   if (!m_Valid)
   {
@@ -509,8 +509,8 @@ AdvancedImageMomentsCalculator<TImage>::GetCentralMoments() const
 //--------------------------------------------------------------------
 // Get principal moments, in physical coordinates
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::VectorType
-AdvancedImageMomentsCalculator<TImage>::GetPrincipalMoments() const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetPrincipalMoments() const -> VectorType
 {
   if (!m_Valid)
   {
@@ -523,8 +523,8 @@ AdvancedImageMomentsCalculator<TImage>::GetPrincipalMoments() const
 //--------------------------------------------------------------------
 // Get principal axes, in physical coordinates
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::MatrixType
-AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxes() const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxes() const -> MatrixType
 {
   if (!m_Valid)
   {
@@ -536,8 +536,8 @@ AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxes() const
 //--------------------------------------------------------------------
 // Get principal axes to physical axes transform
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::AffineTransformPointer
-AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxesToPhysicalAxesTransform(void) const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxesToPhysicalAxesTransform(void) const -> AffineTransformPointer
 {
   typename AffineTransformType::MatrixType matrix;
   typename AffineTransformType::OffsetType offset;
@@ -562,8 +562,8 @@ AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxesToPhysicalAxesTransform(
 // Get physical axes to principal axes transform
 
 template <typename TImage>
-typename AdvancedImageMomentsCalculator<TImage>::AffineTransformPointer
-AdvancedImageMomentsCalculator<TImage>::GetPhysicalAxesToPrincipalAxesTransform(void) const
+auto
+AdvancedImageMomentsCalculator<TImage>::GetPhysicalAxesToPrincipalAxesTransform(void) const -> AffineTransformPointer
 {
   typename AffineTransformType::MatrixType matrix;
   typename AffineTransformType::OffsetType offset;

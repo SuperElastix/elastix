@@ -87,8 +87,8 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SetInput(cons
  */
 
 template <class TInputImage, class TOutputVectorContainer>
-const typename ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::InputImageType *
-ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(void)
+auto
+ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(void) -> const InputImageType *
 {
   return dynamic_cast<const InputImageType *>(this->ProcessObject::GetInput(0));
 } // end GetInput()
@@ -98,8 +98,8 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(void
  */
 
 template <class TInputImage, class TOutputVectorContainer>
-const typename ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::InputImageType *
-ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(unsigned int idx)
+auto
+ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(unsigned int idx) -> const InputImageType *
 {
   return dynamic_cast<const InputImageType *>(this->ProcessObject::GetInput(idx));
 } // end GetInput()
@@ -109,8 +109,8 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(unsi
  */
 
 template <class TInputImage, class TOutputVectorContainer>
-typename ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::OutputVectorContainerType *
-ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetOutput(void)
+auto
+ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetOutput(void) -> OutputVectorContainerType *
 {
   return dynamic_cast<OutputVectorContainerType *>(this->ProcessObject::GetOutput(0));
 } // end GetOutput()

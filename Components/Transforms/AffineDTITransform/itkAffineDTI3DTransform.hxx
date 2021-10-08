@@ -132,8 +132,8 @@ AffineDTI3DTransform<TScalarType>::SetParameters(const ParametersType & paramete
 
 // Get Parameters
 template <class TScalarType>
-const typename AffineDTI3DTransform<TScalarType>::ParametersType &
-AffineDTI3DTransform<TScalarType>::GetParameters(void) const
+auto
+AffineDTI3DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
 {
   this->m_Parameters[0] = this->m_Angle[0];
   this->m_Parameters[1] = this->m_Angle[1];

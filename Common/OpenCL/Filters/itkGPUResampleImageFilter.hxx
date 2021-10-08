@@ -941,9 +941,9 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  */
 
 template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
-const typename GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GPUTransformTypeEnum
+auto
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetTransformType(
-  const int & transformIndex) const
+  const int & transformIndex) const -> const GPUTransformTypeEnum
 {
   if (this->m_TransformIsCombo)
   {
@@ -1108,9 +1108,9 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
  */
 
 template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
-typename GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GPUBSplineBaseTransformType *
+auto
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetGPUBSplineBaseTransform(
-  const std::size_t transformIndex)
+  const std::size_t transformIndex) -> GPUBSplineBaseTransformType *
 {
   GPUBSplineBaseTransformType * GPUBSplineTransformBase = nullptr;
 

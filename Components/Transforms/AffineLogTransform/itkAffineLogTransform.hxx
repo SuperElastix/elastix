@@ -110,8 +110,8 @@ AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType &
 
 // Get Parameters
 template <class TScalarType, unsigned int Dimension>
-const typename AffineLogTransform<TScalarType, Dimension>::ParametersType &
-AffineLogTransform<TScalarType, Dimension>::GetParameters(void) const
+auto
+AffineLogTransform<TScalarType, Dimension>::GetParameters(void) const -> const ParametersType &
 {
   unsigned int k = 0; // Dummy loop index
 

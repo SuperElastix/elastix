@@ -138,9 +138,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::EvaluateT
  */
 
 template <class TFixedImage, class TMovingImage>
-typename SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const
+  const TransformParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 

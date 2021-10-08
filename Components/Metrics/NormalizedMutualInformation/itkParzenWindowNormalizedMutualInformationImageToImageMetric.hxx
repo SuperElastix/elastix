@@ -86,9 +86,9 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
  */
 
 template <class TFixedImage, class TMovingImage>
-typename ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
-  ComputeNormalizedMutualInformation(MeasureType & jointEntropy) const
+  ComputeNormalizedMutualInformation(MeasureType & jointEntropy) const -> MeasureType
 {
   /** Typedef iterators */
   typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFConstIteratorType;
@@ -138,9 +138,9 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
  */
 
 template <class TFixedImage, class TMovingImage>
-typename ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const ParametersType & parameters) const
+  const ParametersType & parameters) const -> MeasureType
 {
   /** Construct the JointPDF and Alpha */
   this->ComputePDFs(parameters);

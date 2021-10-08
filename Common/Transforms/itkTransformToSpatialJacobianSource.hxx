@@ -101,8 +101,8 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
  * Get the output image size.
  */
 template <class TOutputImage, class TTransformPrecisionType>
-const typename TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SizeType &
-TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutputSize()
+auto
+TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutputSize() -> const SizeType &
 {
   return this->m_OutputRegion.GetSize();
 }
@@ -122,8 +122,8 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
  * Get the output image index.
  */
 template <class TOutputImage, class TTransformPrecisionType>
-const typename TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::IndexType &
-TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutputIndex()
+auto
+TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutputIndex() -> const IndexType &
 {
   return this->m_OutputRegion.GetIndex();
 }

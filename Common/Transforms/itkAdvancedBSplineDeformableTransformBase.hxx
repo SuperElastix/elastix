@@ -104,8 +104,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::~AdvancedBSpli
 
 // Get the number of parameters
 template <class TScalarType, unsigned int NDimensions>
-typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
+auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParameters(void) const
+  -> NumberOfParametersType
 {
 
   // The number of parameters equal SpaceDimension * number of
@@ -117,8 +118,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfPar
 
 // Get the number of parameters per dimension
 template <class TScalarType, unsigned int NDimensions>
-typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
+auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParametersPerDimension(void) const
+  -> NumberOfParametersType
 {
   // The number of parameters per dimension equal number of
   // of pixels in the grid region.
@@ -432,8 +434,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParametersB
 
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions>
-const typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::ParametersType &
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(void) const
+auto
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(void) const -> const ParametersType &
 {
   /** NOTE: For efficiency, this class does not keep a copy of the parameters -
    * it just keeps pointer to input parameters.
@@ -449,8 +451,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(
 
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions>
-const typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::FixedParametersType &
+auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetFixedParameters(void) const
+  -> const FixedParametersType &
 {
   RegionType resRegion = this->GetGridRegion();
 
