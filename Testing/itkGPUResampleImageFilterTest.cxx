@@ -68,8 +68,8 @@ GetHelpString(void)
 {
   std::stringstream ss;
 
-  ss << "Usage:" << std::endl
-     << "itkGPUResampleImageFilterTest" << std::endl
+  ss << "Usage:\n"
+     << "itkGPUResampleImageFilterTest\n"
      << "  -in           input file name\n"
      << "  -out          output file names.(outputCPU outputGPU)\n"
      << "  -rmse         acceptable rmse error\n"

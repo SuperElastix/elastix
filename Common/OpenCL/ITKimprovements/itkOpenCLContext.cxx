@@ -162,7 +162,7 @@ OpenCLContext::IsCreated() const
 void CL_CALLBACK
      opencl_context_notify(const char * errinfo, const void * /*private_info*/, std::size_t /*cb*/, void * /*user_data*/)
 {
-  itkOpenCLErrorMacroGeneric(<< "OpenCL error during context creation or runtime:" << std::endl << errinfo);
+  itkOpenCLErrorMacroGeneric(<< "OpenCL error during context creation or runtime:\n" << errinfo);
 }
 
 
@@ -1118,7 +1118,7 @@ OpenCLContext::CreateProgramFromSourceCode(const std::string & sourceCode,
   // Appends postfix source code if provided
   if (!postfixSourceCode.empty())
   {
-    sstream << std::endl << postfixSourceCode;
+    sstream << '\n' << postfixSourceCode;
   }
 
   const std::string oclSource = sstream.str();
@@ -1195,7 +1195,7 @@ OpenCLContext::CreateProgramFromSourceFile(const std::string & filename,
   // Appends postfix source code if provided
   if (!postfixSourceCode.empty())
   {
-    sstream << std::endl << postfixSourceCode;
+    sstream << '\n' << postfixSourceCode;
   }
 
   inputFile.close();

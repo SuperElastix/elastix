@@ -39,8 +39,8 @@ std::string
 GetHelpString(void)
 {
   std::stringstream ss;
-  ss << "Usage:" << std::endl
-     << "elxInvertTransform" << std::endl
+  ss << "Usage:\n"
+     << "elxInvertTransform\n"
      << "  -tp    transform parameters file to be inverted\n"
      << "  -out   output inverted transform parameters filename\n"
      << "  -m     moving image file name\n"
@@ -269,7 +269,7 @@ main(int argc, char * argv[])
   outputTPFile << "(HowToCombineTransforms \"" << combinationMethod << "\")" << std::endl;
 
   /** Write image specific things. */
-  outputTPFile << std::endl << "// Image specific" << std::endl;
+  outputTPFile << '\n' << "// Image specific" << std::endl;
 
   /** Write image dimensions. */
   outputTPFile << "(FixedImageDimension " << FixDim << ")" << std::endl;

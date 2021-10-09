@@ -382,7 +382,7 @@ AdaGrad<TElastix>::AfterRegistration(void)
 {
   /** Print the best metric value. */
   double bestValue = this->GetValue();
-  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
+  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
 
   elxout << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
   this->PrintSettingsVector(this->m_SettingsVector);

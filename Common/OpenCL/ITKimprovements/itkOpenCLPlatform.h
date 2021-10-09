@@ -187,7 +187,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLPlatform & plat
 
   const char indent = ' ';
 
-  strm << "OpenCLPlatform" << std::endl << indent << "Id: " << platform.GetPlatformId() << std::endl;
+  strm << "OpenCLPlatform\n" << indent << "Id: " << platform.GetPlatformId() << std::endl;
 
   strm << indent << "OpenCL version: ";
   switch (platform.GetOpenCLVersion())
@@ -212,13 +212,13 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLPlatform & plat
       break;
   }
 
-  strm << std::endl
-       << indent << "Full profile: " << (platform.IsFullProfile() ? "On" : "Off") << std::endl
-       << indent << "Embedded profile: " << (platform.IsEmbeddedProfile() ? "On" : "Off") << std::endl
-       << indent << "Profile: " << platform.GetProfile() << std::endl
-       << indent << "Version: " << platform.GetVersion() << std::endl
-       << indent << "Name: " << platform.GetName() << std::endl
-       << indent << "Vendor: " << platform.GetVendor() << std::endl
+  strm << '\n'
+       << indent << "Full profile: " << (platform.IsFullProfile() ? "On" : "Off") << '\n'
+       << indent << "Embedded profile: " << (platform.IsEmbeddedProfile() ? "On" : "Off") << '\n'
+       << indent << "Profile: " << platform.GetProfile() << '\n'
+       << indent << "Version: " << platform.GetVersion() << '\n'
+       << indent << "Name: " << platform.GetName() << '\n'
+       << indent << "Vendor: " << platform.GetVendor() << '\n'
        << indent << "Extension suffix: " << platform.GetExtensionSuffix() << std::endl;
 
   const std::list<std::string> extensions = platform.GetExtensions();

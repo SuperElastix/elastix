@@ -260,7 +260,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase(void)
     else
     {
       /** Do not apply the final transform. */
-      elxout << std::endl << "Skipping applying final transform, no resulting output image generated." << std::endl;
+      elxout << '\n' << "Skipping applying final transform, no resulting output image generated." << std::endl;
     } // end if
   }
 

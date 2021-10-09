@@ -338,7 +338,7 @@ ElastixMain::Run(void)
   {
     /** Report and disable the GPU by releasing the context. */
     elxout << errorMessage << std::endl;
-    elxout << "  OpenCL processing in elastix is disabled." << std::endl << std::endl;
+    elxout << "  OpenCL processing in elastix is disabled.\n" << std::endl;
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();

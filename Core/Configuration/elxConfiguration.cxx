@@ -100,7 +100,7 @@ Configuration::PrintParameterFile(void) const
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file. */
-  xl::xout["logonly"] << std::endl
+  xl::xout["logonly"] << '\n'
                       << "=============== start of ParameterFile: " << this->GetParameterFileName()
                       << " ===============" << std::endl;
 
@@ -109,7 +109,7 @@ Configuration::PrintParameterFile(void) const
   // std::cerr << params;
 
   /** Separate clearly in log-file. */
-  xl::xout["logonly"] << std::endl
+  xl::xout["logonly"] << '\n'
                       << "=============== end of ParameterFile: " << this->GetParameterFileName()
                       << " ===============\n"
                       << std::endl;

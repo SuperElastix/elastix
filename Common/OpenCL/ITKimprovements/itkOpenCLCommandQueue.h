@@ -142,9 +142,9 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLCommandQueue & 
 
   const char indent = ' ';
 
-  strm << "OpenCLCommandQueue" << std::endl
-       << indent << "Id: " << queue.GetQueueId() << std::endl
-       << indent << "Out of order: " << (queue.IsOutOfOrder() ? "Yes" : "No") << std::endl
+  strm << "OpenCLCommandQueue\n"
+       << indent << "Id: " << queue.GetQueueId() << '\n'
+       << indent << "Out of order: " << (queue.IsOutOfOrder() ? "Yes" : "No") << '\n'
        << indent << "Profiling enabled: " << (queue.IsProfilingEnabled() ? "Yes" : "No") << std::endl;
 
   return strm;
