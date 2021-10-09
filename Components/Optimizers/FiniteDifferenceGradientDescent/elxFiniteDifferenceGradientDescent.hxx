@@ -192,11 +192,11 @@ FiniteDifferenceGradientDescent<TElastix>::AfterRegistration(void)
   if (this->m_ShowMetricValues)
   {
     bestValue = this->GetValue();
-    elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
+    elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
   }
   else
   {
-    elxout << std::endl
+    elxout << '\n'
            << "Run Elastix again with the option \"ShowMetricValues\" set"
            << " to \"true\", to see information about the metric values. " << std::endl;
   }

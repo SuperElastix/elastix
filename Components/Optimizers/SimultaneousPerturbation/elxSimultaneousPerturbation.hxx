@@ -201,7 +201,7 @@ SimultaneousPerturbation<TElastix>::AfterRegistration(void)
   double bestValue;
 
   bestValue = this->GetValue();
-  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
+  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
 
 } // end AfterRegistration
 

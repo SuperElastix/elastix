@@ -141,7 +141,7 @@ Simplex<TElastix>::AfterRegistration(void)
   /** Print the best metric value */
   // double bestValue = this->GetValue();
   double bestValue = this->GetCachedValue();
-  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
+  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
 
 } // end AfterRegistration()
 

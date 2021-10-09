@@ -215,15 +215,15 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLMemoryObject & 
 
   const char indent = ' ';
 
-  strm << "OpenCLMemoryObject" << std::endl
-       << indent << "Id: " << memoryObject.GetMemoryId() << std::endl
-       << indent << "Context: " << memoryObject.GetContext() << std::endl
-       << indent << "Memory type: " << memoryObject.GetMemoryType() << std::endl
-       << indent << "Flags: " << memoryObject.GetFlags() << std::endl
-       << indent << "Size: " << memoryObject.GetSize() << std::endl
-       << indent << "Map count: " << memoryObject.GetMapCount() << std::endl
-       << indent << "Reference count: " << memoryObject.GetReferenceCount() << std::endl
-       << indent << "Host pointer: " << memoryObject.GetHostPointer() << std::endl
+  strm << "OpenCLMemoryObject\n"
+       << indent << "Id: " << memoryObject.GetMemoryId() << '\n'
+       << indent << "Context: " << memoryObject.GetContext() << '\n'
+       << indent << "Memory type: " << memoryObject.GetMemoryType() << '\n'
+       << indent << "Flags: " << memoryObject.GetFlags() << '\n'
+       << indent << "Size: " << memoryObject.GetSize() << '\n'
+       << indent << "Map count: " << memoryObject.GetMapCount() << '\n'
+       << indent << "Reference count: " << memoryObject.GetReferenceCount() << '\n'
+       << indent << "Host pointer: " << memoryObject.GetHostPointer() << '\n'
        << indent << "Access: ";
 
   switch (memoryObject.GetAccess())

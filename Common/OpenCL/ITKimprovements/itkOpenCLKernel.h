@@ -888,16 +888,16 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLKernel & kernel
 
   const char indent = ' ';
 
-  strm << "OpenCLKernel" << std::endl
-       << indent << "Id: " << kernel.GetKernelId() << std::endl
-       << indent << "Name: " << kernel.GetName() << std::endl
-       << indent << "Number of arguments: " << kernel.GetNumberOfArguments() << std::endl
-       << indent << "Global work size: " << kernel.GetGlobalWorkSize() << std::endl
-       << indent << "Local work size: " << kernel.GetLocalWorkSize() << std::endl
-       << indent << "Global work offset: " << kernel.GetGlobalWorkOffset() << std::endl
-       << indent << "Compile work group size: " << kernel.GetCompileWorkGroupSize() << std::endl
-       << indent << "Best local work size image 2D: " << kernel.GetBestLocalWorkSizeImage2D() << std::endl
-       << indent << "Best local work size image 3D: " << kernel.GetBestLocalWorkSizeImage3D() << std::endl
+  strm << "OpenCLKernel\n"
+       << indent << "Id: " << kernel.GetKernelId() << '\n'
+       << indent << "Name: " << kernel.GetName() << '\n'
+       << indent << "Number of arguments: " << kernel.GetNumberOfArguments() << '\n'
+       << indent << "Global work size: " << kernel.GetGlobalWorkSize() << '\n'
+       << indent << "Local work size: " << kernel.GetLocalWorkSize() << '\n'
+       << indent << "Global work offset: " << kernel.GetGlobalWorkOffset() << '\n'
+       << indent << "Compile work group size: " << kernel.GetCompileWorkGroupSize() << '\n'
+       << indent << "Best local work size image 2D: " << kernel.GetBestLocalWorkSizeImage2D() << '\n'
+       << indent << "Best local work size image 3D: " << kernel.GetBestLocalWorkSizeImage3D() << '\n'
        << indent << "Preferred work size multiple: " << kernel.GetPreferredWorkSizeMultiple() << std::endl;
 
   return strm;

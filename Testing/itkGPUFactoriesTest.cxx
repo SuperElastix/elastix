@@ -64,7 +64,7 @@ PrintAllRegisteredFactories()
   std::cout << "----- Registered factories -----" << std::endl;
   for (std::list<itk::ObjectFactoryBase *>::iterator f = factories.begin(); f != factories.end(); ++f)
   {
-    std::cout << "  Factory version: " << (*f)->GetITKSourceVersion() << std::endl
+    std::cout << "  Factory version: " << (*f)->GetITKSourceVersion() << '\n'
               << "  Factory description: " << (*f)->GetDescription() << std::endl;
 
     std::list<std::string> overrides = (*f)->GetClassOverrideNames();
@@ -77,8 +77,8 @@ PrintAllRegisteredFactories()
     std::list<bool>::const_iterator        e = enableflags.begin();
     for (std::list<std::string>::const_iterator o = overrides.begin(); o != overrides.end(); ++o, ++n, ++d, ++e)
     {
-      std::cout << "    Override " << *o << " with " << *n << std::endl
-                << "      described as \"" << *d << "\"" << std::endl
+      std::cout << "    Override " << *o << " with " << *n << '\n'
+                << "      described as \"" << *d << "\"\n"
                 << "      enabled " << *e << std::endl;
     }
   }

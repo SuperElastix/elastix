@@ -918,7 +918,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   }
   else
   {
-    os << std::endl << this->m_SmoothingSchedule << std::endl;
+    os << '\n' << this->m_SmoothingSchedule << std::endl;
   }
 } // end PrintSelf()
 

@@ -199,7 +199,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLSampler & sampl
 
   const char indent = ' ';
 
-  strm << "OpenCLSampler" << std::endl << indent << "Id: " << sampler.GetSamplerId() << std::endl;
+  strm << "OpenCLSampler\n" << indent << "Id: " << sampler.GetSamplerId() << std::endl;
 
   return strm;
 }

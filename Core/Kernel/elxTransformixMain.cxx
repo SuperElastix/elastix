@@ -87,7 +87,7 @@ TransformixMain::Run(void)
   {
     /** Report and disable the GPU by releasing the context. */
     elxout << errorMessage << std::endl;
-    elxout << "  OpenCL processing in transformix is disabled." << std::endl << std::endl;
+    elxout << "  OpenCL processing in transformix is disabled.\n" << std::endl;
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();
@@ -141,8 +141,8 @@ TransformixMain::Run(void)
   catch (itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    xl::xout["error"] << std::endl
-                      << "--------------- Exception ---------------" << std::endl
+    xl::xout["error"] << '\n'
+                      << "--------------- Exception ---------------\n"
                       << excp << "-----------------------------------------" << std::endl;
     errorCode = 1;
   }

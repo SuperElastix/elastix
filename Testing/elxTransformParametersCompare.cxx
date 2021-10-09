@@ -40,8 +40,8 @@ std::string
 GetHelpString(void)
 {
   std::stringstream ss;
-  ss << "Usage:" << std::endl
-     << "elxTransformParametersCompare" << std::endl
+  ss << "Usage:\n"
+     << "elxTransformParametersCompare\n"
      << "  -test      transform parameters file to test against baseline\n"
      << "  -base      baseline transform parameters filename\n"
      << "  [-mask]    mask image, only supported for the B-spline\n"

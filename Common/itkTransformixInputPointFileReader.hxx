@@ -129,7 +129,8 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateData(void)
         else
         {
           std::ostringstream msg;
-          msg << "The file is not large enough. " << std::endl << "Filename: " << this->m_FileName << std::endl;
+          msg << "The file is not large enough. \n"
+              << "Filename: " << this->m_FileName << std::endl;
           MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
           throw e;
           return;
@@ -141,7 +142,8 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateData(void)
   else
   {
     std::ostringstream msg;
-    msg << "The file has unexpectedly been closed. " << std::endl << "Filename: " << this->m_FileName << std::endl;
+    msg << "The file has unexpectedly been closed. \n"
+        << "Filename: " << this->m_FileName << std::endl;
     MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
     throw e;
     return;

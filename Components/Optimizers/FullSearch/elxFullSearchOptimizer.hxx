@@ -254,7 +254,7 @@ FullSearch<TElastix>::AfterEachResolution(void)
   }
 
   /** Print the best metric value */
-  elxout << std::endl << "Best metric value in this resolution = " << this->GetBestValue() << std::endl;
+  elxout << '\n' << "Best metric value in this resolution = " << this->GetBestValue() << std::endl;
 
   /** Print the best index and point */
   SearchSpaceIndexType bestIndex = this->GetBestIndexInSearchSpace();
@@ -302,7 +302,7 @@ FullSearch<TElastix>::AfterRegistration(void)
 {
   /** Print the best metric value. */
   double bestValue = this->GetBestValue();
-  elxout << std::endl << "Final metric value  = " << bestValue << std::endl;
+  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
 
 } // end AfterRegistration()
 

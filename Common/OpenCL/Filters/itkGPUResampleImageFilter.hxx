@@ -132,7 +132,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
   if (program.IsNull())
   {
     itkExceptionMacro(<< "Kernel has not been loaded from string:\n"
-                      << defines.str() << std::endl
+                      << defines.str() << '\n'
                       << resamplePreSource.str());
   }
   this->m_FilterPreGPUKernelHandle = this->m_PreKernelManager->CreateKernel(program, "ResampleImageFilterPre");
@@ -193,9 +193,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
     this->m_PostKernelManager->BuildProgramFromSourceCode(resamplePostSource.str(), defines);
   if (program.IsNull())
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from string:\n"
-                      << defines << std::endl
-                      << resamplePostSource.str());
+    itkExceptionMacro(<< "Kernel has not been loaded from string:\n" << defines << '\n' << resamplePostSource.str());
   }
 
   if (this->m_InterpolatorIsBSpline)
@@ -323,9 +321,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
     this->m_LoopKernelManager->BuildProgramFromSourceCode(resampleLoopSource.str(), defines);
   if (program.IsNull())
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from string:\n"
-                      << defines << std::endl
-                      << resampleLoopSource.str());
+    itkExceptionMacro(<< "Kernel has not been loaded from string:\n" << defines << '\n' << resampleLoopSource.str());
   }
 
   // \todo: can we clean this up?

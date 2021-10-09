@@ -313,7 +313,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
   }
   else
   {
-    xl::xout["error"] << "ERROR: So what are you using for the GrayValueImage," << std::endl
+    xl::xout["error"] << "ERROR: So what are you using for the GrayValueImage,\n"
                       << "either a threshold or a segmentation, make a choice!" << std::endl;
 
     /** Create and throw an exception. */
@@ -845,7 +845,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
   /** Error checking ... */
   if (fileName.empty())
   {
-    xl::xout["error"] << "ERROR: DeformationFieldFileName not specified." << std::endl
+    xl::xout["error"] << "ERROR: DeformationFieldFileName not specified.\n"
                       << "Unable to read and set the transform parameters." << std::endl;
     // \todo quit program nicely or throw an exception
   }

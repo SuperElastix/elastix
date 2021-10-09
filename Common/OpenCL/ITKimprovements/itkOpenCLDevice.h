@@ -605,7 +605,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
 
   const char indent = ' ';
 
-  strm << "OpenCLDevice" << std::endl << indent << "Id: " << device.GetDeviceId() << std::endl;
+  strm << "OpenCLDevice\n" << indent << "Id: " << device.GetDeviceId() << std::endl;
 
   strm << indent << "OpenCL version: ";
   switch (device.GetOpenCLVersion())
@@ -630,7 +630,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
       break;
   }
 
-  strm << std::endl << indent << "Version: " << device.GetVersion() << std::endl;
+  strm << '\n' << indent << "Version: " << device.GetVersion() << std::endl;
 
   strm << indent << "Device type: ";
   switch (device.GetDeviceType())
@@ -656,18 +656,18 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
   }
 
   // strm << device.GetPlatform() << std::endl;
-  strm << std::endl
-       << indent << "Vendor Id: " << device.GetVendorId() << std::endl
-       << indent << "Available: " << (device.IsAvailable() ? "Yes" : "No") << std::endl
-       << indent << "Has compiler: " << (device.HasCompiler() ? "Yes" : "No") << std::endl
-       << indent << "Has native kernels: " << (device.HasNativeKernels() ? "Yes" : "No") << std::endl
-       << indent << "Has out of order execution: " << (device.HasOutOfOrderExecution() ? "Yes" : "No") << std::endl
-       << indent << "Has double: " << (device.HasDouble() ? "Yes" : "No") << std::endl
-       << indent << "Has half float: " << (device.HasHalfFloat() ? "Yes" : "No") << std::endl
-       << indent << "Has error correcting memory: " << (device.HasErrorCorrectingMemory() ? "Yes" : "No") << std::endl
-       << indent << "Has unified memory: " << (device.HasUnifiedMemory() ? "Yes" : "No") << std::endl
-       << indent << "Compute units: " << device.GetComputeUnits() << std::endl
-       << indent << "Clock frequency: " << device.GetClockFrequency() << std::endl
+  strm << '\n'
+       << indent << "Vendor Id: " << device.GetVendorId() << '\n'
+       << indent << "Available: " << (device.IsAvailable() ? "Yes" : "No") << '\n'
+       << indent << "Has compiler: " << (device.HasCompiler() ? "Yes" : "No") << '\n'
+       << indent << "Has native kernels: " << (device.HasNativeKernels() ? "Yes" : "No") << '\n'
+       << indent << "Has out of order execution: " << (device.HasOutOfOrderExecution() ? "Yes" : "No") << '\n'
+       << indent << "Has double: " << (device.HasDouble() ? "Yes" : "No") << '\n'
+       << indent << "Has half float: " << (device.HasHalfFloat() ? "Yes" : "No") << '\n'
+       << indent << "Has error correcting memory: " << (device.HasErrorCorrectingMemory() ? "Yes" : "No") << '\n'
+       << indent << "Has unified memory: " << (device.HasUnifiedMemory() ? "Yes" : "No") << '\n'
+       << indent << "Compute units: " << device.GetComputeUnits() << '\n'
+       << indent << "Clock frequency: " << device.GetClockFrequency() << '\n'
        << indent << "Address bits: " << device.GetAddressBits() << std::endl;
 
   strm << indent << "Byte order: ";
@@ -684,9 +684,9 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
       break;
   }
 
-  strm << std::endl
-       << indent << "Maximum work item size: " << device.GetMaximumWorkItemSize() << std::endl
-       << indent << "Maximum work items per group: " << device.GetMaximumWorkItemsPerGroup() << std::endl
+  strm << '\n'
+       << indent << "Maximum work item size: " << device.GetMaximumWorkItemSize() << '\n'
+       << indent << "Maximum work items per group: " << device.GetMaximumWorkItemsPerGroup() << '\n'
        << indent << "Maximum work items per group: " << device.GetMaximumWorkItemsPerGroup() << std::endl;
 
   // Has Image 2D
@@ -705,25 +705,25 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
     strm << indent << "Maximum image 3D size: " << device.GetMaximumImage3DSize() << std::endl;
   }
 
-  strm << indent << "Has writable image 3D: " << (device.HasWritableImage3D() ? "Yes" : "No") << std::endl
-       << indent << "Maximum samplers: " << device.GetMaximumSamplers() << std::endl
-       << indent << "Maximum read images: " << device.GetMaximumReadImages() << std::endl
+  strm << indent << "Has writable image 3D: " << (device.HasWritableImage3D() ? "Yes" : "No") << '\n'
+       << indent << "Maximum samplers: " << device.GetMaximumSamplers() << '\n'
+       << indent << "Maximum read images: " << device.GetMaximumReadImages() << '\n'
        << indent << "Maximum write images: " << device.GetMaximumWriteImages() << std::endl
 
-       << indent << "Preferred char vector size: " << device.GetPreferredCharVectorSize() << std::endl
-       << indent << "Preferred short vector size: " << device.GetPreferredShortVectorSize() << std::endl
-       << indent << "Preferred int vector size: " << device.GetPreferredIntVectorSize() << std::endl
-       << indent << "Preferred long vector size: " << device.GetPreferredLongVectorSize() << std::endl
-       << indent << "Preferred float vector size: " << device.GetPreferredFloatVectorSize() << std::endl
-       << indent << "Preferred double vector size: " << device.GetPreferredDoubleVectorSize() << std::endl
+       << indent << "Preferred char vector size: " << device.GetPreferredCharVectorSize() << '\n'
+       << indent << "Preferred short vector size: " << device.GetPreferredShortVectorSize() << '\n'
+       << indent << "Preferred int vector size: " << device.GetPreferredIntVectorSize() << '\n'
+       << indent << "Preferred long vector size: " << device.GetPreferredLongVectorSize() << '\n'
+       << indent << "Preferred float vector size: " << device.GetPreferredFloatVectorSize() << '\n'
+       << indent << "Preferred double vector size: " << device.GetPreferredDoubleVectorSize() << '\n'
        << indent << "Preferred half float vector size: " << device.GetPreferredHalfFloatVectorSize() << std::endl
 
-       << indent << "Native char vector size: " << device.GetNativeCharVectorSize() << std::endl
-       << indent << "Native short vector size: " << device.GetNativeShortVectorSize() << std::endl
-       << indent << "Native int vector size: " << device.GetNativeIntVectorSize() << std::endl
-       << indent << "Native long vector size: " << device.GetNativeLongVectorSize() << std::endl
-       << indent << "Native float vector size: " << device.GetNativeFloatVectorSize() << std::endl
-       << indent << "Native double vector size: " << device.GetNativeDoubleVectorSize() << std::endl
+       << indent << "Native char vector size: " << device.GetNativeCharVectorSize() << '\n'
+       << indent << "Native short vector size: " << device.GetNativeShortVectorSize() << '\n'
+       << indent << "Native int vector size: " << device.GetNativeIntVectorSize() << '\n'
+       << indent << "Native long vector size: " << device.GetNativeLongVectorSize() << '\n'
+       << indent << "Native float vector size: " << device.GetNativeFloatVectorSize() << '\n'
+       << indent << "Native double vector size: " << device.GetNativeDoubleVectorSize() << '\n'
        << indent << "Native half float vector size: " << device.GetNativeHalfFloatVectorSize() << std::endl;
 
   strm << indent << "Float capabilities: ";
@@ -755,7 +755,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
       break;
   }
 
-  strm << std::endl << indent << "Double capabilities: ";
+  strm << '\n' << indent << "Double capabilities: ";
   switch (device.GetDoubleCapabilities())
   {
     case OpenCLDevice::NotSupported:
@@ -784,7 +784,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
       break;
   }
 
-  strm << std::endl << indent << "Half float capabilities: ";
+  strm << '\n' << indent << "Half float capabilities: ";
   switch (device.GetHalfFloatCapabilities())
   {
     case OpenCLDevice::NotSupported:
@@ -813,9 +813,9 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
       break;
   }
 
-  strm << std::endl
-       << indent << "Profiling timer resolution: " << device.GetProfilingTimerResolution() << std::endl
-       << indent << "Maximum allocation size: " << device.GetMaximumAllocationSize() << std::endl
+  strm << '\n'
+       << indent << "Profiling timer resolution: " << device.GetProfilingTimerResolution() << '\n'
+       << indent << "Maximum allocation size: " << device.GetMaximumAllocationSize() << '\n'
        << indent << "Global memory size: " << device.GetGlobalMemorySize() << std::endl;
 
   strm << indent << "Global memory cache type: ";
@@ -835,22 +835,22 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
       break;
   }
 
-  strm << std::endl
-       << indent << "Global memory cache size: " << device.GetGlobalMemoryCacheSize() << std::endl
-       << indent << "Global memory cache line size: " << device.GetGlobalMemoryCacheLineSize() << std::endl
-       << indent << "Local memory size: " << device.GetLocalMemorySize() << std::endl
-       << indent << "Local memory separated: " << (device.IsLocalMemorySeparate() ? "Yes" : "No") << std::endl
-       << indent << "Maximum constant buffer size: " << device.GetMaximumConstantBufferSize() << std::endl
-       << indent << "Maximum constant arguments: " << device.GetMaximumConstantArguments() << std::endl
-       << indent << "Default alignment: " << device.GetDefaultAlignment() << std::endl
-       << indent << "Minimum alignment: " << device.GetMinimumAlignment() << std::endl
-       << indent << "Maximum parameter bytes: " << device.GetMaximumParameterBytes() << std::endl
-       << indent << "Full profile: " << (device.IsFullProfile() ? "Yes" : "No") << std::endl
-       << indent << "Embedded profile: " << (device.IsEmbeddedProfile() ? "Yes" : "No") << std::endl
-       << indent << "Profile: " << device.GetProfile() << std::endl
-       << indent << "Driver version: " << device.GetDriverVersion() << std::endl
-       << indent << "Name: " << device.GetName() << std::endl
-       << indent << "Vendor: " << device.GetVendor() << std::endl
+  strm << '\n'
+       << indent << "Global memory cache size: " << device.GetGlobalMemoryCacheSize() << '\n'
+       << indent << "Global memory cache line size: " << device.GetGlobalMemoryCacheLineSize() << '\n'
+       << indent << "Local memory size: " << device.GetLocalMemorySize() << '\n'
+       << indent << "Local memory separated: " << (device.IsLocalMemorySeparate() ? "Yes" : "No") << '\n'
+       << indent << "Maximum constant buffer size: " << device.GetMaximumConstantBufferSize() << '\n'
+       << indent << "Maximum constant arguments: " << device.GetMaximumConstantArguments() << '\n'
+       << indent << "Default alignment: " << device.GetDefaultAlignment() << '\n'
+       << indent << "Minimum alignment: " << device.GetMinimumAlignment() << '\n'
+       << indent << "Maximum parameter bytes: " << device.GetMaximumParameterBytes() << '\n'
+       << indent << "Full profile: " << (device.IsFullProfile() ? "Yes" : "No") << '\n'
+       << indent << "Embedded profile: " << (device.IsEmbeddedProfile() ? "Yes" : "No") << '\n'
+       << indent << "Profile: " << device.GetProfile() << '\n'
+       << indent << "Driver version: " << device.GetDriverVersion() << '\n'
+       << indent << "Name: " << device.GetName() << '\n'
+       << indent << "Vendor: " << device.GetVendor() << '\n'
        << indent << "Language Version: " << device.GetLanguageVersion() << std::endl;
 
   const std::list<std::string> extensions = device.GetExtensions();

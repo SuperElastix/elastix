@@ -271,13 +271,13 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLImage & image)
 
   const char indent = ' ';
 
-  strm << "OpenCLImage" << std::endl
-       << indent << "Element size(bytes): " << image.GetElementSizeInBytes() << std::endl
-       << indent << "Row size(bytes): " << image.GetRowSizeInBytes() << std::endl
-       << indent << "Slice size(bytes): " << image.GetSliceSizeInBytes() << std::endl
-       << indent << "Dimension: " << image.GetDimension() << std::endl
-       << indent << "Width: " << image.GetWidth() << std::endl
-       << indent << "Height: " << image.GetHeight() << std::endl
+  strm << "OpenCLImage\n"
+       << indent << "Element size(bytes): " << image.GetElementSizeInBytes() << '\n'
+       << indent << "Row size(bytes): " << image.GetRowSizeInBytes() << '\n'
+       << indent << "Slice size(bytes): " << image.GetSliceSizeInBytes() << '\n'
+       << indent << "Dimension: " << image.GetDimension() << '\n'
+       << indent << "Width: " << image.GetWidth() << '\n'
+       << indent << "Height: " << image.GetHeight() << '\n'
        << indent << "Depth: " << image.GetDepth() << std::endl;
 
   // Stream OpenCLMemoryObject

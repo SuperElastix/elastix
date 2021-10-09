@@ -280,7 +280,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
     timer.Start();
 
     /** Tell the user. */
-    elxout << std::endl << "Reading input image ..." << std::endl;
+    elxout << '\n' << "Reading input image ..." << std::endl;
 
     /** Load the image from disk, if it wasn't set already by the user. */
     const bool useDirCos = this->GetUseDirectionCosines();

@@ -177,7 +177,7 @@ OpenCLFixedGenericPyramid<TElastix>::GenerateData(void)
     logger->Write(itk::LoggerBase::PriorityLevelEnum::CRITICAL, e.GetDescription());
 
     xl::xout["error"] << "ERROR: OpenCL program has not been compiled"
-                      << " during updating GPU fixed pyramid calculation." << std::endl
+                      << " during updating GPU fixed pyramid calculation.\n"
                       << "  Please check the '" << logger->GetLogFileName() << "' in output directory." << std::endl;
     computedUsingOpenCL = false;
   }

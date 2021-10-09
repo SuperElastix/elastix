@@ -163,7 +163,7 @@ OpenCLLogger::Write(PriorityLevelEnum level, std::string const & content)
   }
 
   std::ostringstream message;
-  message << "OpenCL compile error: " << std::endl << content;
+  message << "OpenCL compile error: \n" << content;
   Superclass::Write(level, message.str().c_str());
 }
 
