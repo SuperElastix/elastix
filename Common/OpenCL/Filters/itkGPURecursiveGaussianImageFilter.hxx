@@ -51,8 +51,7 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPURecursiveGaussian
   this->m_DeviceLocalMemorySize = (localMemSize / 3) / sizeof(float);
 
   defines << "#define BUFFSIZE " << this->m_DeviceLocalMemorySize << "\n";
-  defines << "#define BUFFPIXELTYPE float"
-          << "\n";
+  defines << "#define BUFFPIXELTYPE float\n";
   defines << "#define INPIXELTYPE ";
   GetTypenameInString(typeid(typename TInputImage::PixelType), defines);
   defines << "#define OUTPIXELTYPE ";

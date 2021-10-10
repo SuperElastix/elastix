@@ -170,8 +170,7 @@ FullSearch<TElastix>::BeforeEachResolution(void)
   }
   else
   {
-    itkExceptionMacro(<< "ERROR: elastix found an error in the search "
-                      << "space definition, and is quiting.");
+    itkExceptionMacro(<< "ERROR: elastix found an error in the search space definition, and is quiting.");
   }
 
 } // end BeforeEachResolution()
@@ -261,8 +260,7 @@ FullSearch<TElastix>::AfterEachResolution(void)
   SearchSpacePointType bestPoint = this->GetBestPointInSearchSpace();
   unsigned int         nrOfSSDims = bestIndex.GetSize();
 
-  elxout << "Index of the point in the optimization surface image that has "
-         << "the best metric value: [ ";
+  elxout << "Index of the point in the optimization surface image that has the best metric value: [ ";
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     elxout << bestIndex[dim] << " ";
@@ -324,8 +322,7 @@ FullSearch<TElastix>::CheckSearchSpaceRangeDefinition(const std::string & fullFi
   {
     xl::xout["error"] << "ERROR:\nNo (valid) range specified for the full search optimizer!\n"
                       << "Please define the field (" << fullFieldName
-                      << " \"name\" parameter_nr min max stepsize) correctly in the "
-                      << "parameter file" << std::endl;
+                      << " \"name\" parameter_nr min max stepsize) correctly in the parameter file" << std::endl;
     return false;
   }
 

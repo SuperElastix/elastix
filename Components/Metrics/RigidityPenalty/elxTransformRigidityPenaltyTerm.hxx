@@ -137,10 +137,8 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
   /** Important check: at least one rigidity image must be given. */
   if (fixedRigidityImageName.empty() && movingRigidityImageName.empty())
   {
-    xl::xout["warning"] << "WARNING: FixedRigidityImageName and "
-                        << "MovingRigidityImage are both not supplied.\n"
-                        << "  The rigidity penalty term is evaluated on entire input "
-                        << "transform domain." << std::endl;
+    xl::xout["warning"] << "WARNING: FixedRigidityImageName and MovingRigidityImage are both not supplied.\n"
+                        << "  The rigidity penalty term is evaluated on entire input transform domain." << std::endl;
   }
 
   /** Add target cells to IterationInfo. */

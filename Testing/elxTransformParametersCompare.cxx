@@ -341,8 +341,7 @@ main(int argc, char ** argv)
   } // end B-spline
 
   /** Print result to screen. */
-  std::cerr << "The norm of the difference between baseline and test "
-            << "transform parameters was computed, using\n"
+  std::cerr << "The norm of the difference between baseline and test transform parameters was computed, using\n"
             << "    || baseline - test ||\n"
             << "    ---------------------\n"
             << "       || baseline ||\n";

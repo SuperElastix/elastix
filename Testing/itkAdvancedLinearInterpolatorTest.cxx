@@ -188,26 +188,30 @@ TestInterpolators(void)
 
     if (std::abs(valueLinA - valueBSpline) > 1.0e-3)
     {
-      std::cerr << "ERROR: there is a difference in the interpolated value, "
-                << "between the linear and the 1st-order B-spline interpolator." << std::endl;
+      std::cerr << "ERROR: there is a difference in the interpolated value, between the linear and the 1st-order "
+                   "B-spline interpolator."
+                << std::endl;
       return false;
     }
     if (std::abs(valueBSpline - valueBSpline2) > 1.0e-3)
     {
-      std::cerr << "ERROR: there is a difference in the interpolated value, "
-                << "within the 1st-order B-spline interpolator (inconsistency)." << std::endl;
+      std::cerr << "ERROR: there is a difference in the interpolated value, within the 1st-order B-spline interpolator "
+                   "(inconsistency)."
+                << std::endl;
       return false;
     }
     if ((derivLinA - derivBSpline).GetVnlVector().magnitude() > 1.0e-3)
     {
-      std::cerr << "ERROR: there is a difference in the interpolated gradient, "
-                << "between the linear and the 1st-order B-spline interpolator." << std::endl;
+      std::cerr << "ERROR: there is a difference in the interpolated gradient, between the linear and the 1st-order "
+                   "B-spline interpolator."
+                << std::endl;
       return false;
     }
     if ((derivBSpline - derivBSpline2).GetVnlVector().magnitude() > 1.0e-3)
     {
-      std::cerr << "ERROR: there is a difference in the interpolated gradient, "
-                << "within the 1st-order B-spline interpolator (inconsistency)." << std::endl;
+      std::cerr << "ERROR: there is a difference in the interpolated gradient, within the 1st-order B-spline "
+                   "interpolator (inconsistency)."
+                << std::endl;
       return false;
     }
   }

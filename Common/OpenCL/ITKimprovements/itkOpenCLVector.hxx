@@ -109,8 +109,8 @@ void
 OpenCLVector<T>::Write(const T * data, const std::size_t count, const std::size_t offset /*= 0 */)
 {
   itkAssertOrThrowMacro(((offset + count) <= this->m_Size),
-                        "OpenCLVector<T>::Write(data, " << count << ", " << offset << ")"
-                                                        << " (offset + count) is out of range")
+                        "OpenCLVector<T>::Write(data, " << count << ", " << offset
+                                                        << ") (offset + count) is out of range")
 
     OpenCLVectorBase::Write(data, count * sizeof(T), offset * sizeof(T));
 }
@@ -122,8 +122,8 @@ void
 OpenCLVector<T>::Read(T * data, const std::size_t count, const std::size_t offset /*= 0 */)
 {
   itkAssertOrThrowMacro(((offset + count) <= this->m_Size),
-                        "OpenCLVector<T>::Read(data, " << count << ", " << offset << ")"
-                                                       << " (offset + count) is out of range")
+                        "OpenCLVector<T>::Read(data, " << count << ", " << offset
+                                                       << ") (offset + count) is out of range")
 
     OpenCLVectorBase::Read(data, count * sizeof(T), offset * sizeof(T));
 }

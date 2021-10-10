@@ -317,8 +317,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
                       << "either a threshold or a segmentation, make a choice!" << std::endl;
 
     /** Create and throw an exception. */
-    itkExceptionMacro(<< "ERROR: Difficulty determining how to create the "
-                      << "GrayValueImage. Check your parameter file.");
+    itkExceptionMacro(<< "ERROR: Difficulty determining how to create the GrayValueImage. Check your parameter file.");
   }
 
   /** Set the interpolator. */

@@ -50,8 +50,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetGri
   if (supportLastDimSize > lastDimSize)
   {
     itkExceptionMacro("Last dimension (" << lastDim << ") of support size (" << supportLastDimSize
-                                         << ") is larger than the "
-                                         << "number of grid points in the last dimension (" << lastDimSize << ").");
+                                         << ") is larger than the number of grid points in the last dimension ("
+                                         << lastDimSize << ").");
   }
 }
 

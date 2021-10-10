@@ -197,8 +197,9 @@ FiniteDifferenceGradientDescent<TElastix>::AfterRegistration(void)
   else
   {
     elxout << '\n'
-           << "Run Elastix again with the option \"ShowMetricValues\" set"
-           << " to \"true\", to see information about the metric values. " << std::endl;
+           << "Run Elastix again with the option \"ShowMetricValues\" set to \"true\", to see information about the "
+              "metric values. "
+           << std::endl;
   }
 
 } // end AfterRegistration

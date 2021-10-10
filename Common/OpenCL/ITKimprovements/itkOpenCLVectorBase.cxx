@@ -124,9 +124,7 @@ OpenCLVectorBase::Create(OpenCLContext * context, const OpenCLMemoryObject::Acce
 
   // Create base pimpl class
   this->d_ptr = new OpenCLVectorBasePimpl();
-  itkAssertOrThrowMacro((this->d_ptr != 0),
-                        "OpenCLVectorBase::Create()"
-                          << " unable to create base pimpl class.");
+  itkAssertOrThrowMacro((this->d_ptr != 0), "OpenCLVectorBase::Create() unable to create base pimpl class.");
 
   this->d_ptr->owners.push_back(this);
   cl_int error;

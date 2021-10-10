@@ -176,8 +176,7 @@ OpenCLMovingGenericPyramid<TElastix>::GenerateData(void)
     itk::OpenCLLogger::Pointer logger = itk::OpenCLLogger::GetInstance();
     logger->Write(itk::LoggerBase::PriorityLevelEnum::CRITICAL, e.GetDescription());
 
-    xl::xout["error"] << "ERROR: OpenCL program has not been compiled"
-                      << " during updating GPU moving pyramid calculation.\n"
+    xl::xout["error"] << "ERROR: OpenCL program has not been compiled during updating GPU moving pyramid calculation.\n"
                       << "  Please check the '" << logger->GetLogFileName() << "' in output directory." << std::endl;
     computedUsingOpenCL = false;
   }

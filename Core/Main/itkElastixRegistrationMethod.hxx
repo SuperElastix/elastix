@@ -457,8 +457,8 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedImage(const unsign
     }
   }
 
-  itkExceptionMacro(<< "Index exceeds the number of fixed images (index: " << index << ", "
-                    << "number of fixed images: " << n << ")");
+  itkExceptionMacro(<< "Index exceeds the number of fixed images (index: " << index << ", number of fixed images: " << n
+                    << ")");
 }
 
 
@@ -527,8 +527,8 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingImage(const unsig
     }
   }
 
-  itkExceptionMacro(<< "Index exceeds the number of moving images (index: " << index << ", "
-                    << "number of moving images: " << n << ")");
+  itkExceptionMacro(<< "Index exceeds the number of moving images (index: " << index
+                    << ", number of moving images: " << n << ")");
 }
 
 
@@ -585,8 +585,8 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedMask(const unsigne
     }
   }
 
-  itkExceptionMacro(<< "Index exceeds the number of fixed masks (index: " << index << ", "
-                    << "number of fixed masks: " << n << ")");
+  itkExceptionMacro(<< "Index exceeds the number of fixed masks (index: " << index << ", number of fixed masks: " << n
+                    << ")");
 }
 
 
@@ -651,8 +651,8 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingMask(const unsign
     }
   }
 
-  itkExceptionMacro(<< "Index exceeds the number of moving masks (index: " << index << ", "
-                    << "number of moving masks: " << n << ")");
+  itkExceptionMacro(<< "Index exceeds the number of moving masks (index: " << index << ", number of moving masks: " << n
+                    << ")");
 }
 
 

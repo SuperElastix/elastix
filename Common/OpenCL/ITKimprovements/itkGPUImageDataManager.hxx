@@ -77,8 +77,7 @@ GPUImageDataManager<ImageType>::UpdateCPUBuffer()
     {
       cl_int errid;
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-      std::cout << "clEnqueueReadBuffer GPU->CPU"
-                << "..." << std::endl;
+      std::cout << "clEnqueueReadBuffer GPU->CPU..." << std::endl;
 #endif
 
 #ifdef OPENCL_PROFILING
@@ -140,8 +139,7 @@ GPUImageDataManager<ImageType>::UpdateGPUBuffer()
     {
       cl_int errid;
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-      std::cout << "clEnqueueWriteBuffer CPU->GPU"
-                << "..." << std::endl;
+      std::cout << "clEnqueueWriteBuffer CPU->GPU..." << std::endl;
 #endif
 
 #ifdef OPENCL_PROFILING

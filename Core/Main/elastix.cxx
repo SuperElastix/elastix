@@ -81,8 +81,8 @@ main(int argc, char ** argv)
                 << " version " << __VERSION__
 #  endif
 #endif
-                << "\nMemory address size: " << std::numeric_limits<std::size_t>::digits << "-bit"
-                << "\nCMake version: " << ELX_CMAKE_VERSION << std::endl;
+                << "\nMemory address size: " << std::numeric_limits<std::size_t>::digits
+                << "-bit\nCMake version: " << ELX_CMAKE_VERSION << std::endl;
       return 0;
     }
     else
@@ -266,9 +266,7 @@ main(int argc, char ** argv)
     parameterFileList.pop();
 
     /** Print a start message. */
-    elxout << "-------------------------------------------------------------------------"
-           << "\n"
-           << std::endl;
+    elxout << "-------------------------------------------------------------------------\n" << std::endl;
     elxout << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\".\n" << std::endl;
 
     /** Declare a timer, start it and print the start time. */
@@ -308,9 +306,7 @@ main(int argc, char ** argv)
            << std::endl;
   } // end loop over registrations
 
-  elxout << "-------------------------------------------------------------------------"
-         << "\n"
-         << std::endl;
+  elxout << "-------------------------------------------------------------------------\n" << std::endl;
 
   /** Stop totaltimer and print it. */
   totaltimer.Stop();

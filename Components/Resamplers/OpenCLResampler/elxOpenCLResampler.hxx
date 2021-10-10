@@ -50,8 +50,7 @@ elastix::OpenCLResampler<TElastix>::OpenCLResampler()
       itk::OpenCLLogger::Pointer logger = itk::OpenCLLogger::GetInstance();
       logger->Write(itk::LoggerBase::PriorityLevelEnum::CRITICAL, e.GetDescription());
 
-      xl::xout["error"] << "ERROR: OpenCL program has not been compiled"
-                        << " during GPU resampler creation.\n"
+      xl::xout["error"] << "ERROR: OpenCL program has not been compiled during GPU resampler creation.\n"
                         << "  Please check the '" << logger->GetLogFileName() << "' in output directory." << std::endl;
 
       this->SwitchingToCPUAndReport(true);
@@ -202,8 +201,7 @@ OpenCLResampler<TElastix>::BeforeGenerateData(void)
       itk::OpenCLLogger::Pointer logger = itk::OpenCLLogger::GetInstance();
       logger->Write(itk::LoggerBase::PriorityLevelEnum::CRITICAL, e.GetDescription());
 
-      xl::xout["error"] << "ERROR: OpenCL program has not been compiled"
-                        << " during setting GPU resampler.\n"
+      xl::xout["error"] << "ERROR: OpenCL program has not been compiled during setting GPU resampler.\n"
                         << "  Please check the '" << logger->GetLogFileName() << "' in output directory." << std::endl;
 
       this->SwitchingToCPUAndReport(true);

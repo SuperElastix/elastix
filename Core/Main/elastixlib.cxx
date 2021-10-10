@@ -270,9 +270,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     elastixMain->SetTotalNumberOfElastixLevels(nrOfParameterFiles);
 
     /** Print a start message. */
-    elxout << "-------------------------------------------------------------------------"
-           << "\n"
-           << std::endl;
+    elxout << "-------------------------------------------------------------------------\n" << std::endl;
     elxout << "Running elastix with parameter map " << i << std::endl;
 
     /** Declare a timer, start it and print the start time. */
@@ -320,9 +318,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     }
   } // end loop over registrations
 
-  elxout << "-------------------------------------------------------------------------"
-         << "\n"
-         << std::endl;
+  elxout << "-------------------------------------------------------------------------\n" << std::endl;
 
   /** Stop totaltimer and print it. */
   totaltimer.Stop();

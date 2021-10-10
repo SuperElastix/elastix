@@ -62,10 +62,11 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
   else
   {
     std::stringstream errorMessageStream;
-    errorMessageStream << "ERROR: You have selected the OpenCL device type: " << openCLDeviceType << '\n'
-                       << indent << "This type is not supported by the elastix. \n"
-                       << indent << "Please provide the correct OpenCL device type (GPU, CPU) "
-                       << "using the (OpenCLDeviceType \"\") option." << std::endl;
+    errorMessageStream
+      << "ERROR: You have selected the OpenCL device type: " << openCLDeviceType << '\n'
+      << indent << "This type is not supported by the elastix. \n"
+      << indent << "Please provide the correct OpenCL device type (GPU, CPU) using the (OpenCLDeviceType \"\") option."
+      << std::endl;
     errorMessage = errorMessageStream.str();
 
     return false;
@@ -123,9 +124,7 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
           errorMessageStream << "Unknown";
           break;
       }
-      errorMessageStream << '\n'
-                         << indent << "elastix option: "
-                         << "(OpenCLDeviceID \"" << deviceID << "\")" << std::endl;
+      errorMessageStream << '\n' << indent << "elastix option: (OpenCLDeviceID \"" << deviceID << "\")" << std::endl;
       ++deviceID;
     }
 
@@ -172,12 +171,14 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
                        << '\n'
                        << indent << "http://www.nvidia.com/Download/index.aspx" << std::endl;
 
-    errorMessageStream << indent << "For AMD processors (OpenCLDeviceType \"CPU\") option or "
-                       << "graphical cards (OpenCLDeviceType \"GPU\") option, download OpenCL drivers from:\n"
+    errorMessageStream << indent
+                       << "For AMD processors (OpenCLDeviceType \"CPU\") option or graphical cards (OpenCLDeviceType "
+                          "\"GPU\") option, download OpenCL drivers from:\n"
                        << indent << "http://support.amd.com/en-us/download" << std::endl;
 
-    errorMessageStream << indent << "For Intel processors (OpenCLDeviceType \"CPU\") option or "
-                       << "HD graphical cards (OpenCLDeviceType \"GPU\") option, download OpenCL drivers from:\n"
+    errorMessageStream << indent
+                       << "For Intel processors (OpenCLDeviceType \"CPU\") option or HD graphical cards "
+                          "(OpenCLDeviceType \"GPU\") option, download OpenCL drivers from:\n"
                        << indent << "https://software.intel.com/en-us/intel-opencl/download" << std::endl;
 
     errorMessage = errorMessageStream.str();
@@ -198,7 +199,7 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
                        << ", does not support 'double' computations.\n"
                        << indent
                        << "OpenCL processing in elastix is disabled, since 'double' support is currently required. "
-                       << "Processing will be performed on the CPU instead.\n"
+                          "Processing will be performed on the CPU instead.\n"
                        << indent << "You may consider upgrading your graphical card (hardware)." << std::endl;
     errorMessage = errorMessageStream.str();
 

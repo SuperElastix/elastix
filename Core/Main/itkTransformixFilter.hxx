@@ -76,20 +76,17 @@ TransformixFilter<TMovingImage>::GenerateData()
       !this->GetComputeSpatialJacobian() && !this->GetComputeDeterminantOfSpatialJacobian() &&
       !this->GetComputeDeformationField())
   {
-    itkExceptionMacro("Expected at least one of SetMovingImage(), "
-                      << "SetFixedPointSetFileName() "
-                      << "ComputeSpatialJacobianOn(), "
-                      << "ComputeDeterminantOfSpatialJacobianOn() or "
-                      << "ComputeDeformationFieldOn(), "
-                      << "to be active.\"");
+    itkExceptionMacro(
+      "Expected at least one of SetMovingImage(), SetFixedPointSetFileName() ComputeSpatialJacobianOn(), "
+      "ComputeDeterminantOfSpatialJacobianOn() or ComputeDeformationFieldOn(), to be active.\"");
   }
 
   // TODO: Patch upstream transformix to split this into seperate arguments
   // Transformix uses "-def" for path to point sets AND as flag for writing deformation field
   if (this->GetComputeDeformationField() && !this->GetFixedPointSetFileName().empty())
   {
-    itkExceptionMacro(<< "For backwards compatibility, only one of ComputeDeformationFieldOn() "
-                      << "or SetFixedPointSetFileName() can be active at any one time.")
+    itkExceptionMacro(<< "For backwards compatibility, only one of ComputeDeformationFieldOn() or "
+                         "SetFixedPointSetFileName() can be active at any one time.")
   }
 
   // Setup argument map which transformix uses internally ito figure out what needs to be done

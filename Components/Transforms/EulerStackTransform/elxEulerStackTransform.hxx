@@ -131,8 +131,7 @@ EulerStackTransform<TElastix>::ReadFromFile(void)
 
   if (!pointRead && !indexRead)
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the "
-                      << "transform parameter file" << std::endl;
+    xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
     itkExceptionMacro(<< "Transform parameter file is corrupt.")
   }
 
@@ -247,8 +246,9 @@ EulerStackTransform<TElastix>::InitializeTransform()
     this->m_Configuration->ReadParameter(UseDirectionCosines, "UseDirectionCosines", 0);
     if (!UseDirectionCosines)
     {
-      elxout << "warning: a wrong center of rotation could have been set, "
-             << " please check the transform matrix in the header file" << std::endl;
+      elxout << "warning: a wrong center of rotation could have been set,  please check the transform matrix in the "
+                "header file"
+             << std::endl;
     }
   }
 
@@ -475,8 +475,7 @@ EulerStackTransform<TElastix>::SetScales(void)
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file"
-                        << " has not been set properly.");
+      itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
     }
 
   } // end else: no automaticScalesEstimation
