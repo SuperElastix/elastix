@@ -523,8 +523,8 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationOrigina
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: AdaptiveStochasticGradientDescent expects "
-                      << "the metric to be of type AdvancedImageToImageMetric!");
+    itkExceptionMacro(
+      << "ERROR: AdaptiveStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
@@ -662,8 +662,8 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDi
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: AdaptiveStochasticGradientDescent expects "
-                      << "the metric to be of type AdvancedImageToImageMetric!");
+    itkExceptionMacro(
+      << "ERROR: AdaptiveStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
@@ -809,8 +809,9 @@ AdaptiveStochasticGradientDescent<TElastix>::SampleGradients(const ParametersTyp
           {
             if (this->GetUseAdaptiveStepSizes())
             {
-              xl::xout["warning"] << "WARNING: UseAdaptiveStepSizes is turned off, "
-                                  << "because UseRandomSampleRegion is set to \"true\"." << std::endl;
+              xl::xout["warning"]
+                << "WARNING: UseAdaptiveStepSizes is turned off, because UseRandomSampleRegion is set to \"true\"."
+                << std::endl;
               this->SetUseAdaptiveStepSizes(false);
             }
           }

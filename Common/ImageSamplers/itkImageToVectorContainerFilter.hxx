@@ -241,8 +241,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreadedGener
   // The ExceptionMacro is not used because gcc warns that a
   // 'noreturn' function does return
   std::ostringstream message;
-  message << "itk::ERROR: " << this->GetNameOfClass() << "(" << this << "): "
-          << "Subclass should override this method!!!";
+  message << "itk::ERROR: " << this->GetNameOfClass() << "(" << this << "): Subclass should override this method!!!";
   ExceptionObject e_(__FILE__, __LINE__, message.str().c_str(), ITK_LOCATION);
   throw e_;
 

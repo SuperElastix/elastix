@@ -64,8 +64,8 @@ OpenCLKernelManager::CreateKernel(const OpenCLProgram & program, const std::stri
   // Check the program
   if (program.IsNull())
   {
-    itkOpenCLWarningMacro(<< "OpenCL kernel '" << name << "' has not been created."
-                          << "Provided program is null. Returned " << createResult);
+    itkOpenCLWarningMacro(<< "OpenCL kernel '" << name << "' has not been created.Provided program is null. Returned "
+                          << createResult);
     return createResult;
   }
 
@@ -135,8 +135,7 @@ OpenCLKernelManager::SetKernelArg(const std::size_t kernelId,
 
   cl_int error;
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-  std::cout << "clSetKernelArg"
-            << "..." << std::endl;
+  std::cout << "clSetKernelArg..." << std::endl;
 #endif
   error = clSetKernelArg(this->GetKernel(kernelId).GetKernelId(), argId, argSize, argVal);
 
@@ -188,8 +187,7 @@ OpenCLKernelManager::SetKernelArgWithImage(const std::size_t             kernelI
 
   cl_int error;
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-  std::cout << "clSetKernelArg"
-            << "..." << std::endl;
+  std::cout << "clSetKernelArg..." << std::endl;
 #endif
 
   if (manager->GetBufferSize() > 0)

@@ -74,8 +74,8 @@ GetHelpString(void)
      << "  -out          output file names.(outputCPU outputGPU)\n"
      << "  -rmse         acceptable rmse error\n"
      << "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n"
-     << "  [-t]          transforms, one of {Affine, Translation, BSpline, Euler, Similarity}"
-     << " or combinations with option \"-c\", default Affine\n"
+     << "  [-t]          transforms, one of {Affine, Translation, BSpline, Euler, Similarity} or combinations with "
+        "option \"-c\", default Affine\n"
      << "  [-c]          use combo transform, default false\n"
      << "  [-p]          parameter file for the B-spline transform\n"
      << "  [-threads]    number of threads, default maximum\n";
@@ -687,9 +687,9 @@ main(int argc, char * argv[])
     if (transformName != "Affine" && transformName != "Translation" && transformName != "BSpline" &&
         transformName != "Euler" && transformName != "Similarity")
     {
-      std::cerr << "ERROR: transforms \"-t\" should be one of "
-                << "{Affine, Translation, BSpline, Euler, Similarity}"
-                << " or combination of them." << std::endl;
+      std::cerr << "ERROR: transforms \"-t\" should be one of {Affine, Translation, BSpline, Euler, Similarity} or "
+                   "combination of them."
+                << std::endl;
       itk::ReleaseContext();
       return EXIT_FAILURE;
     }

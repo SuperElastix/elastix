@@ -92,24 +92,24 @@ public:
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented "
-                      << "for WeightedCombinationTransform");
+    itkExceptionMacro(
+      << "TransformVector(const InputVectorType &) is not implemented for WeightedCombinationTransform");
   }
 
 
   OutputVnlVectorType
   TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented "
-                      << "for WeightedCombinationTransform");
+    itkExceptionMacro(
+      << "TransformVector(const InputVnlVectorType &) is not implemented for WeightedCombinationTransform");
   }
 
 
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
-                      << "for WeightedCombinationTransform");
+    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
+                         "WeightedCombinationTransform");
   }
 
 

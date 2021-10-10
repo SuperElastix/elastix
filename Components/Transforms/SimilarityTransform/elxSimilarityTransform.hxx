@@ -86,8 +86,7 @@ SimilarityTransformElastix<TElastix>::ReadFromFile(void)
 
     if (!pointRead && !indexRead)
     {
-      xl::xout["error"] << "ERROR: No center of rotation is specified in the "
-                        << "transform parameter file." << std::endl;
+      xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file." << std::endl;
       itkExceptionMacro(<< "Transform parameter file is corrupt.")
     }
 
@@ -175,15 +174,13 @@ SimilarityTransformElastix<TElastix>::InitializeTransform(void)
   /** Give a warning if necessary. */
   if (!CORIndexInImage && centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not "
-                        << "within image boundaries!" << std::endl;
+    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not within image boundaries!" << std::endl;
   }
 
   /** Give a warning if necessary. */
   if (!CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not "
-                        << "within image boundaries!" << std::endl;
+    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not within image boundaries!" << std::endl;
   }
 
   /** Check if user wants automatic transform initialization; false by default.

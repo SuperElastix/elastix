@@ -261,8 +261,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetIdentity()
   }
   else
   {
-    itkExceptionMacro(<< "Input parameters for the spline haven't been set ! "
-                      << "Set them using the SetParameters or SetCoefficientImage method first.");
+    itkExceptionMacro(<< "Input parameters for the spline haven't been set ! Set them using the SetParameters or "
+                         "SetCoefficientImage method first.");
   }
 }
 
@@ -442,8 +442,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(
    */
   if (nullptr == this->m_InputParametersPointer)
   {
-    itkExceptionMacro(<< "Cannot GetParameters() because m_InputParametersPointer is NULL."
-                      << " Perhaps SetCoefficientImages() has been called causing the NULL pointer.");
+    itkExceptionMacro(<< "Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps "
+                         "SetCoefficientImages() has been called causing the NULL pointer.");
   }
 
   return (*this->m_InputParametersPointer);

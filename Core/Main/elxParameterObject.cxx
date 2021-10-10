@@ -327,8 +327,9 @@ ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileN
 
   if (this->m_ParameterMap.size() > 1)
   {
-    itkExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << this->m_ParameterMap.size() << ")"
-                      << " does not match the number of provided filenames (1). Please provide a vector of filenames.");
+    itkExceptionMacro(
+      << "Error writing to disk: The number of parameter maps (" << this->m_ParameterMap.size()
+      << ") does not match the number of provided filenames (1). Please provide a vector of filenames.");
   }
 
   this->WriteParameterFile(this->m_ParameterMap[0], parameterFileName);
@@ -345,8 +346,8 @@ ParameterObject::WriteParameterFile(const ParameterMapVectorType &      paramete
 {
   if (parameterMapVector.size() != parameterFileNameVector.size())
   {
-    itkExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << parameterMapVector.size() << ")"
-                      << " does not match the number of provided filenames (" << parameterFileNameVector.size()
+    itkExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << parameterMapVector.size()
+                      << ") does not match the number of provided filenames (" << parameterFileNameVector.size()
                       << ").");
   }
 

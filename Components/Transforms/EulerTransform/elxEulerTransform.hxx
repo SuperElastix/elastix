@@ -77,8 +77,7 @@ EulerTransformElastix<TElastix>::ReadFromFile(void)
 
     if (!pointRead)
     {
-      xl::xout["error"] << "ERROR: No center of rotation is specified in "
-                        << "the transform parameter file" << std::endl;
+      xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
       itkExceptionMacro(<< "Transform parameter file is corrupt.")
     }
 
@@ -189,15 +188,13 @@ EulerTransformElastix<TElastix>::InitializeTransform(void)
   /** Give a warning if necessary. */
   if (!CORIndexInImage && centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not "
-                        << "within image boundaries!" << std::endl;
+    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not within image boundaries!" << std::endl;
   }
 
   /** Give a warning if necessary. */
   if (!CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not "
-                        << "within image boundaries!" << std::endl;
+    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not within image boundaries!" << std::endl;
   }
 
   /** Check if user wants automatic transform initialization; false by default.
@@ -390,8 +387,7 @@ EulerTransformElastix<TElastix>::SetScales(void)
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file"
-                        << " has not been set properly.");
+      itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
     }
 
   } // end else: no automaticScalesEstimation

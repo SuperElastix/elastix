@@ -56,8 +56,7 @@ GPUDataManager::~GPUDataManager()
   if (m_GPUBuffer)
   {
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-    std::cout << "clReleaseMemObject"
-              << "..." << std::endl;
+    std::cout << "clReleaseMemObject..." << std::endl;
 #endif
     cl_int errid = clReleaseMemObject(m_GPUBuffer);
     m_Context->ReportError(errid, __FILE__, __LINE__, ITK_LOCATION);
@@ -296,16 +295,14 @@ GPUDataManager::Graft(const GPUDataManager * data)
     if (m_GPUBuffer) // Decrease reference count to GPU memory
     {
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-      std::cout << "clReleaseMemObject"
-                << "..." << std::endl;
+      std::cout << "clReleaseMemObject..." << std::endl;
 #endif
       clReleaseMemObject(m_GPUBuffer);
     }
     if (data->m_GPUBuffer) // Increase reference count to GPU memory
     {
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-      std::cout << "clRetainMemObject"
-                << "..." << std::endl;
+      std::cout << "clRetainMemObject..." << std::endl;
 #endif
       clRetainMemObject(data->m_GPUBuffer);
     }
@@ -326,8 +323,7 @@ GPUDataManager::Initialize()
   if (m_GPUBuffer) // Release GPU memory if exists
   {
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)
-    std::cout << "clReleaseMemObject"
-              << "..." << std::endl;
+    std::cout << "clReleaseMemObject..." << std::endl;
 #endif
     cl_int errid = clReleaseMemObject(m_GPUBuffer);
     m_Context->ReportError(errid, __FILE__, __LINE__, ITK_LOCATION);

@@ -333,9 +333,9 @@ AdvancedBSplineTransform<TElastix>::PreComputeGridInformation(void)
   }
   else
   {
-    xl::xout["error"] << "ERROR: Invalid GridSpacingSchedule! The number of entries"
-                      << " behind the GridSpacingSchedule option should equal the"
-                      << " numberOfResolutions, or the numberOfResolutions * ImageDimension." << std::endl;
+    xl::xout["error"] << "ERROR: Invalid GridSpacingSchedule! The number of entries behind the GridSpacingSchedule "
+                         "option should equal the numberOfResolutions, or the numberOfResolutions * ImageDimension."
+                      << std::endl;
     itkExceptionMacro(<< "ERROR: Invalid GridSpacingSchedule!");
   }
 
@@ -344,8 +344,9 @@ AdvancedBSplineTransform<TElastix>::PreComputeGridInformation(void)
    */
   if (this->m_Cyclic)
   {
-    xl::xout["warning"] << "WARNING: The provided grid spacing may be adapted to fit the cyclic "
-                        << "behavior of the CyclicBSplineTransform." << std::endl;
+    xl::xout["warning"]
+      << "WARNING: The provided grid spacing may be adapted to fit the cyclic behavior of the CyclicBSplineTransform."
+      << std::endl;
   }
 
   /** Set the grid schedule and final grid spacing in the schedule computer. */

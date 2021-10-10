@@ -100,24 +100,22 @@ public:
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented "
-                      << "for StackTransform");
+    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented for StackTransform");
   }
 
 
   OutputVnlVectorType
   TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented "
-                      << "for StackTransform");
+    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented for StackTransform");
   }
 
 
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
-                      << "for StackTransform");
+    itkExceptionMacro(
+      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for StackTransform");
   }
 
 

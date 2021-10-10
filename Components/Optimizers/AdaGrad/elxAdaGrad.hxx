@@ -531,8 +531,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation(void)
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: VoxelWiseASGD expects "
-                      << "the metric to be of type AdvancedImageToImageMetric!");
+    itkExceptionMacro(<< "ERROR: VoxelWiseASGD expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Getting pointers to the samplers. */
@@ -746,8 +745,9 @@ AdaGrad<TElastix>::SampleGradients(const ParametersType & mu0, double perturbati
           {
             if (this->m_StepSizeStrategy == "Adaptive")
             {
-              xl::xout["warning"] << "WARNING: StepSizeStrategy is set to Constant, "
-                                  << "because UseRandomSampleRegion is set to \"true\"." << std::endl;
+              xl::xout["warning"]
+                << "WARNING: StepSizeStrategy is set to Constant, because UseRandomSampleRegion is set to \"true\"."
+                << std::endl;
               this->m_StepSizeStrategy = "Constant";
             }
           }

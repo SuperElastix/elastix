@@ -192,8 +192,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   else
   {
     /** Both "p" and "tp" are used, which is prohibited. */
-    xl::xout["error"] << "ERROR: Both \"-p\" and \"-tp\" are used, "
-                      << "which is prohibited." << std::endl;
+    xl::xout["error"] << "ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited." << std::endl;
     return 1;
   }
 

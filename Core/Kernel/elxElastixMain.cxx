@@ -231,8 +231,7 @@ ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap)
   int dummy = this->m_Configuration->Initialize(argmap);
   if (dummy)
   {
-    xl::xout["error"] << "ERROR: Something went wrong during initialization "
-                      << "of the configuration object." << std::endl;
+    xl::xout["error"] << "ERROR: Something went wrong during initialization of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineParameters()
@@ -549,7 +548,7 @@ ElastixMain::InitDBIndex(void)
                               << "  The parameter file says:     " << fixDimParameterFile << "\n"
                               << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
                               << "  Note that from elastix 4.6 the parameter file definition \"FixedImageDimension\" "
-                              << "is not needed anymore.\n  Please remove this entry from your parameter file."
+                                 "is not needed anymore.\n  Please remove this entry from your parameter file."
                               << std::endl;
             return 1;
           }
@@ -626,7 +625,7 @@ ElastixMain::InitDBIndex(void)
                               << "  The parameter file says:      " << movDimParameterFile << "\n"
                               << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
                               << "  Note that from elastix 4.6 the parameter file definition \"MovingImageDimension\" "
-                              << "is not needed anymore.\n  Please remove this entry from your parameter file."
+                                 "is not needed anymore.\n  Please remove this entry from your parameter file."
                               << std::endl;
             return 1;
           }

@@ -359,9 +359,10 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation(void)
   }
   else
   {
-    xl::xout["error"] << "ERROR: Invalid GridSpacingSchedule! The number of entries"
-                      << " behind the GridSpacingSchedule option should equal the"
-                      << " numberOfResolutions, or the numberOfResolutions * ( ImageDimension - 1 )." << std::endl;
+    xl::xout["error"]
+      << "ERROR: Invalid GridSpacingSchedule! The number of entries behind the GridSpacingSchedule option should equal "
+         "the numberOfResolutions, or the numberOfResolutions * ( ImageDimension - 1 )."
+      << std::endl;
     itkExceptionMacro(<< "ERROR: Invalid GridSpacingSchedule!");
   }
 
@@ -536,8 +537,9 @@ BSplineStackTransform<TElastix>::ReadFromFile(void)
 
   if (!dummy)
   {
-    itkExceptionMacro("NumberOfSubTransforms, StackOrigin, StackSpacing, GridSize, "
-                      << "GridIndex, GridSpacing and GridOrigin is required by " << this->GetNameOfClass() << ".")
+    itkExceptionMacro("NumberOfSubTransforms, StackOrigin, StackSpacing, GridSize, GridIndex, GridSpacing and "
+                      "GridOrigin is required by "
+                      << this->GetNameOfClass() << ".")
   }
 
   /** Set it all. */

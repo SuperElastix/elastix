@@ -56,8 +56,7 @@ main(int argc, char * argv[])
   /** Check. */
   if (argc != 2)
   {
-    std::cerr << "ERROR: You should specify a text file with the B-spline "
-              << "transformation parameters." << std::endl;
+    std::cerr << "ERROR: You should specify a text file with the B-spline transformation parameters." << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -100,8 +99,7 @@ main(int argc, char * argv[])
   std::ifstream input(argv[1]);
   if (!input.is_open())
   {
-    std::cerr << "ERROR: could not open the text file containing the "
-              << "parameter values." << std::endl;
+    std::cerr << "ERROR: could not open the text file containing the parameter values." << std::endl;
     return EXIT_FAILURE;
   }
   int dimsInPar1;

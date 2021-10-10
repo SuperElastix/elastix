@@ -465,8 +465,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
   else
   {
-    itkExceptionMacro(<< "Input parameters for the spline haven't been set ! "
-                      << "Set them using the SetParameters or SetCoefficientImage method first.");
+    itkExceptionMacro(<< "Input parameters for the spline haven't been set ! Set them using the SetParameters or "
+                         "SetCoefficientImage method first.");
   }
 }
 
@@ -883,8 +883,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  itkExceptionMacro(<< "ERROR: GetJacobianOfSpatialJacobian() not yet implemented "
-                    << "in the MultiBSplineDeformableTransformWithNormal class.");
+  itkExceptionMacro(<< "ERROR: GetJacobianOfSpatialJacobian() not yet implemented in the "
+                       "MultiBSplineDeformableTransformWithNormal class.");
 } // end GetJacobianOfSpatialJacobian()
 
 

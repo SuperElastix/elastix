@@ -137,8 +137,7 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
     /** Trying to read a string other than "true" or "false" as a boolean. */
     std::stringstream ss;
     ss << "ERROR: Entry number " << entry_nr << " for the parameter \"" << parameterName
-       << "\" should be a boolean, i.e. either \"true\" or \"false\""
-       << ", but it reads \"" << parameterValueString << "\".";
+       << "\" should be a boolean, i.e. either \"true\" or \"false\", but it reads \"" << parameterValueString << "\".";
 
     itkExceptionMacro(<< ss.str());
   }

@@ -521,18 +521,15 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
    */
   if (this->GetNumberOfFixedImagePyramids() < this->GetNumberOfFixedImages())
   {
-    itkExceptionMacro(<< "The number of fixed image pyramids should be >= "
-                      << "the number of fixed images");
+    itkExceptionMacro(<< "The number of fixed image pyramids should be >= the number of fixed images");
   }
   if (this->GetNumberOfMovingImagePyramids() < this->GetNumberOfMovingImages())
   {
-    itkExceptionMacro(<< "The number of moving image pyramids should be >= "
-                      << "the number of moving images");
+    itkExceptionMacro(<< "The number of moving image pyramids should be >= the number of moving images");
   }
   if (this->GetNumberOfFixedImageRegions() != this->GetNumberOfFixedImages())
   {
-    itkExceptionMacro(<< "The number of fixed image regions should equal "
-                      << "the number of fixed images");
+    itkExceptionMacro(<< "The number of fixed image regions should equal the number of fixed images");
   }
 
 } // end CheckPyramids()
@@ -568,50 +565,41 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
   unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
   if (this->GetNumberOfInterpolators() > nrOfMetrics)
   {
-    itkExceptionMacro(<< "NumberOfInterpolators can not exceed the "
-                      << "NumberOfMetrics in the CombinationMetric!");
+    itkExceptionMacro(<< "NumberOfInterpolators can not exceed the NumberOfMetrics in the CombinationMetric!");
   }
   if (this->GetNumberOfFixedImagePyramids() > nrOfMetrics)
   {
-    itkExceptionMacro(<< "NumberOfFixedImagePyramids can not exceed the "
-                      << "NumberOfMetrics in the CombinationMetric!");
+    itkExceptionMacro(<< "NumberOfFixedImagePyramids can not exceed the NumberOfMetrics in the CombinationMetric!");
   }
   if (this->GetNumberOfMovingImagePyramids() > nrOfMetrics)
   {
-    itkExceptionMacro(<< "NumberOfMovingImagePyramids can not exceed the "
-                      << "NumberOfMetrics in the CombinationMetric!");
+    itkExceptionMacro(<< "NumberOfMovingImagePyramids can not exceed the NumberOfMetrics in the CombinationMetric!");
   }
   if (this->GetNumberOfMovingImagePyramids() > this->GetNumberOfInterpolators())
   {
-    itkExceptionMacro(<< "NumberOfMovingImagePyramids can not exceed the "
-                      << "NumberOfInterpolators!");
+    itkExceptionMacro(<< "NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!");
   }
 
   /** For all components: ==nrofmetrics of ==1. */
   if ((this->GetNumberOfInterpolators() != 1) && (this->GetNumberOfInterpolators() != nrOfMetrics))
   {
-    itkExceptionMacro(<< "The NumberOfInterpolators should equal 1 "
-                      << "or equal the NumberOfMetrics");
+    itkExceptionMacro(<< "The NumberOfInterpolators should equal 1 or equal the NumberOfMetrics");
   }
   if ((this->GetNumberOfFixedImagePyramids() != 1) && (this->GetNumberOfFixedImagePyramids() != nrOfMetrics))
   {
-    itkExceptionMacro(<< "The NumberOfFixedImagePyramids should equal 1 "
-                      << "or equal the NumberOfMetrics");
+    itkExceptionMacro(<< "The NumberOfFixedImagePyramids should equal 1 or equal the NumberOfMetrics");
   }
   if ((this->GetNumberOfMovingImagePyramids() != 1) && (this->GetNumberOfMovingImagePyramids() != nrOfMetrics))
   {
-    itkExceptionMacro(<< "The NumberOfMovingImagePyramids should equal 1 "
-                      << "or equal the NumberOfMetrics");
+    itkExceptionMacro(<< "The NumberOfMovingImagePyramids should equal 1 or equal the NumberOfMetrics");
   }
   if ((this->GetNumberOfFixedImages() != 1) && (this->GetNumberOfFixedImages() != nrOfMetrics))
   {
-    itkExceptionMacro(<< "The NumberOfFixedImages should equal 1 "
-                      << "or equal the NumberOfMetrics");
+    itkExceptionMacro(<< "The NumberOfFixedImages should equal 1 or equal the NumberOfMetrics");
   }
   if ((this->GetNumberOfMovingImages() != 1) && (this->GetNumberOfMovingImages() != nrOfMetrics))
   {
-    itkExceptionMacro(<< "The NumberOfMovingImages should equal 1 "
-                      << "or equal the NumberOfMetrics");
+    itkExceptionMacro(<< "The NumberOfMovingImages should equal 1 or equal the NumberOfMetrics");
   }
 
 } // end CheckOnInitialize()

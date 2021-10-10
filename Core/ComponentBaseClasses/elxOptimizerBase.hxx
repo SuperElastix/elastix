@@ -46,15 +46,13 @@ template <class TElastix>
 void
 OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** param */)
 {
-  xl::xout["error"] << "ERROR: This function should be overridden or just "
-                    << "not used.\n";
-  xl::xout["error"] << "  Are you using BSplineTransformWithDiffusion in "
-                    << "combination with another optimizer than the "
-                    << "StandardGradientDescentOptimizer? Don't!" << std::endl;
+  xl::xout["error"] << "ERROR: This function should be overridden or just not used.\n";
+  xl::xout["error"] << "  Are you using BSplineTransformWithDiffusion in combination with another optimizer than the "
+                       "StandardGradientDescentOptimizer? Don't!"
+                    << std::endl;
 
   /** Throw an exception if this function is not overridden. */
-  itkExceptionMacro(<< "ERROR: The SetCurrentPositionPublic method is not "
-                    << "implemented in your optimizer");
+  itkExceptionMacro(<< "ERROR: The SetCurrentPositionPublic method is not implemented in your optimizer");
 
 } // end SetCurrentPositionPublic()
 

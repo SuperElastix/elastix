@@ -100,8 +100,7 @@ public:
   void
   SetParameters(const ParametersType &) override
   {
-    itkExceptionMacro(<< "ERROR: SetParameters() is not implemented "
-                      << "for DeformationFieldInterpolatingTransform.\n"
+    itkExceptionMacro(<< "ERROR: SetParameters() is not implemented for DeformationFieldInterpolatingTransform.\n"
                       << "Use SetDeformationField() instead.\n"
                       << "Note that this transform is NOT suited for image registration.\n"
                       << "Just use it as an (initial) fixed transform that is not optimized.");
@@ -135,24 +134,24 @@ public:
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented "
-                      << "for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro(
+      << "TransformVector(const InputVectorType &) is not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
   OutputVnlVectorType
   TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented "
-                      << "for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro(
+      << "TransformVector(const InputVnlVectorType &) is not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
-                      << "for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
+                         "DeformationFieldInterpolatingTransform");
   }
 
 

@@ -89,8 +89,8 @@ main(void)
   /** TEST: Compare the two qualitatively. */
   if (error > distance)
   {
-    std::cerr << "ERROR: the ITK implementation differs from our "
-              << "implementation with more than " << static_cast<unsigned int>(distance * 100.0) << "%." << std::endl;
+    std::cerr << "ERROR: the ITK implementation differs from our implementation with more than "
+              << static_cast<unsigned int>(distance * 100.0) << "%." << std::endl;
     return EXIT_FAILURE;
   }
   std::cerr << std::showpoint;
@@ -177,8 +177,8 @@ main(void)
   /** TEST: Compare the two qualitatively. */
   if (error > distance)
   {
-    std::cerr << "ERROR: the ITK implementation differs from our "
-              << "implementation with more than " << static_cast<unsigned int>(distance * 100.0) << "%." << std::endl;
+    std::cerr << "ERROR: the ITK implementation differs from our implementation with more than "
+              << static_cast<unsigned int>(distance * 100.0) << "%." << std::endl;
     return EXIT_FAILURE;
   }
   std::cerr << std::scientific;

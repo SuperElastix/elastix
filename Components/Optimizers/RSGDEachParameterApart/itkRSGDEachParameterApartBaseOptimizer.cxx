@@ -254,8 +254,7 @@ RSGDEachParameterApartBaseOptimizer::PrintSelf(std::ostream & os, Indent indent)
   }
   else
   {
-    os << indent << "CostFunction: "
-       << "(None)" << std::endl;
+    os << indent << "CostFunction: (None)" << std::endl;
   }
   os << indent << "CurrentStepLength: " << m_CurrentStepLength << std::endl;
   os << indent << "StopCondition: " << m_StopCondition << std::endl;

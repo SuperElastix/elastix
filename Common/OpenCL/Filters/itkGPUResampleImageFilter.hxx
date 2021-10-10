@@ -403,8 +403,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
   const OutputImageRegionType outputLargestRegion = outPtr->GetLargestPossibleRegion();
   if (outputLargestRegion.GetNumberOfPixels() == 0)
   {
-    itkExceptionMacro(<< "GPUResampleImageFilter has not been properly initialized."
-                      << " Filter unable to perform.");
+    itkExceptionMacro(<< "GPUResampleImageFilter has not been properly initialized. Filter unable to perform.");
     return;
   }
 

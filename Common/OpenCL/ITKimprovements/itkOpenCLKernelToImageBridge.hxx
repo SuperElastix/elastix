@@ -91,9 +91,9 @@ OpenCLKernelToImageBridge<TImage>::SetImageDataManager(OpenCLKernel &           
 
   if (error != CL_SUCCESS)
   {
-    itkOpenCLWarningMacroGeneric(<< "Setting kernel argument failed with "
-                                 << "OpenCLKernelToImageBridge::SetImage(kernel name: '" << kernel.GetName() << "', "
-                                 << argumentIndex << ")");
+    itkOpenCLWarningMacroGeneric(
+      << "Setting kernel argument failed with OpenCLKernelToImageBridge::SetImage(kernel name: '" << kernel.GetName()
+      << "', " << argumentIndex << ")");
   }
 
   if (updateCPU)

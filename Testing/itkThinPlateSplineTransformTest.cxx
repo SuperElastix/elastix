@@ -39,8 +39,8 @@ main(int argc, char * argv[])
   /** Check. */
   if (argc != 2)
   {
-    std::cerr << "ERROR: You should specify a text file with the thin plate spline "
-              << "source (fixed image) landmarks." << std::endl;
+    std::cerr << "ERROR: You should specify a text file with the thin plate spline source (fixed image) landmarks."
+              << std::endl;
     return 1;
   }
 

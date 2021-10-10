@@ -445,9 +445,8 @@ TransformBase<TElastix>::ReadFromFile(void)
       std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(this->m_Configuration->GetParameterFileName());
       if (fullFileName1 == fullFileName2)
       {
-        itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName "
-                          << "is identical to the current TransformParameters filename! "
-                          << "An infinite loop is not allowed.");
+        itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName is identical to the current "
+                             "TransformParameters filename! An infinite loop is not allowed.");
       }
 
       /** We can safely read the initial transform. */
@@ -489,8 +488,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformPara
 
   if (configurationInitialTransform->Initialize({ { "-tp", transformParametersFileName } }) != 0)
   {
-    itkGenericExceptionMacro(<< "ERROR: Reading initial transform "
-                             << "parameters failed: " << transformParametersFileName);
+    itkGenericExceptionMacro(<< "ERROR: Reading initial transform parameters failed: " << transformParametersFileName);
   }
 
   this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
@@ -710,28 +708,24 @@ TransformBase<TElastix>::TransformPoints(void) const
     if (itksys::SystemTools::StringEndsWith(def.c_str(), ".vtk") ||
         itksys::SystemTools::StringEndsWith(def.c_str(), ".VTK"))
     {
-      elxout << "  The transform is evaluated on some points, "
-             << "specified in a VTK input point file." << std::endl;
+      elxout << "  The transform is evaluated on some points, specified in a VTK input point file." << std::endl;
       this->TransformPointsSomePointsVTK(def);
     }
     else
     {
-      elxout << "  The transform is evaluated on some points, "
-             << "specified in the input point file." << std::endl;
+      elxout << "  The transform is evaluated on some points, specified in the input point file." << std::endl;
       this->TransformPointsSomePoints(def);
     }
   }
   else if (def == "all")
   {
-    elxout << "  The transform is evaluated on all points. "
-           << "The result is a deformation field." << std::endl;
+    elxout << "  The transform is evaluated on all points. The result is a deformation field." << std::endl;
     this->TransformPointsAllPoints();
   }
   else
   {
     // just a message
-    elxout << "  The command-line option \"-def\" is not used, "
-           << "so no points are transformed" << std::endl;
+    elxout << "  The command-line option \"-def\" is not used, so no points are transformed" << std::endl;
   }
 
 } // end TransformPoints()
@@ -1183,8 +1177,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian(void) const
   std::string jac = this->GetConfiguration()->GetCommandLineArgument("-jac");
   if (jac.empty())
   {
-    elxout << "  The command-line option \"-jac\" is not used, "
-           << "so no det(dT/dx) computed." << std::endl;
+    elxout << "  The command-line option \"-jac\" is not used, so no det(dT/dx) computed." << std::endl;
     return;
   }
   else if (jac != "all")
@@ -1273,8 +1266,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian(void) const
   std::string jac = this->GetConfiguration()->GetCommandLineArgument("-jacmat");
   if (jac != "all")
   {
-    elxout << "  The command-line option \"-jacmat\" is not used, "
-           << "so no dT/dx computed." << std::endl;
+    elxout << "  The command-line option \"-jacmat\" is not used, so no dT/dx computed." << std::endl;
     return;
   }
 

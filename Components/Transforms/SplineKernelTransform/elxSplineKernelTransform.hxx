@@ -138,8 +138,7 @@ SplineKernelTransform<TElastix>::BeforeAll(void)
   /** Is the moving landmark file specified? */
   if (mp.empty())
   {
-    elxout << "-mp       "
-           << "unspecified, assumed equal to -fp" << std::endl;
+    elxout << "-mp       unspecified, assumed equal to -fp" << std::endl;
   }
   else
   {
@@ -388,8 +387,7 @@ SplineKernelTransform<TElastix>::ReadFromFile(void)
   }
   else
   {
-    xl::xout["error"] << "ERROR: the SplineKernelType is not given in the "
-                      << "transform parameter file." << std::endl;
+    xl::xout["error"] << "ERROR: the SplineKernelType is not given in the transform parameter file." << std::endl;
     itkExceptionMacro(<< "ERROR: unable to configure transform.");
   }
 
@@ -414,8 +412,7 @@ SplineKernelTransform<TElastix>::ReadFromFile(void)
     fixedImageLandmarks, "FixedImageLandmarks", 0, numberOfParameters - 1, true);
   if (!retfil)
   {
-    xl::xout["error"] << "ERROR: the FixedImageLandmarks are not given in "
-                      << "the transform parameter file." << std::endl;
+    xl::xout["error"] << "ERROR: the FixedImageLandmarks are not given in the transform parameter file." << std::endl;
     itkExceptionMacro(<< "ERROR: unable to configure transform.");
   }
 

@@ -329,9 +329,9 @@ MultiBSplineTransformWithNormal<TElastix>::PreComputeGridInformation(void)
   }
   else
   {
-    xl::xout["error"] << "ERROR: Invalid GridSpacingSchedule! The number of entries"
-                      << " behind the GridSpacingSchedule option should equal the"
-                      << " numberOfResolutions, or the numberOfResolutions * ImageDimension." << std::endl;
+    xl::xout["error"] << "ERROR: Invalid GridSpacingSchedule! The number of entries behind the GridSpacingSchedule "
+                         "option should equal the numberOfResolutions, or the numberOfResolutions * ImageDimension."
+                      << std::endl;
     itkExceptionMacro(<< "ERROR: Invalid GridSpacingSchedule!");
   }
 
