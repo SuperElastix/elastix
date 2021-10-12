@@ -47,61 +47,6 @@
 #include <iomanip> // For setprecision.
 
 
-namespace itk
-{
-
-/** \class PixelTypeChangeCommand
- * \brief Command that modifies the PixelType of an ImageIO object.
- *
- * This class is used for writing the fullSpatialJacobian image.
- * It is a hack to ensure that a matrix image is seen as a
- * vector image, which most IO classes understand.
- *
- * \ingroup ITKSystemObjects
- */
-template <class T>
-class PixelTypeChangeCommand : public Command
-{
-public:
-  ITK_DISALLOW_COPY_AND_MOVE(PixelTypeChangeCommand);
-
-  /** Standard class typedefs. */
-  typedef PixelTypeChangeCommand  Self;
-  typedef itk::SmartPointer<Self> Pointer;
-
-  /** This is supposed to be an ImageFileWriter */
-  typedef T CallerType;
-
-  /** Run-time type information (and related methods). */
-  itkTypeMacro(PixelTypeChangeCommand, Command);
-
-  /** Method for creation through the object factory. */
-  itkNewMacro(Self);
-
-  /** Set the pixel type to VECTOR */
-  void
-  Execute(Object * caller, const EventObject &) override
-  {
-    CallerType * castcaller = dynamic_cast<CallerType *>(caller);
-    castcaller->GetModifiableImageIO()->SetPixelType(CommonEnums::IOPixel::VECTOR);
-  }
-
-
-  void
-  Execute(const Object * caller, const EventObject &) override
-  {
-    CallerType * castcaller = const_cast<CallerType *>(dynamic_cast<const CallerType *>(caller));
-    castcaller->GetModifiableImageIO()->SetPixelType(CommonEnums::IOPixel::VECTOR);
-  }
-
-
-protected:
-  PixelTypeChangeCommand() = default;
-  ~PixelTypeChangeCommand() override = default;
-};
-
-} // end namespace itk
-
 namespace elastix
 {
 
@@ -1279,7 +1224,6 @@ TransformBase<TElastix>::ComputeSpatialJacobian(void) const
   typedef itk::ImageFileWriter<JacobianImageType>                                JacobianWriterType;
   typedef itk::ChangeInformationImageFilter<JacobianImageType>                   ChangeInfoFilterType;
   typedef typename FixedImageType::DirectionType                                 FixedImageDirectionType;
-  typedef itk::PixelTypeChangeCommand<JacobianWriterType>                        PixelTypeChangeCommandType;
 
   /** Create an setup Jacobian generator. */
   const auto jacGenerator = JacobianGeneratorType::New();
@@ -1316,8 +1260,46 @@ TransformBase<TElastix>::ComputeSpatialJacobian(void) const
   const auto jacWriter = JacobianWriterType::New();
   jacWriter->SetInput(infoChanger->GetOutput());
   jacWriter->SetFileName(makeFileName.str().c_str());
+
+  // This class is used for writing the fullSpatialJacobian image. It is a hack to ensure that a matrix image is seen as
+  // a vector image, which most IO classes understand.
+  class PixelTypeChangeCommand : public itk::Command
+  {
+  public:
+    ITK_DISALLOW_COPY_AND_MOVE(PixelTypeChangeCommand);
+
+    /** Standard class typedefs. */
+    typedef PixelTypeChangeCommand  Self;
+    typedef itk::SmartPointer<Self> Pointer;
+
+    /** Run-time type information (and related methods). */
+    itkTypeMacro(PixelTypeChangeCommand, Command);
+
+    /** Method for creation through the object factory. */
+    itkNewMacro(Self);
+
+  private:
+    /** Set the pixel type to VECTOR */
+    void
+    Execute(itk::Object * caller, const itk::EventObject &) override
+    {
+      const auto castcaller = dynamic_cast<JacobianWriterType *>(caller);
+      castcaller->GetModifiableImageIO()->SetPixelType(itk::CommonEnums::IOPixel::VECTOR);
+    }
+
+    void
+    Execute(const itk::Object * caller, const itk::EventObject & eventObject) override
+    {
+      // Call the non-const overload.
+      Self::Execute(const_cast<itk::Object *>(caller), eventObject);
+    }
+
+    PixelTypeChangeCommand() = default;
+    ~PixelTypeChangeCommand() override = default;
+  };
+
   /** Hack to change the pixel type to vector. Not necessary for mhd. */
-  const auto jacStartWriteCommand = PixelTypeChangeCommandType::New();
+  const auto jacStartWriteCommand = PixelTypeChangeCommand::New();
   if (resultImageFormat != "mhd")
   {
     jacWriter->AddObserver(itk::StartEvent(), jacStartWriteCommand);
