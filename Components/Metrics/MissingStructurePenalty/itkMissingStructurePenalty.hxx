@@ -36,14 +36,6 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::MissingVolumeMeshPena
 
 
 /**
- * ******************* Destructor *******************
- */
-
-template <class TFixedPointSet, class TMovingPointSet>
-MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::~MissingVolumeMeshPenalty() = default; // end Destructor
-
-
-/**
  * *********************** Initialize *****************************
  */
 

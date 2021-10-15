@@ -98,10 +98,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
 }
 
 
-// Destructor
-template <class TScalarType, unsigned int NDimensions>
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::~AdvancedBSplineDeformableTransformBase() = default;
-
 // Get the number of parameters
 template <class TScalarType, unsigned int NDimensions>
 auto

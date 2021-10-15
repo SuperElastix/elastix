@@ -28,14 +28,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TElastix>
-AdvancedBSplineTransform<TElastix>::AdvancedBSplineTransform() = default; // end Constructor()
-
-
-/**
  * ************ InitializeBSplineTransform ***************
  */
 

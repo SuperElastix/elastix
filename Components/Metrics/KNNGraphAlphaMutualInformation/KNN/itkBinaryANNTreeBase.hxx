@@ -20,16 +20,4 @@
 
 #include "itkBinaryANNTreeBase.h"
 
-namespace itk
-{
-
-/**
- * ************************ Constructor *************************
- */
-
-template <class TListSample>
-BinaryANNTreeBase<TListSample>::BinaryANNTreeBase() = default; // end Constructor
-
-} // end namespace itk
-
 #endif // end #ifndef itkBinaryANNTreeBase_hxx

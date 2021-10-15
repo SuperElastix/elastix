@@ -58,10 +58,6 @@ AdvancedRigid3DTransform<TScalarType>::AdvancedRigid3DTransform(const MatrixType
   : Superclass(matrix, offset)
 {}
 
-// Destructor
-template <class TScalarType>
-AdvancedRigid3DTransform<TScalarType>::~AdvancedRigid3DTransform() = default;
-
 // Print self
 template <class TScalarType>
 void

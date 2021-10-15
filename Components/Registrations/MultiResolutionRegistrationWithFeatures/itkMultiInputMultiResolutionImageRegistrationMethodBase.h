@@ -262,7 +262,7 @@ public:
 
 protected:
   /** Constructor. */
-  MultiInputMultiResolutionImageRegistrationMethodBase();
+  MultiInputMultiResolutionImageRegistrationMethodBase() = default;
 
   /** Destructor. */
   ~MultiInputMultiResolutionImageRegistrationMethodBase() override = default;

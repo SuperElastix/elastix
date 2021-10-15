@@ -269,7 +269,7 @@ public:
 
 protected:
   /** The constructor. */
-  AdvancedBSplineTransform();
+  AdvancedBSplineTransform() = default;
 
   /** The destructor. */
   ~AdvancedBSplineTransform() override = default;

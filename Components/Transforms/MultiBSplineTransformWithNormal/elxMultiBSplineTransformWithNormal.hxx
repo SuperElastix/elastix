@@ -31,13 +31,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TElastix>
-MultiBSplineTransformWithNormal<TElastix>::MultiBSplineTransformWithNormal() = default; // end Constructor()
-
-/**
  * ************ InitializeBSplineTransform ***************
  */
 

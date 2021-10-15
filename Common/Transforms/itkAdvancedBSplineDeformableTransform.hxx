@@ -141,11 +141,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
 } // end Constructor
 
 
-// Destructor
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::~AdvancedBSplineDeformableTransform() =
-  default;
-
 // Set the grid region
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void

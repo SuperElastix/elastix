@@ -27,14 +27,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TElastix>
-RecursiveBSplineTransform<TElastix>::RecursiveBSplineTransform() = default; // end Constructor()
-
-
-/**
  * ************ InitializeBSplineTransform ***************
  */
 

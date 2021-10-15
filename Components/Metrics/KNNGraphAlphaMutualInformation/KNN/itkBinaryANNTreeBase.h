@@ -61,7 +61,7 @@ public:
 
 protected:
   /** Constructor. */
-  BinaryANNTreeBase();
+  BinaryANNTreeBase() = default;
 
   /** Destructor. */
   ~BinaryANNTreeBase() override = default;

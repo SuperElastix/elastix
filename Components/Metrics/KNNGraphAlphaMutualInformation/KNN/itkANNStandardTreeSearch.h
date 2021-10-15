@@ -73,7 +73,7 @@ public:
 
 protected:
   ANNStandardTreeSearch();
-  ~ANNStandardTreeSearch() override;
+  ~ANNStandardTreeSearch() override = default;
 
   /** Member variables. */
   double m_ErrorBound;

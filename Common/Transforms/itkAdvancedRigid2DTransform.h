@@ -270,7 +270,7 @@ protected:
   explicit AdvancedRigid2DTransform(unsigned int parametersDimension);
   AdvancedRigid2DTransform(unsigned int outputSpaceDimension, unsigned int parametersDimension);
 
-  ~AdvancedRigid2DTransform() override;
+  ~AdvancedRigid2DTransform() override = default;
 
   /**
    * Print contents of an AdvancedRigid2DTransform

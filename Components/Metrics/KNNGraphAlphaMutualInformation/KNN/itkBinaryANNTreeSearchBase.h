@@ -73,7 +73,7 @@ public:
 
 protected:
   BinaryANNTreeSearchBase();
-  ~BinaryANNTreeSearchBase() override;
+  ~BinaryANNTreeSearchBase() override = default;
 
   /** Member variables. */
   typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;

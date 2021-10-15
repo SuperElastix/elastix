@@ -300,7 +300,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   AdvancedBSplineDeformableTransformBase();
-  ~AdvancedBSplineDeformableTransformBase() override;
+  ~AdvancedBSplineDeformableTransformBase() override = default;
 
   /** Wrap flat array into images of coefficients. */
   void

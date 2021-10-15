@@ -80,7 +80,7 @@ public:
 
 protected:
   ANNPriorityTreeSearch();
-  ~ANNPriorityTreeSearch() override;
+  ~ANNPriorityTreeSearch() override = default;
 
   /** Member variables. */
   double          m_ErrorBound;
