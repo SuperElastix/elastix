@@ -20,6 +20,7 @@
 #define elxResampleInterpolatorBase_hxx
 
 #include "elxResampleInterpolatorBase.h"
+#include "elxConversion.h"
 
 namespace elastix
 {

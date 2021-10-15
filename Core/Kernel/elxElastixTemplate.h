@@ -19,24 +19,21 @@
 #define elxElastixTemplate_h
 
 #include "elxElastixBase.h"
-#include "itkObject.h"
-
-#include "itkObjectFactory.h"
-#include "itkCommand.h"
-#include "itkImage.h"
-#include "itkImageFileReader.h"
-#include "itkImageToImageMetric.h"
-
-#include "elxRegistrationBase.h"
 #include "elxFixedImagePyramidBase.h"
-#include "elxMovingImagePyramidBase.h"
-#include "elxInterpolatorBase.h"
 #include "elxImageSamplerBase.h"
+#include "elxInterpolatorBase.h"
 #include "elxMetricBase.h"
+#include "elxMovingImagePyramidBase.h"
 #include "elxOptimizerBase.h"
-#include "elxResamplerBase.h"
+#include "elxRegistrationBase.h"
 #include "elxResampleInterpolatorBase.h"
+#include "elxResamplerBase.h"
 #include "elxTransformBase.h"
+
+// ITK header files:
+#include <itkCommand.h>
+#include <itkImage.h>
+#include <itkObject.h>
 
 #include <sstream>
 
