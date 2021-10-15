@@ -19,9 +19,9 @@
 #ifndef itkTranslationTransformInitializer_h
 #define itkTranslationTransformInitializer_h
 
-#include "itkObject.h"
-#include "itkObjectFactory.h"
-#include "itkImageMomentsCalculator.h"
+// ITK header files:
+#include <itkImageMomentsCalculator.h>
+#include <itkObject.h>
 
 #include <iostream>
 
