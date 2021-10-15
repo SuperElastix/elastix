@@ -36,13 +36,6 @@ ANNPriorityTreeSearch<TBinaryTree>::ANNPriorityTreeSearch()
 
 
 /**
- * ************************ Destructor *************************
- */
-
-template <class TBinaryTree>
-ANNPriorityTreeSearch<TBinaryTree>::~ANNPriorityTreeSearch() = default; // end Destructor
-
-/**
  * ************************ SetBinaryTree *************************
  *
  */

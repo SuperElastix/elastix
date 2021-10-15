@@ -173,7 +173,7 @@ public:
 
 protected:
   MeshPenalty();
-  ~MeshPenalty() override;
+  ~MeshPenalty() override = default;
 
   /** PrintSelf. */
   void

@@ -81,7 +81,7 @@ public:
 
 protected:
   ANNFixedRadiusTreeSearch();
-  ~ANNFixedRadiusTreeSearch() override;
+  ~ANNFixedRadiusTreeSearch() override = default;
 
   /** Member variables. */
   double m_ErrorBound;

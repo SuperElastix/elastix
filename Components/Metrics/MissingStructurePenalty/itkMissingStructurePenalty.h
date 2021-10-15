@@ -156,7 +156,7 @@ public:
 
 protected:
   MissingVolumeMeshPenalty();
-  ~MissingVolumeMeshPenalty() override;
+  ~MissingVolumeMeshPenalty() override = default;
 
   /** PrintSelf. */
   // void PrintSelf(std::ostream& os, Indent indent) const;

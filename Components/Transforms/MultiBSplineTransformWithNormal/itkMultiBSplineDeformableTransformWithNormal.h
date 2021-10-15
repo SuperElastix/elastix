@@ -423,7 +423,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   MultiBSplineDeformableTransformWithNormal();
-  ~MultiBSplineDeformableTransformWithNormal() override;
+  ~MultiBSplineDeformableTransformWithNormal() override = default;
 
   /** Wrap flat array into images of coefficients. */
   // void WrapAsImages( void );

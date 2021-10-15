@@ -205,7 +205,7 @@ protected:
   explicit AdvancedRigid3DTransform(unsigned int paramDim);
   AdvancedRigid3DTransform(const MatrixType & matrix, const OutputVectorType & offset);
   AdvancedRigid3DTransform();
-  ~AdvancedRigid3DTransform() override;
+  ~AdvancedRigid3DTransform() override = default;
 
   /**
    * Print contents of an AdvancedRigid3DTransform

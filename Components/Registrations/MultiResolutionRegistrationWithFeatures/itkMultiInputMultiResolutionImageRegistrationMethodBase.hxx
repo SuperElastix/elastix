@@ -71,12 +71,6 @@ itkImplementationSetMacro(MovingImagePyramid, MovingImagePyramidType *);
 itkImplementationSetMacro(Interpolator, InterpolatorType *);
 itkImplementationSetMacro2(FixedImageInterpolator, FixedImageInterpolatorType *);
 
-/**
- * ****************** Constructor ******************
- */
-template <typename TFixedImage, typename TMovingImage>
-MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::
-  MultiInputMultiResolutionImageRegistrationMethodBase() = default; // end Constructor()
 
 /**
  * **************** GetFixedImage **********************************

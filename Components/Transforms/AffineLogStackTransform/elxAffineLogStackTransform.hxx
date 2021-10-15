@@ -27,13 +27,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-template <class TElastix>
-AffineLogStackTransform<TElastix>::AffineLogStackTransform() = default; // end Constructor
-
-
-/**
  * ********************* InitializeAffineTransform ****************************
  */
 template <class TElastix>

@@ -280,7 +280,7 @@ public:
 
 protected:
   /** The constructor. */
-  BSplineStackTransform();
+  BSplineStackTransform() = default;
 
   /** The destructor. */
   ~BSplineStackTransform() override = default;

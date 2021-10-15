@@ -27,14 +27,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TElastix>
-BSplineStackTransform<TElastix>::BSplineStackTransform() = default; // end Constructor()
-
-
-/**
  * ************ InitializeBSplineTransform ***************
  */
 template <class TElastix>

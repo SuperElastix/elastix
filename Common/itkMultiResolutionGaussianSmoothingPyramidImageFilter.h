@@ -186,7 +186,7 @@ public:
   GenerateInputRequestedRegion() override;
 
 protected:
-  MultiResolutionGaussianSmoothingPyramidImageFilter();
+  MultiResolutionGaussianSmoothingPyramidImageFilter() = default;
   ~MultiResolutionGaussianSmoothingPyramidImageFilter() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;

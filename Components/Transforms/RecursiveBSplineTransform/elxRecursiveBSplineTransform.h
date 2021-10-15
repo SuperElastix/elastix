@@ -266,7 +266,7 @@ public:
 
 protected:
   /** The constructor. */
-  RecursiveBSplineTransform();
+  RecursiveBSplineTransform() = default;
 
   /** The destructor. */
   ~RecursiveBSplineTransform() override = default;

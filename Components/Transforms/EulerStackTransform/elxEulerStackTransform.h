@@ -210,7 +210,7 @@ public:
 
 protected:
   /** The constructor. */
-  EulerStackTransform();
+  EulerStackTransform() = default;
 
   /** The destructor. */
   ~EulerStackTransform() override = default;

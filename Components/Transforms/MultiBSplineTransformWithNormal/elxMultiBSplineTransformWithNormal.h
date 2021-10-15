@@ -245,7 +245,7 @@ public:
 
 protected:
   /** The constructor. */
-  MultiBSplineTransformWithNormal();
+  MultiBSplineTransformWithNormal() = default;
 
   /** The destructor. */
   ~MultiBSplineTransformWithNormal() override = default;

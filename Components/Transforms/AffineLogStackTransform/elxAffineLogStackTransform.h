@@ -163,7 +163,7 @@ public:
 
 protected:
   /** The constructor. */
-  AffineLogStackTransform();
+  AffineLogStackTransform() = default;
 
   /** The destructor. */
   ~AffineLogStackTransform() override = default;

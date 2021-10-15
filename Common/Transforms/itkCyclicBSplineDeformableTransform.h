@@ -126,7 +126,7 @@ public:
 
 protected:
   CyclicBSplineDeformableTransform();
-  ~CyclicBSplineDeformableTransform() override;
+  ~CyclicBSplineDeformableTransform() override = default;
 
   void
   ComputeNonZeroJacobianIndices(NonZeroJacobianIndicesType & nonZeroJacobianIndices,

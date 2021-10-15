@@ -117,7 +117,7 @@ public:
 
 
 protected:
-  AdvancedLinearInterpolateImageFunction();
+  AdvancedLinearInterpolateImageFunction() = default;
   ~AdvancedLinearInterpolateImageFunction() override = default;
 
 private:

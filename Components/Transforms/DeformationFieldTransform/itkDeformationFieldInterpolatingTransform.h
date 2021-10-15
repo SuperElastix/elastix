@@ -242,7 +242,7 @@ public:
 
 protected:
   DeformationFieldInterpolatingTransform();
-  ~DeformationFieldInterpolatingTransform() override;
+  ~DeformationFieldInterpolatingTransform() override = default;
 
   /** Typedef which is used internally */
   typedef typename DeformationFieldInterpolatorType::ContinuousIndexType InputContinuousIndexType;

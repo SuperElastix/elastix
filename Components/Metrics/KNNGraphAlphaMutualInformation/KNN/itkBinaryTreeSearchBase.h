@@ -73,7 +73,7 @@ public:
 
 protected:
   BinaryTreeSearchBase();
-  ~BinaryTreeSearchBase() override;
+  ~BinaryTreeSearchBase() override = default;
 
   /** Member variables. */
   BinaryTreePointer m_BinaryTree;

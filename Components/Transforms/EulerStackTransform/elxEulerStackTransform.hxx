@@ -24,13 +24,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-template <class TElastix>
-EulerStackTransform<TElastix>::EulerStackTransform() = default; // end Constructor
-
-
-/**
  * ********************* InitializeAffineTransform ****************************
  */
 template <class TElastix>

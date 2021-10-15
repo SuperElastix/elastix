@@ -300,7 +300,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   AdvancedBSplineDeformableTransform();
-  ~AdvancedBSplineDeformableTransform() override;
+  ~AdvancedBSplineDeformableTransform() override = default;
 
   /** Allow subclasses to access and manipulate the weights function. */
   // Why??
