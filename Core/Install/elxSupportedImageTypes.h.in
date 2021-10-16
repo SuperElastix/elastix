@@ -19,20 +19,11 @@
 #ifndef __elxSupportedImageTypes_h
 #define __elxSupportedImageTypes_h
 
-#include "elxMacro.h"
-
 #include "elxInstallFunctions.h"
-#include "elxComponentDatabase.h"
-#include "elxBaseComponent.h"
-#include "elxElastixTemplate.h"
-#include "itkImage.h"
+#include "elxPrepareImageTypeSupport.h"
 
 namespace elastix
 {
-
-  elxPrepareImageTypeSupportMacro();
-
-
   /**
    * ******************** SupportedImageTypes *********************
    *
