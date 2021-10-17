@@ -211,6 +211,7 @@ GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
                                       { "FixedInternalImagePixelType", GetPixelTypeName<PixelType>() },
                                       { "Metric", "AdvancedNormalizedCorrelation" },
                                       { "MovingInternalImagePixelType", GetPixelTypeName<PixelType>() },
+                                      { "MaximumNumberOfIterations", "2" },
                                       { "Optimizer", "AdaptiveStochasticGradientDescent" },
                                       { "Transform", "TranslationTransform" } });
 
