@@ -38,6 +38,7 @@
 using elx::CoreMainGTestUtilities::ConvertToOffset;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::FillImageRegion;
+using elx::CoreMainGTestUtilities::ForEachSupportedImageType;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromMaps;
 
 
@@ -70,41 +71,6 @@ ExpectRoundedTransformParametersEqualOffset(const elastix::ELASTIX &        elas
 {
   const auto transformParameters = GetTransformParametersFromMaps(elastixObject.GetTransformParameterMapList());
   EXPECT_EQ(ConvertToOffset<VDimension>(transformParameters), offset);
-}
-
-
-template <unsigned VImageDimension, typename TPixel = float>
-void
-Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image()
-{
-  using ImageType = itk::Image<TPixel, VImageDimension>;
-  using SizeType = itk::Size<VImageDimension>;
-
-  const auto parameterMap =
-    CreateParameterMap<VImageDimension>({ { "ImageSampler", "Full" },
-                                          { "FixedInternalImagePixelType", GetPixelTypeName<TPixel>() },
-                                          { "Metric", "AdvancedNormalizedCorrelation" },
-                                          { "MovingInternalImagePixelType", GetPixelTypeName<TPixel>() },
-                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                          { "Transform", "TranslationTransform" } });
-
-  const auto regionSizeValue = 2;
-  const auto imageSizeValue = 4;
-
-  const auto image = ImageType::New();
-  image->SetRegions(SizeType::Filled(imageSizeValue));
-  image->Allocate(true);
-  FillImageRegion(*image, itk::Index<VImageDimension>::Filled(1), SizeType::Filled(regionSizeValue));
-
-  elastix::ELASTIX elastixObject;
-  ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
-
-  const auto transformParameters = GetTransformParametersFromMaps(elastixObject.GetTransformParameterMapList());
-
-  for (const auto & transformParameter : transformParameters)
-  {
-    EXPECT_EQ(transformParameter, 0.0);
-  }
 }
 
 
@@ -233,24 +199,39 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
 // fixed and the moving image are the same.
 GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
 {
-  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<2>();
-  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<3>();
-}
+  ForEachSupportedImageType([](const auto elxTypedef) {
+    using ElxTypedef = decltype(elxTypedef);
+    using ImageType = typename ElxTypedef::FixedImageType;
+    constexpr auto Dimension = ImageType::ImageDimension;
+    using PixelType = typename ImageType::PixelType;
+    using SizeType = itk::Size<Dimension>;
 
+    const auto parameterMap =
+      CreateParameterMap<Dimension>({ { "ImageSampler", "Full" },
+                                      { "FixedInternalImagePixelType", GetPixelTypeName<PixelType>() },
+                                      { "Metric", "AdvancedNormalizedCorrelation" },
+                                      { "MovingInternalImagePixelType", GetPixelTypeName<PixelType>() },
+                                      { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                      { "Transform", "TranslationTransform" } });
 
-// Tests specifically for pixel type short that the TransformParameters of a
-// translation are all zero when the fixed and the moving image are the same.
-GTEST_TEST(ElastixLib, ForThreeDimensionalShortPixelsTransformParametersAreZeroWhenFixedImageIsMovingImage)
-{
-  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<3, short>();
-}
+    const auto regionSizeValue = 2;
+    const auto imageSizeValue = 4;
 
+    const auto image = ImageType::New();
+    image->SetRegions(SizeType::Filled(imageSizeValue));
+    image->Allocate(true);
+    FillImageRegion(*image, itk::Index<Dimension>::Filled(1), SizeType::Filled(regionSizeValue));
 
-// Tests specifically for 4-D short that the TransformParameters of a
-// translation are all zero when the fixed and the moving image are the same.
-GTEST_TEST(ElastixLib, ForFourDimensionalShortPixelsTransformParametersAreZeroWhenFixedImageIsMovingImage)
-{
-  Expect_TransformParameters_are_zero_when_fixed_image_is_moving_image<4, short>();
+    elastix::ELASTIX elastixObject;
+    ASSERT_EQ(elastixObject.RegisterImages(image, image, parameterMap, ".", false, false), 0);
+
+    const auto transformParameters = GetTransformParametersFromMaps(elastixObject.GetTransformParameterMapList());
+
+    for (const auto & transformParameter : transformParameters)
+    {
+      EXPECT_EQ(transformParameter, 0.0);
+    }
+  });
 }
 
 
