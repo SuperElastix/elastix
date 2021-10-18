@@ -94,7 +94,7 @@ main(int argc, char ** argv)
   typedef itk::ImageFileReader<ImageType>            ReaderType;
 
   // Read the baseline file
-  ReaderType::Pointer baselineReader = ReaderType::New();
+  auto baselineReader = ReaderType::New();
   baselineReader->SetFileName(baselineImageFileName);
   try
   {
@@ -107,7 +107,7 @@ main(int argc, char ** argv)
   }
 
   // Read the file to test
-  ReaderType::Pointer testReader = ReaderType::New();
+  auto testReader = ReaderType::New();
   testReader->SetFileName(testImageFileName);
   try
   {
@@ -135,7 +135,7 @@ main(int argc, char ** argv)
 
   // Now compare the two images
   typedef itk::Testing::ComparisonImageFilter<ImageType, ImageType> ComparisonFilterType;
-  ComparisonFilterType::Pointer                                     comparisonFilter = ComparisonFilterType::New();
+  auto                                                              comparisonFilter = ComparisonFilterType::New();
   comparisonFilter->SetTestInput(testReader->GetOutput());
   comparisonFilter->SetValidInput(baselineReader->GetOutput());
   comparisonFilter->SetDifferenceThreshold(diffThreshold);
@@ -165,7 +165,7 @@ main(int argc, char ** argv)
     diffImageFileName += itksys::SystemTools::GetFilenameLastExtension(testImageFileName);
 
     typedef itk::ImageFileWriter<ImageType> WriterType;
-    WriterType::Pointer                     writer = WriterType::New();
+    auto                                    writer = WriterType::New();
     writer->SetFileName(diffImageFileName);
     writer->SetInput(comparisonFilter->GetOutput());
     try

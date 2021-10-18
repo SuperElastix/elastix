@@ -38,7 +38,7 @@ namespace elastix
  * as follows:
  *
  * \code
- *   ProgressCommandType::Pointer command = ProgressCommandType::New();
+ *   auto command = ProgressCommandType::New();
  *   command->ConnectObserver( filterpointer );
  *   command->SetStartString( "  Progress: " );
  *   command->SetEndString( "%" );
@@ -56,7 +56,7 @@ namespace elastix
  * that the progress message should be printed with. For example
  *
  * \code
- *   ProgressCommandType::Pointer command = ProgressCommandType::New();
+ *   auto command = ProgressCommandType::New();
  *   command->SetUpdateFrequency( maxnrofvoxels, 100 );
  *   command->SetStartString( "  Progress: " );
  *   command->SetEndString( "%" );
@@ -71,7 +71,7 @@ namespace elastix
  * \li The last possibility is to directly use the PrintProgress function:
  *
  * \code
- *   ProgressCommandType::Pointer command = ProgressCommandType::New();
+ *   auto command = ProgressCommandType::New();
  *   command->SetStartString( "  Progress: " );
  *   command->SetEndString( "%" );
  *   elxout << "Reading, casting, writing..."

@@ -127,7 +127,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData(v
   // Cast here, see the same call in this->CopyImageToImage() of
   // BSplineDecompositionImageFilter::DataToCoefficientsND()
   typedef GPUCastImageFilter<GPUInputImage, GPUOutputImage> CasterType;
-  typename CasterType::Pointer                              caster = CasterType::New();
+  auto                                                      caster = CasterType::New();
   caster->SetInput(inPtr);
   caster->GraftOutput(otPtr);
   caster->Update();

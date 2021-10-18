@@ -219,7 +219,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::ApplyInitialTransfo
 
   /** Create a temporary image. As small as possible, for memory savings. */
   typedef Image<unsigned char, Dimension> ImageType; // bool??
-  typename ImageType::Pointer             image = ImageType::New();
+  auto                                    image = ImageType::New();
   image->SetOrigin(this->m_ImageOrigin);
   image->SetSpacing(this->m_ImageSpacing);
   image->SetDirection(this->m_ImageDirection);

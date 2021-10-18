@@ -59,10 +59,10 @@ main(int argc, char * argv[])
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator MersenneTwisterType;
 
   /** Create the kernel transform. */
-  TransformType::Pointer kernelTransform = TransformType::New();
+  auto kernelTransform = TransformType::New();
 
   /** Read landmarks. */
-  IPPReaderType::Pointer landmarkReader = IPPReaderType::New();
+  auto landmarkReader = IPPReaderType::New();
   landmarkReader->SetFileName(argv[1]);
   try
   {
@@ -85,7 +85,7 @@ main(int argc, char * argv[])
 
   /** Get subset. */
   PointsContainerPointer usedLandmarkPoints = PointsContainerType::New();
-  PointSetType::Pointer  usedSourceLandmarks = PointSetType::New();
+  auto                   usedSourceLandmarks = PointSetType::New();
   for (unsigned long j = 0; j < usedNumberOfLandmarks; ++j)
   {
     PointType tmp = (*sourceLandmarks->GetPoints())[j];
@@ -104,9 +104,9 @@ main(int argc, char * argv[])
   kernelTransform->SetIdentity();                  // target landmarks = source landmarks
 
   /** Create new target landmarks by adding a random vector to it. */
-  PointSetType::ConstPointer   targetLandmarks = kernelTransform->GetTargetLandmarks();
-  PointsContainerPointer       newTargetLandmarkPoints = PointsContainerType::New();
-  MersenneTwisterType::Pointer mersenneTwister = MersenneTwisterType::New();
+  PointSetType::ConstPointer targetLandmarks = kernelTransform->GetTargetLandmarks();
+  PointsContainerPointer     newTargetLandmarkPoints = PointsContainerType::New();
+  auto                       mersenneTwister = MersenneTwisterType::New();
   mersenneTwister->Initialize(140377);
   for (unsigned long j = 0; j < targetLandmarks->GetNumberOfPoints(); ++j)
   {
@@ -118,7 +118,7 @@ main(int argc, char * argv[])
     }
     newTargetLandmarkPoints->push_back(randomPoint);
   }
-  PointSetType::Pointer newTargetLandmarks = PointSetType::New();
+  auto newTargetLandmarks = PointSetType::New();
   newTargetLandmarks->SetPoints(newTargetLandmarkPoints);
 
   /** Test 2: Time setting the target landmarks. */

@@ -577,8 +577,8 @@ void
 KernelTransform2<TScalarType, NDimensions>::SetParameters(const ParametersType & parameters)
 {
   this->m_Parameters = parameters;
-  typename PointsContainer::Pointer landmarks = PointsContainer::New();
-  const unsigned int                numberOfLandmarks = parameters.Size() / NDimensions;
+  auto               landmarks = PointsContainer::New();
+  const unsigned int numberOfLandmarks = parameters.Size() / NDimensions;
   landmarks->Reserve(numberOfLandmarks);
 
   PointsIterator itr = landmarks->Begin();
@@ -622,8 +622,8 @@ template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::SetFixedParameters(const ParametersType & parameters)
 {
-  typename PointsContainer::Pointer landmarks = PointsContainer::New();
-  const unsigned int                numberOfLandmarks = parameters.Size() / NDimensions;
+  auto               landmarks = PointsContainer::New();
+  const unsigned int numberOfLandmarks = parameters.Size() / NDimensions;
   landmarks->Reserve(numberOfLandmarks);
 
   PointsIterator itr = landmarks->Begin();

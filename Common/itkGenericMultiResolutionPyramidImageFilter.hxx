@@ -486,7 +486,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
       if (this->GetUseShrinkImageFilter())
       {
         // Define and setup shrinker
-        typename ShrinkerSameType::Pointer shrinker = ShrinkerSameType::New();
+        auto shrinker = ShrinkerSameType::New();
         shrinker->SetShrinkFactors(shrinkFactors);
 
         // Assign
@@ -495,16 +495,16 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
       else
       {
         // Define and setup resampler
-        typename ResamplerSameType::Pointer resampler = ResamplerSameType::New();
+        auto resampler = ResamplerSameType::New();
         resampler->SetOutputParametersFromImage(outputPtr);
         resampler->SetDefaultPixelValue(0);
 
         // Define and set interpolator
-        typename InterpolatorForSameType::Pointer interpolator = InterpolatorForSameType::New();
+        auto interpolator = InterpolatorForSameType::New();
         resampler->SetInterpolator(interpolator);
 
         // Define and set transform
-        typename TransformType::Pointer transform = TransformType::New();
+        auto transform = TransformType::New();
         resampler->SetTransform(transform);
 
         // Assign
@@ -542,7 +542,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
     if (this->GetUseShrinkImageFilter())
     {
       // Define and setup shrinker
-      typename ShrinkerDifferentType::Pointer shrinker = ShrinkerDifferentType::New();
+      auto shrinker = ShrinkerDifferentType::New();
       shrinker->SetShrinkFactors(shrinkFactors);
 
       // Assign
@@ -551,16 +551,16 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
     else
     {
       // Define and setup resampler
-      typename ResamplerDifferentType::Pointer resampler = ResamplerDifferentType::New();
+      auto resampler = ResamplerDifferentType::New();
       resampler->SetOutputParametersFromImage(outputPtr);
       resampler->SetDefaultPixelValue(0);
 
       // Define and set interpolator
-      typename InterpolatorForDifferentType::Pointer interpolator = InterpolatorForDifferentType::New();
+      auto interpolator = InterpolatorForDifferentType::New();
       resampler->SetInterpolator(interpolator);
 
       // Define and set transform
-      typename TransformType::Pointer transform = TransformType::New();
+      auto transform = TransformType::New();
       resampler->SetTransform(transform);
 
       // Assign

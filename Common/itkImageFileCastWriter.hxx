@@ -46,7 +46,7 @@ std::string
 ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType(void) const
 {
   /** Make a dummy imageIO object, which has some handy functions */
-  MetaImageIO::Pointer dummyImageIO = MetaImageIO::New();
+  auto dummyImageIO = MetaImageIO::New();
 
   /** Set the pixeltype. */
   typedef typename InputImageType::InternalPixelType ScalarType;

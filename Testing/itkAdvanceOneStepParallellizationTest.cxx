@@ -251,7 +251,7 @@ main(void)
   typedef OptimizerTEMP                  OptimizerClass;
   typedef OptimizerClass::ParametersType ParametersType;
 
-  OptimizerClass::Pointer optimizer = OptimizerClass::New();
+  auto optimizer = OptimizerClass::New();
 
   // test parameters
   std::vector<unsigned int> arraySizes;

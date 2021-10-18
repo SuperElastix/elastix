@@ -412,9 +412,9 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
   /** Make a temporary image with the right region info,
    * so that the TransformIndexToPhysicalPoint-functions will be right.
    */
-  typedef FixedImageType           DummyImageType;
-  typename DummyImageType::Pointer dummyImage = DummyImageType::New();
-  RegionType                       region;
+  typedef FixedImageType DummyImageType;
+  auto                   dummyImage = DummyImageType::New();
+  RegionType             region;
   region.SetIndex(index);
   region.SetSize(size);
   dummyImage->SetRegions(region);

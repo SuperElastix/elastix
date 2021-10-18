@@ -73,9 +73,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
   std::string  splittingRuleMoving,
   std::string  splittingRuleJoint)
 {
-  typename ANNkDTreeType::Pointer tmpPtrF = ANNkDTreeType::New();
-  typename ANNkDTreeType::Pointer tmpPtrM = ANNkDTreeType::New();
-  typename ANNkDTreeType::Pointer tmpPtrJ = ANNkDTreeType::New();
+  auto tmpPtrF = ANNkDTreeType::New();
+  auto tmpPtrM = ANNkDTreeType::New();
+  auto tmpPtrJ = ANNkDTreeType::New();
 
   tmpPtrF->SetBucketSize(bucketSize);
   tmpPtrM->SetBucketSize(bucketSize);
@@ -123,9 +123,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
   std::string  shrinkingRuleMoving,
   std::string  shrinkingRuleJoint)
 {
-  typename ANNbdTreeType::Pointer tmpPtrF = ANNbdTreeType::New();
-  typename ANNbdTreeType::Pointer tmpPtrM = ANNbdTreeType::New();
-  typename ANNbdTreeType::Pointer tmpPtrJ = ANNbdTreeType::New();
+  auto tmpPtrF = ANNbdTreeType::New();
+  auto tmpPtrM = ANNbdTreeType::New();
+  auto tmpPtrJ = ANNbdTreeType::New();
 
   tmpPtrF->SetBucketSize(bucketSize);
   tmpPtrM->SetBucketSize(bucketSize);
@@ -171,9 +171,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
   unsigned int kNearestNeighbors,
   double       errorBound)
 {
-  typename ANNStandardTreeSearchType::Pointer tmpPtrF = ANNStandardTreeSearchType::New();
-  typename ANNStandardTreeSearchType::Pointer tmpPtrM = ANNStandardTreeSearchType::New();
-  typename ANNStandardTreeSearchType::Pointer tmpPtrJ = ANNStandardTreeSearchType::New();
+  auto tmpPtrF = ANNStandardTreeSearchType::New();
+  auto tmpPtrM = ANNStandardTreeSearchType::New();
+  auto tmpPtrJ = ANNStandardTreeSearchType::New();
 
   tmpPtrF->SetKNearestNeighbors(kNearestNeighbors);
   tmpPtrM->SetKNearestNeighbors(kNearestNeighbors);
@@ -201,9 +201,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
   double       errorBound,
   double       squaredRadius)
 {
-  typename ANNFixedRadiusTreeSearchType::Pointer tmpPtrF = ANNFixedRadiusTreeSearchType::New();
-  typename ANNFixedRadiusTreeSearchType::Pointer tmpPtrM = ANNFixedRadiusTreeSearchType::New();
-  typename ANNFixedRadiusTreeSearchType::Pointer tmpPtrJ = ANNFixedRadiusTreeSearchType::New();
+  auto tmpPtrF = ANNFixedRadiusTreeSearchType::New();
+  auto tmpPtrM = ANNFixedRadiusTreeSearchType::New();
+  auto tmpPtrJ = ANNFixedRadiusTreeSearchType::New();
 
   tmpPtrF->SetKNearestNeighbors(kNearestNeighbors);
   tmpPtrM->SetKNearestNeighbors(kNearestNeighbors);
@@ -234,9 +234,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
   unsigned int kNearestNeighbors,
   double       errorBound)
 {
-  typename ANNPriorityTreeSearchType::Pointer tmpPtrF = ANNPriorityTreeSearchType::New();
-  typename ANNPriorityTreeSearchType::Pointer tmpPtrM = ANNPriorityTreeSearchType::New();
-  typename ANNPriorityTreeSearchType::Pointer tmpPtrJ = ANNPriorityTreeSearchType::New();
+  auto tmpPtrF = ANNPriorityTreeSearchType::New();
+  auto tmpPtrM = ANNPriorityTreeSearchType::New();
+  auto tmpPtrJ = ANNPriorityTreeSearchType::New();
 
   tmpPtrF->SetKNearestNeighbors(kNearestNeighbors);
   tmpPtrM->SetKNearestNeighbors(kNearestNeighbors);

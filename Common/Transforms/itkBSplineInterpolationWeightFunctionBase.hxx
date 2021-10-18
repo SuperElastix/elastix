@@ -72,7 +72,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 {
   /** Create a temporary image. */
   typedef Image<char, SpaceDimension> CharImageType;
-  typename CharImageType::Pointer     tempImage = CharImageType::New();
+  auto                                tempImage = CharImageType::New();
   tempImage->SetRegions(this->m_SupportSize);
   tempImage->Allocate();
 

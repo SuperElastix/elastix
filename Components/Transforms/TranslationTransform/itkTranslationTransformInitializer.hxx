@@ -127,7 +127,7 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initiali
     FixedRegionType                             fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
     if (this->m_FixedMask)
     {
-      typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
+      auto fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage(this->m_FixedMask);
       fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
@@ -146,7 +146,7 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initiali
     MovingRegionType                             movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
     if (this->m_MovingMask)
     {
-      typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
+      auto movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage(this->m_MovingMask);
       movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }

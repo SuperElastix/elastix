@@ -193,7 +193,7 @@ main(void)
   typedef MetricTEMP                  MetricClass;
   typedef MetricClass::DerivativeType DerivativeType;
 
-  MetricClass::Pointer metric = MetricClass::New();
+  auto metric = MetricClass::New();
 
   // test parameters
   std::vector<unsigned int> arraySizes;

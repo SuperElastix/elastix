@@ -168,7 +168,7 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filename
 
   /** Create writer. */
   typedef itk::ImageFileCastWriter<OutputImageType> WriterType;
-  typename WriterType::Pointer                      writer = WriterType::New();
+  auto                                              writer = WriterType::New();
 
   /** Setup the pipeline. */
   writer->SetInput(this->GetAsITKBaseType()->GetOutput(level));

@@ -124,8 +124,8 @@ main(int argc, char ** argv)
   typedef double ScalarType;
   std::string    dummyErrorMessage = "";
 
-  ParserType::Pointer    parameterFileParser = ParserType::New();
-  InterfaceType::Pointer config = InterfaceType::New();
+  auto parameterFileParser = ParserType::New();
+  auto config = InterfaceType::New();
 
   /** Read test parameters. */
   parameterFileParser->SetParameterFileName(testFileName.c_str());
@@ -233,8 +233,8 @@ main(int argc, char ** argv)
     }
 
     /** Create the coefficient image. */
-    CoefficientImageType::Pointer coefImage = CoefficientImageType::New();
-    RegionType                    region;
+    auto       coefImage = CoefficientImageType::New();
+    RegionType region;
     region.SetSize(gridSize);
     region.SetIndex(gridIndex);
     coefImage->SetRegions(region);
@@ -248,7 +248,7 @@ main(int argc, char ** argv)
     MaskIteratorType       itM;
     if (!maskFileName.empty())
     {
-      MaskReaderType::Pointer maskReader = MaskReaderType::New();
+      auto maskReader = MaskReaderType::New();
       maskReader->SetFileName(maskFileName);
       maskReader->Update();
       maskImage = maskReader->GetOutput();
@@ -325,7 +325,7 @@ main(int argc, char ** argv)
     /** Write the difference image. */
     if (diffNormNormalized > 1e-10)
     {
-      WriterType::Pointer writer = WriterType::New();
+      auto writer = WriterType::New();
       writer->SetFileName(diffImageFileName);
       writer->SetInput(coefImage);
       try

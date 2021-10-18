@@ -135,8 +135,8 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 
         // Create GPU BSpline interpolator in explicit mode
         typedef GPUBSplineInterpolateImageFunction<GPUInputImageType, GPUCoordRepType, GPUCoordRepType>
-                                                     GPUBSplineInterpolatorType;
-        typename GPUBSplineInterpolatorType::Pointer bsplineInterpolator = GPUBSplineInterpolatorType::New();
+             GPUBSplineInterpolatorType;
+        auto bsplineInterpolator = GPUBSplineInterpolatorType::New();
         bsplineInterpolator->SetSplineOrder(bspline->GetSplineOrder());
 
         // UnRegister image factory
@@ -148,8 +148,8 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
       {
         // Create GPU BSpline interpolator in implicit mode
         typedef BSplineInterpolateImageFunction<CPUInputImageType, GPUCoordRepType, GPUCoordRepType>
-                                                     GPUBSplineInterpolatorType;
-        typename GPUBSplineInterpolatorType::Pointer bsplineInterpolator = GPUBSplineInterpolatorType::New();
+             GPUBSplineInterpolatorType;
+        auto bsplineInterpolator = GPUBSplineInterpolatorType::New();
         bsplineInterpolator->SetSplineOrder(bspline->GetSplineOrder());
         this->m_Output = bsplineInterpolator;
       }

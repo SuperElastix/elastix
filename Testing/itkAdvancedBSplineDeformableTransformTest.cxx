@@ -83,8 +83,8 @@ main(int argc, char * argv[])
   typedef InputImageType::DirectionType                       DirectionType;
 
   /** Create the transform. */
-  TransformType::Pointer    transform = TransformType::New();
-  ITKTransformType::Pointer transformITK = ITKTransformType::New();
+  auto transform = TransformType::New();
+  auto transformITK = ITKTransformType::New();
 
   /** Setup the B-spline transform:
    * (GridSize 44 43 35)

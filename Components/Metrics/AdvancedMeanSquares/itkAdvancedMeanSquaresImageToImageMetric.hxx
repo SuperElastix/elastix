@@ -873,13 +873,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian
   // H.Fill(0.0); // done by set_size if sparse matrix
 
   /** Smooth fixed image */
-  typename SmootherType::Pointer smoother = SmootherType::New();
+  auto smoother = SmootherType::New();
   smoother->SetInput(this->GetFixedImage());
   smoother->SetSigma(this->GetSelfHessianSmoothingSigma());
   smoother->Update();
 
   /** Set up interpolator for fixed image */
-  typename FixedImageInterpolatorType::Pointer fixedInterpolator = FixedImageInterpolatorType::New();
+  auto fixedInterpolator = FixedImageInterpolatorType::New();
   if (this->m_BSplineInterpolator.IsNotNull())
   {
     fixedInterpolator->SetSplineOrder(this->m_BSplineInterpolator->GetSplineOrder());
@@ -893,7 +893,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian
   /** Set up random coordinate sampler
    * Actually we could do without a sampler, but it's easy like this.
    */
-  typename SelfHessianSamplerType::Pointer sampler = SelfHessianSamplerType::New();
+  auto sampler = SelfHessianSamplerType::New();
   // typename DummyFixedImageInterpolatorType::Pointer dummyInterpolator =
   //  DummyFixedImageInterpolatorType::New();
   sampler->SetInputImageRegion(this->GetImageSampler()->GetInputImageRegion());

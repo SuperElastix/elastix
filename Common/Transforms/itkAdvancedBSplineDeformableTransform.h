@@ -84,7 +84,7 @@ class ITK_TEMPLATE_EXPORT MultiBSplineDeformableTransformWithNormal;
  * The following illustrates the typical usage of this class:
  * \verbatim
  * typedef AdvancedBSplineDeformableTransform<double,2,3> TransformType;
- * TransformType::Pointer transform = TransformType::New();
+ * auto transform = TransformType::New();
  *
  * transform->SetGridRegion( region );
  * transform->SetGridSpacing( spacing );

@@ -338,9 +338,9 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion(void)
     typedef typename MaskType::BoundingBoxType        BoundingBoxType;
     typedef typename BoundingBoxType::PointsContainer PointsContainerType;
     typename BoundingBoxType::ConstPointer            bb = this->m_Mask->GetMyBoundingBoxInWorldSpace();
-    typename BoundingBoxType::Pointer                 bbIndex = BoundingBoxType::New();
+    auto                                              bbIndex = BoundingBoxType::New();
     const PointsContainerType *                       cornersWorld = bb->GetPoints();
-    typename PointsContainerType::Pointer             cornersIndex = PointsContainerType::New();
+    auto                                              cornersIndex = PointsContainerType::New();
     cornersIndex->Reserve(cornersWorld->Size());
     typename PointsContainerType::const_iterator                                itCW = cornersWorld->begin();
     typename PointsContainerType::iterator                                      itCI = cornersIndex->begin();

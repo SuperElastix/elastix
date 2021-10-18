@@ -232,13 +232,13 @@ OpenCLFixedGenericPyramid<TElastix>::RegisterFactories(void)
   typedef itk::GPULinearInterpolateImageFunctionFactory2<OpenCLImageTypes, OpenCLImageDimentions> LinearFactoryType;
 
   // Create factories
-  typename ImageFactoryType::Pointer             imageFactory = ImageFactoryType::New();
-  typename RecursiveGaussianFactoryType::Pointer recursiveFactory = RecursiveGaussianFactoryType::New();
-  typename CastFactoryType::Pointer              castFactory = CastFactoryType::New();
-  typename ShrinkFactoryType::Pointer            shrinkFactory = ShrinkFactoryType::New();
-  typename ResampleFactoryType::Pointer          resampleFactory = ResampleFactoryType::New();
-  typename IdentityFactoryType::Pointer          identityFactory = IdentityFactoryType::New();
-  typename LinearFactoryType::Pointer            linearFactory = LinearFactoryType::New();
+  auto imageFactory = ImageFactoryType::New();
+  auto recursiveFactory = RecursiveGaussianFactoryType::New();
+  auto castFactory = CastFactoryType::New();
+  auto shrinkFactory = ShrinkFactoryType::New();
+  auto resampleFactory = ResampleFactoryType::New();
+  auto identityFactory = IdentityFactoryType::New();
+  auto linearFactory = LinearFactoryType::New();
 
   // Register factories
   itk::ObjectFactoryBase::RegisterFactory(imageFactory);

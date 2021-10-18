@@ -151,8 +151,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   {
     // Save current settings
     this->m_Labels = labels;
-    ParametersType                   para = this->GetFixedParameters();
-    typename StatisticsType::Pointer stat = StatisticsType::New();
+    ParametersType para = this->GetFixedParameters();
+    auto           stat = StatisticsType::New();
     stat->SetInput(this->m_Labels);
     stat->Update();
     this->m_NbLabels = stat->GetMaximum() + 1;
@@ -385,7 +385,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     upperExtend[i] = std::ceil((transEnd[i] - labelEnd[i])) / labelSpac[i];
   }
 
-  typename PadFilterType::Pointer padFilter = PadFilterType::New();
+  auto padFilter = PadFilterType::New();
   padFilter->SetInput(this->m_Labels);
   padFilter->SetPadLowerBound(lowerExtend);
   padFilter->SetPadUpperBound(upperExtend);
@@ -393,30 +393,30 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
   for (int l = 0; l < this->m_NbLabels; ++l)
   {
-    typename LabelExtractorType::Pointer labelExtractor = LabelExtractorType::New();
+    auto labelExtractor = LabelExtractorType::New();
     labelExtractor->SetInput(padFilter->GetOutput());
     labelExtractor->SetLowerThreshold(l);
     labelExtractor->SetUpperThreshold(l);
     labelExtractor->SetInsideValue(1);
     labelExtractor->SetOutsideValue(0);
 
-    typename DistFilterType::Pointer distFilter = DistFilterType::New();
+    auto distFilter = DistFilterType::New();
     distFilter->SetInsideValue(1);
     distFilter->SetOutsideValue(0);
     distFilter->SetInput(labelExtractor->GetOutput());
 
-    typename SmoothFilterType::Pointer smoothFilter = SmoothFilterType::New();
+    auto smoothFilter = SmoothFilterType::New();
     smoothFilter->SetInput(distFilter->GetOutput());
     smoothFilter->SetSigma(4.);
 
-    typename GradFilterType::Pointer gradFilter = GradFilterType::New();
+    auto gradFilter = GradFilterType::New();
     gradFilter->SetInput(smoothFilter->GetOutput());
 
     const auto castFilter = itk::CastImageFilter<typename GradFilterType::OutputImageType, ImageVectorType>::New();
 
     castFilter->SetInput(gradFilter->GetOutput());
 
-    typename MaskVectorImageType::Pointer maskFilter = MaskVectorImageType::New();
+    auto maskFilter = MaskVectorImageType::New();
     maskFilter->SetInput(castFilter->GetOutput());
     maskFilter->SetMaskImage(labelExtractor->GetOutput());
     maskFilter->SetOutsideValue(itk::NumericTraits<VectorType>::ZeroValue());
@@ -428,7 +428,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     }
     else
     {
-      typename AddVectorImageType::Pointer addFilter = AddVectorImageType::New();
+      auto addFilter = AddVectorImageType::New();
       addFilter->SetInput1(this->m_LabelsNormals);
       addFilter->SetInput2(maskFilter->GetOutput());
       addFilter->Update();

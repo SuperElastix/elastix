@@ -284,7 +284,7 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
   elxout << "Loading landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "." << std::endl;
 
   /** Read the landmarks. */
-  typename PointSetReaderType::Pointer reader = PointSetReaderType::New();
+  auto reader = PointSetReaderType::New();
   reader->SetFileName(landmarkFileName.c_str());
   elxout << "  Reading landmark file: " << landmarkFileName << std::endl;
   try
@@ -361,7 +361,7 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
   typedef VTKPolyDataReader<MeshType>                                  MeshReaderType;
 
   /** Read the input points. */
-  typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
+  auto meshReader = MeshReaderType::New();
   meshReader->SetFileName(ShapeFileName.c_str());
   elxout << "  Reading input point file: " << ShapeFileName << std::endl;
   try

@@ -102,9 +102,9 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayT
      *
      * This code is derived from the itk-example DeformableRegistration6.cxx.
      */
-    typename UpsampleFilterType::Pointer              upsampler = UpsampleFilterType::New();
-    typename CoefficientUpsampleFunctionType::Pointer coeffUpsampleFunction = CoefficientUpsampleFunctionType::New();
-    typename DecompositionFilterType::Pointer         decompositionFilter = DecompositionFilterType::New();
+    auto upsampler = UpsampleFilterType::New();
+    auto coeffUpsampleFunction = CoefficientUpsampleFunctionType::New();
+    auto decompositionFilter = DecompositionFilterType::New();
 
     /** Setup the upsampler. */
     upsampler->SetInterpolator(coeffUpsampleFunction);

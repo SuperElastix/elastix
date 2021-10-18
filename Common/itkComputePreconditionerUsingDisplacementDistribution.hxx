@@ -147,9 +147,9 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   // MS: why is all this needed?
   // MS: ok, to have 1's in the middle and 0 in outer rim
 #if METHOD_BSPLINE == 1
-  typename FixedImageType::Pointer compactImage = FixedImageType::New();
-  FixedImageRegionType             supportRegion;
-  FixedImageRegionType             compactRegion;
+  auto                 compactImage = FixedImageType::New();
+  FixedImageRegionType supportRegion;
+  FixedImageRegionType compactRegion;
 
   typename FixedImageRegionType::SizeType size;
   unsigned int                            supportRegionSize = sizejacind / outdim;
@@ -752,14 +752,14 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
   GridOriginType    gridOrigin = testPtr_bspline->GetGridOrigin();
   GridDirectionType gridDirection = testPtr_bspline->GetGridDirection();
 
-  typename CoefficientImageType::Pointer coefImage = CoefficientImageType::New();
+  auto coefImage = CoefficientImageType::New();
   coefImage->SetRegions(gridRegion);
   coefImage->SetSpacing(gridSpacing);
   coefImage->SetOrigin(gridOrigin);
   coefImage->SetDirection(gridDirection);
   coefImage->Allocate();
 
-  //   typename MaskImageType::Pointer mask = MaskImageType::New();
+  //   auto mask = MaskImageType::New();
   //   mask->CopyInformation( coefImage );
   //   mask->Allocate();
   //   mask->FillBuffer( 0 );
@@ -802,19 +802,19 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
 
     // tmp write
     //     typedef ImageFileWriter<CoefficientImageType> WriterType;
-    //     typename WriterType::Pointer writer1 = WriterType::New();
+    //     auto writer1 = WriterType::New();
     //     writer1->SetFileName( "P_0.mha" );
     //     writer1->SetInput( coefImage );
     //     writer1->Update();
 
     // first time smooth
-    typename SmoothingFilterType::Pointer smoother = SmoothingFilterType::New();
+    auto smoother = SmoothingFilterType::New();
     //     smoother->SetInput(coefImage);
     //     smoother->SetSigma(0.5);
     //     smoother->Update();
     //
     //     // tmp write
-    //     typename WriterType::Pointer writer3 = WriterType::New();
+    //     auto writer3 = WriterType::New();
     //     writer3->SetFileName("P_coefImageSmooth.mha");
     //     //writer2->SetInput( padder->GetOutput() );
     //     writer3->SetInput(smoother->GetOutput());
@@ -952,7 +952,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
 #endif
 
     // tmp write
-    //     typename WriterType::Pointer writer2 = WriterType::New();
+    //     auto writer2 = WriterType::New();
     //     writer2->SetFileName("P_1.mha");
     //     writer2->SetInput( coefImage );
     //     writer2->Update();
@@ -960,7 +960,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
 #ifdef UseOldMethod
     GridSizeType size_tmp;
     // First remove the outer border with -1 information
-    typename CropImageFilterType::Pointer cropper = CropImageFilterType::New();
+    auto cropper = CropImageFilterType::New();
     cropper->SetInput(coefImage);
     size_tmp.Fill(1);
     cropper->SetUpperBoundaryCropSize(size_tmp);
@@ -968,7 +968,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
     cropper->SetLowerBoundaryCropSize(size_tmp);
 
     // Then add the border using zero flux Neumann
-    typename PadImageFilterType::Pointer padder = PadImageFilterType::New();
+    auto padder = PadImageFilterType::New();
     padder->SetInput(cropper->GetOutput());
     size_tmp.Fill(1);
     padder->SetPadUpperBound(size_tmp);
@@ -977,7 +977,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
 #endif
 
     // smooth?
-    // typename SmoothingFilterType::Pointer smoother = SmoothingFilterType::New();
+    // auto smoother = SmoothingFilterType::New();
 #ifdef UseOldMethod
     smoother->SetInput(padder->GetOutput());
 #else
@@ -986,7 +986,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
     smoother->SetSigma(0.5);
 
     // tmp write
-    // typename WriterType::Pointer writer2 = WriterType::New();
+    // auto writer2 = WriterType::New();
     // writer2->SetFileName( "P_3.mha" );
 #ifdef UseOldMethod
     // writer2->SetInput( padder->GetOutput() );

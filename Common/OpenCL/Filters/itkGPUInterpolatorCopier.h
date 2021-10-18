@@ -43,7 +43,7 @@ namespace itk
  *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
  *  typedef itk::InterpolateImageFunction< ImageType, float > InterpolatorType;
  *  typedef itk::GPUInterpolatorCopier< OCLImageTypes, OCLImageDims, InterpolatorType, float > CopierType;
- *  CopierType::Pointer copier = CopierType::New();
+ *  auto copier = CopierType::New();
  *  copier->SetInputInterpolator(CPUInterpolator);
  *  copier->Update();
  *  TransformType::Pointer GPUInterpolator = copier->GetModifiableOutput();

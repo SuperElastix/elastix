@@ -133,7 +133,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData(void)
   /** Allocate output. */
   typename InputImageType::ConstPointer input(this->GetInput());
   typename InputImageType::Pointer      output(this->GetOutput());
-  typename InputImageType::Pointer      outputtmp = InputImageType::New();
+  auto                                  outputtmp = InputImageType::New();
   output->SetRegions(input->GetLargestPossibleRegion());
 
   try

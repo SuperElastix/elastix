@@ -134,7 +134,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::GetCoefficientVectorI
   const CoefficientImagePointer * coefImage = this->GetCoefficientImages();
 
   /** Combine the coefficient images to a vector image. */
-  typename ScalarImageCombineType::Pointer combiner = ScalarImageCombineType::New();
+  auto combiner = ScalarImageCombineType::New();
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     combiner->SetInput(i, coefImage[i]);

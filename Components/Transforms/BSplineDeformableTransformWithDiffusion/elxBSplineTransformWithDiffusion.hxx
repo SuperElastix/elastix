@@ -770,10 +770,10 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale(void)
      * DeformableRegistration6.cxx .
      */
 
-    typename UpsampleFilterType::Pointer              upsampler = UpsampleFilterType::New();
-    typename IdentityTransformType::Pointer           identity = IdentityTransformType::New();
-    typename CoefficientUpsampleFunctionType::Pointer coeffUpsampleFunction = CoefficientUpsampleFunctionType::New();
-    typename DecompositionFilterType::Pointer         decompositionFilter = DecompositionFilterType::New();
+    auto upsampler = UpsampleFilterType::New();
+    auto identity = IdentityTransformType::New();
+    auto coeffUpsampleFunction = CoefficientUpsampleFunctionType::New();
+    auto decompositionFilter = DecompositionFilterType::New();
 
     upsampler->SetInterpolator(coeffUpsampleFunction);
     upsampler->SetTransform(identity);
@@ -850,7 +850,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
   }
 
   /** Read in the deformationField image. */
-  typename VectorReaderType::Pointer vectorReader = VectorReaderType::New();
+  auto vectorReader = VectorReaderType::New();
   vectorReader->SetFileName(fileName.c_str());
 
   /** Do the reading. */
@@ -980,7 +980,7 @@ void
 BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile(void) const
 {
   /** Write the deformation field image. */
-  typename DeformationFieldWriterType::Pointer writer = DeformationFieldWriterType::New();
+  auto writer = DeformationFieldWriterType::New();
   writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
   writer->SetInput(this->m_DiffusedField);
 
@@ -1054,7 +1054,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
   /** First, create a dummyImage with the right region info, so
    * that the TransformIndexToPhysicalPoint-functions will be right.
    */
-  typename DummyImageType::Pointer dummyImage = DummyImageType::New();
+  auto dummyImage = DummyImageType::New();
   dummyImage->SetRegions(this->m_DeformationRegion);
   dummyImage->SetOrigin(this->m_DeformationOrigin);
   dummyImage->SetSpacing(this->m_DeformationSpacing);
@@ -1279,7 +1279,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
 
     /** Write the deformationFieldImage. */
     makeFileName1 << begin.str() << "deformationField" << end.str();
-    typename DeformationFieldWriterType::Pointer deformationFieldWriter = DeformationFieldWriterType::New();
+    auto deformationFieldWriter = DeformationFieldWriterType::New();
     deformationFieldWriter->SetFileName(makeFileName1.str().c_str());
     deformationFieldWriter->SetInput(this->m_DeformationField);
 
@@ -1302,7 +1302,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
     /** Write the GrayValueImage. */
     std::ostringstream makeFileName2("");
     makeFileName2 << begin.str() << "GrayValueImage" << end.str();
-    typename GrayValueImageWriterType::Pointer grayValueImageWriter = GrayValueImageWriterType::New();
+    auto grayValueImageWriter = GrayValueImageWriterType::New();
     grayValueImageWriter->SetFileName(makeFileName2.str().c_str());
     if (this->m_AlsoFixed || this->m_UseFixedSegmentation)
     {
@@ -1332,7 +1332,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
     /** Write the diffusedFieldImage. */
     std::ostringstream makeFileName3("");
     makeFileName3 << begin.str() << "diffusedField" << end.str();
-    typename DeformationFieldWriterType::Pointer diffusedFieldWriter = DeformationFieldWriterType::New();
+    auto diffusedFieldWriter = DeformationFieldWriterType::New();
     diffusedFieldWriter->SetFileName(makeFileName3.str().c_str());
     diffusedFieldWriter->SetInput(this->m_DiffusedField);
 

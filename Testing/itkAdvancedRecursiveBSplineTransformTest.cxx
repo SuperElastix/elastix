@@ -86,9 +86,9 @@ main(int argc, char * argv[])
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator MersenneTwisterType;
 
   /** Create the transforms. */
-  ITKTransformType::Pointer       transformITK = ITKTransformType::New();
-  TransformType::Pointer          transform = TransformType::New();
-  RecursiveTransformType::Pointer recursiveTransform = RecursiveTransformType::New();
+  auto transformITK = ITKTransformType::New();
+  auto transform = TransformType::New();
+  auto recursiveTransform = RecursiveTransformType::New();
 
   /** Setup the B-spline transform:
    * (GridSize 44 43 35)
@@ -246,7 +246,7 @@ main(int argc, char * argv[])
   indices2.SetSize(dummyNum);
 
   // Generate a list of random points
-  MersenneTwisterType::Pointer mersenneTwister = MersenneTwisterType::New();
+  auto mersenneTwister = MersenneTwisterType::New();
   mersenneTwister->Initialize(140377);
   std::vector<InputPointType>  pointList(N);
   std::vector<OutputPointType> transformedPointList1(N);

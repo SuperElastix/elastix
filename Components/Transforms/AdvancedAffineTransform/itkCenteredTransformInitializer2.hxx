@@ -195,7 +195,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     FixedRegionType                             fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
     if (this->m_FixedImageMask)
     {
-      typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
+      auto fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage(this->m_FixedImageMask);
       fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
@@ -205,7 +205,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     MovingRegionType                             movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
     if (this->m_MovingImageMask)
     {
-      typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
+      auto movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage(this->m_MovingImageMask);
       movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
@@ -302,7 +302,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     FixedRegionType                             fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
     if (this->m_FixedImageMask)
     {
-      typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
+      auto fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage(this->m_FixedImageMask);
       fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
@@ -321,7 +321,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     MovingRegionType                             movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
     if (this->m_MovingImageMask)
     {
-      typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
+      auto movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage(this->m_MovingImageMask);
       movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }

@@ -114,7 +114,7 @@ AdvancedImageMomentsCalculator<TImage>::ComputeSingleThreaded()
 {
   if (this->m_CenterOfGravityUsesLowerThreshold)
   {
-    typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+    auto thresholdFilter = BinaryThresholdImageFilterType::New();
     thresholdFilter->SetInput(this->m_Image);
     thresholdFilter->SetLowerThreshold(this->m_LowerThresholdForCenterGravity);
     thresholdFilter->SetInsideValue(1);
@@ -223,7 +223,7 @@ AdvancedImageMomentsCalculator<TImage>::BeforeThreadedCompute()
 
   if (this->m_CenterOfGravityUsesLowerThreshold)
   {
-    typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+    auto thresholdFilter = BinaryThresholdImageFilterType::New();
     thresholdFilter->SetInput(this->m_Image);
     thresholdFilter->SetLowerThreshold(this->m_LowerThresholdForCenterGravity);
     thresholdFilter->SetInsideValue(1);

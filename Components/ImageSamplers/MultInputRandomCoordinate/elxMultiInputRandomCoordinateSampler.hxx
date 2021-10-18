@@ -41,8 +41,8 @@ MultiInputRandomCoordinateSampler<TElastix>::BeforeEachResolution(void)
   this->SetNumberOfSamples(numberOfSpatialSamples);
 
   /** Set up the fixed image interpolator and set the SplineOrder, default value = 1. */
-  typename DefaultInterpolatorType::Pointer fixedImageInterpolator = DefaultInterpolatorType::New();
-  unsigned int                              splineOrder = 1;
+  auto         fixedImageInterpolator = DefaultInterpolatorType::New();
+  unsigned int splineOrder = 1;
   this->GetConfiguration()->ReadParameter(
     splineOrder, "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0);
   fixedImageInterpolator->SetSplineOrder(splineOrder);
