@@ -962,7 +962,7 @@ ElastixMain::GetImageInformationFromFile(const std::string & filename, ImageDime
 
     /** Create a testReader. */
     typedef itk::ImageFileReader<DummyImageType> ReaderType;
-    ReaderType::Pointer                          testReader = ReaderType::New();
+    auto                                         testReader = ReaderType::New();
     testReader->SetFileName(filename);
 
     /** Generate all information. */

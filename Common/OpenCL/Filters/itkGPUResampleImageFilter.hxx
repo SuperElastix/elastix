@@ -434,7 +434,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
   }
 
   typedef ImageRegionSplitterSlowDimension RegionSplitterType;
-  RegionSplitterType::Pointer              splitter = RegionSplitterType::New();
+  auto                                     splitter = RegionSplitterType::New();
   const unsigned int numberOfChunks = splitter->GetNumberOfSplits(outputLargestRegion, requestedNumberOfSplits);
 
   // Get the maximum chunk size

@@ -122,14 +122,14 @@ main(int argc, char * argv[])
   typedef PointSetType::PointType       PointType;
   typedef TransformType::LMatrixType    LMatrixType;
 
-  PointSetType::Pointer dummyLandmarks = PointSetType::New();
+  auto dummyLandmarks = PointSetType::New();
 
   /** Create the kernel transform. */
-  TransformType::Pointer kernelTransform = TransformType::New();
+  auto kernelTransform = TransformType::New();
   kernelTransform->SetStiffness(0.0); // interpolating
 
   /** Read landmarks. */
-  IPPReaderType::Pointer ippReader = IPPReaderType::New();
+  auto ippReader = IPPReaderType::New();
   ippReader->SetFileName(argv[1]);
   try
   {
@@ -173,7 +173,7 @@ main(int argc, char * argv[])
 
     /** Get subset. */
     PointsContainerPointer usedLandmarkPoints = PointsContainerType::New();
-    PointSetType::Pointer  usedLandmarks = PointSetType::New();
+    auto                   usedLandmarks = PointSetType::New();
     for (unsigned long j = 0; j < numberOfLandmarks; ++j)
     {
       PointType tmp = (*sourceLandmarks->GetPoints())[j];

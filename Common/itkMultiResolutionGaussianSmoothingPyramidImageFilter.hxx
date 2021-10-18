@@ -100,8 +100,8 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
   /** Create smoother pointer array, this array contains pointers
    * to the filters for the different dimensions.
    */
-  typename CasterType::Pointer caster = CasterType::New();
-  SmootherArrayType            smootherArray;
+  auto              caster = CasterType::New();
+  SmootherArrayType smootherArray;
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     smootherArray[i] = SmootherType::New();

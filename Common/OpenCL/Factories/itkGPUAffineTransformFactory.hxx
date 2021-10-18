@@ -27,7 +27,7 @@ void
 GPUAffineTransformFactory2<NDimensions>::RegisterOneFactory()
 {
   typedef GPUAffineTransformFactory2<NDimensions> GPUTransformFactoryType;
-  typename GPUTransformFactoryType::Pointer       factory = GPUTransformFactoryType::New();
+  auto                                            factory = GPUTransformFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
 

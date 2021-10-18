@@ -27,7 +27,7 @@ void
 GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions>::RegisterOneFactory()
 {
   typedef GPUNearestNeighborInterpolateImageFunctionFactory2<TTypeList, NDimensions> GPUInterpolateFactoryType;
-  typename GPUInterpolateFactoryType::Pointer factory = GPUInterpolateFactoryType::New();
+  auto factory = GPUInterpolateFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
 

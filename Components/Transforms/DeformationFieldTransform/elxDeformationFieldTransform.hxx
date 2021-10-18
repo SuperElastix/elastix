@@ -69,7 +69,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile(void)
 
   /** Setup VectorImageReader. */
   typedef itk::ImageFileReader<DeformationFieldType> VectorReaderType;
-  typename VectorReaderType::Pointer                 vectorReader = VectorReaderType::New();
+  auto                                               vectorReader = VectorReaderType::New();
 
   /** Read deformationFieldImage-name from parameter-file. */
   std::string fileName = "";
@@ -160,14 +160,14 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile(void) const
     this->m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
 
   /** Possibly change the direction cosines to there original value */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  auto infoChanger = ChangeInfoFilterType::New();
   infoChanger->SetOutputDirection(this->m_OriginalDeformationFieldDirection);
   infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(this->m_DeformationFieldInterpolatingTransform->GetDeformationField());
 
   /** Write the deformation field image. */
   typedef itk::ImageFileWriter<DeformationFieldType> VectorWriterType;
-  typename VectorWriterType::Pointer                 writer = VectorWriterType::New();
+  auto                                               writer = VectorWriterType::New();
   writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
   writer->SetInput(infoChanger->GetOutput());
 

@@ -153,7 +153,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   elxout << "Loading landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "." << std::endl;
 
   /** Read the landmarks. */
-  typename PointSetReaderType::Pointer reader = PointSetReaderType::New();
+  auto reader = PointSetReaderType::New();
   reader->SetFileName(landmarkFileName.c_str());
   elxout << "  Reading landmark file: " << landmarkFileName << std::endl;
   try

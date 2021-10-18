@@ -99,8 +99,8 @@ main(int argc, char * argv[])
   /** Interface to the original transform parameters file. */
   typedef itk::ParameterFileParser   ParserType;
   typedef itk::ParameterMapInterface InterfaceType;
-  ParserType::Pointer                parser = ParserType::New();
-  InterfaceType::Pointer             config = InterfaceType::New();
+  auto                               parser = ParserType::New();
+  auto                               config = InterfaceType::New();
   parser->SetParameterFileName(inputTransformParametersName);
   parser->ReadParameterFile();
   config->SetParameterMap(parser->GetParameterMap());
@@ -137,7 +137,7 @@ main(int argc, char * argv[])
   /** Create a testReader. */
   typedef itk::Image<short, Dimension>         DummyImageType;
   typedef itk::ImageFileReader<DummyImageType> ReaderType;
-  ReaderType::Pointer                          testReader = ReaderType::New();
+  auto                                         testReader = ReaderType::New();
   testReader->SetFileName(movingImageFileName);
 
   /** Generate all information. */
@@ -187,11 +187,11 @@ main(int argc, char * argv[])
   {
     if (transformType == "EulerTransform")
     {
-      RigidTransformType::Pointer rigidTransform = RigidTransformType::New();
+      auto rigidTransform = RigidTransformType::New();
       rigidTransform->SetCenter(centerOfRotation);
       rigidTransform->SetParametersByValue(transformParameters);
 
-      RigidTransformType::Pointer inverseRigidTransform = RigidTransformType::New();
+      auto inverseRigidTransform = RigidTransformType::New();
       rigidTransform->GetInverse(inverseRigidTransform);
 
       transformParametersInv = inverseRigidTransform->GetParameters();
@@ -199,11 +199,11 @@ main(int argc, char * argv[])
     }
     else if (transformType == "AffineTransform")
     {
-      AffineTransformType::Pointer affineTransform = AffineTransformType::New();
+      auto affineTransform = AffineTransformType::New();
       affineTransform->SetCenter(centerOfRotation);
       affineTransform->SetParametersByValue(transformParameters);
 
-      AffineTransformType::Pointer inverseAffineTransform = AffineTransformType::New();
+      auto inverseAffineTransform = AffineTransformType::New();
       affineTransform->GetInverse(inverseAffineTransform);
 
       transformParametersInv = inverseAffineTransform->GetParameters();

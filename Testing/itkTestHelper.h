@@ -124,7 +124,7 @@ CreateOpenCLLogger(const std::string & prefixFileName)
 void
 SetupForDebugging()
 {
-  TestOutputWindow::Pointer tow = TestOutputWindow::New();
+  auto tow = TestOutputWindow::New();
   OutputWindow::SetInstance(tow);
 
 #if (defined(_WIN32) && defined(_DEBUG)) || !defined(NDEBUG)

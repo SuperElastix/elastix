@@ -131,7 +131,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize(void
 
   // typedef itk::LinearInterpolateImageFunction< SegmentedImageType, double > SegmentedImageInterpolatorType;
   typedef itk::NearestNeighborInterpolateImageFunction<SegmentedImageType, double> SegmentedImageInterpolatorType;
-  typename SegmentedImageInterpolatorType::Pointer segmentedImageInterpolator = SegmentedImageInterpolatorType::New();
+  auto segmentedImageInterpolator = SegmentedImageInterpolatorType::New();
 
   segmentedImageInterpolator->SetInputImage(this->m_SampledSegmentedImage);
 
@@ -196,7 +196,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
 
   // interpolation of segmented image
   typedef itk::NearestNeighborInterpolateImageFunction<SegmentedImageType, double> SegmentedImageInterpolatorType;
-  typename SegmentedImageInterpolatorType::Pointer segmentedImageInterpolator = SegmentedImageInterpolatorType::New();
+  auto segmentedImageInterpolator = SegmentedImageInterpolatorType::New();
 
   segmentedImageInterpolator->SetInputImage(this->m_SampledSegmentedImage);
 
@@ -324,7 +324,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
   typename PenaltyGridImageType::PointType penaltyGridPoint, neighborPenaltyGridPoint, xn, xf;
 
   typedef itk::BSplineKernelFunction<3> BSplineKernelFunctionType;
-  BSplineKernelFunctionType::Pointer    bSplineKernel = BSplineKernelFunctionType::New();
+  auto                                  bSplineKernel = BSplineKernelFunctionType::New();
 
   typedef itk::BSplineInterpolationWeightFunction<double, ImageDimension, 3> WeightsFunctionType;
   typedef typename WeightsFunctionType::ContinuousIndexType                  ContinuousIndexType;
@@ -361,7 +361,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
   // interpolation of segmented image
   typedef itk::NearestNeighborInterpolateImageFunction<SegmentedImageType, double> SegmentedImageInterpolatorType;
-  typename SegmentedImageInterpolatorType::Pointer segmentedImageInterpolator = SegmentedImageInterpolatorType::New();
+  auto segmentedImageInterpolator = SegmentedImageInterpolatorType::New();
 
   segmentedImageInterpolator->SetInputImage(this->m_SampledSegmentedImage);
 

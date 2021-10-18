@@ -44,9 +44,9 @@ main(void)
   typedef itk::BSplineSecondOrderDerivativeKernelFunction2<SplineOrder> BSplineSODerivativeKernelType2;
 
   /** Create the kernel. */
-  BSplineSODerivativeKernelType::Pointer dkernel = BSplineSODerivativeKernelType::New();
-  const unsigned int                     size_u = 15;
-  std::vector<double>                    u(size_u);
+  auto                dkernel = BSplineSODerivativeKernelType::New();
+  const unsigned int  size_u = 15;
+  std::vector<double> u(size_u);
   u[0] = -2.5;
   u[1] = -2.0;
   u[2] = -1.9;
@@ -72,7 +72,7 @@ main(void)
   std::cerr << "The elapsed time for ITK implementation is: " << clockDiff << std::endl;
 
   /** Create the kernel. */
-  BSplineSODerivativeKernelType2::Pointer dkernel2 = BSplineSODerivativeKernelType2::New();
+  auto dkernel2 = BSplineSODerivativeKernelType2::New();
 
   /** Time the implementation. */
   startClock = clock();

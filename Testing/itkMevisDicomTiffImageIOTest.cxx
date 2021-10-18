@@ -53,13 +53,13 @@ testMevis(void)
   typedef typename ImageType::DirectionType                         DirectionType;
   typedef itk::ImageRegionIterator<ImageType>                       IteratorType;
 
-  typename WriterType::Pointer writer = WriterType::New();
-  typename ReaderType::Pointer reader = ReaderType::New();
-  typename ImageType::Pointer  inputImage = ImageType::New();
-  SizeType                     size;
-  SpacingType                  spacing;
-  OriginType                   origin;
-  DirectionType                direction;
+  auto          writer = WriterType::New();
+  auto          reader = ReaderType::New();
+  auto          inputImage = ImageType::New();
+  SizeType      size;
+  SpacingType   spacing;
+  OriginType    origin;
+  DirectionType direction;
 
   direction.Fill(0.0);
   for (unsigned int i = 0; i < Dimension; ++i)
@@ -200,7 +200,7 @@ testMevis(void)
     return 1;
   }
 
-  typename ComparisonFilterType::Pointer comparisonFilter = ComparisonFilterType::New();
+  auto comparisonFilter = ComparisonFilterType::New();
   comparisonFilter->SetTestInput(outputImage);
   comparisonFilter->SetValidInput(inputImage);
   comparisonFilter->Update();

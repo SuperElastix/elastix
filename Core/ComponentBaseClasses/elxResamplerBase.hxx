@@ -380,9 +380,9 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
-  DirectionType                          originalDirection;
-  bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
+  auto          infoChanger = ChangeInfoFilterType::New();
+  DirectionType originalDirection;
+  bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(image);
@@ -476,9 +476,9 @@ ResamplerBase<TElastix>::CreateItkResultImage(void)
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
-  DirectionType                          originalDirection;
-  bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
+  auto          infoChanger = ChangeInfoFilterType::New();
+  DirectionType originalDirection;
+  bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(this->GetAsITKBaseType()->GetOutput());
@@ -500,21 +500,21 @@ ResamplerBase<TElastix>::CreateItkResultImage(void)
   /** cast the image to the correct output image Type */
   if (resultImagePixelType == "char")
   {
-    typename CastFilterChar::Pointer castFilter = CastFilterChar::New();
+    auto castFilter = CastFilterChar::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   if (resultImagePixelType == "unsigned char")
   {
-    typename CastFilterUChar::Pointer castFilter = CastFilterUChar::New();
+    auto castFilter = CastFilterUChar::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   else if (resultImagePixelType == "short")
   {
-    typename CastFilterShort::Pointer castFilter = CastFilterShort::New();
+    auto castFilter = CastFilterShort::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
@@ -522,49 +522,49 @@ ResamplerBase<TElastix>::CreateItkResultImage(void)
   else if (resultImagePixelType == "ushort" ||
            resultImagePixelType == "unsigned short") // <-- ushort for backwards compatibility
   {
-    typename CastFilterUShort::Pointer castFilter = CastFilterUShort::New();
+    auto castFilter = CastFilterUShort::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   else if (resultImagePixelType == "int")
   {
-    typename CastFilterInt::Pointer castFilter = CastFilterInt::New();
+    auto castFilter = CastFilterInt::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   else if (resultImagePixelType == "unsigned int")
   {
-    typename CastFilterUInt::Pointer castFilter = CastFilterUInt::New();
+    auto castFilter = CastFilterUInt::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   else if (resultImagePixelType == "long")
   {
-    typename CastFilterLong::Pointer castFilter = CastFilterLong::New();
+    auto castFilter = CastFilterLong::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   else if (resultImagePixelType == "unsigned long")
   {
-    typename CastFilterULong::Pointer castFilter = CastFilterULong::New();
+    auto castFilter = CastFilterULong::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   else if (resultImagePixelType == "float")
   {
-    typename CastFilterFloat::Pointer castFilter = CastFilterFloat::New();
+    auto castFilter = CastFilterFloat::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
   else if (resultImagePixelType == "double")
   {
-    typename CastFilterDouble::Pointer castFilter = CastFilterDouble::New();
+    auto castFilter = CastFilterDouble::New();
     castFilter->SetInput(infoChanger->GetOutput());
     castFilter->Update();
     resultImage = castFilter->GetOutput();

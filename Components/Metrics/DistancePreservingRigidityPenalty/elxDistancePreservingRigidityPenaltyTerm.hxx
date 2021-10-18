@@ -48,7 +48,7 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
   typedef typename SegmentedImageType::SizeType::SizeValueType  SizeValueType;
 
   /** Create the reader and set the filename. */
-  typename SegmentedImageReaderType::Pointer segmentedImageReader = SegmentedImageReaderType::New();
+  auto segmentedImageReader = SegmentedImageReaderType::New();
   segmentedImageReader->SetFileName(segmentedImageName);
   segmentedImageReader->Update();
 
@@ -102,14 +102,14 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
 
   /** Create resampler, identity transform and linear interpolator. */
   typedef itk::ResampleImageFilter<SegmentedImageType, SegmentedImageType> ResampleFilterType;
-  typename ResampleFilterType::Pointer                                     resampler = ResampleFilterType::New();
+  auto                                                                     resampler = ResampleFilterType::New();
 
   typedef itk::IdentityTransform<double, Superclass1::ImageDimension> IdentityTransformType;
-  typename IdentityTransformType::Pointer                             identityTransform = IdentityTransformType::New();
+  auto                                                                identityTransform = IdentityTransformType::New();
   identityTransform->SetIdentity();
 
   typedef itk::LinearInterpolateImageFunction<SegmentedImageType, double> LinearInterpolatorType;
-  typename LinearInterpolatorType::Pointer linearInterpolator = LinearInterpolatorType::New();
+  auto linearInterpolator = LinearInterpolatorType::New();
 
   /** Configure the resampler and run it. */
   resampler->SetInterpolator(linearInterpolator);

@@ -55,7 +55,7 @@ main(void)
   std::cerr << "\nTESTING: derivatives (0,1)\n" << std::endl;
 
   /** Construct several weight functions. */
-  SODerivativeWeightFunctionType::Pointer soWeightFunction = SODerivativeWeightFunctionType::New();
+  auto soWeightFunction = SODerivativeWeightFunctionType::New();
 
   /** Create and fill a continuous index.
    * NOTE: don't change this, since the hard-coded ground truth depends on this.

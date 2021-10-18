@@ -47,12 +47,12 @@ RandomCoordinateSampler<TElastix>::BeforeEachResolution(void)
   if (splineOrder == 1)
   {
     typedef itk::LinearInterpolateImageFunction<InputImageType, CoordRepType> LinearInterpolatorType;
-    typename LinearInterpolatorType::Pointer fixedImageLinearInterpolator = LinearInterpolatorType::New();
+    auto fixedImageLinearInterpolator = LinearInterpolatorType::New();
     this->SetInterpolator(fixedImageLinearInterpolator);
   }
   else
   {
-    typename DefaultInterpolatorType::Pointer fixedImageBSplineInterpolator = DefaultInterpolatorType::New();
+    auto fixedImageBSplineInterpolator = DefaultInterpolatorType::New();
     fixedImageBSplineInterpolator->SetSplineOrder(splineOrder);
     this->SetInterpolator(fixedImageBSplineInterpolator);
   }

@@ -89,7 +89,7 @@ TestInterpolators(void)
     direction[2][0] = 1.0;
   }
 
-  typename InputImageType::Pointer image = InputImageType::New();
+  auto image = InputImageType::New();
   image->SetRegions(region);
   image->SetOrigin(origin);
   image->SetSpacing(spacing);
@@ -107,15 +107,15 @@ TestInterpolators(void)
   }
 
   /** Write the image. */
-  // WriterType::Pointer writer = WriterType::New();
+  // auto writer = WriterType::New();
   // writer->SetInput( image );
   // writer->SetFileName( "image.mhd" );
   // writer->Update();
 
   /** Create and setup interpolators. */
-  typename LinearInterpolatorType::Pointer         linear = LinearInterpolatorType::New();
-  typename AdvancedLinearInterpolatorType::Pointer linearA = AdvancedLinearInterpolatorType::New();
-  typename BSplineInterpolatorType::Pointer        bspline = BSplineInterpolatorType::New();
+  auto linear = LinearInterpolatorType::New();
+  auto linearA = AdvancedLinearInterpolatorType::New();
+  auto bspline = BSplineInterpolatorType::New();
   linear->SetInputImage(image);
   linearA->SetInputImage(image);
   bspline->SetSplineOrder(1); // prior to SetInputImage()

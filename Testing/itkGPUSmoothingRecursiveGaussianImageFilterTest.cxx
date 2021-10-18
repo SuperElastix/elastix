@@ -79,12 +79,12 @@ main(int argc, char * argv[])
   typedef itk::ImageFileWriter<OutputImageType>                                       WriterType;
 
   // Reader
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(inputFileName);
   reader->Update();
 
   // Construct the filter
-  FilterType::Pointer        filter = FilterType::New();
+  auto                       filter = FilterType::New();
   FilterType::SigmaArrayType sigmaArray;
   for (unsigned int i = 0; i < Dimension; ++i)
   {
@@ -118,7 +118,7 @@ main(int argc, char * argv[])
   std::cout << "CPU " << sigmaArray[0] << " " << filter->GetNumberOfWorkUnits() << " " << cputimer.GetMean() / runTimes;
 
   /** Write the CPU result. */
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetInput(filter->GetOutput());
   writer->SetFileName(outputFileNameCPU.c_str());
   try
@@ -167,7 +167,7 @@ main(int argc, char * argv[])
   // reads a GPUImage instead of a normal image.
   // Otherwise, you will get an exception when running the GPU filter:
   // "ERROR: The GPU InputImage is NULL. Filter unable to perform."
-  ReaderType::Pointer gpuReader = ReaderType::New();
+  auto gpuReader = ReaderType::New();
   gpuReader->SetFileName(inputFileName);
 
   // \todo: If the following line is uncommented something goes wrong with
@@ -201,7 +201,7 @@ main(int argc, char * argv[])
             << cputimer.GetMean() / gputimer.GetMean();
 
   /** Write the GPU result. */
-  WriterType::Pointer gpuWriter = WriterType::New();
+  auto gpuWriter = WriterType::New();
   gpuWriter->SetInput(gpuFilter->GetOutput());
   gpuWriter->SetFileName(outputFileNameGPU.c_str());
   try

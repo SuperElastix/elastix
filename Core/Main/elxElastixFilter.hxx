@@ -292,7 +292,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GenerateData(void)
   }
 
   // Save parameter map
-  ParameterObject::Pointer transformParameterObject = ParameterObject::New();
+  auto transformParameterObject = ParameterObject::New();
   transformParameterObject->SetParameterMap(transformParameterMapVector);
   this->SetOutput("TransformParameterObject", transformParameterObject);
 }

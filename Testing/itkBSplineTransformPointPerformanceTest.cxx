@@ -204,7 +204,7 @@ main(int argc, char * argv[])
   typedef InputImageType::DirectionType                       DirectionType;
 
   /** Create the transform. */
-  TransformType::Pointer transform = TransformType::New();
+  auto transform = TransformType::New();
 
   /** Setup the B-spline transform:
    * (GridSize 44 43 35)

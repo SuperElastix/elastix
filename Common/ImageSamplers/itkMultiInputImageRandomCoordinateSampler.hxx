@@ -33,7 +33,7 @@ template <class TInputImage>
 MultiInputImageRandomCoordinateSampler<TInputImage>::MultiInputImageRandomCoordinateSampler()
 {
   /** Set the default interpolator. */
-  typename DefaultInterpolatorType::Pointer bsplineInterpolator = DefaultInterpolatorType::New();
+  auto bsplineInterpolator = DefaultInterpolatorType::New();
   bsplineInterpolator->SetSplineOrder(3);
   this->m_Interpolator = bsplineInterpolator;
 

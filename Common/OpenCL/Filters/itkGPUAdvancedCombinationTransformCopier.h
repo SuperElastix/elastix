@@ -41,7 +41,7 @@ namespace itk
  *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
  *  typedef itk::AdvancedCombinationTransform< float, 3 > TransformType;
  *  typedef itk::GPUAdvancedCombinationTransformCopier< OCLImageTypes, OCLImageDims, TransformType, float > CopierType;
- *  CopierType::Pointer copier = CopierType::New();
+ *  auto copier = CopierType::New();
  *  copier->SetInputTransform(CPUTransform);
  *  copier->Update();
  *  TransformType::Pointer GPUTransform = copier->GetModifiableOutput();

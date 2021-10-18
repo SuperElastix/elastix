@@ -146,7 +146,7 @@ PolydataDummyPenalty<TElastix>::BeforeRegistration(void)
 
   this->SetFixedMeshContainer(meshPointerContainer);
 
-  typename PointSetType::Pointer dummyPointSet = PointSetType::New();
+  auto dummyPointSet = PointSetType::New();
   this->SetFixedPointSet(dummyPointSet);  // FB: TODO solve hack
   this->SetMovingPointSet(dummyPointSet); // FB: TODO solve hack
   // itkCombinationImageToImageMetric.hxx checks if metric base class is ImageMetricType or PointSetMetricType.
@@ -270,7 +270,7 @@ PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typen
   typedef itk::MeshFileReader<MeshType> MeshReaderType;
 
   /** Read the input mesh. */
-  typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
+  auto meshReader = MeshReaderType::New();
   meshReader->SetFileName(meshFileName.c_str());
 
   elxout << "  Reading input mesh file: " << meshFileName << std::endl;
@@ -305,7 +305,7 @@ PolydataDummyPenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdTyp
   /** Typedef's for writing the output mesh. */
   typedef itk::MeshFileWriter<MeshType> MeshWriterType;
   /** Create writer. */
-  typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
+  auto meshWriter = MeshWriterType::New();
 
   /** Set the points of the latest transformation. */
   const MappedMeshContainerPointer mappedMeshContainer = this->GetModifiableMappedMeshContainer();
@@ -402,7 +402,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   typedef itk::Vector<float, FixedImageDimension>                               DeformationVectorType;
 
   /** Construct an ipp-file reader. */
-  typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
+  auto ippReader = IPPReaderType::New();
   ippReader->SetFileName(filename.c_str());
 
   /** Read the input points. */
@@ -451,7 +451,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   region.SetIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
   region.SetSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
 
-  typename FixedImageType::Pointer dummyImage = FixedImageType::New();
+  auto dummyImage = FixedImageType::New();
   dummyImage->SetRegions(region);
   dummyImage->SetOrigin(origin);
   dummyImage->SetSpacing(spacing);

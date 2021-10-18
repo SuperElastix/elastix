@@ -45,7 +45,7 @@ main(void)
 
     // Create ITK Image
     typedef itk::Image<float, 2> ImageType;
-    ImageType::Pointer           image = ImageType::New();
+    auto                         image = ImageType::New();
 
     ImageType::SizeType size;
     size[0] = 64;

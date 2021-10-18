@@ -52,7 +52,7 @@ main(void)
   std::cerr << "TESTING:\n" << std::endl;
 
   /** Construct several weight functions. */
-  DerivativeWeightFunctionType::Pointer foWeightFunction = DerivativeWeightFunctionType::New();
+  auto foWeightFunction = DerivativeWeightFunctionType::New();
 
   /** Create and fill a continuous index.
    * NOTE: don't change this, since the hard-coded ground truth depends on this.

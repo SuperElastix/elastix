@@ -831,7 +831,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGrad
   typedef itk::ImageRegionConstIteratorWithIndex<MovingImageType> MovingIteratorType;
 
   /** Create a temporary moving gradient image. */
-  typename GradientImageType::Pointer tempGradientImage = GradientImageType::New();
+  auto tempGradientImage = GradientImageType::New();
   tempGradientImage->SetRegions(this->m_MovingImage->GetBufferedRegion().GetSize());
   tempGradientImage->Allocate();
 

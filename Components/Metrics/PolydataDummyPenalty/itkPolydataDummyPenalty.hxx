@@ -77,13 +77,13 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
     //  itkExceptionMacro( << "numberOfPoints does not match numberOfNormals" );
     //}
 
-    typename MeshPointsContainerType::Pointer mappedPoints = MeshPointsContainerType::New();
+    auto mappedPoints = MeshPointsContainerType::New();
     mappedPoints->Reserve(numberOfPoints);
 
-    // MeshPointDataContainerType::Pointer mappedPointNormals = MeshPointDataContainerType::New();
+    // auto mappedPointNormals = MeshPointDataContainerType::New();
     // mappedPointNormals->Reserve(numberOfNormals);
 
-    typename FixedMeshType::Pointer mappedMesh = FixedMeshType::New();
+    auto mappedMesh = FixedMeshType::New();
     mappedMesh->SetPoints(mappedPoints);
 
     mappedMesh->SetPointData(nullptr);

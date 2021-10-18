@@ -54,7 +54,7 @@ public:
   static void
   RegisterOneFactory(void)
   {
-    MevisDicomTiffImageIOFactory::Pointer metaFactory = MevisDicomTiffImageIOFactory::New();
+    auto metaFactory = MevisDicomTiffImageIOFactory::New();
     ObjectFactoryBase::RegisterFactory(metaFactory);
   }
 

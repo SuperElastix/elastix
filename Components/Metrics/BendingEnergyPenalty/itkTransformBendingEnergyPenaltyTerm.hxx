@@ -685,7 +685,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetSelfHessian(cons
   }
 
   /** Set up grid sampler */
-  typename SelfHessianSamplerType::Pointer sampler = SelfHessianSamplerType::New();
+  auto sampler = SelfHessianSamplerType::New();
   sampler->SetInputImageRegion(this->GetImageSampler()->GetInputImageRegion());
   sampler->SetMask(this->GetImageSampler()->GetMask());
   sampler->SetInput(this->GetFixedImage());

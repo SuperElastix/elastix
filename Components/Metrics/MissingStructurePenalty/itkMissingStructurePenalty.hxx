@@ -65,10 +65,10 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
     MeshPointsContainerConstPointer fixedPoints = fixedMesh->GetPoints();
     const unsigned int              numberOfPoints = fixedPoints->Size();
 
-    typename MeshPointsContainerType::Pointer mappedPoints = MeshPointsContainerType::New();
+    auto mappedPoints = MeshPointsContainerType::New();
     mappedPoints->Reserve(numberOfPoints);
 
-    typename FixedMeshType::Pointer mappedMesh = FixedMeshType::New();
+    auto mappedMesh = FixedMeshType::New();
     mappedMesh->SetPoints(mappedPoints);
 
     // mappedMesh was constructed with a Cellscontainer and CellDatacontainer of size 0.

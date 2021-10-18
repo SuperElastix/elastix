@@ -97,9 +97,9 @@ private:
     this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast<const OutputComponentType *>(nullptr));
 
     /** cast the input image */
-    typename CasterType::Pointer caster = CasterType::New();
+    auto caster = CasterType::New();
     this->m_Caster = caster;
-    typename ScalarInputImageType::Pointer localInputImage = ScalarInputImageType::New();
+    auto localInputImage = ScalarInputImageType::New();
 
     localInputImage->Graft(static_cast<const ScalarInputImageType *>(inputImage));
 

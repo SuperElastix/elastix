@@ -58,8 +58,8 @@ main(void)
   std::cerr << "2D TESTING:\n" << std::endl;
 
   /** Construct several weight functions. */
-  WeightFunctionType2D::Pointer  weightFunction2D = WeightFunctionType2D::New();
-  WeightFunction2Type2D::Pointer weight2Function2D = WeightFunction2Type2D::New();
+  auto weightFunction2D = WeightFunctionType2D::New();
+  auto weight2Function2D = WeightFunction2Type2D::New();
 
   /** Create and fill a continuous index. */
   ContinuousIndexType2D cindex;
@@ -145,8 +145,8 @@ main(void)
   std::cerr << "\n3D TESTING:\n" << std::endl;
 
   /** Construct several weight functions. */
-  WeightFunctionType3D::Pointer  weightFunction3D = WeightFunctionType3D::New();
-  WeightFunction2Type3D::Pointer weight2Function3D = WeightFunction2Type3D::New();
+  auto weightFunction3D = WeightFunctionType3D::New();
+  auto weight2Function3D = WeightFunction2Type3D::New();
 
   /** Create and fill a continuous index. */
   ContinuousIndexType3D cindex3D;
