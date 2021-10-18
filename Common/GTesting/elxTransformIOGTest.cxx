@@ -21,6 +21,7 @@
 // First include the header file to be tested:
 #include "elxTransformIO.h"
 
+#include "elxConversion.h"
 #include "elxElastixMain.h" // For xoutManager.
 #include "elxElastixTemplate.h"
 #include "elxGTestUtilities.h"
@@ -43,7 +44,6 @@
 #include "TranslationTransform/elxTranslationTransform.h"
 #include "WeightedCombinationTransform/elxWeightedCombinationTransform.h"
 
-#include <itkImage.h>
 #include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
 #include <itkCompositeTransform.h>
@@ -52,6 +52,12 @@
 #include <itkSimilarity2DTransform.h>
 #include <itkSimilarity3DTransform.h>
 #include <itkTranslationTransform.h>
+
+#include <itkImage.h>
+#include <itkIndexRange.h>
+#include <itkVector.h>
+
+#include <itksys/SystemTools.hxx>
 
 #include <cmath> // For M_PI_4.
 #include <typeinfo>
