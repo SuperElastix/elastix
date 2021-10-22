@@ -375,9 +375,6 @@ private:
 
   /** Boolean to decide whether or not the transform parameters are written. */
   bool m_ReadWriteTransformParameters{ true };
-
-  /** Boolean to decide whether or not the transform parameters are written in binary format. */
-  bool m_UseBinaryFormatForTransformationParameters{};
 };
 
 } // end namespace elastix

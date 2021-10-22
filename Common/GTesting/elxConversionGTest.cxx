@@ -300,7 +300,6 @@ GTEST_TEST(Conversion, ParameterMapToString)
 (Spacing 1 1)
 (Transform "TranslationTransform")
 (TransformParameters 0 0)
-(UseBinaryFormatForTransformationParameters "false")
 (UseDirectionCosines "true")
 )";
 
@@ -318,7 +317,6 @@ GTEST_TEST(Conversion, ParameterMapToString)
                                                { "Spacing", { "1", "1" } },
                                                { "Transform", { "TranslationTransform" } },
                                                { "TransformParameters", { "0", "0" } },
-                                               { "UseBinaryFormatForTransformationParameters", { "false" } },
                                                { "UseDirectionCosines", { "true" } } }),
             expectedString);
 }

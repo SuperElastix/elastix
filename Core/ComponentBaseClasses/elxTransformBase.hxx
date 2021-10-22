@@ -74,12 +74,6 @@ TransformBase<TElastix>::BeforeAllBase(void)
     elxout << "-t0       " << check << std::endl;
   }
 
-  /** Check if the faster binary format is to be used when
-   * when writing the transform parameter file.
-   */
-  this->m_Configuration->ReadParameter(
-    this->m_UseBinaryFormatForTransformationParameters, "UseBinaryFormatForTransformationParameters", 0, false);
-
   /** Return a value. */
   return 0;
 
@@ -285,33 +279,13 @@ TransformBase<TElastix>::ReadFromFile(void)
       unsigned int numberOfParameters = 0;
       this->m_Configuration->ReadParameter(numberOfParameters, "NumberOfParameters", 0);
 
-      /** Read the way the transform parameters are written. */
-      bool useBinaryFormatForTransformationParameters = false; // or the member?
-      this->m_Configuration->ReadParameter(
-        useBinaryFormatForTransformationParameters, "UseBinaryFormatForTransformationParameters", 0);
-
       /** Read the TransformParameters. */
-      std::size_t            numberOfParametersFound = 0;
-      std::vector<ValueType> vecPar;
-      if (useBinaryFormatForTransformationParameters)
-      {
-        std::string dataFileName = "";
-        this->m_Configuration->ReadParameter(dataFileName, "TransformParameters", 0);
-        std::ifstream infile(dataFileName, std::ios_base::binary);
-        m_TransformParameters.SetSize(numberOfParameters);
-        infile.read(reinterpret_cast<char *>(m_TransformParameters.data_block()),
-                    sizeof(ValueType) * numberOfParameters);
-        numberOfParametersFound = infile.gcount() / sizeof(ValueType); // for sanity check
-        infile.close();
-      }
-      else
-      {
-        vecPar.resize(numberOfParameters, itk::NumericTraits<ValueType>::ZeroValue());
-        this->m_Configuration->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true);
+      std::vector<ValueType> vecPar(numberOfParameters);
+      this->m_Configuration->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true);
 
-        /** Do not rely on vecPar.size(), since it is unchanged by ReadParameter(). */
-        numberOfParametersFound = this->m_Configuration->CountNumberOfParameterEntries("TransformParameters");
-      }
+      /** Do not rely on vecPar.size(), since it is unchanged by ReadParameter(). */
+      const std::size_t numberOfParametersFound =
+        this->m_Configuration->CountNumberOfParameterEntries("TransformParameters");
 
       /** Sanity check. Are the number of found parameters the same as
        * the number of specified parameters?
@@ -330,12 +304,9 @@ TransformBase<TElastix>::ReadFromFile(void)
       }
 
       /** Copy to m_TransformParameters. */
-      if (!useBinaryFormatForTransformationParameters)
-      {
-        // NOTE: we could avoid this by directly reading into the transform parameters,
-        // e.g. by overloading ReadParameter(), or use swap (?).
-        m_TransformParameters = Conversion::ToOptimizerParameters(vecPar);
-      }
+      // NOTE: we could avoid this by directly reading into the transform parameters,
+      // e.g. by overloading ReadParameter(), or use swap (?).
+      m_TransformParameters = Conversion::ToOptimizerParameters(vecPar);
     }
     else
     {
@@ -492,22 +463,6 @@ TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
 
   this->CreateTransformParametersMap(param, parameterMap);
 
-  /** Write the parameters of this transform. */
-  if (this->m_ReadWriteTransformParameters)
-  {
-    if (this->m_UseBinaryFormatForTransformationParameters)
-    {
-      /** Writing in binary format is faster for large vectors, and slightly more accurate. */
-      std::string dataFileName = this->GetTransformParametersFileName();
-      dataFileName += ".dat";
-      parameterMap["TransformParameters"] = { dataFileName };
-
-      std::ofstream outfile(dataFileName, std::ios_base::binary);
-      outfile.write(reinterpret_cast<const char *>(param.data_block()), sizeof(ValueType) * param.size());
-      outfile.close();
-    }
-  }
-
   const auto & configuration = *(this->Superclass::m_Configuration);
   const auto & self = GetSelf();
 
@@ -558,10 +513,6 @@ TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
                            "-Composite." + itkTransformOutputFileNameExtension);
     }
   }
-
-  /** The way the transform parameters are written. */
-  parameterMap["UseBinaryFormatForTransformationParameters"] = { Conversion::ToString(
-    this->m_UseBinaryFormatForTransformationParameters) };
 
   transformationParameterInfo << Conversion::ParameterMapToString(parameterMap);
 
