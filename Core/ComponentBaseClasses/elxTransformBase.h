@@ -226,7 +226,9 @@ public:
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(const ParametersType & param, ParameterMapType & parameterMap) const;
+  CreateTransformParametersMap(const ParametersType & param,
+                               ParameterMapType &     parameterMap,
+                               const bool             includeDerivedTransformParameters = true) const;
 
   /** Function to write transform-parameters to a file. */
   void

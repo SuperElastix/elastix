@@ -459,17 +459,17 @@ template <class TElastix>
 void
 TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo, const ParametersType & param) const
 {
-  ParameterMapType parameterMap;
-
-  this->CreateTransformParametersMap(param, parameterMap);
-
   const auto & configuration = *(this->Superclass::m_Configuration);
-  const auto & self = GetSelf();
-
-  const auto itkTransformOutputFileNameExtensions =
+  const auto   itkTransformOutputFileNameExtensions =
     configuration.GetValuesOfParameter("ITKTransformOutputFileNameExtension");
   const std::string itkTransformOutputFileNameExtension =
     itkTransformOutputFileNameExtensions.empty() ? "" : itkTransformOutputFileNameExtensions.front();
+
+  ParameterMapType parameterMap;
+
+  this->CreateTransformParametersMap(param, parameterMap, itkTransformOutputFileNameExtension.empty());
+
+  const auto & self = GetSelf();
 
   if (!itkTransformOutputFileNameExtension.empty())
   {
@@ -528,7 +528,8 @@ TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInf
 template <class TElastix>
 void
 TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & param,
-                                                      ParameterMapType &     parameterMap) const
+                                                      ParameterMapType &     parameterMap,
+                                                      const bool             includeDerivedTransformParameters) const
 {
   const auto & elastixObject = *(this->GetElastix());
 
@@ -576,12 +577,15 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
     parameterMap["TransformParameters"] = { Conversion::ToVectorOfStrings(param) };
   }
 
-  // Derived transform classes may add some extra parameters
-  for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
+  if (includeDerivedTransformParameters)
   {
-    const auto & key = keyAndValue.first;
-    assert(parameterMap.count(key) == 0);
-    parameterMap[key] = std::move(keyAndValue.second);
+    // Derived transform classes may add some extra parameters
+    for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
+    {
+      const auto & key = keyAndValue.first;
+      assert(parameterMap.count(key) == 0);
+      parameterMap[key] = std::move(keyAndValue.second);
+    }
   }
 
 } // end CreateTransformParametersMap()
