@@ -99,13 +99,12 @@
   class ITK_TEMPLATE_EXPORT _classname##_install                                                                       \
   {                                                                                                                    \
   public:                                                                                                              \
-    typedef typename ::elastix::ElastixTypedef<VIndex>::ElastixType ElastixType;                                       \
-    typedef ::elastix::ComponentDatabase::ComponentDescriptionType  ComponentDescriptionType;                          \
     static int                                                                                                         \
     DO(::elastix::ComponentDatabase * cdb)                                                                             \
     {                                                                                                                  \
-      ComponentDescriptionType name = ::elastix::_classname<ElastixType>::elxGetClassNameStatic();                     \
-      int                      dummy =                                                                                 \
+      typedef typename ::elastix::ElastixTypedef<VIndex>::ElastixType ElastixType;                                     \
+      const auto name = ::elastix::_classname<ElastixType>::elxGetClassNameStatic();                                   \
+      const int  dummy =                                                                                               \
         ::elastix::InstallFunctions<::elastix::_classname<ElastixType>>::InstallComponent(name, VIndex, cdb);          \
       if (::elastix::ElastixTypedef<VIndex + 1>::IsDefined)                                                            \
       {                                                                                                                \
@@ -118,7 +117,6 @@
   class _classname##_install<::elastix::NrOfSupportedImageTypes + 1>                                                   \
   {                                                                                                                    \
   public:                                                                                                              \
-    typedef ::elastix::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;                           \
     static int                                                                                                         \
     DO(::elastix::ComponentDatabase * /** cdb */)                                                                      \
     {                                                                                                                  \
