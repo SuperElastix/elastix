@@ -129,45 +129,6 @@
     return _InstallDummy##_classname;                                                                                  \
   } // ignore semicolon
 
-/**
- * elxInstallComponentFunctionDeclarationMacro
- *
- * Usage example:
- *   elxInstallComponentFunctionDeclarationMacro( BSplineTransform );
- *
- * This macro declares the function implemented by
- * the elxInstallMacro. This macro is used by the
- * CMake generated file
- * elxInstallComponentFunctionDeclarations.h
- * only.
- *
- * Details: the declaration of InstallComponent function defined
- * by elxInstallMacro is simply repeated.
- *
- * See also elxInstallAllComponents.h.
- */
-#define elxInstallComponentFunctionDeclarationMacro(_classname)                                                        \
-  extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb)
-
-/**
- * elxInstallComponentFunctionCallMacro
- *
- * Usage example:
- *   elxInstallComponentFunctionCallMacro( BSplineTransform );
- *
- * This macro calls the function implemented by
- * the elxInstallMacro. This macro is used by the
- * CMake generated file
- * elxInstallComponentFunctionCalls.h
- * only.
- *
- * Details: the InstallComponent function defined
- * by elxInstallMacro is called.
- *
- * See also elxInstallAllComponents.h.
- */
-#define elxInstallComponentFunctionCallMacro(_classname) ret |= _classname##InstallComponent(_cdb)
-
 
 /**
  * elxClassNameMacro(_name)
