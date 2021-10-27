@@ -21,8 +21,15 @@
 #include "elxInstallFunctions.h"
 #include "elxMacro.h"
 #include "elxInstallAllComponents.h"
+
+// ITKFactoryRegistration headers:
+#include <itkImageIOFactoryRegisterManager.h>
+#include <itkMeshIOFactoryRegisterManager.h>
+#include <itkTransformIOFactoryRegisterManager.h>
+
 #include <iostream>
 #include <string>
+#include <tuple>
 
 namespace elastix
 {
@@ -126,6 +133,13 @@ ComponentLoader::InstallSupportedImageTypes(void)
 int
 ComponentLoader::LoadComponents(void)
 {
+  // Retrieve those IOFactoryRegisterManager instances, just to ensure that they are really constructed.
+  const volatile auto ioFactoryRegisterManagerInstances =
+    std::make_tuple(itk::ImageIOFactoryRegisterManagerInstance,
+                    itk::MeshIOFactoryRegisterManagerInstance,
+                    itk::TransformIOFactoryRegisterManagerInstance);
+  (void)ioFactoryRegisterManagerInstances;
+
   int installReturnCode = 0;
 
   /** Generate the mapping between indices and image types */

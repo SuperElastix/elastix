@@ -15,6 +15,11 @@
  *  limitations under the License.
  *
  *=========================================================================*/
+
+// Avoid creation of instances of `itk::ImageIOFactoryRegisterManager`, `itk::MeshIOFactoryRegisterManager`, and
+// `itk::TransformIOFactoryRegisterManager` at this point.
+#undef ITK_IO_FACTORY_REGISTER_MANAGER
+
 #include "elxTransformIO.h"
 
 #include "elxBaseComponent.h"
