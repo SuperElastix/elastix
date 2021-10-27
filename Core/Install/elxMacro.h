@@ -95,18 +95,19 @@
  *
  */
 #define elxInstallMacro(_classname)                                                                                    \
-  template <::elx::ComponentDatabase::IndexType VIndex>                                                                \
+  template <::elastix::ComponentDatabase::IndexType VIndex>                                                            \
   class ITK_TEMPLATE_EXPORT _classname##_install                                                                       \
   {                                                                                                                    \
   public:                                                                                                              \
-    typedef typename ::elx::ElastixTypedef<VIndex>::ElastixType ElastixType;                                           \
-    typedef ::elx::ComponentDatabase::ComponentDescriptionType  ComponentDescriptionType;                              \
+    typedef typename ::elastix::ElastixTypedef<VIndex>::ElastixType ElastixType;                                       \
+    typedef ::elastix::ComponentDatabase::ComponentDescriptionType  ComponentDescriptionType;                          \
     static int                                                                                                         \
-    DO(::elx::ComponentDatabase * cdb)                                                                                 \
+    DO(::elastix::ComponentDatabase * cdb)                                                                             \
     {                                                                                                                  \
-      ComponentDescriptionType name = ::elx::_classname<ElastixType>::elxGetClassNameStatic();                         \
-      int dummy = ::elx::InstallFunctions<::elx::_classname<ElastixType>>::InstallComponent(name, VIndex, cdb);        \
-      if (::elx::ElastixTypedef<VIndex + 1>::IsDefined)                                                                \
+      ComponentDescriptionType name = ::elastix::_classname<ElastixType>::elxGetClassNameStatic();                     \
+      int                      dummy =                                                                                 \
+        ::elastix::InstallFunctions<::elastix::_classname<ElastixType>>::InstallComponent(name, VIndex, cdb);          \
+      if (::elastix::ElastixTypedef<VIndex + 1>::IsDefined)                                                            \
       {                                                                                                                \
         return _classname##_install<VIndex + 1>::DO(cdb);                                                              \
       }                                                                                                                \
@@ -114,17 +115,17 @@
     }                                                                                                                  \
   };                                                                                                                   \
   template <>                                                                                                          \
-  class _classname##_install<::elx::NrOfSupportedImageTypes + 1>                                                       \
+  class _classname##_install<::elastix::NrOfSupportedImageTypes + 1>                                                   \
   {                                                                                                                    \
   public:                                                                                                              \
-    typedef ::elx::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;                               \
+    typedef ::elastix::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;                           \
     static int                                                                                                         \
-    DO(::elx::ComponentDatabase * /** cdb */)                                                                          \
+    DO(::elastix::ComponentDatabase * /** cdb */)                                                                      \
     {                                                                                                                  \
       return 0;                                                                                                        \
     }                                                                                                                  \
   };                                                                                                                   \
-  extern "C" int _classname##InstallComponent(::elx::ComponentDatabase * _cdb)                                         \
+  extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb)                                     \
   {                                                                                                                    \
     int _InstallDummy##_classname = _classname##_install<1>::DO(_cdb);                                                 \
     return _InstallDummy##_classname;                                                                                  \
@@ -148,7 +149,7 @@
  * See also elxInstallAllComponents.h.
  */
 #define elxInstallComponentFunctionDeclarationMacro(_classname)                                                        \
-  extern "C" int _classname##InstallComponent(::elx::ComponentDatabase * _cdb)
+  extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb)
 
 /**
  * elxInstallComponentFunctionCallMacro
