@@ -18,6 +18,10 @@
 #ifndef elxMacro_h
 #define elxMacro_h
 
+// Avoid creation of multiple instances of `itk::ImageIOFactoryRegisterManager`, `itk::MeshIOFactoryRegisterManager`,
+// and `itk::TransformIOFactoryRegisterManager`.
+#undef ITK_IO_FACTORY_REGISTER_MANAGER
+
 /** This include is only used to get rid of a MSVS compiler warning
  * when using std::copy. The warning is like:
  *   'conversion' conversion from 'type1' to 'type2', possible loss of data
