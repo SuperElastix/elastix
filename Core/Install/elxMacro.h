@@ -95,7 +95,7 @@
  *
  */
 #define elxInstallMacro(_classname)                                                                                    \
-  template <::elastix::ComponentDatabase::IndexType VIndex>                                                            \
+  template <unsigned VIndex>                                                                                           \
   class ITK_TEMPLATE_EXPORT _classname##_install                                                                       \
   {                                                                                                                    \
   public:                                                                                                              \
