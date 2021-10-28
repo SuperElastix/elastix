@@ -81,27 +81,6 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 }
 
 
-// Constructor with explicit arguments
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::AdvancedMatrixOffsetTransformBase(
-  const MatrixType &       matrix,
-  const OutputVectorType & offset)
-{
-  this->m_Matrix = matrix;
-  this->m_MatrixMTime.Modified();
-  this->m_Offset = offset;
-  this->m_Center.Fill(0);
-  this->m_Translation.Fill(0);
-  for (unsigned int i = 0; i < NOutputDimensions; ++i)
-  {
-    this->m_Translation[i] = offset[i];
-  }
-  this->ComputeMatrixParameters();
-
-  this->PrecomputeJacobians(ParametersDimension);
-}
-
-
 // Print self
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
@@ -215,33 +194,6 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 }
 
 
-// Compose with another affine transformation
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-void
-AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::Compose(const Self * other,
-                                                                                             bool         pre)
-{
-  if (pre)
-  {
-    m_Offset = m_Matrix * other->m_Offset + m_Offset;
-    m_Matrix = m_Matrix * other->m_Matrix;
-  }
-  else
-  {
-    m_Offset = other->m_Matrix * m_Offset + other->m_Offset;
-    m_Matrix = other->m_Matrix * m_Matrix;
-  }
-
-  this->ComputeTranslation();
-  this->ComputeMatrixParameters();
-
-  m_MatrixMTime.Modified();
-  this->Modified();
-
-  return;
-}
-
-
 // Transform a point
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
@@ -314,31 +266,6 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   }
 
   return m_InverseMatrix;
-}
-
-// return an inverse transformation
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-bool
-AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetInverse(Self * inverse) const
-{
-  if (!inverse)
-  {
-    return false;
-  }
-
-  this->GetInverseMatrix();
-  if (m_Singular)
-  {
-    return false;
-  }
-
-  inverse->m_Matrix = this->GetInverseMatrix();
-  inverse->m_InverseMatrix = m_Matrix;
-  inverse->m_Offset = -(this->GetInverseMatrix() * m_Offset);
-  inverse->ComputeTranslation();
-  inverse->ComputeMatrixParameters();
-
-  return true;
 }
 
 
