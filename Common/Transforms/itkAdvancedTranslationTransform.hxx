@@ -44,8 +44,6 @@ template <class TScalarType, unsigned int NDimensions>
 AdvancedTranslationTransform<TScalarType, NDimensions>::AdvancedTranslationTransform()
   : Superclass(ParametersDimension)
 {
-  m_Offset.Fill(0);
-
   // The Jacobian of this transform is constant.
   // Therefore the m_Jacobian variable can be
   // initialized here and be shared among all the threads.
@@ -90,32 +88,16 @@ template <class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::SetParameters(const ParametersType & parameters)
 {
-  bool modified = false;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    if (m_Offset[i] != parameters[i])
-    {
-      m_Offset[i] = parameters[i];
-      modified = true;
-    }
-  }
-  if (modified)
-  {
-    this->Modified();
-  }
+  m_ItkTransform.SetParameters(parameters);
+  this->Modified();
 }
-
 
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions>
 auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters(void) const -> const ParametersType &
 {
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    this->m_Parameters[i] = this->m_Offset[i];
-  }
-  return this->m_Parameters;
+  return m_ItkTransform.GetParameters();
 }
 
 // Print self
@@ -125,7 +107,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::PrintSelf(std::ostream &
 {
   Superclass::PrintSelf(os, indent);
 
-  os << indent << "Offset: " << m_Offset << std::endl;
+  os << indent << "ITK Transform: " << m_ItkTransform << std::endl;
 }
 
 
@@ -135,7 +117,7 @@ auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformPoint(const InputPointType & point) const
   -> OutputPointType
 {
-  return point + m_Offset;
+  return m_ItkTransform.TransformPoint(point);
 }
 
 
@@ -289,7 +271,7 @@ template <class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::SetIdentity(void)
 {
-  m_Offset.Fill(0.0);
+  m_ItkTransform.SetIdentity();
 }
 
 

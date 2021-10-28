@@ -34,7 +34,9 @@
 #ifndef itkAdvancedTranslationTransform_h
 #define itkAdvancedTranslationTransform_h
 
+#include "elxDefaultConstructibleSubclass.h"
 #include <iostream>
+#include <itkTranslationTransform.h>
 #include "itkAdvancedTransform.h"
 #include "itkMacro.h"
 #include "itkMatrix.h"
@@ -113,7 +115,7 @@ public:
   const OutputVectorType &
   GetOffset(void) const
   {
-    return m_Offset;
+    return m_ItkTransform.GetOffset();
   }
 
   /** This method sets the parameters for the transform
@@ -131,8 +133,7 @@ public:
   void
   SetOffset(const OutputVectorType & offset)
   {
-    m_Offset = offset;
-    return;
+    m_ItkTransform.SetOffset(offset);
   }
 
   /** Transform by an affine transformation.
@@ -199,7 +200,7 @@ public:
   NumberOfParametersType
   GetNumberOfParameters(void) const override
   {
-    return NDimensions;
+    return m_ItkTransform.GetNumberOfParameters();
   }
 
   /** Indicates that this transform is linear. That is, given two
@@ -210,7 +211,7 @@ public:
   bool
   IsLinear() const override
   {
-    return true;
+    return m_ItkTransform.IsLinear();
   }
 
   /** Indicates the category transform.
@@ -219,7 +220,7 @@ public:
   TransformCategoryEnum
   GetTransformCategory() const override
   {
-    return TransformCategoryEnum::Linear;
+    return m_ItkTransform.GetTransformCategory();
   }
 
 
@@ -227,8 +228,9 @@ public:
    * The Translation Transform does not require fixed parameters,
    * therefore the implementation of this method is a null operation. */
   void
-  SetFixedParameters(const FixedParametersType &) override
-  { /* purposely blank */
+  SetFixedParameters(const FixedParametersType & fixedParameters) override
+  {
+    m_ItkTransform.SetFixedParameters(fixedParameters);
   }
 
   /** Get the Fixed Parameters. The AdvancedTranslationTransform does not
@@ -237,8 +239,7 @@ public:
   const FixedParametersType &
   GetFixedParameters(void) const override
   {
-    this->m_FixedParameters.SetSize(0);
-    return this->m_FixedParameters;
+    return m_ItkTransform.GetFixedParameters();
   }
 
 
@@ -254,7 +255,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  OutputVectorType m_Offset; // Offset of the transformation
+  elastix::DefaultConstructibleSubclass<TranslationTransform<TScalarType, NDimensions>> m_ItkTransform;
 
   JacobianType                  m_LocalJacobian;
   SpatialJacobianType           m_SpatialJacobian;
