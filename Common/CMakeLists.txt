@@ -16,6 +16,7 @@ endif()
 # Define lists of files in the subdirectories.
 
 set( CommonFiles
+  elxDefaultConstructibleSubclass.h
   itkAdvancedLinearInterpolateImageFunction.h
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
