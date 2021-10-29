@@ -446,10 +446,6 @@ private:
   /** To avoid recomputation of the inverse if not needed. */
   TimeStamp         m_MatrixMTime;
   mutable TimeStamp m_InverseMatrixMTime;
-
-  /** Used by the GetJacobian() function which returns the
-   * Jacobian as an output variable. */
-  mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
 };
 
 } // namespace itk

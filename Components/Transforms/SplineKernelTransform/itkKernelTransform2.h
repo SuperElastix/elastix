@@ -525,9 +525,6 @@ protected:
   /** Precomputed nonzero Jacobian indices (simply all params) */
   NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
 
-  /** for old GetJacobian() method: */
-  mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
-
   /** The Jacobian can be computed much faster for some of the
    * derived kerbel transforms, most notably the TPS.
    */
