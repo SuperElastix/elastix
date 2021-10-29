@@ -35,6 +35,7 @@
 #ifndef itkAdvancedMatrixOffsetTransformBase_h
 #define itkAdvancedMatrixOffsetTransformBase_h
 
+#include <itkMatrixOffsetTransformBase.h>
 #include <iostream>
 
 #include "itkMatrix.h"
@@ -170,10 +171,7 @@ public:
   virtual void
   SetMatrix(const MatrixType & matrix)
   {
-    this->m_Matrix = matrix;
-    this->ComputeOffset();
-    this->ComputeMatrixParameters();
-    this->m_MatrixMTime.Modified();
+    m_ItkTransform.SetMatrix(matrix);
     this->Modified();
   }
 
@@ -188,7 +186,7 @@ public:
   const MatrixType &
   GetMatrix(void) const
   {
-    return this->m_Matrix;
+    return m_ItkTransform.GetMatrix();
   }
 
 
@@ -218,8 +216,7 @@ public:
   void
   SetCenter(const InputPointType & center)
   {
-    this->m_Center = center;
-    this->ComputeOffset();
+    m_ItkTransform.SetCenter(center);
     this->Modified();
   }
 
@@ -234,7 +231,7 @@ public:
   const InputPointType &
   GetCenter(void) const
   {
-    return this->m_Center;
+    return m_ItkTransform.GetCenter();
   }
 
 
@@ -248,8 +245,7 @@ public:
   void
   SetTranslation(const OutputVectorType & translation)
   {
-    this->m_Translation = translation;
-    this->ComputeOffset();
+    m_ItkTransform.SetTranslation(translation);
     this->Modified();
   }
 
@@ -264,7 +260,7 @@ public:
   const OutputVectorType &
   GetTranslation(void) const
   {
-    return this->m_Translation;
+    return m_ItkTransform.GetTranslation();
   }
 
 
@@ -397,8 +393,7 @@ protected:
   void
   SetVarMatrix(const MatrixType & matrix)
   {
-    this->m_Matrix = matrix;
-    this->m_MatrixMTime.Modified();
+    m_ItkTransform.SetVarMatrix(matrix);
   }
 
   void
@@ -407,7 +402,7 @@ protected:
   void
   SetVarTranslation(const OutputVectorType & translation)
   {
-    this->m_Translation = translation;
+    m_ItkTransform.SetVarTranslation(translation);
   }
 
   virtual void
@@ -433,19 +428,37 @@ private:
   const InverseMatrixType &
   GetInverseMatrix(void) const;
 
+  using ItkTransformType = MatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>;
 
-  /** Member variables. */
-  MatrixType                m_Matrix;        // Matrix of the transformation
-  OutputVectorType          m_Offset;        // Offset of the transformation
-  mutable InverseMatrixType m_InverseMatrix; // Inverse of the matrix
-  mutable bool              m_Singular;      // Is m_Inverse singular?
+  class DefaultConstructibleItkTransformType : public ItkTransformType
+  {
+  public:
+    ITK_DISALLOW_COPY_AND_MOVE(DefaultConstructibleItkTransformType);
 
-  InputPointType   m_Center;
-  OutputVectorType m_Translation;
+    /// Default-constructor.
+    DefaultConstructibleItkTransformType() = default;
 
-  /** To avoid recomputation of the inverse if not needed. */
-  TimeStamp         m_MatrixMTime;
-  mutable TimeStamp m_InverseMatrixMTime;
+    /// Explicit constructor.
+    explicit DefaultConstructibleItkTransformType(const unsigned paramDims)
+      : ItkTransformType{ paramDims }
+    {}
+
+    /// Destructor.
+    ~DefaultConstructibleItkTransformType() override
+    {
+      // Suppress warning "Trying to delete object with non-zero reference count."
+      this->itk::LightObject::m_ReferenceCount = 0;
+    }
+
+    using ItkTransformType::ComputeOffset;
+    using ItkTransformType::ComputeTranslation;
+    using ItkTransformType::SetVarMatrix;
+    using ItkTransformType::SetVarTranslation;
+  };
+
+
+  /** Member variable. */
+  DefaultConstructibleItkTransformType m_ItkTransform;
 };
 
 } // namespace itk
