@@ -150,24 +150,14 @@ public:
   typedef OutputVectorType OffsetType;
   typedef OutputVectorType TranslationType;
 
-  /** Set the transformation to an Identity
-   * This sets the matrix to identity and the Offset to null.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   virtual void
-  SetIdentity(void);
+  SetIdentity(void)
+  {
+    m_ItkTransform.SetIdentity();
+  }
 
-  /** Set matrix of an AdvancedMatrixOffsetTransformBase
-   *
-   * This method sets the matrix of an AdvancedMatrixOffsetTransformBase to a
-   * value specified by the user.
-   *
-   * This updates the Offset wrt to current translation
-   * and center.  See the warning regarding offset-versus-translation
-   * in the documentation for SetCenter.
-   *
-   * To define an affine transform, you must set the matrix,
-   * center, and translation OR the matrix and offset.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   virtual void
   SetMatrix(const MatrixType & matrix)
   {
@@ -175,44 +165,14 @@ public:
     this->Modified();
   }
 
-
-  /** Get matrix of an AdvancedMatrixOffsetTransformBase
-   *
-   * This method returns the value of the matrix of the
-   * AdvancedMatrixOffsetTransformBase.
-   * To define an affine transform, you must set the matrix,
-   * center, and translation OR the matrix and offset.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   const MatrixType &
   GetMatrix(void) const
   {
     return m_ItkTransform.GetMatrix();
   }
 
-
-  /** Set center of rotation of an AdvancedMatrixOffsetTransformBase
-   *
-   * This method sets the center of rotation of an AdvancedMatrixOffsetTransformBase
-   * to a fixed point - for most transforms derived from this class,
-   * this point is not a "parameter" of the transform - the exception is that
-   * "centered" transforms have center as a parameter during optimization.
-   *
-   * This method updates offset wrt to current translation and matrix.
-   * That is, changing the center changes the transform!
-   *
-   * WARNING: When using the Center, we strongly recommend only changing the
-   * matrix and translation to define a transform.   Changing a transform's
-   * center, changes the mapping between spaces - specifically, translation is
-   * not changed with respect to that new center, and so the offset is updated
-   * to * maintain the consistency with translation.   If a center is not used,
-   * or is set before the matrix and the offset, then it is safe to change the
-   * offset directly.
-   *        As a rule of thumb, if you wish to set the center explicitly, set
-   * before Offset computations are done.
-   *
-   * To define an affine transform, you must set the matrix,
-   * center, and translation OR the matrix and offset.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   void
   SetCenter(const InputPointType & center)
   {
@@ -221,27 +181,14 @@ public:
   }
 
 
-  /** Get center of rotation of the AdvancedMatrixOffsetTransformBase
-   *
-   * This method returns the point used as the fixed
-   * center of rotation for the AdvancedMatrixOffsetTransformBase.
-   * To define an affine transform, you must set the matrix,
-   * center, and translation OR the matrix and offset.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   const InputPointType &
   GetCenter(void) const
   {
     return m_ItkTransform.GetCenter();
   }
 
-
-  /** Set translation of an AdvancedMatrixOffsetTransformBase
-   *
-   * This method sets the translation of an AdvancedMatrixOffsetTransformBase.
-   * This updates Offset to reflect current translation.
-   * To define an affine transform, you must set the matrix,
-   * center, and translation OR the matrix and offset.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   void
   SetTranslation(const OutputVectorType & translation)
   {
@@ -249,60 +196,73 @@ public:
     this->Modified();
   }
 
-
-  /** Get translation component of the AdvancedMatrixOffsetTransformBase
-   *
-   * This method returns the translation used after rotation
-   * about the center point.
-   * To define an affine transform, you must set the matrix,
-   * center, and translation OR the matrix and offset.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   const OutputVectorType &
   GetTranslation(void) const
   {
     return m_ItkTransform.GetTranslation();
   }
 
-
-  /** Set the transformation from a container of parameters.
-   * The first (NOutputDimension x NInputDimension) parameters define the
-   * matrix and the last NOutputDimension parameters the translation.
-   * Offset is updated based on current center.
-   */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   void
-  SetParameters(const ParametersType & parameters) override;
+  SetParameters(const ParametersType & parameters) override
+  {
+    m_ItkTransform.SetParameters(parameters);
 
-  /** Get the Transformation Parameters. */
+    // Modified is always called since we just have a pointer to the
+    // parameters and cannot know if the parameters have changed.
+    this->Modified();
+  }
+
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters(void) const override
+  {
+    return m_ItkTransform.GetParameters();
+  }
 
-  /** Set the fixed parameters and update internal transformation. */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   void
-  SetFixedParameters(const FixedParametersType &) override;
+  SetFixedParameters(const FixedParametersType & fp) override
+  {
+    m_ItkTransform.SetFixedParameters(fp);
+  }
 
-  /** Get the Fixed Parameters. */
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   const FixedParametersType &
-  GetFixedParameters(void) const override;
+  GetFixedParameters(void) const override
+  {
+    return m_ItkTransform.GetFixedParameters();
+  }
 
-  /** Transform by an affine transformation
-   *
-   * This method applies the affine transform given by self to a
-   * given point or vector, returning the transformed point or
-   * vector.  The TransformPoint method transforms its argument as
-   * an affine point, whereas the TransformVector method transforms
-   * its argument as a vector.
-   */
+
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   OutputPointType
-  TransformPoint(const InputPointType & point) const override;
+  TransformPoint(const InputPointType & point) const override
+  {
+    return m_ItkTransform.TransformPoint(point);
+  }
 
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   OutputVectorType
-  TransformVector(const InputVectorType & vector) const override;
+  TransformVector(const InputVectorType & vector) const override
+  {
+    return m_ItkTransform.TransformVector(vector);
+  }
 
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   OutputVnlVectorType
-  TransformVector(const InputVnlVectorType & vector) const override;
+  TransformVector(const InputVnlVectorType & vector) const override
+  {
+    return m_ItkTransform.TransformVector(vector);
+  }
 
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   OutputCovariantVectorType
-  TransformCovariantVector(const InputCovariantVectorType & vector) const override;
+  TransformCovariantVector(const InputCovariantVectorType & vector) const override
+  {
+    return m_ItkTransform.TransformCovariantVector(vector);
+  }
 
   /** Indicates that this transform is linear. That is, given two
    * points P and Q, and scalar coefficients a and b, then
@@ -390,6 +350,7 @@ protected:
   virtual void
   ComputeMatrix(void);
 
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   void
   SetVarMatrix(const MatrixType & matrix)
   {
@@ -399,14 +360,19 @@ protected:
   void
   ComputeTranslation(void);
 
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   void
   SetVarTranslation(const OutputVectorType & translation)
   {
     m_ItkTransform.SetVarTranslation(translation);
   }
 
+  /// Forwards to the corresponding `itk::MatrixOffsetTransformBase` member function.
   virtual void
-  ComputeOffset(void);
+  ComputeOffset(void)
+  {
+    m_ItkTransform.ComputeTranslation();
+  }
 
   /** (spatial) Jacobians and Hessians can mostly be precomputed by this transform.
    * Store them in these member variables.
