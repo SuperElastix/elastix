@@ -36,7 +36,7 @@
 #include <map>
 #include <numeric> // For iota.
 #include <string>
-#include <type_traits> // For is_pointer and integral_constant.
+#include <type_traits> // For is_pointer, is_same, and integral_constant.
 #include <utility>     // For index_sequence.
 #include <vector>
 
@@ -123,6 +123,9 @@ template <typename T>
 itk::SmartPointer<T>
 CheckNew()
 {
+  static_assert(std::is_same<decltype(T::New()), itk::SmartPointer<T>>{},
+                "T::New() must return an itk::SmartPointer<T>!");
+
   const auto ptr = T::New();
   if (ptr == nullptr)
   {
