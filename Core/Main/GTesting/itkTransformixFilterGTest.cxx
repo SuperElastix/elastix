@@ -49,12 +49,9 @@
 #include <string>
 
 
+// Type aliases:
 using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
-
-template <typename TPixel, unsigned VImageDimension>
-using ResampleImageFilterType =
-  itk::ResampleImageFilter<itk::Image<TPixel, VImageDimension>, itk::Image<TPixel, VImageDimension>>;
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
@@ -72,7 +69,7 @@ using elx::GTestUtilities::MakeVector;
 namespace
 {
 template <unsigned NDimension>
-itk::Vector<double, NDimension>
+auto
 ConvertToItkVector(const itk::Size<NDimension> & size)
 {
   itk::Vector<double, NDimension> result;
@@ -81,7 +78,7 @@ ConvertToItkVector(const itk::Size<NDimension> & size)
 }
 
 
-elx::ParameterObject::Pointer
+auto
 CreateParameterObject(const ParameterMapType & parameterMap)
 {
   const auto parameterObject = CheckNew<elx::ParameterObject>();
@@ -91,7 +88,7 @@ CreateParameterObject(const ParameterMapType & parameterMap)
 
 
 template <unsigned ImageDimension>
-ParameterValuesType
+auto
 CreateDefaultDirectionParameterValues()
 {
   constexpr auto      numberOfValues = ImageDimension * ImageDimension;
@@ -106,7 +103,7 @@ CreateDefaultDirectionParameterValues()
 
 
 template <typename T>
-ParameterValuesType
+auto
 ConvertToParameterValues(const T & container)
 {
   ParameterValuesType parameterValues(container.size());
@@ -167,7 +164,7 @@ ImageBuffer_has_nonzero_pixel_values(const TImage & image)
 
 
 template <typename TPixel, unsigned VImageDimension>
-itk::SmartPointer<itk::TransformixFilter<itk::Image<TPixel, VImageDimension>>>
+auto
 CreateTransformixFilter(itk::Image<TPixel, VImageDimension> &                            image,
                         const itk::Transform<double, VImageDimension, VImageDimension> & itkTransform,
                         const std::string & initialTransformParametersFileName = "NoInitialTransform",
@@ -219,11 +216,12 @@ RetrieveOutputFromTransformixFilter(itk::Image<TPixel, VImageDimension> &       
 
 
 template <typename TPixel, unsigned VImageDimension>
-itk::SmartPointer<ResampleImageFilterType<TPixel, VImageDimension>>
+auto
 CreateResampleImageFilter(const itk::Image<TPixel, VImageDimension> &                      image,
                           const itk::Transform<double, VImageDimension, VImageDimension> & itkTransform)
 {
-  const auto filter = ResampleImageFilterType<TPixel, VImageDimension>::New();
+  const auto filter =
+    itk::ResampleImageFilter<itk::Image<TPixel, VImageDimension>, itk::Image<TPixel, VImageDimension>>::New();
   filter->SetInput(&image);
   filter->SetTransform(&itkTransform);
   filter->SetSize(image.GetBufferedRegion().GetSize());
