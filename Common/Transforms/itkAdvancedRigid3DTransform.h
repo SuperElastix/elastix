@@ -132,22 +132,6 @@ public:
   SetMatrix(const MatrixType & matrix) override;
 
   /**
-   * Set the rotation Matrix of a Rigid3D Transform
-   *
-   * This method sets the 3x3 matrix representing a rotation
-   * in the transform.  The Matrix is expected to be orthogonal
-   * with a certain tolerance.
-   *
-   * \deprecated Use SetMatrix instead
-   *
-   **/
-  virtual void
-  SetRotationMatrix(const MatrixType & matrix)
-  {
-    this->SetMatrix(matrix);
-  }
-
-  /**
    * Utility function to test if a matrix is orthogonal within a specified
    * tolerance
    */

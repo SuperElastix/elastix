@@ -137,14 +137,6 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  /** This method must be made protected here because it is not a safe way of
-   * initializing the Versor */
-  void
-  SetRotationMatrix(const MatrixType & matrix) override
-  {
-    this->Superclass::SetRotationMatrix(matrix);
-  }
-
 private:
   AdvancedVersorRigid3DTransform(const Self &) = delete;
   void
