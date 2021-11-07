@@ -84,7 +84,7 @@ ConvertToItkVector(const itk::Size<NDimension> & size)
 elx::ParameterObject::Pointer
 CreateParameterObject(const ParameterMapType & parameterMap)
 {
-  const auto parameterObject = elx::ParameterObject::New();
+  const auto parameterObject = CheckNew<elx::ParameterObject>();
   parameterObject->SetParameterMap(parameterMap);
   return parameterObject;
 }
@@ -126,7 +126,7 @@ TranslateImage(TImage & image, const typename TImage::OffsetType & translationOf
 {
   constexpr auto ImageDimension = TImage::ImageDimension;
 
-  const auto filter = itk::TransformixFilter<TImage>::New();
+  const auto filter = CheckNew<itk::TransformixFilter<TImage>>();
 
   filter->SetMovingImage(&image);
   filter->SetTransformParameterObject(
@@ -394,9 +394,7 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
        { "ITK-Transform.tfm", "ITK-HDF5-Transform.h5", "Special characters [(0-9,;!@#$%&)]/ITK-Transform.tfm" })
   {
     const auto transformFilePathName = GetDataDirectoryPath() + "/Translation(1,-2)/" + transformFileName;
-
-    const auto filter = itk::TransformixFilter<ImageType>::New();
-    ASSERT_NE(filter, nullptr);
+    const auto filter = CheckNew<itk::TransformixFilter<ImageType>>();
 
     filter->SetMovingImage(movingImage);
     filter->SetTransformParameterObject(
