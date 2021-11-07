@@ -375,26 +375,19 @@ GTEST_TEST(itkTransformixFilter, Translation3D)
 GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
 {
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
-  using SizeType = itk::Size<ImageDimension>;
+  using PixelType = float;
 
   const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
-  const auto                        regionSize = SizeType::Filled(2);
-  const SizeType                    imageSize{ { 5, 6 } };
-  const itk::Index<ImageDimension>  fixedImageRegionIndex{ { 1, 3 } };
+  const itk::Size<ImageDimension>   imageSize{ { 5, 6 } };
 
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
-  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
-
+  const auto movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
   const auto expectedOutputImage = TranslateImage(*movingImage, translationOffset);
 
   for (const std::string transformFileName :
        { "ITK-Transform.tfm", "ITK-HDF5-Transform.h5", "Special characters [(0-9,;!@#$%&)]/ITK-Transform.tfm" })
   {
     const auto transformFilePathName = GetDataDirectoryPath() + "/Translation(1,-2)/" + transformFileName;
-    const auto filter = CheckNew<itk::TransformixFilter<ImageType>>();
+    const auto filter = CheckNew<itk::TransformixFilter<itk::Image<PixelType, ImageDimension>>>();
 
     filter->SetMovingImage(movingImage);
     filter->SetTransformParameterObject(
