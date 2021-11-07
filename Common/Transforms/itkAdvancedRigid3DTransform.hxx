@@ -51,13 +51,6 @@ AdvancedRigid3DTransform<TScalarType>::AdvancedRigid3DTransform(unsigned int par
   : Superclass(paramDim)
 {}
 
-// Constructor with default arguments
-template <class TScalarType>
-AdvancedRigid3DTransform<TScalarType>::AdvancedRigid3DTransform(const MatrixType &       matrix,
-                                                                const OutputVectorType & offset)
-  : Superclass(matrix, offset)
-{}
-
 // Print self
 template <class TScalarType>
 void
@@ -141,64 +134,6 @@ AdvancedRigid3DTransform<TScalarType>::SetParameters(const ParametersType & para
 
   this->Modified();
 }
-
-
-// Compose with a translation
-template <class TScalarType>
-void
-AdvancedRigid3DTransform<TScalarType>::Translate(const OffsetType & offset, bool)
-{
-  OutputVectorType newOffset = this->GetOffset();
-  newOffset += offset;
-  this->SetOffset(newOffset);
-  this->ComputeTranslation();
-}
-
-
-// Back transform a point
-template <class TScalarType>
-auto
-AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputPointType & point) const -> InputPointType
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetInverseMatrix() * (point - this->GetOffset());
-}
-
-
-// Back transform a vector
-template <class TScalarType>
-auto
-AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVectorType & vect) const -> InputVectorType
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetInverseMatrix() * vect;
-}
-
-
-// Back transform a vnl_vector
-template <class TScalarType>
-auto
-AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputVnlVectorType & vect) const -> InputVnlVectorType
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetInverseMatrix() * vect;
-}
-
-
-// Back Transform a CovariantVector
-template <class TScalarType>
-auto
-AdvancedRigid3DTransform<TScalarType>::BackTransform(const OutputCovariantVectorType & vect) const
-  -> InputCovariantVectorType
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetMatrix() * vect;
-}
-
 
 } // namespace itk
 

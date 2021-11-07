@@ -181,20 +181,6 @@ public:
   SetIdentity(void) override;
 
   /**
-   * This method creates and returns a new AdvancedSimilarity2DTransform object
-   * which is the inverse of self.
-   **/
-  void
-  CloneInverseTo(Pointer & newinverse) const;
-
-  /**
-   * This method creates and returns a new AdvancedSimilarity2DTransform object
-   * which has the same parameters.
-   **/
-  void
-  CloneTo(Pointer & clone) const;
-
-  /**
    * Set the rotation Matrix of a Similarity 2D Transform
    *
    * This method sets the 2x2 matrix representing a similarity

@@ -237,32 +237,6 @@ AdvancedSimilarity2DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent 
 }
 
 
-// Create and return an inverse transformation
-template <class TScalarType>
-void
-AdvancedSimilarity2DTransform<TScalarType>::CloneInverseTo(Pointer & result) const
-{
-  result = New();
-  result->SetCenter(this->GetCenter()); // inverse have the same center
-  result->SetScale(1.0 / this->GetScale());
-  result->SetAngle(-this->GetAngle());
-  result->SetTranslation(-(this->GetInverseMatrix() * this->GetTranslation()));
-}
-
-
-// Create and return a clone of the transformation
-template <class TScalarType>
-void
-AdvancedSimilarity2DTransform<TScalarType>::CloneTo(Pointer & result) const
-{
-  result = New();
-  result->SetCenter(this->GetCenter());
-  result->SetScale(this->GetScale());
-  result->SetAngle(this->GetAngle());
-  result->SetTranslation(this->GetTranslation());
-}
-
-
 // Set the similarity matrix
 template <class TScalarType>
 void
