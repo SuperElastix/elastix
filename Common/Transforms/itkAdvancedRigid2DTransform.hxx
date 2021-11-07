@@ -133,42 +133,6 @@ AdvancedRigid2DTransform<TScalarType>::ComputeMatrixParameters(void)
 }
 
 
-// Compose with a translation
-template <class TScalarType>
-void
-AdvancedRigid2DTransform<TScalarType>::Translate(const OffsetType & offset, bool)
-{
-  OutputVectorType newOffset = this->GetOffset();
-  newOffset += offset;
-  this->SetOffset(newOffset);
-  this->ComputeTranslation();
-}
-
-
-// Create and return an inverse transformation
-template <class TScalarType>
-void
-AdvancedRigid2DTransform<TScalarType>::CloneInverseTo(Pointer & result) const
-{
-  result = New();
-  result->SetCenter(this->GetCenter()); // inverse have the same center
-  result->SetAngle(-this->GetAngle());
-  result->SetTranslation(-(this->GetInverseMatrix() * this->GetTranslation()));
-}
-
-
-// Create and return a clone of the transformation
-template <class TScalarType>
-void
-AdvancedRigid2DTransform<TScalarType>::CloneTo(Pointer & result) const
-{
-  result = New();
-  result->SetCenter(this->GetCenter());
-  result->SetAngle(this->GetAngle());
-  result->SetTranslation(this->GetTranslation());
-}
-
-
 // Reset the transform to an identity transform
 template <class TScalarType>
 void
@@ -190,16 +154,6 @@ AdvancedRigid2DTransform<TScalarType>::SetAngle(TScalarType angle)
   this->ComputeMatrix();
   this->ComputeOffset();
   this->Modified();
-}
-
-
-// Set the angle of rotation
-template <class TScalarType>
-void
-AdvancedRigid2DTransform<TScalarType>::SetAngleInDegrees(TScalarType angle)
-{
-  const TScalarType angleInRadians = angle * std::atan(1.0) / 45.0;
-  this->SetAngle(angleInRadians);
 }
 
 

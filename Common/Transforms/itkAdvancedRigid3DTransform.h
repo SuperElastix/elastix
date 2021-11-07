@@ -132,20 +132,6 @@ public:
   SetMatrix(const MatrixType & matrix) override;
 
   /**
-   * Get rotation Matrix from an AdvancedRigid3DTransform
-   *
-   * This method returns the value of the rotation of the
-   * AdvancedRigid3DTransform.
-   *
-   * \deprecated Use GetMatrix instead
-   **/
-  const MatrixType &
-  GetRotationMatrix()
-  {
-    return this->GetMatrix();
-  }
-
-  /**
    * Set the rotation Matrix of a Rigid3D Transform
    *
    * This method sets the 3x3 matrix representing a rotation
@@ -162,39 +148,6 @@ public:
   }
 
   /**
-   * Compose the transformation with a translation
-   *
-   * This method modifies self to include a translation of the
-   * origin.  The translation is precomposed with self if pre is
-   * true, and postcomposed otherwise.
-   **/
-  void
-  Translate(const OffsetType & offset, bool pre = false);
-
-  /**
-   * Back transform by an affine transformation
-   *
-   * This method finds the point or vector that maps to a given
-   * point or vector under the affine transformation defined by
-   * self.  If no such point exists, an exception is thrown.
-   *
-   * \deprecated Please use GetInverseTransform and then call the forward
-   *   transform using the result.
-   *
-   **/
-  InputPointType
-  BackTransform(const OutputPointType & point) const;
-
-  InputVectorType
-  BackTransform(const OutputVectorType & vector) const;
-
-  InputVnlVectorType
-  BackTransform(const OutputVnlVectorType & vector) const;
-
-  InputCovariantVectorType
-  BackTransform(const OutputCovariantVectorType & vector) const;
-
-  /**
    * Utility function to test if a matrix is orthogonal within a specified
    * tolerance
    */
@@ -203,7 +156,6 @@ public:
 
 protected:
   explicit AdvancedRigid3DTransform(unsigned int paramDim);
-  AdvancedRigid3DTransform(const MatrixType & matrix, const OutputVectorType & offset);
   AdvancedRigid3DTransform();
   ~AdvancedRigid3DTransform() override = default;
 

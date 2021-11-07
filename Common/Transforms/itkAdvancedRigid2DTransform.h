@@ -148,75 +148,11 @@ public:
   void
   SetMatrix(const MatrixType & matrix) override;
 
-  /**
-   * Set/Get the rotation matrix. These methods are old and are
-   * retained for backward compatibility. Instead, use SetMatrix()
-   * GetMatrix().
-   */
-  virtual void
-  SetRotationMatrix(const MatrixType & matrix)
-  {
-    this->SetMatrix(matrix);
-  }
-  const MatrixType &
-  GetRotationMatrix() const
-  {
-    return this->GetMatrix();
-  }
-
-  /**
-   * Compose the transformation with a translation
-   *
-   * This method modifies self to include a translation of the
-   * origin.  The translation is precomposed with self if pre is
-   * true, and postcomposed otherwise.
-   */
-  void
-  Translate(const OffsetType & offset, bool pre = false);
-
-  /**
-   * Back transform by an rigid transformation.
-   *
-   * The BackTransform() methods are slated to be removed from ITK.
-   * Instead, please use GetInverse() or CloneInverseTo() to generate
-   * an inverse transform and  then perform the transform using that
-   * inverted transform.
-   */
-  inline InputPointType
-  BackTransform(const OutputPointType & point) const;
-
-  inline InputVectorType
-  BackTransform(const OutputVectorType & vector) const;
-
-  inline InputVnlVectorType
-  BackTransform(const OutputVnlVectorType & vector) const;
-
-  inline InputCovariantVectorType
-  BackTransform(const OutputCovariantVectorType & vector) const;
-
   /** Set/Get the angle of rotation in radians */
   void
   SetAngle(TScalarType angle);
 
   itkGetConstReferenceMacro(Angle, TScalarType);
-
-  /** Set the angle of rotation in degrees. */
-  void
-  SetAngleInDegrees(TScalarType angle);
-
-  /** Set/Get the angle of rotation in radians. These methods
-   * are old and are retained for backward compatibility.
-   * Instead, use SetAngle() and GetAngle(). */
-  void
-  SetRotation(TScalarType angle)
-  {
-    this->SetAngle(angle);
-  }
-  virtual const TScalarType &
-  GetRotation() const
-  {
-    return m_Angle;
-  }
 
   /** Set the transformation from a container of parameters
    * This is typically used by optimizers.
@@ -246,20 +182,6 @@ public:
    * \sa Transform::GetJacobian() */
   void
   GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
-
-  /**
-   * This method creates and returns a new AdvancedRigid2DTransform object
-   * which is the inverse of self.
-   */
-  void
-  CloneInverseTo(Pointer & newinverse) const;
-
-  /**
-   * This method creates and returns a new AdvancedRigid2DTransform object
-   * which has the same parameters.
-   */
-  void
-  CloneTo(Pointer & clone) const;
 
   /** Reset the parameters to create and identity transform. */
   void
@@ -310,49 +232,6 @@ private:
 
   TScalarType m_Angle;
 };
-
-// Back transform a point
-template <class TScalarType>
-inline typename AdvancedRigid2DTransform<TScalarType>::InputPointType
-AdvancedRigid2DTransform<TScalarType>::BackTransform(const OutputPointType & point) const
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetInverseMatrix() * (point - this->GetOffset());
-}
-
-
-// Back transform a vector
-template <class TScalarType>
-inline typename AdvancedRigid2DTransform<TScalarType>::InputVectorType
-AdvancedRigid2DTransform<TScalarType>::BackTransform(const OutputVectorType & vect) const
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetInverseMatrix() * vect;
-}
-
-
-// Back transform a vnl_vector
-template <class TScalarType>
-inline typename AdvancedRigid2DTransform<TScalarType>::InputVnlVectorType
-AdvancedRigid2DTransform<TScalarType>::BackTransform(const OutputVnlVectorType & vect) const
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetInverseMatrix() * vect;
-}
-
-
-// Back Transform a CovariantVector
-template <class TScalarType>
-inline typename AdvancedRigid2DTransform<TScalarType>::InputCovariantVectorType
-AdvancedRigid2DTransform<TScalarType>::BackTransform(const OutputCovariantVectorType & vect) const
-{
-  itkWarningMacro(<< "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() "
-                     "to generate an inverse transform and then perform the transform using that inverted transform.");
-  return this->GetMatrix() * vect;
-}
 
 
 } // namespace itk
