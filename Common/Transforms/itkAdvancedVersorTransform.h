@@ -160,14 +160,6 @@ protected:
   /** Destroy an AdvancedVersorTransform object */
   ~AdvancedVersorTransform() override = default;
 
-  /** This method must be made protected here because it is not a safe way of
-   * initializing the Versor */
-  void
-  SetRotationMatrix(const MatrixType & matrix) override
-  {
-    this->Superclass::SetRotationMatrix(matrix);
-  }
-
   void
   SetVarVersor(const VersorType & newVersor)
   {
