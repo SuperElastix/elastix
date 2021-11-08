@@ -25,6 +25,7 @@
 #include "elxElastixMain.h" // For xoutManager.
 #include "elxElastixTemplate.h"
 #include "elxGTestUtilities.h"
+#include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
 
 #include "AdvancedAffineTransform/elxAdvancedAffineTransform.h"
 #include "AdvancedBSplineTransform/elxAdvancedBSplineTransform.h"
@@ -70,6 +71,7 @@ using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::CheckNew;
 using elx::GTestUtilities::CreateDefaultElastixObject;
 using elx::GTestUtilities::ExpectAllKeysUnique;
 using elx::GTestUtilities::GeneratePseudoRandomParameters;
@@ -109,7 +111,7 @@ struct WithDimension
       static_assert(!std::is_base_of<ItkCompositeTransformType, TExpectedCorrespondingItkTransform>::value,
                     "TExpectedCorrespondingItkTransform should not be derived from `itk::CompositeTransform`!");
 
-      const auto elxTransform = ElastixTransformType::New();
+      const auto elxTransform = CheckNew<ElastixTransformType>();
 
       EXPECT_EQ(elxTransform->elxGetClassName(),
                 elx::TransformIO::ConvertITKNameOfClassToElastixClassName(
@@ -136,7 +138,7 @@ struct WithDimension
     static void
     Expect_default_elastix_FixedParameters_empty()
     {
-      const auto fixedParameters = ElastixTransformType::New()->GetFixedParameters();
+      const auto fixedParameters = CheckNew<ElastixTransformType>()->GetFixedParameters();
       ASSERT_EQ(fixedParameters, vnl_vector<double>());
     }
 
@@ -144,7 +146,7 @@ struct WithDimension
     static void
     Expect_default_elastix_FixedParameters_are_all_zero()
     {
-      const auto fixedParameters = ElastixTransformType::New()->GetFixedParameters();
+      const auto fixedParameters = CheckNew<ElastixTransformType>()->GetFixedParameters();
       ASSERT_EQ(fixedParameters.size(), NDimension);
       ASSERT_EQ(fixedParameters, vnl_vector<double>(NDimension, 0.0));
     }
@@ -160,7 +162,7 @@ struct WithDimension
                      .append("\n  fixed = ")
                      .append(elx::Conversion::BoolToString(fixed)));
 
-      const auto transform = ElastixTransformType::New();
+      const auto transform = CheckNew<ElastixTransformType>();
       const auto parameters = elx::TransformIO::GetParameters(fixed, *transform);
       elx::TransformIO::SetParameters(fixed, *transform, parameters);
       ASSERT_EQ(elx::TransformIO::GetParameters(fixed, *transform), parameters);
@@ -179,7 +181,7 @@ struct WithDimension
                      .append("\n  fixed = ")
                      .append(elx::Conversion::BoolToString(fixed)));
 
-      const auto elxTransform = ElastixTransformType::New();
+      const auto elxTransform = CheckNew<ElastixTransformType>();
       SCOPED_TRACE(fixed);
 
       const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
@@ -199,7 +201,7 @@ struct WithDimension
     static void
     Test_copying_parameters()
     {
-      const auto elxTransform = ElastixTransformType::New();
+      const auto elxTransform = CheckNew<ElastixTransformType>();
 
       SCOPED_TRACE(elxTransform->elxGetClassName());
 
@@ -244,7 +246,7 @@ struct WithDimension
 
       const elx::xoutManager manager("", false, false);
 
-      const auto elxTransform = ElastixTransformType::New();
+      const auto elxTransform = CheckNew<ElastixTransformType>();
       const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();
 
       // Note: SetElastix does not take or share the ownership of its argument!
@@ -302,8 +304,8 @@ struct WithDimension
                     "The expected precision for double floating point numbers");
       const auto expectedString = "0." + std::string(expectedPrecision, '3');
 
-      const auto elastixObject = ElastixType<NDimension>::New();
-      elastixObject->SetConfiguration(elx::Configuration::New());
+      const auto elastixObject = CheckNew<ElastixType<NDimension>>();
+      elastixObject->SetConfiguration(CheckNew<elx::Configuration>());
 
       const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
       const auto image = itk::Image<float, NDimension>::New();
@@ -314,7 +316,7 @@ struct WithDimension
       elastixObject->SetFixedImageContainer(imageContainer);
       elastixObject->SetMovingImageContainer(imageContainer);
 
-      const auto elxTransform = ElastixTransformType::New();
+      const auto elxTransform = CheckNew<ElastixTransformType>();
       elxTransform->SetElastix(elastixObject);
       elxTransform->BeforeAll();
 
@@ -338,7 +340,7 @@ struct WithDimension
     {
       const elx::xoutManager manager("", false, false);
 
-      const auto elxTransform = ElastixTransformType::New();
+      const auto elxTransform = CheckNew<ElastixTransformType>();
 
       const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();
 
@@ -368,7 +370,7 @@ struct WithDimension
   static void
   Expect_default_AdvancedBSplineTransform_GetParameters_throws_ExceptionObject(const bool fixed)
   {
-    const auto transform = elx::AdvancedBSplineTransform<ElastixType<NDimension>>::New();
+    const auto transform = CheckNew<elx::AdvancedBSplineTransform<ElastixType<NDimension>>>();
     EXPECT_THROW(elx::TransformIO::GetParameters(fixed, *transform), itk::ExceptionObject);
   }
 
@@ -384,7 +386,7 @@ struct WithDimension
                    .append("\n  ElastixTransformType = ")
                    .append(typeid(ElastixTransformType).name()));
 
-    const auto parameters = ElastixTransformType::New()->GetParameters();
+    const auto parameters = CheckNew<ElastixTransformType>()->GetParameters();
     ASSERT_EQ(parameters, vnl_vector<double>(expectedParameters.data(), NExpectedParameters));
   }
 
@@ -556,7 +558,7 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
 
   const auto elastixObject = CreateDefaultElastixObject<ElastixType<Dimension>>();
 
-  const auto elxTransform = TElastixTransform<ElastixType<Dimension>>::New();
+  const auto elxTransform = CheckNew<TElastixTransform<ElastixType<Dimension>>>();
 
   // Check that the elastix transform type corresponds with the ITK transform type.
   EXPECT_EQ(elxTransform->elxGetClassName(),
@@ -789,7 +791,7 @@ GTEST_TEST(TransformIO, CopyDefaultParametersToCorrespondingItkTransform)
 
 GTEST_TEST(TransformIO, CopyDefaultEulerTransformElastix3DFixedParametersToCorrespondingItkTransform)
 {
-  const auto elxTransform = elx::EulerTransformElastix<ElastixType<3>>::New();
+  const auto elxTransform = CheckNew<elx::EulerTransformElastix<ElastixType<3>>>();
   const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
   ASSERT_NE(compositeTransform, nullptr);
   const auto & transformQueue = compositeTransform->GetTransformQueue();
