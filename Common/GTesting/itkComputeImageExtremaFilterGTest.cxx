@@ -19,6 +19,7 @@
 
 // First include the header file to be tested:
 #include "itkComputeImageExtremaFilter.h"
+#include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
 
 #include <itkImage.h>
 
@@ -31,6 +32,9 @@ template class ComputeImageExtremaFilter<itk::Image<double, 3>>;
 } // namespace itk
 
 using itk::ComputeImageExtremaFilter;
+
+// Using-declaration:
+using elx::CoreMainGTestUtilities::CheckNew;
 
 namespace
 {
@@ -63,7 +67,7 @@ Expect_uniform_image(const typename TImage::SizeType & imageSize)
   const auto ExpectForPixelValue = [image](const PixelType pixelValue) {
     image->FillBuffer(pixelValue);
 
-    const auto filter = ComputeImageExtremaFilter<TImage>::New();
+    const auto filter = CheckNew<ComputeImageExtremaFilter<TImage>>();
     filter->SetInput(image);
     filter->Update();
 
@@ -105,7 +109,7 @@ Expect_one_positive_pixel_value(const typename TImage::SizeType & imageSize)
     image->FillBuffer(0);
     image->SetPixel(IndexType(), pixelValue);
 
-    const auto filter = ComputeImageExtremaFilter<TImage>::New();
+    const auto filter = CheckNew<ComputeImageExtremaFilter<TImage>>();
     filter->SetInput(image);
     filter->Update();
 
@@ -139,7 +143,7 @@ Expect_one_negative_pixel_value(const typename TImage::SizeType & imageSize)
     image->FillBuffer(0);
     image->SetPixel(IndexType(), pixelValue);
 
-    const auto filter = ComputeImageExtremaFilter<TImage>::New();
+    const auto filter = CheckNew<ComputeImageExtremaFilter<TImage>>();
     filter->SetInput(image);
     filter->Update();
 
@@ -186,7 +190,7 @@ Expect_one_non_zero_pixel_value_masked_in(const typename TImage::SizeType & imag
     image->FillBuffer(0);
     image->SetPixel(IndexType(), pixelValue);
 
-    const auto filter = FilterType::New();
+    const auto filter = CheckNew<FilterType>();
     filter->SetInput(image);
     filter->SetImageSpatialMask(maskSpatialObject);
     filter->SetUseMask(true);
@@ -237,7 +241,7 @@ Expect_one_positive_pixel_value_all_pixels_masked_in(const typename TImage::Size
     image->FillBuffer(0);
     image->SetPixel(IndexType(), pixelValue);
 
-    const auto filter = FilterType::New();
+    const auto filter = CheckNew<FilterType>();
     filter->SetInput(image);
     filter->SetImageSpatialMask(maskSpatialObject);
     filter->SetUseMask(true);

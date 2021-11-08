@@ -24,6 +24,7 @@
 
 #include "elxElastixTemplate.h"
 #include "elxGTestUtilities.h"
+#include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
 
 // ITK header file:
 #include <itkImage.h>
@@ -40,6 +41,7 @@ using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::CheckNew;
 using elx::GTestUtilities::CreateDefaultElastixObject;
 using elx::GTestUtilities::ExpectAllKeysUnique;
 using elx::GTestUtilities::MakeMergedMap;
@@ -69,7 +71,7 @@ struct WithDimension
                      .append("\n  ResamplerType = ")
                      .append(typeid(ResamplerType).name()));
 
-      const auto                                    newResampler = ResamplerType::New();
+      const auto                                    newResampler = CheckNew<ResamplerType>();
       elx::ResamplerBase<ElastixType<NDimension>> & resampler = *newResampler;
 
       const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();

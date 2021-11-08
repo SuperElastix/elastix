@@ -26,6 +26,7 @@
 
 #include "elxElastixTemplate.h"
 #include "elxGTestUtilities.h"
+#include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
 
 // ITK header file:
 #include <itkImage.h>
@@ -42,6 +43,7 @@ using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
 
 
 // Using-declarations:
+using elx::CoreMainGTestUtilities::CheckNew;
 using elx::GTestUtilities::ExpectAllKeysUnique;
 using elx::GTestUtilities::MakeMergedMap;
 
@@ -70,7 +72,7 @@ struct WithDimension
                      .append("\n  InterpolatorType = ")
                      .append(typeid(InterpolatorType).name()));
 
-      const auto                                                     newInterpolator = InterpolatorType::New();
+      const auto                                                     newInterpolator = CheckNew<InterpolatorType>();
       const elx::ResampleInterpolatorBase<ElastixType<NDimension>> & interpolator = *newInterpolator;
 
       ParameterMapType actualParameterMap;

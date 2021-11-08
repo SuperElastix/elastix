@@ -20,6 +20,7 @@
 #include "elxConversion.h"
 
 #include "itkParameterMapInterface.h"
+#include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
 
 #include <gtest/gtest.h>
 
@@ -40,6 +41,9 @@
 // The class to be tested.
 using elastix::Conversion;
 
+// Using-declaration:
+using elx::CoreMainGTestUtilities::CheckNew;
+
 namespace
 {
 template <typename TContainer>
@@ -56,7 +60,7 @@ Expect_successful_round_trip_of_parameter_value(const TParameterValue & paramete
   const std::string                                  parameterName("Key");
   const itk::ParameterMapInterface::ParameterMapType parameterMap{ { parameterName,
                                                                      { Conversion::ToString(parameterValue) } } };
-  const auto                                         parameterMapInterface = itk::ParameterMapInterface::New();
+  const auto                                         parameterMapInterface = CheckNew<itk::ParameterMapInterface>();
 
   parameterMapInterface->SetParameterMap(parameterMap);
 
@@ -162,7 +166,7 @@ Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer()
       const std::string parameterName("Key");
       const std::string parameterStringValue = std::to_string(integer) + '.' + std::string(numberOfTrailingZeros, '0');
 
-      const auto parameterMapInterface = itk::ParameterMapInterface::New();
+      const auto parameterMapInterface = CheckNew<itk::ParameterMapInterface>();
       parameterMapInterface->SetParameterMap({ { parameterName, { parameterStringValue } } });
 
       TInteger actualParameterValue{};
@@ -189,7 +193,7 @@ Expect_parameter_with_decimal_point_and_non_zero_trailing_chars_can_not_be_read_
       const std::string parameterName("Key");
       const std::string parameterStringValue = std::to_string(integer) + '.' + trail;
 
-      const auto parameterMapInterface = itk::ParameterMapInterface::New();
+      const auto parameterMapInterface = CheckNew<itk::ParameterMapInterface>();
       parameterMapInterface->SetParameterMap({ { parameterName, { parameterStringValue } } });
 
       TInteger actualParameterValue{};
