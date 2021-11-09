@@ -140,9 +140,6 @@ public:
 
 protected:
   AdvancedEuler3DTransform();
-  AdvancedEuler3DTransform(const MatrixType & matrix, const OutputPointType & offset);
-  explicit AdvancedEuler3DTransform(unsigned int paramsSpaceDims);
-
   ~AdvancedEuler3DTransform() override = default;
 
   void
