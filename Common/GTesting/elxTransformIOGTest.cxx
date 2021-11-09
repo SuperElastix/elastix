@@ -22,6 +22,7 @@
 #include "elxTransformIO.h"
 
 #include "elxConversion.h"
+#include "elxDefaultConstructibleSubclass.h"
 #include "elxElastixMain.h" // For xoutManager.
 #include "elxElastixTemplate.h"
 #include "elxGTestUtilities.h"
@@ -115,7 +116,7 @@ struct WithDimension
 
       EXPECT_EQ(elxTransform->elxGetClassName(),
                 elx::TransformIO::ConvertITKNameOfClassToElastixClassName(
-                  TExpectedCorrespondingItkTransform::New()->GetNameOfClass()));
+                  elx::DefaultConstructibleSubclass<TExpectedCorrespondingItkTransform>{}.GetNameOfClass()));
 
       const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
       ASSERT_NE(compositeTransform, nullptr);
@@ -864,10 +865,10 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation2D)
 {
   constexpr auto Dimension = 2U;
 
-  const auto itkTransform = itk::TranslationTransform<double, Dimension>::New();
-  itkTransform->SetOffset(MakeVector(1.0, 2.0));
+  elx::DefaultConstructibleSubclass<itk::TranslationTransform<double, Dimension>> itkTransform;
+  itkTransform.SetOffset(MakeVector(1.0, 2.0));
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(itkTransform);
 }
 
 
@@ -875,10 +876,10 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation3D)
 {
   constexpr auto Dimension = 3U;
 
-  const auto itkTransform = itk::TranslationTransform<double, Dimension>::New();
-  itkTransform->SetOffset(MakeVector(1.0, 2.0, 3.0));
+  elx::DefaultConstructibleSubclass<itk::TranslationTransform<double, Dimension>> itkTransform;
+  itkTransform.SetOffset(MakeVector(1.0, 2.0, 3.0));
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(itkTransform);
 }
 
 
@@ -886,13 +887,13 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine2D)
 {
   constexpr auto Dimension = 2U;
 
-  const auto itkTransform = itk::AffineTransform<double, Dimension>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, 2.0));
-  itkTransform->Scale(MakeVector(1.5, 1.75));
-  itkTransform->SetCenter(MakePoint(0.5, 1.5));
-  itkTransform->Rotate2D(M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::AffineTransform<double, Dimension>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, 2.0));
+  itkTransform.Scale(MakeVector(1.5, 1.75));
+  itkTransform.SetCenter(MakePoint(0.5, 1.5));
+  itkTransform.Rotate2D(M_PI_4);
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(itkTransform);
 }
 
 
@@ -900,74 +901,74 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
 {
   constexpr auto Dimension = 3U;
 
-  const auto itkTransform = itk::AffineTransform<double, Dimension>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
-  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
-  itkTransform->Scale(MakeVector(1.25, 1.5, 1.75));
-  itkTransform->Rotate3D(itk::Vector<double, Dimension>(1.0), M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::AffineTransform<double, Dimension>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.Scale(MakeVector(1.25, 1.5, 1.75));
+  itkTransform.Rotate3D(itk::Vector<double, Dimension>(1.0), M_PI_4);
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(itkTransform);
 }
 
 
 GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
 {
-  const auto itkTransform = itk::Euler2DTransform<double>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, 2.0));
-  itkTransform->SetCenter(MakePoint(0.5, 1.5));
-  itkTransform->SetAngle(M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::Euler2DTransform<double>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, 2.0));
+  itkTransform.SetCenter(MakePoint(0.5, 1.5));
+  itkTransform.SetAngle(M_PI_4);
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(itkTransform);
 }
 
 
 GTEST_TEST(Transform, TransformedPointSameAsITKEuler3D)
 {
-  const auto itkTransform = itk::Euler3DTransform<double>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
-  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
-  itkTransform->SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
+  elx::DefaultConstructibleSubclass<itk::Euler3DTransform<double>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(itkTransform);
 }
 
 
 GTEST_TEST(Transform, TransformedPointSameAsITKSimilarity2D)
 {
-  const auto itkTransform = itk::Similarity2DTransform<double>::New();
-  itkTransform->SetScale(0.75);
-  itkTransform->SetTranslation(MakeVector(1.0, 2.0));
-  itkTransform->SetCenter(MakePoint(0.5, 1.5));
-  itkTransform->SetAngle(M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::Similarity2DTransform<double>> itkTransform;
+  itkTransform.SetScale(0.75);
+  itkTransform.SetTranslation(MakeVector(1.0, 2.0));
+  itkTransform.SetCenter(MakePoint(0.5, 1.5));
+  itkTransform.SetAngle(M_PI_4);
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(itkTransform);
 }
 
 
 GTEST_TEST(Transform, TransformedPointSameAsITKSimilarity3D)
 {
-  const auto itkTransform = itk::Similarity3DTransform<double>::New();
-  itkTransform->SetScale(0.75);
-  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
-  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
-  itkTransform->SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::Similarity3DTransform<double>> itkTransform;
+  itkTransform.SetScale(0.75);
+  itkTransform.SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(itkTransform);
 }
 
 
 GTEST_TEST(Transform, TransformedPointSameAsITKBSpline2D)
 {
-  const auto itkTransform = itk::BSplineTransform<double, 2>::New();
-  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+  elx::DefaultConstructibleSubclass<itk::BSplineTransform<double, 2>> itkTransform;
+  itkTransform.SetParameters(GeneratePseudoRandomParameters(itkTransform.GetParameters().size(), -1.0));
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(itkTransform);
 }
 
 GTEST_TEST(Transform, TransformedPointSameAsITKBSpline3D)
 {
-  const auto itkTransform = itk::BSplineTransform<double, 3>::New();
-  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+  elx::DefaultConstructibleSubclass<itk::BSplineTransform<double, 3>> itkTransform;
+  itkTransform.SetParameters(GeneratePseudoRandomParameters(itkTransform.GetParameters().size(), -1.0));
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(*itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(itkTransform);
 }
