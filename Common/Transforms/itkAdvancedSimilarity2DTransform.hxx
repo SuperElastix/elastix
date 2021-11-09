@@ -50,17 +50,6 @@ AdvancedSimilarity2DTransform<TScalarType>::AdvancedSimilarity2DTransform()
 }
 
 
-// Constructor with arguments
-template <class TScalarType>
-AdvancedSimilarity2DTransform<TScalarType>::AdvancedSimilarity2DTransform(unsigned int spaceDimension,
-                                                                          unsigned int parametersDimension)
-  : Superclass(spaceDimension, parametersDimension)
-{
-  m_Scale = 1.0f;
-  this->PrecomputeJacobianOfSpatialJacobian();
-}
-
-
 // Set Parameters
 template <class TScalarType>
 void

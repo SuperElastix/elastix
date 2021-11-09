@@ -40,19 +40,9 @@
 namespace itk
 {
 
-// Constructor with default arguments
+// Default-constructor
 template <class TScalarType>
 AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform()
-  : Superclass(ParametersDimension)
-{
-  m_Angle = NumericTraits<TScalarType>::Zero;
-  this->PrecomputeJacobianOfSpatialJacobian();
-}
-
-
-// Constructor with arguments
-template <class TScalarType>
-AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform(unsigned int parametersDimension)
   : Superclass(ParametersDimension)
 {
   m_Angle = NumericTraits<TScalarType>::Zero;

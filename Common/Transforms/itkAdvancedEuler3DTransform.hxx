@@ -39,39 +39,10 @@
 namespace itk
 {
 
-// Constructor with default arguments
+// Default-constructor
 template <class TScalarType>
 AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform()
   : Superclass(ParametersDimension)
-{
-  m_ComputeZYX = false;
-  m_AngleX = m_AngleY = m_AngleZ = NumericTraits<ScalarType>::Zero;
-  this->PrecomputeJacobianOfSpatialJacobian();
-}
-
-
-// Constructor with default arguments
-template <class TScalarType>
-AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform(const MatrixType &      matrix,
-                                                                const OutputPointType & offset)
-{
-  m_ComputeZYX = false;
-  this->SetMatrix(matrix);
-
-  OffsetType off;
-  off[0] = offset[0];
-  off[1] = offset[1];
-  off[2] = offset[2];
-  this->SetOffset(off);
-
-  this->PrecomputeJacobianOfSpatialJacobian();
-}
-
-
-// Constructor with arguments
-template <class TScalarType>
-AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform(unsigned int parametersDimension)
-  : Superclass(parametersDimension)
 {
   m_ComputeZYX = false;
   m_AngleX = m_AngleY = m_AngleZ = NumericTraits<ScalarType>::Zero;
