@@ -23,6 +23,7 @@
 #include <itkParameterFileParser.h>
 
 #include "elxCoreMainGTestUtilities.h"
+#include "elxDefaultConstructibleSubclass.h"
 #include "GTesting/elxGTestUtilities.h"
 
 // ITK header files:
@@ -409,11 +410,11 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform2D)
 {
   constexpr auto ImageDimension = 2U;
 
-  const auto itkTransform = itk::TranslationTransform<double, ImageDimension>::New();
-  itkTransform->SetOffset(MakeVector(1.0, -2.0));
+  elx::DefaultConstructibleSubclass<itk::TranslationTransform<double, ImageDimension>> itkTransform;
+  itkTransform.SetOffset(MakeVector(1.0, -2.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), itkTransform);
 }
 
 
@@ -421,11 +422,11 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform3D)
 {
   constexpr auto ImageDimension = 3U;
 
-  const auto itkTransform = itk::TranslationTransform<double, ImageDimension>::New();
-  itkTransform->SetOffset(MakeVector(1.0, -2.0, 3.0));
+  elx::DefaultConstructibleSubclass<itk::TranslationTransform<double, ImageDimension>> itkTransform;
+  itkTransform.SetOffset(MakeVector(1.0, -2.0, 3.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), itkTransform);
 }
 
 
@@ -433,13 +434,13 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform2D)
 {
   constexpr auto ImageDimension = 2U;
 
-  const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, -2.0));
-  itkTransform->SetCenter(MakePoint(2.5, 3.0));
-  itkTransform->Rotate2D(M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::AffineTransform<double, ImageDimension>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, -2.0));
+  itkTransform.SetCenter(MakePoint(2.5, 3.0));
+  itkTransform.Rotate2D(M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), itkTransform);
 }
 
 
@@ -447,93 +448,93 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform3D)
 {
   constexpr auto ImageDimension = 3U;
 
-  const auto itkTransform = itk::AffineTransform<double, ImageDimension>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, 2.0, 3.0));
-  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
-  itkTransform->Rotate3D(itk::Vector<double, ImageDimension>(1.0), M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::AffineTransform<double, ImageDimension>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.Rotate3D(itk::Vector<double, ImageDimension>(1.0), M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKEulerTransform2D)
 {
-  const auto itkTransform = itk::Euler2DTransform<double>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, -2.0));
-  itkTransform->SetCenter(MakePoint(2.5, 3.0));
-  itkTransform->SetAngle(M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::Euler2DTransform<double>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, -2.0));
+  itkTransform.SetCenter(MakePoint(2.5, 3.0));
+  itkTransform.SetAngle(M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKEulerTransform3D)
 {
-  const auto itkTransform = itk::Euler3DTransform<double>::New();
-  itkTransform->SetTranslation(MakeVector(1.0, -2.0, 3.0));
-  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
-  itkTransform->SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
+  elx::DefaultConstructibleSubclass<itk::Euler3DTransform<double>> itkTransform;
+  itkTransform.SetTranslation(MakeVector(1.0, -2.0, 3.0));
+  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKSimilarityTransform2D)
 {
-  const auto itkTransform = itk::Similarity2DTransform<double>::New();
-  itkTransform->SetScale(0.75);
-  itkTransform->SetTranslation(MakeVector(1.0, -2.0));
-  itkTransform->SetCenter(MakePoint(2.5, 3.0));
-  itkTransform->SetAngle(M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::Similarity2DTransform<double>> itkTransform;
+  itkTransform.SetScale(0.75);
+  itkTransform.SetTranslation(MakeVector(1.0, -2.0));
+  itkTransform.SetCenter(MakePoint(2.5, 3.0));
+  itkTransform.SetAngle(M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6)), itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKSimilarityTransform3D)
 {
-  const auto itkTransform = itk::Similarity3DTransform<double>::New();
-  itkTransform->SetScale(0.75);
-  itkTransform->SetTranslation(MakeVector(1.0, -2.0, 3.0));
-  itkTransform->SetCenter(MakePoint(3.0, 2.0, 1.0));
-  itkTransform->SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
+  elx::DefaultConstructibleSubclass<itk::Similarity3DTransform<double>> itkTransform;
+  itkTransform.SetScale(0.75);
+  itkTransform.SetTranslation(MakeVector(1.0, -2.0, 3.0));
+  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(MakeSize(5, 6, 7)), itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKBSplineTransform2D)
 {
-  const auto itkTransform = itk::BSplineTransform<double, 2>::New();
+  elx::DefaultConstructibleSubclass<itk::BSplineTransform<double, 2>> itkTransform;
 
   const auto imageSize = MakeSize(5, 6);
 
   // Note that this unit test would fail if TransformDomainPhysicalDimensions would not be set.
-  itkTransform->SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
-  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+  itkTransform.SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
+  itkTransform.SetParameters(GeneratePseudoRandomParameters(itkTransform.GetParameters().size(), -1.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize), itkTransform);
 }
 
 
 GTEST_TEST(itkTransformixFilter, ITKBSplineTransform3D)
 {
-  const auto itkTransform = itk::BSplineTransform<double, 3>::New();
+  elx::DefaultConstructibleSubclass<itk::BSplineTransform<double, 3>> itkTransform;
 
   const auto imageSize = MakeSize(5, 6, 7);
 
   // Note that this unit test would fail if TransformDomainPhysicalDimensions would not be set.
-  itkTransform->SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
-  itkTransform->SetParameters(GeneratePseudoRandomParameters(itkTransform->GetParameters().size(), -1.0));
+  itkTransform.SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
+  itkTransform.SetParameters(GeneratePseudoRandomParameters(itkTransform.GetParameters().size(), -1.0));
 
   Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
-    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize), *itkTransform);
+    *CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize), itkTransform);
 }
 
 
@@ -546,9 +547,9 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndDefaultTransform)
   using ParametersValueType = double;
 
   // Create a translated image, which is the expected output image.
-  const auto translationTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
-  translationTransform->SetOffset(MakeVector(1, -2));
-  const auto   resampleImageFilter = CreateResampleImageFilter(*inputImage, *translationTransform);
+  elx::DefaultConstructibleSubclass<itk::TranslationTransform<ParametersValueType, dimension>> translationTransform;
+  translationTransform.SetOffset(MakeVector(1, -2));
+  const auto   resampleImageFilter = CreateResampleImageFilter(*inputImage, translationTransform);
   const auto & expectedOutputImage = Deref(resampleImageFilter->GetOutput());
 
   const std::string initialTransformParametersFileName =
@@ -565,7 +566,7 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndDefaultTransform)
     EXPECT_EQ(*actualOutputImage, expectedOutputImage);
   }
 
-  const auto defaultTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
+  const elx::DefaultConstructibleSubclass<itk::TranslationTransform<ParametersValueType, dimension>> defaultTransform;
 
   for (const std::string transformParameterFileName :
        { "TransformParameters-link-to-ITK-tfm-file.txt",
@@ -573,7 +574,7 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndDefaultTransform)
          "TransformParameters-link-to-file-with-special-chars-in-path-name.txt" })
   {
     const auto actualOutputImage = RetrieveOutputFromTransformixFilter(
-      *inputImage, *defaultTransform, GetDataDirectoryPath() + "/Translation(1,-2)/" + transformParameterFileName);
+      *inputImage, defaultTransform, GetDataDirectoryPath() + "/Translation(1,-2)/" + transformParameterFileName);
     EXPECT_EQ(*actualOutputImage, expectedOutputImage);
   }
 }
@@ -602,9 +603,9 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndInverseTranslation)
 
   // Sanity check: when only an identity transform is applied, the transform from the TransformParameters.txt file
   // makes the output image unequal to the input image.
-  const auto identityTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
+  const elx::DefaultConstructibleSubclass<itk::TranslationTransform<ParametersValueType, dimension>> identityTransform;
 
-  EXPECT_NE(*(RetrieveOutputFromTransformixFilter(*inputImage, *identityTransform, initialTransformParametersFileName)),
+  EXPECT_NE(*(RetrieveOutputFromTransformixFilter(*inputImage, identityTransform, initialTransformParametersFileName)),
             *inputImage);
 
   // The inverse of the transform from the TransformParameters.txt file.
@@ -660,31 +661,31 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndScale)
   const std::string initialTransformParametersFileName =
     GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt";
 
-  const auto scaleTransform = itk::AffineTransform<ParametersValueType, dimension>::New();
-  scaleTransform->Scale(2.0);
+  elx::DefaultConstructibleSubclass<itk::AffineTransform<ParametersValueType, dimension>> scaleTransform;
+  scaleTransform.Scale(2.0);
 
-  const auto translationTransform = itk::TranslationTransform<ParametersValueType, dimension>::New();
-  translationTransform->SetOffset(MakeVector(1.0, -2.0));
+  elx::DefaultConstructibleSubclass<itk::TranslationTransform<ParametersValueType, dimension>> translationTransform;
+  translationTransform.SetOffset(MakeVector(1.0, -2.0));
 
   const auto transformixOutput =
-    RetrieveOutputFromTransformixFilter(*inputImage, *scaleTransform, initialTransformParametersFileName);
+    RetrieveOutputFromTransformixFilter(*inputImage, scaleTransform, initialTransformParametersFileName);
 
-  const auto translationAndScaleTransform = itk::CompositeTransform<double, 2>::New();
-  translationAndScaleTransform->AddTransform(translationTransform);
-  translationAndScaleTransform->AddTransform(scaleTransform);
+  elx::DefaultConstructibleSubclass<itk::CompositeTransform<double, 2>> translationAndScaleTransform;
+  translationAndScaleTransform.AddTransform(&translationTransform);
+  translationAndScaleTransform.AddTransform(&scaleTransform);
 
-  const auto scaleAndTranslationTransform = itk::CompositeTransform<double, 2>::New();
-  scaleAndTranslationTransform->AddTransform(scaleTransform);
-  scaleAndTranslationTransform->AddTransform(translationTransform);
+  elx::DefaultConstructibleSubclass<itk::CompositeTransform<double, 2>> scaleAndTranslationTransform;
+  scaleAndTranslationTransform.AddTransform(&scaleTransform);
+  scaleAndTranslationTransform.AddTransform(&translationTransform);
 
   // Expect that Transformix output is unequal (!) to the output of the corresponding ITK translation + scale composite
   // transform.
   EXPECT_NE(DerefSmartPointer(transformixOutput),
-            *(CreateResampleImageFilter(*inputImage, *translationAndScaleTransform)->GetOutput()));
+            *(CreateResampleImageFilter(*inputImage, translationAndScaleTransform)->GetOutput()));
 
   // Expect that Transformix output is equal to the output of the corresponding ITK scale + translation composite
   // transform (in that order). Note that itk::CompositeTransform processed the transforms in reverse order (compared to
   // elastix).
   EXPECT_EQ(DerefSmartPointer(transformixOutput),
-            *(CreateResampleImageFilter(*inputImage, *scaleAndTranslationTransform)->GetOutput()));
+            *(CreateResampleImageFilter(*inputImage, scaleAndTranslationTransform)->GetOutput()));
 }
