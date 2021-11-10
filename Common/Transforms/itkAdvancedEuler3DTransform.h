@@ -145,10 +145,6 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  /** Set values of angles directly without recomputing other parameters. */
-  void
-  SetVarRotation(ScalarType angleX, ScalarType angleY, ScalarType angleZ);
-
   /** Compute the components of the rotation matrix in the superclass. */
   void
   ComputeMatrix(void) override;

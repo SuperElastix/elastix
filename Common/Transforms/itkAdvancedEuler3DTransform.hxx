@@ -50,17 +50,6 @@ AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform()
 }
 
 
-// Set Angles
-template <class TScalarType>
-void
-AdvancedEuler3DTransform<TScalarType>::SetVarRotation(ScalarType angleX, ScalarType angleY, ScalarType angleZ)
-{
-  this->m_AngleX = angleX;
-  this->m_AngleY = angleY;
-  this->m_AngleZ = angleZ;
-}
-
-
 // Set Parameters
 template <class TScalarType>
 void
