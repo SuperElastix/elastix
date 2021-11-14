@@ -170,12 +170,11 @@ public:
 
 
   /** Set/get number of transforms needed. */
-  virtual void
+  void
   SetNumberOfSubTransforms(const unsigned int num)
   {
-    if (this->m_NumberOfSubTransforms != num)
+    if (this->m_SubTransformContainer.size() != num)
     {
-      this->m_NumberOfSubTransforms = num;
       this->m_SubTransformContainer.clear();
       this->m_SubTransformContainer.resize(num);
       this->Modified();
@@ -183,7 +182,12 @@ public:
   }
 
 
-  itkGetConstMacro(NumberOfSubTransforms, unsigned int);
+  auto
+  GetNumberOfSubTransforms() const
+  {
+    return static_cast<unsigned>(m_SubTransformContainer.size());
+  }
+
 
   /** Set/get stack transform parameters. */
   itkSetMacro(StackSpacing, TScalarType);
@@ -192,7 +196,7 @@ public:
   itkGetConstMacro(StackOrigin, TScalarType);
 
   /** Set the initial transform for sub transform i. */
-  virtual void
+  void
   SetSubTransform(unsigned int i, SubTransformType * transform)
   {
     this->m_SubTransformContainer[i] = transform;
@@ -201,23 +205,23 @@ public:
 
 
   /** Set all sub transforms to transform. */
-  virtual void
+  void
   SetAllSubTransforms(SubTransformType * transform)
   {
-    for (unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t)
+    for (auto & subTransform : m_SubTransformContainer)
     {
       // Copy transform
       SubTransformPointer transformcopy = dynamic_cast<SubTransformType *>(transform->CreateAnother().GetPointer());
       transformcopy->SetFixedParameters(transform->GetFixedParameters());
       transformcopy->SetParameters(transform->GetParameters());
       // Set sub transform
-      this->m_SubTransformContainer[t] = transformcopy;
+      subTransform = transformcopy;
     }
   }
 
 
   /** Get a sub transform. */
-  virtual SubTransformPointer
+  SubTransformPointer
   GetSubTransform(unsigned int i)
   {
     return this->m_SubTransformContainer[i];
@@ -290,8 +294,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  // Number of transforms and transform container
-  unsigned int              m_NumberOfSubTransforms{ 0 };
+  // Transform container
   SubTransformContainerType m_SubTransformContainer;
 
   // Stack spacing and origin of last dimension
