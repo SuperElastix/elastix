@@ -51,7 +51,8 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(
 
   // Set separate subtransform parameters
   const NumberOfParametersType numSubTransformParameters = this->m_SubTransformContainer[0]->GetNumberOfParameters();
-  for (unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t)
+  const auto                   numberOfSubTransforms = static_cast<unsigned>(m_SubTransformContainer.size());
+  for (unsigned int t = 0; t < numberOfSubTransforms; ++t)
   {
     // NTA, split the parameter by number of subparameters
     const ParametersType subparams(&(param.data_block()[t * numSubTransformParameters]), numSubTransformParameters);
@@ -74,9 +75,9 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(
 
   // Fill params with parameters of subtransforms
   unsigned int i = 0;
-  for (unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t)
+  for (const auto & subTransform : m_SubTransformContainer)
   {
-    const ParametersType & subparams = this->m_SubTransformContainer[t]->GetParameters();
+    const ParametersType & subparams = subTransform->GetParameters();
     for (unsigned int p = 0; p < this->m_SubTransformContainer[0]->GetNumberOfParameters(); ++p, ++i)
     {
       this->m_Parameters[i] = subparams[p];
@@ -106,7 +107,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint
   /** Transform point using right subtransform. */
   SubTransformOutputPointType oppr;
   const unsigned int          subt =
-    std::min(this->m_NumberOfSubTransforms - 1,
+    std::min(static_cast<unsigned int>(this->m_SubTransformContainer.size() - 1),
              static_cast<unsigned int>(
                std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
   oppr = this->m_SubTransformContainer[subt]->TransformPoint(ippr);
@@ -143,7 +144,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(co
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
-    std::min(this->m_NumberOfSubTransforms - 1,
+    std::min(static_cast<unsigned int>(this->m_SubTransformContainer.size() - 1),
              static_cast<unsigned int>(
                std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
   SubTransformJacobianType subjac;
