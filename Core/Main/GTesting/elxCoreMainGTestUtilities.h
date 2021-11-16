@@ -261,6 +261,18 @@ GetTransformParametersFromFilter(TFilter & filter)
 }
 
 
+// Creates a test image, filled with zero.
+template <typename TPixel, unsigned VImageDimension>
+auto
+CreateImage(const itk::Size<VImageDimension> & imageSize)
+{
+  const auto image = itk::Image<TPixel, VImageDimension>::New();
+  image->SetRegions(imageSize);
+  image->Allocate(true);
+  return image;
+}
+
+
 // Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
 template <typename TPixel, unsigned VImageDimension>
 auto

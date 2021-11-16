@@ -48,6 +48,7 @@
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::ConvertToOffset;
+using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
 using elx::CoreMainGTestUtilities::Deref;
@@ -65,7 +66,8 @@ using elx::GTestUtilities::MakeVector;
 GTEST_TEST(itkElastixRegistrationMethod, Translation)
 {
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -75,14 +77,9 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
   const SizeType   imageSize{ { 5, 6 } };
   const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
-  const auto fixedImage = ImageType::New();
-  fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
-
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
@@ -106,7 +103,8 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
 {
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -116,14 +114,9 @@ GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
   const SizeType   imageSize{ { 5, 6 } };
   const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
-  const auto fixedImage = ImageType::New();
-  fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
-
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   for (const auto optimizer :
@@ -155,7 +148,8 @@ GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
 GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterOfGravity)
 {
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -165,14 +159,9 @@ GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterO
   const SizeType   imageSize{ { 5, 6 } };
   const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
-  const auto fixedImage = ImageType::New();
-  fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
-
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   for (const bool automaticTransformInitialization : { false, true })
@@ -203,7 +192,8 @@ GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterO
 GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 {
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -213,14 +203,9 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
   const SizeType   imageSize{ { 5, 6 } };
   const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
-  const auto fixedImage = ImageType::New();
-  fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
-
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   for (const bool writeResultImage : { true, false })
@@ -271,7 +256,8 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
 {
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -281,14 +267,9 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
   const SizeType   imageSize{ { 12, 16 } };
   const IndexType  fixedImageRegionIndex{ { 3, 9 } };
 
-  const auto fixedImage = ImageType::New();
-  fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
-
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   for (const auto fixedImageOrigin : { MakePoint(-1.0, -2.0), ImageType::PointType(), MakePoint(0.25, 0.75) })
@@ -341,8 +322,9 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
 
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 {
+  using PixelType = float;
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -352,14 +334,10 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
   const SizeType   imageSize{ { 5, 6 } };
   const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
-  const auto fixedImage = ImageType::New();
-  fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate();
+  const auto movingImage = CreateImage<PixelType>(imageSize);
 
   const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
 
@@ -396,8 +374,9 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTransformFile)
 {
+  using PixelType = float;
   constexpr auto ImageDimension = 2U;
-  using ImageType = itk::Image<float, ImageDimension>;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
@@ -409,14 +388,10 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
   const SizeType   imageSize{ { 5, 6 } };
   const IndexType  fixedImageRegionIndex{ { 1, 3 } };
 
-  const auto fixedImage = ImageType::New();
-  fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
-  const auto movingImage = ImageType::New();
-  movingImage->SetRegions(imageSize);
-  movingImage->Allocate();
+  const auto movingImage = CreateImage<PixelType>(imageSize);
 
   const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
 
