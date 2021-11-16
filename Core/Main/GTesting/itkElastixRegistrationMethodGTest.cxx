@@ -547,3 +547,64 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
     }
   }
 }
+
+
+// Tests registering two small (8x8) binary images, which are translated with respect to each other.
+GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
+{
+  using PixelType = float;
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const auto imageSizeValue = 8;
+  const auto imageSize = SizeType::Filled(imageSizeValue);
+  const auto fixedImageRegionIndex = IndexType::Filled(imageSizeValue / 2 - 1);
+
+  const auto setPixelsOfSquareRegion = [](ImageType & image, const IndexType & regionIndex) {
+    // Set a different value to each of the pixels of a little square region, to ensure that no rotation is assumed.
+    const itk::ImageRegionRange<ImageType> imageRegionRange{ image, { regionIndex, SizeType::Filled(2) } };
+    std::iota(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
+  };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  setPixelsOfSquareRegion(*fixedImage, fixedImageRegionIndex);
+
+  const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+  filter->SetFixedImage(fixedImage);
+  filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                     { "AutomaticTransformInitialization", "false" },
+                                                     { "ImageSampler", "Full" },
+                                                     { "MaximumNumberOfIterations", "2" },
+                                                     { "Metric", "AdvancedNormalizedCorrelation" },
+                                                     { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                     { "Transform", "EulerTransform" } }));
+
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  // Test translation for each direction from (-1, -1) to (1, 1).
+  for (const auto & index : itk::ZeroBasedIndexRange<ImageDimension>(SizeType::Filled(3)))
+  {
+    movingImage->FillBuffer(0);
+    const OffsetType translation = index - IndexType::Filled(1);
+    setPixelsOfSquareRegion(*movingImage, fixedImageRegionIndex + translation);
+
+    filter->SetMovingImage(movingImage);
+    filter->Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(*filter);
+    ASSERT_EQ(transformParameters.size(), 3);
+
+    // The detected rotation angle is expected to be close to zero.
+    // (Absolute angle values of up to 3.77027e-06 were encountered, which seems acceptable.)
+    const auto rotationAngle = transformParameters[0];
+    EXPECT_LT(std::abs(rotationAngle), 1e-5);
+
+    for (unsigned i{}; i <= 1; ++i)
+    {
+      EXPECT_EQ(std::round(transformParameters[i + 1]), translation[i]);
+    }
+  }
+}
