@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 
+#define _USE_MATH_DEFINES
 
 // First include the header file to be tested:
 #include <itkElastixRegistrationMethod.h>
@@ -40,6 +41,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm> // For transform
+#include <cmath>     // For M_PI
 #include <map>
 #include <string>
 #include <utility> // For pair
@@ -606,5 +608,88 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
     {
       EXPECT_EQ(std::round(transformParameters[i + 1]), translation[i]);
     }
+  }
+}
+
+
+// Tests registering two images which are rotated with respect to each other.
+GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
+{
+  using PixelType = float;
+  enum
+  {
+    ImageDimension = 2,
+    imageSizeValue = 128
+  };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using RegionType = ImageType::RegionType;
+
+  const auto imageSize = SizeType::Filled(imageSizeValue);
+  const auto setPixelsOfDisc = [imageSize](ImageType & image, const double rotationAngle) {
+    for (const auto & index : itk::ZeroBasedIndexRange<ImageDimension>{ imageSize })
+    {
+      std::array<double, ImageDimension> offset;
+
+      for (int i{}; i < ImageDimension; ++i)
+      {
+        offset[i] = index[i] - ((imageSizeValue - 1) / 2.0);
+      }
+
+      constexpr auto radius = (imageSizeValue / 2.0) - 2.0;
+
+      if (std::inner_product(offset.begin(), offset.end(), offset.begin(), 0.0) < (radius * radius))
+      {
+        const auto directionAngle = std::atan2(offset[1], offset[0]);
+
+        // Estimate the turn (between 0 and 1), rotated according to the specified rotation angle.
+        const auto rotatedDirectionTurn =
+          std::fmod(std::fmod((directionAngle + rotationAngle) / (2.0 * M_PI), 1.0) + 1.0, 1.0);
+
+        // Multiplication by 64 may be useful for integer pixel types.
+        image.SetPixel(index, static_cast<PixelType>(64.0 * rotatedDirectionTurn));
+      }
+    }
+  };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  setPixelsOfDisc(*fixedImage, 0.0);
+
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+
+  filter->SetFixedImage(fixedImage);
+  filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                     { "AutomaticTransformInitialization", "false" },
+                                                     { "ImageSampler", "Full" },
+                                                     { "MaximumNumberOfIterations", "50" },
+                                                     { "Metric", "AdvancedNormalizedCorrelation" },
+                                                     { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                     { "Transform", "EulerTransform" } }));
+
+  for (const auto degree :
+       { -1
+#ifdef NDEBUG
+         // Test three degrees only in Release mode, as it takes too much time for a Debug configuration.
+         ,
+         0,
+         1
+#endif
+       })
+  {
+    constexpr auto radiansPerDegree = M_PI / 180.0;
+
+    setPixelsOfDisc(*movingImage, degree * radiansPerDegree);
+    filter->SetMovingImage(movingImage);
+    filter->Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(*filter);
+    ASSERT_EQ(transformParameters.size(), 3);
+
+    EXPECT_EQ(std::round(transformParameters[0] / radiansPerDegree), -degree); // rotation angle
+    EXPECT_EQ(std::round(transformParameters[1]), 0.0);                        // translation X
+    EXPECT_EQ(std::round(transformParameters[2]), 0.0);                        // translation Y
   }
 }
