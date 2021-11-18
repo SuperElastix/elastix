@@ -248,7 +248,7 @@ public:
    * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
    * Called by BeforeEachResolution().
    */
-  virtual void
+  void
   InitializeTransform(void);
 
   /** Method to increase the density of the B-spline grid.

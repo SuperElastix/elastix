@@ -132,7 +132,7 @@ public:
    *  the initial translation between fixed and moving image is guessed,
    *  if the user has set (AutomaticTransformInitialization "true").
    */
-  virtual void
+  void
   InitializeTransform(void);
 
 protected:

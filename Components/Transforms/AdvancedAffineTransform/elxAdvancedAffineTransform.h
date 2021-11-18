@@ -179,7 +179,7 @@ public:
    *
    * It is not yet possible to enter an initial rotation angle or scaling.
    */
-  virtual void
+  void
   InitializeTransform(void);
 
   /** Set the scales

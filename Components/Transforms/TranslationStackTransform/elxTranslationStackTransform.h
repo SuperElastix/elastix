@@ -136,7 +136,7 @@ public:
   void
   BeforeRegistration(void) override;
 
-  virtual void
+  void
   InitializeTransform(void);
 
   /** Function to read transform-parameters from a file. */

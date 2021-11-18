@@ -146,7 +146,7 @@ public:
    *
    * It is not yet possible to enter an initial rotation angle.
    */
-  virtual void
+  void
   InitializeTransform(void);
 
   /** Set the scales
