@@ -253,14 +253,6 @@ public:
   void
   BeforeEachResolution(void) override;
 
-  /** Method to set the initial B-spline grid and grid scheduler and initialize the parameters (to 0).
-   * \li Define the initial grid region, origin and spacing, using the precomputed grid information.
-   * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
-   * Called by BeforeEachResolution().
-   */
-  void
-  InitializeTransform(void);
-
   /** Method to increase the density of the B-spline grid.
    * \li Determine the new B-spline coefficients that describe the current deformation field
    *     for all sub transforms.
@@ -291,6 +283,14 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
+
+  /** Method to set the initial B-spline grid and grid scheduler and initialize the parameters (to 0).
+   * \li Define the initial grid region, origin and spacing, using the precomputed grid information.
+   * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
+   * Called by BeforeEachResolution().
+   */
+  void
+  InitializeTransform(void);
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType

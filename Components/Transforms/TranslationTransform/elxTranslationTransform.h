@@ -126,15 +126,6 @@ public:
   void
   BeforeRegistration(void) override;
 
-  /** Initialize Transform.
-   * \li Set all parameters to zero.
-   * \li Set initial translation:
-   *  the initial translation between fixed and moving image is guessed,
-   *  if the user has set (AutomaticTransformInitialization "true").
-   */
-  void
-  InitializeTransform(void);
-
 protected:
   /** The constructor. */
   TranslationTransformElastix();
@@ -145,6 +136,15 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
+
+  /** Initialize Transform.
+   * \li Set all parameters to zero.
+   * \li Set initial translation:
+   *  the initial translation between fixed and moving image is guessed,
+   *  if the user has set (AutomaticTransformInitialization "true").
+   */
+  void
+  InitializeTransform(void);
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType

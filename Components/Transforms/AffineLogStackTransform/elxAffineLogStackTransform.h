@@ -143,10 +143,6 @@ public:
   void
   BeforeRegistration(void) override;
 
-  /** Method initialize the parameters (to 0). */
-  void
-  InitializeTransform(void);
-
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
    * \li If scales are provided by the user use those,
@@ -178,6 +174,10 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
+
+  /** Method initialize the parameters (to 0). */
+  void
+  InitializeTransform(void);
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType

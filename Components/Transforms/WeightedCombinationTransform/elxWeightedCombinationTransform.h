@@ -165,16 +165,6 @@ public:
   void
   BeforeRegistration(void) override;
 
-  /** Initialize Transform.
-   * \li Load subtransforms
-   * \li Set all parameters to 1/NrOfSubTransforms (if NormalizeCombinationWeights=true)
-   * or 0, (if NormalizeCombinationWeights=false)
-   * \li Set the initial parameters in the Registration object
-   * This function is called by BeforeRegistration().
-   */
-  void
-  InitializeTransform(void);
-
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
    * \li If scales are provided by the user use those,
@@ -209,6 +199,16 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
+
+  /** Initialize Transform.
+   * \li Load subtransforms
+   * \li Set all parameters to 1/NrOfSubTransforms (if NormalizeCombinationWeights=true)
+   * or 0, (if NormalizeCombinationWeights=false)
+   * \li Set the initial parameters in the Registration object
+   * This function is called by BeforeRegistration().
+   */
+  void
+  InitializeTransform(void);
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
