@@ -172,7 +172,7 @@ public:
    * \li Set the initial parameters in the Registration object
    * This function is called by BeforeRegistration().
    */
-  virtual void
+  void
   InitializeTransform(void);
 
   /** Set the scales

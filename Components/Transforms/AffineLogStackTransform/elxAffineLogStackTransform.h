@@ -144,7 +144,7 @@ public:
   BeforeRegistration(void) override;
 
   /** Method initialize the parameters (to 0). */
-  virtual void
+  void
   InitializeTransform(void);
 
   /** Set the scales
