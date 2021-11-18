@@ -100,11 +100,8 @@ TranslationStackTransform<TElastix>::BeforeRegistration(void)
   this->m_TranslationStackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
-  ParametersType dummyInitialParameters(this->GetNumberOfParameters());
-  dummyInitialParameters.Fill(0.0);
-
-  /** Put parameters in the registration. */
-  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(dummyInitialParameters);
+  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
+    ParametersType(this->GetNumberOfParameters(), 0.0));
 
 } // end BeforeRegistration()
 
