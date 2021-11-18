@@ -136,9 +136,6 @@ public:
   void
   BeforeRegistration(void) override;
 
-  void
-  InitializeTransform(void);
-
   /** Function to read transform-parameters from a file. */
   void
   ReadFromFile(void) override;
@@ -152,6 +149,9 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
+
+  void
+  InitializeTransform(void);
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
