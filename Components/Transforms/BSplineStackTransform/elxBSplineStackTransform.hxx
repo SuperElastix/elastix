@@ -151,11 +151,8 @@ BSplineStackTransform<TElastix>::BeforeRegistration(void)
   this->m_BSplineStackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
 
   /** Task 3 - Give the registration an initial parameter-array. */
-  ParametersType dummyInitialParameters(this->GetNumberOfParameters());
-  dummyInitialParameters.Fill(0.0);
-
-  /** Put parameters in the registration. */
-  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(dummyInitialParameters);
+  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
+    ParametersType(this->GetNumberOfParameters(), 0.0));
 
   /** Precompute the B-spline grid regions. */
   this->PreComputeGridInformation();

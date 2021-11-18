@@ -81,11 +81,8 @@ EulerStackTransform<TElastix>::BeforeRegistration(void)
   this->m_EulerStackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
-  ParametersType dummyInitialParameters(this->GetNumberOfParameters());
-  dummyInitialParameters.Fill(0.0);
-
-  /** Put parameters in the registration. */
-  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(dummyInitialParameters);
+  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
+    ParametersType(this->GetNumberOfParameters(), 0.0));
 
   /** Task 3 - Initialize the transform */
   this->InitializeTransform();

@@ -84,11 +84,8 @@ AffineLogStackTransform<TElastix>::BeforeRegistration(void)
   this->m_AffineLogStackTransform->SetAllSubTransforms(this->m_AffineLogDummySubTransform);
 
   /** Task 3 - Give the registration an initial parameter-array. */
-  ParametersType dummyInitialParameters(this->GetNumberOfParameters());
-  dummyInitialParameters.Fill(0.0);
-
-  /** Put parameters in the registration. */
-  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(dummyInitialParameters);
+  this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
+    ParametersType(this->GetNumberOfParameters(), 0.0));
 
   /** Task 4 - Initialize the transform */
   this->InitializeTransform();
