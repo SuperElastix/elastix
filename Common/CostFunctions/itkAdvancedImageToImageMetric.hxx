@@ -110,18 +110,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AdvancedImageToImageMetri
 
 
 /**
- * ********************* Destructor ****************************
- */
-
-template <class TFixedImage, class TMovingImage>
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::~AdvancedImageToImageMetric()
-{
-  delete[] this->m_GetValuePerThreadVariables;
-  delete[] this->m_GetValueAndDerivativePerThreadVariables;
-} // end Destructor
-
-
-/**
  * ********************* SetNumberOfWorkUnits ****************************
  */
 
@@ -198,16 +186,15 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
   /** Only resize the array of structs when needed. */
   if (this->m_GetValuePerThreadVariablesSize != numberOfThreads)
   {
-    delete[] this->m_GetValuePerThreadVariables;
-    this->m_GetValuePerThreadVariables = new AlignedGetValuePerThreadStruct[numberOfThreads];
+    this->m_GetValuePerThreadVariables.reset(new AlignedGetValuePerThreadStruct[numberOfThreads]);
     this->m_GetValuePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Only resize the array of structs when needed. */
   if (this->m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
   {
-    delete[] this->m_GetValueAndDerivativePerThreadVariables;
-    this->m_GetValueAndDerivativePerThreadVariables = new AlignedGetValueAndDerivativePerThreadStruct[numberOfThreads];
+    this->m_GetValueAndDerivativePerThreadVariables.reset(
+      new AlignedGetValueAndDerivativePerThreadStruct[numberOfThreads]);
     this->m_GetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
