@@ -38,6 +38,8 @@
 
 #include "itkPlatformMultiThreader.h"
 
+#include <memory> // For unique_ptr.
+
 namespace itk
 {
 
@@ -297,7 +299,7 @@ protected:
   AdvancedImageToImageMetric();
 
   /** Destructor. */
-  ~AdvancedImageToImageMetric() override;
+  ~AdvancedImageToImageMetric() override = default;
 
   /** PrintSelf. */
   void
@@ -445,8 +447,8 @@ protected:
   };
   itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, GetValuePerThreadStruct, PaddedGetValuePerThreadStruct);
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedGetValuePerThreadStruct, AlignedGetValuePerThreadStruct);
-  mutable AlignedGetValuePerThreadStruct * m_GetValuePerThreadVariables;
-  mutable ThreadIdType                     m_GetValuePerThreadVariablesSize;
+  mutable std::unique_ptr<AlignedGetValuePerThreadStruct[]> m_GetValuePerThreadVariables;
+  mutable ThreadIdType                                      m_GetValuePerThreadVariablesSize;
 
   // test per thread struct with padding and alignment
   struct GetValueAndDerivativePerThreadStruct
@@ -461,8 +463,8 @@ protected:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
                     PaddedGetValueAndDerivativePerThreadStruct,
                     AlignedGetValueAndDerivativePerThreadStruct);
-  mutable AlignedGetValueAndDerivativePerThreadStruct * m_GetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType                                  m_GetValueAndDerivativePerThreadVariablesSize;
+  mutable std::unique_ptr<AlignedGetValueAndDerivativePerThreadStruct[]> m_GetValueAndDerivativePerThreadVariables;
+  mutable ThreadIdType                                                   m_GetValueAndDerivativePerThreadVariablesSize;
 
   /** Initialize some multi-threading related parameters. */
   virtual void
