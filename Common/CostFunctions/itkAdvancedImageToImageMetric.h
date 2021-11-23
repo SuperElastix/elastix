@@ -339,36 +339,36 @@ protected:
   /** Variables for ImageSampler support. m_ImageSampler is mutable,
    * because it is changed in the GetValue(), etc, which are const functions.
    */
-  mutable ImageSamplerPointer m_ImageSampler;
+  mutable ImageSamplerPointer m_ImageSampler{ nullptr };
 
   /** Variables for image derivative computation. */
-  bool                              m_InterpolatorIsLinear;
-  bool                              m_InterpolatorIsBSpline;
-  bool                              m_InterpolatorIsBSplineFloat;
-  bool                              m_InterpolatorIsReducedBSpline;
-  LinearInterpolatorPointer         m_LinearInterpolator;
-  BSplineInterpolatorPointer        m_BSplineInterpolator;
-  BSplineInterpolatorFloatPointer   m_BSplineInterpolatorFloat;
-  ReducedBSplineInterpolatorPointer m_ReducedBSplineInterpolator;
+  bool                              m_InterpolatorIsLinear{ false };
+  bool                              m_InterpolatorIsBSpline{ false };
+  bool                              m_InterpolatorIsBSplineFloat{ false };
+  bool                              m_InterpolatorIsReducedBSpline{ false };
+  LinearInterpolatorPointer         m_LinearInterpolator{ nullptr };
+  BSplineInterpolatorPointer        m_BSplineInterpolator{ nullptr };
+  BSplineInterpolatorFloatPointer   m_BSplineInterpolatorFloat{ nullptr };
+  ReducedBSplineInterpolatorPointer m_ReducedBSplineInterpolator{ nullptr };
 
-  CentralDifferenceGradientFilterPointer m_CentralDifferenceGradientFilter;
+  CentralDifferenceGradientFilterPointer m_CentralDifferenceGradientFilter{ nullptr };
 
   /** Variables to store the AdvancedTransform. */
-  bool                                    m_TransformIsAdvanced;
-  typename AdvancedTransformType::Pointer m_AdvancedTransform;
-  mutable bool                            m_TransformIsBSpline;
+  bool                                    m_TransformIsAdvanced{ false };
+  typename AdvancedTransformType::Pointer m_AdvancedTransform{ nullptr };
+  mutable bool                            m_TransformIsBSpline{ false };
 
   /** Variables for the Limiters. */
-  FixedImageLimiterPointer     m_FixedImageLimiter;
-  MovingImageLimiterPointer    m_MovingImageLimiter;
-  FixedImagePixelType          m_FixedImageTrueMin;
-  FixedImagePixelType          m_FixedImageTrueMax;
-  MovingImagePixelType         m_MovingImageTrueMin;
-  MovingImagePixelType         m_MovingImageTrueMax;
-  FixedImageLimiterOutputType  m_FixedImageMinLimit;
-  FixedImageLimiterOutputType  m_FixedImageMaxLimit;
-  MovingImageLimiterOutputType m_MovingImageMinLimit;
-  MovingImageLimiterOutputType m_MovingImageMaxLimit;
+  FixedImageLimiterPointer     m_FixedImageLimiter{ nullptr };
+  MovingImageLimiterPointer    m_MovingImageLimiter{ nullptr };
+  FixedImagePixelType          m_FixedImageTrueMin{ 0 };
+  FixedImagePixelType          m_FixedImageTrueMax{ 1 };
+  MovingImagePixelType         m_MovingImageTrueMin{ 0 };
+  MovingImagePixelType         m_MovingImageTrueMax{ 1 };
+  FixedImageLimiterOutputType  m_FixedImageMinLimit{ 0 };
+  FixedImageLimiterOutputType  m_FixedImageMaxLimit{ 1 };
+  MovingImageLimiterOutputType m_MovingImageMinLimit{ 0 };
+  MovingImageLimiterOutputType m_MovingImageMaxLimit{ 1 };
 
   /** Multi-threaded metric computation. */
 
@@ -413,8 +413,8 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
   /** Variables for multi-threading. */
-  bool m_UseMetricSingleThreaded;
-  bool m_UseMultiThread;
+  bool m_UseMetricSingleThreaded{ true };
+  bool m_UseMultiThread{ false };
   bool m_UseOpenMP;
 
   /** Helper structs that multi-threads the computation of
@@ -447,8 +447,8 @@ protected:
   };
   itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, GetValuePerThreadStruct, PaddedGetValuePerThreadStruct);
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedGetValuePerThreadStruct, AlignedGetValuePerThreadStruct);
-  mutable std::unique_ptr<AlignedGetValuePerThreadStruct[]> m_GetValuePerThreadVariables;
-  mutable ThreadIdType                                      m_GetValuePerThreadVariablesSize;
+  mutable std::unique_ptr<AlignedGetValuePerThreadStruct[]> m_GetValuePerThreadVariables{ nullptr };
+  mutable ThreadIdType                                      m_GetValuePerThreadVariablesSize{ 0 };
 
   // test per thread struct with padding and alignment
   struct GetValueAndDerivativePerThreadStruct
@@ -463,8 +463,10 @@ protected:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
                     PaddedGetValueAndDerivativePerThreadStruct,
                     AlignedGetValueAndDerivativePerThreadStruct);
-  mutable std::unique_ptr<AlignedGetValueAndDerivativePerThreadStruct[]> m_GetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType                                                   m_GetValueAndDerivativePerThreadVariablesSize;
+  mutable std::unique_ptr<AlignedGetValueAndDerivativePerThreadStruct[]> m_GetValueAndDerivativePerThreadVariables{
+    nullptr
+  };
+  mutable ThreadIdType m_GetValueAndDerivativePerThreadVariablesSize{ 0 };
 
   /** Initialize some multi-threading related parameters. */
   virtual void
@@ -561,8 +563,8 @@ protected:
   itkSetMacro(UseFixedImageLimiter, bool);
   itkSetMacro(UseMovingImageLimiter, bool);
 
-  double m_FixedLimitRangeRatio;
-  double m_MovingLimitRangeRatio;
+  double m_FixedLimitRangeRatio{ 0.01 };
+  double m_MovingLimitRangeRatio{ 0.01 };
 
 private:
   AdvancedImageToImageMetric(const Self &) = delete;
@@ -570,14 +572,14 @@ private:
   operator=(const Self &) = delete;
 
   /** Private member variables. */
-  bool   m_UseImageSampler;
-  bool   m_UseFixedImageLimiter;
-  bool   m_UseMovingImageLimiter;
-  double m_RequiredRatioOfValidSamples;
-  bool   m_UseMovingImageDerivativeScales;
-  bool   m_ScaleGradientWithRespectToMovingImageOrientation;
+  bool   m_UseImageSampler{ false };
+  bool   m_UseFixedImageLimiter{ false };
+  bool   m_UseMovingImageLimiter{ false };
+  double m_RequiredRatioOfValidSamples{ 0.25 };
+  bool   m_UseMovingImageDerivativeScales{ false };
+  bool   m_ScaleGradientWithRespectToMovingImageOrientation{ false };
 
-  MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
+  MovingImageDerivativeScalesType m_MovingImageDerivativeScales{ MovingImageDerivativeScalesType::Filled(1.0) };
 };
 
 } // end namespace itk

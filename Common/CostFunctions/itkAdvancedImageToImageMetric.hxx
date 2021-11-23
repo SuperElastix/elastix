@@ -47,46 +47,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AdvancedImageToImageMetri
    */
   this->SetComputeGradient(false);
 
-  this->m_ImageSampler = nullptr;
-  this->m_UseImageSampler = false;
-  this->m_RequiredRatioOfValidSamples = 0.25;
-
-  this->m_LinearInterpolator = nullptr;
-  this->m_BSplineInterpolator = nullptr;
-  this->m_BSplineInterpolatorFloat = nullptr;
-  this->m_ReducedBSplineInterpolator = nullptr;
-  this->m_InterpolatorIsLinear = false;
-  this->m_InterpolatorIsBSpline = false;
-  this->m_InterpolatorIsBSplineFloat = false;
-  this->m_InterpolatorIsReducedBSpline = false;
-  this->m_CentralDifferenceGradientFilter = nullptr;
-
-  this->m_AdvancedTransform = nullptr;
-  this->m_TransformIsAdvanced = false;
-  this->m_TransformIsBSpline = false;
-  this->m_UseMovingImageDerivativeScales = false;
-  this->m_ScaleGradientWithRespectToMovingImageOrientation = false;
-  this->m_MovingImageDerivativeScales.Fill(1.0);
-
-  this->m_FixedImageLimiter = nullptr;
-  this->m_MovingImageLimiter = nullptr;
-  this->m_UseFixedImageLimiter = false;
-  this->m_UseMovingImageLimiter = false;
-  this->m_FixedLimitRangeRatio = 0.01;
-  this->m_MovingLimitRangeRatio = 0.01;
-  this->m_FixedImageTrueMin = NumericTraits<FixedImagePixelType>::Zero;
-  this->m_FixedImageTrueMax = NumericTraits<FixedImagePixelType>::One;
-  this->m_MovingImageTrueMin = NumericTraits<MovingImagePixelType>::Zero;
-  this->m_MovingImageTrueMax = NumericTraits<MovingImagePixelType>::One;
-  this->m_FixedImageMinLimit = NumericTraits<FixedImageLimiterOutputType>::Zero;
-  this->m_FixedImageMaxLimit = NumericTraits<FixedImageLimiterOutputType>::One;
-  this->m_MovingImageMinLimit = NumericTraits<MovingImageLimiterOutputType>::Zero;
-  this->m_MovingImageMaxLimit = NumericTraits<MovingImageLimiterOutputType>::One;
-
-  /** Threading related variables. */
-  this->m_UseMetricSingleThreaded = true;
-  this->m_UseMultiThread = false;
-
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
@@ -99,12 +59,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AdvancedImageToImageMetri
 
   /** Initialize the m_ThreaderMetricParameters. */
   this->m_ThreaderMetricParameters.st_Metric = this;
-
-  // Multi-threading structs
-  this->m_GetValuePerThreadVariables = nullptr;
-  this->m_GetValuePerThreadVariablesSize = 0;
-  this->m_GetValueAndDerivativePerThreadVariables = nullptr;
-  this->m_GetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor
 
