@@ -507,7 +507,21 @@ protected:
   virtual bool
   EvaluateMovingImageValueAndDerivative(const MovingImagePointType & mappedPoint,
                                         RealType &                   movingImageValue,
-                                        MovingImageDerivativeType *  gradient) const;
+                                        MovingImageDerivativeType *  gradient) const
+  {
+    return EvaluateMovingImageValueAndDerivativeWithOptionalThreadId(mappedPoint, movingImageValue, gradient);
+  }
+
+  /* A faster version of `EvaluateMovingImageValueAndDerivative`: Non-virtual, using multithreading, and doing less
+   * dynamic memory allocation/decallocation operations, internally. */
+  bool
+  FastEvaluateMovingImageValueAndDerivative(const MovingImagePointType & mappedPoint,
+                                            RealType &                   movingImageValue,
+                                            MovingImageDerivativeType *  gradient,
+                                            const ThreadIdType           threadId) const
+  {
+    return EvaluateMovingImageValueAndDerivativeWithOptionalThreadId(mappedPoint, movingImageValue, gradient, threadId);
+  }
 
   /** Computes the inner product of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
@@ -570,6 +584,13 @@ private:
   AdvancedImageToImageMetric(const Self &) = delete;
   void
   operator=(const Self &) = delete;
+
+  template <typename... TOptionalThreadId>
+  bool
+  EvaluateMovingImageValueAndDerivativeWithOptionalThreadId(const MovingImagePointType & mappedPoint,
+                                                            RealType &                   movingImageValue,
+                                                            MovingImageDerivativeType *  gradient,
+                                                            const TOptionalThreadId... optionalThreadId) const;
 
   /** Private member variables. */
   bool   m_UseImageSampler{ false };
