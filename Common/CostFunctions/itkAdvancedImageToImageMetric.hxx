@@ -112,6 +112,15 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
   if (this->m_UseMultiThread)
   {
     this->InitializeThreadingParameters();
+
+    const auto setNumberOfWorkUnitsIfNotNull = [this](const auto bsplineInterpolator) {
+      if (!bsplineInterpolator.IsNull())
+      {
+        bsplineInterpolator->SetNumberOfWorkUnits(this->Superclass::GetNumberOfWorkUnits());
+      }
+    };
+    setNumberOfWorkUnitsIfNotNull(m_BSplineInterpolator);
+    setNumberOfWorkUnitsIfNotNull(m_BSplineInterpolatorFloat);
   }
 
 } // end Initialize()
@@ -501,15 +510,17 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform(
 
 
 /**
- * ******************* EvaluateMovingImageValueAndDerivative ******************
+ * ******************* EvaluateMovingImageValueAndDerivativeWithOptionalThreadId ******************
  */
 
 template <class TFixedImage, class TMovingImage>
+template <typename... TOptionalThreadId>
 bool
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueAndDerivative(
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueAndDerivativeWithOptionalThreadId(
   const MovingImagePointType & mappedPoint,
   RealType &                   movingImageValue,
-  MovingImageDerivativeType *  gradient) const
+  MovingImageDerivativeType *  gradient,
+  const TOptionalThreadId... optionalThreadId) const
 {
   /** Check if mapped point inside image buffer. */
   MovingImageContinuousIndexType cindex;
@@ -523,13 +534,14 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
       if (this->m_InterpolatorIsBSpline && !this->GetComputeGradient())
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
-        this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(cindex, movingImageValue, *gradient);
+        this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+          cindex, movingImageValue, *gradient, optionalThreadId...);
       }
       else if (this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient())
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
-          cindex, movingImageValue, *gradient);
+          cindex, movingImageValue, *gradient, optionalThreadId...);
       }
       else if (this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient())
       {
@@ -606,7 +618,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
 
   return sampleOk;
 
-} // end EvaluateMovingImageValueAndDerivative()
+} // end EvaluateMovingImageValueAndDerivativeWithOptionalThreadId()
 
 
 /**
