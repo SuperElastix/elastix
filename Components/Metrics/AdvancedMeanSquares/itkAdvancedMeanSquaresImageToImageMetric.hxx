@@ -362,7 +362,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
+      sampleOk = this->FastEvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr, threadId);
     }
 
     if (sampleOk)
@@ -677,7 +677,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
+      sampleOk = this->FastEvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, &movingImageDerivative, threadId);
     }
 
     if (sampleOk)

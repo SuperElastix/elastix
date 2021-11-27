@@ -490,7 +490,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
+      sampleOk = this->FastEvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, &movingImageDerivative, threadId);
     }
 
     if (sampleOk)

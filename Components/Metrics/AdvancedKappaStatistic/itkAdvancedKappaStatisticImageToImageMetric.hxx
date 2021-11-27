@@ -541,7 +541,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
     MovingImageDerivativeType movingImageDerivative;
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
+      sampleOk = this->FastEvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, &movingImageDerivative, threadId);
     }
 
     /** Do the actual calculation of the metric value. */
