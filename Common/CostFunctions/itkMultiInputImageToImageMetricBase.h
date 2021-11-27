@@ -401,6 +401,13 @@ private:
   void
   operator=(const Self &) = delete;
 
+  /// Avoids accidentally calling `this->FastEvaluateMovingImageValueAndDerivative(mappedPoint, ..., threadId)`, when
+  /// `*this` is derived from `MultiInputImageToImageMetricBase`. (The non-virtual member function
+  /// `AdvancedImageToImageMetric::FastEvaluateMovingImageValueAndDerivative` does not entirely replace the
+  /// `MultiInputImageToImageMetricBase::EvaluateMovingImageValueAndDerivative` override.)
+  void
+  FastEvaluateMovingImageValueAndDerivative(...) const = delete;
+
   /** Private member variables. */
   FixedImageRegionType m_DummyFixedImageRegion;
 
