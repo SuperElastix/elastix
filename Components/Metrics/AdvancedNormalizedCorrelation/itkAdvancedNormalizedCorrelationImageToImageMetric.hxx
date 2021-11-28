@@ -242,7 +242,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
      * inside the moving image buffer. */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
+      sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
     }
 
     if (sampleOk)
@@ -402,7 +402,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
+      sampleOk =
+        this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
     }
 
     if (sampleOk)

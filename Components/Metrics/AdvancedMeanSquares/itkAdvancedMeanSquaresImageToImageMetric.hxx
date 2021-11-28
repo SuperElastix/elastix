@@ -231,7 +231,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
+      sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
     }
 
     if (sampleOk)
@@ -520,7 +520,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
+      sampleOk =
+        this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
     }
 
     if (sampleOk)

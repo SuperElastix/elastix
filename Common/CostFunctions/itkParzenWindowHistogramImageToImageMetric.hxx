@@ -1048,7 +1048,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
+      sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
     }
 
     if (sampleOk)
@@ -1373,7 +1373,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
      */
     if (sampleOk)
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
+      sampleOk =
+        this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
     }
 
     if (sampleOk)
@@ -1495,7 +1496,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       RealType movingImageValue = itk::NumericTraits<RealType>::Zero;
       if (sampleOk)
       {
-        sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
+        sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
         if (sampleOk)
         {
           movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue);
@@ -1550,7 +1551,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
         if (sampleOk)
         {
           RealType movingImageValueRight = 0.0;
-          sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPointRight, movingImageValueRight, nullptr);
+          sampleOk =
+            this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPointRight, movingImageValueRight, nullptr);
           if (sampleOk)
           {
             movingImageValueRight = this->GetMovingImageLimiter()->Evaluate(movingImageValueRight);
@@ -1570,7 +1572,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
         if (sampleOk)
         {
           RealType movingImageValueLeft = 0.0;
-          sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPointLeft, movingImageValueLeft, nullptr);
+          sampleOk =
+            this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPointLeft, movingImageValueLeft, nullptr);
           if (sampleOk)
           {
             movingImageValueLeft = this->GetMovingImageLimiter()->Evaluate(movingImageValueLeft);
