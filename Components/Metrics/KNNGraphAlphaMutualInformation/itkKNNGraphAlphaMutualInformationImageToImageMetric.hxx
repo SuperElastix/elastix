@@ -807,11 +807,12 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
     {
       if (doDerivative)
       {
-        sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
+        sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(
+          mappedPoint, movingImageValue, &movingImageDerivative);
       }
       else
       {
-        sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
+        sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
       }
     }
 
