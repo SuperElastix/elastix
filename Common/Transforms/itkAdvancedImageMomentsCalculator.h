@@ -26,9 +26,9 @@
 #include "itkImageGridSampler.h"
 #include "itkImageFullSampler.h"
 
-#include "vnl/vnl_vector_fixed.h"
-#include "vnl/vnl_matrix_fixed.h"
-#include "vnl/vnl_diag_matrix.h"
+#include <vnl/vnl_vector_fixed.h>
+#include <vnl/vnl_matrix_fixed.h>
+#include <vnl/vnl_diag_matrix.h>
 
 #include "itkPlatformMultiThreader.h"
 

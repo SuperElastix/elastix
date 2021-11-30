@@ -36,7 +36,7 @@
 
 #include <iostream>
 #include "itkAdvancedRigid3DTransform.h"
-#include "vnl/vnl_quaternion.h"
+#include <vnl/vnl_quaternion.h>
 #include "itkVersor.h"
 
 namespace itk

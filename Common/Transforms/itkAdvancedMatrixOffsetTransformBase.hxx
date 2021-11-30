@@ -37,7 +37,7 @@
 
 #include "itkNumericTraits.h"
 #include "itkAdvancedMatrixOffsetTransformBase.h"
-#include "vnl/algo/vnl_matrix_inverse.h"
+#include <vnl/algo/vnl_matrix_inverse.h>
 
 namespace itk
 {

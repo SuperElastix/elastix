@@ -42,7 +42,7 @@
 
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkInterpolateImageFunction.h"
-#include "vnl/vnl_matrix.h"
+#include <vnl/vnl_matrix.h>
 
 #include "itkMultiOrderBSplineDecompositionImageFilter.h"
 #include "itkConceptChecking.h"

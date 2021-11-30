@@ -20,10 +20,10 @@
 
 #include "itkComputeJacobianTerms.h"
 
-#include "vnl/vnl_math.h"
-#include "vnl/vnl_fastops.h"
-#include "vnl/vnl_diag_matrix.h"
-#include "vnl/vnl_sparse_matrix.h"
+#include <vnl/vnl_math.h>
+#include <vnl/vnl_fastops.h>
+#include <vnl/vnl_diag_matrix.h>
+#include <vnl/vnl_sparse_matrix.h>
 
 namespace itk
 {

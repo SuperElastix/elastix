@@ -25,7 +25,7 @@
 #include "itkResampleImageFilter.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itksys/System.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 namespace elastix
 {

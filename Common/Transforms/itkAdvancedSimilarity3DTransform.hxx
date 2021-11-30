@@ -35,8 +35,8 @@
 #define _itkAdvancedSimilarity3DTransform_hxx
 
 #include "itkAdvancedSimilarity3DTransform.h"
-#include "vnl/vnl_math.h"
-#include "vnl/vnl_det.h"
+#include <vnl/vnl_math.h>
+#include <vnl/vnl_det.h>
 
 namespace itk
 {

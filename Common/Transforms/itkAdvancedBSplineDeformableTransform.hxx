@@ -40,7 +40,7 @@
 #include "itkContinuousIndex.h"
 #include "itkImageScanlineConstIterator.h"
 #include "itkIdentityTransform.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include <vector>
 #include <algorithm> // std::copy
 

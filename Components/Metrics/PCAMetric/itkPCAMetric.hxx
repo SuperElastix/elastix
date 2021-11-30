@@ -21,11 +21,11 @@
 #include "itkPCAMetric.h"
 
 #include "itkMersenneTwisterRandomVariateGenerator.h"
-#include "vnl/algo/vnl_matrix_update.h"
+#include <vnl/algo/vnl_matrix_update.h>
 #include "itkImage.h"
-#include "vnl/algo/vnl_svd.h"
-#include "vnl/vnl_trace.h"
-#include "vnl/algo/vnl_symmetric_eigensystem.h"
+#include <vnl/algo/vnl_svd.h>
+#include <vnl/vnl_trace.h>
+#include <vnl/algo/vnl_symmetric_eigensystem.h>
 #include <numeric>
 #include <fstream>
 

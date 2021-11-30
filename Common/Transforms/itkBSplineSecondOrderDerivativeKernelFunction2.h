@@ -19,7 +19,7 @@
 #define itkBSplineSecondOrderDerivativeKernelFunction2_h
 
 #include "itkKernelFunctionBase.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include <cmath> // For abs.
 
 namespace itk

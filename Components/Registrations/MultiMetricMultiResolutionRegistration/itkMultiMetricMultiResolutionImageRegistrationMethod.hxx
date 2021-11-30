@@ -21,7 +21,7 @@
 #include "itkMultiMetricMultiResolutionImageRegistrationMethod.h"
 
 #include "itkContinuousIndex.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 /** Macro that implements the set methods. */
 #define itkImplementationSetMacro(_name, _type)                                                                        \

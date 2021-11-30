@@ -21,8 +21,8 @@
 #include "itkCommand.h"
 #include "itkEventObject.h"
 #include "itkMacro.h"
-#include "vnl/vnl_vector.h"
-#include "vnl/algo/vnl_sparse_symmetric_eigensystem.h"
+#include <vnl/vnl_vector.h>
+#include <vnl/algo/vnl_sparse_symmetric_eigensystem.h>
 #include <algorithm> // For max.
 
 namespace itk

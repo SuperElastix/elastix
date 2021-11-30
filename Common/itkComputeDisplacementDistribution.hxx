@@ -21,9 +21,9 @@
 #include "itkComputeDisplacementDistribution.h"
 
 #include <string>
-#include "vnl/vnl_math.h"
-#include "vnl/vnl_fastops.h"
-#include "vnl/vnl_diag_matrix.h"
+#include <vnl/vnl_math.h>
+#include <vnl/vnl_fastops.h>
+#include <vnl/vnl_diag_matrix.h>
 
 #include "itkImageScanlineIterator.h"
 #include "itkImageSliceIteratorWithIndex.h"

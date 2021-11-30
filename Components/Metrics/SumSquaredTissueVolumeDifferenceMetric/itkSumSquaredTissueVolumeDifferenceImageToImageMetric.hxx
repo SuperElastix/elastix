@@ -19,7 +19,7 @@
 #define _itkSumSquaredTissueVolumeDifferenceImageToImageMetric_txx
 
 #include "itkSumSquaredTissueVolumeDifferenceImageToImageMetric.h"
-#include "vnl/algo/vnl_matrix_update.h"
+#include <vnl/algo/vnl_matrix_update.h>
 
 #ifdef ELASTIX_USE_OPENMP
 #  include <omp.h>

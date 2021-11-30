@@ -22,7 +22,7 @@
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include "itkConfigure.h"
-#include "vnl/vnl_inverse.h"
+#include <vnl/vnl_inverse.h>
 #include "itkBoundingBox.h"
 
 namespace itk

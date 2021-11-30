@@ -19,7 +19,7 @@
 #define itkMultiInputImageRandomCoordinateSampler_hxx
 
 #include "itkMultiInputImageRandomCoordinateSampler.h"
-#include "vnl/vnl_inverse.h"
+#include <vnl/vnl_inverse.h>
 #include "itkConfigure.h"
 
 namespace itk

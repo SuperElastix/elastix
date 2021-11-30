@@ -21,7 +21,7 @@
 #include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h"
 #include "itkImage.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
-#include "vnl/vnl_vector.h"
+#include <vnl/vnl_vector.h>
 
 namespace itk
 {

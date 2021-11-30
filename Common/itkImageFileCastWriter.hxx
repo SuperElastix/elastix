@@ -23,7 +23,7 @@
 #include "itkObjectFactoryBase.h"
 #include "itkImageIOFactory.h"
 #include "itkCommand.h"
-#include "vnl/vnl_vector.h"
+#include <vnl/vnl_vector.h>
 #include "itkVectorImage.h"
 #include "itkDefaultConvertPixelTraits.h"
 #include "itkMetaImageIO.h"

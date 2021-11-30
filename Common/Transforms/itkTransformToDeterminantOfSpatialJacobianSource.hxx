@@ -39,7 +39,7 @@
 #include "itkAdvancedIdentityTransform.h"
 #include "itkProgressReporter.h"
 #include "itkImageRegionIteratorWithIndex.h"
-#include "vnl/vnl_det.h"
+#include <vnl/vnl_det.h>
 
 namespace itk
 {

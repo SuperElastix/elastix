@@ -21,7 +21,7 @@
 #include "itkAdvancedBSplineDeformableTransformBase.h"
 #include "itkContinuousIndex.h"
 #include "itkIdentityTransform.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 namespace itk
 {

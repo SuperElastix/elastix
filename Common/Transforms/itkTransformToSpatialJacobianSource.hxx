@@ -23,7 +23,7 @@
 #include "itkAdvancedIdentityTransform.h"
 #include "itkProgressReporter.h"
 #include "itkImageRegionIteratorWithIndex.h"
-#include "vnl/vnl_copy.h"
+#include <vnl/vnl_copy.h>
 
 namespace itk
 {

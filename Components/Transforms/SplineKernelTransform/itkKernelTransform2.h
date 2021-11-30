@@ -41,13 +41,13 @@ PURPOSE.  See the above copyright notices for more information.
 #include "itkPointSet.h"
 #include <deque>
 #include <math.h>
-#include "vnl/vnl_matrix_fixed.h"
-#include "vnl/vnl_matrix.h"
-#include "vnl/vnl_vector.h"
-#include "vnl/vnl_vector_fixed.h"
-#include "vnl/vnl_sample.h"
-#include "vnl/algo/vnl_svd.h"
-#include "vnl/algo/vnl_qr.h"
+#include <vnl/vnl_matrix_fixed.h>
+#include <vnl/vnl_matrix.h>
+#include <vnl/vnl_vector.h>
+#include <vnl/vnl_vector_fixed.h>
+#include <vnl/vnl_sample.h>
+#include <vnl/algo/vnl_svd.h>
+#include <vnl/algo/vnl_qr.h>
 
 namespace itk
 {
