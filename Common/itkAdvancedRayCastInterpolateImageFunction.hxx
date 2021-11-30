@@ -36,7 +36,7 @@ PURPOSE.  See the above copyright notices for more information.
 
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 // Put the helper class in an anonymous namespace so that it is not
 // exposed to the user

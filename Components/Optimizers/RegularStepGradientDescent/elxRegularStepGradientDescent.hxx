@@ -22,7 +22,7 @@
 #include "elxRegularStepGradientDescent.h"
 #include <iomanip>
 #include <string>
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 namespace elastix
 {

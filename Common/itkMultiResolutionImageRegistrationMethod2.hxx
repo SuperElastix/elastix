@@ -42,7 +42,7 @@
 #include "itkMultiResolutionImageRegistrationMethod2.h"
 #include "itkRecursiveMultiResolutionPyramidImageFilter.h"
 #include "itkContinuousIndex.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 namespace itk
 {

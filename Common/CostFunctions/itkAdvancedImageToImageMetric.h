@@ -28,7 +28,7 @@
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
-#include "vnl/vnl_sparse_matrix.h"
+#include <vnl/vnl_sparse_matrix.h>
 
 #include "itkImageMaskSpatialObject.h"
 

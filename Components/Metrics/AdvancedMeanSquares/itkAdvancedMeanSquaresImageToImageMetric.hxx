@@ -19,7 +19,7 @@
 #define _itkAdvancedMeanSquaresImageToImageMetric_hxx
 
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
-#include "vnl/algo/vnl_matrix_update.h"
+#include <vnl/algo/vnl_matrix_update.h>
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkComputeImageExtremaFilter.h"
 

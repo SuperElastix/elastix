@@ -27,7 +27,7 @@
 #include "itkArray.h"
 #include "itkArray2D.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
-#include "vnl/vnl_diag_matrix.h"
+#include <vnl/vnl_diag_matrix.h>
 
 namespace itk
 {

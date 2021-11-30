@@ -22,10 +22,10 @@
 
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "itkImageScanlineConstIterator.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include "itkMatrix.h"
-#include "vnl/vnl_inverse.h"
-#include "vnl/vnl_det.h"
+#include <vnl/vnl_inverse.h>
+#include <vnl/vnl_det.h>
 
 #ifdef ELASTIX_USE_OPENMP
 #  include <omp.h>

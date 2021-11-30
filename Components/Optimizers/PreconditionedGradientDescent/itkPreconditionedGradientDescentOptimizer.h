@@ -20,7 +20,7 @@
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include "itkArray2D.h"
-#include "vnl/vnl_sparse_matrix.h"
+#include <vnl/vnl_sparse_matrix.h>
 #include "cholmod.h"
 
 namespace itk

@@ -18,7 +18,7 @@
 #ifndef itkAffineLogTransform_hxx
 #define itkAffineLogTransform_hxx
 
-#include "vnl/vnl_matrix_exp.h"
+#include <vnl/vnl_matrix_exp.h>
 #include "itkMath.h"
 #include "itkAffineLogTransform.h"
 

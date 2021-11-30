@@ -19,7 +19,7 @@
 #define itkBSplineInterpolationSecondOrderDerivativeWeightFunction_h
 
 #include "itkBSplineInterpolationWeightFunctionBase.h"
-#include "vnl/vnl_vector_fixed.h"
+#include <vnl/vnl_vector_fixed.h>
 
 namespace itk
 {

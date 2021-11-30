@@ -46,7 +46,7 @@
 #include "itkVector.h"
 
 #include "itkMatrix.h"
-#include "vnl/vnl_matrix_ref.h"
+#include <vnl/vnl_matrix_ref.h>
 
 namespace itk
 {

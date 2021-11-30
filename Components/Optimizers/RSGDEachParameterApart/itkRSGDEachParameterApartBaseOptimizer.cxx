@@ -19,7 +19,7 @@
 #include "itkRSGDEachParameterApartBaseOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 namespace itk
 {

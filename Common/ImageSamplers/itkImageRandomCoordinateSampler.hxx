@@ -19,7 +19,7 @@
 #define itkImageRandomCoordinateSampler_hxx
 
 #include "itkImageRandomCoordinateSampler.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 namespace itk
 {

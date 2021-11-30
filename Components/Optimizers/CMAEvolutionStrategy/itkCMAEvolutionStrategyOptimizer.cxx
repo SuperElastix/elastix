@@ -18,7 +18,7 @@
 
 #include "itkCMAEvolutionStrategyOptimizer.h"
 #include "itkSymmetricEigenAnalysis.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include <algorithm>
 #include <cmath>
 #include "itkCommand.h"

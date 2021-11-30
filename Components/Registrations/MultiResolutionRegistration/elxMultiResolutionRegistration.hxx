@@ -19,7 +19,7 @@
 #define elxMultiResolutionRegistration_hxx
 
 #include "elxMultiResolutionRegistration.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include "itkTimeProbe.h"
 
 namespace elastix

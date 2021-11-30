@@ -23,7 +23,7 @@
 #include "itkHardLimiterFunction.h"
 #include "itkExponentialLimiterFunction.h"
 #include <string>
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include "itkTimeProbe.h"
 
 namespace elastix

@@ -20,7 +20,7 @@
 
 #include "itkComputePreconditionerUsingDisplacementDistribution.h"
 
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 #include "itkImageScanlineIterator.h"
 #include "itkImageSliceIteratorWithIndex.h"

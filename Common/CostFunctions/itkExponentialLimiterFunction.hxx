@@ -19,7 +19,7 @@
 #define itkExponentialLimiterFunction_hxx
 
 #include "itkExponentialLimiterFunction.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 
 namespace itk
 {

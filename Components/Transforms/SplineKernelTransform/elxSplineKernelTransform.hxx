@@ -20,7 +20,7 @@
 
 #include "elxSplineKernelTransform.h"
 #include "itkTransformixInputPointFileReader.h"
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include "itkTimeProbe.h"
 
 namespace elastix

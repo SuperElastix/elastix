@@ -35,7 +35,7 @@
 #define itkAdvancedRigid2DTransform_hxx
 
 #include "itkAdvancedRigid2DTransform.h"
-#include "vnl/algo/vnl_svd_fixed.h"
+#include <vnl/algo/vnl_svd_fixed.h>
 
 namespace itk
 {

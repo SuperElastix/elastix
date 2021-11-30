@@ -38,7 +38,7 @@
 #include "itkPoint.h"
 #include "itkVector.h"
 #include "itkCovariantVector.h"
-#include "vnl/vnl_vector_fixed.h"
+#include <vnl/vnl_vector_fixed.h>
 #include "itkArray.h"
 #include "itkArray2D.h"
 #include "itkAdvancedTransform.h"

@@ -20,7 +20,7 @@
 
 #include "itkVarianceOverLastDimensionImageMetric.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
-#include "vnl/algo/vnl_matrix_update.h"
+#include <vnl/algo/vnl_matrix_update.h>
 #include <numeric>
 
 namespace itk

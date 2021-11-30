@@ -18,7 +18,7 @@
 
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
 
-#include "vnl/vnl_math.h"
+#include <vnl/vnl_math.h>
 #include "itkSigmoidImageFilter.h"
 
 namespace itk

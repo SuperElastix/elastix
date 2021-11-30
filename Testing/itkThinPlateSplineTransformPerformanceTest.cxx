@@ -25,12 +25,12 @@
 #include <fstream>
 #include <iomanip>
 
-#include "vnl/algo/vnl_qr.h"
-//#include "vnl/algo/vnl_sparse_lu.h"
-//#include "vnl/algo/vnl_cholesky.h"
-#include "vnl/vnl_matlab_filewrite.h"
-#include "vnl/vnl_matrix_fixed.h"
-#include "vnl/vnl_sparse_matrix.h"
+#include <vnl/algo/vnl_qr.h>
+//#include <vnl/algo/vnl_sparse_lu.h>
+//#include <vnl/algo/vnl_cholesky.h>
+#include <vnl/vnl_matlab_filewrite.h>
+#include <vnl/vnl_matrix_fixed.h>
+#include <vnl/vnl_sparse_matrix.h>
 
 //-------------------------------------------------------------------------------------
 // Helper class to be able to access protected functions and variables.

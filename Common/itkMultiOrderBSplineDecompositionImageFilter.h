@@ -40,7 +40,7 @@
 #include <vector>
 
 #include "itkImageLinearIteratorWithIndex.h"
-#include "vnl/vnl_matrix.h"
+#include <vnl/vnl_matrix.h>
 
 #include "itkImageToImageFilter.h"
 
