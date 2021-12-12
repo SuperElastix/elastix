@@ -561,9 +561,14 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
 
   const auto elxTransform = CheckNew<TElastixTransform<ElastixType<Dimension>>>();
 
-  // Check that the elastix transform type corresponds with the ITK transform type.
-  EXPECT_EQ(elxTransform->elxGetClassName(),
-            elx::TransformIO::ConvertITKNameOfClassToElastixClassName(itkTransform.GetNameOfClass()));
+  const std::string elxClassName = elxTransform->elxGetClassName();
+  const std::string itkNameOfClass = itkTransform.GetNameOfClass();
+
+  if (!((elxClassName == "RecursiveBSplineTransform") && (itkNameOfClass == "BSplineTransform")))
+  {
+    // Check that the elastix transform type corresponds with the ITK transform type.
+    EXPECT_EQ(elxClassName, elx::TransformIO::ConvertITKNameOfClassToElastixClassName(itkNameOfClass));
+  }
 
   // Note: SetElastix does not take or share the ownership of its argument!
   elxTransform->SetElastix(elastixObject);
@@ -592,7 +597,7 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
                                          0.0,
                                          NumericLimits::min(),
                                          0.5,
-                                         1.0 - NumericLimits::epsilon(), // Note: 1.0 fails on BSpline!!!
+                                         1.0 - (2 * NumericLimits::epsilon()), // Note: 1.0 fails on BSpline!!!
                                          1.0 + 1.0e-14,
                                          2.0,
                                          NumericLimits::max() };
@@ -963,6 +968,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKBSpline2D)
   itkTransform.SetParameters(GeneratePseudoRandomParameters(itkTransform.GetParameters().size(), -1.0));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::RecursiveBSplineTransform>(itkTransform);
 }
 
 GTEST_TEST(Transform, TransformedPointSameAsITKBSpline3D)
@@ -971,4 +977,5 @@ GTEST_TEST(Transform, TransformedPointSameAsITKBSpline3D)
   itkTransform.SetParameters(GeneratePseudoRandomParameters(itkTransform.GetParameters().size(), -1.0));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(itkTransform);
+  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::RecursiveBSplineTransform>(itkTransform);
 }
