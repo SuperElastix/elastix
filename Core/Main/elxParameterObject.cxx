@@ -183,10 +183,7 @@ ParameterObject::RemoveParameter(const ParameterKeyType & key)
 void
 ParameterObject::ReadParameterFile(const ParameterFileNameType & parameterFileName)
 {
-  ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
-  parameterFileParser->SetParameterFileName(parameterFileName);
-  parameterFileParser->ReadParameterFile();
-  this->SetParameterMap(ParameterMapVectorType(1, parameterFileParser->GetParameterMap()));
+  this->SetParameterMap(ParameterMapVectorType{ ParameterFileParserType::ReadParameterMap(parameterFileName) });
 }
 
 
@@ -223,10 +220,7 @@ ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameter
 void
 ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileName)
 {
-  ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
-  parameterFileParser->SetParameterFileName(parameterFileName);
-  parameterFileParser->ReadParameterFile();
-  this->m_ParameterMap.push_back(parameterFileParser->GetParameterMap());
+  this->m_ParameterMap.push_back(ParameterFileParserType::ReadParameterMap(parameterFileName));
 }
 
 

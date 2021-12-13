@@ -97,13 +97,8 @@ main(int argc, char * argv[])
   // typedef BaseTransformType::OutputPointType               OutputPointType;
 
   /** Interface to the original transform parameters file. */
-  typedef itk::ParameterFileParser   ParserType;
-  typedef itk::ParameterMapInterface InterfaceType;
-  auto                               parser = ParserType::New();
-  auto                               config = InterfaceType::New();
-  parser->SetParameterFileName(inputTransformParametersName);
-  parser->ReadParameterFile();
-  config->SetParameterMap(parser->GetParameterMap());
+  auto config = itk::ParameterMapInterface::New();
+  config->SetParameterMap(itk::ParameterFileParser::ReadParameterMap(inputTransformParametersName));
 
   /** Check no initial transform. */
   std::string initialTransform = "";
