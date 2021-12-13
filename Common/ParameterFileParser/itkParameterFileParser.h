@@ -99,7 +99,7 @@ public:
   itkGetStringMacro(ParameterFileName);
 
   /** Return the parameter map. */
-  virtual const ParameterMapType &
+  const ParameterMapType &
   GetParameterMap(void) const;
 
   /** Read the parameters in the parameter map. */
