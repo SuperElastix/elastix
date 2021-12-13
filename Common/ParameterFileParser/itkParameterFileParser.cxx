@@ -17,6 +17,7 @@
  *=========================================================================*/
 
 #include "itkParameterFileParser.h"
+#include "elxDefaultConstructibleSubclass.h"
 
 #include <itksys/SystemTools.hxx>
 #include <itksys/RegularExpression.hxx>
@@ -390,6 +391,22 @@ ParameterFileParser::ReturnParameterFileAsString(void)
   return output;
 
 } // end ReturnParameterFileAsString()
+
+
+/**
+ * **************** ReadParameterMap ***************
+ */
+
+auto
+ParameterFileParser::ReadParameterMap(const std::string & fileName) -> ParameterMapType
+{
+  elastix::DefaultConstructibleSubclass<ParameterFileParser> parameterFileParser;
+  parameterFileParser.m_ParameterFileName = fileName;
+  parameterFileParser.ReadParameterFile();
+
+  // Use fast move semantics, because `parameterFileParser` is destructed afterwards anyway.
+  return std::move(parameterFileParser.m_ParameterMap);
+}
 
 
 } // end namespace itk

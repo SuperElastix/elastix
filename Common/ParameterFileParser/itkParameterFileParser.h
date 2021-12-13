@@ -112,6 +112,10 @@ public:
   std::string
   ReturnParameterFileAsString(void);
 
+  /** Read the specified file into a parameter map and return the map. */
+  static ParameterMapType
+  ReadParameterMap(const std::string & fileName);
+
 protected:
   ParameterFileParser();
   ~ParameterFileParser() override;
