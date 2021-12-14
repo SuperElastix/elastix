@@ -320,9 +320,10 @@ ForEachSupportedImageType(const TFunction & func)
 std::string
 GetDataDirectoryPath();
 
-// Returns CMAKE_BINARY_DIR: the path to the top level of the elastix build tree (without trailing slash).
+// Returns CMAKE_CURRENT_BINARY_DIR: the path to Core Main GTesting subdirectory of the elastix build tree (without
+// trailing slash).
 std::string
-GetBinaryDirectoryPath();
+GetCurrentBinaryDirectoryPath();
 
 // Returns the name of a test defined by `GTEST_TEST(TestSuiteName, TestName)` as "TestSuiteName_TestName_Test".
 std::string
