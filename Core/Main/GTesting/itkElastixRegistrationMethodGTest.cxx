@@ -59,6 +59,7 @@ using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::Front;
 using elx::CoreMainGTestUtilities::GetBinaryDirectoryPath;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
+using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
 using elx::GTestUtilities::MakePoint;
 using elx::GTestUtilities::MakeVector;
@@ -477,8 +478,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
   filter->SetMovingImage(image);
   filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt");
 
-  const std::string rootOutputDirectoryPath =
-    GetBinaryDirectoryPath() + "/GTEST_itkElastixRegistrationMethod_WriteCompositeTransform";
+  const std::string rootOutputDirectoryPath = GetBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
   itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
 
   for (const auto nameAndItkTransform :
