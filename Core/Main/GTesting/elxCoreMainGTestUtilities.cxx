@@ -22,6 +22,9 @@
 #include <gtest/gtest.h>
 
 #include <cassert>
+#include <cctype>  // For isalpha.
+#include <cstring> // For strchr.
+#include <typeinfo>
 #include <type_traits> // For is_same.
 
 
@@ -53,6 +56,24 @@ CoreMainGTestUtilities::GetBinaryDirectoryPath()
   const char        back = str.back();
 
   return (back == '/') || (back == '\\') ? std::string(str.cbegin(), str.cend() - 1) : str;
+}
+
+
+std::string
+CoreMainGTestUtilities::GetNameOfTest(const testing::Test & test)
+{
+  // May yield something like "5TestSuiteName_TestName_Test" (clang, gcc) or "class TestSuiteName_TestName_Test" (MSVC).
+  const char * name = typeid(test).name();
+
+  ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF((name == nullptr) || (*name == '\0'));
+
+  while (!std::isalpha(static_cast<unsigned char>(*name)))
+  {
+    ++name;
+  }
+
+  const char * const space = std::strchr(name, ' ');
+  return (space == nullptr) ? name : space + 1;
 }
 
 } // namespace elastix

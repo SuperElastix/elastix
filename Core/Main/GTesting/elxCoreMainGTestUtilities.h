@@ -324,6 +324,10 @@ GetDataDirectoryPath();
 std::string
 GetBinaryDirectoryPath();
 
+// Returns the name of a test defined by `GTEST_TEST(TestSuiteName, TestName)` as "TestSuiteName_TestName_Test".
+std::string
+GetNameOfTest(const testing::Test &);
+
 } // namespace CoreMainGTestUtilities
 } // namespace elastix
 
