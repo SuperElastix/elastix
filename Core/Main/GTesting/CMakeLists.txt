@@ -15,7 +15,7 @@ target_link_libraries( ElastixLibGTest
   ${ITK_LIBRARIES}
 )
 
-target_compile_definitions(ElastixLibGTest PRIVATE ELX_CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}" ELX_CMAKE_BINARY_DIR="${CMAKE_BINARY_DIR}")
+target_compile_definitions(ElastixLibGTest PRIVATE ELX_CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}" ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 
 if( ELASTIX_USE_OPENCL )
   target_link_libraries( ElastixLibGTest elxOpenCL )
