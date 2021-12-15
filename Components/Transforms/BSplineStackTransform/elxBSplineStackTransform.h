@@ -299,7 +299,7 @@ private:
   typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
 
   /** The B-spline stack transform. */
-  typename StackTransformType::Pointer m_BSplineStackTransform;
+  typename StackTransformType::Pointer m_StackTransform;
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionBSplineTransformBasePointer m_BSplineDummySubTransform;
 

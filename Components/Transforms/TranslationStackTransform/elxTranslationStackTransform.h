@@ -160,7 +160,7 @@ private:
   typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
 
   /** The Translation stack transform. */
-  typename StackTransformType::Pointer m_TranslationStackTransform;
+  typename StackTransformType::Pointer m_StackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionTranslationTransformPointer m_TranslationDummySubTransform;

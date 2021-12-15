@@ -34,10 +34,10 @@ EulerStackTransform<TElastix>::InitializeEulerTransform()
   this->m_EulerDummySubTransform = ReducedDimensionEulerTransformType::New();
 
   /** Create stack transform. */
-  this->m_EulerStackTransform = StackTransformType::New();
+  this->m_StackTransform = StackTransformType::New();
 
   /** Set stack transform as current transform. */
-  this->SetCurrentTransform(this->m_EulerStackTransform);
+  this->SetCurrentTransform(this->m_StackTransform);
 
   return 0;
 }
@@ -73,12 +73,12 @@ EulerStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackOrigin = this->GetElastix()->GetFixedImage()->GetOrigin()[SpaceDimension - 1];
 
   /** Set stack transform parameters. */
-  this->m_EulerStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_EulerStackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_EulerStackTransform->SetStackSpacing(this->m_StackSpacing);
+  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_EulerStackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -130,12 +130,12 @@ EulerStackTransform<TElastix>::ReadFromFile(void)
   this->m_EulerDummySubTransform->SetCenter(RDcenterOfRotationPoint);
 
   /** Set stack transform parameters. */
-  this->m_EulerStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_EulerStackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_EulerStackTransform->SetStackSpacing(this->m_StackSpacing);
+  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_EulerStackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
@@ -151,7 +151,7 @@ template <class TElastix>
 auto
 EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
-  const auto & itkTransform = *m_EulerStackTransform;
+  const auto & itkTransform = *m_StackTransform;
 
   return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_EulerDummySubTransform->GetCenter()) },
            { "StackSpacing", { Conversion::ToString(itkTransform.GetStackSpacing()) } },
@@ -266,7 +266,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
   this->m_EulerDummySubTransform->SetTranslation(noTranslation);
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_EulerStackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(this->GetParameters());
@@ -364,7 +364,7 @@ EulerStackTransform<TElastix>::SetScales(void)
   if (automaticScalesEstimation)
   {
     elxout << "Scales are estimated automatically." << std::endl;
-    this->AutomaticScalesEstimationStackTransform(this->m_EulerStackTransform->GetNumberOfSubTransforms(), newscales);
+    this->AutomaticScalesEstimationStackTransform(this->m_StackTransform->GetNumberOfSubTransforms(), newscales);
     elxout << "finished setting scales" << std::endl;
   }
   else
