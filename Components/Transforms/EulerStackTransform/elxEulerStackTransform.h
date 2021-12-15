@@ -236,7 +236,7 @@ private:
   typename StackTransformType::Pointer m_StackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
-  ReducedDimensionEulerTransformPointer m_EulerDummySubTransform;
+  ReducedDimensionEulerTransformPointer m_DummySubTransform;
 
   /** Stack variables. */
   unsigned int m_NumberOfSubTransforms;

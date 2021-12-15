@@ -30,8 +30,8 @@ template <class TElastix>
 unsigned int
 EulerStackTransform<TElastix>::InitializeEulerTransform()
 {
-  /** Initialize the m_AffineDummySubTransform */
-  this->m_EulerDummySubTransform = ReducedDimensionEulerTransformType::New();
+  /** Initialize the m_DummySubTransform */
+  this->m_DummySubTransform = ReducedDimensionEulerTransformType::New();
 
   /** Create stack transform. */
   this->m_StackTransform = StackTransformType::New();
@@ -78,7 +78,7 @@ EulerStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -127,7 +127,7 @@ EulerStackTransform<TElastix>::ReadFromFile(void)
 
   this->InitializeEulerTransform();
 
-  this->m_EulerDummySubTransform->SetCenter(RDcenterOfRotationPoint);
+  this->m_DummySubTransform->SetCenter(RDcenterOfRotationPoint);
 
   /** Set stack transform parameters. */
   this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
@@ -135,7 +135,7 @@ EulerStackTransform<TElastix>::ReadFromFile(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
@@ -153,7 +153,7 @@ EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -
 {
   const auto & itkTransform = *m_StackTransform;
 
-  return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_EulerDummySubTransform->GetCenter()) },
+  return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_DummySubTransform->GetCenter()) },
            { "StackSpacing", { Conversion::ToString(itkTransform.GetStackSpacing()) } },
            { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },
            { "NumberOfSubTransforms", { Conversion::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
@@ -171,7 +171,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
 {
 
   /** Set all parameters to zero (no rotations, no translation). */
-  this->m_EulerDummySubTransform->SetIdentity();
+  this->m_DummySubTransform->SetIdentity();
 
   /** Try to read CenterOfRotationIndex from parameter file,
    * which is the rotationPoint, expressed in index-values.
@@ -258,15 +258,15 @@ EulerStackTransform<TElastix>::InitializeTransform()
   InitialTransformCenter(redDimCenterOfRotationPoint);
 
   /** Set the center of rotation point. */
-  this->m_EulerDummySubTransform->SetCenter(redDimCenterOfRotationPoint);
+  this->m_DummySubTransform->SetCenter(redDimCenterOfRotationPoint);
 
   /** Set the translation to zero */
   ReducedDimensionOutputVectorType noTranslation;
   noTranslation.Fill(0.0);
-  this->m_EulerDummySubTransform->SetTranslation(noTranslation);
+  this->m_DummySubTransform->SetTranslation(noTranslation);
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_EulerDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(this->GetParameters());

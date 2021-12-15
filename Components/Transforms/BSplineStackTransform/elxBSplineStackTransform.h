@@ -301,7 +301,7 @@ private:
   /** The B-spline stack transform. */
   typename StackTransformType::Pointer m_StackTransform;
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
-  ReducedDimensionBSplineTransformBasePointer m_BSplineDummySubTransform;
+  ReducedDimensionBSplineTransformBasePointer m_DummySubTransform;
 
   /** Grid schedule computer and grid upsampler. */
   GridScheduleComputerPointer m_GridScheduleComputer;
