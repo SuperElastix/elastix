@@ -38,15 +38,15 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
   this->m_GridScheduleComputer->SetBSplineOrder(m_SplineOrder);
   if (this->m_SplineOrder == 1)
   {
-    this->m_BSplineDummySubTransform = BSplineTransformLinearType::New();
+    this->m_DummySubTransform = BSplineTransformLinearType::New();
   }
   else if (this->m_SplineOrder == 2)
   {
-    this->m_BSplineDummySubTransform = BSplineTransformQuadraticType::New();
+    this->m_DummySubTransform = BSplineTransformQuadraticType::New();
   }
   else if (this->m_SplineOrder == 3)
   {
-    this->m_BSplineDummySubTransform = BSplineTransformCubicType::New();
+    this->m_DummySubTransform = BSplineTransformCubicType::New();
   }
   else
   {
@@ -130,9 +130,9 @@ BSplineStackTransform<TElastix>::BeforeRegistration(void)
   /** Set it all. */
   gridregion.SetIndex(gridindex);
   gridregion.SetSize(gridsize);
-  this->m_BSplineDummySubTransform->SetGridRegion(gridregion);
-  this->m_BSplineDummySubTransform->SetGridSpacing(gridspacing);
-  this->m_BSplineDummySubTransform->SetGridOrigin(gridorigin);
+  this->m_DummySubTransform->SetGridRegion(gridregion);
+  this->m_DummySubTransform->SetGridSpacing(gridspacing);
+  this->m_DummySubTransform->SetGridOrigin(gridorigin);
 
   /** Task 2 - Set the stack transform parameters. */
 
@@ -148,7 +148,7 @@ BSplineStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Task 3 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -381,13 +381,13 @@ BSplineStackTransform<TElastix>::InitializeTransform(void)
   this->m_GridScheduleComputer->GetBSplineGrid(0, gridRegion, gridSpacing, gridOrigin, gridDirection);
 
   /** Set it in the BSplineTransform. */
-  this->m_BSplineDummySubTransform->SetGridRegion(gridRegion);
-  this->m_BSplineDummySubTransform->SetGridSpacing(gridSpacing);
-  this->m_BSplineDummySubTransform->SetGridOrigin(gridOrigin);
-  this->m_BSplineDummySubTransform->SetGridDirection(gridDirection);
+  this->m_DummySubTransform->SetGridRegion(gridRegion);
+  this->m_DummySubTransform->SetGridSpacing(gridSpacing);
+  this->m_DummySubTransform->SetGridOrigin(gridOrigin);
+  this->m_DummySubTransform->SetGridDirection(gridDirection);
 
   /** Set all subtransforms to a copy of the dummy B-spline sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters(this->GetNumberOfParameters());
@@ -533,13 +533,13 @@ BSplineStackTransform<TElastix>::ReadFromFile(void)
   /** Set it all. */
   gridregion.SetIndex(gridindex);
   gridregion.SetSize(gridsize);
-  this->m_BSplineDummySubTransform->SetGridRegion(gridregion);
-  this->m_BSplineDummySubTransform->SetGridSpacing(gridspacing);
-  this->m_BSplineDummySubTransform->SetGridOrigin(gridorigin);
-  this->m_BSplineDummySubTransform->SetGridDirection(griddirection);
+  this->m_DummySubTransform->SetGridRegion(gridregion);
+  this->m_DummySubTransform->SetGridSpacing(gridspacing);
+  this->m_DummySubTransform->SetGridOrigin(gridorigin);
+  this->m_DummySubTransform->SetGridDirection(griddirection);
 
   /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase.
    * This must be done after setting the Grid, because later the
@@ -567,7 +567,7 @@ BSplineStackTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth
   typedef typename ScalesType::ValueType                             ScalesValueType;
 
   /** Define new scales. */
-  const NumberOfParametersType numberOfParameters = this->m_BSplineDummySubTransform->GetNumberOfParameters();
+  const NumberOfParametersType numberOfParameters = this->m_DummySubTransform->GetNumberOfParameters();
   const unsigned long          offset = numberOfParameters / SpaceDimension;
   ScalesType                   newScales(numberOfParameters);
   newScales.Fill(itk::NumericTraits<ScalesValueType>::OneValue());

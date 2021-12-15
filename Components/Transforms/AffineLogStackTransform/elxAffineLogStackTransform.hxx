@@ -33,8 +33,8 @@ template <class TElastix>
 unsigned int
 AffineLogStackTransform<TElastix>::InitializeAffineLogTransform()
 {
-  /** Initialize the m_AffineDummySubTransform */
-  this->m_AffineLogDummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
+  /** Initialize the m_DummySubTransform */
+  this->m_DummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
 
   /** Create stack transform. */
   this->m_StackTransform = StackTransformType::New();
@@ -81,7 +81,7 @@ AffineLogStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_AffineLogDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Task 3 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -128,7 +128,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile(void)
 
   this->InitializeAffineLogTransform();
 
-  this->m_AffineLogDummySubTransform->SetCenter(RDcenterOfRotationPoint);
+  this->m_DummySubTransform->SetCenter(RDcenterOfRotationPoint);
 
   /** Set stack transform parameters. */
   this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
@@ -136,7 +136,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_AffineLogDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
@@ -154,7 +154,7 @@ AffineLogStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) con
 {
   const auto & itkTransform = *m_StackTransform;
 
-  return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_AffineLogDummySubTransform->GetCenter()) },
+  return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_DummySubTransform->GetCenter()) },
            { "StackSpacing", { Conversion::ToString(itkTransform.GetStackSpacing()) } },
            { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },
            { "NumberOfSubTransforms", { Conversion::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
@@ -171,7 +171,7 @@ void
 AffineLogStackTransform<TElastix>::InitializeTransform()
 {
   /** Set all parameters to zero (no rotations, no translation). */
-  this->m_AffineLogDummySubTransform->SetIdentity();
+  this->m_DummySubTransform->SetIdentity();
 
   /** Try to read CenterOfRotationIndex from parameter file,
    * which is the rotationPoint, expressed in index-values.
@@ -244,13 +244,13 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
       RDTransformedCenterOfRotation[k] = TransformedCenterOfRotation[k];
     }
 
-    this->m_AffineLogDummySubTransform->SetCenter(RDTransformedCenterOfRotation);
+    this->m_DummySubTransform->SetCenter(RDTransformedCenterOfRotation);
   }
 
   /** Set the center of rotation if it was entered by the user. */
   if (centerGivenAsPoint)
   {
-    this->m_AffineLogDummySubTransform->SetCenter(RDcenterOfRotationPoint);
+    this->m_DummySubTransform->SetCenter(RDcenterOfRotationPoint);
   }
   if (centerGivenAsIndex)
   {
@@ -260,16 +260,16 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
     {
       RDTransformedCenterOfRotation[k] = TransformedCenterOfRotation[k];
     }
-    this->m_AffineLogDummySubTransform->SetCenter(RDTransformedCenterOfRotation);
+    this->m_DummySubTransform->SetCenter(RDTransformedCenterOfRotation);
   }
 
   /** Set the translation to zero */
   ReducedDimensionOutputVectorType noTranslation;
   noTranslation.Fill(0.0);
-  this->m_AffineLogDummySubTransform->SetTranslation(noTranslation);
+  this->m_DummySubTransform->SetTranslation(noTranslation);
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_AffineLogDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(this->GetParameters());

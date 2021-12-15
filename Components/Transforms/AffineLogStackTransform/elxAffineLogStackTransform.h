@@ -189,7 +189,7 @@ private:
   typename StackTransformType::Pointer m_StackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
-  ReducedDimensionAffineLogTransformBasePointer m_AffineLogDummySubTransform;
+  ReducedDimensionAffineLogTransformBasePointer m_DummySubTransform;
 
   /** Stack variables. */
   unsigned int m_NumberOfSubTransforms;

@@ -46,7 +46,7 @@ TranslationStackTransform<TElastix>::InitializeTranslationTransform()
 {
   xl::xout["error"] << "InitializeTranslationTransform" << std::endl;
 
-  this->m_TranslationDummySubTransform = ReducedDimensionTranslationTransformType::New();
+  this->m_DummySubTransform = ReducedDimensionTranslationTransformType::New();
 
   /** Create stack transform. */
   this->m_StackTransform = StackTransformType::New();
@@ -97,7 +97,7 @@ TranslationStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -116,11 +116,11 @@ TranslationStackTransform<TElastix>::InitializeTransform()
 {
   xl::xout["error"] << "InitializeTransform" << std::endl;
 
-  /** Initialize the m_TranslationDummySubTransform */
-  this->m_TranslationDummySubTransform->SetIdentity();
+  /** Initialize the m_DummySubTransform */
+  this->m_DummySubTransform->SetIdentity();
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters(this->GetNumberOfParameters());
@@ -155,7 +155,7 @@ TranslationStackTransform<TElastix>::ReadFromFile(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
