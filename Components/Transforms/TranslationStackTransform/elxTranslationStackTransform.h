@@ -98,12 +98,6 @@ public:
                                                                      ReducedDimensionTranslationTransformType;
   typedef typename ReducedDimensionTranslationTransformType::Pointer ReducedDimensionTranslationTransformPointer;
 
-  /** Typedef for stack transform. */
-  typedef itk::
-    StackTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, Self::SpaceDimension>
-                                                          TranslationStackTransformType;
-  typedef typename TranslationStackTransformType::Pointer TranslationStackTransformPointer;
-
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::ParametersType;
   using typename Superclass1::NumberOfParametersType;
@@ -162,8 +156,11 @@ private:
   void
   operator=(const Self &) = delete;
 
+  /** Typedef for stack transform. */
+  typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
+
   /** The Translation stack transform. */
-  TranslationStackTransformPointer m_TranslationStackTransform;
+  typename StackTransformType::Pointer m_TranslationStackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionTranslationTransformPointer m_TranslationDummySubTransform;

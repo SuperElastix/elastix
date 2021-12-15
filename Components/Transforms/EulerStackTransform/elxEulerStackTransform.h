@@ -125,12 +125,6 @@ public:
   typedef typename ReducedDimensionEulerTransformType::OutputVectorType ReducedDimensionOutputVectorType;
   typedef typename ReducedDimensionEulerTransformType::InputPointType   ReducedDimensionInputPointType;
 
-  /** Typedef for stack transform. */
-  typedef itk::
-    StackTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, Self::SpaceDimension>
-                                                    EulerStackTransformType;
-  typedef typename EulerStackTransformType::Pointer EulerStackTransformPointer;
-
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::ParametersType;
   using typename Superclass1::NumberOfParametersType;
@@ -235,8 +229,11 @@ private:
   void
   operator=(const Self &) = delete;
 
+  /** Typedef for stack transform. */
+  typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
+
   /** The Affine stack transform. */
-  EulerStackTransformPointer m_EulerStackTransform;
+  typename StackTransformType::Pointer m_EulerStackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionEulerTransformPointer m_EulerDummySubTransform;
