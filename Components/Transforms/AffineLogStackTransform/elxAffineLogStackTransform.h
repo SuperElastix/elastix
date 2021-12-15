@@ -186,7 +186,7 @@ private:
   typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
 
   /** The Affine stack transform. */
-  typename StackTransformType::Pointer m_AffineLogStackTransform;
+  typename StackTransformType::Pointer m_StackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionAffineLogTransformBasePointer m_AffineLogDummySubTransform;

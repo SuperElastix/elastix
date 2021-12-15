@@ -49,10 +49,10 @@ TranslationStackTransform<TElastix>::InitializeTranslationTransform()
   this->m_TranslationDummySubTransform = ReducedDimensionTranslationTransformType::New();
 
   /** Create stack transform. */
-  this->m_TranslationStackTransform = StackTransformType::New();
+  this->m_StackTransform = StackTransformType::New();
 
   /** Set stack transform as current transform. */
-  this->SetCurrentTransform(this->m_TranslationStackTransform);
+  this->SetCurrentTransform(this->m_StackTransform);
 
   return 0;
 } // end InitializeTranslationTransform()
@@ -92,12 +92,12 @@ TranslationStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackOrigin = this->GetElastix()->GetFixedImage()->GetOrigin()[SpaceDimension - 1];
 
   /** Set stack transform parameters. */
-  this->m_TranslationStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_TranslationStackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_TranslationStackTransform->SetStackSpacing(this->m_StackSpacing);
+  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_TranslationStackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -120,7 +120,7 @@ TranslationStackTransform<TElastix>::InitializeTransform()
   this->m_TranslationDummySubTransform->SetIdentity();
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_TranslationStackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters(this->GetNumberOfParameters());
@@ -150,12 +150,12 @@ TranslationStackTransform<TElastix>::ReadFromFile(void)
   InitializeTranslationTransform();
 
   /** Set stack transform parameters. */
-  this->m_TranslationStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_TranslationStackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_TranslationStackTransform->SetStackSpacing(this->m_StackSpacing);
+  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_TranslationStackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_TranslationDummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
@@ -171,7 +171,7 @@ template <class TElastix>
 auto
 TranslationStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
-  const auto & itkTransform = *m_TranslationStackTransform;
+  const auto & itkTransform = *m_StackTransform;
 
   return { { "StackSpacing", { Conversion::ToString(itkTransform.GetStackSpacing()) } },
            { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },

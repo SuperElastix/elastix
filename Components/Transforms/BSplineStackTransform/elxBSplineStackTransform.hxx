@@ -60,10 +60,10 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
    */
 
   /** Create stack transform. */
-  this->m_BSplineStackTransform = StackTransformType::New();
+  this->m_StackTransform = StackTransformType::New();
 
   /** Set stack transform as current transform. */
-  this->SetCurrentTransform(this->m_BSplineStackTransform);
+  this->SetCurrentTransform(this->m_StackTransform);
 
   /** Create grid upsampler. */
   this->m_GridUpsampler = GridUpsamplerType::New();
@@ -143,12 +143,12 @@ BSplineStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackOrigin = this->GetElastix()->GetFixedImage()->GetOrigin()[SpaceDimension - 1];
 
   /** Set stack transform parameters. */
-  this->m_BSplineStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_BSplineStackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_BSplineStackTransform->SetStackSpacing(this->m_StackSpacing);
+  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_BSplineStackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
 
   /** Task 3 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -387,7 +387,7 @@ BSplineStackTransform<TElastix>::InitializeTransform(void)
   this->m_BSplineDummySubTransform->SetGridDirection(gridDirection);
 
   /** Set all subtransforms to a copy of the dummy B-spline sub transform. */
-  this->m_BSplineStackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters(this->GetNumberOfParameters());
@@ -410,8 +410,7 @@ BSplineStackTransform<TElastix>::IncreaseScale(void)
 
   /** Get first sub transform. */
   ReducedDimensionBSplineTransformBasePointer firstsubtransform =
-    dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(
-      this->m_BSplineStackTransform->GetSubTransform(0).GetPointer());
+    dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(this->m_StackTransform->GetSubTransform(0).GetPointer());
 
   /** Get the current grid settings. */
   ReducedDimensionOriginType    currentGridOrigin = firstsubtransform->GetGridOrigin();
@@ -440,8 +439,8 @@ BSplineStackTransform<TElastix>::IncreaseScale(void)
   for (unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t)
   {
     /** Get sub transform pointer. */
-    ReducedDimensionBSplineTransformBasePointer subtransform = dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(
-      this->m_BSplineStackTransform->GetSubTransform(t).GetPointer());
+    ReducedDimensionBSplineTransformBasePointer subtransform =
+      dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(this->m_StackTransform->GetSubTransform(t).GetPointer());
 
     /** Get the lastest subtransform parameters. */
     ParametersType latestParameters = subtransform->GetParameters();
@@ -490,9 +489,9 @@ BSplineStackTransform<TElastix>::ReadFromFile(void)
   this->InitializeBSplineTransform();
 
   /** Set stack transform parameters. */
-  this->m_BSplineStackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_BSplineStackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_BSplineStackTransform->SetStackSpacing(this->m_StackSpacing);
+  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Read and Set the Grid. */
 
@@ -540,7 +539,7 @@ BSplineStackTransform<TElastix>::ReadFromFile(void)
   this->m_BSplineDummySubTransform->SetGridDirection(griddirection);
 
   /** Set stack subtransforms. */
-  this->m_BSplineStackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(this->m_BSplineDummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase.
    * This must be done after setting the Grid, because later the
@@ -583,7 +582,7 @@ BSplineStackTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth
 
   /** Get the grid region information and create a fake coefficient image. */
   BSplineTransformBasePointer firstSubTransform =
-    dynamic_cast<BSplineTransformBaseType *>(this->m_BSplineStackTransform->GetSubTransform(0).GetPointer());
+    dynamic_cast<BSplineTransformBaseType *>(this->m_StackTransform->GetSubTransform(0).GetPointer());
   RegionType   gridregion = firstSubTransform->GetGridRegion();
   SizeType     gridsize = gridregion.GetSize();
   IndexType    gridindex = gridregion.GetIndex();
@@ -645,8 +644,7 @@ auto
 BSplineStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
 {
   ReducedDimensionBSplineTransformBasePointer firstSubTransform =
-    dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(
-      this->m_BSplineStackTransform->GetSubTransform(0).GetPointer());
+    dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(this->m_StackTransform->GetSubTransform(0).GetPointer());
 
   const auto gridRegion = firstSubTransform->GetGridRegion();
 
@@ -656,9 +654,9 @@ BSplineStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const
            { "GridOrigin", Conversion::ToVectorOfStrings(firstSubTransform->GetGridOrigin()) },
            { "GridDirection", Conversion::ToVectorOfStrings(firstSubTransform->GetGridDirection()) },
            { "BSplineTransformSplineOrder", { Conversion::ToString(m_SplineOrder) } },
-           { "StackSpacing", { Conversion::ToString(m_BSplineStackTransform->GetStackSpacing()) } },
-           { "StackOrigin", { Conversion::ToString(m_BSplineStackTransform->GetStackOrigin()) } },
-           { "NumberOfSubTransforms", { Conversion::ToString(m_BSplineStackTransform->GetNumberOfSubTransforms()) } } };
+           { "StackSpacing", { Conversion::ToString(m_StackTransform->GetStackSpacing()) } },
+           { "StackOrigin", { Conversion::ToString(m_StackTransform->GetStackOrigin()) } },
+           { "NumberOfSubTransforms", { Conversion::ToString(m_StackTransform->GetNumberOfSubTransforms()) } } };
 
 } // end CreateDerivedTransformParametersMap()
 
