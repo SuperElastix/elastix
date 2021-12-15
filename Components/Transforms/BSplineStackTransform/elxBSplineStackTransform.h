@@ -154,12 +154,6 @@ public:
                                                                      ReducedDimensionBSplineTransformBaseType;
   typedef typename ReducedDimensionBSplineTransformBaseType::Pointer ReducedDimensionBSplineTransformBasePointer;
 
-  /** Typedef for stack transform. */
-  typedef itk::
-    StackTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, Self::SpaceDimension>
-                                                      BSplineStackTransformType;
-  typedef typename BSplineStackTransformType::Pointer BSplineStackTransformPointer;
-
   /** Typedef for supported BSplineTransform types. */
   typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
                                                   Self::ReducedSpaceDimension,
@@ -301,8 +295,11 @@ private:
   void
   operator=(const Self &) = delete;
 
+  /** Typedef for stack transform. */
+  typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
+
   /** The B-spline stack transform. */
-  BSplineStackTransformPointer m_BSplineStackTransform;
+  typename StackTransformType::Pointer m_BSplineStackTransform;
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionBSplineTransformBasePointer m_BSplineDummySubTransform;
 

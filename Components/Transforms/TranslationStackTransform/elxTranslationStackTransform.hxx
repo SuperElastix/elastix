@@ -49,7 +49,7 @@ TranslationStackTransform<TElastix>::InitializeTranslationTransform()
   this->m_TranslationDummySubTransform = ReducedDimensionTranslationTransformType::New();
 
   /** Create stack transform. */
-  this->m_TranslationStackTransform = TranslationStackTransformType::New();
+  this->m_TranslationStackTransform = StackTransformType::New();
 
   /** Set stack transform as current transform. */
   this->SetCurrentTransform(this->m_TranslationStackTransform);

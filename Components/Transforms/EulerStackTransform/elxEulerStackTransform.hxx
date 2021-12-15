@@ -34,7 +34,7 @@ EulerStackTransform<TElastix>::InitializeEulerTransform()
   this->m_EulerDummySubTransform = ReducedDimensionEulerTransformType::New();
 
   /** Create stack transform. */
-  this->m_EulerStackTransform = EulerStackTransformType::New();
+  this->m_EulerStackTransform = StackTransformType::New();
 
   /** Set stack transform as current transform. */
   this->SetCurrentTransform(this->m_EulerStackTransform);

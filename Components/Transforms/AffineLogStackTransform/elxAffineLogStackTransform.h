@@ -82,12 +82,6 @@ public:
   typedef typename ReducedDimensionAffineLogTransformBaseType::OutputVectorType ReducedDimensionOutputVectorType;
   typedef typename ReducedDimensionAffineLogTransformBaseType::InputPointType   ReducedDimensionInputPointType;
 
-  /** Typedef for stack transform. */
-  typedef itk::
-    StackTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, Self::SpaceDimension>
-                                                        AffineLogStackTransformType;
-  typedef typename AffineLogStackTransformType::Pointer AffineLogStackTransformPointer;
-
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::ParametersType;
   using typename Superclass1::NumberOfParametersType;
@@ -188,8 +182,11 @@ private:
   void
   operator=(const Self &) = delete;
 
+  /** Typedef for stack transform. */
+  typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
+
   /** The Affine stack transform. */
-  AffineLogStackTransformPointer m_AffineLogStackTransform;
+  typename StackTransformType::Pointer m_AffineLogStackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionAffineLogTransformBasePointer m_AffineLogDummySubTransform;

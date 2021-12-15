@@ -60,7 +60,7 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
    */
 
   /** Create stack transform. */
-  this->m_BSplineStackTransform = BSplineStackTransformType::New();
+  this->m_BSplineStackTransform = StackTransformType::New();
 
   /** Set stack transform as current transform. */
   this->SetCurrentTransform(this->m_BSplineStackTransform);

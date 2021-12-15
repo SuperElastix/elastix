@@ -37,7 +37,7 @@ AffineLogStackTransform<TElastix>::InitializeAffineLogTransform()
   this->m_AffineLogDummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
 
   /** Create stack transform. */
-  this->m_AffineLogStackTransform = AffineLogStackTransformType::New();
+  this->m_AffineLogStackTransform = StackTransformType::New();
 
   /** Set stack transform as current transform. */
   this->SetCurrentTransform(this->m_AffineLogStackTransform);
