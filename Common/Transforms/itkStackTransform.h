@@ -82,7 +82,6 @@ public:
   typedef AdvancedTransform<TScalarType, Self::ReducedInputSpaceDimension, Self::ReducedOutputSpaceDimension>
                                                   SubTransformType;
   typedef typename SubTransformType::Pointer      SubTransformPointer;
-  typedef std::vector<SubTransformPointer>        SubTransformContainerType;
   typedef typename SubTransformType::JacobianType SubTransformJacobianType;
 
   /** Dimension - 1 point types. */
@@ -295,7 +294,7 @@ private:
   operator=(const Self &) = delete;
 
   // Transform container
-  SubTransformContainerType m_SubTransformContainer;
+  std::vector<SubTransformPointer> m_SubTransformContainer;
 
   // Stack spacing and origin of last dimension
   TScalarType m_StackSpacing{ 1.0 };
