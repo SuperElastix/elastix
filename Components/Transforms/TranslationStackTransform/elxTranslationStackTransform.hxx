@@ -27,16 +27,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-template <class TElastix>
-TranslationStackTransform<TElastix>::TranslationStackTransform()
-{
-  xl::xout["error"] << "Constructor" << std::endl;
-} // end Constructor
-
-
-/**
  * ******************* InitializeTranslationTransform ***********************
  */
 

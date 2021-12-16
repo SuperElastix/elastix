@@ -136,7 +136,7 @@ public:
 
 protected:
   /** The constructor. */
-  TranslationStackTransform();
+  TranslationStackTransform() = default;
 
   /** The destructor. */
   ~TranslationStackTransform() override = default;
