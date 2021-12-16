@@ -73,7 +73,7 @@ SimilarityTransformElastix<TElastix>::ReadFromFile(void)
      * transform parameter file, this is the new, and preferred
      * way, since elastix 3.402.
      */
-    bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
+    const bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
 
     /** If this did not succeed, probably a transform parameter file
      * is trying to be read that was generated using an older elastix

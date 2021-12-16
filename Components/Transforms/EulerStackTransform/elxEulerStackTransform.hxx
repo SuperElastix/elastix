@@ -110,14 +110,13 @@ EulerStackTransform<TElastix>::ReadFromFile(void)
 
   ReducedDimensionInputPointType RDcenterOfRotationPoint;
   RDcenterOfRotationPoint.Fill(0.0);
-  bool pointRead = false;
   bool indexRead = false;
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  pointRead = this->ReadCenterOfRotationPoint(RDcenterOfRotationPoint);
+  const bool pointRead = this->ReadCenterOfRotationPoint(RDcenterOfRotationPoint);
 
   if (!pointRead && !indexRead)
   {
