@@ -74,7 +74,7 @@ AffineDTITransformElastix<TElastix>::ReadFromFile(void)
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
+  const bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
 
   if (!pointRead)
   {
