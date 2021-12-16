@@ -108,8 +108,8 @@ EulerStackTransform<TElastix>::ReadFromFile(void)
   this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
   this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
-  ReducedDimensionInputPointType RDcenterOfRotationPoint;
-  RDcenterOfRotationPoint.Fill(0.0);
+  ReducedDimensionInputPointType RDcenterOfRotationPoint{};
+
   bool indexRead = false;
 
   /** Try first to read the CenterOfRotationPoint from the
@@ -176,10 +176,10 @@ EulerStackTransform<TElastix>::InitializeTransform()
    * which is the rotationPoint, expressed in index-values.
    */
 
-  ContinuousIndexType                 centerOfRotationIndex;
-  InputPointType                      centerOfRotationPoint;
-  ReducedDimensionContinuousIndexType redDimCenterOfRotationIndex;
-  ReducedDimensionInputPointType      redDimCenterOfRotationPoint;
+  ContinuousIndexType                 centerOfRotationIndex{};
+  InputPointType                      centerOfRotationPoint{};
+  ReducedDimensionContinuousIndexType redDimCenterOfRotationIndex{};
+  ReducedDimensionInputPointType      redDimCenterOfRotationPoint{};
 
   bool     centerGivenAsIndex = true;
   bool     centerGivenAsPoint = true;
@@ -189,12 +189,6 @@ EulerStackTransform<TElastix>::InitializeTransform()
   /** Try to read center of rotation point (COP) from parameter file. */
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
-    /** Initialize. */
-    centerOfRotationIndex[i] = 0;
-    centerOfRotationPoint[i] = 0.0;
-    redDimCenterOfRotationIndex[i] = 0;
-    redDimCenterOfRotationPoint[i] = 0.0;
-
     /** Check COR index: Returns zero when parameter was in the parameter file. */
     const bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!foundI)
@@ -260,9 +254,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
   this->m_DummySubTransform->SetCenter(redDimCenterOfRotationPoint);
 
   /** Set the translation to zero */
-  ReducedDimensionOutputVectorType noTranslation;
-  noTranslation.Fill(0.0);
-  this->m_DummySubTransform->SetTranslation(noTranslation);
+  this->m_DummySubTransform->SetTranslation(ReducedDimensionOutputVectorType());
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
   this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
@@ -301,8 +293,7 @@ EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPoint
 
     /** Transform center of rotation point for each time point and
      * compute average. */
-    ReducedDimensionInputPointType averagePoint;
-    averagePoint.Fill(0.0);
+    ReducedDimensionInputPointType averagePoint{};
     for (unsigned int t = 0; t < numTimePoints; ++t)
     {
       /** Set time point and transform back to point. */
@@ -488,12 +479,10 @@ EulerStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPo
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
-  ReducedDimensionInputPointType redDimCenterOfRotationPoint;
+  ReducedDimensionInputPointType redDimCenterOfRotationPoint{};
   bool                           centerGivenAsPoint = true;
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
-    redDimCenterOfRotationPoint[i] = 0.0;
-
     /** Returns zero when parameter was in the parameter file. */
     bool found =
       this->m_Configuration->ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);

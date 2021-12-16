@@ -110,8 +110,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile(void)
   this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
   this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
-  ReducedDimensionInputPointType RDcenterOfRotationPoint;
-  RDcenterOfRotationPoint.Fill(0.0);
+  ReducedDimensionInputPointType RDcenterOfRotationPoint{};
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
@@ -176,12 +175,12 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
    * which is the rotationPoint, expressed in index-values.
    */
 
-  ContinuousIndexType                 centerOfRotationIndex;
-  InputPointType                      centerOfRotationPoint;
-  ReducedDimensionContinuousIndexType RDcenterOfRotationIndex;
-  ReducedDimensionInputPointType      RDcenterOfRotationPoint;
-  InputPointType                      TransformedCenterOfRotation;
-  ReducedDimensionInputPointType      RDTransformedCenterOfRotation;
+  ContinuousIndexType                 centerOfRotationIndex{};
+  InputPointType                      centerOfRotationPoint{};
+  ReducedDimensionContinuousIndexType RDcenterOfRotationIndex{};
+  ReducedDimensionInputPointType      RDcenterOfRotationPoint{};
+  InputPointType                      TransformedCenterOfRotation{};
+  ReducedDimensionInputPointType      RDTransformedCenterOfRotation{};
 
   bool     centerGivenAsIndex = true;
   bool     centerGivenAsPoint = true;
@@ -190,14 +189,6 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
 
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
-    /** Initialize. */
-    centerOfRotationIndex[i] = 0;
-    RDcenterOfRotationIndex[i] = 0;
-    RDcenterOfRotationPoint[i] = 0.0;
-    centerOfRotationPoint[i] = 0.0;
-    TransformedCenterOfRotation[i] = 0.0;
-    RDTransformedCenterOfRotation[i] = 0.0;
-
     /** Check COR index: Returns zero when parameter was in the parameter file. */
     bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!foundI)
@@ -263,9 +254,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   }
 
   /** Set the translation to zero */
-  ReducedDimensionOutputVectorType noTranslation;
-  noTranslation.Fill(0.0);
-  this->m_DummySubTransform->SetTranslation(noTranslation);
+  this->m_DummySubTransform->SetTranslation(ReducedDimensionOutputVectorType());
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
   this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
@@ -428,12 +417,10 @@ AffineLogStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInp
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
-  ReducedDimensionInputPointType RDcenterOfRotationPoint;
+  ReducedDimensionInputPointType RDcenterOfRotationPoint{};
   bool                           centerGivenAsPoint = true;
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
-    RDcenterOfRotationPoint[i] = 0.0;
-
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
