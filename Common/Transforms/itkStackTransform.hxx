@@ -29,7 +29,7 @@ namespace itk
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::StackTransform()
-  : Superclass(OutputSpaceDimension)
+  : Superclass(0)
 {} // end Constructor
 
 
