@@ -34,7 +34,7 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
+template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 class ITK_TEMPLATE_EXPORT StackTransform : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
