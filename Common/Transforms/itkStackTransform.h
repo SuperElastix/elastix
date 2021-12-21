@@ -217,80 +217,77 @@ private:
   void
   operator=(const Self &) = delete;
 
+
+  static constexpr const char * unimplementedOverrideMessage = "Not implemented for StackTransform";
+
   /** These vector transforms are not implemented for this transform. */
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented for StackTransform");
+    itkExceptionMacro(<< unimplementedOverrideMessage);
   }
-
 
   OutputVnlVectorType
   TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented for StackTransform");
+    itkExceptionMacro(<< unimplementedOverrideMessage);
   }
-
 
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(
-      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for StackTransform");
+    itkExceptionMacro(<< unimplementedOverrideMessage);
   }
 
 
   /** Must be provided. */
   void
-  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override
+  GetSpatialJacobian(const InputPointType &, SpatialJacobianType &) const override
   {
-    itkExceptionMacro(<< "Not implemented for StackTransform");
+    itkExceptionMacro(<< unimplementedOverrideMessage);
+  }
+
+  void
+  GetSpatialHessian(const InputPointType &, SpatialHessianType &) const override
+  {
+    itkExceptionMacro(<< unimplementedOverrideMessage);
+  }
+
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &,
+                               JacobianOfSpatialJacobianType &,
+                               NonZeroJacobianIndicesType &) const override
+  {
+    itkExceptionMacro(<< unimplementedOverrideMessage);
+  }
+
+  void
+  GetJacobianOfSpatialJacobian(const InputPointType &,
+                               SpatialJacobianType &,
+                               JacobianOfSpatialJacobianType &,
+                               NonZeroJacobianIndicesType &) const override
+  {
+    itkExceptionMacro(<< unimplementedOverrideMessage);
+  }
+
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &,
+                              JacobianOfSpatialHessianType &,
+                              NonZeroJacobianIndicesType &) const override
+  {
+    itkExceptionMacro(<< unimplementedOverrideMessage);
   }
 
 
   void
-  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override
+  GetJacobianOfSpatialHessian(const InputPointType &,
+                              SpatialHessianType &,
+                              JacobianOfSpatialHessianType &,
+                              NonZeroJacobianIndicesType &) const override
   {
-    itkExceptionMacro(<< "Not implemented for StackTransform");
+    itkExceptionMacro(<< unimplementedOverrideMessage);
   }
 
-
-  void
-  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
-                               JacobianOfSpatialJacobianType & jsj,
-                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
-  {
-    itkExceptionMacro(<< "Not implemented for StackTransform");
-  }
-
-
-  void
-  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
-                               SpatialJacobianType &           sj,
-                               JacobianOfSpatialJacobianType & jsj,
-                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
-  {
-    itkExceptionMacro(<< "Not implemented for StackTransform");
-  }
-
-
-  void
-  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
-                              JacobianOfSpatialHessianType & jsh,
-                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
-  {
-    itkExceptionMacro(<< "Not implemented for StackTransform");
-  }
-
-
-  void
-  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
-                              SpatialHessianType &           sh,
-                              JacobianOfSpatialHessianType & jsh,
-                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
-  {
-    itkExceptionMacro(<< "Not implemented for StackTransform");
-  }
 
   // Transform container
   std::vector<SubTransformPointer> m_SubTransformContainer;
