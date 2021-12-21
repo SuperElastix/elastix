@@ -95,29 +95,6 @@ public:
   OutputPointType
   TransformPoint(const InputPointType & ipp) const override;
 
-  /** These vector transforms are not implemented for this transform. */
-  OutputVectorType
-  TransformVector(const InputVectorType &) const override
-  {
-    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented for StackTransform");
-  }
-
-
-  OutputVnlVectorType
-  TransformVector(const InputVnlVectorType &) const override
-  {
-    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented for StackTransform");
-  }
-
-
-  OutputCovariantVectorType
-  TransformCovariantVector(const InputCovariantVectorType &) const override
-  {
-    itkExceptionMacro(
-      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for StackTransform");
-  }
-
-
   /** This returns a sparse version of the Jacobian of the transformation.
    * In this class however, the Jacobian is not sparse.
    * However, it is a useful function, since the Jacobian is passed
@@ -231,6 +208,38 @@ public:
   NumberOfParametersType
   GetNumberOfNonZeroJacobianIndices(void) const override;
 
+protected:
+  StackTransform();
+  ~StackTransform() override = default;
+
+private:
+  StackTransform(const Self &) = delete;
+  void
+  operator=(const Self &) = delete;
+
+  /** These vector transforms are not implemented for this transform. */
+  OutputVectorType
+  TransformVector(const InputVectorType &) const override
+  {
+    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented for StackTransform");
+  }
+
+
+  OutputVnlVectorType
+  TransformVector(const InputVnlVectorType &) const override
+  {
+    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented for StackTransform");
+  }
+
+
+  OutputCovariantVectorType
+  TransformCovariantVector(const InputCovariantVectorType &) const override
+  {
+    itkExceptionMacro(
+      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for StackTransform");
+  }
+
+
   /** Must be provided. */
   void
   GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override
@@ -282,16 +291,6 @@ public:
   {
     itkExceptionMacro(<< "Not implemented for StackTransform");
   }
-
-
-protected:
-  StackTransform();
-  ~StackTransform() override = default;
-
-private:
-  StackTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
 
   // Transform container
   std::vector<SubTransformPointer> m_SubTransformContainer;
