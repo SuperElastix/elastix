@@ -87,7 +87,7 @@ TranslationStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -110,7 +110,7 @@ TranslationStackTransform<TElastix>::InitializeTransform()
   this->m_DummySubTransform->SetIdentity();
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters(this->GetNumberOfParameters());
@@ -145,7 +145,7 @@ TranslationStackTransform<TElastix>::ReadFromFile(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();

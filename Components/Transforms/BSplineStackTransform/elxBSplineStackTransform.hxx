@@ -148,7 +148,7 @@ BSplineStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Task 3 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -387,7 +387,7 @@ BSplineStackTransform<TElastix>::InitializeTransform(void)
   this->m_DummySubTransform->SetGridDirection(gridDirection);
 
   /** Set all subtransforms to a copy of the dummy B-spline sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters(this->GetNumberOfParameters());
@@ -539,7 +539,7 @@ BSplineStackTransform<TElastix>::ReadFromFile(void)
   this->m_DummySubTransform->SetGridDirection(griddirection);
 
   /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase.
    * This must be done after setting the Grid, because later the

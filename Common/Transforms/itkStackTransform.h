@@ -182,14 +182,14 @@ public:
 
   /** Set all sub transforms to transform. */
   void
-  SetAllSubTransforms(SubTransformType * transform)
+  SetAllSubTransforms(const SubTransformType & transform)
   {
     for (auto & subTransform : m_SubTransformContainer)
     {
       // Copy transform
-      SubTransformPointer transformcopy = dynamic_cast<SubTransformType *>(transform->CreateAnother().GetPointer());
-      transformcopy->SetFixedParameters(transform->GetFixedParameters());
-      transformcopy->SetParameters(transform->GetParameters());
+      SubTransformPointer transformcopy = dynamic_cast<SubTransformType *>(transform.CreateAnother().GetPointer());
+      transformcopy->SetFixedParameters(transform.GetFixedParameters());
+      transformcopy->SetParameters(transform.GetParameters());
       // Set sub transform
       subTransform = transformcopy;
     }
