@@ -81,7 +81,7 @@ AffineLogStackTransform<TElastix>::BeforeRegistration(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Task 3 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -134,7 +134,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile(void)
   this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
   /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
@@ -257,7 +257,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   this->m_DummySubTransform->SetTranslation(ReducedDimensionOutputVectorType());
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(this->m_DummySubTransform);
+  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(this->GetParameters());
