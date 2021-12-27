@@ -183,7 +183,7 @@ ElastixMain::ElastixMain()
  */
 
 const ComponentDatabase &
-ElastixMain::GetComponentDatabase(void)
+ElastixMain::GetComponentDatabase()
 {
   // Improved thread-safety by using C++11 "magic statics".
   static const auto componentDatabase = [] {
@@ -293,7 +293,7 @@ ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap, const std
  */
 
 int
-ElastixMain::Run(void)
+ElastixMain::Run()
 {
 
   /** Set process properties. */
@@ -486,7 +486,7 @@ ElastixMain::Run(const ArgumentMapType & argmap, const ParameterMapType & inputM
  */
 
 int
-ElastixMain::InitDBIndex(void)
+ElastixMain::InitDBIndex()
 {
   /** Only do something when the configuration object wasn't initialized yet. */
   if (this->m_Configuration->IsInitialized())
@@ -689,7 +689,7 @@ ElastixMain::SetElastixLevel(unsigned int level)
  */
 
 unsigned int
-ElastixMain::GetElastixLevel(void)
+ElastixMain::GetElastixLevel()
 {
   /** Call GetElastixLevel from MyConfiguration. */
   return this->m_Configuration->GetElastixLevel();
@@ -715,7 +715,7 @@ ElastixMain::SetTotalNumberOfElastixLevels(unsigned int levels)
  */
 
 unsigned int
-ElastixMain::GetTotalNumberOfElastixLevels(void)
+ElastixMain::GetTotalNumberOfElastixLevels()
 {
   /** Call GetTotalNumberOfElastixLevels from MyConfiguration. */
   return this->m_Configuration->GetTotalNumberOfElastixLevels();
@@ -728,7 +728,7 @@ ElastixMain::GetTotalNumberOfElastixLevels(void)
  */
 
 ElastixMain::ElastixBaseType &
-ElastixMain::GetElastixBase(void) const
+ElastixMain::GetElastixBase() const
 {
   /** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
   const auto testpointer = dynamic_cast<ElastixBaseType *>(this->m_Elastix.GetPointer());
@@ -851,7 +851,7 @@ ElastixMain::CreateComponents(const std::string &              key,
  */
 
 void
-ElastixMain::SetProcessPriority(void) const
+ElastixMain::SetProcessPriority() const
 {
   /** If wanted, set the priority of this process high or below normal. */
   std::string processPriority = this->m_Configuration->GetCommandLineArgument("-priority");
@@ -899,7 +899,7 @@ ElastixMain::SetProcessPriority(void) const
  */
 
 void
-ElastixMain::SetMaximumNumberOfThreads(void) const
+ElastixMain::SetMaximumNumberOfThreads() const
 {
   /** Get the number of threads from the command line. */
   std::string maximumNumberOfThreadsString = this->m_Configuration->GetCommandLineArgument("-threads");
@@ -929,7 +929,7 @@ ElastixMain::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType &
  */
 
 const ElastixMain::FlatDirectionCosinesType &
-ElastixMain::GetOriginalFixedImageDirectionFlat(void) const
+ElastixMain::GetOriginalFixedImageDirectionFlat() const
 {
   return this->m_OriginalFixedImageDirection;
 } // end GetOriginalFixedImageDirectionFlat()
@@ -940,7 +940,7 @@ ElastixMain::GetOriginalFixedImageDirectionFlat(void) const
  */
 
 ElastixMain::ParameterMapType
-ElastixMain::GetTransformParametersMap(void) const
+ElastixMain::GetTransformParametersMap() const
 {
   return this->m_TransformParametersMap;
 } // end GetTransformParametersMap()

@@ -143,7 +143,7 @@ public:
   virtual void
   AddMovingMask(MovingMaskType * movingMask);
   const MovingMaskType *
-  GetMovingMask(void) const;
+  GetMovingMask() const;
   const MovingMaskType *
   GetMovingMask(const unsigned int index) const;
   virtual void

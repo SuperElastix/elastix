@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 int
-RayCastInterpolator<TElastix>::BeforeAll(void)
+RayCastInterpolator<TElastix>::BeforeAll()
 {
   // Check if 2D-3D
   if (this->m_Elastix->GetFixedImage()->GetImageDimension() != 3)
@@ -54,7 +54,7 @@ RayCastInterpolator<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-RayCastInterpolator<TElastix>::BeforeRegistration(void)
+RayCastInterpolator<TElastix>::BeforeRegistration()
 {
   this->m_CombinationTransform = CombinationTransformType::New();
   this->m_CombinationTransform->SetUseComposition(true);
@@ -103,7 +103,7 @@ RayCastInterpolator<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-RayCastInterpolator<TElastix>::BeforeEachResolution(void)
+RayCastInterpolator<TElastix>::BeforeEachResolution()
 {
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 

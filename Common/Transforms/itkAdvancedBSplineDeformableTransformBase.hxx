@@ -88,7 +88,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
 // Get the number of parameters
 template <class TScalarType, unsigned int NDimensions>
 auto
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParameters(void) const
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParameters() const
   -> NumberOfParametersType
 {
 
@@ -102,7 +102,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfPar
 // Get the number of parameters per dimension
 template <class TScalarType, unsigned int NDimensions>
 auto
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParametersPerDimension(void) const
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParametersPerDimension() const
   -> NumberOfParametersType
 {
   // The number of parameters per dimension equal number of
@@ -114,7 +114,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfPar
 // Set the grid spacing
 template <class TScalarType, unsigned int NDimensions>
 void
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdatePointIndexConversions(void)
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdatePointIndexConversions()
 {
   DirectionType scale;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
@@ -155,7 +155,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdatePointInd
 //
 template <class TScalarType, unsigned int NDimensions>
 void
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdateGridOffsetTable(void)
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdateGridOffsetTable()
 {
   SizeType gridSize = this->m_GridRegion.GetSize();
   this->m_GridOffsetTable.Fill(1);
@@ -369,7 +369,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
 // Wrap flat parameters as images
 template <class TScalarType, unsigned int NDimensions>
 void
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::WrapAsImages(void)
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::WrapAsImages()
 {
   /**
    * Wrap flat parameters array into SpaceDimension number of ITK images
@@ -418,7 +418,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParametersB
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions>
 auto
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(void) const -> const ParametersType &
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters() const -> const ParametersType &
 {
   /** NOTE: For efficiency, this class does not keep a copy of the parameters -
    * it just keeps pointer to input parameters.
@@ -435,7 +435,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions>
 auto
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetFixedParameters(void) const
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetFixedParameters() const
   -> const FixedParametersType &
 {
   RegionType resRegion = this->GetGridRegion();

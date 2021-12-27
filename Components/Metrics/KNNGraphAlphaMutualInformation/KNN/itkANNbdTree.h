@@ -67,11 +67,11 @@ public:
   SetShrinkingRule(const std::string & rule);
 
   std::string
-  GetShrinkingRule(void);
+  GetShrinkingRule();
 
   /** Generate the tree. */
   void
-  GenerateTree(void) override;
+  GenerateTree() override;
 
 protected:
   /** Constructor. */

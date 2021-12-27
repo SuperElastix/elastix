@@ -50,7 +50,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::G
 //------------------------------------------------------------------------------
 template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
 void
-GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::Update(void)
+GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::Update()
 {
   if (!this->m_InputInterpolator)
   {

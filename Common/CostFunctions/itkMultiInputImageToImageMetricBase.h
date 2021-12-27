@@ -127,7 +127,7 @@ public:
 
   /** Get the first fixed image. */
   const FixedImageType *
-  GetFixedImage(void) const override
+  GetFixedImage() const override
   {
     return this->GetFixedImage(0);
   }
@@ -159,7 +159,7 @@ public:
 
   /** Get the first fixed image mask. */
   FixedImageMaskType *
-  GetFixedImageMask(void) const override
+  GetFixedImageMask() const override
   {
     return this->GetFixedImageMask(0);
   }
@@ -191,7 +191,7 @@ public:
 
   /** Get the first fixed image region. */
   const FixedImageRegionType &
-  GetFixedImageRegion(void) const override
+  GetFixedImageRegion() const override
   {
     return this->GetFixedImageRegion(0);
   }
@@ -223,7 +223,7 @@ public:
 
   /** Get the first moving image. */
   const MovingImageType *
-  GetMovingImage(void) const override
+  GetMovingImage() const override
   {
     return this->GetMovingImage(0);
   }
@@ -255,7 +255,7 @@ public:
 
   /** Get the first moving image mask. */
   MovingImageMaskType *
-  GetMovingImageMask(void) const override
+  GetMovingImageMask() const override
   {
     return this->GetMovingImageMask(0);
   }
@@ -289,7 +289,7 @@ public:
 
   /** Get the first interpolator. */
   InterpolatorType *
-  GetInterpolator(void) const override
+  GetInterpolator() const override
   {
     return this->GetInterpolator(0);
   }
@@ -326,7 +326,7 @@ public:
 
   /** Get the first fixed image interpolator. */
   virtual FixedImageInterpolatorType *
-  GetFixedImageInterpolator(void) const
+  GetFixedImageInterpolator() const
   {
     return this->GetFixedImageInterpolator(0);
   }
@@ -342,7 +342,7 @@ public:
 
   /** Initialisation. */
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   /** Constructor. */
@@ -364,13 +364,13 @@ protected:
 
   /** Initialize variables related to the image sampler; called by Initialize. */
   void
-  InitializeImageSampler(void) override;
+  InitializeImageSampler() override;
 
   /** Check if all interpolators (for the moving image) are of type
    * BSplineInterpolateImageFunction.
    */
   virtual void
-  CheckForBSplineInterpolators(void);
+  CheckForBSplineInterpolators();
 
   /** Check if mappedPoint is inside all moving images.
    * If so, the moving image value and possibly derivative are computed.

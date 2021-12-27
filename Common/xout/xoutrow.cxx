@@ -30,7 +30,7 @@ namespace xoutlibrary
  */
 
 void
-xoutrow::WriteBufferedData(void)
+xoutrow::WriteBufferedData()
 {
   /** Write the cell-data to the outputs, separated by tabs. */
   auto xit = this->m_XTargetCells.begin();
@@ -242,7 +242,7 @@ xoutrow::SetOutputs(const XStreamMapType & outputmap)
  */
 
 void
-xoutrow::WriteHeaders(void)
+xoutrow::WriteHeaders()
 {
   /** Copy '*this'. */
   Self headerwriter;

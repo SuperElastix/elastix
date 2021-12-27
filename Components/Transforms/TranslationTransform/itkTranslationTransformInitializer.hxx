@@ -43,7 +43,7 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Translat
 
 template <class TTransform, class TFixedImage, class TMovingImage>
 void
-TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::InitializeTransform(void) const
+TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::InitializeTransform() const
 {
   // Sanity check
   if (!this->m_FixedImage)

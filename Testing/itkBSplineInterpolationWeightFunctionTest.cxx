@@ -28,7 +28,7 @@
 // Also the PrintSelf()-functions are called.
 
 int
-main(void)
+main()
 {
   /** Some basic type definitions. */
   const unsigned int SplineOrder = 3;

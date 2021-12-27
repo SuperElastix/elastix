@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-TransformBendingEnergyPenalty<TElastix>::Initialize(void)
+TransformBendingEnergyPenalty<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -48,7 +48,7 @@ TransformBendingEnergyPenalty<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-TransformBendingEnergyPenalty<TElastix>::BeforeEachResolution(void)
+TransformBendingEnergyPenalty<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

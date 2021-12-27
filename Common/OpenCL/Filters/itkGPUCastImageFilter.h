@@ -105,7 +105,7 @@ protected:
   /** Unlike CPU version, GPU version of binary threshold filter is not
   multi-threaded */
   void
-  GPUGenerateData(void) override;
+  GPUGenerateData() override;
 
 private:
   GPUCastImageFilter(const Self &) = delete;

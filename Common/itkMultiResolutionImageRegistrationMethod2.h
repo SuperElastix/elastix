@@ -160,11 +160,11 @@ public:
 
   /** Method that initiates the registration. */
   virtual void
-  StartRegistration(void);
+  StartRegistration();
 
   /** Method to stop the registration. */
   virtual void
-  StopRegistration(void);
+  StopRegistration();
 
   /** Set/Get the Fixed image. */
   itkSetConstObjectMacro(FixedImage, FixedImageType);
@@ -227,7 +227,7 @@ public:
 
   /** Returns the transform resulting from the registration process. */
   const TransformOutputType *
-  GetOutput(void) const;
+  GetOutput() const;
 
   /** Make a DataObject of the correct type to be used as the specified
    * output.
@@ -239,7 +239,7 @@ public:
    * any of its cached ivars.
    */
   ModifiedTimeType
-  GetMTime(void) const override;
+  GetMTime() const override;
 
 protected:
   /** Constructor. */
@@ -256,7 +256,7 @@ protected:
    * the registration.
    */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the
@@ -267,7 +267,7 @@ protected:
 
   /** Compute the size of the fixed region for each level of the pyramid. */
   virtual void
-  PreparePyramids(void);
+  PreparePyramids();
 
   /** Set the current level to be processed. */
   itkSetMacro(CurrentLevel, unsigned long);

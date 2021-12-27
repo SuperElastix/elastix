@@ -152,7 +152,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
 
 template <class TFixedImage, class TMovingImage>
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNBruteForceTree(void)
+KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNBruteForceTree()
 {
   this->m_BinaryKNNTreeFixed = ANNBruteForceTreeType::New();
   this->m_BinaryKNNTreeMoving = ANNBruteForceTreeType::New();
@@ -259,7 +259,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
 
 template <class TFixedImage, class TMovingImage>
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Call the superclass. */
   this->Superclass::Initialize();

@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-VarianceOverLastDimensionMetric<TElastix>::Initialize(void)
+VarianceOverLastDimensionMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -48,7 +48,7 @@ VarianceOverLastDimensionMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration(void)
+VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration()
 {
   /** Check that the direction cosines are structured like
    *       [ dc  dc  0 ]
@@ -85,7 +85,7 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution(void)
+VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

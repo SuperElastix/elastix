@@ -99,11 +99,11 @@ public:
   /** Sets a new LearningRate before calling the Superclass'
    * implementation, and updates the current time. */
   virtual void
-  AdvanceOneStep(void);
+  AdvanceOneStep();
 
   /** Set current time to 0 and call superclass' implementation. */
   virtual void
-  StartOptimization(void);
+  StartOptimization();
 
   /** Set/Get the initial time. Should be >=0. This function is
    * superfluous, since Param_A does effectively the same.
@@ -133,7 +133,7 @@ protected:
    * for example, dependent on the progress.
    */
   virtual void
-  UpdateCurrentTime(void);
+  UpdateCurrentTime();
 
   /** The current time, which serves as input for Compute_a */
   double m_CurrentTime{ 0.0 };

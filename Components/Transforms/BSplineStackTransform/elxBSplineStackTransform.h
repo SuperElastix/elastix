@@ -208,7 +208,7 @@ public:
    * \li Initialize upsample filter.
    */
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   /** Execute stuff before the actual registration:
    * \li Create an initial B-spline grid.
@@ -224,14 +224,14 @@ public:
    * before calling the BeforeEachResolution() methods.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li In the first resolution call InitializeTransform().
    * \li In next resolutions upsample the B-spline grid if necessary (so, call IncreaseScale())
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   /** Method to increase the density of the B-spline grid.
    * \li Determine the new B-spline coefficients that describe the current deformation field
@@ -240,11 +240,11 @@ public:
    * Called by BeforeEachResolution().
    */
   virtual void
-  IncreaseScale(void);
+  IncreaseScale();
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
   /** Set the scales of the edge B-spline coefficients to zero. */
   virtual void
@@ -259,7 +259,7 @@ protected:
 
   /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
   virtual void
-  PreComputeGridInformation(void);
+  PreComputeGridInformation();
 
 private:
   elxOverrideGetSelfMacro;
@@ -270,11 +270,11 @@ private:
    * Called by BeforeEachResolution().
    */
   void
-  InitializeTransform(void);
+  InitializeTransform();
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
   BSplineStackTransform(const Self &) = delete;

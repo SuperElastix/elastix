@@ -145,23 +145,23 @@ public:
    * Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */
   int
-  BeforeAllBase(void) override;
+  BeforeAllBase() override;
 
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   void
-  AfterEachResolution(void) override;
+  AfterEachResolution() override;
 
   /** Function to read the corresponding points. */
   unsigned int
@@ -175,7 +175,7 @@ public:
 
   /** Overwrite to silence warning. */
   void
-  SelectNewSamples(void) override
+  SelectNewSamples() override
   {}
 
 protected:

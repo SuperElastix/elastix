@@ -69,7 +69,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
-StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(void) const -> const ParametersType &
+StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters() const -> const ParametersType &
 {
   this->m_Parameters.SetSize(this->GetNumberOfParameters());
 
@@ -176,7 +176,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(co
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
-StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetNumberOfNonZeroJacobianIndices(void) const
+StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetNumberOfNonZeroJacobianIndices() const
   -> NumberOfParametersType
 {
   return this->m_SubTransformContainer[0]->GetNumberOfNonZeroJacobianIndices();

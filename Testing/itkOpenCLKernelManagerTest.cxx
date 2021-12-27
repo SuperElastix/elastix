@@ -19,7 +19,7 @@
 #include "itkTestHelper.h"
 
 int
-main(void)
+main()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
   context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);

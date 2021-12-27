@@ -130,7 +130,7 @@ public:
   SetParameters(const ParametersType & parameters) override;
 
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Set/Get the value of the isotropic scaling factor */
   void
@@ -162,7 +162,7 @@ protected:
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void
-  PrecomputeJacobianOfSpatialJacobian(void);
+  PrecomputeJacobianOfSpatialJacobian();
 
 private:
   AdvancedSimilarity3DTransform(const Self &) = delete;

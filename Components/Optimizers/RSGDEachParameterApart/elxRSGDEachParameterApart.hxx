@@ -33,7 +33,7 @@ namespace elastix
 
 template <class TElastix>
 void
-RSGDEachParameterApart<TElastix>::BeforeRegistration(void)
+RSGDEachParameterApart<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo.*/
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -54,7 +54,7 @@ RSGDEachParameterApart<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-RSGDEachParameterApart<TElastix>::BeforeEachResolution(void)
+RSGDEachParameterApart<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -102,7 +102,7 @@ RSGDEachParameterApart<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-RSGDEachParameterApart<TElastix>::AfterEachIteration(void)
+RSGDEachParameterApart<TElastix>::AfterEachIteration()
 {
   /** Print some information */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -118,7 +118,7 @@ RSGDEachParameterApart<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-RSGDEachParameterApart<TElastix>::AfterEachResolution(void)
+RSGDEachParameterApart<TElastix>::AfterEachResolution()
 {
 
   /**
@@ -171,7 +171,7 @@ RSGDEachParameterApart<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-RSGDEachParameterApart<TElastix>::AfterRegistration(void)
+RSGDEachParameterApart<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();

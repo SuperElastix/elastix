@@ -41,7 +41,7 @@ ExponentialLimiterFunction<TInput, NDimension>::ExponentialLimiterFunction()
 
 template <class TInput, unsigned int NDimension>
 void
-ExponentialLimiterFunction<TInput, NDimension>::Initialize(void)
+ExponentialLimiterFunction<TInput, NDimension>::Initialize()
 {
   this->ComputeLimiterSettings();
 } // end Initialize()
@@ -120,7 +120,7 @@ ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input
 
 template <class TInput, unsigned int NDimension>
 void
-ExponentialLimiterFunction<TInput, NDimension>::ComputeLimiterSettings(void)
+ExponentialLimiterFunction<TInput, NDimension>::ComputeLimiterSettings()
 {
   this->m_UTminUB = static_cast<double>(this->m_UpperThreshold) - this->m_UpperBound;
   this->m_LTminLB = static_cast<double>(this->m_LowerThreshold) - this->m_LowerBound;

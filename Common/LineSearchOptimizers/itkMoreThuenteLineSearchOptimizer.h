@@ -98,10 +98,10 @@ public:
   } StopConditionType;
 
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   virtual void
-  StopOptimization(void);
+  StopOptimization();
 
   /** If initial derivative and/or value are given we can save some
    * computation time!
@@ -122,10 +122,10 @@ public:
   GetCurrentDerivative(DerivativeType & derivative) const override;
 
   MeasureType
-  GetCurrentValue(void) const override;
+  GetCurrentValue() const override;
 
   virtual double
-  GetCurrentDirectionalDerivative(void) const;
+  GetCurrentDirectionalDerivative() const;
 
   /** Progress information: about the state of convergence */
   itkGetConstMacro(CurrentIteration, unsigned long);
@@ -189,21 +189,21 @@ protected:
 
   /** Load the initial value and derivative into m_f and m_g. */
   virtual void
-  GetInitialValueAndDerivative(void);
+  GetInitialValueAndDerivative();
 
   /** Check the input settings for errors. */
   virtual int
-  CheckSettings(void);
+  CheckSettings();
 
   /** Initialize the interval of uncertainty etc. */
   void
-  InitializeLineSearch(void);
+  InitializeLineSearch();
 
   /** Set the minimum and maximum steps to correspond to the
    * the present interval of uncertainty.
    */
   virtual void
-  UpdateIntervalMinimumAndMaximum(void);
+  UpdateIntervalMinimumAndMaximum();
 
   /** Force a step to be within the bounds MinimumStepLength and MaximumStepLength */
   void
@@ -211,11 +211,11 @@ protected:
 
   /** Set m_step to the best step until now, if unusual termination is expected */
   virtual void
-  PrepareForUnusualTermination(void);
+  PrepareForUnusualTermination();
 
   /** Ask the cost function to compute m_f and m_g at the current position. */
   virtual void
-  ComputeCurrentValueAndDerivative(void);
+  ComputeCurrentValueAndDerivative();
 
   /** Check for convergence */
   virtual void
@@ -223,11 +223,11 @@ protected:
 
   /** Update the interval of uncertainty and compute the new step */
   virtual void
-  ComputeNewStepAndInterval(void);
+  ComputeNewStepAndInterval();
 
   /** Force a sufficient decrease in the size of the interval of uncertainty */
   virtual void
-  ForceSufficientDecreaseInIntervalWidth(void);
+  ForceSufficientDecreaseInIntervalWidth();
 
   /** Advance a step along the line search direction and update
    * the interval of uncertainty.

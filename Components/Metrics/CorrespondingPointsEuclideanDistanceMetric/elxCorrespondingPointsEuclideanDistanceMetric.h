@@ -114,7 +114,7 @@ public:
    * Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /**
    * Do some things before all:
@@ -122,14 +122,14 @@ public:
    *   This should be done in BeforeAllBase and not BeforeAll.
    */
   int
-  BeforeAllBase(void) override;
+  BeforeAllBase() override;
 
   /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Function to read the corresponding points. */
   unsigned int
@@ -139,7 +139,7 @@ public:
 
   /** Overwrite to silence warning. */
   void
-  SelectNewSamples(void) override
+  SelectNewSamples() override
   {}
 
 protected:

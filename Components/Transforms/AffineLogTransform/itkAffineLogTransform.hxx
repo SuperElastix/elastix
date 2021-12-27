@@ -111,7 +111,7 @@ AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType &
 // Get Parameters
 template <class TScalarType, unsigned int Dimension>
 auto
-AffineLogTransform<TScalarType, Dimension>::GetParameters(void) const -> const ParametersType &
+AffineLogTransform<TScalarType, Dimension>::GetParameters() const -> const ParametersType &
 {
   unsigned int k = 0; // Dummy loop index
 
@@ -136,7 +136,7 @@ AffineLogTransform<TScalarType, Dimension>::GetParameters(void) const -> const P
 // SetIdentity
 template <class TScalarType, unsigned int Dimension>
 void
-AffineLogTransform<TScalarType, Dimension>::SetIdentity(void)
+AffineLogTransform<TScalarType, Dimension>::SetIdentity()
 {
   Superclass::SetIdentity();
   this->m_MatrixLogDomain.Fill(itk::NumericTraits<ScalarType>::Zero);
@@ -181,7 +181,7 @@ AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &  
 // Precompute Jacobian of Spatial Jacobian
 template <class TScalarType, unsigned int Dimension>
 void
-AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(void)
+AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian()
 {
   unsigned int d = Dimension;
 

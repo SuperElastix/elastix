@@ -128,14 +128,14 @@ public:
    * calls the Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /**
    * Do some things before each resolution:
    * \li Set options for SelfHessian
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */

@@ -137,7 +137,7 @@ public:
 
   /** Return the number of parameters required by the transform. */
   unsigned int
-  GetNumberOfParameters(void) const override
+  GetNumberOfParameters() const override
   {
     return this->m_Transform->GetNumberOfParameters();
   }
@@ -146,7 +146,7 @@ public:
    *  present and plugged together correctly.
    */
   virtual void
-  Initialize(void);
+  Initialize();
 
   /** Set the fixed mask. */
   // \todo: currently not used

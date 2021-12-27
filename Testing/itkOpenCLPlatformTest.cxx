@@ -19,7 +19,7 @@
 #include "itkOpenCLPlatform.h"
 
 int
-main(void)
+main()
 {
   itk::OpenCLPlatform platform;
 

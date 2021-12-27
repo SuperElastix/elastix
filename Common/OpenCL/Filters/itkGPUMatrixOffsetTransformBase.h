@@ -53,7 +53,7 @@ public:
 
   /**  */
   bool
-  IsMatrixOffsetTransform(void) const override
+  IsMatrixOffsetTransform() const override
   {
     return true;
   }
@@ -73,15 +73,15 @@ public:
 
   /** Get CPU matrix of an MatrixOffsetTransformBase. */
   virtual const CPUMatrixType &
-  GetCPUMatrix(void) const = 0;
+  GetCPUMatrix() const = 0;
 
   /** Get CPU inverse matrix of an MatrixOffsetTransformBase. */
   virtual const CPUInverseMatrixType &
-  GetCPUInverseMatrix(void) const = 0;
+  GetCPUInverseMatrix() const = 0;
 
   /** Get CPU offset of an MatrixOffsetTransformBase. */
   virtual const CPUOutputVectorType &
-  GetCPUOffset(void) const = 0;
+  GetCPUOffset() const = 0;
 
 protected:
   GPUMatrixOffsetTransformBase();
@@ -94,7 +94,7 @@ protected:
 
   /** Returns data manager that stores all settings for the transform. */
   GPUDataManager::Pointer
-  GetParametersDataManager(void) const override;
+  GetParametersDataManager() const override;
 
 private:
   GPUMatrixOffsetTransformBase(const Self & other) = delete;

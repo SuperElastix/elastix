@@ -62,7 +62,7 @@ public:
   /** Operator() to register override. */
   template <typename TType, unsigned int VImageDimension>
   void
-  operator()(void)
+  operator()()
   {
     this->RegisterOverride(typeid(AdvancedMatrixOffsetTransformBase<TType, VImageDimension>).name(),
                            typeid(GPUAdvancedMatrixOffsetTransformBase<TType, VImageDimension>).name(),

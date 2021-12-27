@@ -166,16 +166,16 @@ public:
 
   /** TransformToSpatialJacobianSource produces a floating value image. */
   void
-  GenerateOutputInformation(void) override;
+  GenerateOutputInformation() override;
 
   /** Checking if transform is set. If a linear transformation is used,
    * the unthreaded LinearGenerateData is called. */
   void
-  BeforeThreadedGenerateData(void) override;
+  BeforeThreadedGenerateData() override;
 
   /** Compute the Modified Time based on changes to the components. */
   ModifiedTimeType
-  GetMTime(void) const override;
+  GetMTime() const override;
 
 protected:
   TransformToSpatialJacobianSource();
@@ -200,7 +200,7 @@ protected:
    *  transformation types. Unthreaded.
    */
   void
-  LinearGenerateData(void);
+  LinearGenerateData();
 
 private:
   TransformToSpatialJacobianSource(const Self &) = delete;

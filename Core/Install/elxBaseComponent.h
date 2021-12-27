@@ -62,12 +62,12 @@ public:
    * behavior for a group of components can be implemented.
    */
   virtual int
-  BeforeAllBase(void)
+  BeforeAllBase()
   {
     return 0;
   }
   virtual int
-  BeforeAll(void)
+  BeforeAll()
   {
     return 0;
   }
@@ -79,19 +79,19 @@ public:
    * behavior for a group of components can be implemented.
    */
   virtual void
-  BeforeRegistrationBase(void)
+  BeforeRegistrationBase()
   {}
   virtual void
-  BeforeEachResolutionBase(void)
+  BeforeEachResolutionBase()
   {}
   virtual void
-  AfterEachResolutionBase(void)
+  AfterEachResolutionBase()
   {}
   virtual void
-  AfterEachIterationBase(void)
+  AfterEachIterationBase()
   {}
   virtual void
-  AfterRegistrationBase(void)
+  AfterRegistrationBase()
   {}
 
   /**
@@ -101,19 +101,19 @@ public:
    * behavior, specific for that single component.
    */
   virtual void
-  BeforeRegistration(void)
+  BeforeRegistration()
   {}
   virtual void
-  BeforeEachResolution(void)
+  BeforeEachResolution()
   {}
   virtual void
-  AfterEachResolution(void)
+  AfterEachResolution()
   {}
   virtual void
-  AfterEachIteration(void)
+  AfterEachIteration()
   {}
   virtual void
-  AfterRegistration(void)
+  AfterRegistration()
   {}
 
   /**
@@ -122,7 +122,7 @@ public:
    * elxClassNameMacro("name").
    */
   virtual const char *
-  elxGetClassName(void) const;
+  elxGetClassName() const;
 
   itkTypeMacroNoParent(BaseComponent);
 
@@ -138,7 +138,7 @@ public:
 
   /** Get the componentlabel as a string: "Metric0" for example. */
   const char *
-  GetComponentLabel(void) const;
+  GetComponentLabel() const;
 
   static bool
   IsElastixLibrary();

@@ -131,25 +131,25 @@ public:
    * Then the appropriate parameters in the ParameterArray are updated.
    */
   virtual void
-  UpdateCurrentPosition(void);
+  UpdateCurrentPosition();
 
   /** Start optimization.
    * Make sure to set the initial position before starting the optimization
    */
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization.
    */
   virtual void
-  ResumeOptimization(void);
+  ResumeOptimization();
 
   /** Stop optimization.
    * \sa ResumeOptimization
    */
   virtual void
-  StopOptimization(void);
+  StopOptimization();
 
   /**
    * Set/Get the SearchSpace, which is defined by a pointer to an
@@ -173,15 +173,15 @@ public:
 
   /** Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc..... */
   virtual unsigned long
-  GetNumberOfIterations(void);
+  GetNumberOfIterations();
 
   /** Get the Dimension of the SearchSpace. Calculated from the SearchSpace. */
   virtual unsigned int
-  GetNumberOfSearchSpaceDimensions(void);
+  GetNumberOfSearchSpaceDimensions();
 
   /** Returns an array containing trunc((max-min)/step) for each SearchSpaceDimension) */
   virtual const SearchSpaceSizeType &
-  GetSearchSpaceSize(void);
+  GetSearchSpaceSize();
 
   /** Convert an index to a full parameter array. Requires a valid InitialPosition! */
   virtual ParametersType
@@ -236,7 +236,7 @@ protected:
 
   unsigned long m_LastSearchSpaceChanges{ 0 };
   virtual void
-  ProcessSearchSpaceChanges(void);
+  ProcessSearchSpaceChanges();
 
 private:
   FullSearchOptimizer(const Self &) = delete;

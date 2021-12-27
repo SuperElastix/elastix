@@ -223,7 +223,7 @@ public:
    * a pointer to an ElastixBaseType. Use only after having called run()!
    */
   ElastixBaseType &
-  GetElastixBase(void) const;
+  GetElastixBase() const;
 
   /** Get the final transform (the result of running elastix).
    * You may pass this as an InitialTransform in an other instantiation
@@ -245,21 +245,21 @@ public:
   SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg);
 
   virtual const FlatDirectionCosinesType &
-  GetOriginalFixedImageDirectionFlat(void) const;
+  GetOriginalFixedImageDirectionFlat() const;
 
   /** Get and Set the elastix level. */
   void
   SetElastixLevel(unsigned int level);
 
   unsigned int
-  GetElastixLevel(void);
+  GetElastixLevel();
 
   /** Get and Set the total number of elastix levels. */
   void
   SetTotalNumberOfElastixLevels(unsigned int levels);
 
   unsigned int
-  GetTotalNumberOfElastixLevels(void);
+  GetTotalNumberOfElastixLevels();
 
   /** Returns the Index that is used in elx::ComponentDatabase. */
   itkGetConstMacro(DBIndex, DBIndexType);
@@ -284,7 +284,7 @@ public:
    * m_Configuration is initialized in a different way.
    */
   virtual int
-  Run(void);
+  Run();
 
   /** Start the registration
    * this version of 'run' first calls this->EnterCommandLineParameters(argc,argv)
@@ -301,22 +301,22 @@ public:
    * -priority \<high, belownormal\>
    */
   virtual void
-  SetProcessPriority(void) const;
+  SetProcessPriority() const;
 
   /** Set maximum number of threads, which is read from the command line arguments.
    * Syntax:
    * -threads \<int\>
    */
   virtual void
-  SetMaximumNumberOfThreads(void) const;
+  SetMaximumNumberOfThreads() const;
 
   /** Function to get the ComponentDatabase. */
   static const ComponentDatabase &
-  GetComponentDatabase(void);
+  GetComponentDatabase();
 
   /** GetTransformParametersMap */
   virtual ParameterMapType
-  GetTransformParametersMap(void) const;
+  GetTransformParametersMap() const;
 
 protected:
   ElastixMain();
@@ -366,7 +366,7 @@ protected:
    * DB index from the ComponentDatabase.
    */
   virtual int
-  InitDBIndex(void);
+  InitDBIndex();
 
   /** Create a component. Make sure InitDBIndex has been called before.
    * The input is a string, e.g. "MattesMutualInformation".

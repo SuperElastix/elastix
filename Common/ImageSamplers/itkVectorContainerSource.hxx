@@ -61,7 +61,7 @@ VectorContainerSource<TOutputVectorContainer>::MakeOutput(unsigned int itkNotUse
 
 template <class TOutputVectorContainer>
 auto
-VectorContainerSource<TOutputVectorContainer>::GetOutput(void) -> OutputVectorContainerType *
+VectorContainerSource<TOutputVectorContainer>::GetOutput() -> OutputVectorContainerType *
 {
   if (this->GetNumberOfOutputs() < 1)
   {

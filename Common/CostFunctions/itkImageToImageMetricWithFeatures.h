@@ -138,7 +138,7 @@ public:
   GetFixedFeatureImage(unsigned int i) const;
 
   const FixedFeatureImageType *
-  GetFixedFeatureImage(void) const
+  GetFixedFeatureImage() const
   {
     return this->GetFixedFeatureImage(0);
   }
@@ -160,7 +160,7 @@ public:
   GetFixedFeatureInterpolator(unsigned int i) const;
 
   const FixedFeatureInterpolatorType *
-  GetFixedFeatureInterpolator(void) const
+  GetFixedFeatureInterpolator() const
   {
     return this->GetFixedFeatureInterpolator(0);
   }
@@ -189,7 +189,7 @@ public:
   GetMovingFeatureImage(unsigned int i) const;
 
   const MovingFeatureImageType *
-  GetMovingFeatureImage(void) const
+  GetMovingFeatureImage() const
   {
     return this->GetMovingFeatureImage(0);
   }
@@ -211,7 +211,7 @@ public:
   GetMovingFeatureInterpolator(unsigned int i) const;
 
   const MovingFeatureInterpolatorType *
-  GetMovingFeatureInterpolator(void) const
+  GetMovingFeatureInterpolator() const
   {
     return this->GetMovingFeatureInterpolator(0);
   }
@@ -219,7 +219,7 @@ public:
 
   /** Initialize the metric. */
   virtual void
-  Initialize(void);
+  Initialize();
 
 protected:
   ImageToImageMetricWithFeatures();
@@ -250,7 +250,7 @@ protected:
    * method is called by Initialize.
    */
   virtual void
-  CheckForBSplineFeatureInterpolators(void);
+  CheckForBSplineFeatureInterpolators();
 
 private:
   ImageToImageMetricWithFeatures(const Self &) = delete;

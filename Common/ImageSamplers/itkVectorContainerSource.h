@@ -51,7 +51,7 @@ public:
 
   /** Get the vector container output of this process object. */
   OutputVectorContainerType *
-  GetOutput(void);
+  GetOutput();
 
   /** Get the vector container output of this process object. */
   OutputVectorContainerType *

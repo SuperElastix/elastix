@@ -128,7 +128,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(st
 
 template <class TFixedImage, class TMovingImage>
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Call the superclass to check that standard components are available. */
   this->Superclass::Initialize();
@@ -162,7 +162,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::Initialize(v
 
 template <class TFixedImage, class TMovingImage>
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHistograms(void)
+ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHistograms()
 {
   /* Compute binsize for the histogram.
    *
@@ -354,7 +354,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
 
 template <class TFixedImage, class TMovingImage>
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKernels(void)
+ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKernels()
 {
   switch (this->m_FixedKernelBSplineOrder)
   {
@@ -433,7 +433,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKe
 
 template <class TFixedImage, class TMovingImage>
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters(void) const
+ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
   /** Call superclass implementation. */
   Superclass::InitializeThreadingParameters();
@@ -1209,7 +1209,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
 
 template <class TFixedImage, class TMovingImage>
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedComputePDFs(void) const
+ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedComputePDFs() const
 {
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
@@ -1294,7 +1294,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsT
 
 template <class TFixedImage, class TMovingImage>
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComputePDFsThreaderCallback(void) const
+ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComputePDFsThreaderCallback() const
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(

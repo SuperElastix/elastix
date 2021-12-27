@@ -191,7 +191,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
  */
 template <class TOutputImage, class TTransformPrecisionType>
 void
-TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::BeforeThreadedGenerateData(void)
+TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::BeforeThreadedGenerateData()
 {
   if (!this->m_Transform)
   {
@@ -275,7 +275,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
 
 template <class TOutputImage, class TTransformPrecisionType>
 void
-TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::LinearGenerateData(void)
+TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::LinearGenerateData()
 {
   // Use an unthreaded implementation here, since the FillBuffer method
   // is used.
@@ -303,7 +303,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
  */
 template <class TOutputImage, class TTransformPrecisionType>
 void
-TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GenerateOutputInformation(void)
+TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GenerateOutputInformation()
 {
   // call the superclass' implementation of this method
   Superclass::GenerateOutputInformation();
@@ -329,7 +329,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
  */
 template <class TOutputImage, class TTransformPrecisionType>
 ModifiedTimeType
-TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetMTime(void) const
+TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetMTime() const
 {
   ModifiedTimeType latestTime = Object::GetMTime();
 

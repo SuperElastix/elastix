@@ -305,7 +305,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
 
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::PreparePyramids(void)
+MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::PreparePyramids()
 {
   /** Check some assumptions. */
   this->CheckPyramids();
@@ -588,7 +588,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
 
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::CheckPyramids(void)
+MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::CheckPyramids()
 {
   /** Check if at least one of the following are provided. */
   if (this->GetFixedImage() == nullptr)
@@ -633,7 +633,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
 
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::CheckOnInitialize(void)
+MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>::CheckOnInitialize()
 {
   /** check if at least one of the following is present. */
   if (this->GetMetric() == nullptr)

@@ -77,7 +77,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   void
-  CopyCoefficientImagesToGPU(void);
+  CopyCoefficientImagesToGPU();
 
 private:
   GPUAdvancedBSplineDeformableTransform(const Self & other) = delete;

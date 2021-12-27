@@ -82,7 +82,7 @@ protected:
 
   /** Functions that do the work. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   void
   ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;

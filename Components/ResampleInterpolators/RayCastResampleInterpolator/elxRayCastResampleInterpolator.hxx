@@ -31,7 +31,7 @@ namespace elastix
 
 template <class TElastix>
 void
-RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator(void)
+RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator()
 {
 
   this->m_CombinationTransform = CombinationTransformType::New();
@@ -95,7 +95,7 @@ RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator(void)
 
 template <class TElastix>
 int
-RayCastResampleInterpolator<TElastix>::BeforeAll(void)
+RayCastResampleInterpolator<TElastix>::BeforeAll()
 {
 
   // Check if 2D-3D
@@ -121,7 +121,7 @@ RayCastResampleInterpolator<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-RayCastResampleInterpolator<TElastix>::BeforeRegistration(void)
+RayCastResampleInterpolator<TElastix>::BeforeRegistration()
 {
 
   this->InitializeRayCastInterpolator();
@@ -135,7 +135,7 @@ RayCastResampleInterpolator<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-RayCastResampleInterpolator<TElastix>::ReadFromFile(void)
+RayCastResampleInterpolator<TElastix>::ReadFromFile()
 {
 
   /** Call ReadFromFile of the ResamplerBase. */

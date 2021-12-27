@@ -108,7 +108,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateInputReque
 
 template <class TInputImage, class TGrayValueImage>
 void
-VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData(void)
+VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData()
 {
   // \todo to avoid all the copying we can create a vector of
   // outputs of size this->GetNumberOfIterations(). The last
@@ -339,7 +339,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::SetGrayValueImage(
 
 template <class TInputImage, class TGrayValueImage>
 void
-VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::FilterGrayValueImage(void)
+VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::FilterGrayValueImage()
 {
   /** This functions rescales the intensities of the input
    * this->m_GrayValueImage between 0 and 1, and converts it to

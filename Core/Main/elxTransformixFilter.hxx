@@ -28,7 +28,7 @@ namespace elastix
  */
 
 template <typename TMovingImage>
-TransformixFilter<TMovingImage>::TransformixFilter(void)
+TransformixFilter<TMovingImage>::TransformixFilter()
 {
   this->SetPrimaryInputName("TransformParameterObject");
   this->SetPrimaryOutputName("ResultImage");
@@ -54,7 +54,7 @@ TransformixFilter<TMovingImage>::TransformixFilter(void)
 
 template <typename TMovingImage>
 void
-TransformixFilter<TMovingImage>::GenerateData(void)
+TransformixFilter<TMovingImage>::GenerateData()
 {
   // Force compiler to instantiate the image dimension, otherwise we may get
   //   Undefined symbols for architecture x86_64:
@@ -254,7 +254,7 @@ TransformixFilter<TMovingImage>::MakeOutput(const DataObjectIdentifierType & key
 
 template <typename TMovingImage>
 void
-TransformixFilter<TMovingImage>::GenerateOutputInformation(void)
+TransformixFilter<TMovingImage>::GenerateOutputInformation()
 {
 
   // Get pointers to the input and output
@@ -367,7 +367,7 @@ TransformixFilter<TMovingImage>::SetMovingImage(TMovingImage * inputImage)
 
 template <typename TMovingImage>
 auto
-TransformixFilter<TMovingImage>::GetMovingImage(void) -> InputImageConstPointer
+TransformixFilter<TMovingImage>::GetMovingImage() -> InputImageConstPointer
 {
   return itkDynamicCastInDebugMode<TMovingImage *>(this->GetInput("InputImage"));
 } // end GetMovingImage()
@@ -379,7 +379,7 @@ TransformixFilter<TMovingImage>::GetMovingImage(void) -> InputImageConstPointer
 
 template <typename TMovingImage>
 void
-TransformixFilter<TMovingImage>::RemoveMovingImage(void)
+TransformixFilter<TMovingImage>::RemoveMovingImage()
 {
   this->RemoveInput("InputImage");
 } // end RemoveMovingImage
@@ -403,7 +403,7 @@ TransformixFilter<TMovingImage>::SetTransformParameterObject(ParameterObjectPoin
 
 template <typename TMovingImage>
 auto
-TransformixFilter<TMovingImage>::GetTransformParameterObject(void) -> ParameterObjectType *
+TransformixFilter<TMovingImage>::GetTransformParameterObject() -> ParameterObjectType *
 {
   return dynamic_cast<ParameterObjectType *>(this->GetInput("TransformParameterObject"));
 } // end GetTransformParameterObject()
@@ -415,7 +415,7 @@ TransformixFilter<TMovingImage>::GetTransformParameterObject(void) -> ParameterO
 
 template <typename TMovingImage>
 auto
-TransformixFilter<TMovingImage>::GetTransformParameterObject(void) const -> const ParameterObjectType *
+TransformixFilter<TMovingImage>::GetTransformParameterObject() const -> const ParameterObjectType *
 {
   return dynamic_cast<const ParameterObjectType *>(this->GetInput("TransformParameterObject"));
 } // end GetTransformParameterObject()
@@ -483,7 +483,7 @@ TransformixFilter<TMovingImage>::SetLogFileName(std::string logFileName)
 
 template <typename TMovingImage>
 void
-TransformixFilter<TMovingImage>::RemoveLogFileName(void)
+TransformixFilter<TMovingImage>::RemoveLogFileName()
 {
   this->m_LogFileName = "";
   this->LogToFileOff();

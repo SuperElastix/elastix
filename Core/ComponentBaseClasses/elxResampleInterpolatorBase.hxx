@@ -31,7 +31,7 @@ namespace elastix
 
 template <class TElastix>
 void
-ResampleInterpolatorBase<TElastix>::ReadFromFile(void)
+ResampleInterpolatorBase<TElastix>::ReadFromFile()
 {
   // nothing, but must be here
 

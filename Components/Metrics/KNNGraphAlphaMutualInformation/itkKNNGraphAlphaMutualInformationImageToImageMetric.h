@@ -199,7 +199,7 @@ public:
 
   /** Set ANNBruteForceTree. */
   void
-  SetANNBruteForceTree(void);
+  SetANNBruteForceTree();
 
   /**
    * *** Set tree searchers: ***
@@ -224,7 +224,7 @@ public:
 
   /** Initialize the metric. */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Get the derivatives of the match measure. */
   void

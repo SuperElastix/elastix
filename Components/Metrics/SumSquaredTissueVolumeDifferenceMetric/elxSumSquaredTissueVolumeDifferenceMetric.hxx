@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-SumSquaredTissueVolumeDifferenceMetric<TElastix>::Initialize(void)
+SumSquaredTissueVolumeDifferenceMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -48,7 +48,7 @@ SumSquaredTissueVolumeDifferenceMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-SumSquaredTissueVolumeDifferenceMetric<TElastix>::BeforeEachResolution(void)
+SumSquaredTissueVolumeDifferenceMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

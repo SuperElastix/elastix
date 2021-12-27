@@ -56,7 +56,7 @@ TransformixInputPointFileReader<TOutputMesh>::~TransformixInputPointFileReader()
 
 template <class TOutputMesh>
 void
-TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation(void)
+TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation()
 {
   this->Superclass::GenerateOutputInformation();
 
@@ -103,7 +103,7 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation(void)
 
 template <class TOutputMesh>
 void
-TransformixInputPointFileReader<TOutputMesh>::GenerateData(void)
+TransformixInputPointFileReader<TOutputMesh>::GenerateData()
 {
   typedef typename OutputMeshType::PointsContainer PointsContainerType;
   typedef typename PointsContainerType::Pointer    PointsContainerPointer;

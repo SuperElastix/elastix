@@ -149,11 +149,11 @@ public:
                         DerivativeType &                derivative) const override;
 
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Write gradient images to a files for debugging purposes. */
   void
-  WriteGradientImagesToFiles(void) const;
+  WriteGradientImagesToFiles() const;
 
   /** Set/Get Scales  */
   itkSetMacro(Scales, ScalesType);
@@ -172,11 +172,11 @@ protected:
 
   /** Compute the range of the moved image gradients. */
   void
-  ComputeMovedGradientRange(void) const;
+  ComputeMovedGradientRange() const;
 
   /** Compute the variance and range of the moving image gradients. */
   void
-  ComputeVariance(void) const;
+  ComputeVariance() const;
 
   /** Compute the similarity measure using a specified subtraction factor. */
   MeasureType

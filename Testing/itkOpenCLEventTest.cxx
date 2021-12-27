@@ -19,7 +19,7 @@
 #include "itkOpenCLEventTest.h"
 
 int
-main(void)
+main()
 {
   itk::OpenCLEvent eventNull;
 

@@ -96,7 +96,7 @@ ANNkDTree<TListSample>::SetSplittingRule(const std::string & rule)
 
 template <class TListSample>
 std::string
-ANNkDTree<TListSample>::GetSplittingRule(void)
+ANNkDTree<TListSample>::GetSplittingRule()
 {
   switch (this->m_SplittingRule)
   {
@@ -123,7 +123,7 @@ ANNkDTree<TListSample>::GetSplittingRule(void)
 
 template <class TListSample>
 void
-ANNkDTree<TListSample>::GenerateTree(void)
+ANNkDTree<TListSample>::GenerateTree()
 {
   int dim = static_cast<int>(this->GetDataDimension());
   int nop = static_cast<int>(this->GetActualNumberOfDataPoints());

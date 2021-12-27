@@ -214,7 +214,7 @@ ElastixBase::SetDBIndex(DBIndexType _arg)
  */
 
 int
-ElastixBase::BeforeAllBase(void)
+ElastixBase::BeforeAllBase()
 {
   /** Declare the return value and initialize it. */
   int returndummy = 0;
@@ -360,7 +360,7 @@ ElastixBase::BeforeAllBase(void)
  */
 
 int
-ElastixBase::BeforeAllTransformixBase(void)
+ElastixBase::BeforeAllTransformixBase()
 {
   /** Declare the return value and initialize it. */
   int returndummy = 0;
@@ -439,7 +439,7 @@ ElastixBase::BeforeAllTransformixBase(void)
  */
 
 void
-ElastixBase::BeforeRegistrationBase(void)
+ElastixBase::BeforeRegistrationBase()
 {
   /** Set up the "iteration" writing field. */
   this->m_IterationInfo.SetOutputs(xl::xout.GetCOutputs());
@@ -507,7 +507,7 @@ ElastixBase::SetResultDeformationField(DataObjectPointer result_deformationfield
  */
 
 bool
-ElastixBase::GetUseDirectionCosines(void) const
+ElastixBase::GetUseDirectionCosines() const
 {
   return this->m_UseDirectionCosines;
 }
@@ -529,7 +529,7 @@ ElastixBase::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType &
  */
 
 const ElastixBase::FlatDirectionCosinesType &
-ElastixBase::GetOriginalFixedImageDirectionFlat(void) const
+ElastixBase::GetOriginalFixedImageDirectionFlat() const
 {
   return this->m_OriginalFixedImageDirection;
 }
@@ -540,7 +540,7 @@ ElastixBase::GetOriginalFixedImageDirectionFlat(void) const
  */
 
 itk::ParameterMapInterface::ParameterMapType
-ElastixBase::GetTransformParametersMap(void) const
+ElastixBase::GetTransformParametersMap() const
 {
   return this->m_TransformParametersMap;
 } // end GetTransformParametersMap()

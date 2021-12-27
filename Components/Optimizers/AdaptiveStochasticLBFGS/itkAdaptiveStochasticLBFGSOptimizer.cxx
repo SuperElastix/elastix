@@ -36,7 +36,7 @@ AdaptiveStochasticLBFGSOptimizer::AdaptiveStochasticLBFGSOptimizer() = default;
  */
 
 void
-AdaptiveStochasticLBFGSOptimizer::UpdateCurrentTime(void)
+AdaptiveStochasticLBFGSOptimizer::UpdateCurrentTime()
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

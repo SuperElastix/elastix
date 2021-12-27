@@ -142,15 +142,15 @@ public:
 
   /// Reset the iterator to the start of the ray.
   void
-  Reset(void);
+  Reset();
 
   /// Return the interpolated intensity of the current ray point.
   double
-  GetCurrentIntensity(void) const;
+  GetCurrentIntensity() const;
 
   /// Return the ray point spacing in mm
   double
-  GetRayPointSpacing(void) const
+  GetRayPointSpacing() const
   {
     typename InputImageType::SpacingType spacing = this->m_Image->GetSpacing();
 
@@ -173,19 +173,19 @@ public:
 
   /// Initialise the object
   void
-  Initialise(void);
+  Initialise();
 
 protected:
   /// Calculate the endpoint coordinats of the ray in voxels.
   void
-  EndPointsInVoxels(void);
+  EndPointsInVoxels();
 
   /**
    * Calculate the incremental direction vector in voxels, 'dVoxel',
    * required to traverse the ray.
    */
   void
-  CalcDirnVector(void);
+  CalcDirnVector();
 
   /**
    * Reduce the length of the ray until both start and end
@@ -194,26 +194,26 @@ protected:
    * \return True if a valid ray has been, false otherwise.
    */
   bool
-  AdjustRayLength(void);
+  AdjustRayLength();
 
   /**
    *   Obtain pointers to the four voxels surrounding the point where the ray
    *   enters the volume.
    */
   void
-  InitialiseVoxelPointers(void);
+  InitialiseVoxelPointers();
 
   /// Increment the voxel pointers surrounding the current point on the ray.
   void
-  IncrementVoxelPointers(void);
+  IncrementVoxelPointers();
 
   /// Record volume dimensions and resolution
   void
-  RecordVolumeDimensions(void);
+  RecordVolumeDimensions();
 
   /// Define the corners of the volume
   void
-  DefineCorners(void);
+  DefineCorners();
 
   /** \brief
    * Calculate the planes which define the volume.
@@ -227,7 +227,7 @@ protected:
    * of the sides of the lines in mm.
    */
   void
-  CalcPlanesAndCorners(void);
+  CalcPlanesAndCorners();
 
   /** \brief
    *  Calculate the ray intercepts with the volume.
@@ -239,7 +239,7 @@ protected:
    *  \return True if a valid ray has been specified, false otherwise.
    */
   bool
-  CalcRayIntercepts(void);
+  CalcRayIntercepts();
 
   /**
    *   The ray is traversed by stepping in the axial direction
@@ -353,7 +353,7 @@ protected:
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::Initialise(void)
+RayCastHelper<TInputImage, TCoordRep>::Initialise()
 {
   // Save the dimensions of the volume and calculate the bounding box
   this->RecordVolumeDimensions();
@@ -370,7 +370,7 @@ RayCastHelper<TInputImage, TCoordRep>::Initialise(void)
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::RecordVolumeDimensions(void)
+RayCastHelper<TInputImage, TCoordRep>::RecordVolumeDimensions()
 {
   typename InputImageType::SpacingType spacing = this->m_Image->GetSpacing();
   SizeType                             dim = this->m_Image->GetLargestPossibleRegion().GetSize();
@@ -391,7 +391,7 @@ RayCastHelper<TInputImage, TCoordRep>::RecordVolumeDimensions(void)
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::DefineCorners(void)
+RayCastHelper<TInputImage, TCoordRep>::DefineCorners()
 {
   // Define corner positions as if at the origin
 
@@ -418,7 +418,7 @@ RayCastHelper<TInputImage, TCoordRep>::DefineCorners(void)
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::CalcPlanesAndCorners(void)
+RayCastHelper<TInputImage, TCoordRep>::CalcPlanesAndCorners()
 {
   int j;
 
@@ -805,7 +805,7 @@ RayCastHelper<TInputImage, TCoordRep>::SetRay(OutputPointType RayPosn, Direction
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::EndPointsInVoxels(void)
+RayCastHelper<TInputImage, TCoordRep>::EndPointsInVoxels()
 {
   m_RayVoxelStartPosition[0] = m_RayStartCoordInMM[0] / m_VoxelDimensionInX;
   m_RayVoxelStartPosition[1] = m_RayStartCoordInMM[1] / m_VoxelDimensionInY;
@@ -823,7 +823,7 @@ RayCastHelper<TInputImage, TCoordRep>::EndPointsInVoxels(void)
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::CalcDirnVector(void)
+RayCastHelper<TInputImage, TCoordRep>::CalcDirnVector()
 {
   double xNum, yNum, zNum;
 
@@ -974,7 +974,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcDirnVector(void)
 
 template <class TInputImage, class TCoordRep>
 bool
-RayCastHelper<TInputImage, TCoordRep>::AdjustRayLength(void)
+RayCastHelper<TInputImage, TCoordRep>::AdjustRayLength()
 {
   bool startOK, endOK;
 
@@ -1065,7 +1065,7 @@ RayCastHelper<TInputImage, TCoordRep>::AdjustRayLength(void)
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::Reset(void)
+RayCastHelper<TInputImage, TCoordRep>::Reset()
 {
   int i;
 
@@ -1120,7 +1120,7 @@ RayCastHelper<TInputImage, TCoordRep>::Reset(void)
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::InitialiseVoxelPointers(void)
+RayCastHelper<TInputImage, TCoordRep>::InitialiseVoxelPointers()
 {
   IndexType index;
   index.Fill(0);
@@ -1261,7 +1261,7 @@ RayCastHelper<TInputImage, TCoordRep>::InitialiseVoxelPointers(void)
 
 template <class TInputImage, class TCoordRep>
 void
-RayCastHelper<TInputImage, TCoordRep>::IncrementVoxelPointers(void)
+RayCastHelper<TInputImage, TCoordRep>::IncrementVoxelPointers()
 {
   double xBefore = m_Position3Dvox[0];
   double yBefore = m_Position3Dvox[1];
@@ -1294,7 +1294,7 @@ RayCastHelper<TInputImage, TCoordRep>::IncrementVoxelPointers(void)
 
 template <class TInputImage, class TCoordRep>
 double
-RayCastHelper<TInputImage, TCoordRep>::GetCurrentIntensity(void) const
+RayCastHelper<TInputImage, TCoordRep>::GetCurrentIntensity() const
 {
   double a, b, c, d;
   double y, z;

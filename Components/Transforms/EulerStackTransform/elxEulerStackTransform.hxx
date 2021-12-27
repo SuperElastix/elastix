@@ -49,7 +49,7 @@ EulerStackTransform<TElastix>::InitializeEulerTransform()
 
 template <class TElastix>
 int
-EulerStackTransform<TElastix>::BeforeAll(void)
+EulerStackTransform<TElastix>::BeforeAll()
 {
   /** Initialize affine transform. */
   return InitializeEulerTransform();
@@ -62,7 +62,7 @@ EulerStackTransform<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-EulerStackTransform<TElastix>::BeforeRegistration(void)
+EulerStackTransform<TElastix>::BeforeRegistration()
 {
   /** Task 1 - Set the stack transform parameters. */
 
@@ -99,7 +99,7 @@ EulerStackTransform<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-EulerStackTransform<TElastix>::ReadFromFile(void)
+EulerStackTransform<TElastix>::ReadFromFile()
 {
 
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
@@ -148,7 +148,7 @@ EulerStackTransform<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_StackTransform;
 
@@ -327,7 +327,7 @@ EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPoint
 
 template <class TElastix>
 void
-EulerStackTransform<TElastix>::SetScales(void)
+EulerStackTransform<TElastix>::SetScales()
 {
 
   /** Create the new scales. */

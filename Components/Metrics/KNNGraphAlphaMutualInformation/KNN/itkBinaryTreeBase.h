@@ -59,19 +59,19 @@ public:
 
   /** Get the number of data points. */
   TotalAbsoluteFrequencyType
-  GetNumberOfDataPoints(void) const;
+  GetNumberOfDataPoints() const;
 
   /** Get the actual number of data points. */
   TotalAbsoluteFrequencyType
-  GetActualNumberOfDataPoints(void) const;
+  GetActualNumberOfDataPoints() const;
 
   /** Get the dimension of the input data. */
   MeasurementVectorSizeType
-  GetDataDimension(void) const;
+  GetDataDimension() const;
 
   /** Generate the tree. */
   virtual void
-  GenerateTree(void) = 0;
+  GenerateTree() = 0;
 
 protected:
   /** Constructor. */

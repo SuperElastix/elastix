@@ -33,7 +33,7 @@ StochasticPreconditionedGradientDescentOptimizer::StochasticPreconditionedGradie
  */
 
 void
-StochasticPreconditionedGradientDescentOptimizer::StartOptimization(void)
+StochasticPreconditionedGradientDescentOptimizer::StartOptimization()
 {
   this->m_CurrentTime = this->m_InitialTime;
   this->Superclass::StartOptimization();
@@ -45,7 +45,7 @@ StochasticPreconditionedGradientDescentOptimizer::StartOptimization(void)
  */
 
 void
-StochasticPreconditionedGradientDescentOptimizer::AdvanceOneStep(void)
+StochasticPreconditionedGradientDescentOptimizer::AdvanceOneStep()
 {
 
   this->SetLearningRate(this->Compute_a(this->m_CurrentTime));
@@ -74,7 +74,7 @@ StochasticPreconditionedGradientDescentOptimizer::Compute_a(double k) const
  */
 
 void
-StochasticPreconditionedGradientDescentOptimizer::UpdateCurrentTime(void)
+StochasticPreconditionedGradientDescentOptimizer::UpdateCurrentTime()
 {
   /** Simply Robbins-Monro: time = iteration number. */
   this->m_CurrentTime += 1.0;

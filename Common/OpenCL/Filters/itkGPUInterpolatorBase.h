@@ -50,7 +50,7 @@ public:
 
   /** Returns data manager that stores all settings for the transform. */
   virtual GPUDataManager::Pointer
-  GetParametersDataManager(void) const;
+  GetParametersDataManager() const;
 
 protected:
   GPUInterpolatorBase();

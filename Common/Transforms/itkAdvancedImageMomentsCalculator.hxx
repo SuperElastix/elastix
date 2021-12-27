@@ -30,7 +30,7 @@ namespace itk
 //----------------------------------------------------------------------
 // Construct without computing moments
 template <typename TImage>
-AdvancedImageMomentsCalculator<TImage>::AdvancedImageMomentsCalculator(void)
+AdvancedImageMomentsCalculator<TImage>::AdvancedImageMomentsCalculator()
 {
   m_Valid = false;
   m_Image = nullptr;
@@ -72,7 +72,7 @@ AdvancedImageMomentsCalculator<TImage>::~AdvancedImageMomentsCalculator()
 
 template <typename TImage>
 void
-AdvancedImageMomentsCalculator<TImage>::InitializeThreadingParameters(void)
+AdvancedImageMomentsCalculator<TImage>::InitializeThreadingParameters()
 {
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
@@ -241,7 +241,7 @@ AdvancedImageMomentsCalculator<TImage>::BeforeThreadedCompute()
 
 template <typename TImage>
 void
-AdvancedImageMomentsCalculator<TImage>::LaunchComputeThreaderCallback(void) const
+AdvancedImageMomentsCalculator<TImage>::LaunchComputeThreaderCallback() const
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback,
@@ -537,7 +537,7 @@ AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxes() const -> MatrixType
 // Get principal axes to physical axes transform
 template <typename TImage>
 auto
-AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxesToPhysicalAxesTransform(void) const -> AffineTransformPointer
+AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxesToPhysicalAxesTransform() const -> AffineTransformPointer
 {
   typename AffineTransformType::MatrixType matrix;
   typename AffineTransformType::OffsetType offset;
@@ -563,7 +563,7 @@ AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxesToPhysicalAxesTransform(
 
 template <typename TImage>
 auto
-AdvancedImageMomentsCalculator<TImage>::GetPhysicalAxesToPrincipalAxesTransform(void) const -> AffineTransformPointer
+AdvancedImageMomentsCalculator<TImage>::GetPhysicalAxesToPrincipalAxesTransform() const -> AffineTransformPointer
 {
   typename AffineTransformType::MatrixType matrix;
   typename AffineTransformType::OffsetType offset;

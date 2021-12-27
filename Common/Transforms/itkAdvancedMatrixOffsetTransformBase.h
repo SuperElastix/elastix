@@ -153,7 +153,7 @@ public:
    * This sets the matrix to identity and the Offset to null.
    */
   virtual void
-  SetIdentity(void);
+  SetIdentity();
 
   /** Set matrix of an AdvancedMatrixOffsetTransformBase
    *
@@ -186,7 +186,7 @@ public:
    * center, and translation OR the matrix and offset.
    */
   const MatrixType &
-  GetMatrix(void) const
+  GetMatrix() const
   {
     return this->m_Matrix;
   }
@@ -232,7 +232,7 @@ public:
    * center, and translation OR the matrix and offset.
    */
   const InputPointType &
-  GetCenter(void) const
+  GetCenter() const
   {
     return this->m_Center;
   }
@@ -262,7 +262,7 @@ public:
    * center, and translation OR the matrix and offset.
    */
   const OutputVectorType &
-  GetTranslation(void) const
+  GetTranslation() const
   {
     return this->m_Translation;
   }
@@ -278,7 +278,7 @@ public:
 
   /** Get the Transformation Parameters. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Set the fixed parameters and update internal transformation. */
   void
@@ -286,7 +286,7 @@ public:
 
   /** Get the Fixed Parameters. */
   const FixedParametersType &
-  GetFixedParameters(void) const override;
+  GetFixedParameters() const override;
 
   /** Transform by an affine transformation
    *
@@ -314,7 +314,7 @@ public:
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
   bool
-  IsLinear(void) const override
+  IsLinear() const override
   {
     return true;
   }
@@ -389,10 +389,10 @@ protected:
   PrintSelf(std::ostream & s, Indent indent) const override;
 
   virtual void
-  ComputeMatrixParameters(void);
+  ComputeMatrixParameters();
 
   virtual void
-  ComputeMatrix(void);
+  ComputeMatrix();
 
   void
   SetVarMatrix(const MatrixType & matrix)
@@ -402,7 +402,7 @@ protected:
   }
 
   void
-  ComputeTranslation(void);
+  ComputeTranslation();
 
   void
   SetVarTranslation(const OutputVectorType & translation)
@@ -411,7 +411,7 @@ protected:
   }
 
   virtual void
-  ComputeOffset(void);
+  ComputeOffset();
 
   /** (spatial) Jacobians and Hessians can mostly be precomputed by this transform.
    * Store them in these member variables.
@@ -431,7 +431,7 @@ private:
   PrecomputeJacobians(unsigned int paramDims);
 
   const InverseMatrixType &
-  GetInverseMatrix(void) const;
+  GetInverseMatrix() const;
 
 
   /** Member variables. */

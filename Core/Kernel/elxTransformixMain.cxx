@@ -44,7 +44,7 @@ namespace elastix
  */
 
 int
-TransformixMain::Run(void)
+TransformixMain::Run()
 {
   /** Set process properties. */
   this->SetProcessPriority();
@@ -227,7 +227,7 @@ TransformixMain::~TransformixMain()
  */
 
 int
-TransformixMain::InitDBIndex(void)
+TransformixMain::InitDBIndex()
 {
   /** Check if configuration object was already initialized. */
   if (this->m_Configuration->IsInitialized())

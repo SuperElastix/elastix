@@ -78,7 +78,7 @@ BinaryANNTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
 template < class TBinaryTree >
   auto
   BinaryANNTreeSearchBase<TBinaryTree>
-  ::GetBinaryTree( void ) const -> const BinaryTreeType *
+  ::GetBinaryTree() const -> const BinaryTreeType *
 {
   return this->m_BinaryTree.GetPointer();
 } // end GetBinaryTree

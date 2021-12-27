@@ -290,25 +290,25 @@ public:
    * \li Setup stuff for the diffusion of the deformation field.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li upsample the B-spline grid.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   /** Execute stuff after each iteration:
    * \li Do a diffusion of the deformation field.
    */
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   /** Execute stuff after registration:
    * \li Destroy things that are not needed anymore in order to free memory.
    */
   void
-  AfterRegistration(void) override;
+  AfterRegistration() override;
 
   /** Set the initial B-spline grid. */
   virtual void
@@ -316,15 +316,15 @@ public:
 
   /** Upsample the B-spline grid. */
   virtual void
-  IncreaseScale(void);
+  IncreaseScale();
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
   /** Diffuse the deformation field. */
   void
-  DiffuseDeformationField(void);
+  DiffuseDeformationField();
 
   /** Method to transform a point.
    * This method just calls the implementation from the
@@ -364,11 +364,11 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** Writes its deformation field to a file. */
   void
-  WriteDerivedTransformDataToFile(void) const override;
+  WriteDerivedTransformDataToFile() const override;
 
   /** The deleted copy constructor. */
   BSplineTransformWithDiffusion(const Self &) = delete;

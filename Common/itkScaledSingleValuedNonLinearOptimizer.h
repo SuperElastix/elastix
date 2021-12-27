@@ -92,7 +92,7 @@ public:
    * entering new scales.
    */
   virtual void
-  InitializeScales(void);
+  InitializeScales();
 
   /** Setting: SetCostFunction. */
   void
@@ -105,7 +105,7 @@ public:
   SetUseScales(bool arg);
 
   bool
-  GetUseScales(void) const;
+  GetUseScales() const;
 
   /** Get the current scaled position. */
   itkGetConstReferenceMacro(ScaledCurrentPosition, ParametersType);
@@ -114,7 +114,7 @@ public:
    * and divide each element through its scale.
    */
   const ParametersType &
-  GetCurrentPosition(void) const override;
+  GetCurrentPosition() const override;
 
   /** Get a pointer to the scaled cost function. */
   itkGetConstObjectMacro(ScaledCostFunction, ScaledCostFunctionType);

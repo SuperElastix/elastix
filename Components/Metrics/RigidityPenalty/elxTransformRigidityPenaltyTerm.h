@@ -192,14 +192,14 @@ public:
    * calls the Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /**
    * Do some things before each resolution:
    * \li Read all parameters.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   /**
    * Do some things before registration:
@@ -208,21 +208,21 @@ public:
    * \li Setup some extra target cells.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /**
    * Do some things after each iteration:
    * \li Print the OC, PC, LC parts of the rigidity term.
    */
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   /** This metric is advanced (so it has a sampling possibility), but it
    * purposely does not use samplers. The MetricBase class, however, issues
    * a warning if this is the case, so we overwrite that function.
    */
   void
-  SelectNewSamples(void) override
+  SelectNewSamples() override
   {}
 
 protected:

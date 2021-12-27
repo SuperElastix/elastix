@@ -111,7 +111,7 @@ public:
    * AdvancedTranslationTransform.
    */
   const OutputVectorType &
-  GetOffset(void) const
+  GetOffset() const
   {
     return m_Offset;
   }
@@ -123,7 +123,7 @@ public:
 
   /** Get the Transformation Parameters. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Set offset of an Translation Transform.
    * This method sets the offset of an AdvancedTranslationTransform to a
@@ -193,11 +193,11 @@ public:
 
   /** Set the parameters to the IdentityTransform */
   void
-  SetIdentity(void);
+  SetIdentity();
 
   /** Return the number of parameters that completely define the Transform  */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override
+  GetNumberOfParameters() const override
   {
     return NDimensions;
   }
@@ -235,7 +235,7 @@ public:
    * require Fixed parameters, therefore this method returns an
    * parameters array of size zero. */
   const FixedParametersType &
-  GetFixedParameters(void) const override
+  GetFixedParameters() const override
   {
     this->m_FixedParameters.SetSize(0);
     return this->m_FixedParameters;

@@ -90,20 +90,20 @@ public:
 
   /** Do some things before registration. */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Function to read parameters from a file. */
   virtual void
-  ReadFromFile(void);
+  ReadFromFile();
 
 protected:
   /** This method performs all configuration for GPU pyramid. */
   void
-  BeforeGenerateData(void);
+  BeforeGenerateData();
 
   /** Executes GPU pyramid. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** The constructor. */
   OpenCLMovingGenericPyramid();
@@ -121,10 +121,10 @@ private:
 
   /** Register/Unregister factories. */
   void
-  RegisterFactories(void);
+  RegisterFactories();
 
   void
-  UnregisterFactories(void);
+  UnregisterFactories();
 
   /** Helper method to report switching to CPU mode. */
   void
@@ -132,7 +132,7 @@ private:
 
   /** Helper method to report to elastix log. */
   void
-  ReportToLog(void);
+  ReportToLog();
 
   GPUPyramidPointer                     m_GPUPyramid;
   bool                                  m_GPUPyramidReady;

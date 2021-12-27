@@ -39,7 +39,7 @@ GPUBSplineBaseTransform<TScalarType, NDimensions>::GPUBSplineBaseTransform()
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NDimensions>
 auto
-GPUBSplineBaseTransform<TScalarType, NDimensions>::GetGPUCoefficientImages(void) const -> const GPUCoefficientImageArray
+GPUBSplineBaseTransform<TScalarType, NDimensions>::GetGPUCoefficientImages() const -> const GPUCoefficientImageArray
 {
   return this->m_GPUBSplineTransformCoefficientImages;
 }
@@ -48,7 +48,7 @@ GPUBSplineBaseTransform<TScalarType, NDimensions>::GetGPUCoefficientImages(void)
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NDimensions>
 auto
-GPUBSplineBaseTransform<TScalarType, NDimensions>::GetGPUCoefficientImagesBases(void) const
+GPUBSplineBaseTransform<TScalarType, NDimensions>::GetGPUCoefficientImagesBases() const
   -> const GPUCoefficientImageBaseArray
 {
   return this->m_GPUBSplineTransformCoefficientImagesBase;

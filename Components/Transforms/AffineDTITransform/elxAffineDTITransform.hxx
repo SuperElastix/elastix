@@ -42,7 +42,7 @@ AffineDTITransformElastix<TElastix>::AffineDTITransformElastix()
 
 template <class TElastix>
 void
-AffineDTITransformElastix<TElastix>::BeforeRegistration(void)
+AffineDTITransformElastix<TElastix>::BeforeRegistration()
 {
   if (SpaceDimension != 2 && SpaceDimension != 3)
   {
@@ -64,7 +64,7 @@ AffineDTITransformElastix<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-AffineDTITransformElastix<TElastix>::ReadFromFile(void)
+AffineDTITransformElastix<TElastix>::ReadFromFile()
 {
   /** Variables. */
   InputPointType centerOfRotationPoint;
@@ -100,7 +100,7 @@ AffineDTITransformElastix<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-AffineDTITransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+AffineDTITransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_AffineDTITransform;
 
@@ -118,7 +118,7 @@ AffineDTITransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) c
 
 template <class TElastix>
 void
-AffineDTITransformElastix<TElastix>::InitializeTransform(void)
+AffineDTITransformElastix<TElastix>::InitializeTransform()
 {
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineDTITransform->SetIdentity();
@@ -272,7 +272,7 @@ AffineDTITransformElastix<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-AffineDTITransformElastix<TElastix>::SetScales(void)
+AffineDTITransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();

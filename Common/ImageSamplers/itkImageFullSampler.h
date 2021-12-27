@@ -74,7 +74,7 @@ public:
    * The same samples would be selected anyway.
    */
   bool
-  SelectNewSamplesOnUpdate(void) override
+  SelectNewSamplesOnUpdate() override
   {
     return false;
   }
@@ -82,7 +82,7 @@ public:
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
   bool
-  SelectingNewSamplesOnUpdateSupported(void) const override
+  SelectingNewSamplesOnUpdateSupported() const override
   {
     return false;
   }
@@ -100,7 +100,7 @@ protected:
 
   /** Function that does the work. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** Multi-threaded function that does the work. */
   void

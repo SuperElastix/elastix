@@ -129,13 +129,13 @@ public:
    * \li Set the CheckNumberOfSamples setting.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   /** The constructor. */

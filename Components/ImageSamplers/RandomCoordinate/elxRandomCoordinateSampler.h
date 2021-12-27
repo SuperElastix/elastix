@@ -142,7 +142,7 @@ public:
    * \li Set the UseRandomSampleRegion flag and the SampleRegionSize
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */

@@ -94,7 +94,7 @@ public:
   GetCurrentDerivative(DerivativeType & derivative) const = 0;
 
   virtual MeasureType
-  GetCurrentValue(void) const = 0;
+  GetCurrentValue() const = 0;
 
   /**
    * StepLength is a a scalar, defined as:

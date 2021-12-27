@@ -165,7 +165,7 @@ ScaledSingleValuedCostFunction::GetValueAndDerivative(const ParametersType & par
  */
 
 unsigned int
-ScaledSingleValuedCostFunction::GetNumberOfParameters(void) const
+ScaledSingleValuedCostFunction::GetNumberOfParameters() const
 {
   if (this->m_UnscaledCostFunction.IsNull())
   {

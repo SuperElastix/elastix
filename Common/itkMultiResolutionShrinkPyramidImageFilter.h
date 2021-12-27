@@ -66,7 +66,7 @@ public:
 
   /** Overwrite the Superclass implementation: no padding required. */
   void
-  GenerateInputRequestedRegion(void) override;
+  GenerateInputRequestedRegion() override;
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
@@ -81,7 +81,7 @@ protected:
 
   /** Generate the output data. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
 private:
   MultiResolutionShrinkPyramidImageFilter(const Self &) = delete;

@@ -38,7 +38,7 @@ ScaledSingleValuedNonLinearOptimizer::ScaledSingleValuedNonLinearOptimizer()
  */
 
 void
-ScaledSingleValuedNonLinearOptimizer::InitializeScales(void)
+ScaledSingleValuedNonLinearOptimizer::InitializeScales()
 {
   /** NB: we assume the scales entered by the user are meant
    * as squared scales (following the ITK convention)!
@@ -80,7 +80,7 @@ ScaledSingleValuedNonLinearOptimizer::SetUseScales(bool arg)
  */
 
 bool
-ScaledSingleValuedNonLinearOptimizer::GetUseScales(void) const
+ScaledSingleValuedNonLinearOptimizer::GetUseScales() const
 {
   return this->m_ScaledCostFunction->GetUseScales();
 
@@ -131,7 +131,7 @@ ScaledSingleValuedNonLinearOptimizer::GetScaledValueAndDerivative(const Paramete
  */
 
 const ScaledSingleValuedNonLinearOptimizer::ParametersType &
-ScaledSingleValuedNonLinearOptimizer::GetCurrentPosition(void) const
+ScaledSingleValuedNonLinearOptimizer::GetCurrentPosition() const
 {
   /** Get the current unscaled position. */
   const ParametersType & scaledCurrentPosition = this->GetScaledCurrentPosition();

@@ -176,7 +176,7 @@ public:
 
   itkGetConstMacro(LogFileName, std::string);
   virtual void
-  RemoveLogFileName(void);
+  RemoveLogFileName();
 
   /** Log to std::cout on/off. */
   itkSetMacro(LogToConsole, bool);

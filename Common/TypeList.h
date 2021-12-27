@@ -525,7 +525,7 @@ struct HasType<TypeList<Head, TTail>, TType>
  * struct Predicate
  * {
  *  template<class TType>
- *  void operator()( void ) const
+ *  void operator()() const
  *     { std::cout << typeid(TType).name() << std::endl; }
  * };
  *
@@ -579,7 +579,7 @@ struct Visit<NullType>
  * struct Predicate
  * {
  *  template<class TType, unsigned int Dimension >
- *  void operator()( void ) const
+ *  void operator()() const
  *  { std::cout << typeid(TType).name() << ", " << (unsigned int)(Dimension) << std::endl; }
  * };
  *
@@ -632,7 +632,7 @@ struct VisitDimension<NullType, Dimension>
  * struct Predicate
  * {
  *   template<class TType1, class TType2>
- *     void operator()( void ) const
+ *     void operator()() const
  *     { std::cout << typeid(TType1).name() << " " << typeid(TType2).name() << std::endl; }
  * };
  *
@@ -780,7 +780,7 @@ struct DualVisitImpl<typelist::NullType, typelist::NullType>
  * struct Predicate
  * {
  *   template<class TType1, class TType2, unsigned int Dimension>
- *     void operator()( void ) const
+ *     void operator()() const
  *     { std::cout << typeid(TType1).name()
             << " " << typeid(TType2).name() " "
             << (unsigned int)(VImageDimension) << std::endl; }

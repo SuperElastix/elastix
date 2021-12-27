@@ -83,7 +83,7 @@ ConjugateGradient<TElastix>::InvokeIterationEvent(const itk::EventObject & event
 
 template <class TElastix>
 void
-ConjugateGradient<TElastix>::StartOptimization(void)
+ConjugateGradient<TElastix>::StartOptimization()
 {
 
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */
@@ -156,7 +156,7 @@ ConjugateGradient<TElastix>::LineSearch(const ParametersType searchDir,
 
 template <class TElastix>
 std::string
-ConjugateGradient<TElastix>::DeterminePhase(void) const
+ConjugateGradient<TElastix>::DeterminePhase() const
 {
 
   if (this->GetInLineSearch())
@@ -175,7 +175,7 @@ ConjugateGradient<TElastix>::DeterminePhase(void) const
 
 template <class TElastix>
 void
-ConjugateGradient<TElastix>::BeforeRegistration(void)
+ConjugateGradient<TElastix>::BeforeRegistration()
 {
   /** Add target cells to IterationInfo.*/
   this->AddTargetCellToIterationInfo("1a:SrchDirNr");
@@ -216,7 +216,7 @@ ConjugateGradient<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-ConjugateGradient<TElastix>::BeforeEachResolution(void)
+ConjugateGradient<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -292,7 +292,7 @@ ConjugateGradient<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-ConjugateGradient<TElastix>::AfterEachIteration(void)
+ConjugateGradient<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
 
@@ -384,7 +384,7 @@ ConjugateGradient<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-ConjugateGradient<TElastix>::AfterEachResolution(void)
+ConjugateGradient<TElastix>::AfterEachResolution()
 {
   /**
   typedef enum {
@@ -449,7 +449,7 @@ ConjugateGradient<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-ConjugateGradient<TElastix>::AfterRegistration(void)
+ConjugateGradient<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
 
@@ -493,7 +493,7 @@ ConjugateGradient<TElastix>::TestConvergence(bool firstLineSearchDone)
 
 template <class TElastix>
 std::string
-ConjugateGradient<TElastix>::GetLineSearchStopCondition(void) const
+ConjugateGradient<TElastix>::GetLineSearchStopCondition() const
 {
   /** Must be repeated here; otherwise the StopconditionTypes of the
    * GenericConjugateGradientOptimizer and the LineSearchOptimizer

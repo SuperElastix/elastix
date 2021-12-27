@@ -125,14 +125,14 @@ public:
    * \li Create initial registration parameters.
    */
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
 protected:
   /** The constructor. */
@@ -145,11 +145,11 @@ private:
   elxOverrideGetSelfMacro;
 
   void
-  InitializeTransform(void);
+  InitializeTransform();
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
   TranslationStackTransform(const Self &) = delete;

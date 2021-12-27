@@ -88,7 +88,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::SetNumberOfWorkUnits(Thre
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
@@ -132,7 +132,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters(void) const
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
@@ -183,7 +183,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters(void)
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
 {
   /** Set up fixed limiter. */
   if (this->GetUseFixedImageLimiter())
@@ -303,7 +303,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler(void)
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
 {
   if (this->GetUseImageSampler())
   {
@@ -328,7 +328,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler(vo
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolator(void)
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolator()
 {
   /** Check if the interpolator is of type BSplineInterpolateImageFunction,
    * or of type AdvancedLinearInterpolateImageFunction.
@@ -442,7 +442,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform(void)
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform()
 {
   /** Check if the transform is of type AdvancedTransform. */
   this->m_TransformIsAdvanced = false;
@@ -469,7 +469,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform(void) const
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform() const
 {
   /** Check if this transform is a combo transform. */
   CombinationTransformType * testPtr_combo =
@@ -813,7 +813,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCallback(void) const
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCallback() const
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(this->GetValueThreaderCallback,
@@ -851,7 +851,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThre
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivativeThreaderCallback(void) const
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivativeThreaderCallback() const
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(this->GetValueAndDerivativeThreaderCallback,

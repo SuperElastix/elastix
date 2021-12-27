@@ -88,7 +88,7 @@ GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::S
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform>
 void
-GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::CopyCoefficientImagesToGPU(void)
+GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::CopyCoefficientImagesToGPU()
 {
   typedef typename CPUSuperclass::ImageType             CPUCoefficientImage;
   typedef typename CPUCoefficientImage::PixelType       CPUCoefficientsImagePixelType;

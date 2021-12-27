@@ -139,7 +139,7 @@ public:
 
   /** Initialize the penalty term. */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Typedef's for B-spline transform. */
   typedef AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 3> BSplineTransformType;

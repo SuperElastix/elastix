@@ -125,7 +125,7 @@ public:
    * calls the Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   /** The constructor. */

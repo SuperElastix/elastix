@@ -141,7 +141,7 @@ public:
    * (4) Resize AlphaDerivatives
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Get the derivatives of the match measure. This method simply calls the
    * the GetValueAndDerivative, since this will be mostly almost as fast
@@ -323,7 +323,7 @@ protected:
 
   /** Initialize threading related parameters. */
   void
-  InitializeThreadingParameters(void) const override;
+  InitializeThreadingParameters() const override;
 
   /** Multi-threaded versions of the ComputePDF function. */
   inline void
@@ -331,7 +331,7 @@ protected:
 
   /** Single-threadedly accumulate results. */
   inline void
-  AfterThreadedComputePDFs(void) const;
+  AfterThreadedComputePDFs() const;
 
   /** Helper function to launch the threads. */
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
@@ -339,7 +339,7 @@ protected:
 
   /** Helper function to launch the threads. */
   void
-  LaunchComputePDFsThreaderCallback(void) const;
+  LaunchComputePDFsThreaderCallback() const;
 
   /** Compute the Parzen values given an image value and a starting histogram index
    * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for
@@ -473,10 +473,10 @@ protected:
 
   /** Some initialization functions, called by Initialize. */
   virtual void
-  InitializeHistograms(void);
+  InitializeHistograms();
 
   virtual void
-  InitializeKernels(void);
+  InitializeKernels();
 
   /** Get the value and analytic derivatives for single valued optimizers.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false

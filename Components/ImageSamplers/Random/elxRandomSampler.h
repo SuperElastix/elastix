@@ -104,7 +104,7 @@ public:
    * \li Set the number of samples.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */

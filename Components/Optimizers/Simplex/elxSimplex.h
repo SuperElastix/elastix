@@ -81,19 +81,19 @@ public:
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed. */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   void
-  AfterEachResolution(void) override;
+  AfterEachResolution() override;
 
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   void
-  AfterRegistration(void) override;
+  AfterRegistration() override;
 
   /** Override the SetInitialPosition.
    * Override the implementation in itkOptimizer.h, to

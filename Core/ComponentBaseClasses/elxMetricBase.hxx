@@ -46,7 +46,7 @@ MetricBase<TElastix>::MetricBase()
 
 template <class TElastix>
 void
-MetricBase<TElastix>::BeforeEachResolutionBase(void)
+MetricBase<TElastix>::BeforeEachResolutionBase()
 {
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -179,7 +179,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase(void)
 
 template <class TElastix>
 void
-MetricBase<TElastix>::AfterEachIterationBase(void)
+MetricBase<TElastix>::AfterEachIterationBase()
 {
   /** Show the metric value computed on all voxels, if the user wanted it. */
 
@@ -206,7 +206,7 @@ MetricBase<TElastix>::AfterEachIterationBase(void)
 
 template <class TElastix>
 void
-MetricBase<TElastix>::SelectNewSamples(void)
+MetricBase<TElastix>::SelectNewSamples()
 {
   if (this->GetAdvancedMetricImageSampler())
   {
@@ -287,7 +287,7 @@ MetricBase<TElastix>::GetExactValue(const ParametersType & parameters) -> Measur
 
 template <class TElastix>
 bool
-MetricBase<TElastix>::GetAdvancedMetricUseImageSampler(void) const
+MetricBase<TElastix>::GetAdvancedMetricUseImageSampler() const
 {
   /** Cast this to AdvancedMetricType. */
   const AdvancedMetricType * thisAsMetricWithSampler = dynamic_cast<const AdvancedMetricType *>(this);
@@ -338,7 +338,7 @@ MetricBase<TElastix>::SetAdvancedMetricImageSampler(ImageSamplerBaseType * sampl
 
 template <class TElastix>
 auto
-MetricBase<TElastix>::GetAdvancedMetricImageSampler(void) const -> ImageSamplerBaseType *
+MetricBase<TElastix>::GetAdvancedMetricImageSampler() const -> ImageSamplerBaseType *
 {
   /** Cast this to AdvancedMetricType. */
   const AdvancedMetricType * thisAsMetricWithSampler = dynamic_cast<const AdvancedMetricType *>(this);

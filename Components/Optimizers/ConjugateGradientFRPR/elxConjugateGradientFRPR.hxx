@@ -53,7 +53,7 @@ ConjugateGradientFRPR<TElastix>::ConjugateGradientFRPR()
 
 template <class TElastix>
 const char *
-ConjugateGradientFRPR<TElastix>::DeterminePhase(void) const
+ConjugateGradientFRPR<TElastix>::DeterminePhase() const
 {
   if (this->GetLineBracketing())
   {
@@ -76,7 +76,7 @@ ConjugateGradientFRPR<TElastix>::DeterminePhase(void) const
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::BeforeRegistration(void)
+ConjugateGradientFRPR<TElastix>::BeforeRegistration()
 {
 
   /** Add target cells to IterationInfo.*/
@@ -105,7 +105,7 @@ ConjugateGradientFRPR<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::BeforeEachResolution(void)
+ConjugateGradientFRPR<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -155,7 +155,7 @@ ConjugateGradientFRPR<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::AfterEachIteration(void)
+ConjugateGradientFRPR<TElastix>::AfterEachIteration()
 {
 
   /** Print some information. */
@@ -194,7 +194,7 @@ ConjugateGradientFRPR<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::AfterEachResolution(void)
+ConjugateGradientFRPR<TElastix>::AfterEachResolution()
 {
 
   /**
@@ -235,7 +235,7 @@ ConjugateGradientFRPR<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::AfterRegistration(void)
+ConjugateGradientFRPR<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
 

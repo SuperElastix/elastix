@@ -135,14 +135,14 @@ public:
   SetParameters(const ParametersType & parameters) override;
 
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Compute the Jacobian of the transformation. */
   void
   GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
   void
-  SetIdentity(void) override;
+  SetIdentity() override;
 
 protected:
   AffineDTI3DTransform();
@@ -160,14 +160,14 @@ protected:
 
   /** Compute the components of the rotation matrix in the superclass. */
   void
-  ComputeMatrix(void) override;
+  ComputeMatrix() override;
 
   void
-  ComputeMatrixParameters(void) override;
+  ComputeMatrixParameters() override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void
-  PrecomputeJacobianOfSpatialJacobian(void);
+  PrecomputeJacobianOfSpatialJacobian();
 
 private:
   AffineDTI3DTransform(const Self &) = delete;

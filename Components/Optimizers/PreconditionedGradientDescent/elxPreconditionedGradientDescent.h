@@ -119,21 +119,21 @@ public:
    * progress information can be printed.
    */
   virtual void
-  BeforeRegistration(void);
+  BeforeRegistration();
   virtual void
-  BeforeEachResolution(void);
+  BeforeEachResolution();
   virtual void
-  AfterEachResolution(void);
+  AfterEachResolution();
   virtual void
-  AfterEachIteration(void);
+  AfterEachIteration();
   virtual void
-  AfterRegistration(void);
+  AfterRegistration();
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation.
    */
   virtual void
-  StartOptimization(void);
+  StartOptimization();
 
   /** Stop optimization and pass on exception. */
   virtual void
@@ -173,7 +173,7 @@ public:
    * After that call Superclass' implementation.
    */
   virtual void
-  ResumeOptimization(void);
+  ResumeOptimization();
 
 protected:
   struct SettingsType
@@ -215,7 +215,7 @@ protected:
 
   /** Get the SelfHessian from the metric and submit as Precondition matrix */
   virtual void
-  SetSelfHessian(void);
+  SetSelfHessian();
 
   /** Print the contents of the settings vector to elxout. */
   virtual void
@@ -225,7 +225,7 @@ protected:
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale.
    */
   virtual void
-  AutomaticParameterEstimation(void);
+  AutomaticParameterEstimation();
 
   /** Measure some derivatives, exact and approximated. Returns
    * the sigma1 and sigma2.

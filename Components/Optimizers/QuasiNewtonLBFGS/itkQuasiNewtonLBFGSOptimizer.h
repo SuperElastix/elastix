@@ -93,13 +93,13 @@ public:
   } StopConditionType;
 
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   virtual void
-  ResumeOptimization(void);
+  ResumeOptimization();
 
   virtual void
-  StopOptimization(void);
+  StopOptimization();
 
   /** Get information about optimization process: */
   itkGetConstMacro(CurrentIteration, unsigned long);

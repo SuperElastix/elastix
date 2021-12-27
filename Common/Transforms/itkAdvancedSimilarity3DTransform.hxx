@@ -188,7 +188,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetParameters(const ParametersType &
 
 template <class TScalarType>
 auto
-AdvancedSimilarity3DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
+AdvancedSimilarity3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
 
@@ -268,7 +268,7 @@ AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrix()
 /** Compute the matrix */
 template <class TScalarType>
 void
-AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrixParameters(void)
+AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrixParameters()
 {
   MatrixType matrix = this->GetMatrix();
 
@@ -286,7 +286,7 @@ AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrixParameters(void)
 // Precompute Jacobian of Spatial Jacobian
 template <class TScalarType>
 void
-AdvancedSimilarity3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian(void)
+AdvancedSimilarity3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
   if (ParametersDimension < 7)
   {

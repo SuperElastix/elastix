@@ -43,7 +43,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
 
 template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
 void
-ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::Initialize(void)
+ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::Initialize()
 {
   /** Call the superclass. */
   this->Superclass::Initialize();
@@ -299,7 +299,7 @@ const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedF
 template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
-  CheckForBSplineFeatureInterpolators(void)
+  CheckForBSplineFeatureInterpolators()
 {
   /** Check if the interpolators are of type BSplineInterpolateImageFunction.
    * If so, we can make use of its EvaluateDerivatives method.

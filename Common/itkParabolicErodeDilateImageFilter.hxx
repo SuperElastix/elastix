@@ -168,7 +168,7 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::EnlargeOut
 
 template <typename TInputImage, bool doDilate, typename TOutputImage>
 void
-ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::GenerateData(void)
+ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::GenerateData()
 {
 
   typename TInputImage::ConstPointer inputImage(this->GetInput());

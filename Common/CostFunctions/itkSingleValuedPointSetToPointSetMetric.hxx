@@ -83,7 +83,7 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::SetTransf
 
 template <class TFixedPointSet, class TMovingPointSet>
 void
-SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::Initialize(void)
+SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::Initialize()
 {
   if (!this->m_Transform)
   {

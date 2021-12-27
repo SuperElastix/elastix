@@ -38,7 +38,7 @@ class xoutmain : public xoutbase
 {};
 
 xoutmain &
-get_xout(void);
+get_xout();
 
 } // end namespace xoutlibrary
 

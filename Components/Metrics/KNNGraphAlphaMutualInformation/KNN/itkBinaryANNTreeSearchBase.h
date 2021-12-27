@@ -69,7 +69,7 @@ public:
   void
   SetBinaryTree(BinaryTreeType * tree) override;
 
-  // const BinaryTreeType * GetBinaryTree( void ) const;
+  // const BinaryTreeType * GetBinaryTree() const;
 
 protected:
   BinaryANNTreeSearchBase();

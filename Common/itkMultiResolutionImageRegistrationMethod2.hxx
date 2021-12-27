@@ -92,7 +92,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::MultiResolut
  */
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::Initialize(void)
+MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::Initialize()
 {
 
   // Sanity checks
@@ -143,7 +143,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::Initialize(v
  */
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StopRegistration(void)
+MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StopRegistration()
 {
   this->m_Stop = true;
 }
@@ -154,7 +154,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StopRegistra
  */
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyramids(void)
+MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyramids()
 {
   if (!this->m_Transform)
   {
@@ -270,7 +270,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
  */
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StartRegistration(void)
+MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StartRegistration()
 {
 
   // StartRegistration is an old API from before
@@ -392,7 +392,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PrintSelf(st
  */
 template <typename TFixedImage, typename TMovingImage>
 void
-MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::GenerateData(void)
+MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::GenerateData()
 {
   this->StartRegistration();
 }
@@ -400,7 +400,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::GenerateData
 
 template <typename TFixedImage, typename TMovingImage>
 ModifiedTimeType
-MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::GetMTime(void) const
+MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::GetMTime() const
 {
   ModifiedTimeType mtime = Superclass::GetMTime();
   ModifiedTimeType m;

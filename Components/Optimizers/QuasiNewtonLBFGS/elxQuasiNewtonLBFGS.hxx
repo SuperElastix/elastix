@@ -83,7 +83,7 @@ QuasiNewtonLBFGS<TElastix>::InvokeIterationEvent(const itk::EventObject & event)
 
 template <class TElastix>
 void
-QuasiNewtonLBFGS<TElastix>::StartOptimization(void)
+QuasiNewtonLBFGS<TElastix>::StartOptimization()
 {
 
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */
@@ -156,7 +156,7 @@ QuasiNewtonLBFGS<TElastix>::LineSearch(const ParametersType searchDir,
 
 template <class TElastix>
 std::string
-QuasiNewtonLBFGS<TElastix>::DeterminePhase(void) const
+QuasiNewtonLBFGS<TElastix>::DeterminePhase() const
 {
 
   if (this->GetInLineSearch())
@@ -175,7 +175,7 @@ QuasiNewtonLBFGS<TElastix>::DeterminePhase(void) const
 
 template <class TElastix>
 void
-QuasiNewtonLBFGS<TElastix>::BeforeRegistration(void)
+QuasiNewtonLBFGS<TElastix>::BeforeRegistration()
 {
   /** Add target cells to IterationInfo.*/
   this->AddTargetCellToIterationInfo("1a:SrchDirNr");
@@ -216,7 +216,7 @@ QuasiNewtonLBFGS<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-QuasiNewtonLBFGS<TElastix>::BeforeEachResolution(void)
+QuasiNewtonLBFGS<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -284,7 +284,7 @@ QuasiNewtonLBFGS<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-QuasiNewtonLBFGS<TElastix>::AfterEachIteration(void)
+QuasiNewtonLBFGS<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
 
@@ -372,7 +372,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-QuasiNewtonLBFGS<TElastix>::AfterEachResolution(void)
+QuasiNewtonLBFGS<TElastix>::AfterEachResolution()
 {
   /**
   typedef enum {
@@ -438,7 +438,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-QuasiNewtonLBFGS<TElastix>::AfterRegistration(void)
+QuasiNewtonLBFGS<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
 
@@ -482,7 +482,7 @@ QuasiNewtonLBFGS<TElastix>::TestConvergence(bool firstLineSearchDone)
 
 template <class TElastix>
 std::string
-QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition(void) const
+QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition() const
 {
   /** Must be repeated here; otherwise the StopconditionTypes of the
    * QuasiNewtonOptimizer and the LineSearchOptimizer are mixed up. */

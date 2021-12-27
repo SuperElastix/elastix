@@ -106,7 +106,7 @@ public:
 
   /** Get the first mask. */
   virtual const MaskType *
-  GetMask(void) const
+  GetMask() const
   {
     return this->GetMask(0);
   }
@@ -139,7 +139,7 @@ public:
 
   /** Get the first input image region. */
   virtual const InputImageRegionType &
-  GetInputImageRegion(void) const
+  GetInputImageRegion() const
   {
     return this->GetInputImageRegion(0);
   }
@@ -159,11 +159,11 @@ public:
    * is false when this feature is not supported by the sampler.
    */
   virtual bool
-  SelectNewSamplesOnUpdate(void);
+  SelectNewSamplesOnUpdate();
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
   virtual bool
-  SelectingNewSamplesOnUpdateSupported(void) const
+  SelectingNewSamplesOnUpdateSupported() const
   {
     return true;
   }
@@ -192,7 +192,7 @@ protected:
 
   /** GenerateInputRequestedRegion. */
   void
-  GenerateInputRequestedRegion(void) override;
+  GenerateInputRequestedRegion() override;
 
   /** IsInsideAllMasks. */
   virtual bool
@@ -200,24 +200,24 @@ protected:
 
   /** UpdateAllMasks. */
   virtual void
-  UpdateAllMasks(void);
+  UpdateAllMasks();
 
   /** Checks if the InputImageRegions are a subregion of the
    * LargestPossibleRegions.
    */
   virtual bool
-  CheckInputImageRegions(void);
+  CheckInputImageRegions();
 
   /** Compute the intersection of the InputImageRegion and the bounding box of the mask. */
   void
-  CropInputImageRegion(void);
+  CropInputImageRegion();
 
   /** Multi-threaded function that does the work. */
   void
-  BeforeThreadedGenerateData(void) override;
+  BeforeThreadedGenerateData() override;
 
   void
-  AfterThreadedGenerateData(void) override;
+  AfterThreadedGenerateData() override;
 
   /***/
   unsigned long                            m_NumberOfSamples;

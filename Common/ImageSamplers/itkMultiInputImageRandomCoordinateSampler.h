@@ -116,7 +116,7 @@ protected:
 
   /** Function that does the work. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** Generate a point randomly in a bounding box.
    * This method can be overwritten in subclasses if a different distribution is desired. */

@@ -83,7 +83,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUBSplineDecompo
 
 template <typename TInputImage, typename TOutputImage>
 void
-GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData(void)
+GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 {
   itkDebugMacro(<< "Calling GPUBSplineDecompositionImageFilter::GPUGenerateData()");
 

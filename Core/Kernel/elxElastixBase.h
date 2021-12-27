@@ -52,7 +52,7 @@
  * These macros are undef'd at the end of this file
  */
 #define elxGetObjectMacro(_name, _type)                                                                                \
-  _type * Get##_name(void) const { return this->m_##_name.GetPointer(); }
+  _type * Get##_name() const { return this->m_##_name.GetPointer(); }
 // end elxGetObjectMacro
 
 #define elxSetObjectMacro(_name, _type)                                                                                \
@@ -68,7 +68,7 @@
 
 /** defines for example: GetNumberOfMetrics() */
 #define elxGetNumberOfMacro(_name)                                                                                     \
-  unsigned int GetNumberOf##_name##s(void) const                                                                       \
+  unsigned int GetNumberOf##_name##s() const                                                                           \
   {                                                                                                                    \
     if (this->m_##_name##Container != nullptr)                                                                         \
     {                                                                                                                  \
@@ -193,7 +193,7 @@ public:
   SetDBIndex(DBIndexType _arg);
 
   DBIndexType
-  GetDBIndex(void)
+  GetDBIndex()
   {
     return this->m_DBIndex;
   }
@@ -304,29 +304,29 @@ public:
 
   /** Empty Run()-function to be overridden. */
   virtual int
-  Run(void) = 0;
+  Run() = 0;
 
   /** Empty ApplyTransform()-function to be overridden. */
   virtual int
-  ApplyTransform(void) = 0;
+  ApplyTransform() = 0;
 
   /** Function that is called at the very beginning of ElastixTemplate::Run().
    * It checks the command line input arguments.
    */
   int
-  BeforeAllBase(void) override;
+  BeforeAllBase() override;
 
   /** Function that is called at the very beginning of ElastixTemplate::ApplyTransform().
    * It checks the command line input arguments.
    */
   int
-  BeforeAllTransformixBase(void);
+  BeforeAllTransformixBase();
 
   /** Function called before registration.
    * It installs the IterationInfo field.
    */
   void
-  BeforeRegistrationBase(void) override;
+  BeforeRegistrationBase() override;
 
   ResultImageType *
   GetResultImage(const unsigned int idx = 0) const;
@@ -346,7 +346,7 @@ public:
    * parameter file.
    */
   int
-  GetDefaultOutputPrecision(void) const
+  GetDefaultOutputPrecision() const
   {
     return this->m_DefaultOutputPrecision;
   }
@@ -356,7 +356,7 @@ public:
    * or ignored (false). This depends on the UseDirectionCosines
    * parameter. */
   bool
-  GetUseDirectionCosines(void) const;
+  GetUseDirectionCosines() const;
 
   /** Set/Get the original fixed image direction as a flat array
    * (d11 d21 d31 d21 d22 etc ) */
@@ -364,15 +364,15 @@ public:
   SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg);
 
   const FlatDirectionCosinesType &
-  GetOriginalFixedImageDirectionFlat(void) const;
+  GetOriginalFixedImageDirectionFlat() const;
 
   /** Creates transformation parameters map. */
   virtual void
-  CreateTransformParametersMap(void) = 0;
+  CreateTransformParametersMap() = 0;
 
   /** Gets transformation parameters map. */
   ParameterMapType
-  GetTransformParametersMap(void) const;
+  GetTransformParametersMap() const;
 
   /** Set configuration vector. Library only. */
   void
@@ -383,7 +383,7 @@ public:
   GetConfiguration(const size_t index) const;
 
   xl::xoutrow &
-  GetIterationInfo(void)
+  GetIterationInfo()
   {
     return m_IterationInfo;
   }

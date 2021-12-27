@@ -134,7 +134,7 @@ public:
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *
-  GetAsITKBaseType(void)
+  GetAsITKBaseType()
   {
     return &(this->GetSelf());
   }
@@ -142,7 +142,7 @@ public:
 
   /** Retrieves this object as ITKBaseType, to use in const functions. */
   const ITKBaseType *
-  GetAsITKBaseType(void) const
+  GetAsITKBaseType() const
   {
     return &(this->GetSelf());
   }
@@ -153,25 +153,25 @@ public:
    * (to monitor the progress of the registration).
    */
   void
-  BeforeEachResolutionBase(void) override;
+  BeforeEachResolutionBase() override;
 
   /** Execute stuff after each iteration:
    * \li Optionally compute the exact metric value and plot it to screen.
    */
   void
-  AfterEachIterationBase(void) override;
+  AfterEachIterationBase() override;
 
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.
    */
   virtual void
-  SelectNewSamples(void);
+  SelectNewSamples();
 
   /** Returns whether the metric uses a sampler. When the metric is not of
    * AdvancedMetricType, the function returns false immediately.
    */
   virtual bool
-  GetAdvancedMetricUseImageSampler(void) const;
+  GetAdvancedMetricUseImageSampler() const;
 
   /** Method to set the image sampler. The image sampler is only used when
    * the metric is of type AdvancedMetricType, and has UseImageSampler set
@@ -185,18 +185,18 @@ public:
    * to true. In other cases, the function returns 0.
    */
   virtual ImageSamplerBaseType *
-  GetAdvancedMetricImageSampler(void) const;
+  GetAdvancedMetricImageSampler() const;
 
   /** Get if the exact metric value is computed */
   virtual bool
-  GetShowExactMetricValue(void) const
+  GetShowExactMetricValue() const
   {
     return this->m_ShowExactMetricValue;
   }
 
   /** Get the last computed exact metric value */
   virtual MeasureType
-  GetCurrentExactMetricValue(void) const
+  GetCurrentExactMetricValue() const
   {
     return this->m_CurrentExactMetricValue;
   }

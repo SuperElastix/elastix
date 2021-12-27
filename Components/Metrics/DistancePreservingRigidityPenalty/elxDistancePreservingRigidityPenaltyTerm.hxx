@@ -33,7 +33,7 @@ namespace elastix
 
 template <class TElastix>
 void
-DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
+DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
 {
   /** Read the fixed rigidity image. */
   std::string segmentedImageName = "";
@@ -131,7 +131,7 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-DistancePreservingRigidityPenalty<TElastix>::Initialize(void)
+DistancePreservingRigidityPenalty<TElastix>::Initialize()
 {
   /** Initialize this class with the Superclass initializer. */
   itk::TimeProbe timer;

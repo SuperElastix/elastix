@@ -110,7 +110,7 @@ public:
   SetGrayValueImage(GrayValueImageType * _arg);
 
   typename GrayValueImageType::Pointer
-  GetGrayValueImage(void)
+  GetGrayValueImage()
   {
     return this->m_GrayValueImage.GetPointer();
   }
@@ -135,7 +135,7 @@ protected:
    *     ImageToImageFilter::GenerateData().
    */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
 private:
   VectorMeanDiffusionImageFilter(const Self &) = delete;
@@ -154,7 +154,7 @@ private:
 
   /** For calculating a feature image from the input m_GrayValueImage. */
   void
-  FilterGrayValueImage(void);
+  FilterGrayValueImage();
 };
 
 } // end namespace itk

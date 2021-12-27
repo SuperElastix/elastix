@@ -127,7 +127,7 @@ public:
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
 protected:
   /** The constructor. */
@@ -140,11 +140,11 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** Writes its deformation field to a file. */
   void
-  WriteDerivedTransformDataToFile(void) const override;
+  WriteDerivedTransformDataToFile() const override;
 
   /** The deleted copy constructor. */
   DeformationFieldTransform(const Self &) = delete;

@@ -36,7 +36,7 @@ GPUTransformBase::GetSourceCode(std::string & /*source*/) const
 
 //------------------------------------------------------------------------------
 GPUDataManager::Pointer
-GPUTransformBase::GetParametersDataManager(void) const
+GPUTransformBase::GetParametersDataManager() const
 {
   return this->m_ParametersDataManager;
 }

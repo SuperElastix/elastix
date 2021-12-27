@@ -57,7 +57,7 @@ GPUTransformCopier<TTypeList, NDimensions, TTransform, TOutputTransformPrecision
 //------------------------------------------------------------------------------
 template <typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType>
 void
-GPUTransformCopier<TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType>::Update(void)
+GPUTransformCopier<TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType>::Update()
 {
   if (!this->m_InputTransform)
   {

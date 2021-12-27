@@ -52,7 +52,7 @@ ANNBruteForceTree<TListSample>::~ANNBruteForceTree()
 
 template <class TListSample>
 void
-ANNBruteForceTree<TListSample>::GenerateTree(void)
+ANNBruteForceTree<TListSample>::GenerateTree()
 {
   int dim = static_cast<int>(this->GetDataDimension());
   int nop = static_cast<int>(this->GetActualNumberOfDataPoints());

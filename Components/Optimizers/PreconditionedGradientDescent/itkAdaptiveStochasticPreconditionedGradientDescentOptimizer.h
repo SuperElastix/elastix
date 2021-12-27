@@ -138,7 +138,7 @@ protected:
    * In that case, also the m_PreviousSearchDirection is updated.
    */
   virtual void
-  UpdateCurrentTime(void);
+  UpdateCurrentTime();
 
   /** The Previous search direction = P g, necessary for the CruzAcceleration */
   DerivativeType m_PreviousSearchDirection;

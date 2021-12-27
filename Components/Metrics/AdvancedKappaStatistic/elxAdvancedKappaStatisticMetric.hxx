@@ -31,7 +31,7 @@ namespace elastix
 
 template <class TElastix>
 void
-AdvancedKappaStatisticMetric<TElastix>::Initialize(void)
+AdvancedKappaStatisticMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -49,7 +49,7 @@ AdvancedKappaStatisticMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-AdvancedKappaStatisticMetric<TElastix>::BeforeRegistration(void)
+AdvancedKappaStatisticMetric<TElastix>::BeforeRegistration()
 {
   /** Get and set taking the complement. */
   bool useComplement = true;

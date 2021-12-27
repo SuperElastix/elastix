@@ -95,7 +95,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::TransformRigidityPenalty
 
 template <class TFixedImage, class TScalarType>
 void
-TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CheckUseAndCalculationBooleans(void)
+TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CheckUseAndCalculationBooleans()
 {
   if (this->m_UseLinearityCondition)
   {
@@ -119,7 +119,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CheckUseAndCalculationBo
 
 template <class TFixedImage, class TScalarType>
 void
-TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize(void)
+TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
 {
   /** Call the initialize of the superclass. */
   this->Superclass::Initialize();
@@ -173,7 +173,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize(void)
 
 template <class TFixedImage, class TScalarType>
 void
-TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages(void)
+TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages()
 {
   /** Dilate m_FixedRigidityImage and m_MovingRigidityImage. */
   if (this->m_DilateRigidityImages)

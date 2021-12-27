@@ -60,7 +60,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AdvancedMeanSq
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();

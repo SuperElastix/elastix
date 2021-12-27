@@ -112,7 +112,7 @@ public:
 
 
   const TScalarType
-  GetPoissonRatio(void) const override
+  GetPoissonRatio() const override
   {
     return 1.0 - (this->m_Alpha + 1.0) / 8.0;
   }

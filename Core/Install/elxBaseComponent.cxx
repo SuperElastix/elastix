@@ -43,7 +43,7 @@ namespace elastix
  */
 
 const char *
-BaseComponent::elxGetClassName(void) const
+BaseComponent::elxGetClassName() const
 {
   return "BaseComponent";
 } // end elxGetClassName()
@@ -67,7 +67,7 @@ BaseComponent::SetComponentLabel(const char * label, unsigned int idx)
  */
 
 const char *
-BaseComponent::GetComponentLabel(void) const
+BaseComponent::GetComponentLabel() const
 {
   return this->m_ComponentLabel.c_str();
 } // end GetComponentLabel()

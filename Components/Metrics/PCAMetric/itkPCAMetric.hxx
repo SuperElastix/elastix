@@ -56,7 +56,7 @@ PCAMetric<TFixedImage, TMovingImage>::PCAMetric()
 
 template <class TFixedImage, class TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::Initialize(void)
+PCAMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();

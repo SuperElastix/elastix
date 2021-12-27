@@ -80,7 +80,7 @@ public:
 
   /** Compute the B-spline grid. */
   void
-  ComputeBSplineGrid(void) override;
+  ComputeBSplineGrid() override;
 
 protected:
   /** The constructor. */

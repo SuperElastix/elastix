@@ -29,7 +29,7 @@ namespace elastix
 
 template <class TElastix>
 void
-MovingGenericPyramid<TElastix>::SetMovingSchedule(void)
+MovingGenericPyramid<TElastix>::SetMovingSchedule()
 {
   /** Get the ImageDimension. */
   const unsigned int MovingImageDimension = InputImageType::ImageDimension;
@@ -160,7 +160,7 @@ MovingGenericPyramid<TElastix>::SetMovingSchedule(void)
 
 template <class TElastix>
 void
-MovingGenericPyramid<TElastix>::BeforeEachResolution(void)
+MovingGenericPyramid<TElastix>::BeforeEachResolution()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();

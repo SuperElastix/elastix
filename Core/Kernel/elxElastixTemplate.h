@@ -41,7 +41,7 @@
  * Macro that defines to functions. In the case of
  *   _name = Metric and _elxBaseType = MetricBaseType
  * this results in:
- * MetricBaseType * GetElxMetricBase(void) const;
+ * MetricBaseType * GetElxMetricBase() const;
  * MetricBaseType * GetElxMetricBase(unsigned int idx) const;
  *
  * The first function simply calls the second with argument = 0.
@@ -140,10 +140,10 @@ public:
   typedef BaseComponent BaseComponentType;
 
   /** A Pointer to a member function of a BaseComponentType. */
-  typedef void (BaseComponentType::*PtrToMemberFunction)(void);
-  typedef int (BaseComponentType::*PtrToMemberFunction2)(void);
+  typedef void (BaseComponentType::*PtrToMemberFunction)();
+  typedef int (BaseComponentType::*PtrToMemberFunction2)();
 
-  /** Commands that react on Events and call Self::Function(void). */
+  /** Commands that react on Events and call Self::Function(). */
   typedef itk::SimpleMemberCommand<Self>                    BeforeEachResolutionCommandType;
   typedef itk::SimpleMemberCommand<Self>                    AfterEachResolutionCommandType;
   typedef itk::SimpleMemberCommand<Self>                    AfterEachIterationCommandType;
@@ -212,32 +212,32 @@ public:
    * applying a transform to an image.
    */
   int
-  Run(void) override;
+  Run() override;
 
   int
-  ApplyTransform(void) override;
+  ApplyTransform() override;
 
   /** The Callback functions. */
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   int
-  BeforeAllTransformix(void);
+  BeforeAllTransformix();
 
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   void
-  AfterEachResolution(void) override;
+  AfterEachResolution() override;
 
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   void
-  AfterRegistration(void) override;
+  AfterRegistration() override;
 
   /** Get the iteration number. */
   itkGetConstMacro(IterationCounter, unsigned int);
@@ -267,11 +267,11 @@ private:
 
   /** CreateTransformParametersMap. */
   void
-  CreateTransformParametersMap(void) override;
+  CreateTransformParametersMap() override;
 
   /** Open the IterationInfoFile, where the table with iteration info is written to. */
   void
-  OpenIterationInfoFile(void);
+  OpenIterationInfoFile();
 
   /** Used by the callback functions, BeforeEachResolution() etc.).
    * This method calls a function in each component, in the following order:

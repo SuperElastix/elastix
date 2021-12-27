@@ -76,21 +76,21 @@ public:
 
   /** Advance one step following the gradient direction. */
   virtual void
-  AdvanceOneStep(void);
+  AdvanceOneStep();
 
   /** Start optimization. */
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization. */
   void
-  ResumeOptimization(void);
+  ResumeOptimization();
 
   /** Stop optimization.
    * \sa ResumeOptimization */
   void
-  StopOptimization(void);
+  StopOptimization();
 
   /** Set the number of iterations. */
   itkSetMacro(NumberOfIterations, unsigned long);

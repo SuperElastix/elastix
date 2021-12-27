@@ -88,7 +88,7 @@ OpenCLFixedGenericPyramid<TElastix>::OpenCLFixedGenericPyramid()
 
 template <class TElastix>
 void
-OpenCLFixedGenericPyramid<TElastix>::BeforeGenerateData(void)
+OpenCLFixedGenericPyramid<TElastix>::BeforeGenerateData()
 {
   // Local GPU input image
   GPUInputImagePointer gpuInputImage;
@@ -144,7 +144,7 @@ OpenCLFixedGenericPyramid<TElastix>::BeforeGenerateData(void)
 
 template <class TElastix>
 void
-OpenCLFixedGenericPyramid<TElastix>::GenerateData(void)
+OpenCLFixedGenericPyramid<TElastix>::GenerateData()
 {
   if (!this->m_ContextCreated || !this->m_GPUPyramidCreated || !this->m_UseOpenCL || !this->m_GPUPyramidReady)
   {
@@ -217,7 +217,7 @@ OpenCLFixedGenericPyramid<TElastix>::GenerateData(void)
 
 template <class TElastix>
 void
-OpenCLFixedGenericPyramid<TElastix>::RegisterFactories(void)
+OpenCLFixedGenericPyramid<TElastix>::RegisterFactories()
 {
   // Typedefs for factories
   typedef itk::GPUImageFactory2<OpenCLImageTypes, OpenCLImageDimentions> ImageFactoryType;
@@ -267,7 +267,7 @@ OpenCLFixedGenericPyramid<TElastix>::RegisterFactories(void)
 
 template <class TElastix>
 void
-OpenCLFixedGenericPyramid<TElastix>::UnregisterFactories(void)
+OpenCLFixedGenericPyramid<TElastix>::UnregisterFactories()
 {
   for (std::vector<ObjectFactoryBasePointer>::iterator it = this->m_Factories.begin(); it != this->m_Factories.end();
        ++it)
@@ -284,7 +284,7 @@ OpenCLFixedGenericPyramid<TElastix>::UnregisterFactories(void)
 
 template <class TElastix>
 void
-OpenCLFixedGenericPyramid<TElastix>::BeforeRegistration(void)
+OpenCLFixedGenericPyramid<TElastix>::BeforeRegistration()
 {
   // Are we using a OpenCL enabled GPU for pyramid?
   this->m_UseOpenCL = true;
@@ -299,7 +299,7 @@ OpenCLFixedGenericPyramid<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-OpenCLFixedGenericPyramid<TElastix>::ReadFromFile(void)
+OpenCLFixedGenericPyramid<TElastix>::ReadFromFile()
 {
   // OpenCL pyramid specific.
   this->m_UseOpenCL = true;
@@ -337,7 +337,7 @@ OpenCLFixedGenericPyramid<TElastix>::SwitchingToCPUAndReport(const bool configEr
 
 template <class TElastix>
 void
-OpenCLFixedGenericPyramid<TElastix>::ReportToLog(void)
+OpenCLFixedGenericPyramid<TElastix>::ReportToLog()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
   itk::OpenCLDevice           device = context->GetDefaultDevice();

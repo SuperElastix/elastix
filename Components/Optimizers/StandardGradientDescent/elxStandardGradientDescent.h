@@ -109,24 +109,24 @@ public:
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed. */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   void
-  AfterEachResolution(void) override;
+  AfterEachResolution() override;
 
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   void
-  AfterRegistration(void) override;
+  AfterRegistration() override;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   /** Stop optimisation and pass on exception. */
   void

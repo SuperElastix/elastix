@@ -100,7 +100,7 @@ ComponentLoader::~ComponentLoader() = default;
  * *************** InstallSupportedImageTypes ********************
  */
 int
-ComponentLoader::InstallSupportedImageTypes(void)
+ComponentLoader::InstallSupportedImageTypes()
 {
   /**
    * Method: A recursive template was defined at the top of this file, that
@@ -131,7 +131,7 @@ ComponentLoader::InstallSupportedImageTypes(void)
  */
 
 int
-ComponentLoader::LoadComponents(void)
+ComponentLoader::LoadComponents()
 {
   // Retrieve those IOFactoryRegisterManager instances, just to ensure that they are really constructed.
   const volatile auto ioFactoryRegisterManagerInstances =

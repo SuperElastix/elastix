@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::Initialize(void)
+SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::Initialize()
 {
 
   itk::TimeProbe timer;
@@ -49,7 +49,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution(void)
+SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

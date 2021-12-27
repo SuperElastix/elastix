@@ -122,7 +122,7 @@ public:
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *
-  GetAsITKBaseType(void)
+  GetAsITKBaseType()
   {
     return &(this->GetSelf());
   }
@@ -130,7 +130,7 @@ public:
 
   /** Retrieves this object as ITKBaseType, to use in const functions. */
   const ITKBaseType *
-  GetAsITKBaseType(void) const
+  GetAsITKBaseType() const
   {
     return &(this->GetSelf());
   }
@@ -140,7 +140,7 @@ public:
    * \li nothing here
    */
   virtual int
-  BeforeAllTransformix(void)
+  BeforeAllTransformix()
   {
     return 0;
   }
@@ -152,29 +152,29 @@ public:
    * \li Set the default pixel value.
    */
   void
-  BeforeRegistrationBase(void) override;
+  BeforeRegistrationBase() override;
 
   /** Execute stuff after each resolution:
    * \li Write the resulting output image.
    */
   void
-  AfterEachResolutionBase(void) override;
+  AfterEachResolutionBase() override;
 
   /** Execute stuff after each iteration:
    * \li Write the resulting output image.
    */
   void
-  AfterEachIterationBase(void) override;
+  AfterEachIterationBase() override;
 
   /** Execute stuff after the registration:
    * \li Write the resulting output image.
    */
   void
-  AfterRegistrationBase(void) override;
+  AfterRegistrationBase() override;
 
   /** Function to read transform-parameters from a file. */
   virtual void
-  ReadFromFile(void);
+  ReadFromFile();
 
   /** Function to write transform-parameters to a file. */
   void
@@ -194,7 +194,7 @@ public:
 
   /** Function to create the result image in the format of an itk::Image. */
   virtual void
-  CreateItkResultImage(void);
+  CreateItkResultImage();
 
 protected:
   /** The constructor. */
@@ -204,7 +204,7 @@ protected:
 
   /** Method that sets the transform, the interpolator and the inputImage. */
   virtual void
-  SetComponents(void);
+  SetComponents();
 
   /** Variable that defines to print the progress or not. */
   bool m_ShowProgress;
@@ -226,7 +226,7 @@ private:
 
   /** Release memory. */
   void
-  ReleaseMemory(void);
+  ReleaseMemory();
 };
 
 } // end namespace elastix

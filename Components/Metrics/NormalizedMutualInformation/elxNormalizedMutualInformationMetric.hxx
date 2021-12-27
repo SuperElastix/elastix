@@ -34,7 +34,7 @@ namespace elastix
 
 template <class TElastix>
 void
-NormalizedMutualInformationMetric<TElastix>::Initialize(void)
+NormalizedMutualInformationMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -52,7 +52,7 @@ NormalizedMutualInformationMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-NormalizedMutualInformationMetric<TElastix>::BeforeEachResolution(void)
+NormalizedMutualInformationMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

@@ -79,9 +79,9 @@ public:
   virtual void
   SetMovingImage(TMovingImage * inputImage);
   InputImageConstPointer
-  GetMovingImage(void);
+  GetMovingImage();
   virtual void
-  RemoveMovingImage(void);
+  RemoveMovingImage();
 
   /** Set/Get/Remove moving point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
@@ -112,16 +112,16 @@ public:
   SetTransformParameterObject(ParameterObjectPointer transformParameterObject);
 
   ParameterObjectType *
-  GetTransformParameterObject(void);
+  GetTransformParameterObject();
 
   const ParameterObjectType *
-  GetTransformParameterObject(void) const;
+  GetTransformParameterObject() const;
 
   OutputDeformationFieldType *
-  GetOutputDeformationField(void);
+  GetOutputDeformationField();
 
   const OutputDeformationFieldType *
-  GetOutputDeformationField(void) const;
+  GetOutputDeformationField() const;
 
   /** Set/Get/Remove output directory. */
   itkSetMacro(OutputDirectory, std::string);
@@ -138,7 +138,7 @@ public:
 
   itkGetConstMacro(LogFileName, std::string);
   virtual void
-  RemoveLogFileName(void);
+  RemoveLogFileName();
 
   /** Log to std::cout on/off. */
   itkSetMacro(LogToConsole, bool);
@@ -152,7 +152,7 @@ public:
 
   /** Disables output to log and standard output. */
   void
-  DisableOutput(void)
+  DisableOutput()
   {
     m_EnableOutput = false;
   }
@@ -165,13 +165,13 @@ public:
 
   /** The ResultImage and ResultDeformationField get their image properties from the TransformParameterObject. */
   virtual void
-  GenerateOutputInformation(void) override;
+  GenerateOutputInformation() override;
 
 protected:
-  TransformixFilter(void);
+  TransformixFilter();
 
   virtual void
-  GenerateData(void) override;
+  GenerateData() override;
 
 private:
   TransformixFilter(const Self &) = delete;

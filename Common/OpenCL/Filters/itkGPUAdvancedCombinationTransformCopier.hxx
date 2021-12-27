@@ -69,7 +69,7 @@ void
 GPUAdvancedCombinationTransformCopier<TTypeList,
                                       NDimensions,
                                       TAdvancedCombinationTransform,
-                                      TOutputTransformPrecisionType>::Update(void)
+                                      TOutputTransformPrecisionType>::Update()
 {
   if (!this->m_InputTransform)
   {

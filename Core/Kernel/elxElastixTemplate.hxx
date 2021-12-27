@@ -113,7 +113,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetMovingMask(unsigned int idx) cons
 
 template <class TFixedImage, class TMovingImage>
 int
-ElastixTemplate<TFixedImage, TMovingImage>::Run(void)
+ElastixTemplate<TFixedImage, TMovingImage>::Run()
 {
   /** Tell all components where to find the ElastixTemplate and
    * set there ComponentLabel.
@@ -255,7 +255,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run(void)
 
 template <class TFixedImage, class TMovingImage>
 int
-ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
+ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
 {
   /** Timer. */
   TimerType timer;
@@ -409,7 +409,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(void)
 
 template <class TFixedImage, class TMovingImage>
 int
-ElastixTemplate<TFixedImage, TMovingImage>::BeforeAll(void)
+ElastixTemplate<TFixedImage, TMovingImage>::BeforeAll()
 {
   /** Declare the return value and initialize it. */
   int returndummy = 0;
@@ -431,7 +431,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeAll(void)
 
 template <class TFixedImage, class TMovingImage>
 int
-ElastixTemplate<TFixedImage, TMovingImage>::BeforeAllTransformix(void)
+ElastixTemplate<TFixedImage, TMovingImage>::BeforeAllTransformix()
 {
   /** Declare the return value and initialize it. */
   int returndummy = 0;
@@ -471,7 +471,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeAllTransformix(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration(void)
+ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration()
 {
   /** Start timer for initializing all components. */
   this->m_Timer0.Reset();
@@ -509,7 +509,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution(void)
+ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
 {
   /** Get current resolution level. */
   unsigned long level = this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel();
@@ -566,7 +566,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution(void)
+ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
 {
   /** Get current resolution level. */
   unsigned long level = this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel();
@@ -616,7 +616,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
+ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
 {
   /** Write the headers of the columns that are printed each iteration. */
   if (this->m_IterationCounter == 0)
@@ -695,7 +695,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration(void)
+ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -809,7 +809,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParametersMap(void)
+ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParametersMap()
 {
   this->GetElxTransformBase()->CreateTransformParametersMap(
     this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(), this->m_TransformParametersMap);
@@ -1007,7 +1007,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ConfigureComponents(Self * This)
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile(void)
+ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
 {
   /** Remove the current iteration info output file, if any. */
   this->GetIterationInfo().RemoveOutput("IterationInfoFile");

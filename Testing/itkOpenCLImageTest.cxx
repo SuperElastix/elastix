@@ -21,7 +21,7 @@
 #include <algorithm>
 
 int
-main(void)
+main()
 {
   itk::OpenCLImage imageNull;
 

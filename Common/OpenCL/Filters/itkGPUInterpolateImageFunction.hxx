@@ -153,8 +153,7 @@ GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunct
 //------------------------------------------------------------------------------
 template <typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction>
 GPUDataManager::Pointer
-GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::GetParametersDataManager(
-  void) const
+GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::GetParametersDataManager() const
 {
   const unsigned int ImageDim = InputImageType::ImageDimension;
 

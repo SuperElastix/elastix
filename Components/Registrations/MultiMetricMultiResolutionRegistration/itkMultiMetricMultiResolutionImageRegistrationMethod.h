@@ -40,7 +40,7 @@
 
 /** defines for example: GetNumberOfInterpolators() */
 #define itkGetNumberOfMacro(_name)                                                                                     \
-  virtual unsigned int GetNumberOf##_name##s(void) const { return this->m_##_name##s.size(); }
+  virtual unsigned int GetNumberOf##_name##s() const { return this->m_##_name##s.size(); }
 
 namespace itk
 {
@@ -126,7 +126,7 @@ public:
    * we provide the following function to interrupt registration.
    */
   virtual void
-  StopMultiMetricRegistration(void)
+  StopMultiMetricRegistration()
   {
     this->m_Stop = true;
   }
@@ -146,7 +146,7 @@ public:
    * nrofmetrics, submetrics, etc.
    */
   virtual CombinationMetricType *
-  GetCombinationMetric(void) const
+  GetCombinationMetric() const
   {
     return this->m_CombinationMetric.GetPointer();
   }
@@ -167,7 +167,7 @@ public:
   GetFixedImage(unsigned int pos) const;
 
   const FixedImageType *
-  GetFixedImage(void) const override
+  GetFixedImage() const override
   {
     return this->GetFixedImage(0);
   }
@@ -185,7 +185,7 @@ public:
   GetMovingImage(unsigned int pos) const;
 
   const MovingImageType *
-  GetMovingImage(void) const override
+  GetMovingImage() const override
   {
     return this->GetMovingImage(0);
   }
@@ -201,7 +201,7 @@ public:
   GetFixedImageRegion(unsigned int pos) const;
 
   const FixedImageRegionType &
-  GetFixedImageRegion(void) const override
+  GetFixedImageRegion() const override
   {
     return this->GetFixedImageRegion(0);
   }
@@ -217,7 +217,7 @@ public:
   GetInterpolator(unsigned int pos) const;
 
   InterpolatorType *
-  GetInterpolator(void) override
+  GetInterpolator() override
   {
     return this->GetInterpolator(0);
   }
@@ -233,7 +233,7 @@ public:
   GetFixedImagePyramid(unsigned int pos) const;
 
   FixedImagePyramidType *
-  GetFixedImagePyramid(void) override
+  GetFixedImagePyramid() override
   {
     return this->GetFixedImagePyramid(0);
   }
@@ -249,7 +249,7 @@ public:
   GetMovingImagePyramid(unsigned int pos) const;
 
   MovingImagePyramidType *
-  GetMovingImagePyramid(void) override
+  GetMovingImagePyramid() override
   {
     return this->GetMovingImagePyramid(0);
   }
@@ -261,14 +261,14 @@ public:
    * any of its cached ivars.
    */
   ModifiedTimeType
-  GetMTime(void) const override;
+  GetMTime() const override;
 
   /** Get the last transformation parameters visited by
    * the optimizer. Return the member variable declared in this class,
    * and not that of the superclass (which is declared private).
    */
   const ParametersType &
-  GetLastTransformParameters(void) const override
+  GetLastTransformParameters() const override
   {
     return this->m_LastTransformParameters;
   }
@@ -286,33 +286,33 @@ protected:
    * the registration.
    */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** Initialize by setting the interconnects between the components.
    * This method is executed at every level of the pyramid with the
    * values corresponding to this resolution.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Compute the size of the fixed region for each level of the pyramid.
    * Actually we would like to override PreparePyramids, but this function
    * is not virtual...
    */
   virtual void
-  PrepareAllPyramids(void);
+  PrepareAllPyramids();
 
   /** Function called by PrepareAllPyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
   virtual void
-  CheckPyramids(void);
+  CheckPyramids();
 
   /** Function called by Initialize, which checks if the user input
    * is ok. Called by Initialize().
    */
   virtual void
-  CheckOnInitialize(void);
+  CheckOnInitialize();
 
   /** Variables already defined in the superclass, but as private...  */
   bool           m_Stop;

@@ -36,7 +36,7 @@
 // Test function templated over the dimension
 template <unsigned int Dimension>
 bool
-TestInterpolators(void)
+TestInterpolators()
 {
   typedef itk::Image<short, Dimension>         InputImageType;
   typedef typename InputImageType::SizeType    SizeType;
@@ -278,7 +278,7 @@ TestInterpolators(void)
 
 
 int
-main(void)
+main()
 {
   // 2D tests
   bool success = TestInterpolators<2>();

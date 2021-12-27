@@ -66,7 +66,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters(void) const
+AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 

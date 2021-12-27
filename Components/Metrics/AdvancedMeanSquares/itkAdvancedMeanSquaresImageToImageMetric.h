@@ -168,7 +168,7 @@ public:
    * \li Call the superclass' implementation
    * \li Estimate the normalization factor, if asked for.  */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Set/Get whether to normalize the mean squares measure.
    * This divides the MeanSquares by a factor (range/10)^2,

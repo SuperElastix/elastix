@@ -187,7 +187,7 @@ public:
    * \li Check if -mp command line argument was given
    */
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   /** Execute stuff before the actual registration:
    * \li Setup transform
@@ -196,11 +196,11 @@ public:
    * \li Call InitializeTransform.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
 protected:
   /** The constructor. */
@@ -224,14 +224,14 @@ protected:
    * \li Try reading -fp file
    */
   virtual void
-  DetermineSourceLandmarks(void);
+  DetermineSourceLandmarks();
 
   /** Read target landmarks from mp file or load identity.
    * \li Try reading -mp file
    * \li If no -mp file was given, place landmarks as identity.
    */
   virtual bool
-  DetermineTargetLandmarks(void);
+  DetermineTargetLandmarks();
 
   /** General function to read all landmarks. */
   virtual void
@@ -247,7 +247,7 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor. */
   SplineKernelTransform(const Self &) = delete;

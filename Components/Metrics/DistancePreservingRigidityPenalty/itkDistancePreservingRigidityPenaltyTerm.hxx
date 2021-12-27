@@ -56,7 +56,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::DistancePreserv
  */
 template <class TFixedImage, class TScalarType>
 void
-DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize(void)
+DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
 {
   /** Call the initialize of the superclass. */
   this->Superclass::Initialize();

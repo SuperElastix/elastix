@@ -83,14 +83,14 @@ public:
   SetParameters(const ParametersType & parameters) override;
 
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Compute the Jacobian of the transformation. */
   void
   GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
   void
-  SetIdentity(void) override;
+  SetIdentity() override;
 
 protected:
   AffineLogTransform();
@@ -104,7 +104,7 @@ protected:
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void
-  PrecomputeJacobianOfSpatialJacobian(void);
+  PrecomputeJacobianOfSpatialJacobian();
 
 private:
   AffineLogTransform(const Self &) = delete;

@@ -109,7 +109,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::GetSourceCode(std::string &
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase<TScalarType, NDimensions>::HasIdentityTransform(void) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasIdentityTransform() const
 {
   for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
@@ -126,7 +126,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::HasIdentityTransform(void) 
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase<TScalarType, NDimensions>::HasMatrixOffsetTransform(void) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasMatrixOffsetTransform() const
 {
   for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
@@ -143,7 +143,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::HasMatrixOffsetTransform(vo
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase<TScalarType, NDimensions>::HasTranslationTransform(void) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasTranslationTransform() const
 {
   for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {
@@ -160,7 +160,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::HasTranslationTransform(voi
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NDimensions>
 bool
-GPUCompositeTransformBase<TScalarType, NDimensions>::HasBSplineTransform(void) const
+GPUCompositeTransformBase<TScalarType, NDimensions>::HasBSplineTransform() const
 {
   for (std::size_t i = 0; i < this->GetNumberOfTransforms(); ++i)
   {

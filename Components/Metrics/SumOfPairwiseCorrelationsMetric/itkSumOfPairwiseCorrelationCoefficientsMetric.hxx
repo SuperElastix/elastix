@@ -46,7 +46,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::SumOfPair
 
 template <class TFixedImage, class TMovingImage>
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::Initialize(void)
+SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();

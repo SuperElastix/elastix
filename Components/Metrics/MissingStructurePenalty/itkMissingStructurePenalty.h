@@ -131,7 +131,7 @@ public:
    *  present and plugged together correctly.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Set the fixed mask. */
   // \todo: currently not used

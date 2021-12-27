@@ -36,14 +36,14 @@ MevisDicomTiffImageIOFactory::MevisDicomTiffImageIOFactory()
 MevisDicomTiffImageIOFactory ::~MevisDicomTiffImageIOFactory() {}
 
 const char *
-MevisDicomTiffImageIOFactory::GetITKSourceVersion(void) const
+MevisDicomTiffImageIOFactory::GetITKSourceVersion() const
 {
   return ITK_SOURCE_VERSION;
 }
 
 
 const char *
-MevisDicomTiffImageIOFactory::GetDescription(void) const
+MevisDicomTiffImageIOFactory::GetDescription() const
 {
   return "Mevis Dicom/TIFF ImageIO Factory, allows the loading of Mevis images into insight";
 }

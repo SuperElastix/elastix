@@ -109,7 +109,7 @@ protected:
 
   /** Function that checks if upsampling is required. */
   virtual bool
-  DoUpsampling(void);
+  DoUpsampling();
 
 private:
   UpsampleBSplineParametersFilter(const Self &) = delete;

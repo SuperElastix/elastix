@@ -133,7 +133,7 @@ public:
    * calls the Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /**
    * Do some things before registration:
@@ -141,7 +141,7 @@ public:
    * \li Set the ForeGroundvalue setting
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
 protected:
   /** The constructor. */

@@ -221,7 +221,7 @@ VectorDataContainer<TElementIdentifier, TElement>::DeleteIndex(ElementIdentifier
  */
 template <typename TElementIdentifier, typename TElement>
 auto
-VectorDataContainer<TElementIdentifier, TElement>::Begin(void) const -> ConstIterator
+VectorDataContainer<TElementIdentifier, TElement>::Begin() const -> ConstIterator
 {
   return ConstIterator(0, this->VectorType::begin());
 }
@@ -232,7 +232,7 @@ VectorDataContainer<TElementIdentifier, TElement>::Begin(void) const -> ConstIte
  */
 template <typename TElementIdentifier, typename TElement>
 auto
-VectorDataContainer<TElementIdentifier, TElement>::End(void) const -> ConstIterator
+VectorDataContainer<TElementIdentifier, TElement>::End() const -> ConstIterator
 {
   return ConstIterator(this->VectorType::size() - 1, this->VectorType::end());
 }
@@ -243,7 +243,7 @@ VectorDataContainer<TElementIdentifier, TElement>::End(void) const -> ConstItera
  */
 template <typename TElementIdentifier, typename TElement>
 auto
-VectorDataContainer<TElementIdentifier, TElement>::Begin(void) -> Iterator
+VectorDataContainer<TElementIdentifier, TElement>::Begin() -> Iterator
 {
   return Iterator(0, this->VectorType::begin());
 }
@@ -254,7 +254,7 @@ VectorDataContainer<TElementIdentifier, TElement>::Begin(void) -> Iterator
  */
 template <typename TElementIdentifier, typename TElement>
 auto
-VectorDataContainer<TElementIdentifier, TElement>::End(void) -> Iterator
+VectorDataContainer<TElementIdentifier, TElement>::End() -> Iterator
 {
   return Iterator(this->VectorType::size() - 1, this->VectorType::end());
 }
@@ -265,7 +265,7 @@ VectorDataContainer<TElementIdentifier, TElement>::End(void) -> Iterator
  */
 template <typename TElementIdentifier, typename TElement>
 unsigned long
-VectorDataContainer<TElementIdentifier, TElement>::Size(void) const
+VectorDataContainer<TElementIdentifier, TElement>::Size() const
 {
   return static_cast<unsigned long>(this->VectorType::size());
 }
@@ -276,7 +276,7 @@ VectorDataContainer<TElementIdentifier, TElement>::Size(void) const
  */
 template <typename TElementIdentifier, typename TElement>
 void
-VectorDataContainer<TElementIdentifier, TElement>::Initialize(void)
+VectorDataContainer<TElementIdentifier, TElement>::Initialize()
 {
   this->VectorType::clear();
 }
@@ -298,7 +298,7 @@ VectorDataContainer<TElementIdentifier, TElement>::Reserve(ElementIdentifier siz
  */
 template <typename TElementIdentifier, typename TElement>
 void
-VectorDataContainer<TElementIdentifier, TElement>::Squeeze(void)
+VectorDataContainer<TElementIdentifier, TElement>::Squeeze()
 {
   // By MS: experimental
   // http://stackoverflow.com/questions/253157/how-to-downsize-stdvector

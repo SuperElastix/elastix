@@ -54,7 +54,7 @@ TranslationStackTransform<TElastix>::InitializeTranslationTransform()
 
 template <class TElastix>
 int
-TranslationStackTransform<TElastix>::BeforeAll(void)
+TranslationStackTransform<TElastix>::BeforeAll()
 {
   xl::xout["error"] << "BeforeAll" << std::endl;
 
@@ -69,7 +69,7 @@ TranslationStackTransform<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-TranslationStackTransform<TElastix>::BeforeRegistration(void)
+TranslationStackTransform<TElastix>::BeforeRegistration()
 {
   xl::xout["error"] << "BeforeRegistration" << std::endl;
 
@@ -126,7 +126,7 @@ TranslationStackTransform<TElastix>::InitializeTransform()
 
 template <class TElastix>
 void
-TranslationStackTransform<TElastix>::ReadFromFile(void)
+TranslationStackTransform<TElastix>::ReadFromFile()
 {
   xl::xout["error"] << "ReadFromFile" << std::endl;
 
@@ -159,7 +159,7 @@ TranslationStackTransform<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-TranslationStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+TranslationStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_StackTransform;
 

@@ -33,7 +33,7 @@ namespace elastix
 
 template <class TElastix>
 void
-KNNGraphAlphaMutualInformationMetric<TElastix>::Initialize(void)
+KNNGraphAlphaMutualInformationMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -51,7 +51,7 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeRegistration(void)
+KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeRegistration()
 {
   /** Get and set alpha, from alpha - MI. */
   double alpha = 0.5;
@@ -72,7 +72,7 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution(void)
+KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();

@@ -65,14 +65,14 @@ public:
 
 
   void
-  ComputeLPublic(void)
+  ComputeLPublic()
   {
     this->ComputeL();
   }
 
 
   LMatrixType
-  GetLMatrix(void) const
+  GetLMatrix() const
   {
     return this->m_LMatrix;
   }

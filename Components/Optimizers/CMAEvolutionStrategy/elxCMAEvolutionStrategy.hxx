@@ -33,7 +33,7 @@ namespace elastix
 
 template <class TElastix>
 void
-CMAEvolutionStrategy<TElastix>::StartOptimization(void)
+CMAEvolutionStrategy<TElastix>::StartOptimization()
 {
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */
   this->SetUseScales(false);
@@ -61,7 +61,7 @@ CMAEvolutionStrategy<TElastix>::StartOptimization(void)
 
 template <class TElastix>
 void
-CMAEvolutionStrategy<TElastix>::InitializeProgressVariables(void)
+CMAEvolutionStrategy<TElastix>::InitializeProgressVariables()
 {
   this->Superclass1::InitializeProgressVariables();
 
@@ -82,7 +82,7 @@ CMAEvolutionStrategy<TElastix>::InitializeProgressVariables(void)
 
 template <class TElastix>
 void
-CMAEvolutionStrategy<TElastix>::BeforeRegistration(void)
+CMAEvolutionStrategy<TElastix>::BeforeRegistration()
 {
   /** Add target cells to xout[IterationInfo.*/
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -109,7 +109,7 @@ CMAEvolutionStrategy<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-CMAEvolutionStrategy<TElastix>::BeforeEachResolution(void)
+CMAEvolutionStrategy<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -203,7 +203,7 @@ CMAEvolutionStrategy<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-CMAEvolutionStrategy<TElastix>::AfterEachIteration(void)
+CMAEvolutionStrategy<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
   this->GetIterationInfoAt("2:Metric") << this->GetCurrentValue();
@@ -229,7 +229,7 @@ CMAEvolutionStrategy<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-CMAEvolutionStrategy<TElastix>::AfterEachResolution(void)
+CMAEvolutionStrategy<TElastix>::AfterEachResolution()
 {
   /**
     typedef enum {
@@ -286,7 +286,7 @@ CMAEvolutionStrategy<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-CMAEvolutionStrategy<TElastix>::AfterRegistration(void)
+CMAEvolutionStrategy<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
 

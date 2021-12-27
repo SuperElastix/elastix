@@ -36,7 +36,7 @@ PreconditionedASGDOptimizer::PreconditionedASGDOptimizer() = default;
  */
 
 void
-PreconditionedASGDOptimizer::UpdateCurrentTime(void)
+PreconditionedASGDOptimizer::UpdateCurrentTime()
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-AdvancedMeanSquaresMetric<TElastix>::Initialize(void)
+AdvancedMeanSquaresMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -48,7 +48,7 @@ AdvancedMeanSquaresMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution(void)
+AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

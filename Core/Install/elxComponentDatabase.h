@@ -71,7 +71,7 @@ public:
   /** PtrToCreator is a pointer to a function which
    * outputs an ObjectPointer and has no input arguments.
    */
-  typedef ObjectPointer (*PtrToCreator)(void);
+  typedef ObjectPointer (*PtrToCreator)();
   typedef std::string                                      ComponentDescriptionType;
   typedef std::pair<ComponentDescriptionType, IndexType>   CreatorMapKeyType;
   typedef PtrToCreator                                     CreatorMapValueType;

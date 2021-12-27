@@ -44,7 +44,7 @@ template <typename TTypeList,
           typename TCompositeTransform,
           typename TOutputTransformPrecisionType>
 void
-GPUCompositeTransformCopier<TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType>::Update(void)
+GPUCompositeTransformCopier<TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType>::Update()
 {
   if (!this->m_InputTransform)
   {

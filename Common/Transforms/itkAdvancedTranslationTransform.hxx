@@ -109,7 +109,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::SetParameters(const Para
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions>
 auto
-AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters(void) const -> const ParametersType &
+AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters() const -> const ParametersType &
 {
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
@@ -287,7 +287,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
 // Set the parameters for an Identity transform of this class
 template <class TScalarType, unsigned int NDimensions>
 void
-AdvancedTranslationTransform<TScalarType, NDimensions>::SetIdentity(void)
+AdvancedTranslationTransform<TScalarType, NDimensions>::SetIdentity()
 {
   m_Offset.Fill(0.0);
 }

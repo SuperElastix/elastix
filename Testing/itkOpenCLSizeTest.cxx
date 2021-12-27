@@ -20,7 +20,7 @@
 #include "itkTestHelper.h"
 
 int
-main(void)
+main()
 {
   itk::OpenCLSize size(itk::OpenCLSize::null);
 

@@ -123,7 +123,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   void
-  GPUGenerateData(void) override;
+  GPUGenerateData() override;
 
   // Supported GPU transform types
   typedef enum

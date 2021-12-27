@@ -124,7 +124,7 @@ public:
    * \li Call InitializeTransform.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
 protected:
   /** The constructor. */
@@ -144,11 +144,11 @@ private:
    *  if the user has set (AutomaticTransformInitialization "true").
    */
   void
-  InitializeTransform(void);
+  InitializeTransform();
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor. */
   TranslationTransformElastix(const Self &) = delete;

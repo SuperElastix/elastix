@@ -46,7 +46,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::VarianceOverLas
 
 template <class TFixedImage, class TMovingImage>
 void
-VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();

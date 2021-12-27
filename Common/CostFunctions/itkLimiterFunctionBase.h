@@ -98,7 +98,7 @@ public:
 
   /** Initialize the limiter */
   virtual void
-  Initialize(void)
+  Initialize()
   {}
 
 protected:

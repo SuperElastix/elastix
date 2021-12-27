@@ -61,7 +61,7 @@ ImageGridSampler<TInputImage>::SetSampleGridSpacing(const SampleGridSpacingType 
 
 template <class TInputImage>
 void
-ImageGridSampler<TInputImage>::GenerateData(void)
+ImageGridSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container, and the mask. */
   InputImageConstPointer                     inputImage = this->GetInput();

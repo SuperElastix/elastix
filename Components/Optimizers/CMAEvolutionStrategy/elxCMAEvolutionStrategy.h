@@ -156,24 +156,24 @@ public:
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   void
-  AfterEachResolution(void) override;
+  AfterEachResolution() override;
 
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   void
-  AfterRegistration(void) override;
+  AfterRegistration() override;
 
 protected:
   CMAEvolutionStrategy() = default;
@@ -181,7 +181,7 @@ protected:
 
   /** Call the superclass' implementation and print the value of some variables */
   void
-  InitializeProgressVariables(void) override;
+  InitializeProgressVariables() override;
 
 private:
   elxOverrideGetSelfMacro;

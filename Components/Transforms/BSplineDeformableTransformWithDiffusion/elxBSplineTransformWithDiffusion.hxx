@@ -79,7 +79,7 @@ BSplineTransformWithDiffusion<TElastix>::BSplineTransformWithDiffusion()
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
+BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
 {
   /** Set initial transform parameters to a 1x1x1 grid, with deformation (0,0,0).
    * In the method BeforeEachResolution() this will be replaced by the right grid size.
@@ -399,7 +399,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::BeforeEachResolution(void)
+BSplineTransformWithDiffusion<TElastix>::BeforeEachResolution()
 {
   /** What is the current resolution level? */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -447,7 +447,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::AfterEachIteration(void)
+BSplineTransformWithDiffusion<TElastix>::AfterEachIteration()
 {
   /** Declare boolean. */
   bool DiffusionNow = false;
@@ -554,7 +554,7 @@ BSplineTransformWithDiffusion<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::AfterRegistration(void)
+BSplineTransformWithDiffusion<TElastix>::AfterRegistration()
 {
   /** Destruct some member variables that are not necessary to keep in
    * memory. Only those variables needed for the transform parameters
@@ -679,7 +679,7 @@ BSplineTransformWithDiffusion<TElastix>::SetInitialGrid(bool upsampleGridOption)
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::IncreaseScale(void)
+BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
 {
   /** Typedefs. */
   typedef itk::ResampleImageFilter<ImageType, ImageType>             UpsampleFilterType;
@@ -833,7 +833,7 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale(void)
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
+BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
 {
   /** Task 1 - Get and Set the DeformationField Image. */
 
@@ -977,7 +977,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile(void) const
+BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile() const
 {
   /** Write the deformation field image. */
   auto writer = DeformationFieldWriterType::New();
@@ -1009,7 +1009,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile(void) c
 
 template <class TElastix>
 auto
-BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_BSplineTransform;
   const auto   gridRegion = itkTransform.GetGridRegion();
@@ -1032,7 +1032,7 @@ BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap(voi
 
 template <class TElastix>
 void
-BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField(void)
+BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
 {
   /** This function does:
    * 1) Calculate current deformation field.

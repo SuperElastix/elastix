@@ -39,10 +39,10 @@ public:
 
   /** Class methods used to interface with the registered factories. */
   virtual const char *
-  GetITKSourceVersion(void) const;
+  GetITKSourceVersion() const;
 
   virtual const char *
-  GetDescription(void) const;
+  GetDescription() const;
 
   /** Method for class instantiation. */
   itkFactorylessNewMacro(Self);
@@ -52,7 +52,7 @@ public:
 
   /** Register one factory of this type  */
   static void
-  RegisterOneFactory(void)
+  RegisterOneFactory()
   {
     auto metaFactory = MevisDicomTiffImageIOFactory::New();
     ObjectFactoryBase::RegisterFactory(metaFactory);

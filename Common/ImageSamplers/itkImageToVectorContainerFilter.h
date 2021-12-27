@@ -72,7 +72,7 @@ public:
 
   /** Get the input image of this process object.  */
   const InputImageType *
-  GetInput(void);
+  GetInput();
 
   /** Get the input image of this process object.  */
   const InputImageType *
@@ -80,10 +80,10 @@ public:
 
   /** Get the output Mesh of this process object.  */
   OutputVectorContainerType *
-  GetOutput(void);
+  GetOutput();
 
   /** Prepare the output. */
-  // virtual void GenerateOutputInformation( void );
+  // virtual void GenerateOutputInformation();
 
   /** A version of GenerateData() specific for image processing
    * filters.  This implementation will split the processing across
@@ -101,7 +101,7 @@ public:
    *
    * \sa ThreadedGenerateData() */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** If an imaging filter can be implemented as a multithreaded
    * algorithm, the filter will provide an implementation of
@@ -139,7 +139,7 @@ public:
    * Note that this flow of control is only available if a filter provides
    * a ThreadedGenerateData() method and NOT a GenerateData() method. */
   virtual void
-  BeforeThreadedGenerateData(void)
+  BeforeThreadedGenerateData()
   {}
 
   /** If an imaging filter needs to perform processing after all
@@ -153,7 +153,7 @@ public:
    * Note that this flow of control is only available if a filter provides
    * a ThreadedGenerateData() method and NOT a GenerateData() method. */
   virtual void
-  AfterThreadedGenerateData(void)
+  AfterThreadedGenerateData()
   {}
 
   /** Split the output's RequestedRegion into "numberOfSplits" pieces, returning

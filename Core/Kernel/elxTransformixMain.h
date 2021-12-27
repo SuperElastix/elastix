@@ -84,7 +84,7 @@ public:
 
   /** Overwrite Run() from base-class. */
   int
-  Run(void) override;
+  Run() override;
 
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
   int
@@ -109,7 +109,7 @@ protected:
    * from the ComponentDatabase.
    */
   int
-  InitDBIndex(void) override;
+  InitDBIndex() override;
 
 private:
   TransformixMain(const Self &) = delete;

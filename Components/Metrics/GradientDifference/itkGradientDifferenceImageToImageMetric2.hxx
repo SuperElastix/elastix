@@ -86,7 +86,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GradientDiffere
 
 template <class TFixedImage, class TMovingImage>
 void
-GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialise the base class */
   Superclass::Initialize();
@@ -175,7 +175,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::
 
 template <class TFixedImage, class TMovingImage>
 void
-GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMovedGradientRange(void) const
+GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMovedGradientRange() const
 {
   unsigned int           iDimension;
   MovedGradientPixelType gradient;
@@ -216,7 +216,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMovedGra
  */
 template <class TFixedImage, class TMovingImage>
 void
-GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance(void) const
+GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance() const
 {
   unsigned int           iDimension;
   unsigned long          nPixels;

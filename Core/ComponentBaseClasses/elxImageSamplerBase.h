@@ -67,7 +67,7 @@ public:
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *
-  GetAsITKBaseType(void)
+  GetAsITKBaseType()
   {
     return &(this->GetSelf());
   }
@@ -75,7 +75,7 @@ public:
 
   /** Retrieves this object as ITKBaseType, to use in const functions. */
   const ITKBaseType *
-  GetAsITKBaseType(void) const
+  GetAsITKBaseType() const
   {
     return &(this->GetSelf());
   }
@@ -86,7 +86,7 @@ public:
    * but the sampler is ignoring it.
    */
   void
-  BeforeEachResolutionBase(void) override;
+  BeforeEachResolutionBase() override;
 
 protected:
   /** The constructor. */

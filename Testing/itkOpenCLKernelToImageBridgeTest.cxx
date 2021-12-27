@@ -20,7 +20,7 @@
 #include "itkOpenCLKernelToImageBridge.h"
 
 int
-main(void)
+main()
 {
   try
   {

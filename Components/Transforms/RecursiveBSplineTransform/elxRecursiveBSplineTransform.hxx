@@ -32,7 +32,7 @@ namespace elastix
 
 template <class TElastix>
 unsigned int
-RecursiveBSplineTransform<TElastix>::InitializeBSplineTransform(void)
+RecursiveBSplineTransform<TElastix>::InitializeBSplineTransform()
 {
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
   if (this->m_Cyclic)
@@ -64,7 +64,7 @@ RecursiveBSplineTransform<TElastix>::InitializeBSplineTransform(void)
 
 template <class TElastix>
 int
-RecursiveBSplineTransform<TElastix>::BeforeAll(void)
+RecursiveBSplineTransform<TElastix>::BeforeAll()
 {
   /** Read spline order and periodicity setting from configuration file. */
   this->m_SplineOrder = 3;
@@ -83,7 +83,7 @@ RecursiveBSplineTransform<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-RecursiveBSplineTransform<TElastix>::BeforeRegistration(void)
+RecursiveBSplineTransform<TElastix>::BeforeRegistration()
 {
   /** Set initial transform parameters to a 1x1x1 grid, with deformation (0,0,0).
    * In the method BeforeEachResolution() this will be replaced by the right grid size.
@@ -136,7 +136,7 @@ RecursiveBSplineTransform<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-RecursiveBSplineTransform<TElastix>::BeforeEachResolution(void)
+RecursiveBSplineTransform<TElastix>::BeforeEachResolution()
 {
   /** What is the current resolution level? */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -167,7 +167,7 @@ RecursiveBSplineTransform<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-RecursiveBSplineTransform<TElastix>::PreComputeGridInformation(void)
+RecursiveBSplineTransform<TElastix>::PreComputeGridInformation()
 {
   /** Get the total number of resolution levels. */
   unsigned int nrOfResolutions = this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
@@ -321,7 +321,7 @@ RecursiveBSplineTransform<TElastix>::PreComputeGridInformation(void)
 
 template <class TElastix>
 void
-RecursiveBSplineTransform<TElastix>::InitializeTransform(void)
+RecursiveBSplineTransform<TElastix>::InitializeTransform()
 {
   /** Compute the B-spline grid region, origin, and spacing. */
   RegionType    gridRegion;
@@ -350,7 +350,7 @@ RecursiveBSplineTransform<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-RecursiveBSplineTransform<TElastix>::IncreaseScale(void)
+RecursiveBSplineTransform<TElastix>::IncreaseScale()
 {
   /** What is the current resolution level? */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -410,7 +410,7 @@ RecursiveBSplineTransform<TElastix>::IncreaseScale(void)
 
 template <class TElastix>
 void
-RecursiveBSplineTransform<TElastix>::ReadFromFile(void)
+RecursiveBSplineTransform<TElastix>::ReadFromFile()
 {
   /** Read spline order and periodicity settings and initialize BSplineTransform. */
   m_SplineOrder = 3;
@@ -474,7 +474,7 @@ RecursiveBSplineTransform<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-RecursiveBSplineTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+RecursiveBSplineTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto gridRegion = m_BSplineTransform->GetGridRegion();
 

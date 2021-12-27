@@ -118,7 +118,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::GetSchedule(VectorG
 
 template <typename TTransformScalarType, unsigned int VImageDimension>
 void
-GridScheduleComputer<TTransformScalarType, VImageDimension>::ComputeBSplineGrid(void)
+GridScheduleComputer<TTransformScalarType, VImageDimension>::ComputeBSplineGrid()
 {
   OriginType    imageOrigin;
   SpacingType   imageSpacing, finalGridSpacing;

@@ -64,18 +64,18 @@ public:
 
   /** Returns true, the transform is BSpline transform. */
   bool
-  IsBSplineTransform(void) const override
+  IsBSplineTransform() const override
   {
     return true;
   }
 
   /** Get the GPU array of coefficient images. */
   const GPUCoefficientImageArray
-  GetGPUCoefficientImages(void) const;
+  GetGPUCoefficientImages() const;
 
   /** Get the GPU array of coefficient images bases. */
   const GPUCoefficientImageBaseArray
-  GetGPUCoefficientImagesBases(void) const;
+  GetGPUCoefficientImagesBases() const;
 
 protected:
   /** Sets the Spline Order, supports 0th - 3th order splines. The default

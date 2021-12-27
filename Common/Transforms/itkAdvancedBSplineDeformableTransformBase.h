@@ -171,15 +171,15 @@ public:
    *  the values get modified when the user invokes SetIdentity().
    */
   void
-  SetIdentity(void);
+  SetIdentity();
 
   /** Get the Transformation Parameters. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Get the Transformation Fixed Parameters. */
   const FixedParametersType &
-  GetFixedParameters(void) const override;
+  GetFixedParameters() const override;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType     PixelType;
@@ -188,7 +188,7 @@ public:
 
   /** Get the array of coefficient images. */
   virtual const ImagePointer *
-  GetCoefficientImages(void) const
+  GetCoefficientImages() const
   {
     return this->m_CoefficientImages;
   }
@@ -276,11 +276,11 @@ public:
 
   /** Return the number of parameters that completely define the Transform. */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override;
+  GetNumberOfParameters() const override;
 
   /** Return the number of parameters per dimension */
   virtual NumberOfParametersType
-  GetNumberOfParametersPerDimension(void) const;
+  GetNumberOfParametersPerDimension() const;
 
   /** Return the region of the grid wholly within the support region */
   itkGetConstReferenceMacro(ValidRegion, RegionType);
@@ -291,7 +291,7 @@ public:
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
   bool
-  IsLinear(void) const override
+  IsLinear() const override
   {
     return false;
   }
@@ -300,17 +300,17 @@ public:
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
   TransformCategoryEnum
-  GetTransformCategory(void) const override
+  GetTransformCategory() const override
   {
     return TransformCategoryEnum::BSpline;
   }
 
 
   virtual unsigned int
-  GetNumberOfAffectedWeights(void) const = 0;
+  GetNumberOfAffectedWeights() const = 0;
 
   NumberOfParametersType
-  GetNumberOfNonZeroJacobianIndices(void) const override = 0;
+  GetNumberOfNonZeroJacobianIndices() const override = 0;
 
   /** This typedef should be equal to the typedef used
    * in derived classes based on the weights function.
@@ -327,14 +327,14 @@ protected:
 
   /** Wrap flat array into images of coefficients. */
   void
-  WrapAsImages(void);
+  WrapAsImages();
 
   /** Convert an input point to a continuous index inside the B-spline grid. */
   void
   TransformPointToContinuousGridIndex(const InputPointType & point, ContinuousIndexType & index) const;
 
   void
-  UpdatePointIndexConversions(void);
+  UpdatePointIndexConversions();
 
   virtual void
   ComputeNonZeroJacobianIndices(NonZeroJacobianIndicesType & nonZeroJacobianIndices,
@@ -397,7 +397,7 @@ protected:
   ParametersType m_InternalParametersBuffer;
 
   void
-  UpdateGridOffsetTable(void);
+  UpdateGridOffsetTable();
 
 private:
   AdvancedBSplineDeformableTransformBase(const Self &) = delete;

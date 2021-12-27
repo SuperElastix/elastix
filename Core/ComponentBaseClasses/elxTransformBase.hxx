@@ -57,7 +57,7 @@ namespace elastix
 
 template <class TElastix>
 int
-TransformBase<TElastix>::BeforeAllBase(void)
+TransformBase<TElastix>::BeforeAllBase()
 {
   /** Check Command line options and print them to the logfile. */
   elxout << "Command line options from TransformBase:" << std::endl;
@@ -86,7 +86,7 @@ TransformBase<TElastix>::BeforeAllBase(void)
 
 template <class TElastix>
 int
-TransformBase<TElastix>::BeforeAllTransformix(void)
+TransformBase<TElastix>::BeforeAllTransformix()
 {
   /** Declare the return value and initialize it. */
   int returndummy = 0;
@@ -148,7 +148,7 @@ TransformBase<TElastix>::BeforeAllTransformix(void)
 
 template <class TElastix>
 void
-TransformBase<TElastix>::BeforeRegistrationBase(void)
+TransformBase<TElastix>::BeforeRegistrationBase()
 {
   /** Read from the configuration file how to combine the initial
    * transform with the current transform.
@@ -196,7 +196,7 @@ TransformBase<TElastix>::BeforeRegistrationBase(void)
 
 template <class TElastix>
 auto
-TransformBase<TElastix>::GetInitialTransform(void) const -> const InitialTransformType *
+TransformBase<TElastix>::GetInitialTransform() const -> const InitialTransformType *
 {
   return this->GetAsITKBaseType()->GetInitialTransform();
 
@@ -225,7 +225,7 @@ TransformBase<TElastix>::SetInitialTransform(InitialTransformType * _arg)
 
 template <class TElastix>
 void
-TransformBase<TElastix>::SetFinalParameters(void)
+TransformBase<TElastix>::SetFinalParameters()
 {
   /** Make a local copy, since some transforms do not do this,
    * like the B-spline transform.
@@ -244,7 +244,7 @@ TransformBase<TElastix>::SetFinalParameters(void)
 
 template <class TElastix>
 void
-TransformBase<TElastix>::AfterRegistrationBase(void)
+TransformBase<TElastix>::AfterRegistrationBase()
 {
   /** Set the final Parameters. */
   this->SetFinalParameters();
@@ -258,7 +258,7 @@ TransformBase<TElastix>::AfterRegistrationBase(void)
 
 template <class TElastix>
 void
-TransformBase<TElastix>::ReadFromFile(void)
+TransformBase<TElastix>::ReadFromFile()
 {
   /** NOTE:
    * This method assumes this->m_Configuration is initialized with a
@@ -601,7 +601,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
 
 template <class TElastix>
 void
-TransformBase<TElastix>::TransformPoints(void) const
+TransformBase<TElastix>::TransformPoints() const
 {
   /** If the optional command "-def" is given in the command
    * line arguments, then and only then we continue.
@@ -964,7 +964,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
 
 template <class TElastix>
 void
-TransformBase<TElastix>::TransformPointsAllPoints(void) const
+TransformBase<TElastix>::TransformPointsAllPoints() const
 {
   typename DeformationFieldImageType::Pointer deformationfield = this->GenerateDeformationFieldImage();
   // put deformation field in container
@@ -988,7 +988,7 @@ TransformBase<TElastix>::TransformPointsAllPoints(void) const
 
 template <class TElastix>
 auto
-TransformBase<TElastix>::GenerateDeformationFieldImage(void) const -> typename DeformationFieldImageType::Pointer
+TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename DeformationFieldImageType::Pointer
 {
   /** Typedef's. */
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
@@ -1087,7 +1087,7 @@ TransformBase<TElastix>::WriteDeformationFieldImage(
 
 template <class TElastix>
 void
-TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian(void) const
+TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
 {
   /** If the optional command "-jac" is given in the command line arguments,
    * then and only then we continue.
@@ -1176,7 +1176,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian(void) const
 
 template <class TElastix>
 void
-TransformBase<TElastix>::ComputeSpatialJacobian(void) const
+TransformBase<TElastix>::ComputeSpatialJacobian() const
 {
   /** If the optional command "-jacmat" is given in the command line arguments,
    * then and only then we continue.

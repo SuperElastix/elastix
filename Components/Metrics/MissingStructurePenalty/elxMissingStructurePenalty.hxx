@@ -41,7 +41,7 @@ MissingStructurePenalty<TElastix>::MissingStructurePenalty()
 
 template <class TElastix>
 void
-MissingStructurePenalty<TElastix>::Initialize(void)
+MissingStructurePenalty<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -58,7 +58,7 @@ MissingStructurePenalty<TElastix>::Initialize(void)
 
 template <class TElastix>
 int
-MissingStructurePenalty<TElastix>::BeforeAllBase(void)
+MissingStructurePenalty<TElastix>::BeforeAllBase()
 {
   this->Superclass2::BeforeAllBase();
 
@@ -127,7 +127,7 @@ MissingStructurePenalty<TElastix>::BeforeAllBase(void)
 
 template <class TElastix>
 void
-MissingStructurePenalty<TElastix>::BeforeRegistration(void)
+MissingStructurePenalty<TElastix>::BeforeRegistration()
 {
   std::string componentLabel(this->GetComponentLabel());
   std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
@@ -177,7 +177,7 @@ MissingStructurePenalty<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-MissingStructurePenalty<TElastix>::AfterEachIteration(void)
+MissingStructurePenalty<TElastix>::AfterEachIteration()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -229,7 +229,7 @@ MissingStructurePenalty<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-MissingStructurePenalty<TElastix>::AfterEachResolution(void)
+MissingStructurePenalty<TElastix>::AfterEachResolution()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();

@@ -141,14 +141,14 @@ public:
   // void SetTransformParameters( const ParametersType & parameters ) const;
 
   /** Return the number of parameters required by the transform. */
-  // unsigned int GetNumberOfParameters( void ) const
+  // unsigned int GetNumberOfParameters() const
   //{ return this->m_Transform->GetNumberOfParameters(); }
 
   /** Initialize the Metric by making sure that all the components are
    *  present and plugged together correctly.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Set the fixed mask. */
   // \todo: currently not used

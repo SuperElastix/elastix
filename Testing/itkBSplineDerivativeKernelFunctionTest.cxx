@@ -25,7 +25,7 @@
 //-------------------------------------------------------------------------------------
 
 int
-main(void)
+main()
 {
   /** Some basic type definitions. */
   std::vector<unsigned int> splineOrders;

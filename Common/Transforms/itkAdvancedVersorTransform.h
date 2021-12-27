@@ -132,7 +132,7 @@ public:
 
   /** Get the Transformation Parameters. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Set the rotational part of the transform */
   void
@@ -145,7 +145,7 @@ public:
 
   /** Set the parameters to the IdentityTransform */
   void
-  SetIdentity(void) override;
+  SetIdentity() override;
 
   /** This method computes the Jacobian matrix of the transformation. */
   void
@@ -173,10 +173,10 @@ protected:
   /** Compute Matrix
    *  Compute the components of the rotation matrix in the superclass */
   void
-  ComputeMatrix(void) override;
+  ComputeMatrix() override;
 
   void
-  ComputeMatrixParameters(void) override;
+  ComputeMatrixParameters() override;
 
 private:
   /** Copy a AdvancedVersorTransform object */

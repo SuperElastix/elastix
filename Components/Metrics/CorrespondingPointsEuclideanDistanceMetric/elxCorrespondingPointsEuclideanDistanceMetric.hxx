@@ -31,7 +31,7 @@ namespace elastix
 
 template <class TElastix>
 void
-CorrespondingPointsEuclideanDistanceMetric<TElastix>::Initialize(void)
+CorrespondingPointsEuclideanDistanceMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -49,7 +49,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 int
-CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase(void)
+CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
 {
   this->Superclass2::BeforeAllBase();
 
@@ -107,7 +107,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase(void)
 
 template <class TElastix>
 void
-CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration(void)
+CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
 {
   /** Read and set the fixed pointset. */
   std::string                            fixedName = this->GetConfiguration()->GetCommandLineArgument("-fp");

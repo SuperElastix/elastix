@@ -32,7 +32,7 @@ namespace elastix
 
 template <class TElastix>
 void
-TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
+TransformRigidityPenalty<TElastix>::BeforeRegistration()
 {
   /** Read the fixed rigidity image if desired. */
   std::string fixedRigidityImageName = "";
@@ -166,7 +166,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-TransformRigidityPenalty<TElastix>::Initialize(void)
+TransformRigidityPenalty<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -187,7 +187,7 @@ TransformRigidityPenalty<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-TransformRigidityPenalty<TElastix>::BeforeEachResolution(void)
+TransformRigidityPenalty<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -267,7 +267,7 @@ TransformRigidityPenalty<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-TransformRigidityPenalty<TElastix>::AfterEachIteration(void)
+TransformRigidityPenalty<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
   this->GetIterationInfoAt("Metric-LC") << this->GetLinearityConditionValue();

@@ -135,7 +135,7 @@ public:
 
   /** Return the number of sub-transforms. */
   SizeValueType
-  GetNumberOfTransforms(void) const;
+  GetNumberOfTransforms() const;
 
   /** Get the Nth current transform.
    * Exact interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
@@ -190,19 +190,19 @@ public:
 
   /** Return the number of parameters that completely define the CurrentTransform. */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override;
+  GetNumberOfParameters() const override;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
   NumberOfParametersType
-  GetNumberOfNonZeroJacobianIndices(void) const override;
+  GetNumberOfNonZeroJacobianIndices() const override;
 
   /** Get the transformation parameters from the CurrentTransform. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Get the fixed parameters from the CurrentTransform. */
   const FixedParametersType &
-  GetFixedParameters(void) const override;
+  GetFixedParameters() const override;
 
   /** Set the transformation parameters in the CurrentTransform. */
   void
@@ -234,7 +234,7 @@ public:
   /** Return whether the transform is linear (or actually: affine)
    * Returns true when both initial and current transform are linear */
   bool
-  IsLinear(void) const override;
+  IsLinear() const override;
 
   /** Special handling for combination transform. If all transforms
    * are linear, then return category Linear. Otherwise if all
@@ -245,10 +245,10 @@ public:
 
   /** Whether the advanced transform has nonzero matrices. */
   bool
-  GetHasNonZeroSpatialHessian(void) const override;
+  GetHasNonZeroSpatialHessian() const override;
 
   bool
-  HasNonZeroJacobianOfSpatialHessian(void) const;
+  HasNonZeroJacobianOfSpatialHessian() const;
 
   /** Compute the (sparse) Jacobian of the transformation. */
   void
@@ -312,7 +312,7 @@ protected:
    * SelectedGetJacobianFunction.
    */
   void
-  UpdateCombinationMethod(void);
+  UpdateCombinationMethod();
 
   /** ************************************************
    * Methods to transform a point.

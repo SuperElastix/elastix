@@ -94,7 +94,7 @@ Configuration::Configuration()
  */
 
 void
-Configuration::PrintParameterFile(void) const
+Configuration::PrintParameterFile() const
 {
   /** Read what's in the parameter file. */
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
@@ -122,7 +122,7 @@ Configuration::PrintParameterFile(void) const
  */
 
 int
-Configuration::BeforeAll(void)
+Configuration::BeforeAll()
 {
   if (!BaseComponent::IsElastixLibrary())
   {
@@ -138,7 +138,7 @@ Configuration::BeforeAll(void)
  */
 
 int
-Configuration::BeforeAllTransformix(void)
+Configuration::BeforeAllTransformix()
 {
   this->PrintParameterFile();
   return 0;
@@ -267,7 +267,7 @@ Configuration::Initialize(const CommandLineArgumentMapType &                _arg
  */
 
 bool
-Configuration::IsInitialized(void) const
+Configuration::IsInitialized() const
 {
   return this->m_IsInitialized;
 

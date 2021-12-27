@@ -153,7 +153,7 @@ public:
 
   /** Return the number of parameters that completely define the Transform. */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override
+  GetNumberOfParameters() const override
   {
     return (this->m_SourceLandmarks->GetNumberOfPoints() * SpaceDimension);
   }
@@ -180,11 +180,11 @@ public:
 
   /** Compute W matrix. */
   void
-  ComputeWMatrix(void);
+  ComputeWMatrix();
 
   /** Compute L matrix inverse. */
   void
-  ComputeLInverse(void);
+  ComputeLInverse();
 
   /** Compute the position of point in the new space */
   OutputPointType
@@ -219,7 +219,7 @@ public:
 
   /** Set the Transformation Parameters to be an identity transform. */
   virtual void
-  SetIdentity(void);
+  SetIdentity();
 
   /** Set the Transformation Parameters and update the internal transformation.
    * The parameters represent the source landmarks. Each landmark point is represented
@@ -239,15 +239,15 @@ public:
 
   /** Update the Parameters array from the landmarks coordinates. */
   virtual void
-  UpdateParameters(void);
+  UpdateParameters();
 
   /** Get the Transformation Parameters - Gets the source landmarks. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Get Transform Fixed Parameters - Gets the target landmarks. */
   const ParametersType &
-  GetFixedParameters(void) const override;
+  GetFixedParameters() const override;
 
   /** Stiffness of the spline.  A stiffness of zero results in the
    * standard interpolating spline.  A non-zero stiffness allows the
@@ -289,7 +289,7 @@ public:
    */
   itkSetMacro(PoissonRatio, TScalarType);
   virtual const TScalarType
-  GetPoissonRatio(void) const
+  GetPoissonRatio() const
   {
     return this->m_PoissonRatio;
   }
@@ -427,30 +427,30 @@ protected:
 
   /** Compute K matrix. */
   void
-  ComputeK(void);
+  ComputeK();
 
   /** Compute L matrix. */
   void
-  ComputeL(void);
+  ComputeL();
 
   /** Compute P matrix. */
   void
-  ComputeP(void);
+  ComputeP();
 
   /** Compute Y matrix. */
   void
-  ComputeY(void);
+  ComputeY();
 
   /** Compute displacements \f$ q_i - p_i \f$. */
   void
-  ComputeD(void);
+  ComputeD();
 
   /** Reorganize the components of W into D (deformable), A (rotation part
    * of affine) and B (translational part of affine ) components.
    * \warning This method release the memory of the W Matrix.
    */
   void
-  ReorganizeW(void);
+  ReorganizeW();
 
   /** Stiffness parameter. */
   double m_Stiffness;

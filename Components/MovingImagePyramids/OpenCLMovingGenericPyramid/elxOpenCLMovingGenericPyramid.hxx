@@ -88,7 +88,7 @@ OpenCLMovingGenericPyramid<TElastix>::OpenCLMovingGenericPyramid()
 
 template <class TElastix>
 void
-OpenCLMovingGenericPyramid<TElastix>::BeforeGenerateData(void)
+OpenCLMovingGenericPyramid<TElastix>::BeforeGenerateData()
 {
   // Local GPU input image
   GPUInputImagePointer gpuInputImage;
@@ -144,7 +144,7 @@ OpenCLMovingGenericPyramid<TElastix>::BeforeGenerateData(void)
 
 template <class TElastix>
 void
-OpenCLMovingGenericPyramid<TElastix>::GenerateData(void)
+OpenCLMovingGenericPyramid<TElastix>::GenerateData()
 {
   if (!this->m_ContextCreated || !this->m_GPUPyramidCreated || !this->m_UseOpenCL || !this->m_GPUPyramidReady)
   {
@@ -217,7 +217,7 @@ OpenCLMovingGenericPyramid<TElastix>::GenerateData(void)
 
 template <class TElastix>
 void
-OpenCLMovingGenericPyramid<TElastix>::RegisterFactories(void)
+OpenCLMovingGenericPyramid<TElastix>::RegisterFactories()
 {
   // Typedefs for factories
   typedef itk::GPUImageFactory2<OpenCLImageTypes, OpenCLImageDimentions> ImageFactoryType;
@@ -267,7 +267,7 @@ OpenCLMovingGenericPyramid<TElastix>::RegisterFactories(void)
 
 template <class TElastix>
 void
-OpenCLMovingGenericPyramid<TElastix>::UnregisterFactories(void)
+OpenCLMovingGenericPyramid<TElastix>::UnregisterFactories()
 {
   for (std::vector<ObjectFactoryBasePointer>::iterator it = this->m_Factories.begin(); it != this->m_Factories.end();
        ++it)
@@ -284,7 +284,7 @@ OpenCLMovingGenericPyramid<TElastix>::UnregisterFactories(void)
 
 template <class TElastix>
 void
-OpenCLMovingGenericPyramid<TElastix>::BeforeRegistration(void)
+OpenCLMovingGenericPyramid<TElastix>::BeforeRegistration()
 {
   // Are we using a OpenCL enabled GPU for pyramid?
   this->m_UseOpenCL = true;
@@ -299,7 +299,7 @@ OpenCLMovingGenericPyramid<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-OpenCLMovingGenericPyramid<TElastix>::ReadFromFile(void)
+OpenCLMovingGenericPyramid<TElastix>::ReadFromFile()
 {
   // OpenCL pyramid specific.
   this->m_UseOpenCL = true;
@@ -337,7 +337,7 @@ OpenCLMovingGenericPyramid<TElastix>::SwitchingToCPUAndReport(const bool configE
 
 template <class TElastix>
 void
-OpenCLMovingGenericPyramid<TElastix>::ReportToLog(void)
+OpenCLMovingGenericPyramid<TElastix>::ReportToLog()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
   itk::OpenCLDevice           device = context->GetDefaultDevice();

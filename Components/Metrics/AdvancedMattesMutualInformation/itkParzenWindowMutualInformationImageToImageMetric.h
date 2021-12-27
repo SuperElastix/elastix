@@ -227,7 +227,7 @@ protected:
 
   /** Some initialization functions, called by Initialize. */
   void
-  InitializeHistograms(void) override;
+  InitializeHistograms() override;
 
   /** Threading related parameters. */
   struct ParzenWindowMutualInformationMultiThreaderParameterType
@@ -250,7 +250,7 @@ protected:
 
   /** Helper function to launch the threads. */
   void
-  LaunchComputeDerivativeLowMemoryThreaderCallback(void) const;
+  LaunchComputeDerivativeLowMemoryThreaderCallback() const;
 
 private:
   /** The deleted copy constructor. */

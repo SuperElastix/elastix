@@ -63,10 +63,10 @@ public:
 
   /** Get the output maps. */
   const CStreamMapType &
-  GetCOutputs(void) override;
+  GetCOutputs() override;
 
   const XStreamMapType &
-  GetXOutputs(void) override;
+  GetXOutputs() override;
 };
 
 } // end namespace xoutlibrary

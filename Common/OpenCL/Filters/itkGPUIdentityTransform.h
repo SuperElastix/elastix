@@ -63,7 +63,7 @@ public:
   /** Returns true if the derived transform is identity transform,
    * false otherwise. */
   bool
-  IsIdentityTransform(void) const override
+  IsIdentityTransform() const override
   {
     return true;
   }

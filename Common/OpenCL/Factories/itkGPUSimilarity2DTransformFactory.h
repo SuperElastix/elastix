@@ -62,7 +62,7 @@ public:
   /** Operator() to register override. */
   template <typename TType>
   void
-  operator()(void)
+  operator()()
   {
     this->RegisterOverride(typeid(Similarity2DTransform<TType>).name(),
                            typeid(GPUSimilarity2DTransform<TType>).name(),

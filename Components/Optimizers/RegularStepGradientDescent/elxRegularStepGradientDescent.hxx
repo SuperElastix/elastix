@@ -33,7 +33,7 @@ namespace elastix
 
 template <class TElastix>
 void
-RegularStepGradientDescent<TElastix>::BeforeRegistration(void)
+RegularStepGradientDescent<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo.*/
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -54,7 +54,7 @@ RegularStepGradientDescent<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-RegularStepGradientDescent<TElastix>::BeforeEachResolution(void)
+RegularStepGradientDescent<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -98,7 +98,7 @@ RegularStepGradientDescent<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-RegularStepGradientDescent<TElastix>::AfterEachIteration(void)
+RegularStepGradientDescent<TElastix>::AfterEachIteration()
 {
   /** Print some information */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -113,7 +113,7 @@ RegularStepGradientDescent<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-RegularStepGradientDescent<TElastix>::AfterEachResolution(void)
+RegularStepGradientDescent<TElastix>::AfterEachResolution()
 {
 
   /**
@@ -162,7 +162,7 @@ RegularStepGradientDescent<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-RegularStepGradientDescent<TElastix>::AfterRegistration(void)
+RegularStepGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();

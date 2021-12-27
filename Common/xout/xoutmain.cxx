@@ -21,7 +21,7 @@
 namespace xoutlibrary
 {
 xoutmain &
-get_xout(void)
+get_xout()
 {
   // Note: C++11 "magic statics" ensures that the construction of a local
   // static variable like this is thread-safe.

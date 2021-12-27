@@ -136,7 +136,7 @@ GPUTranslationTransformBase<TScalarType, NDimensions>::GPUTranslationTransformBa
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NDimensions>
 GPUDataManager::Pointer
-GPUTranslationTransformBase<TScalarType, NDimensions>::GetParametersDataManager(void) const
+GPUTranslationTransformBase<TScalarType, NDimensions>::GetParametersDataManager() const
 {
   using namespace ITKGPUTranslationTransformBase;
   const SpaceDimensionToType<SpaceDimension> dim = {};

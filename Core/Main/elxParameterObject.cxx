@@ -230,7 +230,7 @@ ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileNam
 
 
 void
-ParameterObject::WriteParameterFile(void)
+ParameterObject::WriteParameterFile()
 {
   ParameterFileNameVectorType parameterFileNameVector;
   for (unsigned int i = 0; i < m_ParameterMap.size(); ++i)

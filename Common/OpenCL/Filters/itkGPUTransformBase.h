@@ -54,7 +54,7 @@ public:
   /** Returns true if the derived transform is identity transform,
    * false otherwise. */
   virtual bool
-  IsIdentityTransform(void) const
+  IsIdentityTransform() const
   {
     return false;
   }
@@ -62,7 +62,7 @@ public:
   /** Returns true if the derived transform is matrix offset transform,
    * false otherwise. */
   virtual bool
-  IsMatrixOffsetTransform(void) const
+  IsMatrixOffsetTransform() const
   {
     return false;
   }
@@ -70,7 +70,7 @@ public:
   /** Returns true if the derived transform is translation transform,
    * false otherwise. */
   virtual bool
-  IsTranslationTransform(void) const
+  IsTranslationTransform() const
   {
     return false;
   }
@@ -78,14 +78,14 @@ public:
   /** Returns true if the derived transform is BSpline transform,
    * false otherwise. */
   virtual bool
-  IsBSplineTransform(void) const
+  IsBSplineTransform() const
   {
     return false;
   }
 
   /** Returns data manager that stores all settings for the transform. */
   virtual GPUDataManager::Pointer
-  GetParametersDataManager(void) const;
+  GetParametersDataManager() const;
 
   /** Returns data manager that stores all settings for the transform \a index.
    * Used by combination transforms. */

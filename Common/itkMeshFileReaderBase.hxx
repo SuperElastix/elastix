@@ -43,7 +43,7 @@ MeshFileReaderBase<TOutputMesh>::MeshFileReaderBase()
 
 template <class TOutputMesh>
 void
-MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation(void)
+MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation()
 {
   OutputMeshPointer output = this->GetOutput();
 
@@ -77,7 +77,7 @@ MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation(void)
 
 template <class TOutputMesh>
 void
-MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability(void)
+MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability()
 {
   // Test if the file exists.
   if (!itksys::SystemTools::FileExists(this->m_FileName.c_str()))

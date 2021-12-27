@@ -65,7 +65,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::~AdvancedKa
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters(void) const
+AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
@@ -826,7 +826,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::UpdateValue
 
 template <class TFixedImage, class TMovingImage>
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGradient(void)
+AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGradient()
 {
   /** Typedefs. */
   typedef itk::ImageRegionIteratorWithIndex<GradientImageType>    GradientIteratorType;

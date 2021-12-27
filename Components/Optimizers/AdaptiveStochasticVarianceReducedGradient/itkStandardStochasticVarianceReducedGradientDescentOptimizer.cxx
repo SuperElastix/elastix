@@ -35,7 +35,7 @@ StandardStochasticVarianceReducedGradientOptimizer::StandardStochasticVarianceRe
  */
 
 void
-StandardStochasticVarianceReducedGradientOptimizer::StartOptimization(void)
+StandardStochasticVarianceReducedGradientOptimizer::StartOptimization()
 {
   this->m_CurrentTime = this->m_InitialTime;
   this->Superclass::StartOptimization();
@@ -47,7 +47,7 @@ StandardStochasticVarianceReducedGradientOptimizer::StartOptimization(void)
  */
 
 void
-StandardStochasticVarianceReducedGradientOptimizer::AdvanceOneStep(void)
+StandardStochasticVarianceReducedGradientOptimizer::AdvanceOneStep()
 {
 
   this->SetLearningRate(this->Compute_a(this->m_CurrentTime));
@@ -88,7 +88,7 @@ StandardStochasticVarianceReducedGradientOptimizer::Compute_beta(double k) const
  */
 
 void
-StandardStochasticVarianceReducedGradientOptimizer::UpdateCurrentTime(void)
+StandardStochasticVarianceReducedGradientOptimizer::UpdateCurrentTime()
 {
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;

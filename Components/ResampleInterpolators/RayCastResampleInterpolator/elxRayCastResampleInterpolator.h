@@ -100,14 +100,14 @@ public:
   using typename Superclass2::ParameterMapType;
 
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
 protected:
   /** The constructor. */
@@ -120,7 +120,7 @@ protected:
    * with a pre-transform.
    */
   void
-  InitializeRayCastInterpolator(void);
+  InitializeRayCastInterpolator();
 
 private:
   elxOverrideGetSelfMacro;

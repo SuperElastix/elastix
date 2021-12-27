@@ -76,11 +76,11 @@ public:
 
   /** Getter for result image. */
   ConstImagePointer
-  GetResultImage(void) const;
+  GetResultImage() const;
 
   /** Getter for result image. Non-const overload */
   ImagePointer
-  GetResultImage(void);
+  GetResultImage();
 
 private:
   ImagePointer m_ResultImage;

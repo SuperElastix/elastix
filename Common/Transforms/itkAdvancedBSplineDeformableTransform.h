@@ -231,17 +231,17 @@ public:
 
   /** Get number of weights. */
   unsigned long
-  GetNumberOfWeights(void) const
+  GetNumberOfWeights() const
   {
     return this->m_WeightsFunction->GetNumberOfWeights();
   }
 
 
   unsigned int
-  GetNumberOfAffectedWeights(void) const override;
+  GetNumberOfAffectedWeights() const override;
 
   NumberOfParametersType
-  GetNumberOfNonZeroJacobianIndices(void) const override;
+  GetNumberOfNonZeroJacobianIndices() const override;
 
   /** Compute the Jacobian of the transformation. */
   void
@@ -309,7 +309,7 @@ protected:
 
   /** Wrap flat array into images of coefficients. */
   void
-  WrapAsImages(void);
+  WrapAsImages();
 
   void
   ComputeNonZeroJacobianIndices(NonZeroJacobianIndicesType & nonZeroJacobianIndices,

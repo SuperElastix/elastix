@@ -64,7 +64,7 @@ public:
 
   /** A wrap around the New() functions of itkObjects. */
   static ObjectPointer
-  Creator(void)
+  Creator()
   {
     return AnyItkObjectType::New().GetPointer();
   }

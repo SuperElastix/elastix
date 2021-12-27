@@ -62,7 +62,7 @@ public:
 
   /** Get number of transforms in composite transform. */
   SizeValueType
-  GetNumberOfTransforms(void) const override
+  GetNumberOfTransforms() const override
   {
     return CPUSuperclass::GetNumberOfTransforms();
   }

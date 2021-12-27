@@ -96,7 +96,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::~StatisticalShape
 
 template <class TFixedPointSet, class TMovingPointSet>
 void
-StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
+StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 {
   /** Call the initialize of the superclass. */
   this->Superclass::Initialize();

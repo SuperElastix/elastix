@@ -99,10 +99,10 @@ public:
   Allocate(bool initialize = false) override;
 
   void
-  AllocateGPU(void);
+  AllocateGPU();
 
   void
-  Initialize(void) override;
+  Initialize() override;
 
   void
   FillBuffer(const TPixel & value);
@@ -122,25 +122,25 @@ public:
 
   /** Explicit synchronize CPU/GPU buffers */
   void
-  UpdateBuffers(void);
+  UpdateBuffers();
 
   /** Explicit synchronize CPU/GPU buffers */
   void
-  UpdateCPUBuffer(void);
+  UpdateCPUBuffer();
 
   void
-  UpdateGPUBuffer(void);
+  UpdateGPUBuffer();
 
   /** Get CPU buffer pointer */
   TPixel *
-  GetBufferPointer(void) override;
+  GetBufferPointer() override;
 
   const TPixel *
-  GetBufferPointer(void) const override;
+  GetBufferPointer() const override;
 
   /** Return the Pixel Accessor object */
   AccessorType
-  GetPixelAccessor(void)
+  GetPixelAccessor()
   {
     m_DataManager->SetGPUBufferDirty();
     return Superclass::GetPixelAccessor();
@@ -149,7 +149,7 @@ public:
 
   /** Return the Pixel Accesor object */
   const AccessorType
-  GetPixelAccessor(void) const
+  GetPixelAccessor() const
   {
     m_DataManager->UpdateCPUBuffer();
     return Superclass::GetPixelAccessor();
@@ -158,7 +158,7 @@ public:
 
   /** Return the NeighborhoodAccessor functor */
   NeighborhoodAccessorFunctorType
-  GetNeighborhoodAccessor(void)
+  GetNeighborhoodAccessor()
   {
     m_DataManager->SetGPUBufferDirty();
     return NeighborhoodAccessorFunctorType();
@@ -167,7 +167,7 @@ public:
 
   /** Return the NeighborhoodAccessor functor */
   const NeighborhoodAccessorFunctorType
-  GetNeighborhoodAccessor(void) const
+  GetNeighborhoodAccessor() const
   {
     m_DataManager->UpdateCPUBuffer();
     return NeighborhoodAccessorFunctorType();
@@ -179,7 +179,7 @@ public:
 
   /** Return a pointer to the container. */
   PixelContainer *
-  GetPixelContainer(void)
+  GetPixelContainer()
   {
     m_DataManager->SetGPUBufferDirty();
     return Superclass::GetPixelContainer();
@@ -187,7 +187,7 @@ public:
 
 
   const PixelContainer *
-  GetPixelContainer(void) const
+  GetPixelContainer() const
   {
     m_DataManager->UpdateCPUBuffer();
     return Superclass::GetPixelContainer();
@@ -202,14 +202,14 @@ public:
 
 
   int
-  GetCurrentCommandQueueId(void)
+  GetCurrentCommandQueueId()
   {
     return m_DataManager->GetCurrentCommandQueueId();
   }
 
 
   GPUDataManager::Pointer
-  GetGPUDataManager(void) const;
+  GetGPUDataManager() const;
 
   /** Override DataHasBeenGenerated() in DataObject class.
    * We need this because CPU time stamp is always bigger
@@ -219,7 +219,7 @@ public:
    * CPU's time stamp will be increased after that.
    */
   void
-  DataHasBeenGenerated(void) override
+  DataHasBeenGenerated() override
   {
     Superclass::DataHasBeenGenerated();
 
@@ -239,7 +239,7 @@ public:
 
   /** Whenever the image has been modified, set the GPU Buffer to dirty */
   void
-  Modified(void) const override;
+  Modified() const override;
 
   /** Get matrices intended to help with the conversion of Index coordinates
    *  to PhysicalPoint coordinates */

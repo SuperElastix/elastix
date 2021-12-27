@@ -83,15 +83,15 @@ public:
 
   /** Function to get the actual (not the allocated) size of the data container. */
   unsigned long
-  GetActualSize(void);
+  GetActualSize();
 
   /** Function to clear the data container. */
   void
-  Clear(void);
+  Clear();
 
   /** Function to get the size of the data container. */
   InstanceIdentifier
-  Size(void) const override
+  Size() const override
   {
     return this->m_InternalContainerSize;
   }
@@ -124,7 +124,7 @@ public:
 
   /** Function to get the total frequency. */
   TotalAbsoluteFrequencyType
-  GetTotalFrequency(void) const override
+  GetTotalFrequency() const override
   {
     return static_cast<TotalAbsoluteFrequencyType>(this->m_InternalContainerSize);
   }
@@ -155,7 +155,7 @@ private:
 
   /** Function to deallocate the memory of the data container. */
   void
-  DeallocateInternalContainer(void);
+  DeallocateInternalContainer();
 };
 
 } // end namespace Statistics

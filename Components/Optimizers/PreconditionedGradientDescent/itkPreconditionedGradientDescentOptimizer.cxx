@@ -121,7 +121,7 @@ PreconditionedGradientDescentOptimizer::PrintSelf(std::ostream & os, Indent inde
  */
 
 void
-PreconditionedGradientDescentOptimizer::StartOptimization(void)
+PreconditionedGradientDescentOptimizer::StartOptimization()
 {
   this->m_CurrentIteration = 0;
 
@@ -145,7 +145,7 @@ PreconditionedGradientDescentOptimizer::StartOptimization(void)
  */
 
 void
-PreconditionedGradientDescentOptimizer::ResumeOptimization(void)
+PreconditionedGradientDescentOptimizer::ResumeOptimization()
 {
   itkDebugMacro("ResumeOptimization");
 
@@ -219,7 +219,7 @@ PreconditionedGradientDescentOptimizer::MetricErrorResponse(ExceptionObject & er
  */
 
 void
-PreconditionedGradientDescentOptimizer::StopOptimization(void)
+PreconditionedGradientDescentOptimizer::StopOptimization()
 {
   itkDebugMacro("StopOptimization");
 
@@ -233,7 +233,7 @@ PreconditionedGradientDescentOptimizer::StopOptimization(void)
  */
 
 void
-PreconditionedGradientDescentOptimizer::AdvanceOneStep(void)
+PreconditionedGradientDescentOptimizer::AdvanceOneStep()
 {
   typedef DerivativeType::ValueType      DerivativeValueType;
   typedef DerivativeType::const_iterator DerivativeIteratorType;
