@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-PatternIntensityMetric<TElastix>::Initialize(void)
+PatternIntensityMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -48,7 +48,7 @@ PatternIntensityMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-PatternIntensityMetric<TElastix>::BeforeRegistration(void)
+PatternIntensityMetric<TElastix>::BeforeRegistration()
 {
   if (this->m_Elastix->GetFixedImage()->GetImageDimension() != 3)
   {
@@ -71,7 +71,7 @@ PatternIntensityMetric<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-PatternIntensityMetric<TElastix>::BeforeEachResolution(void)
+PatternIntensityMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

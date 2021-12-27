@@ -147,7 +147,7 @@ public:
    * \li Estimate the normalization factor, if asked for.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Set/Get Scales  */
   itkSetMacro(Scales, ScalesType);
@@ -169,7 +169,7 @@ protected:
 
   /** Compute the pattern intensity fixed image*/
   MeasureType
-  ComputePIFixed(void) const;
+  ComputePIFixed() const;
 
   /** Compute the pattern intensity difference image. */
   MeasureType

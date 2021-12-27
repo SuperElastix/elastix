@@ -88,7 +88,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SetInput(cons
 
 template <class TInputImage, class TOutputVectorContainer>
 auto
-ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(void) -> const InputImageType *
+ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput() -> const InputImageType *
 {
   return dynamic_cast<const InputImageType *>(this->ProcessObject::GetInput(0));
 } // end GetInput()
@@ -110,7 +110,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetInput(unsi
 
 template <class TInputImage, class TOutputVectorContainer>
 auto
-ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetOutput(void) -> OutputVectorContainerType *
+ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GetOutput() -> OutputVectorContainerType *
 {
   return dynamic_cast<OutputVectorContainerType *>(this->ProcessObject::GetOutput(0));
 } // end GetOutput()
@@ -199,7 +199,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
 
 template <class TInputImage, class TOutputVectorContainer>
 void
-ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GenerateData(void)
+ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::GenerateData()
 {
   // Call a method that can be overriden by a subclass to allocate
   // memory for the filter's outputs

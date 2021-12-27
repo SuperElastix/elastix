@@ -141,7 +141,7 @@ public:
 
   /** Computes the moving gradient image dM/dx. */
   void
-  ComputeGradient(void) override;
+  ComputeGradient() override;
 
   /** This method allows the user to set the foreground value. The default value is 1.0. */
   itkSetMacro(ForegroundValue, RealType);
@@ -207,7 +207,7 @@ protected:
    * here we use other parameters.
    */
   void
-  InitializeThreadingParameters(void) const override;
+  InitializeThreadingParameters() const override;
 
   /** Get value and derivatives for each thread. */
   inline void

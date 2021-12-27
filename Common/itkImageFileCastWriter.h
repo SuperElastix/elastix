@@ -68,7 +68,7 @@ public:
 
   /** Determine the default outputcomponentType */
   std::string
-  GetDefaultOutputComponentType(void) const;
+  GetDefaultOutputComponentType() const;
 
 protected:
   ImageFileCastWriter();
@@ -76,7 +76,7 @@ protected:
 
   /** Does the real work. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
 private:
   /** Templated function that casts the input image and returns a

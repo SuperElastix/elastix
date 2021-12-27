@@ -64,7 +64,7 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
 
 template <class TElastix>
 int
-BSplineStackTransform<TElastix>::BeforeAll(void)
+BSplineStackTransform<TElastix>::BeforeAll()
 {
   /** Read spline order from configuration file. */
   this->m_SplineOrder = 3;
@@ -82,7 +82,7 @@ BSplineStackTransform<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-BSplineStackTransform<TElastix>::BeforeRegistration(void)
+BSplineStackTransform<TElastix>::BeforeRegistration()
 {
   /** Set initial transform parameters to a 1x1x1 grid, with deformation (0,0,0).
    * In the method BeforeEachResolution() this will be replaced by the right grid size.
@@ -151,7 +151,7 @@ BSplineStackTransform<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-BSplineStackTransform<TElastix>::BeforeEachResolution(void)
+BSplineStackTransform<TElastix>::BeforeEachResolution()
 {
   /** What is the current resolution level? */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -182,7 +182,7 @@ BSplineStackTransform<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-BSplineStackTransform<TElastix>::PreComputeGridInformation(void)
+BSplineStackTransform<TElastix>::PreComputeGridInformation()
 {
   /** Get the total number of resolution levels. */
   const unsigned int nrOfResolutions = this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
@@ -356,7 +356,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation(void)
 
 template <class TElastix>
 void
-BSplineStackTransform<TElastix>::InitializeTransform(void)
+BSplineStackTransform<TElastix>::InitializeTransform()
 {
   /** Compute the B-spline grid region, origin, and spacing. */
   ReducedDimensionRegionType    gridRegion;
@@ -388,7 +388,7 @@ BSplineStackTransform<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-BSplineStackTransform<TElastix>::IncreaseScale(void)
+BSplineStackTransform<TElastix>::IncreaseScale()
 {
   /** What is the current resolution level? */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -456,7 +456,7 @@ BSplineStackTransform<TElastix>::IncreaseScale(void)
 
 template <class TElastix>
 void
-BSplineStackTransform<TElastix>::ReadFromFile(void)
+BSplineStackTransform<TElastix>::ReadFromFile()
 {
   /** Read spline order settings and initialize BSplineTransform. */
   this->m_SplineOrder = 3;
@@ -626,7 +626,7 @@ BSplineStackTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth
 
 template <class TElastix>
 auto
-BSplineStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+BSplineStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   ReducedDimensionBSplineTransformBasePointer firstSubTransform =
     dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(this->m_StackTransform->GetSubTransform(0).GetPointer());

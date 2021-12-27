@@ -190,7 +190,7 @@ public:
 
   /** Get the advanced transform. */
   const AdvancedTransformType *
-  GetTransform(void) const override
+  GetTransform() const override
   {
     return this->m_AdvancedTransform.GetPointer();
   }
@@ -199,7 +199,7 @@ public:
   /** Set/Get the image sampler. */
   itkSetObjectMacro(ImageSampler, ImageSamplerType);
   virtual ImageSamplerType *
-  GetImageSampler(void) const
+  GetImageSampler() const
   {
     return this->m_ImageSampler.GetPointer();
   }
@@ -263,7 +263,7 @@ public:
    * \li Check if an AdvancedTransform has been set
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Experimental feature: compute SelfHessian.
    * This base class just returns an identity matrix of the right size.
@@ -388,7 +388,7 @@ protected:
 
   /** Launch MultiThread GetValue. */
   void
-  LaunchGetValueThreaderCallback(void) const;
+  LaunchGetValueThreaderCallback() const;
 
   /** Multi-threaded version of GetValueAndDerivative(). */
   virtual inline void
@@ -406,7 +406,7 @@ protected:
 
   /** Launch MultiThread GetValueAndDerivative. */
   void
-  LaunchGetValueAndDerivativeThreaderCallback(void) const;
+  LaunchGetValueAndDerivativeThreaderCallback() const;
 
   /** AccumulateDerivatives threader callback function. */
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
@@ -470,7 +470,7 @@ protected:
 
   /** Initialize some multi-threading related parameters. */
   virtual void
-  InitializeThreadingParameters(void) const;
+  InitializeThreadingParameters() const;
 
   /** Protected methods ************** */
 
@@ -478,7 +478,7 @@ protected:
 
   /** Initialize variables related to the image sampler; called by Initialize. */
   virtual void
-  InitializeImageSampler(void);
+  InitializeImageSampler();
 
   /** Inheriting classes can specify whether they use the image sampler functionality
    * Make sure to set it before calling Initialize; default: false. */
@@ -494,7 +494,7 @@ protected:
   /** Initialize variables for image derivative computation; this
    * method is called by Initialize. */
   virtual void
-  CheckForBSplineInterpolator(void);
+  CheckForBSplineInterpolator();
 
   /** Compute the image value (and possibly derivative) at a transformed point.
    * Checks if the point lies within the moving image buffer (bool return).
@@ -539,11 +539,11 @@ protected:
    * the parameters in the support region of a point.
    */
   virtual void
-  CheckForAdvancedTransform(void);
+  CheckForAdvancedTransform();
 
   /** Check if the transform is a B-spline. Called by Initialize. */
   virtual void
-  CheckForBSplineTransform(void) const;
+  CheckForBSplineTransform() const;
 
   /** Transform a point from FixedImage domain to MovingImage domain.
    * This function also checks if mapped point is within support region of
@@ -570,7 +570,7 @@ protected:
   /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */
   virtual void
-  InitializeLimiters(void);
+  InitializeLimiters();
 
   /** Inheriting classes can specify whether they use the image limiter functionality
    * Make sure to set it before calling Initialize; default: false. */

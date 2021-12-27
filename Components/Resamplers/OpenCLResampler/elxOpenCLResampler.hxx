@@ -120,7 +120,7 @@ OpenCLResampler<TElastix>::SetInterpolator(InterpolatorType * _arg)
 
 template <class TElastix>
 void
-OpenCLResampler<TElastix>::BeforeGenerateData(void)
+OpenCLResampler<TElastix>::BeforeGenerateData()
 {
   // Set it to true, if something goes wrong during configuration, it will be false
   this->m_GPUResamplerReady = true;
@@ -221,7 +221,7 @@ OpenCLResampler<TElastix>::BeforeGenerateData(void)
 
 template <class TElastix>
 void
-OpenCLResampler<TElastix>::GenerateData(void)
+OpenCLResampler<TElastix>::GenerateData()
 {
   if (!this->m_ContextCreated || !this->m_GPUResamplerCreated || !this->m_UseOpenCL)
   {
@@ -259,7 +259,7 @@ OpenCLResampler<TElastix>::GenerateData(void)
 
 template <class TElastix>
 void
-OpenCLResampler<TElastix>::BeforeRegistration(void)
+OpenCLResampler<TElastix>::BeforeRegistration()
 {
   // Are we using a OpenCL enabled GPU for resampling?
   this->m_UseOpenCL = true;
@@ -274,7 +274,7 @@ OpenCLResampler<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-OpenCLResampler<TElastix>::ReadFromFile(void)
+OpenCLResampler<TElastix>::ReadFromFile()
 {
   // Call ReadFromFile of the ResamplerBase.
   this->Superclass2::ReadFromFile();
@@ -292,7 +292,7 @@ OpenCLResampler<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-OpenCLResampler<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+OpenCLResampler<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   return { { "OpenCLResamplerUseOpenCL", { Conversion::ToString(this->m_UseOpenCL) } } };
 
@@ -328,7 +328,7 @@ OpenCLResampler<TElastix>::SwitchingToCPUAndReport(const bool configError)
 
 template <class TElastix>
 void
-OpenCLResampler<TElastix>::ReportToLog(void)
+OpenCLResampler<TElastix>::ReportToLog()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
   itk::OpenCLDevice           device = context->GetDefaultDevice();

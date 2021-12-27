@@ -60,7 +60,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::PatternIntensityI
 
 template <class TFixedImage, class TMovingImage>
 void
-PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   Superclass::Initialize();
 

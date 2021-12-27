@@ -112,19 +112,19 @@ public:
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   void
-  AfterEachResolution(void) override;
+  AfterEachResolution() override;
 
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   void
-  AfterRegistration(void) override;
+  AfterRegistration() override;
 
   /** Override the SetInitialPosition.*/
   void
@@ -222,7 +222,7 @@ private:
   bool m_LineBracketing;
 
   const char *
-  DeterminePhase(void) const;
+  DeterminePhase() const;
 };
 
 } // end namespace elastix

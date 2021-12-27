@@ -189,20 +189,20 @@ public:
    * \li Add the sub metric columns to the iteration info object.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion.
    * \li Set the metric weights.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   /** Execute stuff after each iteration
    * \li Print the latest computed submetric values to screen.
    */
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
 protected:
   /** The constructor. */
@@ -230,7 +230,7 @@ protected:
 
   /** Read the components from m_Elastix and set them in the Registration class. */
   virtual void
-  SetComponents(void);
+  SetComponents();
 
   bool m_ShowExactMetricValue;
 

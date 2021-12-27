@@ -35,7 +35,7 @@ StandardStochasticGradientOptimizer::StandardStochasticGradientOptimizer() = def
  */
 
 void
-StandardStochasticGradientOptimizer::StartOptimization(void)
+StandardStochasticGradientOptimizer::StartOptimization()
 {
   this->m_CurrentTime = this->m_InitialTime;
   this->Superclass::StartOptimization();
@@ -47,7 +47,7 @@ StandardStochasticGradientOptimizer::StartOptimization(void)
  */
 
 void
-StandardStochasticGradientOptimizer::AdvanceOneStep(void)
+StandardStochasticGradientOptimizer::AdvanceOneStep()
 {
 
   this->SetLearningRate(this->Compute_a(this->m_CurrentTime));
@@ -87,7 +87,7 @@ StandardStochasticGradientOptimizer::Compute_beta(double k) const
  */
 
 void
-StandardStochasticGradientOptimizer::UpdateCurrentTime(void)
+StandardStochasticGradientOptimizer::UpdateCurrentTime()
 {
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;

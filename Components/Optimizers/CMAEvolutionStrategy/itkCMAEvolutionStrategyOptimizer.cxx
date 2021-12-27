@@ -240,7 +240,7 @@ CMAEvolutionStrategyOptimizer::StopOptimization()
  */
 
 void
-CMAEvolutionStrategyOptimizer::InitializeConstants(void)
+CMAEvolutionStrategyOptimizer::InitializeConstants()
 {
   itkDebugMacro("InitializeConstants");
 
@@ -347,7 +347,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::InitializeProgressVariables(void)
+CMAEvolutionStrategyOptimizer::InitializeProgressVariables()
 {
   itkDebugMacro("InitializeProgressVariables");
 
@@ -407,7 +407,7 @@ CMAEvolutionStrategyOptimizer::InitializeProgressVariables(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::InitializeBCD(void)
+CMAEvolutionStrategyOptimizer::InitializeBCD()
 {
   itkDebugMacro("InitializeBCD");
 
@@ -447,7 +447,7 @@ CMAEvolutionStrategyOptimizer::InitializeBCD(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::GenerateOffspring(void)
+CMAEvolutionStrategyOptimizer::GenerateOffspring()
 {
   itkDebugMacro("GenerateOffspring");
 
@@ -525,7 +525,7 @@ CMAEvolutionStrategyOptimizer::GenerateOffspring(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::SortCostFunctionValues(void)
+CMAEvolutionStrategyOptimizer::SortCostFunctionValues()
 {
   itkDebugMacro("SortCostFunctionValues");
 
@@ -548,7 +548,7 @@ CMAEvolutionStrategyOptimizer::SortCostFunctionValues(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::AdvanceOneStep(void)
+CMAEvolutionStrategyOptimizer::AdvanceOneStep()
 {
   itkDebugMacro("AdvanceOneStep");
 
@@ -592,7 +592,7 @@ CMAEvolutionStrategyOptimizer::AdvanceOneStep(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::UpdateConjugateEvolutionPath(void)
+CMAEvolutionStrategyOptimizer::UpdateConjugateEvolutionPath()
 {
   itkDebugMacro("UpdateConjugateEvolutionPath");
 
@@ -619,7 +619,7 @@ CMAEvolutionStrategyOptimizer::UpdateConjugateEvolutionPath(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::UpdateHeaviside(void)
+CMAEvolutionStrategyOptimizer::UpdateHeaviside()
 {
   itkDebugMacro("UpdateHeaviside");
 
@@ -651,7 +651,7 @@ CMAEvolutionStrategyOptimizer::UpdateHeaviside(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::UpdateEvolutionPath(void)
+CMAEvolutionStrategyOptimizer::UpdateEvolutionPath()
 {
   itkDebugMacro("UpdateEvolutionPath");
 
@@ -674,7 +674,7 @@ CMAEvolutionStrategyOptimizer::UpdateEvolutionPath(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::UpdateC(void)
+CMAEvolutionStrategyOptimizer::UpdateC()
 {
   itkDebugMacro("UpdateC");
 
@@ -742,7 +742,7 @@ CMAEvolutionStrategyOptimizer::UpdateC(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::UpdateSigma(void)
+CMAEvolutionStrategyOptimizer::UpdateSigma()
 {
   itkDebugMacro("UpdateSigma");
 
@@ -770,7 +770,7 @@ CMAEvolutionStrategyOptimizer::UpdateSigma(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::UpdateBD(void)
+CMAEvolutionStrategyOptimizer::UpdateBD()
 {
   itkDebugMacro("UpdateBD");
 
@@ -855,7 +855,7 @@ CMAEvolutionStrategyOptimizer::UpdateBD(void)
  */
 
 void
-CMAEvolutionStrategyOptimizer::FixNumericalErrors(void)
+CMAEvolutionStrategyOptimizer::FixNumericalErrors()
 {
   itkDebugMacro("FixNumericalErrors");
 

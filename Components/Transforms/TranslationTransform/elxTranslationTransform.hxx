@@ -40,7 +40,7 @@ TranslationTransformElastix<TElastix>::TranslationTransformElastix()
 
 template <class TElastix>
 void
-TranslationTransformElastix<TElastix>::BeforeRegistration(void)
+TranslationTransformElastix<TElastix>::BeforeRegistration()
 {
   /** Give initial parameters to this->m_Registration.*/
   this->InitializeTransform();
@@ -53,7 +53,7 @@ TranslationTransformElastix<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-TranslationTransformElastix<TElastix>::InitializeTransform(void)
+TranslationTransformElastix<TElastix>::InitializeTransform()
 {
   /** Set all parameters to zero (no translation). */
   this->m_TranslationTransform->SetIdentity();
@@ -109,7 +109,7 @@ TranslationTransformElastix<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 auto
-TranslationTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+TranslationTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   // This transform type has no specific extra parameters.
   return {};

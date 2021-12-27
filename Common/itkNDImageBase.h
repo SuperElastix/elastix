@@ -125,10 +125,10 @@ public:
   SetRequestedRegion(DataObject * data) = 0;
 
   virtual void
-  Allocate(void) = 0;
+  Allocate() = 0;
 
   virtual void
-  Initialize(void) = 0;
+  Initialize() = 0;
 
   virtual void
   FillBuffer(const TPixel & value) = 0;
@@ -161,10 +161,10 @@ public:
   SetPixelContainer(PixelContainer * container) = 0;
 
   virtual AccessorType
-  GetPixelAccessor(void) = 0;
+  GetPixelAccessor() = 0;
 
   virtual const AccessorType
-  GetPixelAccessor(void) const = 0;
+  GetPixelAccessor() const = 0;
 
   virtual void
   SetSpacing(const SpacingType & spacing) = 0;
@@ -175,10 +175,10 @@ public:
   /* Get Spacing/Origin return copies; not a const &, like
    * itkImage; necessary because of the conversion to arrays */
   virtual SpacingType
-  GetSpacing(void) = 0;
+  GetSpacing() = 0;
 
   virtual PointType
-  GetOrigin(void) = 0;
+  GetOrigin() = 0;
 
   /** \todo Transform IndexToPoint methods. */
 
@@ -198,34 +198,34 @@ public:
 
   /** Get the Dimension.*/
   virtual unsigned int
-  ImageDimension(void) = 0;
+  ImageDimension() = 0;
 
   virtual unsigned int
-  GetImageDimension(void) = 0;
+  GetImageDimension() = 0;
 
   virtual void
   SetImageIOWriter(ImageIOBase * _arg) = 0;
 
   virtual ImageIOBase *
-  GetImageIOWriter(void) = 0;
+  GetImageIOWriter() = 0;
 
   virtual void
   SetImageIOReader(ImageIOBase * _arg) = 0;
 
   virtual ImageIOBase *
-  GetImageIOReader(void) = 0;
+  GetImageIOReader() = 0;
 
   /** Write the actual image to file. */
   virtual void
-  Write(void) = 0;
+  Write() = 0;
 
   /** Read image data from file into the actual image */
   virtual void
-  Read(void) = 0;
+  Read() = 0;
 
   /** Use New method to create a new actual image */
   virtual void
-  CreateNewImage(void) = 0;
+  CreateNewImage() = 0;
 
   /** Set/Get the Input/OutputFileName */
   virtual void
@@ -235,10 +235,10 @@ public:
   SetInputFileName(const char *) = 0;
 
   virtual const char *
-  GetOutputFileName(void) = 0;
+  GetOutputFileName() = 0;
 
   virtual const char *
-  GetInputFileName(void) = 0;
+  GetInputFileName() = 0;
 
   static Pointer
   NewNDImage(unsigned int dim);

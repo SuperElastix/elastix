@@ -137,7 +137,7 @@ public:
 
   /** Get the Fixed Parameters. */
   const ParametersType &
-  GetFixedParameters(void) const override
+  GetFixedParameters() const override
   {
     // \todo: to be implemented by Stefan: check this:
     return this->m_FixedParameters;
@@ -146,7 +146,7 @@ public:
 
   /** Return the number of sub-transforms that have been set. */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override
+  GetNumberOfParameters() const override
   {
     return this->m_TransformContainer.size();
   }
@@ -176,7 +176,7 @@ public:
    * this->Modified() is called when the transform container is updated.
    **/
   const TransformContainerType &
-  GetTransformContainer(void) const
+  GetTransformContainer() const
   {
     return this->m_TransformContainer;
   }

@@ -86,7 +86,7 @@ xoutsimple::SetOutputs(const XStreamMapType & outputmap)
  */
 
 auto
-xoutsimple::GetXOutputs(void) -> const XStreamMapType &
+xoutsimple::GetXOutputs() -> const XStreamMapType &
 {
   return this->m_XTargetCells;
 
@@ -97,7 +97,7 @@ xoutsimple::GetXOutputs(void) -> const XStreamMapType &
  */
 
 auto
-xoutsimple::GetCOutputs(void) -> const CStreamMapType &
+xoutsimple::GetCOutputs() -> const CStreamMapType &
 {
   return this->m_CTargetCells;
 

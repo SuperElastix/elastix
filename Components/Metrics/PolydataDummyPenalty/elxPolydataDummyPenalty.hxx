@@ -40,7 +40,7 @@ PolydataDummyPenalty<TElastix>::PolydataDummyPenalty()
 
 template <class TElastix>
 void
-PolydataDummyPenalty<TElastix>::Initialize(void)
+PolydataDummyPenalty<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -58,7 +58,7 @@ PolydataDummyPenalty<TElastix>::Initialize(void)
 
 template <class TElastix>
 int
-PolydataDummyPenalty<TElastix>::BeforeAllBase(void)
+PolydataDummyPenalty<TElastix>::BeforeAllBase()
 {
   this->Superclass2::BeforeAllBase();
 
@@ -115,7 +115,7 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase(void)
 
 template <class TElastix>
 void
-PolydataDummyPenalty<TElastix>::BeforeRegistration(void)
+PolydataDummyPenalty<TElastix>::BeforeRegistration()
 {
   std::string componentLabel(this->GetComponentLabel());
   std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
@@ -164,7 +164,7 @@ PolydataDummyPenalty<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-PolydataDummyPenalty<TElastix>::AfterEachIteration(void)
+PolydataDummyPenalty<TElastix>::AfterEachIteration()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -216,7 +216,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-PolydataDummyPenalty<TElastix>::AfterEachResolution(void)
+PolydataDummyPenalty<TElastix>::AfterEachResolution()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();

@@ -52,7 +52,7 @@ AffineLogStackTransform<TElastix>::InitializeAffineLogTransform()
 
 template <class TElastix>
 int
-AffineLogStackTransform<TElastix>::BeforeAll(void)
+AffineLogStackTransform<TElastix>::BeforeAll()
 {
   /** Initialize affine transform. */
   return InitializeAffineLogTransform();
@@ -65,7 +65,7 @@ AffineLogStackTransform<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-AffineLogStackTransform<TElastix>::BeforeRegistration(void)
+AffineLogStackTransform<TElastix>::BeforeRegistration()
 {
   /** Task 1 - Set the stack transform parameters. */
 
@@ -102,7 +102,7 @@ AffineLogStackTransform<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-AffineLogStackTransform<TElastix>::ReadFromFile(void)
+AffineLogStackTransform<TElastix>::ReadFromFile()
 {
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
   this->GetConfiguration()->ReadParameter(
@@ -148,7 +148,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-AffineLogStackTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+AffineLogStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_StackTransform;
 
@@ -271,7 +271,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
 
 template <class TElastix>
 void
-AffineLogStackTransform<TElastix>::SetScales(void)
+AffineLogStackTransform<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();

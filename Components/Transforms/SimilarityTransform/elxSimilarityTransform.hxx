@@ -43,7 +43,7 @@ SimilarityTransformElastix<TElastix>::SimilarityTransformElastix()
 
 template <class TElastix>
 void
-SimilarityTransformElastix<TElastix>::BeforeRegistration(void)
+SimilarityTransformElastix<TElastix>::BeforeRegistration()
 {
   /** Task 1 - Set center of rotation and initial translation. */
   this->InitializeTransform();
@@ -60,7 +60,7 @@ SimilarityTransformElastix<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-SimilarityTransformElastix<TElastix>::ReadFromFile(void)
+SimilarityTransformElastix<TElastix>::ReadFromFile()
 {
   if (!this->HasITKTransformParameters())
   {
@@ -109,7 +109,7 @@ SimilarityTransformElastix<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-SimilarityTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+SimilarityTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_SimilarityTransform->GetCenter()) } };
 
@@ -122,7 +122,7 @@ SimilarityTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) 
 
 template <class TElastix>
 void
-SimilarityTransformElastix<TElastix>::InitializeTransform(void)
+SimilarityTransformElastix<TElastix>::InitializeTransform()
 {
   /** Set the parameters to mimic the identity transform. */
   this->m_SimilarityTransform->SetIdentity();
@@ -272,7 +272,7 @@ SimilarityTransformElastix<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-SimilarityTransformElastix<TElastix>::SetScales(void)
+SimilarityTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();

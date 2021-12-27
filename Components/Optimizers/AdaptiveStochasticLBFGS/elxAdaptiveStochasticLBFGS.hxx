@@ -95,7 +95,7 @@ AdaptiveStochasticLBFGS<TElastix>::AdaptiveStochasticLBFGS()
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::BeforeRegistration(void)
+AdaptiveStochasticLBFGS<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo. */
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -122,7 +122,7 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution(void)
+AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -347,7 +347,7 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AfterEachIteration(void)
+AdaptiveStochasticLBFGS<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -371,7 +371,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution(void)
+AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -440,7 +440,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AfterRegistration(void)
+AdaptiveStochasticLBFGS<TElastix>::AfterRegistration()
 {
   /** Print the best metric value. */
 
@@ -459,7 +459,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterRegistration(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::StartOptimization(void)
+AdaptiveStochasticLBFGS<TElastix>::StartOptimization()
 {
   /** Reset some variables */
   this->m_CurrentT = 0;
@@ -518,7 +518,7 @@ AdaptiveStochasticLBFGS<TElastix>::StartOptimization(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::LBFGSUpdate(void)
+AdaptiveStochasticLBFGS<TElastix>::LBFGSUpdate()
 {
   itkDebugMacro("LBFGSUpdate");
 
@@ -548,7 +548,7 @@ AdaptiveStochasticLBFGS<TElastix>::LBFGSUpdate(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AdvanceOneStep(void)
+AdaptiveStochasticLBFGS<TElastix>::AdvanceOneStep()
 {
   itkDebugMacro("AdvanceOneStep");
 
@@ -579,7 +579,7 @@ AdaptiveStochasticLBFGS<TElastix>::AdvanceOneStep(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::StopOptimization(void)
+AdaptiveStochasticLBFGS<TElastix>::StopOptimization()
 {
   itkDebugMacro("StopOptimization");
 
@@ -594,7 +594,7 @@ AdaptiveStochasticLBFGS<TElastix>::StopOptimization(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization(void)
+AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
 {
   /** The following code relies on the fact that all
    * components have been set up and that the initial
@@ -863,7 +863,7 @@ AdaptiveStochasticLBFGS<TElastix>::MetricErrorResponse(itk::ExceptionObject & er
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation(void)
+AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation()
 {
   /** Setup timers. */
   itk::TimeProbe timer1;
@@ -909,7 +909,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal(void)
+AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
 {
   itk::TimeProbe timer2, timer3;
 
@@ -1052,7 +1052,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacementDistribution(void)
+AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacementDistribution()
 {
   itk::TimeProbe timer4, timer5;
 
@@ -1164,7 +1164,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
 
 template <class TElastix>
 void
-AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation(void)
+AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
 {
   /** Get current position to start the parameter estimation. */
   this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(this->GetCurrentPosition());

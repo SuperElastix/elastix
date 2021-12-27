@@ -231,7 +231,7 @@ main(int argc, char ** argv)
  */
 
 void
-PrintHelp(void)
+PrintHelp()
 {
   /** Print the version. */
   std::cout << "transformix version: " ELASTIX_VERSION_STRING "\n\n";

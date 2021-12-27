@@ -48,7 +48,7 @@ ErodeMaskImageFilter<TImage>::ErodeMaskImageFilter()
 
 template <class TImage>
 void
-ErodeMaskImageFilter<TImage>::GenerateData(void)
+ErodeMaskImageFilter<TImage>::GenerateData()
 {
   /** Typedefs. */
   // typedef itk::ThresholdImageFilter<InputImageType> ThresholdFilterType;

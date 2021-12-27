@@ -33,7 +33,7 @@
  */
 
 std::string
-GetHelpString(void)
+GetHelpString()
 {
   std::stringstream ss;
   ss << "Usage:\n"

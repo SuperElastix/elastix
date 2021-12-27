@@ -141,7 +141,7 @@ public:
    * in which case, it just returns false.
    */
   bool
-  GetComputeZYX(void) const // No override.
+  GetComputeZYX() const // No override.
   {
     static_assert(SpaceDimension != 3, "This is not the specialization is 3D!");
     return false;
@@ -201,7 +201,7 @@ public:
    * \note This member function is only an `override` in 3D.
    */
   bool
-  GetComputeZYX(void) const override
+  GetComputeZYX() const override
   {
     static_assert(SpaceDimension == 3, "This specialization is for 3D only!");
 

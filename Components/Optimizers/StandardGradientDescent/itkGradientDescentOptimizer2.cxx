@@ -72,7 +72,7 @@ GradientDescentOptimizer2 ::PrintSelf(std::ostream & os, Indent indent) const
  */
 
 void
-GradientDescentOptimizer2 ::StartOptimization(void)
+GradientDescentOptimizer2 ::StartOptimization()
 {
   this->m_CurrentIteration = 0;
 
@@ -95,7 +95,7 @@ GradientDescentOptimizer2 ::StartOptimization(void)
  */
 
 void
-GradientDescentOptimizer2 ::ResumeOptimization(void)
+GradientDescentOptimizer2 ::ResumeOptimization()
 {
   itkDebugMacro("ResumeOptimization");
 
@@ -169,7 +169,7 @@ GradientDescentOptimizer2 ::MetricErrorResponse(ExceptionObject & err)
  */
 
 void
-GradientDescentOptimizer2 ::StopOptimization(void)
+GradientDescentOptimizer2 ::StopOptimization()
 {
   itkDebugMacro("StopOptimization");
 
@@ -183,7 +183,7 @@ GradientDescentOptimizer2 ::StopOptimization(void)
  */
 
 void
-GradientDescentOptimizer2 ::AdvanceOneStep(void)
+GradientDescentOptimizer2 ::AdvanceOneStep()
 {
   itkDebugMacro("AdvanceOneStep");
 

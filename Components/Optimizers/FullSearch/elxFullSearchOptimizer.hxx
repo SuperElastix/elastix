@@ -45,7 +45,7 @@ FullSearch<TElastix>::FullSearch()
 
 template <class TElastix>
 void
-FullSearch<TElastix>::BeforeRegistration(void)
+FullSearch<TElastix>::BeforeRegistration()
 {
   /** Add the target cells "ItNr" and "Metric" to IterationInfo. */
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -62,7 +62,7 @@ FullSearch<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-FullSearch<TElastix>::BeforeEachResolution(void)
+FullSearch<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -182,7 +182,7 @@ FullSearch<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-FullSearch<TElastix>::AfterEachIteration(void)
+FullSearch<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -208,7 +208,7 @@ FullSearch<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-FullSearch<TElastix>::AfterEachResolution(void)
+FullSearch<TElastix>::AfterEachResolution()
 {
   // typedef enum {FullRangeSearched,  MetricError } StopConditionType;
   std::string stopcondition;
@@ -296,7 +296,7 @@ FullSearch<TElastix>::AfterEachResolution(void)
  */
 template <class TElastix>
 void
-FullSearch<TElastix>::AfterRegistration(void)
+FullSearch<TElastix>::AfterRegistration()
 {
   /** Print the best metric value. */
   double bestValue = this->GetBestValue();

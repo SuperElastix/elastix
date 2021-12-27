@@ -100,7 +100,7 @@ public:
 
   /** Initialization. */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /**  Get the value for single valued optimizers. */
   MeasureType

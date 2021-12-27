@@ -147,7 +147,7 @@ public:
    * \li Set the spline orders of the moving feature interpolators.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li Set the tree type.
@@ -160,13 +160,13 @@ public:
    * \li Set the squared search radius, if appropriate.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   /** The constructor. */

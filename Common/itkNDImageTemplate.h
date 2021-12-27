@@ -110,10 +110,10 @@ public:
   SetRequestedRegion(DataObject * data) override;
 
   void
-  Allocate(void) override;
+  Allocate() override;
 
   void
-  Initialize(void) override;
+  Initialize() override;
 
   void
   FillBuffer(const TPixel & value) override;
@@ -143,10 +143,10 @@ public:
   SetPixelContainer(PixelContainer * container) override;
 
   AccessorType
-  GetPixelAccessor(void) override;
+  GetPixelAccessor() override;
 
   const AccessorType
-  GetPixelAccessor(void) const override;
+  GetPixelAccessor() const override;
 
   void
   SetSpacing(const SpacingType & spacing) override;
@@ -155,10 +155,10 @@ public:
   SetOrigin(const PointType & origin) override;
 
   SpacingType
-  GetSpacing(void) override;
+  GetSpacing() override;
 
   PointType
-  GetOrigin(void) override;
+  GetOrigin() override;
 
   /** \todo Transform IndexToPoint methods. */
 
@@ -178,10 +178,10 @@ public:
 
   /** Get the Dimension.*/
   unsigned int
-  ImageDimension(void) override;
+  ImageDimension() override;
 
   unsigned int
-  GetImageDimension(void) override;
+  GetImageDimension() override;
 
   /** Get the actual image */
   itkGetModifiableObjectMacro(Image, DataObject);
@@ -190,27 +190,27 @@ public:
 
   /** Write the actual image to file. */
   void
-  Write(void) override;
+  Write() override;
 
   /** Read image data from file into the actual image */
   void
-  Read(void) override;
+  Read() override;
 
   /** Use New method to create a new actual image */
   void
-  CreateNewImage(void) override;
+  CreateNewImage() override;
 
   void
   SetImageIOWriter(ImageIOBase * _arg) override;
 
   ImageIOBase *
-  GetImageIOWriter(void) override;
+  GetImageIOWriter() override;
 
   void
   SetImageIOReader(ImageIOBase * _arg) override;
 
   ImageIOBase *
-  GetImageIOReader(void) override;
+  GetImageIOReader() override;
 
   /** Set/Get the Output/Input FileName */
   void
@@ -220,10 +220,10 @@ public:
   SetInputFileName(const char * name) override;
 
   const char *
-  GetOutputFileName(void) override;
+  GetOutputFileName() override;
 
   const char *
-  GetInputFileName(void) override;
+  GetInputFileName() override;
 
 protected:
   NDImageTemplate();

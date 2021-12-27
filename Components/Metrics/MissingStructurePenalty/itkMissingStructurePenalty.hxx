@@ -41,7 +41,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::MissingVolumeMeshPena
 
 template <class TFixedPointSet, class TMovingPointSet>
 void
-MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
+MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 {
   /** Call the initialize of the superclass. */
   // this->Superclass::Initialize();

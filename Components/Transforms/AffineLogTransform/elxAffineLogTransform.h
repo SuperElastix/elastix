@@ -129,7 +129,7 @@ public:
    * \li Set the scales.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -139,14 +139,14 @@ public:
    * the InitializeTransform function is called
    */
   virtual void
-  SetScales(void);
+  SetScales();
 
   /** Function to read transform-parameters from a file.
    *
    * It reads the center of rotation and calls the superclass' implementation.
    */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
 protected:
   /** The constructor. */
@@ -179,11 +179,11 @@ private:
    * It is not yet possible to enter an initial rotation angle.
    */
   void
-  InitializeTransform(void);
+  InitializeTransform();
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor. */
   AffineLogTransformElastix(const Self &) = delete;

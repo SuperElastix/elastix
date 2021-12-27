@@ -117,7 +117,7 @@ public:
   SetParameters(const ParametersType & parameters) override;
 
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Set the rotational part of the transform. */
   void
@@ -136,7 +136,7 @@ public:
   itkGetConstMacro(ComputeZYX, bool);
 
   void
-  SetIdentity(void) override;
+  SetIdentity() override;
 
 protected:
   AdvancedEuler3DTransform();
@@ -147,14 +147,14 @@ protected:
 
   /** Compute the components of the rotation matrix in the superclass. */
   void
-  ComputeMatrix(void) override;
+  ComputeMatrix() override;
 
   void
-  ComputeMatrixParameters(void) override;
+  ComputeMatrixParameters() override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void
-  PrecomputeJacobianOfSpatialJacobian(void);
+  PrecomputeJacobianOfSpatialJacobian();
 
 private:
   AdvancedEuler3DTransform(const Self &) = delete;

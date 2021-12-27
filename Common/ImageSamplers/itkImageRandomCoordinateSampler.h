@@ -114,11 +114,11 @@ protected:
 
   /** Function that does the work. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** Multi-threaded functionality that does the work. */
   void
-  BeforeThreadedGenerateData(void) override;
+  BeforeThreadedGenerateData() override;
 
   void
   ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;

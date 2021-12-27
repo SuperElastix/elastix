@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-DisplacementMagnitudePenalty<TElastix>::Initialize(void)
+DisplacementMagnitudePenalty<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();

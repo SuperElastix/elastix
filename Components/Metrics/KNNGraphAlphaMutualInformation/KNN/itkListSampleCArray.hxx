@@ -180,7 +180,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::SetActualSize(unsigned lon
 
 template <class TMeasurementVector, class TInternalValue>
 unsigned long
-ListSampleCArray<TMeasurementVector, TInternalValue>::GetActualSize(void)
+ListSampleCArray<TMeasurementVector, TInternalValue>::GetActualSize()
 {
   return this->m_ActualSize;
 } // end GetActualSize()
@@ -192,7 +192,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetActualSize(void)
 
 template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray<TMeasurementVector, TInternalValue>::Clear(void)
+ListSampleCArray<TMeasurementVector, TInternalValue>::Clear()
 {
   this->Resize(0);
 } // end Clear()
@@ -221,7 +221,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::AllocateInternalContainer(
 
 template <class TMeasurementVector, class TInternalValue>
 void
-ListSampleCArray<TMeasurementVector, TInternalValue>::DeallocateInternalContainer(void)
+ListSampleCArray<TMeasurementVector, TInternalValue>::DeallocateInternalContainer()
 {
   if (this->m_InternalContainer)
   {

@@ -44,7 +44,7 @@ ImageRandomSamplerSparseMask<TInputImage>::ImageRandomSamplerSparseMask()
 
 template <class TInputImage>
 void
-ImageRandomSamplerSparseMask<TInputImage>::GenerateData(void)
+ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 {
   /** Get a handle to the mask. */
   typename MaskType::ConstPointer mask = this->GetMask();
@@ -120,7 +120,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData(void)
 
 template <class TInputImage>
 void
-ImageRandomSamplerSparseMask<TInputImage>::BeforeThreadedGenerateData(void)
+ImageRandomSamplerSparseMask<TInputImage>::BeforeThreadedGenerateData()
 {
   /** Clear the random number list. */
   this->m_RandomNumberList.resize(0);

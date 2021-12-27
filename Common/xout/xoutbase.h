@@ -97,7 +97,7 @@ public:
 
 
   virtual void
-  WriteBufferedData(void);
+  WriteBufferedData();
 
   /**
    * Methods to Add and Remove target cells. They return 0 when successful.
@@ -140,10 +140,10 @@ public:
 
   /** Get the output maps. */
   virtual const CStreamMapType &
-  GetCOutputs(void);
+  GetCOutputs();
 
   virtual const XStreamMapType &
-  GetXOutputs(void);
+  GetXOutputs();
 
 protected:
   /** Default-constructor. Only to be used by its derived classes. */

@@ -76,13 +76,13 @@ public:
   } StopConditionType;
 
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   virtual void
-  ResumeOptimization(void);
+  ResumeOptimization();
 
   virtual void
-  StopOptimization(void);
+  StopOptimization();
 
   /** Get the current iteration number: */
   itkGetConstMacro(CurrentIteration, unsigned long);
@@ -105,7 +105,7 @@ public:
   /** This function is just for convenience, since many optimizers have such
    * a function. It return the current sigma times the current maximumD. */
   virtual double
-  GetCurrentStepLength(void) const
+  GetCurrentStepLength() const
   {
     return this->GetCurrentSigma() * this->GetCurrentMaximumD();
   }
@@ -338,7 +338,7 @@ protected:
    * \li m_ExpectationNormNormalDistribution
    * \li m_HistoryLength */
   virtual void
-  InitializeConstants(void);
+  InitializeConstants();
 
   /** Initialize the following 'progress' variables:
    * \li m_CurrentSigma
@@ -353,48 +353,48 @@ protected:
    * \li m_MeasureHistory
    * \li m_CurrentMaximumD, m_CurrentMinimumD */
   virtual void
-  InitializeProgressVariables(void);
+  InitializeProgressVariables();
 
   /** Initialize the covariance matrix and its eigen decomposition */
   virtual void
-  InitializeBCD(void);
+  InitializeBCD();
 
   /** GenerateOffspring: Fill m_SearchDirs, m_NormalizedSearchDirs,
    * and m_CostFunctionValues */
   virtual void
-  GenerateOffspring(void);
+  GenerateOffspring();
 
   /** Sort the m_CostFunctionValues vector and update m_MeasureHistory */
   virtual void
-  SortCostFunctionValues(void);
+  SortCostFunctionValues();
 
   /** Compute the m_CurrentPosition = m(g+1), m_CurrentValue, and m_CurrentScaledStep */
   virtual void
-  AdvanceOneStep(void);
+  AdvanceOneStep();
 
   /** Update m_ConjugateEvolutionPath */
   virtual void
-  UpdateConjugateEvolutionPath(void);
+  UpdateConjugateEvolutionPath();
 
   /** Update m_Heaviside */
   virtual void
-  UpdateHeaviside(void);
+  UpdateHeaviside();
 
   /** Update m_EvolutionPath */
   virtual void
-  UpdateEvolutionPath(void);
+  UpdateEvolutionPath();
 
   /** Update the covariance matrix C */
   virtual void
-  UpdateC(void);
+  UpdateC();
 
   /** Update the Sigma either by adaptation or using the predefined function */
   virtual void
-  UpdateSigma(void);
+  UpdateSigma();
 
   /** Update the eigen decomposition and m_CurrentMaximumD/m_CurrentMinimumD */
   virtual void
-  UpdateBD(void);
+  UpdateBD();
 
   /** Some checks, to be sure no numerical errors occur
    * \li Adjust too low/high deviation that otherwise would violate
@@ -406,7 +406,7 @@ protected:
    * \li Adjust step size in case of equal function values (flat fitness)
    * \li Adjust step size in case of equal best function values over history  */
   virtual void
-  FixNumericalErrors(void);
+  FixNumericalErrors();
 
   /** Check if convergence has occured:
    * \li Check if the maximum number of iterations will not be exceeded in the following iteration

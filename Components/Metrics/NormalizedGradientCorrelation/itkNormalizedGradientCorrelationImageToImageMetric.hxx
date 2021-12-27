@@ -59,7 +59,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,
 
 template <class TFixedImage, class TMovingImage>
 void
-NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize the base class */
   Superclass::Initialize();
@@ -140,7 +140,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Prin
 
 template <class TFixedImage, class TMovingImage>
 void
-NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeanFixedGradient(void) const
+NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeanFixedGradient() const
 {
   typename FixedGradientImageType::IndexType currentIndex;
   typename FixedGradientImageType::PointType point;
@@ -213,7 +213,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
 template <class TFixedImage, class TMovingImage>
 void
-NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeanMovedGradient(void) const
+NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeanMovedGradient() const
 {
   typename MovedGradientImageType::IndexType currentIndex;
   typename MovedGradientImageType::PointType point;

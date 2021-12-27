@@ -106,19 +106,19 @@ public:
 
   /** Getter for result image. */
   ConstImagePointer
-  GetResultImage(void) const;
+  GetResultImage() const;
 
   /** Getter for result image. Non-const overload */
   ImagePointer
-  GetResultImage(void);
+  GetResultImage();
 
   /** Get transform parameters of last registration step. */
   ParameterMapType
-  GetTransformParameterMap(void) const;
+  GetTransformParameterMap() const;
 
   /** Get transform parameters of all registration steps. */
   ParameterMapListType
-  GetTransformParameterMapList(void) const;
+  GetTransformParameterMapList() const;
 
 private:
   /* the result images */

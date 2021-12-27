@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-RandomSamplerSparseMask<TElastix>::BeforeEachResolution(void)
+RandomSamplerSparseMask<TElastix>::BeforeEachResolution()
 {
   const unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 

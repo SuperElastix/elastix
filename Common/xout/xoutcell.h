@@ -49,7 +49,7 @@ public:
 
   /** Write the buffered cell data to the outputs. */
   void
-  WriteBufferedData(void) override;
+  WriteBufferedData() override;
 
 private:
   typedef std::ostringstream InternalBufferType;

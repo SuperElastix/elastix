@@ -256,7 +256,7 @@ struct WithDimension
       // BeforeAll() appears necessary to for MultiBSplineTransformWithNormal
       // and AdvancedBSplineTransform to initialize the internal ITK
       // transform of the elastix transform, by calling
-      // InitializeBSplineTransform(void)
+      // InitializeBSplineTransform()
       elxTransform->BeforeAll();
 
       // Overrule the default-constructors of BSplineTransformWithDiffusion

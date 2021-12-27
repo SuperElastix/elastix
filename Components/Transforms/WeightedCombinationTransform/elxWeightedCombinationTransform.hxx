@@ -41,7 +41,7 @@ WeightedCombinationTransformElastix<TElastix>::WeightedCombinationTransformElast
 
 template <class TElastix>
 void
-WeightedCombinationTransformElastix<TElastix>::BeforeRegistration(void)
+WeightedCombinationTransformElastix<TElastix>::BeforeRegistration()
 {
   /** Set the normalizedWeights parameter. It must be correct in order to set the scales properly.
    * \todo: this parameter may change each resolution. */
@@ -65,7 +65,7 @@ WeightedCombinationTransformElastix<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-WeightedCombinationTransformElastix<TElastix>::InitializeTransform(void)
+WeightedCombinationTransformElastix<TElastix>::InitializeTransform()
 {
   /** Load subtransforms specified in parameter file. */
   this->LoadSubTransforms();
@@ -98,7 +98,7 @@ WeightedCombinationTransformElastix<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-WeightedCombinationTransformElastix<TElastix>::ReadFromFile(void)
+WeightedCombinationTransformElastix<TElastix>::ReadFromFile()
 {
   /** Load subtransforms specified in transform parameter file. */
   this->LoadSubTransforms();
@@ -120,7 +120,7 @@ WeightedCombinationTransformElastix<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_WeightedCombinationTransform;
 
@@ -136,7 +136,7 @@ WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParametersM
 
 template <class TElastix>
 void
-WeightedCombinationTransformElastix<TElastix>::SetScales(void)
+WeightedCombinationTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();
@@ -191,7 +191,7 @@ WeightedCombinationTransformElastix<TElastix>::SetScales(void)
 
 template <class TElastix>
 void
-WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms(void)
+WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
 {
   /** Typedef's from ComponentDatabase. */
   typedef typename Superclass2::ComponentDescriptionType ComponentDescriptionType;

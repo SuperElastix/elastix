@@ -233,14 +233,14 @@ public:
 
     /** Get the index into the VectorDataContainer associated with this iterator.   */
     ElementIdentifier
-    Index(void) const
+    Index() const
     {
       return static_cast<ElementIdentifier>(m_Pos);
     }
 
     /** Get the value at this iterator's location in the VectorDataContainer.   */
     Element &
-    Value(void) const
+    Value() const
     {
       return *m_Iter;
     }
@@ -345,14 +345,14 @@ public:
 
     /** Get the index into the VectorDataContainer associated with this iterator.   */
     ElementIdentifier
-    Index(void) const
+    Index() const
     {
       return static_cast<ElementIdentifier>(m_Pos);
     }
 
     /** Get the value at this iterator's location in the VectorDataContainer.   */
     const Element &
-    Value(void) const
+    Value() const
     {
       return *m_Iter;
     }
@@ -444,31 +444,31 @@ public:
    * Get a begin const iterator for the vector.
    */
   ConstIterator
-  Begin(void) const;
+  Begin() const;
 
   /**
    * Get an end const iterator for the vector.
    */
   ConstIterator
-  End(void) const;
+  End() const;
 
   /**
    * Get a begin iterator for the vector.
    */
   Iterator
-  Begin(void);
+  Begin();
 
   /**
    * Get an end iterator for the vector.
    */
   Iterator
-  End(void);
+  End();
 
   /**
    * Get the number of elements currently stored in the vector.
    */
   unsigned long
-  Size(void) const;
+  Size() const;
 
   /**
    * Tell the container to allocate enough memory to allow at least as many
@@ -488,13 +488,13 @@ public:
    * with other containers in the toolkit.
    */
   void
-  Squeeze(void);
+  Squeeze();
 
   /**
    * Clear the elements. The final size will be zero.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 };
 
 } // end namespace itk

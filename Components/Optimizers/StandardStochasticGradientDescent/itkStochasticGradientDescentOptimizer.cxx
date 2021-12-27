@@ -70,7 +70,7 @@ StochasticGradientDescentOptimizer::PrintSelf(std::ostream & os, Indent indent) 
  */
 
 void
-StochasticGradientDescentOptimizer::StartOptimization(void)
+StochasticGradientDescentOptimizer::StartOptimization()
 {
   itkDebugMacro("StartOptimization");
 
@@ -95,7 +95,7 @@ StochasticGradientDescentOptimizer::StartOptimization(void)
  */
 
 void
-StochasticGradientDescentOptimizer::ResumeOptimization(void)
+StochasticGradientDescentOptimizer::ResumeOptimization()
 {
   itkDebugMacro("ResumeOptimization");
 
@@ -175,7 +175,7 @@ StochasticGradientDescentOptimizer::MetricErrorResponse(ExceptionObject & err)
  */
 
 void
-StochasticGradientDescentOptimizer::StopOptimization(void)
+StochasticGradientDescentOptimizer::StopOptimization()
 {
   itkDebugMacro("StopOptimization");
 
@@ -189,7 +189,7 @@ StochasticGradientDescentOptimizer::StopOptimization(void)
  */
 
 void
-StochasticGradientDescentOptimizer::AdvanceOneStep(void)
+StochasticGradientDescentOptimizer::AdvanceOneStep()
 {
   itkDebugMacro("AdvanceOneStep");
 

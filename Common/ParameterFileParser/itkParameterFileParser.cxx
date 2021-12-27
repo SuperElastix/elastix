@@ -46,7 +46,7 @@ ParameterFileParser ::~ParameterFileParser() = default;
  */
 
 const ParameterFileParser::ParameterMapType &
-ParameterFileParser::GetParameterMap(void) const
+ParameterFileParser::GetParameterMap() const
 {
   return this->m_ParameterMap;
 
@@ -58,7 +58,7 @@ ParameterFileParser::GetParameterMap(void) const
  */
 
 void
-ParameterFileParser::ReadParameterFile(void)
+ParameterFileParser::ReadParameterFile()
 {
   /** Perform some basic checks. */
   this->BasicFileChecking();
@@ -102,7 +102,7 @@ ParameterFileParser::ReadParameterFile(void)
  */
 
 void
-ParameterFileParser::BasicFileChecking(void) const
+ParameterFileParser::BasicFileChecking() const
 {
   /** Check if the file name is given. */
   if (this->m_ParameterFileName.empty())
@@ -362,7 +362,7 @@ ParameterFileParser::ThrowException(const std::string & line, const std::string 
  */
 
 std::string
-ParameterFileParser::ReturnParameterFileAsString(void)
+ParameterFileParser::ReturnParameterFileAsString()
 {
   /** Perform some basic checks. */
   this->BasicFileChecking();

@@ -71,7 +71,7 @@ public:
   SetSplittingRule(const std::string & rule);
 
   std::string
-  GetSplittingRule(void);
+  GetSplittingRule();
 
   /** Set the maximum number of points that are to be visited. */
   // void SetMaximumNumberOfPointsToVisit( unsigned int num )
@@ -81,11 +81,11 @@ public:
 
   /** Generate the tree. */
   void
-  GenerateTree(void) override;
+  GenerateTree() override;
 
   /** Get the ANN tree. */
   ANNPointSetType *
-  GetANNTree(void) const override
+  GetANNTree() const override
   {
     return this->m_ANNTree;
   }

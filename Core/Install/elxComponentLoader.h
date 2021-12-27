@@ -61,7 +61,7 @@ public:
 
   /** Function to load components. */
   int
-  LoadComponents(void);
+  LoadComponents();
 
 protected:
   /** Standard constructor and destructor. */
@@ -72,7 +72,7 @@ protected:
 
   bool m_ImageTypeSupportInstalled;
   virtual int
-  InstallSupportedImageTypes(void);
+  InstallSupportedImageTypes();
 
 private:
   /** Standard private (copy)constructor. */

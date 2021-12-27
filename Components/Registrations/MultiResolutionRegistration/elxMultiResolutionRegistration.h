@@ -125,12 +125,12 @@ public:
    * \li Set the number of resolution levels.
    * \li Set the fixed image region. */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion. */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */
@@ -155,7 +155,7 @@ protected:
 
   /** Read the components from m_Elastix and set them in the Registration class. */
   virtual void
-  SetComponents(void);
+  SetComponents();
 
 private:
   elxOverrideGetSelfMacro;

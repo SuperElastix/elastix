@@ -220,7 +220,7 @@ protected:
    * here we use other parameters.
    */
   void
-  InitializeThreadingParameters(void) const override;
+  InitializeThreadingParameters() const override;
 
   /** Get value and derivatives for each thread. */
   inline void

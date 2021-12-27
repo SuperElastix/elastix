@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-BSplineResampleInterpolatorFloat<TElastix>::BeforeRegistration(void)
+BSplineResampleInterpolatorFloat<TElastix>::BeforeRegistration()
 {
   /** BSplineResampleInterpolator specific.*/
 
@@ -52,7 +52,7 @@ BSplineResampleInterpolatorFloat<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-BSplineResampleInterpolatorFloat<TElastix>::ReadFromFile(void)
+BSplineResampleInterpolatorFloat<TElastix>::ReadFromFile()
 {
   /** Call ReadFromFile of the ResamplerBase. */
   this->Superclass2::ReadFromFile();

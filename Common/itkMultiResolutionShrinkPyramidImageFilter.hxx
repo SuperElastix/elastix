@@ -31,7 +31,7 @@ namespace itk
  */
 template <class TInputImage, class TOutputImage>
 void
-MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData(void)
+MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData()
 {
   /** Create the shrinking filter. */
   typedef ShrinkImageFilter<TInputImage, TOutputImage> ShrinkerType;
@@ -70,7 +70,7 @@ MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData
  */
 template <class TInputImage, class TOutputImage>
 void
-MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion(void)
+MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
   Superclass::Superclass::GenerateInputRequestedRegion();

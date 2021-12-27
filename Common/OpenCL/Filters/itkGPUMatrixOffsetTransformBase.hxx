@@ -221,7 +221,7 @@ GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::
 //------------------------------------------------------------------------------
 template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 GPUDataManager::Pointer
-GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetParametersDataManager(void) const
+GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetParametersDataManager() const
 {
   using namespace ITKGPUMatrixOffsetTransformBase;
   const unsigned int                               OutputDimension = OutputSpaceDimension;

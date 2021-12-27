@@ -61,7 +61,7 @@ FiniteDifferenceGradientDescentOptimizer::PrintSelf(std::ostream & os, Indent in
  * *********************** StartOptimization ********************
  */
 void
-FiniteDifferenceGradientDescentOptimizer::StartOptimization(void)
+FiniteDifferenceGradientDescentOptimizer::StartOptimization()
 {
   itkDebugMacro("StartOptimization");
 
@@ -91,7 +91,7 @@ FiniteDifferenceGradientDescentOptimizer::StartOptimization(void)
  */
 
 void
-FiniteDifferenceGradientDescentOptimizer::ResumeOptimization(void)
+FiniteDifferenceGradientDescentOptimizer::ResumeOptimization()
 {
   itkDebugMacro("ResumeOptimization");
 
@@ -199,7 +199,7 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization(void)
  */
 
 void
-FiniteDifferenceGradientDescentOptimizer::StopOptimization(void)
+FiniteDifferenceGradientDescentOptimizer::StopOptimization()
 {
   itkDebugMacro("StopOptimization");
 
@@ -214,7 +214,7 @@ FiniteDifferenceGradientDescentOptimizer::StopOptimization(void)
  */
 
 void
-FiniteDifferenceGradientDescentOptimizer::AdvanceOneStep(void)
+FiniteDifferenceGradientDescentOptimizer::AdvanceOneStep()
 {
   itkDebugMacro("AdvanceOneStep");
 

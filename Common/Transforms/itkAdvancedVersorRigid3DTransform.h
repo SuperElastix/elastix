@@ -122,7 +122,7 @@ public:
   SetParameters(const ParametersType & parameters) override;
 
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** This method computes the Jacobian matrix of the transformation. */
   void

@@ -99,7 +99,7 @@ AdvancedVersorTransform<TScalarType>::SetParameters(const ParametersType & param
 /** Set Parameters */
 template <class TScalarType>
 auto
-AdvancedVersorTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
+AdvancedVersorTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
   this->m_Parameters[0] = this->m_Versor.GetRight()[0];
   this->m_Parameters[1] = this->m_Versor.GetRight()[1];
@@ -146,7 +146,7 @@ AdvancedVersorTransform<TScalarType>::SetIdentity()
 /** Compute the matrix */
 template <class TScalarType>
 void
-AdvancedVersorTransform<TScalarType>::ComputeMatrix(void)
+AdvancedVersorTransform<TScalarType>::ComputeMatrix()
 {
 
   const TScalarType vx = m_Versor.GetX();
@@ -181,7 +181,7 @@ AdvancedVersorTransform<TScalarType>::ComputeMatrix(void)
 /** Compute the matrix */
 template <class TScalarType>
 void
-AdvancedVersorTransform<TScalarType>::ComputeMatrixParameters(void)
+AdvancedVersorTransform<TScalarType>::ComputeMatrixParameters()
 {
   m_Versor.Set(this->GetMatrix());
 }

@@ -156,7 +156,7 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayT
 
 template <class TArray, class TImage>
 bool
-UpsampleBSplineParametersFilter<TArray, TImage>::DoUpsampling(void)
+UpsampleBSplineParametersFilter<TArray, TImage>::DoUpsampling()
 {
   bool ret = (this->m_CurrentGridOrigin != this->m_RequiredGridOrigin);
   ret |= (this->m_CurrentGridSpacing != this->m_RequiredGridSpacing);

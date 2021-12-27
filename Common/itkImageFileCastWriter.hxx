@@ -43,7 +43,7 @@ ImageFileCastWriter<TInputImage>::ImageFileCastWriter()
 //---------------------------------------------------------
 template <class TInputImage>
 std::string
-ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType(void) const
+ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType() const
 {
   /** Make a dummy imageIO object, which has some handy functions */
   auto dummyImageIO = MetaImageIO::New();
@@ -69,7 +69,7 @@ ImageFileCastWriter<TInputImage>::~ImageFileCastWriter()
 //---------------------------------------------------------
 template <class TInputImage>
 void
-ImageFileCastWriter<TInputImage>::GenerateData(void)
+ImageFileCastWriter<TInputImage>::GenerateData()
 {
   const InputImageType * input = this->GetInput();
 

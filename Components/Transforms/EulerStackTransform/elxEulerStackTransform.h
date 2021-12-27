@@ -170,7 +170,7 @@ public:
   /** Execute stuff before anything else is done:*/
 
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   /** Execute stuff before the actual registration:
    * \li Set the stack transform parameters.
@@ -178,7 +178,7 @@ public:
    * \li Create initial registration parameters.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Set the scales
    * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -188,11 +188,11 @@ public:
    * the InitializeTransform function is called
    */
   virtual void
-  SetScales(void);
+  SetScales();
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
   /** Function to rotate center of rotation point using initial transformation. */
   virtual void
@@ -218,11 +218,11 @@ private:
 
   /** Method initialize the parameters (to 0). */
   void
-  InitializeTransform(void);
+  InitializeTransform();
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
   EulerStackTransform(const Self &) = delete;

@@ -130,7 +130,7 @@ public:
    * \li Call the superclass' implementation.   */
 
   virtual void
-  Initialize(void);
+  Initialize();
 
 protected:
   PCAMetric();

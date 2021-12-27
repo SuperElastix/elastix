@@ -112,7 +112,7 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
-AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetNumberOfNonZeroJacobianIndices(void) const
+AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetNumberOfNonZeroJacobianIndices() const
   -> NumberOfParametersType
 {
   return this->GetNumberOfParameters();

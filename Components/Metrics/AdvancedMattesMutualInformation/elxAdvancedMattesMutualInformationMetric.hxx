@@ -50,7 +50,7 @@ AdvancedMattesMutualInformationMetric<TElastix>::AdvancedMattesMutualInformation
 
 template <class TElastix>
 void
-AdvancedMattesMutualInformationMetric<TElastix>::Initialize(void)
+AdvancedMattesMutualInformationMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -68,7 +68,7 @@ AdvancedMattesMutualInformationMetric<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution(void)
+AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
@@ -155,7 +155,7 @@ AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-AdvancedMattesMutualInformationMetric<TElastix>::AfterEachIteration(void)
+AdvancedMattesMutualInformationMetric<TElastix>::AfterEachIteration()
 {
   if (this->GetUseFiniteDifferenceDerivative())
   {

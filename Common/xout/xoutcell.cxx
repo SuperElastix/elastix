@@ -39,7 +39,7 @@ xoutcell::xoutcell()
  */
 
 void
-xoutcell::WriteBufferedData(void)
+xoutcell::WriteBufferedData()
 {
   const std::string strbuf = this->m_InternalBuffer.str();
 

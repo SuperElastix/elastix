@@ -53,7 +53,7 @@ xoutbase & xoutbase::operator[](const char * cellname)
  */
 
 void
-xoutbase::WriteBufferedData(void)
+xoutbase::WriteBufferedData()
 {
   /** Update the target c-streams. */
   for (const auto & cell : m_CTargetCells)
@@ -271,7 +271,7 @@ xoutbase::SetOutputs(const XStreamMapType & outputmap)
  */
 
 const xoutbase::XStreamMapType &
-xoutbase::GetXOutputs(void)
+xoutbase::GetXOutputs()
 {
   return this->m_XOutputs;
 
@@ -282,7 +282,7 @@ xoutbase::GetXOutputs(void)
  */
 
 const xoutbase::CStreamMapType &
-xoutbase::GetCOutputs(void)
+xoutbase::GetCOutputs()
 {
   return this->m_COutputs;
 

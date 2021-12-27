@@ -63,7 +63,7 @@ OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** par
 
 template <class TElastix>
 void
-OptimizerBase<TElastix>::BeforeEachResolutionBase(void)
+OptimizerBase<TElastix>::BeforeEachResolutionBase()
 {
   /** Get the current resolution level. */
   unsigned int level = this->GetRegistration()->GetAsITKBaseType()->GetCurrentLevel();
@@ -82,7 +82,7 @@ OptimizerBase<TElastix>::BeforeEachResolutionBase(void)
 
 template <class TElastix>
 void
-OptimizerBase<TElastix>::AfterRegistrationBase(void)
+OptimizerBase<TElastix>::AfterRegistrationBase()
 {
   typedef typename ParametersType::ValueType ParametersValueType;
 
@@ -111,7 +111,7 @@ OptimizerBase<TElastix>::AfterRegistrationBase(void)
 
 template <class TElastix>
 void
-OptimizerBase<TElastix>::SelectNewSamples(void)
+OptimizerBase<TElastix>::SelectNewSamples()
 {
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.
@@ -130,7 +130,7 @@ OptimizerBase<TElastix>::SelectNewSamples(void)
 
 template <class TElastix>
 bool
-OptimizerBase<TElastix>::GetNewSamplesEveryIteration(void) const
+OptimizerBase<TElastix>::GetNewSamplesEveryIteration() const
 {
   /** itkGetConstMacro Without the itkDebugMacro. */
   return this->m_NewSamplesEveryIteration;

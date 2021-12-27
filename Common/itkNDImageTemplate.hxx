@@ -52,7 +52,7 @@ NDImageTemplate<TPixel, VDimension>::SetRequestedRegion(DataObject * data)
 
 template <class TPixel, unsigned int VDimension>
 void
-NDImageTemplate<TPixel, VDimension>::Allocate(void)
+NDImageTemplate<TPixel, VDimension>::Allocate()
 {
   this->m_Image->Allocate();
 }
@@ -60,7 +60,7 @@ NDImageTemplate<TPixel, VDimension>::Allocate(void)
 
 template <class TPixel, unsigned int VDimension>
 void
-NDImageTemplate<TPixel, VDimension>::Initialize(void)
+NDImageTemplate<TPixel, VDimension>::Initialize()
 {
   this->m_Image->Initialize();
 }
@@ -138,7 +138,7 @@ NDImageTemplate<TPixel, VDimension>::SetPixelContainer(PixelContainer * containe
 
 template <class TPixel, unsigned int VDimension>
 auto
-NDImageTemplate<TPixel, VDimension>::GetPixelAccessor(void) -> AccessorType
+NDImageTemplate<TPixel, VDimension>::GetPixelAccessor() -> AccessorType
 {
   return this->m_Image->GetPixelAccessor();
 }
@@ -146,7 +146,7 @@ NDImageTemplate<TPixel, VDimension>::GetPixelAccessor(void) -> AccessorType
 
 template <class TPixel, unsigned int VDimension>
 auto
-NDImageTemplate<TPixel, VDimension>::GetPixelAccessor(void) const -> const AccessorType
+NDImageTemplate<TPixel, VDimension>::GetPixelAccessor() const -> const AccessorType
 {
   return this->m_Image->GetPixelAccessor();
 }
@@ -170,7 +170,7 @@ NDImageTemplate<TPixel, VDimension>::SetOrigin(const PointType & origin)
 
 template <class TPixel, unsigned int VDimension>
 auto
-NDImageTemplate<TPixel, VDimension>::GetSpacing(void) -> SpacingType
+NDImageTemplate<TPixel, VDimension>::GetSpacing() -> SpacingType
 {
   return ConvertToDynamicArray<SpacingTypeD, SpacingType>::DO(this->m_Image->GetSpacing());
 }
@@ -178,7 +178,7 @@ NDImageTemplate<TPixel, VDimension>::GetSpacing(void) -> SpacingType
 
 template <class TPixel, unsigned int VDimension>
 auto
-NDImageTemplate<TPixel, VDimension>::GetOrigin(void) -> PointType
+NDImageTemplate<TPixel, VDimension>::GetOrigin() -> PointType
 {
   return ConvertToDynamicArray<PointTypeD, PointType>::DO(this->m_Image->GetOrigin());
 }
@@ -217,7 +217,7 @@ NDImageTemplate<TPixel, VDimension>::ComputeIndex(OffsetValueType offset) const 
 
 template <class TPixel, unsigned int VDimension>
 unsigned int
-NDImageTemplate<TPixel, VDimension>::ImageDimension(void)
+NDImageTemplate<TPixel, VDimension>::ImageDimension()
 {
   return this->m_Image->GetImageDimension();
 }
@@ -225,7 +225,7 @@ NDImageTemplate<TPixel, VDimension>::ImageDimension(void)
 
 template <class TPixel, unsigned int VDimension>
 unsigned int
-NDImageTemplate<TPixel, VDimension>::GetImageDimension(void)
+NDImageTemplate<TPixel, VDimension>::GetImageDimension()
 {
   return this->m_Image->GetImageDimension();
 }
@@ -233,7 +233,7 @@ NDImageTemplate<TPixel, VDimension>::GetImageDimension(void)
 
 template <class TPixel, unsigned int VDimension>
 void
-NDImageTemplate<TPixel, VDimension>::Write(void)
+NDImageTemplate<TPixel, VDimension>::Write()
 {
   if (this->m_Writer)
   {
@@ -245,7 +245,7 @@ NDImageTemplate<TPixel, VDimension>::Write(void)
 
 template <class TPixel, unsigned int VDimension>
 void
-NDImageTemplate<TPixel, VDimension>::Read(void)
+NDImageTemplate<TPixel, VDimension>::Read()
 {
   if (this->m_Reader)
   {
@@ -257,7 +257,7 @@ NDImageTemplate<TPixel, VDimension>::Read(void)
 
 template <class TPixel, unsigned int VDimension>
 void
-NDImageTemplate<TPixel, VDimension>::CreateNewImage(void)
+NDImageTemplate<TPixel, VDimension>::CreateNewImage()
 {
   this->m_Image = ImageType::New();
 }
@@ -277,7 +277,7 @@ NDImageTemplate<TPixel, VDimension>::SetImageIOWriter(ImageIOBase * _arg)
 
 template <class TPixel, unsigned int VDimension>
 ImageIOBase *
-NDImageTemplate<TPixel, VDimension>::GetImageIOWriter(void)
+NDImageTemplate<TPixel, VDimension>::GetImageIOWriter()
 {
   if (this->m_Writer)
   {
@@ -304,7 +304,7 @@ NDImageTemplate<TPixel, VDimension>::SetImageIOReader(ImageIOBase * _arg)
 
 template <class TPixel, unsigned int VDimension>
 ImageIOBase *
-NDImageTemplate<TPixel, VDimension>::GetImageIOReader(void)
+NDImageTemplate<TPixel, VDimension>::GetImageIOReader()
 {
   if (this->m_Reader)
   {
@@ -343,7 +343,7 @@ NDImageTemplate<TPixel, VDimension>::SetInputFileName(const char * name)
 
 template <class TPixel, unsigned int VDimension>
 const char *
-NDImageTemplate<TPixel, VDimension>::GetOutputFileName(void)
+NDImageTemplate<TPixel, VDimension>::GetOutputFileName()
 {
   if (this->m_Writer)
   {
@@ -358,7 +358,7 @@ NDImageTemplate<TPixel, VDimension>::GetOutputFileName(void)
 
 template <class TPixel, unsigned int VDimension>
 const char *
-NDImageTemplate<TPixel, VDimension>::GetInputFileName(void)
+NDImageTemplate<TPixel, VDimension>::GetInputFileName()
 {
   if (this->m_Reader)
   {

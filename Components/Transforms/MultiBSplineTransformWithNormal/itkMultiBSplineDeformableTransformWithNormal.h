@@ -153,15 +153,15 @@ public:
    *  the values get modified when the user invokes SetIdentity().
    */
   void
-  SetIdentity(void);
+  SetIdentity();
 
   /** Get the Transformation Parameters. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Get the Transformation Fixed Parameters. */
   const ParametersType &
-  GetFixedParameters(void) const override;
+  GetFixedParameters() const override;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType     PixelType;
@@ -169,9 +169,9 @@ public:
   typedef typename ImageType::Pointer            ImagePointer;
 
   /** Get the array of coefficient images. */
-  // virtual ImagePointer * GetCoefficientImage( void )
+  // virtual ImagePointer * GetCoefficientImage()
   //  { return this->m_CoefficientImage; }
-  // virtual const ImagePointer * GetCoefficientImage( void ) const
+  // virtual const ImagePointer * GetCoefficientImage() const
   //  { return this->m_CoefficientImage; }
 
   /** Set the array of coefficient images.
@@ -202,28 +202,28 @@ public:
   SetGridRegion(const RegionType & region);
 
   virtual RegionType
-  GetGridRegion(void) const;
+  GetGridRegion() const;
 
   /** This method specifies the grid spacing or resolution. */
   virtual void
   SetGridSpacing(const SpacingType & spacing);
 
   virtual SpacingType
-  GetGridSpacing(void) const;
+  GetGridSpacing() const;
 
   /** This method specifies the grid directions . */
   virtual void
   SetGridDirection(const DirectionType & spacing);
 
   virtual DirectionType
-  GetGridDirection(void) const;
+  GetGridDirection() const;
 
   /** This method specifies the grid origin. */
   virtual void
   SetGridOrigin(const OriginType & origin);
 
   virtual OriginType
-  GetGridOrigin(void) const;
+  GetGridOrigin() const;
 
   /** Typedef of the label image. */
   typedef Image<unsigned char, Self::SpaceDimension> ImageLabelType;
@@ -250,7 +250,7 @@ public:
 
   /** Update Local Bases : call to it should become automatic and the function should become private */
   void
-  UpdateLocalBases(void);
+  UpdateLocalBases();
 
   itkGetConstMacro(LocalBases, ImageBaseType *);
 
@@ -292,15 +292,15 @@ public:
 
   /** Return the number of parameters that completely define the Transform. */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override;
+  GetNumberOfParameters() const override;
 
   /** Return the number of parameters per dimension */
   virtual NumberOfParametersType
-  GetNumberOfParametersPerDimension(void) const;
+  GetNumberOfParametersPerDimension() const;
 
   /** Return the region of the grid wholly within the support region */
   virtual const RegionType &
-  GetValidRegion(void)
+  GetValidRegion()
   {
     return m_Trans[0]->GetValidRegion();
   }
@@ -312,28 +312,28 @@ public:
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
   bool
-  IsLinear(void) const override
+  IsLinear() const override
   {
     return false;
   }
 
   /** Get number of weights. */
   virtual unsigned long
-  GetNumberOfWeights(void) const
+  GetNumberOfWeights() const
   {
     return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights();
   }
 
 
   virtual unsigned int
-  GetNumberOfAffectedWeights(void) const
+  GetNumberOfAffectedWeights() const
   {
     return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights();
   }
 
 
   NumberOfParametersType
-  GetNumberOfNonZeroJacobianIndices(void) const override
+  GetNumberOfNonZeroJacobianIndices() const override
   {
     return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights() * SpaceDimension;
   }
@@ -341,28 +341,28 @@ public:
 
   /** Whether the advanced transform has nonzero matrices. */
   virtual bool
-  GetHasNonZeroSpatialJacobian(void) const
+  GetHasNonZeroSpatialJacobian() const
   {
     return true;
   }
 
 
   virtual bool
-  HasNonZeroJacobianOfSpatialJacobian(void) const
+  HasNonZeroJacobianOfSpatialJacobian() const
   {
     return true;
   }
 
 
   bool
-  GetHasNonZeroSpatialHessian(void) const override
+  GetHasNonZeroSpatialHessian() const override
   {
     return true;
   }
 
 
   virtual bool
-  HasNonZeroJacobianOfSpatialHessian(void) const
+  HasNonZeroJacobianOfSpatialHessian() const
   {
     return true;
   }
@@ -426,7 +426,7 @@ protected:
   ~MultiBSplineDeformableTransformWithNormal() override = default;
 
   /** Wrap flat array into images of coefficients. */
-  // void WrapAsImages( void );
+  // void WrapAsImages();
 
   /** Convert an input point to a continuous index inside the BSpline grid. */
   /*

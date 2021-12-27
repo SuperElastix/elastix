@@ -44,7 +44,7 @@
 
 /** defines for example: GetNumberOfInterpolators() */
 #define itkGetNumberOfMacro(_name)                                                                                     \
-  virtual unsigned int GetNumberOf##_name##s(void) const { return this->m_##_name##s.size(); }
+  virtual unsigned int GetNumberOf##_name##s() const { return this->m_##_name##s.size(); }
 
 namespace itk
 {
@@ -143,7 +143,7 @@ public:
   GetFixedImage(unsigned int pos) const;
 
   const FixedImageType *
-  GetFixedImage(void) const override
+  GetFixedImage() const override
   {
     return this->GetFixedImage(0);
   }
@@ -159,7 +159,7 @@ public:
   GetFixedImageRegion(unsigned int pos) const;
 
   const FixedImageRegionType &
-  GetFixedImageRegion(void) const override
+  GetFixedImageRegion() const override
   {
     return this->GetFixedImageRegion(0);
   }
@@ -175,7 +175,7 @@ public:
   GetFixedImagePyramid(unsigned int pos) const;
 
   FixedImagePyramidType *
-  GetFixedImagePyramid(void) override
+  GetFixedImagePyramid() override
   {
     return this->GetFixedImagePyramid(0);
   }
@@ -191,7 +191,7 @@ public:
   GetMovingImage(unsigned int pos) const;
 
   const MovingImageType *
-  GetMovingImage(void) const override
+  GetMovingImage() const override
   {
     return this->GetMovingImage(0);
   }
@@ -207,7 +207,7 @@ public:
   GetMovingImagePyramid(unsigned int pos) const;
 
   MovingImagePyramidType *
-  GetMovingImagePyramid(void) override
+  GetMovingImagePyramid() override
   {
     return this->GetMovingImagePyramid(0);
   }
@@ -223,7 +223,7 @@ public:
   GetInterpolator(unsigned int pos) const;
 
   InterpolatorType *
-  GetInterpolator(void) override
+  GetInterpolator() override
   {
     return this->GetInterpolator(0);
   }
@@ -239,7 +239,7 @@ public:
   GetFixedImageInterpolator(unsigned int pos) const;
 
   virtual FixedImageInterpolatorType *
-  GetFixedImageInterpolator(void)
+  GetFixedImageInterpolator()
   {
     return this->GetFixedImageInterpolator(0);
   }
@@ -258,7 +258,7 @@ public:
    * any of its cached ivars.
    */
   ModifiedTimeType
-  GetMTime(void) const override;
+  GetMTime() const override;
 
 protected:
   /** Constructor. */
@@ -286,17 +286,17 @@ protected:
 
   /** Compute the size of the fixed region for each level of the pyramid. */
   void
-  PreparePyramids(void) override;
+  PreparePyramids() override;
 
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
   virtual void
-  CheckPyramids(void);
+  CheckPyramids();
 
   /** Function called by Initialize, which checks if the user input is ok. */
   virtual void
-  CheckOnInitialize(void);
+  CheckOnInitialize();
 
   /** Containers for the pointers supplied by the user */
   FixedImageVectorType             m_FixedImages;

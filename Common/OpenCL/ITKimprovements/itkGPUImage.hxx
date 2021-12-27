@@ -69,7 +69,7 @@ GPUImage<TPixel, VImageDimension>::Allocate(bool initialize)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 void
-GPUImage<TPixel, VImageDimension>::AllocateGPU(void)
+GPUImage<TPixel, VImageDimension>::AllocateGPU()
 {
   if (!m_Graft)
   {
@@ -90,7 +90,7 @@ GPUImage<TPixel, VImageDimension>::AllocateGPU(void)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 void
-GPUImage<TPixel, VImageDimension>::Initialize(void)
+GPUImage<TPixel, VImageDimension>::Initialize()
 {
   // CPU image initialize
   Superclass::Initialize();
@@ -113,7 +113,7 @@ GPUImage<TPixel, VImageDimension>::Initialize(void)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 void
-GPUImage<TPixel, VImageDimension>::Modified(void) const
+GPUImage<TPixel, VImageDimension>::Modified() const
 {
   Superclass::Modified();
 }
@@ -192,7 +192,7 @@ GPUImage<TPixel, VImageDimension>::SetPixelContainer(PixelContainer * container)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 void
-GPUImage<TPixel, VImageDimension>::UpdateBuffers(void)
+GPUImage<TPixel, VImageDimension>::UpdateBuffers()
 {
   m_DataManager->UpdateCPUBuffer();
   m_DataManager->UpdateGPUBuffer();
@@ -202,7 +202,7 @@ GPUImage<TPixel, VImageDimension>::UpdateBuffers(void)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 void
-GPUImage<TPixel, VImageDimension>::UpdateCPUBuffer(void)
+GPUImage<TPixel, VImageDimension>::UpdateCPUBuffer()
 {
   m_DataManager->UpdateCPUBuffer();
 }
@@ -211,7 +211,7 @@ GPUImage<TPixel, VImageDimension>::UpdateCPUBuffer(void)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 void
-GPUImage<TPixel, VImageDimension>::UpdateGPUBuffer(void)
+GPUImage<TPixel, VImageDimension>::UpdateGPUBuffer()
 {
   m_DataManager->UpdateGPUBuffer();
 }
@@ -220,7 +220,7 @@ GPUImage<TPixel, VImageDimension>::UpdateGPUBuffer(void)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 TPixel *
-GPUImage<TPixel, VImageDimension>::GetBufferPointer(void)
+GPUImage<TPixel, VImageDimension>::GetBufferPointer()
 {
   m_DataManager->UpdateCPUBuffer();
   return Superclass::GetBufferPointer();
@@ -230,7 +230,7 @@ GPUImage<TPixel, VImageDimension>::GetBufferPointer(void)
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 const TPixel *
-GPUImage<TPixel, VImageDimension>::GetBufferPointer(void) const
+GPUImage<TPixel, VImageDimension>::GetBufferPointer() const
 {
   // const does not change buffer, but if CPU is dirty then make it up-to-date
   m_DataManager->UpdateCPUBuffer();
@@ -241,7 +241,7 @@ GPUImage<TPixel, VImageDimension>::GetBufferPointer(void) const
 //------------------------------------------------------------------------------
 template <typename TPixel, unsigned int VImageDimension>
 GPUDataManager::Pointer
-GPUImage<TPixel, VImageDimension>::GetGPUDataManager(void) const
+GPUImage<TPixel, VImageDimension>::GetGPUDataManager() const
 {
   typedef typename GPUImageDataManager<GPUImage>::Superclass GPUImageDataSuperclass;
   typedef typename GPUImageDataSuperclass::Pointer           GPUImageDataSuperclassPointer;

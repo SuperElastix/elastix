@@ -58,7 +58,7 @@ CommandLineArgumentParser::SetCommandLineArguments(int argc, char ** argv)
  */
 
 void
-CommandLineArgumentParser::CreateArgumentMap(void)
+CommandLineArgumentParser::CreateArgumentMap()
 {
   for (IndexType i = 1; i < this->m_Argv.size(); ++i)
   {

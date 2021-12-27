@@ -138,24 +138,24 @@ public:
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   void
-  AfterEachResolution(void) override;
+  AfterEachResolution() override;
 
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   void
-  AfterRegistration(void) override;
+  AfterRegistration() override;
 
   itkGetConstMacro(StartLineSearch, bool);
 
@@ -167,12 +167,12 @@ protected:
 
   /** Convert the line search stop condition to a string */
   virtual std::string
-  GetLineSearchStopCondition(void) const;
+  GetLineSearchStopCondition() const;
 
   /** Generate a string, representing the phase of optimisation
    * (line search, main) */
   virtual std::string
-  DeterminePhase(void) const;
+  DeterminePhase() const;
 
   /** Reimplement the superclass. Calls the superclass' implementation
    * and checks if the MoreThuente line search routine has stopped with

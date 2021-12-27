@@ -65,14 +65,14 @@ ELASTIX::~ELASTIX()
  */
 
 ELASTIX::ConstImagePointer
-ELASTIX::GetResultImage(void) const
+ELASTIX::GetResultImage() const
 {
   return this->m_ResultImage;
 } // end GetResultImage()
 
 
 ELASTIX::ImagePointer
-ELASTIX::GetResultImage(void)
+ELASTIX::GetResultImage()
 {
   return this->m_ResultImage;
 } // end GetResultImage()
@@ -83,7 +83,7 @@ ELASTIX::GetResultImage(void)
  */
 
 ELASTIX::ParameterMapType
-ELASTIX::GetTransformParameterMap(void) const
+ELASTIX::GetTransformParameterMap() const
 {
   return this->m_TransformParametersList.back();
 } // end GetTransformParameterMap()
@@ -94,7 +94,7 @@ ELASTIX::GetTransformParameterMap(void) const
  */
 
 ELASTIX::ParameterMapListType
-ELASTIX::GetTransformParameterMapList(void) const
+ELASTIX::GetTransformParameterMapList() const
 {
   return this->m_TransformParametersList;
 } // end GetTransformParameterMapList()

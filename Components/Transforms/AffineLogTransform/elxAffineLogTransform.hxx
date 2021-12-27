@@ -43,7 +43,7 @@ AffineLogTransformElastix<TElastix>::AffineLogTransformElastix()
 
 template <class TElastix>
 void
-AffineLogTransformElastix<TElastix>::BeforeRegistration(void)
+AffineLogTransformElastix<TElastix>::BeforeRegistration()
 {
   elxout << "BeforeRegistration" << std::endl;
   /** Set center of rotation and initial translation. */
@@ -61,7 +61,7 @@ AffineLogTransformElastix<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-AffineLogTransformElastix<TElastix>::ReadFromFile(void)
+AffineLogTransformElastix<TElastix>::ReadFromFile()
 {
   elxout << "ReadFromFile" << std::endl;
   /** Variables. */
@@ -98,7 +98,7 @@ AffineLogTransformElastix<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-AffineLogTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+AffineLogTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_AffineLogTransform;
 
@@ -116,7 +116,7 @@ AffineLogTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) c
 
 template <class TElastix>
 void
-AffineLogTransformElastix<TElastix>::InitializeTransform(void)
+AffineLogTransformElastix<TElastix>::InitializeTransform()
 {
   elxout << "InitializeTransform" << std::endl;
   /** Set all parameters to zero (no rotations, no translation). */
@@ -271,7 +271,7 @@ AffineLogTransformElastix<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-AffineLogTransformElastix<TElastix>::SetScales(void)
+AffineLogTransformElastix<TElastix>::SetScales()
 {
   elxout << "SetScales" << std::endl;
   /** Create the new scales. */

@@ -334,7 +334,7 @@ main(int argc, char ** argv)
  */
 
 void
-PrintHelp(void)
+PrintHelp()
 {
   /** Print the version. */
   std::cout << "elastix version: " << ELASTIX_VERSION_STRING "\n\n";

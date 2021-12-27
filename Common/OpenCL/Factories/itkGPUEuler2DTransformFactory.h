@@ -62,7 +62,7 @@ public:
   /** Operator() to register override. */
   template <typename TType>
   void
-  operator()(void)
+  operator()()
   {
     this->RegisterOverride(typeid(Euler2DTransform<TType>).name(),
                            typeid(GPUEuler2DTransform<TType>).name(),

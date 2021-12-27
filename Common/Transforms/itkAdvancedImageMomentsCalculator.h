@@ -226,10 +226,10 @@ public:
   }
 
   virtual void
-  BeforeThreadedCompute(void);
+  BeforeThreadedCompute();
 
   virtual void
-  AfterThreadedCompute(void);
+  AfterThreadedCompute();
 
   typedef itk::ImageGridSampler<ImageType> ImageGridSamplerType;
   //  typedef itk::ImageFullSampler< ImageType >     ImageGridSamplerType;
@@ -261,7 +261,7 @@ protected:
 
   /** Launch MultiThread Compute. */
   void
-  LaunchComputeThreaderCallback(void) const;
+  LaunchComputeThreaderCallback() const;
 
   /** Compute threader callback function. */
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
@@ -273,7 +273,7 @@ protected:
 
   /** Initialize some multi-threading related parameters. */
   virtual void
-  InitializeThreadingParameters(void);
+  InitializeThreadingParameters();
 
   /** To give the threads access to all member variables and functions. */
   struct MultiThreaderParameterType

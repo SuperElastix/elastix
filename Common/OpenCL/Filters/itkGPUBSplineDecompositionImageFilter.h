@@ -78,7 +78,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   virtual void
-  GPUGenerateData(void);
+  GPUGenerateData();
 
 private:
   GPUBSplineDecompositionImageFilter(const Self &) = delete;

@@ -101,7 +101,7 @@ SplineKernelTransform<TElastix>::SetKernelType(const std::string & kernelType)
 
 template <class TElastix>
 int
-SplineKernelTransform<TElastix>::BeforeAll(void)
+SplineKernelTransform<TElastix>::BeforeAll()
 {
   /** Check if -fp is given */
   /** If the optional command "-fp" is given in the command
@@ -156,7 +156,7 @@ SplineKernelTransform<TElastix>::BeforeAll(void)
 
 template <class TElastix>
 void
-SplineKernelTransform<TElastix>::BeforeRegistration(void)
+SplineKernelTransform<TElastix>::BeforeRegistration()
 {
   /** Determine type of spline. */
   std::string kernelType = "ThinPlateSpline";
@@ -213,7 +213,7 @@ SplineKernelTransform<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-SplineKernelTransform<TElastix>::DetermineSourceLandmarks(void)
+SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
 {
   /** Load the fixed image landmarks. */
   elxout << "Loading fixed image landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "."
@@ -246,7 +246,7 @@ SplineKernelTransform<TElastix>::DetermineSourceLandmarks(void)
 
 template <class TElastix>
 bool
-SplineKernelTransform<TElastix>::DetermineTargetLandmarks(void)
+SplineKernelTransform<TElastix>::DetermineTargetLandmarks()
 {
   /** The moving landmark file name. */
   std::string mp = this->GetConfiguration()->GetCommandLineArgument("-mp");
@@ -376,7 +376,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
 
 template <class TElastix>
 void
-SplineKernelTransform<TElastix>::ReadFromFile(void)
+SplineKernelTransform<TElastix>::ReadFromFile()
 {
   /** Read kernel type. */
   std::string kernelType = "unknown";
@@ -440,7 +440,7 @@ SplineKernelTransform<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-SplineKernelTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+SplineKernelTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   auto & itkTransform = *m_KernelTransform;
 

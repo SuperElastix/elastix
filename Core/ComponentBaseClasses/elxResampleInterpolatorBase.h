@@ -70,7 +70,7 @@ public:
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *
-  GetAsITKBaseType(void)
+  GetAsITKBaseType()
   {
     return &(this->GetSelf());
   }
@@ -78,7 +78,7 @@ public:
 
   /** Retrieves this object as ITKBaseType, to use in const functions. */
   const ITKBaseType *
-  GetAsITKBaseType(void) const
+  GetAsITKBaseType() const
   {
     return &(this->GetSelf());
   }
@@ -88,14 +88,14 @@ public:
    * \li nothing here
    */
   virtual int
-  BeforeAllTransformix(void)
+  BeforeAllTransformix()
   {
     return 0;
   }
 
   /** Function to read transform-parameters from a file. */
   virtual void
-  ReadFromFile(void);
+  ReadFromFile();
 
   /** Function to write transform-parameters to a file. */
   void

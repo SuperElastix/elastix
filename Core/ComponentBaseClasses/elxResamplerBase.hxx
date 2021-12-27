@@ -46,7 +46,7 @@ ResamplerBase<TElastix>::ResamplerBase()
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::BeforeRegistrationBase(void)
+ResamplerBase<TElastix>::BeforeRegistrationBase()
 {
   /** Connect the components. */
   this->SetComponents();
@@ -84,7 +84,7 @@ ResamplerBase<TElastix>::BeforeRegistrationBase(void)
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::AfterEachResolutionBase(void)
+ResamplerBase<TElastix>::AfterEachResolutionBase()
 {
   /** Set the final transform parameters. */
   this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
@@ -138,7 +138,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase(void)
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::AfterEachIterationBase(void)
+ResamplerBase<TElastix>::AfterEachIterationBase()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -187,7 +187,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase(void)
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::AfterRegistrationBase(void)
+ResamplerBase<TElastix>::AfterRegistrationBase()
 {
   /** Set the final transform parameters. */
   this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
@@ -273,7 +273,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase(void)
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::SetComponents(void)
+ResamplerBase<TElastix>::SetComponents()
 {
   /** Set the transform, the interpolator and the inputImage
    * (which is the moving image).
@@ -426,7 +426,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::CreateItkResultImage(void)
+ResamplerBase<TElastix>::CreateItkResultImage()
 {
   itk::DataObject::Pointer resultImage;
 
@@ -595,7 +595,7 @@ ResamplerBase<TElastix>::CreateItkResultImage(void)
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::ReadFromFile(void)
+ResamplerBase<TElastix>::ReadFromFile()
 {
   /** Connect the components. */
   this->SetComponents();
@@ -739,7 +739,7 @@ ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType & paramet
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::ReleaseMemory(void)
+ResamplerBase<TElastix>::ReleaseMemory()
 {
   /** Release some memory. Sometimes it is not possible to
    * resample and write an image, because too much memory is consumed by

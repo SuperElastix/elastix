@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution(void)
+AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
@@ -49,7 +49,7 @@ AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-AdvancedNormalizedCorrelationMetric<TElastix>::Initialize(void)
+AdvancedNormalizedCorrelationMetric<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();

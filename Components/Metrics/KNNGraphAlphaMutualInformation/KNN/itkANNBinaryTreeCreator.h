@@ -93,11 +93,11 @@ public:
 
   /** Static function to increase the reference count to ANN trees. */
   static void
-  IncreaseReferenceCount(void);
+  IncreaseReferenceCount();
 
   /** Static function to decrease the reference count to ANN trees. */
   static void
-  DecreaseReferenceCount(void);
+  DecreaseReferenceCount();
 
 protected:
   ANNBinaryTreeCreator() = default;

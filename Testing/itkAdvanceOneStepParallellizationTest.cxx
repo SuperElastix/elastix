@@ -96,7 +96,7 @@ public:
 
 
   void
-  AdvanceOneStep(void)
+  AdvanceOneStep()
   {
     const unsigned int spaceDimension = m_NumberOfParameters;
     ParametersType &   newPosition = this->m_CurrentPosition;
@@ -241,7 +241,7 @@ public:
 //-------------------------------------------------------------------------------------
 
 int
-main(void)
+main()
 {
   // Declare and setup
   std::cout << std::fixed << std::showpoint << std::setprecision(8);

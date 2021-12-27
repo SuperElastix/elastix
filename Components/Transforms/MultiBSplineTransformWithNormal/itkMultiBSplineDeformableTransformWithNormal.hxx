@@ -58,7 +58,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 // Get the number of parameters
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
-MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParameters(void) const
+MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParameters() const
   -> NumberOfParametersType
 {
   if (m_NbLabels > 0)
@@ -76,8 +76,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 // FIXME :  Do we need to declare this function ?
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
-MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParametersPerDimension(
-  void) const -> NumberOfParametersType
+MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParametersPerDimension()
+  const -> NumberOfParametersType
 {
   // FIXME : Depends on which dimension we are speaking here. should check it
   if (m_NbLabels > 0)
@@ -581,7 +581,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
-MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetParameters(void) const
+MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetParameters() const
   -> const ParametersType &
 {
   /** NOTE: For efficiency, this class does not keep a copy of the parameters -
@@ -599,7 +599,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 // Get the parameters
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
-MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetFixedParameters(void) const
+MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetFixedParameters() const
   -> const ParametersType &
 {
   return (m_Trans[0]->GetFixedParameters());

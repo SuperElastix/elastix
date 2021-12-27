@@ -36,7 +36,7 @@ AdaptiveStochasticGradientDescentOptimizer::AdaptiveStochasticGradientDescentOpt
  */
 
 void
-AdaptiveStochasticGradientDescentOptimizer::UpdateCurrentTime(void)
+AdaptiveStochasticGradientDescentOptimizer::UpdateCurrentTime()
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

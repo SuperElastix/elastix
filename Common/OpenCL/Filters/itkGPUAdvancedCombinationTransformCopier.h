@@ -132,7 +132,7 @@ public:
 
   /** Update method. */
   void
-  Update(void);
+  Update();
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   // Begin concept checking

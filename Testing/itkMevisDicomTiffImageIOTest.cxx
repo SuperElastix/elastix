@@ -36,7 +36,7 @@
 
 template <unsigned int Dimension>
 int
-testMevis(void)
+testMevis()
 {
   std::cerr << "Testing write/read of " << Dimension << "D image..." << std::endl;
 
@@ -218,7 +218,7 @@ testMevis(void)
 
 
 int
-main(void)
+main()
 {
 
   /** Support Mevis Dicom Tiff (if selected in cmake) */

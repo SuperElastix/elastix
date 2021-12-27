@@ -55,7 +55,7 @@ PreconditionedGradientDescent<TElastix>::PreconditionedGradientDescent()
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::BeforeRegistration(void)
+PreconditionedGradientDescent<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo.*/
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -80,7 +80,7 @@ PreconditionedGradientDescent<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::BeforeEachResolution(void)
+PreconditionedGradientDescent<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -201,7 +201,7 @@ PreconditionedGradientDescent<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::AfterEachIteration(void)
+PreconditionedGradientDescent<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -225,7 +225,7 @@ PreconditionedGradientDescent<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::AfterEachResolution(void)
+PreconditionedGradientDescent<TElastix>::AfterEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -275,7 +275,7 @@ PreconditionedGradientDescent<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::AfterRegistration(void)
+PreconditionedGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();
@@ -293,7 +293,7 @@ PreconditionedGradientDescent<TElastix>::AfterRegistration(void)
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::StartOptimization(void)
+PreconditionedGradientDescent<TElastix>::StartOptimization()
 {
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */
   this->SetUseScales(false);
@@ -331,7 +331,7 @@ PreconditionedGradientDescent<TElastix>::StartOptimization(void)
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::ResumeOptimization(void)
+PreconditionedGradientDescent<TElastix>::ResumeOptimization()
 {
   /** The following code relies on the fact that all
    * components have been set up and that the initial
@@ -362,7 +362,7 @@ PreconditionedGradientDescent<TElastix>::ResumeOptimization(void)
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::SetSelfHessian(void)
+PreconditionedGradientDescent<TElastix>::SetSelfHessian()
 {
   /** If it works, think about a more generic solution */
   typedef itk::AdvancedImageToImageMetric<FixedImageType, MovingImageType> MetricWithSelfHessianType;
@@ -449,7 +449,7 @@ PreconditionedGradientDescent<TElastix>::MetricErrorResponse(itk::ExceptionObjec
 
 template <class TElastix>
 void
-PreconditionedGradientDescent<TElastix>::AutomaticParameterEstimation(void)
+PreconditionedGradientDescent<TElastix>::AutomaticParameterEstimation()
 {
   /** Setup timer. */
   itk::TimeProbe timer;

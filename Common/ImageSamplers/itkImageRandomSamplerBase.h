@@ -74,7 +74,7 @@ protected:
 
   /** Multi-threaded function that does the work. */
   void
-  BeforeThreadedGenerateData(void) override;
+  BeforeThreadedGenerateData() override;
 
   /** PrintSelf. */
   void

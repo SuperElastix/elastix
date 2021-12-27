@@ -419,7 +419,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetUseMetric(const boo
 
 template <class TFixedImage, class TMovingImage>
 void
-CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetUseAllMetrics(void)
+CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetUseAllMetrics()
 {
   for (unsigned int pos = 0; pos < this->GetNumberOfMetrics(); ++pos)
   {
@@ -540,7 +540,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricComputationTi
 
 template <class TFixedImage, class TMovingImage>
 const SizeValueType &
-CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetNumberOfPixelsCounted(void) const
+CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetNumberOfPixelsCounted() const
 {
   unsigned long sum = 0;
   for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
@@ -564,7 +564,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetNumberOfPixelsCount
 
 template <class TFixedImage, class TMovingImage>
 void
-CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
+CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Check if transform, interpolator have been set. Effectively this
    * method checks if the first sub metric is set up completely.
@@ -612,7 +612,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-CombinationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters(void) const
+CombinationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
   /** Initialize the derivatives. */
   for (ThreadIdType i = 0; i < this->GetNumberOfMetrics(); ++i)
@@ -921,7 +921,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian(const T
 
 template <class TFixedImage, class TMovingImage>
 ModifiedTimeType
-CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMTime(void) const
+CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMTime() const
 {
   ModifiedTimeType mtime = this->Superclass::GetMTime();
   ModifiedTimeType m;

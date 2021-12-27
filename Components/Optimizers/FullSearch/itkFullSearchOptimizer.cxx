@@ -39,7 +39,7 @@ FullSearchOptimizer::FullSearchOptimizer()
  * ***************** Start the optimization **********************
  */
 void
-FullSearchOptimizer::StartOptimization(void)
+FullSearchOptimizer::StartOptimization()
 {
 
   itkDebugMacro("StartOptimization");
@@ -73,7 +73,7 @@ FullSearchOptimizer::StartOptimization(void)
  * ******************** Resume the optimization ******************
  */
 void
-FullSearchOptimizer::ResumeOptimization(void)
+FullSearchOptimizer::ResumeOptimization()
 {
 
   itkDebugMacro("ResumeOptimization");
@@ -136,7 +136,7 @@ FullSearchOptimizer::ResumeOptimization(void)
  * ************************** Stop optimization ******************
  */
 void
-FullSearchOptimizer::StopOptimization(void)
+FullSearchOptimizer::StopOptimization()
 {
 
   itkDebugMacro("StopOptimization");
@@ -167,7 +167,7 @@ FullSearchOptimizer::StopOptimization(void)
  */
 
 void
-FullSearchOptimizer::UpdateCurrentPosition(void)
+FullSearchOptimizer::UpdateCurrentPosition()
 {
 
   itkDebugMacro("Current position updated.");
@@ -232,7 +232,7 @@ FullSearchOptimizer::UpdateCurrentPosition(void)
  * ********************* ProcessSearchSpaceChanges **************
  */
 void
-FullSearchOptimizer::ProcessSearchSpaceChanges(void)
+FullSearchOptimizer::ProcessSearchSpaceChanges()
 {
   if (m_SearchSpace->GetMTime() > m_LastSearchSpaceChanges)
   {
@@ -316,7 +316,7 @@ FullSearchOptimizer::RemoveSearchDimension(unsigned int param_nr)
  * Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc.....
  */
 unsigned long
-FullSearchOptimizer::GetNumberOfIterations(void)
+FullSearchOptimizer::GetNumberOfIterations()
 {
   SearchSpaceSizeType sssize = this->GetSearchSpaceSize();
   unsigned int        maxssdim = this->GetNumberOfSearchSpaceDimensions();
@@ -341,7 +341,7 @@ FullSearchOptimizer::GetNumberOfIterations(void)
  * Get the Dimension of the SearchSpace.
  */
 unsigned int
-FullSearchOptimizer::GetNumberOfSearchSpaceDimensions(void)
+FullSearchOptimizer::GetNumberOfSearchSpaceDimensions()
 {
   this->ProcessSearchSpaceChanges();
   return this->m_NumberOfSearchSpaceDimensions;
@@ -355,7 +355,7 @@ FullSearchOptimizer::GetNumberOfSearchSpaceDimensions(void)
  * SearchSpaceDimension)
  */
 const FullSearchOptimizer::SearchSpaceSizeType &
-FullSearchOptimizer::GetSearchSpaceSize(void)
+FullSearchOptimizer::GetSearchSpaceSize()
 {
   this->ProcessSearchSpaceChanges();
   return this->m_SearchSpaceSize;

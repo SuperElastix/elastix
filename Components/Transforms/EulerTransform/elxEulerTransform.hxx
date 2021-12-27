@@ -44,7 +44,7 @@ EulerTransformElastix<TElastix>::EulerTransformElastix()
 
 template <class TElastix>
 void
-EulerTransformElastix<TElastix>::BeforeRegistration(void)
+EulerTransformElastix<TElastix>::BeforeRegistration()
 {
   /** Set center of rotation and initial translation. */
   this->InitializeTransform();
@@ -61,7 +61,7 @@ EulerTransformElastix<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-EulerTransformElastix<TElastix>::ReadFromFile(void)
+EulerTransformElastix<TElastix>::ReadFromFile()
 {
   if (!this->HasITKTransformParameters())
   {
@@ -111,7 +111,7 @@ EulerTransformElastix<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-EulerTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+EulerTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   ParameterMapType parameterMap{ { "CenterOfRotationPoint",
                                    Conversion::ToVectorOfStrings(m_EulerTransform->GetCenter()) } };
@@ -133,7 +133,7 @@ EulerTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const
 
 template <class TElastix>
 void
-EulerTransformElastix<TElastix>::InitializeTransform(void)
+EulerTransformElastix<TElastix>::InitializeTransform()
 {
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_EulerTransform->SetIdentity();
@@ -287,7 +287,7 @@ EulerTransformElastix<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-EulerTransformElastix<TElastix>::SetScales(void)
+EulerTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();

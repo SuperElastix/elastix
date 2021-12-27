@@ -144,14 +144,14 @@ public:
    * \li Add the sub metric columns to the iteration info object.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion.
    * \li Set the metric weights.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */
@@ -180,15 +180,15 @@ protected:
 
   /** Read the components from m_Elastix and set them in the Registration class. */
   virtual void
-  GetAndSetComponents(void);
+  GetAndSetComponents();
 
   /** Set the fixed image regions. */
   virtual void
-  GetAndSetFixedImageRegions(void);
+  GetAndSetFixedImageRegions();
 
   /** Create and set the fixed image interpolators. */
   virtual void
-  GetAndSetFixedImageInterpolators(void);
+  GetAndSetFixedImageInterpolators();
 
 private:
   elxOverrideGetSelfMacro;

@@ -176,11 +176,11 @@ public:
 
   /** Set a multi-resolution rescale schedule with ones. */
   virtual void
-  SetRescaleScheduleToUnity(void);
+  SetRescaleScheduleToUnity();
 
   /** Get the multi-resolution rescale schedule. */
   const RescaleScheduleType &
-  GetRescaleSchedule(void) const
+  GetRescaleSchedule() const
   {
     return this->m_Schedule;
   }
@@ -195,7 +195,7 @@ public:
 
   /** Set a multi-resolution rescale schedule with zeros. */
   virtual void
-  SetSmoothingScheduleToZero(void);
+  SetSmoothingScheduleToZero();
 
   /** Get the multi-resolution smoothing schedule. */
   itkGetConstReferenceMacro(SmoothingSchedule, SmoothingScheduleType);
@@ -246,7 +246,7 @@ protected:
    * below. \sa ProcessObject::GenerateOutputInformaton().
    */
   void
-  GenerateOutputInformation(void) override;
+  GenerateOutputInformation() override;
 
   /** Given one output whose requested region has been set, this method sets
    * the requested region for the remaining output images. The original
@@ -258,15 +258,15 @@ protected:
 
   /** Overwrite the Superclass implementation: no padding required. */
   void
-  GenerateInputRequestedRegion(void) override;
+  GenerateInputRequestedRegion() override;
 
   /** Generate the output data. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** Release the output data when the current level is used. */
   void
-  ReleaseOutputs(void);
+  ReleaseOutputs();
 
   SmoothingScheduleType m_SmoothingSchedule;
   unsigned int          m_CurrentLevel;
@@ -316,7 +316,7 @@ private:
 
   /** Initialize m_SmoothingSchedule to default values for backward compatibility. */
   void
-  SetSmoothingScheduleToDefault(void);
+  SetSmoothingScheduleToDefault();
 
   /** Checks whether we have to compute anything based on
    * m_ComputeOnlyForCurrentLevel and m_CurrentLevel.
@@ -353,11 +353,11 @@ private:
 
   /** Returns true if smooth has been used in pipeline, otherwise return false. */
   bool
-  IsSmoothingUsed(void) const;
+  IsSmoothingUsed() const;
 
   /** Returns true if rescale has been used in pipeline, otherwise return false. */
   bool
-  IsRescaleUsed(void) const;
+  IsRescaleUsed() const;
 
 private:
   GenericMultiResolutionPyramidImageFilter(const Self &) = delete;

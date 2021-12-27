@@ -127,7 +127,7 @@ protected:
    * In that case, also the m_PreviousGradient is updated.
    */
   void
-  UpdateCurrentTime(void) override;
+  UpdateCurrentTime() override;
 
   /** The PreviousGradient, necessary for the CruzAcceleration */
   DerivativeType m_PreviousSearchDirection;

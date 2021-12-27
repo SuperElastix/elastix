@@ -143,7 +143,7 @@ public:
 
   /** Initialize the penalty term. */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Typedef's for B-spline transform. */
   typedef BSplineOrder3TransformType                 BSplineTransformType;
@@ -176,7 +176,7 @@ public:
 
   /** Check stuff. */
   void
-  CheckUseAndCalculationBooleans(void);
+  CheckUseAndCalculationBooleans();
 
   /** The GetValue()-method returns the rigid penalty value. */
   MeasureType
@@ -305,7 +305,7 @@ private:
 
   /** Internal function to dilate the rigidity images. */
   virtual void
-  DilateRigidityImages(void);
+  DilateRigidityImages();
 
   /** Private function used for the filtering. It creates 1D separable operators F. */
   void

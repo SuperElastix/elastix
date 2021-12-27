@@ -74,29 +74,29 @@ public:
     this->SetMaximize(!v);
   }
   void
-  MinimizeOn(void)
+  MinimizeOn()
   {
     SetMaximize(false);
   }
   void
-  MinimizeOff(void)
+  MinimizeOff()
   {
     SetMaximize(true);
   }
 
   /** Start optimization. */
   void
-  StartOptimization(void) override;
+  StartOptimization() override;
 
   /** Resume previously stopped optimization with current parameters.
    * \sa StopOptimization */
   void
-  ResumeOptimization(void);
+  ResumeOptimization();
 
   /** Stop optimization.
    * \sa ResumeOptimization */
   void
-  StopOptimization(void);
+  StopOptimization();
 
   /** Set/Get parameters to control the optimization process. */
   itkSetMacro(MaximumStepLength, double);
@@ -131,7 +131,7 @@ protected:
    * This method verifies if a change in direction is required
    * and if a reduction in steplength is required. */
   virtual void
-  AdvanceOneStep(void);
+  AdvanceOneStep();
 
   /** Advance one step along the corrected gradient taking into
    * account the steplength represented by factor.

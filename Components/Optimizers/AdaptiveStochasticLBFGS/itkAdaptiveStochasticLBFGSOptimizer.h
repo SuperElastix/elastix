@@ -126,7 +126,7 @@ protected:
    * In that case, also the m_PreviousGradient is updated.
    */
   void
-  UpdateCurrentTime(void) override;
+  UpdateCurrentTime() override;
 
   /** The PreviousGradient, necessary for the CruzAcceleration */
   // m_previousGradient m_PrePreviousGradient are not used, where should I put them?

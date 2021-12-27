@@ -36,7 +36,7 @@ AdaptiveStochasticVarianceReducedGradientOptimizer::AdaptiveStochasticVarianceRe
  */
 
 void
-AdaptiveStochasticVarianceReducedGradientOptimizer::UpdateCurrentTime(void)
+AdaptiveStochasticVarianceReducedGradientOptimizer::UpdateCurrentTime()
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

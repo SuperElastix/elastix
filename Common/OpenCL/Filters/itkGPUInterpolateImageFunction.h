@@ -68,7 +68,7 @@ protected:
 
   /** Returns data manager that stores all settings for the transform. */
   GPUDataManager::Pointer
-  GetParametersDataManager(void) const override;
+  GetParametersDataManager() const override;
 
 private:
   GPUInterpolateImageFunction(const Self &) = delete;

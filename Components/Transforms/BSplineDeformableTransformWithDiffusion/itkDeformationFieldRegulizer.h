@@ -85,7 +85,7 @@ public:
 
   /** Function to create and initialze the deformation fields. */
   void
-  InitializeDeformationFields(void);
+  InitializeDeformationFields();
 
   /** Function to update the intermediary deformation field by adding
    * a diffused deformation field to it.

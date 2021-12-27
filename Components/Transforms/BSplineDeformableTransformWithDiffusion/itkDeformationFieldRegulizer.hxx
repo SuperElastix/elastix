@@ -44,7 +44,7 @@ DeformationFieldRegulizer<TAnyITKTransform>::DeformationFieldRegulizer()
 
 template <class TAnyITKTransform>
 void
-DeformationFieldRegulizer<TAnyITKTransform>::InitializeDeformationFields(void)
+DeformationFieldRegulizer<TAnyITKTransform>::InitializeDeformationFields()
 {
   /** Initialize this->m_IntermediaryDeformationFieldTransform. */
   this->m_IntermediaryDeformationFieldTransform = IntermediaryDFTransformType::New();

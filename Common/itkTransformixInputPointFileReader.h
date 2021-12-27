@@ -85,7 +85,7 @@ public:
    * propagation of the pipeline. Updates the PointsAreIndices and NumberOfPoints.
    */
   void
-  GenerateOutputInformation(void) override;
+  GenerateOutputInformation() override;
 
 protected:
   TransformixInputPointFileReader();
@@ -93,7 +93,7 @@ protected:
 
   /** Fill the point container of the output. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   unsigned long m_NumberOfPoints;
   bool          m_PointsAreIndices;

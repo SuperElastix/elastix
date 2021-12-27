@@ -66,22 +66,22 @@ public:
   /** Returns true if the derived composite transform has identity transform,
    * false otherwise. */
   virtual bool
-  HasIdentityTransform(void) const;
+  HasIdentityTransform() const;
 
   /** Returns true if the derived composite transform has matrix offset transform,
    * false otherwise. */
   virtual bool
-  HasMatrixOffsetTransform(void) const;
+  HasMatrixOffsetTransform() const;
 
   /** Returns true if the derived composite transform has translation transform,
    * false otherwise. */
   virtual bool
-  HasTranslationTransform(void) const;
+  HasTranslationTransform() const;
 
   /** Returns true if the derived composite transform has BSpline transform,
    * false otherwise. */
   virtual bool
-  HasBSplineTransform(void) const;
+  HasBSplineTransform() const;
 
   /** Returns true if the transform at \a index is identity transform,
    * false otherwise. */

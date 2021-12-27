@@ -110,11 +110,11 @@ public:
 
   /** Do some things before registration. */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Function to read parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
 protected:
   /** The constructor. */
@@ -124,11 +124,11 @@ protected:
 
   /** This method performs all configuration for GPU resampler. */
   void
-  BeforeGenerateData(void);
+  BeforeGenerateData();
 
   /** Executes GPU resampler. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** Transform copier */
   typedef typename ResamplerBase<TElastix>::CoordRepType InterpolatorPrecisionType;
@@ -158,7 +158,7 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) resampler type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap(void) const override;
+  CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor. */
   OpenCLResampler(const Self &) = delete;
@@ -172,7 +172,7 @@ private:
 
   /** Helper method to report to elastix log. */
   void
-  ReportToLog(void);
+  ReportToLog();
 
   TransformCopierPointer   m_TransformCopier;
   InterpolateCopierPointer m_InterpolatorCopier;

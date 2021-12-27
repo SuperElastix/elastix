@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-BSplineInterpolator<TElastix>::BeforeEachResolution(void)
+BSplineInterpolator<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

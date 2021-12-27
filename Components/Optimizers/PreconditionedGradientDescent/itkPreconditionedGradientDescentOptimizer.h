@@ -96,17 +96,17 @@ public:
 
   /** Advance one step following the gradient direction. */
   virtual void
-  AdvanceOneStep(void);
+  AdvanceOneStep();
 
   /** Start optimization. */
   virtual void
-  StartOptimization(void);
+  StartOptimization();
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization.
    */
   virtual void
-  ResumeOptimization(void);
+  ResumeOptimization();
 
   /** Stop optimization and pass on exception. */
   virtual void
@@ -115,7 +115,7 @@ public:
   /** Stop optimization.
    * \sa ResumeOptimization */
   virtual void
-  StopOptimization(void);
+  StopOptimization();
 
   /** Set the learning rate. */
   itkSetMacro(LearningRate, double);
@@ -155,14 +155,14 @@ public:
 
   /** Temporary functions, for debugging */
   const cholmod_common *
-  GetCholmodCommon(void) const
+  GetCholmodCommon() const
   {
     return this->m_CholmodCommon;
   }
 
 
   const cholmod_factor *
-  GetCholmodFactor(void) const
+  GetCholmodFactor() const
   {
     return this->m_CholmodFactor;
   }

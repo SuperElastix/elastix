@@ -101,7 +101,7 @@ public:
 
   /** True, if Initialize was successfully called. */
   virtual bool
-  IsInitialized(void) const; // to elxconfigurationbase
+  IsInitialized() const; // to elxconfigurationbase
 
   /** Other elastix related information. */
 
@@ -115,7 +115,7 @@ public:
 
   /***/
   virtual bool
-  GetPrintErrorMessages(void)
+  GetPrintErrorMessages()
   {
     return this->m_ParameterMapInterface->GetPrintErrorMessages();
   }
@@ -130,13 +130,13 @@ public:
    * \li Prints the parameter file
    */
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
    * \li Prints the parameter file
    */
   virtual int
-  BeforeAllTransformix(void);
+  BeforeAllTransformix();
 
   /** Interface to the ParameterMapInterface. */
 
@@ -286,7 +286,7 @@ protected:
    * called by both BeforeAll and BeforeAllTransformix.
    */
   virtual void
-  PrintParameterFile(void) const;
+  PrintParameterFile() const;
 
 private:
   Configuration(const Self &) = delete;

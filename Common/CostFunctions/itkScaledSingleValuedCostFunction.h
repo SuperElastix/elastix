@@ -83,7 +83,7 @@ public:
 
   /** Ask the UnscaledCostFunction how many parameters it has. */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override;
+  GetNumberOfParameters() const override;
 
   /** Set the cost function that needs scaling. */
   itkSetObjectMacro(UnscaledCostFunction, Superclass);

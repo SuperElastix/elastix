@@ -66,11 +66,11 @@ public:
 
   /** Generate the tree. */
   void
-  GenerateTree(void) override;
+  GenerateTree() override;
 
   /** Get the ANN tree. */
   ANNPointSetType *
-  GetANNTree(void) const override
+  GetANNTree() const override
   {
     return this->m_ANNTree;
   }

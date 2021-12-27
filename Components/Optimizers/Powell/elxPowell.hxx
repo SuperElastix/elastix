@@ -33,7 +33,7 @@ namespace elastix
 
 template <class TElastix>
 void
-Powell<TElastix>::BeforeRegistration(void)
+Powell<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo.*/
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -54,7 +54,7 @@ Powell<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-Powell<TElastix>::BeforeEachResolution(void)
+Powell<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -89,7 +89,7 @@ Powell<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-Powell<TElastix>::AfterEachIteration(void)
+Powell<TElastix>::AfterEachIteration()
 {
   /** Print some information */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -103,7 +103,7 @@ Powell<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-Powell<TElastix>::AfterEachResolution(void)
+Powell<TElastix>::AfterEachResolution()
 {
   /**
    * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
@@ -123,7 +123,7 @@ Powell<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-Powell<TElastix>::AfterRegistration(void)
+Powell<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();

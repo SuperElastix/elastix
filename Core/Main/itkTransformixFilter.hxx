@@ -424,7 +424,7 @@ TransformixFilter<TMovingImage>::SetTransformParameterObject(ParameterObjectType
 
 template <typename TMovingImage>
 auto
-TransformixFilter<TMovingImage>::GetTransformParameterObject(void) -> ParameterObjectType *
+TransformixFilter<TMovingImage>::GetTransformParameterObject() -> ParameterObjectType *
 {
   return itkDynamicCastInDebugMode<ParameterObjectType *>(this->ProcessObject::GetInput("TransformParameterObject"));
 }
@@ -514,7 +514,7 @@ TransformixFilter<TMovingImage>::SetLogFileName(std::string logFileName)
 
 template <typename TMovingImage>
 void
-TransformixFilter<TMovingImage>::RemoveLogFileName(void)
+TransformixFilter<TMovingImage>::RemoveLogFileName()
 {
   this->m_LogFileName = "";
   this->LogToFileOff();

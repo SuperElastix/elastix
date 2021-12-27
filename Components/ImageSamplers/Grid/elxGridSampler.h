@@ -103,7 +103,7 @@ public:
    * \li Set the sampling grid size.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */

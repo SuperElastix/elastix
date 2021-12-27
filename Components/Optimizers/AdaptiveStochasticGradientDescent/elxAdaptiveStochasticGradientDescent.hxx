@@ -68,7 +68,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AdaptiveStochasticGradientDescent()
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::BeforeRegistration(void)
+AdaptiveStochasticGradientDescent<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo. */
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -93,7 +93,7 @@ AdaptiveStochasticGradientDescent<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::BeforeEachResolution(void)
+AdaptiveStochasticGradientDescent<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -263,7 +263,7 @@ AdaptiveStochasticGradientDescent<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::AfterEachIteration(void)
+AdaptiveStochasticGradientDescent<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -294,7 +294,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::AfterEachResolution(void)
+AdaptiveStochasticGradientDescent<TElastix>::AfterEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -354,7 +354,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::AfterRegistration(void)
+AdaptiveStochasticGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value. */
   double bestValue = this->GetValue();
@@ -372,7 +372,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AfterRegistration(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::StartOptimization(void)
+AdaptiveStochasticGradientDescent<TElastix>::StartOptimization()
 {
   /** Check if the entered scales are correct and != [ 1 1 1 ...]. */
   this->SetUseScales(false);
@@ -401,7 +401,7 @@ AdaptiveStochasticGradientDescent<TElastix>::StartOptimization(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::ResumeOptimization(void)
+AdaptiveStochasticGradientDescent<TElastix>::ResumeOptimization()
 {
   /** The following code relies on the fact that all
    * components have been set up and that the initial
@@ -458,7 +458,7 @@ AdaptiveStochasticGradientDescent<TElastix>::MetricErrorResponse(itk::ExceptionO
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimation(void)
+AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimation()
 {
   /** Total time. */
   itk::TimeProbe timer1;
@@ -502,7 +502,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimation(void)
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationOriginal(void)
+AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationOriginal()
 {
   itk::TimeProbe timer2, timer3;
 
@@ -646,7 +646,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationOrigina
 
 template <class TElastix>
 void
-AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDisplacementDistribution(void)
+AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDisplacementDistribution()
 {
   itk::TimeProbe timer4, timer5;
 

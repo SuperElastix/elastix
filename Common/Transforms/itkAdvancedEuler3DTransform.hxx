@@ -82,7 +82,7 @@ AdvancedEuler3DTransform<TScalarType>::SetParameters(const ParametersType & para
 // Get Parameters
 template <class TScalarType>
 auto
-AdvancedEuler3DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
+AdvancedEuler3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
   this->m_Parameters[0] = m_AngleX;
   this->m_Parameters[1] = m_AngleY;
@@ -110,7 +110,7 @@ AdvancedEuler3DTransform<TScalarType>::SetRotation(ScalarType angleX, ScalarType
 // Compose
 template <class TScalarType>
 void
-AdvancedEuler3DTransform<TScalarType>::SetIdentity(void)
+AdvancedEuler3DTransform<TScalarType>::SetIdentity()
 {
   Superclass::SetIdentity();
   m_AngleX = 0;
@@ -123,7 +123,7 @@ AdvancedEuler3DTransform<TScalarType>::SetIdentity(void)
 // Compute angles from the rotation matrix
 template <class TScalarType>
 void
-AdvancedEuler3DTransform<TScalarType>::ComputeMatrixParameters(void)
+AdvancedEuler3DTransform<TScalarType>::ComputeMatrixParameters()
 {
   if (m_ComputeZYX)
   {
@@ -175,7 +175,7 @@ AdvancedEuler3DTransform<TScalarType>::ComputeMatrixParameters(void)
 // Compute the matrix
 template <class TScalarType>
 void
-AdvancedEuler3DTransform<TScalarType>::ComputeMatrix(void)
+AdvancedEuler3DTransform<TScalarType>::ComputeMatrix()
 {
   // need to check if angles are in the right order
   const double cx = std::cos(m_AngleX);
@@ -273,7 +273,7 @@ AdvancedEuler3DTransform<TScalarType>::GetJacobian(const InputPointType &       
 // Precompute Jacobian of Spatial Jacobian
 template <class TScalarType>
 void
-AdvancedEuler3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian(void)
+AdvancedEuler3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
   if (ParametersDimension < 6)
   {

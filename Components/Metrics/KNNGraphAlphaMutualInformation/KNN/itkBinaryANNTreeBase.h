@@ -57,7 +57,7 @@ public:
 
   /** Get the ANN tree. */
   virtual ANNPointSetType *
-  GetANNTree(void) const = 0;
+  GetANNTree() const = 0;
 
 protected:
   /** Constructor. */

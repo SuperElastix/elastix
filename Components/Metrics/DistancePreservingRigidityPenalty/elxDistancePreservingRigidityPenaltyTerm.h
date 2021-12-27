@@ -150,7 +150,7 @@ public:
    * calls the Superclass' implementation.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /**
    * Do some things before registration:
@@ -158,7 +158,7 @@ public:
    * \li Setup some extra target cells.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
 protected:
   /** The constructor. */

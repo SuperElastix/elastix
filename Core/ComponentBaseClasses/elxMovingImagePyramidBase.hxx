@@ -31,7 +31,7 @@ namespace elastix
 
 template <class TElastix>
 void
-MovingImagePyramidBase<TElastix>::BeforeRegistrationBase(void)
+MovingImagePyramidBase<TElastix>::BeforeRegistrationBase()
 {
   /** Call SetMovingSchedule.*/
   this->SetMovingSchedule();
@@ -45,7 +45,7 @@ MovingImagePyramidBase<TElastix>::BeforeRegistrationBase(void)
 
 template <class TElastix>
 void
-MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase(void)
+MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -90,7 +90,7 @@ MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase(void)
 
 template <class TElastix>
 void
-MovingImagePyramidBase<TElastix>::SetMovingSchedule(void)
+MovingImagePyramidBase<TElastix>::SetMovingSchedule()
 {
   /** Get the ImageDimension. */
   const unsigned int MovingImageDimension = InputImageType::ImageDimension;

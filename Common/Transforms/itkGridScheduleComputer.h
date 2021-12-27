@@ -130,7 +130,7 @@ public:
 
   /** Compute the B-spline grid. */
   virtual void
-  ComputeBSplineGrid(void);
+  ComputeBSplineGrid();
 
   /** Get the B-spline grid at some level. */
   virtual void

@@ -20,7 +20,7 @@
 #include "itkOpenCLProgram.h"
 
 int
-main(void)
+main()
 {
   itk::OpenCLDevice device;
 

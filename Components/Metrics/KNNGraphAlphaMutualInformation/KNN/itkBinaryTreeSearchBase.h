@@ -61,7 +61,7 @@ public:
   SetBinaryTree(BinaryTreeType * tree);
 
   const BinaryTreeType *
-  GetBinaryTree(void) const;
+  GetBinaryTree() const;
 
   /** Set and get the number of nearest neighbours k. */
   itkSetMacro(KNearestNeighbors, unsigned int);

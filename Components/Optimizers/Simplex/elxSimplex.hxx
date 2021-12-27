@@ -33,7 +33,7 @@ namespace elastix
 
 template <class TElastix>
 void
-Simplex<TElastix>::BeforeRegistration(void)
+Simplex<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo.*/
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -54,7 +54,7 @@ Simplex<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-Simplex<TElastix>::BeforeEachResolution(void)
+Simplex<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -101,7 +101,7 @@ Simplex<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-Simplex<TElastix>::AfterEachIteration(void)
+Simplex<TElastix>::AfterEachIteration()
 {
   /** Print some information */
   this->GetIterationInfoAt("2:Metric") << this->GetCachedValue();
@@ -116,7 +116,7 @@ Simplex<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-Simplex<TElastix>::AfterEachResolution(void)
+Simplex<TElastix>::AfterEachResolution()
 {
   /**
    * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
@@ -136,7 +136,7 @@ Simplex<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-Simplex<TElastix>::AfterRegistration(void)
+Simplex<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   // double bestValue = this->GetValue();

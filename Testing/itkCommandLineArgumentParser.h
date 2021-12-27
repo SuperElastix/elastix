@@ -111,11 +111,11 @@ public:
 
   /** Copy argv in a map. */
   void
-  CreateArgumentMap(void);
+  CreateArgumentMap();
 
   /** Print all arguments. */
   void
-  PrintAllArguments(void) const;
+  PrintAllArguments() const;
 
   /** Checks if an argument is given. */
   bool

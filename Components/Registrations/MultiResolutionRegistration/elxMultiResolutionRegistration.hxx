@@ -31,7 +31,7 @@ namespace elastix
 
 template <class TElastix>
 void
-MultiResolutionRegistration<TElastix>::BeforeRegistration(void)
+MultiResolutionRegistration<TElastix>::BeforeRegistration()
 {
   /** Check for a common mistake that people make in their parameter
    * file: using MultiResolutionRegistration in combination with
@@ -86,7 +86,7 @@ MultiResolutionRegistration<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-MultiResolutionRegistration<TElastix>::BeforeEachResolution(void)
+MultiResolutionRegistration<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = this->GetCurrentLevel();
@@ -105,7 +105,7 @@ MultiResolutionRegistration<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-MultiResolutionRegistration<TElastix>::SetComponents(void)
+MultiResolutionRegistration<TElastix>::SetComponents()
 {
   /** Get the component from this-GetElastix() (as elx::...BaseType *),
    * cast it to the appropriate type and set it in 'this'. */

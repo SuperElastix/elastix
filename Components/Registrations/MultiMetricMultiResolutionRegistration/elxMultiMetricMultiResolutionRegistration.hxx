@@ -41,7 +41,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::MultiMetricMultiResolutionRegi
 
 template <class TElastix>
 void
-MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration(void)
+MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration()
 {
   /** Get the components from this->m_Elastix and set them. */
   this->SetComponents();
@@ -122,7 +122,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration(void)
+MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration()
 {
   /** Print the submetric values and gradients to IterationInfo. */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
@@ -175,7 +175,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution(void)
+MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = this->GetCurrentLevel();
@@ -264,7 +264,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-MultiMetricMultiResolutionRegistration<TElastix>::SetComponents(void)
+MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
 {
   /** Get the component from this->GetElastix() (as elx::...BaseType *),
    * cast it to the appropriate type and set it in 'this'.

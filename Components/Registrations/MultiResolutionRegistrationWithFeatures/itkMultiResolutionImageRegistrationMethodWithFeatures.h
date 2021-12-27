@@ -108,7 +108,7 @@ protected:
    * regarding the image pyramids is ok.
    */
   void
-  CheckPyramids(void) override;
+  CheckPyramids() override;
 
 private:
   MultiResolutionImageRegistrationMethodWithFeatures(const Self &) = delete;

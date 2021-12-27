@@ -48,7 +48,7 @@ AdvancedAffineTransformElastix<TElastix>::AdvancedAffineTransformElastix()
 
 template <class TElastix>
 void
-AdvancedAffineTransformElastix<TElastix>::BeforeRegistration(void)
+AdvancedAffineTransformElastix<TElastix>::BeforeRegistration()
 {
   /** Total time. */
   itk::TimeProbe timer1;
@@ -73,7 +73,7 @@ AdvancedAffineTransformElastix<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-AdvancedAffineTransformElastix<TElastix>::ReadFromFile(void)
+AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
 {
   const auto itkParameterValues =
     this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformParameters");
@@ -127,7 +127,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 auto
-AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_AffineTransform->GetCenter()) } };
 
@@ -140,7 +140,7 @@ AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParametersMap(vo
 
 template <class TElastix>
 void
-AdvancedAffineTransformElastix<TElastix>::InitializeTransform(void)
+AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
 {
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineTransform->SetIdentity();
@@ -326,7 +326,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform(void)
 
 template <class TElastix>
 void
-AdvancedAffineTransformElastix<TElastix>::SetScales(void)
+AdvancedAffineTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();

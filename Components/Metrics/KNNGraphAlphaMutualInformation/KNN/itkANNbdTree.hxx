@@ -73,7 +73,7 @@ ANNbdTree<TListSample>::SetShrinkingRule(const std::string & rule)
 
 template <class TListSample>
 std::string
-ANNbdTree<TListSample>::GetShrinkingRule(void)
+ANNbdTree<TListSample>::GetShrinkingRule()
 {
   switch (this->m_ShrinkingRule)
   {
@@ -96,7 +96,7 @@ ANNbdTree<TListSample>::GetShrinkingRule(void)
 
 template <class TListSample>
 void
-ANNbdTree<TListSample>::GenerateTree(void)
+ANNbdTree<TListSample>::GenerateTree()
 {
   int dim = static_cast<int>(this->GetDataDimension());
   int nop = static_cast<int>(this->GetActualNumberOfDataPoints());

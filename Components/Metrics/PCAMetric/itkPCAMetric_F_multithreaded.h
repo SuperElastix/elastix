@@ -131,7 +131,7 @@ public:
    * \li Call the superclass' implementation.   */
 
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   PCAMetric();
@@ -210,14 +210,14 @@ protected:
 
   /** Helper functions to launch the threads. */
   void
-  LaunchGetSamplesThreaderCallback(void) const;
+  LaunchGetSamplesThreaderCallback() const;
 
   void
-  LaunchComputeDerivativeThreaderCallback(void) const;
+  LaunchComputeDerivativeThreaderCallback() const;
 
   /** Initialize some multi-threading related parameters. */
   void
-  InitializeThreadingParameters(void) const override;
+  InitializeThreadingParameters() const override;
 
 private:
   PCAMetric(const Self &) = delete;

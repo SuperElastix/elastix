@@ -44,7 +44,7 @@ FiniteDifferenceGradientDescent<TElastix>::FiniteDifferenceGradientDescent()
 
 template <class TElastix>
 void
-FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration(void)
+FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration()
 {
   std::string showMetricValues("false");
   this->GetConfiguration()->ReadParameter(showMetricValues, "ShowMetricValues", 0);
@@ -78,7 +78,7 @@ FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution(void)
+FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -117,7 +117,7 @@ FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-FiniteDifferenceGradientDescent<TElastix>::AfterEachIteration(void)
+FiniteDifferenceGradientDescent<TElastix>::AfterEachIteration()
 {
   /** Print some information */
 
@@ -149,7 +149,7 @@ FiniteDifferenceGradientDescent<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution(void)
+FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution()
 {
 
   /**
@@ -185,7 +185,7 @@ FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-FiniteDifferenceGradientDescent<TElastix>::AfterRegistration(void)
+FiniteDifferenceGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue;
@@ -211,7 +211,7 @@ FiniteDifferenceGradientDescent<TElastix>::AfterRegistration(void)
 
 template <class TElastix>
 void
-FiniteDifferenceGradientDescent<TElastix>::StartOptimization(void)
+FiniteDifferenceGradientDescent<TElastix>::StartOptimization()
 {
 
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */

@@ -111,13 +111,13 @@ protected:
   ~RayCastInterpolator() override = default;
 
   int
-  BeforeAll(void) override;
+  BeforeAll() override;
 
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 private:
   elxOverrideGetSelfMacro;

@@ -64,14 +64,14 @@ TRANSFORMIX::~TRANSFORMIX()
  */
 
 TRANSFORMIX::ConstImagePointer
-TRANSFORMIX::GetResultImage(void) const
+TRANSFORMIX::GetResultImage() const
 {
   return this->m_ResultImage;
 } // end GetResultImage()
 
 
 TRANSFORMIX::ImagePointer
-TRANSFORMIX::GetResultImage(void)
+TRANSFORMIX::GetResultImage()
 {
   return this->m_ResultImage;
 } // end GetResultImage()

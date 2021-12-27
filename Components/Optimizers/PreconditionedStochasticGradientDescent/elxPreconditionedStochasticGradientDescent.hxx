@@ -78,7 +78,7 @@ PreconditionedStochasticGradientDescent<TElastix>::PreconditionedStochasticGradi
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::BeforeRegistration(void)
+PreconditionedStochasticGradientDescent<TElastix>::BeforeRegistration()
 {
   /** Add the target cell "stepsize" to IterationInfo. */
   this->AddTargetCellToIterationInfo("2:Metric");
@@ -105,7 +105,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution(void)
+PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -288,7 +288,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution(void)
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::AfterEachIteration(void)
+PreconditionedStochasticGradientDescent<TElastix>::AfterEachIteration()
 {
   /** Print some information. */
   this->GetIterationInfoAt("2:Metric") << this->GetValue();
@@ -322,7 +322,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterEachIteration(void)
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution(void)
+PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -382,7 +382,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution(void)
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::AfterRegistration(void)
+PreconditionedStochasticGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value. */
   double bestValue = this->GetValue();
@@ -400,7 +400,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterRegistration(void)
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::StartOptimization(void)
+PreconditionedStochasticGradientDescent<TElastix>::StartOptimization()
 {
   /** As this optimizer estimates the scales itself, no other scales are used. */
   this->SetUseScales(false);
@@ -417,7 +417,7 @@ PreconditionedStochasticGradientDescent<TElastix>::StartOptimization(void)
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::AdvanceOneStep(void)
+PreconditionedStochasticGradientDescent<TElastix>::AdvanceOneStep()
 {
   /** Get space dimension. */
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
@@ -454,7 +454,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AdvanceOneStep(void)
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::ResumeOptimization(void)
+PreconditionedStochasticGradientDescent<TElastix>::ResumeOptimization()
 {
   /** The following code relies on the fact that all components have been set up and
    * that the initial position has been set, so must be called in this function.
@@ -508,7 +508,7 @@ PreconditionedStochasticGradientDescent<TElastix>::MetricErrorResponse(itk::Exce
 
 template <class TElastix>
 void
-PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstimation(void)
+PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstimation()
 {
   /** Total time. */
   itk::TimeProbe timer;

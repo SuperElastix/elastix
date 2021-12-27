@@ -39,7 +39,7 @@ namespace elastix
 
 template <class TElastix>
 void
-StatisticalShapePenalty<TElastix>::Initialize(void)
+StatisticalShapePenalty<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -57,7 +57,7 @@ StatisticalShapePenalty<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-StatisticalShapePenalty<TElastix>::BeforeRegistration(void)
+StatisticalShapePenalty<TElastix>::BeforeRegistration()
 {
   /** Get and set NormalizedShapeModel. Default TRUE. */
   bool normalizedShapeModel = true;
@@ -186,7 +186,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-StatisticalShapePenalty<TElastix>::BeforeEachResolution(void)
+StatisticalShapePenalty<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();

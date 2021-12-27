@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-GridSampler<TElastix>::BeforeEachResolution(void)
+GridSampler<TElastix>::BeforeEachResolution()
 {
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 

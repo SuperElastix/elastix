@@ -111,7 +111,7 @@ public:
   /** Get the parameters. Concatenates the parameters of the
    * sub transforms. */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** Set the fixed parameters. */
   void
@@ -123,7 +123,7 @@ public:
 
   /** Get the Fixed Parameters. */
   const ParametersType &
-  GetFixedParameters(void) const override
+  GetFixedParameters() const override
   {
     // \todo: to be implemented by Coert: check this:
     return this->m_FixedParameters;
@@ -132,7 +132,7 @@ public:
 
   /** Return the number of sub transforms that have been set. */
   NumberOfParametersType
-  GetNumberOfParameters(void) const override
+  GetNumberOfParameters() const override
   {
     if (this->m_SubTransformContainer.empty())
     {
@@ -206,7 +206,7 @@ public:
 
   /** Get number of nonzero Jacobian indices. */
   NumberOfParametersType
-  GetNumberOfNonZeroJacobianIndices(void) const override;
+  GetNumberOfNonZeroJacobianIndices() const override;
 
 protected:
   StackTransform();

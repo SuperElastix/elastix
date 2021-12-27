@@ -29,7 +29,7 @@ namespace elastix
 
 template <class TElastix>
 void
-FixedGenericPyramid<TElastix>::SetFixedSchedule(void)
+FixedGenericPyramid<TElastix>::SetFixedSchedule()
 {
   /** Get the ImageDimension. */
   const unsigned int FixedImageDimension = InputImageType::ImageDimension;
@@ -160,7 +160,7 @@ FixedGenericPyramid<TElastix>::SetFixedSchedule(void)
 
 template <class TElastix>
 void
-FixedGenericPyramid<TElastix>::BeforeEachResolution(void)
+FixedGenericPyramid<TElastix>::BeforeEachResolution()
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();

@@ -62,7 +62,7 @@ public:
    * propagation of the pipeline.
    */
   void
-  GenerateOutputInformation(void) override;
+  GenerateOutputInformation() override;
 
   /** Give the reader a chance to indicate that it will produce more
    * output than it was requested to produce. MeshFileReader cannot
@@ -83,7 +83,7 @@ protected:
    * appropriate message will be thrown.
    */
   virtual void
-  TestFileExistanceAndReadability(void);
+  TestFileExistanceAndReadability();
 
   std::string m_FileName;
 

@@ -174,16 +174,16 @@ public:
 
   /** TransformToDeterminantOfSpatialJacobianSource produces a floating value image. */
   void
-  GenerateOutputInformation(void) override;
+  GenerateOutputInformation() override;
 
   /** Checking if transform is set. In case of linear transformations,
    * the LinearGenerateData is called. */
   void
-  BeforeThreadedGenerateData(void) override;
+  BeforeThreadedGenerateData() override;
 
   /** Compute the Modified Time based on changes to the components. */
   ModifiedTimeType
-  GetMTime(void) const override;
+  GetMTime() const override;
 
 protected:
   TransformToDeterminantOfSpatialJacobianSource();
@@ -207,7 +207,7 @@ protected:
   /** Faster implementation for resampling that works for with linear
    *  transformation types. Unthreaded. */
   void
-  LinearGenerateData(void);
+  LinearGenerateData();
 
 private:
   TransformToDeterminantOfSpatialJacobianSource(const Self &) = delete;

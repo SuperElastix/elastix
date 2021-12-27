@@ -72,7 +72,7 @@ PCAMetric<TFixedImage, TMovingImage>::~PCAMetric()
 
 template <class TFixedImage, class TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::Initialize(void)
+PCAMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
@@ -108,7 +108,7 @@ PCAMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent
 
 template <class TFixedImage, class TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters(void) const
+PCAMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
@@ -931,7 +931,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetSamplesThreaderCallback(void * arg)
 
 template <class TFixedImage, class TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::LaunchGetSamplesThreaderCallback(void) const
+PCAMetric<TFixedImage, TMovingImage>::LaunchGetSamplesThreaderCallback() const
 {
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
@@ -1134,7 +1134,7 @@ PCAMetric<TFixedImage, TMovingImage>::ComputeDerivativeThreaderCallback(void * a
 
 template <class TFixedImage, class TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback(void) const
+PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback() const
 {
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check

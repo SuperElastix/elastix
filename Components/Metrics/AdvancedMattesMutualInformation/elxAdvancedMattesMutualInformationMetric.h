@@ -186,18 +186,18 @@ public:
    * \li Set the fixed/moving LimitRangeRatio
    * \li Set the fixed/moving limiter. */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
   /** Update the CurrenIteration. This is only important
    * if a finite difference derivative estimation is used
    * (selected by the experimental parameter FiniteDifferenceDerivative)  */
   void
-  AfterEachIteration(void) override;
+  AfterEachIteration() override;
 
   /** Set up a timer to measure the initialization time and
    * call the Superclass' implementation. */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Set/Get c. For finite difference derivative estimation */
   itkSetMacro(Param_c, double);

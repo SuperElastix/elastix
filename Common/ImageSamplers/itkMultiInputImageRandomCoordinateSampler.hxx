@@ -52,7 +52,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::MultiInputImageRandomCoordi
 
 template <class TInputImage>
 void
-MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData(void)
+MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
 {
   /** Check. */
   if (!this->CheckInputImageRegions())

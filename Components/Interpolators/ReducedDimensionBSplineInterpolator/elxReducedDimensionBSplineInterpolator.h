@@ -104,7 +104,7 @@ public:
    * \li Set the spline order.
    */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */

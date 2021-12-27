@@ -103,7 +103,7 @@ MoreThuenteLineSearchOptimizer::GetCurrentDerivative(DerivativeType & derivative
  */
 
 MoreThuenteLineSearchOptimizer::MeasureType
-MoreThuenteLineSearchOptimizer::GetCurrentValue(void) const
+MoreThuenteLineSearchOptimizer::GetCurrentValue() const
 {
   return m_f;
 
@@ -115,7 +115,7 @@ MoreThuenteLineSearchOptimizer::GetCurrentValue(void) const
  */
 
 double
-MoreThuenteLineSearchOptimizer::GetCurrentDirectionalDerivative(void) const
+MoreThuenteLineSearchOptimizer::GetCurrentDirectionalDerivative() const
 {
   return m_dg;
 
@@ -127,7 +127,7 @@ MoreThuenteLineSearchOptimizer::GetCurrentDirectionalDerivative(void) const
  */
 
 void
-MoreThuenteLineSearchOptimizer::StartOptimization(void)
+MoreThuenteLineSearchOptimizer::StartOptimization()
 {
   this->CheckSettings();
 
@@ -175,7 +175,7 @@ MoreThuenteLineSearchOptimizer::StartOptimization(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer::StopOptimization(void)
+MoreThuenteLineSearchOptimizer::StopOptimization()
 {
   this->m_Stop = true;
   this->InvokeEvent(EndEvent());
@@ -188,7 +188,7 @@ MoreThuenteLineSearchOptimizer::StopOptimization(void)
  */
 
 int
-MoreThuenteLineSearchOptimizer::CheckSettings(void)
+MoreThuenteLineSearchOptimizer::CheckSettings()
 {
   if (this->GetCostFunction() == nullptr)
   {
@@ -231,7 +231,7 @@ MoreThuenteLineSearchOptimizer::CheckSettings(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer::GetInitialValueAndDerivative(void)
+MoreThuenteLineSearchOptimizer::GetInitialValueAndDerivative()
 {
 
   if (!(this->m_InitialValueProvided && this->m_InitialDerivativeProvided))
@@ -283,7 +283,7 @@ MoreThuenteLineSearchOptimizer::GetInitialValueAndDerivative(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer::InitializeLineSearch(void)
+MoreThuenteLineSearchOptimizer::InitializeLineSearch()
 {
   this->m_Stop = false;
   this->m_StopCondition = Unknown;
@@ -321,7 +321,7 @@ MoreThuenteLineSearchOptimizer::InitializeLineSearch(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer::UpdateIntervalMinimumAndMaximum(void)
+MoreThuenteLineSearchOptimizer::UpdateIntervalMinimumAndMaximum()
 {
   const double xtrapf = 4.0;
 
@@ -363,7 +363,7 @@ MoreThuenteLineSearchOptimizer::BoundStep(double & step) const
  */
 
 void
-MoreThuenteLineSearchOptimizer::PrepareForUnusualTermination(void)
+MoreThuenteLineSearchOptimizer::PrepareForUnusualTermination()
 {
   if ((this->m_brackt && (this->m_step <= this->m_stepmin || this->m_step >= this->m_stepmax)) ||
       this->m_CurrentIteration >= this->GetMaximumNumberOfIterations() - 1 || this->m_SafeGuardedStepFailed ||
@@ -382,7 +382,7 @@ MoreThuenteLineSearchOptimizer::PrepareForUnusualTermination(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer::ComputeCurrentValueAndDerivative(void)
+MoreThuenteLineSearchOptimizer::ComputeCurrentValueAndDerivative()
 {
   try
   {
@@ -463,7 +463,7 @@ MoreThuenteLineSearchOptimizer::TestConvergence(bool & stop)
  */
 
 void
-MoreThuenteLineSearchOptimizer::ComputeNewStepAndInterval(void)
+MoreThuenteLineSearchOptimizer::ComputeNewStepAndInterval()
 {
   int returncode = 0;
 
@@ -549,7 +549,7 @@ MoreThuenteLineSearchOptimizer::ComputeNewStepAndInterval(void)
  */
 
 void
-MoreThuenteLineSearchOptimizer::ForceSufficientDecreaseInIntervalWidth(void)
+MoreThuenteLineSearchOptimizer::ForceSufficientDecreaseInIntervalWidth()
 {
   if (this->m_brackt)
   {

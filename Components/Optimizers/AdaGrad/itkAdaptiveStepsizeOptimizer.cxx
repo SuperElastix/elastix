@@ -36,7 +36,7 @@ AdaptiveStepsizeOptimizer::AdaptiveStepsizeOptimizer() = default;
  */
 
 void
-AdaptiveStepsizeOptimizer::UpdateCurrentTime(void)
+AdaptiveStepsizeOptimizer::UpdateCurrentTime()
 {
   typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 

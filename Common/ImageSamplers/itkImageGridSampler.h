@@ -118,7 +118,7 @@ public:
    * samples would be selected anyway.
    */
   bool
-  SelectNewSamplesOnUpdate(void) override
+  SelectNewSamplesOnUpdate() override
   {
     return false;
   }
@@ -126,7 +126,7 @@ public:
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
   bool
-  SelectingNewSamplesOnUpdateSupported(void) const override
+  SelectingNewSamplesOnUpdateSupported() const override
   {
     return false;
   }
@@ -145,7 +145,7 @@ protected:
 
   /** Function that does the work. */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing;

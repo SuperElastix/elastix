@@ -90,7 +90,7 @@ GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TP
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, typename TParentTransform>
 void
 GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::
-  CopyCoefficientImagesToGPU(void)
+  CopyCoefficientImagesToGPU()
 {
   typedef typename CPUSuperclass::ImageType             CPUCoefficientImage;
   typedef typename CPUCoefficientImage::PixelType       CPUCoefficientsImagePixelType;

@@ -47,7 +47,7 @@ IsDerivedTransformOfType(const itk::SmartPointer<itk::Transform<ScalarType, Dime
 
 //-------------------------------------------------------------------------------------
 int
-main(void)
+main()
 {
   // ITK transform typedefs
   // typedef itk::Transform< ScalarType, Dimension, Dimension > TransformType;

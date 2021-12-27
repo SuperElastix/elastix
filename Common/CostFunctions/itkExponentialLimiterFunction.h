@@ -74,14 +74,14 @@ public:
 
   /** Initialize the limiter; calls the ComputeLimiterSettings() function */
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   ExponentialLimiterFunction();
   ~ExponentialLimiterFunction() override = default;
 
   virtual void
-  ComputeLimiterSettings(void);
+  ComputeLimiterSettings();
 
   double m_UTminUB;
   double m_UTminUBinv;

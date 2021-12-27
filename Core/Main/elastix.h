@@ -36,7 +36,7 @@
  *    example: <tt>transformix --version</tt> \n
  */
 void
-PrintHelp(void);
+PrintHelp();
 
 /** ConvertSecondsToDHMS
  *
@@ -91,7 +91,7 @@ ConvertSecondsToDHMS(const double totalSeconds, const unsigned int precision = 0
 
 /** Returns current date and time as a string. */
 inline std::string
-GetCurrentDateAndTime(void)
+GetCurrentDateAndTime()
 {
   // Obtain current time
   const std::time_t rawtime{ std::time(nullptr) };

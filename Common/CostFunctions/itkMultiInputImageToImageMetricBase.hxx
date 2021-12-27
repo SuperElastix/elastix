@@ -181,7 +181,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::GetFixedImageRegion
 
 template <class TFixedImage, class TMovingImage>
 void
-MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInterpolators(void)
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInterpolators()
 {
   /** Check if the interpolators are of type BSplineInterpolateImageFunction.
    * If so, we can make use of its EvaluateDerivatives method.
@@ -217,7 +217,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInte
 
 template <class TFixedImage, class TMovingImage>
 void
-MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Initialize(void)
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Initialize()
 {
   /** Connect the interpolators. */
   for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
@@ -246,7 +246,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Initialize(void)
 
 template <class TFixedImage, class TMovingImage>
 void
-MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::InitializeImageSampler(void)
+MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::InitializeImageSampler()
 {
   if (this->GetUseImageSampler())
   {

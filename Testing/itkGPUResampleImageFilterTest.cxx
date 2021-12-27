@@ -64,7 +64,7 @@
 //------------------------------------------------------------------------------
 // GetHelpString
 std::string
-GetHelpString(void)
+GetHelpString()
 {
   std::stringstream ss;
 

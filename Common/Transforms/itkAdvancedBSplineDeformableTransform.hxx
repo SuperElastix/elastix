@@ -338,8 +338,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetN
 
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
-AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetNumberOfNonZeroJacobianIndices(
-  void) const -> NumberOfParametersType
+AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetNumberOfNonZeroJacobianIndices() const
+  -> NumberOfParametersType
 {
   return this->m_WeightsFunction->GetNumberOfWeights() * SpaceDimension;
 } // end GetNumberOfNonZeroJacobianIndices()

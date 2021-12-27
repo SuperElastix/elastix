@@ -119,7 +119,7 @@ public:
    * \li Call the superclass' implementation.   */
 
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   SumOfPairwiseCorrelationCoefficientsMetric();

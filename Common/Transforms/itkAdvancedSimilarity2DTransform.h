@@ -165,7 +165,7 @@ public:
    * \sa Transform::GetParameters()
    * \sa Transform::GetFixedParameters() */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
@@ -178,7 +178,7 @@ public:
 
   /** Set the transformation to an identity. */
   void
-  SetIdentity(void) override;
+  SetIdentity() override;
 
   /**
    * Set the rotation Matrix of a Similarity 2D Transform
@@ -206,14 +206,14 @@ protected:
    * to update the underlying matrix whenever a transform parameter
    * is changed. */
   void
-  ComputeMatrix(void) override;
+  ComputeMatrix() override;
 
   /** Compute the angle and scale from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
    * MatrixOffsetTransformBase::Compose() and
    * MatrixOffsetTransformBase::GetInverse(). */
   void
-  ComputeMatrixParameters(void) override;
+  ComputeMatrixParameters() override;
 
   /** Set the scale without updating underlying variables. */
   void
@@ -224,7 +224,7 @@ protected:
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   void
-  PrecomputeJacobianOfSpatialJacobian(void) override;
+  PrecomputeJacobianOfSpatialJacobian() override;
 
 private:
   AdvancedSimilarity2DTransform(const Self &) = delete;

@@ -55,7 +55,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
 
 template <class TFixedImage, class TMovingImage>
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::InitializeHistograms(void)
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::InitializeHistograms()
 {
   /** Call Superclass implementation. */
   this->Superclass::InitializeHistograms();
@@ -646,8 +646,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 template <class TFixedImage, class TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
-                                                TMovingImage>::LaunchComputeDerivativeLowMemoryThreaderCallback(void)
-  const
+                                                TMovingImage>::LaunchComputeDerivativeLowMemoryThreaderCallback() const
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(

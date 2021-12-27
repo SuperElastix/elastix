@@ -34,7 +34,7 @@ StandardGradientDescentOptimizer::StandardGradientDescentOptimizer() = default;
  */
 
 void
-StandardGradientDescentOptimizer::StartOptimization(void)
+StandardGradientDescentOptimizer::StartOptimization()
 {
   this->m_CurrentTime = this->m_InitialTime;
   this->Superclass::StartOptimization();
@@ -46,7 +46,7 @@ StandardGradientDescentOptimizer::StartOptimization(void)
  */
 
 void
-StandardGradientDescentOptimizer::AdvanceOneStep(void)
+StandardGradientDescentOptimizer::AdvanceOneStep()
 {
   /** Decide which type of step size is chosen. */
   if (this->m_UseConstantStep)
@@ -82,7 +82,7 @@ StandardGradientDescentOptimizer::Compute_a(double k) const
  */
 
 void
-StandardGradientDescentOptimizer::UpdateCurrentTime(void)
+StandardGradientDescentOptimizer::UpdateCurrentTime()
 {
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;

@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-MultiInputRandomCoordinateSampler<TElastix>::BeforeEachResolution(void)
+MultiInputRandomCoordinateSampler<TElastix>::BeforeEachResolution()
 {
   const unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 

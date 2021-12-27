@@ -1256,7 +1256,7 @@ MevisDicomTiffImageIO::CanWriteFile(const char * name)
 
 // writeimageinformation
 void
-MevisDicomTiffImageIO ::WriteImageInformation(void)
+MevisDicomTiffImageIO ::WriteImageInformation()
 {}
 
 // write

@@ -130,7 +130,7 @@ protected:
    * calculations to the ParabolicErodeImageFilter, which is multi-threaded.
    */
   void
-  GenerateData(void) override;
+  GenerateData() override;
 
 private:
   ErodeMaskImageFilter(const Self &) = delete;

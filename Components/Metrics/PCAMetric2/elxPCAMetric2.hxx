@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-PCAMetric2<TElastix>::Initialize(void)
+PCAMetric2<TElastix>::Initialize()
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -48,7 +48,7 @@ PCAMetric2<TElastix>::Initialize(void)
 
 template <class TElastix>
 void
-PCAMetric2<TElastix>::BeforeEachResolution(void)
+PCAMetric2<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();

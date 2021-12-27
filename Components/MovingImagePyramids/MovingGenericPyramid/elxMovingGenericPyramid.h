@@ -118,11 +118,11 @@ public:
    * since we now have two schedules, rescaling and smoothing.
    */
   void
-  SetMovingSchedule(void) override;
+  SetMovingSchedule() override;
 
   /** Update the current resolution level. */
   void
-  BeforeEachResolution(void) override;
+  BeforeEachResolution() override;
 
 protected:
   /** The constructor. */

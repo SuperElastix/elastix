@@ -29,7 +29,7 @@ namespace elastix
 
 template <class TElastix>
 void
-ReducedDimensionBSplineResampleInterpolator<TElastix>::BeforeRegistration(void)
+ReducedDimensionBSplineResampleInterpolator<TElastix>::BeforeRegistration()
 {
   /** ReducedDimensionBSplineResampleInterpolator specific. */
 
@@ -59,7 +59,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::BeforeRegistration(void)
 
 template <class TElastix>
 void
-ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile(void)
+ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile()
 {
   /** Call ReadFromFile of the ResamplerBase. */
   this->Superclass2::ReadFromFile();

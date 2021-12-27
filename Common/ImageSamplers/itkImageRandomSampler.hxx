@@ -32,7 +32,7 @@ namespace itk
 
 template <class TInputImage>
 void
-ImageRandomSampler<TInputImage>::GenerateData(void)
+ImageRandomSampler<TInputImage>::GenerateData()
 {
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   typename MaskType::ConstPointer mask = this->GetMask();

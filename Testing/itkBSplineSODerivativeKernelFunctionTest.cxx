@@ -24,7 +24,7 @@
 //-------------------------------------------------------------------------------------
 
 int
-main(void)
+main()
 {
   /** Some basic type definitions.
    * NOTE: don't change the dimension or the spline order, since the

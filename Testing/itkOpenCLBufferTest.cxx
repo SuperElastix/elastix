@@ -38,7 +38,7 @@ std_all_of(const std::vector<type> & v, const type value)
 
 //------------------------------------------------------------------------------
 int
-main(void)
+main()
 {
   itk::OpenCLBuffer bufferNull;
 

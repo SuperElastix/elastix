@@ -57,7 +57,7 @@ DeformationFieldTransform<TElastix>::DeformationFieldTransform()
 
 template <class TElastix>
 void
-DeformationFieldTransform<TElastix>::ReadFromFile(void)
+DeformationFieldTransform<TElastix>::ReadFromFile()
 {
   // \todo Test this ReadFromFile function.
 
@@ -149,7 +149,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile(void)
 
 template <class TElastix>
 void
-DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile(void) const
+DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
 {
   // \todo Finish and Test this function.
 
@@ -196,7 +196,7 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile(void) const
 
 template <class TElastix>
 auto
-DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap(void) const -> ParameterMapType
+DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
 {
   const std::string interpolatorName =
     m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();

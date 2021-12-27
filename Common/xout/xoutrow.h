@@ -55,12 +55,12 @@ public:
    * separated by tabs.
    */
   void
-  WriteBufferedData(void) override;
+  WriteBufferedData() override;
 
   /** Writes the names of the target cells to the outputs.
    */
   virtual void
-  WriteHeaders(void);
+  WriteHeaders();
 
   /** This method adds an xoutcell to the map of Targets. */
   int

@@ -131,11 +131,11 @@ public:
    *  are present and plugged together correctly.
    */
   void
-  Initialize(void) override;
+  Initialize() override;
 
   /** Write gradient images to a files for debugging purposes. */
   void
-  WriteGradientImagesToFiles(void) const;
+  WriteGradientImagesToFiles() const;
 
   /** Set/Get Scales  */
   itkSetMacro(Scales, ScalesType);
@@ -159,10 +159,10 @@ protected:
 
   /** Compute the mean of the fixed and moved image gradients. */
   void
-  ComputeMeanMovedGradient(void) const;
+  ComputeMeanMovedGradient() const;
 
   void
-  ComputeMeanFixedGradient(void) const;
+  ComputeMeanFixedGradient() const;
 
   /** Compute the similarity measure  */
   MeasureType

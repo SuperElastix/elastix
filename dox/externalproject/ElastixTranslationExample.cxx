@@ -24,7 +24,7 @@
 #include <cassert>
 
 int
-main(void)
+main()
 {
   enum
   {

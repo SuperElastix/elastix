@@ -111,7 +111,7 @@ AffineDTI2DTransform<TScalarType>::SetParameters(const ParametersType & paramete
 // Get Parameters
 template <class TScalarType>
 auto
-AffineDTI2DTransform<TScalarType>::GetParameters(void) const -> const ParametersType &
+AffineDTI2DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
   this->m_Parameters[0] = this->m_Angle[0];
   this->m_Parameters[1] = this->m_Shear[0];
@@ -127,7 +127,7 @@ AffineDTI2DTransform<TScalarType>::GetParameters(void) const -> const Parameters
 // SetIdentity()
 template <class TScalarType>
 void
-AffineDTI2DTransform<TScalarType>::SetIdentity(void)
+AffineDTI2DTransform<TScalarType>::SetIdentity()
 {
   Superclass::SetIdentity();
   this->m_Angle.Fill(itk::NumericTraits<ScalarType>::ZeroValue());
@@ -140,7 +140,7 @@ AffineDTI2DTransform<TScalarType>::SetIdentity(void)
 // Compute angles from the rotation matrix
 template <class TScalarType>
 void
-AffineDTI2DTransform<TScalarType>::ComputeMatrixParameters(void)
+AffineDTI2DTransform<TScalarType>::ComputeMatrixParameters()
 {
   // let's hope we don't need it :)
   itkExceptionMacro(<< "This function has not been implemented yet!");
@@ -151,7 +151,7 @@ AffineDTI2DTransform<TScalarType>::ComputeMatrixParameters(void)
 // Compute the matrix
 template <class TScalarType>
 void
-AffineDTI2DTransform<TScalarType>::ComputeMatrix(void)
+AffineDTI2DTransform<TScalarType>::ComputeMatrix()
 {
   // need to check if angles are in the right order
   const double cx = std::cos(this->m_Angle[0]);
@@ -229,7 +229,7 @@ AffineDTI2DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
 // Precompute Jacobian of Spatial Jacobian
 template <class TScalarType>
 void
-AffineDTI2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian(void)
+AffineDTI2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
   if (ParametersDimension < 7)
   {

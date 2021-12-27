@@ -60,7 +60,7 @@ public:
 
   /** This method returns the CPU value of the offset of the TranslationTransform. */
   const CPUOutputVectorType &
-  GetCPUOffset(void) const override
+  GetCPUOffset() const override
   {
     return this->GetOffset();
   }

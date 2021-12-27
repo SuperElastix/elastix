@@ -23,7 +23,7 @@
 // This test is mainly to test CMake generating process when two kernels are
 // merged into one source code see OpenCLSimpleTestKernel.cxx
 int
-main(void)
+main()
 {
   try
   {

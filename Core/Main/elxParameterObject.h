@@ -97,7 +97,7 @@ public:
   void
   AddParameterFile(const ParameterFileNameType & parameterFileName);
   void
-  WriteParameterFile(void);
+  WriteParameterFile();
   void
   WriteParameterFile(const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName);
   void

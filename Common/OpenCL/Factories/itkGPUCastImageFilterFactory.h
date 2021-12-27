@@ -62,7 +62,7 @@ public:
   /** Operator() to register override. */
   template <typename TTypeIn, typename TTypeOut, unsigned int VImageDimension>
   void
-  operator()(void)
+  operator()()
   {
     // Image typedefs
     typedef Image<TTypeIn, VImageDimension>     InputImageType;

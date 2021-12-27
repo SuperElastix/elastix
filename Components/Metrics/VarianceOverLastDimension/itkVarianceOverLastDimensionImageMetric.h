@@ -145,7 +145,7 @@ public:
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation.   */
   void
-  Initialize(void) override;
+  Initialize() override;
 
 protected:
   VarianceOverLastDimensionImageMetric();

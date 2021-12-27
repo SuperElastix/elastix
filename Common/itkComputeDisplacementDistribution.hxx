@@ -80,7 +80,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::~ComputeDisplacementDi
 
 template <class TFixedImage, class TTransform>
 void
-ComputeDisplacementDistribution<TFixedImage, TTransform>::InitializeThreadingParameters(void)
+ComputeDisplacementDistribution<TFixedImage, TTransform>::InitializeThreadingParameters()
 {
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
@@ -314,7 +314,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::BeforeThreadedCompute(
 
 template <class TFixedImage, class TTransform>
 void
-ComputeDisplacementDistribution<TFixedImage, TTransform>::LaunchComputeThreaderCallback(void) const
+ComputeDisplacementDistribution<TFixedImage, TTransform>::LaunchComputeThreaderCallback() const
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback,

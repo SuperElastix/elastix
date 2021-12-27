@@ -51,7 +51,7 @@ ImageRandomCoordinateSampler<TInputImage>::ImageRandomCoordinateSampler()
 
 template <class TInputImage>
 void
-ImageRandomCoordinateSampler<TInputImage>::GenerateData(void)
+ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 {
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   typename MaskType::ConstPointer mask = this->GetMask();
@@ -165,7 +165,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData(void)
 
 template <class TInputImage>
 void
-ImageRandomCoordinateSampler<TInputImage>::BeforeThreadedGenerateData(void)
+ImageRandomCoordinateSampler<TInputImage>::BeforeThreadedGenerateData()
 {
   /** Set up the interpolator. */
   typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();

@@ -152,14 +152,14 @@ private:
 
   /** Function to initialize the support region. */
   void
-  InitializeSupport(void);
+  InitializeSupport();
 
   /** Function to initialize the offset table.
    * The offset table is a convenience table, just to
    * keep track where is what.
    */
   void
-  InitializeOffsetToIndexTable(void);
+  InitializeOffsetToIndexTable();
 };
 
 } // end namespace itk

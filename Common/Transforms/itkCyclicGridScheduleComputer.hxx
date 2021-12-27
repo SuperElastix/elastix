@@ -40,7 +40,7 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>::CyclicGridSch
 
 template <typename TTransformScalarType, unsigned int VImageDimension>
 void
-CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>::ComputeBSplineGrid(void)
+CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>::ComputeBSplineGrid()
 {
   /** Call superclass method. */
   // Superclass::ComputeBSplineGrid();

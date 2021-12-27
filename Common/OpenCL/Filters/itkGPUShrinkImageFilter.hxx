@@ -64,7 +64,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUShrinkImageFilter()
 
 template <typename TInputImage, typename TOutputImage>
 void
-GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData(void)
+GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 {
   itkDebugMacro(<< "Calling GPUShrinkImageFilter::GPUGenerateData()");
 

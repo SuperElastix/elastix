@@ -113,11 +113,11 @@ public:
    * \li Set the spline order.
    */
   void
-  BeforeRegistration(void) override;
+  BeforeRegistration() override;
 
   /** Function to read transform-parameters from a file. */
   void
-  ReadFromFile(void) override;
+  ReadFromFile() override;
 
 protected:
   /** The constructor. */

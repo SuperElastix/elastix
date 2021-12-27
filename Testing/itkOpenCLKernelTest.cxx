@@ -18,7 +18,7 @@
 #include "itkOpenCLKernel.h"
 
 int
-main(void)
+main()
 {
   itk::OpenCLKernel kernel;
 

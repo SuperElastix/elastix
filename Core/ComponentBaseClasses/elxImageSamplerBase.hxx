@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-ImageSamplerBase<TElastix>::BeforeEachResolutionBase(void)
+ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
 {
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();

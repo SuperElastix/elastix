@@ -147,7 +147,7 @@ public:
 
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual NumberOfParametersType
-  GetNumberOfNonZeroJacobianIndices(void) const;
+  GetNumberOfNonZeroJacobianIndices() const;
 
   /** Whether the advanced transform has nonzero matrices. */
   itkGetConstMacro(HasNonZeroSpatialHessian, bool);

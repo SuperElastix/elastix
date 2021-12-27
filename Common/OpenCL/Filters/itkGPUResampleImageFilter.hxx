@@ -373,7 +373,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
 
 template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GPUGenerateData(void)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GPUGenerateData()
 {
   itkDebugMacro(<< "GPUResampleImageFilter::GPUGenerateData() called");
 

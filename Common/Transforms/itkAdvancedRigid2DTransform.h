@@ -174,7 +174,7 @@ public:
    * \sa Transform::GetParameters()
    * \sa Transform::GetFixedParameters() */
   const ParametersType &
-  GetParameters(void) const override;
+  GetParameters() const override;
 
   /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
@@ -185,7 +185,7 @@ public:
 
   /** Reset the parameters to create and identity transform. */
   void
-  SetIdentity(void) override;
+  SetIdentity() override;
 
 protected:
   AdvancedRigid2DTransform();
@@ -203,14 +203,14 @@ protected:
    * is changed.
    * Also update the m_JacobianOfSpatialJacobian. */
   void
-  ComputeMatrix(void) override;
+  ComputeMatrix() override;
 
   /** Compute the angle from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
    * AdvancedMatrixOffsetTransformBase::Compose() and
    * AdvancedMatrixOffsetTransformBase::GetInverse(). */
   void
-  ComputeMatrixParameters(void) override;
+  ComputeMatrixParameters() override;
 
   /** Update angle without recomputation of other internal variables. */
   void
@@ -221,7 +221,7 @@ protected:
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void
-  PrecomputeJacobianOfSpatialJacobian(void);
+  PrecomputeJacobianOfSpatialJacobian();
 
 private:
   AdvancedRigid2DTransform(const Self &) = delete;

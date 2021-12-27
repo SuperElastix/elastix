@@ -62,21 +62,21 @@ public:
 
   /** Get CPU matrix of an MatrixOffsetTransformBase. */
   const CPUMatrixType &
-  GetCPUMatrix(void) const override
+  GetCPUMatrix() const override
   {
     return this->GetMatrix();
   }
 
   /** Get CPU inverse matrix of an MatrixOffsetTransformBase. */
   const CPUInverseMatrixType &
-  GetCPUInverseMatrix(void) const override
+  GetCPUInverseMatrix() const override
   {
     return this->GetInverseMatrix();
   }
 
   /** Get CPU offset of an MatrixOffsetTransformBase. */
   const CPUOutputVectorType &
-  GetCPUOffset(void) const override
+  GetCPUOffset() const override
   {
     return this->GetOffset();
   }

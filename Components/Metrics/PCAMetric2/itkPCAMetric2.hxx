@@ -50,7 +50,7 @@ PCAMetric2<TFixedImage, TMovingImage>::PCAMetric2()
 
 template <class TFixedImage, class TMovingImage>
 void
-PCAMetric2<TFixedImage, TMovingImage>::Initialize(void)
+PCAMetric2<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();

@@ -50,7 +50,7 @@ public:
 
   /** Returns true, the transform is translation transform. */
   bool
-  IsTranslationTransform(void) const override
+  IsTranslationTransform() const override
   {
     return true;
   }
@@ -67,7 +67,7 @@ public:
 
   /** This method returns the CPU value of the offset of the TranslationTransform. */
   virtual const CPUOutputVectorType &
-  GetCPUOffset(void) const = 0;
+  GetCPUOffset() const = 0;
 
 protected:
   GPUTranslationTransformBase();
@@ -80,7 +80,7 @@ protected:
 
   /** Returns data manager that stores all settings for the transform. */
   GPUDataManager::Pointer
-  GetParametersDataManager(void) const override;
+  GetParametersDataManager() const override;
 
 private:
   GPUTranslationTransformBase(const Self & other) = delete;

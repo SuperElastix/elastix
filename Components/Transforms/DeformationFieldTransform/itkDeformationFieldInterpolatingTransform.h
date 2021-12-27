@@ -117,7 +117,7 @@ public:
 
   /** Get the Fixed Parameters. */
   const ParametersType &
-  GetFixedParameters(void) const override
+  GetFixedParameters() const override
   {
     // This transform has no fixed parameters.
     return this->m_FixedParameters;
@@ -158,7 +158,7 @@ public:
   /** Make this an identity transform ( the deformation field is replaced
    * by a zero deformation field */
   void
-  SetIdentity(void);
+  SetIdentity();
 
   /** Set/Get the deformation field that defines the displacements */
   virtual void
@@ -173,7 +173,7 @@ public:
   itkGetModifiableObjectMacro(DeformationFieldInterpolator, DeformationFieldInterpolatorType);
 
   bool
-  IsLinear(void) const override
+  IsLinear() const override
   {
     return false;
   }

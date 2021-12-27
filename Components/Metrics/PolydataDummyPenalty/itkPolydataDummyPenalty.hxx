@@ -40,7 +40,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::MeshPenalty()
 
 template <class TFixedPointSet, class TMovingPointSet>
 void
-MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize(void)
+MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 {
   /** Call the initialize of the superclass. */
   // this->Superclass::Initialize();
