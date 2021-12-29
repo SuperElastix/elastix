@@ -60,59 +60,66 @@ elastix::TransformIO::ConvertITKNameOfClassToElastixClassName(const std::string 
 itk::TransformBase::Pointer
 elastix::TransformIO::ConvertItkTransformBaseToSingleItkTransform(const itk::TransformBase & elxTransform)
 {
-  // itk::TransformBase::GetNameOfClass() may yield a string like the following, for an elastix ITK transform:
-  // - "AdvancedMatrixOffsetTransformBase"
-  // - "AdvancedTranslationTransform"
-  // - "SimilarityTransform"
-  // - "EulerTransform"
-  // - "AdvancedBSplineDeformableTransform"
-  std::string name = elxTransform.GetNameOfClass();
+  const std::string className = [&elxTransform]() -> std::string {
+    // itk::TransformBase::GetNameOfClass() may yield a string like the following, for an elastix ITK transform:
+    // - "AdvancedMatrixOffsetTransformBase"
+    // - "AdvancedTranslationTransform"
+    // - "SimilarityTransform"
+    // - "EulerTransform"
+    // - "AdvancedBSplineDeformableTransform"
+    const std::string name = elxTransform.GetNameOfClass();
 
-  if (name == "AdvancedMatrixOffsetTransformBase")
-  {
-    name = "AffineTransform";
-  }
-  else
-  {
+    if (name == "AdvancedMatrixOffsetTransformBase")
+    {
+      return "AffineTransform";
+    }
     if (name == "AdvancedBSplineDeformableTransform")
     {
-      name = "BSplineTransform";
+      return "BSplineTransform";
     }
-    else
-    {
-      const std::string advancedSubstring = "Advanced";
 
-      if ((name.size() > advancedSubstring.size()) &&
-          std::equal(name.cbegin(), name.cbegin() + advancedSubstring.size(), advancedSubstring.cbegin()))
+    const std::string transformSubstring = "Transform";
+
+    if (name.size() > transformSubstring.size())
+    {
+      const auto transformSubstringPosition = name.size() - transformSubstring.size();
+
+      if (std::equal(name.cbegin() + transformSubstringPosition, name.cend(), transformSubstring.cbegin()))
       {
-        name.erase(0, advancedSubstring.size());
+        const std::string advancedSubstring = "Advanced";
+
+        if (std::equal(name.cbegin(),
+                       name.cbegin() + advancedSubstring.size(),
+                       advancedSubstring.cbegin(),
+                       advancedSubstring.cend()))
+        {
+          // Just chop off the "Advanced" substring.
+          return std::string(name.c_str() + advancedSubstring.size());
+        }
+
+        const auto substr = name.substr(0, transformSubstringPosition);
+
+        if ((substr == "Euler") || (substr == "Similarity"))
+        {
+          // For EulerTransform and SimilarityTransform, ITK has "2D" or "3D" inserted in the class name.
+          return substr + std::to_string(elxTransform.GetInputSpaceDimension()) + 'D' + transformSubstring;
+        }
       }
     }
-  }
 
-  const std::string transformSubstring = "Transform";
-  const auto        transformSubstringPosition = name.find(transformSubstring);
+    return "";
+  }();
 
-  if (transformSubstringPosition == std::string::npos)
+  if (className.empty())
   {
     return nullptr;
   }
-  const auto inputSpaceDimension = elxTransform.GetInputSpaceDimension();
-  const auto outputSpaceDimension = elxTransform.GetOutputSpaceDimension();
-
-  // For EulerTransform and SimilarityTransform, ITK has "2D"
-  // or "3D" inserted in the class name.
-
-  const auto substr = name.substr(0, transformSubstringPosition);
-  const auto instanceName = (((substr == "Euler") || (substr == "Similarity"))
-                               ? (substr + std::to_string(inputSpaceDimension) + 'D' + transformSubstring)
-                               : name) +
-                            "_double_" + std::to_string(inputSpaceDimension) + '_' +
-                            std::to_string(outputSpaceDimension);
 
   // Initialize the factory.
   itk::TransformFactoryBase::GetFactory();
 
+  const auto instanceName = className + "_double_" + std::to_string(elxTransform.GetInputSpaceDimension()) + '_' +
+                            std::to_string(elxTransform.GetOutputSpaceDimension());
   const auto instance = itk::ObjectFactoryBase::CreateInstance(instanceName.c_str());
   const auto itkTransform = dynamic_cast<itk::TransformBase *>(instance.GetPointer());
   if (itkTransform == nullptr)
