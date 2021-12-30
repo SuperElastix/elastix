@@ -233,17 +233,7 @@ main(int argc, char * argv[])
    *
    */
 
-  itk::TimeProbesCollectorBase                    timeCollector;
-  TransformType::WeightsType                      weights;
-  RecursiveTransformType::WeightsType             weights2;
-  TransformType::ParameterIndexArrayType          indices;
-  RecursiveTransformType::ParameterIndexArrayType indices2;
-
-  const unsigned int dummyNum = std::pow(static_cast<double>(SplineOrder + 1), static_cast<double>(Dimension));
-  weights.SetSize(dummyNum);
-  indices.SetSize(dummyNum);
-  weights2.SetSize(dummyNum);
-  indices2.SetSize(dummyNum);
+  itk::TimeProbesCollectorBase timeCollector;
 
   // Generate a list of random points
   auto mersenneTwister = MersenneTwisterType::New();
