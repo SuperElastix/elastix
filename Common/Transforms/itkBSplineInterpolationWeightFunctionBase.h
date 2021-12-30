@@ -22,6 +22,7 @@
 #include "itkContinuousIndex.h"
 #include "itkArray.h"
 #include "itkArray2D.h"
+#include "itkMath.h"
 #include "itkMatrix.h"
 #include "itkBSplineKernelFunction2.h"
 #include "itkBSplineDerivativeKernelFunction.h"
@@ -29,24 +30,6 @@
 
 namespace itk
 {
-
-/** Recursive template to retrieve the number of Bspline weights at compile time. */
-template <unsigned int SplineOrder, unsigned int Dimension>
-class ITK_TEMPLATE_EXPORT GetConstNumberOfWeightsHack
-{
-public:
-  typedef GetConstNumberOfWeightsHack<SplineOrder, Dimension - 1> OneDimensionLess;
-  itkStaticConstMacro(Value, unsigned long, (SplineOrder + 1) * OneDimensionLess::Value);
-};
-
-/** Partial template specialization to terminate the recursive loop. */
-template <unsigned int SplineOrder>
-class ITK_TEMPLATE_EXPORT GetConstNumberOfWeightsHack<SplineOrder, 0>
-{
-public:
-  itkStaticConstMacro(Value, unsigned long, 1);
-};
-
 /** \class BSplineInterpolationWeightFunctionBase
  * \brief Returns the weights over the support region used for B-spline
  * interpolation/reconstruction.
@@ -84,8 +67,7 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** The number of weights as a static const. */
-  typedef GetConstNumberOfWeightsHack<Self::SplineOrder, Self::SpaceDimension> GetConstNumberOfWeightsHackType;
-  itkStaticConstMacro(NumberOfWeights, unsigned long, GetConstNumberOfWeightsHackType::Value);
+  static constexpr unsigned long NumberOfWeights = Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension);
 
   /** OutputType typedef support. */
   typedef Array<double> WeightsType;
