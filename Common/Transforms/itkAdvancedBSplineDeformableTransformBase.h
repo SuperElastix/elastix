@@ -81,6 +81,29 @@ public:
   using typename Superclass::MovingImageGradientType;
   using typename Superclass::MovingImageGradientValueType;
 
+  /* Creates a `BSplineDeformableTransform` of the specified derived type and spline order. */
+  template <template <class, unsigned, unsigned> class TBSplineDeformableTransform>
+  static Pointer
+  Create(const unsigned splineOrder)
+  {
+    switch (splineOrder)
+    {
+      case 1:
+      {
+        return TBSplineDeformableTransform<TScalarType, NDimensions, 1>::New();
+      }
+      case 2:
+      {
+        return TBSplineDeformableTransform<TScalarType, NDimensions, 2>::New();
+      }
+      case 3:
+      {
+        return TBSplineDeformableTransform<TScalarType, NDimensions, 3>::New();
+      }
+    }
+    itkGenericExceptionMacro(<< "ERROR: The provided spline order (" << splineOrder << ") is not supported.");
+  }
+
   /** This method sets the parameters of the transform.
    * For a B-spline deformation transform, the parameters are the BSpline
    * coefficients on a sparse grid.

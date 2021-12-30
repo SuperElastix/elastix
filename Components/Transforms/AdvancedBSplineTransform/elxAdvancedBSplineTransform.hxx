@@ -40,47 +40,15 @@ AdvancedBSplineTransform<TElastix>::InitializeBSplineTransform(void)
   {
     this->m_GridScheduleComputer = CyclicGridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder(this->m_SplineOrder);
-
-    if (this->m_SplineOrder == 1)
-    {
-      this->m_BSplineTransform = CyclicBSplineTransformLinearType::New();
-    }
-    else if (this->m_SplineOrder == 2)
-    {
-      this->m_BSplineTransform = CyclicBSplineTransformQuadraticType::New();
-    }
-    else if (this->m_SplineOrder == 3)
-    {
-      this->m_BSplineTransform = CyclicBSplineTransformCubicType::New();
-    }
-    else
-    {
-      itkExceptionMacro(<< "ERROR: The provided spline order is not supported.");
-      return 1;
-    }
+    m_BSplineTransform =
+      BSplineTransformBaseType::template Create<itk::CyclicBSplineDeformableTransform>(m_SplineOrder);
   }
   else
   {
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder(this->m_SplineOrder);
-
-    if (this->m_SplineOrder == 1)
-    {
-      this->m_BSplineTransform = BSplineTransformLinearType::New();
-    }
-    else if (this->m_SplineOrder == 2)
-    {
-      this->m_BSplineTransform = BSplineTransformQuadraticType::New();
-    }
-    else if (this->m_SplineOrder == 3)
-    {
-      this->m_BSplineTransform = BSplineTransformCubicType::New();
-    }
-    else
-    {
-      itkExceptionMacro(<< "ERROR: The provided spline order is not supported.");
-      return 1;
-    }
+    m_BSplineTransform =
+      BSplineTransformBaseType::template Create<itk::AdvancedBSplineDeformableTransform>(m_SplineOrder);
   }
 
   this->SetCurrentTransform(this->m_BSplineTransform);

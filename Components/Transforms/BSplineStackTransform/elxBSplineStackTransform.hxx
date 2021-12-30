@@ -36,23 +36,8 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
   this->m_GridScheduleComputer = GridScheduleComputerType::New();
   this->m_GridScheduleComputer->SetBSplineOrder(m_SplineOrder);
-  if (this->m_SplineOrder == 1)
-  {
-    this->m_DummySubTransform = BSplineTransformLinearType::New();
-  }
-  else if (this->m_SplineOrder == 2)
-  {
-    this->m_DummySubTransform = BSplineTransformQuadraticType::New();
-  }
-  else if (this->m_SplineOrder == 3)
-  {
-    this->m_DummySubTransform = BSplineTransformCubicType::New();
-  }
-  else
-  {
-    itkExceptionMacro(<< "ERROR: The provided spline order is not supported.");
-    return 1;
-  }
+  m_DummySubTransform =
+    ReducedDimensionBSplineTransformBaseType::template Create<itk::AdvancedBSplineDeformableTransform>(m_SplineOrder);
 
   /** Note: periodic B-splines are not supported here as they do not seem to
    * make sense as a subtransform and deliver problems when compiling elastix

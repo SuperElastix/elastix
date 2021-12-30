@@ -144,23 +144,6 @@ public:
                                                      BSplineTransformBaseType;
   typedef typename BSplineTransformBaseType::Pointer BSplineTransformBasePointer;
 
-  /** Typedef for supported BSplineTransform types. */
-  typedef itk::RecursiveBSplineTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 1>
-    BSplineTransformLinearType;
-  typedef itk::RecursiveBSplineTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 2>
-    BSplineTransformQuadraticType;
-  typedef itk::RecursiveBSplineTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 3>
-    BSplineTransformCubicType;
-  typedef itk::
-    CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 1>
-      CyclicBSplineTransformLinearType;
-  typedef itk::
-    CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 2>
-      CyclicBSplineTransformQuadraticType;
-  typedef itk::
-    CyclicBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension, 3>
-      CyclicBSplineTransformCubicType;
-
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::ScalarType;
   using typename Superclass1::ParametersType;
