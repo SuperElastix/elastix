@@ -154,20 +154,6 @@ public:
                                                                      ReducedDimensionBSplineTransformBaseType;
   typedef typename ReducedDimensionBSplineTransformBaseType::Pointer ReducedDimensionBSplineTransformBasePointer;
 
-  /** Typedef for supported BSplineTransform types. */
-  typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  Self::ReducedSpaceDimension,
-                                                  1>
-    BSplineTransformLinearType;
-  typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  Self::ReducedSpaceDimension,
-                                                  2>
-    BSplineTransformQuadraticType;
-  typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  Self::ReducedSpaceDimension,
-                                                  3>
-    BSplineTransformCubicType;
-
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::ParametersType;
   using typename Superclass2::ParameterMapType;
