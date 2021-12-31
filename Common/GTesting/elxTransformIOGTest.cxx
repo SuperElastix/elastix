@@ -63,7 +63,7 @@
 
 #include <cmath> // For M_PI_4.
 #include <typeinfo>
-#include <type_traits> // For is_base_of and is_same
+#include <type_traits> // For extent, is_base_of and is_same
 
 #include <gtest/gtest.h>
 
@@ -602,9 +602,10 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
                                          2.0,
                                          NumericLimits::max() };
 
+  constexpr auto numberOfTestInputValues = std::extent<decltype(testInputValues)>::value;
+
   // Use the test input values as coordinates.
-  for (const auto index :
-       itk::ZeroBasedIndexRange<Dimension>(itk::Size<Dimension>::Filled(GTEST_ARRAY_SIZE_(testInputValues))))
+  for (const auto index : itk::ZeroBasedIndexRange<Dimension>(itk::Size<Dimension>::Filled(numberOfTestInputValues)))
   {
     itk::Point<double, Dimension> inputPoint;
     std::transform(index.begin(), index.end(), inputPoint.begin(), [&testInputValues](const itk::SizeValueType value) {
