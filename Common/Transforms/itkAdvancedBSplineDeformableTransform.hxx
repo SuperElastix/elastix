@@ -894,8 +894,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
    * spatial Jacobian to the transformation parameters mu: d/dmu of dT / dx_i
    */
   typedef ImageScanlineConstIterator<ImageType> IteratorType;
-  typename WeightsType::const_iterator          itWeights;
-  typename WeightsType::const_iterator          itCoeffs;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
@@ -907,7 +905,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     std::copy(weights.data_block(), weights.data_block() + numberOfWeights, weightVector + i * numberOfWeights);
 
     /** Reset coeffs iterator */
-    itCoeffs = coeffs.begin();
+    typename WeightsType::const_iterator itCoeffs = coeffs.begin();
 
     /** Compute the spatial Jacobian sj:
      *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
@@ -915,7 +913,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
     {
       /** Reset weights iterator. */
-      itWeights = weights.begin();
+      typename WeightsType::const_iterator itWeights = weights.begin();
 
       /** Compute the sum for this dimension. */
       for (unsigned int mu = 0; mu < numberOfWeights; ++mu)
@@ -1176,9 +1174,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
    * Make use of the fact that the Hessian is symmetrical, so do not compute
    * both i,j and j,i for i != j.
    */
-  unsigned int                         count = 0;
-  typename WeightsType::const_iterator itWeights;
-  typename WeightsType::const_iterator itCoeffs;
+  unsigned int count = 0;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     for (unsigned int j = 0; j <= i; ++j)
@@ -1191,7 +1187,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       count++;
 
       /** Reset coeffs iterator */
-      itCoeffs = coeffs.begin();
+      typename WeightsType::const_iterator itCoeffs = coeffs.begin();
 
       /** Compute the spatial Hessian sh:
        *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
@@ -1199,7 +1195,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
       {
         /** Reset weights iterator. */
-        itWeights = weights.begin();
+        typename WeightsType::const_iterator itWeights = weights.begin();
 
         /** Compute the sum for this dimension. */
         double sum = 0.0;
