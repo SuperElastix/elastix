@@ -517,11 +517,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Copy values from coefficient image to linear coeffs array. */
-  typedef ImageScanlineConstIterator<ImageType> IteratorType;
-  typename WeightsType::iterator                itCoeffsLinear = coeffs.begin();
+  typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
-    IteratorType itCoef(this->m_CoefficientImages[dim], supportRegion);
+    ImageScanlineConstIterator<ImageType> itCoef(this->m_CoefficientImages[dim], supportRegion);
 
     while (!itCoef.IsAtEnd())
     {
@@ -538,7 +537,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   /** Compute the spatial Jacobian sj:
    *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights * PointToGridIndex.
    */
-  typedef ImageScanlineConstIterator<ImageType> IteratorType;
   sj.Fill(0.0);
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
@@ -624,11 +622,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Copy values from coefficient image to linear coeffs array. */
-  typedef ImageScanlineConstIterator<ImageType> IteratorType;
-  typename WeightsType::iterator                itCoeffsLinear = coeffs.begin();
+  typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
-    IteratorType itCoef(this->m_CoefficientImages[dim], supportRegion);
+    ImageScanlineConstIterator<ImageType> itCoef(this->m_CoefficientImages[dim], supportRegion);
 
     // for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     while (!itCoef.IsAtEnd())
@@ -852,11 +849,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   /** Copy values from coefficient image to linear coeffs array. */
   // takes considerable amount of time : 27% of this function. // with old region iterator, check with new
-  typedef ImageScanlineConstIterator<ImageType> IteratorType;
-  typename WeightsType::iterator                itCoeffsLinear = coeffs.begin();
+  typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
-    IteratorType itCoef(this->m_CoefficientImages[dim], supportRegion);
+    ImageScanlineConstIterator<ImageType> itCoef(this->m_CoefficientImages[dim], supportRegion);
 
     while (!itCoef.IsAtEnd())
     {
@@ -880,7 +876,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** For all derivative directions, compute the derivatives of the
    * spatial Jacobian to the transformation parameters mu: d/dmu of dT / dx_i
    */
-  typedef ImageScanlineConstIterator<ImageType> IteratorType;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
@@ -1133,11 +1128,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   /** Copy values from coefficient image to linear coeffs array. */
   // takes considerable amount of time : 27% of this function. // with old region iterator, check with new
-  typedef ImageScanlineConstIterator<ImageType> IteratorType;
-  typename WeightsType::iterator                itCoeffsLinear = coeffs.begin();
+  typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
-    IteratorType itCoef(this->m_CoefficientImages[dim], supportRegion);
+    ImageScanlineConstIterator<ImageType> itCoef(this->m_CoefficientImages[dim], supportRegion);
 
     while (!itCoef.IsAtEnd())
     {
