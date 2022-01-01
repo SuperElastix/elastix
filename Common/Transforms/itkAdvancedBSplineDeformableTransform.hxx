@@ -42,7 +42,7 @@
 #include "itkIdentityTransform.h"
 #include <vnl/vnl_math.h>
 #include <vector>
-#include <algorithm> // std::copy
+#include <algorithm> // For std::copy_n.
 
 namespace itk
 {
@@ -396,7 +396,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   for (unsigned int d = 0; d < SpaceDimension; ++d)
   {
     unsigned long offset = d * SpaceDimension * numberOfWeights + d * numberOfWeights;
-    std::copy(weightsArray, weightsArray + numberOfWeights, jacobianPointer + offset);
+    std::copy_n(weights.begin(), numberOfWeights, jacobianPointer + offset);
   }
 
   /** Compute the nonzero Jacobian indices.
@@ -462,7 +462,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
     const MovingImageGradientValueType mig = movingImageGradient[d];
     for (NumberOfParametersType i = 0; i < nnzjiPerDimension; ++i)
     {
-      imageJacobian[counter] = weightsArray[i] * mig;
+      imageJacobian[counter] = weights[i] * mig;
       ++counter;
     }
   }
@@ -756,7 +756,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     this->m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex, weights);
 
     /** Remember the weights. */
-    std::copy(weights.data_block(), weights.data_block() + numberOfWeights, weightVector + i * numberOfWeights);
+    std::copy_n(weights.begin(), numberOfWeights, weightVector + i * numberOfWeights);
 
   } // end for i
 
@@ -884,7 +884,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
      * weights at once for all dimensions */
 
     /** Remember the weights. */
-    std::copy(weights.data_block(), weights.data_block() + numberOfWeights, weightVector + i * numberOfWeights);
+    std::copy_n(weights.begin(), numberOfWeights, weightVector + i * numberOfWeights);
 
     /** Reset coeffs iterator */
     typename WeightsType::const_iterator itCoeffs = coeffs.begin();
@@ -1164,7 +1164,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       this->m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
 
       /** Remember the weights. */
-      std::copy(weights.data_block(), weights.data_block() + numberOfWeights, weightVector + count * numberOfWeights);
+      std::copy_n(weights.begin(), numberOfWeights, weightVector + count * numberOfWeights);
       count++;
 
       /** Reset coeffs iterator */
