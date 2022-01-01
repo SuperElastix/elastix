@@ -350,11 +350,11 @@ protected:
   ImagePointer m_CoefficientImages[NDimensions];
 
   /** Variables defining the coefficient grid extend. */
-  RegionType     m_GridRegion;
-  SpacingType    m_GridSpacing;
-  DirectionType  m_GridDirection;
-  OriginType     m_GridOrigin;
-  GridOffsetType m_GridOffsetTable;
+  RegionType     m_GridRegion{};
+  SpacingType    m_GridSpacing{ 1.0 }; // default spacing is all ones
+  DirectionType  m_GridDirection{ DirectionType::GetIdentity() };
+  OriginType     m_GridOrigin{};
+  GridOffsetType m_GridOffsetTable{};
 
   DirectionType                                     m_PointToIndexMatrix;
   SpatialJacobianType                               m_PointToIndexMatrix2;

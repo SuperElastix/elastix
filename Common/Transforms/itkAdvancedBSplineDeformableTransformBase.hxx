@@ -31,19 +31,6 @@ template <class TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplineDeformableTransformBase()
   : Superclass(SpaceDimension)
 {
-  // Default grid size is zero
-  typename RegionType::SizeType  size;
-  typename RegionType::IndexType index;
-  size.Fill(0);
-  index.Fill(0);
-  this->m_GridRegion.SetSize(size);
-  this->m_GridRegion.SetIndex(index);
-
-  this->m_GridOrigin.Fill(0.0);        // default origin is all zeros
-  this->m_GridSpacing.Fill(1.0);       // default spacing is all ones
-  this->m_GridDirection.SetIdentity(); // default spacing is all ones
-  this->m_GridOffsetTable.Fill(0);
-
   this->m_InternalParametersBuffer = ParametersType(0);
   // Make sure the parameters pointer is not NULL after construction.
   this->m_InputParametersPointer = &(this->m_InternalParametersBuffer);
