@@ -173,9 +173,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
    */
-  RegionType supportRegion;
-  supportRegion.SetSize(this->m_SupportSize);
-  supportRegion.SetIndex(supportIndex);
+  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
   this->ComputeNonZeroJacobianIndices(nonZeroJacobianIndices, supportRegion);
 
 } // end GetJacobian()
@@ -237,9 +235,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
     EvaluateJacobianWithImageGradientProduct(imageJacobianPointer, migArray, weightsArray1D, 1.0);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
-  RegionType supportRegion;
-  supportRegion.SetSize(this->m_SupportSize);
-  supportRegion.SetIndex(supportIndex);
+  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
@@ -510,9 +506,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
     GetJacobianOfSpatialJacobian(jsjPtr2, weightsPointer, derivativeWeightsPointer, dc, dummy);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
-  RegionType supportRegion;
-  supportRegion.SetSize(this->m_SupportSize);
-  supportRegion.SetIndex(supportIndex);
+  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices(nonZeroJacobianIndices, supportRegion);
@@ -616,9 +610,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
     GetJacobianOfSpatialHessian(jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
-  RegionType supportRegion;
-  supportRegion.SetSize(this->m_SupportSize);
-  supportRegion.SetIndex(supportIndex);
+  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices(nonZeroJacobianIndices, supportRegion);

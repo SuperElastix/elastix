@@ -177,9 +177,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   this->m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
 
   /** For each dimension, correlate coefficient with weights. */
-  RegionType supportRegion;
-  supportRegion.SetSize(this->m_SupportSize);
-  supportRegion.SetIndex(supportIndex);
+  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Split support region into two parts. */
   RegionType supportRegions[2];
@@ -325,9 +323,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
 
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
-  RegionType supportRegion;
-  supportRegion.SetSize(this->m_SupportSize);
-  supportRegion.SetIndex(supportIndex);
+  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Split support region into two parts. */
   RegionType supportRegions[2];
