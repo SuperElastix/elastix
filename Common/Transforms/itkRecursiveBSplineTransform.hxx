@@ -102,7 +102,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
   /** Call the recursive TransformPoint function. */
   ScalarType displacement[SpaceDimension];
   RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::TransformPoint(
-    displacement, mu, bsplineOffsetTable, weightsArray1D);
+    displacement, mu, bsplineOffsetTable, &(weights1D[0]));
 
   // The output point is the start point + displacement.
   for (unsigned int j = 0; j < SpaceDimension; ++j)
@@ -168,7 +168,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
    */
   ParametersValueType * jacobianPointer = jacobian.data_block();
   RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::GetJacobian(
-    jacobianPointer, weightsArray1D, 1.0);
+    jacobianPointer, &(weights1D[0]), 1.0);
 
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
@@ -232,7 +232,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
   }
   ParametersValueType * imageJacobianPointer = imageJacobian.data_block();
   RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::
-    EvaluateJacobianWithImageGradientProduct(imageJacobianPointer, migArray, weightsArray1D, 1.0);
+    EvaluateJacobianWithImageGradientProduct(imageJacobianPointer, migArray, &(weights1D[0]), 1.0);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
