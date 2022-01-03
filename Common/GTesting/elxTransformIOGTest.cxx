@@ -46,6 +46,8 @@
 #include "TranslationTransform/elxTranslationTransform.h"
 #include "WeightedCombinationTransform/elxWeightedCombinationTransform.h"
 
+#include "itkAdvancedLimitedEuler3DTransform.h"
+
 #include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
 #include <itkCompositeTransform.h>
@@ -979,4 +981,40 @@ GTEST_TEST(Transform, TransformedPointSameAsITKBSpline3D)
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedBSplineTransform>(itkTransform);
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::RecursiveBSplineTransform>(itkTransform);
+}
+
+
+// Tests that the limited Euler transform yields the same point-to-point transformation as the unlimited Euler
+// transform, when there is no limit specified.
+GTEST_TEST(Transform, TransformedPointLimitedEulerSameAsUnlimitedEuler3D)
+{
+  std::mt19937 randomNumberEngine;
+
+  // Generated another pseudo-random floating point number with each call.
+  const auto getRandomNumber = [&randomNumberEngine] {
+    const std::uniform_real_distribution<> distribution{ -1.0, 1.0 };
+    return distribution(randomNumberEngine);
+  };
+
+  for (const bool computeZYX : { false, true })
+  {
+    const auto unlimitedTransform = CheckNew<itk::AdvancedEuler3DTransform<double>>();
+    unlimitedTransform->SetCenter(MakePoint(getRandomNumber(), getRandomNumber(), getRandomNumber()));
+    unlimitedTransform->SetComputeZYX(computeZYX);
+    unlimitedTransform->SetTranslation(MakeVector(getRandomNumber(), getRandomNumber(), getRandomNumber()));
+    unlimitedTransform->SetRotation(getRandomNumber(), getRandomNumber(), getRandomNumber());
+
+    const auto limitedTransform = CheckNew<itk::AdvancedLimitedEuler3DTransform<double>>();
+
+    // Copy all the relevant properties from the "unlimited" to the "limited" Euler transform.
+    limitedTransform->SetCenter(unlimitedTransform->GetCenter());
+    limitedTransform->SetComputeZYX(unlimitedTransform->GetComputeZYX());
+    limitedTransform->SetTranslation(unlimitedTransform->GetTranslation());
+    limitedTransform->SetRotation(
+      unlimitedTransform->GetAngleX(), unlimitedTransform->GetAngleY(), unlimitedTransform->GetAngleZ());
+
+    const auto inputPoint = MakePoint(getRandomNumber(), getRandomNumber(), getRandomNumber());
+
+    EXPECT_EQ(limitedTransform->TransformPoint(inputPoint), unlimitedTransform->TransformPoint(inputPoint));
+  }
 }

@@ -26,6 +26,9 @@
 #include "elxDefaultConstructibleSubclass.h"
 #include "GTesting/elxGTestUtilities.h"
 
+#include "itkAdvancedEuler3DTransform.h"
+#include "itkAdvancedLimitedEuler3DTransform.h"
+
 // ITK header files:
 #include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
@@ -688,4 +691,73 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndScale)
   // elastix).
   EXPECT_EQ(DerefSmartPointer(transformixOutput),
             *(CreateResampleImageFilter(*inputImage, scaleAndTranslationTransform)->GetOutput()));
+}
+
+
+// Tests that the limited Euler transform yields the same image-to-image transformation as the unlimited Euler
+// transform, when there is no limit specified.
+GTEST_TEST(itkTransformixFilter, TransformedImageLimitedEulerSameAsUnlimitedEuler3D)
+{
+  enum
+  {
+    ImageDimension = 3
+  };
+  using TPixel = float;
+  using ImageType = itk::Image<TPixel, ImageDimension>;
+
+  const auto image = CreateImageFilledWithSequenceOfNaturalNumbers<TPixel, ImageDimension>({ 7, 8, 9 });
+
+  const auto transformImage = [&image](const char * const transformName,
+                                       const auto &       transform) -> itk::SmartPointer<ImageType> {
+    const auto filter = CheckNew<itk::TransformixFilter<itk::Image<TPixel, ImageDimension>>>();
+
+    const auto & transformParameters = transform.GetParameters();
+
+    filter->SetMovingImage(image);
+
+    filter->SetTransformParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "CenterOfRotationPoint", elx::Conversion::ToVectorOfStrings(transform.GetCenter()) },
+                              { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
+                              { "Index", ParameterValuesType(ImageDimension, "0") },
+                              { "NumberOfParameters", { std::to_string(transformParameters.size()) } },
+                              { "Origin", ParameterValuesType(ImageDimension, "0") },
+                              { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                              { "Size", ConvertToParameterValues(image->GetRequestedRegion().GetSize()) },
+                              { "Transform", ParameterValuesType{ transformName } },
+                              { "TransformParameters", elx::Conversion::ToVectorOfStrings(transformParameters) },
+                              { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
+    filter->Update();
+    return filter->GetOutput();
+  };
+
+  std::mt19937 randomNumberEngine;
+
+  // Generated another pseudo-random floating point number with each call.
+  const auto getRandomNumber = [&randomNumberEngine] {
+    const std::uniform_real_distribution<> distribution{ -1.0, 1.0 };
+    return distribution(randomNumberEngine);
+  };
+
+  for (const bool computeZYX : { false, true })
+  {
+    const auto unlimitedTransform = CheckNew<itk::AdvancedEuler3DTransform<double>>();
+    unlimitedTransform->SetCenter(MakePoint(getRandomNumber(), getRandomNumber(), getRandomNumber()));
+    unlimitedTransform->SetComputeZYX(computeZYX);
+    unlimitedTransform->SetTranslation(MakeVector(getRandomNumber(), getRandomNumber(), getRandomNumber()));
+    unlimitedTransform->SetRotation(getRandomNumber(), getRandomNumber(), getRandomNumber());
+
+    const auto limitedTransform = CheckNew<itk::AdvancedLimitedEuler3DTransform<double>>();
+
+    // Copy all the relevant properties from the "unlimited" to the "limited" Euler transform.
+    limitedTransform->SetCenter(unlimitedTransform->GetCenter());
+    limitedTransform->SetComputeZYX(unlimitedTransform->GetComputeZYX());
+    limitedTransform->SetTranslation(unlimitedTransform->GetTranslation());
+    limitedTransform->SetRotation(
+      unlimitedTransform->GetAngleX(), unlimitedTransform->GetAngleY(), unlimitedTransform->GetAngleZ());
+
+    const auto unlimitedTransformedImage = transformImage("EulerTransform", *unlimitedTransform);
+    const auto limitedTransformedImage = transformImage("LimitedEulerTransform", *limitedTransform);
+    EXPECT_EQ(DerefSmartPointer(limitedTransformedImage), DerefSmartPointer(unlimitedTransformedImage));
+  }
 }
