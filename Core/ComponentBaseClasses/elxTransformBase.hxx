@@ -1109,7 +1109,6 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   /** Typedef's. */
   typedef itk::Image<float, FixedImageDimension>                                              JacobianImageType;
   typedef itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType> JacobianGeneratorType;
-  typedef itk::ImageFileWriter<JacobianImageType>                                             JacobianWriterType;
   typedef itk::ChangeInformationImageFilter<JacobianImageType>                                ChangeInfoFilterType;
   typedef typename FixedImageType::DirectionType                                              FixedImageDirectionType;
 
@@ -1145,7 +1144,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "spatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  const auto jacWriter = JacobianWriterType::New();
+  const auto jacWriter = itk::ImageFileWriter<JacobianImageType>::New();
   jacWriter->SetInput(infoChanger->GetOutput());
   jacWriter->SetFileName(makeFileName.str().c_str());
 
@@ -1194,7 +1193,6 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
                                                                                  OutputSpatialJacobianType;
   typedef itk::Image<OutputSpatialJacobianType, FixedImageDimension>             JacobianImageType;
   typedef itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType> JacobianGeneratorType;
-  typedef itk::ImageFileWriter<JacobianImageType>                                JacobianWriterType;
   typedef itk::ChangeInformationImageFilter<JacobianImageType>                   ChangeInfoFilterType;
   typedef typename FixedImageType::DirectionType                                 FixedImageDirectionType;
 
@@ -1230,7 +1228,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "fullSpatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  const auto jacWriter = JacobianWriterType::New();
+  const auto jacWriter = itk::ImageFileWriter<JacobianImageType>::New();
   jacWriter->SetInput(infoChanger->GetOutput());
   jacWriter->SetFileName(makeFileName.str().c_str());
 
@@ -1252,11 +1250,13 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
     itkNewMacro(Self);
 
   private:
+    using PrivateJacobianImageType = JacobianImageType;
+
     /** Set the pixel type to VECTOR */
     void
     Execute(itk::Object * caller, const itk::EventObject &) override
     {
-      const auto castcaller = dynamic_cast<JacobianWriterType *>(caller);
+      const auto castcaller = dynamic_cast<itk::ImageFileWriter<PrivateJacobianImageType> *>(caller);
       castcaller->GetModifiableImageIO()->SetPixelType(itk::CommonEnums::IOPixel::VECTOR);
     }
 
