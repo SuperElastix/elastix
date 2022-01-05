@@ -37,10 +37,10 @@ class ITK_TEMPLATE_EXPORT ANNFixedRadiusTreeSearch : public BinaryANNTreeSearchB
 {
 public:
   /** Standard itk. */
-  typedef ANNFixedRadiusTreeSearch             Self;
-  typedef BinaryANNTreeSearchBase<TListSample> Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = ANNFixedRadiusTreeSearch;
+  using Superclass = BinaryANNTreeSearchBase<TListSample>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);

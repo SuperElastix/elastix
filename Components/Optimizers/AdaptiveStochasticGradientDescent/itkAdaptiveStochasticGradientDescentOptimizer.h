@@ -73,11 +73,11 @@ class AdaptiveStochasticGradientDescentOptimizer : public StandardGradientDescen
 {
 public:
   /** Standard ITK.*/
-  typedef AdaptiveStochasticGradientDescentOptimizer Self;
-  typedef StandardGradientDescentOptimizer           Superclass;
+  using Self = AdaptiveStochasticGradientDescentOptimizer;
+  using Superclass = StandardGradientDescentOptimizer;
 
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

@@ -87,12 +87,12 @@ class ITK_TEMPLATE_EXPORT MultiInputRandomCoordinateSampler
 {
 public:
   /** Standard ITK-stuff. */
-  typedef MultiInputRandomCoordinateSampler Self;
-  typedef itk::MultiInputImageRandomCoordinateSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
-                                          Superclass1;
-  typedef elx::ImageSamplerBase<TElastix> Superclass2;
-  typedef itk::SmartPointer<Self>         Pointer;
-  typedef itk::SmartPointer<const Self>   ConstPointer;
+  using Self = MultiInputRandomCoordinateSampler;
+  using Superclass1 =
+    itk::MultiInputImageRandomCoordinateSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>;
+  using Superclass2 = elx::ImageSamplerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -141,7 +141,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Execute stuff before each resolution:
    * \li Set the number of samples.

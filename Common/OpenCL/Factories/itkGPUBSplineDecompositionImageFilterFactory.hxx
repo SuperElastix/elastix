@@ -26,7 +26,7 @@ template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
 GPUBSplineDecompositionImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::RegisterOneFactory()
 {
-  typedef GPUBSplineDecompositionImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions> GPUFilterFactoryType;
+  using GPUFilterFactoryType = GPUBSplineDecompositionImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>;
   auto factory = GPUFilterFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
@@ -54,7 +54,7 @@ GPUBSplineDecompositionImageFilterFactory2<TTypeListIn, TTypeListOut, NDimension
   const bool outputHasFloat = typelist::HasType<TTypeListOut, float>::Type;
   if (!outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                 FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<TTypeListIn, FloatTypeList, 1> visitor1;
     visitor1(*this);
   }
@@ -74,7 +74,7 @@ GPUBSplineDecompositionImageFilterFactory2<TTypeListIn, TTypeListOut, NDimension
   const bool outputHasFloat = typelist::HasType<TTypeListOut, float>::Type;
   if (!outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                 FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<TTypeListIn, FloatTypeList, 2> visitor1;
     visitor1(*this);
   }
@@ -94,7 +94,7 @@ GPUBSplineDecompositionImageFilterFactory2<TTypeListIn, TTypeListOut, NDimension
   const bool outputHasFloat = typelist::HasType<TTypeListOut, float>::Type;
   if (!outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                 FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<TTypeListIn, FloatTypeList, 3> visitor1;
     visitor1(*this);
   }

@@ -86,23 +86,22 @@ class ITK_TEMPLATE_EXPORT WeightedCombinationTransformElastix
 {
 public:
   /** Standard ITK-stuff. */
-  typedef WeightedCombinationTransformElastix Self;
+  using Self = WeightedCombinationTransformElastix;
 
-  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-    Superclass1;
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                        elx::TransformBase<TElastix>::FixedImageDimension>;
 
-  typedef elx::TransformBase<TElastix> Superclass2;
+  using Superclass2 = elx::TransformBase<TElastix>;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::WeightedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension,
-                                            elx::TransformBase<TElastix>::MovingImageDimension>
-    WeightedCombinationTransformType;
+  using WeightedCombinationTransformType =
+    itk::WeightedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                      elx::TransformBase<TElastix>::FixedImageDimension,
+                                      elx::TransformBase<TElastix>::MovingImageDimension>;
 
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -144,16 +143,16 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
   using typename Superclass2::CommandLineArgumentMapType;
   using typename Superclass2::CommandLineEntryType;
 
   /** Extra typedefs */
-  typedef typename WeightedCombinationTransformType::Pointer                WeightedCombinationTransformPointer;
-  typedef typename WeightedCombinationTransformType::TransformContainerType TransformContainerType;
-  typedef typename WeightedCombinationTransformType::TransformType          SubTransformType;
-  typedef typename WeightedCombinationTransformType::TransformPointer       SubTransformPointer;
+  using WeightedCombinationTransformPointer = typename WeightedCombinationTransformType::Pointer;
+  using TransformContainerType = typename WeightedCombinationTransformType::TransformContainerType;
+  using SubTransformType = typename WeightedCombinationTransformType::TransformType;
+  using SubTransformPointer = typename WeightedCombinationTransformType::TransformPointer;
 
   /** For scales setting in the optimizer */
   using typename Superclass2::ScalesType;

@@ -54,7 +54,7 @@ class ITKOpenCL_EXPORT OpenCLBuffer : public OpenCLMemoryObject
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLBuffer Self;
+  using Self = OpenCLBuffer;
 
   /** Constructs a null OpenCL buffer object. */
   OpenCLBuffer() = default;

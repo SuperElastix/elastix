@@ -45,10 +45,10 @@ class ITK_TEMPLATE_EXPORT ImageGridSampler : public ImageSamplerBase<TInputImage
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageGridSampler              Self;
-  typedef ImageSamplerBase<TInputImage> Superclass;
-  typedef SmartPointer<Self>            Pointer;
-  typedef SmartPointer<const Self>      ConstPointer;
+  using Self = ImageGridSampler;
+  using Superclass = ImageSamplerBase<TInputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -79,11 +79,11 @@ public:
   using typename Superclass::InputImagePointType;
 
   /** Typedefs for support of user defined grid spacing for the spatial samples. */
-  typedef typename InputImageType::OffsetType             SampleGridSpacingType;
-  typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
-  typedef typename InputImageType::SizeType               SampleGridSizeType;
-  typedef InputImageIndexType                             SampleGridIndexType;
-  typedef typename InputImageType::SizeType               InputImageSizeType;
+  using SampleGridSpacingType = typename InputImageType::OffsetType;
+  using SampleGridSpacingValueType = typename SampleGridSpacingType::OffsetValueType;
+  using SampleGridSizeType = typename InputImageType::SizeType;
+  using SampleGridIndexType = InputImageIndexType;
+  using InputImageSizeType = typename InputImageType::SizeType;
 
   /** Set/Get the sample grid spacing for each dimension (only integer factors)
    * This function overrules previous calls to SetNumberOfSamples.

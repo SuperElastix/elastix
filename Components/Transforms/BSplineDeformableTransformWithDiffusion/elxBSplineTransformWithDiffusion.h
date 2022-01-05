@@ -167,25 +167,22 @@ class ITK_TEMPLATE_EXPORT BSplineTransformWithDiffusion
 {
 public:
   /** Standard ITK-stuff. */
-  typedef BSplineTransformWithDiffusion Self;
-  typedef itk::DeformationFieldRegulizer<itk::AdvancedCombinationTransform<
-    // BSplineCombinationTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
-    elx::TransformBase<TElastix>::FixedImageDimension>>
-    // elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >
-                                       Superclass1;
-  typedef elx::TransformBase<TElastix> Superclass2;
+  using Self = BSplineTransformWithDiffusion;
+  using Superclass1 = itk::DeformationFieldRegulizer<
+    itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                      elx::TransformBase<TElastix>::FixedImageDimension>>;
+  using Superclass2 = elx::TransformBase<TElastix>;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                  elx::TransformBase<TElastix>::FixedImageDimension,
-                                                  __VSplineOrder>
-    BSplineTransformType;
+  using BSplineTransformType =
+    itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                            elx::TransformBase<TElastix>::FixedImageDimension,
+                                            3>;
 
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -219,18 +216,18 @@ public:
   using typename Superclass1::OutputPointType;
 
   /** Typedef's specific for the BSplineTransform. */
-  typedef typename BSplineTransformType::PixelType               PixelType;
-  typedef typename BSplineTransformType::ImageType               ImageType;
-  typedef typename BSplineTransformType::ImagePointer            ImagePointer;
-  typedef typename BSplineTransformType::RegionType              RegionType;
-  typedef typename BSplineTransformType::IndexType               IndexType;
-  typedef typename BSplineTransformType::SizeType                SizeType;
-  typedef typename BSplineTransformType::SpacingType             SpacingType;
-  typedef typename BSplineTransformType::OriginType              OriginType;
-  typedef typename BSplineTransformType::WeightsFunctionType     WeightsFunctionType;
-  typedef typename BSplineTransformType::WeightsType             WeightsType;
-  typedef typename BSplineTransformType::ContinuousIndexType     ContinuousIndexType;
-  typedef typename BSplineTransformType::ParameterIndexArrayType ParameterIndexArrayType;
+  using PixelType = typename BSplineTransformType::PixelType;
+  using ImageType = typename BSplineTransformType::ImageType;
+  using ImagePointer = typename BSplineTransformType::ImagePointer;
+  using RegionType = typename BSplineTransformType::RegionType;
+  using IndexType = typename BSplineTransformType::IndexType;
+  using SizeType = typename BSplineTransformType::SizeType;
+  using SpacingType = typename BSplineTransformType::SpacingType;
+  using OriginType = typename BSplineTransformType::OriginType;
+  using WeightsFunctionType = typename BSplineTransformType::WeightsFunctionType;
+  using WeightsType = typename BSplineTransformType::WeightsType;
+  using ContinuousIndexType = typename BSplineTransformType::ContinuousIndexType;
+  using ParameterIndexArrayType = typename BSplineTransformType::ParameterIndexArrayType;
 
   /** Typedef's from TransformBase. */
   using typename Superclass2::ElastixType;
@@ -243,46 +240,46 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Other typedef's inherited from Superclass1. */
   using typename Superclass1::IntermediaryDFTransformType;
   using typename Superclass1::VectorImageType;
-  typedef typename VectorImageType::Pointer VectorImagePointer;
+  using VectorImagePointer = typename VectorImageType::Pointer;
 
   /** References to the fixed and moving image types. */
-  typedef typename ElastixType::FixedImageType  FixedImageELXType;
-  typedef typename ElastixType::MovingImageType MovingImageELXType;
+  using FixedImageELXType = typename ElastixType::FixedImageType;
+  using MovingImageELXType = typename ElastixType::MovingImageType;
 
   /** Other typedef's.*/
-  typedef itk::Image<short, Self::SpaceDimension>       DummyImageType;
-  typedef itk::ImageRegionConstIterator<DummyImageType> DummyIteratorType;
-  typedef typename BSplineTransformType::Pointer        BSplineTransformPointer;
-  typedef typename Superclass1::Superclass              GenericDeformationFieldRegulizer;
+  using DummyImageType = itk::Image<short, Self::SpaceDimension>;
+  using DummyIteratorType = itk::ImageRegionConstIterator<DummyImageType>;
+  using BSplineTransformPointer = typename BSplineTransformType::Pointer;
+  using GenericDeformationFieldRegulizer = typename Superclass1::Superclass;
 
   /** Typedef's for the diffusion of the deformation field. */
-  typedef itk::ImageFileReader<VectorImageType>        VectorReaderType;
-  typedef typename VectorImageType::PixelType          VectorType;
-  typedef itk::ImageRegionIterator<VectorImageType>    VectorImageIteratorType;
-  typedef FixedImageELXType                            GrayValueImageType;
-  typedef typename GrayValueImageType::Pointer         GrayValueImagePointer;
-  typedef typename GrayValueImageType::PixelType       GrayValuePixelType;
-  typedef itk::ImageRegionIterator<GrayValueImageType> GrayValueImageIteratorType;
-  typedef itk::MaximumImageFilter<GrayValueImageType, GrayValueImageType, GrayValueImageType> MaximumImageFilterType;
-  typedef itk::VectorMeanDiffusionImageFilter<VectorImageType, GrayValueImageType>            DiffusionFilterType;
-  typedef typename DiffusionFilterType::Pointer                                               DiffusionFilterPointer;
-  typedef typename VectorImageType::SizeType                                                  RadiusType;
-  typedef itk::ResampleImageFilter<MovingImageELXType, GrayValueImageType, CoordRepType>      ResamplerType1;
-  typedef typename ResamplerType1::Pointer                                                    ResamplerPointer1;
-  typedef itk::ResampleImageFilter<GrayValueImageType, GrayValueImageType, CoordRepType>      ResamplerType2;
-  typedef typename ResamplerType2::Pointer                                                    ResamplerPointer2;
-  typedef itk::BSplineInterpolateImageFunction<GrayValueImageType>                            InterpolatorType;
-  typedef typename InterpolatorType::Pointer                                                  InterpolatorPointer;
-  typedef itk::ImageFileReader<GrayValueImageType>                                            GrayValueImageReaderType;
-  typedef typename GrayValueImageReaderType::Pointer GrayValueImageReaderPointer;
-  typedef itk::ImageFileWriter<GrayValueImageType>   GrayValueImageWriterType;
-  typedef itk::ImageFileWriter<VectorImageType>      DeformationFieldWriterType;
+  using VectorReaderType = itk::ImageFileReader<VectorImageType>;
+  using VectorType = typename VectorImageType::PixelType;
+  using VectorImageIteratorType = itk::ImageRegionIterator<VectorImageType>;
+  using GrayValueImageType = FixedImageELXType;
+  using GrayValueImagePointer = typename GrayValueImageType::Pointer;
+  using GrayValuePixelType = typename GrayValueImageType::PixelType;
+  using GrayValueImageIteratorType = itk::ImageRegionIterator<GrayValueImageType>;
+  using MaximumImageFilterType = itk::MaximumImageFilter<GrayValueImageType, GrayValueImageType, GrayValueImageType>;
+  using DiffusionFilterType = itk::VectorMeanDiffusionImageFilter<VectorImageType, GrayValueImageType>;
+  using DiffusionFilterPointer = typename DiffusionFilterType::Pointer;
+  using RadiusType = typename VectorImageType::SizeType;
+  using ResamplerType1 = itk::ResampleImageFilter<MovingImageELXType, GrayValueImageType, CoordRepType>;
+  using ResamplerPointer1 = typename ResamplerType1::Pointer;
+  using ResamplerType2 = itk::ResampleImageFilter<GrayValueImageType, GrayValueImageType, CoordRepType>;
+  using ResamplerPointer2 = typename ResamplerType2::Pointer;
+  using InterpolatorType = itk::BSplineInterpolateImageFunction<GrayValueImageType>;
+  using InterpolatorPointer = typename InterpolatorType::Pointer;
+  using GrayValueImageReaderType = itk::ImageFileReader<GrayValueImageType>;
+  using GrayValueImageReaderPointer = typename GrayValueImageReaderType::Pointer;
+  using GrayValueImageWriterType = itk::ImageFileWriter<GrayValueImageType>;
+  using DeformationFieldWriterType = itk::ImageFileWriter<VectorImageType>;
 
   /** Execute stuff before the actual registration:
    * \li Create an initial B-spline grid.

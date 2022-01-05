@@ -87,16 +87,16 @@ main(int argc, char ** argv)
   }
 
   /** Hard-coded image dimension and pixel type. */
-  const unsigned int    Dimension = 3;
-  typedef unsigned char PixelType;
+  const unsigned int Dimension = 3;
+  using PixelType = unsigned char;
 
   /** Typedefs. */
-  typedef itk::Image<PixelType, Dimension>                     ImageType;
-  typedef itk::ImageFileReader<ImageType>                      ImageReaderType;
-  typedef ImageReaderType::Pointer                             ImageReaderPointer;
-  typedef itk::AndImageFilter<ImageType, ImageType, ImageType> AndFilterType;
-  typedef AndFilterType::Pointer                               AndFilterPointer;
-  typedef itk::ImageRegionConstIterator<ImageType>             IteratorType;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ImageReaderType = itk::ImageFileReader<ImageType>;
+  using ImageReaderPointer = ImageReaderType::Pointer;
+  using AndFilterType = itk::AndImageFilter<ImageType, ImageType, ImageType>;
+  using AndFilterPointer = AndFilterType::Pointer;
+  using IteratorType = itk::ImageRegionConstIterator<ImageType>;
 
   /** Create readers and an AND filter. */
   ImageReaderPointer reader1 = ImageReaderType::New();

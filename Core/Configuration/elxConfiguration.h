@@ -53,11 +53,11 @@ class Configuration
 {
 public:
   /** Standard itk.*/
-  typedef Configuration                 Self;
-  typedef itk::Object                   Superclass1;
-  typedef BaseComponent                 Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = Configuration;
+  using Superclass1 = itk::Object;
+  using Superclass2 = BaseComponent;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -66,14 +66,14 @@ public:
   itkTypeMacro(Configuration, itk::Object);
 
   /** Typedefs for the command line arguments. */
-  typedef std::map<std::string, std::string>     CommandLineArgumentMapType;
-  typedef CommandLineArgumentMapType::value_type CommandLineEntryType;
+  using CommandLineArgumentMapType = std::map<std::string, std::string>;
+  using CommandLineEntryType = CommandLineArgumentMapType::value_type;
 
   /** Typedefs for the parameter file. */
-  typedef itk::ParameterFileParser           ParameterFileParserType;
-  typedef ParameterFileParserType::Pointer   ParameterFileParserPointer;
-  typedef itk::ParameterMapInterface         ParameterMapInterfaceType;
-  typedef ParameterMapInterfaceType::Pointer ParameterMapInterfacePointer;
+  using ParameterFileParserType = itk::ParameterFileParser;
+  using ParameterFileParserPointer = ParameterFileParserType::Pointer;
+  using ParameterMapInterfaceType = itk::ParameterMapInterface;
+  using ParameterMapInterfacePointer = ParameterMapInterfaceType::Pointer;
 
   /** Get and Set CommandLine arguments into the argument map. */
   std::string

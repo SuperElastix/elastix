@@ -66,14 +66,14 @@ main(int argc, char * argv[])
   std::cout << std::showpoint << std::setprecision(4);
 
   // Typedefs.
-  const unsigned int                       Dimension = 3;
-  typedef float                            PixelType;
-  typedef itk::Image<PixelType, Dimension> ImageType;
+  const unsigned int Dimension = 3;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, Dimension>;
 
   // CPU Typedefs
-  typedef itk::BSplineDecompositionImageFilter<ImageType, ImageType> FilterType;
-  typedef itk::ImageFileReader<ImageType>                            ReaderType;
-  typedef itk::ImageFileWriter<ImageType>                            WriterType;
+  using FilterType = itk::BSplineDecompositionImageFilter<ImageType, ImageType>;
+  using ReaderType = itk::ImageFileReader<ImageType>;
+  using WriterType = itk::ImageFileWriter<ImageType>;
 
   // Reader
   auto reader = ReaderType::New();
@@ -128,7 +128,7 @@ main(int argc, char * argv[])
   // Register object factory for GPU image and filter
   // All these filters that are constructed after this point are
   // turned into a GPU filter.
-  typedef typelist::MakeTypeList<float>::Type OCLImageTypes;
+  using OCLImageTypes = typelist::MakeTypeList<float>::Type;
   itk::GPUImageFactory2<OCLImageTypes, OCLImageDims>::RegisterOneFactory();
   itk::GPUBSplineDecompositionImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLImageDims>::RegisterOneFactory();
 

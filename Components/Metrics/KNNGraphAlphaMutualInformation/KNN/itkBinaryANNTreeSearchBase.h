@@ -39,10 +39,10 @@ class ITK_TEMPLATE_EXPORT BinaryANNTreeSearchBase : public BinaryTreeSearchBase<
 {
 public:
   /** Standard itk. */
-  typedef BinaryANNTreeSearchBase           Self;
-  typedef BinaryTreeSearchBase<TListSample> Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  using Self = BinaryANNTreeSearchBase;
+  using Superclass = BinaryTreeSearchBase<TListSample>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ITK type info. */
   itkTypeMacro(BinaryANNTreeSearchBase, BinaryTreeSearchBase);
@@ -56,14 +56,14 @@ public:
   using typename Superclass::DistanceArrayType;
 
   /** Typedefs from ANN. */
-  typedef ANNpoint     ANNPointType;         // double *
-  typedef ANNidx       ANNIndexType;         // int
-  typedef ANNidxArray  ANNIndexArrayType;    // int *
-  typedef ANNdist      ANNDistanceType;      // double
-  typedef ANNdistArray ANNDistanceArrayType; // double *
+  using ANNPointType = ANNpoint;             // double *
+  using ANNIndexType = ANNidx;               // int
+  using ANNIndexArrayType = ANNidxArray;     // int *
+  using ANNDistanceType = ANNdist;           // double
+  using ANNDistanceArrayType = ANNdistArray; // double *
 
   /** An itk ANN tree. */
-  typedef BinaryANNTreeBase<ListSampleType> BinaryANNTreeType;
+  using BinaryANNTreeType = BinaryANNTreeBase<ListSampleType>;
 
   /** Set and get the binary tree. */
   void

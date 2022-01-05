@@ -46,10 +46,10 @@ class ITK_TEMPLATE_EXPORT MissingVolumeMeshPenalty
 {
 public:
   /** Standard class typedefs. */
-  typedef MissingVolumeMeshPenalty                                              Self;
-  typedef SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet> Superclass;
-  typedef SmartPointer<Self>                                                    Pointer;
-  typedef SmartPointer<const Self>                                              ConstPointer;
+  using Self = MissingVolumeMeshPenalty;
+  using Superclass = SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Type used for representing point components  */
 
@@ -71,8 +71,8 @@ public:
 
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector<CoordRepType>               VnlVectorType;
+  using CoordRepType = typename OutputPointType::CoordRepType;
+  using VnlVectorType = vnl_vector<CoordRepType>;
 
   using typename Superclass::NonZeroJacobianIndicesType;
 
@@ -81,45 +81,45 @@ public:
   itkStaticConstMacro(MovingPointSetDimension, unsigned int, Superclass::MovingPointSetDimension);
 
   /** Typedefs. */
-  typedef unsigned char DummyMeshPixelType;
-  typedef DefaultStaticMeshTraits<DummyMeshPixelType, FixedPointSetDimension, FixedPointSetDimension, CoordRepType>
-                                                                           MeshTraitsType;
-  typedef Mesh<DummyMeshPixelType, FixedPointSetDimension, MeshTraitsType> FixedMeshType;
-  typedef typename FixedMeshType::PointIdentifier                          FixedMeshPointIdentifier;
+  using DummyMeshPixelType = unsigned char;
+  using MeshTraitsType =
+    DefaultStaticMeshTraits<DummyMeshPixelType, FixedPointSetDimension, FixedPointSetDimension, CoordRepType>;
+  using FixedMeshType = Mesh<DummyMeshPixelType, FixedPointSetDimension, MeshTraitsType>;
+  using FixedMeshPointIdentifier = typename FixedMeshType::PointIdentifier;
 
-  typedef typename FixedMeshType::ConstPointer FixedMeshConstPointer;
-  typedef typename FixedMeshType::Pointer      FixedMeshPointer;
-  typedef typename MeshTraitsType::CellType    CellInterfaceType;
+  using FixedMeshConstPointer = typename FixedMeshType::ConstPointer;
+  using FixedMeshPointer = typename FixedMeshType::Pointer;
+  using CellInterfaceType = typename MeshTraitsType::CellType;
 
-  typedef typename FixedMeshType::PointType                                       MeshPointType;
-  typedef typename FixedMeshType::PointType::VectorType                           VectorType;
-  typedef typename VectorType::const_pointer                                      VectorConstPointer;
-  typedef itk::Vector<typename VectorType::ValueType, FixedPointSetDimension - 1> SubVectorType;
+  using MeshPointType = typename FixedMeshType::PointType;
+  using VectorType = typename FixedMeshType::PointType::VectorType;
+  using VectorConstPointer = typename VectorType::const_pointer;
+  using SubVectorType = itk::Vector<typename VectorType::ValueType, FixedPointSetDimension - 1>;
 
-  typedef typename FixedMeshType::PointsContainer              MeshPointsContainerType;
-  typedef typename MeshPointsContainerType::Pointer            MeshPointsContainerPointer;
-  typedef typename MeshPointsContainerType::ConstPointer       MeshPointsContainerConstPointer;
-  typedef typename FixedMeshType::PointsContainerConstIterator MeshPointsContainerConstIteratorType;
-  typedef typename FixedMeshType::PointsContainerIterator      MeshPointsContainerIteratorType;
+  using MeshPointsContainerType = typename FixedMeshType::PointsContainer;
+  using MeshPointsContainerPointer = typename MeshPointsContainerType::Pointer;
+  using MeshPointsContainerConstPointer = typename MeshPointsContainerType::ConstPointer;
+  using MeshPointsContainerConstIteratorType = typename FixedMeshType::PointsContainerConstIterator;
+  using MeshPointsContainerIteratorType = typename FixedMeshType::PointsContainerIterator;
 
-  typedef typename FixedMeshType::PointDataContainer             MeshPointDataContainerType;
-  typedef typename FixedMeshType::PointDataContainerConstPointer MeshPointDataContainerConstPointer;
-  typedef typename FixedMeshType::PointDataContainerPointer      MeshPointDataContainerPointer;
+  using MeshPointDataContainerType = typename FixedMeshType::PointDataContainer;
+  using MeshPointDataContainerConstPointer = typename FixedMeshType::PointDataContainerConstPointer;
+  using MeshPointDataContainerPointer = typename FixedMeshType::PointDataContainerPointer;
   // typedef typename FixedMeshType::PointDataContainerConstIterator     MeshPointDataContainerConstIteratorType;
-  typedef typename FixedMeshType::PointDataContainerIterator MeshPointDataContainerConstIteratorType;
-  typedef typename MeshPointDataContainerType::Iterator      MeshPointDataContainerIteratorType;
+  using MeshPointDataContainerConstIteratorType = typename FixedMeshType::PointDataContainerIterator;
+  using MeshPointDataContainerIteratorType = typename MeshPointDataContainerType::Iterator;
 
-  typedef unsigned int                                       MeshIdType;
-  typedef VectorContainer<MeshIdType, FixedMeshConstPointer> FixedMeshContainerType;
-  typedef typename FixedMeshContainerType::Pointer           FixedMeshContainerPointer;
-  typedef typename FixedMeshContainerType::ConstPointer      FixedMeshContainerConstPointer;
-  typedef typename FixedMeshContainerType::ElementIdentifier FixedMeshContainerElementIdentifier;
+  using MeshIdType = unsigned int;
+  using FixedMeshContainerType = VectorContainer<MeshIdType, FixedMeshConstPointer>;
+  using FixedMeshContainerPointer = typename FixedMeshContainerType::Pointer;
+  using FixedMeshContainerConstPointer = typename FixedMeshContainerType::ConstPointer;
+  using FixedMeshContainerElementIdentifier = typename FixedMeshContainerType::ElementIdentifier;
 
-  typedef VectorContainer<MeshIdType, FixedMeshPointer>  MappedMeshContainerType;
-  typedef typename MappedMeshContainerType::Pointer      MappedMeshContainerPointer;
-  typedef typename MappedMeshContainerType::ConstPointer MappedMeshContainerConstPointer;
+  using MappedMeshContainerType = VectorContainer<MeshIdType, FixedMeshPointer>;
+  using MappedMeshContainerPointer = typename MappedMeshContainerType::Pointer;
+  using MappedMeshContainerConstPointer = typename MappedMeshContainerType::ConstPointer;
 
-  typedef Array<DerivativeValueType> MeshPointsDerivativeValueType;
+  using MeshPointsDerivativeValueType = Array<DerivativeValueType>;
 
   itkSetConstObjectMacro(FixedMeshContainer, FixedMeshContainerType);
   itkGetConstObjectMacro(FixedMeshContainer, FixedMeshContainerType);

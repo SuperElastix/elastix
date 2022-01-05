@@ -37,10 +37,10 @@ class RSGDEachParameterApartBaseOptimizer : public SingleValuedNonLinearOptimize
 {
 public:
   /** Standard "Self" typedef. */
-  typedef RSGDEachParameterApartBaseOptimizer Self;
-  typedef SingleValuedNonLinearOptimizer      Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  using Self = RSGDEachParameterApartBaseOptimizer;
+  using Superclass = SingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

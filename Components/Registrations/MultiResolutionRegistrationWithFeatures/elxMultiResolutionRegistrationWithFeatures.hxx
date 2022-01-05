@@ -199,9 +199,9 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageInterpolat
   }
 
   /** Create and set interpolators for the fixed feature images. */
-  typedef itk::BSplineInterpolateImageFunction<FixedImageType>      FixedImageInterpolatorType;
-  typedef std::vector<typename FixedImageInterpolatorType::Pointer> FixedImageInterpolatorVectorType;
-  FixedImageInterpolatorVectorType                                  interpolators(noFixIm);
+  using FixedImageInterpolatorType = itk::BSplineInterpolateImageFunction<FixedImageType>;
+  using FixedImageInterpolatorVectorType = std::vector<typename FixedImageInterpolatorType::Pointer>;
+  FixedImageInterpolatorVectorType interpolators(noFixIm);
   for (unsigned int i = 0; i < noFixIm; ++i)
   {
     interpolators[i] = FixedImageInterpolatorType::New();

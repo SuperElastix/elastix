@@ -50,8 +50,8 @@ ImageRandomSampler<TInputImage>::GenerateData()
   sampleContainer->Reserve(this->GetNumberOfSamples());
 
   /** Setup a random iterator over the input image. */
-  typedef ImageRandomConstIteratorWithIndex<InputImageType> RandomIteratorType;
-  RandomIteratorType                                        randIter(inputImage, this->GetCroppedInputImageRegion());
+  using RandomIteratorType = ImageRandomConstIteratorWithIndex<InputImageType>;
+  RandomIteratorType randIter(inputImage, this->GetCroppedInputImageRegion());
   randIter.GoToBegin();
 
   /** Setup an iterator over the output, which is of ImageSampleContainerType. */

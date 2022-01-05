@@ -39,10 +39,10 @@ class TransformixMain : public ElastixMain
 {
 public:
   /** Standard itk. */
-  typedef TransformixMain               Self;
-  typedef ElastixMain                   Superclass;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = TransformixMain;
+  using Superclass = ElastixMain;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -53,7 +53,7 @@ public:
   /** Typedef's from Superclass. */
 
   /** typedef's from itk base Object. */
-  typedef Superclass::ObjectType ObjectType;
+  using ObjectType = Superclass::ObjectType;
   using Superclass::ObjectPointer;
   using Superclass::DataObjectType;
   using Superclass::DataObjectPointer;

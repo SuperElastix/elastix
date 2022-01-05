@@ -882,9 +882,9 @@ OpenCLDevice::GetMaximumFlopsDevices(const OpenCLDevice::DeviceType type, const 
   }
 
   // Find the device that has maximum Flops
-  typedef std::pair<std::size_t, cl_device_id> DeviceType;
-  typedef std::set<DeviceType>                 MaximumFlopsDevicesType;
-  MaximumFlopsDevicesType                      maximumFlopsDevices;
+  using DeviceType = std::pair<std::size_t, cl_device_id>;
+  using MaximumFlopsDevicesType = std::set<DeviceType>;
+  MaximumFlopsDevicesType maximumFlopsDevices;
   for (std::list<OpenCLDevice>::const_iterator device = allDevices.begin(); device != allDevices.end(); ++device)
   {
     int        deviceFlops = (*device).GetComputeUnits() * (*device).GetClockFrequency();

@@ -48,11 +48,11 @@ class ITK_EXPORT GPUIdentityTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUIdentityTransform     Self;
-  typedef TParentTransform         CPUSuperclass;
-  typedef GPUTransformBase         GPUSuperclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = GPUIdentityTransform;
+  using CPUSuperclass = TParentTransform;
+  using GPUSuperclass = GPUTransformBase;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

@@ -81,10 +81,10 @@ class AffineDTI3DTransform : public AdvancedMatrixOffsetTransformBase<TScalarTyp
 {
 public:
   /** Standard class typedefs. */
-  typedef AffineDTI3DTransform                                 Self;
-  typedef AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3> Superclass;
-  typedef SmartPointer<Self>                                   Pointer;
-  typedef SmartPointer<const Self>                             ConstPointer;
+  using Self = AffineDTI3DTransform;
+  using Superclass = AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);
@@ -115,7 +115,7 @@ public:
   using typename Superclass::CenterType;
   using typename Superclass::TranslationType;
   using typename Superclass::OffsetType;
-  typedef typename Superclass::ScalarType AngleType;
+  using AngleType = typename Superclass::ScalarType;
 
   using typename Superclass::NonZeroJacobianIndicesType;
   using typename Superclass::SpatialJacobianType;
@@ -124,7 +124,7 @@ public:
   using typename Superclass::JacobianOfSpatialHessianType;
   using typename Superclass::InternalMatrixType;
 
-  typedef FixedArray<ScalarType> ScalarArrayType;
+  using ScalarArrayType = FixedArray<ScalarType>;
 
   /** Set/Get the transformation from a container of parameters
    * This is typically used by optimizers.  There are 12 parameters.

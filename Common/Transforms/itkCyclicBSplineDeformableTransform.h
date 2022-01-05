@@ -46,10 +46,10 @@ class ITK_TEMPLATE_EXPORT CyclicBSplineDeformableTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef CyclicBSplineDeformableTransform                                           Self;
-  typedef AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder> Superclass;
-  typedef SmartPointer<Self>                                                         Pointer;
-  typedef SmartPointer<const Self>                                                   ConstPointer;
+  using Self = CyclicBSplineDeformableTransform;
+  using Superclass = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro(Self);
@@ -74,17 +74,17 @@ public:
   using typename Superclass::NumberOfParametersType;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType     PixelType;
-  typedef Image<PixelType, Self::SpaceDimension> ImageType;
-  typedef typename ImageType::Pointer            ImagePointer;
+  using PixelType = typename ParametersType::ValueType;
+  using ImageType = Image<PixelType, Self::SpaceDimension>;
+  using ImagePointer = typename ImageType::Pointer;
 
   using typename Superclass::RegionType;
-  typedef typename RegionType::IndexType    IndexType;
-  typedef typename RegionType::SizeType     SizeType;
-  typedef typename ImageType::SpacingType   SpacingType;
-  typedef typename ImageType::DirectionType DirectionType;
-  typedef typename ImageType::PointType     OriginType;
-  typedef typename RegionType::IndexType    GridOffsetType;
+  using IndexType = typename RegionType::IndexType;
+  using SizeType = typename RegionType::SizeType;
+  using SpacingType = typename ImageType::SpacingType;
+  using DirectionType = typename ImageType::DirectionType;
+  using OriginType = typename ImageType::PointType;
+  using GridOffsetType = typename RegionType::IndexType;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
   using typename Superclass::WeightsType;
@@ -94,9 +94,9 @@ public:
   using typename Superclass::JacobianImageType;
   using typename Superclass::JacobianPixelType;
   using typename Superclass::WeightsFunctionType;
-  typedef BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension - 1, Self::SplineOrder>
-                                                               RedWeightsFunctionType;
-  typedef typename RedWeightsFunctionType::ContinuousIndexType RedContinuousIndexType;
+  using RedWeightsFunctionType =
+    BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension - 1, Self::SplineOrder>;
+  using RedContinuousIndexType = typename RedWeightsFunctionType::ContinuousIndexType;
 
   /** This method specifies the region over which the grid resides. */
   void

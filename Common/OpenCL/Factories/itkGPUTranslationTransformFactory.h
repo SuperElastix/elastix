@@ -37,10 +37,10 @@ template <typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPUTranslationTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-  typedef GPUTranslationTransformFactory2   Self;
-  typedef GPUObjectFactoryBase<NDimensions> Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  using Self = GPUTranslationTransformFactory2;
+  using Superclass = GPUObjectFactoryBase<NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Return a descriptive string describing the factory. */
   const char *
@@ -77,7 +77,7 @@ protected:
   virtual ~GPUTranslationTransformFactory2() {}
 
   /** Typedef for real type list. */
-  typedef typelist::MakeTypeList<float, double>::Type RealTypeList;
+  using RealTypeList = typelist::MakeTypeList<float, double>::Type;
 
   /** Register methods for 1D. */
   virtual void

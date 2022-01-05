@@ -42,8 +42,8 @@ namespace xoutlibrary
 class xoutrow : public xoutbase
 {
 public:
-  typedef xoutrow  Self;
-  typedef xoutbase Superclass;
+  using Self = xoutrow;
+  using Superclass = xoutbase;
 
   /** Constructor */
   xoutrow() = default;

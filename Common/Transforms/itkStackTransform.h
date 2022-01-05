@@ -39,10 +39,10 @@ class ITK_TEMPLATE_EXPORT StackTransform : public AdvancedTransform<TScalarType,
 {
 public:
   /** Standard class typedefs. */
-  typedef StackTransform                                                      Self;
-  typedef AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions> Superclass;
-  typedef SmartPointer<Self>                                                  Pointer;
-  typedef SmartPointer<const Self>                                            ConstPointer;
+  using Self = StackTransform;
+  using Superclass = AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
@@ -79,17 +79,17 @@ public:
   using typename Superclass::InputVectorPixelType;
 
   /** Sub transform types, having a reduced dimension. */
-  typedef AdvancedTransform<TScalarType, Self::ReducedInputSpaceDimension, Self::ReducedOutputSpaceDimension>
-                                                  SubTransformType;
-  typedef typename SubTransformType::Pointer      SubTransformPointer;
-  typedef typename SubTransformType::JacobianType SubTransformJacobianType;
+  using SubTransformType =
+    AdvancedTransform<TScalarType, Self::ReducedInputSpaceDimension, Self::ReducedOutputSpaceDimension>;
+  using SubTransformPointer = typename SubTransformType::Pointer;
+  using SubTransformJacobianType = typename SubTransformType::JacobianType;
 
   /** Dimension - 1 point types. */
-  typedef typename SubTransformType::InputPointType  SubTransformInputPointType;
-  typedef typename SubTransformType::OutputPointType SubTransformOutputPointType;
+  using SubTransformInputPointType = typename SubTransformType::InputPointType;
+  using SubTransformOutputPointType = typename SubTransformType::OutputPointType;
 
   /** Array type for parameter vector instantiation. */
-  typedef typename ParametersType::ArrayType ParametersArrayType;
+  using ParametersArrayType = typename ParametersType::ArrayType;
 
   /**  Method to transform a point. */
   OutputPointType

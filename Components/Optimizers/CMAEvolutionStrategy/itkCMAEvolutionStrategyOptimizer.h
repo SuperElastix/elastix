@@ -49,10 +49,10 @@ namespace itk
 class CMAEvolutionStrategyOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-  typedef CMAEvolutionStrategyOptimizer        Self;
-  typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = CMAEvolutionStrategyOptimizer;
+  using Superclass = ScaledSingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
   itkTypeMacro(CMAEvolutionStrategyOptimizer, ScaledSingleValuedNonLinearOptimizer);
@@ -223,16 +223,16 @@ public:
   itkGetConstMacro(ValueTolerance, double);
 
 protected:
-  typedef Array<double>               RecombinationWeightsType;
-  typedef vnl_diag_matrix<double>     EigenValueMatrixType;
-  typedef Array2D<double>             CovarianceMatrixType;
-  typedef std::vector<ParametersType> ParameterContainerType;
-  typedef std::deque<MeasureType>     MeasureHistoryType;
+  using RecombinationWeightsType = Array<double>;
+  using EigenValueMatrixType = vnl_diag_matrix<double>;
+  using CovarianceMatrixType = Array2D<double>;
+  using ParameterContainerType = std::vector<ParametersType>;
+  using MeasureHistoryType = std::deque<MeasureType>;
 
-  typedef std::pair<MeasureType, unsigned int> MeasureIndexPairType;
-  typedef std::vector<MeasureIndexPairType>    MeasureContainerType;
+  using MeasureIndexPairType = std::pair<MeasureType, unsigned int>;
+  using MeasureContainerType = std::vector<MeasureIndexPairType>;
 
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
 
   /** The random number generator used to generate the offspring. */
   RandomGeneratorType::Pointer m_RandomGenerator{ RandomGeneratorType::GetInstance() };

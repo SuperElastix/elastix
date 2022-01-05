@@ -720,25 +720,25 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
 {
   // Note: This function is only meant for the B-spline transformation
 #define UseOldMethod
-  const unsigned int                                                                   SplineOrder = 3;
-  typedef AdvancedCombinationTransform<double, FixedImageDimension>                    CombinationTransformType;
-  typedef AdvancedBSplineDeformableTransform<double, FixedImageDimension, SplineOrder> BSplineTransformType;
-  typedef typename BSplineTransformType::SizeType                                      GridSizeType;
-  typedef typename BSplineTransformType::IndexType                                     GridIndexType;
-  typedef typename BSplineTransformType::SpacingType                                   GridSpacingType;
-  typedef typename BSplineTransformType::OriginType                                    GridOriginType;
-  typedef typename BSplineTransformType::DirectionType                                 GridDirectionType;
-  typedef typename BSplineTransformType::RegionType                                    GridRegionType;
-  typedef typename BSplineTransformType::ImageType                                     CoefficientImageType;
+  const unsigned int SplineOrder = 3;
+  using CombinationTransformType = AdvancedCombinationTransform<double, FixedImageDimension>;
+  using BSplineTransformType = AdvancedBSplineDeformableTransform<double, FixedImageDimension, SplineOrder>;
+  using GridSizeType = typename BSplineTransformType::SizeType;
+  using GridIndexType = typename BSplineTransformType::IndexType;
+  using GridSpacingType = typename BSplineTransformType::SpacingType;
+  using GridOriginType = typename BSplineTransformType::OriginType;
+  using GridDirectionType = typename BSplineTransformType::DirectionType;
+  using GridRegionType = typename BSplineTransformType::RegionType;
+  using CoefficientImageType = typename BSplineTransformType::ImageType;
 
-  typedef ImageRegionIteratorWithIndex<CoefficientImageType> IteratorType;
-  typedef ImageLinearIteratorWithIndex<CoefficientImageType> ImageScanlineIteratorType;
-  typedef ImageSliceIteratorWithIndex<CoefficientImageType>  SliceIteratorType;
+  using IteratorType = ImageRegionIteratorWithIndex<CoefficientImageType>;
+  using ImageScanlineIteratorType = ImageLinearIteratorWithIndex<CoefficientImageType>;
+  using SliceIteratorType = ImageSliceIteratorWithIndex<CoefficientImageType>;
 
-  typedef CropImageFilter<CoefficientImageType, CoefficientImageType> CropImageFilterType;
+  using CropImageFilterType = CropImageFilter<CoefficientImageType, CoefficientImageType>;
   // typedef MirrorPadImageFilter<CoefficientImageType,CoefficientImageType> PadImageFilterType;
-  typedef ZeroFluxNeumannPadImageFilter<CoefficientImageType, CoefficientImageType>         PadImageFilterType;
-  typedef SmoothingRecursiveGaussianImageFilter<CoefficientImageType, CoefficientImageType> SmoothingFilterType;
+  using PadImageFilterType = ZeroFluxNeumannPadImageFilter<CoefficientImageType, CoefficientImageType>;
+  using SmoothingFilterType = SmoothingRecursiveGaussianImageFilter<CoefficientImageType, CoefficientImageType>;
 
   CombinationTransformType * testPtr_combo = dynamic_cast<CombinationTransformType *>(this->m_Transform.GetPointer());
   if (!testPtr_combo)
@@ -801,7 +801,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
     }
 
     // tmp write
-    //     typedef ImageFileWriter<CoefficientImageType> WriterType;
+    //     using WriterType = ImageFileWriter<CoefficientImageType>;
     //     auto writer1 = WriterType::New();
     //     writer1->SetFileName( "P_0.mha" );
     //     writer1->SetInput( coefImage );

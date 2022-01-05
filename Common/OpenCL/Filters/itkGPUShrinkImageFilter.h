@@ -46,11 +46,11 @@ class ITK_EXPORT GPUShrinkImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUShrinkImageFilter                                            Self;
-  typedef ShrinkImageFilter<TInputImage, TOutputImage>                    CPUSuperclass;
-  typedef GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass> GPUSuperclass;
-  typedef SmartPointer<Self>                                              Pointer;
-  typedef SmartPointer<const Self>                                        ConstPointer;
+  using Self = GPUShrinkImageFilter;
+  using CPUSuperclass = ShrinkImageFilter<TInputImage, TOutputImage>;
+  using GPUSuperclass = GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -59,20 +59,20 @@ public:
   itkTypeMacro(GPUShrinkImageFilter, GPUSuperclass);
 
   /** Superclass typedefs. */
-  typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
-  typedef typename GPUSuperclass::OutputImagePixelType  OutputImagePixelType;
+  using OutputImageRegionType = typename GPUSuperclass::OutputImageRegionType;
+  using OutputImagePixelType = typename GPUSuperclass::OutputImagePixelType;
 
   /** Some convenient typedefs. */
-  typedef TInputImage                           InputImageType;
-  typedef typename InputImageType::Pointer      InputImagePointer;
-  typedef typename InputImageType::ConstPointer InputImageConstPointer;
-  typedef typename InputImageType::RegionType   InputImageRegionType;
-  typedef typename InputImageType::PixelType    InputImagePixelType;
+  using InputImageType = TInputImage;
+  using InputImagePointer = typename InputImageType::Pointer;
+  using InputImageConstPointer = typename InputImageType::ConstPointer;
+  using InputImageRegionType = typename InputImageType::RegionType;
+  using InputImagePixelType = typename InputImageType::PixelType;
 
-  typedef typename CPUSuperclass::ShrinkFactorsType ShrinkFactorsType;
-  typedef typename CPUSuperclass::OutputIndexType   OutputIndexType;
-  typedef typename CPUSuperclass::InputIndexType    InputIndexType;
-  typedef typename CPUSuperclass::OutputOffsetType  OutputOffsetType;
+  using ShrinkFactorsType = typename CPUSuperclass::ShrinkFactorsType;
+  using OutputIndexType = typename CPUSuperclass::OutputIndexType;
+  using InputIndexType = typename CPUSuperclass::InputIndexType;
+  using OutputOffsetType = typename CPUSuperclass::OutputOffsetType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);

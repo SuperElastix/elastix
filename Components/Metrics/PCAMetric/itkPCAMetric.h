@@ -34,13 +34,13 @@ class ITK_TEMPLATE_EXPORT PCAMetric : public AdvancedImageToImageMetric<TFixedIm
 {
 public:
   /** Standard class typedefs. */
-  typedef PCAMetric                                             Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = PCAMetric;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   using typename Superclass::FixedImageRegionType;
-  typedef typename FixedImageRegionType::SizeType FixedImageSizeType;
+  using FixedImageSizeType = typename FixedImageRegionType::SizeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -145,8 +145,8 @@ protected:
   using typename Superclass::FixedImageIndexValueType;
   using typename Superclass::MovingImageIndexType;
   using typename Superclass::FixedImagePointType;
-  typedef typename itk::ContinuousIndex<CoordinateRepresentationType, FixedImageDimension>
-    FixedImageContinuousIndexType;
+  using FixedImageContinuousIndexType =
+    typename itk::ContinuousIndex<CoordinateRepresentationType, FixedImageDimension>;
   using typename Superclass::MovingImagePointType;
   using typename Superclass::MovingImageContinuousIndexType;
   using typename Superclass::BSplineInterpolatorType;

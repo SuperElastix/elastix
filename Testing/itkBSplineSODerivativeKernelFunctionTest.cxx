@@ -40,8 +40,8 @@ main()
   unsigned int N = static_cast<unsigned int>(1e8);
 
   /** Other typedefs. */
-  typedef itk::BSplineSecondOrderDerivativeKernelFunction<SplineOrder>  BSplineSODerivativeKernelType;
-  typedef itk::BSplineSecondOrderDerivativeKernelFunction2<SplineOrder> BSplineSODerivativeKernelType2;
+  using BSplineSODerivativeKernelType = itk::BSplineSecondOrderDerivativeKernelFunction<SplineOrder>;
+  using BSplineSODerivativeKernelType2 = itk::BSplineSecondOrderDerivativeKernelFunction2<SplineOrder>;
 
   /** Create the kernel. */
   auto                dkernel = BSplineSODerivativeKernelType::New();

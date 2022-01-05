@@ -138,13 +138,13 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
                         ObjectPointer                         transform)
 {
   /** Some typedef's. */
-  typedef elx::ElastixMain                            ElastixMainType;
-  typedef ElastixMainType::DataObjectContainerType    DataObjectContainerType;
-  typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
-  typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
+  using ElastixMainType = elx::ElastixMain;
+  using DataObjectContainerType = ElastixMainType::DataObjectContainerType;
+  using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
+  using FlatDirectionCosinesType = ElastixMainType::FlatDirectionCosinesType;
 
-  typedef ElastixMainType::ArgumentMapType ArgumentMapType;
-  typedef ArgumentMapType::value_type      ArgumentMapEntryType;
+  using ArgumentMapType = ElastixMainType::ArgumentMapType;
+  using ArgumentMapEntryType = ArgumentMapType::value_type;
 
   // Clear output transform parameters
   this->m_TransformParametersList.clear();

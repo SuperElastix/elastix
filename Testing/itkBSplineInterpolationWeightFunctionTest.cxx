@@ -32,9 +32,9 @@ main()
 {
   /** Some basic type definitions. */
   const unsigned int SplineOrder = 3;
-  typedef float      CoordinateRepresentationType;
-  const double       distance = 1e-3;             // the allowable distance
-  const double       allowedTimeDifference = 0.2; // 20% is considered within limits
+  using CoordinateRepresentationType = float;
+  const double distance = 1e-3;             // the allowable distance
+  const double allowedTimeDifference = 0.2; // 20% is considered within limits
   /** The number of calls to Evaluate() in 2D. This number gives reasonably
    * fast test results in Release mode. In 3D half of this number calls are
    * made.
@@ -42,14 +42,14 @@ main()
   unsigned int N = static_cast<unsigned int>(1e6);
 
   /** Other typedefs. */
-  typedef itk::BSplineInterpolationWeightFunction<CoordinateRepresentationType, 2, SplineOrder>  WeightFunctionType2D;
-  typedef itk::BSplineInterpolationWeightFunction2<CoordinateRepresentationType, 2, SplineOrder> WeightFunction2Type2D;
-  typedef itk::BSplineInterpolationWeightFunction<CoordinateRepresentationType, 3, SplineOrder>  WeightFunctionType3D;
-  typedef itk::BSplineInterpolationWeightFunction2<CoordinateRepresentationType, 3, SplineOrder> WeightFunction2Type3D;
-  typedef WeightFunctionType2D::ContinuousIndexType                                              ContinuousIndexType2D;
-  typedef WeightFunctionType2D::WeightsType                                                      WeightsType2D;
-  typedef WeightFunctionType3D::ContinuousIndexType                                              ContinuousIndexType3D;
-  typedef WeightFunctionType3D::WeightsType                                                      WeightsType3D;
+  using WeightFunctionType2D = itk::BSplineInterpolationWeightFunction<CoordinateRepresentationType, 2, SplineOrder>;
+  using WeightFunction2Type2D = itk::BSplineInterpolationWeightFunction2<CoordinateRepresentationType, 2, SplineOrder>;
+  using WeightFunctionType3D = itk::BSplineInterpolationWeightFunction<CoordinateRepresentationType, 3, SplineOrder>;
+  using WeightFunction2Type3D = itk::BSplineInterpolationWeightFunction2<CoordinateRepresentationType, 3, SplineOrder>;
+  using ContinuousIndexType2D = WeightFunctionType2D::ContinuousIndexType;
+  using WeightsType2D = WeightFunctionType2D::WeightsType;
+  using ContinuousIndexType3D = WeightFunctionType3D::ContinuousIndexType;
+  using WeightsType3D = WeightFunctionType3D::WeightsType;
 
   /**
    * *********** 2D TESTING ***********************************************

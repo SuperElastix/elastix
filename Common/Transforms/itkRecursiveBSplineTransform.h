@@ -39,10 +39,10 @@ class ITK_TEMPLATE_EXPORT RecursiveBSplineTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef RecursiveBSplineTransform                                                  Self;
-  typedef AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder> Superclass;
-  typedef SmartPointer<Self>                                                         Pointer;
-  typedef SmartPointer<const Self>                                                   ConstPointer;
+  using Self = RecursiveBSplineTransform;
+  using Superclass = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro(Self);
@@ -86,7 +86,7 @@ public:
   using typename Superclass::DirectionType;
   using typename Superclass::OriginType;
   using typename Superclass::GridOffsetType;
-  typedef typename GridOffsetType::OffsetValueType OffsetValueType;
+  using OffsetValueType = typename GridOffsetType::OffsetValueType;
 
   using typename Superclass::NonZeroJacobianIndicesType;
   using typename Superclass::SpatialJacobianType;
@@ -110,13 +110,14 @@ public:
   /** Parameter index array type. */
   using typename Superclass::ParameterIndexArrayType;
 
-  typedef typename itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>
-    RecursiveBSplineWeightFunctionType; // TODO: get rid of this and use the kernels directly.
+  using RecursiveBSplineWeightFunctionType = typename itk::
+    RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>; // TODO: get rid of this and
+                                                                                         // use the kernels directly.
 
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction2<Self::SplineOrder>                      KernelType;
-  typedef BSplineDerivativeKernelFunction2<Self::SplineOrder>            DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder> SecondOrderDerivativeKernelType;
+  using KernelType = BSplineKernelFunction2<Self::SplineOrder>;
+  using DerivativeKernelType = BSplineDerivativeKernelFunction2<Self::SplineOrder>;
+  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder>;
 
   /** Interpolation kernel. */
   typename KernelType::Pointer                      m_Kernel;

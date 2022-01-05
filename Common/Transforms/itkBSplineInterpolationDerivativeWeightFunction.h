@@ -46,10 +46,10 @@ class ITK_TEMPLATE_EXPORT BSplineInterpolationDerivativeWeightFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef BSplineInterpolationDerivativeWeightFunction                                     Self;
-  typedef BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder> Superclass;
-  typedef SmartPointer<Self>                                                               Pointer;
-  typedef SmartPointer<const Self>                                                         ConstPointer;
+  using Self = BSplineInterpolationDerivativeWeightFunction;
+  using Superclass = BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro(Self);

@@ -150,7 +150,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     this->m_FixedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
   }
 
-  typedef itk::ImageRegionConstIteratorWithIndex<FixedGradientImageType> FixedIteratorType;
+  using FixedIteratorType = itk::ImageRegionConstIteratorWithIndex<FixedGradientImageType>;
   FixedIteratorType fixedIteratorx(this->m_FixedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   FixedIteratorType fixedIteratory(this->m_FixedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());
 
@@ -223,7 +223,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     this->m_MovedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
   }
 
-  typedef itk::ImageRegionConstIteratorWithIndex<MovedGradientImageType> MovedIteratorType;
+  using MovedIteratorType = itk::ImageRegionConstIteratorWithIndex<MovedGradientImageType>;
 
   MovedIteratorType movedIteratorx(this->m_MovedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   MovedIteratorType movedIteratory(this->m_MovedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());
@@ -315,7 +315,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     this->m_MovedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
   }
 
-  typedef itk::ImageRegionConstIteratorWithIndex<FixedGradientImageType> FixedIteratorType;
+  using FixedIteratorType = itk::ImageRegionConstIteratorWithIndex<FixedGradientImageType>;
 
   FixedIteratorType fixedIteratorx(this->m_FixedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   FixedIteratorType fixedIteratory(this->m_FixedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());
@@ -323,7 +323,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   fixedIteratorx.GoToBegin();
   fixedIteratory.GoToBegin();
 
-  typedef itk::ImageRegionConstIteratorWithIndex<MovedGradientImageType> MovedIteratorType;
+  using MovedIteratorType = itk::ImageRegionConstIteratorWithIndex<MovedGradientImageType>;
 
   MovedIteratorType movedIteratorx(this->m_MovedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   MovedIteratorType movedIteratory(this->m_MovedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());

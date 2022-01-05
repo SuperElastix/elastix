@@ -43,7 +43,7 @@ class ITK_TEMPLATE_EXPORT GPUBSplineBaseTransform : public GPUTransformBase
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUBSplineBaseTransform Self;
+  using Self = GPUBSplineBaseTransform;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(GPUBSplineBaseTransform, GPUTransformBase);
@@ -55,12 +55,12 @@ public:
    * is a 3rd order spline. */
   itkGetConstMacro(SplineOrder, unsigned int);
 
-  typedef GPUImage<TScalarType, NDimensions>        GPUCoefficientImageType;
-  typedef typename GPUCoefficientImageType::Pointer GPUCoefficientImagePointer;
-  typedef typename GPUDataManager::Pointer          GPUDataManagerPointer;
+  using GPUCoefficientImageType = GPUImage<TScalarType, NDimensions>;
+  using GPUCoefficientImagePointer = typename GPUCoefficientImageType::Pointer;
+  using GPUDataManagerPointer = typename GPUDataManager::Pointer;
 
-  typedef FixedArray<GPUCoefficientImagePointer, NDimensions> GPUCoefficientImageArray;
-  typedef FixedArray<GPUDataManagerPointer, NDimensions>      GPUCoefficientImageBaseArray;
+  using GPUCoefficientImageArray = FixedArray<GPUCoefficientImagePointer, NDimensions>;
+  using GPUCoefficientImageBaseArray = FixedArray<GPUDataManagerPointer, NDimensions>;
 
   /** Returns true, the transform is BSpline transform. */
   bool

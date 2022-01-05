@@ -37,10 +37,10 @@ template <typename TTypeList, typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPUBSplineInterpolateImageFunctionFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-  typedef GPUBSplineInterpolateImageFunctionFactory2 Self;
-  typedef GPUObjectFactoryBase<NDimensions>          Superclass;
-  typedef SmartPointer<Self>                         Pointer;
-  typedef SmartPointer<const Self>                   ConstPointer;
+  using Self = GPUBSplineInterpolateImageFunctionFactory2;
+  using Superclass = GPUObjectFactoryBase<NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Return a descriptive string describing the factory. */
   const char *
@@ -65,8 +65,8 @@ public:
   operator()()
   {
     // Image typedefs
-    typedef Image<TType, VImageDimension>    InputImageType;
-    typedef GPUImage<TType, VImageDimension> GPUInputImageType;
+    using InputImageType = Image<TType, VImageDimension>;
+    using GPUInputImageType = GPUImage<TType, VImageDimension>;
 
     // Override default with the coordinate representation type as float
     // and coefficient type as float

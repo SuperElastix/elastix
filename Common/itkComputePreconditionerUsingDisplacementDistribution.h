@@ -42,10 +42,10 @@ class ITK_TEMPLATE_EXPORT ComputePreconditionerUsingDisplacementDistribution
 {
 public:
   /** Standard ITK.*/
-  typedef ComputePreconditionerUsingDisplacementDistribution       Self;
-  typedef ComputeDisplacementDistribution<TFixedImage, TTransform> Superclass;
-  typedef SmartPointer<Self>                                       Pointer;
-  typedef SmartPointer<const Self>                                 ConstPointer;
+  using Self = ComputePreconditionerUsingDisplacementDistribution;
+  using Superclass = ComputeDisplacementDistribution<TFixedImage, TTransform>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

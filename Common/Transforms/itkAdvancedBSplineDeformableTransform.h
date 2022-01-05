@@ -135,10 +135,10 @@ class ITK_TEMPLATE_EXPORT AdvancedBSplineDeformableTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedBSplineDeformableTransform                               Self;
-  typedef AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions> Superclass;
-  typedef SmartPointer<Self>                                               Pointer;
-  typedef SmartPointer<const Self>                                         ConstPointer;
+  using Self = AdvancedBSplineDeformableTransform;
+  using Superclass = AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro(Self);
@@ -201,16 +201,16 @@ public:
   TransformPoint(const InputPointType & point) const override;
 
   /** Interpolation weights function type. */
-  typedef BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, Self::SplineOrder> WeightsFunctionType;
-  typedef typename WeightsFunctionType::Pointer             WeightsFunctionPointer;
-  typedef typename WeightsFunctionType::WeightsType         WeightsType;
-  typedef typename WeightsFunctionType::ContinuousIndexType ContinuousIndexType;
-  typedef BSplineInterpolationDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>
-                                                          DerivativeWeightsFunctionType;
-  typedef typename DerivativeWeightsFunctionType::Pointer DerivativeWeightsFunctionPointer;
-  typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>
-                                                            SODerivativeWeightsFunctionType;
-  typedef typename SODerivativeWeightsFunctionType::Pointer SODerivativeWeightsFunctionPointer;
+  using WeightsFunctionType = BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+  using WeightsFunctionPointer = typename WeightsFunctionType::Pointer;
+  using WeightsType = typename WeightsFunctionType::WeightsType;
+  using ContinuousIndexType = typename WeightsFunctionType::ContinuousIndexType;
+  using DerivativeWeightsFunctionType =
+    BSplineInterpolationDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+  using DerivativeWeightsFunctionPointer = typename DerivativeWeightsFunctionType::Pointer;
+  using SODerivativeWeightsFunctionType =
+    BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+  using SODerivativeWeightsFunctionPointer = typename SODerivativeWeightsFunctionType::Pointer;
 
   /** Parameter index array type. */
   using typename Superclass::ParameterIndexArrayType;

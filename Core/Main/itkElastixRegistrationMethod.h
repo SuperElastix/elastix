@@ -55,10 +55,10 @@ class ITK_TEMPLATE_EXPORT ElastixRegistrationMethod : public itk::ImageSource<TF
 {
 public:
   /** Standard ITK typedefs. */
-  typedef ElastixRegistrationMethod Self;
-  typedef ImageSource<TFixedImage>  Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  using Self = ElastixRegistrationMethod;
+  using Superclass = ImageSource<TFixedImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -67,33 +67,33 @@ public:
   itkTypeMacro(ElastixRegistrationMethod, ImageSource);
 
   /** Typedefs. */
-  typedef elastix::ElastixMain                      ElastixMainType;
-  typedef ElastixMainType::Pointer                  ElastixMainPointer;
-  typedef std::vector<ElastixMainPointer>           ElastixMainVectorType;
-  typedef ElastixMainType::ObjectPointer            ElastixMainObjectPointer;
-  typedef ElastixMainType::ArgumentMapType          ArgumentMapType;
-  typedef ArgumentMapType::value_type               ArgumentMapEntryType;
-  typedef ElastixMainType::FlatDirectionCosinesType FlatDirectionCosinesType;
+  using ElastixMainType = elastix::ElastixMain;
+  using ElastixMainPointer = ElastixMainType::Pointer;
+  using ElastixMainVectorType = std::vector<ElastixMainPointer>;
+  using ElastixMainObjectPointer = ElastixMainType::ObjectPointer;
+  using ArgumentMapType = ElastixMainType::ArgumentMapType;
+  using ArgumentMapEntryType = ArgumentMapType::value_type;
+  using FlatDirectionCosinesType = ElastixMainType::FlatDirectionCosinesType;
 
-  typedef ElastixMainType::DataObjectContainerType      DataObjectContainerType;
-  typedef ElastixMainType::DataObjectContainerPointer   DataObjectContainerPointer;
-  typedef DataObjectContainerType::Iterator             DataObjectContainerIterator;
-  typedef ProcessObject::DataObjectIdentifierType       DataObjectIdentifierType;
-  typedef ProcessObject::DataObjectPointerArraySizeType DataObjectPointerArraySizeType;
-  typedef ProcessObject::NameArray                      NameArrayType;
+  using DataObjectContainerType = ElastixMainType::DataObjectContainerType;
+  using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
+  using DataObjectContainerIterator = DataObjectContainerType::Iterator;
+  using DataObjectIdentifierType = ProcessObject::DataObjectIdentifierType;
+  using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
+  using NameArrayType = ProcessObject::NameArray;
 
-  typedef elastix::ParameterObject                      ParameterObjectType;
-  typedef ParameterObjectType::ParameterMapType         ParameterMapType;
-  typedef ParameterObjectType::ParameterMapVectorType   ParameterMapVectorType;
-  typedef ParameterObjectType::ParameterValueVectorType ParameterValueVectorType;
-  typedef ParameterObjectType::Pointer                  ParameterObjectPointer;
-  typedef ParameterObjectType::ConstPointer             ParameterObjectConstPointer;
+  using ParameterObjectType = elastix::ParameterObject;
+  using ParameterMapType = ParameterObjectType::ParameterMapType;
+  using ParameterMapVectorType = ParameterObjectType::ParameterMapVectorType;
+  using ParameterValueVectorType = ParameterObjectType::ParameterValueVectorType;
+  using ParameterObjectPointer = ParameterObjectType::Pointer;
+  using ParameterObjectConstPointer = ParameterObjectType::ConstPointer;
 
   static constexpr unsigned int FixedImageDimension = TFixedImage::ImageDimension;
   static constexpr unsigned int MovingImageDimension = TMovingImage::ImageDimension;
 
-  typedef Image<unsigned char, FixedImageDimension>  FixedMaskType;
-  typedef Image<unsigned char, MovingImageDimension> MovingMaskType;
+  using FixedMaskType = Image<unsigned char, FixedImageDimension>;
+  using MovingMaskType = Image<unsigned char, MovingImageDimension>;
 
   using FixedImageType = TFixedImage;
   using MovingImageType = TMovingImage;

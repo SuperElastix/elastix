@@ -53,10 +53,10 @@ class ITK_TEMPLATE_EXPORT ThinPlateSplineKernelTransform2 : public KernelTransfo
 {
 public:
   /** Standard class typedefs. */
-  typedef ThinPlateSplineKernelTransform2            Self;
-  typedef KernelTransform2<TScalarType, NDimensions> Superclass;
-  typedef SmartPointer<Self>                         Pointer;
-  typedef SmartPointer<const Self>                   ConstPointer;
+  using Self = ThinPlateSplineKernelTransform2;
+  using Superclass = KernelTransform2<TScalarType, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro(Self);

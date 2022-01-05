@@ -113,11 +113,11 @@ class ITK_TEMPLATE_EXPORT TransformRigidityPenalty
 {
 public:
   /** Standard ITK-stuff. */
-  typedef TransformRigidityPenalty                                                                 Self;
-  typedef itk::TransformRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double> Superclass1;
-  typedef MetricBase<TElastix>                                                                     Superclass2;
-  typedef itk::SmartPointer<Self>                                                                  Pointer;
-  typedef itk::SmartPointer<const Self>                                                            ConstPointer;
+  using Self = TransformRigidityPenalty;
+  using Superclass1 = itk::TransformRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>;
+  using Superclass2 = MetricBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -186,7 +186,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.

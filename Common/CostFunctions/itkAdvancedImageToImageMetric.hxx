@@ -196,8 +196,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
     itk::TimeProbe timer;
     timer.Start();
 
-    typedef typename itk::ComputeImageExtremaFilter<FixedImageType> ComputeFixedImageExtremaFilterType;
-    typename ComputeFixedImageExtremaFilterType::Pointer            computeFixedImageExtrema =
+    using ComputeFixedImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<FixedImageType>;
+    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema =
       ComputeFixedImageExtremaFilterType::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
     computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
@@ -251,8 +251,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
     itk::TimeProbe timer;
     timer.Start();
 
-    typedef typename itk::ComputeImageExtremaFilter<MovingImageType> ComputeMovingImageExtremaFilterType;
-    typename ComputeMovingImageExtremaFilterType::Pointer            computeMovingImageExtrema =
+    using ComputeMovingImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<MovingImageType>;
+    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema =
       ComputeMovingImageExtremaFilterType::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
     computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
@@ -412,8 +412,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
      * For more details see the post about "2D/3D registration memory issue" in
      * elastix's mailing list (2 July 2012).
      */
-    typedef itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>
-               RayCastInterpolatorType;
+    using RayCastInterpolatorType =
+      itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
     const bool interpolatorIsRayCast =
       dynamic_cast<RayCastInterpolatorType *>(this->m_Interpolator.GetPointer()) != nullptr;
 
@@ -589,7 +589,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
            * and post rotation by the direction cosines of the moving image.
            * First the gradient is rotated backwards to a standardized axis.
            */
-          typedef typename MovingImageType::DirectionType::InternalMatrixType InternalMatrixType;
+          using InternalMatrixType = typename MovingImageType::DirectionType::InternalMatrixType;
           const InternalMatrixType M = this->GetMovingImage()->GetDirection().GetVnlMatrix();
           vnl_vector<double>       rotated_gradient_vnl = M.transpose() * gradient->GetVnlVector();
 
@@ -632,8 +632,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator              DerivativeIteratorType;
+  using JacobianIteratorType = typename TransformJacobianType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
 
   /** Multiple the 1-by-dim vector movingImageDerivative with the
    * dim-by-length matrix jacobian, to get a 1-by-length vector imageJacobian.

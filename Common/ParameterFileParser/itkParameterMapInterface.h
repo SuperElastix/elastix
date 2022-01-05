@@ -77,10 +77,10 @@ class ParameterMapInterface : public Object
 {
 public:
   /** Standard ITK typedefs. */
-  typedef ParameterMapInterface    Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = ParameterMapInterface;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -89,8 +89,8 @@ public:
   itkTypeMacro(ParameterMapInterface, Object);
 
   /** Typedefs. */
-  typedef ParameterFileParser::ParameterValuesType ParameterValuesType;
-  typedef ParameterFileParser::ParameterMapType    ParameterMapType;
+  using ParameterValuesType = ParameterFileParser::ParameterValuesType;
+  using ParameterMapType = ParameterFileParser::ParameterMapType;
 
   /** Set the parameter map. */
   void

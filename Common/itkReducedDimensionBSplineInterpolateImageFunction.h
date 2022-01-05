@@ -90,10 +90,10 @@ class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineInterpolateImageFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef ReducedDimensionBSplineInterpolateImageFunction Self;
-  typedef InterpolateImageFunction<TImageType, TCoordRep> Superclass;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  using Self = ReducedDimensionBSplineInterpolateImageFunction;
+  using Superclass = InterpolateImageFunction<TImageType, TCoordRep>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ReducedDimensionBSplineInterpolateImageFunction, InterpolateImageFunction);
@@ -122,16 +122,16 @@ public:
   using typename Superclass::PointType;
 
   /** Iterator typedef support */
-  typedef ImageLinearIteratorWithIndex<TImageType> Iterator;
+  using Iterator = ImageLinearIteratorWithIndex<TImageType>;
 
   /** Internal Coefficient typedef support */
-  typedef TCoefficientType                                 CoefficientDataType;
-  typedef Image<CoefficientDataType, Self::ImageDimension> CoefficientImageType;
+  using CoefficientDataType = TCoefficientType;
+  using CoefficientImageType = Image<CoefficientDataType, Self::ImageDimension>;
 
   /** Define filter for calculating the BSpline coefficients */
-  typedef MultiOrderBSplineDecompositionImageFilter<TImageType, CoefficientImageType> CoefficientFilter;
+  using CoefficientFilter = MultiOrderBSplineDecompositionImageFilter<TImageType, CoefficientImageType>;
 
-  typedef typename CoefficientFilter::Pointer CoefficientFilterPointer;
+  using CoefficientFilterPointer = typename CoefficientFilter::Pointer;
 
   /** Evaluate the function at a ContinuousIndex position.
    *
@@ -145,7 +145,7 @@ public:
   EvaluateAtContinuousIndex(const ContinuousIndexType & index) const override;
 
   /** Derivative typedef support */
-  typedef CovariantVector<OutputType, Self::ImageDimension> CovariantVectorType;
+  using CovariantVectorType = CovariantVector<OutputType, Self::ImageDimension>;
 
   CovariantVectorType
   EvaluateDerivative(const PointType & point) const

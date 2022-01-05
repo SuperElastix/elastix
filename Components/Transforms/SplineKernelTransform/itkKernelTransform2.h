@@ -98,10 +98,10 @@ class ITK_TEMPLATE_EXPORT KernelTransform2 : public AdvancedTransform<TScalarTyp
 {
 public:
   /** Standard class typedefs. */
-  typedef KernelTransform2                                         Self;
-  typedef AdvancedTransform<TScalarType, NDimensions, NDimensions> Superclass;
-  typedef SmartPointer<Self>                                       Pointer;
-  typedef SmartPointer<const Self>                                 ConstPointer;
+  using Self = KernelTransform2;
+  using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(KernelTransform2, AdvancedTransform);
@@ -137,19 +137,19 @@ public:
   /** PointList typedef. This type is used for maintaining lists of points,
    * specifically, the source and target landmark lists.
    */
-  typedef DefaultStaticMeshTraits<TScalarType, NDimensions, NDimensions, TScalarType, TScalarType> PointSetTraitsType;
-  typedef PointSet<InputPointType, NDimensions, PointSetTraitsType>                                PointSetType;
-  typedef typename PointSetType::Pointer                                                           PointSetPointer;
-  typedef typename PointSetType::PointsContainer                                                   PointsContainer;
-  typedef typename PointSetType::PointsContainerIterator                                           PointsIterator;
-  typedef typename PointSetType::PointsContainerConstIterator                                      PointsConstIterator;
+  using PointSetTraitsType = DefaultStaticMeshTraits<TScalarType, NDimensions, NDimensions, TScalarType, TScalarType>;
+  using PointSetType = PointSet<InputPointType, NDimensions, PointSetTraitsType>;
+  using PointSetPointer = typename PointSetType::Pointer;
+  using PointsContainer = typename PointSetType::PointsContainer;
+  using PointsIterator = typename PointSetType::PointsContainerIterator;
+  using PointsConstIterator = typename PointSetType::PointsContainerConstIterator;
 
   /** VectorSet typedef. */
-  typedef VectorContainer<unsigned long, InputVectorType> VectorSetType;
-  typedef typename VectorSetType::Pointer                 VectorSetPointer;
+  using VectorSetType = VectorContainer<unsigned long, InputVectorType>;
+  using VectorSetPointer = typename VectorSetType::Pointer;
 
   /** 'I' (identity) matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> IMatrixType;
+  using IMatrixType = vnl_matrix_fixed<TScalarType, NDimensions, NDimensions>;
 
   /** Return the number of parameters that completely define the Transform. */
   NumberOfParametersType
@@ -360,37 +360,37 @@ protected:
 
 public:
   /** 'G' matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> GMatrixType;
+  using GMatrixType = vnl_matrix_fixed<TScalarType, NDimensions, NDimensions>;
 
   /** 'L' matrix typedef. */
-  typedef vnl_matrix<TScalarType> LMatrixType;
+  using LMatrixType = vnl_matrix<TScalarType>;
 
   /** 'K' matrix typedef. */
-  typedef vnl_matrix<TScalarType> KMatrixType;
+  using KMatrixType = vnl_matrix<TScalarType>;
 
   /** 'P' matrix typedef. */
-  typedef vnl_matrix<TScalarType> PMatrixType;
+  using PMatrixType = vnl_matrix<TScalarType>;
 
   /** 'Y' matrix typedef. */
-  typedef vnl_matrix<TScalarType> YMatrixType;
+  using YMatrixType = vnl_matrix<TScalarType>;
 
   /** 'W' matrix typedef. */
-  typedef vnl_matrix<TScalarType> WMatrixType;
+  using WMatrixType = vnl_matrix<TScalarType>;
 
   /** 'D' matrix typedef. Deformation component */
-  typedef vnl_matrix<TScalarType> DMatrixType;
+  using DMatrixType = vnl_matrix<TScalarType>;
 
   /** 'A' matrix typedef. Rotational part of the Affine component */
-  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> AMatrixType;
+  using AMatrixType = vnl_matrix_fixed<TScalarType, NDimensions, NDimensions>;
 
   /** 'B' matrix typedef. Translational part of the Affine component */
-  typedef vnl_vector_fixed<TScalarType, NDimensions> BMatrixType;
+  using BMatrixType = vnl_vector_fixed<TScalarType, NDimensions>;
 
   /** Row matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, 1, NDimensions> RowMatrixType;
+  using RowMatrixType = vnl_matrix_fixed<TScalarType, 1, NDimensions>;
 
   /** Column matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, NDimensions, 1> ColumnMatrixType;
+  using ColumnMatrixType = vnl_matrix_fixed<TScalarType, NDimensions, 1>;
 
   /** The list of source landmarks, denoted 'p'. */
   PointSetPointer m_SourceLandmarks;
@@ -513,8 +513,8 @@ protected:
    * turn calls ComputeWMatrix(). The L matrix is not changed however, and therefore
    * it is not needed to redo the decomposition.
    */
-  typedef vnl_svd<ScalarType> SVDDecompositionType;
-  typedef vnl_qr<ScalarType>  QRDecompositionType;
+  using SVDDecompositionType = vnl_svd<ScalarType>;
+  using QRDecompositionType = vnl_qr<ScalarType>;
 
   SVDDecompositionType * m_LMatrixDecompositionSVD;
   QRDecompositionType *  m_LMatrixDecompositionQR;

@@ -46,10 +46,10 @@ class ITK_TEMPLATE_EXPORT TransformPenaltyTerm : public AdvancedImageToImageMetr
 {
 public:
   /** Standard ITK stuff. */
-  typedef TransformPenaltyTerm                                 Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TFixedImage> Superclass;
-  typedef SmartPointer<Self>                                   Pointer;
-  typedef SmartPointer<const Self>                             ConstPointer;
+  using Self = TransformPenaltyTerm;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TFixedImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(TransformPenaltyTerm, AdvancedImageToImageMetric);
@@ -103,15 +103,15 @@ public:
   using typename Superclass::BSplineOrder3TransformPointer;
 
   /** Template parameters. FixedImageType has already been taken from superclass. */
-  typedef TScalarType ScalarType; // \todo: not really meaningful name.
+  using ScalarType = TScalarType; // \todo: not really meaningful name.
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::AdvancedTransformType            TransformType;
-  typedef typename TransformType::SpatialJacobianType           SpatialJacobianType;
-  typedef typename TransformType::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename TransformType::SpatialHessianType            SpatialHessianType;
-  typedef typename TransformType::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename TransformType::InternalMatrixType            InternalMatrixType;
+  using TransformType = typename Superclass::AdvancedTransformType;
+  using SpatialJacobianType = typename TransformType::SpatialJacobianType;
+  using JacobianOfSpatialJacobianType = typename TransformType::JacobianOfSpatialJacobianType;
+  using SpatialHessianType = typename TransformType::SpatialHessianType;
+  using JacobianOfSpatialHessianType = typename TransformType::JacobianOfSpatialHessianType;
+  using InternalMatrixType = typename TransformType::InternalMatrixType;
 
   /** Define the dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);

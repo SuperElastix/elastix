@@ -43,11 +43,11 @@ class ITK_TEMPLATE_EXPORT GPUTranslationTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUTranslationTransform                               Self;
-  typedef TParentTransform                                      CPUSuperclass;
-  typedef GPUTranslationTransformBase<TScalarType, NDimensions> GPUSuperclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = GPUTranslationTransform;
+  using CPUSuperclass = TParentTransform;
+  using GPUSuperclass = GPUTranslationTransformBase<TScalarType, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -56,7 +56,7 @@ public:
   itkTypeMacro(GPUTranslationTransform, CPUSuperclass);
 
   /** Typedefs from GPUSuperclass. */
-  typedef typename GPUSuperclass::CPUOutputVectorType CPUOutputVectorType;
+  using CPUOutputVectorType = typename GPUSuperclass::CPUOutputVectorType;
 
   /** This method returns the CPU value of the offset of the TranslationTransform. */
   virtual const CPUOutputVectorType &

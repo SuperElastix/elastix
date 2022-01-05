@@ -26,8 +26,8 @@ template <typename NDimensions>
 void
 GPUEuler3DTransformFactory2<NDimensions>::RegisterOneFactory()
 {
-  typedef GPUEuler3DTransformFactory2<NDimensions> GPUTransformFactoryType;
-  auto                                             factory = GPUTransformFactoryType::New();
+  using GPUTransformFactoryType = GPUEuler3DTransformFactory2<NDimensions>;
+  auto factory = GPUTransformFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
 

@@ -85,13 +85,12 @@ class ITK_TEMPLATE_EXPORT EulerStackTransform
 {
 public:
   /** Standard ITK-stuff. */
-  typedef EulerStackTransform Self;
-  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-                                        Superclass1;
-  typedef elx::TransformBase<TElastix>  Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = EulerStackTransform;
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                        elx::TransformBase<TElastix>::FixedImageDimension>;
+  using Superclass2 = elx::TransformBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -112,18 +111,18 @@ public:
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>
-                                                      EulerTransformType;
-  typedef typename EulerTransformType::Pointer        EulerTransformPointer;
-  typedef typename EulerTransformType::InputPointType InputPointType;
+  using EulerTransformType =
+    itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>;
+  using EulerTransformPointer = typename EulerTransformType::Pointer;
+  using InputPointType = typename EulerTransformType::InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
-  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>
-                                                               ReducedDimensionEulerTransformType;
-  typedef typename ReducedDimensionEulerTransformType::Pointer ReducedDimensionEulerTransformPointer;
+  using ReducedDimensionEulerTransformType =
+    itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>;
+  using ReducedDimensionEulerTransformPointer = typename ReducedDimensionEulerTransformType::Pointer;
 
-  typedef typename ReducedDimensionEulerTransformType::OutputVectorType ReducedDimensionOutputVectorType;
-  typedef typename ReducedDimensionEulerTransformType::InputPointType   ReducedDimensionInputPointType;
+  using ReducedDimensionOutputVectorType = typename ReducedDimensionEulerTransformType::OutputVectorType;
+  using ReducedDimensionInputPointType = typename ReducedDimensionEulerTransformType::InputPointType;
 
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::ParametersType;
@@ -140,32 +139,32 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Reduced Dimension typedef's. */
-  typedef float                                              PixelType;
-  typedef itk::Image<PixelType, Self::ReducedSpaceDimension> ReducedDimensionImageType;
-  typedef itk::ImageRegion<Self::ReducedSpaceDimension>      ReducedDimensionRegionType;
-  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionPointType;
-  typedef typename ReducedDimensionImageType::SizeType       ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType     ReducedDimensionIndexType;
-  typedef typename ReducedDimensionImageType::SpacingType    ReducedDimensionSpacingType;
-  typedef typename ReducedDimensionImageType::DirectionType  ReducedDimensionDirectionType;
-  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionOriginType;
+  using PixelType = float;
+  using ReducedDimensionImageType = itk::Image<PixelType, Self::ReducedSpaceDimension>;
+  using ReducedDimensionRegionType = itk::ImageRegion<Self::ReducedSpaceDimension>;
+  using ReducedDimensionPointType = typename ReducedDimensionImageType::PointType;
+  using ReducedDimensionSizeType = typename ReducedDimensionImageType::SizeType;
+  using ReducedDimensionIndexType = typename ReducedDimensionRegionType::IndexType;
+  using ReducedDimensionSpacingType = typename ReducedDimensionImageType::SpacingType;
+  using ReducedDimensionDirectionType = typename ReducedDimensionImageType::DirectionType;
+  using ReducedDimensionOriginType = typename ReducedDimensionImageType::PointType;
 
   /** For scales setting in the optimizer */
   using typename Superclass2::ScalesType;
 
   /** Other typedef's. */
-  typedef typename FixedImageType::IndexType                                 IndexType;
-  typedef typename FixedImageType::SizeType                                  SizeType;
-  typedef typename FixedImageType::PointType                                 PointType;
-  typedef typename FixedImageType::SpacingType                               SpacingType;
-  typedef typename FixedImageType::RegionType                                RegionType;
-  typedef typename FixedImageType::DirectionType                             DirectionType;
-  typedef typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension> ReducedDimensionContinuousIndexType;
-  typedef typename itk::ContinuousIndex<CoordRepType, SpaceDimension>        ContinuousIndexType;
+  using IndexType = typename FixedImageType::IndexType;
+  using SizeType = typename FixedImageType::SizeType;
+  using PointType = typename FixedImageType::PointType;
+  using SpacingType = typename FixedImageType::SpacingType;
+  using RegionType = typename FixedImageType::RegionType;
+  using DirectionType = typename FixedImageType::DirectionType;
+  using ReducedDimensionContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension>;
+  using ContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, SpaceDimension>;
 
   /** Execute stuff before anything else is done:*/
 
@@ -230,7 +229,7 @@ private:
   operator=(const Self &) = delete;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
+  using StackTransformType = itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension>;
 
   /** The Affine stack transform. */
   typename StackTransformType::Pointer m_StackTransform;

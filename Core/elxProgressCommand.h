@@ -91,18 +91,18 @@ class ProgressCommand : public itk::Command
 {
 public:
   /** Smart pointer declaration methods. */
-  typedef ProgressCommand               Self;
-  typedef itk::Command                  Superclass;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = ProgressCommand;
+  using Superclass = itk::Command;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Standard ITK stuff. */
   itkTypeMacro(ProgressCommand, Command);
   itkNewMacro(Self);
 
   /** Typedef's. */
-  typedef itk::ProcessObject         ProcessObjectType;
-  typedef ProcessObjectType::Pointer ProcessObjectPointer;
+  using ProcessObjectType = itk::ProcessObject;
+  using ProcessObjectPointer = ProcessObjectType::Pointer;
 
   /** Define when to print the progress. */
   virtual void

@@ -58,23 +58,22 @@ class ITK_TEMPLATE_EXPORT DeformationFieldTransform
 {
 public:
   /** Standard ITK-stuff. */
-  typedef DeformationFieldTransform Self;
+  using Self = DeformationFieldTransform;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::DeformationFieldInterpolatingTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                      elx::TransformBase<TElastix>::FixedImageDimension,
-                                                      float>
-    DeformationFieldInterpolatingTransformType;
+  using DeformationFieldInterpolatingTransformType =
+    itk::DeformationFieldInterpolatingTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                elx::TransformBase<TElastix>::FixedImageDimension,
+                                                float>;
 
-  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-    Superclass1;
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                        elx::TransformBase<TElastix>::FixedImageDimension>;
 
-  typedef elx::TransformBase<TElastix> Superclass2;
+  using Superclass2 = elx::TransformBase<TElastix>;
 
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -106,10 +105,10 @@ public:
   using typename Superclass1::OutputPointType;
 
   /** Typedef's specific for the DeformationFieldInterpolatingTransform. */
-  typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldType       DeformationFieldType;
-  typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldVectorType DeformationFieldVectorType;
+  using DeformationFieldType = typename DeformationFieldInterpolatingTransformType::DeformationFieldType;
+  using DeformationFieldVectorType = typename DeformationFieldInterpolatingTransformType::DeformationFieldVectorType;
 
-  typedef typename DeformationFieldInterpolatingTransformType::Pointer DeformationFieldInterpolatingTransformPointer;
+  using DeformationFieldInterpolatingTransformPointer = typename DeformationFieldInterpolatingTransformType::Pointer;
 
   /** Typedef's from TransformBase. */
   using typename Superclass2::ElastixType;
@@ -122,8 +121,8 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Function to read transform-parameters from a file. */
   void
@@ -152,7 +151,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  typedef typename DeformationFieldType::DirectionType DirectionType;
+  using DirectionType = typename DeformationFieldType::DirectionType;
 
   /** The transform that is set as current transform in the
    * CcombinationTransform */

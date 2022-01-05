@@ -78,10 +78,10 @@ class ITK_TEMPLATE_EXPORT AdvancedRigid2DTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedRigid2DTransform                             Self;
-  typedef AdvancedMatrixOffsetTransformBase<TScalarType, 2, 2> Superclass;
-  typedef SmartPointer<Self>                                   Pointer;
-  typedef SmartPointer<const Self>                             ConstPointer;
+  using Self = AdvancedRigid2DTransform;
+  using Superclass = AdvancedMatrixOffsetTransformBase<TScalarType, 2, 2>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(AdvancedRigid2DTransform, AdvancedMatrixOffsetTransformBase);

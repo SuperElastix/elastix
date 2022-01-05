@@ -184,8 +184,8 @@ GPUAdvancedCombinationTransformCopier<
     }
 
     // Try Advanced Affine
-    typedef AdvancedMatrixOffsetTransformBase<CPUScalarType, SpaceDimension, SpaceDimension>
-                                                             AdvancedAffineTransformType;
+    using AdvancedAffineTransformType =
+      AdvancedMatrixOffsetTransformBase<CPUScalarType, SpaceDimension, SpaceDimension>;
     const typename AdvancedAffineTransformType::ConstPointer affine =
       dynamic_cast<const AdvancedAffineTransformType *>(fromTransform.GetPointer());
 
@@ -195,14 +195,14 @@ GPUAdvancedCombinationTransformCopier<
       if (this->m_ExplicitMode)
       {
         // Create GPU Advanced Affine transform in explicit mode
-        typedef GPUAdvancedMatrixOffsetTransformBase<GPUScalarType, SpaceDimension> GPUAdvancedAffineTransformType;
+        using GPUAdvancedAffineTransformType = GPUAdvancedMatrixOffsetTransformBase<GPUScalarType, SpaceDimension>;
         affineTransform = GPUAdvancedAffineTransformType::New();
       }
       else
       {
         // Create GPU Advanced Affine transform in implicit mode
-        typedef AdvancedMatrixOffsetTransformBase<GPUScalarType, SpaceDimension, SpaceDimension>
-          GPUAdvancedAffineTransformType;
+        using GPUAdvancedAffineTransformType =
+          AdvancedMatrixOffsetTransformBase<GPUScalarType, SpaceDimension, SpaceDimension>;
         affineTransform = GPUAdvancedAffineTransformType::New();
       }
       this->CastCopyTransformParameters(fromTransform, affineTransform);
@@ -211,8 +211,8 @@ GPUAdvancedCombinationTransformCopier<
     }
 
     // Try Advanced Translation
-    typedef AdvancedTranslationTransform<CPUScalarType, SpaceDimension> AdvancedTranslationTransformType;
-    const typename AdvancedTranslationTransformType::ConstPointer       translation =
+    using AdvancedTranslationTransformType = AdvancedTranslationTransform<CPUScalarType, SpaceDimension>;
+    const typename AdvancedTranslationTransformType::ConstPointer translation =
       dynamic_cast<const AdvancedTranslationTransformType *>(fromTransform.GetPointer());
 
     if (translation)
@@ -221,13 +221,13 @@ GPUAdvancedCombinationTransformCopier<
       if (this->m_ExplicitMode)
       {
         // Create GPU Advanced Translation transform in explicit mode
-        typedef GPUAdvancedTranslationTransform<GPUScalarType, SpaceDimension> GPUAdvancedTranslationTransformType;
+        using GPUAdvancedTranslationTransformType = GPUAdvancedTranslationTransform<GPUScalarType, SpaceDimension>;
         translationTransform = GPUAdvancedTranslationTransformType::New();
       }
       else
       {
         // Create GPU Advanced Translation transform in implicit mode
-        typedef AdvancedTranslationTransform<GPUScalarType, SpaceDimension> GPUAdvancedTranslationTransformType;
+        using GPUAdvancedTranslationTransformType = AdvancedTranslationTransform<GPUScalarType, SpaceDimension>;
         translationTransform = GPUAdvancedTranslationTransformType::New();
       }
       this->CastCopyTransformParameters(fromTransform, translationTransform);
@@ -340,10 +340,10 @@ GPUAdvancedCombinationTransformCopier<
   TOutputTransformPrecisionType>::CopyBSplineTransform(const CPUCurrentTransformConstPointer & fromTransform,
                                                        GPUComboTransformPointer &              toTransform)
 {
-  typedef AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 0> AdvancedBSplineOrder0TransformType;
-  typedef AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 1> AdvancedBSplineOrder1TransformType;
-  typedef AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 2> AdvancedBSplineOrder2TransformType;
-  typedef AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 3> AdvancedBSplineOrder3TransformType;
+  using AdvancedBSplineOrder0TransformType = AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 0>;
+  using AdvancedBSplineOrder1TransformType = AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 1>;
+  using AdvancedBSplineOrder2TransformType = AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 2>;
+  using AdvancedBSplineOrder3TransformType = AdvancedBSplineDeformableTransform<CPUScalarType, SpaceDimension, 3>;
 
   GPUAdvancedTransformPointer bsplineTransform;
 
@@ -351,8 +351,8 @@ GPUAdvancedCombinationTransformCopier<
   // We also have to register GPUImageFactory because
   // GPUAdvancedBSplineDeformableTransform using m_Coefficients as ITK images
   // inside the implementation, therefore we define GPUImageFactory pointer
-  typedef itk::GPUImageFactory2<TTypeList, NDimensions> GPUImageFactoryType;
-  typedef typename GPUImageFactoryType::Pointer         GPUImageFactoryPointer;
+  using GPUImageFactoryType = itk::GPUImageFactory2<TTypeList, NDimensions>;
+  using GPUImageFactoryPointer = typename GPUImageFactoryType::Pointer;
 
   // Try BSpline Order 3 first
   const typename AdvancedBSplineOrder3TransformType::ConstPointer bsplineOrder3 =
@@ -367,7 +367,7 @@ GPUAdvancedCombinationTransformCopier<
       itk::ObjectFactoryBase::RegisterFactory(imageFactory);
 
       // Create GPU Advanced BSpline transform in explicit mode
-      typedef GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 3> GPUBSplineTransformType;
+      using GPUBSplineTransformType = GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 3>;
       bsplineTransform = GPUBSplineTransformType::New();
 
       // UnRegister image factory
@@ -376,7 +376,7 @@ GPUAdvancedCombinationTransformCopier<
     else
     {
       // Create GPU Advanced BSpline transform in implicit mode
-      typedef AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 3> GPUBSplineTransformType;
+      using GPUBSplineTransformType = AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 3>;
       bsplineTransform = GPUBSplineTransformType::New();
     }
     this->CastCopyTransformParameters(fromTransform, bsplineTransform);
@@ -398,7 +398,7 @@ GPUAdvancedCombinationTransformCopier<
         itk::ObjectFactoryBase::RegisterFactory(imageFactory);
 
         // Create GPU Advanced BSpline transform in explicit mode
-        typedef GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 0> GPUBSplineTransformType;
+        using GPUBSplineTransformType = GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 0>;
         bsplineTransform = GPUBSplineTransformType::New();
 
         // UnRegister image factory
@@ -407,7 +407,7 @@ GPUAdvancedCombinationTransformCopier<
       else
       {
         // Create GPU Advanced BSpline transform in implicit mode
-        typedef AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 0> GPUBSplineTransformType;
+        using GPUBSplineTransformType = AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 0>;
         bsplineTransform = GPUBSplineTransformType::New();
       }
       this->CastCopyTransformParameters(fromTransform, bsplineTransform);
@@ -429,7 +429,7 @@ GPUAdvancedCombinationTransformCopier<
           itk::ObjectFactoryBase::RegisterFactory(imageFactory);
 
           // Create GPU Advanced BSpline transform in explicit mode
-          typedef GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 1> GPUBSplineTransformType;
+          using GPUBSplineTransformType = GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 1>;
           bsplineTransform = GPUBSplineTransformType::New();
 
           // UnRegister image factory
@@ -438,7 +438,7 @@ GPUAdvancedCombinationTransformCopier<
         else
         {
           // Create GPU Advanced BSpline transform in implicit mode
-          typedef AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 1> GPUBSplineTransformType;
+          using GPUBSplineTransformType = AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 1>;
           bsplineTransform = GPUBSplineTransformType::New();
         }
         this->CastCopyTransformParameters(fromTransform, bsplineTransform);
@@ -460,7 +460,7 @@ GPUAdvancedCombinationTransformCopier<
             itk::ObjectFactoryBase::RegisterFactory(imageFactory);
 
             // Create GPU Advanced BSpline transform in explicit mode
-            typedef GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 2> GPUBSplineTransformType;
+            using GPUBSplineTransformType = GPUAdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 2>;
             bsplineTransform = GPUBSplineTransformType::New();
 
             // UnRegister image factory
@@ -469,7 +469,7 @@ GPUAdvancedCombinationTransformCopier<
           else
           {
             // Create GPU Advanced BSpline transform in implicit mode
-            typedef AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 2> GPUBSplineTransformType;
+            using GPUBSplineTransformType = AdvancedBSplineDeformableTransform<GPUScalarType, SpaceDimension, 2>;
             bsplineTransform = GPUBSplineTransformType::New();
           }
           this->CastCopyTransformParameters(fromTransform, bsplineTransform);
@@ -498,7 +498,7 @@ GPUAdvancedCombinationTransformCopier<
                                                        GPUComboTransformPointer &              toTransform,
                                                        TransformSpaceDimensionToType<2>)
 {
-  typedef AdvancedRigid2DTransform<CPUScalarType>    CPUEulerTransformType;
+  using CPUEulerTransformType = AdvancedRigid2DTransform<CPUScalarType>;
   const typename CPUEulerTransformType::ConstPointer euler =
     dynamic_cast<const CPUEulerTransformType *>(fromTransform.GetPointer());
 
@@ -508,13 +508,13 @@ GPUAdvancedCombinationTransformCopier<
     if (this->m_ExplicitMode)
     {
       // Create GPU Advanced Euler transform in explicit mode
-      typedef GPUAdvancedEuler2DTransform<GPUScalarType> GPUEulerTransformType;
+      using GPUEulerTransformType = GPUAdvancedEuler2DTransform<GPUScalarType>;
       eulerTransform = GPUEulerTransformType::New();
     }
     else
     {
       // Create GPU Advanced Euler transform in implicit mode
-      typedef AdvancedRigid2DTransform<GPUScalarType> GPUEulerTransformType;
+      using GPUEulerTransformType = AdvancedRigid2DTransform<GPUScalarType>;
       eulerTransform = GPUEulerTransformType::New();
     }
 
@@ -541,7 +541,7 @@ GPUAdvancedCombinationTransformCopier<
                                                        GPUComboTransformPointer &              toTransform,
                                                        TransformSpaceDimensionToType<3>)
 {
-  typedef AdvancedEuler3DTransform<CPUScalarType>    CPUEulerTransformType;
+  using CPUEulerTransformType = AdvancedEuler3DTransform<CPUScalarType>;
   const typename CPUEulerTransformType::ConstPointer euler =
     dynamic_cast<const CPUEulerTransformType *>(fromTransform.GetPointer());
 
@@ -551,13 +551,13 @@ GPUAdvancedCombinationTransformCopier<
     if (this->m_ExplicitMode)
     {
       // Create GPU Advanced Euler transform in explicit mode
-      typedef GPUAdvancedEuler3DTransform<GPUScalarType> GPUEulerTransformType;
+      using GPUEulerTransformType = GPUAdvancedEuler3DTransform<GPUScalarType>;
       eulerTransform = GPUEulerTransformType::New();
     }
     else
     {
       // Create GPU Advanced Euler transform in implicit mode
-      typedef AdvancedEuler3DTransform<GPUScalarType> GPUEulerTransformType;
+      using GPUEulerTransformType = AdvancedEuler3DTransform<GPUScalarType>;
       eulerTransform = GPUEulerTransformType::New();
     }
 
@@ -584,7 +584,7 @@ GPUAdvancedCombinationTransformCopier<
                                                             GPUComboTransformPointer &              toTransform,
                                                             TransformSpaceDimensionToType<2>)
 {
-  typedef AdvancedSimilarity2DTransform<CPUScalarType>    CPUSimilarityTransformType;
+  using CPUSimilarityTransformType = AdvancedSimilarity2DTransform<CPUScalarType>;
   const typename CPUSimilarityTransformType::ConstPointer similarity =
     dynamic_cast<const CPUSimilarityTransformType *>(fromTransform.GetPointer());
 
@@ -594,13 +594,13 @@ GPUAdvancedCombinationTransformCopier<
     if (this->m_ExplicitMode)
     {
       // Create GPU Advanced Similarity transform in explicit mode
-      typedef GPUAdvancedSimilarity2DTransform<GPUScalarType> GPUSimilarityTransformType;
+      using GPUSimilarityTransformType = GPUAdvancedSimilarity2DTransform<GPUScalarType>;
       similarityTransform = GPUSimilarityTransformType::New();
     }
     else
     {
       // Create GPU Advanced Similarity transform in implicit mode
-      typedef AdvancedSimilarity2DTransform<GPUScalarType> GPUSimilarityTransformType;
+      using GPUSimilarityTransformType = AdvancedSimilarity2DTransform<GPUScalarType>;
       similarityTransform = GPUSimilarityTransformType::New();
     }
     this->CastCopyTransformParameters(fromTransform, similarityTransform);
@@ -626,7 +626,7 @@ GPUAdvancedCombinationTransformCopier<
                                                             GPUComboTransformPointer &              toTransform,
                                                             TransformSpaceDimensionToType<3>)
 {
-  typedef AdvancedSimilarity3DTransform<CPUScalarType>    CPUSimilarityTransformType;
+  using CPUSimilarityTransformType = AdvancedSimilarity3DTransform<CPUScalarType>;
   const typename CPUSimilarityTransformType::ConstPointer similarity =
     dynamic_cast<const CPUSimilarityTransformType *>(fromTransform.GetPointer());
 
@@ -636,13 +636,13 @@ GPUAdvancedCombinationTransformCopier<
     if (this->m_ExplicitMode)
     {
       // Create GPU Advanced Similarity transform in explicit mode
-      typedef GPUAdvancedSimilarity3DTransform<GPUScalarType> GPUSimilarityTransformType;
+      using GPUSimilarityTransformType = GPUAdvancedSimilarity3DTransform<GPUScalarType>;
       similarityTransform = GPUSimilarityTransformType::New();
     }
     else
     {
       // Create GPU Advanced Similarity transform in implicit mode
-      typedef AdvancedSimilarity3DTransform<GPUScalarType> GPUSimilarityTransformType;
+      using GPUSimilarityTransformType = AdvancedSimilarity3DTransform<GPUScalarType>;
       similarityTransform = GPUSimilarityTransformType::New();
     }
     this->CastCopyTransformParameters(fromTransform, similarityTransform);

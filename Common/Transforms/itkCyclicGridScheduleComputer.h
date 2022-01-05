@@ -43,10 +43,10 @@ class ITK_TEMPLATE_EXPORT CyclicGridScheduleComputer
 {
 public:
   /** Standard class typedefs. */
-  typedef CyclicGridScheduleComputer                                  Self;
-  typedef GridScheduleComputer<TTransformScalarType, VImageDimension> Superclass;
-  typedef SmartPointer<Self>                                          Pointer;
-  typedef SmartPointer<const Self>                                    ConstPointer;
+  using Self = CyclicGridScheduleComputer;
+  using Superclass = GridScheduleComputer<TTransformScalarType, VImageDimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -58,25 +58,25 @@ public:
   itkStaticConstMacro(Dimension, unsigned int, VImageDimension);
 
   /** Typedef's. */
-  typedef TTransformScalarType                  TransformScalarType;
-  typedef ImageBase<Self::Dimension>            ImageBaseType;
-  typedef typename ImageBaseType::PointType     PointType;
-  typedef typename ImageBaseType::PointType     OriginType;
-  typedef typename ImageBaseType::SpacingType   SpacingType;
-  typedef typename ImageBaseType::DirectionType DirectionType;
-  typedef typename ImageBaseType::SizeType      SizeType;
-  typedef typename ImageBaseType::SizeValueType SizeValueType;
-  typedef typename ImageBaseType::RegionType    RegionType;
-  typedef SpacingType                           GridSpacingFactorType;
-  typedef std::vector<OriginType>               VectorOriginType;
-  typedef std::vector<SpacingType>              VectorSpacingType;
-  typedef std::vector<RegionType>               VectorRegionType;
-  typedef std::vector<GridSpacingFactorType>    VectorGridSpacingFactorType;
+  using TransformScalarType = TTransformScalarType;
+  using ImageBaseType = ImageBase<Self::Dimension>;
+  using PointType = typename ImageBaseType::PointType;
+  using OriginType = typename ImageBaseType::PointType;
+  using SpacingType = typename ImageBaseType::SpacingType;
+  using DirectionType = typename ImageBaseType::DirectionType;
+  using SizeType = typename ImageBaseType::SizeType;
+  using SizeValueType = typename ImageBaseType::SizeValueType;
+  using RegionType = typename ImageBaseType::RegionType;
+  using GridSpacingFactorType = SpacingType;
+  using VectorOriginType = std::vector<OriginType>;
+  using VectorSpacingType = std::vector<SpacingType>;
+  using VectorRegionType = std::vector<RegionType>;
+  using VectorGridSpacingFactorType = std::vector<GridSpacingFactorType>;
 
   /** Typedefs for the initial transform. */
-  typedef Transform<TransformScalarType, Self::Dimension, Self::Dimension> TransformType;
-  typedef typename TransformType::Pointer                                  TransformPointer;
-  typedef typename TransformType::ConstPointer                             TransformConstPointer;
+  using TransformType = Transform<TransformScalarType, Self::Dimension, Self::Dimension>;
+  using TransformPointer = typename TransformType::Pointer;
+  using TransformConstPointer = typename TransformType::ConstPointer;
 
   /** Compute the B-spline grid. */
   void

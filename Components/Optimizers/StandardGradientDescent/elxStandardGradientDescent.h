@@ -71,11 +71,11 @@ class ITK_TEMPLATE_EXPORT StandardGradientDescent
 {
 public:
   /** Standard ITK.*/
-  typedef StandardGradientDescent          Self;
-  typedef StandardGradientDescentOptimizer Superclass1;
-  typedef OptimizerBase<TElastix>          Superclass2;
-  typedef itk::SmartPointer<Self>          Pointer;
-  typedef itk::SmartPointer<const Self>    ConstPointer;
+  using Self = StandardGradientDescent;
+  using Superclass1 = StandardGradientDescentOptimizer;
+  using Superclass2 = OptimizerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -101,7 +101,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Typedef for the ParametersType. */
   using typename Superclass1::ParametersType;

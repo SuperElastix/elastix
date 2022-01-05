@@ -38,10 +38,10 @@ class ITK_TEMPLATE_EXPORT ImageFullSampler : public ImageSamplerBase<TInputImage
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageFullSampler              Self;
-  typedef ImageSamplerBase<TInputImage> Superclass;
-  typedef SmartPointer<Self>            Pointer;
-  typedef SmartPointer<const Self>      ConstPointer;
+  using Self = ImageFullSampler;
+  using Superclass = ImageSamplerBase<TInputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -67,8 +67,8 @@ public:
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** Other typdefs. */
-  typedef typename InputImageType::IndexType InputImageIndexType;
-  typedef typename InputImageType::PointType InputImagePointType;
+  using InputImageIndexType = typename InputImageType::IndexType;
+  using InputImagePointType = typename InputImageType::PointType;
 
   /** Selecting new samples makes no sense if nothing changed.
    * The same samples would be selected anyway.

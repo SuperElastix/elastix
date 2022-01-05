@@ -71,14 +71,14 @@ void
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::InitializeOffsetToIndexTable()
 {
   /** Create a temporary image. */
-  typedef Image<char, SpaceDimension> CharImageType;
-  auto                                tempImage = CharImageType::New();
+  using CharImageType = Image<char, SpaceDimension>;
+  auto tempImage = CharImageType::New();
   tempImage->SetRegions(this->m_SupportSize);
   tempImage->Allocate();
 
   /** Create an iterator over the image. */
-  typedef ImageRegionConstIteratorWithIndex<CharImageType> IteratorType;
-  IteratorType                                             it(tempImage, tempImage->GetBufferedRegion());
+  using IteratorType = ImageRegionConstIteratorWithIndex<CharImageType>;
+  IteratorType it(tempImage, tempImage->GetBufferedRegion());
   it.GoToBegin();
 
   /** Fill the OffsetToIndexTable. */

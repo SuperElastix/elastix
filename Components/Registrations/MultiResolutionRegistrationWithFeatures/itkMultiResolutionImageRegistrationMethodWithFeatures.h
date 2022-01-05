@@ -57,10 +57,10 @@ class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethodWithFeatures
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiResolutionImageRegistrationMethodWithFeatures                              Self;
-  typedef MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                                              Pointer;
-  typedef SmartPointer<const Self>                                                        ConstPointer;
+  using Self = MultiResolutionImageRegistrationMethodWithFeatures;
+  using Superclass = MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -84,7 +84,7 @@ public:
   using typename Superclass::InterpolatorType;
   using typename Superclass::InterpolatorPointer;
   using typename Superclass::OptimizerType;
-  typedef typename OptimizerType::Pointer OptimizerPointer;
+  using OptimizerPointer = typename OptimizerType::Pointer;
   using typename Superclass::FixedImagePyramidType;
   using typename Superclass::FixedImagePyramidPointer;
   using typename Superclass::MovingImagePyramidType;

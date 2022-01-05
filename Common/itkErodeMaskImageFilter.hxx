@@ -52,9 +52,9 @@ ErodeMaskImageFilter<TImage>::GenerateData()
 {
   /** Typedefs. */
   // typedef itk::ThresholdImageFilter<InputImageType> ThresholdFilterType;
-  typedef itk::ParabolicErodeImageFilter<InputImageType, OutputImageType> ErodeFilterType;
-  typedef typename ErodeFilterType::RadiusType                            RadiusType;
-  typedef typename ErodeFilterType::ScalarRealType                        ScalarRealType;
+  using ErodeFilterType = itk::ParabolicErodeImageFilter<InputImageType, OutputImageType>;
+  using RadiusType = typename ErodeFilterType::RadiusType;
+  using ScalarRealType = typename ErodeFilterType::ScalarRealType;
 
   /** Get the correct radius. */
   RadiusType     radiusarray;

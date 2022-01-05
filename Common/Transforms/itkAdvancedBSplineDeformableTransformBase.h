@@ -43,10 +43,10 @@ class ITK_TEMPLATE_EXPORT AdvancedBSplineDeformableTransformBase
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedBSplineDeformableTransformBase                   Self;
-  typedef AdvancedTransform<TScalarType, NDimensions, NDimensions> Superclass;
-  typedef SmartPointer<Self>                                       Pointer;
-  typedef SmartPointer<const Self>                                 ConstPointer;
+  using Self = AdvancedBSplineDeformableTransformBase;
+  using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(AdvancedBSplineDeformableTransformBase, AdvancedTransform);
@@ -182,9 +182,9 @@ public:
   GetFixedParameters() const override;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType     PixelType;
-  typedef Image<PixelType, Self::SpaceDimension> ImageType;
-  typedef typename ImageType::Pointer            ImagePointer;
+  using PixelType = typename ParametersType::ValueType;
+  using ImageType = Image<PixelType, Self::SpaceDimension>;
+  using ImagePointer = typename ImageType::Pointer;
 
   /** Get the array of coefficient images. */
   virtual const ImagePointer *
@@ -208,14 +208,14 @@ public:
   SetCoefficientImages(ImagePointer images[]);
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef ImageRegion<Self::SpaceDimension> RegionType;
+  using RegionType = ImageRegion<Self::SpaceDimension>;
 
-  typedef typename RegionType::IndexType    IndexType;
-  typedef typename RegionType::SizeType     SizeType;
-  typedef typename ImageType::SpacingType   SpacingType;
-  typedef typename ImageType::DirectionType DirectionType;
-  typedef typename ImageType::PointType     OriginType;
-  typedef IndexType                         GridOffsetType;
+  using IndexType = typename RegionType::IndexType;
+  using SizeType = typename RegionType::SizeType;
+  using SpacingType = typename ImageType::SpacingType;
+  using DirectionType = typename ImageType::DirectionType;
+  using OriginType = typename ImageType::PointType;
+  using GridOffsetType = IndexType;
 
   /** This method specifies the region over which the grid resides. */
   virtual void
@@ -242,7 +242,7 @@ public:
   itkGetConstMacro(GridOrigin, OriginType);
 
   /** Parameter index array type. */
-  typedef Array<unsigned long> ParameterIndexArrayType;
+  using ParameterIndexArrayType = Array<unsigned long>;
 
   /** Method to transform a vector -
    *  not applicable for this type of transform.
@@ -315,7 +315,7 @@ public:
   /** This typedef should be equal to the typedef used
    * in derived classes based on the weights function.
    */
-  typedef ContinuousIndex<ScalarType, SpaceDimension> ContinuousIndexType;
+  using ContinuousIndexType = ContinuousIndex<ScalarType, SpaceDimension>;
 
 protected:
   /** Print contents of an AdvancedBSplineDeformableTransformBase. */
@@ -380,8 +380,8 @@ protected:
   const ParametersType * m_InputParametersPointer;
 
   /** Jacobian as SpaceDimension number of images. */
-  typedef typename JacobianType::ValueType               JacobianPixelType;
-  typedef Image<JacobianPixelType, Self::SpaceDimension> JacobianImageType;
+  using JacobianPixelType = typename JacobianType::ValueType;
+  using JacobianImageType = Image<JacobianPixelType, Self::SpaceDimension>;
 
   typename JacobianImageType::Pointer m_JacobianImage[NDimensions];
 

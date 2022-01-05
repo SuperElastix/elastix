@@ -63,9 +63,9 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayT
   }
 
   /** Typedefs. */
-  typedef itk::ResampleImageFilter<ImageType, ImageType>             UpsampleFilterType;
-  typedef itk::BSplineResampleImageFunction<ImageType, ValueType>    CoefficientUpsampleFunctionType;
-  typedef itk::BSplineDecompositionImageFilter<ImageType, ImageType> DecompositionFilterType;
+  using UpsampleFilterType = itk::ResampleImageFilter<ImageType, ImageType>;
+  using CoefficientUpsampleFunctionType = itk::BSplineResampleImageFunction<ImageType, ValueType>;
+  using DecompositionFilterType = itk::BSplineDecompositionImageFilter<ImageType, ImageType>;
 
   /** Get the number of parameters. */
   const unsigned int currentNumberOfPixels = this->m_CurrentGridRegion.GetNumberOfPixels();

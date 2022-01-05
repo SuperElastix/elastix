@@ -76,10 +76,10 @@ class ITK_TEMPLATE_EXPORT KNNGraphAlphaMutualInformationImageToImageMetric
 {
 public:
   /** Standard itk. */
-  typedef KNNGraphAlphaMutualInformationImageToImageMetric            Self;
-  typedef MultiInputImageToImageMetricBase<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                          Pointer;
-  typedef SmartPointer<const Self>                                    ConstPointer;
+  using Self = KNNGraphAlphaMutualInformationImageToImageMetric;
+  using Superclass = MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -142,30 +142,30 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedefs for the samples. */
-  typedef Array<double>                                                        MeasurementVectorType;
-  typedef typename MeasurementVectorType::ValueType                            MeasurementVectorValueType;
-  typedef typename Statistics::ListSampleCArray<MeasurementVectorType, double> ListSampleType;
-  typedef typename ListSampleType::Pointer                                     ListSamplePointer;
+  using MeasurementVectorType = Array<double>;
+  using MeasurementVectorValueType = typename MeasurementVectorType::ValueType;
+  using ListSampleType = typename Statistics::ListSampleCArray<MeasurementVectorType, double>;
+  using ListSamplePointer = typename ListSampleType::Pointer;
 
   /** Typedefs for trees. */
-  typedef BinaryTreeBase<ListSampleType>      BinaryKNNTreeType;
-  typedef typename BinaryKNNTreeType::Pointer BinaryKNNTreePointer;
-  typedef ANNkDTree<ListSampleType>           ANNkDTreeType;
-  typedef ANNbdTree<ListSampleType>           ANNbdTreeType;
-  typedef ANNBruteForceTree<ListSampleType>   ANNBruteForceTreeType;
+  using BinaryKNNTreeType = BinaryTreeBase<ListSampleType>;
+  using BinaryKNNTreePointer = typename BinaryKNNTreeType::Pointer;
+  using ANNkDTreeType = ANNkDTree<ListSampleType>;
+  using ANNbdTreeType = ANNbdTree<ListSampleType>;
+  using ANNBruteForceTreeType = ANNBruteForceTree<ListSampleType>;
 
   /** Typedefs for tree searchers. */
-  typedef BinaryTreeSearchBase<ListSampleType>      BinaryKNNTreeSearchType;
-  typedef typename BinaryKNNTreeSearchType::Pointer BinaryKNNTreeSearchPointer;
-  typedef ANNStandardTreeSearch<ListSampleType>     ANNStandardTreeSearchType;
-  typedef ANNFixedRadiusTreeSearch<ListSampleType>  ANNFixedRadiusTreeSearchType;
-  typedef ANNPriorityTreeSearch<ListSampleType>     ANNPriorityTreeSearchType;
+  using BinaryKNNTreeSearchType = BinaryTreeSearchBase<ListSampleType>;
+  using BinaryKNNTreeSearchPointer = typename BinaryKNNTreeSearchType::Pointer;
+  using ANNStandardTreeSearchType = ANNStandardTreeSearch<ListSampleType>;
+  using ANNFixedRadiusTreeSearchType = ANNFixedRadiusTreeSearch<ListSampleType>;
+  using ANNPriorityTreeSearchType = ANNPriorityTreeSearch<ListSampleType>;
 
-  typedef typename BinaryKNNTreeSearchType::IndexArrayType    IndexArrayType;
-  typedef typename BinaryKNNTreeSearchType::DistanceArrayType DistanceArrayType;
+  using IndexArrayType = typename BinaryKNNTreeSearchType::IndexArrayType;
+  using DistanceArrayType = typename BinaryKNNTreeSearchType::DistanceArrayType;
 
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+  using DerivativeValueType = typename DerivativeType::ValueType;
+  using TransformJacobianValueType = typename TransformJacobianType::ValueType;
 
   /**
    * *** Set trees: ***
@@ -285,11 +285,11 @@ private:
   using typename Superclass::MovingImagePointType;
   using typename Superclass::MovingImageDerivativeType;
   using typename Superclass::MovingImageContinuousIndexType;
-  typedef std::vector<TransformJacobianType> TransformJacobianContainerType;
+  using TransformJacobianContainerType = std::vector<TransformJacobianType>;
   // typedef std::vector<ParameterIndexArrayType>           TransformJacobianIndicesContainerType;
-  typedef std::vector<NonZeroJacobianIndicesType> TransformJacobianIndicesContainerType;
-  typedef Array2D<double>                         SpatialDerivativeType;
-  typedef std::vector<SpatialDerivativeType>      SpatialDerivativeContainerType;
+  using TransformJacobianIndicesContainerType = std::vector<NonZeroJacobianIndicesType>;
+  using SpatialDerivativeType = Array2D<double>;
+  using SpatialDerivativeContainerType = std::vector<SpatialDerivativeType>;
 
   /** This function takes the fixed image samples from the ImageSampler
    * and puts them in the listSampleFixed, together with the fixed feature

@@ -45,8 +45,8 @@ class ITK_TEMPLATE_EXPORT InterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef InterpolatorBase          Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = InterpolatorBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(InterpolatorBase, BaseComponentSE);
@@ -60,11 +60,11 @@ public:
   using typename Superclass::RegistrationPointer;
 
   /** Other typedef's. */
-  typedef typename ElastixType::MovingImageType InputImageType;
-  typedef ElastixBase::CoordRepType             CoordRepType;
+  using InputImageType = typename ElastixType::MovingImageType;
+  using CoordRepType = ElastixBase::CoordRepType;
 
   /** ITKBaseType. */
-  typedef itk::InterpolateImageFunction<InputImageType, CoordRepType> ITKBaseType;
+  using ITKBaseType = itk::InterpolateImageFunction<InputImageType, CoordRepType>;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *

@@ -76,21 +76,21 @@ class ITK_TEMPLATE_EXPORT VectorDataContainer
 {
 public:
   /** Standard class typedefs. */
-  typedef VectorDataContainer      Self;
-  typedef DataObject               Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = VectorDataContainer;
+  using Superclass = DataObject;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Save the template parameters. */
-  typedef TElementIdentifier ElementIdentifier;
-  typedef TElement           Element;
+  using ElementIdentifier = TElementIdentifier;
+  using Element = TElement;
 
 private:
   /** Quick access to the STL vector type that was inherited. */
-  typedef std::vector<Element>                VectorType;
-  typedef typename VectorType::size_type      size_type;
-  typedef typename VectorType::iterator       VectorIterator;
-  typedef typename VectorType::const_iterator VectorConstIterator;
+  using VectorType = std::vector<Element>;
+  using size_type = typename VectorType::size_type;
+  using VectorIterator = typename VectorType::iterator;
+  using VectorConstIterator = typename VectorType::const_iterator;
 
 protected:
   /** Provide pass-through constructors corresponding to all the STL
@@ -120,7 +120,7 @@ protected:
 
 public:
   /** This type is provided to Adapt this container as an STL container */
-  typedef VectorType STLContainerType;
+  using STLContainerType = VectorType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

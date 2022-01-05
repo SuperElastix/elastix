@@ -44,10 +44,10 @@ class ITK_TEMPLATE_EXPORT WeightedCombinationTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef WeightedCombinationTransform                                        Self;
-  typedef AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions> Superclass;
-  typedef SmartPointer<Self>                                                  Pointer;
-  typedef SmartPointer<const Self>                                            ConstPointer;
+  using Self = WeightedCombinationTransform;
+  using Superclass = AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
@@ -79,10 +79,10 @@ public:
   using typename Superclass::JacobianOfSpatialHessianType;
 
   /** New typedefs in this class: */
-  typedef Transform<TScalarType, NInputDimensions, NOutputDimensions> TransformType;
+  using TransformType = Transform<TScalarType, NInputDimensions, NOutputDimensions>;
   /** \todo: shouldn't these be ConstPointers? */
-  typedef typename TransformType::Pointer TransformPointer;
-  typedef std::vector<TransformPointer>   TransformContainerType;
+  using TransformPointer = typename TransformType::Pointer;
+  using TransformContainerType = std::vector<TransformPointer>;
 
   /**  Method to transform a point. */
   OutputPointType

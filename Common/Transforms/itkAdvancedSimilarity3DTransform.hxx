@@ -118,7 +118,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
     itkExceptionMacro(<< "Attempting to set a non-orthogonal matrix (after removing scaling)");
   }
 
-  typedef AdvancedMatrixOffsetTransformBase<TScalarType, 3> Baseclass;
+  using Baseclass = AdvancedMatrixOffsetTransformBase<TScalarType, 3>;
   this->Baseclass::SetMatrix(matrix);
   this->PrecomputeJacobianOfSpatialJacobian();
 }
@@ -297,7 +297,7 @@ AdvancedSimilarity3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian(
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize(ParametersDimension);
 
-  typedef typename VersorType::ValueType ValueType;
+  using ValueType = typename VersorType::ValueType;
 
   // compute derivatives with respect to rotation
   const ValueType vx = this->GetVersor().GetX();

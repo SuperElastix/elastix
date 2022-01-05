@@ -790,8 +790,8 @@ CMAEvolutionStrategyOptimizer::UpdateBD()
     return;
   }
 
-  typedef itk::SymmetricEigenAnalysis<CovarianceMatrixType, EigenValueMatrixType, CovarianceMatrixType>
-    EigenAnalysisType;
+  using EigenAnalysisType =
+    itk::SymmetricEigenAnalysis<CovarianceMatrixType, EigenValueMatrixType, CovarianceMatrixType>;
 
   /** In the itkEigenAnalysis only the upper triangle of the matrix will be accessed, so
    * we do not need to make sure the matrix is symmetric, like in the

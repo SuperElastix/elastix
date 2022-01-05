@@ -89,10 +89,10 @@ class AffineDTITransform : public AffineDTIGroupTemplate<TScalarType, Dimension>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef AffineDTITransform                             Self;
-  typedef AffineDTIGroupTemplate<TScalarType, Dimension> Superclass;
-  typedef SmartPointer<Self>                             Pointer;
-  typedef SmartPointer<const Self>                       ConstPointer;
+  using Self = AffineDTITransform;
+  using Superclass = AffineDTIGroupTemplate<TScalarType, Dimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

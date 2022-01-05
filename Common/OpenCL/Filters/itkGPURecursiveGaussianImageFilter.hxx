@@ -79,8 +79,8 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 {
   itkDebugMacro(<< "Calling GPURecursiveGaussianImageFilter::GPUGenerateData()");
 
-  typedef typename GPUTraits<TInputImage>::Type  GPUInputImage;
-  typedef typename GPUTraits<TOutputImage>::Type GPUOutputImage;
+  using GPUInputImage = typename GPUTraits<TInputImage>::Type;
+  using GPUOutputImage = typename GPUTraits<TOutputImage>::Type;
 
   const typename GPUInputImage::Pointer inPtr = dynamic_cast<GPUInputImage *>(this->ProcessObject::GetInput(0));
   typename GPUOutputImage::Pointer      otPtr = dynamic_cast<GPUOutputImage *>(this->ProcessObject::GetOutput(0));

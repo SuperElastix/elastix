@@ -38,10 +38,10 @@ class ITK_TEMPLATE_EXPORT BinaryANNTreeBase : public BinaryTreeBase<TListSample>
 {
 public:
   /** Standard itk. */
-  typedef BinaryANNTreeBase           Self;
-  typedef BinaryTreeBase<TListSample> Superclass;
-  typedef SmartPointer<Self>          Pointer;
-  typedef SmartPointer<const Self>    ConstPointer;
+  using Self = BinaryANNTreeBase;
+  using Superclass = BinaryTreeBase<TListSample>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ITK type info. */
   itkTypeMacro(BinaryANNTreeBase, BinaryTreeBase);
@@ -53,7 +53,7 @@ public:
   using typename Superclass::TotalAbsoluteFrequencyType;
 
   /** Typedef */
-  typedef ANNpointSet ANNPointSetType;
+  using ANNPointSetType = ANNpointSet;
 
   /** Get the ANN tree. */
   virtual ANNPointSetType *

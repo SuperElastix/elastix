@@ -926,7 +926,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
   this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(this->GetCurrentPosition());
 
   /** Cast to advanced metric type. */
-  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
+  using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
@@ -1064,7 +1064,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
   double       maxJJ = 0;
 
   /** Cast to advanced metric type. */
-  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
+  using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
@@ -1174,7 +1174,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
   double       maxJJ = 0;
 
   /** Cast to advanced metric type. */
-  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
+  using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
@@ -1595,8 +1595,8 @@ AdaptiveStochasticLBFGS<TElastix>::ComputeSearchDirection(const DerivativeType &
   itkDebugMacro("ComputeSearchDirection");
 
   /** Assumes m_Rho, m_S, and m_Y are up-to-date at m_PreviousPoint */
-  typedef itk::Array<double> AlphaType;
-  AlphaType                  alpha(this->m_LBFGSMemory);
+  using AlphaType = itk::Array<double>;
+  AlphaType alpha(this->m_LBFGSMemory);
 
   const unsigned int numberOfParameters = gradient.GetSize();
 

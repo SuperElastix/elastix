@@ -42,10 +42,10 @@ template <class TScalarType, unsigned int NDimensions>
 class KernelTransformPublic : public ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
 {
 public:
-  typedef KernelTransformPublic                                     Self;
-  typedef ThinPlateSplineKernelTransform2<TScalarType, NDimensions> Superclass;
-  typedef SmartPointer<Self>                                        Pointer;
-  typedef SmartPointer<const Self>                                  ConstPointer;
+  using Self = KernelTransformPublic;
+  using Superclass = ThinPlateSplineKernelTransform2<TScalarType, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
   itkTypeMacro(KernelTransformPublic, ThinPlateSplineKernelTransform2);
   itkNewMacro(Self);
 
@@ -98,7 +98,7 @@ main(int argc, char * argv[])
   /** Some basic type definitions. */
   const unsigned int Dimension = 3;
   // ScalarType double needed for Cholesky. Double is used in elastix.
-  typedef double      ScalarType;
+  using ScalarType = double;
   const unsigned long maxTestedLandmarksForSVD = 401;
   const ScalarType    tolerance = 1e-8; // for double
 
@@ -111,16 +111,16 @@ main(int argc, char * argv[])
   }
 
   /** Other typedefs. */
-  typedef itk::KernelTransformPublic<ScalarType, Dimension>  TransformType;
-  typedef TransformType::JacobianType                        JacobianType;
-  typedef TransformType::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
-  typedef TransformType::PointSetType                        PointSetType;
-  typedef itk::TransformixInputPointFileReader<PointSetType> IPPReaderType;
+  using TransformType = itk::KernelTransformPublic<ScalarType, Dimension>;
+  using JacobianType = TransformType::JacobianType;
+  using NonZeroJacobianIndicesType = TransformType::NonZeroJacobianIndicesType;
+  using PointSetType = TransformType::PointSetType;
+  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
 
-  typedef PointSetType::PointsContainer PointsContainerType;
-  typedef PointsContainerType::Pointer  PointsContainerPointer;
-  typedef PointSetType::PointType       PointType;
-  typedef TransformType::LMatrixType    LMatrixType;
+  using PointsContainerType = PointSetType::PointsContainer;
+  using PointsContainerPointer = PointsContainerType::Pointer;
+  using PointType = PointSetType::PointType;
+  using LMatrixType = TransformType::LMatrixType;
 
   auto dummyLandmarks = PointSetType::New();
 
@@ -288,9 +288,9 @@ main(int argc, char * argv[])
     //
     // Test Jacobian computation performance
 
-    typedef vnl_matrix_fixed<ScalarType, Dimension, Dimension> GMatrixType;
-    GMatrixType                                                Gmatrix; // dim x dim
-    typedef PointSetType::PointsContainerIterator              PointsIterator;
+    using GMatrixType = vnl_matrix_fixed<ScalarType, Dimension, Dimension>;
+    GMatrixType Gmatrix; // dim x dim
+    using PointsIterator = PointSetType::PointsContainerIterator;
 
     // OLD way:
     PointType p;

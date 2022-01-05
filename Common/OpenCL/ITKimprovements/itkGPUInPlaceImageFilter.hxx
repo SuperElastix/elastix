@@ -85,8 +85,8 @@ GPUInPlaceImageFilter<TInputImage, TOutputImage, TParentImageFilter>::AllocateOu
         outputPtr->Allocate();
       }
 
-      typedef ImageBase<OutputImageDimension> ImageBaseType;
-      typename ImageBaseType::Pointer         outputPtr;
+      using ImageBaseType = ImageBase<OutputImageDimension>;
+      typename ImageBaseType::Pointer outputPtr;
 
       // If there are more than one outputs, allocate the remaining outputs
       for (unsigned int i = 1; i < this->GetNumberOfOutputs(); ++i)

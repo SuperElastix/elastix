@@ -70,10 +70,10 @@ class AdaptiveStochasticLBFGSOptimizer : public StandardStochasticGradientOptimi
 {
 public:
   /** Standard ITK.*/
-  typedef AdaptiveStochasticLBFGSOptimizer    Self;
-  typedef StandardStochasticGradientOptimizer Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  using Self = AdaptiveStochasticLBFGSOptimizer;
+  using Superclass = StandardStochasticGradientOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

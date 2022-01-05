@@ -40,10 +40,10 @@ class ITK_TEMPLATE_EXPORT UpsampleBSplineParametersFilter : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef UpsampleBSplineParametersFilter Self;
-  typedef Object                          Superclass;
-  typedef SmartPointer<Self>              Pointer;
-  typedef SmartPointer<const Self>        ConstPointer;
+  using Self = UpsampleBSplineParametersFilter;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -52,15 +52,15 @@ public:
   itkTypeMacro(UpsampleBSplineParametersFilter, Object);
 
   /** Typedefs. */
-  typedef TArray                            ArrayType;
-  typedef typename ArrayType::ValueType     ValueType;
-  typedef TImage                            ImageType;
-  typedef typename ImageType::Pointer       ImagePointer;
-  typedef typename ImageType::PixelType     PixelType;
-  typedef typename ImageType::SpacingType   SpacingType;
-  typedef typename ImageType::PointType     OriginType;
-  typedef typename ImageType::DirectionType DirectionType;
-  typedef typename ImageType::RegionType    RegionType;
+  using ArrayType = TArray;
+  using ValueType = typename ArrayType::ValueType;
+  using ImageType = TImage;
+  using ImagePointer = typename ImageType::Pointer;
+  using PixelType = typename ImageType::PixelType;
+  using SpacingType = typename ImageType::SpacingType;
+  using OriginType = typename ImageType::PointType;
+  using DirectionType = typename ImageType::DirectionType;
+  using RegionType = typename ImageType::RegionType;
 
   /** Dimension of the fixed image. */
   itkStaticConstMacro(Dimension, unsigned int, ImageType::ImageDimension);

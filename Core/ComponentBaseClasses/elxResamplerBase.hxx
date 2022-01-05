@@ -56,8 +56,8 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
   /** Get a pointer to the fixedImage.
    * \todo make it a cast to the fixed image type
    */
-  typedef typename ElastixType::FixedImageType FixedImageType;
-  FixedImageType *                             fixedImage = this->m_Elastix->GetFixedImage();
+  using FixedImageType = typename ElastixType::FixedImageType;
+  FixedImageType * fixedImage = this->m_Elastix->GetFixedImage();
 
   /** Set the region info to the same values as in the fixedImage. */
   this->GetAsITKBaseType()->SetSize(fixedImage->GetLargestPossibleRegion().GetSize());
@@ -372,9 +372,9 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Typedef's for writing the output image. */
-  typedef itk::ImageFileCastWriter<OutputImageType>          WriterType;
-  typedef typename WriterType::Pointer                       WriterPointer;
-  typedef itk::ChangeInformationImageFilter<OutputImageType> ChangeInfoFilterType;
+  using WriterType = itk::ImageFileCastWriter<OutputImageType>;
+  using WriterPointer = typename WriterType::Pointer;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<OutputImageType>;
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
@@ -470,7 +470,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
 
   /** Typedef's for writing the output image. */
-  typedef itk::ChangeInformationImageFilter<OutputImageType> ChangeInfoFilterType;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<OutputImageType>;
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
@@ -483,19 +483,19 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(this->GetAsITKBaseType()->GetOutput());
 
-  typedef itk::CastImageFilter<InputImageType, itk::Image<char, InputImageType::ImageDimension>> CastFilterChar;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<unsigned char, InputImageType::ImageDimension>>
-                                                                                                  CastFilterUChar;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<short, InputImageType::ImageDimension>> CastFilterShort;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<unsigned short, InputImageType::ImageDimension>>
-                                                                                                         CastFilterUShort;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<int, InputImageType::ImageDimension>>          CastFilterInt;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<unsigned int, InputImageType::ImageDimension>> CastFilterUInt;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<long, InputImageType::ImageDimension>>         CastFilterLong;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<unsigned long, InputImageType::ImageDimension>>
-                                                                                                   CastFilterULong;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<float, InputImageType::ImageDimension>>  CastFilterFloat;
-  typedef itk::CastImageFilter<InputImageType, itk::Image<double, InputImageType::ImageDimension>> CastFilterDouble;
+  using CastFilterChar = itk::CastImageFilter<InputImageType, itk::Image<char, InputImageType::ImageDimension>>;
+  using CastFilterUChar =
+    itk::CastImageFilter<InputImageType, itk::Image<unsigned char, InputImageType::ImageDimension>>;
+  using CastFilterShort = itk::CastImageFilter<InputImageType, itk::Image<short, InputImageType::ImageDimension>>;
+  using CastFilterUShort =
+    itk::CastImageFilter<InputImageType, itk::Image<unsigned short, InputImageType::ImageDimension>>;
+  using CastFilterInt = itk::CastImageFilter<InputImageType, itk::Image<int, InputImageType::ImageDimension>>;
+  using CastFilterUInt = itk::CastImageFilter<InputImageType, itk::Image<unsigned int, InputImageType::ImageDimension>>;
+  using CastFilterLong = itk::CastImageFilter<InputImageType, itk::Image<long, InputImageType::ImageDimension>>;
+  using CastFilterULong =
+    itk::CastImageFilter<InputImageType, itk::Image<unsigned long, InputImageType::ImageDimension>>;
+  using CastFilterFloat = itk::CastImageFilter<InputImageType, itk::Image<float, InputImageType::ImageDimension>>;
+  using CastFilterDouble = itk::CastImageFilter<InputImageType, itk::Image<double, InputImageType::ImageDimension>>;
 
   /** cast the image to the correct output image Type */
   if (resultImagePixelType == "char")

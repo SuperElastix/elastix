@@ -84,10 +84,10 @@ class ITK_TEMPLATE_EXPORT AdvancedTransform : public Transform<TScalarType, NInp
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedTransform                                           Self;
-  typedef Transform<TScalarType, NInputDimensions, NOutputDimensions> Superclass;
-  typedef SmartPointer<Self>                                          Pointer;
-  typedef SmartPointer<const Self>                                    ConstPointer;
+  using Self = AdvancedTransform;
+  using Superclass = Transform<TScalarType, NInputDimensions, NOutputDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   // itkNewMacro( Self );
@@ -116,34 +116,34 @@ public:
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
 
-  typedef typename Superclass::InverseTransformBaseType InverseTransformBaseType;
+  using InverseTransformBaseType = typename Superclass::InverseTransformBaseType;
   using typename Superclass::InverseTransformBasePointer;
 
   /** Transform typedefs for the from Superclass. */
-  typedef Transform<TScalarType, NInputDimensions, NOutputDimensions> TransformType;
-  typedef typename TransformType::Pointer                             TransformTypePointer;
-  typedef typename TransformType::ConstPointer                        TransformTypeConstPointer;
+  using TransformType = Transform<TScalarType, NInputDimensions, NOutputDimensions>;
+  using TransformTypePointer = typename TransformType::Pointer;
+  using TransformTypeConstPointer = typename TransformType::ConstPointer;
 
   /** Types for the (Spatial)Jacobian/Hessian.
    * Using an itk::FixedArray instead of an std::vector gives a performance
    * gain for the SpatialHessianType.
    */
-  typedef std::vector<unsigned long>                                    NonZeroJacobianIndicesType;
-  typedef Matrix<ScalarType, OutputSpaceDimension, InputSpaceDimension> SpatialJacobianType;
-  typedef std::vector<SpatialJacobianType>                              JacobianOfSpatialJacobianType;
+  using NonZeroJacobianIndicesType = std::vector<unsigned long>;
+  using SpatialJacobianType = Matrix<ScalarType, OutputSpaceDimension, InputSpaceDimension>;
+  using JacobianOfSpatialJacobianType = std::vector<SpatialJacobianType>;
   // \todo: think about the SpatialHessian type, should be a 3D native type
-  typedef FixedArray<Matrix<ScalarType, InputSpaceDimension, InputSpaceDimension>, OutputSpaceDimension>
-                                                           SpatialHessianType;
-  typedef std::vector<SpatialHessianType>                  JacobianOfSpatialHessianType;
-  typedef typename SpatialJacobianType::InternalMatrixType InternalMatrixType;
+  using SpatialHessianType =
+    FixedArray<Matrix<ScalarType, InputSpaceDimension, InputSpaceDimension>, OutputSpaceDimension>;
+  using JacobianOfSpatialHessianType = std::vector<SpatialHessianType>;
+  using InternalMatrixType = typename SpatialJacobianType::InternalMatrixType;
 
   /** Typedef for the moving image gradient type.
    * This type is defined by the B-spline interpolator as
    * typedef CovariantVector< RealType, ImageDimension >
    * As we cannot access this type we simply re-construct it to be identical.
    */
-  typedef OutputCovariantVectorType                   MovingImageGradientType;
-  typedef typename MovingImageGradientType::ValueType MovingImageGradientValueType;
+  using MovingImageGradientType = OutputCovariantVectorType;
+  using MovingImageGradientValueType = typename MovingImageGradientType::ValueType;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual NumberOfParametersType

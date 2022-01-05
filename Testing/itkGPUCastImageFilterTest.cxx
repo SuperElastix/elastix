@@ -64,16 +64,16 @@ main(int argc, char * argv[])
   std::cout << std::showpoint << std::setprecision(4);
 
   // Typedefs.
-  const unsigned int                             Dimension = 3;
-  typedef short                                  InputPixelType;
-  typedef float                                  OutputPixelType;
-  typedef itk::Image<InputPixelType, Dimension>  InputImageType;
-  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
+  const unsigned int Dimension = 3;
+  using InputPixelType = short;
+  using OutputPixelType = float;
+  using InputImageType = itk::Image<InputPixelType, Dimension>;
+  using OutputImageType = itk::Image<OutputPixelType, Dimension>;
 
   // CPU Typedefs
-  typedef itk::CastImageFilter<InputImageType, OutputImageType> FilterType;
-  typedef itk::ImageFileReader<InputImageType>                  ReaderType;
-  typedef itk::ImageFileWriter<OutputImageType>                 WriterType;
+  using FilterType = itk::CastImageFilter<InputImageType, OutputImageType>;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
+  using WriterType = itk::ImageFileWriter<OutputImageType>;
 
   // Reader
   auto reader = ReaderType::New();
@@ -131,7 +131,7 @@ main(int argc, char * argv[])
   // Register object factory for GPU image and filter
   // All these filters that are constructed after this point are
   // turned into a GPU filter.
-  typedef typelist::MakeTypeList<short, float>::Type OCLImageTypes;
+  using OCLImageTypes = typelist::MakeTypeList<short, float>::Type;
   itk::GPUImageFactory2<OCLImageTypes, OCLImageDims>::RegisterOneFactory();
   itk::GPUCastImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLImageDims>::RegisterOneFactory();
 

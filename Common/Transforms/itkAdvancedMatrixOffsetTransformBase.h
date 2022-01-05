@@ -98,10 +98,10 @@ class ITK_TEMPLATE_EXPORT AdvancedMatrixOffsetTransformBase
 {
 public:
   /** Standard typedefs   */
-  typedef AdvancedMatrixOffsetTransformBase                                   Self;
-  typedef AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions> Superclass;
-  typedef SmartPointer<Self>                                                  Pointer;
-  typedef SmartPointer<const Self>                                            ConstPointer;
+  using Self = AdvancedMatrixOffsetTransformBase;
+  using Superclass = AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(AdvancedMatrixOffsetTransformBase, AdvancedTransform);
@@ -139,15 +139,15 @@ public:
   using typename Superclass::InternalMatrixType;
 
   /** Standard matrix type for this class. */
-  typedef Matrix<TScalarType, Self::OutputSpaceDimension, Self::InputSpaceDimension> MatrixType;
+  using MatrixType = Matrix<TScalarType, Self::OutputSpaceDimension, Self::InputSpaceDimension>;
 
   /** Standard inverse matrix type for this class. */
-  typedef Matrix<TScalarType, Self::InputSpaceDimension, Self::OutputSpaceDimension> InverseMatrixType;
+  using InverseMatrixType = Matrix<TScalarType, Self::InputSpaceDimension, Self::OutputSpaceDimension>;
 
   /** Typedefs. */
-  typedef InputPointType   CenterType;
-  typedef OutputVectorType OffsetType;
-  typedef OutputVectorType TranslationType;
+  using CenterType = InputPointType;
+  using OffsetType = OutputVectorType;
+  using TranslationType = OutputVectorType;
 
   /** Set the transformation to an Identity
    * This sets the matrix to identity and the Offset to null.

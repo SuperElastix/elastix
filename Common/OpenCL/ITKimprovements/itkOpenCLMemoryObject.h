@@ -61,10 +61,10 @@ protected:
 
 public:
   /** Standard class typedefs. */
-  typedef OpenCLMemoryObject    Self;
-  typedef Size<4>               RectangleType;
-  typedef Point<std::size_t, 2> PointType;
-  typedef Size<2>               SizeType;
+  using Self = OpenCLMemoryObject;
+  using RectangleType = Size<4>;
+  using PointType = Point<std::size_t, 2>;
+  using SizeType = Size<2>;
 
   /** \enum OpenCLMemoryObject::Access
    * This enum defines the access mode to the OpenCL memory objects.

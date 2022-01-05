@@ -41,13 +41,13 @@ main()
   const double maxAllowedDistance = 1e-5; // the allowable distance
 
   /** Other typedefs. */
-  typedef itk::KernelFunctionBase<double>          BaseKernelType;
-  typedef itk::BSplineDerivativeKernelFunction<1>  KernelType_ITK_1;
-  typedef itk::BSplineDerivativeKernelFunction2<1> KernelType_elx_1;
-  typedef itk::BSplineDerivativeKernelFunction<2>  KernelType_ITK_2;
-  typedef itk::BSplineDerivativeKernelFunction2<2> KernelType_elx_2;
-  typedef itk::BSplineDerivativeKernelFunction<3>  KernelType_ITK_3;
-  typedef itk::BSplineDerivativeKernelFunction2<3> KernelType_elx_3;
+  using BaseKernelType = itk::KernelFunctionBase<double>;
+  using KernelType_ITK_1 = itk::BSplineDerivativeKernelFunction<1>;
+  using KernelType_elx_1 = itk::BSplineDerivativeKernelFunction2<1>;
+  using KernelType_ITK_2 = itk::BSplineDerivativeKernelFunction<2>;
+  using KernelType_elx_2 = itk::BSplineDerivativeKernelFunction2<2>;
+  using KernelType_ITK_3 = itk::BSplineDerivativeKernelFunction<3>;
+  using KernelType_elx_3 = itk::BSplineDerivativeKernelFunction2<3>;
 
   /** Create the evaluation points. */
   // const unsigned int size_u = 17;

@@ -72,10 +72,10 @@ class AdaptiveStepsizeOptimizer : public StandardGradientDescentOptimizer
 {
 public:
   /** Standard ITK.*/
-  typedef AdaptiveStepsizeOptimizer        Self;
-  typedef StandardGradientDescentOptimizer Superclass;
-  typedef SmartPointer<Self>               Pointer;
-  typedef SmartPointer<const Self>         ConstPointer;
+  using Self = AdaptiveStepsizeOptimizer;
+  using Superclass = StandardGradientDescentOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

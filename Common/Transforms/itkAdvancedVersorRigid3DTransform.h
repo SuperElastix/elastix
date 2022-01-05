@@ -66,10 +66,10 @@ class ITK_TEMPLATE_EXPORT AdvancedVersorRigid3DTransform : public AdvancedVersor
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedVersorRigid3DTransform       Self;
-  typedef AdvancedVersorTransform<TScalarType> Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = AdvancedVersorRigid3DTransform;
+  using Superclass = AdvancedVersorTransform<TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);

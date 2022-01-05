@@ -48,13 +48,13 @@ class ITK_TEMPLATE_EXPORT AdvancedNormalizedCorrelationMetric
 {
 public:
   /** Standard ITK-stuff. */
-  typedef AdvancedNormalizedCorrelationMetric Self;
-  typedef itk::AdvancedNormalizedCorrelationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
-                                                               typename MetricBase<TElastix>::MovingImageType>
-                                        Superclass1;
-  typedef MetricBase<TElastix>          Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = AdvancedNormalizedCorrelationMetric;
+  using Superclass1 =
+    itk::AdvancedNormalizedCorrelationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
+                                                         typename MetricBase<TElastix>::MovingImageType>;
+  using Superclass2 = MetricBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -122,7 +122,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Execute stuff before each new pyramid resolution:
    * \li Set the flag to subtract the mean.

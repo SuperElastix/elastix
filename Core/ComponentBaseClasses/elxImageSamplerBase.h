@@ -45,8 +45,8 @@ class ITK_TEMPLATE_EXPORT ImageSamplerBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageSamplerBase          Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = ImageSamplerBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ImageSamplerBase, BaseComponentSE);
@@ -60,10 +60,10 @@ public:
   using typename Superclass::RegistrationPointer;
 
   /** Other typedef's. */
-  typedef typename ElastixType::FixedImageType InputImageType;
+  using InputImageType = typename ElastixType::FixedImageType;
 
   /** ITKBaseType. */
-  typedef itk::ImageSamplerBase<InputImageType> ITKBaseType;
+  using ITKBaseType = itk::ImageSamplerBase<InputImageType>;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *

@@ -39,17 +39,17 @@ class ITK_TEMPLATE_EXPORT GPUCompositeTransformBase : public GPUTransformBase
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUCompositeTransformBase Self;
-  typedef GPUTransformBase          GPUSuperclass;
+  using Self = GPUCompositeTransformBase;
+  using GPUSuperclass = GPUTransformBase;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(GPUCompositeTransformBase, GPUSuperclass);
 
   /** Sub transform types. */
-  typedef TScalarType                                      ScalarType;
-  typedef Transform<TScalarType, NDimensions, NDimensions> TransformType;
-  typedef typename TransformType::Pointer                  TransformTypePointer;
-  typedef typename TransformType::ConstPointer             TransformTypeConstPointer;
+  using ScalarType = TScalarType;
+  using TransformType = Transform<TScalarType, NDimensions, NDimensions>;
+  using TransformTypePointer = typename TransformType::Pointer;
+  using TransformTypeConstPointer = typename TransformType::ConstPointer;
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, NDimensions);

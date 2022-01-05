@@ -51,10 +51,10 @@ class ITK_TEMPLATE_EXPORT MultiInputImageToImageMetricBase
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiInputImageToImageMetricBase                      Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = MultiInputImageToImageMetricBase;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(MultiInputImageToImageMetricBase, AdvancedImageToImageMetric);
@@ -95,17 +95,17 @@ public:
   using typename Superclass::DerivativeType;
   using typename Superclass::ParametersType;
 
-  typedef InterpolateImageFunction<FixedImageType, CoordinateRepresentationType> FixedImageInterpolatorType;
-  typedef typename FixedImageInterpolatorType::Pointer                           FixedImageInterpolatorPointer;
+  using FixedImageInterpolatorType = InterpolateImageFunction<FixedImageType, CoordinateRepresentationType>;
+  using FixedImageInterpolatorPointer = typename FixedImageInterpolatorType::Pointer;
 
   /** Typedef's for storing multiple inputs. */
-  typedef std::vector<FixedImageConstPointer>        FixedImageVectorType;
-  typedef std::vector<FixedImageMaskPointer>         FixedImageMaskVectorType;
-  typedef std::vector<FixedImageRegionType>          FixedImageRegionVectorType;
-  typedef std::vector<MovingImageConstPointer>       MovingImageVectorType;
-  typedef std::vector<MovingImageMaskPointer>        MovingImageMaskVectorType;
-  typedef std::vector<InterpolatorPointer>           InterpolatorVectorType;
-  typedef std::vector<FixedImageInterpolatorPointer> FixedImageInterpolatorVectorType;
+  using FixedImageVectorType = std::vector<FixedImageConstPointer>;
+  using FixedImageMaskVectorType = std::vector<FixedImageMaskPointer>;
+  using FixedImageRegionVectorType = std::vector<FixedImageRegionType>;
+  using MovingImageVectorType = std::vector<MovingImageConstPointer>;
+  using MovingImageMaskVectorType = std::vector<MovingImageMaskPointer>;
+  using InterpolatorVectorType = std::vector<InterpolatorPointer>;
+  using FixedImageInterpolatorVectorType = std::vector<FixedImageInterpolatorPointer>;
 
   /** ******************** Fixed images ******************** */
 
@@ -359,8 +359,8 @@ protected:
 
   /** Typedef's for the moving image interpolators. */
   using typename Superclass::BSplineInterpolatorType;
-  typedef typename BSplineInterpolatorType::Pointer BSplineInterpolatorPointer;
-  typedef std::vector<BSplineInterpolatorPointer>   BSplineInterpolatorVectorType;
+  using BSplineInterpolatorPointer = typename BSplineInterpolatorType::Pointer;
+  using BSplineInterpolatorVectorType = std::vector<BSplineInterpolatorPointer>;
 
   /** Initialize variables related to the image sampler; called by Initialize. */
   void

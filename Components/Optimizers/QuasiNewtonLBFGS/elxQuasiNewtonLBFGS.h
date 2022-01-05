@@ -91,11 +91,11 @@ class ITK_TEMPLATE_EXPORT QuasiNewtonLBFGS
 {
 public:
   /** Standard ITK.*/
-  typedef QuasiNewtonLBFGS              Self;
-  typedef QuasiNewtonLBFGSOptimizer     Superclass1;
-  typedef OptimizerBase<TElastix>       Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = QuasiNewtonLBFGS;
+  using Superclass1 = QuasiNewtonLBFGSOptimizer;
+  using Superclass2 = OptimizerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -124,13 +124,13 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Extra typedefs */
-  typedef itk::MoreThuenteLineSearchOptimizer    LineOptimizerType;
-  typedef LineOptimizerType::Pointer             LineOptimizerPointer;
-  typedef itk::ReceptorMemberCommand<Self>       EventPassThroughType;
-  typedef typename EventPassThroughType::Pointer EventPassThroughPointer;
+  using LineOptimizerType = itk::MoreThuenteLineSearchOptimizer;
+  using LineOptimizerPointer = LineOptimizerType::Pointer;
+  using EventPassThroughType = itk::ReceptorMemberCommand<Self>;
+  using EventPassThroughPointer = typename EventPassThroughType::Pointer;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */

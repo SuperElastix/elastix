@@ -53,47 +53,47 @@ class ComponentDatabase : public itk::Object
 {
 public:
   /** Standard.*/
-  typedef ComponentDatabase             Self;
-  typedef itk::Object                   Superclass;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = ComponentDatabase;
+  using Superclass = itk::Object;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   itkNewMacro(Self);
   itkTypeMacro(ComponentDatabase, Object);
 
   /** The Index is the number of the ElastixTypedef<number>::ElastixType.*/
-  typedef unsigned int IndexType;
+  using IndexType = unsigned int;
 
   /** Typedefs for the CreatorMap*/
-  typedef itk::Object         ObjectType;
-  typedef ObjectType::Pointer ObjectPointer;
+  using ObjectType = itk::Object;
+  using ObjectPointer = ObjectType::Pointer;
 
   /** PtrToCreator is a pointer to a function which
    * outputs an ObjectPointer and has no input arguments.
    */
-  typedef ObjectPointer (*PtrToCreator)();
-  typedef std::string                                      ComponentDescriptionType;
-  typedef std::pair<ComponentDescriptionType, IndexType>   CreatorMapKeyType;
-  typedef PtrToCreator                                     CreatorMapValueType;
-  typedef std::map<CreatorMapKeyType, CreatorMapValueType> CreatorMapType;
-  typedef CreatorMapType::value_type                       CreatorMapEntryType;
+  using PtrToCreator = ObjectPointer (*)();
+  using ComponentDescriptionType = std::string;
+  using CreatorMapKeyType = std::pair<ComponentDescriptionType, IndexType>;
+  using CreatorMapValueType = PtrToCreator;
+  using CreatorMapType = std::map<CreatorMapKeyType, CreatorMapValueType>;
+  using CreatorMapEntryType = CreatorMapType::value_type;
 
   /** Typedefs for the IndexMap.*/
 
   /** The ImageTypeDescription contains the pixeltype (as a string)
    * and the dimension (unsigned int).
    */
-  typedef std::string                                             PixelTypeDescriptionType;
-  typedef unsigned int                                            ImageDimensionType;
-  typedef std::pair<PixelTypeDescriptionType, ImageDimensionType> ImageTypeDescriptionType;
+  using PixelTypeDescriptionType = std::string;
+  using ImageDimensionType = unsigned int;
+  using ImageTypeDescriptionType = std::pair<PixelTypeDescriptionType, ImageDimensionType>;
 
   /** This pair contains the ImageTypeDescription of the FixedImageType
    * and the MovingImageType.
    */
-  typedef std::pair<ImageTypeDescriptionType, ImageTypeDescriptionType> IndexMapKeyType;
-  typedef IndexType                                                     IndexMapValueType;
-  typedef std::map<IndexMapKeyType, IndexMapValueType>                  IndexMapType;
-  typedef IndexMapType::value_type                                      IndexMapEntryType;
+  using IndexMapKeyType = std::pair<ImageTypeDescriptionType, ImageTypeDescriptionType>;
+  using IndexMapValueType = IndexType;
+  using IndexMapType = std::map<IndexMapKeyType, IndexMapValueType>;
+  using IndexMapEntryType = IndexMapType::value_type;
 
   /** Functions to set an entry in a map.*/
   int

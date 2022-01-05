@@ -44,10 +44,10 @@ class ITK_TEMPLATE_EXPORT ExponentialLimiterFunction : public LimiterFunctionBas
 {
 public:
   /** Standard class typedefs. */
-  typedef ExponentialLimiterFunction              Self;
-  typedef LimiterFunctionBase<TInput, NDimension> Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  using Self = ExponentialLimiterFunction;
+  using Superclass = LimiterFunctionBase<TInput, NDimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ExponentialLimiterFunction, LimiterFunctionBase);

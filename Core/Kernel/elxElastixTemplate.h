@@ -104,10 +104,10 @@ class ITK_TEMPLATE_EXPORT ElastixTemplate final : public ElastixBase
 {
 public:
   /** Standard itk. */
-  typedef ElastixTemplate               Self;
-  typedef ElastixBase                   Superclass;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = ElastixTemplate;
+  using Superclass = ElastixBase;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -116,10 +116,10 @@ public:
   itkTypeMacro(ElastixTemplate, ElastixBase);
 
   /** Typedef's for this class. */
-  typedef TFixedImage                       FixedImageType;
-  typedef TMovingImage                      MovingImageType;
-  typedef typename FixedImageType::Pointer  FixedImagePointer;
-  typedef typename MovingImageType::Pointer MovingImagePointer;
+  using FixedImageType = TFixedImage;
+  using MovingImageType = TMovingImage;
+  using FixedImagePointer = typename FixedImageType::Pointer;
+  using MovingImagePointer = typename MovingImageType::Pointer;
 
   /** For using the Dimensions. */
   itkStaticConstMacro(Dimension, unsigned int, FixedImageType::ImageDimension);
@@ -127,51 +127,51 @@ public:
   itkStaticConstMacro(MovingDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Types for the masks. */
-  typedef unsigned char                              MaskPixelType;
-  typedef itk::Image<MaskPixelType, FixedDimension>  FixedMaskType;
-  typedef itk::Image<MaskPixelType, MovingDimension> MovingMaskType;
-  typedef typename FixedMaskType::Pointer            FixedMaskPointer;
-  typedef typename MovingMaskType::Pointer           MovingMaskPointer;
+  using MaskPixelType = unsigned char;
+  using FixedMaskType = itk::Image<MaskPixelType, FixedDimension>;
+  using MovingMaskType = itk::Image<MaskPixelType, MovingDimension>;
+  using FixedMaskPointer = typename FixedMaskType::Pointer;
+  using MovingMaskPointer = typename MovingMaskType::Pointer;
 
   /** Typedef for the UseDirectionCosines option. */
-  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
+  using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   /** BaseComponent. */
-  typedef BaseComponent BaseComponentType;
+  using BaseComponentType = BaseComponent;
 
   /** A Pointer to a member function of a BaseComponentType. */
-  typedef void (BaseComponentType::*PtrToMemberFunction)();
-  typedef int (BaseComponentType::*PtrToMemberFunction2)();
+  using PtrToMemberFunction = void (BaseComponentType::*)();
+  using PtrToMemberFunction2 = int (BaseComponentType::*)();
 
   /** Commands that react on Events and call Self::Function(). */
-  typedef itk::SimpleMemberCommand<Self>                    BeforeEachResolutionCommandType;
-  typedef itk::SimpleMemberCommand<Self>                    AfterEachResolutionCommandType;
-  typedef itk::SimpleMemberCommand<Self>                    AfterEachIterationCommandType;
-  typedef typename BeforeEachResolutionCommandType::Pointer BeforeEachResolutionCommandPointer;
-  typedef typename AfterEachResolutionCommandType::Pointer  AfterEachResolutionCommandPointer;
-  typedef typename AfterEachIterationCommandType::Pointer   AfterEachIterationCommandPointer;
+  using BeforeEachResolutionCommandType = itk::SimpleMemberCommand<Self>;
+  using AfterEachResolutionCommandType = itk::SimpleMemberCommand<Self>;
+  using AfterEachIterationCommandType = itk::SimpleMemberCommand<Self>;
+  using BeforeEachResolutionCommandPointer = typename BeforeEachResolutionCommandType::Pointer;
+  using AfterEachResolutionCommandPointer = typename AfterEachResolutionCommandType::Pointer;
+  using AfterEachIterationCommandPointer = typename AfterEachIterationCommandType::Pointer;
 
   /** The elastix basecomponent types. */
-  typedef FixedImagePyramidBase<Self>    FixedImagePyramidBaseType;
-  typedef MovingImagePyramidBase<Self>   MovingImagePyramidBaseType;
-  typedef InterpolatorBase<Self>         InterpolatorBaseType;
-  typedef elx::ImageSamplerBase<Self>    ImageSamplerBaseType;
-  typedef MetricBase<Self>               MetricBaseType;
-  typedef OptimizerBase<Self>            OptimizerBaseType;
-  typedef RegistrationBase<Self>         RegistrationBaseType;
-  typedef ResamplerBase<Self>            ResamplerBaseType;
-  typedef ResampleInterpolatorBase<Self> ResampleInterpolatorBaseType;
-  typedef elx::TransformBase<Self>       TransformBaseType;
+  using FixedImagePyramidBaseType = FixedImagePyramidBase<Self>;
+  using MovingImagePyramidBaseType = MovingImagePyramidBase<Self>;
+  using InterpolatorBaseType = InterpolatorBase<Self>;
+  using ImageSamplerBaseType = elx::ImageSamplerBase<Self>;
+  using MetricBaseType = MetricBase<Self>;
+  using OptimizerBaseType = OptimizerBase<Self>;
+  using RegistrationBaseType = RegistrationBase<Self>;
+  using ResamplerBaseType = ResamplerBase<Self>;
+  using ResampleInterpolatorBaseType = ResampleInterpolatorBase<Self>;
+  using TransformBaseType = elx::TransformBase<Self>;
 
   /** Typedef's for ApplyTransform.
    * \todo How useful is this? It is not consequently supported, since the
    * the input image is stored in the MovingImageContainer anyway.
    */
-  typedef MovingImageType InputImageType;
-  typedef MovingImageType OutputImageType;
+  using InputImageType = MovingImageType;
+  using OutputImageType = MovingImageType;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
+  using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
 
   /** Functions to set/get pointers to the elastix components.
    * Get the components as pointers to elxBaseType.

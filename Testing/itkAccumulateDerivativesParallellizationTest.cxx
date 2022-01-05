@@ -47,23 +47,23 @@ class MetricTEMP : public itk::Object
 {
 public:
   /** Standard class typedefs. */
-  typedef MetricTEMP              Self;
-  typedef itk::SmartPointer<Self> Pointer;
+  using Self = MetricTEMP;
+  using Pointer = itk::SmartPointer<Self>;
   itkNewMacro(Self);
 
-  typedef InternalScalarType              DerivativeValueType;
-  typedef itk::Array<DerivativeValueType> DerivativeType;
+  using DerivativeValueType = InternalScalarType;
+  using DerivativeType = itk::Array<DerivativeValueType>;
 
   unsigned long                       m_NumberOfParameters;
   mutable std::vector<DerivativeType> m_ThreaderDerivatives;
 
-  typedef itk::PlatformMultiThreader ThreaderType;
-  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
-  ThreaderType::Pointer              m_Threader;
-  DerivativeValueType                m_NormalSum;
-  ThreadIdType                       m_NumberOfThreads;
-  bool                               m_UseOpenMP;
-  bool                               m_UseMultiThreaded;
+  using ThreaderType = itk::PlatformMultiThreader;
+  using ThreadInfoType = ThreaderType::WorkUnitInfo;
+  ThreaderType::Pointer m_Threader;
+  DerivativeValueType   m_NormalSum;
+  ThreadIdType          m_NumberOfThreads;
+  bool                  m_UseOpenMP;
+  bool                  m_UseMultiThreaded;
 
   struct MultiThreaderParameterType
   {
@@ -190,8 +190,8 @@ main()
   std::cout << "RESULTS FOR InternalScalarType = " << typeid(InternalScalarType).name() << "\n\n" << std::endl;
 
   /** Typedefs. */
-  typedef MetricTEMP                  MetricClass;
-  typedef MetricClass::DerivativeType DerivativeType;
+  using MetricClass = MetricTEMP;
+  using DerivativeType = MetricClass::DerivativeType;
 
   auto metric = MetricClass::New();
 

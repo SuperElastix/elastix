@@ -34,10 +34,10 @@ class AffineLogTransform : public AdvancedMatrixOffsetTransformBase<TScalarType,
 {
 public:
   /** Standard class typedefs. */
-  typedef AffineLogTransform                                                   Self;
-  typedef AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension> Superclass;
-  typedef SmartPointer<Self>                                                   Pointer;
-  typedef SmartPointer<const Self>                                             ConstPointer;
+  using Self = AffineLogTransform;
+  using Superclass = AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);
@@ -68,7 +68,7 @@ public:
   using typename Superclass::CenterType;
   using typename Superclass::TranslationType;
   using typename Superclass::OffsetType;
-  typedef typename Superclass::ScalarType AngleType;
+  using AngleType = typename Superclass::ScalarType;
 
   using typename Superclass::NonZeroJacobianIndicesType;
   using typename Superclass::SpatialJacobianType;
@@ -77,7 +77,7 @@ public:
   using typename Superclass::JacobianOfSpatialHessianType;
   using typename Superclass::InternalMatrixType;
 
-  typedef FixedArray<ScalarType> ScalarArrayType;
+  using ScalarArrayType = FixedArray<ScalarType>;
 
   void
   SetParameters(const ParametersType & parameters) override;

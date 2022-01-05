@@ -63,11 +63,11 @@ template <typename TPixel, unsigned int VImageDimension = 2>
 class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUImage : public Image<TPixel, VImageDimension>
 {
 public:
-  typedef GPUImage                       Self;
-  typedef Image<TPixel, VImageDimension> Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
-  typedef WeakPointer<const Self>        ConstWeakPointer;
+  using Self = GPUImage;
+  using Superclass = Image<TPixel, VImageDimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
+  using ConstWeakPointer = WeakPointer<const Self>;
 
   itkNewMacro(Self);
 
@@ -86,13 +86,13 @@ public:
   using typename Superclass::IndexType;
   using typename Superclass::OffsetType;
   using typename Superclass::RegionType;
-  typedef typename PixelContainer::Pointer      PixelContainerPointer;
-  typedef typename PixelContainer::ConstPointer PixelContainerConstPointer;
+  using PixelContainerPointer = typename PixelContainer::Pointer;
+  using PixelContainerConstPointer = typename PixelContainer::ConstPointer;
   using typename Superclass::AccessorType;
 
-  typedef DefaultPixelAccessorFunctor<Self> AccessorFunctorType;
+  using AccessorFunctorType = DefaultPixelAccessorFunctor<Self>;
 
-  typedef NeighborhoodAccessorFunctor<Self> NeighborhoodAccessorFunctorType;
+  using NeighborhoodAccessorFunctorType = NeighborhoodAccessorFunctor<Self>;
 
   /** Allocate CPU and GPU memory space */
   void
@@ -268,14 +268,14 @@ template <typename T>
 class ITK_TEMPLATE_EXPORT GPUTraits
 {
 public:
-  typedef T Type;
+  using Type = T;
 };
 
 template <typename TPixelType, unsigned int NDimension>
 class ITK_TEMPLATE_EXPORT GPUTraits<Image<TPixelType, NDimension>>
 {
 public:
-  typedef GPUImage<TPixelType, NDimension> Type;
+  using Type = GPUImage<TPixelType, NDimension>;
 };
 
 } // end namespace itk

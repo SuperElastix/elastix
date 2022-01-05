@@ -279,7 +279,7 @@ template <class TElastix>
 unsigned int
 MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
-  typedef itk::MeshFileReader<MeshType> MeshReaderType;
+  using MeshReaderType = itk::MeshFileReader<MeshType>;
 
   /** Read the input mesh. */
   auto meshReader = MeshReaderType::New();
@@ -313,7 +313,7 @@ void
 MissingStructurePenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
 {
   /** Typedef's for writing the output mesh. */
-  typedef itk::MeshFileWriter<MeshType> MeshWriterType;
+  using MeshWriterType = itk::MeshFileWriter<MeshType>;
 
   /** Create writer. */
   auto meshWriter = MeshWriterType::New();
@@ -405,21 +405,21 @@ Function to read 2d structures by reading elastix point files (transformix forma
 the sequence of points to form a 2d connected polydata contour.
   */
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType               FixedImageRegionType;
-  typedef typename FixedImageType::PointType                FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
-  typedef typename FixedImageType::IndexType                FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType      FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType               MovingImageIndexType;
-  typedef itk::ContinuousIndex<double, FixedImageDimension> FixedImageContinuousIndexType;
-  typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using FixedImageOriginType = typename FixedImageType::PointType;
+  using FixedImageSpacingType = typename FixedImageType::SpacingType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using FixedImageIndexValueType = typename FixedImageIndexType::IndexValueType;
+  using MovingImageIndexType = typename MovingImageType::IndexType;
+  using FixedImageContinuousIndexType = itk::ContinuousIndex<double, FixedImageDimension>;
+  using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
-  typedef unsigned char DummyIPPPixelType;
-  typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>
-                                                                                MeshTraitsType;
-  typedef itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType> PointSetType;
-  typedef itk::TransformixInputPointFileReader<PointSetType>                    IPPReaderType;
-  typedef itk::Vector<float, FixedImageDimension>                               DeformationVectorType;
+  using DummyIPPPixelType = unsigned char;
+  using MeshTraitsType =
+    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
+  using PointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
+  using DeformationVectorType = itk::Vector<float, FixedImageDimension>;
 
   /** Construct an ipp-file reader. */
   auto ippReader = IPPReaderType::New();
@@ -533,8 +533,8 @@ the sequence of points to form a 2d connected polydata contour.
   /** FB: make connected mesh (polygon) for data that is 2d by assuming the sequence of points being connected**/
   if (FixedImageDimension == 2)
   {
-    typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
-    typedef itk::LineCell<typename MeshType::CellType>   LineType;
+    using CellAutoPointer = typename MeshType::CellType::CellAutoPointer;
+    using LineType = itk::LineCell<typename MeshType::CellType>;
 
     for (unsigned int i = 0; i < nrofpoints; ++i)
     {

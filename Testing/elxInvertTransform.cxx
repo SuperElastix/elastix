@@ -85,15 +85,15 @@ main(int argc, char * argv[])
   /** Typedef's. */
   // const unsigned int Dimension = 2;
   const unsigned int Dimension = 3;
-  typedef float      PrecisionType;
-  std::string        dummyErrorMessage = "";
+  using PrecisionType = float;
+  std::string dummyErrorMessage = "";
 
-  typedef itk::Transform<PrecisionType, Dimension, Dimension> BaseTransformType;
-  typedef itk::EulerTransform<PrecisionType, Dimension>       RigidTransformType;
-  typedef itk::AffineTransform<PrecisionType, Dimension>      AffineTransformType;
-  typedef BaseTransformType::ParametersType                   ParametersType;
-  typedef BaseTransformType::ScalarType                       ScalarType;
-  typedef RigidTransformType::CenterType                      CenterType;
+  using BaseTransformType = itk::Transform<PrecisionType, Dimension, Dimension>;
+  using RigidTransformType = itk::EulerTransform<PrecisionType, Dimension>;
+  using AffineTransformType = itk::AffineTransform<PrecisionType, Dimension>;
+  using ParametersType = BaseTransformType::ParametersType;
+  using ScalarType = BaseTransformType::ScalarType;
+  using CenterType = RigidTransformType::CenterType;
   // typedef BaseTransformType::OutputPointType               OutputPointType;
 
   /** Interface to the original transform parameters file. */
@@ -130,9 +130,9 @@ main(int argc, char * argv[])
    */
 
   /** Create a testReader. */
-  typedef itk::Image<short, Dimension>         DummyImageType;
-  typedef itk::ImageFileReader<DummyImageType> ReaderType;
-  auto                                         testReader = ReaderType::New();
+  using DummyImageType = itk::Image<short, Dimension>;
+  using ReaderType = itk::ImageFileReader<DummyImageType>;
+  auto testReader = ReaderType::New();
   testReader->SetFileName(movingImageFileName);
 
   /** Generate all information. */

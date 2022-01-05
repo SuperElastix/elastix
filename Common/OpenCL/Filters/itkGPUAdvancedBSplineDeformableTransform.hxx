@@ -35,11 +35,11 @@ GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TP
 {
   GPUSuperclass::SetSplineOrder(CPUSuperclass::SplineOrder);
 
-  typedef typename CPUSuperclass::ImageType       CPUCoefficientImage;
-  typedef typename CPUCoefficientImage::PixelType CPUCoefficientsImagePixelType;
+  using CPUCoefficientImage = typename CPUSuperclass::ImageType;
+  using CPUCoefficientsImagePixelType = typename CPUCoefficientImage::PixelType;
 
-  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
-  typedef typename GPUCoefficientsImageType::Pointer                                   GPUCoefficientsImagePointer;
+  using GPUCoefficientsImageType = GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension>;
+  using GPUCoefficientsImagePointer = typename GPUCoefficientsImageType::Pointer;
 
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
@@ -92,12 +92,12 @@ void
 GPUAdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::
   CopyCoefficientImagesToGPU()
 {
-  typedef typename CPUSuperclass::ImageType             CPUCoefficientImage;
-  typedef typename CPUCoefficientImage::PixelType       CPUCoefficientsImagePixelType;
-  typedef typename GPUSuperclass::GPUDataManagerPointer GPUDataManagerPointer;
+  using CPUCoefficientImage = typename CPUSuperclass::ImageType;
+  using CPUCoefficientsImagePixelType = typename CPUCoefficientImage::PixelType;
+  using GPUDataManagerPointer = typename GPUSuperclass::GPUDataManagerPointer;
 
-  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
-  typedef typename GPUCoefficientsImageType::Pointer                                   GPUCoefficientsImagePointer;
+  using GPUCoefficientsImageType = GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension>;
+  using GPUCoefficientsImagePointer = typename GPUCoefficientsImageType::Pointer;
 
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {

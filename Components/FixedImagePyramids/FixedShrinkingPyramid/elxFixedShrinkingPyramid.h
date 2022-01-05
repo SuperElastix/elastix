@@ -43,13 +43,13 @@ class ITK_TEMPLATE_EXPORT FixedShrinkingPyramid
 {
 public:
   /** Standard ITK-stuff. */
-  typedef FixedShrinkingPyramid Self;
-  typedef itk::MultiResolutionShrinkPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
-                                                       typename FixedImagePyramidBase<TElastix>::OutputImageType>
-                                          Superclass1;
-  typedef FixedImagePyramidBase<TElastix> Superclass2;
-  typedef itk::SmartPointer<Self>         Pointer;
-  typedef itk::SmartPointer<const Self>   ConstPointer;
+  using Self = FixedShrinkingPyramid;
+  using Superclass1 =
+    itk::MultiResolutionShrinkPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
+                                                 typename FixedImagePyramidBase<TElastix>::OutputImageType>;
+  using Superclass2 = FixedImagePyramidBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -81,7 +81,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
 protected:
   /** The constructor. */

@@ -499,11 +499,11 @@ void
 AdvancedBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth)
 {
   /** Some typedefs. */
-  typedef itk::ImageRegionExclusionConstIteratorWithIndex<ImageType> IteratorType;
-  typedef typename RegistrationType::ITKBaseType                     ITKRegistrationType;
-  typedef typename ITKRegistrationType::OptimizerType                OptimizerType;
-  typedef typename OptimizerType::ScalesType                         ScalesType;
-  typedef typename ScalesType::ValueType                             ScalesValueType;
+  using IteratorType = itk::ImageRegionExclusionConstIteratorWithIndex<ImageType>;
+  using ITKRegistrationType = typename RegistrationType::ITKBaseType;
+  using OptimizerType = typename ITKRegistrationType::OptimizerType;
+  using ScalesType = typename OptimizerType::ScalesType;
+  using ScalesValueType = typename ScalesType::ValueType;
 
   /** Define new scales. */
   const NumberOfParametersType numberOfParameters = this->m_BSplineTransform->GetNumberOfParameters();

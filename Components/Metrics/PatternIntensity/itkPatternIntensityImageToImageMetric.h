@@ -47,10 +47,10 @@ class ITK_TEMPLATE_EXPORT PatternIntensityImageToImageMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef PatternIntensityImageToImageMetric                    Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = PatternIntensityImageToImageMetric;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -68,7 +68,7 @@ public:
   using typename Superclass::FixedImageConstPointer;
   using typename Superclass::FixedImageRegionType;
   using typename Superclass::TransformType;
-  typedef typename TransformType::ScalarType ScalarType;
+  using ScalarType = typename TransformType::ScalarType;
   using typename Superclass::TransformPointer;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
@@ -100,29 +100,29 @@ public:
   using typename Superclass::FixedImageLimiterOutputType;
   using typename Superclass::MovingImageLimiterOutputType;
   using typename Superclass::MovingImageDerivativeScalesType;
-  typedef typename itk::Optimizer            OptimizerType;
-  typedef typename OptimizerType::ScalesType ScalesType;
+  using OptimizerType = typename itk::Optimizer;
+  using ScalesType = typename OptimizerType::ScalesType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
-  typedef itk::Image<FixedImagePixelType, Self::FixedImageDimension>                  TransformedMovingImageType;
-  typedef typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension> CombinationTransformType;
-  typedef typename CombinationTransformType::Pointer                                  CombinationTransformPointer;
-  typedef typename itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, ScalarType> RayCastInterpolatorType;
-  typedef typename RayCastInterpolatorType::Pointer                                          RayCastInterpolatorPointer;
-  typedef itk::ResampleImageFilter<MovingImageType, TransformedMovingImageType> TransformMovingImageFilterType;
-  typedef typename TransformMovingImageFilterType::Pointer                      TransformMovingImageFilterPointer;
-  typedef itk::RescaleIntensityImageFilter<TransformedMovingImageType, TransformedMovingImageType>
-                                                            RescaleIntensityImageFilterType;
-  typedef typename RescaleIntensityImageFilterType::Pointer RescaleIntensityImageFilterPointer;
+  using TransformedMovingImageType = itk::Image<FixedImagePixelType, Self::FixedImageDimension>;
+  using CombinationTransformType = typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension>;
+  using CombinationTransformPointer = typename CombinationTransformType::Pointer;
+  using RayCastInterpolatorType = typename itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, ScalarType>;
+  using RayCastInterpolatorPointer = typename RayCastInterpolatorType::Pointer;
+  using TransformMovingImageFilterType = itk::ResampleImageFilter<MovingImageType, TransformedMovingImageType>;
+  using TransformMovingImageFilterPointer = typename TransformMovingImageFilterType::Pointer;
+  using RescaleIntensityImageFilterType =
+    itk::RescaleIntensityImageFilter<TransformedMovingImageType, TransformedMovingImageType>;
+  using RescaleIntensityImageFilterPointer = typename RescaleIntensityImageFilterType::Pointer;
 
-  typedef itk::SubtractImageFilter<FixedImageType, TransformedMovingImageType, TransformedMovingImageType>
-                                                      DifferenceImageFilterType;
-  typedef typename DifferenceImageFilterType::Pointer DifferenceImageFilterPointer;
-  typedef itk::MultiplyImageFilter<TransformedMovingImageType, TransformedMovingImageType, TransformedMovingImageType>
-                                                    MultiplyImageFilterType;
-  typedef typename MultiplyImageFilterType::Pointer MultiplyImageFilterPointer;
+  using DifferenceImageFilterType =
+    itk::SubtractImageFilter<FixedImageType, TransformedMovingImageType, TransformedMovingImageType>;
+  using DifferenceImageFilterPointer = typename DifferenceImageFilterType::Pointer;
+  using MultiplyImageFilterType =
+    itk::MultiplyImageFilter<TransformedMovingImageType, TransformedMovingImageType, TransformedMovingImageType>;
+  using MultiplyImageFilterPointer = typename MultiplyImageFilterType::Pointer;
 
   /** The moving image dimension. */
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);

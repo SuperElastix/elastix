@@ -34,8 +34,8 @@ void
 MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData()
 {
   /** Create the shrinking filter. */
-  typedef ShrinkImageFilter<TInputImage, TOutputImage> ShrinkerType;
-  auto                                                 shrinker = ShrinkerType::New();
+  using ShrinkerType = ShrinkImageFilter<TInputImage, TOutputImage>;
+  auto shrinker = ShrinkerType::New();
   shrinker->SetInput(this->GetInput());
 
   /** Loop over all resolution levels. */

@@ -79,10 +79,10 @@ class ITK_TEMPLATE_EXPORT MultiMetricMultiResolutionImageRegistrationMethod
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiMetricMultiResolutionImageRegistrationMethod                  Self;
-  typedef MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                                 Pointer;
-  typedef SmartPointer<const Self>                                           ConstPointer;
+  using Self = MultiMetricMultiResolutionImageRegistrationMethod;
+  using Superclass = MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -104,7 +104,7 @@ public:
   using typename Superclass::InterpolatorType;
   using typename Superclass::InterpolatorPointer;
   using typename Superclass::OptimizerType;
-  typedef typename OptimizerType::Pointer OptimizerPointer;
+  using OptimizerPointer = typename OptimizerType::Pointer;
   using typename Superclass::FixedImagePyramidType;
   using typename Superclass::FixedImagePyramidPointer;
   using typename Superclass::MovingImagePyramidType;
@@ -118,8 +118,8 @@ public:
   using typename Superclass::DataObjectPointer;
 
   /** Extra typedefs */
-  typedef CombinationImageToImageMetric<FixedImageType, MovingImageType> CombinationMetricType;
-  typedef typename CombinationMetricType::Pointer                        CombinationMetricPointer;
+  using CombinationMetricType = CombinationImageToImageMetric<FixedImageType, MovingImageType>;
+  using CombinationMetricPointer = typename CombinationMetricType::Pointer;
 
   /** Unfortunately the StopRegistration method is not virtual and
    * the m_Stop member is private in the superclass. That's why
@@ -280,7 +280,7 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  typedef std::vector<FixedImageRegionType> FixedImageRegionPyramidType;
+  using FixedImageRegionPyramidType = std::vector<FixedImageRegionType>;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.

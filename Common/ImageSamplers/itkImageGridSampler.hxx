@@ -72,8 +72,8 @@ ImageGridSampler<TInputImage>::GenerateData()
   sampleContainer->Initialize();
 
   /** Set up a region iterator within the user specified image region. */
-  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
-  InputImageIterator                                        iter(inputImage, this->GetCroppedInputImageRegion());
+  using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
+  InputImageIterator iter(inputImage, this->GetCroppedInputImageRegion());
 
   /** Take into account the possibility of a smaller bounding box around the mask */
   this->SetNumberOfSamples(this->m_RequestedNumberOfSamples);

@@ -56,7 +56,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
   MarginalPDFType & pdf) const
 {
   /** Typedef iterator */
-  typedef typename MarginalPDFType::iterator MarginalPDFIteratorType;
+  using MarginalPDFIteratorType = typename MarginalPDFType::iterator;
 
   /** Prepare iterators for computing marginal logPDF. */
   MarginalPDFIteratorType       PDFit = pdf.begin();
@@ -91,8 +91,8 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
   ComputeNormalizedMutualInformation(MeasureType & jointEntropy) const -> MeasureType
 {
   /** Typedef iterators */
-  typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFConstIteratorType;
-  typedef typename MarginalPDFType::const_iterator        MarginalPDFConstIteratorType;
+  using JointPDFConstIteratorType = ImageLinearConstIteratorWithIndex<JointPDFType>;
+  using MarginalPDFConstIteratorType = typename MarginalPDFType::const_iterator;
 
   /** Prepare iterators for computing measure */
   JointPDFConstIteratorType jointPDFconstit(this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion());
@@ -216,11 +216,11 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
    **/
 
   /** Typedefs for iterators */
-  typedef ImageLinearConstIteratorWithIndex<JointPDFDerivativesType> JointPDFDerivativesConstIteratorType;
-  typedef typename DerivativeType::iterator                          DerivativeIteratorType;
-  typedef typename DerivativeType::const_iterator                    DerivativeConstIteratorType;
-  typedef ImageLinearConstIteratorWithIndex<JointPDFType>            JointPDFConstIteratorType;
-  typedef typename MarginalPDFType::const_iterator                   MarginalPDFConstIteratorType;
+  using JointPDFDerivativesConstIteratorType = ImageLinearConstIteratorWithIndex<JointPDFDerivativesType>;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
+  using DerivativeConstIteratorType = typename DerivativeType::const_iterator;
+  using JointPDFConstIteratorType = ImageLinearConstIteratorWithIndex<JointPDFType>;
+  using MarginalPDFConstIteratorType = typename MarginalPDFType::const_iterator;
 
   /** Setup iterators */
   JointPDFDerivativesConstIteratorType jointPDFDerivativesConstit(

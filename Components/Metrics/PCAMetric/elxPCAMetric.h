@@ -66,12 +66,12 @@ class ITK_TEMPLATE_EXPORT PCAMetric
 {
 public:
   /** Standard ITK-stuff. */
-  typedef PCAMetric Self;
-  typedef itk::PCAMetric<typename MetricBase<TElastix>::FixedImageType, typename MetricBase<TElastix>::MovingImageType>
-                                        Superclass1;
-  typedef MetricBase<TElastix>          Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = PCAMetric;
+  using Superclass1 =
+    itk::PCAMetric<typename MetricBase<TElastix>::FixedImageType, typename MetricBase<TElastix>::MovingImageType>;
+  using Superclass2 = MetricBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -141,14 +141,14 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Typedef's for the B-spline transform. */
-  typedef itk::AdvancedBSplineDeformableTransformBase<ScalarType, FixedImageDimension> BSplineTransformBaseType;
-  typedef itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension>           CombinationTransformType;
-  typedef itk::StackTransform<ScalarType, FixedImageDimension, MovingImageDimension>   StackTransformType;
-  typedef itk::AdvancedBSplineDeformableTransformBase<ScalarType, FixedImageDimension - 1>
-    ReducedDimensionBSplineTransformBaseType;
+  using BSplineTransformBaseType = itk::AdvancedBSplineDeformableTransformBase<ScalarType, FixedImageDimension>;
+  using CombinationTransformType = itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension>;
+  using StackTransformType = itk::StackTransform<ScalarType, FixedImageDimension, MovingImageDimension>;
+  using ReducedDimensionBSplineTransformBaseType =
+    itk::AdvancedBSplineDeformableTransformBase<ScalarType, FixedImageDimension - 1>;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.

@@ -39,16 +39,16 @@ main(int argc, char * argv[])
 {
   const unsigned int ImageDimension = 3; // 2
 
-  typedef float                                          InputPixelType;
-  typedef float                                          OutputPixelType;
-  typedef itk::GPUImage<InputPixelType, ImageDimension>  InputImageType;
-  typedef itk::GPUImage<OutputPixelType, ImageDimension> OutputImageType;
+  using InputPixelType = float;
+  using OutputPixelType = float;
+  using InputImageType = itk::GPUImage<InputPixelType, ImageDimension>;
+  using OutputImageType = itk::GPUImage<OutputPixelType, ImageDimension>;
 
-  typedef itk::RecursiveGaussianImageFilter<InputImageType, OutputImageType>    CPUFilterType;
-  typedef itk::GPURecursiveGaussianImageFilter<InputImageType, OutputImageType> GPUFilterType;
+  using CPUFilterType = itk::RecursiveGaussianImageFilter<InputImageType, OutputImageType>;
+  using GPUFilterType = itk::GPURecursiveGaussianImageFilter<InputImageType, OutputImageType>;
 
-  typedef itk::ImageFileReader<InputImageType>  ReaderType;
-  typedef itk::ImageFileWriter<OutputImageType> WriterType;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
+  using WriterType = itk::ImageFileWriter<OutputImageType>;
 
   if (argc < 3)
   {

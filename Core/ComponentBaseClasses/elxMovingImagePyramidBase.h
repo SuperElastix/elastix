@@ -61,8 +61,8 @@ class ITK_TEMPLATE_EXPORT MovingImagePyramidBase : public BaseComponentSE<TElast
 {
 public:
   /** Standard ITK-stuff. */
-  typedef MovingImagePyramidBase    Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = MovingImagePyramidBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(MovingImagePyramidBase, BaseComponentSE);
@@ -76,14 +76,14 @@ public:
   using typename Superclass::RegistrationPointer;
 
   /** Typedefs inherited from Elastix. */
-  typedef typename ElastixType::MovingImageType InputImageType;
-  typedef typename ElastixType::MovingImageType OutputImageType;
+  using InputImageType = typename ElastixType::MovingImageType;
+  using OutputImageType = typename ElastixType::MovingImageType;
 
   /** Other typedef's. */
-  typedef itk::MultiResolutionPyramidImageFilter<InputImageType, OutputImageType> ITKBaseType;
+  using ITKBaseType = itk::MultiResolutionPyramidImageFilter<InputImageType, OutputImageType>;
 
   /** Typedef's from ITKBaseType. */
-  typedef typename ITKBaseType::ScheduleType ScheduleType;
+  using ScheduleType = typename ITKBaseType::ScheduleType;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *

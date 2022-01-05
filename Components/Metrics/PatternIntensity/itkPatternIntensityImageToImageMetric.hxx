@@ -151,7 +151,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() 
   iterationRegion.SetIndex(iterationStartIndex);
   iterationRegion.SetSize(iterationSize);
 
-  typedef itk::ImageRegionConstIteratorWithIndex<FixedImageType> FixedImageTypeIteratorType;
+  using FixedImageTypeIteratorType = itk::ImageRegionConstIteratorWithIndex<FixedImageType>;
 
   FixedImageTypeIteratorType fixedImageIt(this->m_FixedImage, iterationRegion);
   fixedImageIt.GoToBegin();
@@ -264,7 +264,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(con
   iterationRegion.SetIndex(iterationStartIndex);
   iterationRegion.SetSize(iterationSize);
 
-  typedef itk::ImageRegionConstIteratorWithIndex<TransformedMovingImageType> DifferenceImageIteratorType;
+  using DifferenceImageIteratorType = itk::ImageRegionConstIteratorWithIndex<TransformedMovingImageType>;
   DifferenceImageIteratorType differenceImageIt(this->m_DifferenceImageFilter->GetOutput(), iterationRegion);
   differenceImageIt.GoToBegin();
 

@@ -682,11 +682,11 @@ void
 BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
 {
   /** Typedefs. */
-  typedef itk::ResampleImageFilter<ImageType, ImageType>             UpsampleFilterType;
-  typedef itk::IdentityTransform<CoordRepType, SpaceDimension>       IdentityTransformType;
-  typedef itk::BSplineResampleImageFunction<ImageType, CoordRepType> CoefficientUpsampleFunctionType;
-  typedef itk::BSplineDecompositionImageFilter<ImageType, ImageType> DecompositionFilterType;
-  typedef itk::ImageRegionConstIterator<ImageType>                   IteratorType;
+  using UpsampleFilterType = itk::ResampleImageFilter<ImageType, ImageType>;
+  using IdentityTransformType = itk::IdentityTransform<CoordRepType, SpaceDimension>;
+  using CoefficientUpsampleFunctionType = itk::BSplineResampleImageFunction<ImageType, CoordRepType>;
+  using DecompositionFilterType = itk::BSplineDecompositionImageFilter<ImageType, ImageType>;
+  using IteratorType = itk::ImageRegionConstIterator<ImageType>;
 
   /** The current region/spacing settings of the grid. */
   RegionType gridregionLow = this->m_BSplineTransform->GetGridRegion();

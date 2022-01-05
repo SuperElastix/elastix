@@ -50,22 +50,22 @@ public:
   ITK_DISALLOW_COPY_AND_MOVE(BaseComponentSE);
 
   /** Standard stuff. */
-  typedef BaseComponentSE Self;
-  typedef BaseComponent   Superclass;
+  using Self = BaseComponentSE;
+  using Superclass = BaseComponent;
 
   /** Elastix typedef's. */
-  typedef TElastix                      ElastixType;
-  typedef itk::WeakPointer<ElastixType> ElastixPointer;
+  using ElastixType = TElastix;
+  using ElastixPointer = itk::WeakPointer<ElastixType>;
 
   /** ConfigurationType. */
-  typedef Configuration          ConfigurationType;
-  typedef Configuration::Pointer ConfigurationPointer;
+  using ConfigurationType = Configuration;
+  using ConfigurationPointer = Configuration::Pointer;
 
   /** RegistrationType; NB: this is the elx::RegistrationBase
    * not an itk::Object or something like that.
    */
-  typedef typename ElastixType::RegistrationBaseType RegistrationType;
-  typedef RegistrationType *                         RegistrationPointer;
+  using RegistrationType = typename ElastixType::RegistrationBaseType;
+  using RegistrationPointer = RegistrationType *;
 
   /**
    * Get/Set functions for Elastix.

@@ -37,10 +37,10 @@ template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPUResampleImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
-  typedef GPUResampleImageFilterFactory2    Self;
-  typedef GPUObjectFactoryBase<NDimensions> Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  using Self = GPUResampleImageFilterFactory2;
+  using Superclass = GPUObjectFactoryBase<NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Return a descriptive string describing the factory. */
   const char *
@@ -65,10 +65,10 @@ public:
   operator()()
   {
     // Image typedefs
-    typedef Image<TTypeIn, VImageDimension>     InputImageType;
-    typedef Image<TTypeOut, VImageDimension>    OutputImageType;
-    typedef GPUImage<TTypeIn, VImageDimension>  GPUInputImageType;
-    typedef GPUImage<TTypeOut, VImageDimension> GPUOutputImageType;
+    using InputImageType = Image<TTypeIn, VImageDimension>;
+    using OutputImageType = Image<TTypeOut, VImageDimension>;
+    using GPUInputImageType = GPUImage<TTypeIn, VImageDimension>;
+    using GPUOutputImageType = GPUImage<TTypeOut, VImageDimension>;
 
     // Override default
     this->RegisterOverride(typeid(ResampleImageFilter<InputImageType, OutputImageType, float>).name(),

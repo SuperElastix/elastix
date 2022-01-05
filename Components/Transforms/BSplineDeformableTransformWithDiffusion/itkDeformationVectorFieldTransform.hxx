@@ -71,8 +71,8 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::SetCoefficientVectorI
   const CoefficientVectorImageType * vecImage)
 {
   /** Typedef's for iterators. */
-  typedef ImageRegionConstIterator<CoefficientVectorImageType> VectorIteratorType;
-  typedef ImageRegionIterator<CoefficientImageType>            IteratorType;
+  using VectorIteratorType = ImageRegionConstIterator<CoefficientVectorImageType>;
+  using IteratorType = ImageRegionIterator<CoefficientImageType>;
 
   /** Create array of images representing the B-spline
    * coefficients in each dimension.
@@ -128,7 +128,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::GetCoefficientVectorI
   CoefficientVectorImagePointer & vecImage) const
 {
   /** Typedef for the combiner. */
-  typedef ComposeImageFilter<CoefficientImageType, CoefficientVectorImageType> ScalarImageCombineType;
+  using ScalarImageCombineType = ComposeImageFilter<CoefficientImageType, CoefficientVectorImageType>;
 
   /** Get a handle to the series of coefficient images. */
   const CoefficientImagePointer * coefImage = this->GetCoefficientImages();

@@ -246,7 +246,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
   this->m_FilterLoopGPUKernelHandle.clear();
 
   // Test for a GPU combo transform
-  typedef GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension> CompositeTransformType;
+  using CompositeTransformType = GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension>;
   const CompositeTransformType * compositeTransformBase = dynamic_cast<const CompositeTransformType *>(_arg);
 
   if (compositeTransformBase)
@@ -433,8 +433,8 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
     requestedNumberOfSplits = 1;
   }
 
-  typedef ImageRegionSplitterSlowDimension RegionSplitterType;
-  auto                                     splitter = RegionSplitterType::New();
+  using RegionSplitterType = ImageRegionSplitterSlowDimension;
+  auto               splitter = RegionSplitterType::New();
   const unsigned int numberOfChunks = splitter->GetNumberOfSplits(outputLargestRegion, requestedNumberOfSplits);
 
   // Get the maximum chunk size
@@ -627,8 +627,8 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
     // Launch all the loop kernels
     if (this->m_TransformIsCombo)
     {
-      typedef GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension> CompositeTransformType;
-      const CompositeTransformType *                                                    compositeTransform =
+      using CompositeTransformType = GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension>;
+      const CompositeTransformType * compositeTransform =
         dynamic_cast<const CompositeTransformType *>(this->m_TransformBase);
 
       for (int i = compositeTransform->GetNumberOfTransforms() - 1; i >= 0; i--)
@@ -801,13 +801,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
   itkDebugMacro(<< "GPUResampleImageFilter::SetBSplineTransformCoefficientsToGPU(" << transformIndex << ") called");
 
   // Typedefs
-  typedef GPUBSplineBaseTransform<InterpolatorPrecisionType, InputImageDimension> GPUBSplineTransformType;
+  using GPUBSplineTransformType = GPUBSplineBaseTransform<InterpolatorPrecisionType, InputImageDimension>;
 
-  typedef typename GPUBSplineTransformType::GPUCoefficientImageType      GPUCoefficientImageType;
-  typedef typename GPUBSplineTransformType::GPUCoefficientImageArray     GPUCoefficientImageArray;
-  typedef typename GPUBSplineTransformType::GPUCoefficientImageBaseArray GPUCoefficientImageBaseArray;
-  typedef typename GPUBSplineTransformType::GPUCoefficientImagePointer   GPUCoefficientImagePointer;
-  typedef typename GPUBSplineTransformType::GPUDataManagerPointer        GPUDataManagerPointer;
+  using GPUCoefficientImageType = typename GPUBSplineTransformType::GPUCoefficientImageType;
+  using GPUCoefficientImageArray = typename GPUBSplineTransformType::GPUCoefficientImageArray;
+  using GPUCoefficientImageBaseArray = typename GPUBSplineTransformType::GPUCoefficientImageBaseArray;
+  using GPUCoefficientImagePointer = typename GPUBSplineTransformType::GPUCoefficientImagePointer;
+  using GPUDataManagerPointer = typename GPUBSplineTransformType::GPUDataManagerPointer;
 
   // Local variables
   const cl_uint coefficientsImageLoopKernelIndex = 4;
@@ -1112,7 +1112,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
   // Get GPUBSplineTransformBase
   if (this->m_TransformIsCombo)
   {
-    typedef GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension> CompositeTransformType;
+    using CompositeTransformType = GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension>;
     CompositeTransformType * compositeTransform = dynamic_cast<CompositeTransformType *>(this->m_TransformBase);
 
     GPUBSplineTransformBase =

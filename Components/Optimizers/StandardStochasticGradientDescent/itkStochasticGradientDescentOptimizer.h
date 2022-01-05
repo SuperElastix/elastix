@@ -54,10 +54,10 @@ class StochasticGradientDescentOptimizer : public ScaledSingleValuedNonLinearOpt
 {
 public:
   /** Standard class typedefs. */
-  typedef StochasticGradientDescentOptimizer   Self;
-  typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = StochasticGradientDescentOptimizer;
+  using Superclass = ScaledSingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -176,8 +176,8 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::PlatformMultiThreader ThreaderType;
-  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
+  using ThreaderType = itk::PlatformMultiThreader;
+  using ThreadInfoType = ThreaderType::WorkUnitInfo;
 
   // made protected so subclass can access
   double                m_Value{ 0.0 };

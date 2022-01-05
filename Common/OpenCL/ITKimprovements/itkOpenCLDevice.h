@@ -59,7 +59,7 @@ class ITKOpenCL_EXPORT OpenCLDevice
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLDevice Self;
+  using Self = OpenCLDevice;
 
   /** Constructs a default OpenCL device identifier. */
   OpenCLDevice()

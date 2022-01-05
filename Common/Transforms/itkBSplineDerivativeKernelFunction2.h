@@ -60,9 +60,9 @@ class ITK_TEMPLATE_EXPORT BSplineDerivativeKernelFunction2 : public KernelFuncti
 {
 public:
   /** Standard class typedefs. */
-  typedef BSplineDerivativeKernelFunction2 Self;
-  typedef KernelFunctionBase2<double>      Superclass;
-  typedef SmartPointer<Self>               Pointer;
+  using Self = BSplineDerivativeKernelFunction2;
+  using Superclass = KernelFunctionBase2<double>;
+  using Pointer = SmartPointer<Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

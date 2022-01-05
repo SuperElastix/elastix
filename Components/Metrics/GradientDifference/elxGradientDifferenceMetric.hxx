@@ -74,7 +74,7 @@ template <class TElastix>
 void
 GradientDifferenceMetric<TElastix>::BeforeEachResolution()
 {
-  typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType ScalesType;
+  using ScalesType = typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType;
   ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
   this->SetScales(scales);
 

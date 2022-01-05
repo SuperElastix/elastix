@@ -53,7 +53,7 @@ class ITK_TEMPLATE_EXPORT OpenCLVector : public OpenCLVectorBase
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLVector Self;
+  using Self = OpenCLVector;
 
   /** Creates a null OpenCL vector.
    * \sa IsNull() */

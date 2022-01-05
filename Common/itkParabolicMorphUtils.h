@@ -83,12 +83,12 @@ doOneDimension(TInIter &          inputIterator,
                const RealType     image_scale,
                const RealType     Sigma)
 {
-  //  typedef typename std::vector<RealType> LineBufferType;
+  //  using LineBufferType = typename std::vector<RealType>;
 
   // message from M.Starring suggested performance gain using Array
   // instead of std::vector.
-  typedef typename itk::Array<RealType> LineBufferType;
-  RealType                              iscale = 1.0;
+  using LineBufferType = typename itk::Array<RealType>;
+  RealType iscale = 1.0;
   if (m_UseImageSpacing)
   {
     iscale = image_scale;

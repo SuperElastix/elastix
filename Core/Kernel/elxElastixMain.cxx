@@ -956,13 +956,13 @@ ElastixMain::GetImageInformationFromFile(const std::string & filename, ImageDime
   if (!filename.empty())
   {
     /** Dummy image type. */
-    const unsigned int                                 DummyDimension = 3;
-    typedef short                                      DummyPixelType;
-    typedef itk::Image<DummyPixelType, DummyDimension> DummyImageType;
+    const unsigned int DummyDimension = 3;
+    using DummyPixelType = short;
+    using DummyImageType = itk::Image<DummyPixelType, DummyDimension>;
 
     /** Create a testReader. */
-    typedef itk::ImageFileReader<DummyImageType> ReaderType;
-    auto                                         testReader = ReaderType::New();
+    using ReaderType = itk::ImageFileReader<DummyImageType>;
+    auto testReader = ReaderType::New();
     testReader->SetFileName(filename);
 
     /** Generate all information. */

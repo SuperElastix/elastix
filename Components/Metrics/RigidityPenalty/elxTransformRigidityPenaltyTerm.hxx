@@ -39,12 +39,12 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
   this->GetConfiguration()->ReadParameter(
     fixedRigidityImageName, "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false);
 
-  typedef typename Superclass1::RigidityImageType              RigidityImageType;
-  typedef itk::ImageFileReader<RigidityImageType>              RigidityImageReaderType;
-  typename RigidityImageReaderType::Pointer                    fixedRigidityReader;
-  typedef itk::ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
-  typedef typename ChangeInfoFilterType::Pointer               ChangeInfoFilterPointer;
-  typedef typename RigidityImageType::DirectionType            DirectionType;
+  using RigidityImageType = typename Superclass1::RigidityImageType;
+  using RigidityImageReaderType = itk::ImageFileReader<RigidityImageType>;
+  typename RigidityImageReaderType::Pointer fixedRigidityReader;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<RigidityImageType>;
+  using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
+  using DirectionType = typename RigidityImageType::DirectionType;
 
   if (!fixedRigidityImageName.empty())
   {

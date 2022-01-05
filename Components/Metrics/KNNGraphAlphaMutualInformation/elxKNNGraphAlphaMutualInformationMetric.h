@@ -86,13 +86,13 @@ class ITK_TEMPLATE_EXPORT KNNGraphAlphaMutualInformationMetric
 {
 public:
   /** Standard ITK-stuff. */
-  typedef KNNGraphAlphaMutualInformationMetric Self;
-  typedef itk::KNNGraphAlphaMutualInformationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
-                                                                typename MetricBase<TElastix>::MovingImageType>
-                                        Superclass1;
-  typedef MetricBase<TElastix>          Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = KNNGraphAlphaMutualInformationMetric;
+  using Superclass1 =
+    itk::KNNGraphAlphaMutualInformationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
+                                                          typename MetricBase<TElastix>::MovingImageType>;
+  using Superclass2 = MetricBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -131,11 +131,11 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Typedefs for feature images. */
-  typedef FixedImageType  FixedFeatureImageType;
-  typedef MovingImageType MovingFeatureImageType;
+  using FixedFeatureImageType = FixedImageType;
+  using MovingFeatureImageType = MovingImageType;
 
   /** Execute stuff before the registration:
    * \li Set the alpha from alpha - MI.

@@ -667,20 +667,20 @@ void
 TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename) const
 {
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType                FixedImageRegionType;
-  typedef typename FixedImageType::IndexType                 FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType       FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType                MovingImageIndexType;
-  typedef typename MovingImageIndexType::IndexValueType      MovingImageIndexValueType;
-  typedef itk::ContinuousIndex<double, FixedImageDimension>  FixedImageContinuousIndexType;
-  typedef itk::ContinuousIndex<double, MovingImageDimension> MovingImageContinuousIndexType;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using FixedImageIndexValueType = typename FixedImageIndexType::IndexValueType;
+  using MovingImageIndexType = typename MovingImageType::IndexType;
+  using MovingImageIndexValueType = typename MovingImageIndexType::IndexValueType;
+  using FixedImageContinuousIndexType = itk::ContinuousIndex<double, FixedImageDimension>;
+  using MovingImageContinuousIndexType = itk::ContinuousIndex<double, MovingImageDimension>;
 
-  typedef unsigned char DummyIPPPixelType;
-  typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>
-                                                                                MeshTraitsType;
-  typedef itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType> PointSetType;
-  typedef itk::TransformixInputPointFileReader<PointSetType>                    IPPReaderType;
-  typedef itk::Vector<float, FixedImageDimension>                               DeformationVectorType;
+  using DummyIPPPixelType = unsigned char;
+  using MeshTraitsType =
+    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
+  using PointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
+  using DeformationVectorType = itk::Vector<float, FixedImageDimension>;
 
   /** Construct an ipp-file reader. */
   const auto ippReader = IPPReaderType::New();
@@ -891,13 +891,13 @@ void
 TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filename) const
 {
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
-  typedef float DummyIPPPixelType;
-  typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>
-                                                                                 MeshTraitsType;
-  typedef itk::Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>      MeshType;
-  typedef itk::MeshFileReader<MeshType>                                          MeshReaderType;
-  typedef itk::MeshFileWriter<MeshType>                                          MeshWriterType;
-  typedef itk::TransformMeshFilter<MeshType, MeshType, CombinationTransformType> TransformMeshFilterType;
+  using DummyIPPPixelType = float;
+  using MeshTraitsType =
+    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
+  using MeshType = itk::Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  using MeshReaderType = itk::MeshFileReader<MeshType>;
+  using MeshWriterType = itk::MeshFileWriter<MeshType>;
+  using TransformMeshFilterType = itk::TransformMeshFilter<MeshType, MeshType, CombinationTransformType>;
 
   /** Read the input points. */
   const auto meshReader = MeshReaderType::New();
@@ -991,10 +991,10 @@ auto
 TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename DeformationFieldImageType::Pointer
 {
   /** Typedef's. */
-  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
-  typedef itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordRepType>
-                                                                       DeformationFieldGeneratorType;
-  typedef itk::ChangeInformationImageFilter<DeformationFieldImageType> ChangeInfoFilterType;
+  using FixedImageDirectionType = typename FixedImageType::DirectionType;
+  using DeformationFieldGeneratorType =
+    itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordRepType>;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldImageType>;
 
   /** Create an setup deformation field generator. */
   const auto defGenerator = DeformationFieldGeneratorType::New();
@@ -1048,7 +1048,7 @@ void
 TransformBase<TElastix>::WriteDeformationFieldImage(
   typename TransformBase<TElastix>::DeformationFieldImageType::Pointer deformationfield) const
 {
-  typedef itk::ImageFileWriter<DeformationFieldImageType> DeformationFieldWriterType;
+  using DeformationFieldWriterType = itk::ImageFileWriter<DeformationFieldImageType>;
 
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
@@ -1107,10 +1107,10 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   }
 
   /** Typedef's. */
-  typedef itk::Image<float, FixedImageDimension>                                              JacobianImageType;
-  typedef itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType> JacobianGeneratorType;
-  typedef itk::ChangeInformationImageFilter<JacobianImageType>                                ChangeInfoFilterType;
-  typedef typename FixedImageType::DirectionType                                              FixedImageDirectionType;
+  using JacobianImageType = itk::Image<float, FixedImageDimension>;
+  using JacobianGeneratorType = itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType>;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<JacobianImageType>;
+  using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   /** Create an setup Jacobian generator. */
   const auto jacGenerator = JacobianGeneratorType::New();
@@ -1188,13 +1188,13 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   }
 
   /** Typedef's. */
-  typedef float SpatialJacobianComponentType;
-  typedef itk::Matrix<SpatialJacobianComponentType, MovingImageDimension, FixedImageDimension>
-                                                                                 OutputSpatialJacobianType;
-  typedef itk::Image<OutputSpatialJacobianType, FixedImageDimension>             JacobianImageType;
-  typedef itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType> JacobianGeneratorType;
-  typedef itk::ChangeInformationImageFilter<JacobianImageType>                   ChangeInfoFilterType;
-  typedef typename FixedImageType::DirectionType                                 FixedImageDirectionType;
+  using SpatialJacobianComponentType = float;
+  using OutputSpatialJacobianType =
+    itk::Matrix<SpatialJacobianComponentType, MovingImageDimension, FixedImageDimension>;
+  using JacobianImageType = itk::Image<OutputSpatialJacobianType, FixedImageDimension>;
+  using JacobianGeneratorType = itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType>;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<JacobianImageType>;
+  using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   /** Create an setup Jacobian generator. */
   const auto jacGenerator = JacobianGeneratorType::New();
@@ -1240,8 +1240,8 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
     ITK_DISALLOW_COPY_AND_MOVE(PixelTypeChangeCommand);
 
     /** Standard class typedefs. */
-    typedef PixelTypeChangeCommand  Self;
-    typedef itk::SmartPointer<Self> Pointer;
+    using Self = PixelTypeChangeCommand;
+    using Pointer = itk::SmartPointer<Self>;
 
     /** Run-time type information (and related methods). */
     itkTypeMacro(PixelTypeChangeCommand, Command);
@@ -1351,11 +1351,11 @@ template <class TElastix>
 void
 TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
 {
-  typedef itk::ImageGridSampler<FixedImageType>               ImageSamplerType;
-  typedef typename ImageSamplerType::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer          ImageSampleContainerPointer;
-  typedef typename ITKBaseType::JacobianType                  JacobianType;
-  typedef typename ITKBaseType::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  using ImageSamplerType = itk::ImageGridSampler<FixedImageType>;
+  using ImageSampleContainerType = typename ImageSamplerType::ImageSampleContainerType;
+  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
+  using JacobianType = typename ITKBaseType::JacobianType;
+  using NonZeroJacobianIndicesType = typename ITKBaseType::NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int        outdim = MovingImageDimension;
@@ -1416,15 +1416,15 @@ void
 TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned int & numberOfSubTransforms,
                                                                  ScalesType &         scales) const
 {
-  typedef typename FixedImageType::RegionType FixedImageRegionType;
-  typedef typename FixedImageType::IndexType  FixedImageIndexType;
-  typedef typename FixedImageType::SizeType   SizeType;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using SizeType = typename FixedImageType::SizeType;
 
-  typedef itk::ImageGridSampler<FixedImageType>               ImageSamplerType;
-  typedef typename ImageSamplerType::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer          ImageSampleContainerPointer;
-  typedef typename ITKBaseType::JacobianType                  JacobianType;
-  typedef typename ITKBaseType::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  using ImageSamplerType = itk::ImageGridSampler<FixedImageType>;
+  using ImageSampleContainerType = typename ImageSamplerType::ImageSampleContainerType;
+  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
+  using JacobianType = typename ITKBaseType::JacobianType;
+  using NonZeroJacobianIndicesType = typename ITKBaseType::NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int        outdim = FixedImageDimension;

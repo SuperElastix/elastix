@@ -54,7 +54,7 @@
  *           < MetricBase<TElastix>::FixedImageType
  *             MetricBase<TElastix>::MovingImageType >
  *   {
- *     typedef MyMetric Self;
+ *     using Self = MyMetric;
  *     itkNewMacro( Self ); //needed for the elxInstallMacro
  *     elxClassNameMacro("MattesMutualInformation"); //also needed
  *     .......
@@ -102,7 +102,7 @@
     static int                                                                                                         \
     DO(::elastix::ComponentDatabase * cdb)                                                                             \
     {                                                                                                                  \
-      typedef typename ::elastix::ElastixTypedef<VIndex>::ElastixType ElastixType;                                     \
+      using ElastixType = typename ::elastix::ElastixTypedef<VIndex>::ElastixType;                                     \
       const auto name = ::elastix::_classname<ElastixType>::elxGetClassNameStatic();                                   \
       const int  dummy =                                                                                               \
         ::elastix::InstallFunctions<::elastix::_classname<ElastixType>>::InstallComponent(name, VIndex, cdb);          \

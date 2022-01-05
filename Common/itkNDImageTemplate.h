@@ -46,10 +46,10 @@ class ITK_TEMPLATE_EXPORT NDImageTemplate : public NDImageBase<TPixel>
 {
 public:
   /** Standard class typedefs.*/
-  typedef NDImageTemplate          Self;
-  typedef NDImageBase<TPixel>      Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = NDImageTemplate;
+  using Superclass = NDImageBase<TPixel>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -89,19 +89,19 @@ public:
   using typename Superclass::OffsetType;
 
   /** Typedefs dependent on the dimension */
-  typedef Image<TPixel, VDimension>    ImageType;
-  typedef typename ImageType::Pointer  ImagePointer;
-  typedef ImageFileWriter<ImageType>   WriterType;
-  typedef typename WriterType::Pointer WriterPointer;
-  typedef ImageFileReader<ImageType>   ReaderType;
-  typedef typename ReaderType::Pointer ReaderPointer;
+  using ImageType = Image<TPixel, VDimension>;
+  using ImagePointer = typename ImageType::Pointer;
+  using WriterType = ImageFileWriter<ImageType>;
+  using WriterPointer = typename WriterType::Pointer;
+  using ReaderType = ImageFileReader<ImageType>;
+  using ReaderPointer = typename ReaderType::Pointer;
 
   /** Original, itk, versions of the index and sizetypes etc. */
-  typedef typename ImageType::IndexType   IndexTypeD;
-  typedef typename ImageType::SizeType    SizeTypeD;
-  typedef typename ImageType::SpacingType SpacingTypeD;
-  typedef typename ImageType::PointType   PointTypeD;
-  typedef typename ImageType::OffsetType  OffsetTypeD;
+  using IndexTypeD = typename ImageType::IndexType;
+  using SizeTypeD = typename ImageType::SizeType;
+  using SpacingTypeD = typename ImageType::SpacingType;
+  using PointTypeD = typename ImageType::PointType;
+  using OffsetTypeD = typename ImageType::OffsetType;
 
   void
   SetRegions(SizeType size) override;

@@ -50,10 +50,10 @@ class ITK_TEMPLATE_EXPORT RecursiveBSplineInterpolationWeightFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef RecursiveBSplineInterpolationWeightFunction                                  Self;
-  typedef BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder> Superclass;
-  typedef SmartPointer<Self>                                                           Pointer;
-  typedef SmartPointer<const Self>                                                     ConstPointer;
+  using Self = RecursiveBSplineInterpolationWeightFunction;
+  using Superclass = BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro(Self);
@@ -123,9 +123,9 @@ private:
   SizeType     m_SupportSize;
 
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction2<Self::SplineOrder>                      KernelType;
-  typedef BSplineDerivativeKernelFunction2<Self::SplineOrder>            DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder> SecondOrderDerivativeKernelType;
+  using KernelType = BSplineKernelFunction2<Self::SplineOrder>;
+  using DerivativeKernelType = BSplineDerivativeKernelFunction2<Self::SplineOrder>;
+  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder>;
 
   /** Interpolation kernel. */
   typename KernelType::Pointer                      m_Kernel;

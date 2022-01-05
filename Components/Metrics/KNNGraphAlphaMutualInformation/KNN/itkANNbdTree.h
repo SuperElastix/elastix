@@ -37,10 +37,10 @@ class ITK_TEMPLATE_EXPORT ANNbdTree : public ANNkDTree<TListSample>
 {
 public:
   /** Standard itk. */
-  typedef ANNbdTree                Self;
-  typedef ANNkDTree<TListSample>   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = ANNbdTree;
+  using Superclass = ANNkDTree<TListSample>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
@@ -58,7 +58,7 @@ public:
   using typename Superclass::SplittingRuleType;
   using typename Superclass::BucketSizeType;
 
-  typedef ANNshrinkRule ShrinkingRuleType;
+  using ShrinkingRuleType = ANNshrinkRule;
 
   /** Set and get the shrinking rule: it defines ... */
   itkSetMacro(ShrinkingRule, ShrinkingRuleType);

@@ -155,9 +155,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
     // Note that the last pixel is not included in the valid region
     // with odd spline orders.
     // For backward compatibility m_ValidRegion is still created.
-    typename RegionType::SizeType                   size = this->m_GridRegion.GetSize();
-    typename RegionType::IndexType                  index = this->m_GridRegion.GetIndex();
-    typedef typename ContinuousIndexType::ValueType CValueType;
+    typename RegionType::SizeType  size = this->m_GridRegion.GetSize();
+    typename RegionType::IndexType index = this->m_GridRegion.GetIndex();
+    using CValueType = typename ContinuousIndexType::ValueType;
     for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_ValidRegionBegin[j] =
@@ -241,10 +241,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   outputPoint.Fill(NumericTraits<ScalarType>::ZeroValue());
 
   /** Create iterators over the coefficient images. */
-  typedef ImageScanlineConstIterator<ImageType> IteratorType;
-  IteratorType                                  iterator[SpaceDimension];
-  unsigned long                                 counter = 0;
-  const PixelType *                             basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
+  using IteratorType = ImageScanlineConstIterator<ImageType>;
+  IteratorType      iterator[SpaceDimension];
+  unsigned long     counter = 0;
+  const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
@@ -588,7 +588,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   const InputPointType & ipp,
   SpatialHessianType &   sh) const
 {
-  typedef typename WeightsType::ValueType WeightsValueType;
+  using WeightsValueType = typename WeightsType::ValueType;
 
   /** Convert the physical point to a continuous index, which
    * is needed for the evaluate functions below.
@@ -837,10 +837,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Allocate weight on the stack. */
-  typedef typename WeightsType::ValueType WeightsValueType;
-  const unsigned long                     numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  WeightsValueType                        weightsArray[numberOfWeights];
-  WeightsType                             weights(weightsArray, numberOfWeights, false);
+  using WeightsValueType = typename WeightsType::ValueType;
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsValueType    weightsArray[numberOfWeights];
+  WeightsType         weights(weightsArray, numberOfWeights, false);
 
   /** Allocate coefficients on the stack. */
   std::array<WeightsValueType, numberOfWeights * SpaceDimension> coeffs;
@@ -1069,7 +1069,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
 {
-  typedef typename WeightsType::ValueType WeightsValueType;
+  using WeightsValueType = typename WeightsType::ValueType;
 
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
@@ -1115,10 +1115,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
 
   /** Allocate weight on the stack. */
-  typedef typename WeightsType::ValueType WeightsValueType;
-  const unsigned long                     numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  WeightsValueType                        weightsArray[numberOfWeights];
-  WeightsType                             weights(weightsArray, numberOfWeights, false);
+  using WeightsValueType = typename WeightsType::ValueType;
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsValueType    weightsArray[numberOfWeights];
+  WeightsType         weights(weightsArray, numberOfWeights, false);
 
   /** Allocate coefficients on the stack. */
   std::array<WeightsValueType, numberOfWeights * SpaceDimension> coeffs;

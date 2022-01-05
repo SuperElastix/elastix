@@ -376,10 +376,10 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
    */
 
   /** Temporary variables. */
-  typedef typename NumericTraits<MeasureType>::AccumulateType AccumulateType;
-  MeasurementVectorType                                       z_F, z_M, z_J;
-  IndexArrayType                                              indices_F, indices_M, indices_J;
-  DistanceArrayType                                           distances_F, distances_M, distances_J;
+  using AccumulateType = typename NumericTraits<MeasureType>::AccumulateType;
+  MeasurementVectorType z_F, z_M, z_J;
+  IndexArrayType        indices_F, indices_M, indices_J;
+  DistanceArrayType     distances_F, distances_M, distances_J;
 
   MeasureType    H, G;
   AccumulateType sumG = NumericTraits<AccumulateType>::Zero;
@@ -600,11 +600,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
    */
 
   /** Temporary variables. */
-  typedef typename NumericTraits<MeasureType>::AccumulateType AccumulateType;
-  MeasurementVectorType                                       z_F, z_M, z_J, z_M_ip, z_J_ip, diff_M, diff_J;
-  IndexArrayType                                              indices_F, indices_M, indices_J;
-  DistanceArrayType                                           distances_F, distances_M, distances_J;
-  MeasureType                                                 distance_F, distance_M, distance_J;
+  using AccumulateType = typename NumericTraits<MeasureType>::AccumulateType;
+  MeasurementVectorType z_F, z_M, z_J, z_M_ip, z_J_ip, diff_M, diff_J;
+  IndexArrayType        indices_F, indices_M, indices_J;
+  DistanceArrayType     distances_F, distances_M, distances_J;
+  MeasureType           distance_F, distance_M, distance_J;
 
   MeasureType    H, G, Gpow;
   AccumulateType sumG = NumericTraits<AccumulateType>::Zero;

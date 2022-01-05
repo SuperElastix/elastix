@@ -63,10 +63,10 @@ class ITK_TEMPLATE_EXPORT SumSquaredTissueVolumeDifferenceImageToImageMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef SumSquaredTissueVolumeDifferenceImageToImageMetric    Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = SumSquaredTissueVolumeDifferenceImageToImageMetric;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -115,12 +115,12 @@ public:
   using typename Superclass::MovingImageDerivativeScalesType;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::AdvancedTransformType            TransformType;
-  typedef typename TransformType::SpatialJacobianType           SpatialJacobianType;
-  typedef typename TransformType::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename TransformType::SpatialHessianType            SpatialHessianType;
-  typedef typename TransformType::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
-  typedef typename TransformType::InternalMatrixType            InternalMatrixType;
+  using TransformType = typename Superclass::AdvancedTransformType;
+  using SpatialJacobianType = typename TransformType::SpatialJacobianType;
+  using JacobianOfSpatialJacobianType = typename TransformType::JacobianOfSpatialJacobianType;
+  using SpatialHessianType = typename TransformType::SpatialHessianType;
+  using JacobianOfSpatialHessianType = typename TransformType::JacobianOfSpatialHessianType;
+  using InternalMatrixType = typename TransformType::InternalMatrixType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);

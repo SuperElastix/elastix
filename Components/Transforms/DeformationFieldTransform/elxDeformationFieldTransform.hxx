@@ -64,12 +64,12 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
 
-  typedef itk::ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
-  typedef typename ChangeInfoFilterType::Pointer                  ChangeInfoFilterPointer;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldType>;
+  using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
 
   /** Setup VectorImageReader. */
-  typedef itk::ImageFileReader<DeformationFieldType> VectorReaderType;
-  auto                                               vectorReader = VectorReaderType::New();
+  using VectorReaderType = itk::ImageFileReader<DeformationFieldType>;
+  auto vectorReader = VectorReaderType::New();
 
   /** Read deformationFieldImage-name from parameter-file. */
   std::string fileName = "";
@@ -114,9 +114,9 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
    */
   this->m_DeformationFieldInterpolatingTransform->SetDeformationField(infoChanger->GetOutput());
 
-  typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldInterpolatorType  InterpolatorType;
-  typedef itk::VectorNearestNeighborInterpolateImageFunction<DeformationFieldType, CoordRepType> NNInterpolatorType;
-  typedef itk::VectorLinearInterpolateImageFunction<DeformationFieldType, CoordRepType>          LinInterpolatorType;
+  using InterpolatorType = typename DeformationFieldInterpolatingTransformType::DeformationFieldInterpolatorType;
+  using NNInterpolatorType = itk::VectorNearestNeighborInterpolateImageFunction<DeformationFieldType, CoordRepType>;
+  using LinInterpolatorType = itk::VectorLinearInterpolateImageFunction<DeformationFieldType, CoordRepType>;
 
   typename InterpolatorType::Pointer interpolator; // default-constructed (null)
   unsigned int                       interpolationOrder = 0;
@@ -153,7 +153,7 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
 {
   // \todo Finish and Test this function.
 
-  typedef itk::ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldType>;
 
   /** Write the interpolation order to file */
   std::string interpolatorName =
@@ -166,8 +166,8 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
   infoChanger->SetInput(this->m_DeformationFieldInterpolatingTransform->GetDeformationField());
 
   /** Write the deformation field image. */
-  typedef itk::ImageFileWriter<DeformationFieldType> VectorWriterType;
-  auto                                               writer = VectorWriterType::New();
+  using VectorWriterType = itk::ImageFileWriter<DeformationFieldType>;
+  auto writer = VectorWriterType::New();
   writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
   writer->SetInput(infoChanger->GetOutput());
 

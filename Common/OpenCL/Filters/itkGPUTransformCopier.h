@@ -38,8 +38,8 @@ namespace itk
  *   itkStaticConstMacro( Support3D, bool, true );
  *  };
  *
- *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
- *  typedef itk::GPUTransformCopier< OCLImageTypes, OCLImageDims, TransformType, float > CopierType;
+ *  using OCLImageTypes = typelist::MakeTypeList< short, float >::Type;
+ *  using CopierType = itk::GPUTransformCopier< OCLImageTypes, OCLImageDims, TransformType, float >;
  *  auto copier = CopierType::New();
  *  copier->SetInputTransform(CPUTransform);
  *  copier->Update();
@@ -63,10 +63,10 @@ class ITK_TEMPLATE_EXPORT GPUTransformCopier : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUTransformCopier       Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = GPUTransformCopier;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -75,22 +75,22 @@ public:
   itkTypeMacro(GPUTransformCopier, Object);
 
   /** Type CPU definitions for the transform. */
-  typedef TTransform                                     CPUTransformType;
-  typedef typename CPUTransformType::ConstPointer        CPUTransformConstPointer;
-  typedef typename CPUTransformType::ParametersType      CPUParametersType;
-  typedef typename CPUTransformType::FixedParametersType CPUFixedParametersType;
-  typedef typename CPUTransformType::ScalarType          CPUScalarType;
+  using CPUTransformType = TTransform;
+  using CPUTransformConstPointer = typename CPUTransformType::ConstPointer;
+  using CPUParametersType = typename CPUTransformType::ParametersType;
+  using CPUFixedParametersType = typename CPUTransformType::FixedParametersType;
+  using CPUScalarType = typename CPUTransformType::ScalarType;
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, CPUTransformType::InputSpaceDimension);
   itkStaticConstMacro(OutputSpaceDimension, unsigned int, CPUTransformType::OutputSpaceDimension);
 
   /** Type GPU definitions for the transform. */
-  typedef TOutputTransformPrecisionType                                       GPUScalarType;
-  typedef Transform<GPUScalarType, InputSpaceDimension, OutputSpaceDimension> GPUTransformType;
-  typedef typename GPUTransformType::Pointer                                  GPUTransformPointer;
-  typedef typename GPUTransformType::ParametersType                           GPUParametersType;
-  typedef typename GPUTransformType::FixedParametersType                      GPUFixedParametersType;
+  using GPUScalarType = TOutputTransformPrecisionType;
+  using GPUTransformType = Transform<GPUScalarType, InputSpaceDimension, OutputSpaceDimension>;
+  using GPUTransformPointer = typename GPUTransformType::Pointer;
+  using GPUParametersType = typename GPUTransformType::ParametersType;
+  using GPUFixedParametersType = typename GPUTransformType::FixedParametersType;
 
   /** Get/Set the input transform. */
   itkSetConstObjectMacro(InputTransform, CPUTransformType);

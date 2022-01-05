@@ -48,19 +48,19 @@ public:
   /** Typedef related to the coordinate representation type and the weights type.
    * Usually double, but can be float as well. <Not tested very well for float>
    */
-  typedef TScalar ScalarType;
-  typedef double  InternalFloatType;
+  using ScalarType = TScalar;
+  using InternalFloatType = double;
 
   /** Helper constant variable. */
   itkStaticConstMacro(HelperConstVariable, unsigned int, (SpaceDimension - 1) * (SplineOrder + 1));
 
   /** Typedef to know the number of indices at compile time. */
-  typedef itk::RecursiveBSplineInterpolationWeightFunction<ScalarType, OutputDimension, SplineOrder>
-    RecursiveBSplineWeightFunctionType;
+  using RecursiveBSplineWeightFunctionType =
+    itk::RecursiveBSplineInterpolationWeightFunction<ScalarType, OutputDimension, SplineOrder>;
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
-  typedef ScalarType *  OutputPointType;
-  typedef ScalarType ** CoefficientPointerVectorType;
+  using OutputPointType = ScalarType *;
+  using CoefficientPointerVectorType = ScalarType **;
 
   /** TransformPoint recursive implementation. */
   static inline void
@@ -378,16 +378,16 @@ public:
   /** Typedef related to the coordinate representation type and the weights type.
    * Usually double, but can be float as well. <Not tested very well for float>
    */
-  typedef TScalar ScalarType;
-  typedef double  InternalFloatType;
+  using ScalarType = TScalar;
+  using InternalFloatType = double;
 
   /** Typedef to know the number of indices at compile time. */
-  typedef itk::RecursiveBSplineInterpolationWeightFunction<TScalar, OutputDimension, SplineOrder>
-    RecursiveBSplineWeightFunctionType;
+  using RecursiveBSplineWeightFunctionType =
+    itk::RecursiveBSplineInterpolationWeightFunction<TScalar, OutputDimension, SplineOrder>;
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
-  typedef ScalarType *  OutputPointType;
-  typedef ScalarType ** CoefficientPointerVectorType;
+  using OutputPointType = ScalarType *;
+  using CoefficientPointerVectorType = ScalarType **;
 
   /** TransformPoint recursive implementation. */
   static inline void

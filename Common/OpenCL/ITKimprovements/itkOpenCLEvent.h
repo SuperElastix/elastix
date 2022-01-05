@@ -93,7 +93,7 @@ class ITKOpenCL_EXPORT OpenCLEvent
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLEvent Self;
+  using Self = OpenCLEvent;
 
   /** Constructs a null OpenCL event object. */
   OpenCLEvent();

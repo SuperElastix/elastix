@@ -50,11 +50,11 @@ class ITKOpenCL_EXPORT OpenCLSize
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLSize Self;
+  using Self = OpenCLSize;
 
-  typedef Size<1> SizeType1D;
-  typedef Size<2> SizeType2D;
-  typedef Size<3> SizeType3D;
+  using SizeType1D = Size<1>;
+  using SizeType2D = Size<2>;
+  using SizeType3D = Size<3>;
 
   /** Null compatibility */
   struct Null

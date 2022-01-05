@@ -37,10 +37,10 @@ class ITK_TEMPLATE_EXPORT ELASTIXLIB_API ElastixFilter : public itk::ImageSource
 {
 public:
   /** Standard ITK typedefs. */
-  typedef ElastixFilter                 Self;
-  typedef itk::ImageSource<TFixedImage> Superclass;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = ElastixFilter;
+  using Superclass = itk::ImageSource<TFixedImage>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -49,42 +49,42 @@ public:
   itkTypeMacro(ElastixFilter, itk::ImageSource);
 
   /** Typedefs. */
-  typedef elastix::ElastixMain                      ElastixMainType;
-  typedef ElastixMainType::Pointer                  ElastixMainPointer;
-  typedef std::vector<ElastixMainPointer>           ElastixMainVectorType;
-  typedef ElastixMainType::ObjectPointer            ElastixMainObjectPointer;
-  typedef ElastixMainType::ArgumentMapType          ArgumentMapType;
-  typedef ArgumentMapType::value_type               ArgumentMapEntryType;
-  typedef ElastixMainType::FlatDirectionCosinesType FlatDirectionCosinesType;
+  using ElastixMainType = elastix::ElastixMain;
+  using ElastixMainPointer = ElastixMainType::Pointer;
+  using ElastixMainVectorType = std::vector<ElastixMainPointer>;
+  using ElastixMainObjectPointer = ElastixMainType::ObjectPointer;
+  using ArgumentMapType = ElastixMainType::ArgumentMapType;
+  using ArgumentMapEntryType = ArgumentMapType::value_type;
+  using FlatDirectionCosinesType = ElastixMainType::FlatDirectionCosinesType;
 
-  typedef ElastixMainType::DataObjectContainerType           DataObjectContainerType;
-  typedef ElastixMainType::DataObjectContainerPointer        DataObjectContainerPointer;
-  typedef DataObjectContainerType::Iterator                  DataObjectContainerIterator;
-  typedef itk::ProcessObject::DataObjectIdentifierType       DataObjectIdentifierType;
-  typedef itk::ProcessObject::DataObjectPointerArraySizeType DataObjectPointerArraySizeType;
-  typedef itk::ProcessObject::NameArray                      NameArrayType;
+  using DataObjectContainerType = ElastixMainType::DataObjectContainerType;
+  using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
+  using DataObjectContainerIterator = DataObjectContainerType::Iterator;
+  using DataObjectIdentifierType = itk::ProcessObject::DataObjectIdentifierType;
+  using DataObjectPointerArraySizeType = itk::ProcessObject::DataObjectPointerArraySizeType;
+  using NameArrayType = itk::ProcessObject::NameArray;
 
-  typedef ParameterObject                               ParameterObjectType;
-  typedef ParameterObjectType::ParameterMapType         ParameterMapType;
-  typedef ParameterObjectType::ParameterMapVectorType   ParameterMapVectorType;
-  typedef ParameterObjectType::ParameterValueVectorType ParameterValueVectorType;
-  typedef ParameterObjectType::Pointer                  ParameterObjectPointer;
-  typedef ParameterObjectType::ConstPointer             ParameterObjectConstPointer;
+  using ParameterObjectType = ParameterObject;
+  using ParameterMapType = ParameterObjectType::ParameterMapType;
+  using ParameterMapVectorType = ParameterObjectType::ParameterMapVectorType;
+  using ParameterValueVectorType = ParameterObjectType::ParameterValueVectorType;
+  using ParameterObjectPointer = ParameterObjectType::Pointer;
+  using ParameterObjectConstPointer = ParameterObjectType::ConstPointer;
 
-  typedef typename TFixedImage::Pointer       FixedImagePointer;
-  typedef typename TFixedImage::ConstPointer  FixedImageConstPointer;
-  typedef typename TMovingImage::Pointer      MovingImagePointer;
-  typedef typename TMovingImage::ConstPointer MovingImageConstPointer;
+  using FixedImagePointer = typename TFixedImage::Pointer;
+  using FixedImageConstPointer = typename TFixedImage::ConstPointer;
+  using MovingImagePointer = typename TMovingImage::Pointer;
+  using MovingImageConstPointer = typename TMovingImage::ConstPointer;
 
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
   itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);
 
-  typedef itk::Image<unsigned char, FixedImageDimension>  FixedMaskType;
-  typedef typename FixedMaskType::Pointer                 FixedMaskPointer;
-  typedef typename FixedMaskType::Pointer                 FixedMaskConstPointer;
-  typedef itk::Image<unsigned char, MovingImageDimension> MovingMaskType;
-  typedef typename MovingMaskType::Pointer                MovingMaskPointer;
-  typedef typename MovingMaskType::Pointer                MovingMaskConstPointer;
+  using FixedMaskType = itk::Image<unsigned char, FixedImageDimension>;
+  using FixedMaskPointer = typename FixedMaskType::Pointer;
+  using FixedMaskConstPointer = typename FixedMaskType::Pointer;
+  using MovingMaskType = itk::Image<unsigned char, MovingImageDimension>;
+  using MovingMaskPointer = typename MovingMaskType::Pointer;
+  using MovingMaskConstPointer = typename MovingMaskType::Pointer;
 
   /** Set/Add/Get/NumberOf fixed images. */
   virtual void

@@ -74,16 +74,15 @@ class ITK_EXPORT GPUCastImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUCastImageFilter Self;
-  typedef GPUUnaryFunctorImageFilter<
-    TInputImage,
-    TOutputImage,
-    Functor::GPUCast<typename TInputImage::PixelType, typename TOutputImage::PixelType>,
-    CastImageFilter<TInputImage, TOutputImage>>
-                                                     GPUSuperclass;
-  typedef CastImageFilter<TInputImage, TOutputImage> CPUSuperclass;
-  typedef SmartPointer<Self>                         Pointer;
-  typedef SmartPointer<const Self>                   ConstPointer;
+  using Self = GPUCastImageFilter;
+  using GPUSuperclass =
+    GPUUnaryFunctorImageFilter<TInputImage,
+                               TOutputImage,
+                               Functor::GPUCast<typename TInputImage::PixelType, typename TOutputImage::PixelType>,
+                               CastImageFilter<TInputImage, TOutputImage>>;
+  using CPUSuperclass = CastImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -92,11 +91,11 @@ public:
   itkTypeMacro(GPUCastImageFilter, GPUUnaryFunctorImageFilter);
 
   /** Pixel types. */
-  typedef typename TInputImage::PixelType  InputPixelType;
-  typedef typename TOutputImage::PixelType OutputPixelType;
+  using InputPixelType = typename TInputImage::PixelType;
+  using OutputPixelType = typename TOutputImage::PixelType;
 
   /** Type of DataObjects to use for scalar inputs */
-  typedef SimpleDataObjectDecorator<InputPixelType> InputPixelObjectType;
+  using InputPixelObjectType = SimpleDataObjectDecorator<InputPixelType>;
 
 protected:
   GPUCastImageFilter();

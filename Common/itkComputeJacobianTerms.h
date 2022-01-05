@@ -38,10 +38,10 @@ class ITK_TEMPLATE_EXPORT ComputeJacobianTerms : public Object
 {
 public:
   /** Standard ITK.*/
-  typedef ComputeJacobianTerms     Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = ComputeJacobianTerms;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -50,23 +50,23 @@ public:
   itkTypeMacro(ComputeJacobianTerms, Object);
 
   /** typedef  */
-  typedef TFixedImage                         FixedImageType;
-  typedef TTransform                          TransformType;
-  typedef typename TransformType::Pointer     TransformPointer;
-  typedef typename FixedImageType::RegionType FixedImageRegionType;
+  using FixedImageType = TFixedImage;
+  using TransformType = TTransform;
+  using TransformPointer = typename TransformType::Pointer;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
 
   /** Type for the mask of the fixed image. Only pixels that are "inside"
    * this mask will be considered for the computation of the Jacobian terms.
    */
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
-  typedef SpatialObject<Self::FixedImageDimension>  FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer      FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer FixedImageMaskConstPointer;
+  using FixedImageMaskType = SpatialObject<Self::FixedImageDimension>;
+  using FixedImageMaskPointer = typename FixedImageMaskType::Pointer;
+  using FixedImageMaskConstPointer = typename FixedImageMaskType::ConstPointer;
 
-  typedef ScaledSingleValuedNonLinearOptimizer ScaledSingleValuedNonLinearOptimizerType;
-  typedef typename ScaledSingleValuedNonLinearOptimizerType ::ScaledCostFunctionPointer ScaledCostFunctionPointer;
-  typedef typename ScaledSingleValuedNonLinearOptimizerType::ScalesType                 ScalesType;
-  typedef typename TransformType::NonZeroJacobianIndicesType                            NonZeroJacobianIndicesType;
+  using ScaledSingleValuedNonLinearOptimizerType = ScaledSingleValuedNonLinearOptimizer;
+  using ScaledCostFunctionPointer = typename ScaledSingleValuedNonLinearOptimizerType ::ScaledCostFunctionPointer;
+  using ScalesType = typename ScaledSingleValuedNonLinearOptimizerType::ScalesType;
+  using NonZeroJacobianIndicesType = typename TransformType::NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
   itkSetConstObjectMacro(FixedImage, FixedImageType);
@@ -119,26 +119,26 @@ protected:
   unsigned int  m_NumberOfBandStructureSamples;
   SizeValueType m_NumberOfJacobianMeasurements;
 
-  typedef typename FixedImageType::IndexType   FixedImageIndexType;
-  typedef typename FixedImageType::PointType   FixedImagePointType;
-  typedef typename TransformType::JacobianType JacobianType;
-  typedef typename JacobianType::ValueType     JacobianValueType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using FixedImagePointType = typename FixedImageType::PointType;
+  using JacobianType = typename TransformType::JacobianType;
+  using JacobianValueType = typename JacobianType::ValueType;
 
   /** Samplers. */
-  typedef ImageSamplerBase<FixedImageType>             ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer       ImageSamplerBasePointer;
-  typedef ImageRandomSamplerBase<FixedImageType>       ImageRandomSamplerBaseType;
-  typedef typename ImageRandomSamplerBaseType::Pointer ImageRandomSamplerBasePointer;
+  using ImageSamplerBaseType = ImageSamplerBase<FixedImageType>;
+  using ImageSamplerBasePointer = typename ImageSamplerBaseType::Pointer;
+  using ImageRandomSamplerBaseType = ImageRandomSamplerBase<FixedImageType>;
+  using ImageRandomSamplerBasePointer = typename ImageRandomSamplerBaseType::Pointer;
 
-  typedef ImageGridSampler<FixedImageType>                         ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer                   ImageGridSamplerPointer;
-  typedef typename ImageGridSamplerType ::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer               ImageSampleContainerPointer;
+  using ImageGridSamplerType = ImageGridSampler<FixedImageType>;
+  using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
+  using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
+  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
-  typedef JacobianType                                   TransformJacobianType;
-  typedef typename TransformType::ScalarType             CoordinateRepresentationType;
-  typedef typename TransformType::NumberOfParametersType NumberOfParametersType;
+  using TransformJacobianType = JacobianType;
+  using CoordinateRepresentationType = typename TransformType::ScalarType;
+  using NumberOfParametersType = typename TransformType::NumberOfParametersType;
 
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeDisplacementDistribution

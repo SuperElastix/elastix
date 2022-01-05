@@ -30,7 +30,7 @@ main(int argc, char * argv[])
 {
   /** Some basic type definitions. */
   const unsigned int Dimension = 3;
-  typedef double     ScalarType; // ScalarType double used in elastix
+  using ScalarType = double; // ScalarType double used in elastix
 
   /** Only perform the test with usedNumberOfLandmarks. */
   const unsigned long usedNumberOfLandmarks = 100;
@@ -45,18 +45,18 @@ main(int argc, char * argv[])
   }
 
   /** Other typedefs. */
-  typedef itk::ThinPlateSplineKernelTransform2<ScalarType, Dimension> TransformType;
-  typedef TransformType::JacobianType                                 JacobianType;
-  typedef TransformType::NonZeroJacobianIndicesType                   NonZeroJacobianIndicesType;
-  typedef TransformType::PointSetType                                 PointSetType;
-  typedef TransformType::InputPointType                               InputPointType;
+  using TransformType = itk::ThinPlateSplineKernelTransform2<ScalarType, Dimension>;
+  using JacobianType = TransformType::JacobianType;
+  using NonZeroJacobianIndicesType = TransformType::NonZeroJacobianIndicesType;
+  using PointSetType = TransformType::PointSetType;
+  using InputPointType = TransformType::InputPointType;
 
-  typedef itk::TransformixInputPointFileReader<PointSetType> IPPReaderType;
-  typedef PointSetType::PointsContainer                      PointsContainerType;
-  typedef PointsContainerType::Pointer                       PointsContainerPointer;
-  typedef PointSetType::PointType                            PointType;
+  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
+  using PointsContainerType = PointSetType::PointsContainer;
+  using PointsContainerPointer = PointsContainerType::Pointer;
+  using PointType = PointSetType::PointType;
 
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator MersenneTwisterType;
+  using MersenneTwisterType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
 
   /** Create the kernel transform. */
   auto kernelTransform = TransformType::New();

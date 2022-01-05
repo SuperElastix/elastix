@@ -34,26 +34,26 @@ namespace elastix
 class ParameterObject : public itk::DataObject
 {
 public:
-  typedef ParameterObject               Self;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = ParameterObject;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
   itkNewMacro(Self);
   itkTypeMacro(ParameterObject, itk::DataObject);
 
-  typedef std::string                                          ParameterKeyType;
-  typedef std::string                                          ParameterValueType;
-  typedef std::vector<ParameterValueType>                      ParameterValueVectorType;
-  typedef ParameterValueVectorType::iterator                   ParameterValueVectorIterator;
-  typedef std::map<ParameterKeyType, ParameterValueVectorType> ParameterMapType;
-  typedef ParameterMapType::iterator                           ParameterMapIterator;
-  typedef ParameterMapType::const_iterator                     ParameterMapConstIterator;
-  typedef std::vector<ParameterMapType>                        ParameterMapVectorType;
-  typedef std::string                                          ParameterFileNameType;
-  typedef std::vector<ParameterFileNameType>                   ParameterFileNameVectorType;
-  typedef ParameterFileNameVectorType::iterator                ParameterFileNameVectorIterator;
-  typedef ParameterFileNameVectorType::const_iterator          ParameterFileNameVectorConstIterator;
-  typedef itk::ParameterFileParser                             ParameterFileParserType;
-  typedef ParameterFileParserType::Pointer                     ParameterFileParserPointer;
+  using ParameterKeyType = std::string;
+  using ParameterValueType = std::string;
+  using ParameterValueVectorType = std::vector<ParameterValueType>;
+  using ParameterValueVectorIterator = ParameterValueVectorType::iterator;
+  using ParameterMapType = std::map<ParameterKeyType, ParameterValueVectorType>;
+  using ParameterMapIterator = ParameterMapType::iterator;
+  using ParameterMapConstIterator = ParameterMapType::const_iterator;
+  using ParameterMapVectorType = std::vector<ParameterMapType>;
+  using ParameterFileNameType = std::string;
+  using ParameterFileNameVectorType = std::vector<ParameterFileNameType>;
+  using ParameterFileNameVectorIterator = ParameterFileNameVectorType::iterator;
+  using ParameterFileNameVectorConstIterator = ParameterFileNameVectorType::const_iterator;
+  using ParameterFileParserType = itk::ParameterFileParser;
+  using ParameterFileParserPointer = ParameterFileParserType::Pointer;
 
   /* Set/Get/Add parameter map or vector of parameter maps. */
   // TODO: Use itkSetMacro for ParameterMapVectorType

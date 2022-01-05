@@ -62,20 +62,20 @@ int
 main(int argc, char ** argv)
 {
   /** Typedefs. */
-  typedef itk::Image<float, ITK_TEST_DIMENSION_MAX>               CoefficientImageType;
-  typedef CoefficientImageType::RegionType                        RegionType;
-  typedef RegionType::SizeType                                    SizeType;
-  typedef RegionType::IndexType                                   IndexType;
-  typedef CoefficientImageType::SpacingType                       SpacingType;
-  typedef CoefficientImageType::PointType                         PointType;
-  typedef CoefficientImageType::PointType                         OriginType;
-  typedef CoefficientImageType::DirectionType                     DirectionType;
-  typedef itk::ImageRegionIteratorWithIndex<CoefficientImageType> IteratorType;
-  typedef itk::ImageFileWriter<CoefficientImageType>              WriterType;
+  using CoefficientImageType = itk::Image<float, ITK_TEST_DIMENSION_MAX>;
+  using RegionType = CoefficientImageType::RegionType;
+  using SizeType = RegionType::SizeType;
+  using IndexType = RegionType::IndexType;
+  using SpacingType = CoefficientImageType::SpacingType;
+  using PointType = CoefficientImageType::PointType;
+  using OriginType = CoefficientImageType::PointType;
+  using DirectionType = CoefficientImageType::DirectionType;
+  using IteratorType = itk::ImageRegionIteratorWithIndex<CoefficientImageType>;
+  using WriterType = itk::ImageFileWriter<CoefficientImageType>;
 
-  typedef itk::Image<unsigned char, ITK_TEST_DIMENSION_MAX> MaskImageType;
-  typedef itk::ImageFileReader<MaskImageType>               MaskReaderType;
-  typedef itk::ImageRegionIteratorWithIndex<MaskImageType>  MaskIteratorType;
+  using MaskImageType = itk::Image<unsigned char, ITK_TEST_DIMENSION_MAX>;
+  using MaskReaderType = itk::ImageFileReader<MaskImageType>;
+  using MaskIteratorType = itk::ImageRegionIteratorWithIndex<MaskImageType>;
 
   /** Create command line argument parser. */
   itk::CommandLineArgumentParser::Pointer parser = itk::CommandLineArgumentParser::New();
@@ -118,11 +118,11 @@ main(int argc, char ** argv)
   }
 
   /** Create parameter file reader. */
-  typedef itk::ParameterFileParser   ParserType;
-  typedef itk::ParameterMapInterface InterfaceType;
+  using ParserType = itk::ParameterFileParser;
+  using InterfaceType = itk::ParameterMapInterface;
 
-  typedef double ScalarType;
-  std::string    dummyErrorMessage = "";
+  using ScalarType = double;
+  std::string dummyErrorMessage = "";
 
   auto parameterFileParser = ParserType::New();
   auto config = InterfaceType::New();

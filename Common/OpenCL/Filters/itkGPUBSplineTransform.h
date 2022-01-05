@@ -44,13 +44,13 @@ class ITK_EXPORT GPUBSplineTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUBSplineTransform                               Self;
-  typedef TParentTransform                                  CPUSuperclass;
-  typedef GPUBSplineBaseTransform<TScalarType, NDimensions> GPUSuperclass;
-  typedef SmartPointer<Self>                                Pointer;
-  typedef SmartPointer<const Self>                          ConstPointer;
-  typedef typename CPUSuperclass::ParametersType            ParametersType;
-  typedef typename CPUSuperclass::CoefficientImageArray     CoefficientImageArray;
+  using Self = GPUBSplineTransform;
+  using CPUSuperclass = TParentTransform;
+  using GPUSuperclass = GPUBSplineBaseTransform<TScalarType, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
+  using ParametersType = typename CPUSuperclass::ParametersType;
+  using CoefficientImageArray = typename CPUSuperclass::CoefficientImageArray;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

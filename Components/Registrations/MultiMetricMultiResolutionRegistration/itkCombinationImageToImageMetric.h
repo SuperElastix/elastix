@@ -60,10 +60,10 @@ class ITK_TEMPLATE_EXPORT CombinationImageToImageMetric : public AdvancedImageTo
 {
 public:
   /** Standard class typedefs. */
-  typedef CombinationImageToImageMetric                         Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = CombinationImageToImageMetric;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(CombinationImageToImageMetric, AdvancedImageToImageMetric);
@@ -85,8 +85,8 @@ public:
   // using typename Superclass::FixedImagePointer;
   using typename Superclass::FixedImageConstPointer;
   using typename Superclass::FixedImageRegionType;
-  typedef typename Superclass::AdvancedTransformType TransformType;
-  typedef typename TransformType::Pointer            TransformPointer;
+  using TransformType = typename Superclass::AdvancedTransformType;
+  using TransformPointer = typename TransformType::Pointer;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
   using typename Superclass::TransformParametersType;
@@ -126,35 +126,33 @@ public:
   */
 
   /** Typedefs for the metrics. */
-  typedef Superclass                                     ImageMetricType;
-  typedef typename ImageMetricType::Pointer              ImageMetricPointer;
-  typedef SingleValuedCostFunction                       SingleValuedCostFunctionType;
-  typedef typename SingleValuedCostFunctionType::Pointer SingleValuedCostFunctionPointer;
+  using ImageMetricType = Superclass;
+  using ImageMetricPointer = typename ImageMetricType::Pointer;
+  using SingleValuedCostFunctionType = SingleValuedCostFunction;
+  using SingleValuedCostFunctionPointer = typename SingleValuedCostFunctionType::Pointer;
 
-  typedef typename FixedImageType::PixelType             FixedImagePixelType;
-  typedef typename MovingImageType::RegionType           MovingImageRegionType;
-  typedef FixedArray<double, Self::MovingImageDimension> MovingImageDerivativeScalesType;
+  using FixedImagePixelType = typename FixedImageType::PixelType;
+  using MovingImageRegionType = typename MovingImageType::RegionType;
+  using MovingImageDerivativeScalesType = FixedArray<double, Self::MovingImageDimension>;
 
   /** Typedef for the PointSetMetric. */
-  typedef PointSet<CoordinateRepresentationType,
-                   TFixedImage::ImageDimension,
-                   DefaultStaticMeshTraits<CoordinateRepresentationType,
-                                           TFixedImage::ImageDimension,
-                                           TFixedImage::ImageDimension,
-                                           CoordinateRepresentationType,
-                                           CoordinateRepresentationType,
-                                           CoordinateRepresentationType>>
-    FixedPointSetType;
-  typedef PointSet<CoordinateRepresentationType,
-                   TMovingImage::ImageDimension,
-                   DefaultStaticMeshTraits<CoordinateRepresentationType,
-                                           TMovingImage::ImageDimension,
-                                           TMovingImage::ImageDimension,
-                                           CoordinateRepresentationType,
-                                           CoordinateRepresentationType,
-                                           CoordinateRepresentationType>>
-                                                                                      MovingPointSetType;
-  typedef SingleValuedPointSetToPointSetMetric<FixedPointSetType, MovingPointSetType> PointSetMetricType;
+  using FixedPointSetType = PointSet<CoordinateRepresentationType,
+                                     TFixedImage::ImageDimension,
+                                     DefaultStaticMeshTraits<CoordinateRepresentationType,
+                                                             TFixedImage::ImageDimension,
+                                                             TFixedImage::ImageDimension,
+                                                             CoordinateRepresentationType,
+                                                             CoordinateRepresentationType,
+                                                             CoordinateRepresentationType>>;
+  using MovingPointSetType = PointSet<CoordinateRepresentationType,
+                                      TMovingImage::ImageDimension,
+                                      DefaultStaticMeshTraits<CoordinateRepresentationType,
+                                                              TMovingImage::ImageDimension,
+                                                              TMovingImage::ImageDimension,
+                                                              CoordinateRepresentationType,
+                                                              CoordinateRepresentationType,
+                                                              CoordinateRepresentationType>>;
+  using PointSetMetricType = SingleValuedPointSetToPointSetMetric<FixedPointSetType, MovingPointSetType>;
 
   /** Typedefs for multi-threading. */
   using typename Superclass::ThreaderType;

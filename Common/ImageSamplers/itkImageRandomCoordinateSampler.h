@@ -41,10 +41,10 @@ class ITK_TEMPLATE_EXPORT ImageRandomCoordinateSampler : public ImageRandomSampl
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageRandomCoordinateSampler        Self;
-  typedef ImageRandomSamplerBase<TInputImage> Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  using Self = ImageRandomCoordinateSampler;
+  using Superclass = ImageRandomSamplerBase<TInputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -66,7 +66,7 @@ public:
   using typename Superclass::ImageSampleContainerPointer;
   using typename Superclass::MaskType;
   using typename Superclass::InputImageSizeType;
-  typedef typename InputImageType::SpacingType InputImageSpacingType;
+  using InputImageSpacingType = typename InputImageType::SpacingType;
   using typename Superclass::InputImageIndexType;
   using typename Superclass::InputImagePointType;
   using typename Superclass::InputImagePointValueType;
@@ -77,14 +77,14 @@ public:
 
   /** This image sampler samples the image on physical coordinates and thus
    * needs an interpolator. */
-  typedef double                                                                CoordRepType;
-  typedef InterpolateImageFunction<InputImageType, CoordRepType>                InterpolatorType;
-  typedef typename InterpolatorType::Pointer                                    InterpolatorPointer;
-  typedef BSplineInterpolateImageFunction<InputImageType, CoordRepType, double> DefaultInterpolatorType;
+  using CoordRepType = double;
+  using InterpolatorType = InterpolateImageFunction<InputImageType, CoordRepType>;
+  using InterpolatorPointer = typename InterpolatorType::Pointer;
+  using DefaultInterpolatorType = BSplineInterpolateImageFunction<InputImageType, CoordRepType, double>;
 
   /** The random number generator used to generate random coordinates. */
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
+  using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
+  using RandomGeneratorPointer = typename RandomGeneratorType::Pointer;
 
   /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
   itkSetObjectMacro(Interpolator, InterpolatorType);
@@ -101,7 +101,7 @@ public:
   itkSetMacro(UseRandomSampleRegion, bool);
 
 protected:
-  typedef typename InterpolatorType::ContinuousIndexType InputImageContinuousIndexType;
+  using InputImageContinuousIndexType = typename InterpolatorType::ContinuousIndexType;
 
   /** The constructor. */
   ImageRandomCoordinateSampler();

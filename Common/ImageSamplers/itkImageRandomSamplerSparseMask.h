@@ -39,10 +39,10 @@ class ITK_TEMPLATE_EXPORT ImageRandomSamplerSparseMask : public ImageRandomSampl
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageRandomSamplerSparseMask        Self;
-  typedef ImageRandomSamplerBase<TInputImage> Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  using Self = ImageRandomSamplerSparseMask;
+  using Superclass = ImageRandomSamplerBase<TInputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -68,16 +68,16 @@ public:
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** Other typdefs. */
-  typedef typename InputImageType::IndexType InputImageIndexType;
-  typedef typename InputImageType::PointType InputImagePointType;
+  using InputImageIndexType = typename InputImageType::IndexType;
+  using InputImagePointType = typename InputImageType::PointType;
 
   /** The random number generator used to generate random indices. */
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
+  using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
+  using RandomGeneratorPointer = typename RandomGeneratorType::Pointer;
 
 protected:
-  typedef itk::ImageFullSampler<InputImageType>     InternalFullSamplerType;
-  typedef typename InternalFullSamplerType::Pointer InternalFullSamplerPointer;
+  using InternalFullSamplerType = itk::ImageFullSampler<InputImageType>;
+  using InternalFullSamplerPointer = typename InternalFullSamplerType::Pointer;
 
   /** The constructor. */
   ImageRandomSamplerSparseMask();

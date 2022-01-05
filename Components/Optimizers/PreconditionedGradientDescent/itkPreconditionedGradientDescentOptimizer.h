@@ -56,10 +56,10 @@ class PreconditionedGradientDescentOptimizer : public ScaledSingleValuedNonLinea
 {
 public:
   /** Standard class typedefs. */
-  typedef PreconditionedGradientDescentOptimizer Self;
-  typedef ScaledSingleValuedNonLinearOptimizer   Superclass;
-  typedef SmartPointer<Self>                     Pointer;
-  typedef SmartPointer<const Self>               ConstPointer;
+  using Self = PreconditionedGradientDescentOptimizer;
+  using Superclass = ScaledSingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -77,11 +77,11 @@ public:
   using Superclass::ScaledCostFunctionPointer;
 
   /** Some typedefs for computing the SelfHessian */
-  typedef DerivativeType::ValueType PreconditionValueType;
+  using PreconditionValueType = DerivativeType::ValueType;
   // typedef Array2D<PreconditionValueType>                  PreconditionType;
   // typedef vnl_symmetric_eigensystem<
   //  PreconditionValueType >                               EigenSystemType;
-  typedef vnl_sparse_matrix<PreconditionValueType> PreconditionType;
+  using PreconditionType = vnl_sparse_matrix<PreconditionValueType>;
 
   /** Codes of stopping conditions
    * The MinimumStepSize stopcondition never occurs, but may
@@ -197,7 +197,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const;
 
   /** Cholmod index type: define at central place */
-  typedef int CInt; // change to UF_long if using cholmod_l;
+  using cholmod_l = int CInt; // change to UF_long if using;
 
   // made protected so subclass can access
   DerivativeType    m_Gradient;

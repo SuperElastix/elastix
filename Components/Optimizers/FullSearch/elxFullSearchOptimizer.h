@@ -60,11 +60,11 @@ class ITK_TEMPLATE_EXPORT FullSearch
 {
 public:
   /** Standard ITK.*/
-  typedef FullSearch                    Self;
-  typedef itk::FullSearchOptimizer      Superclass1;
-  typedef OptimizerBase<TElastix>       Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = FullSearch;
+  using Superclass1 = itk::FullSearchOptimizer;
+  using Superclass2 = OptimizerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -100,15 +100,15 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** To store the results of the full search */
-  typedef itk::NDImageBase<float>       NDImageType;
-  typedef typename NDImageType::Pointer NDImagePointer;
+  using NDImageType = itk::NDImageBase<float>;
+  using NDImagePointer = typename NDImageType::Pointer;
 
   /** To store the names of the search space dimensions */
-  typedef std::map<unsigned int, std::string>           DimensionNameMapType;
-  typedef typename DimensionNameMapType::const_iterator NameIteratorType;
+  using DimensionNameMapType = std::map<unsigned int, std::string>;
+  using NameIteratorType = typename DimensionNameMapType::const_iterator;
 
   /** Methods that have to be present everywhere.*/
   void

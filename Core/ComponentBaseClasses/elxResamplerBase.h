@@ -77,8 +77,8 @@ class ITK_TEMPLATE_EXPORT ResamplerBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK stuff. */
-  typedef ResamplerBase             Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = ResamplerBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ResamplerBase, BaseComponentSE);
@@ -93,29 +93,29 @@ public:
 
   /** Typedef's from elastix.
    * NB: it is assumed that fixed and moving image dimension are equal!  */
-  typedef typename ElastixType::MovingImageType InputImageType;
-  typedef typename ElastixType::MovingImageType OutputImageType;
+  using InputImageType = typename ElastixType::MovingImageType;
+  using OutputImageType = typename ElastixType::MovingImageType;
   // typedef typename ElastixType::FixedImageType      OutputImageType;
-  typedef ElastixBase::CoordRepType CoordRepType;
+  using CoordRepType = ElastixBase::CoordRepType;
 
   /** Other typedef's. */
-  typedef itk::ResampleImageFilter<InputImageType, OutputImageType, CoordRepType> ITKBaseType;
+  using ITKBaseType = itk::ResampleImageFilter<InputImageType, OutputImageType, CoordRepType>;
 
   /** Typedef's from ResampleImageFiler. */
-  typedef typename ITKBaseType::TransformType    TransformType;
-  typedef typename ITKBaseType::InterpolatorType InterpolatorType;
-  typedef typename ITKBaseType::SizeType         SizeType;
-  typedef typename ITKBaseType::IndexType        IndexType;
-  typedef typename ITKBaseType::SpacingType      SpacingType;
-  typedef typename ITKBaseType::DirectionType    DirectionType;
-  typedef typename ITKBaseType::OriginPointType  OriginPointType;
-  typedef typename ITKBaseType::PixelType        OutputPixelType;
+  using TransformType = typename ITKBaseType::TransformType;
+  using InterpolatorType = typename ITKBaseType::InterpolatorType;
+  using SizeType = typename ITKBaseType::SizeType;
+  using IndexType = typename ITKBaseType::IndexType;
+  using SpacingType = typename ITKBaseType::SpacingType;
+  using DirectionType = typename ITKBaseType::DirectionType;
+  using OriginPointType = typename ITKBaseType::OriginPointType;
+  using OutputPixelType = typename ITKBaseType::PixelType;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef typename ElastixType::ParameterMapType ParameterMapType;
+  using ParameterMapType = typename ElastixType::ParameterMapType;
 
   /** Typedef for the ProgressCommand. */
-  typedef elx::ProgressCommand ProgressCommandType;
+  using ProgressCommandType = elx::ProgressCommand;
 
   /** Get the ImageDimension. */
   itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);

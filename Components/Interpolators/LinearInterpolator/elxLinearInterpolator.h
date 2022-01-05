@@ -48,13 +48,12 @@ class ITK_TEMPLATE_EXPORT LinearInterpolator
 {
 public:
   /** Standard ITK-stuff. */
-  typedef LinearInterpolator Self;
-  typedef itk::AdvancedLinearInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
-                                                      typename InterpolatorBase<TElastix>::CoordRepType>
-                                        Superclass1;
-  typedef InterpolatorBase<TElastix>    Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = LinearInterpolator;
+  using Superclass1 = itk::AdvancedLinearInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
+                                                                  typename InterpolatorBase<TElastix>::CoordRepType>;
+  using Superclass2 = InterpolatorBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -85,7 +84,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
 protected:
   /** The constructor. */

@@ -75,7 +75,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase()
   /** Read the sample grid spacing for computing the "exact" metric */
   if (showExactMetricValue)
   {
-    typedef typename ExactMetricImageSamplerType::SampleGridSpacingValueType SampleGridSpacingValueType;
+    using SampleGridSpacingValueType = typename ExactMetricImageSamplerType::SampleGridSpacingValueType;
     this->m_ExactMetricSampleGridSpacing.Fill(1);
 
     /** Read the desired grid spacing of the samples. */

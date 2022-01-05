@@ -54,8 +54,8 @@ class ITK_TEMPLATE_EXPORT OptimizerBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef OptimizerBase             Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = OptimizerBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(OptimizerBase, BaseComponentSE);
@@ -69,10 +69,10 @@ public:
   using typename Superclass::RegistrationPointer;
 
   /** ITKBaseType. */
-  typedef itk::Optimizer ITKBaseType;
+  using ITKBaseType = itk::Optimizer;
 
   /** Typedef needed for the SetCurrentPositionPublic function. */
-  typedef typename ITKBaseType::ParametersType ParametersType;
+  using ParametersType = typename ITKBaseType::ParametersType;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *

@@ -106,11 +106,11 @@ class ITK_TEMPLATE_EXPORT AdaptiveStochasticLBFGS
 {
 public:
   /** Standard ITK. */
-  typedef AdaptiveStochasticLBFGS          Self;
-  typedef AdaptiveStochasticLBFGSOptimizer Superclass1;
-  typedef OptimizerBase<TElastix>          Superclass2;
-  typedef itk::SmartPointer<Self>          Pointer;
-  typedef itk::SmartPointer<const Self>    ConstPointer;
+  using Self = AdaptiveStochasticLBFGS;
+  using Superclass1 = AdaptiveStochasticLBFGSOptimizer;
+  using Superclass2 = OptimizerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -136,21 +136,21 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
-  typedef itk::SizeValueType                SizeValueType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using SizeValueType = itk::SizeValueType;
 
-  //  typedef LineSearchOptimizer           LineSearchOptimizerType;
+  //  using LineSearchOptimizerType = LineSearchOptimizer          ;
 
-  //  typedef LineSearchOptimizerType::Pointer LineSearchOptimizerPointer;
+  //  using LineSearchOptimizerPointer = LineSearchOptimizerType::Pointer;
 
   /** Typedef for the ParametersType. */
   using typename Superclass1::ParametersType;
 
-  typedef itk::LineSearchOptimizer LineSearchOptimizerType;
+  using LineSearchOptimizerType = itk::LineSearchOptimizer;
 
-  typedef LineSearchOptimizerType::Pointer    LineSearchOptimizerPointer;
-  typedef itk::MoreThuenteLineSearchOptimizer LineOptimizerType;
-  typedef LineOptimizerType::Pointer          LineOptimizerPointer;
+  using LineSearchOptimizerPointer = LineSearchOptimizerType::Pointer;
+  using LineOptimizerType = itk::MoreThuenteLineSearchOptimizer;
+  using LineOptimizerPointer = LineOptimizerType::Pointer;
 
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed.
@@ -223,7 +223,7 @@ public:
   itkGetConstReferenceMacro(MaximumNumberOfSamplingAttempts, SizeValueType);
 
   /** Type to count and reference number of threads */
-  typedef unsigned int ThreadIdType;
+  using ThreadIdType = unsigned int;
 
   /** Set the number of threads. */
   void
@@ -234,65 +234,65 @@ public:
 
 protected:
   /** Protected typedefs */
-  typedef typename RegistrationType::FixedImageType  FixedImageType;
-  typedef typename RegistrationType::MovingImageType MovingImageType;
+  using FixedImageType = typename RegistrationType::FixedImageType;
+  using MovingImageType = typename RegistrationType::MovingImageType;
 
-  typedef typename FixedImageType::RegionType                      FixedImageRegionType;
-  typedef typename FixedImageType::IndexType                       FixedImageIndexType;
-  typedef typename FixedImageType::PointType                       FixedImagePointType;
-  typedef typename RegistrationType::ITKBaseType                   itkRegistrationType;
-  typedef typename itkRegistrationType::TransformType              TransformType;
-  typedef typename TransformType::JacobianType                     JacobianType;
-  typedef itk::ComputeJacobianTerms<FixedImageType, TransformType> ComputeJacobianTermsType;
-  typedef typename JacobianType::ValueType                         JacobianValueType;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using FixedImagePointType = typename FixedImageType::PointType;
+  using itkRegistrationType = typename RegistrationType::ITKBaseType;
+  using TransformType = typename itkRegistrationType::TransformType;
+  using JacobianType = typename TransformType::JacobianType;
+  using ComputeJacobianTermsType = itk::ComputeJacobianTerms<FixedImageType, TransformType>;
+  using JacobianValueType = typename JacobianType::ValueType;
   struct SettingsType
   {
     double a, A, alpha, fmax, fmin, omega;
   };
-  typedef typename std::vector<SettingsType> SettingsVectorType;
+  using SettingsVectorType = typename std::vector<SettingsType>;
 
-  typedef itk::ComputeDisplacementDistribution<FixedImageType, TransformType> ComputeDisplacementDistributionType;
+  using ComputeDisplacementDistributionType = itk::ComputeDisplacementDistribution<FixedImageType, TransformType>;
 
   /** Samplers: */
-  typedef itk::ImageSamplerBase<FixedImageType>              ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer             ImageSamplerBasePointer;
-  typedef itk::ImageRandomSamplerBase<FixedImageType>        ImageRandomSamplerBaseType;
-  typedef typename ImageRandomSamplerBaseType::Pointer       ImageRandomSamplerBasePointer;
-  typedef itk::ImageRandomCoordinateSampler<FixedImageType>  ImageRandomCoordinateSamplerType;
-  typedef typename ImageRandomCoordinateSamplerType::Pointer ImageRandomCoordinateSamplerPointer;
-  typedef typename ImageSamplerBaseType::ImageSampleType     ImageSampleType;
+  using ImageSamplerBaseType = itk::ImageSamplerBase<FixedImageType>;
+  using ImageSamplerBasePointer = typename ImageSamplerBaseType::Pointer;
+  using ImageRandomSamplerBaseType = itk::ImageRandomSamplerBase<FixedImageType>;
+  using ImageRandomSamplerBasePointer = typename ImageRandomSamplerBaseType::Pointer;
+  using ImageRandomCoordinateSamplerType = itk::ImageRandomCoordinateSampler<FixedImageType>;
+  using ImageRandomCoordinateSamplerPointer = typename ImageRandomCoordinateSamplerType::Pointer;
+  using ImageSampleType = typename ImageSamplerBaseType::ImageSampleType;
 
   /** Image random sampler. */
-  typedef itk::ImageRandomSampler<FixedImageType>                   ImageRandomSamplerType;
-  typedef typename ImageRandomSamplerType::Pointer                  ImageRandomSamplerPointer;
-  typedef typename ImageRandomSamplerType::ImageSampleContainerType ImageRadomSampleContainerType;
-  typedef typename ImageRadomSampleContainerType::Pointer           ImageRadomSampleContainerPointer;
+  using ImageRandomSamplerType = itk::ImageRandomSampler<FixedImageType>;
+  using ImageRandomSamplerPointer = typename ImageRandomSamplerType::Pointer;
+  using ImageRadomSampleContainerType = typename ImageRandomSamplerType::ImageSampleContainerType;
+  using ImageRadomSampleContainerPointer = typename ImageRadomSampleContainerType::Pointer;
 
   /** Image grid sampler. */
-  typedef itk::ImageGridSampler<FixedImageType>                   ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer                  ImageGridSamplerPointer;
-  typedef typename ImageGridSamplerType::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer              ImageSampleContainerPointer;
+  using ImageGridSamplerType = itk::ImageGridSampler<FixedImageType>;
+  using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
+  using ImageSampleContainerType = typename ImageGridSamplerType::ImageSampleContainerType;
+  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
 
   /** Other protected typedefs */
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  typedef ProgressCommand                                        ProgressCommandType;
-  typedef typename ProgressCommand::Pointer                      ProgressCommandPointer;
+  using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
+  using ProgressCommandType = ProgressCommand;
+  using ProgressCommandPointer = typename ProgressCommand::Pointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
-  typedef JacobianType TransformJacobianType;
+  using TransformJacobianType = JacobianType;
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
-  typedef typename TransformType::ScalarType CoordinateRepresentationType;
-  typedef itk::AdvancedTransform<CoordinateRepresentationType, Self::FixedImageDimension, Self::MovingImageDimension>
-                                                                     AdvancedTransformType;
-  typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  using CoordinateRepresentationType = typename TransformType::ScalarType;
+  using AdvancedTransformType =
+    itk::AdvancedTransform<CoordinateRepresentationType, Self::FixedImageDimension, Self::MovingImageDimension>;
+  using NonZeroJacobianIndicesType = typename AdvancedTransformType::NonZeroJacobianIndicesType;
 
   /** For L-BFGS usage. */
-  typedef itk::Array<double>          RhoType;
-  typedef std::vector<ParametersType> SType;
-  typedef std::vector<DerivativeType> YType;
-  typedef itk::Array<double>          DiagonalMatrixType;
+  using RhoType = itk::Array<double>;
+  using SType = std::vector<ParametersType>;
+  using YType = std::vector<DerivativeType>;
+  using DiagonalMatrixType = itk::Array<double>;
 
   AdaptiveStochasticLBFGS();
   ~AdaptiveStochasticLBFGS() override = default;

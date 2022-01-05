@@ -78,10 +78,10 @@ class CommandLineArgumentParser : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef CommandLineArgumentParser Self;
-  typedef Object                    Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  using Self = CommandLineArgumentParser;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   enum ReturnValue
   {
@@ -105,9 +105,9 @@ public:
   CheckForRequiredArguments() const;
 
   /** Map to store the arguments and their indices. */
-  typedef std::size_t                      IndexType;
-  typedef std::map<std::string, IndexType> ArgumentMapType;
-  typedef ArgumentMapType::value_type      EntryType;
+  using IndexType = std::size_t;
+  using ArgumentMapType = std::map<std::string, IndexType>;
+  using EntryType = ArgumentMapType::value_type;
 
   /** Copy argv in a map. */
   void

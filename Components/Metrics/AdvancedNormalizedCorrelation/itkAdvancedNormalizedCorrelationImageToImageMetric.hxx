@@ -331,7 +331,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 {
   itkDebugMacro(<< "GetValueAndDerivative( " << parameters << " ) ");
 
-  typedef typename DerivativeType::ValueType DerivativeValueType;
+  using DerivativeValueType = typename DerivativeType::ValueType;
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;

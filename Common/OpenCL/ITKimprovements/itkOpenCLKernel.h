@@ -136,7 +136,7 @@ class ITKOpenCL_EXPORT OpenCLKernel
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLMemoryObject Self;
+  using Self = OpenCLMemoryObject;
 
   /** Constructs a null OpenCL kernel object. */
   OpenCLKernel();
@@ -336,234 +336,234 @@ public:
     cl_int SetArg(const cl_uint index, const void * data, const size_t size);
 
   /** Sets argument \a index for this kernel to size \a value. */
-  typedef Size<1> Size1DType;
+  using Size1DType = Size<1>;
   cl_int
   SetArg(const cl_uint index, const Size1DType & value);
 
-  typedef Size<2> Size2DType;
+  using Size2DType = Size<2>;
   cl_int
   SetArg(const cl_uint index, const Size2DType & value);
 
-  typedef Size<3> Size3DType;
+  using Size3DType = Size<3>;
   cl_int
   SetArg(const cl_uint index, const Size3DType & value);
 
-  typedef Size<4> Size4DType;
+  using Size4DType = Size<4>;
   cl_int
   SetArg(const cl_uint index, const Size4DType & value);
 
   /** Sets argument \a index for this kernel to index \a value. */
-  typedef Index<1> Index1DType;
+  using Index1DType = Index<1>;
   cl_int
   SetArg(const cl_uint index, const Index1DType & value);
 
-  typedef Index<2> Index2DType;
+  using Index2DType = Index<2>;
   cl_int
   SetArg(const cl_uint index, const Index2DType & value);
 
-  typedef Index<3> Index3DType;
+  using Index3DType = Index<3>;
   cl_int
   SetArg(const cl_uint index, const Index3DType & value);
 
-  typedef Index<4> Index4DType;
+  using Index4DType = Index<4>;
   cl_int
   SetArg(const cl_uint index, const Index4DType & value);
 
   /** Sets argument \a index for this kernel to offset \a value. */
-  typedef Offset<1> Offset1DType;
+  using Offset1DType = Offset<1>;
   cl_int
   SetArg(const cl_uint index, const Offset1DType & value);
 
-  typedef Offset<2> Offset2DType;
+  using Offset2DType = Offset<2>;
   cl_int
   SetArg(const cl_uint index, const Offset2DType & value);
 
-  typedef Offset<3> Offset3DType;
+  using Offset3DType = Offset<3>;
   cl_int
   SetArg(const cl_uint index, const Offset3DType & value);
 
-  typedef Offset<4> Offset4DType;
+  using Offset4DType = Offset<4>;
   cl_int
   SetArg(const cl_uint index, const Offset4DType & value);
 
   /** Sets argument \a index for this kernel to point \a value. */
-  typedef Point<int, 1> PointInt1DType;
+  using PointInt1DType = Point<int, 1>;
   cl_int
   SetArg(const cl_uint index, const PointInt1DType & value);
 
-  typedef Point<float, 1> PointFloat1DType;
+  using PointFloat1DType = Point<float, 1>;
   cl_int
   SetArg(const cl_uint index, const PointFloat1DType & value);
 
-  typedef Point<double, 1> PointDouble1DType;
+  using PointDouble1DType = Point<double, 1>;
   cl_int
   SetArg(const cl_uint index, const PointDouble1DType & value);
 
-  typedef Point<int, 2> PointInt2DType;
+  using PointInt2DType = Point<int, 2>;
   cl_int
   SetArg(const cl_uint index, const PointInt2DType & value);
 
-  typedef Point<float, 2> PointFloat2DType;
+  using PointFloat2DType = Point<float, 2>;
   cl_int
   SetArg(const cl_uint index, const PointFloat2DType & value);
 
-  typedef Point<double, 2> PointDouble2DType;
+  using PointDouble2DType = Point<double, 2>;
   cl_int
   SetArg(const cl_uint index, const PointDouble2DType & value);
 
-  typedef Point<int, 3> PointInt3DType;
+  using PointInt3DType = Point<int, 3>;
   cl_int
   SetArg(const cl_uint index, const PointInt3DType & value);
 
-  typedef Point<float, 3> PointFloat3DType;
+  using PointFloat3DType = Point<float, 3>;
   cl_int
   SetArg(const cl_uint index, const PointFloat3DType & value);
 
-  typedef Point<double, 3> PointDouble3DType;
+  using PointDouble3DType = Point<double, 3>;
   cl_int
   SetArg(const cl_uint index, const PointDouble3DType & value);
 
-  typedef Point<int, 4> PointInt4DType;
+  using PointInt4DType = Point<int, 4>;
   cl_int
   SetArg(const cl_uint index, const PointInt4DType & value);
 
-  typedef Point<float, 4> PointFloat4DType;
+  using PointFloat4DType = Point<float, 4>;
   cl_int
   SetArg(const cl_uint index, const PointFloat4DType & value);
 
-  typedef Point<double, 4> PointDouble4DType;
+  using PointDouble4DType = Point<double, 4>;
   cl_int
   SetArg(const cl_uint index, const PointDouble4DType & value);
 
   /** Sets argument \a index for this kernel to vector \a value. */
   /** ITK Vector typedefs. */
-  typedef Vector<int, 1> VectorInt1DType;
+  using VectorInt1DType = Vector<int, 1>;
   cl_int
   SetArg(const cl_uint index, const VectorInt1DType & value);
 
-  typedef Vector<float, 1> VectorFloat1DType;
+  using VectorFloat1DType = Vector<float, 1>;
   cl_int
   SetArg(const cl_uint index, const VectorFloat1DType & value);
 
-  typedef Vector<double, 1> VectorDouble1DType;
+  using VectorDouble1DType = Vector<double, 1>;
   cl_int
   SetArg(const cl_uint index, const VectorDouble1DType & value);
 
-  typedef Vector<int, 2> VectorInt2DType;
+  using VectorInt2DType = Vector<int, 2>;
   cl_int
   SetArg(const cl_uint index, const VectorInt2DType & value);
 
-  typedef Vector<float, 2> VectorFloat2DType;
+  using VectorFloat2DType = Vector<float, 2>;
   cl_int
   SetArg(const cl_uint index, const VectorFloat2DType & value);
 
-  typedef Vector<double, 2> VectorDouble2DType;
+  using VectorDouble2DType = Vector<double, 2>;
   cl_int
   SetArg(const cl_uint index, const VectorDouble2DType & value);
 
-  typedef Vector<int, 3> VectorInt3DType;
+  using VectorInt3DType = Vector<int, 3>;
   cl_int
   SetArg(const cl_uint index, const VectorInt3DType & value);
 
-  typedef Vector<float, 3> VectorFloat3DType;
+  using VectorFloat3DType = Vector<float, 3>;
   cl_int
   SetArg(const cl_uint index, const VectorFloat3DType & value);
 
-  typedef Vector<double, 3> VectorDouble3DType;
+  using VectorDouble3DType = Vector<double, 3>;
   cl_int
   SetArg(const cl_uint index, const VectorDouble3DType & value);
 
-  typedef Vector<int, 4> VectorInt4DType;
+  using VectorInt4DType = Vector<int, 4>;
   cl_int
   SetArg(const cl_uint index, const VectorInt4DType & value);
 
-  typedef Vector<float, 4> VectorFloat4DType;
+  using VectorFloat4DType = Vector<float, 4>;
   cl_int
   SetArg(const cl_uint index, const VectorFloat4DType & value);
 
-  typedef Vector<double, 4> VectorDouble4DType;
+  using VectorDouble4DType = Vector<double, 4>;
   cl_int
   SetArg(const cl_uint index, const VectorDouble4DType & value);
 
   /** Sets argument \a index for this kernel to covariant vector \a value. */
-  typedef CovariantVector<int, 1> CovariantVectorInt1DType;
+  using CovariantVectorInt1DType = CovariantVector<int, 1>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorInt1DType & value);
 
-  typedef CovariantVector<float, 1> CovariantVectorFloat1DType;
+  using CovariantVectorFloat1DType = CovariantVector<float, 1>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorFloat1DType & value);
 
-  typedef CovariantVector<double, 1> CovariantVectorDouble1DType;
+  using CovariantVectorDouble1DType = CovariantVector<double, 1>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorDouble1DType & value);
 
-  typedef CovariantVector<int, 2> CovariantVectorInt2DType;
+  using CovariantVectorInt2DType = CovariantVector<int, 2>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorInt2DType & value);
 
-  typedef CovariantVector<float, 2> CovariantVectorFloat2DType;
+  using CovariantVectorFloat2DType = CovariantVector<float, 2>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorFloat2DType & value);
 
-  typedef CovariantVector<double, 2> CovariantVectorDouble2DType;
+  using CovariantVectorDouble2DType = CovariantVector<double, 2>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorDouble2DType & value);
 
-  typedef CovariantVector<int, 3> CovariantVectorInt3DType;
+  using CovariantVectorInt3DType = CovariantVector<int, 3>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorInt3DType & value);
 
-  typedef CovariantVector<float, 3> CovariantVectorFloat3DType;
+  using CovariantVectorFloat3DType = CovariantVector<float, 3>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorFloat3DType & value);
 
-  typedef CovariantVector<double, 3> CovariantVectorDouble3DType;
+  using CovariantVectorDouble3DType = CovariantVector<double, 3>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorDouble3DType & value);
 
-  typedef CovariantVector<int, 4> CovariantVectorInt4DType;
+  using CovariantVectorInt4DType = CovariantVector<int, 4>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorInt4DType & value);
 
-  typedef CovariantVector<float, 4> CovariantVectorFloat4DType;
+  using CovariantVectorFloat4DType = CovariantVector<float, 4>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorFloat4DType & value);
 
-  typedef CovariantVector<double, 4> CovariantVectorDouble4DType;
+  using CovariantVectorDouble4DType = CovariantVector<double, 4>;
   cl_int
   SetArg(const cl_uint index, const CovariantVectorDouble4DType & value);
 
   /** Sets argument \a index for this kernel to matrix \a value. */
-  typedef Matrix<float, 1, 1> MatrixFloat1x1Type;
+  using MatrixFloat1x1Type = Matrix<float, 1, 1>;
   cl_int
   SetArg(const cl_uint index, const MatrixFloat1x1Type & value);
 
-  typedef Matrix<double, 1, 1> MatrixDouble1x1Type;
+  using MatrixDouble1x1Type = Matrix<double, 1, 1>;
   cl_int
   SetArg(const cl_uint index, const MatrixDouble1x1Type & value);
 
-  typedef Matrix<float, 2, 2> MatrixFloat2x2Type;
+  using MatrixFloat2x2Type = Matrix<float, 2, 2>;
   cl_int
   SetArg(const cl_uint index, const MatrixFloat2x2Type & value);
 
-  typedef Matrix<double, 2, 2> MatrixDouble2x2Type;
+  using MatrixDouble2x2Type = Matrix<double, 2, 2>;
   cl_int
   SetArg(const cl_uint index, const MatrixDouble2x2Type & value);
 
-  typedef Matrix<float, 3, 3> MatrixFloat3x3Type;
+  using MatrixFloat3x3Type = Matrix<float, 3, 3>;
   cl_int
   SetArg(const cl_uint index, const MatrixFloat3x3Type & value);
 
-  typedef Matrix<double, 3, 3> MatrixDouble3x3Type;
+  using MatrixDouble3x3Type = Matrix<double, 3, 3>;
   cl_int
   SetArg(const cl_uint index, const MatrixDouble3x3Type & value);
 
-  typedef Matrix<float, 4, 4> MatrixFloat4x4Type;
+  using MatrixFloat4x4Type = Matrix<float, 4, 4>;
   cl_int
   SetArg(const cl_uint index, const MatrixFloat4x4Type & value);
 
-  typedef Matrix<double, 4, 4> MatrixDouble4x4Type;
+  using MatrixDouble4x4Type = Matrix<double, 4, 4>;
   cl_int
   SetArg(const cl_uint index, const MatrixDouble4x4Type & value);
 

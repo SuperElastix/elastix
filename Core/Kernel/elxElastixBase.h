@@ -146,43 +146,43 @@ class ElastixBase
 {
 public:
   /** Standard typedefs etc. */
-  typedef ElastixBase   Self;
-  typedef BaseComponent Superclass;
+  using Self = ElastixBase;
+  using Superclass = BaseComponent;
 
   /** Typedefs used in this class. */
-  typedef Configuration                                         ConfigurationType;
-  typedef ConfigurationType::Pointer                            ConfigurationPointer;
-  typedef itk::Object                                           ObjectType; // for the components
-  typedef ObjectType::Pointer                                   ObjectPointer;
-  typedef itk::DataObject                                       DataObjectType; // for the images
-  typedef DataObjectType::Pointer                               DataObjectPointer;
-  typedef itk::VectorContainer<unsigned int, ObjectPointer>     ObjectContainerType;
-  typedef ObjectContainerType::Pointer                          ObjectContainerPointer;
-  typedef itk::VectorContainer<unsigned int, DataObjectPointer> DataObjectContainerType;
-  typedef DataObjectContainerType::Pointer                      DataObjectContainerPointer;
-  typedef itk::VectorContainer<unsigned int, std::string>       FileNameContainerType;
-  typedef FileNameContainerType::Pointer                        FileNameContainerPointer;
+  using ConfigurationType = Configuration;
+  using ConfigurationPointer = ConfigurationType::Pointer;
+  using ObjectType = itk::Object; // for the components
+  using ObjectPointer = ObjectType::Pointer;
+  using DataObjectType = itk::DataObject; // for the images
+  using DataObjectPointer = DataObjectType::Pointer;
+  using ObjectContainerType = itk::VectorContainer<unsigned int, ObjectPointer>;
+  using ObjectContainerPointer = ObjectContainerType::Pointer;
+  using DataObjectContainerType = itk::VectorContainer<unsigned int, DataObjectPointer>;
+  using DataObjectContainerPointer = DataObjectContainerType::Pointer;
+  using FileNameContainerType = itk::VectorContainer<unsigned int, std::string>;
+  using FileNameContainerPointer = FileNameContainerType::Pointer;
 
   /** Result image */
-  typedef itk::DataObject ResultImageType;
+  using ResultImageType = itk::DataObject;
 
   /** Result deformation field */
-  typedef itk::DataObject ResultDeformationFieldType;
+  using ResultDeformationFieldType = itk::DataObject;
 
   /** Other typedef's. */
-  typedef ComponentDatabase                ComponentDatabaseType;
-  typedef ComponentDatabaseType::Pointer   ComponentDatabasePointer;
-  typedef ComponentDatabaseType::IndexType DBIndexType;
-  typedef std::vector<double>              FlatDirectionCosinesType;
+  using ComponentDatabaseType = ComponentDatabase;
+  using ComponentDatabasePointer = ComponentDatabaseType::Pointer;
+  using DBIndexType = ComponentDatabaseType::IndexType;
+  using FlatDirectionCosinesType = std::vector<double>;
 
   /** Type for representation of the transform coordinates. */
-  typedef double CoordRepType; // itk::CostFunction::ParametersValueType
+  using CoordRepType = double; // itk::CostFunction::ParametersValueType
 
   /** Typedef that is used in the elastix dll version. */
-  typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
+  using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
 
   /** Typedef's for Timer class. */
-  typedef itk::TimeProbe TimerType;
+  using TimerType = itk::TimeProbe;
 
   /** Set/Get the Configuration Object. */
   elxGetObjectMacro(Configuration, ConfigurationType);
@@ -444,7 +444,7 @@ protected:
   class ITK_TEMPLATE_EXPORT MultipleImageLoader
   {
   public:
-    typedef typename TImage::DirectionType DirectionType;
+    using DirectionType = typename TImage::DirectionType;
 
     static DataObjectContainerPointer
     GenerateImageContainer(const FileNameContainerType * const fileNameContainer,

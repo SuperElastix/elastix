@@ -67,15 +67,15 @@ class ITK_TEMPLATE_EXPORT TransformToSpatialJacobianSource : public ImageSource<
 {
 public:
   /** Standard class typedefs. */
-  typedef TransformToSpatialJacobianSource Self;
-  typedef ImageSource<TOutputImage>        Superclass;
-  typedef SmartPointer<Self>               Pointer;
-  typedef SmartPointer<const Self>         ConstPointer;
+  using Self = TransformToSpatialJacobianSource;
+  using Superclass = ImageSource<TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  typedef TOutputImage                           OutputImageType;
-  typedef typename OutputImageType::Pointer      OutputImagePointer;
-  typedef typename OutputImageType::ConstPointer OutputImageConstPointer;
-  typedef typename OutputImageType::RegionType   OutputImageRegionType;
+  using OutputImageType = TOutputImage;
+  using OutputImagePointer = typename OutputImageType::Pointer;
+  using OutputImageConstPointer = typename OutputImageType::ConstPointer;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -87,23 +87,23 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Typedefs for transform. */
-  typedef AdvancedTransform<TTransformPrecisionType, Self::ImageDimension, Self::ImageDimension> TransformType;
-  typedef typename TransformType::ConstPointer                                                   TransformPointerType;
-  typedef typename TransformType::SpatialJacobianType                                            SpatialJacobianType;
+  using TransformType = AdvancedTransform<TTransformPrecisionType, Self::ImageDimension, Self::ImageDimension>;
+  using TransformPointerType = typename TransformType::ConstPointer;
+  using SpatialJacobianType = typename TransformType::SpatialJacobianType;
 
   /** Typedefs for output image. */
-  typedef typename OutputImageType::PixelType PixelType;
+  using PixelType = typename OutputImageType::PixelType;
   // typedef typename PixelType::ValueType           PixelValueType;
-  typedef typename OutputImageType::RegionType    RegionType;
-  typedef typename RegionType::SizeType           SizeType;
-  typedef typename OutputImageType::IndexType     IndexType;
-  typedef typename OutputImageType::PointType     PointType;
-  typedef typename OutputImageType::SpacingType   SpacingType;
-  typedef typename OutputImageType::PointType     OriginType;
-  typedef typename OutputImageType::DirectionType DirectionType;
+  using RegionType = typename OutputImageType::RegionType;
+  using SizeType = typename RegionType::SizeType;
+  using IndexType = typename OutputImageType::IndexType;
+  using PointType = typename OutputImageType::PointType;
+  using SpacingType = typename OutputImageType::SpacingType;
+  using OriginType = typename OutputImageType::PointType;
+  using DirectionType = typename OutputImageType::DirectionType;
 
   /** Typedefs for base image. */
-  typedef ImageBase<Self::ImageDimension> ImageBaseType;
+  using ImageBaseType = ImageBase<Self::ImageDimension>;
 
   /** Set the coordinate transformation.
    * Set the coordinate transform to use for resampling.  Note that this must

@@ -69,10 +69,10 @@ class ITK_TEMPLATE_EXPORT AdvancedVersorTransform : public AdvancedRigid3DTransf
 {
 public:
   /** Standard Self Typedef */
-  typedef AdvancedVersorTransform               Self;
-  typedef AdvancedRigid3DTransform<TScalarType> Superclass;
-  typedef SmartPointer<Self>                    Pointer;
-  typedef SmartPointer<const Self>              ConstPointer;
+  using Self = AdvancedVersorTransform;
+  using Superclass = AdvancedRigid3DTransform<TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods).  */
   itkTypeMacro(AdvancedVersorTransform, AdvancedRigid3DTransform);
@@ -112,12 +112,12 @@ public:
   using typename Superclass::InternalMatrixType;
 
   /** VnlQuaternion Type */
-  typedef vnl_quaternion<TScalarType> VnlQuaternionType;
+  using VnlQuaternionType = vnl_quaternion<TScalarType>;
 
   /** Versor Type */
-  typedef Versor<TScalarType>             VersorType;
-  typedef typename VersorType::VectorType AxisType;
-  typedef typename VersorType::ValueType  AngleType;
+  using VersorType = Versor<TScalarType>;
+  using AxisType = typename VersorType::VectorType;
+  using AngleType = typename VersorType::ValueType;
 
   /**
    * Set the transformation from a container of parameters

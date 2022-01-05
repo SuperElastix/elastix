@@ -58,10 +58,10 @@ class ITK_TEMPLATE_EXPORT AdvancedRayCastInterpolateImageFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedRayCastInterpolateImageFunction          Self;
-  typedef InterpolateImageFunction<TInputImage, TCoordRep> Superclass;
-  typedef SmartPointer<Self>                               Pointer;
-  typedef SmartPointer<const Self>                         ConstPointer;
+  using Self = AdvancedRayCastInterpolateImageFunction;
+  using Superclass = InterpolateImageFunction<TInputImage, TCoordRep>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Constants for the image dimensions */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
@@ -70,24 +70,24 @@ public:
    * Type of the Transform Base class
    * The fixed image should be a 3D image
    */
-  typedef Transform<TCoordRep, InputImageDimension, InputImageDimension> TransformType;
+  using TransformType = Transform<TCoordRep, InputImageDimension, InputImageDimension>;
 
-  typedef typename TransformType::Pointer         TransformPointer;
-  typedef typename TransformType::InputPointType  InputPointType;
-  typedef typename TransformType::OutputPointType OutputPointType;
-  typedef typename TransformType::ParametersType  TransformParametersType;
-  typedef typename TransformType::JacobianType    TransformJacobianType;
+  using TransformPointer = typename TransformType::Pointer;
+  using InputPointType = typename TransformType::InputPointType;
+  using OutputPointType = typename TransformType::OutputPointType;
+  using TransformParametersType = typename TransformType::ParametersType;
+  using TransformJacobianType = typename TransformType::JacobianType;
 
-  typedef typename Superclass::InputPixelType PixelType;
+  using PixelType = typename Superclass::InputPixelType;
 
-  typedef typename TInputImage::SizeType SizeType;
+  using SizeType = typename TInputImage::SizeType;
 
-  typedef Vector<TCoordRep, InputImageDimension> DirectionType;
+  using DirectionType = Vector<TCoordRep, InputImageDimension>;
 
   /**  Type of the Interpolator Base class */
-  typedef InterpolateImageFunction<TInputImage, TCoordRep> InterpolatorType;
+  using InterpolatorType = InterpolateImageFunction<TInputImage, TCoordRep>;
 
-  typedef typename InterpolatorType::Pointer InterpolatorPointer;
+  using InterpolatorPointer = typename InterpolatorType::Pointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(AdvancedRayCastInterpolateImageFunction, InterpolateImageFunction);

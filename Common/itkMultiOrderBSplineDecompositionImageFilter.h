@@ -84,10 +84,10 @@ class ITK_TEMPLATE_EXPORT MultiOrderBSplineDecompositionImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiOrderBSplineDecompositionImageFilter     Self;
-  typedef ImageToImageFilter<TInputImage, TOutputImage> Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  using Self = MultiOrderBSplineDecompositionImageFilter;
+  using Superclass = ImageToImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(MultiOrderBSplineDecompositionImageFilter, ImageToImageFilter);
@@ -101,14 +101,14 @@ public:
   using typename Superclass::InputImageConstPointer;
   using typename Superclass::OutputImagePointer;
 
-  typedef typename itk::NumericTraits<typename TOutputImage::PixelType>::RealType CoeffType;
+  using CoeffType = typename itk::NumericTraits<typename TOutputImage::PixelType>::RealType;
 
   /** Dimension underlying input image. */
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
   itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Iterator typedef support */
-  typedef ImageLinearIteratorWithIndex<TOutputImage> OutputLinearIterator;
+  using OutputLinearIterator = ImageLinearIteratorWithIndex<TOutputImage>;
 
   /** Get/Sets the Spline Order, supports 0th - 5th order splines. The default
    *  is a 3rd order spline. */

@@ -26,8 +26,8 @@ template <typename NDimensions>
 void
 GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>::RegisterOneFactory()
 {
-  typedef GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions> GPUTransformFactoryType;
-  auto                                                              factory = GPUTransformFactoryType::New();
+  using GPUTransformFactoryType = GPUAdvancedMatrixOffsetTransformBaseFactory2<NDimensions>;
+  auto factory = GPUTransformFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
 

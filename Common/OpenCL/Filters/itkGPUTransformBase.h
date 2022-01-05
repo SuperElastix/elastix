@@ -37,7 +37,7 @@ class ITK_EXPORT GPUTransformBase
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUTransformBase Self;
+  using Self = GPUTransformBase;
 
   /** Run-time type information (and related methods). */
   virtual const char *

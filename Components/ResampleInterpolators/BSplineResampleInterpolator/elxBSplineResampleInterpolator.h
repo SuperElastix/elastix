@@ -60,14 +60,13 @@ class ITK_TEMPLATE_EXPORT BSplineResampleInterpolator
 {
 public:
   /** Standard ITK-stuff. */
-  typedef BSplineResampleInterpolator Self;
-  typedef itk::BSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
-                                               typename ResampleInterpolatorBase<TElastix>::CoordRepType,
-                                               double>
-                                             Superclass1;
-  typedef ResampleInterpolatorBase<TElastix> Superclass2;
-  typedef itk::SmartPointer<Self>            Pointer;
-  typedef itk::SmartPointer<const Self>      ConstPointer;
+  using Self = BSplineResampleInterpolator;
+  using Superclass1 = itk::BSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                                           typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+                                                           double>;
+  using Superclass2 = ResampleInterpolatorBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -104,7 +103,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Typedef that is used in the elastix dll version. */
   using typename Superclass2::ParameterMapType;

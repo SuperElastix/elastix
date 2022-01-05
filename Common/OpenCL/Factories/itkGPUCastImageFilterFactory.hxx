@@ -26,8 +26,8 @@ template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
 GPUCastImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::RegisterOneFactory()
 {
-  typedef GPUCastImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions> GPUFilterFactoryType;
-  auto                                                                       factory = GPUFilterFactoryType::New();
+  using GPUFilterFactoryType = GPUCastImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>;
+  auto factory = GPUFilterFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
 
@@ -57,23 +57,23 @@ GPUCastImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register1D()
 
   if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 1> visitor1;
     visitor1(*this);
   }
 
   if (!inputHasFloat || !outputHasDouble)
   {
-    typedef typelist::MakeTypeList<float>::Type                    FloatTypeList;
-    typedef typelist::MakeTypeList<double>::Type                   DoubleTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
+    using DoubleTypeList = typelist::MakeTypeList<double>::Type;
     typelist::DualVisitDimension<FloatTypeList, DoubleTypeList, 1> visitor2;
     visitor2(*this);
   }
 
   if (!inputHasDouble || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<double>::Type                   DoubleTypeList;
-    typedef typelist::MakeTypeList<float>::Type                    FloatTypeList;
+    using DoubleTypeList = typelist::MakeTypeList<double>::Type;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<DoubleTypeList, FloatTypeList, 1> visitor3;
     visitor3(*this);
   }
@@ -97,23 +97,23 @@ GPUCastImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register2D()
 
   if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 2> visitor1;
     visitor1(*this);
   }
 
   if (!inputHasFloat || !outputHasDouble)
   {
-    typedef typelist::MakeTypeList<float>::Type                    FloatTypeList;
-    typedef typelist::MakeTypeList<double>::Type                   DoubleTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
+    using DoubleTypeList = typelist::MakeTypeList<double>::Type;
     typelist::DualVisitDimension<FloatTypeList, DoubleTypeList, 2> visitor2;
     visitor2(*this);
   }
 
   if (!inputHasDouble || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<double>::Type                   DoubleTypeList;
-    typedef typelist::MakeTypeList<float>::Type                    FloatTypeList;
+    using DoubleTypeList = typelist::MakeTypeList<double>::Type;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<DoubleTypeList, FloatTypeList, 2> visitor3;
     visitor3(*this);
   }
@@ -137,23 +137,23 @@ GPUCastImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::Register3D()
 
   if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 3> visitor1;
     visitor1(*this);
   }
 
   if (!inputHasFloat || !outputHasDouble)
   {
-    typedef typelist::MakeTypeList<float>::Type                    FloatTypeList;
-    typedef typelist::MakeTypeList<double>::Type                   DoubleTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
+    using DoubleTypeList = typelist::MakeTypeList<double>::Type;
     typelist::DualVisitDimension<FloatTypeList, DoubleTypeList, 3> visitor2;
     visitor2(*this);
   }
 
   if (!inputHasDouble || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<double>::Type                   DoubleTypeList;
-    typedef typelist::MakeTypeList<float>::Type                    FloatTypeList;
+    using DoubleTypeList = typelist::MakeTypeList<double>::Type;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<DoubleTypeList, FloatTypeList, 3> visitor3;
     visitor3(*this);
   }

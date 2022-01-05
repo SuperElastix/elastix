@@ -175,8 +175,8 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
       largestPossibleRegion = image->GetLargestPossibleRegion();
     }
 
-    typedef unsigned int size_type;
-    size_type            size[ImageType::ImageDimension];
+    using size_type = unsigned int;
+    size_type size[ImageType::ImageDimension];
     for (unsigned int i = 0; i < ImageDim; ++i)
     {
       if (image.IsNotNull())

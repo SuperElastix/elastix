@@ -26,8 +26,8 @@ template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
 GPUResampleImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::RegisterOneFactory()
 {
-  typedef GPUResampleImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions> GPUFilterFactoryType;
-  auto                                                                           factory = GPUFilterFactoryType::New();
+  using GPUFilterFactoryType = GPUResampleImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>;
+  auto factory = GPUFilterFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
 

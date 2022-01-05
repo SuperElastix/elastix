@@ -49,12 +49,12 @@ class ITK_TEMPLATE_EXPORT OpenCLMovingGenericPyramid : public MovingGenericPyram
 {
 public:
   /** Standard ITK-stuff. */
-  typedef OpenCLMovingGenericPyramid                           Self;
-  typedef MovingGenericPyramid<TElastix>                       Superclass;
-  typedef typename MovingGenericPyramid<TElastix>::Superclass1 Superclass1;
-  typedef typename MovingGenericPyramid<TElastix>::Superclass2 Superclass2;
-  typedef itk::SmartPointer<Self>                              Pointer;
-  typedef itk::SmartPointer<const Self>                        ConstPointer;
+  using Self = OpenCLMovingGenericPyramid;
+  using Superclass = MovingGenericPyramid<TElastix>;
+  using Superclass1 = typename MovingGenericPyramid<TElastix>::Superclass1;
+  using Superclass2 = typename MovingGenericPyramid<TElastix>::Superclass2;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -74,19 +74,19 @@ public:
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::InputImageType;
   using typename Superclass1::OutputImageType;
-  typedef typename Superclass1::InputImageType::PixelType  InputImagePixelType;
-  typedef typename Superclass1::OutputImageType::PixelType OutputImagePixelType;
+  using InputImagePixelType = typename Superclass1::InputImageType::PixelType;
+  using OutputImagePixelType = typename Superclass1::OutputImageType::PixelType;
 
   /** Typedefs for factory. */
-  typedef typename itk::ObjectFactoryBase::Pointer ObjectFactoryBasePointer;
+  using ObjectFactoryBasePointer = typename itk::ObjectFactoryBase::Pointer;
 
   /** GPU Typedefs for GPU image and GPU filter. */
-  typedef itk::GPUImage<InputImagePixelType, InputImageType::ImageDimension>   GPUInputImageType;
-  typedef typename GPUInputImageType::Pointer                                  GPUInputImagePointer;
-  typedef itk::GPUImage<OutputImagePixelType, OutputImageType::ImageDimension> GPUOutputImageType;
+  using GPUInputImageType = itk::GPUImage<InputImagePixelType, InputImageType::ImageDimension>;
+  using GPUInputImagePointer = typename GPUInputImageType::Pointer;
+  using GPUOutputImageType = itk::GPUImage<OutputImagePixelType, OutputImageType::ImageDimension>;
 
-  typedef itk::GenericMultiResolutionPyramidImageFilter<GPUInputImageType, GPUOutputImageType, float> GPUPyramidType;
-  typedef typename GPUPyramidType::Pointer                                                            GPUPyramidPointer;
+  using GPUPyramidType = itk::GenericMultiResolutionPyramidImageFilter<GPUInputImageType, GPUOutputImageType, float>;
+  using GPUPyramidPointer = typename GPUPyramidType::Pointer;
 
   /** Do some things before registration. */
   void

@@ -65,10 +65,10 @@ class ITK_TEMPLATE_EXPORT AdvancedSimilarity3DTransform : public AdvancedVersorR
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedSimilarity3DTransform               Self;
-  typedef AdvancedVersorRigid3DTransform<TScalarType> Superclass;
-  typedef SmartPointer<Self>                          Pointer;
-  typedef SmartPointer<const Self>                    ConstPointer;
+  using Self = AdvancedSimilarity3DTransform;
+  using Superclass = AdvancedVersorRigid3DTransform<TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);
@@ -105,7 +105,7 @@ public:
   using typename Superclass::VersorType;
   using typename Superclass::AxisType;
   using typename Superclass::AngleType;
-  typedef TScalarType ScaleType;
+  using ScaleType = TScalarType;
 
   using typename Superclass::NonZeroJacobianIndicesType;
   using typename Superclass::SpatialJacobianType;

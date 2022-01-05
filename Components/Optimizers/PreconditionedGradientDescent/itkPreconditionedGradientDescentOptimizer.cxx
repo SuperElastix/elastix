@@ -235,8 +235,8 @@ PreconditionedGradientDescentOptimizer::StopOptimization()
 void
 PreconditionedGradientDescentOptimizer::AdvanceOneStep()
 {
-  typedef DerivativeType::ValueType      DerivativeValueType;
-  typedef DerivativeType::const_iterator DerivativeIteratorType;
+  using DerivativeValueType = DerivativeType::ValueType;
+  using DerivativeIteratorType = DerivativeType::const_iterator;
 
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
@@ -274,8 +274,8 @@ PreconditionedGradientDescentOptimizer::CholmodSolve(const DerivativeType & grad
    */
   itkDebugMacro("CholmodSolve");
 
-  typedef DerivativeType::ValueType      DerivativeValueType;
-  typedef DerivativeType::const_iterator DerivativeIteratorType;
+  using DerivativeValueType = DerivativeType::ValueType;
+  using DerivativeIteratorType = DerivativeType::const_iterator;
 
   /** Get the spaceDimension from the cost function. */
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
@@ -350,9 +350,9 @@ PreconditionedGradientDescentOptimizer::SetPreconditionMatrix(PreconditionType &
    */
   itkDebugMacro("SetPreconditionMatrix");
 
-  typedef PreconditionType::row             RowType;
-  typedef RowType::const_iterator           RowIteratorType;
-  typedef vnl_vector<PreconditionValueType> DiagonalType;
+  using RowType = PreconditionType::row;
+  using RowIteratorType = RowType::const_iterator;
+  using DiagonalType = vnl_vector<PreconditionValueType>;
 
   const size_t spaceDimension = static_cast<size_t>(precondition.cols());
 

@@ -40,21 +40,21 @@ class ITK_TEMPLATE_EXPORT BinaryTreeSearchBase : public Object
 {
 public:
   /** Standard itk. */
-  typedef BinaryTreeSearchBase     Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = BinaryTreeSearchBase;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** ITK type info. */
   itkTypeMacro(BinaryTreeSearchBase, Object);
 
   /** Typedef's. */
-  typedef TListSample                                    ListSampleType;
-  typedef BinaryTreeBase<ListSampleType>                 BinaryTreeType;
-  typedef typename BinaryTreeType::Pointer               BinaryTreePointer;
-  typedef typename BinaryTreeType::MeasurementVectorType MeasurementVectorType;
-  typedef Array<int>                                     IndexArrayType;
-  typedef Array<double>                                  DistanceArrayType;
+  using ListSampleType = TListSample;
+  using BinaryTreeType = BinaryTreeBase<ListSampleType>;
+  using BinaryTreePointer = typename BinaryTreeType::Pointer;
+  using MeasurementVectorType = typename BinaryTreeType::MeasurementVectorType;
+  using IndexArrayType = Array<int>;
+  using DistanceArrayType = Array<double>;
 
   /** Set and get the binary tree. */
   virtual void

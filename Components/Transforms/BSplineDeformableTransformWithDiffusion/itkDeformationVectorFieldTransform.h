@@ -48,10 +48,10 @@ class ITK_TEMPLATE_EXPORT DeformationVectorFieldTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef DeformationVectorFieldTransform                                 Self;
-  typedef AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0> Superclass;
-  typedef SmartPointer<Self>                                              Pointer;
-  typedef SmartPointer<const Self>                                        ConstPointer;
+  using Self = DeformationVectorFieldTransform;
+  using Superclass = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -77,14 +77,14 @@ public:
   using typename Superclass::OutputPointType;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename Superclass::PixelType    CoefficientPixelType;
-  typedef typename Superclass::ImageType    CoefficientImageType;
-  typedef typename Superclass::ImagePointer CoefficientImagePointer;
+  using CoefficientPixelType = typename Superclass::PixelType;
+  using CoefficientImageType = typename Superclass::ImageType;
+  using CoefficientImagePointer = typename Superclass::ImagePointer;
 
   /** Typedef's for VectorImage. */
-  typedef Vector<float, Self::SpaceDimension>                     CoefficientVectorPixelType;
-  typedef Image<CoefficientVectorPixelType, Self::SpaceDimension> CoefficientVectorImageType;
-  typedef typename CoefficientVectorImageType::Pointer            CoefficientVectorImagePointer;
+  using CoefficientVectorPixelType = Vector<float, Self::SpaceDimension>;
+  using CoefficientVectorImageType = Image<CoefficientVectorPixelType, Self::SpaceDimension>;
+  using CoefficientVectorImagePointer = typename CoefficientVectorImageType::Pointer;
 
   /** Set the coefficient image as a deformation field.
    * The superclass provides a similar function (SetCoeffficientImage),

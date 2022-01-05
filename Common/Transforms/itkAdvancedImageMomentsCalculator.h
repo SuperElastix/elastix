@@ -67,10 +67,10 @@ class ITK_TEMPLATE_EXPORT AdvancedImageMomentsCalculator : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedImageMomentsCalculator<TImage> Self;
-  typedef Object                                 Superclass;
-  typedef SmartPointer<Self>                     Pointer;
-  typedef SmartPointer<const Self>               ConstPointer;
+  using Self = AdvancedImageMomentsCalculator<TImage>;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -82,31 +82,31 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** Standard scalar type within this class. */
-  typedef double ScalarType;
+  using ScalarType = double;
 
   /** Standard vector type within this class. */
-  typedef Vector<ScalarType, Self::ImageDimension> VectorType;
+  using VectorType = Vector<ScalarType, Self::ImageDimension>;
 
   /** Spatial Object type within this class. */
-  typedef SpatialObject<Self::ImageDimension> SpatialObjectType;
+  using SpatialObjectType = SpatialObject<Self::ImageDimension>;
 
   /** Spatial Object member types used within this class. */
-  typedef typename SpatialObjectType::Pointer      SpatialObjectPointer;
-  typedef typename SpatialObjectType::ConstPointer SpatialObjectConstPointer;
+  using SpatialObjectPointer = typename SpatialObjectType::Pointer;
+  using SpatialObjectConstPointer = typename SpatialObjectType::ConstPointer;
 
   /** Standard matrix type within this class. */
-  typedef Matrix<ScalarType, Self::ImageDimension, Self::ImageDimension> MatrixType;
+  using MatrixType = Matrix<ScalarType, Self::ImageDimension, Self::ImageDimension>;
 
   /** Standard image type within this class. */
-  typedef TImage ImageType;
+  using ImageType = TImage;
 
   /** Standard image type pointer within this class. */
-  typedef typename ImageType::Pointer      ImagePointer;
-  typedef typename ImageType::ConstPointer ImageConstPointer;
+  using ImagePointer = typename ImageType::Pointer;
+  using ImageConstPointer = typename ImageType::ConstPointer;
 
   /** Affine transform for mapping to and from principal axis */
-  typedef AffineTransform<double, Self::ImageDimension> AffineTransformType;
-  typedef typename AffineTransformType::Pointer         AffineTransformPointer;
+  using AffineTransformType = AffineTransform<double, Self::ImageDimension>;
+  using AffineTransformPointer = typename AffineTransformType::Pointer;
 
   /** Set the input image. */
   virtual void
@@ -231,17 +231,17 @@ public:
   virtual void
   AfterThreadedCompute();
 
-  typedef itk::ImageGridSampler<ImageType> ImageGridSamplerType;
-  //  typedef itk::ImageFullSampler< ImageType >     ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer                   ImageGridSamplerPointer;
-  typedef typename ImageGridSamplerType ::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer               ImageSampleContainerPointer;
+  using ImageGridSamplerType = itk::ImageGridSampler<ImageType>;
+  //  using ImageGridSamplerType = itk::ImageFullSampler< ImageType >    ;
+  using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
+  using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
+  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
 
   virtual void
   SampleImage(ImageSampleContainerPointer & sampleContainer);
 
-  typedef itk::BinaryThresholdImageFilter<TImage, TImage> BinaryThresholdImageFilterType;
-  typedef typename TImage::PixelType                      InputPixelType;
+  using BinaryThresholdImageFilterType = itk::BinaryThresholdImageFilter<TImage, TImage>;
+  using InputPixelType = typename TImage::PixelType;
 
   /** Set some parameters. */
   itkSetMacro(NumberOfSamplesForCenteredTransformInitialization, SizeValueType);
@@ -255,9 +255,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::PlatformMultiThreader ThreaderType;
-  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
-  ThreaderType::Pointer              m_Threader;
+  using ThreaderType = itk::PlatformMultiThreader;
+  using ThreadInfoType = ThreaderType::WorkUnitInfo;
+  ThreaderType::Pointer m_Threader;
 
   /** Launch MultiThread Compute. */
   void
@@ -300,7 +300,7 @@ protected:
   SizeValueType                           m_NumberOfPixelsCounted;
 
   /** The type of region used for multithreading */
-  typedef typename ImageType::RegionType ThreadRegionType;
+  using ThreadRegionType = typename ImageType::RegionType;
 
   SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization;
   InputPixelType              m_LowerThresholdForCenterGravity;

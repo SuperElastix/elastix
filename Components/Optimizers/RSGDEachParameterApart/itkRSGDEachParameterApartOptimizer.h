@@ -54,10 +54,10 @@ class RSGDEachParameterApartOptimizer : public RSGDEachParameterApartBaseOptimiz
 {
 public:
   /** Standard class typedefs. */
-  typedef RSGDEachParameterApartOptimizer     Self;
-  typedef RSGDEachParameterApartBaseOptimizer Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  using Self = RSGDEachParameterApartOptimizer;
+  using Superclass = RSGDEachParameterApartBaseOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -67,7 +67,7 @@ public:
 
   /** Cost function typedefs. */
   using Superclass::CostFunctionType;
-  typedef CostFunctionType::Pointer CostFunctionPointer;
+  using CostFunctionPointer = CostFunctionType::Pointer;
 
 protected:
   RSGDEachParameterApartOptimizer() = default;

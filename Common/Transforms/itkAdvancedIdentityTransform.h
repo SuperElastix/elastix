@@ -72,10 +72,10 @@ class ITK_TEMPLATE_EXPORT AdvancedIdentityTransform : public AdvancedTransform<T
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedIdentityTransform                                Self;
-  typedef AdvancedTransform<TScalarType, NDimensions, NDimensions> Superclass;
-  typedef SmartPointer<Self>                                       Pointer;
-  typedef SmartPointer<const Self>                                 ConstPointer;
+  using Self = AdvancedIdentityTransform;
+  using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
@@ -89,7 +89,7 @@ public:
   itkStaticConstMacro(ParametersDimension, unsigned int, 1);
 
   /** Type of the input parameters. */
-  typedef TScalarType ScalarType;
+  using ScalarType = TScalarType;
 
   /** Type of the input parameters. */
   using typename Superclass::ParametersType;
@@ -100,25 +100,25 @@ public:
   using typename Superclass::JacobianType;
 
   /** Standard vector type for this class. */
-  typedef Vector<TScalarType, Self::InputSpaceDimension>  InputVectorType;
-  typedef Vector<TScalarType, Self::OutputSpaceDimension> OutputVectorType;
+  using InputVectorType = Vector<TScalarType, Self::InputSpaceDimension>;
+  using OutputVectorType = Vector<TScalarType, Self::OutputSpaceDimension>;
 
   /** Standard covariant vector type for this class */
-  typedef CovariantVector<TScalarType, Self::InputSpaceDimension>  InputCovariantVectorType;
-  typedef CovariantVector<TScalarType, Self::OutputSpaceDimension> OutputCovariantVectorType;
+  using InputCovariantVectorType = CovariantVector<TScalarType, Self::InputSpaceDimension>;
+  using OutputCovariantVectorType = CovariantVector<TScalarType, Self::OutputSpaceDimension>;
 
   /** Standard vnl_vector type for this class. */
-  typedef vnl_vector_fixed<TScalarType, Self::InputSpaceDimension>  InputVnlVectorType;
-  typedef vnl_vector_fixed<TScalarType, Self::OutputSpaceDimension> OutputVnlVectorType;
+  using InputVnlVectorType = vnl_vector_fixed<TScalarType, Self::InputSpaceDimension>;
+  using OutputVnlVectorType = vnl_vector_fixed<TScalarType, Self::OutputSpaceDimension>;
 
   /** Standard coordinate point type for this class */
-  typedef Point<TScalarType, Self::InputSpaceDimension>  InputPointType;
-  typedef Point<TScalarType, Self::OutputSpaceDimension> OutputPointType;
+  using InputPointType = Point<TScalarType, Self::InputSpaceDimension>;
+  using OutputPointType = Point<TScalarType, Self::OutputSpaceDimension>;
 
   /** Base inverse transform type. This type should not be changed to the
    * concrete inverse transform type or inheritance would be lost.*/
-  typedef typename Superclass::InverseTransformBaseType InverseTransformBaseType;
-  typedef typename InverseTransformBaseType::Pointer    InverseTransformBasePointer;
+  using InverseTransformBaseType = typename Superclass::InverseTransformBaseType;
+  using InverseTransformBasePointer = typename InverseTransformBaseType::Pointer;
 
   /** AdvancedTransform typedefs */
   using typename Superclass::NonZeroJacobianIndicesType;

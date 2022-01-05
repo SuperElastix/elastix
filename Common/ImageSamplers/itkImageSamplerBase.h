@@ -44,11 +44,11 @@ class ITK_TEMPLATE_EXPORT ImageSamplerBase
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageSamplerBase Self;
-  typedef ImageToVectorContainerFilter<TInputImage, VectorDataContainer<std::size_t, ImageSample<TInputImage>>>
-                                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = ImageSamplerBase;
+  using Superclass =
+    ImageToVectorContainerFilter<TInputImage, VectorDataContainer<std::size_t, ImageSample<TInputImage>>>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -70,19 +70,19 @@ public:
   itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);
 
   /** Other typdefs. */
-  typedef ImageSample<InputImageType>                       ImageSampleType;
-  typedef VectorDataContainer<std::size_t, ImageSampleType> ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer        ImageSampleContainerPointer;
-  typedef typename InputImageType::SizeType                 InputImageSizeType;
-  typedef typename InputImageType::IndexType                InputImageIndexType;
-  typedef typename InputImageType::PointType                InputImagePointType;
-  typedef typename InputImagePointType::ValueType           InputImagePointValueType;
-  typedef typename ImageSampleType::RealType                ImageSampleValueType;
-  typedef SpatialObject<Self::InputImageDimension>          MaskType;
-  typedef typename MaskType::Pointer                        MaskPointer;
-  typedef typename MaskType::ConstPointer                   MaskConstPointer;
-  typedef std::vector<MaskConstPointer>                     MaskVectorType;
-  typedef std::vector<InputImageRegionType>                 InputImageRegionVectorType;
+  using ImageSampleType = ImageSample<InputImageType>;
+  using ImageSampleContainerType = VectorDataContainer<std::size_t, ImageSampleType>;
+  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
+  using InputImageSizeType = typename InputImageType::SizeType;
+  using InputImageIndexType = typename InputImageType::IndexType;
+  using InputImagePointType = typename InputImageType::PointType;
+  using InputImagePointValueType = typename InputImagePointType::ValueType;
+  using ImageSampleValueType = typename ImageSampleType::RealType;
+  using MaskType = SpatialObject<Self::InputImageDimension>;
+  using MaskPointer = typename MaskType::Pointer;
+  using MaskConstPointer = typename MaskType::ConstPointer;
+  using MaskVectorType = std::vector<MaskConstPointer>;
+  using InputImageRegionVectorType = std::vector<InputImageRegionType>;
 
   /** ******************** Masks ******************** */
 

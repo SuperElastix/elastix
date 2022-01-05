@@ -93,13 +93,13 @@ main(int argc, char ** argv)
   }
 
   /** Some typedef's. */
-  typedef elx::ElastixMain                            ElastixMainType;
-  typedef ElastixMainType::ObjectPointer              ObjectPointer;
-  typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
-  typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
+  using ElastixMainType = elx::ElastixMain;
+  using ObjectPointer = ElastixMainType::ObjectPointer;
+  using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
+  using FlatDirectionCosinesType = ElastixMainType::FlatDirectionCosinesType;
 
-  typedef ElastixMainType::ArgumentMapType ArgumentMapType;
-  typedef ArgumentMapType::value_type      ArgumentMapEntryType;
+  using ArgumentMapType = ElastixMainType::ArgumentMapType;
+  using ArgumentMapEntryType = ArgumentMapType::value_type;
 
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();

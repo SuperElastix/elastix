@@ -31,8 +31,8 @@ main()
    */
   const unsigned int Dimension = 2;
   const unsigned int SplineOrder = 3;
-  typedef float      CoordinateRepresentationType;
-  const double       distance = 1e-3; // the allowable distance
+  using CoordinateRepresentationType = float;
+  const double distance = 1e-3; // the allowable distance
   // const double allowedTimeDifference = 0.1; // 10% is considered within limits
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
@@ -40,10 +40,10 @@ main()
   unsigned int N = static_cast<unsigned int>(1e7);
 
   /** Other typedefs. */
-  typedef itk::BSplineInterpolationDerivativeWeightFunction<CoordinateRepresentationType, Dimension, SplineOrder>
-                                                            DerivativeWeightFunctionType;
-  typedef DerivativeWeightFunctionType::ContinuousIndexType ContinuousIndexType;
-  typedef DerivativeWeightFunctionType::WeightsType         WeightsType;
+  using DerivativeWeightFunctionType =
+    itk::BSplineInterpolationDerivativeWeightFunction<CoordinateRepresentationType, Dimension, SplineOrder>;
+  using ContinuousIndexType = DerivativeWeightFunctionType::ContinuousIndexType;
+  using WeightsType = DerivativeWeightFunctionType::WeightsType;
 
   /**
    * *********** TESTING ***********************************************

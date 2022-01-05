@@ -40,17 +40,17 @@ class ELASTIXLIB_API ELASTIX
 {
 public:
   // typedefs for images
-  typedef itk::DataObject     Image;
-  typedef Image::Pointer      ImagePointer;
-  typedef Image::ConstPointer ConstImagePointer;
+  using Image = itk::DataObject;
+  using ImagePointer = Image::Pointer;
+  using ConstImagePointer = Image::ConstPointer;
 
   // typedefs for parameter map
-  typedef itk::ParameterFileParser::ParameterValuesType           ParameterValuesType;
-  typedef itk::ParameterFileParser::ParameterMapType              ParameterMapType;
-  typedef std::vector<itk::ParameterFileParser::ParameterMapType> ParameterMapListType;
+  using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
+  using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
+  using ParameterMapListType = std::vector<itk::ParameterFileParser::ParameterMapType>;
 
   // typedefs for ObjectPointer
-  typedef elastix::ElastixMain::ObjectPointer ObjectPointer;
+  using ObjectPointer = elastix::ElastixMain::ObjectPointer;
 
   /**
    *  Constructor and destructor

@@ -90,8 +90,8 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
   InputPointType   rotationCenter;
   OutputVectorType translationVector;
 
-  typedef ImageMaskSpatialObject<InputSpaceDimension>  FixedMaskSpatialObjectType;
-  typedef ImageMaskSpatialObject<OutputSpaceDimension> MovingMaskSpatialObjectType;
+  using FixedMaskSpatialObjectType = ImageMaskSpatialObject<InputSpaceDimension>;
+  using MovingMaskSpatialObjectType = ImageMaskSpatialObject<OutputSpaceDimension>;
 
   if (m_UseMoments)
   {
@@ -154,10 +154,10 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     const typename MovingImageType::IndexType &  movingIndex = movingRegion.GetIndex();
     const typename MovingImageType::SizeType &   movingSize = movingRegion.GetSize();
 
-    typedef typename InputPointType::ValueType                 CoordRepType;
-    typedef ContinuousIndex<CoordRepType, InputSpaceDimension> ContinuousIndexType;
+    using CoordRepType = typename InputPointType::ValueType;
+    using ContinuousIndexType = ContinuousIndex<CoordRepType, InputSpaceDimension>;
 
-    typedef typename ContinuousIndexType::ValueType ContinuousIndexValueType;
+    using ContinuousIndexValueType = typename ContinuousIndexType::ValueType;
 
     InputPointType      centerMovingPoint;
     ContinuousIndexType centerMovingIndex;
@@ -191,8 +191,8 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     // When masks are used the geometrical tops (z-direction) of the bounding box
     // of the masks are used. Center of rotation point is set to the center of the fixed image.
     // Get fixed image (mask) information
-    typedef typename FixedImageType::RegionType FixedRegionType;
-    FixedRegionType                             fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
+    using FixedRegionType = typename FixedImageType::RegionType;
+    FixedRegionType fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
     if (this->m_FixedImageMask)
     {
       auto fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
@@ -201,8 +201,8 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     }
 
     // Get moving image (mask) information
-    typedef typename MovingImageType::RegionType MovingRegionType;
-    MovingRegionType                             movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
+    using MovingRegionType = typename MovingImageType::RegionType;
+    MovingRegionType movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
     if (this->m_MovingImageMask)
     {
       auto movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
@@ -298,8 +298,8 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     // When masks are used the geometrical centers of the bounding box
     // of the masks are used.
     // Get fixed image (mask) information
-    typedef typename FixedImageType::RegionType FixedRegionType;
-    FixedRegionType                             fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
+    using FixedRegionType = typename FixedImageType::RegionType;
+    FixedRegionType fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
     if (this->m_FixedImageMask)
     {
       auto fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
@@ -317,8 +317,8 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     this->m_FixedImage->TransformContinuousIndexToPhysicalPoint(fixedCenterCI, centerFixed);
 
     // Get moving image (mask) information
-    typedef typename MovingImageType::RegionType MovingRegionType;
-    MovingRegionType                             movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
+    using MovingRegionType = typename MovingImageType::RegionType;
+    MovingRegionType movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
     if (this->m_MovingImageMask)
     {
       auto movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();

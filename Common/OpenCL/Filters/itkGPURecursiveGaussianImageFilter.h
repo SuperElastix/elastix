@@ -44,11 +44,11 @@ class ITK_EXPORT GPURecursiveGaussianImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef GPURecursiveGaussianImageFilter                                 Self;
-  typedef RecursiveGaussianImageFilter<TInputImage, TOutputImage>         CPUSuperclass;
-  typedef GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass> GPUSuperclass;
-  typedef SmartPointer<Self>                                              Pointer;
-  typedef SmartPointer<const Self>                                        ConstPointer;
+  using Self = GPURecursiveGaussianImageFilter;
+  using CPUSuperclass = RecursiveGaussianImageFilter<TInputImage, TOutputImage>;
+  using GPUSuperclass = GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -57,16 +57,16 @@ public:
   itkTypeMacro(GPURecursiveGaussianImageFilter, GPUSuperclass);
 
   /** Superclass typedefs. */
-  typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
-  typedef typename GPUSuperclass::OutputImagePixelType  OutputImagePixelType;
-  typedef typename CPUSuperclass::ScalarRealType        ScalarRealType;
+  using OutputImageRegionType = typename GPUSuperclass::OutputImageRegionType;
+  using OutputImagePixelType = typename GPUSuperclass::OutputImagePixelType;
+  using ScalarRealType = typename CPUSuperclass::ScalarRealType;
 
   /** Some convenient typedefs. */
-  typedef TInputImage                           InputImageType;
-  typedef typename InputImageType::Pointer      InputImagePointer;
-  typedef typename InputImageType::ConstPointer InputImageConstPointer;
-  typedef typename InputImageType::RegionType   InputImageRegionType;
-  typedef typename InputImageType::PixelType    InputImagePixelType;
+  using InputImageType = TInputImage;
+  using InputImagePointer = typename InputImageType::Pointer;
+  using InputImageConstPointer = typename InputImageType::ConstPointer;
+  using InputImageRegionType = typename InputImageType::RegionType;
+  using InputImagePixelType = typename InputImageType::PixelType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);

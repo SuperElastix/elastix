@@ -41,12 +41,12 @@ class ITK_TEMPLATE_EXPORT KernelFunctionBase2 : public KernelFunctionBase<TRealV
 {
 public:
   /** Standard class typedefs. */
-  typedef KernelFunctionBase2                Self;
-  typedef KernelFunctionBase<TRealValueType> Superclass;
-  typedef SmartPointer<Self>                 Pointer;
-  typedef SmartPointer<const Self>           ConstPointer;
+  using Self = KernelFunctionBase2;
+  using Superclass = KernelFunctionBase<TRealValueType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
-  typedef TRealValueType RealType;
+  using RealType = TRealValueType;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(KernelFunctionBase2, KernelFunctionBase);

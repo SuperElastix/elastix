@@ -60,9 +60,9 @@ class ITK_TEMPLATE_EXPORT BSplineKernelFunction2 : public KernelFunctionBase2<do
 {
 public:
   /** Standard class typedefs. */
-  typedef BSplineKernelFunction2      Self;
-  typedef KernelFunctionBase2<double> Superclass;
-  typedef SmartPointer<Self>          Pointer;
+  using Self = BSplineKernelFunction2;
+  using Superclass = KernelFunctionBase2<double>;
+  using Pointer = SmartPointer<Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -74,7 +74,7 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Store weights for the entire support. */
-  typedef FixedArray<double, Self::SplineOrder + 1> WeightArrayType;
+  using WeightArrayType = FixedArray<double, Self::SplineOrder + 1>;
 
   /** Evaluate the function at one point. */
   inline double

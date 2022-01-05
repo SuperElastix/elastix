@@ -218,8 +218,8 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::ApplyInitialTransfo
    */
 
   /** Create a temporary image. As small as possible, for memory savings. */
-  typedef Image<unsigned char, Dimension> ImageType; // bool??
-  auto                                    image = ImageType::New();
+  using ImageType = Image<unsigned char, Dimension>; // bool??
+  auto image = ImageType::New();
   image->SetOrigin(this->m_ImageOrigin);
   image->SetSpacing(this->m_ImageSpacing);
   image->SetDirection(this->m_ImageDirection);
@@ -227,21 +227,21 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::ApplyInitialTransfo
   image->Allocate();
 
   /** The points that define the bounding box. */
-  typedef typename PointType::ValueType                         PointValueType;
-  typedef BoundingBox<unsigned long, Dimension, PointValueType> BoundingBoxType;
-  typedef typename BoundingBoxType::Pointer                     BoundingBoxPointer;
-  typedef typename BoundingBoxType::PointsContainer             PointsContainerType;
-  typedef typename PointsContainerType::Pointer                 PointsContainerPointer;
-  BoundingBoxPointer                                            boundingBox = BoundingBoxType::New();
-  PointsContainerPointer                                        boundaryPoints = PointsContainerType::New();
-  OriginType                                                    maxPoint;
-  OriginType                                                    minPoint;
+  using PointValueType = typename PointType::ValueType;
+  using BoundingBoxType = BoundingBox<unsigned long, Dimension, PointValueType>;
+  using BoundingBoxPointer = typename BoundingBoxType::Pointer;
+  using PointsContainerType = typename BoundingBoxType::PointsContainer;
+  using PointsContainerPointer = typename PointsContainerType::Pointer;
+  BoundingBoxPointer     boundingBox = BoundingBoxType::New();
+  PointsContainerPointer boundaryPoints = PointsContainerType::New();
+  OriginType             maxPoint;
+  OriginType             minPoint;
   maxPoint.Fill(NumericTraits<TransformScalarType>::NonpositiveMin());
   minPoint.Fill(NumericTraits<TransformScalarType>::max());
 
   /** An iterator over the boundary of the image. */
-  typedef ImageRegionExclusionConstIteratorWithIndex<ImageType> BoundaryIteratorType;
-  BoundaryIteratorType                                          bit(image, this->m_ImageRegion);
+  using BoundaryIteratorType = ImageRegionExclusionConstIteratorWithIndex<ImageType>;
+  BoundaryIteratorType bit(image, this->m_ImageRegion);
   bit.SetExclusionRegionToInsetRegion();
   bit.GoToBegin();
   SizeType imageSize = this->m_ImageRegion.GetSize();
@@ -263,7 +263,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::ApplyInitialTransfo
   boundaryPoints->reserve(numberOfBoundaryPoints);
 
   /** Start loop over boundary and compute transformed points. */
-  typedef typename ImageType::IndexType IndexType;
+  using IndexType = typename ImageType::IndexType;
   while (!bit.IsAtEnd())
   {
     /** Get index, transform to physical point, apply initial transform.

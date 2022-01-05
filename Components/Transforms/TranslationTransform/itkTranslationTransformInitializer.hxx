@@ -74,8 +74,8 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initiali
 
   OutputVectorType translationVector;
 
-  typedef ImageMaskSpatialObject<InputSpaceDimension>  FixedMaskSpatialObjectType;
-  typedef ImageMaskSpatialObject<OutputSpaceDimension> MovingMaskSpatialObjectType;
+  using FixedMaskSpatialObjectType = ImageMaskSpatialObject<InputSpaceDimension>;
+  using MovingMaskSpatialObjectType = ImageMaskSpatialObject<OutputSpaceDimension>;
 
   if (this->m_UseMoments)
   {
@@ -123,8 +123,8 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initiali
     // of the masks are used.
 
     // Get fixed image (mask) information
-    typedef typename FixedImageType::RegionType FixedRegionType;
-    FixedRegionType                             fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
+    using FixedRegionType = typename FixedImageType::RegionType;
+    FixedRegionType fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
     if (this->m_FixedMask)
     {
       auto fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
@@ -142,8 +142,8 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initiali
     this->m_FixedImage->TransformContinuousIndexToPhysicalPoint(fixedCenterCI, centerFixed);
 
     // Get moving image (mask) information
-    typedef typename MovingImageType::RegionType MovingRegionType;
-    MovingRegionType                             movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
+    using MovingRegionType = typename MovingImageType::RegionType;
+    MovingRegionType movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
     if (this->m_MovingMask)
     {
       auto movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();

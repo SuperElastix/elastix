@@ -45,8 +45,8 @@ class ITK_EXPORT GPUMatrixOffsetTransformBase : public GPUTransformBase
 {
 public:
   /** Standard typedefs   */
-  typedef GPUMatrixOffsetTransformBase Self;
-  typedef GPUTransformBase             GPUSuperclass;
+  using Self = GPUMatrixOffsetTransformBase;
+  using GPUSuperclass = GPUTransformBase;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(GPUMatrixOffsetTransformBase, GPUSuperclass);
@@ -59,7 +59,7 @@ public:
   }
 
   /** Type of the scalar representing coordinate and vector elements. */
-  typedef TScalarType ScalarType;
+  using ScalarType = TScalarType;
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, NInputDimensions);
@@ -67,9 +67,9 @@ public:
   itkStaticConstMacro(ParametersDimension, unsigned int, NOutputDimensions *(NInputDimensions + 1));
 
   /** Standard matrix type for this class */
-  typedef Matrix<TScalarType, Self::OutputSpaceDimension, Self::InputSpaceDimension> CPUMatrixType;
-  typedef Matrix<TScalarType, Self::InputSpaceDimension, Self::OutputSpaceDimension> CPUInverseMatrixType;
-  typedef Vector<TScalarType, Self::OutputSpaceDimension>                            CPUOutputVectorType;
+  using CPUMatrixType = Matrix<TScalarType, Self::OutputSpaceDimension, Self::InputSpaceDimension>;
+  using CPUInverseMatrixType = Matrix<TScalarType, Self::InputSpaceDimension, Self::OutputSpaceDimension>;
+  using CPUOutputVectorType = Vector<TScalarType, Self::OutputSpaceDimension>;
 
   /** Get CPU matrix of an MatrixOffsetTransformBase. */
   virtual const CPUMatrixType &

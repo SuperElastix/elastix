@@ -41,10 +41,10 @@ class ITK_TEMPLATE_EXPORT CorrespondingPointsEuclideanDistancePointMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef CorrespondingPointsEuclideanDistancePointMetric                       Self;
-  typedef SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet> Superclass;
-  typedef SmartPointer<Self>                                                    Pointer;
-  typedef SmartPointer<const Self>                                              ConstPointer;
+  using Self = CorrespondingPointsEuclideanDistancePointMetric;
+  using Superclass = SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -71,8 +71,8 @@ public:
 
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector<CoordRepType>               VnlVectorType;
+  using CoordRepType = typename OutputPointType::CoordRepType;
+  using VnlVectorType = vnl_vector<CoordRepType>;
 
   using typename Superclass::NonZeroJacobianIndicesType;
 

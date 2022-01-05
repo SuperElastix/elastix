@@ -45,13 +45,12 @@ class ITK_TEMPLATE_EXPORT AffineLogStackTransform
 {
 public:
   /** Standard ITK-stuff. */
-  typedef AffineLogStackTransform Self;
-  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-                                        Superclass1;
-  typedef elx::TransformBase<TElastix>  Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = AffineLogStackTransform;
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                        elx::TransformBase<TElastix>::FixedImageDimension>;
+  using Superclass2 = elx::TransformBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -69,18 +68,18 @@ public:
   itkStaticConstMacro(SpaceDimension, unsigned int, Superclass2::FixedImageDimension);
   itkStaticConstMacro(ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1);
 
-  typedef itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>
-                                                          AffineLogTransformType;
-  typedef typename AffineLogTransformType::Pointer        AffineLogTransformPointer;
-  typedef typename AffineLogTransformType::InputPointType InputPointType;
+  using AffineLogTransformType =
+    itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>;
+  using AffineLogTransformPointer = typename AffineLogTransformType::Pointer;
+  using InputPointType = typename AffineLogTransformType::InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
-  typedef itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>
-                                                                       ReducedDimensionAffineLogTransformBaseType;
-  typedef typename ReducedDimensionAffineLogTransformBaseType::Pointer ReducedDimensionAffineLogTransformBasePointer;
+  using ReducedDimensionAffineLogTransformBaseType =
+    itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>;
+  using ReducedDimensionAffineLogTransformBasePointer = typename ReducedDimensionAffineLogTransformBaseType::Pointer;
 
-  typedef typename ReducedDimensionAffineLogTransformBaseType::OutputVectorType ReducedDimensionOutputVectorType;
-  typedef typename ReducedDimensionAffineLogTransformBaseType::InputPointType   ReducedDimensionInputPointType;
+  using ReducedDimensionOutputVectorType = typename ReducedDimensionAffineLogTransformBaseType::OutputVectorType;
+  using ReducedDimensionInputPointType = typename ReducedDimensionAffineLogTransformBaseType::InputPointType;
 
   /** Typedefs inherited from the superclass. */
   using typename Superclass1::ParametersType;
@@ -97,32 +96,32 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Reduced Dimension typedef's. */
-  typedef float                                              PixelType;
-  typedef itk::Image<PixelType, Self::ReducedSpaceDimension> ReducedDimensionImageType;
-  typedef itk::ImageRegion<Self::ReducedSpaceDimension>      ReducedDimensionRegionType;
-  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionPointType;
-  typedef typename ReducedDimensionImageType::SizeType       ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType     ReducedDimensionIndexType;
-  typedef typename ReducedDimensionImageType::SpacingType    ReducedDimensionSpacingType;
-  typedef typename ReducedDimensionImageType::DirectionType  ReducedDimensionDirectionType;
-  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionOriginType;
+  using PixelType = float;
+  using ReducedDimensionImageType = itk::Image<PixelType, Self::ReducedSpaceDimension>;
+  using ReducedDimensionRegionType = itk::ImageRegion<Self::ReducedSpaceDimension>;
+  using ReducedDimensionPointType = typename ReducedDimensionImageType::PointType;
+  using ReducedDimensionSizeType = typename ReducedDimensionImageType::SizeType;
+  using ReducedDimensionIndexType = typename ReducedDimensionRegionType::IndexType;
+  using ReducedDimensionSpacingType = typename ReducedDimensionImageType::SpacingType;
+  using ReducedDimensionDirectionType = typename ReducedDimensionImageType::DirectionType;
+  using ReducedDimensionOriginType = typename ReducedDimensionImageType::PointType;
 
   /** For scales setting in the optimizer */
   using typename Superclass2::ScalesType;
 
   /** Other typedef's. */
-  typedef typename FixedImageType::IndexType                                 IndexType;
-  typedef typename FixedImageType::SizeType                                  SizeType;
-  typedef typename FixedImageType::PointType                                 PointType;
-  typedef typename FixedImageType::SpacingType                               SpacingType;
-  typedef typename FixedImageType::RegionType                                RegionType;
-  typedef typename FixedImageType::DirectionType                             DirectionType;
-  typedef typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension> ReducedDimensionContinuousIndexType;
-  typedef typename itk::ContinuousIndex<CoordRepType, SpaceDimension>        ContinuousIndexType;
+  using IndexType = typename FixedImageType::IndexType;
+  using SizeType = typename FixedImageType::SizeType;
+  using PointType = typename FixedImageType::PointType;
+  using SpacingType = typename FixedImageType::SpacingType;
+  using RegionType = typename FixedImageType::RegionType;
+  using DirectionType = typename FixedImageType::DirectionType;
+  using ReducedDimensionContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension>;
+  using ContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, SpaceDimension>;
 
   /** Execute stuff before anything else is done:*/
 
@@ -183,7 +182,7 @@ private:
   operator=(const Self &) = delete;
 
   /** Typedef for stack transform. */
-  typedef itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension> StackTransformType;
+  using StackTransformType = itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension>;
 
   /** The Affine stack transform. */
   typename StackTransformType::Pointer m_StackTransform;
