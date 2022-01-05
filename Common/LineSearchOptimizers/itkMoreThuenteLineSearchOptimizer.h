@@ -84,7 +84,7 @@ public:
   using Superclass::DerivativeType;
   using Superclass::CostFunctionType;
 
-  typedef enum
+  enum StopConditionType
   {
     StrongWolfeConditionsSatisfied,
     MetricError,
@@ -95,7 +95,7 @@ public:
     RoundingError,
     AscentSearchDirection,
     Unknown
-  } StopConditionType;
+  };
 
   void
   StartOptimization() override;

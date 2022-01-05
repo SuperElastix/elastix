@@ -126,14 +126,14 @@ protected:
   GPUGenerateData() override;
 
   // Supported GPU transform types
-  typedef enum
+  enum GPUTransformTypeEnum
   {
     IdentityTransform = 1,
     MatrixOffsetTransform,
     TranslationTransform,
     BSplineTransform,
     Else
-  } GPUTransformTypeEnum;
+  };
 
   /** Set arguments for the pre kernel manager. */
   void

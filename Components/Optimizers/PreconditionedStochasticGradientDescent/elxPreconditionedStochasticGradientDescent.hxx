@@ -328,10 +328,10 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution()
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /**
-   * typedef enum {
+   * enum StopConditionType {
    *   MaximumNumberOfIterations,
    *   MetricError,
-   *   MinimumStepSize } StopConditionType;
+   *   MinimumStepSize };
    */
   std::string stopcondition;
 

@@ -232,14 +232,14 @@ void
 CMAEvolutionStrategy<TElastix>::AfterEachResolution()
 {
   /**
-    typedef enum {
+    enum StopConditionType {
     MetricError,
     MaximumNumberOfIterations,
     PositionToleranceMin,
     PositionToleranceMax,
     ValueTolerance,
     ZeroStepLength,
-    Unknown }    StopConditionType;  */
+    Unknown };  */
 
   std::string stopcondition;
 

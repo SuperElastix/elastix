@@ -68,11 +68,11 @@ public:
   itkTypeMacro(FiniteDifferenceGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer);
 
   /** Codes of stopping conditions */
-  typedef enum
+  enum StopConditionType
   {
     MaximumNumberOfIterations,
     MetricError
-  } StopConditionType;
+  };
 
   /** Advance one step following the gradient direction. */
   virtual void

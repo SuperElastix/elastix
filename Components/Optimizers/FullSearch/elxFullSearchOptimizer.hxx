@@ -210,7 +210,7 @@ template <class TElastix>
 void
 FullSearch<TElastix>::AfterEachResolution()
 {
-  // typedef enum {FullRangeSearched,  MetricError } StopConditionType;
+  // enum StopConditionType {FullRangeSearched,  MetricError };
   std::string stopcondition;
 
   switch (this->GetStopCondition())

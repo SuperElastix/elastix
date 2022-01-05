@@ -81,7 +81,7 @@ public:
 
   using LineSearchOptimizerPointer = LineSearchOptimizerType::Pointer;
 
-  typedef enum
+  enum StopConditionType
   {
     MetricError,
     LineSearchError,
@@ -90,7 +90,7 @@ public:
     GradientMagnitudeTolerance,
     ZeroStep,
     Unknown
-  } StopConditionType;
+  };
 
   void
   StartOptimization() override;

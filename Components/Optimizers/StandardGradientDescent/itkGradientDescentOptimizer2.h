@@ -78,12 +78,12 @@ public:
   /** Codes of stopping conditions
    * The MinimumStepSize stopcondition never occurs, but may
    * be implemented in inheriting classes */
-  typedef enum
+  enum StopConditionType
   {
     MaximumNumberOfIterations,
     MetricError,
     MinimumStepSize
-  } StopConditionType;
+  };
 
   /** Advance one step following the gradient direction. */
   virtual void

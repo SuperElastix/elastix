@@ -59,11 +59,11 @@ public:
   itkTypeMacro(FullSearchOptimizer, SingleValuedNonLinearOptimizer);
 
   /** Codes of stopping conditions */
-  typedef enum
+  enum StopConditionType
   {
     FullRangeSearched,
     MetricError
-  } StopConditionType;
+  };
 
   /* Typedefs inherited from superclass */
   using Superclass::ParametersType;
