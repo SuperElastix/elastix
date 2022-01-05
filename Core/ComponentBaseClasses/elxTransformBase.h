@@ -134,8 +134,8 @@ public:
   ITK_DISALLOW_COPY_AND_MOVE(TransformBase);
 
   /** Standard ITK stuff. */
-  typedef TransformBase             Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = TransformBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(TransformBase, BaseComponentSE);
@@ -143,21 +143,21 @@ public:
   /** Typedef from Superclass. */
   using typename Superclass::RegistrationType;
 
-  typedef Configuration ::CommandLineArgumentMapType CommandLineArgumentMapType;
-  typedef Configuration ::CommandLineEntryType       CommandLineEntryType;
+  using CommandLineArgumentMapType = Configuration ::CommandLineArgumentMapType;
+  using CommandLineEntryType = Configuration ::CommandLineEntryType;
 
   /** Elastix typedef's. */
-  typedef ElastixBase::CoordRepType          CoordRepType;
-  typedef typename TElastix::FixedImageType  FixedImageType;
-  typedef typename TElastix::MovingImageType MovingImageType;
+  using CoordRepType = ElastixBase::CoordRepType;
+  using FixedImageType = typename TElastix::FixedImageType;
+  using MovingImageType = typename TElastix::MovingImageType;
 
   /** Typedef's from ComponentDatabase. */
-  typedef ComponentDatabase                               ComponentDatabaseType;
-  typedef ComponentDatabaseType::ComponentDescriptionType ComponentDescriptionType;
-  typedef ComponentDatabase::PtrToCreator                 PtrToCreator;
+  using ComponentDatabaseType = ComponentDatabase;
+  using ComponentDescriptionType = ComponentDatabaseType::ComponentDescriptionType;
+  using PtrToCreator = ComponentDatabase::PtrToCreator;
 
   /** Typedef for the ProgressCommand. */
-  typedef elx::ProgressCommand ProgressCommandType;
+  using ProgressCommandType = elx::ProgressCommand;
 
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
@@ -166,30 +166,30 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Other typedef's. */
-  typedef itk::Object                                                                ObjectType;
-  typedef itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension> CombinationTransformType;
-  typedef CombinationTransformType                                                   ITKBaseType;
-  typedef typename CombinationTransformType::InitialTransformType                    InitialTransformType;
+  using ObjectType = itk::Object;
+  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension>;
+  using ITKBaseType = CombinationTransformType;
+  using InitialTransformType = typename CombinationTransformType::InitialTransformType;
 
   /** Typedef's for parameters. */
   using ValueType = double;
   using ParametersType = itk::OptimizerParameters<ValueType>;
 
   /** Typedef's for TransformPoint. */
-  typedef typename ITKBaseType::InputPointType  InputPointType;
-  typedef typename ITKBaseType::OutputPointType OutputPointType;
+  using InputPointType = typename ITKBaseType::InputPointType;
+  using OutputPointType = typename ITKBaseType::OutputPointType;
 
   /** Typedef's for TransformPointsAllPoints. */
-  typedef itk::Vector<float, FixedImageDimension>          VectorPixelType;
-  typedef itk::Image<VectorPixelType, FixedImageDimension> DeformationFieldImageType;
+  using VectorPixelType = itk::Vector<float, FixedImageDimension>;
+  using DeformationFieldImageType = itk::Image<VectorPixelType, FixedImageDimension>;
 
   /** Typedefs needed for AutomaticScalesEstimation function */
-  typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
-  typedef typename ITKRegistrationType::OptimizerType OptimizerType;
-  typedef typename OptimizerType::ScalesType          ScalesType;
+  using ITKRegistrationType = typename RegistrationType::ITKBaseType;
+  using OptimizerType = typename ITKRegistrationType::OptimizerType;
+  using ScalesType = typename OptimizerType::ScalesType;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef typename TElastix::ParameterMapType ParameterMapType;
+  using ParameterMapType = typename TElastix::ParameterMapType;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *

@@ -75,10 +75,10 @@ class ITK_TEMPLATE_EXPORT MultiInputMultiResolutionImageRegistrationMethodBase
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiInputMultiResolutionImageRegistrationMethodBase               Self;
-  typedef MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                                 Pointer;
-  typedef SmartPointer<const Self>                                           ConstPointer;
+  using Self = MultiInputMultiResolutionImageRegistrationMethodBase;
+  using Superclass = MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -101,7 +101,7 @@ public:
   using typename Superclass::InterpolatorType;
   using typename Superclass::InterpolatorPointer;
   using typename Superclass::OptimizerType;
-  typedef typename OptimizerType::Pointer OptimizerPointer;
+  using OptimizerPointer = typename OptimizerType::Pointer;
   using typename Superclass::FixedImagePyramidType;
   using typename Superclass::FixedImagePyramidPointer;
   using typename Superclass::MovingImagePyramidType;
@@ -114,19 +114,19 @@ public:
   using typename Superclass::ParametersType;
   using typename Superclass::DataObjectPointer;
 
-  typedef std::vector<FixedImageRegionPyramidType> FixedImageRegionPyramidVectorType;
+  using FixedImageRegionPyramidVectorType = std::vector<FixedImageRegionPyramidType>;
 
   /** Typedef's for the MultiInput part. */
-  typedef MultiInputImageToImageMetricBase<FixedImageType, MovingImageType> MultiInputMetricType;
-  typedef typename MultiInputMetricType::Pointer                            MultiInputMetricPointer;
-  typedef typename MultiInputMetricType ::FixedImageVectorType              FixedImageVectorType;
-  typedef typename MultiInputMetricType ::FixedImageRegionVectorType        FixedImageRegionVectorType;
-  typedef typename MultiInputMetricType ::MovingImageVectorType             MovingImageVectorType;
-  typedef typename MultiInputMetricType ::InterpolatorVectorType            InterpolatorVectorType;
-  typedef typename MultiInputMetricType ::FixedImageInterpolatorType        FixedImageInterpolatorType;
-  typedef typename MultiInputMetricType ::FixedImageInterpolatorVectorType  FixedImageInterpolatorVectorType;
-  typedef std::vector<FixedImagePyramidPointer>                             FixedImagePyramidVectorType;
-  typedef std::vector<MovingImagePyramidPointer>                            MovingImagePyramidVectorType;
+  using MultiInputMetricType = MultiInputImageToImageMetricBase<FixedImageType, MovingImageType>;
+  using MultiInputMetricPointer = typename MultiInputMetricType::Pointer;
+  using FixedImageVectorType = typename MultiInputMetricType ::FixedImageVectorType;
+  using FixedImageRegionVectorType = typename MultiInputMetricType ::FixedImageRegionVectorType;
+  using MovingImageVectorType = typename MultiInputMetricType ::MovingImageVectorType;
+  using InterpolatorVectorType = typename MultiInputMetricType ::InterpolatorVectorType;
+  using FixedImageInterpolatorType = typename MultiInputMetricType ::FixedImageInterpolatorType;
+  using FixedImageInterpolatorVectorType = typename MultiInputMetricType ::FixedImageInterpolatorVectorType;
+  using FixedImagePyramidVectorType = std::vector<FixedImagePyramidPointer>;
+  using MovingImagePyramidVectorType = std::vector<MovingImagePyramidPointer>;
 
   /** The following methods all have a similar pattern. The
    * SetFixedImage() just calls SetFixedImage(0).

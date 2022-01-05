@@ -37,10 +37,10 @@ class ITK_TEMPLATE_EXPORT ANNPriorityTreeSearch : public BinaryANNTreeSearchBase
 {
 public:
   /** Standard itk. */
-  typedef ANNPriorityTreeSearch                Self;
-  typedef BinaryANNTreeSearchBase<TListSample> Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = ANNPriorityTreeSearch;
+  using Superclass = BinaryANNTreeSearchBase<TListSample>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
@@ -64,8 +64,8 @@ public:
   using typename Superclass::BinaryANNTreeType;
 
   /** Typedefs for casting to kd tree. */
-  typedef ANNkd_tree  ANNkDTreeType;
-  typedef ANNpointSet ANNPointSetType;
+  using ANNkDTreeType = ANNkd_tree;
+  using ANNPointSetType = ANNpointSet;
 
   /** Set and get the error bound eps. */
   itkSetClampMacro(ErrorBound, double, 0.0, 1e14);

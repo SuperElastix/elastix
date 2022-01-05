@@ -65,11 +65,11 @@ class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUUnaryFunctorImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUUnaryFunctorImageFilter                       Self;
-  typedef TParentImageFilter                               CPUSuperclass;
-  typedef GPUInPlaceImageFilter<TInputImage, TOutputImage> GPUSuperclass;
-  typedef SmartPointer<Self>                               Pointer;
-  typedef SmartPointer<const Self>                         ConstPointer;
+  using Self = GPUUnaryFunctorImageFilter;
+  using CPUSuperclass = TParentImageFilter;
+  using GPUSuperclass = GPUInPlaceImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -78,17 +78,17 @@ public:
   itkTypeMacro(GPUUnaryFunctorImageFilter, GPUInPlaceImageFilter);
 
   /** Some typedefs. */
-  typedef TFunction FunctorType;
+  using FunctorType = TFunction;
 
-  typedef TInputImage                           InputImageType;
-  typedef typename InputImageType::ConstPointer InputImagePointer;
-  typedef typename InputImageType::RegionType   InputImageRegionType;
-  typedef typename InputImageType::PixelType    InputImagePixelType;
+  using InputImageType = TInputImage;
+  using InputImagePointer = typename InputImageType::ConstPointer;
+  using InputImageRegionType = typename InputImageType::RegionType;
+  using InputImagePixelType = typename InputImageType::PixelType;
 
-  typedef TOutputImage                         OutputImageType;
-  typedef typename OutputImageType::Pointer    OutputImagePointer;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
-  typedef typename OutputImageType::PixelType  OutputImagePixelType;
+  using OutputImageType = TOutputImage;
+  using OutputImagePointer = typename OutputImageType::Pointer;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
+  using OutputImagePixelType = typename OutputImageType::PixelType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);

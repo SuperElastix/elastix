@@ -56,10 +56,10 @@ class ITK_TEMPLATE_EXPORT AdvancedTranslationTransform : public AdvancedTransfor
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedTranslationTransform                             Self;
-  typedef AdvancedTransform<TScalarType, NDimensions, NDimensions> Superclass;
-  typedef SmartPointer<Self>                                       Pointer;
-  typedef SmartPointer<const Self>                                 ConstPointer;
+  using Self = AdvancedTranslationTransform;
+  using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through the object factory.*/
   itkNewMacro(Self);
@@ -84,20 +84,20 @@ public:
   using typename Superclass::JacobianType;
 
   /** Standard vector type for this class. */
-  typedef Vector<TScalarType, Self::SpaceDimension> InputVectorType;
-  typedef Vector<TScalarType, Self::SpaceDimension> OutputVectorType;
+  using InputVectorType = Vector<TScalarType, Self::SpaceDimension>;
+  using OutputVectorType = Vector<TScalarType, Self::SpaceDimension>;
 
   /** Standard covariant vector type for this class. */
-  typedef CovariantVector<TScalarType, Self::SpaceDimension> InputCovariantVectorType;
-  typedef CovariantVector<TScalarType, Self::SpaceDimension> OutputCovariantVectorType;
+  using InputCovariantVectorType = CovariantVector<TScalarType, Self::SpaceDimension>;
+  using OutputCovariantVectorType = CovariantVector<TScalarType, Self::SpaceDimension>;
 
   /** Standard vnl_vector type for this class. */
-  typedef vnl_vector_fixed<TScalarType, Self::SpaceDimension> InputVnlVectorType;
-  typedef vnl_vector_fixed<TScalarType, Self::SpaceDimension> OutputVnlVectorType;
+  using InputVnlVectorType = vnl_vector_fixed<TScalarType, Self::SpaceDimension>;
+  using OutputVnlVectorType = vnl_vector_fixed<TScalarType, Self::SpaceDimension>;
 
   /** Standard coordinate point type for this class. */
-  typedef Point<TScalarType, Self::SpaceDimension> InputPointType;
-  typedef Point<TScalarType, Self::SpaceDimension> OutputPointType;
+  using InputPointType = Point<TScalarType, Self::SpaceDimension>;
+  using OutputPointType = Point<TScalarType, Self::SpaceDimension>;
 
   /** AdvancedTransform typedefs */
   using typename Superclass::NonZeroJacobianIndicesType;

@@ -90,8 +90,8 @@ AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution()
   this->SetNumberOfMovingHistogramBins(numberOfMovingHistogramBins);
 
   /** Set limiters. */
-  typedef itk::HardLimiterFunction<RealType, FixedImageDimension>         FixedLimiterType;
-  typedef itk::ExponentialLimiterFunction<RealType, MovingImageDimension> MovingLimiterType;
+  using FixedLimiterType = itk::HardLimiterFunction<RealType, FixedImageDimension>;
+  using MovingLimiterType = itk::ExponentialLimiterFunction<RealType, MovingImageDimension>;
   this->SetFixedImageLimiter(FixedLimiterType::New());
   this->SetMovingImageLimiter(MovingLimiterType::New());
 

@@ -150,7 +150,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
                                                                                   MeasureType &          value,
                                                                                   DerivativeType & derivative) const
 {
-  typedef typename MovingImagePointType::VectorType VectorType;
+  using VectorType = typename MovingImagePointType::VectorType;
 
   /** Create and initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;

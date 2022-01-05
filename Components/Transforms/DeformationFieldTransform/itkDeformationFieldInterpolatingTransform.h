@@ -48,10 +48,10 @@ class ITK_TEMPLATE_EXPORT DeformationFieldInterpolatingTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef DeformationFieldInterpolatingTransform                   Self;
-  typedef AdvancedTransform<TScalarType, NDimensions, NDimensions> Superclass;
-  typedef SmartPointer<Self>                                       Pointer;
-  typedef SmartPointer<const Self>                                 ConstPointer;
+  using Self = DeformationFieldInterpolatingTransform;
+  using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through the object factory.*/
   itkNewMacro(Self);
@@ -84,15 +84,15 @@ public:
 
   using typename Superclass::InternalMatrixType;
 
-  typedef TComponentType                                                    DeformationFieldComponentType;
-  typedef Vector<DeformationFieldComponentType, Self::OutputSpaceDimension> DeformationFieldVectorType;
-  typedef Image<DeformationFieldVectorType, Self::InputSpaceDimension>      DeformationFieldType;
-  typedef typename DeformationFieldType::Pointer                            DeformationFieldPointer;
+  using DeformationFieldComponentType = TComponentType;
+  using DeformationFieldVectorType = Vector<DeformationFieldComponentType, Self::OutputSpaceDimension>;
+  using DeformationFieldType = Image<DeformationFieldVectorType, Self::InputSpaceDimension>;
+  using DeformationFieldPointer = typename DeformationFieldType::Pointer;
 
-  typedef VectorInterpolateImageFunction<DeformationFieldType, ScalarType> DeformationFieldInterpolatorType;
-  typedef typename DeformationFieldInterpolatorType::Pointer               DeformationFieldInterpolatorPointer;
-  typedef VectorNearestNeighborInterpolateImageFunction<DeformationFieldType, ScalarType>
-    DefaultDeformationFieldInterpolatorType;
+  using DeformationFieldInterpolatorType = VectorInterpolateImageFunction<DeformationFieldType, ScalarType>;
+  using DeformationFieldInterpolatorPointer = typename DeformationFieldInterpolatorType::Pointer;
+  using DefaultDeformationFieldInterpolatorType =
+    VectorNearestNeighborInterpolateImageFunction<DeformationFieldType, ScalarType>;
 
   /** Set the transformation parameters is not supported.
    * Use SetDeformationField() instead
@@ -245,8 +245,8 @@ protected:
   ~DeformationFieldInterpolatingTransform() override = default;
 
   /** Typedef which is used internally */
-  typedef typename DeformationFieldInterpolatorType::ContinuousIndexType InputContinuousIndexType;
-  typedef typename DeformationFieldInterpolatorType::OutputType          InterpolatorOutputType;
+  using InputContinuousIndexType = typename DeformationFieldInterpolatorType::ContinuousIndexType;
+  using InterpolatorOutputType = typename DeformationFieldInterpolatorType::OutputType;
 
   /** Print contents of an DeformationFieldInterpolatingTransform. */
   void

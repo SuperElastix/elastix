@@ -67,7 +67,7 @@ class ITKOpenCL_EXPORT OpenCLUserEvent : public OpenCLEvent
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLUserEvent Self;
+  using Self = OpenCLUserEvent;
 
   /** Constructs a null user event. */
   OpenCLUserEvent()

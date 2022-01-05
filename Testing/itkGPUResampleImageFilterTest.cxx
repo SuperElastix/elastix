@@ -123,8 +123,8 @@ ComputeCenterOfTheImage(const typename InputImageType::ConstPointer & image)
   const typename InputImageType::SizeType  size = image->GetLargestPossibleRegion().GetSize();
   const typename InputImageType::IndexType index = image->GetLargestPossibleRegion().GetIndex();
 
-  typedef itk::ContinuousIndex<double, InputImageType::ImageDimension> ContinuousIndexType;
-  ContinuousIndexType                                                  centerAsContInd;
+  using ContinuousIndexType = itk::ContinuousIndex<double, InputImageType::ImageDimension>;
+  ContinuousIndexType centerAsContInd;
   for (std::size_t i = 0; i < Dimension; ++i)
   {
     centerAsContInd[i] = static_cast<double>(index[i]) + static_cast<double>(size[i] - 1) / 2.0;
@@ -144,14 +144,14 @@ DefineInterpolator(typename InterpolatorType::Pointer & interpolator,
                    const unsigned int                   splineOrderInterpolator)
 {
   // Interpolator typedefs
-  typedef typename InterpolatorType::InputImageType InputImageType;
-  typedef typename InterpolatorType::CoordRepType   CoordRepType;
-  typedef CoordRepType                              CoefficientType;
+  using InputImageType = typename InterpolatorType::InputImageType;
+  using CoordRepType = typename InterpolatorType::CoordRepType;
+  using CoefficientType = CoordRepType;
 
   // Typedefs for all interpolators
-  typedef itk::NearestNeighborInterpolateImageFunction<InputImageType, CoordRepType> NearestNeighborInterpolatorType;
-  typedef itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>          LinearInterpolatorType;
-  typedef itk::BSplineInterpolateImageFunction<InputImageType, CoordRepType, CoefficientType> BSplineInterpolatorType;
+  using NearestNeighborInterpolatorType = itk::NearestNeighborInterpolateImageFunction<InputImageType, CoordRepType>;
+  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>;
+  using BSplineInterpolatorType = itk::BSplineInterpolateImageFunction<InputImageType, CoordRepType, CoefficientType>;
 
   if (interpolatorName == "NearestNeighbor")
   {
@@ -439,12 +439,12 @@ SetTransform(const std::size_t                                            transf
     const typename InputImageType::RegionType    inputRegion = image->GetBufferedRegion();
     const typename InputImageType::SizeType      inputSize = inputRegion.GetSize();
 
-    typedef typename BSplineTransformType::MeshSizeType MeshSizeType;
-    MeshSizeType                                        gridSize;
+    using MeshSizeType = typename BSplineTransformType::MeshSizeType;
+    MeshSizeType gridSize;
     gridSize.Fill(4);
 
-    typedef typename BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
-    PhysicalDimensionsType                                        gridSpacing;
+    using PhysicalDimensionsType = typename BSplineTransformType::PhysicalDimensionsType;
+    PhysicalDimensionsType gridSpacing;
     for (unsigned int d = 0; d < Dimension; ++d)
     {
       gridSpacing[d] = inputSpacing[d] * (inputSize[d] - 1.0);
@@ -725,57 +725,56 @@ main(int argc, char * argv[])
   std::cout << std::showpoint << std::setprecision(4);
 
   // Typedefs.
-  const unsigned int                              Dimension = 3;
-  typedef short                                   InputPixelType;
-  typedef short                                   OutputPixelType;
-  typedef itk::Image<InputPixelType, Dimension>   InputImageType;
-  typedef itk::Image<OutputPixelType, Dimension>  OutputImageType;
-  typedef InputImageType::SizeType::SizeValueType SizeValueType;
-  typedef typelist::MakeTypeList<short>::Type     OCLImageTypes;
+  const unsigned int Dimension = 3;
+  using InputPixelType = short;
+  using OutputPixelType = short;
+  using InputImageType = itk::Image<InputPixelType, Dimension>;
+  using OutputImageType = itk::Image<OutputPixelType, Dimension>;
+  using SizeValueType = InputImageType::SizeType::SizeValueType;
+  using OCLImageTypes = typelist::MakeTypeList<short>::Type;
 
   // CPU typedefs
-  typedef float InterpolatorPrecisionType;
-  typedef float ScalarType;
-  typedef itk::ResampleImageFilter<InputImageType, OutputImageType, InterpolatorPrecisionType> FilterType;
+  using InterpolatorPrecisionType = float;
+  using ScalarType = float;
+  using FilterType = itk::ResampleImageFilter<InputImageType, OutputImageType, InterpolatorPrecisionType>;
 
   // Transform typedefs
-  typedef itk::Transform<ScalarType, Dimension, Dimension> TransformType;
-  typedef itk::AffineTransform<ScalarType, Dimension>      AffineTransformType;
-  typedef itk::TranslationTransform<ScalarType, Dimension> TranslationTransformType;
-  typedef itk::BSplineTransform<ScalarType, Dimension, 3>  BSplineTransformType;
-  typedef itk::Euler3DTransform<ScalarType>                EulerTransformType;
-  typedef itk::Similarity3DTransform<ScalarType>           SimilarityTransformType;
+  using TransformType = itk::Transform<ScalarType, Dimension, Dimension>;
+  using AffineTransformType = itk::AffineTransform<ScalarType, Dimension>;
+  using TranslationTransformType = itk::TranslationTransform<ScalarType, Dimension>;
+  using BSplineTransformType = itk::BSplineTransform<ScalarType, Dimension, 3>;
+  using EulerTransformType = itk::Euler3DTransform<ScalarType>;
+  using SimilarityTransformType = itk::Similarity3DTransform<ScalarType>;
 
   // Advanced transform typedefs
-  typedef itk::AdvancedCombinationTransform<ScalarType, Dimension>                 AdvancedCombinationTransformType;
-  typedef itk::AdvancedTransform<ScalarType, Dimension, Dimension>                 AdvancedTransformType;
-  typedef itk::AdvancedMatrixOffsetTransformBase<ScalarType, Dimension, Dimension> AdvancedAffineTransformType;
-  typedef itk::AdvancedTranslationTransform<ScalarType, Dimension>                 AdvancedTranslationTransformType;
-  typedef itk::AdvancedBSplineDeformableTransform<ScalarType, Dimension, 3>        AdvancedBSplineTransformType;
-  typedef itk::AdvancedEuler3DTransform<ScalarType>                                AdvancedEulerTransformType;
-  typedef itk::AdvancedSimilarity3DTransform<ScalarType>                           AdvancedSimilarityTransformType;
+  using AdvancedCombinationTransformType = itk::AdvancedCombinationTransform<ScalarType, Dimension>;
+  using AdvancedTransformType = itk::AdvancedTransform<ScalarType, Dimension, Dimension>;
+  using AdvancedAffineTransformType = itk::AdvancedMatrixOffsetTransformBase<ScalarType, Dimension, Dimension>;
+  using AdvancedTranslationTransformType = itk::AdvancedTranslationTransform<ScalarType, Dimension>;
+  using AdvancedBSplineTransformType = itk::AdvancedBSplineDeformableTransform<ScalarType, Dimension, 3>;
+  using AdvancedEulerTransformType = itk::AdvancedEuler3DTransform<ScalarType>;
+  using AdvancedSimilarityTransformType = itk::AdvancedSimilarity3DTransform<ScalarType>;
 
   // Transform copiers
-  typedef itk::
-    GPUAdvancedCombinationTransformCopier<OCLImageTypes, OCLImageDims, AdvancedCombinationTransformType, ScalarType>
-                                                                                          AdvancedTransformCopierType;
-  typedef itk::GPUTransformCopier<OCLImageTypes, OCLImageDims, TransformType, ScalarType> TransformCopierType;
+  using AdvancedTransformCopierType = itk::
+    GPUAdvancedCombinationTransformCopier<OCLImageTypes, OCLImageDims, AdvancedCombinationTransformType, ScalarType>;
+  using TransformCopierType = itk::GPUTransformCopier<OCLImageTypes, OCLImageDims, TransformType, ScalarType>;
 
   // Interpolate typedefs
-  typedef itk::InterpolateImageFunction<InputImageType, InterpolatorPrecisionType> InterpolatorType;
-  //  typedef itk::NearestNeighborInterpolateImageFunction<
-  //    InputImageType, InterpolatorPrecisionType >             NearestNeighborInterpolatorType;
-  //  typedef itk::LinearInterpolateImageFunction<
-  //    InputImageType, InterpolatorPrecisionType >             LinearInterpolatorType;
-  //  typedef itk::BSplineInterpolateImageFunction<
-  //    InputImageType, ScalarType, InterpolatorPrecisionType > BSplineInterpolatorType;
+  using InterpolatorType = itk::InterpolateImageFunction<InputImageType, InterpolatorPrecisionType>;
+  //  using NearestNeighborInterpolatorType = itk::NearestNeighborInterpolateImageFunction<
+  //    InputImageType, InterpolatorPrecisionType >;
+  //  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<
+  //    InputImageType, InterpolatorPrecisionType >;
+  //  using BSplineInterpolatorType = itk::BSplineInterpolateImageFunction<
+  //    InputImageType, ScalarType, InterpolatorPrecisionType >;
 
   // Interpolator copier
-  typedef itk::GPUInterpolatorCopier<OCLImageTypes, OCLImageDims, InterpolatorType, InterpolatorPrecisionType>
-    InterpolateCopierType;
+  using InterpolateCopierType =
+    itk::GPUInterpolatorCopier<OCLImageTypes, OCLImageDims, InterpolatorType, InterpolatorPrecisionType>;
 
-  typedef itk::ImageFileReader<InputImageType>  ReaderType;
-  typedef itk::ImageFileWriter<OutputImageType> WriterType;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
+  using WriterType = itk::ImageFileWriter<OutputImageType>;
 
   // CPU part
   ReaderType::Pointer       cpuReader;
@@ -784,8 +783,8 @@ main(int argc, char * argv[])
   TransformType::Pointer    cpuTransform;
 
   // Keep BSpline transform parameters in memory
-  typedef BSplineTransformType::ParametersType BSplineParametersType;
-  std::vector<BSplineParametersType>           bsplineParameters;
+  using BSplineParametersType = BSplineTransformType::ParametersType;
+  std::vector<BSplineParametersType> bsplineParameters;
 
   // CPU Reader
   cpuReader = ReaderType::New();
@@ -804,8 +803,8 @@ main(int argc, char * argv[])
   // Construct and setup the resample filter
   cpuFilter = FilterType::New();
 
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomNumberGeneratorType;
-  RandomNumberGeneratorType::Pointer                             randomNum = RandomNumberGeneratorType::GetInstance();
+  using RandomNumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
+  RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
 
   InputImageType::ConstPointer        inputImage = cpuReader->GetOutput();
   const InputImageType::SpacingType   inputSpacing = inputImage->GetSpacing();

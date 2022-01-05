@@ -45,7 +45,7 @@ class ITKOpenCL_EXPORT OpenCLPlatform
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLPlatform Self;
+  using Self = OpenCLPlatform;
 
   /** Constructs a default OpenCL platform identifier. */
   OpenCLPlatform()

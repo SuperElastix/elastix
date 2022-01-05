@@ -41,10 +41,10 @@ class ITK_TEMPLATE_EXPORT ImageFileCastWriter : public ImageFileWriter<TInputIma
 {
 public:
   /** Standard class typedefs. */
-  typedef ImageFileCastWriter          Self;
-  typedef ImageFileWriter<TInputImage> Superclass;
-  typedef SmartPointer<Self>           Pointer;
-  typedef SmartPointer<const Self>     ConstPointer;
+  using Self = ImageFileCastWriter;
+  using Superclass = ImageFileWriter<TInputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -87,10 +87,10 @@ private:
   void *
   ConvertScalarImage(const DataObject * inputImage)
   {
-    typedef Image<OutputComponentType, InputImageDimension>      DiskImageType;
-    typedef typename PixelTraits<InputImagePixelType>::ValueType InputImageComponentType;
-    typedef Image<InputImageComponentType, InputImageDimension>  ScalarInputImageType;
-    typedef CastImageFilter<ScalarInputImageType, DiskImageType> CasterType;
+    using DiskImageType = Image<OutputComponentType, InputImageDimension>;
+    using InputImageComponentType = typename PixelTraits<InputImagePixelType>::ValueType;
+    using ScalarInputImageType = Image<InputImageComponentType, InputImageDimension>;
+    using CasterType = CastImageFilter<ScalarInputImageType, DiskImageType>;
 
     /** Reconfigure the imageIO */
     // this->GetImageIO()->SetPixelTypeInfo( typeid(OutputComponentType) );

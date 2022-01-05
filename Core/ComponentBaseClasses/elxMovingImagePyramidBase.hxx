@@ -170,8 +170,8 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filenam
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Create writer. */
-  typedef itk::ImageFileCastWriter<OutputImageType> WriterType;
-  auto                                              writer = WriterType::New();
+  using WriterType = itk::ImageFileCastWriter<OutputImageType>;
+  auto writer = WriterType::New();
 
   /** Setup the pipeline. */
   writer->SetInput(this->GetAsITKBaseType()->GetOutput(level));

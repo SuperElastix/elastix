@@ -126,10 +126,10 @@ class ITK_TEMPLATE_EXPORT MultiResolutionGaussianSmoothingPyramidImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiResolutionGaussianSmoothingPyramidImageFilter           Self;
-  typedef MultiResolutionPyramidImageFilter<TInputImage, TOutputImage> Superclass;
-  typedef SmartPointer<Self>                                           Pointer;
-  typedef SmartPointer<const Self>                                     ConstPointer;
+  using Self = MultiResolutionGaussianSmoothingPyramidImageFilter;
+  using Superclass = MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

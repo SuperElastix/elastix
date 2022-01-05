@@ -38,25 +38,25 @@ template <unsigned int Dimension>
 bool
 TestInterpolators()
 {
-  typedef itk::Image<short, Dimension>         InputImageType;
-  typedef typename InputImageType::SizeType    SizeType;
-  typedef typename InputImageType::SpacingType SpacingType;
-  typedef typename InputImageType::PointType   OriginType;
-  typedef typename InputImageType::RegionType  RegionType;
+  using InputImageType = itk::Image<short, Dimension>;
+  using SizeType = typename InputImageType::SizeType;
+  using SpacingType = typename InputImageType::SpacingType;
+  using OriginType = typename InputImageType::PointType;
+  using RegionType = typename InputImageType::RegionType;
   // typedef typename RegionType::IndexType         IndexType;
-  typedef typename InputImageType::DirectionType DirectionType;
-  typedef double                                 CoordRepType;
-  typedef double                                 CoefficientType;
+  using DirectionType = typename InputImageType::DirectionType;
+  using CoordRepType = double;
+  using CoefficientType = double;
 
-  typedef itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>         LinearInterpolatorType;
-  typedef itk::AdvancedLinearInterpolateImageFunction<InputImageType, CoordRepType> AdvancedLinearInterpolatorType;
-  typedef itk::BSplineInterpolateImageFunction<InputImageType, CoordRepType, CoefficientType> BSplineInterpolatorType;
-  typedef typename LinearInterpolatorType::ContinuousIndexType                                ContinuousIndexType;
-  typedef typename AdvancedLinearInterpolatorType::CovariantVectorType                        CovariantVectorType;
-  typedef typename AdvancedLinearInterpolatorType::OutputType OutputType; // double scalar
+  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>;
+  using AdvancedLinearInterpolatorType = itk::AdvancedLinearInterpolateImageFunction<InputImageType, CoordRepType>;
+  using BSplineInterpolatorType = itk::BSplineInterpolateImageFunction<InputImageType, CoordRepType, CoefficientType>;
+  using ContinuousIndexType = typename LinearInterpolatorType::ContinuousIndexType;
+  using CovariantVectorType = typename AdvancedLinearInterpolatorType::CovariantVectorType;
+  using OutputType = typename AdvancedLinearInterpolatorType::OutputType; // double scalar
 
-  typedef itk::ImageRegionIterator<InputImageType>               IteratorType;
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomNumberGeneratorType;
+  using IteratorType = itk::ImageRegionIterator<InputImageType>;
+  using RandomNumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
   // typedef itk::ImageFileWriter< InputImageType >                 WriterType;
 
   RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();

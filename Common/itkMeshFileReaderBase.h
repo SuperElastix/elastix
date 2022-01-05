@@ -38,10 +38,10 @@ class ITK_TEMPLATE_EXPORT MeshFileReaderBase : public MeshSource<TOutputMesh>
 {
 public:
   /** Standard class typedefs. */
-  typedef MeshFileReaderBase       Self;
-  typedef MeshSource<TOutputMesh>  Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = MeshFileReaderBase;
+  using Superclass = MeshSource<TOutputMesh>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

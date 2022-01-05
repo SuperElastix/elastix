@@ -243,8 +243,8 @@ template <typename TPixel, unsigned int VImageDimension>
 GPUDataManager::Pointer
 GPUImage<TPixel, VImageDimension>::GetGPUDataManager() const
 {
-  typedef typename GPUImageDataManager<GPUImage>::Superclass GPUImageDataSuperclass;
-  typedef typename GPUImageDataSuperclass::Pointer           GPUImageDataSuperclassPointer;
+  using GPUImageDataSuperclass = typename GPUImageDataManager<GPUImage>::Superclass;
+  using GPUImageDataSuperclassPointer = typename GPUImageDataSuperclass::Pointer;
 
   return static_cast<GPUImageDataSuperclassPointer>(m_DataManager.GetPointer());
 }
@@ -270,8 +270,8 @@ GPUImage<TPixel, VImageDimension>::Graft(const DataObject * data)
   if (data)
   {
     // Attempt to cast data to an GPUImageDataManagerType
-    typedef GPUImageDataManager<GPUImage> GPUImageDataManagerType;
-    const GPUImageDataManagerType *       ptr;
+    using GPUImageDataManagerType = GPUImageDataManager<GPUImage>;
+    const GPUImageDataManagerType * ptr;
 
     try
     {

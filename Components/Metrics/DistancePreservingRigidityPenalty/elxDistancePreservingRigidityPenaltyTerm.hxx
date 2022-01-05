@@ -40,12 +40,12 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
   this->GetConfiguration()->ReadParameter(
     segmentedImageName, "SegmentedImageName", this->GetComponentLabel(), 0, -1, false);
 
-  typedef typename Superclass1::SegmentedImageType              SegmentedImageType;
-  typedef itk::ImageFileReader<SegmentedImageType>              SegmentedImageReaderType;
-  typedef itk::ChangeInformationImageFilter<SegmentedImageType> ChangeInfoFilterType;
-  typedef typename ChangeInfoFilterType::Pointer                ChangeInfoFilterPointer;
-  typedef typename SegmentedImageType::DirectionType            DirectionType;
-  typedef typename SegmentedImageType::SizeType::SizeValueType  SizeValueType;
+  using SegmentedImageType = typename Superclass1::SegmentedImageType;
+  using SegmentedImageReaderType = itk::ImageFileReader<SegmentedImageType>;
+  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<SegmentedImageType>;
+  using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
+  using DirectionType = typename SegmentedImageType::DirectionType;
+  using SizeValueType = typename SegmentedImageType::SizeType::SizeValueType;
 
   /** Create the reader and set the filename. */
   auto segmentedImageReader = SegmentedImageReaderType::New();
@@ -101,14 +101,14 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
   }
 
   /** Create resampler, identity transform and linear interpolator. */
-  typedef itk::ResampleImageFilter<SegmentedImageType, SegmentedImageType> ResampleFilterType;
-  auto                                                                     resampler = ResampleFilterType::New();
+  using ResampleFilterType = itk::ResampleImageFilter<SegmentedImageType, SegmentedImageType>;
+  auto resampler = ResampleFilterType::New();
 
-  typedef itk::IdentityTransform<double, Superclass1::ImageDimension> IdentityTransformType;
-  auto                                                                identityTransform = IdentityTransformType::New();
+  using IdentityTransformType = itk::IdentityTransform<double, Superclass1::ImageDimension>;
+  auto identityTransform = IdentityTransformType::New();
   identityTransform->SetIdentity();
 
-  typedef itk::LinearInterpolateImageFunction<SegmentedImageType, double> LinearInterpolatorType;
+  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<SegmentedImageType, double>;
   auto linearInterpolator = LinearInterpolatorType::New();
 
   /** Configure the resampler and run it. */

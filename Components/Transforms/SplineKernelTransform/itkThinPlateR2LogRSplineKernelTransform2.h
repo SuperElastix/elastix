@@ -55,10 +55,10 @@ class ITK_TEMPLATE_EXPORT ThinPlateR2LogRSplineKernelTransform2 : public KernelT
 {
 public:
   /** Standard class typedefs. */
-  typedef ThinPlateR2LogRSplineKernelTransform2      Self;
-  typedef KernelTransform2<TScalarType, NDimensions> Superclass;
-  typedef SmartPointer<Self>                         Pointer;
-  typedef SmartPointer<const Self>                   ConstPointer;
+  using Self = ThinPlateR2LogRSplineKernelTransform2;
+  using Superclass = KernelTransform2<TScalarType, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro(Self);

@@ -90,8 +90,8 @@ main(int argc, char ** argv)
   parser->GetCommandLineArgument("-a", allowedTolerance);
 
   // Read images
-  typedef itk::Image<double, ITK_TEST_DIMENSION_MAX> ImageType;
-  typedef itk::ImageFileReader<ImageType>            ReaderType;
+  using ImageType = itk::Image<double, ITK_TEST_DIMENSION_MAX>;
+  using ReaderType = itk::ImageFileReader<ImageType>;
 
   // Read the baseline file
   auto baselineReader = ReaderType::New();
@@ -134,8 +134,8 @@ main(int argc, char ** argv)
   }
 
   // Now compare the two images
-  typedef itk::Testing::ComparisonImageFilter<ImageType, ImageType> ComparisonFilterType;
-  auto                                                              comparisonFilter = ComparisonFilterType::New();
+  using ComparisonFilterType = itk::Testing::ComparisonImageFilter<ImageType, ImageType>;
+  auto comparisonFilter = ComparisonFilterType::New();
   comparisonFilter->SetTestInput(testReader->GetOutput());
   comparisonFilter->SetValidInput(baselineReader->GetOutput());
   comparisonFilter->SetDifferenceThreshold(diffThreshold);
@@ -164,8 +164,8 @@ main(int argc, char ** argv)
     diffImageFileName += "_DIFF";
     diffImageFileName += itksys::SystemTools::GetFilenameLastExtension(testImageFileName);
 
-    typedef itk::ImageFileWriter<ImageType> WriterType;
-    auto                                    writer = WriterType::New();
+    using WriterType = itk::ImageFileWriter<ImageType>;
+    auto writer = WriterType::New();
     writer->SetFileName(diffImageFileName);
     writer->SetInput(comparisonFilter->GetOutput());
     try

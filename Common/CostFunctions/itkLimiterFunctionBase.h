@@ -51,10 +51,10 @@ class ITK_TEMPLATE_EXPORT LimiterFunctionBase : public FunctionBase<TInput, type
 {
 public:
   /** Standard class typedefs. */
-  typedef LimiterFunctionBase                                            Self;
-  typedef FunctionBase<TInput, typename NumericTraits<TInput>::RealType> Superclass;
-  typedef SmartPointer<Self>                                             Pointer;
-  typedef SmartPointer<const Self>                                       ConstPointer;
+  using Self = LimiterFunctionBase;
+  using Superclass = FunctionBase<TInput, typename NumericTraits<TInput>::RealType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(LimiterFunctionBase, FunctionBase);
@@ -65,8 +65,8 @@ public:
   using typename Superclass::InputType;
   using typename Superclass::OutputType;
 
-  typedef OutputType                                            DerivativeValueType;
-  typedef CovariantVector<DerivativeValueType, Self::Dimension> DerivativeType;
+  using DerivativeValueType = OutputType;
+  using DerivativeType = CovariantVector<DerivativeValueType, Self::Dimension>;
 
   /** Limit the input value. */
   OutputType

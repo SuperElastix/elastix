@@ -87,8 +87,8 @@ namespace typelist
 template <typename H, typename T>
 struct TypeList
 {
-  typedef H Head;
-  typedef T Tail;
+  using Head = H;
+  using Tail = T;
 };
 
 /** \class NullType
@@ -139,37 +139,37 @@ template <typename T1 = NullType,
 struct MakeTypeList
 {
 private:
-  typedef typename MakeTypeList<T2,
-                                T3,
-                                T4,
-                                T5,
-                                T6,
-                                T7,
-                                T8,
-                                T9,
-                                T10,
-                                T11,
-                                T12,
-                                T13,
-                                T14,
-                                T15,
-                                T16,
-                                T17,
-                                T18,
-                                T19,
-                                T20,
-                                T21,
-                                T22,
-                                T23,
-                                T24>::Type TailType;
+  using TailType = typename MakeTypeList<T2,
+                                         T3,
+                                         T4,
+                                         T5,
+                                         T6,
+                                         T7,
+                                         T8,
+                                         T9,
+                                         T10,
+                                         T11,
+                                         T12,
+                                         T13,
+                                         T14,
+                                         T15,
+                                         T16,
+                                         T17,
+                                         T18,
+                                         T19,
+                                         T20,
+                                         T21,
+                                         T22,
+                                         T23,
+                                         T24>::Type;
 
 public:
-  typedef TypeList<T1, TailType> Type;
+  using Type = TypeList<T1, TailType>;
 };
 template <>
 struct MakeTypeList<>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 
 template <typename TTypeList>
@@ -226,19 +226,19 @@ struct TypeAt;
 template <class Head, class Tail>
 struct TypeAt<TypeList<Head, Tail>, 0>
 {
-  typedef Head Type;
+  using Type = Head;
 };
 
 template <class Head, class Tail, unsigned int i>
 struct TypeAt<TypeList<Head, Tail>, i>
 {
-  typedef typename TypeAt<Tail, i - 1>::Type Type;
+  using Type = typename TypeAt<Tail, i - 1>::Type;
 };
 
 template <unsigned int i>
 struct TypeAt<NullType, i>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 
 template <class TTypeList1, class TTypeList2>
@@ -267,34 +267,34 @@ struct Append;
 template <class Head, class Tail, class T>
 struct Append<TypeList<Head, Tail>, T>
 {
-  typedef TypeList<Head, typename Append<Tail, T>::Type> Type;
+  using Type = TypeList<Head, typename Append<Tail, T>::Type>;
 };
 
 /** \cond TYPELIST_IMPLEMENTATION */
 template <>
 struct Append<NullType, NullType>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 template <class T>
 struct Append<NullType, T>
 {
-  typedef TypeList<T, NullType> Type;
+  using Type = TypeList<T, NullType>;
 };
 template <class T>
 struct Append<T, NullType>
 {
-  typedef TypeList<T, NullType> Type;
+  using Type = TypeList<T, NullType>;
 };
 template <class Head, class Tail>
 struct Append<NullType, TypeList<Head, Tail>>
 {
-  typedef TypeList<Head, Tail> Type;
+  using Type = TypeList<Head, Tail>;
 };
 template <class Head, class Tail>
 struct Append<TypeList<Head, Tail>, NullType>
 {
-  typedef TypeList<Head, Tail> Type;
+  using Type = TypeList<Head, Tail>;
 };
 
 /**\class Erase
@@ -306,19 +306,19 @@ struct Erase;
 template <class T>
 struct Erase<NullType, T>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 
 template <class T, class Tail>
 struct Erase<TypeList<T, Tail>, T>
 {
-  typedef Tail Type;
+  using Type = Tail;
 };
 
 template <class Head, class Tail, class T>
 struct Erase<TypeList<Head, Tail>, T>
 {
-  typedef TypeList<Head, typename Erase<Tail, T>::Type> Type;
+  using Type = TypeList<Head, typename Erase<Tail, T>::Type>;
 };
 
 /**\class EraseAll
@@ -329,17 +329,17 @@ struct EraseAll;
 template <class T>
 struct EraseAll<NullType, T>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 template <class T, class Tail>
 struct EraseAll<TypeList<T, Tail>, T>
 {
-  typedef typename EraseAll<Tail, T>::Type Type;
+  using Type = typename EraseAll<Tail, T>::Type;
 };
 template <class Head, class Tail, class T>
 struct EraseAll<TypeList<Head, Tail>, T>
 {
-  typedef TypeList<Head, typename EraseAll<Tail, T>::Type> Type;
+  using Type = TypeList<Head, typename EraseAll<Tail, T>::Type>;
 };
 
 /**\class NoDuplicates
@@ -351,18 +351,18 @@ struct NoDuplicates;
 template <>
 struct NoDuplicates<NullType>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 
 template <class Head, class Tail>
 struct NoDuplicates<TypeList<Head, Tail>>
 {
 private:
-  typedef typename NoDuplicates<Tail>::Type L1;
-  typedef typename Erase<L1, Head>::Type    L2;
+  using L1 = typename NoDuplicates<Tail>::Type;
+  using L2 = typename Erase<L1, Head>::Type;
 
 public:
-  typedef TypeList<Head, L2> Type;
+  using Type = TypeList<Head, L2>;
 };
 
 /**\class Replace
@@ -374,19 +374,19 @@ struct Replace;
 template <class T, class U>
 struct Replace<NullType, T, U>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 
 template <class T, class Tail, class U>
 struct Replace<TypeList<T, Tail>, T, U>
 {
-  typedef TypeList<U, Tail> Type;
+  using Type = TypeList<U, Tail>;
 };
 
 template <class Head, class Tail, class T, class U>
 struct Replace<TypeList<Head, Tail>, T, U>
 {
-  typedef TypeList<Head, typename Replace<Tail, T, U>::Type> Type;
+  using Type = TypeList<Head, typename Replace<Tail, T, U>::Type>;
 };
 
 /**\class ReplaceAll
@@ -398,19 +398,19 @@ struct ReplaceAll;
 template <class T, class U>
 struct ReplaceAll<NullType, T, U>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 
 template <class T, class Tail, class U>
 struct ReplaceAll<TypeList<T, Tail>, T, U>
 {
-  typedef TypeList<U, typename ReplaceAll<Tail, T, U>::Type> Type;
+  using Type = TypeList<U, typename ReplaceAll<Tail, T, U>::Type>;
 };
 
 template <class Head, class Tail, class T, class U>
 struct ReplaceAll<TypeList<Head, Tail>, T, U>
 {
-  typedef TypeList<Head, typename ReplaceAll<Tail, T, U>::Type> Type;
+  using Type = TypeList<Head, typename ReplaceAll<Tail, T, U>::Type>;
 };
 
 /**\class Reverse
@@ -422,13 +422,13 @@ struct Reverse;
 template <>
 struct Reverse<NullType>
 {
-  typedef NullType Type;
+  using Type = NullType;
 };
 
 template <class Head, class Tail>
 struct Reverse<TypeList<Head, Tail>>
 {
-  typedef typename Append<typename Reverse<Tail>::Type, Head>::Type Type;
+  using Type = typename Append<typename Reverse<Tail>::Type, Head>::Type;
 };
 
 /** \endcond */
@@ -543,11 +543,11 @@ struct Visit
   void
   operator()(Predicate & visitor)
   {
-    typedef typename TTypeList::Head Head;
-    typedef typename TTypeList::Tail Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND  operator()<Head>();
-    Visit<Tail>                      next;
-    next.ELX_TEMPLATE_WORKAROUND     operator()<Predicate>(visitor);
+    using Head = typename TTypeList::Head;
+    using Tail = typename TTypeList::Tail;
+    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head>();
+    Visit<Tail>                     next;
+    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
   }
 
 
@@ -555,11 +555,11 @@ struct Visit
   void
   operator()(const Predicate & visitor)
   {
-    typedef typename TTypeList::Head Head;
-    typedef typename TTypeList::Tail Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND  operator()<Head>();
-    Visit<Tail>                      next;
-    next.ELX_TEMPLATE_WORKAROUND     operator()<Predicate>(visitor);
+    using Head = typename TTypeList::Head;
+    using Tail = typename TTypeList::Tail;
+    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head>();
+    Visit<Tail>                     next;
+    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
   }
 };
 
@@ -595,11 +595,11 @@ struct VisitDimension
   void
   operator()(Predicate & visitor)
   {
-    typedef typename TTypeList::Head Head;
-    typedef typename TTypeList::Tail Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND  operator()<Head, Dimension>();
-    VisitDimension<Tail, Dimension>  next;
-    next.ELX_TEMPLATE_WORKAROUND     operator()<Predicate>(visitor);
+    using Head = typename TTypeList::Head;
+    using Tail = typename TTypeList::Tail;
+    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head, Dimension>();
+    VisitDimension<Tail, Dimension> next;
+    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
   }
 
 
@@ -607,11 +607,11 @@ struct VisitDimension
   void
   operator()(const Predicate & visitor)
   {
-    typedef typename TTypeList::Head Head;
-    typedef typename TTypeList::Tail Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND  operator()<Head, Dimension>();
-    VisitDimension<Tail, Dimension>  next;
-    next.ELX_TEMPLATE_WORKAROUND     operator()<Predicate>(visitor);
+    using Head = typename TTypeList::Head;
+    using Tail = typename TTypeList::Tail;
+    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head, Dimension>();
+    VisitDimension<Tail, Dimension> next;
+    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
   }
 };
 
@@ -687,7 +687,7 @@ struct DualVisitImpl
   void
   operator()(Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Tail LeftTail;
+    using LeftTail = typename TLeftTypeList::Tail;
 
     DualVisitImpl<TLeftTypeList, TRightTypeList> goRight;
     goRight.visitRHS<Visitor>(visitor);
@@ -701,7 +701,7 @@ struct DualVisitImpl
   void
   operator()(const Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Tail LeftTail;
+    using LeftTail = typename TLeftTypeList::Tail;
 
     DualVisitImpl<TLeftTypeList, TRightTypeList> goRight;
     goRight.visitRHS<Visitor>(visitor);
@@ -715,9 +715,9 @@ struct DualVisitImpl
   void
   visitRHS(Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Head  LeftHead;
-    typedef typename TRightTypeList::Head RightHead;
-    typedef typename TRightTypeList::Tail RightTail;
+    using LeftHead = typename TLeftTypeList::Head;
+    using RightHead = typename TRightTypeList::Head;
+    using RightTail = typename TRightTypeList::Tail;
 
     visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead>();
 
@@ -730,9 +730,9 @@ struct DualVisitImpl
   void
   visitRHS(const Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Head  LeftHead;
-    typedef typename TRightTypeList::Head RightHead;
-    typedef typename TRightTypeList::Tail RightTail;
+    using LeftHead = typename TLeftTypeList::Head;
+    using RightHead = typename TRightTypeList::Head;
+    using RightTail = typename TRightTypeList::Tail;
 
     visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead>();
 
@@ -837,7 +837,7 @@ struct DualVisitDimensionImpl
   void
   operator()(Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Tail LeftTail;
+    using LeftTail = typename TLeftTypeList::Tail;
 
     DualVisitDimensionImpl<TLeftTypeList, TRightTypeList, Dimension> goRight;
     goRight.visitRHS<Visitor>(visitor);
@@ -851,7 +851,7 @@ struct DualVisitDimensionImpl
   void
   operator()(const Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Tail LeftTail;
+    using LeftTail = typename TLeftTypeList::Tail;
 
     DualVisitDimensionImpl<TLeftTypeList, TRightTypeList, Dimension> goRight;
     goRight.visitRHS<Visitor>(visitor);
@@ -865,9 +865,9 @@ struct DualVisitDimensionImpl
   void
   visitRHS(Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Head  LeftHead;
-    typedef typename TRightTypeList::Head RightHead;
-    typedef typename TRightTypeList::Tail RightTail;
+    using LeftHead = typename TLeftTypeList::Head;
+    using RightHead = typename TRightTypeList::Head;
+    using RightTail = typename TRightTypeList::Tail;
 
     visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead, Dimension>();
 
@@ -880,9 +880,9 @@ struct DualVisitDimensionImpl
   void
   visitRHS(const Visitor & visitor) const
   {
-    typedef typename TLeftTypeList::Head  LeftHead;
-    typedef typename TRightTypeList::Head RightHead;
-    typedef typename TRightTypeList::Tail RightTail;
+    using LeftHead = typename TLeftTypeList::Head;
+    using RightHead = typename TRightTypeList::Head;
+    using RightTail = typename TRightTypeList::Tail;
 
     visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead, Dimension>();
 

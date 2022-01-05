@@ -67,16 +67,16 @@ main(int argc, char * argv[])
   std::cout << std::showpoint << std::setprecision(4);
 
   // Typedefs.
-  const unsigned int                             Dimension = 3;
-  typedef float                                  InputPixelType;
-  typedef float                                  OutputPixelType;
-  typedef itk::Image<InputPixelType, Dimension>  InputImageType;
-  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
+  const unsigned int Dimension = 3;
+  using InputPixelType = float;
+  using OutputPixelType = float;
+  using InputImageType = itk::Image<InputPixelType, Dimension>;
+  using OutputImageType = itk::Image<OutputPixelType, Dimension>;
 
   // CPU Typedefs
-  typedef itk::SmoothingRecursiveGaussianImageFilter<InputImageType, OutputImageType> FilterType;
-  typedef itk::ImageFileReader<InputImageType>                                        ReaderType;
-  typedef itk::ImageFileWriter<OutputImageType>                                       WriterType;
+  using FilterType = itk::SmoothingRecursiveGaussianImageFilter<InputImageType, OutputImageType>;
+  using ReaderType = itk::ImageFileReader<InputImageType>;
+  using WriterType = itk::ImageFileWriter<OutputImageType>;
 
   // Reader
   auto reader = ReaderType::New();
@@ -141,7 +141,7 @@ main(int argc, char * argv[])
   // that internally uses the recursive filter. By registering the recursive
   // filter, we now automatically use it, even if it's usage is hidden by a
   // wrapper.
-  typedef typelist::MakeTypeList<float>::Type OCLImageTypes;
+  using OCLImageTypes = typelist::MakeTypeList<float>::Type;
   itk::GPUImageFactory2<OCLImageTypes, OCLImageDims>::RegisterOneFactory();
   itk::GPURecursiveGaussianImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLImageDims>::RegisterOneFactory();
   itk::GPUCastImageFilterFactory2<OCLImageTypes, OCLImageTypes, OCLImageDims>::RegisterOneFactory();

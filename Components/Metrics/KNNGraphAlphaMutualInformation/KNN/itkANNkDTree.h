@@ -37,10 +37,10 @@ class ITK_TEMPLATE_EXPORT ANNkDTree : public BinaryANNTreeBase<TListSample>
 {
 public:
   /** Standard itk. */
-  typedef ANNkDTree                      Self;
-  typedef BinaryANNTreeBase<TListSample> Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+  using Self = ANNkDTree;
+  using Superclass = BinaryANNTreeBase<TListSample>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
@@ -55,10 +55,10 @@ public:
   using typename Superclass::TotalAbsoluteFrequencyType;
 
   /** Typedef's. */
-  typedef ANNpointSet  ANNPointSetType;
-  typedef ANNkd_tree   ANNkDTreeType;
-  typedef ANNsplitRule SplittingRuleType;
-  typedef unsigned int BucketSizeType;
+  using ANNPointSetType = ANNpointSet;
+  using ANNkDTreeType = ANNkd_tree;
+  using SplittingRuleType = ANNsplitRule;
+  using BucketSizeType = unsigned int;
 
   /** Set and get the bucket size: the number of points in a region/bucket. */
   itkSetMacro(BucketSize, BucketSizeType);

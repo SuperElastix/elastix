@@ -39,8 +39,8 @@ class ITKOpenCL_EXPORT OpenCLImage : public OpenCLMemoryObject
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLImage        Self;
-  typedef OpenCLMemoryObject Superclass;
+  using Self = OpenCLImage;
+  using Superclass = OpenCLMemoryObject;
 
   /** Constructs a null OpenCL image object. */
   OpenCLImage() = default;

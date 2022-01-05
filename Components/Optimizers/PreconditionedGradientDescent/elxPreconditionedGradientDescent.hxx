@@ -365,7 +365,7 @@ void
 PreconditionedGradientDescent<TElastix>::SetSelfHessian()
 {
   /** If it works, think about a more generic solution */
-  typedef itk::AdvancedImageToImageMetric<FixedImageType, MovingImageType> MetricWithSelfHessianType;
+  using MetricWithSelfHessianType = itk::AdvancedImageToImageMetric<FixedImageType, MovingImageType>;
 
   /** Total time. */
   itk::TimeProbe timer;

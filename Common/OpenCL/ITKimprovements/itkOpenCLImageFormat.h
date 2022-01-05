@@ -35,7 +35,7 @@ class ITKOpenCL_EXPORT OpenCLImageFormat
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLImageFormat Self;
+  using Self = OpenCLImageFormat;
 
   /** \enum OpenCLImageFormat::ImageType
    * This enum defines the image type for the OpenCL image object.

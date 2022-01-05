@@ -201,9 +201,9 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
   this->m_MovingImagePyramid->SetInput(this->m_MovingImage);
   this->m_MovingImagePyramid->UpdateLargestPossibleRegion();
 
-  typedef typename FixedImageRegionType::SizeType      SizeType;
-  typedef typename FixedImageRegionType::IndexType     IndexType;
-  typedef typename FixedImagePyramidType::ScheduleType ScheduleType;
+  using SizeType = typename FixedImageRegionType::SizeType;
+  using IndexType = typename FixedImageRegionType::IndexType;
+  using ScheduleType = typename FixedImagePyramidType::ScheduleType;
 
   ScheduleType schedule = this->m_FixedImagePyramid->GetSchedule();
 
@@ -226,11 +226,11 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
   // Multiresolution pyramid, which does not use the same shrinking pattern.
   // Instead of copying the shrinking code, we compute image regions from
   // the result of the fixed image pyramid.
-  typedef typename FixedImageType::PointType                         PointType;
-  typedef typename PointType::CoordRepType                           CoordRepType;
-  typedef typename IndexType::IndexValueType                         IndexValueType;
-  typedef typename SizeType::SizeValueType                           SizeValueType;
-  typedef ContinuousIndex<CoordRepType, TFixedImage::ImageDimension> CIndexType;
+  using PointType = typename FixedImageType::PointType;
+  using CoordRepType = typename PointType::CoordRepType;
+  using IndexValueType = typename IndexType::IndexValueType;
+  using SizeValueType = typename SizeType::SizeValueType;
+  using CIndexType = ContinuousIndex<CoordRepType, TFixedImage::ImageDimension>;
 
   PointType inputStartPoint;
   PointType inputEndPoint;

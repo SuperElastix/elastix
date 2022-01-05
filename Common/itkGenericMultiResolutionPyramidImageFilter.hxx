@@ -466,13 +466,13 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes)
 {
   // Typedefs
-  typedef IdentityTransform<TPrecisionType, OutputImageType::ImageDimension>    TransformType;
-  typedef ShrinkImageFilter<OutputImageType, OutputImageType>                   ShrinkerSameType;
-  typedef ResampleImageFilter<OutputImageType, OutputImageType, TPrecisionType> ResamplerSameType;
-  typedef ShrinkImageFilter<InputImageType, OutputImageType>                    ShrinkerDifferentType;
-  typedef ResampleImageFilter<InputImageType, OutputImageType, TPrecisionType>  ResamplerDifferentType;
-  typedef LinearInterpolateImageFunction<OutputImageType, TPrecisionType>       InterpolatorForSameType;
-  typedef LinearInterpolateImageFunction<InputImageType, TPrecisionType>        InterpolatorForDifferentType;
+  using TransformType = IdentityTransform<TPrecisionType, OutputImageType::ImageDimension>;
+  using ShrinkerSameType = ShrinkImageFilter<OutputImageType, OutputImageType>;
+  using ResamplerSameType = ResampleImageFilter<OutputImageType, OutputImageType, TPrecisionType>;
+  using ShrinkerDifferentType = ShrinkImageFilter<InputImageType, OutputImageType>;
+  using ResamplerDifferentType = ResampleImageFilter<InputImageType, OutputImageType, TPrecisionType>;
+  using InterpolatorForSameType = LinearInterpolateImageFunction<OutputImageType, TPrecisionType>;
+  using InterpolatorForDifferentType = LinearInterpolateImageFunction<InputImageType, TPrecisionType>;
 
   /**
    * Define pipeline in case input and output types are THE SAME.

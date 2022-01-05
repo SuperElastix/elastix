@@ -48,11 +48,11 @@ class ITK_TEMPLATE_EXPORT GPUNearestNeighborInterpolateImageFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUNearestNeighborInterpolateImageFunction                         Self;
-  typedef NearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>    CPUSuperclass;
-  typedef GPUInterpolateImageFunction<TInputImage, TCoordRep, CPUSuperclass> GPUSuperclass;
-  typedef SmartPointer<Self>                                                 Pointer;
-  typedef SmartPointer<const Self>                                           ConstPointer;
+  using Self = GPUNearestNeighborInterpolateImageFunction;
+  using CPUSuperclass = NearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>;
+  using GPUSuperclass = GPUInterpolateImageFunction<TInputImage, TCoordRep, CPUSuperclass>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

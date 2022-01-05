@@ -43,13 +43,13 @@ class ITK_TEMPLATE_EXPORT OpenCLKernelToImageBridge
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLKernelToImageBridge Self;
+  using Self = OpenCLKernelToImageBridge;
 
   /** Image class typedefs. */
-  typedef TImage                           ImageType;
-  typedef typename ImageType::ConstPointer ImagePointer;
-  typedef typename ImageType::RegionType   ImageRegionType;
-  typedef typename ImageType::PixelType    ImagePixelType;
+  using ImageType = TImage;
+  using ImagePointer = typename ImageType::ConstPointer;
+  using ImageRegionType = typename ImageType::RegionType;
+  using ImagePixelType = typename ImageType::PixelType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);

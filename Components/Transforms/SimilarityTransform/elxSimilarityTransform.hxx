@@ -164,8 +164,8 @@ SimilarityTransformElastix<TElastix>::InitializeTransform()
   }
   if (centerGivenAsPoint)
   {
-    typedef itk::ContinuousIndex<double, SpaceDimension> ContinuousIndexType;
-    ContinuousIndexType                                  cindex;
+    using ContinuousIndexType = itk::ContinuousIndex<double, SpaceDimension>;
+    ContinuousIndexType cindex;
     CORPointInImage =
       this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformPhysicalPointToContinuousIndex(
         centerOfRotationPoint, cindex);
@@ -412,9 +412,9 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
   /** Make a temporary image with the right region info,
    * so that the TransformIndexToPhysicalPoint-functions will be right.
    */
-  typedef FixedImageType DummyImageType;
-  auto                   dummyImage = DummyImageType::New();
-  RegionType             region;
+  using DummyImageType = FixedImageType;
+  auto       dummyImage = DummyImageType::New();
+  RegionType region;
   region.SetIndex(index);
   region.SetSize(size);
   dummyImage->SetRegions(region);

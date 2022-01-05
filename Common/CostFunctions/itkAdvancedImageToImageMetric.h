@@ -84,10 +84,10 @@ class ITK_TEMPLATE_EXPORT AdvancedImageToImageMetric : public ImageToImageMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedImageToImageMetric                    Self;
-  typedef ImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  using Self = AdvancedImageToImageMetric;
+  using Superclass = ImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(AdvancedImageToImageMetric, ImageToImageMetric);
@@ -100,10 +100,10 @@ public:
   using typename Superclass::CoordinateRepresentationType;
   using typename Superclass::MovingImageType;
   using typename Superclass::MovingImagePixelType;
-  typedef typename MovingImageType::Pointer MovingImagePointer;
+  using MovingImagePointer = typename MovingImageType::Pointer;
   using typename Superclass::MovingImageConstPointer;
   using typename Superclass::FixedImageType;
-  typedef typename FixedImageType::Pointer FixedImagePointer;
+  using FixedImagePointer = typename FixedImageType::Pointer;
   using typename Superclass::FixedImageConstPointer;
   using typename Superclass::FixedImageRegionType;
   using typename Superclass::TransformType;
@@ -126,52 +126,52 @@ public:
   using typename Superclass::MovingImageMaskPointer;
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
-  typedef typename DerivativeType::ValueType DerivativeValueType;
+  using DerivativeValueType = typename DerivativeType::ValueType;
   using typename Superclass::ParametersType;
 
-  typedef ImageMaskSpatialObject<Self::FixedImageDimension>  FixedImageMaskSpatialObject2Type;
-  typedef ImageMaskSpatialObject<Self::MovingImageDimension> MovingImageMaskSpatialObject2Type;
+  using FixedImageMaskSpatialObject2Type = ImageMaskSpatialObject<Self::FixedImageDimension>;
+  using MovingImageMaskSpatialObject2Type = ImageMaskSpatialObject<Self::MovingImageDimension>;
 
   /** Some useful extra typedefs. */
-  typedef typename FixedImageType::PixelType             FixedImagePixelType;
-  typedef typename MovingImageType::RegionType           MovingImageRegionType;
-  typedef FixedArray<double, Self::MovingImageDimension> MovingImageDerivativeScalesType;
+  using FixedImagePixelType = typename FixedImageType::PixelType;
+  using MovingImageRegionType = typename MovingImageType::RegionType;
+  using MovingImageDerivativeScalesType = FixedArray<double, Self::MovingImageDimension>;
 
   /** Typedefs for the ImageSampler. */
-  typedef ImageSamplerBase<FixedImageType>                        ImageSamplerType;
-  typedef typename ImageSamplerType::Pointer                      ImageSamplerPointer;
-  typedef typename ImageSamplerType::OutputVectorContainerType    ImageSampleContainerType;
-  typedef typename ImageSamplerType::OutputVectorContainerPointer ImageSampleContainerPointer;
+  using ImageSamplerType = ImageSamplerBase<FixedImageType>;
+  using ImageSamplerPointer = typename ImageSamplerType::Pointer;
+  using ImageSampleContainerType = typename ImageSamplerType::OutputVectorContainerType;
+  using ImageSampleContainerPointer = typename ImageSamplerType::OutputVectorContainerPointer;
 
   /** Typedefs for Limiter support. */
-  typedef LimiterFunctionBase<RealType, FixedImageDimension>  FixedImageLimiterType;
-  typedef typename FixedImageLimiterType::Pointer             FixedImageLimiterPointer;
-  typedef typename FixedImageLimiterType::OutputType          FixedImageLimiterOutputType;
-  typedef LimiterFunctionBase<RealType, MovingImageDimension> MovingImageLimiterType;
-  typedef typename MovingImageLimiterType::Pointer            MovingImageLimiterPointer;
-  typedef typename MovingImageLimiterType::OutputType         MovingImageLimiterOutputType;
+  using FixedImageLimiterType = LimiterFunctionBase<RealType, FixedImageDimension>;
+  using FixedImageLimiterPointer = typename FixedImageLimiterType::Pointer;
+  using FixedImageLimiterOutputType = typename FixedImageLimiterType::OutputType;
+  using MovingImageLimiterType = LimiterFunctionBase<RealType, MovingImageDimension>;
+  using MovingImageLimiterPointer = typename MovingImageLimiterType::Pointer;
+  using MovingImageLimiterOutputType = typename MovingImageLimiterType::OutputType;
 
   /** Advanced transform. */
-  typedef typename TransformType::ScalarType                                       ScalarType;
-  typedef AdvancedTransform<ScalarType, FixedImageDimension, MovingImageDimension> AdvancedTransformType;
-  typedef typename AdvancedTransformType::NumberOfParametersType                   NumberOfParametersType;
+  using ScalarType = typename TransformType::ScalarType;
+  using AdvancedTransformType = AdvancedTransform<ScalarType, FixedImageDimension, MovingImageDimension>;
+  using NumberOfParametersType = typename AdvancedTransformType::NumberOfParametersType;
 
   /** Typedef's for the B-spline transform. */
-  typedef AdvancedCombinationTransform<ScalarType, FixedImageDimension>          CombinationTransformType;
-  typedef AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 1> BSplineOrder1TransformType;
-  typedef AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 2> BSplineOrder2TransformType;
-  typedef AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 3> BSplineOrder3TransformType;
-  typedef typename BSplineOrder1TransformType::Pointer                           BSplineOrder1TransformPointer;
-  typedef typename BSplineOrder2TransformType::Pointer                           BSplineOrder2TransformPointer;
-  typedef typename BSplineOrder3TransformType::Pointer                           BSplineOrder3TransformPointer;
+  using CombinationTransformType = AdvancedCombinationTransform<ScalarType, FixedImageDimension>;
+  using BSplineOrder1TransformType = AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 1>;
+  using BSplineOrder2TransformType = AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 2>;
+  using BSplineOrder3TransformType = AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 3>;
+  using BSplineOrder1TransformPointer = typename BSplineOrder1TransformType::Pointer;
+  using BSplineOrder2TransformPointer = typename BSplineOrder2TransformType::Pointer;
+  using BSplineOrder3TransformPointer = typename BSplineOrder3TransformType::Pointer;
 
   /** Hessian type; for SelfHessian (experimental feature) */
-  typedef typename DerivativeType::ValueType  HessianValueType;
-  typedef vnl_sparse_matrix<HessianValueType> HessianType;
+  using HessianValueType = typename DerivativeType::ValueType;
+  using HessianType = vnl_sparse_matrix<HessianValueType>;
 
   /** Typedefs for multi-threading. */
-  typedef itk::PlatformMultiThreader          ThreaderType;
-  typedef typename ThreaderType::WorkUnitInfo ThreadInfoType;
+  using ThreaderType = itk::PlatformMultiThreader;
+  using ThreadInfoType = typename ThreaderType::WorkUnitInfo;
 
   /** Public methods ********************/
 
@@ -308,31 +308,31 @@ protected:
   /** Protected Typedefs ******************/
 
   /** Typedefs for indices and points. */
-  typedef typename FixedImageType::IndexType             FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType   FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType            MovingImageIndexType;
-  typedef typename TransformType::InputPointType         FixedImagePointType;
-  typedef typename TransformType::OutputPointType        MovingImagePointType;
-  typedef typename InterpolatorType::ContinuousIndexType MovingImageContinuousIndexType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using FixedImageIndexValueType = typename FixedImageIndexType::IndexValueType;
+  using MovingImageIndexType = typename MovingImageType::IndexType;
+  using FixedImagePointType = typename TransformType::InputPointType;
+  using MovingImagePointType = typename TransformType::OutputPointType;
+  using MovingImageContinuousIndexType = typename InterpolatorType::ContinuousIndexType;
 
   /** Typedefs used for computing image derivatives. */
-  typedef BSplineInterpolateImageFunction<MovingImageType, CoordinateRepresentationType, double>
-                                                    BSplineInterpolatorType;
-  typedef typename BSplineInterpolatorType::Pointer BSplineInterpolatorPointer;
-  typedef BSplineInterpolateImageFunction<MovingImageType, CoordinateRepresentationType, float>
-                                                         BSplineInterpolatorFloatType;
-  typedef typename BSplineInterpolatorFloatType::Pointer BSplineInterpolatorFloatPointer;
-  typedef ReducedDimensionBSplineInterpolateImageFunction<MovingImageType, CoordinateRepresentationType, double>
-                                                           ReducedBSplineInterpolatorType;
-  typedef typename ReducedBSplineInterpolatorType::Pointer ReducedBSplineInterpolatorPointer;
-  typedef AdvancedLinearInterpolateImageFunction<MovingImageType, CoordinateRepresentationType> LinearInterpolatorType;
-  typedef typename LinearInterpolatorType::Pointer                 LinearInterpolatorPointer;
-  typedef typename BSplineInterpolatorType::CovariantVectorType    MovingImageDerivativeType;
-  typedef GradientImageFilter<MovingImageType, RealType, RealType> CentralDifferenceGradientFilterType;
-  typedef typename CentralDifferenceGradientFilterType::Pointer    CentralDifferenceGradientFilterPointer;
+  using BSplineInterpolatorType =
+    BSplineInterpolateImageFunction<MovingImageType, CoordinateRepresentationType, double>;
+  using BSplineInterpolatorPointer = typename BSplineInterpolatorType::Pointer;
+  using BSplineInterpolatorFloatType =
+    BSplineInterpolateImageFunction<MovingImageType, CoordinateRepresentationType, float>;
+  using BSplineInterpolatorFloatPointer = typename BSplineInterpolatorFloatType::Pointer;
+  using ReducedBSplineInterpolatorType =
+    ReducedDimensionBSplineInterpolateImageFunction<MovingImageType, CoordinateRepresentationType, double>;
+  using ReducedBSplineInterpolatorPointer = typename ReducedBSplineInterpolatorType::Pointer;
+  using LinearInterpolatorType = AdvancedLinearInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
+  using LinearInterpolatorPointer = typename LinearInterpolatorType::Pointer;
+  using MovingImageDerivativeType = typename BSplineInterpolatorType::CovariantVectorType;
+  using CentralDifferenceGradientFilterType = GradientImageFilter<MovingImageType, RealType, RealType>;
+  using CentralDifferenceGradientFilterPointer = typename CentralDifferenceGradientFilterType::Pointer;
 
   /** Typedefs for support of sparse Jacobians and compact support of transformations. */
-  typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  using NonZeroJacobianIndicesType = typename AdvancedTransformType::NonZeroJacobianIndicesType;
 
   /** Protected Variables **************/
 

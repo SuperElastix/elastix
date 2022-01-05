@@ -58,10 +58,10 @@ namespace itk
 class QuasiNewtonLBFGSOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-  typedef QuasiNewtonLBFGSOptimizer            Self;
-  typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = QuasiNewtonLBFGSOptimizer;
+  using Superclass = ScaledSingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
   itkTypeMacro(QuasiNewtonLBFGSOptimizer, ScaledSingleValuedNonLinearOptimizer);
@@ -73,13 +73,13 @@ public:
   using Superclass::MeasureType;
   using Superclass::ScalesType;
 
-  typedef Array<double>               RhoType;
-  typedef std::vector<ParametersType> SType;
-  typedef std::vector<DerivativeType> YType;
-  typedef Array<double>               DiagonalMatrixType;
-  typedef LineSearchOptimizer         LineSearchOptimizerType;
+  using RhoType = Array<double>;
+  using SType = std::vector<ParametersType>;
+  using YType = std::vector<DerivativeType>;
+  using DiagonalMatrixType = Array<double>;
+  using LineSearchOptimizerType = LineSearchOptimizer;
 
-  typedef LineSearchOptimizerType::Pointer LineSearchOptimizerPointer;
+  using LineSearchOptimizerPointer = LineSearchOptimizerType::Pointer;
 
   typedef enum
   {

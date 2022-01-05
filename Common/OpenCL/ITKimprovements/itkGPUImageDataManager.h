@@ -70,10 +70,10 @@ class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUImageDataManager : public GPUDataM
   friend class GPUImage<typename ImageType::PixelType, ImageType::ImageDimension>;
 
 public:
-  typedef GPUImageDataManager      Self;
-  typedef GPUDataManager           Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = GPUImageDataManager;
+  using Superclass = GPUDataManager;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
   itkTypeMacro(GPUImageDataManager, GPUDataManager);

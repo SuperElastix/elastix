@@ -35,7 +35,7 @@ main(int argc, char * argv[])
    */
   const unsigned int Dimension = 3;
   const unsigned int SplineOrder = 3;
-  typedef float      CoordinateRepresentationType;
+  using CoordinateRepresentationType = float;
   // const double distance = 1e-3; // the allowable distance
   // const double allowedTimeDifference = 0.1; // 10% is considered within limits
 
@@ -57,30 +57,29 @@ main(int argc, char * argv[])
   }
 
   /** Other typedefs. */
-  typedef itk::AdvancedBSplineDeformableTransform<CoordinateRepresentationType, Dimension, SplineOrder> TransformType;
-  typedef itk::BSplineDeformableTransform<
+  using TransformType = itk::AdvancedBSplineDeformableTransform<CoordinateRepresentationType, Dimension, SplineOrder>;
+  using ITKTransformType = itk::BSplineDeformableTransform<
     // typedef itk::BSplineTransform<
     CoordinateRepresentationType,
     Dimension,
-    SplineOrder>
-                                                              ITKTransformType;
-  typedef TransformType::JacobianType                         JacobianType;
-  typedef TransformType::SpatialJacobianType                  SpatialJacobianType;
-  typedef TransformType::SpatialHessianType                   SpatialHessianType;
-  typedef TransformType::JacobianOfSpatialJacobianType        JacobianOfSpatialJacobianType;
-  typedef TransformType::JacobianOfSpatialHessianType         JacobianOfSpatialHessianType;
-  typedef TransformType::NonZeroJacobianIndicesType           NonZeroJacobianIndicesType;
-  typedef TransformType::NumberOfParametersType               NumberOfParametersType;
-  typedef TransformType::InputPointType                       InputPointType;
-  typedef TransformType::OutputPointType                      OutputPointType;
-  typedef TransformType::ParametersType                       ParametersType;
-  typedef itk::Image<CoordinateRepresentationType, Dimension> InputImageType;
-  typedef InputImageType::RegionType                          RegionType;
-  typedef InputImageType::SizeType                            SizeType;
-  typedef InputImageType::IndexType                           IndexType;
-  typedef InputImageType::SpacingType                         SpacingType;
-  typedef InputImageType::PointType                           OriginType;
-  typedef InputImageType::DirectionType                       DirectionType;
+    SplineOrder>;
+  using JacobianType = TransformType::JacobianType;
+  using SpatialJacobianType = TransformType::SpatialJacobianType;
+  using SpatialHessianType = TransformType::SpatialHessianType;
+  using JacobianOfSpatialJacobianType = TransformType::JacobianOfSpatialJacobianType;
+  using JacobianOfSpatialHessianType = TransformType::JacobianOfSpatialHessianType;
+  using NonZeroJacobianIndicesType = TransformType::NonZeroJacobianIndicesType;
+  using NumberOfParametersType = TransformType::NumberOfParametersType;
+  using InputPointType = TransformType::InputPointType;
+  using OutputPointType = TransformType::OutputPointType;
+  using ParametersType = TransformType::ParametersType;
+  using InputImageType = itk::Image<CoordinateRepresentationType, Dimension>;
+  using RegionType = InputImageType::RegionType;
+  using SizeType = InputImageType::SizeType;
+  using IndexType = InputImageType::IndexType;
+  using SpacingType = InputImageType::SpacingType;
+  using OriginType = InputImageType::PointType;
+  using DirectionType = InputImageType::DirectionType;
 
   /** Create the transform. */
   auto transform = TransformType::New();

@@ -77,11 +77,11 @@ class ITK_TEMPLATE_EXPORT ConjugateGradientFRPR
 {
 public:
   /** Standard ITK.*/
-  typedef ConjugateGradientFRPR         Self;
-  typedef itk::FRPROptimizer            Superclass1;
-  typedef OptimizerBase<TElastix>       Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = ConjugateGradientFRPR;
+  using Superclass1 = itk::FRPROptimizer;
+  using Superclass2 = OptimizerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -98,7 +98,7 @@ public:
   // using Superclass1::StopConditionType; not implemented in this itkOptimizer
   using typename Superclass1::ParametersType;
   // not declared in Superclass, although it should be.
-  typedef SingleValuedNonLinearOptimizer::DerivativeType DerivativeType;
+  using DerivativeType = SingleValuedNonLinearOptimizer::DerivativeType;
 
   /** Typedef's inherited from Elastix.*/
   using typename Superclass2::ElastixType;
@@ -107,7 +107,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/

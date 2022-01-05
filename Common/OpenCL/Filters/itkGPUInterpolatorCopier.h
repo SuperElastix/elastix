@@ -39,10 +39,10 @@ namespace itk
  *   itkStaticConstMacro( Support3D, bool, true );
  *  };
  *
- *  typedef itk::Image< short, 3 > ImageType;
- *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
- *  typedef itk::InterpolateImageFunction< ImageType, float > InterpolatorType;
- *  typedef itk::GPUInterpolatorCopier< OCLImageTypes, OCLImageDims, InterpolatorType, float > CopierType;
+ *  using ImageType = itk::Image< short, 3 >;
+ *  using OCLImageTypes = typelist::MakeTypeList< short, float >::Type;
+ *  using InterpolatorType = itk::InterpolateImageFunction< ImageType, float >;
+ *  using CopierType = itk::GPUInterpolatorCopier< OCLImageTypes, OCLImageDims, InterpolatorType, float >;
  *  auto copier = CopierType::New();
  *  copier->SetInputInterpolator(CPUInterpolator);
  *  copier->Update();
@@ -66,10 +66,10 @@ class ITK_TEMPLATE_EXPORT GPUInterpolatorCopier : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUInterpolatorCopier    Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = GPUInterpolatorCopier;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -78,23 +78,23 @@ public:
   itkTypeMacro(GPUInterpolatorCopier, Object);
 
   /** Type CPU definitions for the interpolator. */
-  typedef TInterpolator                                CPUInterpolatorType;
-  typedef typename CPUInterpolatorType::ConstPointer   CPUInterpolatorConstPointer;
-  typedef typename CPUInterpolatorType::InputImageType CPUInputImageType;
-  typedef typename CPUInterpolatorType::CoordRepType   CPUCoordRepType;
-  typedef TOutputCoordRep                              GPUCoordRepType;
+  using CPUInterpolatorType = TInterpolator;
+  using CPUInterpolatorConstPointer = typename CPUInterpolatorType::ConstPointer;
+  using CPUInputImageType = typename CPUInterpolatorType::InputImageType;
+  using CPUCoordRepType = typename CPUInterpolatorType::CoordRepType;
+  using GPUCoordRepType = TOutputCoordRep;
 
   /** Typedef's for non explicit GPU interpolator definitions. */
-  typedef InterpolateImageFunction<CPUInputImageType, GPUCoordRepType> GPUInterpolatorType;
-  typedef typename GPUInterpolatorType::Pointer                        GPUInterpolatorPointer;
-  typedef typename GPUInterpolatorType::ConstPointer                   GPUInterpolatorConstPointer;
+  using GPUInterpolatorType = InterpolateImageFunction<CPUInputImageType, GPUCoordRepType>;
+  using GPUInterpolatorPointer = typename GPUInterpolatorType::Pointer;
+  using GPUInterpolatorConstPointer = typename GPUInterpolatorType::ConstPointer;
 
   /** Typedef's for explicit GPU interpolator definitions. */
-  typedef typename CPUInputImageType::PixelType                                    CPUInputImagePixelType;
-  typedef itk::GPUImage<CPUInputImagePixelType, CPUInputImageType::ImageDimension> GPUInputImageType;
-  typedef InterpolateImageFunction<GPUInputImageType, GPUCoordRepType>             GPUExplicitInterpolatorType;
-  typedef typename GPUExplicitInterpolatorType::Pointer                            GPUExplicitInterpolatorPointer;
-  typedef typename GPUExplicitInterpolatorType::ConstPointer                       GPUExplicitInterpolatorConstPointer;
+  using CPUInputImagePixelType = typename CPUInputImageType::PixelType;
+  using GPUInputImageType = itk::GPUImage<CPUInputImagePixelType, CPUInputImageType::ImageDimension>;
+  using GPUExplicitInterpolatorType = InterpolateImageFunction<GPUInputImageType, GPUCoordRepType>;
+  using GPUExplicitInterpolatorPointer = typename GPUExplicitInterpolatorType::Pointer;
+  using GPUExplicitInterpolatorConstPointer = typename GPUExplicitInterpolatorType::ConstPointer;
 
   /** Get/Set the input interpolator. */
   itkSetConstObjectMacro(InputInterpolator, CPUInterpolatorType);

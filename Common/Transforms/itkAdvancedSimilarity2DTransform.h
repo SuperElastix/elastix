@@ -80,10 +80,10 @@ class ITK_TEMPLATE_EXPORT AdvancedSimilarity2DTransform : public AdvancedRigid2D
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedSimilarity2DTransform         Self;
-  typedef AdvancedRigid2DTransform<TScalarType> Superclass;
-  typedef SmartPointer<Self>                    Pointer;
-  typedef SmartPointer<const Self>              ConstPointer;
+  using Self = AdvancedSimilarity2DTransform;
+  using Superclass = AdvancedRigid2DTransform<TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);
@@ -99,7 +99,7 @@ public:
 
   /** Scalar type. */
   using typename Superclass::ScalarType;
-  typedef TScalarType ScaleType;
+  using ScaleType = TScalarType;
 
   /** Parameters type. */
   using typename Superclass::ParametersType;

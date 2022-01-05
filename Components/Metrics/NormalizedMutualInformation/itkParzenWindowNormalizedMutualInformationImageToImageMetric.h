@@ -74,10 +74,10 @@ class ITK_TEMPLATE_EXPORT ParzenWindowNormalizedMutualInformationImageToImageMet
 {
 public:
   /** Standard class typedefs. */
-  typedef ParzenWindowNormalizedMutualInformationImageToImageMetric          Self;
-  typedef ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                                 Pointer;
-  typedef SmartPointer<const Self>                                           ConstPointer;
+  using Self = ParzenWindowNormalizedMutualInformationImageToImageMetric;
+  using Superclass = ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

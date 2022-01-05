@@ -63,10 +63,10 @@ main(int argc, char ** argv)
   }
 
   /** Some typedef's.*/
-  typedef elx::TransformixMain                 TransformixMainType;
-  typedef TransformixMainType::Pointer         TransformixMainPointer;
-  typedef TransformixMainType::ArgumentMapType ArgumentMapType;
-  typedef ArgumentMapType::value_type          ArgumentMapEntryType;
+  using TransformixMainType = elx::TransformixMain;
+  using TransformixMainPointer = TransformixMainType::Pointer;
+  using ArgumentMapType = TransformixMainType::ArgumentMapType;
+  using ArgumentMapEntryType = ArgumentMapType::value_type;
 
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();

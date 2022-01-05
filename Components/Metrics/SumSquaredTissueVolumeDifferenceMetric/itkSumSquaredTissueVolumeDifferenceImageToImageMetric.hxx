@@ -731,9 +731,9 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::E
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator              DerivativeIteratorType;
-  JacobianIteratorType                                   jac = jacobian.begin();
+  using JacobianIteratorType = typename TransformJacobianType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
+  JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
   for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
@@ -839,8 +839,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::
     const SpatialJacobianType &           inverseSpatialJacobian,
     DerivativeType &                      jacobianOfSpatialJacobianDeterminant) const
 {
-  typedef typename JacobianOfSpatialJacobianType::const_iterator JacobianOfSpatialJacobianIteratorType;
-  typedef typename DerivativeType::iterator                      DerivativeIteratorType;
+  using JacobianOfSpatialJacobianIteratorType = typename JacobianOfSpatialJacobianType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
 
   jacobianOfSpatialJacobianDeterminant.Fill(0.0);
 

@@ -172,10 +172,10 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
     itkExceptionMacro(<< "ERROR: The number of regions should be 1 or the number of inputs.");
   }
 
-  typedef typename InputImageType::DirectionType DirectionType;
-  DirectionType                                  dir0 = this->GetInput(0)->GetDirection();
-  typename DirectionType::InternalMatrixType     dir0invtemp = vnl_inverse(dir0.GetVnlMatrix());
-  DirectionType                                  dir0inv(dir0invtemp);
+  using DirectionType = typename InputImageType::DirectionType;
+  DirectionType                              dir0 = this->GetInput(0)->GetDirection();
+  typename DirectionType::InternalMatrixType dir0invtemp = vnl_inverse(dir0.GetVnlMatrix());
+  DirectionType                              dir0inv(dir0invtemp);
   for (unsigned int i = 1; i < numberOfInputs; ++i)
   {
     DirectionType diri = this->GetInput(i)->GetDirection();
@@ -234,8 +234,8 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
   if (this->GetUseRandomSampleRegion())
   {
     /** Convert sampleRegionSize to continuous index space */
-    typedef typename InputImageContinuousIndexType::VectorType CIndexVectorType;
-    CIndexVectorType                                           sampleRegionSize;
+    using CIndexVectorType = typename InputImageContinuousIndexType::VectorType;
+    CIndexVectorType sampleRegionSize;
     for (unsigned int i = 0; i < InputImageDimension; ++i)
     {
       sampleRegionSize[i] = this->GetSampleRegionSize()[i] / this->GetInput()->GetSpacing()[i];

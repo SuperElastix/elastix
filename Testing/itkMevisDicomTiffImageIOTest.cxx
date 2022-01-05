@@ -41,17 +41,17 @@ testMevis()
   std::cerr << "Testing write/read of " << Dimension << "D image..." << std::endl;
 
   /** Some basic type definitions. */
-  typedef unsigned char PixelType;
+  using PixelType = unsigned char;
 
-  typedef itk::Image<PixelType, Dimension>                          ImageType;
-  typedef itk::ImageFileWriter<ImageType>                           WriterType;
-  typedef itk::ImageFileReader<ImageType>                           ReaderType;
-  typedef itk::Testing::ComparisonImageFilter<ImageType, ImageType> ComparisonFilterType;
-  typedef typename ImageType::SizeType                              SizeType;
-  typedef typename ImageType::SpacingType                           SpacingType;
-  typedef typename ImageType::PointType                             OriginType;
-  typedef typename ImageType::DirectionType                         DirectionType;
-  typedef itk::ImageRegionIterator<ImageType>                       IteratorType;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using WriterType = itk::ImageFileWriter<ImageType>;
+  using ReaderType = itk::ImageFileReader<ImageType>;
+  using ComparisonFilterType = itk::Testing::ComparisonImageFilter<ImageType, ImageType>;
+  using SizeType = typename ImageType::SizeType;
+  using SpacingType = typename ImageType::SpacingType;
+  using OriginType = typename ImageType::PointType;
+  using DirectionType = typename ImageType::DirectionType;
+  using IteratorType = itk::ImageRegionIterator<ImageType>;
 
   auto          writer = WriterType::New();
   auto          reader = ReaderType::New();

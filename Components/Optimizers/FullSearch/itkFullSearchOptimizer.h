@@ -47,10 +47,10 @@ class FullSearchOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
   /** Standard class typedefs. */
-  typedef FullSearchOptimizer            Self;
-  typedef SingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+  using Self = FullSearchOptimizer;
+  using Superclass = SingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -71,23 +71,23 @@ public:
   using Superclass::CostFunctionPointer;
   using Superclass::MeasureType;
 
-  typedef ParametersType::ValueType             ParameterValueType; // = double
-  typedef ParameterValueType                    RangeValueType;
-  typedef FixedArray<RangeValueType, 3>         RangeType;
-  typedef MapContainer<unsigned int, RangeType> SearchSpaceType;
-  typedef SearchSpaceType::Pointer              SearchSpacePointer;
-  typedef SearchSpaceType::ConstIterator        SearchSpaceIteratorType;
+  using ParameterValueType = ParametersType::ValueType; // = double
+  using RangeValueType = ParameterValueType;
+  using RangeType = FixedArray<RangeValueType, 3>;
+  using SearchSpaceType = MapContainer<unsigned int, RangeType>;
+  using SearchSpacePointer = SearchSpaceType::Pointer;
+  using SearchSpaceIteratorType = SearchSpaceType::ConstIterator;
 
   /** Type that stores the parameter values of the parameters to be optimized.
    * Updated every iteration. */
-  typedef Array<ParameterValueType> SearchSpacePointType;
+  using SearchSpacePointType = Array<ParameterValueType>;
 
   /** The same values, but transformed to integer indices.
    * These can be used to create an image visualizing the search space. */
-  typedef Array<IndexValueType> SearchSpaceIndexType;
+  using SearchSpaceIndexType = Array<IndexValueType>;
 
   /** The size of each dimension to be searched ((max-min)/step)) */
-  typedef Array<SizeValueType> SearchSpaceSizeType;
+  using SearchSpaceSizeType = Array<SizeValueType>;
 
   /** NB: The methods SetScales has no influence! */
 

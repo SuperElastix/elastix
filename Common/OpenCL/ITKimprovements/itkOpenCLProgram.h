@@ -38,7 +38,7 @@ class ITKOpenCL_EXPORT OpenCLProgram
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLProgram Self;
+  using Self = OpenCLProgram;
 
   /** Constructs a null OpenCL program object. */
   OpenCLProgram();

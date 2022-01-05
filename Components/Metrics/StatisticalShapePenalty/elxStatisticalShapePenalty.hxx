@@ -276,10 +276,10 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
                                                  const typename ImageType::ConstPointer image)
 {
   /** Typedefs. */
-  typedef typename ImageType::IndexType                      IndexType;
-  typedef typename ImageType::IndexValueType                 IndexValueType;
-  typedef typename ImageType::PointType                      PointType;
-  typedef itk::TransformixInputPointFileReader<PointSetType> PointSetReaderType;
+  using IndexType = typename ImageType::IndexType;
+  using IndexValueType = typename ImageType::IndexValueType;
+  using PointType = typename ImageType::PointType;
+  using PointSetReaderType = itk::TransformixInputPointFileReader<PointSetType>;
 
   elxout << "Loading landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "." << std::endl;
 
@@ -354,11 +354,11 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
                                              const typename ImageType::ConstPointer image)
 {
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
-  typedef double DummyIPPPixelType;
-  typedef DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>
-                                                                       MeshTraitsType;
-  typedef Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType> MeshType;
-  typedef VTKPolyDataReader<MeshType>                                  MeshReaderType;
+  using DummyIPPPixelType = double;
+  using MeshTraitsType =
+    DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
+  using MeshType = Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  using MeshReaderType = VTKPolyDataReader<MeshType>;
 
   /** Read the input points. */
   auto meshReader = MeshReaderType::New();

@@ -57,11 +57,11 @@ class StochasticPreconditionedGradientDescentOptimizer : public PreconditionedGr
 {
 public:
   /** Standard ITK.*/
-  typedef StochasticPreconditionedGradientDescentOptimizer Self;
-  typedef PreconditionedGradientDescentOptimizer           Superclass;
+  using Self = StochasticPreconditionedGradientDescentOptimizer;
+  using Superclass = PreconditionedGradientDescentOptimizer;
 
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

@@ -829,8 +829,8 @@ void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGradient()
 {
   /** Typedefs. */
-  typedef itk::ImageRegionIteratorWithIndex<GradientImageType>    GradientIteratorType;
-  typedef itk::ImageRegionConstIteratorWithIndex<MovingImageType> MovingIteratorType;
+  using GradientIteratorType = itk::ImageRegionIteratorWithIndex<GradientImageType>;
+  using MovingIteratorType = itk::ImageRegionConstIteratorWithIndex<MovingImageType>;
 
   /** Create a temporary moving gradient image. */
   auto tempGradientImage = GradientImageType::New();

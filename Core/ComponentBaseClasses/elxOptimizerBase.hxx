@@ -84,7 +84,7 @@ template <class TElastix>
 void
 OptimizerBase<TElastix>::AfterRegistrationBase()
 {
-  typedef typename ParametersType::ValueType ParametersValueType;
+  using ParametersValueType = typename ParametersType::ValueType;
 
   /** Get the final parameters, round to six decimals. */
   ParametersType      finalTP = this->GetAsITKBaseType()->GetCurrentPosition();
@@ -146,7 +146,7 @@ template <class TElastix>
 void
 OptimizerBase<TElastix>::SetSinusScales(double amplitude, double frequency, unsigned long numberOfParameters)
 {
-  typedef typename ITKBaseType::ScalesType ScalesType;
+  using ScalesType = typename ITKBaseType::ScalesType;
 
   const double nrofpar = static_cast<double>(numberOfParameters);
   ScalesType   scales(numberOfParameters);

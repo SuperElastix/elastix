@@ -47,20 +47,20 @@ class ITK_TEMPLATE_EXPORT InstallFunctions
 {
 public:
   /** Standard.*/
-  typedef InstallFunctions Self;
-  typedef TAnyItkObject    AnyItkObjectType;
+  using Self = InstallFunctions;
+  using AnyItkObjectType = TAnyItkObject;
 
   /** The baseclass of all objects that are returned by the Creator. */
-  typedef ComponentDatabase::ObjectType    ObjectType;
-  typedef ComponentDatabase::ObjectPointer ObjectPointer;
+  using ObjectType = ComponentDatabase::ObjectType;
+  using ObjectPointer = ComponentDatabase::ObjectPointer;
 
   /** The type of the index in the component database.
    * Each combination of pixeltype/dimension corresponds
    * a specific number, the index (unsigned int). */
-  typedef ComponentDatabase::IndexType IndexType;
+  using IndexType = ComponentDatabase::IndexType;
 
   /** The type of the key in the component database (=string) */
-  typedef ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;
+  using ComponentDescriptionType = ComponentDatabase::ComponentDescriptionType;
 
   /** A wrap around the New() functions of itkObjects. */
   static ObjectPointer

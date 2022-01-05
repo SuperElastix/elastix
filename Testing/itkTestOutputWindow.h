@@ -48,10 +48,10 @@ class TestOutputWindow : public OutputWindow
 {
 public:
   /** Standard class typedefs. */
-  typedef TestOutputWindow         Self;
-  typedef OutputWindow             Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = TestOutputWindow;
+  using Superclass = OutputWindow;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

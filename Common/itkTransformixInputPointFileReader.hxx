@@ -105,10 +105,10 @@ template <class TOutputMesh>
 void
 TransformixInputPointFileReader<TOutputMesh>::GenerateData()
 {
-  typedef typename OutputMeshType::PointsContainer PointsContainerType;
-  typedef typename PointsContainerType::Pointer    PointsContainerPointer;
-  typedef typename OutputMeshType::PointType       PointType;
-  const unsigned int                               dimension = OutputMeshType::PointDimension;
+  using PointsContainerType = typename OutputMeshType::PointsContainer;
+  using PointsContainerPointer = typename PointsContainerType::Pointer;
+  using PointType = typename OutputMeshType::PointType;
+  const unsigned int dimension = OutputMeshType::PointDimension;
 
   OutputMeshPointer      output = this->GetOutput();
   PointsContainerPointer points = PointsContainerType::New();

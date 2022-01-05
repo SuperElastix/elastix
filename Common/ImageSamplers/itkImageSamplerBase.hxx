@@ -335,17 +335,17 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
      * of the inputImage indices.
      */
 
-    typedef typename MaskType::BoundingBoxType        BoundingBoxType;
-    typedef typename BoundingBoxType::PointsContainer PointsContainerType;
-    typename BoundingBoxType::ConstPointer            bb = this->m_Mask->GetMyBoundingBoxInWorldSpace();
-    auto                                              bbIndex = BoundingBoxType::New();
-    const PointsContainerType *                       cornersWorld = bb->GetPoints();
-    auto                                              cornersIndex = PointsContainerType::New();
+    using BoundingBoxType = typename MaskType::BoundingBoxType;
+    using PointsContainerType = typename BoundingBoxType::PointsContainer;
+    typename BoundingBoxType::ConstPointer bb = this->m_Mask->GetMyBoundingBoxInWorldSpace();
+    auto                                   bbIndex = BoundingBoxType::New();
+    const PointsContainerType *            cornersWorld = bb->GetPoints();
+    auto                                   cornersIndex = PointsContainerType::New();
     cornersIndex->Reserve(cornersWorld->Size());
-    typename PointsContainerType::const_iterator                                itCW = cornersWorld->begin();
-    typename PointsContainerType::iterator                                      itCI = cornersIndex->begin();
-    typedef itk::ContinuousIndex<InputImagePointValueType, InputImageDimension> CIndexType;
-    CIndexType                                                                  cindex;
+    typename PointsContainerType::const_iterator itCW = cornersWorld->begin();
+    typename PointsContainerType::iterator       itCI = cornersIndex->begin();
+    using CIndexType = itk::ContinuousIndex<InputImagePointValueType, InputImageDimension>;
+    CIndexType cindex;
     while (itCW != cornersWorld->end())
     {
       inputImage->TransformPhysicalPointToContinuousIndex(*itCW, cindex);
@@ -357,10 +357,10 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
     bbIndex->ComputeBoundingBox();
 
     /** Create a bounding box region. */
-    InputImageIndexType                                  minIndex, maxIndex;
-    typedef typename InputImageIndexType::IndexValueType IndexValueType;
-    InputImageSizeType                                   size;
-    InputImageRegionType                                 boundingBoxRegion;
+    InputImageIndexType minIndex, maxIndex;
+    using IndexValueType = typename InputImageIndexType::IndexValueType;
+    InputImageSizeType   size;
+    InputImageRegionType boundingBoxRegion;
     for (unsigned int i = 0; i < InputImageDimension; ++i)
     {
       /** apply ceil/floor for max/min resp. to be sure that

@@ -37,10 +37,10 @@ class ITK_TEMPLATE_EXPORT ANNBruteForceTree : public BinaryANNTreeBase<TListSamp
 {
 public:
   /** Standard itk. */
-  typedef ANNBruteForceTree              Self;
-  typedef BinaryANNTreeBase<TListSample> Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+  using Self = ANNBruteForceTree;
+  using Superclass = BinaryANNTreeBase<TListSample>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
@@ -55,8 +55,8 @@ public:
   using typename Superclass::TotalAbsoluteFrequencyType;
 
   /** Typedef's. */
-  typedef ANNpointSet   ANNPointSetType;
-  typedef ANNbruteForce ANNBruteForceTreeType;
+  using ANNPointSetType = ANNpointSet;
+  using ANNBruteForceTreeType = ANNbruteForce;
 
   /** Set the maximum number of points that are to be visited. */
   // void SetMaximumNumberOfPointsToVisit( unsigned int num )

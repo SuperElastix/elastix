@@ -37,10 +37,10 @@ class ITK_TEMPLATE_EXPORT ImageRandomSamplerBase : public ImageSamplerBase<TInpu
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageRandomSamplerBase        Self;
-  typedef ImageSamplerBase<TInputImage> Superclass;
-  typedef SmartPointer<Self>            Pointer;
-  typedef SmartPointer<const Self>      ConstPointer;
+  using Self = ImageRandomSamplerBase;
+  using Superclass = ImageSamplerBase<TInputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

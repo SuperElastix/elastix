@@ -43,11 +43,11 @@ class ITK_TEMPLATE_EXPORT GPUAdvancedCombinationTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUAdvancedCombinationTransform                     Self;
-  typedef TParentTransform                                    CPUSuperclass;
-  typedef GPUCompositeTransformBase<TScalarType, NDimensions> GPUSuperclass;
-  typedef SmartPointer<Self>                                  Pointer;
-  typedef SmartPointer<const Self>                            ConstPointer;
+  using Self = GPUAdvancedCombinationTransform;
+  using CPUSuperclass = TParentTransform;
+  using GPUSuperclass = GPUCompositeTransformBase<TScalarType, NDimensions>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -56,9 +56,9 @@ public:
   itkTypeMacro(GPUAdvancedCombinationTransform, TParentTransform);
 
   /** Sub transform types. */
-  typedef typename GPUSuperclass::TransformType             GPUTransformType;
-  typedef typename GPUSuperclass::TransformTypePointer      TransformTypePointer;
-  typedef typename GPUSuperclass::TransformTypeConstPointer TransformTypeConstPointer;
+  using GPUTransformType = typename GPUSuperclass::TransformType;
+  using TransformTypePointer = typename GPUSuperclass::TransformTypePointer;
+  using TransformTypeConstPointer = typename GPUSuperclass::TransformTypeConstPointer;
 
   /** Get number of transforms in composite transform. */
   SizeValueType

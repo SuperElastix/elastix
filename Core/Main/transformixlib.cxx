@@ -89,13 +89,13 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
                             bool                            performCout)
 {
   /** Some typedef's.*/
-  typedef elx::TransformixMain                        TransformixMainType;
-  typedef TransformixMainType::Pointer                TransformixMainPointer;
-  typedef TransformixMainType::ArgumentMapType        ArgumentMapType;
-  typedef ArgumentMapType::value_type                 ArgumentMapEntryType;
-  typedef elx::ElastixMain                            ElastixMainType;
-  typedef ElastixMainType::DataObjectContainerType    DataObjectContainerType;
-  typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
+  using TransformixMainType = elx::TransformixMain;
+  using TransformixMainPointer = TransformixMainType::Pointer;
+  using ArgumentMapType = TransformixMainType::ArgumentMapType;
+  using ArgumentMapEntryType = ArgumentMapType::value_type;
+  using ElastixMainType = elx::ElastixMain;
+  using DataObjectContainerType = ElastixMainType::DataObjectContainerType;
+  using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
 
   /** Declare an instance of the Transformix class. */
   TransformixMainPointer transformix;

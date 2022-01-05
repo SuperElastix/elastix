@@ -309,9 +309,9 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
    * compute the maximum allowed value for the smallestContIndex,
    * such that a sample region of size SampleRegionSize still fits.
    */
-  typedef typename InputImageContinuousIndexType::VectorType CIndexVectorType;
-  CIndexVectorType                                           sampleRegionSize;
-  InputImageContinuousIndexType                              maxSmallestContIndex;
+  using CIndexVectorType = typename InputImageContinuousIndexType::VectorType;
+  CIndexVectorType              sampleRegionSize;
+  InputImageContinuousIndexType maxSmallestContIndex;
   for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
     sampleRegionSize[i] = this->GetSampleRegionSize()[i] / this->GetInput()->GetSpacing()[i];

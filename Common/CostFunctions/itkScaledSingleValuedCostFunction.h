@@ -40,10 +40,10 @@ class ScaledSingleValuedCostFunction : public SingleValuedCostFunction
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ScaledSingleValuedCostFunction Self;
-  typedef SingleValuedCostFunction       Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+  using Self = ScaledSingleValuedCostFunction;
+  using Superclass = SingleValuedCostFunction;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -57,10 +57,10 @@ public:
   using Superclass::ParametersType;
   // temporary, untill it is fixed in the ITK4
   // typedef IdentifierType NumberOfParametersType; // temp, copied from itk::TransformBase
-  typedef unsigned int        NumberOfParametersType; // temp, copied from itk::CostFunction
-  typedef Superclass::Pointer SingleValuedCostFunctionPointer;
+  using NumberOfParametersType = unsigned int; // temp, copied from itk::CostFunction
+  using SingleValuedCostFunctionPointer = Superclass::Pointer;
 
-  typedef Array<double> ScalesType;
+  using ScalesType = Array<double>;
 
   /** Divide the parameters by the scales and call the GetValue routine
    * of the unscaled cost function.

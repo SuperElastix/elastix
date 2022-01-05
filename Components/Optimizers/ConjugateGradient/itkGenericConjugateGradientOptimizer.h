@@ -40,10 +40,10 @@ namespace itk
 class GenericConjugateGradientOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
-  typedef GenericConjugateGradientOptimizer    Self;
-  typedef ScaledSingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = GenericConjugateGradientOptimizer;
+  using Superclass = ScaledSingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
   itkTypeMacro(GenericConjugateGradientOptimizer, ScaledSingleValuedNonLinearOptimizer);
@@ -55,16 +55,16 @@ public:
   using Superclass::MeasureType;
   using Superclass::ScalesType;
 
-  typedef LineSearchOptimizer              LineSearchOptimizerType;
-  typedef LineSearchOptimizerType::Pointer LineSearchOptimizerPointer;
+  using LineSearchOptimizerType = LineSearchOptimizer;
+  using LineSearchOptimizerPointer = LineSearchOptimizerType::Pointer;
 
   /** Typedef for a function that computes \f$\beta\f$, given the previousGradient,
    * the current gradient, and the previous search direction */
-  typedef double (Self::*ComputeBetaFunctionType)(const DerivativeType &,
+  using ComputeBetaFunctionType = double (Self::*)(const DerivativeType &,
                                                   const DerivativeType &,
                                                   const ParametersType &);
-  typedef std::string                                           BetaDefinitionType;
-  typedef std::map<BetaDefinitionType, ComputeBetaFunctionType> BetaDefinitionMapType;
+  using BetaDefinitionType = std::string;
+  using BetaDefinitionMapType = std::map<BetaDefinitionType, ComputeBetaFunctionType>;
 
   typedef enum
   {

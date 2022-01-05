@@ -527,7 +527,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Cast to advanced metric type. */
-  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
+  using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {

@@ -220,16 +220,16 @@ void
 OpenCLFixedGenericPyramid<TElastix>::RegisterFactories()
 {
   // Typedefs for factories
-  typedef itk::GPUImageFactory2<OpenCLImageTypes, OpenCLImageDimentions> ImageFactoryType;
-  typedef itk::GPURecursiveGaussianImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions>
-                                                                                                     RecursiveGaussianFactoryType;
-  typedef itk::GPUCastImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions> CastFactoryType;
-  typedef itk::GPUShrinkImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions>
-    ShrinkFactoryType;
-  typedef itk::GPUResampleImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions>
-                                                                                                  ResampleFactoryType;
-  typedef itk::GPUIdentityTransformFactory2<OpenCLImageDimentions>                                IdentityFactoryType;
-  typedef itk::GPULinearInterpolateImageFunctionFactory2<OpenCLImageTypes, OpenCLImageDimentions> LinearFactoryType;
+  using ImageFactoryType = itk::GPUImageFactory2<OpenCLImageTypes, OpenCLImageDimentions>;
+  using RecursiveGaussianFactoryType =
+    itk::GPURecursiveGaussianImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions>;
+  using CastFactoryType = itk::GPUCastImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions>;
+  using ShrinkFactoryType =
+    itk::GPUShrinkImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions>;
+  using ResampleFactoryType =
+    itk::GPUResampleImageFilterFactory2<OpenCLImageTypes, OpenCLImageTypes, OpenCLImageDimentions>;
+  using IdentityFactoryType = itk::GPUIdentityTransformFactory2<OpenCLImageDimentions>;
+  using LinearFactoryType = itk::GPULinearInterpolateImageFunctionFactory2<OpenCLImageTypes, OpenCLImageDimentions>;
 
   // Create factories
   auto imageFactory = ImageFactoryType::New();

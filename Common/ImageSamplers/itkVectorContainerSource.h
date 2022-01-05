@@ -33,10 +33,10 @@ class ITK_TEMPLATE_EXPORT VectorContainerSource : public ProcessObject
 {
 public:
   /** Standard ITK-stuff. */
-  typedef VectorContainerSource    Self;
-  typedef ProcessObject            Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = VectorContainerSource;
+  using Superclass = ProcessObject;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -46,8 +46,8 @@ public:
 
   /** Some convenient typedefs. */
   using typename Superclass::DataObjectPointer;
-  typedef TOutputVectorContainer                      OutputVectorContainerType;
-  typedef typename OutputVectorContainerType::Pointer OutputVectorContainerPointer;
+  using OutputVectorContainerType = TOutputVectorContainer;
+  using OutputVectorContainerPointer = typename OutputVectorContainerType::Pointer;
 
   /** Get the vector container output of this process object. */
   OutputVectorContainerType *

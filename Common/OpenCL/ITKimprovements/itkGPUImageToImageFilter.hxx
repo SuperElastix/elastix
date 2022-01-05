@@ -92,7 +92,7 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GenerateDa
     this->GPUGenerateData();
 
     // Update CPU buffer for all outputs
-    typedef GPUImage<OutputImagePixelType, OutputImageDimension> GPUOutputImageType;
+    using GPUOutputImageType = GPUImage<OutputImagePixelType, OutputImageDimension>;
     for (OutputDataObjectIterator it(this); !it.IsAtEnd(); ++it)
     {
       GPUOutputImageType * GPUOutput = dynamic_cast<GPUOutputImageType *>(it.GetOutput());
@@ -119,8 +119,8 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutpu
     itkExceptionMacro(<< "Requested to graft output that is a NULL pointer");
   }
 
-  typedef typename itk::GPUTraits<TOutputImage>::Type GPUOutputImage;
-  typename GPUOutputImage::Pointer                    outputPtr;
+  using GPUOutputImage = typename itk::GPUTraits<TOutputImage>::Type;
+  typename GPUOutputImage::Pointer outputPtr;
 
   try
   {
@@ -155,8 +155,8 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutpu
     itkExceptionMacro(<< "Requested to graft output that is a NULL pointer");
   }
 
-  typedef typename itk::GPUTraits<TOutputImage>::Type GPUOutputImage;
-  typename GPUOutputImage::Pointer                    outputPtr;
+  using GPUOutputImage = typename itk::GPUTraits<TOutputImage>::Type;
+  typename GPUOutputImage::Pointer outputPtr;
 
   try
   {

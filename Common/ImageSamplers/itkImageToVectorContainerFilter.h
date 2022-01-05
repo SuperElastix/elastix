@@ -35,10 +35,10 @@ class ITK_TEMPLATE_EXPORT ImageToVectorContainerFilter : public VectorContainerS
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ImageToVectorContainerFilter                  Self;
-  typedef VectorContainerSource<TOutputVectorContainer> Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  using Self = ImageToVectorContainerFilter;
+  using Superclass = VectorContainerSource<TOutputVectorContainer>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -52,11 +52,11 @@ public:
   using typename Superclass::OutputVectorContainerPointer;
 
   /** Some Image related typedefs. */
-  typedef TInputImage                           InputImageType;
-  typedef typename InputImageType::Pointer      InputImagePointer;
-  typedef typename InputImageType::ConstPointer InputImageConstPointer;
-  typedef typename InputImageType::RegionType   InputImageRegionType;
-  typedef typename InputImageType::PixelType    InputImagePixelType;
+  using InputImageType = TInputImage;
+  using InputImagePointer = typename InputImageType::Pointer;
+  using InputImageConstPointer = typename InputImageType::ConstPointer;
+  using InputImageRegionType = typename InputImageType::RegionType;
+  using InputImagePixelType = typename InputImageType::PixelType;
 
   /** Create a valid output. */
   DataObject::Pointer

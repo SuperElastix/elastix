@@ -42,10 +42,10 @@ class ITK_TEMPLATE_EXPORT DeformationFieldRegulizer : public TAnyITKTransform
 {
 public:
   /** Standard itk. */
-  typedef DeformationFieldRegulizer Self;
-  typedef TAnyITKTransform          Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  using Self = DeformationFieldRegulizer;
+  using Superclass = TAnyITKTransform;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -72,16 +72,16 @@ public:
   using typename Superclass::OutputPointType;
 
   /** Typedef's needed in this class. */
-  typedef DeformationVectorFieldTransform<ScalarType, Self::InputSpaceDimension> IntermediaryDFTransformType;
-  typedef typename IntermediaryDFTransformType::Pointer                          IntermediaryDFTransformPointer;
-  typedef typename IntermediaryDFTransformType ::CoefficientVectorImageType      VectorImageType;
-  typedef typename VectorImageType::PixelType                                    VectorPixelType;
-  typedef ImageRegionIterator<VectorImageType>                                   IteratorType;
+  using IntermediaryDFTransformType = DeformationVectorFieldTransform<ScalarType, Self::InputSpaceDimension>;
+  using IntermediaryDFTransformPointer = typename IntermediaryDFTransformType::Pointer;
+  using VectorImageType = typename IntermediaryDFTransformType ::CoefficientVectorImageType;
+  using VectorPixelType = typename VectorImageType::PixelType;
+  using IteratorType = ImageRegionIterator<VectorImageType>;
 
   /** Typedef's for the vectorImage. */
-  typedef typename VectorImageType::RegionType  RegionType;
-  typedef typename VectorImageType::SpacingType SpacingType;
-  typedef typename VectorImageType::PointType   OriginType;
+  using RegionType = typename VectorImageType::RegionType;
+  using SpacingType = typename VectorImageType::SpacingType;
+  using OriginType = typename VectorImageType::PointType;
 
   /** Function to create and initialze the deformation fields. */
   void

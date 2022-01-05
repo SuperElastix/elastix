@@ -36,10 +36,10 @@ namespace itk
 class OpenCLLogger : public LoggerBase
 {
 public:
-  typedef OpenCLLogger             Self;
-  typedef LoggerBase               Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = OpenCLLogger;
+  using Superclass = LoggerBase;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(OpenCLLogger, Object);

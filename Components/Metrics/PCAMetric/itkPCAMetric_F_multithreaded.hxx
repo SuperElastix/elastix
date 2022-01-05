@@ -150,9 +150,9 @@ PCAMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator              DerivativeIteratorType;
-  JacobianIteratorType                                   jac = jacobian.begin();
+  using JacobianIteratorType = typename TransformJacobianType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
+  JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
   for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)

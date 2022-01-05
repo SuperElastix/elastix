@@ -56,11 +56,11 @@ std_first_of(const typename std::vector<type> & v, const std::size_t n, const ty
 int
 main(int argc, char * argv[])
 {
-  typedef unsigned char                      VectorTypeUChar;
-  typedef float                              VectorTypeFloat;
-  typedef itk::OpenCLVector<VectorTypeUChar> OCLVectorTypeUChar;
-  typedef itk::OpenCLVector<VectorTypeFloat> OCLVectorTypeFloat;
-  OCLVectorTypeUChar                         vectorNull;
+  using VectorTypeUChar = unsigned char;
+  using VectorTypeFloat = float;
+  using OCLVectorTypeUChar = itk::OpenCLVector<VectorTypeUChar>;
+  using OCLVectorTypeFloat = itk::OpenCLVector<VectorTypeFloat>;
+  OCLVectorTypeUChar vectorNull;
 
   if (!vectorNull.IsNull())
   {

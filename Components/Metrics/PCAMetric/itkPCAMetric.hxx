@@ -136,9 +136,9 @@ PCAMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator              DerivativeIteratorType;
-  JacobianIteratorType                                   jac = jacobian.begin();
+  using JacobianIteratorType = typename TransformJacobianType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
+  JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
   for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
@@ -169,10 +169,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   if (UseGetValueAndDerivative)
   {
-    typedef typename DerivativeType::ValueType DerivativeValueType;
-    const unsigned int                         P = this->GetNumberOfParameters();
-    MeasureType                                dummymeasure = NumericTraits<MeasureType>::Zero;
-    DerivativeType                             dummyderivative = DerivativeType(P);
+    using DerivativeValueType = typename DerivativeType::ValueType;
+    const unsigned int P = this->GetNumberOfParameters();
+    MeasureType        dummymeasure = NumericTraits<MeasureType>::Zero;
+    DerivativeType     dummyderivative = DerivativeType(P);
     dummyderivative.Fill(NumericTraits<DerivativeValueType>::Zero);
 
     this->GetValueAndDerivative(parameters, dummymeasure, dummyderivative);
@@ -200,7 +200,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
   const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
-  typedef vnl_matrix<RealType> MatrixType;
+  using MatrixType = vnl_matrix<RealType>;
 
   /** Get real last dim samples. */
   const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly
@@ -419,8 +419,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
   /** Define derivative and Jacobian types. */
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+  using DerivativeValueType = typename DerivativeType::ValueType;
+  using TransformJacobianValueType = typename TransformJacobianType::ValueType;
 
   /** Initialize some variables */
   const unsigned int P = this->GetNumberOfParameters();
@@ -446,8 +446,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
   const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
-  typedef vnl_matrix<RealType>            MatrixType;
-  typedef vnl_matrix<DerivativeValueType> DerivativeMatrixType;
+  using MatrixType = vnl_matrix<RealType>;
+  using DerivativeMatrixType = vnl_matrix<DerivativeValueType>;
 
   std::vector<FixedImagePointType> SamplesOK;
 

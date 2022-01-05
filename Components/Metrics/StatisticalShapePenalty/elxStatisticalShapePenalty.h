@@ -62,13 +62,12 @@ class ITK_TEMPLATE_EXPORT StatisticalShapePenalty
 {
 public:
   /** Standard ITK-stuff. */
-  typedef StatisticalShapePenalty Self;
-  typedef StatisticalShapePointPenalty<typename MetricBase<TElastix>::FixedPointSetType,
-                                       typename MetricBase<TElastix>::MovingPointSetType>
-                                   Superclass1;
-  typedef MetricBase<TElastix>     Superclass2;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = StatisticalShapePenalty;
+  using Superclass1 = StatisticalShapePointPenalty<typename MetricBase<TElastix>::FixedPointSetType,
+                                                   typename MetricBase<TElastix>::MovingPointSetType>;
+  using Superclass2 = MetricBase<TElastix>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -105,18 +104,18 @@ public:
   using typename Superclass1::DerivativeType;
   using typename Superclass1::ParametersType;
 
-  typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector<CoordRepType>               VnlVectorType;
+  using CoordRepType = typename OutputPointType::CoordRepType;
+  using VnlVectorType = vnl_vector<CoordRepType>;
 
   /** Other typedef's. */
-  typedef itk::Object ObjectType;
+  using ObjectType = itk::Object;
   /*typedef itk::AdvancedTransform<
     CoordRepType,
     itkGetStaticConstMacro( FixedImageDimension ),
     itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;
     */
-  typedef itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension> CombinationTransformType;
-  typedef typename CombinationTransformType::InitialTransformType                    InitialTransformType;
+  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension>;
+  using InitialTransformType = typename CombinationTransformType::InitialTransformType;
 
   /** Typedefs inherited from elastix. */
   using typename Superclass2::ElastixType;
@@ -125,7 +124,7 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
 
@@ -138,8 +137,8 @@ public:
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
    * assumes that the fixed and moving image are of the same type.
    */
-  typedef FixedPointSetType PointSetType;
-  typedef FixedImageType    ImageType;
+  using PointSetType = FixedPointSetType;
+  using ImageType = FixedImageType;
 
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.

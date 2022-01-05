@@ -238,7 +238,7 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStep()
     const double           learningRate = this->m_LearningRate;
 
     /** Wrap itk::Arrays into Eigen jackets. */
-    typedef Eigen::VectorXd               ParametersTypeEigen;
+    using ParametersTypeEigen = Eigen::VectorXd;
     Eigen::Map<ParametersTypeEigen>       newPositionE(newPosition.data_block(), spaceDimension);
     Eigen::Map<const ParametersTypeEigen> currentPositionE(currentPosition.data_block(), spaceDimension);
     Eigen::Map<ParametersTypeEigen>       gradientE(this->m_Gradient.data_block(), spaceDimension);
@@ -255,7 +255,7 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStep()
     const double           learningRate = this->m_LearningRate;
 
     /** Wrap itk::Arrays into Eigen jackets. */
-    typedef Eigen::VectorXd               ParametersTypeEigen;
+    using ParametersTypeEigen = Eigen::VectorXd;
     Eigen::Map<ParametersTypeEigen>       newPositionE(newPosition.data_block(), spaceDimension);
     Eigen::Map<const ParametersTypeEigen> currentPositionE(currentPosition.data_block(), spaceDimension);
     Eigen::Map<ParametersTypeEigen>       gradientE(this->m_Gradient.data_block(), spaceDimension);

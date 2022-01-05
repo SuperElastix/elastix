@@ -163,8 +163,8 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
 
   if (centerGivenAsPoint)
   {
-    typedef itk::ContinuousIndex<double, SpaceDimension> ContinuousIndexType;
-    ContinuousIndexType                                  cindex;
+    using ContinuousIndexType = itk::ContinuousIndex<double, SpaceDimension>;
+    ContinuousIndexType cindex;
     CORPointInImage =
       this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformPhysicalPointToContinuousIndex(
         centerOfRotationPoint, cindex);

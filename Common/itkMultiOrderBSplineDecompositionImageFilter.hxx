@@ -324,9 +324,9 @@ template <class TInputImage, class TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyImageToImage()
 {
-  typedef ImageRegionConstIteratorWithIndex<TInputImage> InputIterator;
-  typedef ImageRegionIterator<TOutputImage>              OutputIterator;
-  typedef typename TOutputImage::PixelType               OutputPixelType;
+  using InputIterator = ImageRegionConstIteratorWithIndex<TInputImage>;
+  using OutputIterator = ImageRegionIterator<TOutputImage>;
+  using OutputPixelType = typename TOutputImage::PixelType;
 
   InputIterator  inIt(this->GetInput(), this->GetInput()->GetBufferedRegion());
   OutputIterator outIt(this->GetOutput(), this->GetOutput()->GetBufferedRegion());
@@ -350,8 +350,8 @@ void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyScratchToCoefficients(
   OutputLinearIterator & Iter)
 {
-  typedef typename TOutputImage::PixelType OutputPixelType;
-  unsigned long                            j = 0;
+  using OutputPixelType = typename TOutputImage::PixelType;
+  unsigned long j = 0;
   while (!Iter.IsAtEndOfLine())
   {
     Iter.Set(static_cast<OutputPixelType>(m_Scratch[j]));

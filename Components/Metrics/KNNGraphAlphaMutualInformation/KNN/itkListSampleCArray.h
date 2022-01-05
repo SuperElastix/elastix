@@ -46,10 +46,10 @@ class ITK_TEMPLATE_EXPORT ListSampleCArray : public Sample<TMeasurementVector>
 {
 public:
   /** Standard itk. */
-  typedef ListSampleCArray           Self;
-  typedef Sample<TMeasurementVector> Superclass;
-  typedef SmartPointer<Self>         Pointer;
-  typedef SmartPointer<const Self>   ConstPointer;
+  using Self = ListSampleCArray;
+  using Superclass = Sample<TMeasurementVector>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New method for creating an object using a factory.*/
   itkNewMacro(Self);
@@ -66,9 +66,9 @@ public:
   using typename Superclass::InstanceIdentifier;
 
   /** Typedef's for the internal data container. */
-  typedef TInternalValue      InternalValueType;
-  typedef InternalValueType * InternalDataType;
-  typedef InternalDataType *  InternalDataContainerType;
+  using InternalValueType = TInternalValue;
+  using InternalDataType = InternalValueType *;
+  using InternalDataContainerType = InternalDataType *;
 
   /** Macro to get the internal data container. */
   itkGetConstMacro(InternalContainer, InternalDataContainerType);

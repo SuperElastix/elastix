@@ -46,10 +46,10 @@ class ITK_TEMPLATE_EXPORT NormalizedGradientCorrelationImageToImageMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef NormalizedGradientCorrelationImageToImageMetric       Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = NormalizedGradientCorrelationImageToImageMetric;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -60,19 +60,19 @@ public:
 /** Types transferred from the base class */
 /** Work around a Visual Studio .NET bug */
 #if defined(_MSC_VER) && (_MSC_VER == 1300)
-  typedef double RealType;
+  using RealType = double;
 #else
   using typename Superclass::RealType;
 #endif
 
   using typename Superclass::TransformType;
-  typedef typename TransformType::ScalarType ScalarType;
+  using ScalarType = typename TransformType::ScalarType;
   using typename Superclass::TransformPointer;
-  typedef typename TransformType::ConstPointer TransformConstPointer;
+  using TransformConstPointer = typename TransformType::ConstPointer;
   using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::InterpolatorType;
-  typedef typename InterpolatorType::Pointer InterpolatorPointer;
+  using InterpolatorPointer = typename InterpolatorType::Pointer;
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
   using typename Superclass::FixedImageType;
@@ -82,36 +82,36 @@ public:
   using typename Superclass::FixedImageConstPointer;
   using typename Superclass::MovingImageConstPointer;
   using typename Superclass::MovingImagePointer;
-  typedef typename TFixedImage::PixelType    FixedImagePixelType;
-  typedef typename TMovingImage::PixelType   MovedImagePixelType;
-  typedef typename itk::Optimizer            OptimizerType;
-  typedef typename OptimizerType::ScalesType ScalesType;
+  using FixedImagePixelType = typename TFixedImage::PixelType;
+  using MovedImagePixelType = typename TMovingImage::PixelType;
+  using OptimizerType = typename itk::Optimizer;
+  using ScalesType = typename OptimizerType::ScalesType;
 
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Types for transforming the moving image */
-  typedef typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension> CombinationTransformType;
-  typedef typename CombinationTransformType::Pointer                                  CombinationTransformPointer;
-  typedef itk::Image<FixedImagePixelType, Self::FixedImageDimension>                  TransformedMovingImageType;
-  typedef itk::Image<unsigned char, Self::FixedImageDimension>                        MaskImageType;
-  typedef typename MaskImageType::Pointer                                             MaskImageTypePointer;
-  typedef itk::ResampleImageFilter<MovingImageType, TransformedMovingImageType>       TransformMovingImageFilterType;
-  typedef typename TransformMovingImageFilterType::Pointer                            TransformMovingImageFilterPointer;
-  typedef typename itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, ScalarType> RayCastInterpolatorType;
-  typedef typename RayCastInterpolatorType::Pointer                                          RayCastInterpolatorPointer;
+  using CombinationTransformType = typename itk::AdvancedCombinationTransform<ScalarType, FixedImageDimension>;
+  using CombinationTransformPointer = typename CombinationTransformType::Pointer;
+  using TransformedMovingImageType = itk::Image<FixedImagePixelType, Self::FixedImageDimension>;
+  using MaskImageType = itk::Image<unsigned char, Self::FixedImageDimension>;
+  using MaskImageTypePointer = typename MaskImageType::Pointer;
+  using TransformMovingImageFilterType = itk::ResampleImageFilter<MovingImageType, TransformedMovingImageType>;
+  using TransformMovingImageFilterPointer = typename TransformMovingImageFilterType::Pointer;
+  using RayCastInterpolatorType = typename itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, ScalarType>;
+  using RayCastInterpolatorPointer = typename RayCastInterpolatorType::Pointer;
 
   /** Sobel filters to compute the gradients of the Fixed Image */
-  typedef itk::Image<RealType, Self::FixedImageDimension>              FixedGradientImageType;
-  typedef itk::CastImageFilter<FixedImageType, FixedGradientImageType> CastFixedImageFilterType;
-  typedef typename CastFixedImageFilterType::Pointer                   CastFixedImageFilterPointer;
-  typedef typename FixedGradientImageType::PixelType                   FixedGradientPixelType;
+  using FixedGradientImageType = itk::Image<RealType, Self::FixedImageDimension>;
+  using CastFixedImageFilterType = itk::CastImageFilter<FixedImageType, FixedGradientImageType>;
+  using CastFixedImageFilterPointer = typename CastFixedImageFilterType::Pointer;
+  using FixedGradientPixelType = typename FixedGradientImageType::PixelType;
 
   /** Sobel filters to compute the gradients of the Moved Image */
   itkStaticConstMacro(MovedImageDimension, unsigned int, MovingImageType::ImageDimension);
-  typedef itk::Image<RealType, Self::MovedImageDimension>                          MovedGradientImageType;
-  typedef itk::CastImageFilter<TransformedMovingImageType, MovedGradientImageType> CastMovedImageFilterType;
-  typedef typename CastMovedImageFilterType::Pointer                               CastMovedImageFilterPointer;
-  typedef typename MovedGradientImageType::PixelType                               MovedGradientPixelType;
+  using MovedGradientImageType = itk::Image<RealType, Self::MovedImageDimension>;
+  using CastMovedImageFilterType = itk::CastImageFilter<TransformedMovingImageType, MovedGradientImageType>;
+  using CastMovedImageFilterPointer = typename CastMovedImageFilterType::Pointer;
+  using MovedGradientPixelType = typename MovedGradientImageType::PixelType;
 
   /** Get the derivatives of the match measure. */
   void
@@ -168,8 +168,8 @@ protected:
   MeasureType
   ComputeMeasure(const TransformParametersType & parameters) const;
 
-  typedef NeighborhoodOperatorImageFilter<FixedGradientImageType, FixedGradientImageType> FixedSobelFilter;
-  typedef NeighborhoodOperatorImageFilter<MovedGradientImageType, MovedGradientImageType> MovedSobelFilter;
+  using FixedSobelFilter = NeighborhoodOperatorImageFilter<FixedGradientImageType, FixedGradientImageType>;
+  using MovedSobelFilter = NeighborhoodOperatorImageFilter<MovedGradientImageType, MovedGradientImageType>;
 
 private:
   NormalizedGradientCorrelationImageToImageMetric(const Self &) = delete;

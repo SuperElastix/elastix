@@ -26,7 +26,7 @@ template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 void
 GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>::RegisterOneFactory()
 {
-  typedef GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions> GPUFilterFactoryType;
+  using GPUFilterFactoryType = GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>;
   auto factory = GPUFilterFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
@@ -56,7 +56,7 @@ GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>:
 
   if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 1> visitor1;
     visitor1(*this);
   }
@@ -78,7 +78,7 @@ GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>:
 
   if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 2> visitor1;
     visitor1(*this);
   }
@@ -100,7 +100,7 @@ GPURecursiveGaussianImageFilterFactory2<TTypeListIn, TTypeListOut, NDimensions>:
 
   if (!inputHasFloat || !outputHasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type                   FloatTypeList;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
     typelist::DualVisitDimension<FloatTypeList, FloatTypeList, 3> visitor1;
     visitor1(*this);
   }

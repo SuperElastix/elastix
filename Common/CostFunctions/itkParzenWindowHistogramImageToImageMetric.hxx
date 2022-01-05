@@ -557,7 +557,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   const NonZeroJacobianIndicesType * nzji,
   JointPDFType *                     jointPDF) const
 {
-  typedef ImageScanlineIterator<JointPDFType> PDFIteratorType;
+  using PDFIteratorType = ImageScanlineIterator<JointPDFType>;
 
   /** Determine Parzen window arguments (see eq. 6 of Mattes paper [2]). */
   const double fixedImageParzenWindowTerm =
@@ -687,9 +687,9 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDF(JointPDFType * pdf,
                                                                                       const double & factor) const
 {
-  typedef ImageScanlineIterator<JointPDFType> JointPDFIteratorType;
-  JointPDFIteratorType                        it(pdf, pdf->GetBufferedRegion());
-  const PDFValueType                          castfac = static_cast<PDFValueType>(factor);
+  using JointPDFIteratorType = ImageScanlineIterator<JointPDFType>;
+  JointPDFIteratorType it(pdf, pdf->GetBufferedRegion());
+  const PDFValueType   castfac = static_cast<PDFValueType>(factor);
   while (!it.IsAtEnd())
   {
     while (!it.IsAtEndOfLine())
@@ -713,9 +713,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJoi
   JointPDFDerivativesType * pdf,
   const double &            factor) const
 {
-  typedef ImageScanlineIterator<JointPDFDerivativesType> JointPDFDerivativesIteratorType;
-  JointPDFDerivativesIteratorType                        it(pdf, pdf->GetBufferedRegion());
-  const PDFValueType                                     castfac = static_cast<PDFValueType>(factor);
+  using JointPDFDerivativesIteratorType = ImageScanlineIterator<JointPDFDerivativesType>;
+  JointPDFDerivativesIteratorType it(pdf, pdf->GetBufferedRegion());
+  const PDFValueType              castfac = static_cast<PDFValueType>(factor);
   while (!it.IsAtEnd())
   {
     while (!it.IsAtEndOfLine())
@@ -740,7 +740,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeMargi
   MarginalPDFType &    marginalPDF,
   const unsigned int & direction) const
 {
-  typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
+  using JointPDFLinearIterator = ImageLinearIteratorWithIndex<JointPDFType>;
   // \todo: bug? shouldn't this be over the function argument jointPDF ?
   JointPDFLinearIterator linearIter(this->m_JointPDF, this->m_JointPDF->GetBufferedRegion());
   linearIter.SetDirection(direction);
@@ -773,8 +773,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeIncre
   IncrementalMarginalPDFType *    fixedIncrementalMarginalPDF,
   IncrementalMarginalPDFType *    movingIncrementalMarginalPDF) const
 {
-  typedef itk::ImageRegionConstIterator<JointPDFDerivativesType>        IncIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex<IncrementalMarginalPDFType> IncMargIteratorType;
+  using IncIteratorType = itk::ImageRegionConstIterator<JointPDFDerivativesType>;
+  using IncMargIteratorType = itk::ImageLinearIteratorWithIndex<IncrementalMarginalPDFType>;
 
   fixedIncrementalMarginalPDF->FillBuffer(itk::NumericTraits<PDFValueType>::ZeroValue());
   movingIncrementalMarginalPDF->FillBuffer(itk::NumericTraits<PDFValueType>::ZeroValue());
@@ -1234,9 +1234,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreade
 
   /** Accumulate joint histogram. */
   // could be multi-threaded too, by each thread updating only a part of the JointPDF.
-  typedef ImageScanlineIterator<JointPDFType> JointPDFIteratorType;
-  JointPDFIteratorType                        it(this->m_JointPDF, this->m_JointPDF->GetBufferedRegion());
-  std::vector<JointPDFIteratorType>           itT(numberOfThreads);
+  using JointPDFIteratorType = ImageScanlineIterator<JointPDFType>;
+  JointPDFIteratorType              it(this->m_JointPDF, this->m_JointPDF->GetBufferedRegion());
+  std::vector<JointPDFIteratorType> itT(numberOfThreads);
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     itT[i] = JointPDFIteratorType(this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[i].st_JointPDF,

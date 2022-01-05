@@ -51,18 +51,18 @@ main()
 {
   // ITK transform typedefs
   // typedef itk::Transform< ScalarType, Dimension, Dimension > TransformType;
-  typedef itk::AffineTransform<ScalarType, Dimension>      AffineTransformType;
-  typedef itk::TranslationTransform<ScalarType, Dimension> TranslationTransformType;
-  typedef itk::BSplineTransform<ScalarType, Dimension, 3>  BSplineTransformType;
-  typedef itk::CompositeTransform<ScalarType, Dimension>   CompositeTransformType;
+  using AffineTransformType = itk::AffineTransform<ScalarType, Dimension>;
+  using TranslationTransformType = itk::TranslationTransform<ScalarType, Dimension>;
+  using BSplineTransformType = itk::BSplineTransform<ScalarType, Dimension, 3>;
+  using CompositeTransformType = itk::CompositeTransform<ScalarType, Dimension>;
 
   // elastix advanced transform typedefs
-  typedef itk::AdvancedCombinationTransform<ScalarType, Dimension> AdvancedCombinationTransformType;
+  using AdvancedCombinationTransformType = itk::AdvancedCombinationTransform<ScalarType, Dimension>;
   // typedef itk::AdvancedTransform< ScalarType, Dimension, Dimension >
   // AdvancedTransformType;
-  typedef itk::AdvancedMatrixOffsetTransformBase<ScalarType, Dimension, Dimension> AdvancedAffineTransformType;
-  typedef itk::AdvancedTranslationTransform<ScalarType, Dimension>                 AdvancedTranslationTransformType;
-  typedef itk::AdvancedBSplineDeformableTransform<ScalarType, Dimension, 3>        AdvancedBSplineTransformType;
+  using AdvancedAffineTransformType = itk::AdvancedMatrixOffsetTransformBase<ScalarType, Dimension, Dimension>;
+  using AdvancedTranslationTransformType = itk::AdvancedTranslationTransform<ScalarType, Dimension>;
+  using AdvancedBSplineTransformType = itk::AdvancedBSplineDeformableTransform<ScalarType, Dimension, 3>;
 
   // Define ITK transforms
   const auto affine = AffineTransformType::New();

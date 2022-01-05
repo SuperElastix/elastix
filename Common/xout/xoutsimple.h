@@ -36,8 +36,8 @@ class xoutsimple : public xoutbase
 {
 public:
   /** Typedef's.*/
-  typedef xoutsimple Self;
-  typedef xoutbase   Superclass;
+  using Self = xoutsimple;
+  using Superclass = xoutbase;
 
   /** Constructors */
   xoutsimple() = default;

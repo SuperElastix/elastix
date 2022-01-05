@@ -52,10 +52,10 @@ class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunctionBase
 {
 public:
   /** Standard class typedefs. */
-  typedef BSplineInterpolationWeightFunctionBase                                   Self;
-  typedef FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>, Array<double>> Superclass;
-  typedef SmartPointer<Self>                                                       Pointer;
-  typedef SmartPointer<const Self>                                                 ConstPointer;
+  using Self = BSplineInterpolationWeightFunctionBase;
+  using Superclass = FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>, Array<double>>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(BSplineInterpolationWeightFunctionBase, FunctionBase);
@@ -70,14 +70,14 @@ public:
   static constexpr unsigned long NumberOfWeights = Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension);
 
   /** OutputType typedef support. */
-  typedef Array<double> WeightsType;
+  using WeightsType = Array<double>;
 
   /** Index and size typedef support. */
-  typedef Index<VSpaceDimension> IndexType;
-  typedef Size<VSpaceDimension>  SizeType;
+  using IndexType = Index<VSpaceDimension>;
+  using SizeType = Size<VSpaceDimension>;
 
   /** ContinuousIndex typedef support. */
-  typedef ContinuousIndex<TCoordRep, VSpaceDimension> ContinuousIndexType;
+  using ContinuousIndexType = ContinuousIndex<TCoordRep, VSpaceDimension>;
 
   /** Evaluate the weights at specified ContinousIndex position. */
   WeightsType
@@ -108,22 +108,22 @@ protected:
   ~BSplineInterpolationWeightFunctionBase() override = default;
 
   /** Interpolation kernel types. */
-  typedef BSplineKernelFunction2<Self::SplineOrder>                      KernelType;
-  typedef typename KernelType::Pointer                                   KernelPointer;
-  typedef BSplineDerivativeKernelFunction<Self::SplineOrder>             DerivativeKernelType;
-  typedef typename DerivativeKernelType::Pointer                         DerivativeKernelPointer;
-  typedef BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder> SecondOrderDerivativeKernelType;
-  typedef typename SecondOrderDerivativeKernelType::Pointer              SecondOrderDerivativeKernelPointer;
-  typedef typename KernelType::WeightArrayType                           WeightArrayType;
+  using KernelType = BSplineKernelFunction2<Self::SplineOrder>;
+  using KernelPointer = typename KernelType::Pointer;
+  using DerivativeKernelType = BSplineDerivativeKernelFunction<Self::SplineOrder>;
+  using DerivativeKernelPointer = typename DerivativeKernelType::Pointer;
+  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder>;
+  using SecondOrderDerivativeKernelPointer = typename SecondOrderDerivativeKernelType::Pointer;
+  using WeightArrayType = typename KernelType::WeightArrayType;
 
   /** Lookup table type. */
-  typedef Array2D<unsigned long> TableType;
+  using TableType = Array2D<unsigned long>;
 
   /** Typedef for intermediary 1D weights.
    * The Matrix is at least twice as fast as std::vector< vnl_vector< double > >,
    * probably because of the fixed size at compile time.
    */
-  typedef Matrix<double, Self::SpaceDimension, Self::SplineOrder + 1> OneDWeightsType;
+  using OneDWeightsType = Matrix<double, Self::SpaceDimension, Self::SplineOrder + 1>;
 
   /** Compute the 1D weights. */
   virtual void

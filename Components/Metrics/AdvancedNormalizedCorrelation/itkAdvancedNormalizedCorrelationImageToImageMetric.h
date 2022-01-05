@@ -92,10 +92,10 @@ class ITK_TEMPLATE_EXPORT AdvancedNormalizedCorrelationImageToImageMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedNormalizedCorrelationImageToImageMetric       Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = AdvancedNormalizedCorrelationImageToImageMetric;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -241,7 +241,7 @@ private:
 
   mutable bool m_SubtractMean;
 
-  typedef typename NumericTraits<MeasureType>::AccumulateType AccumulateType;
+  using AccumulateType = typename NumericTraits<MeasureType>::AccumulateType;
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.

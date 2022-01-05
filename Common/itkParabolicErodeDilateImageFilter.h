@@ -64,10 +64,10 @@ class ITK_TEMPLATE_EXPORT ParabolicErodeDilateImageFilter : public ImageToImageF
 
 public:
   /** Standard class typedefs. */
-  typedef ParabolicErodeDilateImageFilter               Self;
-  typedef ImageToImageFilter<TInputImage, TOutputImage> Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  using Self = ParabolicErodeDilateImageFilter;
+  using Superclass = ImageToImageFilter<TInputImage, TOutputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -76,33 +76,33 @@ public:
   itkTypeMacro(ParabolicErodeDilateImageFilter, ImageToImageFilter);
 
   /** Pixel Type of the input image */
-  typedef TInputImage                                       InputImageType;
-  typedef TOutputImage                                      OutputImageType;
-  typedef typename TInputImage::PixelType                   PixelType;
-  typedef typename NumericTraits<PixelType>::RealType       RealType;
-  typedef typename NumericTraits<PixelType>::ScalarRealType ScalarRealType;
-  typedef typename TOutputImage::PixelType                  OutputPixelType;
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
+  using PixelType = typename TInputImage::PixelType;
+  using RealType = typename NumericTraits<PixelType>::RealType;
+  using ScalarRealType = typename NumericTraits<PixelType>::ScalarRealType;
+  using OutputPixelType = typename TOutputImage::PixelType;
 
   /** Smart pointer typedef support.  */
-  typedef typename TInputImage::Pointer      InputImagePointer;
-  typedef typename TInputImage::ConstPointer InputImageConstPointer;
-  typedef typename TInputImage::SizeType     InputSizeType;
-  typedef typename TOutputImage::SizeType    OutputSizeType;
+  using InputImagePointer = typename TInputImage::Pointer;
+  using InputImageConstPointer = typename TInputImage::ConstPointer;
+  using InputSizeType = typename TInputImage::SizeType;
+  using OutputSizeType = typename TOutputImage::SizeType;
 
   /** a type to represent the "kernel radius" */
-  typedef typename itk::FixedArray<ScalarRealType, TInputImage::ImageDimension> RadiusType;
+  using RadiusType = typename itk::FixedArray<ScalarRealType, TInputImage::ImageDimension>;
 
   /** Image dimension. */
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
   itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
   /** Define the image type for internal computations
       RealType is usually 'double' in NumericTraits.
       Here we prefer float in order to save memory.  */
 
-  typedef typename NumericTraits<PixelType>::FloatType InternalRealType;
+  using InternalRealType = typename NumericTraits<PixelType>::FloatType;
   // typedef typename Image<InternalRealType, Self::ImageDimension >   RealImageType;
 
   // set all of the scales the same

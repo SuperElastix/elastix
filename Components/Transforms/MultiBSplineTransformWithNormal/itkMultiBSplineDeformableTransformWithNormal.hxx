@@ -146,7 +146,7 @@ template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetLabels(ImageLabelType * labels)
 {
-  typedef StatisticsImageFilter<ImageLabelType> StatisticsType;
+  using StatisticsType = StatisticsImageFilter<ImageLabelType>;
   if (labels != this->m_Labels)
   {
     // Save current settings
@@ -173,12 +173,12 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions>
 struct UpdateLocalBases_impl
 {
-  typedef itk::Vector<TScalarType, NDimensions> VectorType;
-  typedef itk::Vector<VectorType, NDimensions>  BaseType;
-  typedef itk::Image<VectorType, NDimensions>   ImageVectorType;
-  typedef typename ImageVectorType::Pointer     ImageVectorPointer;
-  typedef itk::Image<BaseType, NDimensions>     ImageBaseType;
-  typedef typename ImageBaseType::Pointer       ImageBasePointer;
+  using VectorType = itk::Vector<TScalarType, NDimensions>;
+  using BaseType = itk::Vector<VectorType, NDimensions>;
+  using ImageVectorType = itk::Image<VectorType, NDimensions>;
+  using ImageVectorPointer = typename ImageVectorType::Pointer;
+  using ImageBaseType = itk::Image<BaseType, NDimensions>;
+  using ImageBasePointer = typename ImageBaseType::Pointer;
 
   static void
   Do(ImageBaseType *, ImageVectorType *)
@@ -190,13 +190,13 @@ struct UpdateLocalBases_impl
 template <class TScalarType>
 struct UpdateLocalBases_impl<TScalarType, 2>
 {
-  static const unsigned                         NDimensions = 2;
-  typedef itk::Vector<TScalarType, NDimensions> VectorType;
-  typedef itk::Vector<VectorType, NDimensions>  BaseType;
-  typedef itk::Image<VectorType, NDimensions>   ImageVectorType;
-  typedef typename ImageVectorType::Pointer     ImageVectorPointer;
-  typedef itk::Image<BaseType, NDimensions>     ImageBaseType;
-  typedef typename ImageBaseType::Pointer       ImageBasePointer;
+  static const unsigned NDimensions = 2;
+  using VectorType = itk::Vector<TScalarType, NDimensions>;
+  using BaseType = itk::Vector<VectorType, NDimensions>;
+  using ImageVectorType = itk::Image<VectorType, NDimensions>;
+  using ImageVectorPointer = typename ImageVectorType::Pointer;
+  using ImageBaseType = itk::Image<BaseType, NDimensions>;
+  using ImageBasePointer = typename ImageBaseType::Pointer;
 
   static void
   Do(ImageBaseType * bases, ImageVectorType * normals)
@@ -204,13 +204,13 @@ struct UpdateLocalBases_impl<TScalarType, 2>
     const TScalarType base_x[] = { 1, 0 };
     const TScalarType base_y[] = { 0, 1 };
 
-    typedef itk::NearestNeighborInterpolateImageFunction<ImageVectorType, TScalarType> ImageVectorInterpolator;
-    typedef typename ImageVectorInterpolator::Pointer                                  ImageVectorInterpolatorPointer;
+    using ImageVectorInterpolator = itk::NearestNeighborInterpolateImageFunction<ImageVectorType, TScalarType>;
+    using ImageVectorInterpolatorPointer = typename ImageVectorInterpolator::Pointer;
     ImageVectorInterpolatorPointer vinterp = ImageVectorInterpolator::New();
     vinterp->SetInputImage(normals);
 
-    typedef ImageRegionIterator<ImageBaseType> IteratorType;
-    IteratorType                               it(bases, bases->GetLargestPossibleRegion());
+    using IteratorType = ImageRegionIterator<ImageBaseType>;
+    IteratorType it(bases, bases->GetLargestPossibleRegion());
     for (it.GoToBegin(); !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
@@ -250,13 +250,13 @@ struct UpdateLocalBases_impl<TScalarType, 2>
 template <class TScalarType>
 struct UpdateLocalBases_impl<TScalarType, 3>
 {
-  static const unsigned                         NDimensions = 3;
-  typedef itk::Vector<TScalarType, NDimensions> VectorType;
-  typedef itk::Vector<VectorType, NDimensions>  BaseType;
-  typedef itk::Image<VectorType, NDimensions>   ImageVectorType;
-  typedef typename ImageVectorType::Pointer     ImageVectorPointer;
-  typedef itk::Image<BaseType, NDimensions>     ImageBaseType;
-  typedef typename ImageBaseType::Pointer       ImageBasePointer;
+  static const unsigned NDimensions = 3;
+  using VectorType = itk::Vector<TScalarType, NDimensions>;
+  using BaseType = itk::Vector<VectorType, NDimensions>;
+  using ImageVectorType = itk::Image<VectorType, NDimensions>;
+  using ImageVectorPointer = typename ImageVectorType::Pointer;
+  using ImageBaseType = itk::Image<BaseType, NDimensions>;
+  using ImageBasePointer = typename ImageBaseType::Pointer;
 
   static void
   Do(ImageBaseType * bases, ImageVectorType * normals)
@@ -265,13 +265,13 @@ struct UpdateLocalBases_impl<TScalarType, 3>
     const TScalarType base_y[] = { 0, 1, 0 };
     const TScalarType base_z[] = { 0, 0, 1 };
 
-    typedef itk::NearestNeighborInterpolateImageFunction<ImageVectorType, TScalarType> ImageVectorInterpolator;
-    typedef typename ImageVectorInterpolator::Pointer                                  ImageVectorInterpolatorPointer;
+    using ImageVectorInterpolator = itk::NearestNeighborInterpolateImageFunction<ImageVectorType, TScalarType>;
+    using ImageVectorInterpolatorPointer = typename ImageVectorInterpolator::Pointer;
     ImageVectorInterpolatorPointer vinterp = ImageVectorInterpolator::New();
     vinterp->SetInputImage(normals);
 
-    typedef ImageRegionIterator<ImageBaseType> IteratorType;
-    IteratorType                               it(bases, bases->GetLargestPossibleRegion());
+    using IteratorType = ImageRegionIterator<ImageBaseType>;
+    IteratorType it(bases, bases->GetLargestPossibleRegion());
     for (it.GoToBegin(); !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
@@ -345,17 +345,17 @@ template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::UpdateLocalBases()
 {
-  typedef itk::Image<double, Self::SpaceDimension>                                      ImageDoubleType;
-  typedef itk::ConstantPadImageFilter<ImageLabelType, ImageLabelType>                   PadFilterType;
-  typedef itk::ApproximateSignedDistanceMapImageFilter<ImageLabelType, ImageDoubleType> DistFilterType;
-  typedef itk::SmoothingRecursiveGaussianImageFilter<ImageDoubleType, ImageDoubleType>  SmoothFilterType;
-  typedef itk::GradientImageFilter<ImageDoubleType, double, double>                     GradFilterType;
-  typedef itk::BinaryThresholdImageFilter<ImageLabelType, ImageLabelType>               LabelExtractorType;
-  typedef itk::AddImageFilter<ImageVectorType, ImageVectorType, ImageVectorType>        AddVectorImageType;
-  typedef itk::MaskImageFilter<ImageVectorType, ImageLabelType, ImageVectorType>        MaskVectorImageType;
-  typedef typename ImageLabelType::PointType                                            PointType;
-  typedef typename ImageLabelType::RegionType                                           RegionType;
-  typedef typename ImageLabelType::SpacingType                                          SpacingType;
+  using ImageDoubleType = itk::Image<double, Self::SpaceDimension>;
+  using PadFilterType = itk::ConstantPadImageFilter<ImageLabelType, ImageLabelType>;
+  using DistFilterType = itk::ApproximateSignedDistanceMapImageFilter<ImageLabelType, ImageDoubleType>;
+  using SmoothFilterType = itk::SmoothingRecursiveGaussianImageFilter<ImageDoubleType, ImageDoubleType>;
+  using GradFilterType = itk::GradientImageFilter<ImageDoubleType, double, double>;
+  using LabelExtractorType = itk::BinaryThresholdImageFilter<ImageLabelType, ImageLabelType>;
+  using AddVectorImageType = itk::AddImageFilter<ImageVectorType, ImageVectorType, ImageVectorType>;
+  using MaskVectorImageType = itk::MaskImageFilter<ImageVectorType, ImageLabelType, ImageVectorType>;
+  using PointType = typename ImageLabelType::PointType;
+  using RegionType = typename ImageLabelType::RegionType;
+  using SpacingType = typename ImageLabelType::SpacingType;
 
   PointType transOrig = GetGridOrigin();
   PointType transEnd;
@@ -476,9 +476,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     m_Para[i].SetSize(m_Trans[i]->GetNumberOfParameters());
   }
 
-  typedef typename ImageBaseType::PixelContainer BaseContainer;
-  const BaseContainer &                          bases = *m_LocalBases->GetPixelContainer();
-  unsigned ParametersPerDimension = m_Trans[0]->GetNumberOfParametersPerDimension();
+  using BaseContainer = typename ImageBaseType::PixelContainer;
+  const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
+  unsigned              ParametersPerDimension = m_Trans[0]->GetNumberOfParametersPerDimension();
   for (unsigned i = 0; i < ParametersPerDimension; ++i)
   {
     VectorType tmp = bases[i][0] * parameters.GetElement(i);
@@ -752,8 +752,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     return;
   }
 
-  typedef typename ImageBaseType::PixelContainer BaseContainer;
-  const BaseContainer &                          bases = *m_LocalBases->GetPixelContainer();
+  using BaseContainer = typename ImageBaseType::PixelContainer;
+  const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
 
   const unsigned nweights = this->GetNumberOfWeights();
   for (unsigned i = 0; i < nweights; ++i)
@@ -940,8 +940,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   m_Trans[0]->GetJacobianOfSpatialJacobian(ipp, nsj, njsj, nonZeroJacobianIndices);
   m_Trans[lidx]->GetJacobianOfSpatialJacobian(ipp, lsj, ljsj, nonZeroJacobianIndices);
 
-  typedef typename ImageBaseType::PixelContainer BaseContainer;
-  const BaseContainer &                          bases = *m_LocalBases->GetPixelContainer();
+  using BaseContainer = typename ImageBaseType::PixelContainer;
+  const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
 
   const unsigned nweights = this->GetNumberOfWeights();
   for (unsigned i = 0; i < nweights; ++i)
@@ -1048,8 +1048,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   m_Trans[0]->GetJacobianOfSpatialHessian(ipp, nsh, njsh, nonZeroJacobianIndices);
   m_Trans[lidx]->GetJacobianOfSpatialHessian(ipp, lsh, ljsh, nonZeroJacobianIndices);
 
-  typedef typename ImageBaseType::PixelContainer BaseContainer;
-  const BaseContainer &                          bases = *m_LocalBases->GetPixelContainer();
+  using BaseContainer = typename ImageBaseType::PixelContainer;
+  const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
 
   const unsigned nweights = this->GetNumberOfWeights();
   for (unsigned i = 0; i < nweights; ++i)

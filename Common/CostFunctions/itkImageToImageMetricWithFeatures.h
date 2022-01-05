@@ -42,10 +42,10 @@ class ITK_TEMPLATE_EXPORT ImageToImageMetricWithFeatures : public AdvancedImageT
 {
 public:
   /** Standard class typedefs. */
-  typedef ImageToImageMetricWithFeatures                        Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = ImageToImageMetricWithFeatures;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ImageToImageMetricWithFeatures, AdvancedImageToImageMetric);
@@ -100,20 +100,20 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedefs for the feature images. */
-  typedef TFixedFeatureImage                       FixedFeatureImageType;
-  typedef typename FixedFeatureImageType::Pointer  FixedFeatureImagePointer;
-  typedef TMovingFeatureImage                      MovingFeatureImageType;
-  typedef typename MovingFeatureImageType::Pointer MovingFeatureImagePointer;
-  typedef std::vector<FixedFeatureImagePointer>    FixedFeatureImageVectorType;
-  typedef std::vector<MovingFeatureImagePointer>   MovingFeatureImageVectorType;
+  using FixedFeatureImageType = TFixedFeatureImage;
+  using FixedFeatureImagePointer = typename FixedFeatureImageType::Pointer;
+  using MovingFeatureImageType = TMovingFeatureImage;
+  using MovingFeatureImagePointer = typename MovingFeatureImageType::Pointer;
+  using FixedFeatureImageVectorType = std::vector<FixedFeatureImagePointer>;
+  using MovingFeatureImageVectorType = std::vector<MovingFeatureImagePointer>;
 
   /** Typedefs for the feature images interpolators. */
-  typedef InterpolateImageFunction<FixedFeatureImageType, double>  FixedFeatureInterpolatorType;
-  typedef InterpolateImageFunction<MovingFeatureImageType, double> MovingFeatureInterpolatorType;
-  typedef typename FixedFeatureInterpolatorType::Pointer           FixedFeatureInterpolatorPointer;
-  typedef typename MovingFeatureInterpolatorType::Pointer          MovingFeatureInterpolatorPointer;
-  typedef std::vector<FixedFeatureInterpolatorPointer>             FixedFeatureInterpolatorVectorType;
-  typedef std::vector<MovingFeatureInterpolatorPointer>            MovingFeatureInterpolatorVectorType;
+  using FixedFeatureInterpolatorType = InterpolateImageFunction<FixedFeatureImageType, double>;
+  using MovingFeatureInterpolatorType = InterpolateImageFunction<MovingFeatureImageType, double>;
+  using FixedFeatureInterpolatorPointer = typename FixedFeatureInterpolatorType::Pointer;
+  using MovingFeatureInterpolatorPointer = typename MovingFeatureInterpolatorType::Pointer;
+  using FixedFeatureInterpolatorVectorType = std::vector<FixedFeatureInterpolatorPointer>;
+  using MovingFeatureInterpolatorVectorType = std::vector<MovingFeatureInterpolatorPointer>;
 
   /** Set the number of fixed feature images. */
   void
@@ -228,8 +228,8 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const;
 
   using typename Superclass::BSplineInterpolatorType;
-  typedef typename BSplineInterpolatorType::Pointer BSplineInterpolatorPointer;
-  typedef std::vector<BSplineInterpolatorPointer>   BSplineFeatureInterpolatorVectorType;
+  using BSplineInterpolatorPointer = typename BSplineInterpolatorType::Pointer;
+  using BSplineFeatureInterpolatorVectorType = std::vector<BSplineInterpolatorPointer>;
   using typename Superclass::FixedImagePointType;
   using typename Superclass::MovingImagePointType;
   using typename Superclass::MovingImageDerivativeType;

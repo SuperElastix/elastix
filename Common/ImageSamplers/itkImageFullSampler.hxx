@@ -49,8 +49,8 @@ ImageFullSampler<TInputImage>::GenerateData()
   sampleContainer->Initialize();
 
   /** Set up a region iterator within the user specified image region. */
-  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
-  InputImageIterator                                        iter(inputImage, this->GetCroppedInputImageRegion());
+  using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
+  InputImageIterator iter(inputImage, this->GetCroppedInputImageRegion());
 
   /** Fill the sample container. */
   if (mask.IsNull())
@@ -142,7 +142,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     = this->m_ThreaderSampleContainer[threadId];
 
   /** Set up a region iterator within the user specified image region. */
-  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
+  using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
   // InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
   InputImageIterator iter(inputImage, inputRegionForThread);
 

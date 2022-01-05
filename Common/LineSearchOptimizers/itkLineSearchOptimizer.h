@@ -37,10 +37,10 @@ namespace itk
 class LineSearchOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
-  typedef LineSearchOptimizer            Self;
-  typedef SingleValuedNonLinearOptimizer Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+  using Self = LineSearchOptimizer;
+  using Superclass = SingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   // itkNewMacro(Self); because this is an abstract base class.
   itkTypeMacro(LineSearchOptimizer, SingleValuedNonLinearOptimizer);

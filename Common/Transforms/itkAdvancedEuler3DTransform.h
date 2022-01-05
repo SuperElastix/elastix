@@ -66,10 +66,10 @@ class ITK_TEMPLATE_EXPORT AdvancedEuler3DTransform : public AdvancedRigid3DTrans
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedEuler3DTransform              Self;
-  typedef AdvancedRigid3DTransform<TScalarType> Superclass;
-  typedef SmartPointer<Self>                    Pointer;
-  typedef SmartPointer<const Self>              ConstPointer;
+  using Self = AdvancedEuler3DTransform;
+  using Superclass = AdvancedRigid3DTransform<TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);
@@ -100,7 +100,7 @@ public:
   using typename Superclass::CenterType;
   using typename Superclass::TranslationType;
   using typename Superclass::OffsetType;
-  typedef typename Superclass::ScalarType AngleType;
+  using AngleType = typename Superclass::ScalarType;
 
   using typename Superclass::NonZeroJacobianIndicesType;
   using typename Superclass::SpatialJacobianType;

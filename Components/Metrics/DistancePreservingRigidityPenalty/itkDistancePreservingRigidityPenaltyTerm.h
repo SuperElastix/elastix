@@ -77,10 +77,10 @@ class ITK_TEMPLATE_EXPORT DistancePreservingRigidityPenaltyTerm : public Transfo
 {
 public:
   /** Standard itk stuff. */
-  typedef DistancePreservingRigidityPenaltyTerm          Self;
-  typedef TransformPenaltyTerm<TFixedImage, TScalarType> Superclass;
-  typedef SmartPointer<Self>                             Pointer;
-  typedef SmartPointer<const Self>                       ConstPointer;
+  using Self = DistancePreservingRigidityPenaltyTerm;
+  using Superclass = TransformPenaltyTerm<TFixedImage, TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -142,13 +142,13 @@ public:
   Initialize() override;
 
   /** Typedef's for B-spline transform. */
-  typedef AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 3> BSplineTransformType;
-  typedef typename BSplineTransformType::Pointer                                 BSplineTransformPointer;
-  typedef typename BSplineTransformType::SpacingType                             GridSpacingType;
-  typedef typename BSplineTransformType::ImageType                               CoefficientImageType;
-  typedef typename CoefficientImageType::Pointer                                 CoefficientImagePointer;
-  typedef typename CoefficientImageType::SpacingType                             CoefficientImageSpacingType;
-  typedef AdvancedCombinationTransform<ScalarType, FixedImageDimension>          CombinationTransformType;
+  using BSplineTransformType = AdvancedBSplineDeformableTransform<ScalarType, FixedImageDimension, 3>;
+  using BSplineTransformPointer = typename BSplineTransformType::Pointer;
+  using GridSpacingType = typename BSplineTransformType::SpacingType;
+  using CoefficientImageType = typename BSplineTransformType::ImageType;
+  using CoefficientImagePointer = typename CoefficientImageType::Pointer;
+  using CoefficientImageSpacingType = typename CoefficientImageType::SpacingType;
+  using CombinationTransformType = AdvancedCombinationTransform<ScalarType, FixedImageDimension>;
 
   /** The GetValue()-method returns the rigid penalty value. */
   MeasureType
@@ -170,19 +170,19 @@ public:
   itkSetObjectMacro(BSplineTransform, BSplineTransformType);
 
   /** B-spline knot image */
-  typedef Image<signed short, Self::MovingImageDimension> BSplineKnotImageType;
-  typedef typename BSplineKnotImageType::Pointer          BSplineKnotImagePointer;
-  typedef typename BSplineKnotImageType::RegionType       BSplineKnotImageRegionType;
+  using BSplineKnotImageType = Image<signed short, Self::MovingImageDimension>;
+  using BSplineKnotImagePointer = typename BSplineKnotImageType::Pointer;
+  using BSplineKnotImageRegionType = typename BSplineKnotImageType::RegionType;
 
   /** penalty grid image */
-  typedef Image<signed short, Self::MovingImageDimension> PenaltyGridImageType;
-  typedef typename PenaltyGridImageType::Pointer          PenaltyGridImagePointer;
-  typedef typename PenaltyGridImageType::RegionType       PenaltyGridImageRegionType;
+  using PenaltyGridImageType = Image<signed short, Self::MovingImageDimension>;
+  using PenaltyGridImagePointer = typename PenaltyGridImageType::Pointer;
+  using PenaltyGridImageRegionType = typename PenaltyGridImageType::RegionType;
 
   /** Define the segmented image. */
-  typedef Image<signed short, Self::MovingImageDimension> SegmentedImageType;
-  typedef typename SegmentedImageType::Pointer            SegmentedImagePointer;
-  typedef typename SegmentedImageType::RegionType         SegmentedImageRegionType;
+  using SegmentedImageType = Image<signed short, Self::MovingImageDimension>;
+  using SegmentedImagePointer = typename SegmentedImageType::Pointer;
+  using SegmentedImageRegionType = typename SegmentedImageType::RegionType;
 
   /** Connect the Segmented Image. */
   itkSetObjectMacro(SegmentedImage, SegmentedImageType);

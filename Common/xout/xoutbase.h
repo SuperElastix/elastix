@@ -40,12 +40,12 @@ class xoutbase
 {
 public:
   /** Typedef's.*/
-  typedef xoutbase Self;
+  using Self = xoutbase;
 
-  typedef std::map<std::string, std::ostream *> CStreamMapType;
-  typedef std::map<std::string, Self *>         XStreamMapType;
-  typedef CStreamMapType::value_type            CStreamMapEntryType;
-  typedef XStreamMapType::value_type            XStreamMapEntryType;
+  using CStreamMapType = std::map<std::string, std::ostream *>;
+  using XStreamMapType = std::map<std::string, Self *>;
+  using CStreamMapEntryType = CStreamMapType::value_type;
+  using XStreamMapEntryType = XStreamMapType::value_type;
 
   /** Destructor */
   virtual ~xoutbase() = 0;

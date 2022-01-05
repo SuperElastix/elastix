@@ -52,7 +52,7 @@ class ITKOpenCL_EXPORT OpenCLCommandQueue
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLCommandQueue Self;
+  using Self = OpenCLCommandQueue;
 
   /** Constructs a null OpenCL command queue object. */
   OpenCLCommandQueue()

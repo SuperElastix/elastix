@@ -49,18 +49,18 @@ class ITK_EXPORT GPUBSplineInterpolateImageFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUBSplineInterpolateImageFunction Self;
-  typedef GPUInterpolateImageFunction<TInputImage,
-                                      TCoordRep,
-                                      BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>
-    GPUSuperclass;
-  typedef BSplineInterpolateImageFunction<TInputImage,
-                                          TCoordRep,
-                                          BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>
-                                   CPUSuperclass;
-  typedef GPUSuperclass            Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = GPUBSplineInterpolateImageFunction;
+  using GPUSuperclass =
+    GPUInterpolateImageFunction<TInputImage,
+                                TCoordRep,
+                                BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>;
+  using CPUSuperclass =
+    BSplineInterpolateImageFunction<TInputImage,
+                                    TCoordRep,
+                                    BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>;
+  using Superclass = GPUSuperclass;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(GPUBSplineInterpolateImageFunction, GPUSuperclass);
@@ -71,9 +71,9 @@ public:
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
-  typedef GPUImage<TCoefficientType, InputImageDimension> GPUCoefficientImageType;
-  typedef typename GPUCoefficientImageType::Pointer       GPUCoefficientImagePointer;
-  typedef typename GPUDataManager::Pointer                GPUDataManagerPointer;
+  using GPUCoefficientImageType = GPUImage<TCoefficientType, InputImageDimension>;
+  using GPUCoefficientImagePointer = typename GPUCoefficientImageType::Pointer;
+  using GPUDataManagerPointer = typename GPUDataManager::Pointer;
 
   /** Set the input image. This must be set by the user. */
   void

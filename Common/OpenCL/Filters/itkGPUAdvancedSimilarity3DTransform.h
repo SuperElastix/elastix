@@ -41,11 +41,11 @@ class ITK_TEMPLATE_EXPORT GPUAdvancedSimilarity3DTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUAdvancedSimilarity3DTransform                Self;
-  typedef TParentTransform                                CPUSuperclass;
-  typedef GPUMatrixOffsetTransformBase<TScalarType, 3, 3> GPUSuperclass;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  using Self = GPUAdvancedSimilarity3DTransform;
+  using CPUSuperclass = TParentTransform;
+  using GPUSuperclass = GPUMatrixOffsetTransformBase<TScalarType, 3, 3>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -54,9 +54,9 @@ public:
   itkTypeMacro(GPUAdvancedSimilarity3DTransform, CPUSuperclass);
 
   /** Typedefs from GPUSuperclass. */
-  typedef typename GPUSuperclass::CPUMatrixType        CPUMatrixType;
-  typedef typename GPUSuperclass::CPUInverseMatrixType CPUInverseMatrixType;
-  typedef typename GPUSuperclass::CPUOutputVectorType  CPUOutputVectorType;
+  using CPUMatrixType = typename GPUSuperclass::CPUMatrixType;
+  using CPUInverseMatrixType = typename GPUSuperclass::CPUInverseMatrixType;
+  using CPUOutputVectorType = typename GPUSuperclass::CPUOutputVectorType;
 
   /** Get CPU matrix of an MatrixOffsetTransformBase. */
   const CPUMatrixType &

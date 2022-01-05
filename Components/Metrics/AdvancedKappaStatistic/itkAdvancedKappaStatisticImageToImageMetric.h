@@ -58,10 +58,10 @@ class ITK_TEMPLATE_EXPORT AdvancedKappaStatisticImageToImageMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedKappaStatisticImageToImageMetric              Self;
-  typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                    Pointer;
-  typedef SmartPointer<const Self>                              ConstPointer;
+  using Self = AdvancedKappaStatisticImageToImageMetric;
+  using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

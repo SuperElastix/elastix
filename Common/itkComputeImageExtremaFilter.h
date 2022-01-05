@@ -49,10 +49,10 @@ class ITK_TEMPLATE_EXPORT ComputeImageExtremaFilter : public StatisticsImageFilt
 {
 public:
   /** Standard Self typedef */
-  typedef ComputeImageExtremaFilter          Self;
-  typedef StatisticsImageFilter<TInputImage> Superclass;
-  typedef SmartPointer<Self>                 Pointer;
-  typedef SmartPointer<const Self>           ConstPointer;
+  using Self = ComputeImageExtremaFilter;
+  using Superclass = StatisticsImageFilter<TInputImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -61,13 +61,13 @@ public:
   itkTypeMacro(ComputeImageExtremaFilter, StatisticsImageFilter);
 
   /** Image related typedefs. */
-  typedef typename TInputImage::Pointer InputImagePointer;
+  using InputImagePointer = typename TInputImage::Pointer;
 
   using typename Superclass::RegionType;
   using typename Superclass::SizeType;
   using typename Superclass::IndexType;
   using typename Superclass::PixelType;
-  typedef typename TInputImage::PointType PointType;
+  using PointType = typename TInputImage::PointType;
 
   /** Image related typedefs. */
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
@@ -78,15 +78,15 @@ public:
   itkSetMacro(ImageRegion, RegionType);
   itkSetMacro(UseMask, bool);
 
-  typedef SpatialObject<Self::ImageDimension>  ImageMaskType;
-  typedef typename ImageMaskType::Pointer      ImageMaskPointer;
-  typedef typename ImageMaskType::ConstPointer ImageMaskConstPointer;
+  using ImageMaskType = SpatialObject<Self::ImageDimension>;
+  using ImageMaskPointer = typename ImageMaskType::Pointer;
+  using ImageMaskConstPointer = typename ImageMaskType::ConstPointer;
   itkSetConstObjectMacro(ImageMask, ImageMaskType);
   itkGetConstObjectMacro(ImageMask, ImageMaskType);
 
-  typedef ImageMaskSpatialObject<Self::ImageDimension> ImageSpatialMaskType;
-  typedef typename ImageSpatialMaskType::Pointer       ImageSpatialMaskPointer;
-  typedef typename ImageSpatialMaskType::ConstPointer  ImageSpatialMaskConstPointer;
+  using ImageSpatialMaskType = ImageMaskSpatialObject<Self::ImageDimension>;
+  using ImageSpatialMaskPointer = typename ImageSpatialMaskType::Pointer;
+  using ImageSpatialMaskConstPointer = typename ImageSpatialMaskType::ConstPointer;
   itkSetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
   itkGetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
 

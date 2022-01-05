@@ -181,11 +181,11 @@ class ITK_TEMPLATE_EXPORT PreconditionedStochasticGradientDescent
 {
 public:
   /** Standard ITK. */
-  typedef PreconditionedStochasticGradientDescent Self;
-  typedef PreconditionedASGDOptimizer             Superclass1;
-  typedef OptimizerBase<TElastix>                 Superclass2;
-  typedef itk::SmartPointer<Self>                 Pointer;
-  typedef itk::SmartPointer<const Self>           ConstPointer;
+  using Self = PreconditionedStochasticGradientDescent;
+  using Superclass1 = PreconditionedASGDOptimizer;
+  using Superclass2 = OptimizerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -211,8 +211,8 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
-  typedef itk::SizeValueType                SizeValueType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using SizeValueType = itk::SizeValueType;
 
   /** Typedef for the ParametersType. */
   using typename Superclass1::ParametersType;
@@ -285,63 +285,63 @@ protected:
   ~PreconditionedStochasticGradientDescent() override = default;
 
   /** Protected typedefs */
-  typedef typename RegistrationType::FixedImageType  FixedImageType;
-  typedef typename RegistrationType::MovingImageType MovingImageType;
+  using FixedImageType = typename RegistrationType::FixedImageType;
+  using MovingImageType = typename RegistrationType::MovingImageType;
 
-  typedef typename FixedImageType::RegionType         FixedImageRegionType;
-  typedef typename FixedImageType::IndexType          FixedImageIndexType;
-  typedef typename FixedImageType::PointType          FixedImagePointType;
-  typedef typename RegistrationType::ITKBaseType      itkRegistrationType;
-  typedef typename itkRegistrationType::TransformType TransformType;
-  typedef typename TransformType::JacobianType        JacobianType;
-  typedef typename JacobianType::ValueType            JacobianValueType;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using FixedImagePointType = typename FixedImageType::PointType;
+  using itkRegistrationType = typename RegistrationType::ITKBaseType;
+  using TransformType = typename itkRegistrationType::TransformType;
+  using JacobianType = typename TransformType::JacobianType;
+  using JacobianValueType = typename JacobianType::ValueType;
   struct SettingsType
   {
     double a, A, alpha, fmax, fmin, omega;
   };
-  typedef typename std::vector<SettingsType>   SettingsVectorType;
-  typedef typename ElastixType::FixedImageType OutputImageType;
+  using SettingsVectorType = typename std::vector<SettingsType>;
+  using OutputImageType = typename ElastixType::FixedImageType;
 
-  typedef itk::ComputePreconditionerUsingDisplacementDistribution<FixedImageType, TransformType>
-                                                         PreconditionerEstimationType;
-  typedef typename PreconditionerEstimationType::Pointer PreconditionerEstimationPointer;
+  using PreconditionerEstimationType =
+    itk::ComputePreconditionerUsingDisplacementDistribution<FixedImageType, TransformType>;
+  using PreconditionerEstimationPointer = typename PreconditionerEstimationType::Pointer;
 
-  typedef itk::ComputeDisplacementDistribution<FixedImageType, TransformType> ComputeDisplacementDistributionType;
+  using ComputeDisplacementDistributionType = itk::ComputeDisplacementDistribution<FixedImageType, TransformType>;
 
   /** Samplers: */
-  typedef itk::ImageSamplerBase<FixedImageType>                   ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer                  ImageSamplerBasePointer;
-  typedef itk::ImageRandomSamplerBase<FixedImageType>             ImageRandomSamplerBaseType;
-  typedef typename ImageRandomSamplerBaseType::Pointer            ImageRandomSamplerBasePointer;
-  typedef itk::ImageRandomCoordinateSampler<FixedImageType>       ImageRandomCoordinateSamplerType;
-  typedef typename ImageRandomCoordinateSamplerType::Pointer      ImageRandomCoordinateSamplerPointer;
-  typedef itk::ImageRandomSampler<FixedImageType>                 ImageRandomSamplerType;
-  typedef typename ImageRandomSamplerType::Pointer                ImageRandomSamplerPointer;
-  typedef itk::ImageGridSampler<FixedImageType>                   ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer                  ImageGridSamplerPointer;
-  typedef typename ImageGridSamplerType::ImageSampleContainerType ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer              ImageSampleContainerPointer;
+  using ImageSamplerBaseType = itk::ImageSamplerBase<FixedImageType>;
+  using ImageSamplerBasePointer = typename ImageSamplerBaseType::Pointer;
+  using ImageRandomSamplerBaseType = itk::ImageRandomSamplerBase<FixedImageType>;
+  using ImageRandomSamplerBasePointer = typename ImageRandomSamplerBaseType::Pointer;
+  using ImageRandomCoordinateSamplerType = itk::ImageRandomCoordinateSampler<FixedImageType>;
+  using ImageRandomCoordinateSamplerPointer = typename ImageRandomCoordinateSamplerType::Pointer;
+  using ImageRandomSamplerType = itk::ImageRandomSampler<FixedImageType>;
+  using ImageRandomSamplerPointer = typename ImageRandomSamplerType::Pointer;
+  using ImageGridSamplerType = itk::ImageGridSampler<FixedImageType>;
+  using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
+  using ImageSampleContainerType = typename ImageGridSamplerType::ImageSampleContainerType;
+  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
 
   /** Other protected typedefs */
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
-  typedef ProgressCommand                                        ProgressCommandType;
-  typedef typename ProgressCommand::Pointer                      ProgressCommandPointer;
+  using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
+  using RandomGeneratorPointer = typename RandomGeneratorType::Pointer;
+  using ProgressCommandType = ProgressCommand;
+  using ProgressCommandPointer = typename ProgressCommand::Pointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
-  typedef JacobianType TransformJacobianType;
+  using TransformJacobianType = JacobianType;
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
-  typedef typename TransformType::ScalarType CoordinateRepresentationType;
+  using CoordinateRepresentationType = typename TransformType::ScalarType;
 
-  typedef itk::AdvancedTransform<CoordinateRepresentationType, Self::FixedImageDimension, Self::MovingImageDimension>
-                                                                     AdvancedTransformType;
-  typedef typename AdvancedTransformType::Pointer                    AdvancedTransformPointer;
-  typedef typename AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  using AdvancedTransformType =
+    itk::AdvancedTransform<CoordinateRepresentationType, Self::FixedImageDimension, Self::MovingImageDimension>;
+  using AdvancedTransformPointer = typename AdvancedTransformType::Pointer;
+  using NonZeroJacobianIndicesType = typename AdvancedTransformType::NonZeroJacobianIndicesType;
 
-  typedef itk::AdvancedBSplineDeformableTransformBase<CoordinateRepresentationType, Self::FixedImageDimension>
-                                                                   AdvancedBSplineDeformableTransformType;
-  typedef typename AdvancedBSplineDeformableTransformType::Pointer BSplineTransformBasePointer;
+  using AdvancedBSplineDeformableTransformType =
+    itk::AdvancedBSplineDeformableTransformBase<CoordinateRepresentationType, Self::FixedImageDimension>;
+  using BSplineTransformBasePointer = typename AdvancedBSplineDeformableTransformType::Pointer;
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;

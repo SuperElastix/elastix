@@ -182,8 +182,8 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative
     const FixedMeshPointer           mappedMesh = this->m_MappedMeshContainer->ElementAt(meshId);
     const MeshPointsContainerPointer mappedPoints = mappedMesh->GetPoints();
 
-    typename FixedMeshType::PointType &              pointCentroid = pointCentroids->ElementAt(meshId);
-    typedef typename FixedMeshType::PointsContainer  FixedMeshPointsContainerType;
+    typename FixedMeshType::PointType & pointCentroid = pointCentroids->ElementAt(meshId);
+    using FixedMeshPointsContainerType = typename FixedMeshType::PointsContainer;
     typename FixedMeshType::PointsContainer::Pointer derivPoints = FixedMeshPointsContainerType::New();
 
     derivPoints->resize(numberOfPoints);

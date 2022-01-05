@@ -90,10 +90,10 @@ class ITK_TEMPLATE_EXPORT SimilarityTransform : public SimilarityGroupTemplate<T
 {
 public:
   /** Standard ITK-stuff. */
-  typedef SimilarityTransform                             Self;
-  typedef SimilarityGroupTemplate<TScalarType, Dimension> Superclass;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  using Self = SimilarityTransform;
+  using Superclass = SimilarityGroupTemplate<TScalarType, Dimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

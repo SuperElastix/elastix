@@ -29,7 +29,7 @@ main(int argc, char * argv[])
 {
   /** Some basic type definitions. */
   constexpr unsigned int Dimension = 3;
-  typedef float          PixelType;
+  using PixelType = float;
 
   /** Check. */
   if (argc != 4)

@@ -71,10 +71,10 @@ namespace itk
 class MoreThuenteLineSearchOptimizer : public LineSearchOptimizer
 {
 public:
-  typedef MoreThuenteLineSearchOptimizer Self;
-  typedef LineSearchOptimizer            Superclass;
-  typedef SmartPointer<Self>             Pointer;
-  typedef SmartPointer<const Self>       ConstPointer;
+  using Self = MoreThuenteLineSearchOptimizer;
+  using Superclass = LineSearchOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
   itkTypeMacro(MoreThuenteLineSearchOptimizer, LineSearchOptimizer);

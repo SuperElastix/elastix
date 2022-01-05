@@ -267,7 +267,7 @@ unsigned int
 PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
 
-  typedef itk::MeshFileReader<MeshType> MeshReaderType;
+  using MeshReaderType = itk::MeshFileReader<MeshType>;
 
   /** Read the input mesh. */
   auto meshReader = MeshReaderType::New();
@@ -303,7 +303,7 @@ void
 PolydataDummyPenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
 {
   /** Typedef's for writing the output mesh. */
-  typedef itk::MeshFileWriter<MeshType> MeshWriterType;
+  using MeshWriterType = itk::MeshFileWriter<MeshType>;
   /** Create writer. */
   auto meshWriter = MeshWriterType::New();
 
@@ -385,21 +385,21 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   Floris: Mainly copied from elxTransformBase.hxx
   */
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType               FixedImageRegionType;
-  typedef typename FixedImageType::PointType                FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
-  typedef typename FixedImageType::IndexType                FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType      FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType               MovingImageIndexType;
-  typedef itk::ContinuousIndex<double, FixedImageDimension> FixedImageContinuousIndexType;
-  typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
+  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using FixedImageOriginType = typename FixedImageType::PointType;
+  using FixedImageSpacingType = typename FixedImageType::SpacingType;
+  using FixedImageIndexType = typename FixedImageType::IndexType;
+  using FixedImageIndexValueType = typename FixedImageIndexType::IndexValueType;
+  using MovingImageIndexType = typename MovingImageType::IndexType;
+  using FixedImageContinuousIndexType = itk::ContinuousIndex<double, FixedImageDimension>;
+  using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
-  typedef unsigned char DummyIPPPixelType;
-  typedef itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>
-                                                                                MeshTraitsType;
-  typedef itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType> PointSetType;
-  typedef itk::TransformixInputPointFileReader<PointSetType>                    IPPReaderType;
-  typedef itk::Vector<float, FixedImageDimension>                               DeformationVectorType;
+  using DummyIPPPixelType = unsigned char;
+  using MeshTraitsType =
+    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
+  using PointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
+  using DeformationVectorType = itk::Vector<float, FixedImageDimension>;
 
   /** Construct an ipp-file reader. */
   auto ippReader = IPPReaderType::New();
@@ -502,8 +502,8 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   /** Floris: make connected mesh (polygon) if data is 2d by assuming the sequence of points being connected**/
   if (FixedImageDimension == 2)
   {
-    typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
-    typedef itk::LineCell<typename MeshType::CellType>   LineType;
+    using CellAutoPointer = typename MeshType::CellType::CellAutoPointer;
+    using LineType = itk::LineCell<typename MeshType::CellType>;
 
     for (unsigned int i = 0; i < nrofpoints; ++i)
     {
@@ -529,9 +529,9 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
     std::cout << "point " << pointsBegin->Index() << ": " << pointsBegin->Value().GetVnlVector() << std::endl;
   }
 
-  typedef typename MeshType::CellsContainer::Iterator CellIterator;
-  CellIterator                                        cellIterator = mesh->GetCells()->Begin();
-  CellIterator                                        CellsEnd = mesh->GetCells()->End();
+  using CellIterator = typename MeshType::CellsContainer::Iterator;
+  CellIterator cellIterator = mesh->GetCells()->Begin();
+  CellIterator CellsEnd = mesh->GetCells()->End();
 
   typename CellInterfaceType::PointIdIterator beginpointer;
   typename CellInterfaceType::PointIdIterator endpointer;

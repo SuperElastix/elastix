@@ -89,10 +89,10 @@ class ITK_TEMPLATE_EXPORT EulerTransform : public EulerGroupTemplate<TScalarType
 {
 public:
   /** Standard ITK-stuff. */
-  typedef EulerTransform                             Self;
-  typedef EulerGroupTemplate<TScalarType, Dimension> Superclass;
-  typedef SmartPointer<Self>                         Pointer;
-  typedef SmartPointer<const Self>                   ConstPointer;
+  using Self = EulerTransform;
+  using Superclass = EulerGroupTemplate<TScalarType, Dimension>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -163,10 +163,10 @@ class ITK_TEMPLATE_EXPORT EulerTransform<TScalarType, 3> : public EulerGroupTemp
 {
 public:
   /** Standard ITK-stuff. */
-  typedef EulerTransform                     Self;
-  typedef EulerGroupTemplate<TScalarType, 3> Superclass;
-  typedef SmartPointer<Self>                 Pointer;
-  typedef SmartPointer<const Self>           ConstPointer;
+  using Self = EulerTransform;
+  using Superclass = EulerGroupTemplate<TScalarType, 3>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -187,8 +187,8 @@ public:
   {
     static_assert(SpaceDimension == 3, "This specialization is for 3D only!");
 
-    typedef AdvancedEuler3DTransform<TScalarType> Euler3DTransformType;
-    typename Euler3DTransformType::Pointer        transform = dynamic_cast<Euler3DTransformType *>(this);
+    using Euler3DTransformType = AdvancedEuler3DTransform<TScalarType>;
+    typename Euler3DTransformType::Pointer transform = dynamic_cast<Euler3DTransformType *>(this);
     if (transform)
     {
       transform->Euler3DTransformType::SetComputeZYX(arg);
@@ -205,8 +205,8 @@ public:
   {
     static_assert(SpaceDimension == 3, "This specialization is for 3D only!");
 
-    typedef AdvancedEuler3DTransform<TScalarType> Euler3DTransformType;
-    typename Euler3DTransformType::ConstPointer   transform = dynamic_cast<const Euler3DTransformType *>(this);
+    using Euler3DTransformType = AdvancedEuler3DTransform<TScalarType>;
+    typename Euler3DTransformType::ConstPointer transform = dynamic_cast<const Euler3DTransformType *>(this);
 
     if (transform)
     {

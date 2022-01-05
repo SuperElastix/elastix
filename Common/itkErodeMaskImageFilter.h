@@ -58,10 +58,10 @@ class ITK_TEMPLATE_EXPORT ErodeMaskImageFilter : public ImageToImageFilter<TImag
 {
 public:
   /** Standard ITK stuff. */
-  typedef ErodeMaskImageFilter               Self;
-  typedef ImageToImageFilter<TImage, TImage> Superclass;
-  typedef SmartPointer<Self>                 Pointer;
-  typedef SmartPointer<const Self>           ConstPointer;
+  using Self = ErodeMaskImageFilter;
+  using Superclass = ImageToImageFilter<TImage, TImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ErodeMaskImageFilter, ImageToImageFilter);
@@ -70,12 +70,12 @@ public:
   itkNewMacro(Self);
 
   /** Typedefs. */
-  typedef TImage                              InputImageType;
-  typedef TImage                              OutputImageType;
-  typedef typename InputImageType::Pointer    InputImagePointer;
-  typedef typename OutputImageType::Pointer   OutputImagePointer;
-  typedef typename InputImageType::PixelType  InputPixelType;
-  typedef typename OutputImageType::PixelType OutputPixelType;
+  using InputImageType = TImage;
+  using OutputImageType = TImage;
+  using InputImagePointer = typename InputImageType::Pointer;
+  using OutputImagePointer = typename OutputImageType::Pointer;
+  using InputPixelType = typename InputImageType::PixelType;
+  using OutputPixelType = typename OutputImageType::PixelType;
 
   /** Dimensionality of the two images is assumed to be the same. */
   itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);
@@ -83,8 +83,8 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
 
   /** Define the schedule type. */
-  typedef MultiResolutionPyramidImageFilter<InputImageType, OutputImageType> ImagePyramidFilterType;
-  typedef typename ImagePyramidFilterType::ScheduleType                      ScheduleType;
+  using ImagePyramidFilterType = MultiResolutionPyramidImageFilter<InputImageType, OutputImageType>;
+  using ScheduleType = typename ImagePyramidFilterType::ScheduleType;
 
   /** Set/Get the pyramid schedule used to downsample the image whose
    * mask is the input of the ErodeMaskImageFilter

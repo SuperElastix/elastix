@@ -35,10 +35,10 @@ class ITK_TEMPLATE_EXPORT DisplacementMagnitudePenaltyTerm : public TransformPen
 {
 public:
   /** Standard ITK stuff. */
-  typedef DisplacementMagnitudePenaltyTerm               Self;
-  typedef TransformPenaltyTerm<TFixedImage, TScalarType> Superclass;
-  typedef SmartPointer<Self>                             Pointer;
-  typedef SmartPointer<const Self>                       ConstPointer;
+  using Self = DisplacementMagnitudePenaltyTerm;
+  using Superclass = TransformPenaltyTerm<TFixedImage, TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

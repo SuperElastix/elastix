@@ -32,10 +32,10 @@ class ITK_EXPORT MevisDicomTiffImageIOFactory : public ObjectFactoryBase
 {
 public:
   /** Standard class typedefs. */
-  typedef MevisDicomTiffImageIOFactory Self;
-  typedef ObjectFactoryBase            Superclass;
-  typedef SmartPointer<Self>           Pointer;
-  typedef SmartPointer<const Self>     ConstPointer;
+  using Self = MevisDicomTiffImageIOFactory;
+  using Superclass = ObjectFactoryBase;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Class methods used to interface with the registered factories. */
   virtual const char *

@@ -43,11 +43,11 @@ class ITK_TEMPLATE_EXPORT GPUInterpolateImageFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUInterpolateImageFunction     Self;
-  typedef TParentInterpolateImageFunction CPUSuperclass;
-  typedef GPUInterpolatorBase             GPUSuperclass;
-  typedef SmartPointer<Self>              Pointer;
-  typedef SmartPointer<const Self>        ConstPointer;
+  using Self = GPUInterpolateImageFunction;
+  using CPUSuperclass = TParentInterpolateImageFunction;
+  using GPUSuperclass = GPUInterpolatorBase;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(GPUInterpolateImageFunction, TParentInterpolateImageFunction);
@@ -56,9 +56,9 @@ public:
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Superclass typedef support. */
-  typedef typename CPUSuperclass::InputImageType      InputImageType;
-  typedef typename CPUSuperclass::ContinuousIndexType ContinuousIndexType;
-  typedef typename CPUSuperclass::CoordRepType        CoordRepType;
+  using InputImageType = typename CPUSuperclass::InputImageType;
+  using ContinuousIndexType = typename CPUSuperclass::ContinuousIndexType;
+  using CoordRepType = typename CPUSuperclass::CoordRepType;
 
 protected:
   GPUInterpolateImageFunction();

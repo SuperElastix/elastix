@@ -65,10 +65,10 @@ class ITK_TEMPLATE_EXPORT AdvancedLinearInterpolateImageFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef AdvancedLinearInterpolateImageFunction                 Self;
-  typedef LinearInterpolateImageFunction<TInputImage, TCoordRep> Superclass;
-  typedef SmartPointer<Self>                                     Pointer;
-  typedef SmartPointer<const Self>                               ConstPointer;
+  using Self = AdvancedLinearInterpolateImageFunction;
+  using Superclass = LinearInterpolateImageFunction<TInputImage, TCoordRep>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(AdvancedLinearInterpolateImageFunction, LinearInterpolateImageFunction);
@@ -81,7 +81,7 @@ public:
 
   /** InputImageType typedef support. */
   using typename Superclass::InputImageType;
-  typedef typename InputImageType::SpacingType InputImageSpacingType;
+  using InputImageSpacingType = typename InputImageType::SpacingType;
 
   /** InputPixelType typedef support. */
   using typename Superclass::InputPixelType;
@@ -97,10 +97,10 @@ public:
 
   /** ContinuousIndex typedef support. */
   using typename Superclass::ContinuousIndexType;
-  typedef typename ContinuousIndexType::ValueType ContinuousIndexValueType;
+  using ContinuousIndexValueType = typename ContinuousIndexType::ValueType;
 
   /** Derivative typedef support */
-  typedef CovariantVector<OutputType, Self::ImageDimension> CovariantVectorType;
+  using CovariantVectorType = CovariantVector<OutputType, Self::ImageDimension>;
 
   /** Method to compute the derivative. */
   CovariantVectorType

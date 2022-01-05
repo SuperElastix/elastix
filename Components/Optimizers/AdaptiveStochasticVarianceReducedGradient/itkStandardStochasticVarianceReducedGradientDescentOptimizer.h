@@ -57,11 +57,11 @@ class StandardStochasticVarianceReducedGradientOptimizer : public StochasticVari
 {
 public:
   /** Standard ITK.*/
-  typedef StandardStochasticVarianceReducedGradientOptimizer Self;
-  typedef StochasticVarianceReducedGradientDescentOptimizer  Superclass;
+  using Self = StandardStochasticVarianceReducedGradientOptimizer;
+  using Superclass = StochasticVarianceReducedGradientDescentOptimizer;
 
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

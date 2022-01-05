@@ -113,9 +113,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::EvaluateT
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator              DerivativeIteratorType;
-  JacobianIteratorType                                   jac = jacobian.begin();
+  using JacobianIteratorType = typename TransformJacobianType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
+  JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
   for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
@@ -164,7 +164,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
-  typedef vnl_matrix<RealType> MatrixType;
+  using MatrixType = vnl_matrix<RealType>;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
@@ -316,7 +316,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
   /** Define derivative and Jacobian types. */
-  typedef typename DerivativeType::ValueType DerivativeValueType;
+  using DerivativeValueType = typename DerivativeType::ValueType;
   // typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
@@ -342,8 +342,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
-  typedef vnl_matrix<RealType>            MatrixType;
-  typedef vnl_matrix<DerivativeValueType> DerivativeMatrixType;
+  using MatrixType = vnl_matrix<RealType>;
+  using DerivativeMatrixType = vnl_matrix<DerivativeValueType>;
 
   std::vector<FixedImagePointType> SamplesOK;
 

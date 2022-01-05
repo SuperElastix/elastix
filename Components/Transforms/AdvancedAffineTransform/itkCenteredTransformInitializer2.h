@@ -93,10 +93,10 @@ class ITK_TEMPLATE_EXPORT CenteredTransformInitializer2 : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef CenteredTransformInitializer2 Self;
-  typedef Object                        Superclass;
-  typedef SmartPointer<Self>            Pointer;
-  typedef SmartPointer<const Self>      ConstPointer;
+  using Self = CenteredTransformInitializer2;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro(Self);
@@ -105,42 +105,42 @@ public:
   itkTypeMacro(CenteredTransformInitializer2, Object);
 
   /** Type of the transform to initialize */
-  typedef TTransform                      TransformType;
-  typedef typename TransformType::Pointer TransformPointer;
+  using TransformType = TTransform;
+  using TransformPointer = typename TransformType::Pointer;
 
   /** Dimension of parameters. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension);
   itkStaticConstMacro(OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
-  typedef TFixedImage  FixedImageType;
-  typedef TMovingImage MovingImageType;
+  using FixedImageType = TFixedImage;
+  using MovingImageType = TMovingImage;
 
-  typedef typename FixedImageType::ConstPointer  FixedImagePointer;
-  typedef typename MovingImageType::ConstPointer MovingImagePointer;
+  using FixedImagePointer = typename FixedImageType::ConstPointer;
+  using MovingImagePointer = typename MovingImageType::ConstPointer;
 
-  typedef Image<unsigned char, InputSpaceDimension>  FixedImageMaskType;
-  typedef Image<unsigned char, OutputSpaceDimension> MovingImageMaskType;
-  typedef typename FixedImageMaskType::ConstPointer  FixedImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer MovingImageMaskPointer;
+  using FixedImageMaskType = Image<unsigned char, InputSpaceDimension>;
+  using MovingImageMaskType = Image<unsigned char, OutputSpaceDimension>;
+  using FixedImageMaskPointer = typename FixedImageMaskType::ConstPointer;
+  using MovingImageMaskPointer = typename MovingImageMaskType::ConstPointer;
 
   /** Moment calculators */
-  typedef AdvancedImageMomentsCalculator<FixedImageType>  FixedImageCalculatorType;
-  typedef AdvancedImageMomentsCalculator<MovingImageType> MovingImageCalculatorType;
+  using FixedImageCalculatorType = AdvancedImageMomentsCalculator<FixedImageType>;
+  using MovingImageCalculatorType = AdvancedImageMomentsCalculator<MovingImageType>;
 
-  typedef typename FixedImageCalculatorType::Pointer  FixedImageCalculatorPointer;
-  typedef typename MovingImageCalculatorType::Pointer MovingImageCalculatorPointer;
+  using FixedImageCalculatorPointer = typename FixedImageCalculatorType::Pointer;
+  using MovingImageCalculatorPointer = typename MovingImageCalculatorType::Pointer;
 
   /** Offset type. */
-  typedef typename TransformType::OffsetType OffsetType;
+  using OffsetType = typename TransformType::OffsetType;
 
   /** Point type. */
-  typedef typename TransformType::InputPointType InputPointType;
+  using InputPointType = typename TransformType::InputPointType;
 
   /** Vector type. */
-  typedef typename TransformType::OutputVectorType OutputVectorType;
+  using OutputVectorType = typename TransformType::OutputVectorType;
 
-  typedef typename FixedImageType::PixelType InputPixelType;
+  using InputPixelType = typename FixedImageType::PixelType;
 
   /** Set the transform to be initialized */
   itkSetObjectMacro(Transform, TransformType);

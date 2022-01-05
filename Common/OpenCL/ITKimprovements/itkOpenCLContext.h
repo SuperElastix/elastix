@@ -77,10 +77,10 @@ class ITKOpenCL_EXPORT OpenCLContext : public LightObject
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLContext            Self;
-  typedef LightObject              Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = OpenCLContext;
+  using Superclass = LightObject;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(OpenCLContext, LightObject);

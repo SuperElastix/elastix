@@ -34,11 +34,11 @@ GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::G
 {
   GPUSuperclass::SetSplineOrder(CPUSuperclass::SplineOrder);
 
-  typedef typename CPUSuperclass::ImageType       CPUCoefficientImage;
-  typedef typename CPUCoefficientImage::PixelType CPUCoefficientsImagePixelType;
+  using CPUCoefficientImage = typename CPUSuperclass::ImageType;
+  using CPUCoefficientsImagePixelType = typename CPUCoefficientImage::PixelType;
 
-  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
-  typedef typename GPUCoefficientsImageType::Pointer                                   GPUCoefficientsImagePointer;
+  using GPUCoefficientsImageType = GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension>;
+  using GPUCoefficientsImagePointer = typename GPUCoefficientsImageType::Pointer;
 
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
@@ -90,12 +90,12 @@ template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOr
 void
 GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder, TParentTransform>::CopyCoefficientImagesToGPU()
 {
-  typedef typename CPUSuperclass::ImageType             CPUCoefficientImage;
-  typedef typename CPUCoefficientImage::PixelType       CPUCoefficientsImagePixelType;
-  typedef typename GPUSuperclass::GPUDataManagerPointer GPUDataManagerPointer;
+  using CPUCoefficientImage = typename CPUSuperclass::ImageType;
+  using CPUCoefficientsImagePixelType = typename CPUCoefficientImage::PixelType;
+  using GPUDataManagerPointer = typename GPUSuperclass::GPUDataManagerPointer;
 
-  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
-  typedef typename GPUCoefficientsImageType::Pointer                                   GPUCoefficientsImagePointer;
+  using GPUCoefficientsImageType = GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension>;
+  using GPUCoefficientsImagePointer = typename GPUCoefficientsImageType::Pointer;
 
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {

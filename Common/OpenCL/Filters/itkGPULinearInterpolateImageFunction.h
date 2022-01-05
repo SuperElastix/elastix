@@ -46,11 +46,11 @@ class ITK_EXPORT GPULinearInterpolateImageFunction
 {
 public:
   /** Standard class typedefs. */
-  typedef GPULinearInterpolateImageFunction                                  Self;
-  typedef LinearInterpolateImageFunction<TInputImage, TCoordRep>             CPUSuperclass;
-  typedef GPUInterpolateImageFunction<TInputImage, TCoordRep, CPUSuperclass> GPUSuperclass;
-  typedef SmartPointer<Self>                                                 Pointer;
-  typedef SmartPointer<const Self>                                           ConstPointer;
+  using Self = GPULinearInterpolateImageFunction;
+  using CPUSuperclass = LinearInterpolateImageFunction<TInputImage, TCoordRep>;
+  using GPUSuperclass = GPUInterpolateImageFunction<TInputImage, TCoordRep, CPUSuperclass>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

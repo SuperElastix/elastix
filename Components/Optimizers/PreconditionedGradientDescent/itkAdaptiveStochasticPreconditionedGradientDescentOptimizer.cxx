@@ -37,7 +37,7 @@ AdaptiveStochasticPreconditionedGradientDescentOptimizer::AdaptiveStochasticPrec
 void
 AdaptiveStochasticPreconditionedGradientDescentOptimizer::UpdateCurrentTime()
 {
-  typedef itk::Functor::Sigmoid<double, double> SigmoidType;
+  using SigmoidType = itk::Functor::Sigmoid<double, double>;
 
   if (this->m_UseAdaptiveStepSizes)
   {

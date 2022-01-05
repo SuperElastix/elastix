@@ -66,11 +66,11 @@ class StandardGradientDescentOptimizer : public GradientDescentOptimizer2
 {
 public:
   /** Standard ITK.*/
-  typedef StandardGradientDescentOptimizer Self;
-  typedef GradientDescentOptimizer2        Superclass;
+  using Self = StandardGradientDescentOptimizer;
+  using Superclass = GradientDescentOptimizer2;
 
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

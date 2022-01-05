@@ -58,10 +58,10 @@ class ITK_TEMPLATE_EXPORT StatisticalShapePointPenalty
 {
 public:
   /** Standard class typedefs. */
-  typedef StatisticalShapePointPenalty                                          Self;
-  typedef SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet> Superclass;
-  typedef SmartPointer<Self>                                                    Pointer;
-  typedef SmartPointer<const Self>                                              ConstPointer;
+  using Self = StatisticalShapePointPenalty;
+  using Superclass = SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -90,13 +90,13 @@ public:
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
 
-  typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector<CoordRepType>               VnlVectorType;
-  typedef vnl_matrix<CoordRepType>               VnlMatrixType;
+  using CoordRepType = typename OutputPointType::CoordRepType;
+  using VnlVectorType = vnl_vector<CoordRepType>;
+  using VnlMatrixType = vnl_matrix<CoordRepType>;
   // typedef itk::Array<VnlVectorType *> ProposalDerivativeType;
-  typedef typename std::vector<VnlVectorType *> ProposalDerivativeType;
+  using ProposalDerivativeType = typename std::vector<VnlVectorType *>;
   // typedef typename vnl_vector<VnlVectorType *> ProposalDerivativeType; //Cannot be linked
-  typedef vnl_svd_economy<CoordRepType> PCACovarianceType;
+  using PCACovarianceType = vnl_svd_economy<CoordRepType>;
 
   /** Initialization. */
   void

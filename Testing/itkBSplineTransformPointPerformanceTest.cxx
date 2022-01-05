@@ -35,10 +35,10 @@ class BSplineTransform_TEST : public AdvancedBSplineDeformableTransform<TScalarT
 {
 public:
   /** Standard class typedefs. */
-  typedef BSplineTransform_TEST                                                      Self;
-  typedef AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder> Superclass;
-  typedef SmartPointer<Self>                                                         Pointer;
-  typedef SmartPointer<const Self>                                                   ConstPointer;
+  using Self = BSplineTransform_TEST;
+  using Superclass = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Some stuff that is needed to get this class functional. */
   itkNewMacro(Self);
@@ -120,10 +120,10 @@ public:
     outputPoint.Fill(NumericTraits<ScalarType>::ZeroValue());
 
     /** Create iterators over the coefficient images. */
-    typedef ImageRegionConstIterator<ImageType> IteratorType;
-    IteratorType                                iterator[SpaceDimension];
-    unsigned long                               counter = 0;
-    const PixelType *                           basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
+    using IteratorType = ImageRegionConstIterator<ImageType>;
+    IteratorType      iterator[SpaceDimension];
+    unsigned long     counter = 0;
+    const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
     for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
@@ -169,7 +169,7 @@ main(int argc, char * argv[])
    */
   const unsigned int Dimension = 3;
   const unsigned int SplineOrder = 3;
-  typedef double     CoordinateRepresentationType;
+  using CoordinateRepresentationType = double;
 
   /** The number of calls to Evaluate(). Distinguish between
    * Debug and Release mode.
@@ -189,19 +189,19 @@ main(int argc, char * argv[])
   }
 
   /** Typedefs. */
-  typedef itk::BSplineTransform_TEST<CoordinateRepresentationType, Dimension, SplineOrder> TransformType;
+  using TransformType = itk::BSplineTransform_TEST<CoordinateRepresentationType, Dimension, SplineOrder>;
 
-  typedef TransformType::InputPointType  InputPointType;
-  typedef TransformType::OutputPointType OutputPointType;
-  typedef TransformType::ParametersType  ParametersType;
+  using InputPointType = TransformType::InputPointType;
+  using OutputPointType = TransformType::OutputPointType;
+  using ParametersType = TransformType::ParametersType;
 
-  typedef itk::Image<CoordinateRepresentationType, Dimension> InputImageType;
-  typedef InputImageType::RegionType                          RegionType;
-  typedef InputImageType::SizeType                            SizeType;
-  typedef InputImageType::IndexType                           IndexType;
-  typedef InputImageType::SpacingType                         SpacingType;
-  typedef InputImageType::PointType                           OriginType;
-  typedef InputImageType::DirectionType                       DirectionType;
+  using InputImageType = itk::Image<CoordinateRepresentationType, Dimension>;
+  using RegionType = InputImageType::RegionType;
+  using SizeType = InputImageType::SizeType;
+  using IndexType = InputImageType::IndexType;
+  using SpacingType = InputImageType::SpacingType;
+  using OriginType = InputImageType::PointType;
+  using DirectionType = InputImageType::DirectionType;
 
   /** Create the transform. */
   auto transform = TransformType::New();

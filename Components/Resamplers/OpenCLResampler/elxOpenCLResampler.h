@@ -55,15 +55,14 @@ class OpenCLResampler
 {
 public:
   /** Standard ITK-stuff. */
-  typedef OpenCLResampler Self;
+  using Self = OpenCLResampler;
 
-  typedef itk::ResampleImageFilter<typename ResamplerBase<TElastix>::InputImageType,
-                                   typename ResamplerBase<TElastix>::OutputImageType,
-                                   typename ResamplerBase<TElastix>::CoordRepType>
-                                        Superclass1;
-  typedef ResamplerBase<TElastix>       Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Superclass1 = itk::ResampleImageFilter<typename ResamplerBase<TElastix>::InputImageType,
+                                               typename ResamplerBase<TElastix>::OutputImageType,
+                                               typename ResamplerBase<TElastix>::CoordRepType>;
+  using Superclass2 = ResamplerBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -82,21 +81,21 @@ public:
   using typename Superclass1::TransformType;
 
   using typename Superclass1::InputImageType;
-  typedef typename InputImageType::PixelType InputImagePixelType;
+  using InputImagePixelType = typename InputImageType::PixelType;
 
   using typename Superclass1::OutputImageType;
-  typedef typename OutputImageType::PixelType  OutputImagePixelType;
-  typedef typename OutputImageType::RegionType OutputImageRegionType;
+  using OutputImagePixelType = typename OutputImageType::PixelType;
+  using OutputImageRegionType = typename OutputImageType::RegionType;
 
   /** GPU Typedefs for GPU image and GPU resampler. */
-  typedef itk::GPUImage<InputImagePixelType, InputImageType::ImageDimension>   GPUInputImageType;
-  typedef typename GPUInputImageType::Pointer                                  GPUInputImagePointer;
-  typedef itk::GPUImage<OutputImagePixelType, OutputImageType::ImageDimension> GPUOutputImageType;
-  typedef float                                                                GPUInterpolatorPrecisionType;
+  using GPUInputImageType = itk::GPUImage<InputImagePixelType, InputImageType::ImageDimension>;
+  using GPUInputImagePointer = typename GPUInputImageType::Pointer;
+  using GPUOutputImageType = itk::GPUImage<OutputImagePixelType, OutputImageType::ImageDimension>;
+  using GPUInterpolatorPrecisionType = float;
 
-  typedef itk::GPUResampleImageFilter<GPUInputImageType, GPUOutputImageType, GPUInterpolatorPrecisionType>
-                                             GPUResamplerType;
-  typedef typename GPUResamplerType::Pointer GPUResamplerPointer;
+  using GPUResamplerType =
+    itk::GPUResampleImageFilter<GPUInputImageType, GPUOutputImageType, GPUInterpolatorPrecisionType>;
+  using GPUResamplerPointer = typename GPUResamplerType::Pointer;
 
   using typename Superclass2::ParameterMapType;
 
@@ -131,27 +130,25 @@ protected:
   GenerateData() override;
 
   /** Transform copier */
-  typedef typename ResamplerBase<TElastix>::CoordRepType InterpolatorPrecisionType;
-  typedef typename itk::AdvancedCombinationTransform<InterpolatorPrecisionType, OutputImageType::ImageDimension>
-    AdvancedCombinationTransformType;
-  typedef typename itk::GPUAdvancedCombinationTransformCopier<OpenCLImageTypes,
-                                                              OpenCLImageDimentions,
-                                                              AdvancedCombinationTransformType,
-                                                              float>
-                                                                 TransformCopierType;
-  typedef typename TransformCopierType::Pointer                  TransformCopierPointer;
-  typedef typename TransformCopierType::GPUComboTransformPointer GPUTransformPointer;
+  using InterpolatorPrecisionType = typename ResamplerBase<TElastix>::CoordRepType;
+  using AdvancedCombinationTransformType =
+    typename itk::AdvancedCombinationTransform<InterpolatorPrecisionType, OutputImageType::ImageDimension>;
+  using TransformCopierType = typename itk::GPUAdvancedCombinationTransformCopier<OpenCLImageTypes,
+                                                                                  OpenCLImageDimentions,
+                                                                                  AdvancedCombinationTransformType,
+                                                                                  float>;
+  using TransformCopierPointer = typename TransformCopierType::Pointer;
+  using GPUTransformPointer = typename TransformCopierType::GPUComboTransformPointer;
 
   /** Interpolator copier */
-  typedef typename InterpolatorType::InputImageType InterpolatorInputImageType;
-  typedef typename InterpolatorType::CoordRepType   InterpolatorCoordRepType;
-  typedef itk::InterpolateImageFunction<InterpolatorInputImageType, InterpolatorCoordRepType>
-    InterpolateImageFunctionType;
-  typedef
-    typename itk::GPUInterpolatorCopier<OpenCLImageTypes, OpenCLImageDimentions, InterpolateImageFunctionType, float>
-                                                                         InterpolateCopierType;
-  typedef typename InterpolateCopierType::Pointer                        InterpolateCopierPointer;
-  typedef typename InterpolateCopierType::GPUExplicitInterpolatorPointer GPUExplicitInterpolatorPointer;
+  using InterpolatorInputImageType = typename InterpolatorType::InputImageType;
+  using InterpolatorCoordRepType = typename InterpolatorType::CoordRepType;
+  using InterpolateImageFunctionType =
+    itk::InterpolateImageFunction<InterpolatorInputImageType, InterpolatorCoordRepType>;
+  using InterpolateCopierType =
+    typename itk::GPUInterpolatorCopier<OpenCLImageTypes, OpenCLImageDimentions, InterpolateImageFunctionType, float>;
+  using InterpolateCopierPointer = typename InterpolateCopierType::Pointer;
+  using GPUExplicitInterpolatorPointer = typename InterpolateCopierType::GPUExplicitInterpolatorPointer;
 
 private:
   elxOverrideGetSelfMacro;

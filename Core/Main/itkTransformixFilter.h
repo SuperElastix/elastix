@@ -55,10 +55,10 @@ class ITK_TEMPLATE_EXPORT TransformixFilter : public ImageSource<TMovingImage>
 {
 public:
   /** Standard ITK typedefs. */
-  typedef TransformixFilter         Self;
-  typedef ImageSource<TMovingImage> Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  using Self = TransformixFilter;
+  using Superclass = ImageSource<TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -67,26 +67,26 @@ public:
   itkTypeMacro(TransformixFilter, ImageSource);
 
   /** Typedefs. */
-  typedef elastix::TransformixMain             TransformixMainType;
-  typedef TransformixMainType::Pointer         TransformixMainPointer;
-  typedef TransformixMainType::ArgumentMapType ArgumentMapType;
-  typedef ArgumentMapType::value_type          ArgumentMapEntryType;
+  using TransformixMainType = elastix::TransformixMain;
+  using TransformixMainPointer = TransformixMainType::Pointer;
+  using ArgumentMapType = TransformixMainType::ArgumentMapType;
+  using ArgumentMapEntryType = ArgumentMapType::value_type;
 
-  typedef ProcessObject::DataObjectPointer                DataObjectPointer;
-  typedef ProcessObject::DataObjectIdentifierType         DataObjectIdentifierType;
-  typedef TransformixMainType::DataObjectContainerType    DataObjectContainerType;
-  typedef TransformixMainType::DataObjectContainerPointer DataObjectContainerPointer;
+  using DataObjectPointer = ProcessObject::DataObjectPointer;
+  using DataObjectIdentifierType = ProcessObject::DataObjectIdentifierType;
+  using DataObjectContainerType = TransformixMainType::DataObjectContainerType;
+  using DataObjectContainerPointer = TransformixMainType::DataObjectContainerPointer;
 
-  typedef elastix::ParameterObject                      ParameterObjectType;
-  typedef ParameterObjectType::ParameterMapVectorType   ParameterMapVectorType;
-  typedef ParameterObjectType::ParameterMapType         ParameterMapType;
-  typedef ParameterObjectType::ParameterValueVectorType ParameterValueVectorType;
-  typedef typename ParameterObjectType::Pointer         ParameterObjectPointer;
-  typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
+  using ParameterObjectType = elastix::ParameterObject;
+  using ParameterMapVectorType = ParameterObjectType::ParameterMapVectorType;
+  using ParameterMapType = ParameterObjectType::ParameterMapType;
+  using ParameterValueVectorType = ParameterObjectType::ParameterValueVectorType;
+  using ParameterObjectPointer = typename ParameterObjectType::Pointer;
+  using ParameterObjectConstPointer = typename ParameterObjectType::ConstPointer;
 
   using typename Superclass::OutputImageType;
-  typedef typename itk::Image<itk::Vector<float, TMovingImage::ImageDimension>, TMovingImage::ImageDimension>
-    OutputDeformationFieldType;
+  using OutputDeformationFieldType =
+    typename itk::Image<itk::Vector<float, TMovingImage::ImageDimension>, TMovingImage::ImageDimension>;
 
   using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
 

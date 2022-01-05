@@ -68,8 +68,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   if (this->GetUseNormalization())
   {
     /** Try to guess a normalization factor. */
-    typedef typename itk::ComputeImageExtremaFilter<FixedImageType> ComputeFixedImageExtremaFilterType;
-    typename ComputeFixedImageExtremaFilterType::Pointer            computeFixedImageExtrema =
+    using ComputeFixedImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<FixedImageType>;
+    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema =
       ComputeFixedImageExtremaFilterType::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
     computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
@@ -100,8 +100,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
       this->m_FixedImageTrueMax +
       this->m_FixedLimitRangeRatio * (this->m_FixedImageTrueMax - this->m_FixedImageTrueMin));
 
-    typedef typename itk::ComputeImageExtremaFilter<MovingImageType> ComputeMovingImageExtremaFilterType;
-    typename ComputeMovingImageExtremaFilterType::Pointer            computeMovingImageExtrema =
+    using ComputeMovingImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<MovingImageType>;
+    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema =
       ComputeMovingImageExtremaFilterType::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
     computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
@@ -855,7 +855,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian
   HessianType &                   H) const
 {
   itkDebugMacro("GetSelfHessian()");
-  typedef Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  using RandomGeneratorType = Statistics::MersenneTwisterRandomVariateGenerator;
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
@@ -1004,9 +1004,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::UpdateSelfHess
   const NonZeroJacobianIndicesType & nzji,
   HessianType &                      H) const
 {
-  typedef typename HessianType::row    RowType;
-  typedef typename RowType::iterator   RowIteratorType;
-  typedef typename HessianType::pair_t ElementType;
+  using RowType = typename HessianType::row;
+  using RowIteratorType = typename RowType::iterator;
+  using ElementType = typename HessianType::pair_t;
 
   // does not work for sparse matrix. \todo: distinguish between sparse and nonsparse
   ///** Do rank-1 update of H */

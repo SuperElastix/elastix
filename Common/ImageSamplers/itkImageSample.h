@@ -39,10 +39,10 @@ public:
   ~ImageSample() = default;
 
   /** Typedef's. */
-  typedef TImage                                      ImageType;
-  typedef typename ImageType::PointType               PointType;
-  typedef typename ImageType::PixelType               PixelType;
-  typedef typename NumericTraits<PixelType>::RealType RealType;
+  using ImageType = TImage;
+  using PointType = typename ImageType::PointType;
+  using PixelType = typename ImageType::PixelType;
+  using RealType = typename NumericTraits<PixelType>::RealType;
 
   /** Member variables. */
   PointType m_ImageCoordinates;

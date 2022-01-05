@@ -26,8 +26,8 @@ template <typename TTypeList, typename NDimensions>
 void
 GPUImageFactory2<TTypeList, NDimensions>::RegisterOneFactory()
 {
-  typedef GPUImageFactory2<TTypeList, NDimensions> GPUImageFactoryType;
-  auto                                             factory = GPUImageFactoryType::New();
+  using GPUImageFactoryType = GPUImageFactory2<TTypeList, NDimensions>;
+  auto factory = GPUImageFactoryType::New();
   ObjectFactoryBase::RegisterFactory(factory);
 }
 
@@ -53,8 +53,8 @@ GPUImageFactory2<TTypeList, NDimensions>::Register1D()
   const bool hasFloat = typelist::HasType<TTypeList, float>::Type;
   if (!hasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
-    typelist::VisitDimension<FloatTypeList, 1>  visitor1;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
+    typelist::VisitDimension<FloatTypeList, 1> visitor1;
     visitor1(*this);
   }
 }
@@ -73,8 +73,8 @@ GPUImageFactory2<TTypeList, NDimensions>::Register2D()
   const bool hasFloat = typelist::HasType<TTypeList, float>::Type;
   if (!hasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
-    typelist::VisitDimension<FloatTypeList, 2>  visitor1;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
+    typelist::VisitDimension<FloatTypeList, 2> visitor1;
     visitor1(*this);
   }
 }
@@ -93,8 +93,8 @@ GPUImageFactory2<TTypeList, NDimensions>::Register3D()
   const bool hasFloat = typelist::HasType<TTypeList, float>::Type;
   if (!hasFloat)
   {
-    typedef typelist::MakeTypeList<float>::Type FloatTypeList;
-    typelist::VisitDimension<FloatTypeList, 3>  visitor1;
+    using FloatTypeList = typelist::MakeTypeList<float>::Type;
+    typelist::VisitDimension<FloatTypeList, 3> visitor1;
     visitor1(*this);
   }
 }

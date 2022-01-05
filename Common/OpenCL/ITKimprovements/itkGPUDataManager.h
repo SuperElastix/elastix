@@ -69,10 +69,10 @@ class ITKOpenCL_EXPORT GPUDataManager : public Object // DataObject//
 public:
   ITK_DISALLOW_COPY_AND_MOVE(GPUDataManager);
 
-  typedef GPUDataManager           Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = GPUDataManager;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

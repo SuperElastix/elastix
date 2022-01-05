@@ -42,13 +42,13 @@ class ITK_TEMPLATE_EXPORT RayCastResampleInterpolator
 {
 public:
   /** Standard ITK-stuff. */
-  typedef RayCastResampleInterpolator Self;
-  typedef itk::AdvancedRayCastInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
-                                                       typename ResampleInterpolatorBase<TElastix>::CoordRepType>
-                                             Superclass1;
-  typedef ResampleInterpolatorBase<TElastix> Superclass2;
-  typedef itk::SmartPointer<Self>            Pointer;
-  typedef itk::SmartPointer<const Self>      ConstPointer;
+  using Self = RayCastResampleInterpolator;
+  using Superclass1 =
+    itk::AdvancedRayCastInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
+                                                 typename ResampleInterpolatorBase<TElastix>::CoordRepType>;
+  using Superclass2 = ResampleInterpolatorBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -72,7 +72,7 @@ public:
   using typename Superclass1::ContinuousIndexType;
   using typename Superclass1::PointType;
   using typename Superclass1::SizeType;
-  typedef typename InputImageType::SpacingType SpacingType;
+  using SpacingType = typename InputImageType::SpacingType;
 
   /** Typedef's from ResampleInterpolatorBase. */
   using typename Superclass2::ElastixType;
@@ -81,21 +81,19 @@ public:
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType ITKBaseType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Typedef's for CombinationTransform */
-  typedef typename itk::EulerTransform<typename InterpolatorBase<TElastix>::CoordRepType, ImageDimension>
-                                                      EulerTransformType;
-  typedef typename EulerTransformType::ParametersType TransformParametersType;
-  typedef typename EulerTransformType::Pointer        EulerTransformPointer;
-  typedef typename itk::
-    AdvancedTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension, Self::ImageDimension>
-                                                  AdvancedTransformType;
-  typedef typename AdvancedTransformType::Pointer AdvancedTransformPointer;
-  typedef
-    typename itk::AdvancedCombinationTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension>
-                                                     CombinationTransformType;
-  typedef typename CombinationTransformType::Pointer CombinationTransformPointer;
+  using EulerTransformType =
+    typename itk::EulerTransform<typename InterpolatorBase<TElastix>::CoordRepType, ImageDimension>;
+  using TransformParametersType = typename EulerTransformType::ParametersType;
+  using EulerTransformPointer = typename EulerTransformType::Pointer;
+  using AdvancedTransformType = typename itk::
+    AdvancedTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension, Self::ImageDimension>;
+  using AdvancedTransformPointer = typename AdvancedTransformType::Pointer;
+  using CombinationTransformType =
+    typename itk::AdvancedCombinationTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension>;
+  using CombinationTransformPointer = typename CombinationTransformType::Pointer;
 
   using typename Superclass2::ParameterMapType;
 

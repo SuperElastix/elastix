@@ -193,8 +193,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
     /** Create iterators over the coefficient images
      * (for both supportRegion1 and supportRegion2.
      */
-    typedef ImageRegionConstIterator<ImageType> IteratorType;
-    IteratorType                                iterator[SpaceDimension];
+    using IteratorType = ImageRegionConstIterator<ImageType>;
+    IteratorType iterator[SpaceDimension];
 
     const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
@@ -266,8 +266,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
     this->m_CoefficientImages[0]->GetLargestPossibleRegion(), supportRegion, supportRegions[0], supportRegions[1]);
 
   /** For each dimension, copy the weight to the support region. */
-  unsigned long                                  counter = 0;
-  typedef ImageRegionIterator<JacobianImageType> IteratorType;
+  unsigned long counter = 0;
+  using IteratorType = ImageRegionIterator<JacobianImageType>;
   for (unsigned int r = 0; r < 2; ++r)
   {
     IteratorType iterator = IteratorType(this->m_CoefficientImages[0], supportRegions[r]);

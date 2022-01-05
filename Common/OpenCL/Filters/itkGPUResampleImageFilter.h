@@ -51,11 +51,11 @@ class ITK_EXPORT GPUResampleImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUResampleImageFilter                                                     Self;
-  typedef ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType> CPUSuperclass;
-  typedef GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass>            GPUSuperclass;
-  typedef SmartPointer<Self>                                                         Pointer;
-  typedef SmartPointer<const Self>                                                   ConstPointer;
+  using Self = GPUResampleImageFilter;
+  using CPUSuperclass = ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>;
+  using GPUSuperclass = GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -68,36 +68,36 @@ public:
   itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
 
   /** Some convenient typedefs. */
-  typedef TInputImage                            InputImageType;
-  typedef TOutputImage                           OutputImageType;
-  typedef typename GPUTraits<TInputImage>::Type  GPUInputImage;
-  typedef typename GPUTraits<TOutputImage>::Type GPUOutputImage;
-  typedef TInterpolatorPrecisionType             InterpolatorPrecisionType;
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
+  using GPUInputImage = typename GPUTraits<TInputImage>::Type;
+  using GPUOutputImage = typename GPUTraits<TOutputImage>::Type;
+  using InterpolatorPrecisionType = TInterpolatorPrecisionType;
 
   /** Superclass typedefs. */
-  typedef typename CPUSuperclass::InterpolatorType      InterpolatorType;
-  typedef typename CPUSuperclass::TransformType         TransformType;
-  typedef typename CPUSuperclass::ExtrapolatorType      ExtrapolatorType;
-  typedef typename CPUSuperclass::InputImageRegionType  InputImageRegionType;
-  typedef typename CPUSuperclass::OutputImageRegionType OutputImageRegionType;
-  typedef typename CPUSuperclass::SizeType              SizeType;
-  typedef typename CPUSuperclass::IndexType             IndexType;
+  using InterpolatorType = typename CPUSuperclass::InterpolatorType;
+  using TransformType = typename CPUSuperclass::TransformType;
+  using ExtrapolatorType = typename CPUSuperclass::ExtrapolatorType;
+  using InputImageRegionType = typename CPUSuperclass::InputImageRegionType;
+  using OutputImageRegionType = typename CPUSuperclass::OutputImageRegionType;
+  using SizeType = typename CPUSuperclass::SizeType;
+  using IndexType = typename CPUSuperclass::IndexType;
 
-  typedef typename GPUSuperclass::OutputImagePixelType OutputImagePixelType;
+  using OutputImagePixelType = typename GPUSuperclass::OutputImagePixelType;
 
   /** Other typedefs. */
-  typedef typename OpenCLKernelManager::Pointer                                     GPUKernelManagerPointer;
-  typedef typename GPUDataManager::Pointer                                          GPUDataManagerPointer;
-  typedef GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension> CompositeTransformBaseType;
+  using GPUKernelManagerPointer = typename OpenCLKernelManager::Pointer;
+  using GPUDataManagerPointer = typename GPUDataManager::Pointer;
+  using CompositeTransformBaseType = GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension>;
 
   /** Typedefs for the B-spline interpolator. */
-  typedef GPUBSplineInterpolateImageFunction<InputImageType, InterpolatorPrecisionType> GPUBSplineInterpolatorType;
-  typedef typename GPUBSplineInterpolatorType::GPUCoefficientImageType    GPUBSplineInterpolatorCoefficientImageType;
-  typedef typename GPUBSplineInterpolatorType::GPUCoefficientImagePointer GPUBSplineInterpolatorCoefficientImagePointer;
-  typedef typename GPUBSplineInterpolatorType::GPUDataManagerPointer      GPUBSplineInterpolatorDataManagerPointer;
+  using GPUBSplineInterpolatorType = GPUBSplineInterpolateImageFunction<InputImageType, InterpolatorPrecisionType>;
+  using GPUBSplineInterpolatorCoefficientImageType = typename GPUBSplineInterpolatorType::GPUCoefficientImageType;
+  using GPUBSplineInterpolatorCoefficientImagePointer = typename GPUBSplineInterpolatorType::GPUCoefficientImagePointer;
+  using GPUBSplineInterpolatorDataManagerPointer = typename GPUBSplineInterpolatorType::GPUDataManagerPointer;
 
   /** Typedefs for the B-spline transform. */
-  typedef GPUBSplineBaseTransform<InterpolatorPrecisionType, InputImageDimension> GPUBSplineBaseTransformType;
+  using GPUBSplineBaseTransformType = GPUBSplineBaseTransform<InterpolatorPrecisionType, InputImageDimension>;
 
   /** Set the interpolator. */
   void
@@ -191,8 +191,8 @@ private:
   GPUDataManagerPointer m_DeformationFieldBuffer;
   unsigned int          m_RequestedNumberOfSplits;
 
-  typedef std::pair<int, bool>                            TransformHandle;
-  typedef std::map<GPUTransformTypeEnum, TransformHandle> TransformsHandle;
+  using TransformHandle = std::pair<int, bool>;
+  using TransformsHandle = std::map<GPUTransformTypeEnum, TransformHandle>;
 
 #if 0
   class TransformKernelHelper

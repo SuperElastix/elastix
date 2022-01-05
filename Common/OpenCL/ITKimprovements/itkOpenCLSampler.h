@@ -72,7 +72,7 @@ class ITKOpenCL_EXPORT OpenCLSampler
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLSampler Self;
+  using Self = OpenCLSampler;
 
   /** Constructs a null OpenCL sampler object. */
   OpenCLSampler()

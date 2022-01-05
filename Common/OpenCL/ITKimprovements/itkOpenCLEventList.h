@@ -33,9 +33,9 @@ class ITKOpenCL_EXPORT OpenCLEventList
 {
 public:
   /** Standard class typedefs. */
-  typedef OpenCLEventList Self;
+  using Self = OpenCLEventList;
 
-  typedef std::vector<cl_event> OpenCLEventListArrayType;
+  using OpenCLEventListArrayType = std::vector<cl_event>;
 
   /** Constructs an empty list of OpenCL events. */
   OpenCLEventList() = default;

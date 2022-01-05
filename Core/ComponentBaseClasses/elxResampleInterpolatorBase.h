@@ -44,8 +44,8 @@ class ITK_TEMPLATE_EXPORT ResampleInterpolatorBase : public BaseComponentSE<TEla
 {
 public:
   /** Standard ITK stuff. */
-  typedef ResampleInterpolatorBase  Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = ResampleInterpolatorBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ResampleInterpolatorBase, BaseComponentSE);
@@ -59,14 +59,14 @@ public:
   using typename Superclass::RegistrationPointer;
 
   /** Typedef's from elastix. */
-  typedef typename ElastixType::MovingImageType InputImageType;
-  typedef ElastixBase::CoordRepType             CoordRepType;
+  using InputImageType = typename ElastixType::MovingImageType;
+  using CoordRepType = ElastixBase::CoordRepType;
 
   /** Other typedef's. */
-  typedef itk::InterpolateImageFunction<InputImageType, CoordRepType> ITKBaseType;
+  using ITKBaseType = itk::InterpolateImageFunction<InputImageType, CoordRepType>;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef typename ElastixType::ParameterMapType ParameterMapType;
+  using ParameterMapType = typename ElastixType::ParameterMapType;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *

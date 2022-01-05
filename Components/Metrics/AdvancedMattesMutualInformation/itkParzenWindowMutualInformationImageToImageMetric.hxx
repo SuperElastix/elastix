@@ -91,8 +91,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Compute the metric by double summation over histogram. */
 
   /** Setup iterators */
-  typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFIteratorType;
-  typedef typename MarginalPDFType::const_iterator        MarginalPDFIteratorType;
+  using JointPDFIteratorType = ImageLinearConstIteratorWithIndex<JointPDFType>;
+  using MarginalPDFIteratorType = typename MarginalPDFType::const_iterator;
 
   JointPDFIteratorType jointPDFit(this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion());
   jointPDFit.SetDirection(0);
@@ -169,10 +169,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Compute the metric and derivatives by double summation over histogram. */
 
   /** Setup iterators .*/
-  typedef ImageLinearConstIteratorWithIndex<JointPDFType>            JointPDFIteratorType;
-  typedef ImageLinearConstIteratorWithIndex<JointPDFDerivativesType> JointPDFDerivativesIteratorType;
-  typedef typename MarginalPDFType::const_iterator                   MarginalPDFIteratorType;
-  typedef typename DerivativeType::iterator                          DerivativeIteratorType;
+  using JointPDFIteratorType = ImageLinearConstIteratorWithIndex<JointPDFType>;
+  using JointPDFDerivativesIteratorType = ImageLinearConstIteratorWithIndex<JointPDFDerivativesType>;
+  using MarginalPDFIteratorType = typename MarginalPDFType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
 
   JointPDFIteratorType jointPDFit(this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion());
   jointPDFit.SetDirection(0);
@@ -669,8 +669,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   double & MI) const
 {
   /** Setup iterators. */
-  typedef ImageScanlineConstIterator<JointPDFType> JointPDFIteratorType;
-  typedef typename MarginalPDFType::const_iterator MarginalPDFIteratorType;
+  using JointPDFIteratorType = ImageScanlineConstIterator<JointPDFType>;
+  using MarginalPDFIteratorType = typename MarginalPDFType::const_iterator;
 
   JointPDFIteratorType          jointPDFit(this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion());
   MarginalPDFIteratorType       fixedPDFit = this->m_FixedImageMarginalPDF.begin();
@@ -855,12 +855,12 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Compute the metric and derivatives by double summation over histogram. */
 
   /** Setup iterators */
-  typedef ImageLinearConstIteratorWithIndex<JointPDFType>               JointPDFIteratorType;
-  typedef ImageLinearConstIteratorWithIndex<JointPDFDerivativesType>    IncrementalJointPDFIteratorType;
-  typedef typename MarginalPDFType::const_iterator                      MarginalPDFIteratorType;
-  typedef ImageLinearConstIteratorWithIndex<IncrementalMarginalPDFType> IncrementalMarginalPDFIteratorType;
-  typedef typename DerivativeType::iterator                             DerivativeIteratorType;
-  typedef typename DerivativeType::const_iterator                       DerivativeConstIteratorType;
+  using JointPDFIteratorType = ImageLinearConstIteratorWithIndex<JointPDFType>;
+  using IncrementalJointPDFIteratorType = ImageLinearConstIteratorWithIndex<JointPDFDerivativesType>;
+  using MarginalPDFIteratorType = typename MarginalPDFType::const_iterator;
+  using IncrementalMarginalPDFIteratorType = ImageLinearConstIteratorWithIndex<IncrementalMarginalPDFType>;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
+  using DerivativeConstIteratorType = typename DerivativeType::const_iterator;
 
   JointPDFIteratorType jointPDFit(this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion());
   jointPDFit.GoToBegin();
@@ -1027,10 +1027,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   DerivativeType &                   preconditioner,
   DerivativeType &                   divisor) const
 {
-  typedef typename TransformJacobianType::ValueType                  TransformJacobianValueType;
-  const unsigned int                                                 M = nzji.size();
-  typedef Matrix<double, MovingImageDimension, MovingImageDimension> MatrixType;
-  MatrixType                                                         jacjact;
+  using TransformJacobianValueType = typename TransformJacobianType::ValueType;
+  const unsigned int M = nzji.size();
+  using MatrixType = Matrix<double, MovingImageDimension, MovingImageDimension>;
+  MatrixType jacjact;
 
   /** Compute jac * jac' */
   for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)

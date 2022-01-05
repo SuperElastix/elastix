@@ -77,10 +77,10 @@ class ITK_TEMPLATE_EXPORT ParzenWindowMutualInformationImageToImageMetric
 {
 public:
   /** Standard class typedefs. */
-  typedef ParzenWindowMutualInformationImageToImageMetric                    Self;
-  typedef ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage> Superclass;
-  typedef SmartPointer<Self>                                                 Pointer;
-  typedef SmartPointer<const Self>                                           ConstPointer;
+  using Self = ParzenWindowMutualInformationImageToImageMetric;
+  using Superclass = ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -260,9 +260,9 @@ private:
   operator=(const Self &) = delete;
 
   /** Helper array for storing the values of the JointPDF ratios. */
-  typedef double              PRatioType;
-  typedef Array2D<PRatioType> PRatioArrayType;
-  mutable PRatioArrayType     m_PRatioArray;
+  using PRatioType = double;
+  using PRatioArrayType = Array2D<PRatioType>;
+  mutable PRatioArrayType m_PRatioArray;
 
   /** Setting */
   bool m_UseJacobianPreconditioning;

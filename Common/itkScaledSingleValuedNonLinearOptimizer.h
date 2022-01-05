@@ -63,10 +63,10 @@ class ScaledSingleValuedNonLinearOptimizer : public SingleValuedNonLinearOptimiz
 {
 public:
   /** Standard ITK-stuff. */
-  typedef ScaledSingleValuedNonLinearOptimizer Self;
-  typedef SingleValuedNonLinearOptimizer       Superclass;
-  typedef SmartPointer<Self>                   Pointer;
-  typedef SmartPointer<const Self>             ConstPointer;
+  using Self = ScaledSingleValuedNonLinearOptimizer;
+  using Superclass = SingleValuedNonLinearOptimizer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -80,9 +80,9 @@ public:
   using Superclass::DerivativeType;
   using Superclass::CostFunctionType;
 
-  typedef NonLinearOptimizer::ScalesType  ScalesType;
-  typedef ScaledSingleValuedCostFunction  ScaledCostFunctionType;
-  typedef ScaledCostFunctionType::Pointer ScaledCostFunctionPointer;
+  using ScalesType = NonLinearOptimizer::ScalesType;
+  using ScaledCostFunctionType = ScaledSingleValuedCostFunction;
+  using ScaledCostFunctionPointer = ScaledCostFunctionType::Pointer;
 
   /** Configure the scaled cost function. This function
    * sets the current scales in the ScaledCostFunction.

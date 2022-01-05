@@ -71,12 +71,12 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
    * Term 4: maxJCJ, see (54)
    */
 
-  typedef double                                 CovarianceValueType;
-  typedef itk::Array2D<CovarianceValueType>      CovarianceMatrixType;
-  typedef vnl_sparse_matrix<CovarianceValueType> SparseCovarianceMatrixType;
-  typedef SparseCovarianceMatrixType::row        SparseRowType;
-  typedef itk::Array<SizeValueType>              NonZeroJacobianIndicesExpandedType;
-  typedef vnl_diag_matrix<CovarianceValueType>   DiagCovarianceMatrixType;
+  using CovarianceValueType = double;
+  using CovarianceMatrixType = itk::Array2D<CovarianceValueType>;
+  using SparseCovarianceMatrixType = vnl_sparse_matrix<CovarianceValueType>;
+  using SparseRowType = SparseCovarianceMatrixType::row;
+  using NonZeroJacobianIndicesExpandedType = itk::Array<SizeValueType>;
+  using DiagCovarianceMatrixType = vnl_diag_matrix<CovarianceValueType>;
 
   /** Initialize. */
   TrC = TrCC = maxJJ = maxJCJ = 0.0;
@@ -124,10 +124,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   CovarianceMatrixType jactjac(sizejacind, sizejacind);
   jactjac.Fill(0.0);
 
-  typedef std::vector<unsigned int>             DifHistType;
-  typedef std::pair<unsigned int, unsigned int> FreqPairType;
-  typedef std::vector<FreqPairType>             DifHist2Type;
-  DifHist2Type                                  difHist2;
+  using DifHistType = std::vector<unsigned int>;
+  using FreqPairType = std::pair<unsigned int, unsigned int>;
+  using DifHist2Type = std::vector<FreqPairType>;
+  DifHist2Type difHist2;
 
   /** DifHist is a histogram of absolute parameterNrDifferences that
    * occur in the nonzerojacobianindex vectors.

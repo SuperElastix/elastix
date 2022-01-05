@@ -129,7 +129,7 @@ AdvancedImageMomentsCalculator<TImage>::ComputeSingleThreaded()
   m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
   m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
 
-  typedef typename ImageType::IndexType IndexType;
+  using IndexType = typename ImageType::IndexType;
 
   if (!m_Image)
   {

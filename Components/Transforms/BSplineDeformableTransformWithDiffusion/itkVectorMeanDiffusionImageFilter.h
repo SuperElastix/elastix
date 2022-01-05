@@ -50,15 +50,15 @@ class ITK_TEMPLATE_EXPORT VectorMeanDiffusionImageFilter : public ImageToImageFi
 {
 public:
   /** Convenient typedefs for simplifying declarations. */
-  typedef TInputImage                          InputImageType;
-  typedef TGrayValueImage                      GrayValueImageType;
-  typedef typename GrayValueImageType::Pointer GrayValueImagePointer;
+  using InputImageType = TInputImage;
+  using GrayValueImageType = TGrayValueImage;
+  using GrayValueImagePointer = typename GrayValueImageType::Pointer;
 
   /** Standard class typedefs. */
-  typedef VectorMeanDiffusionImageFilter                     Self;
-  typedef ImageToImageFilter<InputImageType, InputImageType> Superclass;
-  typedef SmartPointer<Self>                                 Pointer;
-  typedef SmartPointer<const Self>                           ConstPointer;
+  using Self = VectorMeanDiffusionImageFilter;
+  using Superclass = ImageToImageFilter<InputImageType, InputImageType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Extract dimension from input image. */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
@@ -70,20 +70,20 @@ public:
   itkTypeMacro(VectorMeanDiffusionImageFilter, ImageToImageFilter);
 
   /** Image typedef support. */
-  typedef typename InputImageType::PixelType InputPixelType;
-  typedef typename InputPixelType::ValueType ValueType;
+  using InputPixelType = typename InputImageType::PixelType;
+  using ValueType = typename InputPixelType::ValueType;
   // typedef typename NumericTraits<InputPixelType>::RealType    InputRealType;
-  typedef typename InputImageType::RegionType       InputImageRegionType;
-  typedef typename InputImageType::SizeType         InputSizeType;
-  typedef typename InputImageType::IndexType        IndexType;
-  typedef Vector<double, Self::InputImageDimension> VectorRealType;
-  typedef Image<double, Self::InputImageDimension>  DoubleImageType;
-  typedef typename DoubleImageType::Pointer         DoubleImagePointer;
-  typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
+  using InputImageRegionType = typename InputImageType::RegionType;
+  using InputSizeType = typename InputImageType::SizeType;
+  using IndexType = typename InputImageType::IndexType;
+  using VectorRealType = Vector<double, Self::InputImageDimension>;
+  using DoubleImageType = Image<double, Self::InputImageDimension>;
+  using DoubleImagePointer = typename DoubleImageType::Pointer;
+  using GrayValuePixelType = typename GrayValueImageType::PixelType;
 
   /** Typedef for the rescale intensity filter. */
-  typedef RescaleIntensityImageFilter<GrayValueImageType, DoubleImageType> RescaleImageFilterType;
-  typedef typename RescaleImageFilterType::Pointer                         RescaleImageFilterPointer;
+  using RescaleImageFilterType = RescaleIntensityImageFilter<GrayValueImageType, DoubleImageType>;
+  using RescaleImageFilterPointer = typename RescaleImageFilterType::Pointer;
 
   /** Set the radius of the neighborhood used to compute the mean. */
   itkSetMacro(Radius, InputSizeType);

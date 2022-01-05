@@ -38,9 +38,9 @@ namespace itk
  *   itkStaticConstMacro( Support3D, bool, true );
  *  };
  *
- *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
- *  typedef itk::AdvancedCombinationTransform< float, 3 > TransformType;
- *  typedef itk::GPUAdvancedCombinationTransformCopier< OCLImageTypes, OCLImageDims, TransformType, float > CopierType;
+ *  using OCLImageTypes = typelist::MakeTypeList< short, float >::Type;
+ *  using TransformType = itk::AdvancedCombinationTransform< float, 3 >;
+ *  using CopierType = itk::GPUAdvancedCombinationTransformCopier< OCLImageTypes, OCLImageDims, TransformType, float >;
  *  auto copier = CopierType::New();
  *  copier->SetInputTransform(CPUTransform);
  *  copier->Update();
@@ -67,10 +67,10 @@ class ITK_TEMPLATE_EXPORT GPUAdvancedCombinationTransformCopier : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUAdvancedCombinationTransformCopier Self;
-  typedef Object                                Superclass;
-  typedef SmartPointer<Self>                    Pointer;
-  typedef SmartPointer<const Self>              ConstPointer;
+  using Self = GPUAdvancedCombinationTransformCopier;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -79,39 +79,39 @@ public:
   itkTypeMacro(GPUAdvancedCombinationTransformCopier, Object);
 
   /** Type CPU definitions for the transform. */
-  typedef TAdvancedCombinationTransform CPUComboTransformType;
+  using CPUComboTransformType = TAdvancedCombinationTransform;
 
   /** Input and Output space dimension. */
   itkStaticConstMacro(SpaceDimension, unsigned int, CPUComboTransformType::SpaceDimension);
 
   /** CPU combo transform class typedefs. */
-  typedef typename CPUComboTransformType::ConstPointer                 CPUComboTransformConstPointer;
-  typedef typename CPUComboTransformType::CurrentTransformType         CPUCurrentTransformType;
-  typedef typename CPUComboTransformType::CurrentTransformPointer      CPUCurrentTransformPointer;
-  typedef typename CPUComboTransformType::CurrentTransformConstPointer CPUCurrentTransformConstPointer;
-  typedef typename CPUComboTransformType::InitialTransformType         CPUInitialTransformType;
-  typedef typename CPUComboTransformType::InitialTransformPointer      CPUInitialTransformPointer;
-  typedef typename CPUComboTransformType::InitialTransformConstPointer CPUInitialTransformConstPointer;
-  typedef typename CPUComboTransformType::TransformType                TransformType;             // itk::Transform
-  typedef typename CPUComboTransformType::TransformTypePointer         TransformTypePointer;      // itk::Transform
-  typedef typename CPUComboTransformType::TransformTypeConstPointer    TransformTypeConstPointer; // itk::Transform
-  typedef typename CPUComboTransformType::ScalarType                   CPUScalarType;
+  using CPUComboTransformConstPointer = typename CPUComboTransformType::ConstPointer;
+  using CPUCurrentTransformType = typename CPUComboTransformType::CurrentTransformType;
+  using CPUCurrentTransformPointer = typename CPUComboTransformType::CurrentTransformPointer;
+  using CPUCurrentTransformConstPointer = typename CPUComboTransformType::CurrentTransformConstPointer;
+  using CPUInitialTransformType = typename CPUComboTransformType::InitialTransformType;
+  using CPUInitialTransformPointer = typename CPUComboTransformType::InitialTransformPointer;
+  using CPUInitialTransformConstPointer = typename CPUComboTransformType::InitialTransformConstPointer;
+  using TransformType = typename CPUComboTransformType::TransformType;                         // itk::Transform
+  using TransformTypePointer = typename CPUComboTransformType::TransformTypePointer;           // itk::Transform
+  using TransformTypeConstPointer = typename CPUComboTransformType::TransformTypeConstPointer; // itk::Transform
+  using CPUScalarType = typename CPUComboTransformType::ScalarType;
 
   /** CPU advanced transform class typedefs. */
-  typedef AdvancedTransform<CPUScalarType, SpaceDimension, SpaceDimension> CPUAdvancedTransformType;
-  typedef typename CPUAdvancedTransformType::ParametersType                CPUParametersType;
-  typedef typename CPUAdvancedTransformType::FixedParametersType           CPUFixedParametersType;
+  using CPUAdvancedTransformType = AdvancedTransform<CPUScalarType, SpaceDimension, SpaceDimension>;
+  using CPUParametersType = typename CPUAdvancedTransformType::ParametersType;
+  using CPUFixedParametersType = typename CPUAdvancedTransformType::FixedParametersType;
 
   /** GPU combo transform class typedefs. */
-  typedef TOutputTransformPrecisionType                                  GPUScalarType;
-  typedef GPUAdvancedCombinationTransform<GPUScalarType, SpaceDimension> GPUComboTransformType;
-  typedef typename GPUComboTransformType::Pointer                        GPUComboTransformPointer;
+  using GPUScalarType = TOutputTransformPrecisionType;
+  using GPUComboTransformType = GPUAdvancedCombinationTransform<GPUScalarType, SpaceDimension>;
+  using GPUComboTransformPointer = typename GPUComboTransformType::Pointer;
 
   /** GPU advanced transform class typedefs. */
-  typedef AdvancedTransform<GPUScalarType, SpaceDimension, SpaceDimension> GPUAdvancedTransformType;
-  typedef typename GPUAdvancedTransformType::Pointer                       GPUAdvancedTransformPointer;
-  typedef typename GPUAdvancedTransformType::ParametersType                GPUParametersType;
-  typedef typename GPUAdvancedTransformType::FixedParametersType           GPUFixedParametersType;
+  using GPUAdvancedTransformType = AdvancedTransform<GPUScalarType, SpaceDimension, SpaceDimension>;
+  using GPUAdvancedTransformPointer = typename GPUAdvancedTransformType::Pointer;
+  using GPUParametersType = typename GPUAdvancedTransformType::ParametersType;
+  using GPUFixedParametersType = typename GPUAdvancedTransformType::FixedParametersType;
 
   /** Get/Set the input transform. */
   itkSetConstObjectMacro(InputTransform, CPUComboTransformType);

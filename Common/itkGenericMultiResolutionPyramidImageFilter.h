@@ -119,11 +119,11 @@ class ITK_TEMPLATE_EXPORT GenericMultiResolutionPyramidImageFilter
 {
 public:
   /** Standard class typedefs. */
-  typedef GenericMultiResolutionPyramidImageFilter                     Self;
-  typedef MultiResolutionPyramidImageFilter<TInputImage, TOutputImage> Superclass;
-  typedef typename Superclass::Superclass                              SuperSuperclass;
-  typedef SmartPointer<Self>                                           Pointer;
-  typedef SmartPointer<const Self>                                     ConstPointer;
+  using Self = GenericMultiResolutionPyramidImageFilter;
+  using Superclass = MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>;
+  using SuperSuperclass = typename Superclass::Superclass;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -142,17 +142,17 @@ public:
   using typename Superclass::InputImagePointer;
   using typename Superclass::OutputImagePointer;
   using typename Superclass::InputImageConstPointer;
-  typedef typename Superclass::InputImageType::SpacingType  SpacingType;
-  typedef typename InputImageType::PixelType                PixelType;
-  typedef typename NumericTraits<PixelType>::ScalarRealType ScalarRealType;
+  using SpacingType = typename Superclass::InputImageType::SpacingType;
+  using PixelType = typename InputImageType::PixelType;
+  using ScalarRealType = typename NumericTraits<PixelType>::ScalarRealType;
 
   /** SmoothingScheduleType typedef support. */
-  typedef Array2D<ScalarRealType> SmoothingScheduleType;
-  typedef ScheduleType            RescaleScheduleType;
+  using SmoothingScheduleType = Array2D<ScalarRealType>;
+  using RescaleScheduleType = ScheduleType;
 
   /** Define the type for the sigma array. */
-  typedef FixedArray<ScalarRealType, Self::ImageDimension> SigmaArrayType;
-  typedef SigmaArrayType                                   RescaleFactorArrayType;
+  using SigmaArrayType = FixedArray<ScalarRealType, Self::ImageDimension>;
+  using RescaleFactorArrayType = SigmaArrayType;
 
   /** Set a multi-resolution schedule. The input schedule must have only
    * ImageDimension number of columns and NumberOfLevels number of rows. For
@@ -277,14 +277,14 @@ private:
   /** Typedef for smoother. Smooth always happens first, then only from
    * InputImageType to OutputImageType is possible.
    */
-  typedef SmoothingRecursiveGaussianImageFilter<InputImageType, OutputImageType> SmootherType;
+  using SmootherType = SmoothingRecursiveGaussianImageFilter<InputImageType, OutputImageType>;
 
   /** Typedefs for shrinker or resample. If smoother has not been used, then
    * we have to use InputImageType to OutputImageType,
    * otherwise OutputImageType to OutputImageType.
    */
-  typedef ImageToImageFilter<OutputImageType, OutputImageType> ImageToImageFilterSameTypes;
-  typedef ImageToImageFilter<InputImageType, OutputImageType>  ImageToImageFilterDifferentTypes;
+  using ImageToImageFilterSameTypes = ImageToImageFilter<OutputImageType, OutputImageType>;
+  using ImageToImageFilterDifferentTypes = ImageToImageFilter<InputImageType, OutputImageType>;
 
   /** Smooth image at current level. Returns true if performed.
    * This method does not perform execution.

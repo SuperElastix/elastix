@@ -81,20 +81,19 @@ class ITK_TEMPLATE_EXPORT AdvancedAffineTransformElastix
 {
 public:
   /** Standard ITK-stuff. */
-  typedef AdvancedAffineTransformElastix Self;
-  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-                                        Superclass1;
-  typedef elx::TransformBase<TElastix>  Superclass2;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Self = AdvancedAffineTransformElastix;
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                        elx::TransformBase<TElastix>::FixedImageDimension>;
+  using Superclass2 = elx::TransformBase<TElastix>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::AdvancedMatrixOffsetTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
-                                                 elx::TransformBase<TElastix>::FixedImageDimension,
-                                                 elx::TransformBase<TElastix>::MovingImageDimension>
-    AffineTransformType;
+  using AffineTransformType =
+    itk::AdvancedMatrixOffsetTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
+                                           elx::TransformBase<TElastix>::FixedImageDimension,
+                                           elx::TransformBase<TElastix>::MovingImageDimension>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -136,23 +135,23 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Other typedef's. */
-  typedef typename FixedImageType::IndexType     IndexType;
-  typedef typename IndexType::IndexValueType     IndexValueType;
-  typedef typename FixedImageType::SizeType      SizeType;
-  typedef typename FixedImageType::PointType     PointType;
-  typedef typename FixedImageType::SpacingType   SpacingType;
-  typedef typename FixedImageType::RegionType    RegionType;
-  typedef typename FixedImageType::DirectionType DirectionType;
+  using IndexType = typename FixedImageType::IndexType;
+  using IndexValueType = typename IndexType::IndexValueType;
+  using SizeType = typename FixedImageType::SizeType;
+  using PointType = typename FixedImageType::PointType;
+  using SpacingType = typename FixedImageType::SpacingType;
+  using RegionType = typename FixedImageType::RegionType;
+  using DirectionType = typename FixedImageType::DirectionType;
 
   // typedef CenteredTransformInitializer<
-  typedef itk::CenteredTransformInitializer2<AffineTransformType, FixedImageType, MovingImageType>
-                                                     TransformInitializerType;
-  typedef typename TransformInitializerType::Pointer TransformInitializerPointer;
-  typedef typename AffineTransformType::Pointer      AffineTransformPointer;
+  using TransformInitializerType =
+    itk::CenteredTransformInitializer2<AffineTransformType, FixedImageType, MovingImageType>;
+  using TransformInitializerPointer = typename TransformInitializerType::Pointer;
+  using AffineTransformPointer = typename AffineTransformType::Pointer;
 
   /** For scales setting in the optimizer */
   using typename Superclass2::ScalesType;

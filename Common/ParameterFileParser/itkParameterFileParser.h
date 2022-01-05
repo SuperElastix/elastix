@@ -79,10 +79,10 @@ class ParameterFileParser : public Object
 {
 public:
   /** Standard ITK typedefs. */
-  typedef ParameterFileParser      Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = ParameterFileParser;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -91,8 +91,8 @@ public:
   itkTypeMacro(ParameterFileParser, Object);
 
   /** Typedefs. */
-  typedef std::vector<std::string>                   ParameterValuesType;
-  typedef std::map<std::string, ParameterValuesType> ParameterMapType;
+  using ParameterValuesType = std::vector<std::string>;
+  using ParameterMapType = std::map<std::string, ParameterValuesType>;
 
   /** Set the name of the file containing the parameters. */
   itkSetStringMacro(ParameterFileName);

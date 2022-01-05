@@ -109,9 +109,9 @@ class TIFFReaderInternal;
 class ITK_EXPORT MevisDicomTiffImageIO : public ImageIOBase
 {
 public:
-  typedef MevisDicomTiffImageIO Self;
-  typedef ImageIOBase           Superclass;
-  typedef SmartPointer<Self>    Pointer;
+  using Self = MevisDicomTiffImageIO;
+  using Superclass = ImageIOBase;
+  using Pointer = SmartPointer<Self>;
 
   itkNewMacro(Self);
   itkTypeMacro(MevisDicomTiffImageIO, Superclass);

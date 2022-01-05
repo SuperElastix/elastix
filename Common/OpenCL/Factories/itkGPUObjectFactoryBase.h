@@ -40,10 +40,10 @@ template <typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPUObjectFactoryBase : public ObjectFactoryBase
 {
 public:
-  typedef GPUObjectFactoryBase     Self;
-  typedef ObjectFactoryBase        Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = GPUObjectFactoryBase;
+  using Superclass = ObjectFactoryBase;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Class methods used to interface with the registered factories. */
   const char *

@@ -55,8 +55,8 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration()
    *  dc = [ dc  dc  0 ]
    *       [  0   0  1 ]
    */
-  typedef typename FixedImageType::DirectionType DirectionType;
-  DirectionType                                  dc = this->GetElastix()->GetFixedImage()->GetDirection();
+  using DirectionType = typename FixedImageType::DirectionType;
+  DirectionType dc = this->GetElastix()->GetFixedImage()->GetDirection();
 
   bool dcValid = true;
   for (unsigned int i = 0; i < FixedImageDimension - 1; ++i)

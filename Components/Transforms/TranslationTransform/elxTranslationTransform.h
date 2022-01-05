@@ -54,22 +54,21 @@ class ITK_TEMPLATE_EXPORT TranslationTransformElastix
 {
 public:
   /** Standard ITK-stuff. */
-  typedef TranslationTransformElastix Self;
+  using Self = TranslationTransformElastix;
 
-  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-    Superclass1;
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                        elx::TransformBase<TElastix>::FixedImageDimension>;
 
-  typedef elx::TransformBase<TElastix> Superclass2;
+  using Superclass2 = elx::TransformBase<TElastix>;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-    TranslationTransformType;
+  using TranslationTransformType =
+    itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                      elx::TransformBase<TElastix>::FixedImageDimension>;
 
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -111,14 +110,14 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Extra typedefs */
-  typedef itk::TranslationTransformInitializer<TranslationTransformType, FixedImageType, MovingImageType>
-                                                     TransformInitializerType;
-  typedef typename TransformInitializerType::Pointer TransformInitializerPointer;
-  typedef typename TranslationTransformType::Pointer TranslationTransformPointer;
+  using TransformInitializerType =
+    itk::TranslationTransformInitializer<TranslationTransformType, FixedImageType, MovingImageType>;
+  using TransformInitializerPointer = typename TransformInitializerType::Pointer;
+  using TranslationTransformPointer = typename TranslationTransformType::Pointer;
 
   /** Execute stuff before the actual registration:
    * \li Call InitializeTransform.

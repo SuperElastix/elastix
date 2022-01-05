@@ -145,10 +145,10 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
                                                                     const typename ImageType::ConstPointer image)
 {
   /** Typedefs. */
-  typedef typename ImageType::IndexType                      IndexType;
-  typedef typename ImageType::IndexValueType                 IndexValueType;
-  typedef typename ImageType::PointType                      PointType;
-  typedef itk::TransformixInputPointFileReader<PointSetType> PointSetReaderType;
+  using IndexType = typename ImageType::IndexType;
+  using IndexValueType = typename ImageType::IndexValueType;
+  using PointType = typename ImageType::PointType;
+  using PointSetReaderType = itk::TransformixInputPointFileReader<PointSetType>;
 
   elxout << "Loading landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "." << std::endl;
 

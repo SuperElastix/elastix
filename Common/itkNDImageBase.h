@@ -59,10 +59,10 @@ class ITK_TEMPLATE_EXPORT NDImageBase : public Object
 {
 public:
   /** Standard class typedefs.*/
-  typedef NDImageBase              Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Self = NDImageBase;
+  using Superclass = Object;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   // itkNewMacro( Self );
@@ -72,37 +72,37 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(NDImageBase, Object);
 
-  typedef DataObject              DataObjectType;
-  typedef DataObjectType::Pointer DataObjectPointer;
+  using DataObjectType = DataObject;
+  using DataObjectPointer = DataObjectType::Pointer;
 
   /** Type definitions like normal itkImages, independent of the dimension */
-  typedef typename Image<TPixel, 2>::PixelType                  PixelType;
-  typedef typename Image<TPixel, 2>::ValueType                  ValueType;
-  typedef typename Image<TPixel, 2>::InternalPixelType          InternalPixelType;
-  typedef typename Image<TPixel, 2>::AccessorType               AccessorType;
-  typedef typename Image<TPixel, 2>::PixelContainer             PixelContainer;
-  typedef typename Image<TPixel, 2>::PixelContainerPointer      PixelContainerPointer;
-  typedef typename Image<TPixel, 2>::PixelContainerConstPointer PixelContainerConstPointer;
+  using PixelType = typename Image<TPixel, 2>::PixelType;
+  using ValueType = typename Image<TPixel, 2>::ValueType;
+  using InternalPixelType = typename Image<TPixel, 2>::InternalPixelType;
+  using AccessorType = typename Image<TPixel, 2>::AccessorType;
+  using PixelContainer = typename Image<TPixel, 2>::PixelContainer;
+  using PixelContainerPointer = typename Image<TPixel, 2>::PixelContainerPointer;
+  using PixelContainerConstPointer = typename Image<TPixel, 2>::PixelContainerConstPointer;
 
-  typedef typename ImageBase<2>::SpacingType Spacing2DType;
-  typedef typename ImageBase<2>::PointType   Point2DType;
+  using Spacing2DType = typename ImageBase<2>::SpacingType;
+  using Point2DType = typename ImageBase<2>::PointType;
 
-  typedef typename Spacing2DType::ValueType      SpacingValueType;
-  typedef typename Point2DType::ValueType        PointValueType;
-  typedef typename ImageBase<2>::IndexValueType  IndexValueType;
-  typedef typename ImageBase<2>::SizeValueType   SizeValueType;
-  typedef typename ImageBase<2>::OffsetValueType OffsetValueType;
+  using SpacingValueType = typename Spacing2DType::ValueType;
+  using PointValueType = typename Point2DType::ValueType;
+  using IndexValueType = typename ImageBase<2>::IndexValueType;
+  using SizeValueType = typename ImageBase<2>::SizeValueType;
+  using OffsetValueType = typename ImageBase<2>::OffsetValueType;
 
   /** ND versions of the index and sizetypes. Unlike in
    * their counterparts in the itk::Image, their size
    * can be defined at runtime. The elx::NDImageTemplate
    * takes care of converting from/to these types to
    * to/from the corresponding types in itk::Image.*/
-  typedef Array<IndexValueType>   IndexType;
-  typedef Array<SizeValueType>    SizeType;
-  typedef Array<SpacingValueType> SpacingType;
-  typedef Array<PointValueType>   PointType;
-  typedef Array<OffsetValueType>  OffsetType;
+  using IndexType = Array<IndexValueType>;
+  using SizeType = Array<SizeValueType>;
+  using SpacingType = Array<SpacingValueType>;
+  using PointType = Array<PointValueType>;
+  using OffsetType = Array<OffsetValueType>;
   /** \todo: extend to direction cosines; but not needed for now in elastix */
 
   /** Region typedef support. A region is used to specify a subset of an image. */

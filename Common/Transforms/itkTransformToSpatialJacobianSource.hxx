@@ -230,8 +230,8 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Nonline
   OutputImagePointer outputPtr = this->GetOutput();
 
   // Create an iterator that will walk the output region for this thread.
-  typedef ImageRegionIteratorWithIndex<TOutputImage> OutputIteratorType;
-  OutputIteratorType                                 it(outputPtr, outputRegionForThread);
+  using OutputIteratorType = ImageRegionIteratorWithIndex<TOutputImage>;
+  OutputIteratorType it(outputPtr, outputRegionForThread);
   it.GoToBegin();
 
   // pixel coordinates

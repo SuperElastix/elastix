@@ -84,9 +84,9 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
   this->GetJacobian(ipp, jacobian, nonZeroJacobianIndices);
 
   /** Perform a full multiplication. */
-  typedef typename JacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator     DerivativeIteratorType;
-  JacobianIteratorType                          jac = jacobian.begin();
+  using JacobianIteratorType = typename JacobianType::const_iterator;
+  using DerivativeIteratorType = typename DerivativeType::iterator;
+  JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill(0.0);
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
 

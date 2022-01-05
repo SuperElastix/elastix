@@ -76,8 +76,8 @@ class ITK_TEMPLATE_EXPORT RegistrationBase : public BaseComponentSE<TElastix>
 {
 public:
   /** Standard ITK stuff. */
-  typedef RegistrationBase          Self;
-  typedef BaseComponentSE<TElastix> Superclass;
+  using Self = RegistrationBase;
+  using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(RegistrationBase, BaseComponentSE);
@@ -91,8 +91,8 @@ public:
   using typename Superclass::RegistrationPointer;
 
   /** Other typedef's. */
-  typedef typename ElastixType::FixedImageType  FixedImageType;
-  typedef typename ElastixType::MovingImageType MovingImageType;
+  using FixedImageType = typename ElastixType::FixedImageType;
+  using MovingImageType = typename ElastixType::MovingImageType;
 
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
@@ -100,10 +100,10 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Typedef for ITKBaseType. */
-  typedef itk::MultiResolutionImageRegistrationMethod2<FixedImageType, MovingImageType> ITKBaseType;
+  using ITKBaseType = itk::MultiResolutionImageRegistrationMethod2<FixedImageType, MovingImageType>;
 
   /** Typedef for mask erosion options */
-  typedef std::vector<bool> UseMaskErosionArrayType;
+  using UseMaskErosionArrayType = std::vector<bool>;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *
@@ -154,24 +154,24 @@ protected:
   ~RegistrationBase() override = default;
 
   /** Typedef's for mask support. */
-  typedef typename ElastixType::MaskPixelType                     MaskPixelType;
-  typedef typename ElastixType::FixedMaskType                     FixedMaskImageType;
-  typedef typename ElastixType::MovingMaskType                    MovingMaskImageType;
-  typedef typename FixedMaskImageType::Pointer                    FixedMaskImagePointer;
-  typedef typename MovingMaskImageType::Pointer                   MovingMaskImagePointer;
-  typedef itk::ImageMaskSpatialObject<Self::FixedImageDimension>  FixedMaskSpatialObjectType;
-  typedef itk::ImageMaskSpatialObject<Self::MovingImageDimension> MovingMaskSpatialObjectType;
-  typedef typename FixedMaskSpatialObjectType::Pointer            FixedMaskSpatialObjectPointer;
-  typedef typename MovingMaskSpatialObjectType::Pointer           MovingMaskSpatialObjectPointer;
+  using MaskPixelType = typename ElastixType::MaskPixelType;
+  using FixedMaskImageType = typename ElastixType::FixedMaskType;
+  using MovingMaskImageType = typename ElastixType::MovingMaskType;
+  using FixedMaskImagePointer = typename FixedMaskImageType::Pointer;
+  using MovingMaskImagePointer = typename MovingMaskImageType::Pointer;
+  using FixedMaskSpatialObjectType = itk::ImageMaskSpatialObject<Self::FixedImageDimension>;
+  using MovingMaskSpatialObjectType = itk::ImageMaskSpatialObject<Self::MovingImageDimension>;
+  using FixedMaskSpatialObjectPointer = typename FixedMaskSpatialObjectType::Pointer;
+  using MovingMaskSpatialObjectPointer = typename MovingMaskSpatialObjectType::Pointer;
 
-  typedef typename ITKBaseType::FixedImagePyramidType  FixedImagePyramidType;
-  typedef typename ITKBaseType::MovingImagePyramidType MovingImagePyramidType;
+  using FixedImagePyramidType = typename ITKBaseType::FixedImagePyramidType;
+  using MovingImagePyramidType = typename ITKBaseType::MovingImagePyramidType;
 
   /** Some typedef's used for eroding the masks */
-  typedef itk::ErodeMaskImageFilter<FixedMaskImageType>  FixedMaskErodeFilterType;
-  typedef typename FixedMaskErodeFilterType::Pointer     FixedMaskErodeFilterPointer;
-  typedef itk::ErodeMaskImageFilter<MovingMaskImageType> MovingMaskErodeFilterType;
-  typedef typename MovingMaskErodeFilterType::Pointer    MovingMaskErodeFilterPointer;
+  using FixedMaskErodeFilterType = itk::ErodeMaskImageFilter<FixedMaskImageType>;
+  using FixedMaskErodeFilterPointer = typename FixedMaskErodeFilterType::Pointer;
+  using MovingMaskErodeFilterType = itk::ErodeMaskImageFilter<MovingMaskImageType>;
+  using MovingMaskErodeFilterPointer = typename MovingMaskErodeFilterType::Pointer;
 
   /** Generate a spatial object from a mask image, possibly after eroding the image
    * Input:

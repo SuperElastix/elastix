@@ -410,12 +410,12 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale()
   this->m_GridUpsampler->SetRequiredGridRegion(requiredGridRegion);
   this->m_GridUpsampler->SetRequiredGridDirection(requiredGridDirection);
 
-  typedef itk::Vector<double, Self::SpaceDimension> VectorType;
+  using VectorType = itk::Vector<double, Self::SpaceDimension>;
 
-  typedef itk::Vector<VectorType, Self::SpaceDimension> BaseType;
-  typedef itk::Image<BaseType, Self::SpaceDimension>    ImageBaseType;
-  typedef typename ImageBaseType::Pointer               ImageBasePointer;
-  typedef typename ImageBaseType::PixelContainer        BaseContainer;
+  using BaseType = itk::Vector<VectorType, Self::SpaceDimension>;
+  using ImageBaseType = itk::Image<BaseType, Self::SpaceDimension>;
+  using ImageBasePointer = typename ImageBaseType::Pointer;
+  using BaseContainer = typename ImageBaseType::PixelContainer;
 
   ImageBasePointer      Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
   const BaseContainer & bases = *Bases->GetPixelContainer();
@@ -443,7 +443,7 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale()
   ImageBasePointer      new_Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
   const BaseContainer & new_bases = *new_Bases->GetPixelContainer();
 
-  typedef itk::Image<unsigned char, Self::SpaceDimension> ImageLabelType;
+  using ImageLabelType = itk::Image<unsigned char, Self::SpaceDimension>;
   typename ImageLabelType::Pointer labels1 = this->m_MultiBSplineTransformWithNormal->GetLabels();
   typename itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::Pointer filter =
     itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();
@@ -452,8 +452,8 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale()
   filter->SetOutputParametersFromImage(new_Bases);
   filter->Update();
 
-  typedef typename ImageLabelType::PixelContainer LabelContainer;
-  const LabelContainer &                          labels = *filter->GetOutput()->GetPixelContainer();
+  using LabelContainer = typename ImageLabelType::PixelContainer;
+  const LabelContainer & labels = *filter->GetOutput()->GetPixelContainer();
 
   unsigned new_ParametersPerDimension = this->m_MultiBSplineTransformWithNormal->GetNumberOfParametersPerDimension();
 
@@ -642,11 +642,11 @@ void
 MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int edgeWidth)
 {
   /** Some typedefs. */
-  typedef itk::ImageRegionExclusionConstIteratorWithIndex<ImageType> IteratorType;
-  typedef typename RegistrationType::ITKBaseType                     ITKRegistrationType;
-  typedef typename ITKRegistrationType::OptimizerType                OptimizerType;
-  typedef typename OptimizerType::ScalesType                         ScalesType;
-  typedef typename ScalesType::ValueType                             ScalesValueType;
+  using IteratorType = itk::ImageRegionExclusionConstIteratorWithIndex<ImageType>;
+  using ITKRegistrationType = typename RegistrationType::ITKBaseType;
+  using OptimizerType = typename ITKRegistrationType::OptimizerType;
+  using ScalesType = typename OptimizerType::ScalesType;
+  using ScalesValueType = typename ScalesType::ValueType;
 
   /** Define new scales. */
   const unsigned long numberOfParameters = this->m_MultiBSplineTransformWithNormal->GetNumberOfParameters();

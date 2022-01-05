@@ -194,9 +194,9 @@ void
 WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
 {
   /** Typedef's from ComponentDatabase. */
-  typedef typename Superclass2::ComponentDescriptionType ComponentDescriptionType;
-  typedef typename Superclass2::PtrToCreator             PtrToCreator;
-  typedef typename Superclass2::ObjectType               ObjectType;
+  using ComponentDescriptionType = typename Superclass2::ComponentDescriptionType;
+  using PtrToCreator = typename Superclass2::PtrToCreator;
+  using ObjectType = typename Superclass2::ObjectType;
 
   const std::size_t N = this->m_Configuration->CountNumberOfParameterEntries("SubTransforms");
 

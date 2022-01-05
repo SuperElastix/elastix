@@ -59,11 +59,11 @@ class ITK_TEMPLATE_EXPORT ElasticBodyReciprocalSplineKernelTransform2
 {
 public:
   /** Standard class typedefs. */
-  typedef ElasticBodyReciprocalSplineKernelTransform2 Self;
-  typedef KernelTransform2<TScalarType, NDimensions>  Superclass;
+  using Self = ElasticBodyReciprocalSplineKernelTransform2;
+  using Superclass = KernelTransform2<TScalarType, NDimensions>;
 
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ElasticBodyReciprocalSplineKernelTransform2, KernelTransform2);

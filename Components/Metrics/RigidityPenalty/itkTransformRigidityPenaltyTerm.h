@@ -72,10 +72,10 @@ class ITK_TEMPLATE_EXPORT TransformRigidityPenaltyTerm : public TransformPenalty
 {
 public:
   /** Standard itk stuff. */
-  typedef TransformRigidityPenaltyTerm                   Self;
-  typedef TransformPenaltyTerm<TFixedImage, TScalarType> Superclass;
-  typedef SmartPointer<Self>                             Pointer;
-  typedef SmartPointer<const Self>                       ConstPointer;
+  using Self = TransformRigidityPenaltyTerm;
+  using Superclass = TransformPenaltyTerm<TFixedImage, TScalarType>;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -146,33 +146,33 @@ public:
   Initialize() override;
 
   /** Typedef's for B-spline transform. */
-  typedef BSplineOrder3TransformType                 BSplineTransformType;
-  typedef typename BSplineTransformType::Pointer     BSplineTransformPointer;
-  typedef typename BSplineTransformType::SpacingType GridSpacingType;
-  typedef typename BSplineTransformType::ImageType   CoefficientImageType;
-  typedef typename CoefficientImageType::Pointer     CoefficientImagePointer;
-  typedef typename CoefficientImageType::SpacingType CoefficientImageSpacingType;
+  using BSplineTransformType = BSplineOrder3TransformType;
+  using BSplineTransformPointer = typename BSplineTransformType::Pointer;
+  using GridSpacingType = typename BSplineTransformType::SpacingType;
+  using CoefficientImageType = typename BSplineTransformType::ImageType;
+  using CoefficientImagePointer = typename CoefficientImageType::Pointer;
+  using CoefficientImageSpacingType = typename CoefficientImageType::SpacingType;
 
   /** Typedef support for neighborhoods, filters, etc. */
-  typedef Neighborhood<ScalarType, Self::FixedImageDimension>                         NeighborhoodType;
-  typedef typename NeighborhoodType::SizeType                                         NeighborhoodSizeType;
-  typedef ImageRegionIterator<CoefficientImageType>                                   CoefficientImageIteratorType;
-  typedef NeighborhoodOperatorImageFilter<CoefficientImageType, CoefficientImageType> NOIFType;
-  typedef NeighborhoodIterator<CoefficientImageType>                                  NeighborhoodIteratorType;
-  typedef typename NeighborhoodIteratorType::RadiusType                               RadiusType;
+  using NeighborhoodType = Neighborhood<ScalarType, Self::FixedImageDimension>;
+  using NeighborhoodSizeType = typename NeighborhoodType::SizeType;
+  using CoefficientImageIteratorType = ImageRegionIterator<CoefficientImageType>;
+  using NOIFType = NeighborhoodOperatorImageFilter<CoefficientImageType, CoefficientImageType>;
+  using NeighborhoodIteratorType = NeighborhoodIterator<CoefficientImageType>;
+  using RadiusType = typename NeighborhoodIteratorType::RadiusType;
 
   /** Typedef's for the construction of the rigidity image. */
-  typedef CoefficientImageType                                                       RigidityImageType;
-  typedef typename RigidityImageType::Pointer                                        RigidityImagePointer;
-  typedef typename RigidityImageType::PixelType                                      RigidityPixelType;
-  typedef typename RigidityImageType::RegionType                                     RigidityImageRegionType;
-  typedef typename RigidityImageType::IndexType                                      RigidityImageIndexType;
-  typedef typename RigidityImageType::PointType                                      RigidityImagePointType;
-  typedef ImageRegionIterator<RigidityImageType>                                     RigidityImageIteratorType;
-  typedef BinaryBallStructuringElement<RigidityPixelType, Self::FixedImageDimension> StructuringElementType;
-  typedef typename StructuringElementType::RadiusType                                SERadiusType;
-  typedef GrayscaleDilateImageFilter<RigidityImageType, RigidityImageType, StructuringElementType> DilateFilterType;
-  typedef typename DilateFilterType::Pointer                                                       DilateFilterPointer;
+  using RigidityImageType = CoefficientImageType;
+  using RigidityImagePointer = typename RigidityImageType::Pointer;
+  using RigidityPixelType = typename RigidityImageType::PixelType;
+  using RigidityImageRegionType = typename RigidityImageType::RegionType;
+  using RigidityImageIndexType = typename RigidityImageType::IndexType;
+  using RigidityImagePointType = typename RigidityImageType::PointType;
+  using RigidityImageIteratorType = ImageRegionIterator<RigidityImageType>;
+  using StructuringElementType = BinaryBallStructuringElement<RigidityPixelType, Self::FixedImageDimension>;
+  using SERadiusType = typename StructuringElementType::RadiusType;
+  using DilateFilterType = GrayscaleDilateImageFilter<RigidityImageType, RigidityImageType, StructuringElementType>;
+  using DilateFilterPointer = typename DilateFilterType::Pointer;
 
   /** Check stuff. */
   void

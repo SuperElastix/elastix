@@ -78,22 +78,20 @@ class ITK_TEMPLATE_EXPORT EulerTransformElastix
 {
 public:
   /** Standard ITK-stuff.*/
-  typedef EulerTransformElastix Self;
+  using Self = EulerTransformElastix;
 
-  typedef itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                                            elx::TransformBase<TElastix>::FixedImageDimension>
-    Superclass1;
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                        elx::TransformBase<TElastix>::FixedImageDimension>;
 
-  typedef elx::TransformBase<TElastix> Superclass2;
+  using Superclass2 = elx::TransformBase<TElastix>;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  typedef itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType,
-                              elx::TransformBase<TElastix>::FixedImageDimension>
-    EulerTransformType;
+  using EulerTransformType = itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+                                                 elx::TransformBase<TElastix>::FixedImageDimension>;
 
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -128,8 +126,8 @@ public:
   using typename Superclass1::InputVnlVectorType;
   using typename Superclass1::OutputVnlVectorType;
 
-  typedef typename EulerTransformType::Pointer    EulerTransformPointer;
-  typedef typename EulerTransformType::OffsetType OffsetType;
+  using EulerTransformPointer = typename EulerTransformType::Pointer;
+  using OffsetType = typename EulerTransformType::OffsetType;
 
   /** Typedef's inherited from TransformBase. */
   using typename Superclass2::ElastixType;
@@ -142,21 +140,21 @@ public:
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
-  typedef typename Superclass2::ITKBaseType              ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
+  using ITKBaseType = typename Superclass2::ITKBaseType;
+  using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Other typedef's. */
-  typedef typename FixedImageType::IndexType     IndexType;
-  typedef typename IndexType::IndexValueType     IndexValueType;
-  typedef typename FixedImageType::SizeType      SizeType;
-  typedef typename FixedImageType::PointType     PointType;
-  typedef typename FixedImageType::SpacingType   SpacingType;
-  typedef typename FixedImageType::RegionType    RegionType;
-  typedef typename FixedImageType::DirectionType DirectionType;
+  using IndexType = typename FixedImageType::IndexType;
+  using IndexValueType = typename IndexType::IndexValueType;
+  using SizeType = typename FixedImageType::SizeType;
+  using PointType = typename FixedImageType::PointType;
+  using SpacingType = typename FixedImageType::SpacingType;
+  using RegionType = typename FixedImageType::RegionType;
+  using DirectionType = typename FixedImageType::DirectionType;
 
-  typedef itk::CenteredTransformInitializer<EulerTransformType, FixedImageType, MovingImageType>
-                                                     TransformInitializerType;
-  typedef typename TransformInitializerType::Pointer TransformInitializerPointer;
+  using TransformInitializerType =
+    itk::CenteredTransformInitializer<EulerTransformType, FixedImageType, MovingImageType>;
+  using TransformInitializerPointer = typename TransformInitializerType::Pointer;
 
   /** For scales setting in the optimizer */
   using typename Superclass2::ScalesType;

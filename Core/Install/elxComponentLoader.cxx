@@ -44,9 +44,9 @@ class _installsupportedimagesrecursively
 public:
   /** ElastixTypedef is defined in elxSupportedImageTypes.h, by means of the
    * the elxSupportedImageTypesMacro */
-  typedef ElastixTypedef<VIndex>                      ET;
-  typedef typename ET::ElastixType                    ElastixType;
-  typedef ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;
+  using ET = ElastixTypedef<VIndex>;
+  using ElastixType = typename ET::ElastixType;
+  using ComponentDescriptionType = ComponentDatabase::ComponentDescriptionType;
 
   static int
   DO(const ComponentDescriptionType & name, ComponentDatabase * cdb)
@@ -69,7 +69,7 @@ template <>
 class _installsupportedimagesrecursively<NrOfSupportedImageTypes + 1>
 {
 public:
-  typedef ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;
+  using ComponentDescriptionType = ComponentDatabase::ComponentDescriptionType;
   static int
   DO(const ComponentDescriptionType & /** name */, ComponentDatabase * /** cdb */)
   {
