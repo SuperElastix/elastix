@@ -61,12 +61,12 @@ public:
   /** Typedef for a function that computes \f$\beta\f$, given the previousGradient,
    * the current gradient, and the previous search direction */
   using ComputeBetaFunctionType = double (Self::*)(const DerivativeType &,
-                                                  const DerivativeType &,
-                                                  const ParametersType &);
+                                                   const DerivativeType &,
+                                                   const ParametersType &);
   using BetaDefinitionType = std::string;
   using BetaDefinitionMapType = std::map<BetaDefinitionType, ComputeBetaFunctionType>;
 
-  typedef enum
+  enum StopConditionType
   {
     MetricError,
     LineSearchError,
@@ -75,7 +75,7 @@ public:
     ValueTolerance,
     InfiniteBeta,
     Unknown
-  } StopConditionType;
+  };
 
   void
   StartOptimization() override;

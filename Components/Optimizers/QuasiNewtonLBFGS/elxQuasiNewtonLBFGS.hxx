@@ -375,7 +375,7 @@ void
 QuasiNewtonLBFGS<TElastix>::AfterEachResolution()
 {
   /**
-  typedef enum {
+  enum {
     MetricError,
     LineSearchError,
     MaximumNumberOfIterations,
@@ -486,7 +486,7 @@ QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition() const
 {
   /** Must be repeated here; otherwise the StopconditionTypes of the
    * QuasiNewtonOptimizer and the LineSearchOptimizer are mixed up. */
-  typedef enum
+  enum LineSearchStopConditionType
   {
     StrongWolfeConditionsSatisfied,
     MetricError,
@@ -497,7 +497,7 @@ QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition() const
     RoundingError,
     AscentSearchDirection,
     Unknown
-  } LineSearchStopConditionType;
+  };
 
   std::string stopcondition;
 

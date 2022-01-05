@@ -49,7 +49,7 @@ public:
   itkTypeMacro(RSGDEachParameterApartBaseOptimizer, SingleValuedNonLinearOptimizer);
 
   /** Codes of stopping conditions. */
-  typedef enum
+  enum StopConditionType
   {
     GradientMagnitudeTolerance = 1,
     StepTooSmall,
@@ -57,7 +57,7 @@ public:
     SamplesNotAvailable,
     MaximumNumberOfIterations,
     MetricError
-  } StopConditionType;
+  };
 
   /** Specify whether to minimize or maximize the cost function. */
   itkSetMacro(Maximize, bool);

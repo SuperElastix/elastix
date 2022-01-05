@@ -64,7 +64,7 @@ public:
   using Superclass::MeasureType;
   using Superclass::ScalesType;
 
-  typedef enum
+  enum StopConditionType
   {
     MetricError,
     MaximumNumberOfIterations,
@@ -73,7 +73,7 @@ public:
     ValueTolerance,
     ZeroStepLength,
     Unknown
-  } StopConditionType;
+  };
 
   void
   StartOptimization() override;

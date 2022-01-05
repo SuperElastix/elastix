@@ -387,7 +387,7 @@ void
 ConjugateGradient<TElastix>::AfterEachResolution()
 {
   /**
-  typedef enum {
+  enum {
     MetricError,
     LineSearchError,
     MaximumNumberOfIterations,
@@ -498,7 +498,7 @@ ConjugateGradient<TElastix>::GetLineSearchStopCondition() const
   /** Must be repeated here; otherwise the StopconditionTypes of the
    * GenericConjugateGradientOptimizer and the LineSearchOptimizer
    * are mixed up. */
-  typedef enum
+  enum LineSearchStopConditionType
   {
     StrongWolfeConditionsSatisfied,
     MetricError,
@@ -509,7 +509,7 @@ ConjugateGradient<TElastix>::GetLineSearchStopCondition() const
     RoundingError,
     AscentSearchDirection,
     Unknown
-  } LineSearchStopConditionType;
+  };
 
   std::string stopcondition;
 
