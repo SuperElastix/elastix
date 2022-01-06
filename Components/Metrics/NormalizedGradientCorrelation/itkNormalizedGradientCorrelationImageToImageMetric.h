@@ -84,8 +84,7 @@ public:
   using typename Superclass::MovingImagePointer;
   using FixedImagePixelType = typename TFixedImage::PixelType;
   using MovedImagePixelType = typename TMovingImage::PixelType;
-  using OptimizerType = typename itk::Optimizer;
-  using ScalesType = typename OptimizerType::ScalesType;
+  using ScalesType = typename Optimizer::ScalesType;
 
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
 

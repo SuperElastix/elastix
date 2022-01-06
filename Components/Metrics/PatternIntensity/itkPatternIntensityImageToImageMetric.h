@@ -100,8 +100,7 @@ public:
   using typename Superclass::FixedImageLimiterOutputType;
   using typename Superclass::MovingImageLimiterOutputType;
   using typename Superclass::MovingImageDerivativeScalesType;
-  using OptimizerType = typename itk::Optimizer;
-  using ScalesType = typename OptimizerType::ScalesType;
+  using ScalesType = typename Optimizer::ScalesType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
