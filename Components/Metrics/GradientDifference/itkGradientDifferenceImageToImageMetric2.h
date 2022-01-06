@@ -113,8 +113,7 @@ public:
   using FixedImagePixelType = typename TFixedImage::PixelType;
   using MovedImagePixelType = typename TMovingImage::PixelType;
   using MovingImageRegionType = typename MovingImageType::RegionType;
-  using OptimizerType = typename itk::Optimizer;
-  using ScalesType = typename OptimizerType::ScalesType;
+  using ScalesType = typename Optimizer::ScalesType;
 
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
   itkStaticConstMacro(MovedImageDimension, unsigned int, MovingImageType::ImageDimension);
