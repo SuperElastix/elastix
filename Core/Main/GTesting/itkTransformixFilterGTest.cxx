@@ -20,11 +20,20 @@
 
 // First include the header file to be tested:
 #include <itkTransformixFilter.h>
+#include <itkElastixRegistrationMethod.h>
 #include <itkParameterFileParser.h>
 
 #include "elxCoreMainGTestUtilities.h"
 #include "elxDefaultConstructibleSubclass.h"
 #include "GTesting/elxGTestUtilities.h"
+
+#include <itkStackTransform.h>
+
+#include <../Components/Transforms/AffineLogStackTransform/itkAffineLogStackTransform.h>
+#include <../Components/Transforms/BSplineStackTransform/itkBSplineStackTransform.h>
+#include <../Components/Transforms/EulerStackTransform/itkEulerStackTransform.h>
+#include <../Components/Transforms/TranslationStackTransform/itkTranslationStackTransform.h>
+
 
 // ITK header files:
 #include <itkAffineTransform.h>
@@ -32,6 +41,7 @@
 #include <itkCompositeTransform.h>
 #include <itkEuler2DTransform.h>
 #include <itkEuler3DTransform.h>
+#include <itkFileTools.h>
 #include <itkImage.h>
 #include <itkImageBufferRange.h>
 #include <itkNumberToString.h>
@@ -39,6 +49,8 @@
 #include <itkSimilarity2DTransform.h>
 #include <itkSimilarity3DTransform.h>
 #include <itkTranslationTransform.h>
+#include <itkTransformFactory.h>
+
 
 // GoogleTest header file:
 #include <gtest/gtest.h>
@@ -60,7 +72,9 @@ using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
+using elx::CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
+using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::GTestUtilities::GeneratePseudoRandomParameters;
 using elx::GTestUtilities::MakePoint;
 using elx::GTestUtilities::MakeSize;
@@ -310,6 +324,73 @@ ExpectAlmostEqualPixelValues(const TImage & actualImage, const TImage & expected
     ++expectedImageIterator;
     ++indexIterator;
   }
+}
+
+
+template <typename TImage>
+void
+Expect_Transformix_output_equals_registration_output_from_file(const testing::Test &    test,
+                                                               const std::string &      subdirectoryName,
+                                                               TImage &                 fixedImage,
+                                                               TImage &                 movingImage,
+                                                               const ParameterMapType & parameterMap)
+{
+  const std::string rootOutputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(test);
+  itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
+
+  const std::string outputDirectoryPath = rootOutputDirectoryPath + '/' + subdirectoryName;
+  itk::FileTools::CreateDirectory(outputDirectoryPath);
+
+
+  const auto registration = CheckNew<itk::ElastixRegistrationMethod<TImage, TImage>>();
+
+  registration->SetFixedImage(&fixedImage);
+  registration->SetMovingImage(&movingImage);
+  registration->SetParameterObject(CreateParameterObject(parameterMap));
+  registration->SetOutputDirectory(outputDirectoryPath);
+  registration->Update();
+
+  const auto & registrationOutputImage = Deref(registration->GetOutput());
+
+  const itk::ImageBufferRange<const TImage> registrationOutputImageBufferRange(registrationOutputImage);
+  const auto beginOfRegistrationOutputImageBuffer = registrationOutputImageBufferRange.cbegin();
+  const auto endOfRegistrationOutputImageBuffer = registrationOutputImageBufferRange.cend();
+  const itk::ImageBufferRange<const TImage> movingImageBufferRange(movingImage);
+
+  ASSERT_NE(beginOfRegistrationOutputImageBuffer, endOfRegistrationOutputImageBuffer);
+
+  const auto firstRegistrationOutputPixel = *beginOfRegistrationOutputImageBuffer;
+
+  // Check that the registrationOutputImage is not a uniform image, otherwise the test
+  // probably just does does not make much sense.
+  EXPECT_NE(std::find_if_not(beginOfRegistrationOutputImageBuffer,
+                             endOfRegistrationOutputImageBuffer,
+                             [firstRegistrationOutputPixel](const auto pixelValue) {
+                               return pixelValue == firstRegistrationOutputPixel;
+                             }),
+            endOfRegistrationOutputImageBuffer);
+
+  // Check that the registrationOutputImage has different pixel values than the moving image, otherwise the test
+  // probably just does does not make much sense either.
+  EXPECT_FALSE(std::equal(beginOfRegistrationOutputImageBuffer,
+                          endOfRegistrationOutputImageBuffer,
+                          movingImageBufferRange.cbegin(),
+                          movingImageBufferRange.cend()));
+
+  const auto transformixFilter = CheckNew<itk::TransformixFilter<TImage>>();
+
+  transformixFilter->SetMovingImage(&movingImage);
+
+  const auto parameterObject = CheckNew<elx::ParameterObject>();
+
+  parameterObject->SetParameterMap(
+    itk::ParameterFileParser::ReadParameterMap(outputDirectoryPath + "/TransformParameters.0.txt"));
+
+  transformixFilter->SetTransformParameterObject(parameterObject);
+
+  transformixFilter->Update();
+
+  EXPECT_EQ(Deref(transformixFilter->GetOutput()), registrationOutputImage);
 }
 
 } // namespace
@@ -688,4 +769,46 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndScale)
   // elastix).
   EXPECT_EQ(DerefSmartPointer(transformixOutput),
             *(CreateResampleImageFilter(*inputImage, scaleAndTranslationTransform)->GetOutput()));
+}
+
+
+GTEST_TEST(itkTransformixFilter, OutputEqualsRegistrationOutputForStackTransform)
+{
+  using PixelType = float;
+  enum
+  {
+    ImageDimension = 3,
+    imageSizeX = 5,
+    imageSizeY = 6,
+    imageSizeZ = 4
+  };
+
+  itk::TransformFactory<itk::AffineLogStackTransform<ImageDimension>>::RegisterTransform();
+  itk::TransformFactory<itk::BSplineStackTransform<ImageDimension>>::RegisterTransform();
+  itk::TransformFactory<itk::EulerStackTransform<ImageDimension>>::RegisterTransform();
+  itk::TransformFactory<itk::TranslationStackTransform<ImageDimension>>::RegisterTransform();
+
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType, ImageDimension>({ imageSizeX, imageSizeY, imageSizeZ });
+
+  for (const std::string transformName :
+       { "AffineLogStackTransform", "BSplineStackTransform", "TranslationStackTransform", "EulerStackTransform" })
+  {
+    for (const std::string fileNameExtension : { "", "h5", "tfm" })
+    {
+      Expect_Transformix_output_equals_registration_output_from_file(
+        *this,
+        transformName + fileNameExtension,
+        *image,
+        *image,
+        ParameterMapType{ // Parameters in alphabetic order:
+                          { "AutomaticTransformInitialization", { "false" } },
+                          { "ImageSampler", { "Full" } },
+                          { "MaximumNumberOfIterations", { "2" } },
+                          { "Metric", { "VarianceOverLastDimensionMetric" } },
+                          { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                          { "ITKTransformOutputFileNameExtension", { fileNameExtension } },
+                          { "Transform", { transformName } } });
+    }
+  }
 }
