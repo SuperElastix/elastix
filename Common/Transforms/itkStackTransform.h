@@ -44,9 +44,6 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  /** New method for creating an object using a factory. */
-  itkNewMacro(Self);
-
   /** Run-time type information (and related methods). */
   itkTypeMacro(StackTransform, AdvancedTransform);
 
@@ -59,6 +56,7 @@ public:
   /** Typedefs from the Superclass. */
   using typename Superclass::ScalarType;
   using typename Superclass::ParametersType;
+  using typename Superclass::FixedParametersType;
   using typename Superclass::NumberOfParametersType;
   using typename Superclass::ParametersValueType;
   using typename Superclass::JacobianType;
@@ -115,18 +113,34 @@ public:
 
   /** Set the fixed parameters. */
   void
-  SetFixedParameters(const ParametersType &) override
+  SetFixedParameters(const FixedParametersType & fixedParameters) override
   {
-    // \todo: to be implemented by Coert
-  }
+    const auto numberOfFixedParameters = fixedParameters.size();
+    if (numberOfFixedParameters < numberOfGeneralFixedParametersOfStack)
+    {
+      itkExceptionMacro(<< "The number of FixedParameters (" << numberOfFixedParameters << ") should be at least "
+                        << numberOfGeneralFixedParametersOfStack);
+    }
 
+    if (this->Superclass::m_FixedParameters != fixedParameters)
+    {
+      this->Superclass::m_FixedParameters = fixedParameters;
 
-  /** Get the Fixed Parameters. */
-  const ParametersType &
-  GetFixedParameters() const override
-  {
-    // \todo: to be implemented by Coert: check this:
-    return this->m_FixedParameters;
+      const FixedParametersType fixedParametersOfSubTransform(
+        fixedParameters.data_block() + numberOfGeneralFixedParametersOfStack,
+        numberOfFixedParameters - numberOfGeneralFixedParametersOfStack);
+
+      m_SubTransformContainer.resize(fixedParameters[indexOfNumberOfSubTransforms]);
+
+      for (auto & subTransform : m_SubTransformContainer)
+      {
+        subTransform = this->CreateSubTransform();
+        subTransform->SetFixedParameters(fixedParametersOfSubTransform);
+      }
+      m_StackSpacing = fixedParameters[indexOfStackSpacing];
+      m_StackOrigin = fixedParameters[indexOfStackOrigin];
+      this->Modified();
+    }
   }
 
 
@@ -180,16 +194,33 @@ public:
   }
 
 
+  /** Sets the fixed parameters to the general fixed parameters of the stack + the fixed parameters of the first
+   * sub-transform (if any). */
+  void
+  UpdateFixedParameters()
+  {
+    const SubTransformType * const subTransform =
+      m_SubTransformContainer.empty() ? nullptr : m_SubTransformContainer.front();
+    this->UpdateFixedParametersInternally((subTransform == nullptr) ? FixedParametersType()
+                                                                    : subTransform->GetFixedParameters());
+  }
+
+
   /** Set all sub transforms to transform. */
   void
   SetAllSubTransforms(const SubTransformType & transform)
   {
+    const auto & fixedParametersOfSubTransform = transform.GetFixedParameters();
+    const auto & parametersOfSubTransform = transform.GetParameters();
+
+    UpdateFixedParametersInternally(fixedParametersOfSubTransform);
+
     for (auto & subTransform : m_SubTransformContainer)
     {
       // Copy transform
       SubTransformPointer transformcopy = dynamic_cast<SubTransformType *>(transform.CreateAnother().GetPointer());
-      transformcopy->SetFixedParameters(transform.GetFixedParameters());
-      transformcopy->SetParameters(transform.GetParameters());
+      transformcopy->SetFixedParameters(fixedParametersOfSubTransform);
+      transformcopy->SetParameters(parametersOfSubTransform);
       // Set sub transform
       subTransform = transformcopy;
     }
@@ -216,6 +247,40 @@ private:
   StackTransform(const Self &) = delete;
   void
   operator=(const Self &) = delete;
+
+  // Indices of the general fixed parameters into the FixedParameters array, and the number of those parameters.
+  enum
+  {
+    indexOfNumberOfSubTransforms,
+    indexOfStackSpacing,
+    indexOfStackOrigin,
+    numberOfGeneralFixedParametersOfStack
+  };
+
+
+  /** Each override of this pure virtual member function should create a subtransform for the specific (derived) stack
+   * transform type. For example, for an `TranslationStackTransform` it should create an `AdvancedTranslationTransform`,
+   * and for an `EulerStackTransform` it should create an `EulerTransform`. */
+  virtual SubTransformPointer
+  CreateSubTransform() const = 0;
+
+
+  /** Sets the fixed parameters to the general fixed parameters of the stack + the specified fixed parameters of a
+   * sub-transform. */
+  void
+  UpdateFixedParametersInternally(const FixedParametersType & fixedParametersOfSubTransform)
+  {
+    const auto numberOfFixedParametersOfSubTransform = fixedParametersOfSubTransform.size();
+
+    FixedParametersType & fixedParametersOfStack = this->Superclass::m_FixedParameters;
+    fixedParametersOfStack.set_size(numberOfGeneralFixedParametersOfStack + numberOfFixedParametersOfSubTransform);
+    fixedParametersOfStack[indexOfNumberOfSubTransforms] = m_SubTransformContainer.size();
+    fixedParametersOfStack[indexOfStackOrigin] = m_StackOrigin;
+    fixedParametersOfStack[indexOfStackSpacing] = m_StackSpacing;
+    std::copy_n(fixedParametersOfSubTransform.begin(),
+                numberOfFixedParametersOfSubTransform,
+                fixedParametersOfStack.begin() + numberOfGeneralFixedParametersOfStack);
+  }
 
 
   static constexpr const char * unimplementedOverrideMessage = "Not implemented for StackTransform";

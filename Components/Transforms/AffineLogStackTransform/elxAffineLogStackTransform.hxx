@@ -36,12 +36,6 @@ AffineLogStackTransform<TElastix>::InitializeAffineLogTransform()
   /** Initialize the m_DummySubTransform */
   this->m_DummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
 
-  /** Create stack transform. */
-  this->m_StackTransform = StackTransformType::New();
-
-  /** Set stack transform as current transform. */
-  this->SetCurrentTransform(this->m_StackTransform);
-
   return 0;
 }
 
@@ -104,37 +98,40 @@ template <class TElastix>
 void
 AffineLogStackTransform<TElastix>::ReadFromFile()
 {
-  /** Read stack-spacing, stack-origin and number of sub-transforms. */
-  this->GetConfiguration()->ReadParameter(
-    this->m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
-  this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
-  this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
-
-  ReducedDimensionInputPointType RDcenterOfRotationPoint{};
-
-  /** Try first to read the CenterOfRotationPoint from the
-   * transform parameter file, this is the new, and preferred
-   * way, since elastix 3.402.
-   */
-  const bool pointRead = this->ReadCenterOfRotationPoint(RDcenterOfRotationPoint);
-
-  if (!pointRead)
+  if (!this->HasITKTransformParameters())
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
-    itkExceptionMacro(<< "Transform parameter file is corrupt.")
+    /** Read stack-spacing, stack-origin and number of sub-transforms. */
+    this->GetConfiguration()->ReadParameter(
+      this->m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+    this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+    this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
+
+    ReducedDimensionInputPointType RDcenterOfRotationPoint{};
+
+    /** Try first to read the CenterOfRotationPoint from the
+     * transform parameter file, this is the new, and preferred
+     * way, since elastix 3.402.
+     */
+    const bool pointRead = this->ReadCenterOfRotationPoint(RDcenterOfRotationPoint);
+
+    if (!pointRead)
+    {
+      xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
+      itkExceptionMacro(<< "Transform parameter file is corrupt.")
+    }
+
+    this->InitializeAffineLogTransform();
+
+    this->m_DummySubTransform->SetCenter(RDcenterOfRotationPoint);
+
+    /** Set stack transform parameters. */
+    this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+    this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+    this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
+
+    /** Set stack subtransforms. */
+    this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
   }
-
-  this->InitializeAffineLogTransform();
-
-  this->m_DummySubTransform->SetCenter(RDcenterOfRotationPoint);
-
-  /** Set stack transform parameters. */
-  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
-
-  /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();

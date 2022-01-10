@@ -37,13 +37,6 @@ TranslationStackTransform<TElastix>::InitializeTranslationTransform()
   xl::xout["error"] << "InitializeTranslationTransform" << std::endl;
 
   this->m_DummySubTransform = ReducedDimensionTranslationTransformType::New();
-
-  /** Create stack transform. */
-  this->m_StackTransform = StackTransformType::New();
-
-  /** Set stack transform as current transform. */
-  this->SetCurrentTransform(this->m_StackTransform);
-
   return 0;
 } // end InitializeTranslationTransform()
 
@@ -130,22 +123,25 @@ TranslationStackTransform<TElastix>::ReadFromFile()
 {
   xl::xout["error"] << "ReadFromFile" << std::endl;
 
-  /** Read stack-spacing, stack-origin and number of sub-transforms. */
-  this->GetConfiguration()->ReadParameter(
-    this->m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
-  this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
-  this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
+  if (!this->HasITKTransformParameters())
+  {
+    /** Read stack-spacing, stack-origin and number of sub-transforms. */
+    this->GetConfiguration()->ReadParameter(
+      this->m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+    this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+    this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
-  /** Initialize translation transform. */
-  InitializeTranslationTransform();
+    /** Initialize translation transform. */
+    InitializeTranslationTransform();
 
-  /** Set stack transform parameters. */
-  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
+    /** Set stack transform parameters. */
+    this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
+    this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
+    this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
 
-  /** Set stack subtransforms. */
-  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
+    /** Set stack subtransforms. */
+    this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
+  }
 
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();

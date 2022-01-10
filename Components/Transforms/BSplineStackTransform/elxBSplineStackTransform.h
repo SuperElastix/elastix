@@ -23,7 +23,7 @@
 /** Include itk transforms needed. */
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
-#include "itkStackTransform.h"
+#include "itkBSplineStackTransform.h"
 
 /** Include grid schedule computer and upsample filter. */
 #include "itkGridScheduleComputer.h"
@@ -251,7 +251,7 @@ public:
 
 protected:
   /** The constructor. */
-  BSplineStackTransform() = default;
+  BSplineStackTransform() { this->Superclass1::SetCurrentTransform(m_StackTransform); }
 
   /** The destructor. */
   ~BSplineStackTransform() override = default;
@@ -281,10 +281,11 @@ private:
   operator=(const Self &) = delete;
 
   /** Typedef for stack transform. */
-  using StackTransformType = itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension>;
+  using StackTransformType = itk::BSplineStackTransform<SpaceDimension>;
 
   /** The B-spline stack transform. */
-  typename StackTransformType::Pointer m_StackTransform;
+  const typename StackTransformType::Pointer m_StackTransform{ StackTransformType::New() };
+
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionBSplineTransformBasePointer m_DummySubTransform;
 

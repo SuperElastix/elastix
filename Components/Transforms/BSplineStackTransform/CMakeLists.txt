@@ -2,5 +2,6 @@
 ADD_ELXCOMPONENT( BSplineStackTransform
  elxBSplineStackTransform.h
  elxBSplineStackTransform.hxx
- elxBSplineStackTransform.cxx )
+ elxBSplineStackTransform.cxx
+ itkBSplineStackTransform.h )
 

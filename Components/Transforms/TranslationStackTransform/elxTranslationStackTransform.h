@@ -21,7 +21,7 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedTranslationTransform.h"
-#include "itkStackTransform.h"
+#include "itkTranslationStackTransform.h"
 
 
 /**
@@ -134,7 +134,7 @@ public:
 
 protected:
   /** The constructor. */
-  TranslationStackTransform() = default;
+  TranslationStackTransform() { this->Superclass1::SetCurrentTransform(m_StackTransform); }
 
   /** The destructor. */
   ~TranslationStackTransform() override = default;
@@ -155,10 +155,10 @@ private:
   operator=(const Self &) = delete;
 
   /** Typedef for stack transform. */
-  using StackTransformType = itk::StackTransform<ElastixBase::CoordRepType, SpaceDimension, SpaceDimension>;
+  using StackTransformType = itk::TranslationStackTransform<SpaceDimension>;
 
   /** The Translation stack transform. */
-  typename StackTransformType::Pointer m_StackTransform;
+  const typename StackTransformType::Pointer m_StackTransform{ StackTransformType::New() };
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionTranslationTransformPointer m_DummySubTransform;
