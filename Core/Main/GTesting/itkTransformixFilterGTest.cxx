@@ -29,11 +29,6 @@
 
 #include <itkStackTransform.h>
 
-#include <../Components/Transforms/AffineLogStackTransform/itkAffineLogStackTransform.h>
-#include <../Components/Transforms/BSplineStackTransform/itkBSplineStackTransform.h>
-#include <../Components/Transforms/EulerStackTransform/itkEulerStackTransform.h>
-#include <../Components/Transforms/TranslationStackTransform/itkTranslationStackTransform.h>
-
 
 // ITK header files:
 #include <itkAffineTransform.h>
@@ -49,7 +44,6 @@
 #include <itkSimilarity2DTransform.h>
 #include <itkSimilarity3DTransform.h>
 #include <itkTranslationTransform.h>
-#include <itkTransformFactory.h>
 
 
 // GoogleTest header file:
@@ -782,11 +776,6 @@ GTEST_TEST(itkTransformixFilter, OutputEqualsRegistrationOutputForStackTransform
     imageSizeY = 6,
     imageSizeZ = 4
   };
-
-  itk::TransformFactory<itk::AffineLogStackTransform<ImageDimension>>::RegisterTransform();
-  itk::TransformFactory<itk::BSplineStackTransform<ImageDimension>>::RegisterTransform();
-  itk::TransformFactory<itk::EulerStackTransform<ImageDimension>>::RegisterTransform();
-  itk::TransformFactory<itk::TranslationStackTransform<ImageDimension>>::RegisterTransform();
 
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType, ImageDimension>({ imageSizeX, imageSizeY, imageSizeZ });
