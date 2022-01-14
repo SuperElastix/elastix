@@ -133,16 +133,22 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SplitR
 }
 
 
-/** Transform a point. */
+// Transform a point
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void
+auto
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
-  const InputPointType &    point,
-  OutputPointType &         outputPoint,
-  WeightsType &             weights,
-  ParameterIndexArrayType & indices,
-  bool &                    inside) const
+  const InputPointType & point) const -> OutputPointType
 {
+  /** Allocate memory on the stack: */
+  const unsigned long                         numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType             weightsArray[numberOfWeights];
+  typename ParameterIndexArrayType::ValueType indicesArray[numberOfWeights];
+  WeightsType                                 weights(weightsArray, numberOfWeights, false);
+  ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
+
+  OutputPointType outputPoint;
+  bool            inside;
+
   inside = true;
   InputPointType transformedPoint = point;
 
@@ -154,7 +160,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
     {
       outputPoint[j] = transformedPoint[j];
     }
-    return;
+    return outputPoint;
   }
 
   ContinuousIndexType cindex;
@@ -168,7 +174,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   if (!inside)
   {
     outputPoint = transformedPoint;
-    return;
+    return outputPoint;
   }
 
   /** Compute interpolation weights. */
@@ -225,6 +231,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   {
     outputPoint[j] += transformedPoint[j];
   }
+
+  return outputPoint;
 }
 
 
