@@ -207,9 +207,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
 
   OutputPointType outputPoint;
-  bool            inside;
 
-  inside = true;
   InputPointType transformedPoint = point;
 
   /** Check if the coefficient image has been set. */
@@ -229,8 +227,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and return the input point
-  inside = this->InsideValidRegion(cindex);
-  if (!inside)
+  if (!this->InsideValidRegion(cindex))
   {
     outputPoint = transformedPoint;
     return outputPoint;
