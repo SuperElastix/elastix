@@ -147,9 +147,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
 
   OutputPointType outputPoint;
-  bool            inside;
 
-  inside = true;
   InputPointType transformedPoint = point;
 
   /** Check if the coefficient image has been set. */
@@ -170,8 +168,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
    * (except for the last dimension, which wraps around) we assume
    * zero displacement and return the input point.
    */
-  inside = this->InsideValidRegion(cindex);
-  if (!inside)
+  if (!this->InsideValidRegion(cindex))
   {
     outputPoint = transformedPoint;
     return outputPoint;
