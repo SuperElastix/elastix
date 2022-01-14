@@ -102,19 +102,9 @@ public:
   void
   SetGridRegion(const RegionType & region) override;
 
-  /** Transform points by a B-spline deformable transformation.
-   * On return, weights contains the interpolation weights used to compute the
-   * deformation and indices of the x (zeroth) dimension coefficient parameters
-   * in the support region used to compute the deformation.
-   * Parameter indices for the i-th dimension can be obtained by adding
-   * ( i * this->GetNumberOfParametersPerDimension() ) to the indices array.
-   */
-  void
-  TransformPoint(const InputPointType &    inputPoint,
-                 OutputPointType &         outputPoint,
-                 WeightsType &             weights,
-                 ParameterIndexArrayType & indices,
-                 bool &                    inside) const override;
+  /** Transform points by a B-spline deformable transformation. */
+  OutputPointType
+  TransformPoint(const InputPointType & point) const override;
 
   /** Compute the Jacobian of the transformation. */
   virtual void

@@ -195,14 +195,20 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
 
 // Transform a point
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void
+auto
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
-  const InputPointType &    point,
-  OutputPointType &         outputPoint,
-  WeightsType &             weights,
-  ParameterIndexArrayType & indices,
-  bool &                    inside) const
+  const InputPointType & point) const -> OutputPointType
 {
+  /** Allocate memory on the stack: */
+  const unsigned long                         numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType             weightsArray[numberOfWeights];
+  typename ParameterIndexArrayType::ValueType indicesArray[numberOfWeights];
+  WeightsType                                 weights(weightsArray, numberOfWeights, false);
+  ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
+
+  OutputPointType outputPoint;
+  bool            inside;
+
   inside = true;
   InputPointType transformedPoint = point;
 
@@ -214,7 +220,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
     {
       outputPoint[j] = transformedPoint[j];
     }
-    return;
+    return outputPoint;
   }
 
   /***/
@@ -227,7 +233,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   if (!inside)
   {
     outputPoint = transformedPoint;
-    return;
+    return outputPoint;
   }
 
   // Compute interpolation weights
@@ -280,27 +286,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   {
     outputPoint[j] += transformedPoint[j];
   }
-
-} // end TransformPoint()
-
-
-// Transform a point
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-auto
-AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
-  const InputPointType & point) const -> OutputPointType
-{
-  /** Allocate memory on the stack: */
-  const unsigned long                         numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType             weightsArray[numberOfWeights];
-  typename ParameterIndexArrayType::ValueType indicesArray[numberOfWeights];
-  WeightsType                                 weights(weightsArray, numberOfWeights, false);
-  ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
-
-  OutputPointType outputPoint;
-  bool            inside;
-
-  this->TransformPoint(point, outputPoint, weights, indices, inside);
 
   return outputPoint;
 }
