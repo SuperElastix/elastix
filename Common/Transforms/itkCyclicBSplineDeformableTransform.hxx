@@ -197,26 +197,26 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
      * (for both supportRegion1 and supportRegion2.
      */
     using IteratorType = ImageRegionConstIterator<ImageType>;
-    IteratorType iterator[SpaceDimension];
+    IteratorType iterators[SpaceDimension];
 
     const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
     for (unsigned int j = 0; j < SpaceDimension - 1; ++j)
     {
-      iterator[j] = IteratorType(this->m_CoefficientImages[j], supportRegions[r]);
+      iterators[j] = IteratorType(this->m_CoefficientImages[j], supportRegions[r]);
     }
 
     /** Loop over this support region. */
-    while (!iterator[0].IsAtEnd())
+    while (!iterators[0].IsAtEnd())
     {
       /** Populate the indices array. */
-      indices[counter] = &(iterator[0].Value()) - basePointer;
+      indices[counter] = &(iterators[0].Value()) - basePointer;
 
       /** Multiply weigth with coefficient to compute displacement. */
       for (unsigned int j = 0; j < SpaceDimension - 1; ++j)
       {
-        outputPoint[j] += static_cast<ScalarType>(weights[counter] * iterator[j].Value());
-        ++iterator[j];
+        outputPoint[j] += static_cast<ScalarType>(weights[counter] * iterators[j].Value());
+        ++iterators[j];
       }
       ++counter;
 
