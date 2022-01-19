@@ -87,14 +87,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
 
   // Setup variables for computing interpolation
   this->m_Offset = SplineOrder / 2;
-  if (SplineOrder % 2)
-  {
-    this->m_SplineOrderOdd = true;
-  }
-  else
-  {
-    this->m_SplineOrderOdd = false;
-  }
   this->m_ValidRegion = this->m_GridRegion;
 
   /** Fixed Parameters store the following information:

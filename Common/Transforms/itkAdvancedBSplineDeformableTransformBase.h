@@ -373,9 +373,6 @@ protected:
   ContinuousIndexType m_ValidRegionBegin;
   ContinuousIndexType m_ValidRegionEnd;
 
-  /** Odd or even order B-spline. */
-  bool m_SplineOrderOdd;
-
   /** Keep a pointer to the input parameters. */
   const ParametersType * m_InputParametersPointer;
 
