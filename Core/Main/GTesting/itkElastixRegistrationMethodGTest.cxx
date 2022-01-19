@@ -473,78 +473,89 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
   };
 
   const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
-
   filter->SetFixedImage(image);
   filter->SetMovingImage(image);
-  filter->SetInitialTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt");
 
   const std::string rootOutputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
   itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
 
-  for (const auto nameAndItkTransform :
-       { NameAndItkTransform{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
-         NameAndItkTransform{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
-         NameAndItkTransform{ "EulerTransform", itk::Euler2DTransform<>::New() },
-         NameAndItkTransform{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
-         NameAndItkTransform{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
+  for (const bool useInitialTransform : { false, true })
   {
-    for (const std::string fileNameExtension : { "", "h5", "tfm" })
+    filter->SetInitialTransformParameterFileName(
+      useInitialTransform ? (GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt") : "");
+
+    const std::string outputSubdirectoryPath =
+      rootOutputDirectoryPath + "/" + (useInitialTransform ? "InitialTranslation(1,-2)" : "NoInitialTransform");
+    itk::FileTools::CreateDirectory(outputSubdirectoryPath);
+
+    for (const auto nameAndItkTransform :
+         { NameAndItkTransform{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
+           NameAndItkTransform{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
+           NameAndItkTransform{ "EulerTransform", itk::Euler2DTransform<>::New() },
+           NameAndItkTransform{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
+           NameAndItkTransform{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
     {
-      const std::string outputDirectoryPath =
-        rootOutputDirectoryPath + "/" + nameAndItkTransform.name + fileNameExtension;
-      itk::FileTools::CreateDirectory(outputDirectoryPath);
-
-      filter->SetOutputDirectory(outputDirectoryPath);
-
-      filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                         { "AutomaticTransformInitialization", "false" },
-                                                         { "ImageSampler", "Full" },
-                                                         { "ITKTransformOutputFileNameExtension", fileNameExtension },
-                                                         { "MaximumNumberOfIterations", "0" },
-                                                         { "Metric", "AdvancedNormalizedCorrelation" },
-                                                         { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                         { "Transform", nameAndItkTransform.name },
-                                                         { "WriteITKCompositeTransform", "true" } }));
-      filter->Update();
-
-      if (!fileNameExtension.empty())
+      for (const std::string fileNameExtension : { "", "h5", "tfm" })
       {
-        const auto & expectedItkTransform = *(nameAndItkTransform.itkTransform);
-        const auto   expectedNumberOfFixedParameters = expectedItkTransform.GetFixedParameters().size();
+        const std::string outputDirectoryPath =
+          outputSubdirectoryPath + "/" + nameAndItkTransform.name + fileNameExtension;
+        itk::FileTools::CreateDirectory(outputDirectoryPath);
 
-        const itk::TransformBase::ConstPointer singleTransform =
-          elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0." + fileNameExtension);
+        filter->SetOutputDirectory(outputDirectoryPath);
 
-        using CompositeTransformType = itk::CompositeTransform<double, ImageDimension>;
+        filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                           { "AutomaticTransformInitialization", "false" },
+                                                           { "ImageSampler", "Full" },
+                                                           { "ITKTransformOutputFileNameExtension", fileNameExtension },
+                                                           { "MaximumNumberOfIterations", "0" },
+                                                           { "Metric", "AdvancedNormalizedCorrelation" },
+                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                           { "Transform", nameAndItkTransform.name },
+                                                           { "WriteITKCompositeTransform", "true" } }));
+        filter->Update();
 
-        const itk::TransformBase::Pointer compositeTransform =
-          elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0-Composite." + fileNameExtension);
-        const auto & transformQueue =
-          Deref(dynamic_cast<const CompositeTransformType *>(compositeTransform.GetPointer())).GetTransformQueue();
-
-        ASSERT_EQ(transformQueue.size(), 2);
-
-        const itk::TransformBase * const frontTransform = transformQueue.front();
-
-        for (const auto actualTransformPtr : { singleTransform.GetPointer(), frontTransform })
+        if (!fileNameExtension.empty())
         {
-          const itk::TransformBase & actualTransform = Deref(actualTransformPtr);
+          const auto & expectedItkTransform = *(nameAndItkTransform.itkTransform);
+          const auto   expectedNumberOfFixedParameters = expectedItkTransform.GetFixedParameters().size();
 
-          EXPECT_EQ(typeid(actualTransform), typeid(expectedItkTransform));
-          EXPECT_EQ(actualTransform.GetParameters(), expectedItkTransform.GetParameters());
+          const itk::TransformBase::ConstPointer singleTransform =
+            elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0." + fileNameExtension);
 
-          // Note that the actual values of the FixedParameters may not be exactly like the expected default-constructed
-          // transform.
-          EXPECT_EQ(actualTransform.GetFixedParameters().size(), expectedNumberOfFixedParameters);
+          using CompositeTransformType = itk::CompositeTransform<double, ImageDimension>;
+
+          const itk::TransformBase::Pointer compositeTransform =
+            elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0-Composite." + fileNameExtension);
+          const auto & transformQueue =
+            Deref(dynamic_cast<const CompositeTransformType *>(compositeTransform.GetPointer())).GetTransformQueue();
+
+          ASSERT_EQ(transformQueue.size(), useInitialTransform ? 2 : 1);
+
+          const itk::TransformBase * const frontTransform = transformQueue.front();
+
+          for (const auto actualTransformPtr : { singleTransform.GetPointer(), frontTransform })
+          {
+            const itk::TransformBase & actualTransform = Deref(actualTransformPtr);
+
+            EXPECT_EQ(typeid(actualTransform), typeid(expectedItkTransform));
+            EXPECT_EQ(actualTransform.GetParameters(), expectedItkTransform.GetParameters());
+
+            // Note that the actual values of the FixedParameters may not be exactly like the expected
+            // default-constructed transform.
+            EXPECT_EQ(actualTransform.GetFixedParameters().size(), expectedNumberOfFixedParameters);
+          }
+          EXPECT_EQ(singleTransform->GetFixedParameters(), frontTransform->GetFixedParameters());
+
+          if (useInitialTransform)
+          {
+            // Expect that the back of the transformQueue has a translation according to the
+            // InitialTransformParameterFileName.
+            const auto & backTransform = DerefSmartPointer(transformQueue.back());
+            const auto & translationTransform =
+              Deref(dynamic_cast<const itk::TranslationTransform<double, ImageDimension> *>(&backTransform));
+            EXPECT_EQ(translationTransform.GetOffset(), MakeVector(1.0, -2.0));
+          }
         }
-        EXPECT_EQ(singleTransform->GetFixedParameters(), frontTransform->GetFixedParameters());
-
-        // Expect that the back of the transformQueue has a translation according to the
-        // InitialTransformParameterFileName.
-        const auto & backTransform = DerefSmartPointer(transformQueue.back());
-        const auto & translationTransform =
-          Deref(dynamic_cast<const itk::TranslationTransform<double, ImageDimension> *>(&backTransform));
-        EXPECT_EQ(translationTransform.GetOffset(), MakeVector(1.0, -2.0));
       }
     }
   }
