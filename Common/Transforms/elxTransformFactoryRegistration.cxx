@@ -25,6 +25,7 @@
 
 #include <elxSupportedImageTypes.h>
 
+#include <itkBSplineTransform.h>
 #include <itkTransformFactory.h>
 #include <utility> // For index_sequence
 
@@ -127,15 +128,21 @@ RegisterTransforms()
   (void)registered;
 }
 
-} // namespace
+template <unsigned int NDimension>
+using ItkBSplineTransformOrder1Type = itk::BSplineTransform<double, NDimension, 1>;
+template <unsigned int NDimension>
+using ItkBSplineTransformOrder2Type = itk::BSplineTransform<double, NDimension, 2>;
 
+} // namespace
 
 namespace elastix
 {
 void
 TransformFactoryRegistration::RegisterTransforms()
 {
-  ::RegisterTransforms<itk::AffineLogStackTransform,
+  ::RegisterTransforms<ItkBSplineTransformOrder1Type,
+                       ItkBSplineTransformOrder2Type,
+                       itk::AffineLogStackTransform,
                        itk::BSplineStackTransform,
                        itk::EulerStackTransform,
                        itk::TranslationStackTransform>();
