@@ -17,6 +17,7 @@ endif()
 
 set( CommonFiles
   elxDefaultConstructibleSubclass.h
+  elxSupportedImageDimensions.h
   itkAdvancedLinearInterpolateImageFunction.h
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
