@@ -22,6 +22,7 @@
 #include <itkElastixRegistrationMethod.h>
 
 #include "elxCoreMainGTestUtilities.h"
+#include "elxDefaultConstructibleSubclass.h"
 #include "elxTransformIO.h"
 #include "GTesting/elxGTestUtilities.h"
 
@@ -63,6 +64,81 @@ using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
 using elx::GTestUtilities::MakePoint;
 using elx::GTestUtilities::MakeVector;
+
+
+namespace
+{
+template <unsigned NDimension, unsigned NSplineOrder>
+void
+Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirectoryPath)
+{
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, NDimension>;
+  const auto image = CreateImage<PixelType>(itk::Size<NDimension>::Filled(4));
+
+  using ItkBSplineTransformType = itk::BSplineTransform<double, NDimension, NSplineOrder>;
+  const elx::DefaultConstructibleSubclass<ItkBSplineTransformType> itkBSplineTransform;
+
+  const auto defaultFixedParameters = itkBSplineTransform.GetFixedParameters();
+
+  // FixedParameters store the grid size, origin, spacing, and direction, according to the ITK `BSplineTransform`
+  // default-constructor at
+  // https://github.com/InsightSoftwareConsortium/ITK/blob/v5.2.0/Modules/Core/Transform/include/itkBSplineTransform.hxx#L35-L61.
+  constexpr auto expectedNumberOfFixedParameters = NDimension * (NDimension + 3);
+  ASSERT_EQ(defaultFixedParameters.size(), expectedNumberOfFixedParameters);
+
+  const auto filter = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+
+  filter->SetFixedImage(image);
+  filter->SetMovingImage(image);
+
+  for (const std::string fileNameExtension : { "h5", "tfm" })
+  {
+    const std::string outputDirectoryPath = rootOutputDirectoryPath + "/" + std::to_string(NDimension) + "D_" +
+                                            "SplineOrder=" + std::to_string(NSplineOrder) +
+                                            "_FileNameExtension=" + fileNameExtension;
+    itk::FileTools::CreateDirectory(outputDirectoryPath);
+
+    filter->SetOutputDirectory(outputDirectoryPath);
+    filter->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                       { "AutomaticTransformInitialization", "false" },
+                                                       { "ImageSampler", "Full" },
+                                                       { "BSplineTransformSplineOrder", std::to_string(NSplineOrder) },
+                                                       { "ITKTransformOutputFileNameExtension", fileNameExtension },
+                                                       { "MaximumNumberOfIterations", "0" },
+                                                       { "Metric", "AdvancedNormalizedCorrelation" },
+                                                       { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                       { "Transform", "BSplineTransform" } }));
+    filter->Update();
+
+    const itk::TransformBase::ConstPointer readTransform =
+      elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0." + fileNameExtension);
+
+    const itk::TransformBase & actualTransform = DerefSmartPointer(readTransform);
+
+    EXPECT_EQ(typeid(actualTransform), typeid(ItkBSplineTransformType));
+    EXPECT_EQ(actualTransform.GetParameters(), itkBSplineTransform.GetParameters());
+
+    const auto actualFixedParameters = actualTransform.GetFixedParameters();
+    ASSERT_EQ(actualFixedParameters.size(), expectedNumberOfFixedParameters);
+
+    for (unsigned i{}; i < NDimension; ++i)
+    {
+      EXPECT_EQ(actualFixedParameters[i], defaultFixedParameters[i]);
+    }
+    for (unsigned i{ NDimension }; i < 3 * NDimension; ++i)
+    {
+      // The actual values of the FixedParameters for grid origin and spacing differ from the corresponding
+      // default-constructed transform! That is expected!
+      EXPECT_NE(actualFixedParameters[i], defaultFixedParameters[i]);
+    }
+    for (unsigned i{ 3 * NDimension }; i < expectedNumberOfFixedParameters; ++i)
+    {
+      EXPECT_EQ(actualFixedParameters[i], defaultFixedParameters[i]);
+    }
+  }
+}
+} // namespace
 
 
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
@@ -559,6 +635,20 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
       }
     }
   }
+}
+
+
+GTEST_TEST(itkElastixRegistrationMethod, WriteBSplineTransformToItkFileFormat)
+{
+  const std::string rootOutputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
+  itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
+
+  Test_WriteBSplineTransformToItkFileFormat<2, 1>(rootOutputDirectoryPath);
+  Test_WriteBSplineTransformToItkFileFormat<2, 2>(rootOutputDirectoryPath);
+  Test_WriteBSplineTransformToItkFileFormat<2, 3>(rootOutputDirectoryPath);
+  Test_WriteBSplineTransformToItkFileFormat<3, 1>(rootOutputDirectoryPath);
+  Test_WriteBSplineTransformToItkFileFormat<3, 2>(rootOutputDirectoryPath);
+  Test_WriteBSplineTransformToItkFileFormat<3, 3>(rootOutputDirectoryPath);
 }
 
 
