@@ -24,8 +24,11 @@
 
 #include "elxBaseComponent.h"
 #include "elxConfiguration.h"
+#include "elxSupportedImageDimensions.h"
 
 #include "xoutmain.h"
+
+#include "itkAdvancedBSplineDeformableTransformBase.h"
 
 #include <itkTransformBase.h>
 #include <itkTransformFactoryBase.h>
@@ -33,6 +36,41 @@
 #include <itkTransformFileWriter.h>
 
 #include <string>
+
+
+namespace
+{
+
+// Returns the spline order of the transform. Returns zero if the transform has no spline order, of if its spline order
+// has a "default value" of 3.
+template <std::size_t NDimension>
+unsigned
+GetSplineOrderFromBSplineDeformableTransform(const itk::TransformBase & elxTransform)
+{
+  const auto bSplineDeformableTransform =
+    dynamic_cast<const itk::AdvancedBSplineDeformableTransformBase<double, NDimension> *>(&elxTransform);
+
+  if (bSplineDeformableTransform == nullptr)
+  {
+    return 0;
+  }
+  const auto     splineOrder = bSplineDeformableTransform->GetSplineOrder();
+  constexpr auto defaultSplineOrder = 3;
+
+  return (splineOrder == defaultSplineOrder) ? 0 : bSplineDeformableTransform->GetSplineOrder();
+}
+
+
+template <std::size_t... NDimension>
+unsigned
+GetOptionalSplineOrderByImageDimensionSequence(const itk::TransformBase & elxTransform,
+                                               const std::index_sequence<NDimension...>)
+{
+  const unsigned splineOrders[] = { GetSplineOrderFromBSplineDeformableTransform<NDimension>(elxTransform)... };
+  return *std::max_element(std::cbegin(splineOrders), std::cend(splineOrders));
+}
+
+} // namespace
 
 
 std::string
@@ -115,11 +153,18 @@ elastix::TransformIO::ConvertItkTransformBaseToSingleItkTransform(const itk::Tra
     return nullptr;
   }
 
+  // When the transform has a non-zero non-default SplineOrder, it must be appended to the instance name. Specifically
+  // relevant for b-spline transform types (having instance names like "BSplineTransform_double_2_2_2" and .
+  const auto optionalSplineOrder =
+    GetOptionalSplineOrderByImageDimensionSequence(elxTransform, SupportedFixedImageDimensionSequence);
+  const auto optionalSplineOrderPostfix =
+    (optionalSplineOrder == 0) ? std::string() : ('_' + std::to_string(optionalSplineOrder));
+
   // Initialize the factory.
   itk::TransformFactoryBase::GetFactory();
 
   const auto instanceName = className + "_double_" + std::to_string(elxTransform.GetInputSpaceDimension()) + '_' +
-                            std::to_string(elxTransform.GetOutputSpaceDimension());
+                            std::to_string(elxTransform.GetOutputSpaceDimension()) + optionalSplineOrderPostfix;
   const auto instance = itk::ObjectFactoryBase::CreateInstance(instanceName.c_str());
   const auto itkTransform = dynamic_cast<itk::TransformBase *>(instance.GetPointer());
   if (itkTransform == nullptr)
