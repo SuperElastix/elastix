@@ -28,8 +28,10 @@ namespace itk
 
 // Constructor with default arguments
 template <class TScalarType, unsigned int NDimensions>
-AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplineDeformableTransformBase()
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplineDeformableTransformBase(
+  const unsigned splineOrder)
   : Superclass(SpaceDimension)
+  , m_SplineOrder(splineOrder)
 {
   this->m_InternalParametersBuffer = ParametersType(0);
   // Make sure the parameters pointer is not NULL after construction.
