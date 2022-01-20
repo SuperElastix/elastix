@@ -51,7 +51,7 @@ namespace itk
 // Constructor with default arguments
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::AdvancedBSplineDeformableTransform()
-  : Superclass()
+  : Superclass(VSplineOrder)
 {
   // Instantiate weights functions
   this->m_WeightsFunction = WeightsFunctionType::New();

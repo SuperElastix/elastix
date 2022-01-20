@@ -104,6 +104,14 @@ public:
     itkGenericExceptionMacro(<< "ERROR: The provided spline order (" << splineOrder << ") is not supported.");
   }
 
+
+  unsigned
+  GetSplineOrder() const
+  {
+    return m_SplineOrder;
+  }
+
+
   /** This method sets the parameters of the transform.
    * For a B-spline deformation transform, the parameters are the BSpline
    * coefficients on a sparse grid.
@@ -322,7 +330,8 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  AdvancedBSplineDeformableTransformBase();
+  AdvancedBSplineDeformableTransformBase() = delete;
+  explicit AdvancedBSplineDeformableTransformBase(const unsigned splineOrder);
   ~AdvancedBSplineDeformableTransformBase() override = default;
 
   /** Wrap flat array into images of coefficients. */
@@ -344,6 +353,10 @@ protected:
   virtual bool
   InsideValidRegion(const ContinuousIndexType & index) const;
 
+private:
+  const unsigned m_SplineOrder;
+
+protected:
   /** Array of images representing the B-spline coefficients
    *  in each dimension.
    */
