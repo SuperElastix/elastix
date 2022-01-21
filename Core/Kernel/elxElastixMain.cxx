@@ -26,7 +26,6 @@
 
 #include "elxElastixMain.h"
 #include "elxComponentLoader.h"
-#include "elxTransformFactoryRegistration.h"
 
 #include "elxMacro.h"
 #include "itkPlatformMultiThreader.h"
@@ -188,7 +187,6 @@ ElastixMain::GetComponentDatabase()
 {
   // Improved thread-safety by using C++11 "magic statics".
   static const auto componentDatabase = [] {
-    TransformFactoryRegistration::RegisterTransforms();
     const auto componentDatabase = ComponentDatabase::New();
     const auto componentLoader = ComponentLoader::New();
     componentLoader->SetComponentDatabase(componentDatabase);
