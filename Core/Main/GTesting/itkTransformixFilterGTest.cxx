@@ -387,6 +387,46 @@ Expect_Transformix_output_equals_registration_output_from_file(const testing::Te
   EXPECT_EQ(Deref(transformixFilter->GetOutput()), registrationOutputImage);
 }
 
+
+template <unsigned NDimension, unsigned NSplineOrder>
+void
+Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath)
+{
+  const auto imageSize = itk::Size<NDimension>::Filled(4);
+  using PixelType = float;
+
+  elx::DefaultConstructibleSubclass<itk::BSplineTransform<double, NDimension, NSplineOrder>> bsplineTransform;
+  const auto inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+  bsplineTransform.SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
+  bsplineTransform.SetParameters(GeneratePseudoRandomParameters(bsplineTransform.GetParameters().size(), -1.0));
+
+  const auto transformixFilter = CheckNew<itk::TransformixFilter<itk::Image<PixelType, NDimension>>>();
+  transformixFilter->SetMovingImage(inputImage);
+
+  for (const std::string fileNameExtension : { "h5", "tfm" })
+  {
+    const std::string transformFilePathName = rootOutputDirectoryPath + '/' + std::to_string(NDimension) +
+                                              "D_SplineOrder=" + std::to_string(NSplineOrder) + '.' + fileNameExtension;
+    elx::TransformIO::Write(bsplineTransform, transformFilePathName);
+
+    transformixFilter->SetTransformParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "Direction", CreateDefaultDirectionParameterValues<NDimension>() },
+                              { "Index", ParameterValuesType(NDimension, "0") },
+                              { "Origin", ParameterValuesType(NDimension, "0") },
+                              { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                              { "Size", ConvertToParameterValues(imageSize) },
+                              { "Transform", ParameterValuesType{ "File" } },
+                              { "TransformFileName", { transformFilePathName } },
+                              { "Spacing", ParameterValuesType(NDimension, "1") } }));
+    transformixFilter->Update();
+
+    const auto resampleImageFilter = CreateResampleImageFilter(*inputImage, bsplineTransform);
+
+    ExpectEqualImages(Deref(transformixFilter->GetOutput()), Deref(resampleImageFilter->GetOutput()));
+  }
+}
+
 } // namespace
 
 
@@ -478,6 +518,20 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
     const auto * const outputImage = filter->GetOutput();
     ExpectEqualImages(Deref(outputImage), *expectedOutputImage);
   }
+}
+
+
+GTEST_TEST(itkTransformixFilter, BSplineViaExternalTransformFile)
+{
+  const std::string rootOutputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
+  itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
+
+  Test_BSplineViaExternalTransformFile<2, 1>(rootOutputDirectoryPath);
+  Test_BSplineViaExternalTransformFile<3, 1>(rootOutputDirectoryPath);
+  Test_BSplineViaExternalTransformFile<2, 2>(rootOutputDirectoryPath);
+  Test_BSplineViaExternalTransformFile<3, 2>(rootOutputDirectoryPath);
+  Test_BSplineViaExternalTransformFile<2, 3>(rootOutputDirectoryPath);
+  Test_BSplineViaExternalTransformFile<3, 3>(rootOutputDirectoryPath);
 }
 
 

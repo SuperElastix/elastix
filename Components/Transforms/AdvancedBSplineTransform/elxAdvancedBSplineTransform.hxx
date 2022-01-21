@@ -22,6 +22,7 @@
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include <vnl/vnl_math.h>
+#include <regex>
 
 
 namespace elastix
@@ -415,6 +416,27 @@ AdvancedBSplineTransform<TElastix>::ReadFromFile()
 {
   /** Read spline order and periodicity settings and initialize BSplineTransform. */
   this->m_SplineOrder = 3;
+
+  const std::vector<std::string> parameterValues = this->m_Configuration->GetValuesOfParameter("ITKTransformType");
+
+  if (!parameterValues.empty())
+  {
+    assert(parameterValues.size() == 1);
+
+    // itkTransformTypeAsString should be something like "BSplineTransform_double_2_2" (for a default spline order) or
+    // "BSplineTransform_double_3_3_2" (for a non-default spline order)
+    const auto itkTransformTypeAsString = parameterValues.front();
+
+    if (std::regex_match(itkTransformTypeAsString, std::regex("BSplineTransform_[a-z]+_\\d_\\d_\\d")))
+    {
+      // The last character from `itkTransformTypeAsString` represents a non-default spline order.
+      m_SplineOrder = static_cast<unsigned>(itkTransformTypeAsString.back() - '0');
+
+      // Assert that m_SplineOrder is one of the two supported non-default spline order values.
+      assert(m_SplineOrder == 1 || m_SplineOrder == 2);
+    }
+  }
+
   this->GetConfiguration()->ReadParameter(
     this->m_SplineOrder, "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0);
   this->m_Cyclic = false;
