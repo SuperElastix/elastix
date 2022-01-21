@@ -30,6 +30,9 @@
 
 namespace
 {
+struct EmptyStruct
+{};
+
 
 template <template <unsigned> class TTransform, std::size_t... VDimension>
 static void
@@ -55,9 +58,6 @@ template <template <unsigned> class... TTransform>
 void
 RegisterTransforms()
 {
-  struct EmptyStruct
-  {};
-
   const EmptyStruct registered[] = { (RegisterTransform<TTransform>(), EmptyStruct())... };
   (void)registered;
 }
@@ -74,12 +74,15 @@ namespace elastix
 void
 TransformFactoryRegistration::RegisterTransforms()
 {
-  ::RegisterTransforms<ItkBSplineTransformOrder1Type,
-                       ItkBSplineTransformOrder2Type,
-                       itk::AffineLogStackTransform,
-                       itk::BSplineStackTransform,
-                       itk::EulerStackTransform,
-                       itk::TranslationStackTransform>();
+  // Use C++11 "magic statics" to ensure that ::RegisterTransforms is called only once, thread-safely.
+  const static EmptyStruct emptyStruct = (::RegisterTransforms<ItkBSplineTransformOrder1Type,
+                                                               ItkBSplineTransformOrder2Type,
+                                                               itk::AffineLogStackTransform,
+                                                               itk::BSplineStackTransform,
+                                                               itk::EulerStackTransform,
+                                                               itk::TranslationStackTransform>(),
+                                          EmptyStruct());
+  (void)emptyStruct;
 }
 
 } // namespace elastix

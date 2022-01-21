@@ -20,6 +20,7 @@
 
 #include "elxConversion.h"
 #include "elxTransformIO.h"
+#include "elxTransformFactoryRegistration.h"
 
 namespace elastix
 {
@@ -153,6 +154,8 @@ Configuration::BeforeAllTransformix()
 int
 Configuration::Initialize(const CommandLineArgumentMapType & _arg)
 {
+  TransformFactoryRegistration::RegisterTransforms();
+
   /** The first part is getting the command line arguments and setting them
    * in the configuration. From the command line arguments we find the name
    * of the parameter text file. The second part is then to get and set the
@@ -236,6 +239,8 @@ int
 Configuration::Initialize(const CommandLineArgumentMapType &                _arg,
                           const ParameterFileParserType::ParameterMapType & inputMap)
 {
+  TransformFactoryRegistration::RegisterTransforms();
+
   /** The first part is getting the command line arguments and setting them
    * in the configuration. From the command line arguments we find the name
    * of the parameter text file. The second part is then to get and set the
