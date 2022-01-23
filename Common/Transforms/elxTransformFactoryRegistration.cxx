@@ -67,6 +67,14 @@ using ItkBSplineTransformOrder1Type = itk::BSplineTransform<double, NDimension, 
 template <unsigned int NDimension>
 using ItkBSplineTransformOrder2Type = itk::BSplineTransform<double, NDimension, 2>;
 
+template <unsigned int NDimension>
+using ItBSplineStackTransformOrder1Type = itk::BSplineStackTransform<NDimension, 1>;
+template <unsigned int NDimension>
+using ItBSplineStackTransformOrder2Type = itk::BSplineStackTransform<NDimension, 2>;
+template <unsigned int NDimension>
+using ItBSplineStackTransformOrder3Type = itk::BSplineStackTransform<NDimension, 3>;
+
+
 } // namespace
 
 namespace elastix
@@ -78,7 +86,9 @@ TransformFactoryRegistration::RegisterTransforms()
   const static EmptyStruct emptyStruct = (::RegisterTransforms<ItkBSplineTransformOrder1Type,
                                                                ItkBSplineTransformOrder2Type,
                                                                itk::AffineLogStackTransform,
-                                                               itk::BSplineStackTransform,
+                                                               ItBSplineStackTransformOrder1Type,
+                                                               ItBSplineStackTransformOrder2Type,
+                                                               ItBSplineStackTransformOrder3Type,
                                                                itk::EulerStackTransform,
                                                                itk::TranslationStackTransform>(),
                                           EmptyStruct());

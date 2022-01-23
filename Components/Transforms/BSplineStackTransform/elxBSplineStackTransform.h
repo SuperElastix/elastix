@@ -281,10 +281,10 @@ private:
   operator=(const Self &) = delete;
 
   /** Typedef for stack transform. */
-  using StackTransformType = itk::BSplineStackTransform<SpaceDimension>;
+  using AbstractStackTransformType = itk::AbstractBSplineStackTransform<SpaceDimension>;
 
   /** The B-spline stack transform. */
-  const typename StackTransformType::Pointer m_StackTransform{ StackTransformType::New() };
+  typename AbstractStackTransformType::Pointer m_StackTransform;
 
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionBSplineTransformBasePointer m_DummySubTransform;

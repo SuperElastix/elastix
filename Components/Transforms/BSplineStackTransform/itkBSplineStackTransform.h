@@ -22,11 +22,46 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "elxElastixBase.h"
 
+#include <cassert>
+
 namespace itk
 {
 template <unsigned int NDimension>
-class ITK_TEMPLATE_EXPORT BSplineStackTransform
+class ITK_TEMPLATE_EXPORT AbstractBSplineStackTransform
   : public itk::StackTransform<elx::ElastixBase::CoordRepType, NDimension, NDimension>
+{
+public:
+  ITK_DISALLOW_COPY_AND_MOVE(AbstractBSplineStackTransform);
+
+  using Self = AbstractBSplineStackTransform;
+  using Superclass = itk::StackTransform<elx::ElastixBase::CoordRepType, NDimension, NDimension>;
+  using Pointer = itk::SmartPointer<AbstractBSplineStackTransform>;
+
+  itkTypeMacro(AbstractBSplineStackTransform, Superclass);
+
+  enum
+  {
+    // The minimum, maximum, and default supported spline order.
+    minSplineOrder = 1,
+    maxSplineOrder = 3,
+    defaultSplineOrder = maxSplineOrder
+  };
+
+
+  virtual unsigned
+  GetSplineOrder() const = 0;
+
+protected:
+  /** Default-constructor */
+  AbstractBSplineStackTransform() = default;
+
+  /** Destructor */
+  ~AbstractBSplineStackTransform() override = default;
+};
+
+
+template <unsigned NDimension, unsigned VSplineOrder>
+class ITK_TEMPLATE_EXPORT BSplineStackTransform : public AbstractBSplineStackTransform<NDimension>
 {
 private:
   using CoordRepType = elx::ElastixBase::CoordRepType;
@@ -35,15 +70,16 @@ public:
   ITK_DISALLOW_COPY_AND_MOVE(BSplineStackTransform);
 
   using Self = BSplineStackTransform;
-  using Superclass = itk::StackTransform<CoordRepType, NDimension, NDimension>;
+  using Superclass = AbstractBSplineStackTransform<NDimension>;
   using Pointer = itk::SmartPointer<BSplineStackTransform>;
   itkNewMacro(Self);
   itkTypeMacro(BSplineStackTransform, Superclass);
 
-  void
-  SetSplineOrder(const unsigned newValue)
+  std::string
+  GetTransformTypeAsString() const override
   {
-    m_SplineOrder = newValue;
+    return Superclass::GetTransformTypeAsString() +
+           ((VSplineOrder == Superclass::defaultSplineOrder) ? "" : ('_' + std::to_string(VSplineOrder)));
   }
 
 protected:
@@ -54,15 +90,18 @@ protected:
   ~BSplineStackTransform() override = default;
 
 private:
+  unsigned
+  GetSplineOrder() const override
+  {
+    return VSplineOrder;
+  }
+
   /** Create a subtransform that may be added to this specific stack. */
   typename Superclass::SubTransformPointer
   CreateSubTransform() const override
   {
-    return AdvancedBSplineDeformableTransformBase<CoordRepType, NDimension - 1>::template Create<
-      AdvancedBSplineDeformableTransform>(m_SplineOrder);
+    return AdvancedBSplineDeformableTransform<CoordRepType, NDimension - 1, VSplineOrder>::New();
   }
-
-  unsigned m_SplineOrder{ 3 };
 };
 
 } // namespace itk

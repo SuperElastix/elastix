@@ -29,6 +29,7 @@
 #include "xoutmain.h"
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
+#include "../Components/Transforms/BSplineStackTransform/itkBSplineStackTransform.h"
 
 #include <itkTransformBase.h>
 #include <itkTransformFactoryBase.h>
@@ -41,23 +42,40 @@
 namespace
 {
 
+// Returns the spline order of the transform. Returns zero if its spline order has a "default value" of 3.
+template <typename TTransform>
+unsigned
+GetSplineOrderFromTransform(const TTransform & transform)
+{
+  constexpr auto defaultSplineOrder = 3;
+  const auto     splineOrder = transform.GetSplineOrder();
+  return (splineOrder == defaultSplineOrder) ? 0 : splineOrder;
+}
+
+
 // Returns the spline order of the transform. Returns zero if the transform has no spline order, of if its spline order
 // has a "default value" of 3.
 template <std::size_t NDimension>
 unsigned
-GetSplineOrderFromBSplineDeformableTransform(const itk::TransformBase & elxTransform)
+GetSplineOrderFromTransformBase(const itk::TransformBase & elxTransform)
 {
+  // Only BSpline and BSplineStack transforms have a spline order.
   const auto bSplineDeformableTransform =
     dynamic_cast<const itk::AdvancedBSplineDeformableTransformBase<double, NDimension> *>(&elxTransform);
 
-  if (bSplineDeformableTransform == nullptr)
+  if (bSplineDeformableTransform != nullptr)
   {
-    return 0;
+    return GetSplineOrderFromTransform(*bSplineDeformableTransform);
   }
-  const auto     splineOrder = bSplineDeformableTransform->GetSplineOrder();
-  constexpr auto defaultSplineOrder = 3;
 
-  return (splineOrder == defaultSplineOrder) ? 0 : bSplineDeformableTransform->GetSplineOrder();
+  const auto bSplineStackTransform =
+    dynamic_cast<const itk::AbstractBSplineStackTransform<NDimension> *>(&elxTransform);
+
+  if (bSplineStackTransform != nullptr)
+  {
+    return GetSplineOrderFromTransform(*bSplineStackTransform);
+  }
+  return 0;
 }
 
 
@@ -66,7 +84,7 @@ unsigned
 GetOptionalSplineOrderByImageDimensionSequence(const itk::TransformBase & elxTransform,
                                                const std::index_sequence<NDimension...>)
 {
-  const unsigned splineOrders[] = { GetSplineOrderFromBSplineDeformableTransform<NDimension>(elxTransform)... };
+  const unsigned splineOrders[] = { GetSplineOrderFromTransformBase<NDimension>(elxTransform)... };
   return *std::max_element(std::cbegin(splineOrders), std::cend(splineOrders));
 }
 

@@ -22,6 +22,8 @@
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include <vnl/vnl_math.h>
+#include <regex>
+
 
 namespace elastix
 {
@@ -39,12 +41,32 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
   m_DummySubTransform =
     ReducedDimensionBSplineTransformBaseType::template Create<itk::AdvancedBSplineDeformableTransform>(m_SplineOrder);
 
-  m_StackTransform->SetSplineOrder(m_SplineOrder);
+  m_StackTransform = [](const unsigned splineOrder) -> itk::SmartPointer<AbstractStackTransformType> {
+    switch (splineOrder)
+    {
+      case 1:
+      {
+        return itk::BSplineStackTransform<SpaceDimension, 1>::New();
+      }
+      case 2:
+      {
+        return itk::BSplineStackTransform<SpaceDimension, 2>::New();
+      }
+      case 3:
+      {
+        return itk::BSplineStackTransform<SpaceDimension, 3>::New();
+      }
+    }
+    itkGenericExceptionMacro(<< "ERROR: The provided spline order (" << splineOrder << ") is not supported.");
+  }(m_SplineOrder);
 
   /** Note: periodic B-splines are not supported here as they do not seem to
    * make sense as a subtransform and deliver problems when compiling elastix
    * for image dimension 2.
    */
+
+  /** Set stack transform as current transform. */
+  this->SetCurrentTransform(this->m_StackTransform);
 
   /** Create grid upsampler. */
   this->m_GridUpsampler = GridUpsamplerType::New();
@@ -442,7 +464,35 @@ template <class TElastix>
 void
 BSplineStackTransform<TElastix>::ReadFromFile()
 {
-  if (!this->HasITKTransformParameters())
+  if (this->HasITKTransformParameters())
+  {
+    m_SplineOrder = AbstractStackTransformType::defaultSplineOrder;
+
+    const std::vector<std::string> parameterValues = this->m_Configuration->GetValuesOfParameter("ITKTransformType");
+
+    if (!parameterValues.empty())
+    {
+      assert(parameterValues.size() == 1);
+
+      // itkTransformTypeAsString should be something like "BSplineStackTransform_double_2_2" (for a default spline
+      // order) or "BSplineStackTransform_double_3_3_2" (for a non-default spline order)
+      const auto itkTransformTypeAsString = parameterValues.front();
+
+      if (std::regex_match(itkTransformTypeAsString, std::regex("BSplineStackTransform_[a-z]+_\\d_\\d_\\d")))
+      {
+        // The last character from `itkTransformTypeAsString` represents a non-default spline order.
+        m_SplineOrder = static_cast<unsigned>(itkTransformTypeAsString.back() - '0');
+
+        // Assert that m_SplineOrder is one of the supported non-default spline order values.
+        assert(m_SplineOrder >= AbstractStackTransformType::minSplineOrder);
+        assert(m_SplineOrder <= AbstractStackTransformType::maxSplineOrder);
+        assert(m_SplineOrder != AbstractStackTransformType::defaultSplineOrder);
+      }
+    }
+    /** Initialize the right B-spline transform. */
+    this->InitializeBSplineTransform();
+  }
+  else
   {
     /** Read spline order settings and initialize BSplineTransform. */
     this->m_SplineOrder = 3;
