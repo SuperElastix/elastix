@@ -108,11 +108,11 @@ protected:
   ~BSplineInterpolationWeightFunctionBase() override = default;
 
   /** Interpolation kernel types. */
-  using KernelType = BSplineKernelFunction2<Self::SplineOrder>;
+  using KernelType = BSplineKernelFunction2<VSplineOrder>;
   using KernelPointer = typename KernelType::Pointer;
-  using DerivativeKernelType = BSplineDerivativeKernelFunction<Self::SplineOrder>;
+  using DerivativeKernelType = BSplineDerivativeKernelFunction<VSplineOrder>;
   using DerivativeKernelPointer = typename DerivativeKernelType::Pointer;
-  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder>;
+  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<VSplineOrder>;
   using SecondOrderDerivativeKernelPointer = typename SecondOrderDerivativeKernelType::Pointer;
   using WeightArrayType = typename KernelType::WeightArrayType;
 
@@ -123,7 +123,7 @@ protected:
    * The Matrix is at least twice as fast as std::vector< vnl_vector< double > >,
    * probably because of the fixed size at compile time.
    */
-  using OneDWeightsType = Matrix<double, Self::SpaceDimension, Self::SplineOrder + 1>;
+  using OneDWeightsType = Matrix<double, Self::SpaceDimension, VSplineOrder + 1>;
 
   /** Compute the 1D weights. */
   virtual void

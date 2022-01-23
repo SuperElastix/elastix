@@ -201,15 +201,15 @@ public:
   TransformPoint(const InputPointType & point) const override;
 
   /** Interpolation weights function type. */
-  using WeightsFunctionType = BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+  using WeightsFunctionType = BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, VSplineOrder>;
   using WeightsFunctionPointer = typename WeightsFunctionType::Pointer;
   using WeightsType = typename WeightsFunctionType::WeightsType;
   using ContinuousIndexType = typename WeightsFunctionType::ContinuousIndexType;
   using DerivativeWeightsFunctionType =
-    BSplineInterpolationDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+    BSplineInterpolationDerivativeWeightFunction<ScalarType, Self::SpaceDimension, VSplineOrder>;
   using DerivativeWeightsFunctionPointer = typename DerivativeWeightsFunctionType::Pointer;
   using SODerivativeWeightsFunctionType =
-    BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+    BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType, Self::SpaceDimension, VSplineOrder>;
   using SODerivativeWeightsFunctionPointer = typename SODerivativeWeightsFunctionType::Pointer;
 
   /** Parameter index array type. */
@@ -318,7 +318,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  friend class MultiBSplineDeformableTransformWithNormal<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+  friend class MultiBSplineDeformableTransformWithNormal<ScalarType, Self::SpaceDimension, VSplineOrder>;
 };
 
 } // namespace itk
