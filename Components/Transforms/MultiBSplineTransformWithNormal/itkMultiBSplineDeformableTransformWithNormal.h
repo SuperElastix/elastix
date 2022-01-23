@@ -83,7 +83,7 @@ public:
   using typename Superclass::InternalMatrixType;
 
   /** Interpolation weights function type. */
-  using WeightsFunctionType = BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, Self::SplineOrder>;
+  using WeightsFunctionType = BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, VSplineOrder>;
   using WeightsType = typename WeightsFunctionType::WeightsType;
 
   /** This method sets the parameters of the transform.
@@ -495,7 +495,7 @@ protected:
   /** Internal parameters buffer. */
   ParametersType m_InternalParametersBuffer;
 
-  using TransformType = AdvancedBSplineDeformableTransform<TScalarType, Self::SpaceDimension, Self::SplineOrder>;
+  using TransformType = AdvancedBSplineDeformableTransform<TScalarType, Self::SpaceDimension, VSplineOrder>;
 
   unsigned char                                m_NbLabels;
   ImageLabelPointer                            m_Labels;

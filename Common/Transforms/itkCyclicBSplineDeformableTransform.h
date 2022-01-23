@@ -95,7 +95,7 @@ public:
   using typename Superclass::JacobianPixelType;
   using typename Superclass::WeightsFunctionType;
   using RedWeightsFunctionType =
-    BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension - 1, Self::SplineOrder>;
+    BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension - 1, VSplineOrder>;
   using RedContinuousIndexType = typename RedWeightsFunctionType::ContinuousIndexType;
 
   /** This method specifies the region over which the grid resides. */

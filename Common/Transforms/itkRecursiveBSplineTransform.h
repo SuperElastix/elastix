@@ -115,9 +115,9 @@ public:
                                                                                          // use the kernels directly.
 
   /** Interpolation kernel type. */
-  using KernelType = BSplineKernelFunction2<Self::SplineOrder>;
-  using DerivativeKernelType = BSplineDerivativeKernelFunction2<Self::SplineOrder>;
-  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<Self::SplineOrder>;
+  using KernelType = BSplineKernelFunction2<VSplineOrder>;
+  using DerivativeKernelType = BSplineDerivativeKernelFunction2<VSplineOrder>;
+  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<VSplineOrder>;
 
   /** Interpolation kernel. */
   typename KernelType::Pointer                      m_Kernel;

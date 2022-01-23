@@ -74,7 +74,7 @@ public:
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
   /** Store weights for the entire support. */
-  using WeightArrayType = FixedArray<double, Self::SplineOrder + 1>;
+  using WeightArrayType = FixedArray<double, VSplineOrder + 1>;
 
   /** Evaluate the function at one point. */
   inline double
