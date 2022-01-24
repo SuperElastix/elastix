@@ -97,30 +97,16 @@ AdvancedBSplineTransform<TElastix>::BeforeRegistration()
 
   /** Task 1 - Set the Grid. */
 
-  /** Declarations. */
-  RegionType  gridregion;
-  SizeType    gridsize;
-  IndexType   gridindex;
-  SpacingType gridspacing;
-  OriginType  gridorigin;
-
-  /** Fill everything with default values. */
-  gridsize.Fill(1);
-  gridindex.Fill(0);
-  gridspacing.Fill(1.0);
-  gridorigin.Fill(0.0);
-
   /** Set gridsize for large dimension to 4 to prevent errors when checking
    * on support region size.
    */
+  SizeType gridsize = SizeType::Filled(1);
   gridsize.SetElement(gridsize.GetSizeDimension() - 1, 4);
 
   /** Set it all. */
-  gridregion.SetIndex(gridindex);
-  gridregion.SetSize(gridsize);
-  this->m_BSplineTransform->SetGridRegion(gridregion);
-  this->m_BSplineTransform->SetGridSpacing(gridspacing);
-  this->m_BSplineTransform->SetGridOrigin(gridorigin);
+  this->m_BSplineTransform->SetGridRegion(RegionType(gridsize));
+  this->m_BSplineTransform->SetGridSpacing(SpacingType(1.0));
+  this->m_BSplineTransform->SetGridOrigin(OriginType());
 
   /** Task 2 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -445,20 +431,12 @@ AdvancedBSplineTransform<TElastix>::ReadFromFile()
 
   /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
-  /** Declarations. */
-  RegionType    gridregion;
-  SizeType      gridsize;
-  IndexType     gridindex;
-  SpacingType   gridspacing;
-  OriginType    gridorigin;
-  DirectionType griddirection;
-
-  /** Fill everything with default values. */
-  gridsize.Fill(1);
-  gridindex.Fill(0);
-  gridspacing.Fill(1.0);
-  gridorigin.Fill(0.0);
-  griddirection.SetIdentity();
+  /** Declarations. Everything filled with default values.*/
+  SizeType      gridsize = SizeType::Filled(1);
+  IndexType     gridindex = { { 0 } };
+  SpacingType   gridspacing(1.0);
+  OriginType    gridorigin{};
+  DirectionType griddirection = DirectionType::GetIdentity();
 
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
   for (unsigned int i = 0; i < SpaceDimension; ++i)
@@ -474,9 +452,7 @@ AdvancedBSplineTransform<TElastix>::ReadFromFile()
   }
 
   /** Set it all. */
-  gridregion.SetIndex(gridindex);
-  gridregion.SetSize(gridsize);
-  this->m_BSplineTransform->SetGridRegion(gridregion);
+  this->m_BSplineTransform->SetGridRegion(RegionType(gridindex, gridsize));
   this->m_BSplineTransform->SetGridSpacing(gridspacing);
   this->m_BSplineTransform->SetGridOrigin(gridorigin);
   this->m_BSplineTransform->SetGridDirection(griddirection);
