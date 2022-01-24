@@ -90,30 +90,16 @@ BSplineStackTransform<TElastix>::BeforeRegistration()
 
   /** Task 1 - Set the Grid. */
 
-  /** Declarations. */
-  ReducedDimensionRegionType  gridregion;
-  ReducedDimensionSizeType    gridsize;
-  ReducedDimensionIndexType   gridindex;
-  ReducedDimensionSpacingType gridspacing;
-  ReducedDimensionOriginType  gridorigin;
-
-  /** Fill everything with default values. */
-  gridsize.Fill(1);
-  gridindex.Fill(0);
-  gridspacing.Fill(1.0);
-  gridorigin.Fill(0.0);
-
   /** Set gridsize for large dimension to 4 to prevent errors when checking
    * on support region size.
    */
+  ReducedDimensionSizeType gridsize = ReducedDimensionSizeType::Filled(1);
   gridsize.SetElement(gridsize.GetSizeDimension() - 1, 4);
 
   /** Set it all. */
-  gridregion.SetIndex(gridindex);
-  gridregion.SetSize(gridsize);
-  this->m_DummySubTransform->SetGridRegion(gridregion);
-  this->m_DummySubTransform->SetGridSpacing(gridspacing);
-  this->m_DummySubTransform->SetGridOrigin(gridorigin);
+  this->m_DummySubTransform->SetGridRegion(ReducedDimensionRegionType(gridsize));
+  this->m_DummySubTransform->SetGridSpacing(ReducedDimensionSpacingType(1.0));
+  this->m_DummySubTransform->SetGridOrigin(ReducedDimensionOriginType());
 
   /** Task 2 - Set the stack transform parameters. */
 
@@ -481,20 +467,12 @@ BSplineStackTransform<TElastix>::ReadFromFile()
 
     /** Read and Set the Grid. */
 
-    /** Declarations. */
-    ReducedDimensionRegionType    gridregion;
-    ReducedDimensionSizeType      gridsize;
-    ReducedDimensionIndexType     gridindex;
-    ReducedDimensionSpacingType   gridspacing;
-    ReducedDimensionOriginType    gridorigin;
-    ReducedDimensionDirectionType griddirection;
-
-    /** Fill everything with default values. */
-    gridsize.Fill(1);
-    gridindex.Fill(0);
-    gridspacing.Fill(1.0);
-    gridorigin.Fill(0.0);
-    griddirection.SetIdentity();
+    /** Declarations. Everything filled with default values.*/
+    ReducedDimensionSizeType      gridsize = ReducedDimensionSizeType::Filled(1);
+    ReducedDimensionIndexType     gridindex = { { 0 } };
+    ReducedDimensionSpacingType   gridspacing(1.0);
+    ReducedDimensionOriginType    gridorigin{};
+    ReducedDimensionDirectionType griddirection = ReducedDimensionDirectionType::GetIdentity();
 
     /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
     for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
@@ -517,9 +495,7 @@ BSplineStackTransform<TElastix>::ReadFromFile()
     }
 
     /** Set it all. */
-    gridregion.SetIndex(gridindex);
-    gridregion.SetSize(gridsize);
-    this->m_DummySubTransform->SetGridRegion(gridregion);
+    this->m_DummySubTransform->SetGridRegion(ReducedDimensionRegionType(gridindex, gridsize));
     this->m_DummySubTransform->SetGridSpacing(gridspacing);
     this->m_DummySubTransform->SetGridOrigin(gridorigin);
     this->m_DummySubTransform->SetGridDirection(griddirection);
