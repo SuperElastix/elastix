@@ -44,38 +44,14 @@ namespace itk
 
 // Constructor with default arguments
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::AdvancedMatrixOffsetTransformBase()
-  : Superclass(ParametersDimension)
-{
-  this->m_Matrix.SetIdentity();
-  this->m_MatrixMTime.Modified();
-  this->m_Offset.Fill(0);
-  this->m_Center.Fill(0);
-  this->m_Translation.Fill(0);
-  this->m_Singular = false;
-  this->m_InverseMatrix.SetIdentity();
-  this->m_InverseMatrixMTime = this->m_MatrixMTime;
-  this->m_FixedParameters.SetSize(NInputDimensions);
-  this->m_FixedParameters.Fill(0.0);
-
-  this->PrecomputeJacobians(ParametersDimension);
-}
-
-
-// Constructor with default arguments
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::AdvancedMatrixOffsetTransformBase(
   unsigned int paramDims)
   : Superclass(paramDims)
 {
-  this->m_Matrix.SetIdentity();
-  this->m_MatrixMTime.Modified();
-  this->m_Offset.Fill(0);
-  this->m_Center.Fill(0);
-  this->m_Translation.Fill(0);
-  this->m_Singular = false;
-  this->m_InverseMatrix.SetIdentity();
-  this->m_InverseMatrixMTime = this->m_MatrixMTime;
+  m_MatrixMTime.Modified();
+  m_InverseMatrixMTime = m_MatrixMTime;
+  this->m_FixedParameters.SetSize(NInputDimensions);
+  this->m_FixedParameters.Fill(0.0);
 
   this->PrecomputeJacobians(paramDims);
 }

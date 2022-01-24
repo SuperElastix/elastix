@@ -378,8 +378,7 @@ protected:
    * omitted, then the AdvancedMatrixOffsetTransformBase is initialized to an identity
    * transformation in the appropriate number of dimensions.
    */
-  explicit AdvancedMatrixOffsetTransformBase(unsigned int paramDims);
-  AdvancedMatrixOffsetTransformBase();
+  explicit AdvancedMatrixOffsetTransformBase(const unsigned int paramDims = ParametersDimension);
 
   /** Destroy an AdvancedMatrixOffsetTransformBase object. */
   ~AdvancedMatrixOffsetTransformBase() override = default;
@@ -435,13 +434,13 @@ private:
 
 
   /** Member variables. */
-  MatrixType                m_Matrix;        // Matrix of the transformation
-  OutputVectorType          m_Offset;        // Offset of the transformation
-  mutable InverseMatrixType m_InverseMatrix; // Inverse of the matrix
-  mutable bool              m_Singular;      // Is m_Inverse singular?
+  MatrixType                m_Matrix{ MatrixType::GetIdentity() };               // Matrix of the transformation
+  OutputVectorType          m_Offset{};                                          // Offset of the transformation
+  mutable InverseMatrixType m_InverseMatrix{ InverseMatrixType::GetIdentity() }; // Inverse of the matrix
+  mutable bool              m_Singular{ false };                                 // Is m_Inverse singular?
 
-  InputPointType   m_Center;
-  OutputVectorType m_Translation;
+  InputPointType   m_Center{};
+  OutputVectorType m_Translation{};
 
   /** To avoid recomputation of the inverse if not needed. */
   TimeStamp         m_MatrixMTime;
