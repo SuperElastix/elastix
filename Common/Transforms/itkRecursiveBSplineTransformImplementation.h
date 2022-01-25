@@ -21,6 +21,7 @@
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
 
 // Standard C++ header files:
+#include <algorithm> // For copy_n and fill_n.
 #include <cassert>
 #include <cstring> // For memcpy.
 
@@ -67,17 +68,11 @@ public:
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     TScalar * tmp_mu[OutputDimension];
-    for (unsigned int j = 0; j < OutputDimension; ++j)
-    {
-      tmp_mu[j] = mu[j];
-    }
+    std::copy_n(mu, OutputDimension, tmp_mu);
 
     /** Create a temporary opp and initialize the original. */
     TScalar tmp_opp[OutputDimension];
-    for (unsigned int j = 0; j < OutputDimension; ++j)
-    {
-      opp[j] = 0.0;
-    }
+    std::fill_n(opp, OutputDimension, 0.0);
 
     OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
     for (unsigned int k = 0; k <= SplineOrder; ++k)
@@ -160,10 +155,7 @@ public:
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     TScalar * tmp_mu[OutputDimension];
-    for (unsigned int j = 0; j < OutputDimension; ++j)
-    {
-      tmp_mu[j] = mu[j];
-    }
+    std::copy_n(mu, OutputDimension, tmp_mu);
 
     /** Create a temporary sj and initialize the original. */
     InternalFloatType tmp_sj[OutputDimension * SpaceDimension];
@@ -229,10 +221,7 @@ public:
 
     /** Make a copy of the pointers to mu. The pointer will move later. */
     TScalar * tmp_mu[OutputDimension];
-    for (unsigned int j = 0; j < OutputDimension; ++j)
-    {
-      tmp_mu[j] = mu[j];
-    }
+    std::copy_n(mu, OutputDimension, tmp_mu);
 
     /** Create a temporary sh and initialize the original. */
     InternalFloatType tmp_sh[helperDim1];
