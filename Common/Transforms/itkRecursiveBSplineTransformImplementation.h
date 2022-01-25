@@ -45,10 +45,6 @@ template <unsigned int OutputDimension, unsigned int SpaceDimension, unsigned in
 class ITK_TEMPLATE_EXPORT RecursiveBSplineTransformImplementation
 {
 public:
-  /** Typedef related to the coordinate representation type and the weights type.
-   * Usually double, but can be float as well. <Not tested very well for float>
-   */
-  using ScalarType = TScalar;
   using InternalFloatType = double;
 
   /** Helper constant variable. */
@@ -56,11 +52,11 @@ public:
 
   /** Typedef to know the number of indices at compile time. */
   using RecursiveBSplineWeightFunctionType =
-    itk::RecursiveBSplineInterpolationWeightFunction<ScalarType, OutputDimension, SplineOrder>;
+    itk::RecursiveBSplineInterpolationWeightFunction<TScalar, OutputDimension, SplineOrder>;
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
-  using OutputPointType = ScalarType *;
-  using CoefficientPointerVectorType = ScalarType **;
+  using OutputPointType = TScalar *;
+  using CoefficientPointerVectorType = TScalar **;
 
   /** TransformPoint recursive implementation. */
   static inline void
@@ -70,14 +66,14 @@ public:
                  const double *                     weights1D)
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
-    ScalarType * tmp_mu[OutputDimension];
+    TScalar * tmp_mu[OutputDimension];
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
       tmp_mu[j] = mu[j];
     }
 
     /** Create a temporary opp and initialize the original. */
-    ScalarType tmp_opp[OutputDimension];
+    TScalar tmp_opp[OutputDimension];
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
       opp[j] = 0.0;
@@ -104,7 +100,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void
-  GetJacobian(ScalarType *& jacobians, const double * weights1D, double value)
+  GetJacobian(TScalar *& jacobians, const double * weights1D, double value)
   {
     for (unsigned int k = 0; k <= SplineOrder; ++k)
     {
@@ -117,7 +113,7 @@ public:
 
   /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
   static inline void
-  EvaluateJacobianWithImageGradientProduct(ScalarType *&             imageJacobian,
+  EvaluateJacobianWithImageGradientProduct(TScalar *&                imageJacobian,
                                            const InternalFloatType * movingImageGradient,
                                            const double *            weights1D,
                                            double                    value)
@@ -163,7 +159,7 @@ public:
                      const double *                     derivativeWeights1D)           // 1st derivative of B-spline
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
-    ScalarType * tmp_mu[OutputDimension];
+    TScalar * tmp_mu[OutputDimension];
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
       tmp_mu[j] = mu[j];
@@ -232,7 +228,7 @@ public:
     const unsigned int helperDim2 = OutputDimension * (SpaceDimension + 1) * (SpaceDimension + 2) / 2;
 
     /** Make a copy of the pointers to mu. The pointer will move later. */
-    ScalarType * tmp_mu[OutputDimension];
+    TScalar * tmp_mu[OutputDimension];
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
       tmp_mu[j] = mu[j];
@@ -375,10 +371,6 @@ template <unsigned int OutputDimension, unsigned int SplineOrder, class TScalar>
 class ITK_TEMPLATE_EXPORT RecursiveBSplineTransformImplementation<OutputDimension, 0, SplineOrder, TScalar>
 {
 public:
-  /** Typedef related to the coordinate representation type and the weights type.
-   * Usually double, but can be float as well. <Not tested very well for float>
-   */
-  using ScalarType = TScalar;
   using InternalFloatType = double;
 
   /** Typedef to know the number of indices at compile time. */
@@ -386,8 +378,8 @@ public:
     itk::RecursiveBSplineInterpolationWeightFunction<TScalar, OutputDimension, SplineOrder>;
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
-  using OutputPointType = ScalarType *;
-  using CoefficientPointerVectorType = ScalarType **;
+  using OutputPointType = TScalar *;
+  using CoefficientPointerVectorType = TScalar **;
 
   /** TransformPoint recursive implementation. */
   static inline void
@@ -405,7 +397,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void
-  GetJacobian(ScalarType *& jacobians, const double * weights1D, double value)
+  GetJacobian(TScalar *& jacobians, const double * weights1D, double value)
   {
     unsigned long offset = 0;
     for (unsigned int j = 0; j < OutputDimension; ++j)
@@ -419,7 +411,7 @@ public:
 
   /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
   static inline void
-  EvaluateJacobianWithImageGradientProduct(ScalarType *&             imageJacobian,
+  EvaluateJacobianWithImageGradientProduct(TScalar *&                imageJacobian,
                                            const InternalFloatType * movingImageGradient,
                                            const double *            weights1D,
                                            double                    value)
