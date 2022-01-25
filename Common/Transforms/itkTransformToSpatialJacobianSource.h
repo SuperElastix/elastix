@@ -19,6 +19,7 @@
 #define itkTransformToSpatialJacobianSource_h
 
 #include "itkAdvancedTransform.h"
+#include "itkAdvancedIdentityTransform.h"
 #include "itkImageSource.h"
 
 namespace itk
@@ -208,11 +209,13 @@ private:
   operator=(const Self &) = delete;
 
   /** Member variables. */
-  RegionType           m_OutputRegion;    // region of the output image
-  TransformPointerType m_Transform;       // Coordinate transform to use
-  SpacingType          m_OutputSpacing;   // output image spacing
-  OriginType           m_OutputOrigin;    // output image origin
-  DirectionType        m_OutputDirection; // output image direction cosines
+  RegionType           m_OutputRegion{}; // region of the output image
+  TransformPointerType m_Transform{
+    AdvancedIdentityTransform<TTransformPrecisionType, ImageDimension>::New()
+  };                                                               // Coordinate transform to use
+  SpacingType   m_OutputSpacing{ 1.0 };                            // output image spacing
+  OriginType    m_OutputOrigin{};                                  // output image origin
+  DirectionType m_OutputDirection{ DirectionType::GetIdentity() }; // output image direction cosines
 };
 
 } // end namespace itk

@@ -36,7 +36,6 @@
 
 #include "itkTransformToDeterminantOfSpatialJacobianSource.h"
 
-#include "itkAdvancedIdentityTransform.h"
 #include "itkProgressReporter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include <vnl/vnl_det.h>
@@ -51,20 +50,6 @@ template <class TOutputImage, class TTransformPrecisionType>
 TransformToDeterminantOfSpatialJacobianSource<TOutputImage,
                                               TTransformPrecisionType>::TransformToDeterminantOfSpatialJacobianSource()
 {
-  this->m_OutputSpacing.Fill(1.0);
-  this->m_OutputOrigin.Fill(0.0);
-  this->m_OutputDirection.SetIdentity();
-
-  SizeType size;
-  size.Fill(0);
-  this->m_OutputRegion.SetSize(size);
-
-  IndexType index;
-  index.Fill(0);
-  this->m_OutputRegion.SetIndex(index);
-
-  this->m_Transform = AdvancedIdentityTransform<TTransformPrecisionType, ImageDimension>::New();
-
   // Use the classic (ITK4) threading model, to ensure ThreadedGenerateData is being called.
   this->itk::ImageSource<TOutputImage>::DynamicMultiThreadingOff();
 
