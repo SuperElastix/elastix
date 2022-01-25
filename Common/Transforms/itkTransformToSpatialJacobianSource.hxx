@@ -20,7 +20,6 @@
 
 #include "itkTransformToSpatialJacobianSource.h"
 
-#include "itkAdvancedIdentityTransform.h"
 #include "itkProgressReporter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include <vnl/vnl_copy.h>
@@ -34,20 +33,6 @@ namespace itk
 template <class TOutputImage, class TTransformPrecisionType>
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::TransformToSpatialJacobianSource()
 {
-  this->m_OutputSpacing.Fill(1.0);
-  this->m_OutputOrigin.Fill(0.0);
-  this->m_OutputDirection.SetIdentity();
-
-  SizeType size;
-  size.Fill(0);
-  this->m_OutputRegion.SetSize(size);
-
-  IndexType index;
-  index.Fill(0);
-  this->m_OutputRegion.SetIndex(index);
-
-  this->m_Transform = AdvancedIdentityTransform<TTransformPrecisionType, ImageDimension>::New();
-
   // Check if the output pixel type is valid
   // TODO: should maybe be done at compile time, using concept checking.
   const unsigned int pixrow = PixelType::RowDimensions;
