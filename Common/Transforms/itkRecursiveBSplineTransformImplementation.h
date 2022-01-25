@@ -71,7 +71,7 @@ public:
     TScalar tmp_opp[OutputDimension];
     std::fill_n(opp, OutputDimension, 0.0);
 
-    OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
+    const OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
     for (unsigned int k = 0; k <= SplineOrder; ++k)
     {
       /** Recurse. */
@@ -161,7 +161,7 @@ public:
       sj[n] = 0.0;
     }
 
-    OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
+    const OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
     for (unsigned int k = 0; k <= SplineOrder; ++k)
     {
       /** Recurse. */
@@ -227,7 +227,7 @@ public:
       sh[n] = 0.0;
     }
 
-    OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
+    const OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
     for (unsigned int k = 0; k <= SplineOrder; ++k)
     {
       /** Recurse. */
