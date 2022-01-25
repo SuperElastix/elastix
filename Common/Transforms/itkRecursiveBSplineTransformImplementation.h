@@ -57,7 +57,7 @@ public:
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
   using OutputPointType = TScalar *;
-  using CoefficientPointerVectorType = TScalar **;
+  using CoefficientPointerVectorType = const TScalar * const *;
 
   /** TransformPoint recursive implementation. */
   static inline void
@@ -67,7 +67,7 @@ public:
                  const double *                     weights1D)
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
-    TScalar * tmp_mu[OutputDimension];
+    const TScalar * tmp_mu[OutputDimension];
     std::copy_n(mu, OutputDimension, tmp_mu);
 
     /** Create a temporary opp and initialize the original. */
@@ -154,7 +154,7 @@ public:
                      const double *                     derivativeWeights1D)           // 1st derivative of B-spline
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
-    TScalar * tmp_mu[OutputDimension];
+    const TScalar * tmp_mu[OutputDimension];
     std::copy_n(mu, OutputDimension, tmp_mu);
 
     /** Create a temporary sj and initialize the original. */
@@ -220,7 +220,7 @@ public:
     const unsigned int helperDim2 = OutputDimension * (SpaceDimension + 1) * (SpaceDimension + 2) / 2;
 
     /** Make a copy of the pointers to mu. The pointer will move later. */
-    TScalar * tmp_mu[OutputDimension];
+    const TScalar * tmp_mu[OutputDimension];
     std::copy_n(mu, OutputDimension, tmp_mu);
 
     /** Create a temporary sh and initialize the original. */
@@ -368,7 +368,7 @@ public:
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
   using OutputPointType = TScalar *;
-  using CoefficientPointerVectorType = TScalar **;
+  using CoefficientPointerVectorType = const TScalar * const *;
 
   /** TransformPoint recursive implementation. */
   static inline void
