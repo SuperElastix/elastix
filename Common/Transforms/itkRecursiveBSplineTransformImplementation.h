@@ -56,15 +56,12 @@ public:
     itk::RecursiveBSplineInterpolationWeightFunction<TScalar, OutputDimension, SplineOrder>;
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
-  using OutputPointType = TScalar *;
-  using CoefficientPointerVectorType = const TScalar * const *;
-
   /** TransformPoint recursive implementation. */
   static inline void
-  TransformPoint(OutputPointType                    opp,
-                 const CoefficientPointerVectorType mu,
-                 const OffsetValueType *            gridOffsetTable,
-                 const double *                     weights1D)
+  TransformPoint(TScalar *                     opp,
+                 const TScalar * const * const mu,
+                 const OffsetValueType *       gridOffsetTable,
+                 const double *                weights1D)
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     const TScalar * tmp_mu[OutputDimension];
@@ -147,11 +144,11 @@ public:
    * i.e. the TransformPoint() function.
    */
   static inline void
-  GetSpatialJacobian(InternalFloatType *                sj,
-                     const CoefficientPointerVectorType mu,
-                     const OffsetValueType *            gridOffsetTable,
-                     const double *                     weights1D, // normal B-spline weights
-                     const double *                     derivativeWeights1D)           // 1st derivative of B-spline
+  GetSpatialJacobian(InternalFloatType *           sj,
+                     const TScalar * const * const mu,
+                     const OffsetValueType *       gridOffsetTable,
+                     const double *                weights1D, // normal B-spline weights
+                     const double *                derivativeWeights1D)      // 1st derivative of B-spline
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     const TScalar * tmp_mu[OutputDimension];
@@ -209,12 +206,12 @@ public:
    * Note that we store only one of the symmetric halves of Hk.
    */
   static inline void
-  GetSpatialHessian(InternalFloatType *                sh,
-                    const CoefficientPointerVectorType mu,
-                    const OffsetValueType *            gridOffsetTable,
-                    const double *                     weights1D,           // normal B-spline weights
-                    const double *                     derivativeWeights1D, // 1st derivative of B-spline
-                    const double *                     hessianWeights1D)                        // 2nd derivative of B-spline
+  GetSpatialHessian(InternalFloatType *           sh,
+                    const TScalar * const * const mu,
+                    const OffsetValueType *       gridOffsetTable,
+                    const double *                weights1D,           // normal B-spline weights
+                    const double *                derivativeWeights1D, // 1st derivative of B-spline
+                    const double *                hessianWeights1D)                   // 2nd derivative of B-spline
   {
     const unsigned int helperDim1 = OutputDimension * SpaceDimension * (SpaceDimension + 1) / 2;
     const unsigned int helperDim2 = OutputDimension * (SpaceDimension + 1) * (SpaceDimension + 2) / 2;
@@ -367,15 +364,12 @@ public:
     itk::RecursiveBSplineInterpolationWeightFunction<TScalar, OutputDimension, SplineOrder>;
   itkStaticConstMacro(BSplineNumberOfIndices, unsigned int, RecursiveBSplineWeightFunctionType::NumberOfIndices);
 
-  using OutputPointType = TScalar *;
-  using CoefficientPointerVectorType = const TScalar * const *;
-
   /** TransformPoint recursive implementation. */
   static inline void
-  TransformPoint(OutputPointType                    opp,
-                 const CoefficientPointerVectorType mu,
-                 const OffsetValueType *            gridOffsetTable,
-                 const double *                     weights1D)
+  TransformPoint(TScalar *                     opp,
+                 const TScalar * const * const mu,
+                 const OffsetValueType *       gridOffsetTable,
+                 const double *                weights1D)
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -430,11 +424,11 @@ public:
 
   /** GetSpatialJacobian recursive implementation. */
   static inline void
-  GetSpatialJacobian(InternalFloatType *                sj,
-                     const CoefficientPointerVectorType mu,
-                     const OffsetValueType *            gridOffsetTable,
-                     const double *                     weights1D, // normal B-spline weights
-                     const double *                     derivativeWeights1D)           // 1st derivative of B-spline
+  GetSpatialJacobian(InternalFloatType *           sj,
+                     const TScalar * const * const mu,
+                     const OffsetValueType *       gridOffsetTable,
+                     const double *                weights1D, // normal B-spline weights
+                     const double *                derivativeWeights1D)      // 1st derivative of B-spline
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -445,12 +439,12 @@ public:
 
   /** GetSpatialHessian recursive implementation. */
   static inline void
-  GetSpatialHessian(InternalFloatType *                sh,
-                    const CoefficientPointerVectorType mu,
-                    const OffsetValueType *            gridOffsetTable,
-                    const double *                     weights1D,           // normal B-spline weights
-                    const double *                     derivativeWeights1D, // 1st derivative of B-spline
-                    const double *                     hessianWeights1D)                        // 2nd derivative of B-spline
+  GetSpatialHessian(InternalFloatType *           sh,
+                    const TScalar * const * const mu,
+                    const OffsetValueType *       gridOffsetTable,
+                    const double *                weights1D,           // normal B-spline weights
+                    const double *                derivativeWeights1D, // 1st derivative of B-spline
+                    const double *                hessianWeights1D)                   // 2nd derivative of B-spline
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
