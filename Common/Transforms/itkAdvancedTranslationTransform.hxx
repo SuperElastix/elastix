@@ -44,12 +44,9 @@ template <class TScalarType, unsigned int NDimensions>
 AdvancedTranslationTransform<TScalarType, NDimensions>::AdvancedTranslationTransform()
   : Superclass(ParametersDimension)
 {
-  m_Offset.Fill(0);
-
   // The Jacobian of this transform is constant.
   // Therefore the m_Jacobian variable can be
   // initialized here and be shared among all the threads.
-  this->m_LocalJacobian.SetSize(SpaceDimension, ParametersDimension);
   this->m_LocalJacobian.Fill(0.0);
 
   for (unsigned int i = 0; i < NDimensions; ++i)
@@ -57,19 +54,11 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::AdvancedTranslationTrans
     this->m_LocalJacobian(i, i) = 1.0;
   }
 
-  /** SpatialJacobian is also constant */
-  this->m_SpatialJacobian.SetIdentity();
-
   /** Nonzero Jacobian indices, for GetJacobian */
-  this->m_NonZeroJacobianIndices.resize(ParametersDimension);
   for (unsigned int i = 0; i < ParametersDimension; ++i)
   {
     this->m_NonZeroJacobianIndices[i] = i;
   }
-
-  /** Set to correct size. The elements are automatically initialized to 0 */
-  this->m_JacobianOfSpatialJacobian.resize(ParametersDimension);
-  this->m_JacobianOfSpatialHessian.resize(ParametersDimension);
 
   /** m_SpatialHessian is automatically initialized with zeros */
   this->m_HasNonZeroSpatialHessian = false;

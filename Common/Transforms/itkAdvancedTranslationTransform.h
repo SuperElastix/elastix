@@ -254,14 +254,14 @@ private:
   void
   operator=(const Self &) = delete;
 
-  OutputVectorType m_Offset; // Offset of the transformation
+  OutputVectorType m_Offset{}; // Offset of the transformation
 
-  JacobianType                  m_LocalJacobian;
-  SpatialJacobianType           m_SpatialJacobian;
-  SpatialHessianType            m_SpatialHessian;
-  NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;
-  JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
-  JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian;
+  JacobianType                        m_LocalJacobian{ JacobianType(NDimensions, NDimensions) };
+  const SpatialJacobianType           m_SpatialJacobian{ SpatialJacobianType::GetIdentity() };
+  const SpatialHessianType            m_SpatialHessian{};
+  NonZeroJacobianIndicesType          m_NonZeroJacobianIndices{ NonZeroJacobianIndicesType(NDimensions) };
+  const JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian{ JacobianOfSpatialJacobianType(NDimensions) };
+  const JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian{ JacobianOfSpatialHessianType(NDimensions) };
 };
 
 // class AdvancedTranslationTransform
