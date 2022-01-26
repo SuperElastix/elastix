@@ -107,10 +107,8 @@ private:
   operator=(const Self &) = delete;
 
   /** Structures to control overloaded versions of Evaluate */
-  struct DispatchBase
-  {};
   template <unsigned int>
-  struct ITK_TEMPLATE_EXPORT Dispatch : DispatchBase
+  struct ITK_TEMPLATE_EXPORT Dispatch
   {};
 
   /** Zeroth order spline. */
@@ -242,24 +240,6 @@ private:
     weights[1] = -1.5 * sqrValue + 5.0 * absValue - 3.5;
     weights[2] = 1.5 * sqrValue - 4.0 * absValue + 2.0;
     weights[3] = -0.5 * sqrValue + absValue - 0.5;
-  }
-
-
-  /** Unimplemented spline order */
-  inline double
-  Evaluate(const DispatchBase &, const double &) const
-  {
-    itkExceptionMacro("Evaluate not implemented for spline order " << SplineOrder);
-    return 0.0; // This is to avoid compiler warning about missing
-    // return statement.  It should never be evaluated.
-  }
-
-
-  /** Unimplemented spline order */
-  inline void
-  Evaluate(const DispatchBase &, const double &, double *) const
-  {
-    itkExceptionMacro("Evaluate not implemented for spline order " << SplineOrder);
   }
 };
 
