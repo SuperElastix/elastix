@@ -126,11 +126,6 @@ private:
   using KernelType = BSplineKernelFunction2<VSplineOrder>;
   using DerivativeKernelType = BSplineDerivativeKernelFunction2<VSplineOrder>;
   using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<VSplineOrder>;
-
-  /** Interpolation kernel. */
-  typename KernelType::Pointer                      m_Kernel;
-  typename DerivativeKernelType::Pointer            m_DerivativeKernel;
-  typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
 };
 
 } // end namespace itk
