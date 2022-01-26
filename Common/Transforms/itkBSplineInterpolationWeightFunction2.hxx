@@ -28,12 +28,8 @@ namespace itk
  */
 
 template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>::BSplineInterpolationWeightFunction2()
-{
-  /** Initialize the interpolation kernel. */
-  this->m_Kernel = KernelType::New();
-
-} // end Constructor
+BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>::BSplineInterpolationWeightFunction2() =
+  default;
 
 
 /**
@@ -54,7 +50,7 @@ BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>::C
 
     // Compute weights
     double weights[6]; // Sufficiently large: maximum implemented SplineOrder + 1
-    this->m_Kernel->Evaluate(x, weights);
+    KernelType::FastEvaluate(x, weights);
 
     // Copy
     for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)

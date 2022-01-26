@@ -113,9 +113,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   os << indent << "NumberOfWeights: " << this->m_NumberOfWeights << std::endl;
   os << indent << "SupportSize: " << this->m_SupportSize << std::endl;
   os << indent << "OffsetToIndexTable: " << this->m_OffsetToIndexTable << std::endl;
-  os << indent << "Kernel: " << this->m_Kernel.GetPointer() << std::endl;
   os << indent << "DerivativeKernel: " << this->m_DerivativeKernel.GetPointer() << std::endl;
-  os << indent << "SecondOrderDerivativeKernel: " << this->m_SecondOrderDerivativeKernel.GetPointer() << std::endl;
 
 } // end PrintSelf()
 
