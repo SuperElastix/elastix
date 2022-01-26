@@ -35,9 +35,6 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::RecursiveBSplineT
   : Superclass()
 {
   this->m_RecursiveBSplineWeightFunction = RecursiveBSplineWeightFunctionType::New();
-  this->m_Kernel = KernelType::New();
-  this->m_DerivativeKernel = DerivativeKernelType::New();
-  this->m_SecondOrderDerivativeKernel = SecondOrderDerivativeKernelType::New();
 } // end Constructor()
 
 

@@ -114,16 +114,6 @@ public:
     RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>; // TODO: get rid of this and
                                                                                          // use the kernels directly.
 
-  /** Interpolation kernel type. */
-  using KernelType = BSplineKernelFunction2<VSplineOrder>;
-  using DerivativeKernelType = BSplineDerivativeKernelFunction2<VSplineOrder>;
-  using SecondOrderDerivativeKernelType = BSplineSecondOrderDerivativeKernelFunction2<VSplineOrder>;
-
-  /** Interpolation kernel. */
-  typename KernelType::Pointer                      m_Kernel;
-  typename DerivativeKernelType::Pointer            m_DerivativeKernel;
-  typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
-
   /** Compute point transformation. This one is commonly used.
    * It calls RecursiveBSplineTransformImplementation2::InterpolateTransformPoint
    * for a recursive implementation.
