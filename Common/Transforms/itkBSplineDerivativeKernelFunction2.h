@@ -73,11 +73,29 @@ public:
   /** Enum of for spline order. */
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
+  /** Evaluate the function. Faster than the corresponding public `Evaluate` member function, because it is
+   * static (whereas this `Evaluate` member function is virtual). */
+  static double
+  FastEvaluate(const double u)
+  {
+    return Self::Evaluate(Dispatch<VSplineOrder>(), u);
+  }
+
+
+  /** Evaluate the function. Faster than the corresponding public `Evaluate` member function, because it is
+   * static (whereas this `Evaluate` member function is virtual). */
+  static void
+  FastEvaluate(const double u, double * const weights)
+  {
+    return Self::Evaluate(Dispatch<VSplineOrder>(), u, weights);
+  }
+
+
   /** Evaluate the function. */
   inline double
   Evaluate(const double & u) const override
   {
-    return Self::Evaluate(Dispatch<VSplineOrder>(), u);
+    return Self::FastEvaluate(u);
   }
 
 
@@ -85,7 +103,7 @@ public:
   inline void
   Evaluate(const double & u, double * weights) const override
   {
-    return Self::Evaluate(Dispatch<VSplineOrder>(), u, weights);
+    return Self::FastEvaluate(u, weights);
   }
 
 

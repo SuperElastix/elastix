@@ -76,11 +76,30 @@ public:
   /** Store weights for the entire support. */
   using WeightArrayType = FixedArray<double, VSplineOrder + 1>;
 
+  /** Evaluate the function at one point. Faster than the corresponding public `Evaluate` member function, because it is
+   * static (whereas this `Evaluate` member function is virtual). */
+  static double
+  FastEvaluate(const double u)
+  {
+    return Self::Evaluate(Dispatch<VSplineOrder>(), u);
+  }
+
+
+  /** Evaluate the function at the entire support. This is slightly faster, since no if's are needed. It is also faster
+   * than the corresponding public `Evaluate` member function, because it is static (whereas this `Evaluate` member
+   * function is virtual). */
+  static void
+  FastEvaluate(const double u, double * const weights)
+  {
+    Self::Evaluate(Dispatch<VSplineOrder>(), u, weights);
+  }
+
+
   /** Evaluate the function at one point. */
   inline double
   Evaluate(const double & u) const override
   {
-    return Self::Evaluate(Dispatch<VSplineOrder>(), u);
+    return Self::FastEvaluate(u);
   }
 
 
@@ -90,7 +109,7 @@ public:
   inline void
   Evaluate(const double & u, double * weights) const override
   {
-    Self::Evaluate(Dispatch<VSplineOrder>(), u, weights);
+    Self::FastEvaluate(u, weights);
   }
 
 
