@@ -58,10 +58,10 @@ public:
 
   /** TransformPoint recursive implementation. */
   static inline void
-  TransformPoint(TScalar *                     opp,
+  TransformPoint(TScalar * const               opp,
                  const TScalar * const * const mu,
-                 const OffsetValueType *       gridOffsetTable,
-                 const double *                weights1D)
+                 const OffsetValueType * const gridOffsetTable,
+                 const double * const          weights1D)
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     const TScalar * tmp_mu[OutputDimension];
@@ -92,7 +92,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void
-  GetJacobian(TScalar *& jacobians, const double * weights1D, double value)
+  GetJacobian(TScalar *& jacobians, const double * const weights1D, const double value)
   {
     for (unsigned int k = 0; k <= SplineOrder; ++k)
     {
@@ -105,10 +105,10 @@ public:
 
   /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
   static inline void
-  EvaluateJacobianWithImageGradientProduct(TScalar *&                imageJacobian,
-                                           const InternalFloatType * movingImageGradient,
-                                           const double *            weights1D,
-                                           double                    value)
+  EvaluateJacobianWithImageGradientProduct(TScalar *&                      imageJacobian,
+                                           const InternalFloatType * const movingImageGradient,
+                                           const double * const            weights1D,
+                                           const double                    value)
   {
     for (unsigned int k = 0; k <= SplineOrder; ++k)
     {
@@ -122,10 +122,10 @@ public:
 
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void
-  ComputeNonZeroJacobianIndices(unsigned long *&        nzji,
-                                const unsigned long     parametersPerDim,
-                                unsigned long           currentIndex,
-                                const OffsetValueType * gridOffsetTable)
+  ComputeNonZeroJacobianIndices(unsigned long *&              nzji,
+                                const unsigned long           parametersPerDim,
+                                unsigned long                 currentIndex,
+                                const OffsetValueType * const gridOffsetTable)
   {
     const OffsetValueType bot = gridOffsetTable[SpaceDimension - 1];
     for (unsigned int k = 0; k <= SplineOrder; ++k)
@@ -144,11 +144,11 @@ public:
    * i.e. the TransformPoint() function.
    */
   static inline void
-  GetSpatialJacobian(InternalFloatType *           sj,
+  GetSpatialJacobian(InternalFloatType * const     sj,
                      const TScalar * const * const mu,
-                     const OffsetValueType *       gridOffsetTable,
-                     const double *                weights1D, // normal B-spline weights
-                     const double *                derivativeWeights1D)      // 1st derivative of B-spline
+                     const OffsetValueType * const gridOffsetTable,
+                     const double * const          weights1D,  // normal B-spline weights
+                     const double * const          derivativeWeights1D) // 1st derivative of B-spline
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     const TScalar * tmp_mu[OutputDimension];
@@ -206,12 +206,12 @@ public:
    * Note that we store only one of the symmetric halves of Hk.
    */
   static inline void
-  GetSpatialHessian(InternalFloatType *           sh,
+  GetSpatialHessian(InternalFloatType * const     sh,
                     const TScalar * const * const mu,
-                    const OffsetValueType *       gridOffsetTable,
-                    const double *                weights1D,           // normal B-spline weights
-                    const double *                derivativeWeights1D, // 1st derivative of B-spline
-                    const double *                hessianWeights1D)                   // 2nd derivative of B-spline
+                    const OffsetValueType * const gridOffsetTable,
+                    const double * const          weights1D,           // normal B-spline weights
+                    const double * const          derivativeWeights1D, // 1st derivative of B-spline
+                    const double * const          hessianWeights1D)             // 2nd derivative of B-spline
   {
     const unsigned int helperDim1 = OutputDimension * SpaceDimension * (SpaceDimension + 1) / 2;
     const unsigned int helperDim2 = OutputDimension * (SpaceDimension + 1) * (SpaceDimension + 2) / 2;
@@ -267,9 +267,9 @@ public:
    */
   static inline void
   GetJacobianOfSpatialJacobian(InternalFloatType *&            jsj_out,
-                               const double *                  weights1D,           // normal B-spline weights
-                               const double *                  derivativeWeights1D, // 1st derivative of B-spline
-                               const double *                  directionCosines,
+                               const double * const            weights1D,           // normal B-spline weights
+                               const double * const            derivativeWeights1D, // 1st derivative of B-spline
+                               const double * const            directionCosines,
                                const InternalFloatType * const jsj)
   {
     const unsigned int helperDim = OutputDimension - SpaceDimension + 1;
@@ -303,10 +303,10 @@ public:
    */
   static inline void
   GetJacobianOfSpatialHessian(InternalFloatType *&            jsh_out,
-                              const double *                  weights1D,           // normal B-spline weights
-                              const double *                  derivativeWeights1D, // 1st derivative of B-spline
-                              const double *                  hessianWeights1D,    // 2nd derivative of B-spline
-                              const double *                  directionCosines,
+                              const double * const            weights1D,           // normal B-spline weights
+                              const double * const            derivativeWeights1D, // 1st derivative of B-spline
+                              const double * const            hessianWeights1D,    // 2nd derivative of B-spline
+                              const double * const            directionCosines,
                               const InternalFloatType * const jsh)
   {
     const unsigned int helperDim = OutputDimension - SpaceDimension;
@@ -366,10 +366,10 @@ public:
 
   /** TransformPoint recursive implementation. */
   static inline void
-  TransformPoint(TScalar *                     opp,
+  TransformPoint(TScalar * const               opp,
                  const TScalar * const * const mu,
-                 const OffsetValueType *       gridOffsetTable,
-                 const double *                weights1D)
+                 const OffsetValueType * const gridOffsetTable,
+                 const double * const          weights1D)
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -380,7 +380,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void
-  GetJacobian(TScalar *& jacobians, const double * weights1D, double value)
+  GetJacobian(TScalar *& jacobians, const double * const weights1D, const double value)
   {
     unsigned long offset = 0;
     for (unsigned int j = 0; j < OutputDimension; ++j)
@@ -394,10 +394,10 @@ public:
 
   /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
   static inline void
-  EvaluateJacobianWithImageGradientProduct(TScalar *&                imageJacobian,
-                                           const InternalFloatType * movingImageGradient,
-                                           const double *            weights1D,
-                                           double                    value)
+  EvaluateJacobianWithImageGradientProduct(TScalar *&                      imageJacobian,
+                                           const InternalFloatType * const movingImageGradient,
+                                           const double * const            weights1D,
+                                           const double                    value)
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -409,10 +409,10 @@ public:
 
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void
-  ComputeNonZeroJacobianIndices(unsigned long *&        nzji,
-                                const unsigned long     parametersPerDim,
-                                unsigned long           currentIndex,
-                                const OffsetValueType * gridOffsetTable)
+  ComputeNonZeroJacobianIndices(unsigned long *&              nzji,
+                                const unsigned long           parametersPerDim,
+                                const unsigned long           currentIndex,
+                                const OffsetValueType * const gridOffsetTable)
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -424,11 +424,11 @@ public:
 
   /** GetSpatialJacobian recursive implementation. */
   static inline void
-  GetSpatialJacobian(InternalFloatType *           sj,
+  GetSpatialJacobian(InternalFloatType * const     sj,
                      const TScalar * const * const mu,
-                     const OffsetValueType *       gridOffsetTable,
-                     const double *                weights1D, // normal B-spline weights
-                     const double *                derivativeWeights1D)      // 1st derivative of B-spline
+                     const OffsetValueType * const gridOffsetTable,
+                     const double * const          weights1D,  // normal B-spline weights
+                     const double * const          derivativeWeights1D) // 1st derivative of B-spline
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -439,12 +439,12 @@ public:
 
   /** GetSpatialHessian recursive implementation. */
   static inline void
-  GetSpatialHessian(InternalFloatType *           sh,
+  GetSpatialHessian(InternalFloatType * const     sh,
                     const TScalar * const * const mu,
-                    const OffsetValueType *       gridOffsetTable,
-                    const double *                weights1D,           // normal B-spline weights
-                    const double *                derivativeWeights1D, // 1st derivative of B-spline
-                    const double *                hessianWeights1D)                   // 2nd derivative of B-spline
+                    const OffsetValueType * const gridOffsetTable,
+                    const double * const          weights1D,           // normal B-spline weights
+                    const double * const          derivativeWeights1D, // 1st derivative of B-spline
+                    const double * const          hessianWeights1D)             // 2nd derivative of B-spline
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -456,9 +456,9 @@ public:
   /** GetJacobianOfSpatialJacobian recursive implementation. */
   static inline void
   GetJacobianOfSpatialJacobian(InternalFloatType *&            jsj_out,
-                               const double *                  weights1D,           // normal B-spline weights
-                               const double *                  derivativeWeights1D, // 1st derivative of B-spline
-                               const double *                  directionCosines,
+                               const double * const            weights1D,           // normal B-spline weights
+                               const double * const            derivativeWeights1D, // 1st derivative of B-spline
+                               const double * const            directionCosines,
                                const InternalFloatType * const jsj)
   {
     /** Copy the correct elements to the output.
@@ -495,10 +495,10 @@ public:
   /** GetJacobianOfSpatialHessian recursive implementation. */
   static inline void
   GetJacobianOfSpatialHessian(InternalFloatType *&            jsh_out,
-                              const double *                  weights1D,           // normal B-spline weights
-                              const double *                  derivativeWeights1D, // 1st derivative of B-spline
-                              const double *                  hessianWeights1D,    // 2nd derivative of B-spline
-                              const double *                  directionCosines,
+                              const double * const            weights1D,           // normal B-spline weights
+                              const double * const            derivativeWeights1D, // 1st derivative of B-spline
+                              const double * const            hessianWeights1D,    // 2nd derivative of B-spline
+                              const double * const            directionCosines,
                               const InternalFloatType * const jsh)
   {
     double jsh_tmp[OutputDimension * OutputDimension];
