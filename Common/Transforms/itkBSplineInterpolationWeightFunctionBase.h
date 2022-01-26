@@ -140,10 +140,8 @@ protected:
   SizeType      m_SupportSize;
   TableType     m_OffsetToIndexTable;
 
-  /** Interpolation kernels. */
-  typename KernelType::Pointer                      m_Kernel;
-  typename DerivativeKernelType::Pointer            m_DerivativeKernel;
-  typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
+  /** Derivative interpolation kernel. */
+  typename DerivativeKernelType::Pointer m_DerivativeKernel;
 
 private:
   BSplineInterpolationWeightFunctionBase(const Self &) = delete;

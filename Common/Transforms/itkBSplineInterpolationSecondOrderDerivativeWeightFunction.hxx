@@ -38,10 +38,8 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
   this->m_DerivativeDirections.fill(0);
   this->m_EqualDerivativeDirections = true;
 
-  /** Initialize the interpolation kernels. */
-  this->m_Kernel = KernelType::New();
+  /** Initialize the derivative interpolation kernel. */
   this->m_DerivativeKernel = DerivativeKernelType::New();
-  this->m_SecondOrderDerivativeKernel = SecondOrderDerivativeKernelType::New();
 
 } // end Constructor
 
@@ -113,7 +111,7 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
     {
       for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)
       {
-        weights1D[i][k] = this->m_Kernel->Evaluate(x);
+        weights1D[i][k] = KernelType::FastEvaluate(x);
         x -= 1.0;
       }
     }
@@ -123,7 +121,7 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
       {
         for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)
         {
-          weights1D[i][k] = this->m_SecondOrderDerivativeKernel->Evaluate(x);
+          weights1D[i][k] = SecondOrderDerivativeKernelType::FastEvaluate(x);
           x -= 1.0;
         }
       }

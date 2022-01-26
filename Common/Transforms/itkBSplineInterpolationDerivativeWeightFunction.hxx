@@ -34,8 +34,7 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
   /** Initialize members. */
   this->m_DerivativeDirection = 0;
 
-  /** Initialize the interpolation kernels. */
-  this->m_Kernel = KernelType::New();
+  /** Initialize the derivative interpolation kernel. */
   this->m_DerivativeKernel = DerivativeKernelType::New();
 
 } // end Constructor
@@ -99,7 +98,7 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
     {
       for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)
       {
-        weights1D[i][k] = this->m_Kernel->Evaluate(x);
+        weights1D[i][k] = KernelType::FastEvaluate(x);
         x -= 1.0;
       }
     }
