@@ -19,6 +19,7 @@
 #define elxAdvancedBSplineTransform_hxx
 
 #include "elxAdvancedBSplineTransform.h"
+#include "itkRecursiveBSplineTransform.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include <vnl/vnl_math.h>
@@ -48,8 +49,7 @@ AdvancedBSplineTransform<TElastix>::InitializeBSplineTransform()
   {
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder(this->m_SplineOrder);
-    m_BSplineTransform =
-      BSplineTransformBaseType::template Create<itk::AdvancedBSplineDeformableTransform>(m_SplineOrder);
+    m_BSplineTransform = BSplineTransformBaseType::template Create<itk::RecursiveBSplineTransform>(m_SplineOrder);
   }
 
   this->SetCurrentTransform(this->m_BSplineTransform);
