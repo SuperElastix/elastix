@@ -222,7 +222,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData()
         /** Initialize the sum to 0. */
         for (j = 0; j < InputImageDimension; ++j)
         {
-          sum[j] = NumericTraits<double>::Zero;
+          sum[j] = 0.0;
         }
 
         /** Initialize sumc. */

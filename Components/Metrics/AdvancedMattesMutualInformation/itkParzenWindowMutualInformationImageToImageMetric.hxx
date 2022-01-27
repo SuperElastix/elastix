@@ -154,7 +154,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Initialize some variables. */
   value = NumericTraits<MeasureType>::Zero;
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<double>::ZeroValue());
+  derivative.Fill(0.0);
 
   /** Construct the JointPDF, JointPDFDerivatives, Alpha and its derivatives. */
   this->ComputePDFsAndPDFDerivatives(parameters);
@@ -289,7 +289,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   NonZeroJacobianIndicesType   nzji = NonZeroJacobianIndicesType(nnzji);
   DerivativeType               imageJacobian(nzji.size());
   TransformJacobianType        jacobian;
-  derivative.Fill(NumericTraits<double>::ZeroValue());
+  derivative.Fill(0.0);
 
   /** Declare and allocate arrays for Jacobian preconditioning. */
   DerivativeType jacobianPreconditioner, preconditioningDivisor;
@@ -834,7 +834,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Initialize some variables. */
   value = NumericTraits<MeasureType>::Zero;
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<double>::ZeroValue());
+  derivative.Fill(0.0);
 
   /** Construct the JointPDF, JointPDFDerivatives, Alpha and its derivatives. */
   this->ComputePDFsAndIncrementalPDFs(parameters);

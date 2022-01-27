@@ -355,7 +355,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   unsigned int pixelIndex = 0;
 
   /** Initialize image sample matrix . */
-  datablock.fill(itk::NumericTraits<double>::Zero);
+  datablock.fill(0.0);
 
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
