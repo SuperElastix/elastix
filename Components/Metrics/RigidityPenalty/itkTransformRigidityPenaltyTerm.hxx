@@ -1959,7 +1959,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Create1DOperator(
 {
   /** Create an operator size and set it in the operator. */
   NeighborhoodSizeType r;
-  r.Fill(NumericTraits<unsigned int>::ZeroValue());
+  r.Fill(0U);
   r[WhichDimension - 1] = 1;
   F.SetRadius(r);
 

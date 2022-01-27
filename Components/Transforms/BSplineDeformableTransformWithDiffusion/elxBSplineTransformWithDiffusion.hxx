@@ -355,7 +355,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
   }
 
   /** Get the default pixel value. */
-  float defaultPixelValueForGVI = itk::NumericTraits<float>::Zero;
+  float defaultPixelValueForGVI = 0.0f;
   if (this->m_UseMovingSegmentation && !this->m_ThresholdBool)
   {
     this->m_Configuration->ReadParameter(defaultPixelValueForGVI, "DefaultPixelValueForGVI", 0);
