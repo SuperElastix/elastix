@@ -31,7 +31,7 @@ LineSearchOptimizer::LineSearchOptimizer()
   this->m_CurrentStepLength = 0.0;
   this->m_MinimumStepLength = 0.0;
   this->m_MaximumStepLength = NumericTraits<double>::max();
-  this->m_InitialStepLengthEstimate = NumericTraits<double>::One;
+  this->m_InitialStepLengthEstimate = 1.0;
 
 } // end Constructor
 

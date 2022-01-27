@@ -147,7 +147,7 @@ private:
 
     if (absValue < 0.5)
     {
-      return NumericTraits<double>::OneValue();
+      return 1.0;
     }
     else if (absValue == 0.5)
     {
@@ -168,7 +168,7 @@ private:
 
     if (absValue < 1.0)
     {
-      return NumericTraits<double>::OneValue() - absValue;
+      return 1.0 - absValue;
     }
     else
     {
@@ -232,7 +232,7 @@ private:
 
     if (absValue < 0.5)
     {
-      weights[0] = NumericTraits<double>::OneValue();
+      weights[0] = 1.0;
     }
     else if (absValue == 0.5)
     {
@@ -251,7 +251,7 @@ private:
   {
     const double absValue = std::abs(u);
 
-    weights[0] = NumericTraits<double>::OneValue() - absValue;
+    weights[0] = 1.0 - absValue;
     weights[1] = absValue;
   }
 

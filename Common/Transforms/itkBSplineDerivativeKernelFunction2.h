@@ -138,11 +138,11 @@ private:
   {
     const double absValue = std::abs(u);
 
-    if (absValue < NumericTraits<double>::OneValue())
+    if (absValue < 1.0)
     {
       return -vnl_math::sgn(u);
     }
-    else if (absValue == NumericTraits<double>::OneValue())
+    else if (absValue == 1.0)
     {
       return -vnl_math::sgn(u) / 2.0;
     }
