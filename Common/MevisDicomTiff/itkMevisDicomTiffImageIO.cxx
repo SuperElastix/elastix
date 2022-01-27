@@ -77,10 +77,10 @@ MevisDicomTiffImageIO ::MevisDicomTiffImageIO()
   , m_TileDepth(0)
   , m_NumberOfTiles(0)
   , m_RescaleSlope(NumericTraits<double>::OneValue())
-  , m_RescaleIntercept(NumericTraits<double>::ZeroValue())
-  , m_GantryTilt(NumericTraits<double>::ZeroValue())
-  , m_EstimatedMinimum(NumericTraits<double>::ZeroValue())
-  , m_EstimatedMaximum(NumericTraits<double>::ZeroValue())
+  , m_RescaleIntercept(0.0)
+  , m_GantryTilt(0.0)
+  , m_EstimatedMinimum(0.0)
+  , m_EstimatedMaximum(0.0)
 {
   // this->SetNumberOfDimensions(4);
   this->SetFileType(Binary);
@@ -593,19 +593,19 @@ MevisDicomTiffImageIO::ReadImageInformation()
       row[0] = row3[0];
       row[1] = row3[1];
       row[2] = row3[2];
-      row[3] = itk::NumericTraits<double>::Zero;
+      row[3] = 0.0;
 
       col[0] = col3[0];
       col[1] = col3[1];
       col[2] = col3[2];
-      col[3] = itk::NumericTraits<double>::Zero;
+      col[3] = 0.0;
 
       slice[0] = slice3[0];
       slice[1] = slice3[1];
       slice[2] = slice3[2];
-      slice[3] = itk::NumericTraits<double>::Zero;
+      slice[3] = 0.0;
 
-      dum[0] = dum[1] = dum[2] = itk::NumericTraits<double>::Zero;
+      dum[0] = dum[1] = dum[2] = 0.0;
       dum[3] = itk::NumericTraits<double>::One;
 
       this->SetDirection(0, row);
@@ -631,7 +631,7 @@ MevisDicomTiffImageIO::ReadImageInformation()
   {
     // not necessary to throw an exception for this.
     itkDebugMacro(<< "mevisIO:readimageinformation(): warning: intercept (0x0028,0x1052) not found in dcm header!");
-    m_RescaleIntercept = NumericTraits<double>::Zero; // default
+    m_RescaleIntercept = 0.0; // default
   }
 
   // slope
@@ -658,7 +658,7 @@ MevisDicomTiffImageIO::ReadImageInformation()
   {
     // not necessary to throw an exception for this.
     itkDebugMacro(<< "mevisIO: readimageinformation(): warning: gantry tilt (0x0018,0x1120) not found in dcm header!");
-    m_GantryTilt = NumericTraits<double>::Zero; // default
+    m_GantryTilt = 0.0; // default
   }
 
   // HEADER in MetaDICT

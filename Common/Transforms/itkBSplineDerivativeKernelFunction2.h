@@ -148,7 +148,7 @@ private:
     }
     else
     {
-      return NumericTraits<double>::ZeroValue();
+      return 0.0;
     }
   }
 
@@ -193,7 +193,7 @@ private:
     }
     else
     {
-      return NumericTraits<double>::ZeroValue();
+      return 0.0;
     }
   }
 

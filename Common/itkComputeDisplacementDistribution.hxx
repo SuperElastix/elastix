@@ -104,9 +104,9 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::InitializeThreadingPar
   /** Some initialization. */
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    this->m_ComputePerThreadVariables[i].st_MaxJJ = NumericTraits<double>::Zero;
-    this->m_ComputePerThreadVariables[i].st_Displacement = NumericTraits<double>::Zero;
-    this->m_ComputePerThreadVariables[i].st_DisplacementSquared = NumericTraits<double>::Zero;
+    this->m_ComputePerThreadVariables[i].st_MaxJJ = 0.0;
+    this->m_ComputePerThreadVariables[i].st_Displacement = 0.0;
+    this->m_ComputePerThreadVariables[i].st_DisplacementSquared = 0.0;
     this->m_ComputePerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
   }
 
