@@ -76,7 +76,7 @@ MevisDicomTiffImageIO ::MevisDicomTiffImageIO()
   , m_TileLength(0)
   , m_TileDepth(0)
   , m_NumberOfTiles(0)
-  , m_RescaleSlope(NumericTraits<double>::OneValue())
+  , m_RescaleSlope(1.0)
   , m_RescaleIntercept(0.0)
   , m_GantryTilt(0.0)
   , m_EstimatedMinimum(0.0)
@@ -606,7 +606,7 @@ MevisDicomTiffImageIO::ReadImageInformation()
       slice[3] = 0.0;
 
       dum[0] = dum[1] = dum[2] = 0.0;
-      dum[3] = itk::NumericTraits<double>::One;
+      dum[3] = 1.0;
 
       this->SetDirection(0, row);
       this->SetDirection(1, col);
@@ -645,7 +645,7 @@ MevisDicomTiffImageIO::ReadImageInformation()
   {
     // not necessary to throw an exception for this.
     itkDebugMacro(<< "mevisIO:readimageinformation(): warning: slope (0x0028,0x1053) not found in dcm header!");
-    m_RescaleSlope = NumericTraits<double>::One; // default
+    m_RescaleSlope = 1.0; // default
   }
   // gantry tilt
   gdcm::Attribute<0x0018, 0x1120> atgantry;
