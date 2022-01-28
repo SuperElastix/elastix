@@ -568,6 +568,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
          { NameAndItkTransform{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
            NameAndItkTransform{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
            NameAndItkTransform{ "EulerTransform", itk::Euler2DTransform<>::New() },
+           NameAndItkTransform{ "RecursiveBSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
            NameAndItkTransform{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
            NameAndItkTransform{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
     {

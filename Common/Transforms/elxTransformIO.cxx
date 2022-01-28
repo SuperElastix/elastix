@@ -111,7 +111,7 @@ elastix::TransformIO::ConvertItkTransformBaseToSingleItkTransform(const itk::Tra
     {
       return "AffineTransform";
     }
-    if (name == "AdvancedBSplineDeformableTransform")
+    if (name == "AdvancedBSplineDeformableTransform" || name == "RecursiveBSplineTransform")
     {
       return "BSplineTransform";
     }
