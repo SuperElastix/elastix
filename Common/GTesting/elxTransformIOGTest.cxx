@@ -564,7 +564,7 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
   const std::string elxClassName = elxTransform->elxGetClassName();
   const std::string itkNameOfClass = itkTransform.GetNameOfClass();
 
-  if (!((elxClassName == "RecursiveBSplineTransform") && (itkNameOfClass == "BSplineTransform")))
+  if (!((elxClassName == "BSplineTransform") && (itkNameOfClass == elxClassName)))
   {
     // Check that the elastix transform type corresponds with the ITK transform type.
     EXPECT_EQ(elxClassName, elx::TransformIO::ConvertITKNameOfClassToElastixClassName(itkNameOfClass));

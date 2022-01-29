@@ -82,6 +82,12 @@ elastix::TransformIO::ConvertITKNameOfClassToElastixClassName(const std::string 
   // "Euler2DTransform" ==> "EulerTransform"
   // "Similarity3DTransform" ==> "SimilarityTransform"
 
+  if (itkNameOfClass == "BSplineTransform")
+  {
+    // The elastix "RecursiveBSplineTransform" is faster than the elastix "BSplineTransform".
+    return "RecursiveBSplineTransform";
+  }
+
   auto name = itkNameOfClass;
 
   // Remove "nD" from ITK's "Euler2DTransform", "Similarity3DTransform", etc.
