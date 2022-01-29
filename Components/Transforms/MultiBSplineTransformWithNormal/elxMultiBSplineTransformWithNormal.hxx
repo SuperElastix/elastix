@@ -625,10 +625,9 @@ MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int
   using ScalesValueType = typename ScalesType::ValueType;
 
   /** Define new scales. */
-  const unsigned long numberOfParameters = this->m_MultiBSplineTransformWithNormal->GetNumberOfParameters();
-  const unsigned long offset = numberOfParameters / SpaceDimension;
-  ScalesType          newScales(numberOfParameters);
-  newScales.Fill(itk::NumericTraits<ScalesValueType>::OneValue());
+  const unsigned long   numberOfParameters = this->m_MultiBSplineTransformWithNormal->GetNumberOfParameters();
+  const unsigned long   offset = numberOfParameters / SpaceDimension;
+  ScalesType            newScales(numberOfParameters, ScalesValueType{ 1.0 });
   const ScalesValueType infScale = 10000.0;
 
   if (edgeWidth == 0)

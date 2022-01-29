@@ -482,9 +482,8 @@ RecursiveBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeW
   /** Define new scales. */
   const NumberOfParametersType numberOfParameters = this->m_BSplineTransform->GetNumberOfParameters();
   const unsigned long          offset = numberOfParameters / SpaceDimension;
-  ScalesType                   newScales(numberOfParameters);
-  newScales.Fill(itk::NumericTraits<ScalesValueType>::One);
-  const ScalesValueType infScale = 10000.0;
+  ScalesType                   newScales(numberOfParameters, ScalesValueType{ 1.0 });
+  const ScalesValueType        infScale = 10000.0;
 
   if (edgeWidth == 0)
   {
