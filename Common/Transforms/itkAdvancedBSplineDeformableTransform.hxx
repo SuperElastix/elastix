@@ -96,7 +96,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
    *     Grid Direction
    *  The size of these is equal to the  NInputDimensions
    */
-  this->m_FixedParameters.SetSize(NDimensions * (NDimensions + 3));
+  this->m_FixedParameters.SetSize(Superclass::NumberOfFixedParameters);
   this->m_FixedParameters.Fill(0.0);
   for (unsigned int i = 0; i < NDimensions; ++i)
   {
