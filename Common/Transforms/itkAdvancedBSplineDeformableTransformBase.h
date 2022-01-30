@@ -54,6 +54,9 @@ public:
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
 
+  /** The number of fixed parameters. For Grid size, origin, spacing, and direction. */
+  static constexpr unsigned int NumberOfFixedParameters = NDimensions * (NDimensions + 3);
+
   /** Typedefs from Superclass. */
   using typename Superclass::ParametersType;
   using typename Superclass::FixedParametersType;

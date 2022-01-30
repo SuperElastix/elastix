@@ -67,7 +67,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
    *     Grid Direction
    *  The size of these is equal to the  NInputDimensions
    */
-  this->m_FixedParameters.SetSize(NDimensions * (NDimensions + 3));
+  this->m_FixedParameters.SetSize(NumberOfFixedParameters);
   this->m_FixedParameters.Fill(0.0);
   for (unsigned int i = 0; i < NDimensions; ++i)
   {
@@ -287,7 +287,7 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParameters(
   const FixedParametersType & passedParameters)
 {
-  FixedParametersType parameters(NDimensions * (3 + NDimensions));
+  FixedParametersType parameters(NumberOfFixedParameters);
 
   // check if the number of parameters match the
   // expected number of parameters
@@ -303,14 +303,14 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
       parameters[3 * NDimensions + (di * NDimensions + di)] = 1;
     }
   }
-  else if (passedParameters.Size() != NDimensions * (3 + NDimensions))
+  else if (passedParameters.Size() != NumberOfFixedParameters)
   {
     itkExceptionMacro(<< "Mismatched between parameters size " << passedParameters.size()
-                      << " and number of fixed parameters " << NDimensions * (3 + NDimensions));
+                      << " and number of fixed parameters " << NumberOfFixedParameters);
   }
   else
   {
-    for (unsigned int i = 0; i < NDimensions * (3 + NDimensions); ++i)
+    for (unsigned int i = 0; i < NumberOfFixedParameters; ++i)
     {
       parameters[i] = passedParameters[i];
     }
