@@ -781,14 +781,16 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::UpdateValue
     }
   }
 
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** Calculate the contributions to the derivatives with respect to each parameter. */
-  if (nzji.size() == this->GetNumberOfParameters())
+  if (nzji.size() == numberOfParameters)
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
     typename DerivativeType::iterator       sum1it = sum1.begin();
     typename DerivativeType::iterator       sum2it = sum2.begin();
-    for (unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu)
+    for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
       if (usableFixedSample)
       {

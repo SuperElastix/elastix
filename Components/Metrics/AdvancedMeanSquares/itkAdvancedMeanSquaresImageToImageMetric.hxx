@@ -820,12 +820,15 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::UpdateValueAnd
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
   const RealType diff_2 = diff * 2.0;
-  if (nzji.size() == this->GetNumberOfParameters())
+
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
+  if (nzji.size() == numberOfParameters)
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
     typename DerivativeType::iterator       derivit = deriv.begin();
-    for (unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu)
+    for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
       (*derivit) += diff_2 * (*imjacit);
       ++imjacit;
@@ -870,8 +873,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
 
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** Prepare Hessian */
-  H.set_size(this->GetNumberOfParameters(), this->GetNumberOfParameters());
+  H.set_size(numberOfParameters, numberOfParameters);
   // H.Fill(0.0); // done by set_size if sparse matrix
 
   /** Smooth fixed image */
@@ -976,7 +981,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian
   if (this->m_NumberOfPixelsCounted > 0)
   {
     const double normal_sum = 2.0 * this->m_NormalizationFactor / static_cast<double>(this->m_NumberOfPixelsCounted);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       H.scale_row(i, normal_sum);
     }
@@ -984,7 +989,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian
   else
   {
     // H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       H(i, i) = 1.0;
     }

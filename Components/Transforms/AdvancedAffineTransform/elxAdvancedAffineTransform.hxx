@@ -406,10 +406,10 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
         newscales[i] = scale;
       }
     }
-    else if (count == this->GetNumberOfParameters())
+    else if (count == N)
     {
       /** In this case the third option is used. */
-      for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+      for (unsigned int i = 0; i < N; ++i)
       {
         this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }

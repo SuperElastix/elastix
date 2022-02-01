@@ -777,13 +777,16 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::U
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
   const RealType diff_2 = diff * -2.0;
-  if (nzji.size() == this->GetNumberOfParameters())
+
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
+  if (nzji.size() == numberOfParameters)
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
     typename DerivativeType::const_iterator jsjdit = jacobianOfSpatialJacobianDeterminant.begin();
     typename DerivativeType::iterator       derivit = deriv.begin();
-    for (unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu)
+    for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
       (*derivit) +=
         diff_2 * spatialJacobianDeterminant *

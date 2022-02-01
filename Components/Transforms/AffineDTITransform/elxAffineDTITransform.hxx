@@ -285,11 +285,11 @@ AffineDTITransformElastix<TElastix>::SetScales()
 
   std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
 
-  if (count == this->GetNumberOfParameters())
+  if (count == N)
   {
     /** Overrule the automatically estimated scales with the user-specified
      * scales. Values <= 0 are not used; the default is kept then. */
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < N; ++i)
     {
       double scale_i = -1.0;
       this->m_Configuration->ReadParameter(scale_i, "Scales", i);

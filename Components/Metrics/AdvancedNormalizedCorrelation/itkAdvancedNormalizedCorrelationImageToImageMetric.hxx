@@ -89,6 +89,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   /** Some initialization. */
   const AccumulateType      zero1 = NumericTraits<AccumulateType>::Zero;
   const DerivativeValueType zero2 = NumericTraits<DerivativeValueType>::Zero;
+  const auto                numberOfParameters = this->GetNumberOfParameters();
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted =
@@ -98,8 +99,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sfm = zero1;
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sf = zero1;
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sm = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF.SetSize(this->GetNumberOfParameters());
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM.SetSize(this->GetNumberOfParameters());
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF.SetSize(numberOfParameters);
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM.SetSize(numberOfParameters);
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential.SetSize(
       this->GetNumberOfParameters());
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF.Fill(zero2);
@@ -140,8 +141,10 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Upda
   DerivativeType &                   derivativeM,
   DerivativeType &                   differential) const
 {
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** Calculate the contributions to the derivatives with respect to each parameter. */
-  if (nzji.size() == this->GetNumberOfParameters())
+  if (nzji.size() == numberOfParameters)
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
@@ -149,7 +152,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Upda
     typename DerivativeType::iterator       derivativeMit = derivativeM.begin();
     typename DerivativeType::iterator       differentialit = differential.begin();
 
-    for (unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu)
+    for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
       (*derivativeFit) += fixedImageValue * (*imjacit);
       (*derivativeMit) += movingImageValue * (*imjacit);
@@ -437,6 +440,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** If SubtractMean, then subtract things from sff, smm, sfm,
    * derivativeF and derivativeM.
    */
@@ -447,7 +452,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
     smm -= (sm * sm / N);
     sfm -= (sf * sm / N);
 
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       derivativeF[i] -= sf * differential[i] / N;
       derivativeM[i] -= sm * differential[i] / N;
@@ -461,7 +466,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   if (this->m_NumberOfPixelsCounted > 0 && denom < -1e-14)
   {
     value = sfm / denom;
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       derivative[i] = (derivativeF[i] - (sfm / smm) * derivativeM[i]) / denom;
     }
@@ -730,11 +735,13 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
       differential += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential;
     }
 
+    const auto numberOfParameters = this->GetNumberOfParameters();
+
     /** If SubtractMean, then subtract things from  derivativeF and derivativeM. */
     if (this->m_SubtractMean)
     {
       double diff, derF, derM;
-      for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+      for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         diff = differential[i];
         derF = derivativeF[i] - (sf / N) * diff;
@@ -744,7 +751,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
     }
     else
     {
-      for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+      for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         derivative[i] = (derivativeF[i] - (sfm / smm) * derivativeM[i]) / denom;
       }

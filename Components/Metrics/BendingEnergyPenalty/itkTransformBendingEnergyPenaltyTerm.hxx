@@ -671,13 +671,15 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetSelfHessian(cons
   /** Make sure the transform parameters are up to date. */
   // this->SetTransformParameters( parameters );
 
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** Prepare Hessian */
-  H.set_size(this->GetNumberOfParameters(), this->GetNumberOfParameters());
+  H.set_size(numberOfParameters, numberOfParameters);
   // H.Fill(0.0); //done by set_size for sparse matrix
   if (!this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian())
   {
     // H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       H(i, i) = 1.0;
     }
@@ -799,7 +801,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetSelfHessian(cons
   if (this->m_NumberOfPixelsCounted > 0)
   {
     const double normal_sum = 1.0 / static_cast<double>(this->m_NumberOfPixelsCounted);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       H.scale_row(i, normal_sum);
     }
@@ -807,7 +809,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetSelfHessian(cons
   else
   {
     // H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       H(i, i) = 1.0;
     }
