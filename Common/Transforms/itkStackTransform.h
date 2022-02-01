@@ -116,10 +116,10 @@ public:
   SetFixedParameters(const FixedParametersType & fixedParameters) override
   {
     const auto numberOfFixedParameters = fixedParameters.size();
-    if (numberOfFixedParameters < numberOfGeneralFixedParametersOfStack)
+    if (numberOfFixedParameters < NumberOfGeneralFixedParametersOfStack)
     {
       itkExceptionMacro(<< "The number of FixedParameters (" << numberOfFixedParameters << ") should be at least "
-                        << numberOfGeneralFixedParametersOfStack);
+                        << NumberOfGeneralFixedParametersOfStack);
     }
 
     if (this->Superclass::m_FixedParameters != fixedParameters)
@@ -127,18 +127,18 @@ public:
       this->Superclass::m_FixedParameters = fixedParameters;
 
       const FixedParametersType fixedParametersOfSubTransform(
-        fixedParameters.data_block() + numberOfGeneralFixedParametersOfStack,
-        numberOfFixedParameters - numberOfGeneralFixedParametersOfStack);
+        fixedParameters.data_block() + NumberOfGeneralFixedParametersOfStack,
+        numberOfFixedParameters - NumberOfGeneralFixedParametersOfStack);
 
-      m_SubTransformContainer.resize(fixedParameters[indexOfNumberOfSubTransforms]);
+      m_SubTransformContainer.resize(fixedParameters[IndexOfNumberOfSubTransforms]);
 
       for (auto & subTransform : m_SubTransformContainer)
       {
         subTransform = this->CreateSubTransform();
         subTransform->SetFixedParameters(fixedParametersOfSubTransform);
       }
-      m_StackSpacing = fixedParameters[indexOfStackSpacing];
-      m_StackOrigin = fixedParameters[indexOfStackOrigin];
+      m_StackSpacing = fixedParameters[IndexOfStackSpacing];
+      m_StackOrigin = fixedParameters[IndexOfStackOrigin];
       this->Modified();
     }
   }
@@ -251,10 +251,10 @@ private:
   // Indices of the general fixed parameters into the FixedParameters array, and the number of those parameters.
   enum
   {
-    indexOfNumberOfSubTransforms,
-    indexOfStackSpacing,
-    indexOfStackOrigin,
-    numberOfGeneralFixedParametersOfStack
+    IndexOfNumberOfSubTransforms,
+    IndexOfStackSpacing,
+    IndexOfStackOrigin,
+    NumberOfGeneralFixedParametersOfStack
   };
 
 
@@ -273,13 +273,13 @@ private:
     const auto numberOfFixedParametersOfSubTransform = fixedParametersOfSubTransform.size();
 
     FixedParametersType & fixedParametersOfStack = this->Superclass::m_FixedParameters;
-    fixedParametersOfStack.set_size(numberOfGeneralFixedParametersOfStack + numberOfFixedParametersOfSubTransform);
-    fixedParametersOfStack[indexOfNumberOfSubTransforms] = m_SubTransformContainer.size();
-    fixedParametersOfStack[indexOfStackOrigin] = m_StackOrigin;
-    fixedParametersOfStack[indexOfStackSpacing] = m_StackSpacing;
+    fixedParametersOfStack.set_size(NumberOfGeneralFixedParametersOfStack + numberOfFixedParametersOfSubTransform);
+    fixedParametersOfStack[IndexOfNumberOfSubTransforms] = m_SubTransformContainer.size();
+    fixedParametersOfStack[IndexOfStackOrigin] = m_StackOrigin;
+    fixedParametersOfStack[IndexOfStackSpacing] = m_StackSpacing;
     std::copy_n(fixedParametersOfSubTransform.begin(),
                 numberOfFixedParametersOfSubTransform,
-                fixedParametersOfStack.begin() + numberOfGeneralFixedParametersOfStack);
+                fixedParametersOfStack.begin() + NumberOfGeneralFixedParametersOfStack);
   }
 
 
