@@ -37,13 +37,29 @@ public:
   using Self = BSplineStackTransform;
   using Superclass = itk::StackTransform<CoordRepType, NDimension, NDimension>;
   using Pointer = itk::SmartPointer<BSplineStackTransform>;
+  using typename Superclass::FixedParametersType;
   itkNewMacro(Self);
   itkTypeMacro(BSplineStackTransform, Superclass);
 
+private:
+  using Superclass::NumberOfGeneralFixedParametersOfStack;
+
+  static constexpr unsigned int NumberOfFixedParametersOfSubTransform =
+    AdvancedBSplineDeformableTransformBase<CoordRepType, NDimension - 1>::NumberOfFixedParameters;
+
+  static constexpr unsigned int NumberOfFixedParameters =
+    NumberOfGeneralFixedParametersOfStack + NumberOfFixedParametersOfSubTransform + 1;
+
+public:
   void
   SetSplineOrder(const unsigned newValue)
   {
     m_SplineOrder = newValue;
+
+    if (!Superclass::m_FixedParameters.empty())
+    {
+      Superclass::m_FixedParameters.back() = m_SplineOrder;
+    }
   }
 
 protected:
@@ -53,7 +69,47 @@ protected:
   /** Destructor */
   ~BSplineStackTransform() override = default;
 
+  void
+  SetFixedParameters(const FixedParametersType & fixedParameters) override
+  {
+    const auto numberOfFixedParameters = fixedParameters.size();
+    if (numberOfFixedParameters < NumberOfFixedParameters)
+    {
+      itkExceptionMacro(<< "The number of FixedParameters (" << numberOfFixedParameters << ") should be at least "
+                        << NumberOfFixedParameters);
+    }
+    const auto lastFixedParameter = fixedParameters.back();
+    if (lastFixedParameter >= 1 && lastFixedParameter <= 3 &&
+        static_cast<double>(static_cast<unsigned>(lastFixedParameter)) == lastFixedParameter)
+    {
+      m_SplineOrder = static_cast<unsigned>(fixedParameters.back());
+    }
+    else
+    {
+      itkExceptionMacro(<< "The last FixedParameters (" << lastFixedParameter << ") should be a valid spline order.");
+    }
+
+    if (Superclass::m_FixedParameters != fixedParameters)
+    {
+      Superclass::m_FixedParameters = fixedParameters;
+
+      Superclass::CreateSubTransforms(FixedParametersType(
+        fixedParameters.data_block() + NumberOfGeneralFixedParametersOfStack, NumberOfFixedParametersOfSubTransform));
+      Superclass::UpdateStackSpacingAndOrigin();
+      this->Modified();
+    }
+  }
+
 private:
+  void
+  UpdateFixedParametersInternally(const FixedParametersType & fixedParametersOfSubTransform) override
+  {
+    FixedParametersType & fixedParametersOfStack = this->Superclass::m_FixedParameters;
+    fixedParametersOfStack.set_size(NumberOfGeneralFixedParametersOfStack + NumberOfFixedParametersOfSubTransform + 1);
+    fixedParametersOfStack.back() = m_SplineOrder;
+    Superclass::UpdateFixedParametersInternally(fixedParametersOfSubTransform);
+  }
+
   /** Create a subtransform that may be added to this specific stack. */
   typename Superclass::SubTransformPointer
   CreateSubTransform() const override
@@ -62,7 +118,7 @@ private:
       AdvancedBSplineDeformableTransform>(m_SplineOrder);
   }
 
-  unsigned m_SplineOrder{ 3 };
+  unsigned m_SplineOrder{};
 };
 
 } // namespace itk

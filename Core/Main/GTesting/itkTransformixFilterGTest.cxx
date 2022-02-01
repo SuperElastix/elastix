@@ -855,3 +855,40 @@ GTEST_TEST(itkTransformixFilter, OutputEqualsRegistrationOutputForStackTransform
     }
   }
 }
+
+
+GTEST_TEST(itkTransformixFilter, OutputEqualsRegistrationOutputForBSplineStackTransform)
+{
+  using PixelType = float;
+  enum
+  {
+    ImageDimension = 3,
+    imageSizeX = 5,
+    imageSizeY = 6,
+    imageSizeZ = 4
+  };
+
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType, ImageDimension>({ imageSizeX, imageSizeY, imageSizeZ });
+  const std::string transformName = "BSplineStackTransform";
+  for (const unsigned splineOrder : { 1, 2, 3 })
+  {
+    for (const std::string fileNameExtension : { "", "h5", "tfm" })
+    {
+      Expect_Transformix_output_equals_registration_output_from_file(
+        *this,
+        "SplineOrder=" + std::to_string(splineOrder) + (fileNameExtension.empty() ? "" : ('_' + fileNameExtension)),
+        *image,
+        *image,
+        ParameterMapType{ // Parameters in alphabetic order:
+                          { "AutomaticTransformInitialization", { "false" } },
+                          { "BSplineTransformSplineOrder", { std::to_string(splineOrder) } },
+                          { "ImageSampler", { "Full" } },
+                          { "MaximumNumberOfIterations", { "2" } },
+                          { "Metric", { "VarianceOverLastDimensionMetric" } },
+                          { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                          { "ITKTransformOutputFileNameExtension", { fileNameExtension } },
+                          { "Transform", { transformName } } });
+    }
+  }
+}
