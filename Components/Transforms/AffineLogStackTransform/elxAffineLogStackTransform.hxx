@@ -375,11 +375,11 @@ AffineLogStackTransform<TElastix>::SetScales()
         newscales[i + 1] = 1.0;
       }
     }
-    else if (count == this->GetNumberOfParameters())
+    else if (count == N)
     {
       newscales.Fill(1.0);
       /** In this case the third option is used. */
-      for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+      for (unsigned int i = 0; i < N; ++i)
       {
         this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }

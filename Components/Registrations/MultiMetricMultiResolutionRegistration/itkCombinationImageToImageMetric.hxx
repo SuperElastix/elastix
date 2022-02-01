@@ -872,10 +872,12 @@ void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian(const TransformParametersType & parameters,
                                                                          HessianType &                   H) const
 {
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** Prepare Hessian */
-  H.set_size(this->GetNumberOfParameters(), this->GetNumberOfParameters());
+  H.set_size(numberOfParameters, numberOfParameters);
   // H.Fill(0.0);
-  HessianType tmpH(this->GetNumberOfParameters(), this->GetNumberOfParameters());
+  HessianType tmpH(numberOfParameters, numberOfParameters);
 
   /** Add all metrics' selfhessians. */
   bool initialized = false;
@@ -906,7 +908,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian(const T
   if (!initialized)
   {
     // H.fill_diagonal(1.0);
-    for (unsigned int j = 0; j < this->GetNumberOfParameters(); ++j)
+    for (unsigned int j = 0; j < numberOfParameters; ++j)
     {
       H(j, j) = 1.0;
     }

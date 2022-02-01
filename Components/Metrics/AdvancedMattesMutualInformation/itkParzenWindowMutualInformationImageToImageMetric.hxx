@@ -798,11 +798,13 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Upda
     }
   }
 
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** Now compute derivative -= sum * imageJacobian. */
-  if (nzji.size() == this->GetNumberOfParameters())
+  if (nzji.size() == numberOfParameters)
   {
     /** Loop over all Jacobians. */
-    for (unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu)
+    for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
       derivative[mu] += static_cast<DerivativeValueType>(imageJacobian[mu] * sum);
     }

@@ -77,8 +77,10 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(
   unsigned int i = 0;
   for (const auto & subTransform : m_SubTransformContainer)
   {
+    const auto numberOfSubTransformParameters = this->m_SubTransformContainer[0]->GetNumberOfParameters();
+
     const ParametersType & subparams = subTransform->GetParameters();
-    for (unsigned int p = 0; p < this->m_SubTransformContainer[0]->GetNumberOfParameters(); ++p, ++i)
+    for (unsigned int p = 0; p < numberOfSubTransformParameters; ++p, ++i)
     {
       this->m_Parameters[i] = subparams[p];
     }

@@ -653,11 +653,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
                                       (pdfIndex[0] * this->m_JointPDFDerivatives->GetOffsetTable()[1]) +
                                       (pdfIndex[1] * this->m_JointPDFDerivatives->GetOffsetTable()[2]);
 
-  if (nzji.size() == this->GetNumberOfParameters())
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
+  if (nzji.size() == numberOfParameters)
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjac = imageJacobian.begin();
-    for (unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu)
+    for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
       *(derivPtr) -= static_cast<PDFDerivativeValueType>((*imjac) * factor);
       ++derivPtr;
@@ -787,12 +789,14 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeIncre
   fixincit.GoToBegin();
   movincit.GoToBegin();
 
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
   /** Loop over the incremental pdf and update the incremental marginal pdfs. */
   for (unsigned int f = 0; f < this->m_NumberOfFixedHistogramBins; ++f)
   {
     for (unsigned int m = 0; m < this->m_NumberOfMovingHistogramBins; ++m)
     {
-      for (unsigned int p = 0; p < this->GetNumberOfParameters(); ++p)
+      for (unsigned int p = 0; p < numberOfParameters; ++p)
       {
         fixincit.Value() += incit.Get();
         movincit.Value() += incit.Get();
@@ -1613,7 +1617,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   {
     this->m_Alpha = 1.0 / sumOfMovingMaskValues;
   }
-  for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i)
+
+  const auto numberOfParameters = this->GetNumberOfParameters();
+
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
     this->m_PerturbedAlphaRight[i] += sumOfMovingMaskValues;
     this->m_PerturbedAlphaLeft[i] += sumOfMovingMaskValues;
