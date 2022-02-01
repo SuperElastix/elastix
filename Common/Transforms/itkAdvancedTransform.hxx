@@ -85,20 +85,16 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
 
   /** Perform a full multiplication. */
   using JacobianIteratorType = typename JacobianType::const_iterator;
-  using DerivativeIteratorType = typename DerivativeType::iterator;
   JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill(0.0);
-  const unsigned int sizeImageJacobian = imageJacobian.GetSize();
 
   for (unsigned int dim = 0; dim < InputSpaceDimension; ++dim)
   {
-    const double           imDeriv = movingImageGradient[dim];
-    DerivativeIteratorType imjac = imageJacobian.begin();
+    const double imDeriv = movingImageGradient[dim];
 
-    for (unsigned int mu = 0; mu < sizeImageJacobian; ++mu)
+    for (auto & imageJacobianElement : imageJacobian)
     {
-      (*imjac) += (*jac) * imDeriv;
-      ++imjac;
+      imageJacobianElement += (*jac) * imDeriv;
       ++jac;
     }
   }

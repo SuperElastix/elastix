@@ -633,7 +633,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
   DerivativeType &                  imageJacobian) const
 {
   using JacobianIteratorType = typename TransformJacobianType::const_iterator;
-  using DerivativeIteratorType = typename DerivativeType::iterator;
 
   /** Multiple the 1-by-dim vector movingImageDerivative with the
    * dim-by-length matrix jacobian, to get a 1-by-length vector imageJacobian.
@@ -663,17 +662,14 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
     /** Otherwise perform a full multiplication. */
     JacobianIteratorType jac = jacobian.begin();
     imageJacobian.Fill(0.0);
-    const unsigned int sizeImageJacobian = imageJacobian.GetSize();
 
     for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
     {
-      const double           imDeriv = movingImageDerivative[dim];
-      DerivativeIteratorType imjac = imageJacobian.begin();
+      const double imDeriv = movingImageDerivative[dim];
 
-      for (unsigned int mu = 0; mu < sizeImageJacobian; ++mu)
+      for (auto & imageJacobianElement : imageJacobian)
       {
-        (*imjac) += (*jac) * imDeriv;
-        ++imjac;
+        imageJacobianElement += (*jac) * imDeriv;
         ++jac;
       }
     }
