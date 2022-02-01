@@ -204,7 +204,7 @@ AdvancedRigid2DTransform<TScalarType>::GetParameters() const -> const Parameters
   itkDebugMacro(<< "Getting parameters ");
 
   // Get the angle
-  this->m_Parameters[0] = this->GetAngle();
+  this->m_Parameters[0] = m_Angle;
 
   // Get the translation
   for (unsigned int i = 0; i < OutputSpaceDimension; ++i)
@@ -231,10 +231,10 @@ AdvancedRigid2DTransform<TScalarType>::GetJacobian(const InputPointType &       
   j.Fill(0.0);
 
   // Some helper variables
-  const double ca = std::cos(this->GetAngle());
-  const double sa = std::sin(this->GetAngle());
-  const double cx = this->GetCenter()[0];
-  const double cy = this->GetCenter()[1];
+  const double ca = std::cos(m_Angle);
+  const double sa = std::sin(m_Angle);
+  const double cx = Superclass::GetCenter()[0];
+  const double cy = Superclass::GetCenter()[1];
 
   // derivatives with respect to the angle
   j[0][0] = -sa * (p[0] - cx) - ca * (p[1] - cy);
