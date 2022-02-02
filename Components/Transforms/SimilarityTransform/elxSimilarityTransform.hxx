@@ -275,8 +275,8 @@ void
 SimilarityTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
-  const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType                   newscales(N);
+  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  ScalesType                   newscales(numberOfParameters);
   newscales.Fill(1.0);
 
   /** Check if automatic scales estimation is desired. */
@@ -314,7 +314,7 @@ SimilarityTransformElastix<TElastix>::SetScales()
     }
 
     /** Get the scales from the parameter file. */
-    for (unsigned int i = 0; i < N; ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       this->GetConfiguration()->ReadParameter(newscales[i], "Scales", this->GetComponentLabel(), i, -1);
     }

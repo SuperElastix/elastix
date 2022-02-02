@@ -98,7 +98,8 @@ AdaptiveStochasticGradientDescent<TElastix>::BeforeEachResolution()
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  const unsigned int numberOfParameters =
+    this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
@@ -202,7 +203,8 @@ AdaptiveStochasticGradientDescent<TElastix>::BeforeEachResolution()
      * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfJacobianMeasurements = std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(P));
+    this->m_NumberOfJacobianMeasurements =
+      std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(numberOfParameters));
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfJacobianMeasurements, "NumberOfJacobianMeasurements", this->GetComponentLabel(), level, 0);
 
@@ -854,12 +856,13 @@ AdaptiveStochasticGradientDescent<TElastix>::SampleGradients(const ParametersTyp
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
-  DerivativeType     approxgradient(P);
-  DerivativeType     exactgradient(P);
-  DerivativeType     diffgradient;
-  double             exactgg = 0.0;
-  double             diffgg = 0.0;
+  const unsigned int numberOfParameters =
+    this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  DerivativeType approxgradient(numberOfParameters);
+  DerivativeType exactgradient(numberOfParameters);
+  DerivativeType diffgradient;
+  double         exactgg = 0.0;
+  double         diffgg = 0.0;
 
   /** Compute gg for some random parameters. */
   for (unsigned int i = 0; i < this->m_NumberOfGradientMeasurements; ++i)

@@ -271,8 +271,8 @@ void
 AffineLogStackTransform<TElastix>::SetScales()
 {
   /** Create the new scales. */
-  const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType                   newscales(N);
+  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  ScalesType                   newscales(numberOfParameters);
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimation = false;
@@ -375,11 +375,11 @@ AffineLogStackTransform<TElastix>::SetScales()
         newscales[i + 1] = 1.0;
       }
     }
-    else if (count == N)
+    else if (count == numberOfParameters)
     {
       newscales.Fill(1.0);
       /** In this case the third option is used. */
-      for (unsigned int i = 0; i < N; ++i)
+      for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }

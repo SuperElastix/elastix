@@ -153,9 +153,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   if (UseGetValueAndDerivative)
   {
     using DerivativeValueType = typename DerivativeType::ValueType;
-    const unsigned int P = this->GetNumberOfParameters();
+    const unsigned int numberOfParameters = this->GetNumberOfParameters();
     MeasureType        dummymeasure = NumericTraits<MeasureType>::Zero;
-    DerivativeType     dummyderivative = DerivativeType(P);
+    DerivativeType     dummyderivative = DerivativeType(numberOfParameters);
     dummyderivative.Fill(NumericTraits<DerivativeValueType>::Zero);
 
     this->GetValueAndDerivative(parameters, dummymeasure, dummyderivative);
@@ -365,10 +365,10 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   // typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
-  const unsigned int P = this->GetNumberOfParameters();
+  const unsigned int numberOfParameters = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits<MeasureType>::Zero;
-  derivative = DerivativeType(P);
+  derivative = DerivativeType(numberOfParameters);
   derivative.Fill(NumericTraits<DerivativeValueType>::Zero);
 
   /** Make sure the transform parameters are up to date. */

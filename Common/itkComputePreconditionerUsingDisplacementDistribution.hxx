@@ -103,12 +103,12 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
    */
 
   /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   /** Get the exact gradient. Uses a random coordinate sampler with
-   * NumberOfSamplesForPrecondition samples, which equals P.
+   * NumberOfSamplesForPrecondition samples, which equals numberOfParameters.
    */
-  DerivativeType exactgradient(P);
+  DerivativeType exactgradient(numberOfParameters);
   this->GetScaledDerivative(mu, exactgradient);
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
@@ -139,7 +139,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   double globalDeformation = 0.0;
   double globalDeformationSquare = 0.0;
 
-  std::vector<double> localStepSizeSquared(P, 0.0);
+  std::vector<double> localStepSizeSquared(numberOfParameters, 0.0);
 
   /** Create a compact region. */
   // MS: Better cast transform to a B-spline transform and ask for
@@ -199,7 +199,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
 #endif
 
   /** Loop over all voxels in the sample container. */
-  ParametersType binCount(P, 0.0);
+  ParametersType binCount(numberOfParameters, 0.0);
   unsigned int   samplenr = 0; // needed for global value only
 
   for (iter = begin; iter != end; ++iter)
@@ -238,7 +238,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
       unsigned int nonzerodim = j / outdim; // Affine, first 9 parameters
       if (j >= outdim * outdim)
         nonzerodim = j - outdim * outdim; // Affine, last 3
-      if (P > 13)
+      if (numberOfParameters > 13)
         nonzerodim = j / (sizejacind / outdim); // B-spline
 
       double displacement = jacj_g[nonzerodim];
@@ -293,7 +293,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
 
   /** Convert the local step sizes to a scaling factor. */
   unsigned int counter_tmp = 0;
-  for (unsigned int i = 0; i < P; ++i)
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
     if (preconditioner[i] > 0)
     {
@@ -349,17 +349,17 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   maxJJ = 0.0;
 
   /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   // Replace by a general check later.
   bool transformIsBSpline = false;
-  if (P > 13)
+  if (numberOfParameters > 13)
     transformIsBSpline = true; // assume B-spline
 
   /** Get the exact gradient. Uses a random coordinate sampler with
-   * NumberOfSamplesForPrecondition samples, which equals P.
+   * NumberOfSamplesForPrecondition samples, which equals numberOfParameters.
    */
-  DerivativeType exactgradient(P);
+  DerivativeType exactgradient(numberOfParameters);
   this->GetScaledDerivative(mu, exactgradient);
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
@@ -387,8 +387,8 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   jacj_g.Fill(0.0);
   JacobianType        jacjjacj(outdim, outdim);
   const double        sqrt2 = std::sqrt(static_cast<double>(2.0));
-  std::vector<double> localStepSizeSquared(P, 0.0);
-  ParametersType      binCount(P);
+  std::vector<double> localStepSizeSquared(numberOfParameters, 0.0);
+  ParametersType      binCount(numberOfParameters);
   binCount.Fill(0.0);
 
   /** Loop over all voxels in the sample container. */
@@ -531,7 +531,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   /** Compute the mean local step sizes and apply the 2 sigma rule. */
   double maxEigenvalue = -1e+9;
   double minEigenvalue = 1e+9;
-  for (unsigned int i = 0; i < P; ++i)
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
     /** Mean deformation magnitude. */
     double nonZeroBin = binCount[i];
@@ -575,7 +575,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   if (transformIsBSpline && conditionNumber > this->m_ConditionNumber)
   {
     minEigenvalue = maxEigenvalue / this->m_ConditionNumber;
-    for (unsigned int i = 0; i < P; ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       if (preconditioner[i] > this->m_MaximumStepLength / minEigenvalue)
       {
@@ -602,11 +602,11 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   maxJJ = 0.0;
 
   /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   // Replace by a general check later.
   bool transformIsBSpline = false;
-  if (P > 13)
+  if (numberOfParameters > 13)
     transformIsBSpline = true; // assume B-spline
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
@@ -630,7 +630,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   JacobianType               jacjjacj(outdim, outdim);
   const double               sqrt2 = std::sqrt(static_cast<double>(2.0));
   NonZeroJacobianIndicesType jacind(sizejacind);
-  ParametersType             binCount(P, 0.0);
+  ParametersType             binCount(numberOfParameters, 0.0);
 
   /** Loop over all voxels in the sample container. */
   for (iter = begin; iter != end; ++iter)
@@ -662,7 +662,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
 
   double maxEigenvalue = -1e+9;
   double minEigenvalue = 1e+9;
-  for (unsigned int i = 0; i < P; ++i)
+  for (unsigned int i = 0; i < numberOfParameters; ++i)
   {
     double nonZeroBin = binCount[i] / outdim;
     if (nonZeroBin > 0 && preconditioner[i] > 1e-9)
@@ -690,7 +690,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   if (transformIsBSpline && conditionNumber > this->m_ConditionNumber)
   {
     minEigenvalue = maxEigenvalue / this->m_ConditionNumber;
-    for (unsigned int i = 0; i < P; ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       if (preconditioner[i] > 1.0 / minEigenvalue)
       {

@@ -110,7 +110,8 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  const unsigned int numberOfParameters =
+    this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
@@ -199,7 +200,8 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
      * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfJacobianMeasurements = std::max(static_cast<unsigned int>(5000), static_cast<unsigned int>(2 * P));
+    this->m_NumberOfJacobianMeasurements =
+      std::max(static_cast<unsigned int>(5000), static_cast<unsigned int>(2 * numberOfParameters));
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfJacobianMeasurements, "NumberOfJacobianMeasurements", this->GetComponentLabel(), level, 0);
 
@@ -214,7 +216,8 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
      * P = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfSamplesForPrecondition = std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(P));
+    this->m_NumberOfSamplesForPrecondition =
+      std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(numberOfParameters));
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfSamplesForPrecondition, "NumberOfSamplesForPrecondition", this->GetComponentLabel(), level, 0);
 
@@ -519,10 +522,10 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(this->GetCurrentPosition());
 
   /** Get the number of parameters. */
-  unsigned int P =
+  unsigned int numberOfParameters =
     static_cast<unsigned int>(this->GetRegistration()->GetAsITKBaseType()->GetTransform()->GetNumberOfParameters());
 
-  this->m_SearchDirection = ParametersType(P);
+  this->m_SearchDirection = ParametersType(numberOfParameters);
   this->m_SearchDirection.Fill(0.0); // if the print out is not needed, this could be removed. YQ
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
@@ -576,7 +579,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   preconditionerEstimator->SetUseScales(false); // Make sure scales are not used
 
   /** Construct the preconditioner and initialize. */
-  this->m_PreconditionVector = ParametersType(P);
+  this->m_PreconditionVector = ParametersType(numberOfParameters);
   this->m_PreconditionVector.Fill(0.0);
 
   /** Compute the preconditioner. */
@@ -605,7 +608,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
 #if 0
   elxout << std::scientific;
   elxout << "The preconditioner: [ ";
-  for( unsigned int i = 0; i < P; ++i ) elxout << m_PreconditionVector[ i ] << " ";
+  for( unsigned int i = 0; i < numberOfParameters; ++i ) elxout << m_PreconditionVector[ i ] << " ";
   elxout << "]" <<  std::endl;
   elxout << std::fixed;
 #endif
@@ -796,14 +799,15 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
-  DerivativeType     approxgradient(P);
-  DerivativeType     exactgradient(P);
-  DerivativeType     searchDirection(P);
-  DerivativeType     diffgradient;
-  double             exactgg = 0.0;
-  double             diffgg = 0.0;
-  double             approxgg = 0.0;
+  const unsigned int numberOfParameters =
+    this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  DerivativeType approxgradient(numberOfParameters);
+  DerivativeType exactgradient(numberOfParameters);
+  DerivativeType searchDirection(numberOfParameters);
+  DerivativeType diffgradient;
+  double         exactgg = 0.0;
+  double         diffgg = 0.0;
+  double         approxgg = 0.0;
 
   /** Compute gg for some random parameters. */
   for (unsigned int i = 0; i < this->m_NumberOfGradientMeasurements; ++i)
@@ -832,7 +836,7 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
       }
       this->GetScaledDerivativeWithExceptionHandling(perturbedMu0, exactgradient);
 
-      for (unsigned int i = 0; i < P; ++i)
+      for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         searchDirection[i] = exactgradient[i] * this->m_PreconditionVector[i];
       }
@@ -851,7 +855,7 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
 
       /** Compute error vector. */
       diffgradient = exactgradient - approxgradient;
-      for (unsigned int i = 0; i < P; ++i)
+      for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         searchDirection[i] = diffgradient[i] * this->m_PreconditionVector[i];
       }

@@ -290,8 +290,8 @@ void
 EulerTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
-  const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType                   newscales(N);
+  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  ScalesType                   newscales(numberOfParameters);
   newscales.Fill(1.0);
 
   /** Check if automatic scales estimation is desired. */
@@ -373,10 +373,10 @@ EulerTransformElastix<TElastix>::SetScales()
         newscales[i] = scale;
       }
     }
-    else if (count == N)
+    else if (count == numberOfParameters)
     {
       /** In this case the third option is used. */
-      for (unsigned int i = 0; i < N; ++i)
+      for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
       }

@@ -88,7 +88,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   const double        n = static_cast<double>(nrofsamples);
 
   /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   /** Get transform and set current position. */
   typename TransformType::Pointer transform = this->m_Transform;
@@ -116,8 +116,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   NonZeroJacobianIndicesType prevjacind = jacind;
 
   /** Initialize covariance matrix. Sparse, diagonal, and band form. */
-  SparseCovarianceMatrixType cov(P, P);
-  DiagCovarianceMatrixType   diagcov(P, 0.0);
+  SparseCovarianceMatrixType cov(numberOfParameters, numberOfParameters);
+  DiagCovarianceMatrixType   diagcov(numberOfParameters, 0.0);
   CovarianceMatrixType       bandcov;
 
   /** For temporary storage of J'J. */
@@ -135,7 +135,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
    * of pairs. pair.first = Frequency, pair.second = parameterNrDifference.
    * This is useful for sorting.
    */
-  DifHistType difHist(P, 0);
+  DifHistType difHist(numberOfParameters, 0);
 
   /** Try to guess the band structure of the covariance matrix.
    * A 'band' is a series of elements cov(p,q) with constant q-p.
@@ -184,7 +184,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   }
 
   /** Copy the nonzero elements of the difHist to a vector pairs. */
-  for (unsigned int p = 0; p < P; ++p)
+  for (unsigned int p = 0; p < numberOfParameters; ++p)
   {
     const unsigned int freq = difHist[p];
     if (freq != 0)
@@ -198,9 +198,9 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   const unsigned int bandcovsize = std::min(this->m_MaxBandCovSize, static_cast<unsigned int>(difHist2.size()));
 
   /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
-  std::vector<unsigned int> bandcovMap(P, bandcovsize);
+  std::vector<unsigned int> bandcovMap(numberOfParameters, bandcovsize);
   /** Maps colnr in bandcov to parameterNrDifference (q-p). */
-  std::vector<unsigned int> bandcovMap2(bandcovsize, P);
+  std::vector<unsigned int> bandcovMap2(bandcovsize, numberOfParameters);
 
   /** Sort the difHist2 based on the frequencies. */
   std::sort(difHist2.begin(), difHist2.end());
@@ -215,7 +215,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   }
 
   /** Initialize band matrix. */
-  bandcov = CovarianceMatrixType(P, bandcovsize);
+  bandcov = CovarianceMatrixType(numberOfParameters, bandcovsize);
   bandcov.Fill(0.0);
 
   /**
@@ -326,7 +326,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   /** Copy the bandmatrix into the sparse matrix and empty the bandcov matrix.
    * \todo: perhaps work further with this bandmatrix instead.
    */
-  for (unsigned int p = 0; p < P; ++p)
+  for (unsigned int p = 0; p < numberOfParameters; ++p)
   {
     for (unsigned int b = 0; b < bandcovsize; ++b)
     {
@@ -343,7 +343,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   /** Apply scales. the use of m_Scales maybe something wrong. */
   if (this->m_UseScales)
   {
-    for (unsigned int p = 0; p < P; ++p)
+    for (unsigned int p = 0; p < numberOfParameters; ++p)
     {
       cov.scale_row(p, 1.0 / this->m_Scales[p]);
     }
@@ -359,7 +359,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   }
 
   /** Compute TrC = trace(C), and diagcov. */
-  for (unsigned int p = 0; p < P; ++p)
+  for (unsigned int p = 0; p < numberOfParameters; ++p)
   {
     if (!cov.empty_row(p))
     {
@@ -404,7 +404,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   JacobianType                       jacjdiagcov(outdim, sizejacind);
   JacobianType                       jacjdiagcovjacj(outdim, outdim);
   JacobianType                       jacjcovjacj(outdim, outdim);
-  NonZeroJacobianIndicesExpandedType jacindExpanded(P);
+  NonZeroJacobianIndicesExpandedType jacindExpanded(numberOfParameters);
 
   samplenr = 0;
   for (iter = begin; iter != end; ++iter)

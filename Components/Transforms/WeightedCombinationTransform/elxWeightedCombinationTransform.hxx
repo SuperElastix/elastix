@@ -71,11 +71,11 @@ WeightedCombinationTransformElastix<TElastix>::InitializeTransform()
   this->LoadSubTransforms();
 
   /** Some helper variables */
-  const NumberOfParametersType N = this->GetNumberOfParameters();
-  const double                 Nd = static_cast<double>(N);
+  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  const double                 Nd = static_cast<double>(numberOfParameters);
 
   /** Equal weights */
-  ParametersType parameters(N);
+  ParametersType parameters(numberOfParameters);
   if (this->m_WeightedCombinationTransform->GetNormalizeWeights())
   {
     parameters.Fill(1.0 / Nd);
@@ -139,8 +139,8 @@ void
 WeightedCombinationTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
-  const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType                   newscales(N);
+  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  ScalesType                   newscales(numberOfParameters);
   newscales.Fill(1.0);
 
   /** Check if automatic scales estimation is desired. */
@@ -156,12 +156,12 @@ WeightedCombinationTransformElastix<TElastix>::SetScales()
   {
     const std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
 
-    if (count == N)
+    if (count == numberOfParameters)
     {
       /** Read the user-supplied values/ */
-      std::vector<double> newscalesvec(N);
-      this->m_Configuration->ReadParameter(newscalesvec, "Scales", 0, N - 1, true);
-      for (unsigned int i = 0; i < N; ++i)
+      std::vector<double> newscalesvec(numberOfParameters);
+      this->m_Configuration->ReadParameter(newscalesvec, "Scales", 0, numberOfParameters - 1, true);
+      for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         newscales[i] = newscalesvec[i];
       }
