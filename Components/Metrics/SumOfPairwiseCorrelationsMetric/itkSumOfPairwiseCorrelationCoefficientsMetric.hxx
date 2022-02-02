@@ -320,10 +320,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   // typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
-  const unsigned int P = this->GetNumberOfParameters();
+  const unsigned int numberOfParameters = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits<MeasureType>::Zero;
-  derivative = DerivativeType(P);
+  derivative = DerivativeType(numberOfParameters);
   derivative.Fill(NumericTraits<DerivativeValueType>::Zero);
 
   /** Make sure the transform parameters are up to date. */

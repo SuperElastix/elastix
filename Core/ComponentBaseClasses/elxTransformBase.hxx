@@ -1359,8 +1359,8 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int        outdim = MovingImageDimension;
-  const unsigned int        N = thisITK->GetNumberOfParameters();
-  scales = ScalesType(N);
+  const unsigned int        numberOfParameters = thisITK->GetNumberOfParameters();
+  scales = ScalesType(numberOfParameters);
 
   /** Set up grid sampler. */
   const auto sampler = ImageSamplerType::New();
@@ -1398,7 +1398,7 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
      */
     for (unsigned int d = 0; d < outdim; ++d)
     {
-      ScalesType jacd(jacobian[d], N, false);
+      ScalesType jacd(jacobian[d], numberOfParameters, false);
       scales += element_product(jacd, jacd);
     }
   }
@@ -1428,10 +1428,10 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int        outdim = FixedImageDimension;
-  const unsigned int        N = thisITK->GetNumberOfParameters();
+  const unsigned int        numberOfParameters = thisITK->GetNumberOfParameters();
 
   /** initialize */
-  scales = ScalesType(N);
+  scales = ScalesType(numberOfParameters);
   scales.Fill(0.0);
 
   /** Get fixed image region from registration. */
@@ -1483,16 +1483,16 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
     /** Square each element of the Jacobian and add each row to the new scales. */
     for (unsigned int d = 0; d < outdim; ++d)
     {
-      ScalesType jacd(jacobian[d], N, false);
+      ScalesType jacd(jacobian[d], numberOfParameters, false);
       scales += element_product(jacd, jacd);
     }
   }
   scales /= static_cast<double>(nrofsamples);
 
   const unsigned int numberOfScalesSubTransform =
-    N / numberOfSubTransforms; //(FixedImageDimension)*(FixedImageDimension - 1);
+    numberOfParameters / numberOfSubTransforms; //(FixedImageDimension)*(FixedImageDimension - 1);
 
-  for (unsigned int i = 0; i < N; i += numberOfScalesSubTransform)
+  for (unsigned int i = 0; i < numberOfParameters; i += numberOfScalesSubTransform)
   {
     for (unsigned int j = 0; j < numberOfScalesSubTransform; ++j)
     {

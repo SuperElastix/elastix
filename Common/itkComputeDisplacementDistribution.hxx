@@ -139,14 +139,14 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   const SizeValueType nrofsamples = sampleContainer->Size();
 
   /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   /** Get scales vector */
   const ScalesType & scales = this->GetScales();
   this->m_ScaledCostFunction->SetScales(scales);
 
   /** Get the exact gradient. */
-  this->m_ExactGradient = DerivativeType(P);
+  this->m_ExactGradient = DerivativeType(numberOfParameters);
   this->m_ExactGradient.Fill(0.0);
   this->GetScaledDerivative(mu, this->m_ExactGradient);
 
@@ -524,14 +524,14 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   const SizeValueType nrofsamples = sampleContainer->Size();
 
   /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   /** Get scales vector */
   const ScalesType & scales = this->GetScales();
   this->m_ScaledCostFunction->SetScales(scales);
 
   /** Get the exact gradient. */
-  DerivativeType exactgradient(P);
+  DerivativeType exactgradient(numberOfParameters);
   exactgradient = mu;
 
   /** Get transform and set current position. */

@@ -275,8 +275,8 @@ AffineLogTransformElastix<TElastix>::SetScales()
 {
   elxout << "SetScales" << std::endl;
   /** Create the new scales. */
-  const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType                   newscales(N);
+  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  ScalesType                   newscales(numberOfParameters);
   newscales.Fill(1.0);
 
   /** Always estimate scales automatically */
@@ -285,11 +285,11 @@ AffineLogTransformElastix<TElastix>::SetScales()
 
   std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
 
-  if (count == N)
+  if (count == numberOfParameters)
   {
     /** Overrule the automatically estimated scales with the user-specified
      * scales. Values <= 0 are not used; the default is kept then. */
-    for (unsigned int i = 0; i < N; ++i)
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
       double scale_i = -1.0;
       this->m_Configuration->ReadParameter(scale_i, "Scales", i);
