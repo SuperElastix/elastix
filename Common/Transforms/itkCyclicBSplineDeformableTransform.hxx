@@ -141,9 +141,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
 {
   /** Allocate memory on the stack: */
   const unsigned long                         numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType             weightsArray[numberOfWeights];
   typename ParameterIndexArrayType::ValueType indicesArray[numberOfWeights];
-  WeightsType                                 weights(weightsArray, numberOfWeights, false);
+  WeightsType                                 weights;
   ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
 
   OutputPointType outputPoint;
@@ -319,9 +318,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
 
   /** Compute the number of affected B-spline parameters. */
   /** Allocate memory on the stack: */
-  const SizeValueType             numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[numberOfWeights];
-  WeightsType                     weights(weightsArray, numberOfWeights, false);
+  WeightsType weights;
 
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);

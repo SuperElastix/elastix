@@ -47,15 +47,11 @@ auto
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(const InputPointType & point) const
   -> OutputPointType
 {
-  /** Define some constants. */
-  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-
   /** Initialize output point. */
   OutputPointType outputPoint;
 
   /** Allocate weights on the stack: */
-  typename WeightsType::ValueType weightsArray1D[numberOfWeights];
-  WeightsType                     weights1D(weightsArray1D, numberOfWeights, false);
+  WeightsType weights1D;
 
   /** Check if the coefficient image has been set. */
   if (!this->m_CoefficientImages[0])
@@ -151,10 +147,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
    * In contrast to the normal B-spline weights function, the recursive version
    * returns the individual weights instead of the multiplied ones.
    */
-  const unsigned int              numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray1D[numberOfWeights];
-  WeightsType                     weights1D(weightsArray1D, numberOfWeights, false);
-  IndexType                       supportIndex;
+  WeightsType weights1D;
+  IndexType   supportIndex;
   this->m_RecursiveBSplineWeightFunction->Evaluate(cindex, weights1D, supportIndex);
 
   /** Recursively compute the first numberOfIndices entries of the Jacobian.
@@ -209,10 +203,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
    * In contrast to the normal B-spline weights function, the recursive version
    * returns the individual weights instead of the multiplied ones.
    */
-  const unsigned int              numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray1D[numberOfWeights];
-  WeightsType                     weights1D(weightsArray1D, numberOfWeights, false);
-  IndexType                       supportIndex;
+  WeightsType weights1D;
+  IndexType   supportIndex;
   this->m_RecursiveBSplineWeightFunction->Evaluate(cindex, weights1D, supportIndex);
 
   /** Recursively compute the inner product of the Jacobian and the moving image gradient.
@@ -262,11 +254,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
   }
 
   /** Create storage for the B-spline interpolation weights. */
-  const unsigned int              numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray1D[numberOfWeights];
-  WeightsType                     weights1D(weightsArray1D, numberOfWeights, false);
-  typename WeightsType::ValueType derivativeWeightsArray1D[numberOfWeights];
-  WeightsType                     derivativeWeights1D(derivativeWeightsArray1D, numberOfWeights, false);
+  WeightsType weights1D;
+  WeightsType derivativeWeights1D;
 
   double * weightsPointer = &(weights1D[0]);
   double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
@@ -349,13 +338,9 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian
   }
 
   /** Create storage for the B-spline interpolation weights. */
-  const unsigned int              numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray1D[numberOfWeights];
-  WeightsType                     weights1D(weightsArray1D, numberOfWeights, false);
-  typename WeightsType::ValueType derivativeWeightsArray1D[numberOfWeights];
-  WeightsType                     derivativeWeights1D(derivativeWeightsArray1D, numberOfWeights, false);
-  typename WeightsType::ValueType hessianWeightsArray1D[numberOfWeights];
-  WeightsType                     hessianWeights1D(hessianWeightsArray1D, numberOfWeights, false);
+  WeightsType weights1D;
+  WeightsType derivativeWeights1D;
+  WeightsType hessianWeights1D;
 
   double * weightsPointer = &(weights1D[0]);
   double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
@@ -468,11 +453,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   }
 
   /** Create storage for the B-spline interpolation weights. */
-  const unsigned int              numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray1D[numberOfWeights];
-  WeightsType                     weights1D(weightsArray1D, numberOfWeights, false);
-  typename WeightsType::ValueType derivativeWeightsArray1D[numberOfWeights];
-  WeightsType                     derivativeWeights1D(derivativeWeightsArray1D, numberOfWeights, false);
+  WeightsType weights1D;
+  WeightsType derivativeWeights1D;
 
   double * weightsPointer = &(weights1D[0]);
   double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
@@ -567,13 +549,9 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   }
 
   /** Create storage for the B-spline interpolation weights. */
-  const unsigned int              numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray1D[numberOfWeights];
-  WeightsType                     weights1D(weightsArray1D, numberOfWeights, false);
-  typename WeightsType::ValueType derivativeWeightsArray1D[numberOfWeights];
-  WeightsType                     derivativeWeights1D(derivativeWeightsArray1D, numberOfWeights, false);
-  typename WeightsType::ValueType hessianWeightsArray1D[numberOfWeights];
-  WeightsType                     hessianWeights1D(hessianWeightsArray1D, numberOfWeights, false);
+  WeightsType weights1D;
+  WeightsType derivativeWeights1D;
+  WeightsType hessianWeights1D;
 
   double * weightsPointer = &(weights1D[0]);
   double * derivativeWeightsPointer = &(derivativeWeights1D[0]);

@@ -48,12 +48,14 @@ namespace itk
  */
 template <class TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunctionBase
-  : public FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>, Array<double>>
+  : public FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>,
+                        FixedArray<double, Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension)>>
 {
 public:
   /** Standard class typedefs. */
   using Self = BSplineInterpolationWeightFunctionBase;
-  using Superclass = FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>, Array<double>>;
+  using Superclass = FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>,
+                                  FixedArray<double, Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension)>>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -70,7 +72,7 @@ public:
   static constexpr unsigned long NumberOfWeights = Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension);
 
   /** OutputType typedef support. */
-  using WeightsType = Array<double>;
+  using WeightsType = FixedArray<double, NumberOfWeights>;
 
   /** Index and size typedef support. */
   using IndexType = Index<VSpaceDimension>;

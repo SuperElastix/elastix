@@ -1,5 +1,5 @@
 variables:
-  ITKv5_VERSION: v5.2.0
+  ITKv5_VERSION: v5.3rc03
   ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build

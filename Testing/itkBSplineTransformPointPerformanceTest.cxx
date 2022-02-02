@@ -61,9 +61,8 @@ public:
   TransformPoint_OLD(const InputPointType & point) const
   {
     const unsigned long                         numberOfWeights = WeightsFunctionType::NumberOfWeights;
-    typename WeightsType::ValueType             weightsArray[numberOfWeights];
     typename ParameterIndexArrayType::ValueType indicesArray[numberOfWeights];
-    WeightsType                                 weights(weightsArray, numberOfWeights, false);
+    WeightsType                                 weights;
     ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
 
     OutputPointType outputPoint;
