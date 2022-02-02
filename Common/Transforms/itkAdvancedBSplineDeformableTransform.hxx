@@ -193,9 +193,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
 {
   /** Allocate memory on the stack: */
   const unsigned long                         numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType             weightsArray[numberOfWeights];
   typename ParameterIndexArrayType::ValueType indicesArray[numberOfWeights];
-  WeightsType                                 weights(weightsArray, numberOfWeights, false);
+  WeightsType                                 weights;
   ParameterIndexArrayType                     indices(indicesArray, numberOfWeights, false);
 
   OutputPointType outputPoint;
@@ -352,9 +351,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Compute the number of affected B-spline parameters.
    * Allocate memory on the stack.
    */
-  const unsigned long             numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[numberOfWeights];
-  WeightsType                     weights(weightsArray, numberOfWeights, false);
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsType         weights;
 
   /** Compute the weights. */
   IndexType supportIndex;
@@ -418,9 +416,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
   /** Compute the number of affected B-spline parameters.
    * Allocate memory on the stack.
    */
-  const unsigned long             numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[numberOfWeights];
-  WeightsType                     weights(weightsArray, numberOfWeights, false);
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsType         weights;
 
   /** Compute the B-spline derivative weights. */
   IndexType supportIndex;
@@ -475,9 +472,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
 
   /** Compute the number of affected B-spline parameters. */
   /** Allocate memory on the stack: */
-  const unsigned long             numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[numberOfWeights];
-  WeightsType                     weights(weightsArray, numberOfWeights, false);
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsType         weights;
 
   /** Array for CoefficientImage values */
   std::array<typename WeightsType::ValueType, numberOfWeights * SpaceDimension> coeffs;
@@ -579,8 +575,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   /** Helper variables. */
   /** Allocate memory on the stack: */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  WeightsValueType    weightsArray[numberOfWeights];
-  WeightsType         weights(weightsArray, numberOfWeights, false);
+  WeightsType         weights;
 
   /** Array for CoefficientImage values */
   std::array<WeightsValueType, numberOfWeights * SpaceDimension> coeffs;
@@ -702,9 +697,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Helper variables. */
 
   /** Allocate memory on the stack: */
-  const unsigned long             numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[numberOfWeights];
-  WeightsType                     weights(weightsArray, numberOfWeights, false);
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsType         weights;
 
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
@@ -806,8 +800,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Allocate weight on the stack. */
   using WeightsValueType = typename WeightsType::ValueType;
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  WeightsValueType    weightsArray[numberOfWeights];
-  WeightsType         weights(weightsArray, numberOfWeights, false);
+  WeightsType         weights;
 
   /** Allocate coefficients on the stack. */
   std::array<WeightsValueType, numberOfWeights * SpaceDimension> coeffs;
@@ -957,9 +950,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Compute the number of affected B-spline parameters. */
 
   /** Allocate memory on the stack: */
-  const unsigned long             numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[numberOfWeights];
-  WeightsType                     weights(weightsArray, numberOfWeights, false);
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsType         weights;
 
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex, supportIndex);
@@ -1082,8 +1074,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Allocate weight on the stack. */
   using WeightsValueType = typename WeightsType::ValueType;
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  WeightsValueType    weightsArray[numberOfWeights];
-  WeightsType         weights(weightsArray, numberOfWeights, false);
+  WeightsType         weights;
 
   /** Allocate coefficients on the stack. */
   std::array<WeightsValueType, numberOfWeights * SpaceDimension> coeffs;
