@@ -550,7 +550,7 @@ protected:
    * the transform. It returns true if so, and false otherwise.
    */
   virtual bool
-  TransformPoint(const FixedImagePointType & fixedImagePoint, MovingImagePointType & mappedPoint) const;
+  TransformPoint(const FixedImagePointType & fixedImagePoint, MovingImagePointType & mappedPoint) const final;
 
   /** This function returns a reference to the transform Jacobians.
    * This is either a reference to the full TransformJacobian or
