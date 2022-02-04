@@ -551,10 +551,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::InsideValidReg
 
 
 template <class TScalarType, unsigned int NDimensions>
-void
+auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::TransformPointToContinuousGridIndex(
-  const InputPointType & point,
-  ContinuousIndexType &  cindex) const
+  const InputPointType & point) const -> ContinuousIndexType
 {
   Vector<double, SpaceDimension> tvector;
 
@@ -564,11 +563,13 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::TransformPoint
   }
 
   Vector<double, SpaceDimension> cvector = this->m_PointToIndexMatrix * tvector;
+  ContinuousIndexType            cindex;
 
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     cindex[j] = static_cast<typename ContinuousIndexType::CoordRepType>(cvector[j]);
   }
+  return cindex;
 }
 
 

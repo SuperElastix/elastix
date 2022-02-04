@@ -736,8 +736,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
   // Convert the physical point to a continuous index, which
   // is needed for the 'Evaluate()' functions below.
-  typename TransformType::ContinuousIndexType cindex;
-  m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp, cindex);
+  const typename TransformType::ContinuousIndexType cindex = m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero Jacobian
@@ -915,8 +914,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
   // Convert the physical point to a continuous index, which
   // is needed for the 'Evaluate()' functions below.
-  typename TransformType::ContinuousIndexType cindex;
-  m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp, cindex);
+  const typename TransformType::ContinuousIndexType cindex = m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp);
 
   if (lidx == 0 || !m_Trans[lidx]->InsideValidRegion(cindex))
   {
@@ -1016,8 +1014,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
   // Convert the physical point to a continuous index, which
   // is needed for the 'Evaluate()' functions below.
-  typename TransformType::ContinuousIndexType cindex;
-  m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp, cindex);
+  const typename TransformType::ContinuousIndexType cindex = m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp);
 
   if (lidx == 0 || !m_Trans[lidx]->InsideValidRegion(cindex))
   {

@@ -161,8 +161,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
     return outputPoint;
   }
 
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(point, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(point);
 
   /** NOTE: if the support region does not lie totally within the grid
    * (except for the last dimension, which wraps around) we assume
@@ -246,8 +245,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
   const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
   /** Tranform from world coordinates to grid coordinates. */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(point, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(point);
 
   /** NOTE: if the support region does not lie totally within the grid
    * we assume zero displacement and return the input point.
@@ -309,8 +307,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and identity spatial Jacobian
