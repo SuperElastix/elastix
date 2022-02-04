@@ -95,8 +95,7 @@ public:
     }
 
     /***/
-    ContinuousIndexType cindex;
-    this->TransformPointToContinuousGridIndex(inputPoint, cindex);
+    const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(inputPoint);
 
     // NOTE: if the support region does not lie totally within the grid
     // we assume zero displacement and return the input point

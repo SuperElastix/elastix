@@ -214,8 +214,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   }
 
   /***/
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(point, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(point);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and return the input point
@@ -327,8 +326,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   /** Initialize. */
   const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
@@ -397,8 +395,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   /** Get sizes. */
   const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
@@ -466,8 +463,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and identity spatial Jacobian
@@ -567,8 +563,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   /** Convert the physical point to a continuous index, which
    * is needed for the evaluate functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero spatial Hessian
@@ -686,8 +681,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero jsj.
@@ -785,8 +779,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and identity sj and zero jsj.
@@ -940,8 +933,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and identity sj and zero jsj.
@@ -1057,8 +1049,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex(ipp, cindex);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and identity sj and zero jsj.

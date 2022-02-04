@@ -342,8 +342,8 @@ protected:
   WrapAsImages();
 
   /** Convert an input point to a continuous index inside the B-spline grid. */
-  void
-  TransformPointToContinuousGridIndex(const InputPointType & point, ContinuousIndexType & index) const;
+  ContinuousIndexType
+  TransformPointToContinuousGridIndex(const InputPointType & point) const;
 
   void
   UpdatePointIndexConversions();
