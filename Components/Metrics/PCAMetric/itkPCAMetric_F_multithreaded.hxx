@@ -229,8 +229,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
     for (unsigned int d = 0; d < this->m_G; ++d)
     {
       /** Initialize some variables. */
-      RealType             movingImageValue;
-      MovingImagePointType mappedPoint;
+      RealType movingImageValue;
 
       /** Set fixed point's last dimension to lastDimPosition. */
       voxelCoord[this->m_LastDimIndex] = d;
@@ -238,14 +237,11 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
 
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+      /** Transform point. */
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
-      /** Check if point is inside mask. */
-      if (sampleOk)
-      {
-        sampleOk = this->IsInsideMovingMask(mappedPoint);
-      }
+      /** Check if the point is inside the moving mask. */
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
       if (sampleOk)
       {
@@ -413,8 +409,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
     for (unsigned int d = 0; d < this->m_G; ++d)
     {
       /** Initialize some variables. */
-      RealType             movingImageValue;
-      MovingImagePointType mappedPoint;
+      RealType movingImageValue;
 
       /** Set fixed point's last dimension to lastDimPosition. */
       voxelCoord[this->m_LastDimIndex] = d;
@@ -422,13 +417,11 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
 
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
-      /** Check if point is inside mask. */
-      if (sampleOk)
-      {
-        sampleOk = this->IsInsideMovingMask(mappedPoint);
-      }
+      /** Transform point. */
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
+
+      /** Check if the point is inside the moving mask. */
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
       if (sampleOk)
 
@@ -549,7 +542,6 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
     {
       /** Initialize some variables. */
       RealType                  movingImageValue;
-      MovingImagePointType      mappedPoint;
       MovingImageDerivativeType movingImageDerivative;
 
       /** Set fixed point's last dimension to lastDimPosition. */
@@ -557,7 +549,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
-      this->TransformPoint(fixedPoint, mappedPoint);
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
       this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
 
@@ -756,8 +748,7 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedGetSamples(ThreadIdType threadId)
     for (unsigned int d = 0; d < this->m_G; ++d)
     {
       /** Initialize some variables. */
-      RealType             movingImageValue;
-      MovingImagePointType mappedPoint;
+      RealType movingImageValue;
 
       /** Set fixed point's last dimension to lastDimPosition. */
       voxelCoord[this->m_LastDimIndex] = d;
@@ -765,13 +756,11 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedGetSamples(ThreadIdType threadId)
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
 
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
-      /** Check if point is inside mask. */
-      if (sampleOk)
-      {
-        sampleOk = this->IsInsideMovingMask(mappedPoint);
-      }
+      /** Transform point. */
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
+
+      /** Check if the point is inside the moving mask. */
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
       if (sampleOk)
 
@@ -957,7 +946,6 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivative(ThreadIdType thr
 
   /** Initialize some variables. */
   RealType                  movingImageValue;
-  MovingImagePointType      mappedPoint;
   MovingImageDerivativeType movingImageDerivative;
 
   TransformJacobianType      jacobian;
@@ -986,7 +974,7 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivative(ThreadIdType thr
 
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
-      this->TransformPoint(fixedPoint, mappedPoint);
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
       this->FastEvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative, threadId);
 

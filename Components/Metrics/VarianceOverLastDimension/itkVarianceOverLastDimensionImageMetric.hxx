@@ -260,8 +260,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
     for (unsigned int d = 0; d < realNumLastDimPositions; ++d)
     {
       /** Initialize some variables. */
-      RealType             movingImageValue;
-      MovingImagePointType mappedPoint;
+      RealType movingImageValue;
 
       /** Set fixed point's last dimension to lastDimPosition. */
       voxelCoord[lastDim] = lastDimPositions[d];
@@ -269,14 +268,11 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
 
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+      /** Transform point. */
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
-      /** Check if point is inside mask. */
-      if (sampleOk)
-      {
-        sampleOk = this->IsInsideMovingMask(mappedPoint);
-      }
+      /** Check if the point is inside the moving mask. */
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
       /** Compute the moving image value and check if the point is
        * inside the moving image buffer.
@@ -446,21 +442,17 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
     {
       /** Initialize some variables. */
       RealType                  movingImageValue;
-      MovingImagePointType      mappedPoint;
       MovingImageDerivativeType movingImageDerivative;
 
       /** Set fixed point's last dimension to lastDimPosition. */
       voxelCoord[lastDim] = lastDimPositions[d];
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+      /** Transform point. */
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
-      /** Check if point is inside mask. */
-      if (sampleOk)
-      {
-        sampleOk = this->IsInsideMovingMask(mappedPoint);
-      }
+      /** Check if the point is inside the moving mask. */
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
       /** Compute the moving image value and check if the point is
        * inside the moving image buffer. */

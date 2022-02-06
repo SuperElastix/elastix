@@ -79,7 +79,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
     mappedPoint = this->m_Transform->TransformPoint(fixedPoint);
 
-    /** Check if point is inside mask. */
+    /** Check if the point is inside the moving mask. */
     bool sampleOk = true;
     if (sampleOk)
     {
@@ -196,7 +196,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
     mappedPoint = this->m_Transform->TransformPoint(fixedPoint);
 
-    /** Check if point is inside mask. */
+    /** Check if the point is inside the moving mask. */
     bool sampleOk = true;
     if (sampleOk)
     {
