@@ -683,15 +683,11 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
  */
 
 template <class TFixedImage, class TMovingImage>
-bool
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::TransformPoint(const FixedImagePointType & fixedImagePoint,
-                                                                      MovingImagePointType &      mappedPoint) const
+auto
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::TransformPoint(const FixedImagePointType & fixedImagePoint) const
+  -> MovingImagePointType
 {
-  mappedPoint = this->m_Transform->TransformPoint(fixedImagePoint);
-
-  /** For future use: return whether the sample is valid */
-  const bool valid = true;
-  return valid;
+  return Superclass::m_Transform->TransformPoint(fixedImagePoint);
 
 } // end TransformPoint()
 

@@ -1036,16 +1036,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
     RealType                    movingImageValue;
-    MovingImagePointType        mappedPoint;
 
-    /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+    /** Transform point. */
+    const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
-    /** Check if point is inside mask. */
-    if (sampleOk)
-    {
-      sampleOk = this->IsInsideMovingMask(mappedPoint);
-    }
+    /** Check if the point is inside the moving mask. */
+    bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
     /** Compute the moving image value and check if the point is
      * inside the moving image buffer.
@@ -1165,16 +1161,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
     RealType                    movingImageValue;
-    MovingImagePointType        mappedPoint;
 
-    /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+    /** Transform point. */
+    const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
-    /** Check if point is inside mask. */
-    if (sampleOk)
-    {
-      sampleOk = this->IsInsideMovingMask(mappedPoint);
-    }
+    /** Check if the point is inside the moving mask. */
+    bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
     /** Compute the moving image value and check if the point is
      * inside the moving image buffer.
@@ -1360,17 +1352,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
     RealType                    movingImageValue;
-    MovingImagePointType        mappedPoint;
     MovingImageDerivativeType   movingImageDerivative;
 
-    /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+    /** Transform point. */
+    const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
-    /** Check if point is inside mask. */
-    if (sampleOk)
-    {
-      sampleOk = this->IsInsideMovingMask(mappedPoint);
-    }
+    /** Check if the point is inside the moving mask. */
+    bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
     /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
      * the point is inside the moving image buffer.
@@ -1481,17 +1469,15 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
     /** Transform point and check if it is inside the B-spline support region.
      * if not, skip this sample.
      */
-    MovingImagePointType mappedPoint;
-    bool                 sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+    const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
-    if (sampleOk)
     {
       /** Get the fixed image value and make sure the value falls within the histogram range. */
       RealType fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
 
-      /** Check if point is inside mask. */
-      sampleOk = this->IsInsideMovingMask(mappedPoint);
+      /** Check if the point is inside the moving mask. */
+      bool     sampleOk = this->IsInsideMovingMask(mappedPoint);
       RealType movingMaskValue = static_cast<RealType>(static_cast<unsigned char>(sampleOk));
 
       /** Compute the moving image value M(T(x)) and check if

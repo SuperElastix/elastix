@@ -545,12 +545,9 @@ protected:
   virtual void
   CheckForBSplineTransform() const;
 
-  /** Transform a point from FixedImage domain to MovingImage domain.
-   * This function also checks if mapped point is within support region of
-   * the transform. It returns true if so, and false otherwise.
-   */
-  virtual bool
-  TransformPoint(const FixedImagePointType & fixedImagePoint, MovingImagePointType & mappedPoint) const;
+  /** Transform a point from FixedImage domain to MovingImage domain. */
+  MovingImagePointType
+  TransformPoint(const FixedImagePointType & fixedImagePoint) const;
 
   /** This function returns a reference to the transform Jacobians.
    * This is either a reference to the full TransformJacobian or
