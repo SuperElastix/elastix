@@ -79,8 +79,9 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
   DerivativeType &                imageJacobian,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  /** Obtain the Jacobian. */
-  JacobianType jacobian; //( SpaceDimension, );
+  /** Obtain the Jacobian. Using thread-local storage, so that both the allocation and the deallocation of the internal
+   * data occurs only once per thread, as it has appeared as a major performance bottleneck. */
+  thread_local JacobianType jacobian;
   this->GetJacobian(ipp, jacobian, nonZeroJacobianIndices);
 
   /** Perform a full multiplication. */
