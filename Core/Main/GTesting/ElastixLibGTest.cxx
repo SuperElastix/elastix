@@ -209,6 +209,7 @@ GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
     const auto parameterMap =
       CreateParameterMap<Dimension>({ { "ImageSampler", "Full" },
                                       { "FixedInternalImagePixelType", GetPixelTypeName<PixelType>() },
+                                      { "MaximumNumberOfIterations", "2" },
                                       { "Metric", "AdvancedNormalizedCorrelation" },
                                       { "MovingInternalImagePixelType", GetPixelTypeName<PixelType>() },
                                       { "Optimizer", "AdaptiveStochasticGradientDescent" },
