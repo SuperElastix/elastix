@@ -25,6 +25,6 @@
  *
  * \section manual Manual
  *
- * <p>We have a manual! Download it <a href="../download/elastix-@ELASTIX_VERSION@.0-manual.pdf" onClick="javascript: pageTracker._trackPageview('../download/elastix_manual_v@ELASTIX_VERSION@');">here</a>.</p>
+ * <p>We have a manual! Download it <a href="../download/elastix-@ELASTIX_VERSION@-manual.pdf" onClick="javascript: pageTracker._trackPageview('../download/elastix-@ELASTIX_VERSION@-manual');">here</a>.</p>
  *
  */
