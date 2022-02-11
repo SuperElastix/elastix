@@ -112,9 +112,6 @@ public:
   using CoordRepType = typename OutputPointType::CoordRepType;
 
   using typename Superclass1::MeshIdType;
-  /** Other typedef's. */
-  using ObjectType = itk::Object;
-
   using CombinationTransformType = itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension>;
   using InitialTransformType = typename CombinationTransformType::InitialTransformType;
 

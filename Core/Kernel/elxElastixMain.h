@@ -141,8 +141,7 @@ public:
   /** Typedef's.*/
 
   /** ITK base objects. */
-  using ObjectType = itk::Object;
-  using ObjectPointer = ObjectType::Pointer;
+  using ObjectPointer = itk::Object::Pointer;
   using DataObjectType = itk::DataObject;
   using DataObjectPointer = DataObjectType::Pointer;
 
@@ -216,7 +215,7 @@ public:
    * The components are returned as Object::Pointer.
    * Before calling this functions, call run().
    */
-  itkGetModifiableObjectMacro(Elastix, ObjectType);
+  itkGetModifiableObjectMacro(Elastix, itk::Object);
 
   /** Convenience function that returns the elastix component as
    * a pointer to an ElastixBaseType. Use only after having called run()!
@@ -229,14 +228,14 @@ public:
    * of ElastixMain.
    * Only valid after calling Run()!
    */
-  itkGetModifiableObjectMacro(FinalTransform, ObjectType);
+  itkGetModifiableObjectMacro(FinalTransform, itk::Object);
 
   /** Set/Get the initial transform
-   * the type is ObjectType, but the pointer should actually point
+   * the type is itk::Object, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    */
-  itkSetObjectMacro(InitialTransform, ObjectType);
-  itkGetModifiableObjectMacro(InitialTransform, ObjectType);
+  itkSetObjectMacro(InitialTransform, itk::Object);
+  itkGetModifiableObjectMacro(InitialTransform, itk::Object);
 
   /** Set/Get the original fixed image direction as a flat array
    * (d11 d21 d31 d21 d22 etc ) */

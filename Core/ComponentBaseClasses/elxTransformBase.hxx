@@ -428,7 +428,7 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
   /** Create an InitialTransform. */
   const PtrToCreator testcreator =
     ElastixMain::GetComponentDatabase().GetCreator(initialTransformName, this->m_Elastix->GetDBIndex());
-  const ObjectType::Pointer initialTransform = (testcreator == nullptr) ? nullptr : testcreator();
+  const itk::Object::Pointer initialTransform = (testcreator == nullptr) ? nullptr : testcreator();
 
   const auto elx_initialTransform = dynamic_cast<Self *>(initialTransform.GetPointer());
 

@@ -53,7 +53,6 @@ public:
   /** Typedef's from Superclass. */
 
   /** typedef's from itk base Object. */
-  using ObjectType = Superclass::ObjectType;
   using Superclass::ObjectPointer;
   using Superclass::DataObjectType;
   using Superclass::DataObjectPointer;

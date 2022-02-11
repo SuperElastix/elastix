@@ -151,8 +151,7 @@ public:
 
   /** Typedefs used in this class. */
   using ConfigurationPointer = Configuration::Pointer;
-  using ObjectType = itk::Object; // for the components
-  using ObjectPointer = ObjectType::Pointer;
+  using ObjectPointer = itk::Object::Pointer;
   using DataObjectType = itk::DataObject; // for the images
   using DataObjectPointer = DataObjectType::Pointer;
   using ObjectContainerType = itk::VectorContainer<unsigned int, ObjectPointer>;
@@ -286,20 +285,20 @@ public:
   elxGetNumberOfMacro(ResultDeformationField);
 
   /** Set/Get the initial transform
-   * The type is ObjectType, but the pointer should actually point
+   * The type is itk::Object, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    */
-  elxSetObjectMacro(InitialTransform, ObjectType);
-  elxGetObjectMacro(InitialTransform, ObjectType);
+  elxSetObjectMacro(InitialTransform, itk::Object);
+  elxGetObjectMacro(InitialTransform, itk::Object);
 
   /** Set/Get the final transform
-   * The type is ObjectType, but the pointer should actually point
+   * The type is itk::Object, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    * You can use this to set it as an initial transform in another
    * ElastixBase instantiation.
    */
-  elxSetObjectMacro(FinalTransform, ObjectType);
-  elxGetObjectMacro(FinalTransform, ObjectType);
+  elxSetObjectMacro(FinalTransform, itk::Object);
+  elxGetObjectMacro(FinalTransform, itk::Object);
 
   /** Empty Run()-function to be overridden. */
   virtual int

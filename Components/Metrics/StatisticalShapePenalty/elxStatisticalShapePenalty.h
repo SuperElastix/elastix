@@ -108,7 +108,6 @@ public:
   using VnlVectorType = vnl_vector<CoordRepType>;
 
   /** Other typedef's. */
-  using ObjectType = itk::Object;
   /*typedef itk::AdvancedTransform<
     CoordRepType,
     itkGetStaticConstMacro( FixedImageDimension ),
