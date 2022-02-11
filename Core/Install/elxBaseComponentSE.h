@@ -57,8 +57,7 @@ public:
   using ElastixType = TElastix;
   using ElastixPointer = itk::WeakPointer<ElastixType>;
 
-  /** ConfigurationType. */
-  using ConfigurationType = Configuration;
+  /** Configuration pointer type. */
   using ConfigurationPointer = Configuration::Pointer;
 
   /** RegistrationType; NB: this is the elx::RegistrationBase
@@ -109,11 +108,11 @@ public:
     return this->m_Elastix->AddTargetCellToIterationInfo(name);
   }
 
-  /** itkGetModifiableObjectMacro(Configuration, ConfigurationType);
+  /** itkGetModifiableObjectMacro(Configuration, Configuration);
    * The configuration object provides functionality to
    * read parameters and command line arguments.
    */
-  ConfigurationType *
+  Configuration *
   GetConfiguration() const
   {
     return this->m_Configuration.GetPointer();
@@ -122,7 +121,7 @@ public:
 
   /** Set the configuration. Added for transformix. */
   void
-  SetConfiguration(ConfigurationType * _arg);
+  SetConfiguration(Configuration * _arg);
 
   /** Get a pointer to the Registration component.
    * This is a convenience function, since the registration

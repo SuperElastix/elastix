@@ -151,7 +151,7 @@ xoutManager::Guard::~Guard()
 ElastixMain::ElastixMain()
 {
   /** Initialize the components. */
-  this->m_Configuration = ConfigurationType::New();
+  this->m_Configuration = Configuration::New();
 
   this->m_Elastix = nullptr;
 
@@ -271,7 +271,7 @@ ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap, const std
     /** Initialize the configuration object with the
      * command line parameters entered by the user.
      */
-    this->m_Configurations[i] = ConfigurationType::New();
+    this->m_Configurations[i] = Configuration::New();
     int dummy = this->m_Configurations[i]->Initialize(argmap, inputMaps[i]);
     if (dummy)
     {

@@ -94,7 +94,6 @@ public:
   /** Typedefs inherited from Elastix. */
   using typename Superclass2::ElastixType;
   using typename Superclass2::ElastixPointer;
-  using typename Superclass2::ConfigurationType;
   using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
