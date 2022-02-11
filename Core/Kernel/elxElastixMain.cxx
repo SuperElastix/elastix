@@ -750,11 +750,8 @@ ElastixMain::ObjectPointer
 ElastixMain::CreateComponent(const ComponentDescriptionType & name)
 {
   /** A pointer to the New() function. */
-  PtrToCreator testcreator = nullptr;
-  testcreator = GetComponentDatabase().GetCreator(name, this->m_DBIndex);
-
-  // Note that ObjectPointer() yields a default-constructed SmartPointer (null).
-  ObjectPointer testpointer = testcreator ? testcreator() : ObjectPointer();
+  const PtrToCreator  testcreator = GetComponentDatabase().GetCreator(name, this->m_DBIndex);
+  const ObjectPointer testpointer = (testcreator == nullptr) ? nullptr : testcreator();
 
   if (testpointer.IsNull())
   {
