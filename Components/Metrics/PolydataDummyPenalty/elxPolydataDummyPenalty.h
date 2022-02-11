@@ -123,7 +123,6 @@ public:
 
   using typename Superclass1::MeshIdType;
   /** Other typedef's. */
-  using ObjectType = itk::Object;
   /*typedef itk::AdvancedTransform<
   CoordRepType,
   itkGetStaticConstMacro( FixedImageDimension ),

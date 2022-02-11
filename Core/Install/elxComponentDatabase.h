@@ -65,8 +65,7 @@ public:
   using IndexType = unsigned int;
 
   /** Typedefs for the CreatorMap*/
-  using ObjectType = itk::Object;
-  using ObjectPointer = ObjectType::Pointer;
+  using ObjectPointer = itk::Object::Pointer;
 
   /** PtrToCreator is a pointer to a function which
    * outputs an ObjectPointer and has no input arguments.

@@ -196,7 +196,6 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
   /** Typedef's from ComponentDatabase. */
   using ComponentDescriptionType = typename Superclass2::ComponentDescriptionType;
   using PtrToCreator = typename Superclass2::PtrToCreator;
-  using ObjectType = typename Superclass2::ObjectType;
 
   const std::size_t N = this->m_Configuration->CountNumberOfParameterEntries("SubTransforms");
 
@@ -245,7 +244,7 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
     /** Create a SubTransform. */
     const PtrToCreator testcreator =
       ElastixMain::GetComponentDatabase().GetCreator(subTransformName, this->m_Elastix->GetDBIndex());
-    const typename ObjectType::Pointer subTransform = (testcreator == nullptr) ? nullptr : testcreator();
+    const itk::Object::Pointer subTransform = (testcreator == nullptr) ? nullptr : testcreator();
 
     /** Cast to TransformBase */
     Superclass2 * elx_subTransform = dynamic_cast<Superclass2 *>(subTransform.GetPointer());

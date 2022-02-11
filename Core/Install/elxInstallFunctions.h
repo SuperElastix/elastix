@@ -51,7 +51,6 @@ public:
   using AnyItkObjectType = TAnyItkObject;
 
   /** The baseclass of all objects that are returned by the Creator. */
-  using ObjectType = ComponentDatabase::ObjectType;
   using ObjectPointer = ComponentDatabase::ObjectPointer;
 
   /** The type of the index in the component database.
