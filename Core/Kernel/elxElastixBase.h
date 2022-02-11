@@ -150,8 +150,7 @@ public:
   using Superclass = BaseComponent;
 
   /** Typedefs used in this class. */
-  using ConfigurationType = Configuration;
-  using ConfigurationPointer = ConfigurationType::Pointer;
+  using ConfigurationPointer = Configuration::Pointer;
   using ObjectType = itk::Object; // for the components
   using ObjectPointer = ObjectType::Pointer;
   using DataObjectType = itk::DataObject; // for the images
@@ -185,8 +184,8 @@ public:
   using TimerType = itk::TimeProbe;
 
   /** Set/Get the Configuration Object. */
-  elxGetObjectMacro(Configuration, ConfigurationType);
-  elxSetObjectMacro(Configuration, ConfigurationType);
+  elxGetObjectMacro(Configuration, Configuration);
+  elxSetObjectMacro(Configuration, Configuration);
 
   /** Set the database index of the instantiated elastix object. */
   void

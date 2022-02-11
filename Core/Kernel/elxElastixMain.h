@@ -148,9 +148,8 @@ public:
 
   /** elastix components. */
   using ElastixBaseType = ElastixBase;
-  using ConfigurationType = ElastixBase::ConfigurationType;
-  using ArgumentMapType = ConfigurationType::CommandLineArgumentMapType;
-  using ConfigurationPointer = ConfigurationType::Pointer;
+  using ArgumentMapType = Configuration::CommandLineArgumentMapType;
+  using ConfigurationPointer = Configuration::Pointer;
   using ObjectContainerType = ElastixBase::ObjectContainerType;
   using DataObjectContainerType = ElastixBase::DataObjectContainerType;
   using ObjectContainerPointer = ElastixBase::ObjectContainerPointer;
@@ -210,8 +209,8 @@ public:
   itkGetModifiableObjectMacro(ResultDeformationFieldContainer, DataObjectContainerType);
 
   /** Set/Get the configuration object. */
-  itkSetObjectMacro(Configuration, ConfigurationType);
-  itkGetModifiableObjectMacro(Configuration, ConfigurationType);
+  itkSetObjectMacro(Configuration, Configuration);
+  itkGetModifiableObjectMacro(Configuration, Configuration);
 
   /** Functions to get pointers to the elastix components.
    * The components are returned as Object::Pointer.
