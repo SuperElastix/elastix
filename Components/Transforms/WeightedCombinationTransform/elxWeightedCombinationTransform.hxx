@@ -225,7 +225,7 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
 
     /** Create a new configuration, which will be initialized with
      * the subtransformFileName. */
-    ConfigurationPointer configurationSubTransform = Configuration::New();
+    const auto configurationSubTransform = Configuration::New();
 
     /** Create argmapInitialTransform. */
     CommandLineArgumentMapType argmapSubTransform;
