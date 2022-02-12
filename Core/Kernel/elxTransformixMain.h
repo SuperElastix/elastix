@@ -60,7 +60,6 @@ public:
   /** Elastix components. */
   using Superclass::ElastixBaseType;
   using Superclass::ArgumentMapType;
-  using Superclass::ConfigurationPointer;
   using Superclass::ObjectContainerType;
   using Superclass::DataObjectContainerType;
   using Superclass::ObjectContainerPointer;
