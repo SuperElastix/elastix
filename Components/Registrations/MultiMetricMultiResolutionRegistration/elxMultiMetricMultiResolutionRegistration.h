@@ -170,7 +170,6 @@ public:
   /** Typedef's from Elastix. */
   using typename Superclass2::ElastixType;
   using typename Superclass2::ElastixPointer;
-  using typename Superclass2::ConfigurationPointer;
   using RegistrationType = typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
   using ITKBaseType = typename Superclass2::ITKBaseType;

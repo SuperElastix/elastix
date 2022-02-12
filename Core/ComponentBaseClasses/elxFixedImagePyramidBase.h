@@ -68,7 +68,6 @@ public:
   /** Typedefs inherited from the superclass. */
   using typename Superclass::ElastixType;
   using typename Superclass::ElastixPointer;
-  using typename Superclass::ConfigurationPointer;
   using typename Superclass::RegistrationType;
   using typename Superclass::RegistrationPointer;
 

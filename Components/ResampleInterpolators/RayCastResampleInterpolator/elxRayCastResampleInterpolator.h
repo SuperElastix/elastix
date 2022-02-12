@@ -77,7 +77,6 @@ public:
   /** Typedef's from ResampleInterpolatorBase. */
   using typename Superclass2::ElastixType;
   using typename Superclass2::ElastixPointer;
-  using typename Superclass2::ConfigurationPointer;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::RegistrationPointer;
   using ITKBaseType = typename Superclass2::ITKBaseType;
