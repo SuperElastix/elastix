@@ -18,6 +18,8 @@
 
 #include "elxParameterObject.h"
 
+#include "itkParameterFileParser.h"
+
 #include "itkFileTools.h"
 #include <fstream>
 #include <iostream>
@@ -183,7 +185,7 @@ ParameterObject::RemoveParameter(const ParameterKeyType & key)
 void
 ParameterObject::ReadParameterFile(const ParameterFileNameType & parameterFileName)
 {
-  this->SetParameterMap(ParameterMapVectorType{ ParameterFileParserType::ReadParameterMap(parameterFileName) });
+  this->SetParameterMap(ParameterMapVectorType{ itk::ParameterFileParser::ReadParameterMap(parameterFileName) });
 }
 
 
@@ -220,7 +222,7 @@ ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameter
 void
 ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileName)
 {
-  this->m_ParameterMap.push_back(ParameterFileParserType::ReadParameterMap(parameterFileName));
+  this->m_ParameterMap.push_back(itk::ParameterFileParser::ReadParameterMap(parameterFileName));
 }
 
 
