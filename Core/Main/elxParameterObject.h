@@ -22,8 +22,6 @@
 #include "itkDataObject.h"
 #include "elxMacro.h"
 
-#include "itkParameterFileParser.h"
-
 namespace elastix
 {
 
@@ -52,8 +50,6 @@ public:
   using ParameterFileNameVectorType = std::vector<ParameterFileNameType>;
   using ParameterFileNameVectorIterator = ParameterFileNameVectorType::iterator;
   using ParameterFileNameVectorConstIterator = ParameterFileNameVectorType::const_iterator;
-  using ParameterFileParserType = itk::ParameterFileParser;
-  using ParameterFileParserPointer = ParameterFileParserType::Pointer;
 
   /* Set/Get/Add parameter map or vector of parameter maps. */
   // TODO: Use itkSetMacro for ParameterMapVectorType

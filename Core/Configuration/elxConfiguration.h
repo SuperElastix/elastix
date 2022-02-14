@@ -69,12 +69,6 @@ public:
   using CommandLineArgumentMapType = std::map<std::string, std::string>;
   using CommandLineEntryType = CommandLineArgumentMapType::value_type;
 
-  /** Typedefs for the parameter file. */
-  using ParameterFileParserType = itk::ParameterFileParser;
-  using ParameterFileParserPointer = ParameterFileParserType::Pointer;
-  using ParameterMapInterfaceType = itk::ParameterMapInterface;
-  using ParameterMapInterfacePointer = ParameterMapInterfaceType::Pointer;
-
   /** Get and Set CommandLine arguments into the argument map. */
   std::string
   GetCommandLineArgument(const std::string & key) const;
@@ -97,7 +91,7 @@ public:
   Initialize(const CommandLineArgumentMapType & _arg);
 
   virtual int
-  Initialize(const CommandLineArgumentMapType & _arg, const ParameterFileParserType::ParameterMapType & inputMap);
+  Initialize(const CommandLineArgumentMapType & _arg, const itk::ParameterFileParser::ParameterMapType & inputMap);
 
   /** True, if Initialize was successfully called. */
   virtual bool
@@ -293,10 +287,10 @@ private:
   void
   operator=(const Self &) = delete;
 
-  CommandLineArgumentMapType   m_CommandLineArgumentMap;
-  std::string                  m_ParameterFileName;
-  ParameterFileParserPointer   m_ParameterFileParser;
-  ParameterMapInterfacePointer m_ParameterMapInterface;
+  CommandLineArgumentMapType          m_CommandLineArgumentMap;
+  std::string                         m_ParameterFileName;
+  itk::ParameterFileParser::Pointer   m_ParameterFileParser;
+  itk::ParameterMapInterface::Pointer m_ParameterMapInterface;
 
   bool         m_IsInitialized;
   unsigned int m_ElastixLevel;

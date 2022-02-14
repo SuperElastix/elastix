@@ -80,8 +80,8 @@ Configuration::Configuration()
 {
   /** Initialize stuff. */
   this->m_ParameterFileName = "";
-  this->m_ParameterFileParser = ParameterFileParserType::New();
-  this->m_ParameterMapInterface = ParameterMapInterfaceType::New();
+  this->m_ParameterFileParser = itk::ParameterFileParser::New();
+  this->m_ParameterMapInterface = itk::ParameterMapInterface::New();
 
   this->m_IsInitialized = false;
   this->m_ElastixLevel = 0;
@@ -236,8 +236,8 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
  */
 
 int
-Configuration::Initialize(const CommandLineArgumentMapType &                _arg,
-                          const ParameterFileParserType::ParameterMapType & inputMap)
+Configuration::Initialize(const CommandLineArgumentMapType &                 _arg,
+                          const itk::ParameterFileParser::ParameterMapType & inputMap)
 {
   TransformFactoryRegistration::RegisterTransforms();
 
