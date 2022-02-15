@@ -53,9 +53,8 @@ public:
   using Self = BaseComponentSE;
   using Superclass = BaseComponent;
 
-  /** Elastix typedef's. */
+  /** Elastix typedef. */
   using ElastixType = TElastix;
-  using ElastixPointer = itk::WeakPointer<ElastixType>;
 
   /** Configuration pointer type. */
   using ConfigurationPointer = Configuration::Pointer;
@@ -138,9 +137,9 @@ protected:
   BaseComponentSE() = default;
   ~BaseComponentSE() override = default;
 
-  ElastixPointer       m_Elastix{};
-  ConfigurationPointer m_Configuration{};
-  RegistrationType *   m_Registration{};
+  itk::WeakPointer<TElastix> m_Elastix{};
+  ConfigurationPointer       m_Configuration{};
+  RegistrationType *         m_Registration{};
 
 private:
   virtual const itk::Object &

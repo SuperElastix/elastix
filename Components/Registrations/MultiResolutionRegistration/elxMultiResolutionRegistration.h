@@ -107,7 +107,6 @@ public:
 
   /** Typedef's from Elastix. */
   using typename Superclass2::ElastixType;
-  using typename Superclass2::ElastixPointer;
   using RegistrationType = typename Superclass2::RegistrationType;
   using ITKBaseType = typename Superclass2::ITKBaseType;
   using typename Superclass2::UseMaskErosionArrayType;

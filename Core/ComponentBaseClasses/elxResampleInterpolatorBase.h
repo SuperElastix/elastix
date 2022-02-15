@@ -52,7 +52,6 @@ public:
 
   /** Typedef's from superclass. */
   using typename Superclass::ElastixType;
-  using typename Superclass::ElastixPointer;
   using typename Superclass::RegistrationType;
 
   /** Typedef's from elastix. */
