@@ -81,7 +81,6 @@ public:
 
   /** Typedef's inherited from Elastix. */
   using typename Superclass::ElastixType;
-  using typename Superclass::ElastixPointer;
   using typename Superclass::RegistrationType;
 
   /** Other typedef's. */

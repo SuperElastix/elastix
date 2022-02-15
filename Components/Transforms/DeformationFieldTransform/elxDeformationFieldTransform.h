@@ -112,7 +112,6 @@ public:
 
   /** Typedef's from TransformBase. */
   using typename Superclass2::ElastixType;
-  using typename Superclass2::ElastixPointer;
   using typename Superclass2::ParameterMapType;
   using typename Superclass2::RegistrationType;
   using typename Superclass2::CoordRepType;

@@ -96,7 +96,6 @@ public:
 
   /** Typedef's inherited from Superclass2, the elastix OptimizerBase .*/
   using typename Superclass2::ElastixType;
-  using typename Superclass2::ElastixPointer;
   using typename Superclass2::RegistrationType;
   using ITKBaseType = typename Superclass2::ITKBaseType;
 
