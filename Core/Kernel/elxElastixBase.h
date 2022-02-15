@@ -168,9 +168,8 @@ public:
   using ResultDeformationFieldType = itk::DataObject;
 
   /** Other typedef's. */
-  using ComponentDatabaseType = ComponentDatabase;
-  using ComponentDatabasePointer = ComponentDatabaseType::Pointer;
-  using DBIndexType = ComponentDatabaseType::IndexType;
+  using ComponentDatabasePointer = ComponentDatabase::Pointer;
+  using DBIndexType = ComponentDatabase::IndexType;
   using FlatDirectionCosinesType = std::vector<double>;
 
   /** Type for representation of the transform coordinates. */

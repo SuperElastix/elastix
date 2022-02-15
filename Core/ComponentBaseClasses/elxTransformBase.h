@@ -152,8 +152,7 @@ public:
   using MovingImageType = typename TElastix::MovingImageType;
 
   /** Typedef's from ComponentDatabase. */
-  using ComponentDatabaseType = ComponentDatabase;
-  using ComponentDescriptionType = ComponentDatabaseType::ComponentDescriptionType;
+  using ComponentDescriptionType = ComponentDatabase::ComponentDescriptionType;
   using PtrToCreator = ComponentDatabase::PtrToCreator;
 
   /** Typedef for the ProgressCommand. */

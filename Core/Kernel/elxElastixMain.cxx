@@ -727,11 +727,11 @@ ElastixMain::GetTotalNumberOfElastixLevels()
  * ************************* GetElastixBase ***************************
  */
 
-ElastixMain::ElastixBaseType &
+ElastixBase &
 ElastixMain::GetElastixBase() const
 {
-  /** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
-  const auto testpointer = dynamic_cast<ElastixBaseType *>(this->m_Elastix.GetPointer());
+  /** Convert ElastixAsObject to a pointer to an ElastixBase. */
+  const auto testpointer = dynamic_cast<ElastixBase *>(this->m_Elastix.GetPointer());
   if (testpointer == nullptr)
   {
     itkExceptionMacro(<< "Probably GetElastixBase() is called before having called Run()");
