@@ -71,7 +71,6 @@ public:
   using typename Superclass::ElastixType;
   using typename Superclass::ElastixPointer;
   using typename Superclass::RegistrationType;
-  using typename Superclass::RegistrationPointer;
 
   /** Typedefs inherited from Elastix. */
   using InputImageType = typename ElastixType::MovingImageType;

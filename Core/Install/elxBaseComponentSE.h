@@ -64,7 +64,6 @@ public:
    * not an itk::Object or something like that.
    */
   using RegistrationType = typename ElastixType::RegistrationBaseType;
-  using RegistrationPointer = RegistrationType *;
 
   /**
    * Get/Set functions for Elastix.
@@ -128,7 +127,7 @@ public:
    * component is needed often by other components.
    * It could be accessed also via GetElastix->GetElxRegistrationBase().
    */
-  RegistrationPointer
+  RegistrationType *
   GetRegistration() const
   {
     return this->m_Registration;
@@ -141,7 +140,7 @@ protected:
 
   ElastixPointer       m_Elastix{};
   ConfigurationPointer m_Configuration{};
-  RegistrationPointer  m_Registration{};
+  RegistrationType *   m_Registration{};
 
 private:
   virtual const itk::Object &
