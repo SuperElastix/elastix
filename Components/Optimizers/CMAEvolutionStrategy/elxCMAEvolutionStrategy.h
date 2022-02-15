@@ -148,7 +148,6 @@ public:
   using typename Superclass2::ElastixType;
   using typename Superclass2::ElastixPointer;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::RegistrationPointer;
   using ITKBaseType = typename Superclass2::ITKBaseType;
 
   /** Check if any scales are set, and set the UseScales flag on or off;

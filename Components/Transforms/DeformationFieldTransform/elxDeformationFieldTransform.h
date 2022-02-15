@@ -115,7 +115,6 @@ public:
   using typename Superclass2::ElastixPointer;
   using typename Superclass2::ParameterMapType;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::RegistrationPointer;
   using typename Superclass2::CoordRepType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
