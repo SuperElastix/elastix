@@ -52,12 +52,11 @@ public:
   itkTypeMacro(ComponentLoader, Object);
 
   /** Typedef's. */
-  using ComponentDatabaseType = ComponentDatabase;
-  using ComponentDatabasePointer = ComponentDatabaseType::Pointer;
+  using ComponentDatabasePointer = ComponentDatabase::Pointer;
 
   /** Set and get the ComponentDatabase. */
-  itkSetObjectMacro(ComponentDatabase, ComponentDatabaseType);
-  itkGetModifiableObjectMacro(ComponentDatabase, ComponentDatabaseType);
+  itkSetObjectMacro(ComponentDatabase, ComponentDatabase);
+  itkGetModifiableObjectMacro(ComponentDatabase, ComponentDatabase);
 
   /** Function to load components. */
   int

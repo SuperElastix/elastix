@@ -146,7 +146,6 @@ public:
   using DataObjectPointer = DataObjectType::Pointer;
 
   /** elastix components. */
-  using ElastixBaseType = ElastixBase;
   using ArgumentMapType = Configuration::CommandLineArgumentMapType;
   using ConfigurationPointer = Configuration::Pointer;
   using ObjectContainerType = ElastixBase::ObjectContainerType;
@@ -158,13 +157,12 @@ public:
   /** Typedefs for the database that holds pointers to New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
    */
-  using ComponentDatabaseType = ComponentDatabase;
-  using ComponentDatabasePointer = ComponentDatabaseType::Pointer;
-  using PtrToCreator = ComponentDatabaseType::PtrToCreator;
-  using ComponentDescriptionType = ComponentDatabaseType::ComponentDescriptionType;
-  using PixelTypeDescriptionType = ComponentDatabaseType::PixelTypeDescriptionType;
-  using ImageDimensionType = ComponentDatabaseType::ImageDimensionType;
-  using DBIndexType = ComponentDatabaseType::IndexType;
+  using ComponentDatabasePointer = ComponentDatabase::Pointer;
+  using PtrToCreator = ComponentDatabase::PtrToCreator;
+  using ComponentDescriptionType = ComponentDatabase::ComponentDescriptionType;
+  using PixelTypeDescriptionType = ComponentDatabase::PixelTypeDescriptionType;
+  using ImageDimensionType = ComponentDatabase::ImageDimensionType;
+  using DBIndexType = ComponentDatabase::IndexType;
 
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
@@ -218,9 +216,9 @@ public:
   itkGetModifiableObjectMacro(Elastix, itk::Object);
 
   /** Convenience function that returns the elastix component as
-   * a pointer to an ElastixBaseType. Use only after having called run()!
+   * a pointer to an ElastixBase. Use only after having called run()!
    */
-  ElastixBaseType &
+  ElastixBase &
   GetElastixBase() const;
 
   /** Get the final transform (the result of running elastix).

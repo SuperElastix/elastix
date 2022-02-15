@@ -58,7 +58,6 @@ public:
   using Superclass::DataObjectPointer;
 
   /** Elastix components. */
-  using Superclass::ElastixBaseType;
   using Superclass::ArgumentMapType;
   using Superclass::ObjectContainerType;
   using Superclass::DataObjectContainerType;
@@ -68,7 +67,6 @@ public:
   /** Typedefs for the database that holds pointers to New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
    */
-  using Superclass::ComponentDatabaseType;
   using Superclass::ComponentDatabasePointer;
   using Superclass::PtrToCreator;
   using Superclass::ComponentDescriptionType;
