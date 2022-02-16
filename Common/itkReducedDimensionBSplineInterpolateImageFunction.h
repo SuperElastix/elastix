@@ -240,9 +240,8 @@ private:
   void
   ApplyMirrorBoundaryConditions(vnl_matrix<long> & evaluateIndex, unsigned int splineOrder) const;
 
-  Iterator               m_CIterator;                    // Iterator for traversing spline coefficients.
-  unsigned long          m_MaxNumberInterpolationPoints; // number of neighborhood points used for interpolation
-  std::vector<IndexType> m_PointsToIndex;                // Preallocation of interpolation neighborhood indicies
+  Iterator               m_CIterator;     // Iterator for traversing spline coefficients.
+  std::vector<IndexType> m_PointsToIndex; // Preallocation of interpolation neighborhood indicies
 
   CoefficientFilterPointer m_CoefficientFilter;
 

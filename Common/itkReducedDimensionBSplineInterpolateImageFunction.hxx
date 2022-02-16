@@ -44,7 +44,7 @@
 #include "itkImageRegionIterator.h"
 
 #include "itkVector.h"
-
+#include "itkMath.h"
 #include "itkMatrix.h"
 #include <vnl/vnl_matrix_ref.h>
 
@@ -129,11 +129,6 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
   m_CoefficientFilter->SetSplineOrder(ImageDimension - 1, 0);
 
   // this->SetPoles();
-  m_MaxNumberInterpolationPoints = 1;
-  for (unsigned int n = 0; n < ImageDimension - 1; ++n)
-  {
-    m_MaxNumberInterpolationPoints *= (m_SplineOrder + 1);
-  }
   this->GeneratePointsToIndex();
 }
 
@@ -168,7 +163,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
   coefficientIndex[ImageDimension - 1] = vnl_math::rnd(x[ImageDimension - 1]);
 
   // Step through eachpoint in the N-dimensional interpolation cube.
-  for (unsigned int p = 0; p < m_MaxNumberInterpolationPoints; ++p)
+  for (const auto & pointIndex : m_PointsToIndex)
   {
     // translate each step into the N-dimensional index.
     //      IndexType pointIndex = PointToIndex( p );
@@ -176,8 +171,8 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
     double w = 1.0;
     for (unsigned int n = 0; n < ImageDimension - 1; ++n)
     {
-      w *= weights[n][m_PointsToIndex[p][n]];
-      coefficientIndex[n] = EvaluateIndex[n][m_PointsToIndex[p][n]]; // Build up ND index for coefficients.
+      w *= weights[n][pointIndex[n]];
+      coefficientIndex[n] = EvaluateIndex[n][pointIndex[n]]; // Build up ND index for coefficients.
     }
     // Convert our step p to the appropriate point in ND space in the
     // m_Coefficients cube.
@@ -228,21 +223,21 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
   for (unsigned int n = 0; n < ImageDimension - 1; ++n)
   {
     derivativeValue[n] = 0.0;
-    for (unsigned int p = 0; p < m_MaxNumberInterpolationPoints; ++p)
+    for (const auto & pointIndex : m_PointsToIndex)
     {
       tempValue = 1.0;
       for (unsigned int n1 = 0; n1 < ImageDimension - 1; ++n1)
       {
-        coefficientIndex[n1] = EvaluateIndex[n1][m_PointsToIndex[p][n1]];
+        coefficientIndex[n1] = EvaluateIndex[n1][pointIndex[n1]];
 
         if (n1 == n)
         {
           // w *= weights[ n ][ m_PointsToIndex[ p ][ n ] ];
-          tempValue *= weightsDerivative[n1][m_PointsToIndex[p][n1]];
+          tempValue *= weightsDerivative[n1][pointIndex[n1]];
         }
         else
         {
-          tempValue *= weights[n1][m_PointsToIndex[p][n1]];
+          tempValue *= weights[n1][pointIndex[n1]];
         }
       }
       derivativeValue[n] += m_Coefficients->GetPixel(coefficientIndex) * tempValue;
@@ -481,10 +476,14 @@ template <class TImageType, class TCoordRep, class TCoefficientType>
 void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::GeneratePointsToIndex()
 {
+  // number of neighborhood points used for interpolation
+  const auto maxNumberInterpolationPoints =
+    static_cast<unsigned int>(Math::UnsignedPower(m_SplineOrder + 1, ImageDimension - 1));
+
   // m_PointsToIndex is used to convert a sequential location to an N-dimension
   // index vector.  This is precomputed to save time during the interpolation routine.
-  m_PointsToIndex.resize(m_MaxNumberInterpolationPoints);
-  for (unsigned int p = 0; p < m_MaxNumberInterpolationPoints; ++p)
+  m_PointsToIndex.resize(maxNumberInterpolationPoints);
+  for (unsigned int p = 0; p < maxNumberInterpolationPoints; ++p)
   {
     int           pp = p;
     unsigned long indexFactor[ImageDimension - 1];
