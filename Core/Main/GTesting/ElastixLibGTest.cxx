@@ -31,6 +31,8 @@
 #include <algorithm> // For transform.
 #include <array>
 #include <limits>
+#include <tuple>
+#include <utility> // For pair.
 #include <vector>
 
 
@@ -45,22 +47,22 @@ using elx::CoreMainGTestUtilities::GetTransformParametersFromMaps;
 namespace
 {
 
-template <typename>
+template <typename TPixel>
 constexpr const char *
-GetPixelTypeName() = delete;
-
-template <>
-constexpr const char *
-GetPixelTypeName<short>()
+GetPixelTypeName()
 {
-  return "short";
-}
+  constexpr auto pixelTypeNames = std::make_tuple(std::make_pair<char>(0, "char"),
+                                                  std::make_pair<unsigned char>(0, "unsigned char"),
+                                                  std::make_pair<short>(0, "short"),
+                                                  std::make_pair<unsigned short>(0, "unsigned short"),
+                                                  std::make_pair<int>(0, "int"),
+                                                  std::make_pair<unsigned int>(0, "unsigned int"),
+                                                  std::make_pair<long>(0, "long"),
+                                                  std::make_pair<unsigned long>(0, "unsigned long"),
+                                                  std::make_pair<float>(0, "float"),
+                                                  std::make_pair<double>(0, "double"));
 
-template <>
-constexpr const char *
-GetPixelTypeName<float>()
-{
-  return "float";
+  return std::get<std::pair<TPixel, const char *>>(pixelTypeNames).second;
 }
 
 
