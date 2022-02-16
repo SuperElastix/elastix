@@ -84,7 +84,6 @@ public:
   using typename Superclass1::IndexType;
   using typename Superclass1::ContinuousIndexType;
   using typename Superclass1::PointType;
-  using typename Superclass1::Iterator;
   using typename Superclass1::CoefficientDataType;
   using typename Superclass1::CoefficientImageType;
   using typename Superclass1::CoefficientFilter;

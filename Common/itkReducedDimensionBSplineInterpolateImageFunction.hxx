@@ -39,7 +39,6 @@
 #define itkReducedDimensionBSplineInterpolateImageFunction_hxx
 
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
-#include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
 
