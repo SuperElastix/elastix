@@ -40,7 +40,6 @@
 
 #include <vector>
 
-#include "itkImageLinearIteratorWithIndex.h"
 #include "itkInterpolateImageFunction.h"
 #include <vnl/vnl_matrix.h>
 
@@ -120,9 +119,6 @@ public:
 
   /** PointType typedef support */
   using typename Superclass::PointType;
-
-  /** Iterator typedef support */
-  using Iterator = ImageLinearIteratorWithIndex<TImageType>;
 
   /** Internal Coefficient typedef support */
   using CoefficientDataType = TCoefficientType;
