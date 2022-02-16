@@ -483,91 +483,47 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(this->GetAsITKBaseType()->GetOutput());
 
-  using CastFilterChar = itk::CastImageFilter<InputImageType, itk::Image<char, InputImageType::ImageDimension>>;
-  using CastFilterUChar =
-    itk::CastImageFilter<InputImageType, itk::Image<unsigned char, InputImageType::ImageDimension>>;
-  using CastFilterShort = itk::CastImageFilter<InputImageType, itk::Image<short, InputImageType::ImageDimension>>;
-  using CastFilterUShort =
-    itk::CastImageFilter<InputImageType, itk::Image<unsigned short, InputImageType::ImageDimension>>;
-  using CastFilterInt = itk::CastImageFilter<InputImageType, itk::Image<int, InputImageType::ImageDimension>>;
-  using CastFilterUInt = itk::CastImageFilter<InputImageType, itk::Image<unsigned int, InputImageType::ImageDimension>>;
-  using CastFilterLong = itk::CastImageFilter<InputImageType, itk::Image<long, InputImageType::ImageDimension>>;
-  using CastFilterULong =
-    itk::CastImageFilter<InputImageType, itk::Image<unsigned long, InputImageType::ImageDimension>>;
-  using CastFilterFloat = itk::CastImageFilter<InputImageType, itk::Image<float, InputImageType::ImageDimension>>;
-  using CastFilterDouble = itk::CastImageFilter<InputImageType, itk::Image<double, InputImageType::ImageDimension>>;
-
   /** cast the image to the correct output image Type */
   if (resultImagePixelType == "char")
   {
-    auto castFilter = CastFilterChar::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<char>(infoChanger->GetOutput());
   }
   if (resultImagePixelType == "unsigned char")
   {
-    auto castFilter = CastFilterUChar::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<unsigned char>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "short")
   {
-    auto castFilter = CastFilterShort::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<short>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "ushort" ||
            resultImagePixelType == "unsigned short") // <-- ushort for backwards compatibility
   {
-    auto castFilter = CastFilterUShort::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<unsigned short>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "int")
   {
-    auto castFilter = CastFilterInt::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<int>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "unsigned int")
   {
-    auto castFilter = CastFilterUInt::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<unsigned int>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "long")
   {
-    auto castFilter = CastFilterLong::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<long>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "unsigned long")
   {
-    auto castFilter = CastFilterULong::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<unsigned long>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "float")
   {
-    auto castFilter = CastFilterFloat::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<float>(infoChanger->GetOutput());
   }
   else if (resultImagePixelType == "double")
   {
-    auto castFilter = CastFilterDouble::New();
-    castFilter->SetInput(infoChanger->GetOutput());
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
+    resultImage = CastImage<double>(infoChanger->GetOutput());
   }
 
   if (resultImage.IsNull())
