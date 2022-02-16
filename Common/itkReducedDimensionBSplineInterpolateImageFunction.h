@@ -193,9 +193,8 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   // These are needed by the smoothing spline routine.
-  std::vector<CoefficientDataType> m_Scratch;     // temp storage for processing of Coefficients
-  typename TImageType::SizeType    m_DataLength;  // Image size
-  unsigned int                     m_SplineOrder; // User specified spline order (3rd or cubic is the default)
+  typename TImageType::SizeType m_DataLength;  // Image size
+  unsigned int                  m_SplineOrder; // User specified spline order (3rd or cubic is the default)
 
   typename CoefficientImageType::ConstPointer m_Coefficients; // Spline coefficients
 
@@ -240,7 +239,6 @@ private:
   void
   ApplyMirrorBoundaryConditions(vnl_matrix<long> & evaluateIndex, unsigned int splineOrder) const;
 
-  Iterator               m_CIterator;     // Iterator for traversing spline coefficients.
   std::vector<IndexType> m_PointsToIndex; // Preallocation of interpolation neighborhood indicies
 
   CoefficientFilterPointer m_CoefficientFilter;
