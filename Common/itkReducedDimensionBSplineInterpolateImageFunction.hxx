@@ -210,21 +210,18 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
   // Modify EvaluateIndex at the boundaries using mirror boundary conditions
   this->ApplyMirrorBoundaryConditions(EvaluateIndex, m_SplineOrder);
 
-  const InputImageType *                       inputImage = this->GetInputImage();
+  const InputImageType * const                 inputImage = this->GetInputImage();
   const typename InputImageType::SpacingType & spacing = inputImage->GetSpacing();
 
   // Calculate derivative
-  CovariantVectorType derivativeValue;
-  derivativeValue[ImageDimension - 1] = static_cast<OutputType>(0.0);
-  double    tempValue;
+  CovariantVectorType derivativeValue{};
   IndexType coefficientIndex;
   coefficientIndex[ImageDimension - 1] = vnl_math::rnd(x[ImageDimension - 1]);
   for (unsigned int n = 0; n < ImageDimension - 1; ++n)
   {
-    derivativeValue[n] = 0.0;
     for (const auto & pointIndex : m_PointsToIndex)
     {
-      tempValue = 1.0;
+      double tempValue = 1.0;
       for (unsigned int n1 = 0; n1 < ImageDimension - 1; ++n1)
       {
         coefficientIndex[n1] = EvaluateIndex[n1][pointIndex[n1]];
