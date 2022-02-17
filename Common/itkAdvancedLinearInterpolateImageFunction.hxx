@@ -137,9 +137,7 @@ AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAnd
   deriv[1] = deriv_sign[1] * (dinv[0] * (val01 - val00) + dist[0] * (val11 - val10));
 
   /** Take direction cosines into account. */
-  CovariantVectorType orientedDerivative;
-  inputImage->TransformLocalVectorToPhysicalVector(deriv, orientedDerivative);
-  deriv = orientedDerivative;
+  deriv = inputImage->TransformLocalVectorToPhysicalVector(deriv);
 
 } // end EvaluateValueAndDerivativeOptimized()
 
@@ -232,9 +230,7 @@ AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAnd
                               dinv[0] * dist[1] * (val011 - val010) + dist[0] * dist[1] * (val111 - val110));
 
   /** Take direction cosines into account. */
-  CovariantVectorType orientedDerivative;
-  inputImage->TransformLocalVectorToPhysicalVector(deriv, orientedDerivative);
-  deriv = orientedDerivative;
+  deriv = inputImage->TransformLocalVectorToPhysicalVector(deriv);
 
 } // end EvaluateValueAndDerivativeOptimized()
 

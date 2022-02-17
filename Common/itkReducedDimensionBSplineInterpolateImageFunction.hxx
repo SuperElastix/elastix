@@ -215,7 +215,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 
   // Calculate derivative
   CovariantVectorType derivativeValue{};
-  IndexType coefficientIndex;
+  IndexType           coefficientIndex;
   coefficientIndex[ImageDimension - 1] = vnl_math::rnd(x[ImageDimension - 1]);
   for (unsigned int n = 0; n < ImageDimension - 1; ++n)
   {
@@ -243,9 +243,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 
   if (this->m_UseImageDirection)
   {
-    CovariantVectorType orientedDerivative;
-    inputImage->TransformLocalVectorToPhysicalVector(derivativeValue, orientedDerivative);
-    return orientedDerivative;
+    return inputImage->TransformLocalVectorToPhysicalVector(derivativeValue);
   }
 
   return derivativeValue;
