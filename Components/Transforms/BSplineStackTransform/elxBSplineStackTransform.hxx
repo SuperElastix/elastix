@@ -37,7 +37,7 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
   this->m_GridScheduleComputer = GridScheduleComputerType::New();
   this->m_GridScheduleComputer->SetBSplineOrder(m_SplineOrder);
   m_DummySubTransform =
-    ReducedDimensionBSplineTransformBaseType::template Create<itk::AdvancedBSplineDeformableTransform>(m_SplineOrder);
+    ReducedDimensionBSplineTransformBaseType::template Create<itk::RecursiveBSplineTransform>(m_SplineOrder);
 
   m_StackTransform->SetSplineOrder(m_SplineOrder);
 

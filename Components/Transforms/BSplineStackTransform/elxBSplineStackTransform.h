@@ -22,7 +22,7 @@
 
 /** Include itk transforms needed. */
 #include "itkAdvancedCombinationTransform.h"
-#include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkRecursiveBSplineTransform.h"
 #include "itkBSplineStackTransform.h"
 
 /** Include grid schedule computer and upsample filter. */
