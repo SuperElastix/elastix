@@ -61,16 +61,14 @@ public:
   inline double
   Evaluate(const double & u) const override
   {
-    return (m_KernelFunction->Evaluate(u + 1.0) - 2.0 * m_KernelFunction->Evaluate(u) +
-            m_KernelFunction->Evaluate(u - 1.0));
+    return (KernelType::FastEvaluate(u + 1.0) - 2.0 * KernelType::FastEvaluate(u) + KernelType::FastEvaluate(u - 1.0));
   }
 
 
 protected:
   using KernelType = BSplineKernelFunction<Self::SplineOrder - 2>;
 
-  BSplineSecondOrderDerivativeKernelFunction() { m_KernelFunction = KernelType::New(); }
-
+  BSplineSecondOrderDerivativeKernelFunction() = default;
 
   ~BSplineSecondOrderDerivativeKernelFunction() override = default;
   void
@@ -85,8 +83,6 @@ private:
   BSplineSecondOrderDerivativeKernelFunction(const Self &) = delete;
   void
   operator=(const Self &) = delete;
-
-  typename KernelType::Pointer m_KernelFunction;
 };
 
 } // end namespace itk

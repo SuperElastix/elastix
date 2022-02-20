@@ -324,8 +324,6 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
   typename PenaltyGridImageType::PointType penaltyGridPoint, neighborPenaltyGridPoint, xn, xf;
 
   using BSplineKernelFunctionType = itk::BSplineKernelFunction<3>;
-  auto bSplineKernel = BSplineKernelFunctionType::New();
-
   using WeightsFunctionType = itk::BSplineInterpolationWeightFunction<double, ImageDimension, 3>;
   using ContinuousIndexType = typename WeightsFunctionType::ContinuousIndexType;
   using ContinuousIndexValueType = double;
@@ -471,9 +469,9 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
                     neighbor_m = ntindex_neighbor_start[0] + ii;
 
                     // neighborhood of (i',j',k')
-                    du_dC_neighbor = (bSplineKernel->Evaluate(tx_neighbor - neighbor_m)) *
-                                     (bSplineKernel->Evaluate(ty_neighbor - neighbor_n)) *
-                                     (bSplineKernel->Evaluate(tz_neighbor - neighbor_p));
+                    du_dC_neighbor = (BSplineKernelFunctionType::FastEvaluate(tx_neighbor - neighbor_m)) *
+                                     (BSplineKernelFunctionType::FastEvaluate(ty_neighbor - neighbor_n)) *
+                                     (BSplineKernelFunctionType::FastEvaluate(tz_neighbor - neighbor_p));
 
                     par1 = static_cast<unsigned int>(neighbor_m) +
                            bSplineKnotImageSize[0] * static_cast<unsigned int>(neighbor_n) +
@@ -484,8 +482,9 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
                     derivative[par1 + 2 * numberOfParametersPerDimension] += derivativeTermTemp3 * du_dC_neighbor;
 
                     // neighborhood of (i,j,k)
-                    du_dC = (bSplineKernel->Evaluate(tx - m)) * (bSplineKernel->Evaluate(ty - n)) *
-                            (bSplineKernel->Evaluate(tz - p));
+                    du_dC = (BSplineKernelFunctionType::FastEvaluate(tx - m)) *
+                            (BSplineKernelFunctionType::FastEvaluate(ty - n)) *
+                            (BSplineKernelFunctionType::FastEvaluate(tz - p));
 
                     par2 = static_cast<unsigned int>(m) + bSplineKnotImageSize[0] * static_cast<unsigned int>(n) +
                            bSplineKnotImageSize[0] * bSplineKnotImageSize[1] * static_cast<unsigned int>(p);
