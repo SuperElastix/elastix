@@ -77,8 +77,6 @@ using elx::GTestUtilities::CreateDefaultElastixObject;
 using elx::GTestUtilities::ExpectAllKeysUnique;
 using elx::GTestUtilities::GeneratePseudoRandomParameters;
 using elx::GTestUtilities::MakeMergedMap;
-using elx::GTestUtilities::MakePoint;
-using elx::GTestUtilities::MakeVector;
 
 
 namespace
@@ -872,7 +870,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation2D)
   constexpr auto Dimension = 2U;
 
   elx::DefaultConstructibleSubclass<itk::TranslationTransform<double, Dimension>> itkTransform;
-  itkTransform.SetOffset(MakeVector(1.0, 2.0));
+  itkTransform.SetOffset(itk::MakeVector(1.0, 2.0));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(itkTransform);
 }
@@ -883,7 +881,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation3D)
   constexpr auto Dimension = 3U;
 
   elx::DefaultConstructibleSubclass<itk::TranslationTransform<double, Dimension>> itkTransform;
-  itkTransform.SetOffset(MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetOffset(itk::MakeVector(1.0, 2.0, 3.0));
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::TranslationTransformElastix>(itkTransform);
 }
@@ -894,9 +892,9 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine2D)
   constexpr auto Dimension = 2U;
 
   elx::DefaultConstructibleSubclass<itk::AffineTransform<double, Dimension>> itkTransform;
-  itkTransform.SetTranslation(MakeVector(1.0, 2.0));
-  itkTransform.Scale(MakeVector(1.5, 1.75));
-  itkTransform.SetCenter(MakePoint(0.5, 1.5));
+  itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0));
+  itkTransform.Scale(itk::MakeVector(1.5, 1.75));
+  itkTransform.SetCenter(itk::MakePoint(0.5, 1.5));
   itkTransform.Rotate2D(M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(itkTransform);
@@ -908,9 +906,9 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
   constexpr auto Dimension = 3U;
 
   elx::DefaultConstructibleSubclass<itk::AffineTransform<double, Dimension>> itkTransform;
-  itkTransform.SetTranslation(MakeVector(1.0, 2.0, 3.0));
-  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
-  itkTransform.Scale(MakeVector(1.25, 1.5, 1.75));
+  itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetCenter(itk::MakePoint(3.0, 2.0, 1.0));
+  itkTransform.Scale(itk::MakeVector(1.25, 1.5, 1.75));
   itkTransform.Rotate3D(itk::Vector<double, Dimension>(1.0), M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::AdvancedAffineTransformElastix>(itkTransform);
@@ -920,8 +918,8 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
 GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
 {
   elx::DefaultConstructibleSubclass<itk::Euler2DTransform<double>> itkTransform;
-  itkTransform.SetTranslation(MakeVector(1.0, 2.0));
-  itkTransform.SetCenter(MakePoint(0.5, 1.5));
+  itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0));
+  itkTransform.SetCenter(itk::MakePoint(0.5, 1.5));
   itkTransform.SetAngle(M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(itkTransform);
@@ -931,8 +929,8 @@ GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
 GTEST_TEST(Transform, TransformedPointSameAsITKEuler3D)
 {
   elx::DefaultConstructibleSubclass<itk::Euler3DTransform<double>> itkTransform;
-  itkTransform.SetTranslation(MakeVector(1.0, 2.0, 3.0));
-  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetCenter(itk::MakePoint(3.0, 2.0, 1.0));
   itkTransform.SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(itkTransform);
@@ -943,8 +941,8 @@ GTEST_TEST(Transform, TransformedPointSameAsITKSimilarity2D)
 {
   elx::DefaultConstructibleSubclass<itk::Similarity2DTransform<double>> itkTransform;
   itkTransform.SetScale(0.75);
-  itkTransform.SetTranslation(MakeVector(1.0, 2.0));
-  itkTransform.SetCenter(MakePoint(0.5, 1.5));
+  itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0));
+  itkTransform.SetCenter(itk::MakePoint(0.5, 1.5));
   itkTransform.SetAngle(M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(itkTransform);
@@ -955,8 +953,8 @@ GTEST_TEST(Transform, TransformedPointSameAsITKSimilarity3D)
 {
   elx::DefaultConstructibleSubclass<itk::Similarity3DTransform<double>> itkTransform;
   itkTransform.SetScale(0.75);
-  itkTransform.SetTranslation(MakeVector(1.0, 2.0, 3.0));
-  itkTransform.SetCenter(MakePoint(3.0, 2.0, 1.0));
+  itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0, 3.0));
+  itkTransform.SetCenter(itk::MakePoint(3.0, 2.0, 1.0));
   itkTransform.SetRotation(itk::Vector<double, 3>(1.0), M_PI_4);
 
   Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::SimilarityTransformElastix>(itkTransform);

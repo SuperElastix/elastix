@@ -90,32 +90,6 @@ CreateDefaultElastixObject()
 }
 
 
-template <typename T, typename... TVariadic>
-auto
-MakeVector(const T firstValue, TVariadic... remainingValues) -> itk::Vector<T, 1 + sizeof...(remainingValues)>
-{
-  const T data[] = { firstValue, remainingValues... };
-  return data;
-}
-
-
-template <typename T, typename... TVariadic>
-auto
-MakePoint(const T firstValue, TVariadic... remainingValues) -> itk::Point<T, 1 + sizeof...(remainingValues)>
-{
-  const T data[] = { firstValue, remainingValues... };
-  return data;
-}
-
-
-template <typename... T>
-constexpr itk::Size<sizeof...(T)>
-MakeSize(const T... values)
-{
-  return { static_cast<itk::SizeValueType>(values)... };
-}
-
-
 /// Returns an `OptimizerParameters` object, filled with pseudo random floating point numbers between the specified
 /// minimum and maximum value.
 inline itk::OptimizerParameters<double>

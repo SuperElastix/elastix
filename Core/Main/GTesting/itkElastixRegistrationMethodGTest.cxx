@@ -24,7 +24,6 @@
 #include "elxCoreMainGTestUtilities.h"
 #include "elxDefaultConstructibleSubclass.h"
 #include "elxTransformIO.h"
-#include "GTesting/elxGTestUtilities.h"
 
 // ITK header file:
 #include <itkAffineTransform.h>
@@ -62,8 +61,6 @@ using elx::CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
 using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
-using elx::GTestUtilities::MakePoint;
-using elx::GTestUtilities::MakeVector;
 
 
 namespace
@@ -351,11 +348,12 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
   const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  for (const auto fixedImageOrigin : { MakePoint(-1.0, -2.0), ImageType::PointType(), MakePoint(0.25, 0.75) })
+  for (const auto fixedImageOrigin : { itk::MakePoint(-1.0, -2.0), ImageType::PointType(), itk::MakePoint(0.25, 0.75) })
   {
     fixedImage->SetOrigin(fixedImageOrigin);
 
-    for (const auto movingImageOrigin : { MakePoint(-1.0, -2.0), ImageType::PointType(), MakePoint(0.25, 0.75) })
+    for (const auto movingImageOrigin :
+         { itk::MakePoint(-1.0, -2.0), ImageType::PointType(), itk::MakePoint(0.25, 0.75) })
     {
       movingImage->SetOrigin(movingImageOrigin);
 
@@ -630,7 +628,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
             const auto & backTransform = DerefSmartPointer(transformQueue.back());
             const auto & translationTransform =
               Deref(dynamic_cast<const itk::TranslationTransform<double, ImageDimension> *>(&backTransform));
-            EXPECT_EQ(translationTransform.GetOffset(), MakeVector(1.0, -2.0));
+            EXPECT_EQ(translationTransform.GetOffset(), itk::MakeVector(1.0, -2.0));
           }
         }
       }
