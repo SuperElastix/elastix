@@ -230,7 +230,7 @@ public:
   GetNumberOfNonZeroJacobianIndices() const override;
 
 protected:
-  StackTransform();
+  StackTransform() = default;
   ~StackTransform() override = default;
 
   // Indices of the general fixed parameters into the FixedParameters array, and the number of those parameters.

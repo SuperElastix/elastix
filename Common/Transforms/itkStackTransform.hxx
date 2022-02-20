@@ -24,16 +24,6 @@ namespace itk
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::StackTransform()
-  : Superclass(0)
-{} // end Constructor
-
-
-/**
  * ************************ SetParameters ***********************
  */
 
