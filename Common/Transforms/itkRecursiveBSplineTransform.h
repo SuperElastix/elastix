@@ -110,10 +110,6 @@ public:
   /** Parameter index array type. */
   using typename Superclass::ParameterIndexArrayType;
 
-  using RecursiveBSplineWeightFunctionType = typename itk::
-    RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>; // TODO: get rid of this and
-                                                                                         // use the kernels directly.
-
   /** Compute point transformation. This one is commonly used.
    * It calls RecursiveBSplineTransformImplementation2::InterpolateTransformPoint
    * for a recursive implementation.
@@ -181,8 +177,6 @@ protected:
   using typename Superclass::JacobianImageType;
   using typename Superclass::JacobianPixelType;
 
-  typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
-
   /** Compute the nonzero Jacobian indices. */
   void
   ComputeNonZeroJacobianIndices(NonZeroJacobianIndicesType & nonZeroJacobianIndices,
@@ -192,6 +186,11 @@ private:
   RecursiveBSplineTransform(const Self &) = delete;
   void
   operator=(const Self &) = delete;
+
+  using RecursiveBSplineWeightFunctionType =
+    itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>;
+
+  typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
 };
 
 } // end namespace itk
