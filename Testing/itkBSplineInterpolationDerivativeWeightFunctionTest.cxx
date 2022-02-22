@@ -17,6 +17,7 @@
  *=========================================================================*/
 #include "itkBSplineInterpolationDerivativeWeightFunction.h"
 
+#include <array>
 #include <ctime>
 #include <iomanip>
 
@@ -93,24 +94,22 @@ main()
    * These numbers are created by a small Matlab program. So, if this appears
    * to be not a valid check, then we made the same bug twice.
    */
-  WeightsType trueFOWeights(16);
-  trueFOWeights.Fill(0.0);
-  trueFOWeights[0] = -5.400000000000e-4;
-  trueFOWeights[1] = -2.466666666666e-4;
-  trueFOWeights[2] = 7.800000000000e-4;
-  trueFOWeights[3] = 6.666666666666e-6;
-  trueFOWeights[4] = -1.144800000000e-1;
-  trueFOWeights[5] = -5.229333333333e-2;
-  trueFOWeights[6] = 1.653600000000e-1;
-  trueFOWeights[7] = 1.413333333333e-3;
-  trueFOWeights[8] = -2.554200000000e-1;
-  trueFOWeights[9] = -1.166733333333e-1;
-  trueFOWeights[10] = 3.689400000000e-1;
-  trueFOWeights[11] = 3.153333333333e-3;
-  trueFOWeights[12] = -3.456000000000e-2;
-  trueFOWeights[13] = -1.578666666666e-2;
-  trueFOWeights[14] = 4.992000000000e-2;
-  trueFOWeights[15] = 4.266666666666e-4;
+  const std::array<double, WeightsType::Dimension> trueFOWeights = { { -5.400000000000e-4,
+                                                                       -2.466666666666e-4,
+                                                                       7.800000000000e-4,
+                                                                       6.666666666666e-6,
+                                                                       -1.144800000000e-1,
+                                                                       -5.229333333333e-2,
+                                                                       1.653600000000e-1,
+                                                                       1.413333333333e-3,
+                                                                       -2.554200000000e-1,
+                                                                       -1.166733333333e-1,
+                                                                       3.689400000000e-1,
+                                                                       3.153333333333e-3,
+                                                                       -3.456000000000e-2,
+                                                                       -1.578666666666e-2,
+                                                                       4.992000000000e-2,
+                                                                       4.266666666666e-4 } };
 
   /** Compute the distance between the two vectors. */
   double error = 0.0;

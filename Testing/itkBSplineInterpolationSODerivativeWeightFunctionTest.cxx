@@ -17,6 +17,7 @@
  *=========================================================================*/
 #include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h"
 
+#include <array>
 #include <ctime>
 #include <iomanip>
 
@@ -96,24 +97,22 @@ main()
    * These numbers are created by a small Matlab program. So, if this appears
    * to be not a valid check, then we made the same bug twice.
    */
-  WeightsType trueSOWeights(16);
-  trueSOWeights.Fill(0.0);
-  trueSOWeights[0] = 0.0081;
-  trueSOWeights[1] = 0.0037;
-  trueSOWeights[2] = -0.0117;
-  trueSOWeights[3] = -0.0001;
-  trueSOWeights[4] = 0.2592;
-  trueSOWeights[5] = 0.1184;
-  trueSOWeights[6] = -0.3744;
-  trueSOWeights[7] = -0.0032;
-  trueSOWeights[8] = -0.1377;
-  trueSOWeights[9] = -0.0629;
-  trueSOWeights[10] = 0.1989;
-  trueSOWeights[11] = 0.0017;
-  trueSOWeights[12] = -0.1296;
-  trueSOWeights[13] = -0.0592;
-  trueSOWeights[14] = 0.1872;
-  trueSOWeights[15] = 0.0016;
+  std::array<double, WeightsType::Dimension> trueSOWeights = { { 0.0081,
+                                                                 0.0037,
+                                                                 -0.0117,
+                                                                 -0.0001,
+                                                                 0.2592,
+                                                                 0.1184,
+                                                                 -0.3744,
+                                                                 -0.0032,
+                                                                 -0.1377,
+                                                                 -0.0629,
+                                                                 0.1989,
+                                                                 0.0017,
+                                                                 -0.1296,
+                                                                 -0.0592,
+                                                                 0.1872,
+                                                                 0.0016 } };
 
   /** Compute the distance between the two vectors. */
   double error = 0.0;
@@ -184,23 +183,22 @@ main()
    * These numbers are created by a small Matlab program. So, if this appears
    * to be not a valid check, then we made the same bug twice.
    */
-  trueSOWeights.Fill(0.0);
-  trueSOWeights[0] = 1.200000000000e-3;
-  trueSOWeights[1] = -2.266666666666e-3;
-  trueSOWeights[2] = 9.333333333333e-4;
-  trueSOWeights[3] = 1.333333333333e-4;
-  trueSOWeights[4] = 2.544000000000e-1;
-  trueSOWeights[5] = -4.805333333333e-1;
-  trueSOWeights[6] = 1.978666666666e-1;
-  trueSOWeights[7] = 2.826666666666e-2;
-  trueSOWeights[8] = 5.676000000000e-1;
-  trueSOWeights[9] = -1.072133333333;
-  trueSOWeights[10] = 4.414666666666e-1;
-  trueSOWeights[11] = 6.306666666666e-2;
-  trueSOWeights[12] = 7.680000000000e-2;
-  trueSOWeights[13] = -1.450666666666e-1;
-  trueSOWeights[14] = 5.973333333333e-2;
-  trueSOWeights[15] = 8.533333333333e-3;
+  trueSOWeights = { { 1.200000000000e-3,
+                      -2.266666666666e-3,
+                      9.333333333333e-4,
+                      1.333333333333e-4,
+                      2.544000000000e-1,
+                      -4.805333333333e-1,
+                      1.978666666666e-1,
+                      2.826666666666e-2,
+                      5.676000000000e-1,
+                      -1.072133333333,
+                      4.414666666666e-1,
+                      6.306666666666e-2,
+                      7.680000000000e-2,
+                      -1.450666666666e-1,
+                      5.973333333333e-2,
+                      8.533333333333e-3 } };
 
   /** Compute the distance between the two vectors. */
   error = 0.0;
