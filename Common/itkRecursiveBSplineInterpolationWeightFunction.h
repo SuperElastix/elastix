@@ -82,22 +82,6 @@ public:
   /** Get number of indices. */
   itkGetConstMacro(NumberOfIndices, unsigned int);
 
-  /** Evaluate the weights at specified ContinousIndex position.
-   * Subclasses must provide this method. */
-  WeightsType
-  Evaluate(const ContinuousIndexType & index) const override;
-
-  /** Evaluate the weights at specified ContinousIndex position.
-   * The weights are returned in the user specified container.
-   * This function assume that weights can hold
-   * (SplineOrder + 1)^(SpaceDimension) elements. For efficiency,
-   * no size checking is done.
-   * On return, startIndex contains the start index of the
-   * support region over which the weights are defined.
-   */
-  void
-  Evaluate(const ContinuousIndexType & index, WeightsType & weights, IndexType & startIndex) const override;
-
   WeightsType
   Evaluate(const ContinuousIndexType & index, IndexType & startIndex) const;
 
@@ -114,6 +98,22 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
+  /** Evaluate the weights at specified ContinousIndex position.
+   * Subclasses must provide this method. */
+  WeightsType
+  Evaluate(const ContinuousIndexType & index) const override;
+
+  /** Evaluate the weights at specified ContinousIndex position.
+   * The weights are returned in the user specified container.
+   * This function assume that weights can hold
+   * (SplineOrder + 1)^(SpaceDimension) elements. For efficiency,
+   * no size checking is done.
+   * On return, startIndex contains the start index of the
+   * support region over which the weights are defined.
+   */
+  void
+  Evaluate(const ContinuousIndexType & index, WeightsType & weights, IndexType & startIndex) const override;
+
   RecursiveBSplineInterpolationWeightFunction(const Self &) = delete;
   void
   operator=(const Self &) = delete;
