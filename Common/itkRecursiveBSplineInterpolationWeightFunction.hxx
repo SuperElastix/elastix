@@ -73,12 +73,8 @@ auto
 RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
   const ContinuousIndexType & index) const -> WeightsType
 {
-  WeightsType weights;
-  IndexType   startIndex;
-
-  this->Evaluate(index, weights, startIndex);
-
-  return weights;
+  IndexType startIndex;
+  return this->Evaluate(index, startIndex);
 } // end Evaluate()
 
 
