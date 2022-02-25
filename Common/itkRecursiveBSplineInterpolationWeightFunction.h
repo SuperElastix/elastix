@@ -98,13 +98,14 @@ public:
   void
   Evaluate(const ContinuousIndexType & index, WeightsType & weights, IndexType & startIndex) const override;
 
-  void
-  EvaluateDerivative(const ContinuousIndexType & index, WeightsType & weights, const IndexType & startIndex) const;
+  WeightsType
+  Evaluate(const ContinuousIndexType & index, IndexType & startIndex) const;
 
-  void
-  EvaluateSecondOrderDerivative(const ContinuousIndexType & index,
-                                WeightsType &               weights,
-                                const IndexType &           startIndex) const;
+  WeightsType
+  EvaluateDerivative(const ContinuousIndexType & index, const IndexType & startIndex) const;
+
+  WeightsType
+  EvaluateSecondOrderDerivative(const ContinuousIndexType & index, const IndexType & startIndex) const;
 
 protected:
   RecursiveBSplineInterpolationWeightFunction();
