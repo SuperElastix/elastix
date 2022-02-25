@@ -21,6 +21,7 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
+#include "elxDefaultConstructibleSubclass.h"
 
 namespace itk
 {
@@ -171,7 +172,7 @@ public:
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override;
 
 protected:
-  RecursiveBSplineTransform();
+  RecursiveBSplineTransform() = default;
   ~RecursiveBSplineTransform() override = default;
 
   using typename Superclass::JacobianImageType;
@@ -190,7 +191,7 @@ private:
   using RecursiveBSplineWeightFunctionType =
     itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>;
 
-  typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
+  elastix::DefaultConstructibleSubclass<RecursiveBSplineWeightFunctionType> m_RecursiveBSplineWeightFunction;
 };
 
 } // end namespace itk
