@@ -20,8 +20,6 @@
 
 #include "itkRecursiveBSplineTransform.h"
 
-#include "itkRecursiveBSplineTransformImplementation.h"
-
 
 namespace itk
 {
@@ -80,8 +78,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
 
   /** Call the recursive TransformPoint function. */
   ScalarType displacement[SpaceDimension];
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::TransformPoint(
-    displacement, mu, bsplineOffsetTable, &(weights1D[0]));
+  ImplementationType::TransformPoint(displacement, mu, bsplineOffsetTable, &(weights1D[0]));
 
   // The output point is the start point + displacement.
   for (unsigned int j = 0; j < SpaceDimension; ++j)
@@ -142,8 +139,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
    * The pointer has changed after this function call.
    */
   ParametersValueType * jacobianPointer = jacobian.data_block();
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::GetJacobian(
-    jacobianPointer, &(weights1D[0]), 1.0);
+  ImplementationType::GetJacobian(jacobianPointer, &(weights1D[0]), 1.0);
 
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
@@ -202,8 +198,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
     migArray[j] = movingImageGradient[j];
   }
   ParametersValueType * imageJacobianPointer = imageJacobian.data_block();
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::
-    EvaluateJacobianWithImageGradientProduct(imageJacobianPointer, migArray, &(weights1D[0]), 1.0);
+  ImplementationType::EvaluateJacobianWithImageGradientProduct(imageJacobianPointer, migArray, &(weights1D[0]), 1.0);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
@@ -264,7 +259,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
 
   /** Recursively compute the spatial Jacobian. */
   double spatialJacobian[SpaceDimension * (SpaceDimension + 1)]; // double
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::GetSpatialJacobian(
+  ImplementationType::GetSpatialJacobian(
     spatialJacobian, mu, bsplineOffsetTable, weights1D.data(), derivativeWeights1D.data());
 
   /** Copy the correct elements to the spatial Jacobian.
@@ -344,7 +339,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian
 
   /** Recursively compute the spatial Hessian. */
   double spatialHessian[SpaceDimension * (SpaceDimension + 1) * (SpaceDimension + 2) / 2];
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::GetSpatialHessian(
+  ImplementationType::GetSpatialHessian(
     spatialHessian, mu, bsplineOffsetTable, weights1D.data(), derivativeWeights1D.data(), hessianWeights1D.data());
 
   /** Copy the correct elements to the spatial Hessian.
@@ -441,8 +436,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   /** Recursively expand all weights (destroys dummy), and multiply with dc. */
   const double * dc = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
   double *       jsjPtr2 = jsj[0].GetVnlMatrix().data_block();
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::
-    GetJacobianOfSpatialJacobian(jsjPtr2, weights1D.data(), derivativeWeights1D.data(), dc, dummy);
+  ImplementationType::GetJacobianOfSpatialJacobian(jsjPtr2, weights1D.data(), derivativeWeights1D.data(), dc, dummy);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
@@ -534,9 +528,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   double *       jshPtr = jsh[0][0].GetVnlMatrix().data_block();
   const double * dc = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
   const double   dummy[1] = { 1.0 };
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::
-    GetJacobianOfSpatialHessian(
-      jshPtr, weights1D.data(), derivativeWeights1D.data(), hessianWeights1D.data(), dc, dummy);
+  ImplementationType::GetJacobianOfSpatialHessian(
+    jshPtr, weights1D.data(), derivativeWeights1D.data(), hessianWeights1D.data(), dc, dummy);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
   const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
@@ -590,8 +583,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::ComputeNonZeroJac
   /** Call the recursive implementation. */
   unsigned long   currentIndex = totalOffsetToSupportIndex;
   unsigned long * nzjiPointer = &nonZeroJacobianIndices[0];
-  RecursiveBSplineTransformImplementation<SpaceDimension, SpaceDimension, SplineOrder, TScalar>::
-    ComputeNonZeroJacobianIndices(nzjiPointer, parametersPerDim, currentIndex, gridOffsetTable);
+  ImplementationType::ComputeNonZeroJacobianIndices(nzjiPointer, parametersPerDim, currentIndex, gridOffsetTable);
 
 } // end ComputeNonZeroJacobianIndices()
 

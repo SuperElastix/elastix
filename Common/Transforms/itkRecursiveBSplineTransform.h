@@ -21,6 +21,7 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
+#include "itkRecursiveBSplineTransformImplementation.h"
 #include "elxDefaultConstructibleSubclass.h"
 
 namespace itk
@@ -187,6 +188,9 @@ private:
   RecursiveBSplineTransform(const Self &) = delete;
   void
   operator=(const Self &) = delete;
+
+  using ImplementationType =
+    RecursiveBSplineTransformImplementation<NDimensions, NDimensions, VSplineOrder, TScalarType>;
 
   using RecursiveBSplineWeightFunctionType =
     itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>;
