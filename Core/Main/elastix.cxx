@@ -37,6 +37,49 @@
 #include <queue>
 #include <vector>
 
+
+constexpr const char * elastixHelpText =
+  /** Print the version. */
+  "elastix version: " ELASTIX_VERSION_STRING "\n\n"
+
+  /** What is elastix? */
+  "elastix registers a moving image to a fixed image.\n"
+  "The registration-process is specified in the parameter file.\n"
+  "  --help, -h displays this message and exit\n"
+  "  --version  output version information and exit\n"
+  "  --extended-version  output extended version information and exit\n\n"
+
+  /** Mandatory arguments.*/
+  "Call elastix from the command line with mandatory arguments:\n"
+  "  -f        fixed image\n"
+  "  -m        moving image\n"
+  "  -out      output directory\n"
+  "  -p        parameter file, elastix handles 1 or more \"-p\"\n\n"
+
+  /** Optional arguments.*/
+  "Optional extra commands:\n"
+  "  -fMask    mask for fixed image\n"
+  "  -mMask    mask for moving image\n"
+  "  -fp       point set for fixed image\n"
+  "  -mp       point set for moving image\n"
+  "  -t0       parameter file for initial transform\n"
+  "  -priority set the process priority to high, abovenormal, normal (default),\n"
+  "            belownormal, or idle (Windows only option)\n"
+  "  -threads  set the maximum number of threads of elastix\n\n"
+
+  /** The parameter file.*/
+  "The parameter-file must contain all the information "
+  "necessary for elastix to run properly. That includes which metric to "
+  "use, which optimizer, which transform, etc. It must also contain "
+  "information specific for the metric, optimizer, transform, etc. "
+  "For a usable parameter-file, see the website.\n\n"
+
+  "Need further help? Please check:\n"
+  " * the elastix website: https://elastix.lumc.nl\n"
+  " * the source code repository site: https://github.com/SuperElastix/elastix\n"
+  " * the discussion forum: https://groups.google.com/g/elastix-imageregistration";
+
+
 int
 main(int argc, char ** argv)
 {
@@ -54,7 +97,7 @@ main(int argc, char ** argv)
     std::string argument(argv[1]);
     if (argument == "-help" || argument == "--help" || argument == "-h")
     {
-      PrintHelp();
+      std::cout << elastixHelpText << std::endl;
       return 0;
     }
     else if (argument == "--version")
@@ -327,54 +370,3 @@ main(int argc, char ** argv)
   return 0;
 
 } // end main
-
-
-/**
- * *********************** PrintHelp ****************************
- */
-
-void
-PrintHelp()
-{
-  /** Print the version. */
-  std::cout << "elastix version: " << ELASTIX_VERSION_STRING "\n\n";
-
-  /** What is elastix? */
-  std::cout << "elastix registers a moving image to a fixed image.\n"
-            << "The registration-process is specified in the parameter file.\n"
-            << "  --help, -h displays this message and exit\n"
-            << "  --version  output version information and exit\n"
-            << "  --extended-version  output extended version information and exit\n\n";
-
-  /** Mandatory arguments.*/
-  std::cout << "Call elastix from the command line with mandatory arguments:\n"
-            << "  -f        fixed image\n"
-            << "  -m        moving image\n"
-            << "  -out      output directory\n"
-            << "  -p        parameter file, elastix handles 1 or more \"-p\"\n\n";
-
-  /** Optional arguments.*/
-  std::cout << "Optional extra commands:\n"
-            << "  -fMask    mask for fixed image\n"
-            << "  -mMask    mask for moving image\n"
-            << "  -fp       point set for fixed image\n"
-            << "  -mp       point set for moving image\n"
-            << "  -t0       parameter file for initial transform\n"
-            << "  -priority set the process priority to high, abovenormal, normal (default),\n"
-            << "            belownormal, or idle (Windows only option)\n"
-            << "  -threads  set the maximum number of threads of elastix\n\n";
-
-  /** The parameter file.*/
-  std::cout << "The parameter-file must contain all the information "
-               "necessary for elastix to run properly. That includes which metric to "
-               "use, which optimizer, which transform, etc. It must also contain "
-               "information specific for the metric, optimizer, transform, etc. "
-               "For a usable parameter-file, see the website.\n\n";
-
-  std::cout << "Need further help? Please check:\n"
-               " * the elastix website: https://elastix.lumc.nl\n"
-               " * the source code repository site: https://github.com/SuperElastix/elastix\n"
-               " * the discussion forum: https://groups.google.com/g/elastix-imageregistration"
-            << std::endl;
-
-} // end PrintHelp()

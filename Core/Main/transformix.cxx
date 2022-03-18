@@ -30,6 +30,50 @@
 #include <iostream>
 
 
+constexpr const char * transformixHelpText =
+  /** Print the version. */
+  "transformix version: " ELASTIX_VERSION_STRING "\n\n"
+
+  /** What is transformix? */
+  "transformix applies a transform on an input image and/or "
+  "generates a deformation field.\n"
+  "The transform is specified in the transform-parameter file.\n"
+  "  --help, -h displays this message and exit\n"
+  "  --version  output version information and exit\n\n"
+
+  /** Mandatory arguments. */
+  "Call transformix from the command line with mandatory arguments:\n"
+  "  -out      output directory\n"
+  "  -tp       transform-parameter file, only 1\n\n"
+
+  /** Optional arguments. */
+  "Optional extra commands:\n"
+  "  -in       input image to deform\n"
+  "  -def      file containing input-image points; the point are transformed\n"
+  "            according to the specified transform-parameter file\n"
+  "            use \"-def all\" to transform all points from the input-image, which\n"
+  "            effectively generates a deformation field.\n"
+  "  -jac      use \"-jac all\" to generate an image with the determinant of the\n"
+  "            spatial Jacobian\n"
+  "  -jacmat   use \"-jacmat all\" to generate an image with the spatial Jacobian\n"
+  "            matrix at each voxel\n"
+  "  -priority set the process priority to high, abovenormal, normal (default),\n"
+  "            belownormal, or idle (Windows only option)\n"
+  "  -threads  set the maximum number of threads of transformix\n"
+  "\nAt least one of the options \"-in\", \"-def\", \"-jac\", or \"-jacmat\" should be given.\n\n"
+
+  /** The parameter file. */
+  "The transform-parameter file must contain all the information "
+  "necessary for transformix to run properly. That includes which transform "
+  "to use, with which parameters, etc. For a usable transform-parameter file, "
+  "run elastix, and inspect the output file \"TransformParameters.0.txt\".\n\n"
+
+  "Need further help? Please check:\n"
+  " * the elastix website: https://elastix.lumc.nl\n"
+  " * the source code repository site: https://github.com/SuperElastix/elastix\n"
+  " * the discussion forum: https://groups.google.com/g/elastix-imageregistration";
+
+
 int
 main(int argc, char ** argv)
 {
@@ -47,7 +91,7 @@ main(int argc, char ** argv)
     std::string argument(argv[1]);
     if (argument == "-help" || argument == "--help" || argument == "-h")
     {
-      PrintHelp();
+      std::cout << transformixHelpText << std::endl;
       return 0;
     }
     else if (argument == "--version")
@@ -224,56 +268,3 @@ main(int argc, char ** argv)
   return returndummy;
 
 } // end main
-
-
-/**
- * *********************** PrintHelp ****************************
- */
-
-void
-PrintHelp()
-{
-  /** Print the version. */
-  std::cout << "transformix version: " ELASTIX_VERSION_STRING "\n\n";
-
-  /** What is transformix? */
-  std::cout << "transformix applies a transform on an input image and/or "
-               "generates a deformation field.\n"
-            << "The transform is specified in the transform-parameter file.\n"
-            << "  --help, -h displays this message and exit\n"
-            << "  --version  output version information and exit\n\n";
-
-  /** Mandatory arguments. */
-  std::cout << "Call transformix from the command line with mandatory arguments:\n"
-            << "  -out      output directory\n"
-            << "  -tp       transform-parameter file, only 1\n\n";
-
-  /** Optional arguments. */
-  std::cout << "Optional extra commands:\n"
-            << "  -in       input image to deform\n"
-            << "  -def      file containing input-image points; the point are transformed\n"
-            << "            according to the specified transform-parameter file\n"
-            << "            use \"-def all\" to transform all points from the input-image, which\n"
-            << "            effectively generates a deformation field.\n"
-            << "  -jac      use \"-jac all\" to generate an image with the determinant of the\n"
-            << "            spatial Jacobian\n"
-            << "  -jacmat   use \"-jacmat all\" to generate an image with the spatial Jacobian\n"
-            << "            matrix at each voxel\n"
-            << "  -priority set the process priority to high, abovenormal, normal (default),\n"
-            << "            belownormal, or idle (Windows only option)\n"
-            << "  -threads  set the maximum number of threads of transformix\n"
-            << "\nAt least one of the options \"-in\", \"-def\", \"-jac\", or \"-jacmat\" should be given.\n\n";
-
-  /** The parameter file. */
-  std::cout << "The transform-parameter file must contain all the information "
-               "necessary for transformix to run properly. That includes which transform "
-               "to use, with which parameters, etc. For a usable transform-parameter file, "
-               "run elastix, and inspect the output file \"TransformParameters.0.txt\".\n\n";
-
-  std::cout << "Need further help? Please check:\n"
-               " * the elastix website: https://elastix.lumc.nl\n"
-               " * the source code repository site: https://github.com/SuperElastix/elastix\n"
-               " * the discussion forum: https://groups.google.com/g/elastix-imageregistration"
-            << std::endl;
-
-} // end PrintHelp()
