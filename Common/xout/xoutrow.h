@@ -62,9 +62,9 @@ public:
   virtual void
   WriteHeaders();
 
-  /** This method adds an xoutcell to the map of Targets. */
+  /** This method adds a new xoutcell to the map of Targets. */
   int
-  AddTargetCell(const char * name) override;
+  AddNewTargetCell(const char * name);
 
   /** This method removes an xoutcell to the map of Targets. */
   int
