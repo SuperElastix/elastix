@@ -57,11 +57,11 @@ xoutrow::WriteBufferedData()
 
 
 /**
- * ******************** AddTargetCell ***************************
+ * ******************** AddNewTargetCell ***************************
  */
 
 int
-xoutrow::AddTargetCell(const char * name)
+xoutrow::AddNewTargetCell(const char * name)
 {
   if (this->m_CellMap.count(name) == 0)
   {

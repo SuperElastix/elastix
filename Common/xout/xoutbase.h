@@ -109,11 +109,6 @@ public:
   AddTargetCell(const char * name, Self * cell);
 
   virtual int
-  AddTargetCell(const char * /** name */)
-  {
-    return 1;
-  }
-  virtual int
   RemoveTargetCell(const char * name);
 
   virtual void

@@ -394,7 +394,7 @@ public:
   void
   AddTargetCellToIterationInfo(const char * const name)
   {
-    m_IterationInfo.AddTargetCell(name);
+    m_IterationInfo.AddNewTargetCell(name);
   }
 
 protected:
