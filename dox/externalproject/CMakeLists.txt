@@ -1,7 +1,8 @@
 # Example project for using elastix code from external projects.
 project( elxExternalProject )
 
-cmake_minimum_required( VERSION 3.10.2 )
+# Minimum CMake version. Intended to correspond with the `cmake_minimum_required` version of elastix.
+cmake_minimum_required( VERSION 3.16.3 )
 
 find_package( Elastix REQUIRED )
 
