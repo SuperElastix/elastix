@@ -94,7 +94,7 @@ protected:
    * are not set automatically, so make sure to do it yourself.
    */
   void
-  SetTargetCells(const XStreamMapType & cellmap) override;
+  SetXTargetCells(const XStreamMapType & cellmap) override;
 
 private:
   std::map<std::string, std::unique_ptr<xoutbase>> m_CellMap;

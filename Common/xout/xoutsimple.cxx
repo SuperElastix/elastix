@@ -64,7 +64,7 @@ xoutsimple::RemoveOutput(const char * name)
 void
 xoutsimple::SetOutputs(const CStreamMapType & outputmap)
 {
-  this->SetTargetCells(outputmap);
+  this->SetCTargetCells(outputmap);
 
 } // end SetOutputs
 
@@ -76,7 +76,7 @@ xoutsimple::SetOutputs(const CStreamMapType & outputmap)
 void
 xoutsimple::SetOutputs(const XStreamMapType & outputmap)
 {
-  this->SetTargetCells(outputmap);
+  this->SetXTargetCells(outputmap);
 
 } // end SetOutputs()
 
