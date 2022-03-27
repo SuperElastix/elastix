@@ -111,12 +111,6 @@ public:
   virtual int
   RemoveTargetCell(const char * name);
 
-  virtual void
-  SetTargetCells(const CStreamMapType & cellmap);
-
-  virtual void
-  SetTargetCells(const XStreamMapType & cellmap);
-
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
   virtual int
   AddOutput(const char * name, std::ostream * output);
@@ -143,6 +137,12 @@ public:
 protected:
   /** Default-constructor. Only to be used by its derived classes. */
   xoutbase() = default;
+
+  virtual void
+  SetTargetCells(const CStreamMapType & cellmap);
+
+  virtual void
+  SetTargetCells(const XStreamMapType & cellmap);
 
   /** Maps that contain the outputs. */
   CStreamMapType m_COutputs;
