@@ -70,12 +70,6 @@ public:
   int
   RemoveTargetCell(const char * name) override;
 
-  /** Method to set all targets at once. The outputs of these targets
-   * are not set automatically, so make sure to do it yourself.
-   */
-  void
-  SetTargetCells(const XStreamMapType & cellmap) override;
-
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).
    * In addition to the behaviour of the Superclass's methods, these functions
    * set the outputs of the TargetCells as well.
@@ -94,6 +88,13 @@ public:
 
   void
   SetOutputs(const XStreamMapType & outputmap) override;
+
+protected:
+  /** Method to set all targets at once. The outputs of these targets
+   * are not set automatically, so make sure to do it yourself.
+   */
+  void
+  SetTargetCells(const XStreamMapType & cellmap) override;
 
 private:
   std::map<std::string, std::unique_ptr<xoutbase>> m_CellMap;
