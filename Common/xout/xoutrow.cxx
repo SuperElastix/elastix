@@ -114,11 +114,11 @@ xoutrow::RemoveTargetCell(const char * name)
 
 
 /**
- * **************** SetTargetCells (xout objects) ***************
+ * **************** SetXTargetCells (xout objects) ***************
  */
 
 void
-xoutrow::SetTargetCells(const XStreamMapType & cellmap)
+xoutrow::SetXTargetCells(const XStreamMapType & cellmap)
 {
   /** Clean the this->m_CellMap (cells that are created using the
    * AddTarget(const char *) method.
@@ -246,7 +246,7 @@ xoutrow::WriteHeaders()
 {
   /** Copy '*this'. */
   Self headerwriter;
-  headerwriter.SetTargetCells(this->m_XTargetCells);
+  headerwriter.SetXTargetCells(this->m_XTargetCells);
   // no CTargetCells, because they are not used in xoutrow!
   headerwriter.SetOutputs(this->m_COutputs);
   headerwriter.SetOutputs(this->m_XOutputs);

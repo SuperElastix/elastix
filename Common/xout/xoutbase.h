@@ -138,11 +138,11 @@ protected:
   /** Default-constructor. Only to be used by its derived classes. */
   xoutbase() = default;
 
-  virtual void
-  SetTargetCells(const CStreamMapType & cellmap);
+  void
+  SetCTargetCells(const CStreamMapType & cellmap);
 
   virtual void
-  SetTargetCells(const XStreamMapType & cellmap);
+  SetXTargetCells(const XStreamMapType & cellmap);
 
   /** Maps that contain the outputs. */
   CStreamMapType m_COutputs;

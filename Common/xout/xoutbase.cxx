@@ -145,11 +145,11 @@ xoutbase::RemoveTargetCell(const char * name)
 
 
 /**
- * **************** SetTargetCells (std::ostreams) **************
+ * **************** SetCTargetCells (std::ostreams) **************
  */
 
 void
-xoutbase::SetTargetCells(const CStreamMapType & cellmap)
+xoutbase::SetCTargetCells(const CStreamMapType & cellmap)
 {
   this->m_CTargetCells = cellmap;
 
@@ -157,11 +157,11 @@ xoutbase::SetTargetCells(const CStreamMapType & cellmap)
 
 
 /**
- * **************** SetTargetCells (xout objects) ***************
+ * **************** SetXTargetCells (xout objects) ***************
  */
 
 void
-xoutbase::SetTargetCells(const XStreamMapType & cellmap)
+xoutbase::SetXTargetCells(const XStreamMapType & cellmap)
 {
   this->m_XTargetCells = cellmap;
 
