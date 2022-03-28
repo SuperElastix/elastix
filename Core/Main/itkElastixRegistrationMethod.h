@@ -275,6 +275,9 @@ private:
   void
   RemoveInputsOfType(const DataObjectIdentifierType & inputName);
 
+  /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
+  using Superclass::SetInput;
+
   std::string m_InitialTransformParameterFileName;
   std::string m_FixedPointSetFileName;
   std::string m_MovingPointSetFileName;
