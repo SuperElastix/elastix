@@ -189,6 +189,9 @@ private:
   using itk::ProcessObject::GetInput;
   using itk::ProcessObject::RemoveInput;
 
+  /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
+  using Superclass::MakeOutput;
+
   std::string m_FixedPointSetFileName;
   bool        m_ComputeSpatialJacobian;
   bool        m_ComputeDeterminantOfSpatialJacobian;

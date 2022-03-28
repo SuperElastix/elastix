@@ -209,6 +209,10 @@ private:
   void
   operator=(const Self &) = delete;
 
+  /** Private using-declarations, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
+  using Superclass::SetInput;
+  using Superclass::MakeOutput;
+
   /** IsEmpty. */
   static bool
   IsEmpty(const InputImageType * inputImage);
