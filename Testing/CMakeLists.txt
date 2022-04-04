@@ -1001,3 +1001,5 @@ elx_add_test( TransformixFilterTest "" "Transformix"
   ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   ${TestOutputDir}/TransformixFilterTest.mha )
 target_link_libraries( itkTransformixFilterTest elastix_lib transformix_lib )
+
+add_subdirectory(PythonTests)
