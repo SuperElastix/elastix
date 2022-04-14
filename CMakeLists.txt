@@ -15,11 +15,15 @@ cmake_policy( SET CMP0042 NEW )
 #---------------------------------------------------------------------
 include( CTest )
 
-  # The following may make smaller and quicker loading libraries,
-  # that hides unnecessary symbols. Available from CMake 3.0.0.
-  #set( CMAKE_C_VISIBILITY_PRESET hidden )
-  #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
+# The following may make smaller and quicker loading libraries, that hides unnecessary symbols.
+set( CMAKE_C_VISIBILITY_PRESET hidden )
+set( CMAKE_CXX_VISIBILITY_PRESET hidden )
 
+# Prevent MacOS/Clang ld: warning: direct access in function '...' from file '...cxx.o' to global
+# weak symbol 'vtable for ...' from file '....a(...cxx.o)' means the weak symbol cannot be
+# overridden at runtime. This was likely caused by different translation units being compiled with
+# different visibility settings. 
+set(ITK_TEMPLATE_VISIBILITY_DEFAULT OFF)
 #---------------------------------------------------------------------
 option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 set(_GPU_depends "")
