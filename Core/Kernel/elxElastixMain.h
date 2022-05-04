@@ -142,8 +142,7 @@ public:
 
   /** ITK base objects. */
   using ObjectPointer = itk::Object::Pointer;
-  using DataObjectType = itk::DataObject;
-  using DataObjectPointer = DataObjectType::Pointer;
+  using DataObjectPointer = itk::DataObject::Pointer;
 
   /** elastix components. */
   using ArgumentMapType = Configuration::CommandLineArgumentMapType;

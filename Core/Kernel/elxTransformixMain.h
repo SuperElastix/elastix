@@ -54,7 +54,6 @@ public:
 
   /** typedef's from itk base Object. */
   using Superclass::ObjectPointer;
-  using Superclass::DataObjectType;
   using Superclass::DataObjectPointer;
 
   /** Elastix components. */

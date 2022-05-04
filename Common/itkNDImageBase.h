@@ -72,8 +72,7 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(NDImageBase, Object);
 
-  using DataObjectType = DataObject;
-  using DataObjectPointer = DataObjectType::Pointer;
+  using DataObjectPointer = DataObject::Pointer;
 
   /** Type definitions like normal itkImages, independent of the dimension */
   using PixelType = typename Image<TPixel, 2>::PixelType;
