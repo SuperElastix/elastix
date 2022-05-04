@@ -178,9 +178,6 @@ public:
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
 
-  /** Typedef's for Timer class. */
-  using TimerType = itk::TimeProbe;
-
   /** Set/Get the Configuration Object. */
   elxGetObjectMacro(Configuration, Configuration);
   elxSetObjectMacro(Configuration, Configuration);
@@ -407,9 +404,9 @@ protected:
   FlatDirectionCosinesType m_OriginalFixedImageDirection;
 
   /** Timers. */
-  TimerType m_Timer0{};
-  TimerType m_IterationTimer{};
-  TimerType m_ResolutionTimer{};
+  itk::TimeProbe m_Timer0{};
+  itk::TimeProbe m_IterationTimer{};
+  itk::TimeProbe m_ResolutionTimer{};
 
   /** Store the CurrentTransformParameterFileName. */
   std::string m_CurrentTransformParameterFileName;
