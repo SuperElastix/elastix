@@ -218,8 +218,7 @@ main(int argc, char ** argv)
     gridSpacing.Fill(1.0);
     OriginType gridOrigin;
     gridOrigin.Fill(0.0);
-    DirectionType gridDirection;
-    gridDirection.SetIdentity();
+    auto gridDirection = DirectionType::GetIdentity();
     for (unsigned int i = 0; i < dimension; ++i)
     {
       config->ReadParameter(gridSize[i], "GridSize", i, true, dummyErrorMessage);

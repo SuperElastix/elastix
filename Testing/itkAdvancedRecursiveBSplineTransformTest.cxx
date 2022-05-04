@@ -133,8 +133,7 @@ main(int argc, char * argv[])
   gridOrigin[0] = -237.6759555555;
   gridOrigin[1] = -239.9488431747;
   gridOrigin[2] = -344.2315805162;
-  DirectionType gridDirection;
-  gridDirection.SetIdentity();
+  auto gridDirection = DirectionType::GetIdentity();
   gridDirection(0, 1) = 0.02;
   gridDirection(0, 2) = 0.06;
   gridDirection(1, 0) = 0.03;

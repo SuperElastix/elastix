@@ -227,13 +227,11 @@ main(int argc, char * argv[])
   gridOrigin[0] = -237.6759555555;
   gridOrigin[1] = -239.9488431747;
   gridOrigin[2] = -344.2315805162;
-  DirectionType gridDirection;
-  gridDirection.SetIdentity();
 
   transform->SetGridOrigin(gridOrigin);
   transform->SetGridSpacing(gridSpacing);
   transform->SetGridRegion(gridRegion);
-  transform->SetGridDirection(gridDirection);
+  transform->SetGridDirection(DirectionType::GetIdentity());
 
   /** Now read the parameters as defined in the file par.txt. */
   ParametersType parameters(transform->GetNumberOfParameters());

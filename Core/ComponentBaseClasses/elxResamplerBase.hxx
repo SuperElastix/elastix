@@ -561,8 +561,7 @@ ResamplerBase<TElastix>::ReadFromFile()
   IndexType       index;
   OriginPointType origin;
   SizeType        size;
-  DirectionType   direction;
-  direction.SetIdentity();
+  auto            direction = DirectionType::GetIdentity();
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     /** No default size. Read size from the parameter file. */
