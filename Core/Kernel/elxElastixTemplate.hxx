@@ -258,7 +258,7 @@ int
 ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
 {
   /** Timer. */
-  TimerType timer;
+  itk::TimeProbe timer;
 
   /** Tell all components where to find the ElastixTemplate. */
   this->ConfigureComponents(this);
