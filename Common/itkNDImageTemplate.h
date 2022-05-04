@@ -63,7 +63,6 @@ public:
 
   itkStaticConstMacro(Dimension, unsigned int, VDimension);
 
-  using typename Superclass::DataObjectType;
   using typename Superclass::DataObjectPointer;
 
   /** Type definitions like normal itkImages, independent of the dimension */

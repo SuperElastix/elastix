@@ -152,8 +152,7 @@ public:
   /** Typedefs used in this class. */
   using ConfigurationPointer = Configuration::Pointer;
   using ObjectPointer = itk::Object::Pointer;
-  using DataObjectType = itk::DataObject; // for the images
-  using DataObjectPointer = DataObjectType::Pointer;
+  using DataObjectPointer = itk::DataObject::Pointer; // for the images
   using ObjectContainerType = itk::VectorContainer<unsigned int, ObjectPointer>;
   using ObjectContainerPointer = ObjectContainerType::Pointer;
   using DataObjectContainerType = itk::VectorContainer<unsigned int, DataObjectPointer>;
