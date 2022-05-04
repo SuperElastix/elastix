@@ -453,10 +453,8 @@ protected:
         /** Setup reader. */
         const auto imageReader = itk::ImageFileReader<TImage>::New();
         imageReader->SetFileName(fileName);
-        const auto    infoChanger = itk::ChangeInformationImageFilter<TImage>::New();
-        DirectionType direction;
-        direction.SetIdentity();
-        infoChanger->SetOutputDirection(direction);
+        const auto infoChanger = itk::ChangeInformationImageFilter<TImage>::New();
+        infoChanger->SetOutputDirection(DirectionType::GetIdentity());
         infoChanger->SetChangeDirection(!useDirectionCosines);
         infoChanger->SetInput(imageReader->GetOutput());
 

@@ -362,12 +362,11 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
    * We put this in a dummy image, so that we can correctly
    * calculate the center of rotation in world coordinates.
    */
-  SpacingType   spacing;
-  IndexType     index;
-  PointType     origin;
-  SizeType      size;
-  DirectionType direction;
-  direction.SetIdentity();
+  SpacingType spacing;
+  IndexType   index;
+  PointType   origin;
+  SizeType    size;
+  auto        direction = DirectionType::GetIdentity();
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */

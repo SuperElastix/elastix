@@ -103,8 +103,7 @@ main(int argc, char * argv[])
   gridOrigin[0] = -237.6759555555;
   gridOrigin[1] = -239.9488431747;
   gridOrigin[2] = -344.2315805162;
-  DirectionType gridDirection;
-  gridDirection.SetIdentity();
+  const auto gridDirection = DirectionType::GetIdentity();
 
   transform->SetGridOrigin(gridOrigin);
   transform->SetGridSpacing(gridSpacing);
