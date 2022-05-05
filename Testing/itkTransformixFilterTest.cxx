@@ -57,11 +57,7 @@ main(int argc, char * argv[])
   transformix->SetLogToConsole(true);
   ImageType::Pointer resultImage = transformix->GetOutput();
 
-  using ImageWriterType = itk::ImageFileWriter<ImageType>;
-  auto imageWriter = ImageWriterType::New();
-  imageWriter->SetFileName(transformedImageFile);
-  imageWriter->SetInput(resultImage);
-  imageWriter->Update();
+  itk::WriteImage(resultImage, transformedImageFile);
 
   /** Return a value. */
   return 0;

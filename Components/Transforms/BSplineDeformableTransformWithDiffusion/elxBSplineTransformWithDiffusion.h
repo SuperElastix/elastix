@@ -274,8 +274,6 @@ public:
   using InterpolatorPointer = typename InterpolatorType::Pointer;
   using GrayValueImageReaderType = itk::ImageFileReader<GrayValueImageType>;
   using GrayValueImageReaderPointer = typename GrayValueImageReaderType::Pointer;
-  using GrayValueImageWriterType = itk::ImageFileWriter<GrayValueImageType>;
-  using DeformationFieldWriterType = itk::ImageFileWriter<VectorImageType>;
 
   /** Execute stuff before the actual registration:
    * \li Create an initial B-spline grid.

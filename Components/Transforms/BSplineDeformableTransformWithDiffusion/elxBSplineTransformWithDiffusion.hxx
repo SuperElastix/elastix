@@ -980,14 +980,9 @@ void
 BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile() const
 {
   /** Write the deformation field image. */
-  auto writer = DeformationFieldWriterType::New();
-  writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
-  writer->SetInput(this->m_DiffusedField);
-
-  /** Do the writing. */
   try
   {
-    writer->Update();
+    itk::WriteImage(m_DiffusedField, TransformIO::MakeDeformationFieldFileName(*this));
   }
   catch (itk::ExceptionObject & excp)
   {
@@ -1279,14 +1274,11 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
 
     /** Write the deformationFieldImage. */
     makeFileName1 << begin.str() << "deformationField" << end.str();
-    auto deformationFieldWriter = DeformationFieldWriterType::New();
-    deformationFieldWriter->SetFileName(makeFileName1.str().c_str());
-    deformationFieldWriter->SetInput(this->m_DeformationField);
 
     /** Do the writing. */
     try
     {
-      deformationFieldWriter->Update();
+      itk::WriteImage(m_DeformationField, makeFileName1.str());
     }
     catch (itk::ExceptionObject & excp)
     {
@@ -1302,21 +1294,12 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
     /** Write the GrayValueImage. */
     std::ostringstream makeFileName2("");
     makeFileName2 << begin.str() << "GrayValueImage" << end.str();
-    auto grayValueImageWriter = GrayValueImageWriterType::New();
-    grayValueImageWriter->SetFileName(makeFileName2.str().c_str());
-    if (this->m_AlsoFixed || this->m_UseFixedSegmentation)
-    {
-      grayValueImageWriter->SetInput(this->m_GrayValueImage2);
-    }
-    else
-    {
-      grayValueImageWriter->SetInput(this->m_GrayValueImage1);
-    }
 
     /** Do the writing. */
     try
     {
-      grayValueImageWriter->Update();
+      const auto image = (m_AlsoFixed || m_UseFixedSegmentation) ? m_GrayValueImage2 : m_GrayValueImage1;
+      itk::WriteImage(image, makeFileName2.str());
     }
     catch (itk::ExceptionObject & excp)
     {
@@ -1332,14 +1315,11 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
     /** Write the diffusedFieldImage. */
     std::ostringstream makeFileName3("");
     makeFileName3 << begin.str() << "diffusedField" << end.str();
-    auto diffusedFieldWriter = DeformationFieldWriterType::New();
-    diffusedFieldWriter->SetFileName(makeFileName3.str().c_str());
-    diffusedFieldWriter->SetInput(this->m_DiffusedField);
 
     /** Do the writing. */
     try
     {
-      diffusedFieldWriter->Update();
+      itk::WriteImage(m_DiffusedField, makeFileName3.str());
     }
     catch (itk::ExceptionObject & excp)
     {

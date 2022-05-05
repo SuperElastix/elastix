@@ -160,15 +160,9 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
   infoChanger->SetInput(this->m_DeformationFieldInterpolatingTransform->GetDeformationField());
 
   /** Write the deformation field image. */
-  using VectorWriterType = itk::ImageFileWriter<DeformationFieldType>;
-  auto writer = VectorWriterType::New();
-  writer->SetFileName(TransformIO::MakeDeformationFieldFileName(*this));
-  writer->SetInput(infoChanger->GetOutput());
-
-  /** Do the writing. */
   try
   {
-    writer->Update();
+    itk::WriteImage(infoChanger->GetOutput(), TransformIO::MakeDeformationFieldFileName(*this));
   }
   catch (itk::ExceptionObject & excp)
   {
