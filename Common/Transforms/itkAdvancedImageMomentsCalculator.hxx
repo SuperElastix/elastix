@@ -51,19 +51,9 @@ AdvancedImageMomentsCalculator<TImage>::AdvancedImageMomentsCalculator()
   this->m_ThreaderParameters.st_Self = this;
 
   // Multi-threading structs
-  this->m_ComputePerThreadVariables = nullptr;
-  this->m_ComputePerThreadVariablesSize = 0;
   this->m_CenterOfGravityUsesLowerThreshold = false;
   this->m_NumberOfSamplesForCenteredTransformInitialization = 10000;
   this->m_LowerThresholdForCenterGravity = 500;
-}
-
-//----------------------------------------------------------------------
-// Destructor
-template <typename TImage>
-AdvancedImageMomentsCalculator<TImage>::~AdvancedImageMomentsCalculator()
-{
-  delete[] this->m_ComputePerThreadVariables;
 }
 
 /**
@@ -85,24 +75,8 @@ AdvancedImageMomentsCalculator<TImage>::InitializeThreadingParameters()
    */
   const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
-  /** Only resize the array of structs when needed. */
-  if (this->m_ComputePerThreadVariablesSize != numberOfThreads)
-  {
-    delete[] this->m_ComputePerThreadVariables;
-    this->m_ComputePerThreadVariables = new AlignedComputePerThreadStruct[numberOfThreads];
-    this->m_ComputePerThreadVariablesSize = numberOfThreads;
-  }
-
-  /** Some initialization. */
-  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-  {
-    this->m_ComputePerThreadVariables[i].st_M0 = NumericTraits<ScalarType>::Zero;
-    this->m_ComputePerThreadVariables[i].st_M1 = NumericTraits<typename VectorType::ValueType>::Zero;
-    this->m_ComputePerThreadVariables[i].st_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
-    this->m_ComputePerThreadVariables[i].st_Cg = NumericTraits<typename VectorType::ValueType>::Zero;
-    this->m_ComputePerThreadVariables[i].st_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
-    this->m_ComputePerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
-  }
+  // For each thread, assign a struct of zero-initialized values.
+  m_ComputePerThreadVariables.assign(numberOfThreads, AlignedComputePerThreadStruct());
 
 } // end InitializeThreadingParameters()
 
@@ -337,12 +311,14 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
     }
   }
   /** Update the thread struct once. */
-  this->m_ComputePerThreadVariables[threadId].st_M0 = M0;
-  this->m_ComputePerThreadVariables[threadId].st_M1 = M1;
-  this->m_ComputePerThreadVariables[threadId].st_M2 = M2;
-  this->m_ComputePerThreadVariables[threadId].st_Cg = Cg;
-  this->m_ComputePerThreadVariables[threadId].st_Cm = Cm;
-  this->m_ComputePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  AlignedComputePerThreadStruct computePerThreadStruct;
+  computePerThreadStruct.st_M0 = M0;
+  computePerThreadStruct.st_M1 = M1;
+  computePerThreadStruct.st_M2 = M2;
+  computePerThreadStruct.st_Cg = Cg;
+  computePerThreadStruct.st_Cm = Cm;
+  computePerThreadStruct.st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  m_ComputePerThreadVariables[threadId] = computePerThreadStruct;
 
 } // end ThreadedCompute()
 
@@ -354,25 +330,24 @@ template <typename TImage>
 void
 AdvancedImageMomentsCalculator<TImage>::AfterThreadedCompute()
 {
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
   /** Accumulate thread results. */
-  for (ThreadIdType k = 0; k < numberOfThreads; ++k)
+  for (auto & computePerThreadStruct : m_ComputePerThreadVariables)
   {
-    this->m_M0 += this->m_ComputePerThreadVariables[k].st_M0;
+    this->m_M0 += computePerThreadStruct.st_M0;
     for (unsigned int i = 0; i < ImageDimension; ++i)
     {
-      this->m_M1[i] += this->m_ComputePerThreadVariables[k].st_M1[i];
-      this->m_Cg[i] += this->m_ComputePerThreadVariables[k].st_Cg[i];
-      this->m_ComputePerThreadVariables[k].st_M1[i] = 0;
-      this->m_ComputePerThreadVariables[k].st_Cg[i] = 0;
+      this->m_M1[i] += computePerThreadStruct.st_M1[i];
+      this->m_Cg[i] += computePerThreadStruct.st_Cg[i];
+      computePerThreadStruct.st_M1[i] = 0;
+      computePerThreadStruct.st_Cg[i] = 0;
       for (unsigned int j = 0; j < ImageDimension; ++j)
       {
-        this->m_M2[i][j] += this->m_ComputePerThreadVariables[k].st_M2[i][j];
-        this->m_Cm[i][j] += this->m_ComputePerThreadVariables[k].st_Cm[i][j];
-        this->m_ComputePerThreadVariables[k].st_M2[i][j] = 0;
-        this->m_ComputePerThreadVariables[k].st_Cm[i][j] = 0;
+        this->m_M2[i][j] += computePerThreadStruct.st_M2[i][j];
+        this->m_Cm[i][j] += computePerThreadStruct.st_Cm[i][j];
+        computePerThreadStruct.st_M2[i][j] = 0;
+        computePerThreadStruct.st_Cm[i][j] = 0;
       }
-      this->m_ComputePerThreadVariables[k].st_M0 = 0;
+      computePerThreadStruct.st_M0 = 0;
     }
   }
   DoPostProcessing();

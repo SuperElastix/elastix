@@ -26,6 +26,8 @@
 #include "itkImageFullSampler.h"
 #include "itkPlatformMultiThreader.h"
 
+#include <vector>
+
 namespace itk
 {
 /**\class ComputeDisplacementDistribution
@@ -132,7 +134,7 @@ public:
 
 protected:
   ComputeDisplacementDistribution();
-  ~ComputeDisplacementDistribution() override;
+  ~ComputeDisplacementDistribution() override = default;
 
   /** Typedefs for multi-threading. */
   using ThreaderType = itk::PlatformMultiThreader;
@@ -214,8 +216,7 @@ protected:
 private:
   mutable MultiThreaderParameterType m_ThreaderParameters;
 
-  mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
-  mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
+  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
 
   SizeValueType               m_NumberOfPixelsCounted;
   bool                        m_UseMultiThread;
