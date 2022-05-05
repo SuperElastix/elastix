@@ -200,8 +200,6 @@ protected:
   {
     Self * st_Self;
   };
-  mutable MultiThreaderParameterType m_ThreaderParameters;
-
   struct ComputePerThreadStruct
   {
     /**  Used for accumulating variables. */
@@ -212,6 +210,10 @@ protected:
   };
   itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, ComputePerThreadStruct, PaddedComputePerThreadStruct);
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct, AlignedComputePerThreadStruct);
+
+private:
+  mutable MultiThreaderParameterType m_ThreaderParameters;
+
   mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
   mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
 
@@ -219,7 +221,6 @@ protected:
   bool                        m_UseMultiThread;
   ImageSampleContainerPointer m_SampleContainer;
 
-private:
   ComputeDisplacementDistribution(const Self &) = delete;
   void
   operator=(const Self &) = delete;
