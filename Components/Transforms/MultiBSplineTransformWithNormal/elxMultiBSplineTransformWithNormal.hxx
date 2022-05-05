@@ -86,10 +86,7 @@ MultiBSplineTransformWithNormal<TElastix>::BeforeAll()
   this->m_LabelsPath = this->m_Configuration->GetCommandLineArgument("-labels");
   if (!this->m_LabelsPath.empty())
   {
-    typename itk::ImageFileReader<ImageLabelType>::Pointer reader = itk::ImageFileReader<ImageLabelType>::New();
-    reader->SetFileName(this->m_LabelsPath);
-    reader->Update();
-    this->m_Labels = reader->GetOutput();
+    m_Labels = itk::ReadImage<ImageLabelType>(m_LabelsPath);
   }
   else
   {
@@ -567,10 +564,7 @@ MultiBSplineTransformWithNormal<TElastix>::ReadFromFile()
     this->m_LabelsPath, "MultiBSplineTransformWithNormalLabels", this->GetComponentLabel(), 0, 0);
   if (!this->m_LabelsPath.empty())
   {
-    typename itk::ImageFileReader<ImageLabelType>::Pointer reader = itk::ImageFileReader<ImageLabelType>::New();
-    reader->SetFileName(this->m_LabelsPath);
-    reader->Update();
-    this->m_Labels = reader->GetOutput();
+    this->m_Labels = itk::ReadImage<ImageLabelType>(m_LabelsPath);
   }
   this->m_MultiBSplineTransformWithNormal->SetLabels(this->m_Labels);
   this->m_MultiBSplineTransformWithNormal->UpdateLocalBases();

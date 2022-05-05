@@ -40,8 +40,6 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
     fixedRigidityImageName, "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false);
 
   using RigidityImageType = typename Superclass1::RigidityImageType;
-  using RigidityImageReaderType = itk::ImageFileReader<RigidityImageType>;
-  typename RigidityImageReaderType::Pointer fixedRigidityReader;
   using ChangeInfoFilterType = itk::ChangeInformationImageFilter<RigidityImageType>;
   using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
   using DirectionType = typename RigidityImageType::DirectionType;
@@ -51,19 +49,16 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
     /** Use the FixedRigidityImage. */
     this->SetUseFixedRigidityImage(true);
 
-    /** Create the reader and set the filename. */
-    fixedRigidityReader = RigidityImageReaderType::New();
-    fixedRigidityReader->SetFileName(fixedRigidityImageName);
-
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
     infoChanger->SetOutputDirection(DirectionType::GetIdentity());
     infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
-    infoChanger->SetInput(fixedRigidityReader->GetOutput());
 
     /** Do the reading. */
     try
     {
+      const auto image = itk::ReadImage<RigidityImageType>(fixedRigidityImageName);
+      infoChanger->SetInput(image);
       infoChanger->Update();
     }
     catch (itk::ExceptionObject & excp)
@@ -90,25 +85,21 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
   this->GetConfiguration()->ReadParameter(
     movingRigidityImageName, "MovingRigidityImageName", this->GetComponentLabel(), 0, -1, false);
 
-  typename RigidityImageReaderType::Pointer movingRigidityReader;
   if (!movingRigidityImageName.empty())
   {
     /** Use the movingRigidityImage. */
     this->SetUseMovingRigidityImage(true);
 
-    /** Create the reader and set the filename. */
-    movingRigidityReader = RigidityImageReaderType::New();
-    movingRigidityReader->SetFileName(movingRigidityImageName);
-
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
     infoChanger->SetOutputDirection(DirectionType::GetIdentity());
     infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
-    infoChanger->SetInput(movingRigidityReader->GetOutput());
 
     /** Do the reading. */
     try
     {
+      const auto image = itk::ReadImage<RigidityImageType>(movingRigidityImageName);
+      infoChanger->SetInput(image);
       infoChanger->Update();
     }
     catch (itk::ExceptionObject & excp)

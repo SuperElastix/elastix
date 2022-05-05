@@ -92,26 +92,22 @@ main(int argc, char ** argv)
 
   /** Typedefs. */
   using ImageType = itk::Image<PixelType, Dimension>;
-  using ImageReaderType = itk::ImageFileReader<ImageType>;
-  using ImageReaderPointer = ImageReaderType::Pointer;
   using AndFilterType = itk::AndImageFilter<ImageType, ImageType, ImageType>;
   using AndFilterPointer = AndFilterType::Pointer;
   using IteratorType = itk::ImageRegionConstIterator<ImageType>;
 
-  /** Create readers and an AND filter. */
-  ImageReaderPointer reader1 = ImageReaderType::New();
-  reader1->SetFileName(inputFileNames[0]);
-  ImageReaderPointer reader2 = ImageReaderType::New();
-  reader2->SetFileName(inputFileNames[1]);
   AndFilterPointer ANDFilter = AndFilterType::New();
-  ANDFilter->SetInput1(reader2->GetOutput());
-  ANDFilter->SetInput2(reader1->GetOutput());
-  // finalANDFilter->SetCoordinateTolerance( tolerance );
-  // finalANDFilter->SetDirectionTolerance( tolerance );
 
   /** Do the AND operation. */
   try
   {
+    const auto image1 = itk::ReadImage<ImageType>(inputFileNames[0]);
+    const auto image2 = itk::ReadImage<ImageType>(inputFileNames[1]);
+    ANDFilter->SetInput1(image1);
+    ANDFilter->SetInput2(image2);
+    // finalANDFilter->SetCoordinateTolerance( tolerance );
+    // finalANDFilter->SetDirectionTolerance( tolerance );
+
     ANDFilter->Update();
   }
   catch (itk::ExceptionObject & excp)
