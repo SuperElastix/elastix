@@ -850,11 +850,10 @@ void
 AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobianUseAddition(const InputPointType & ipp,
                                                                                       SpatialJacobianType &  sj) const
 {
-  SpatialJacobianType sj0, sj1, identity;
+  SpatialJacobianType sj0, sj1;
   this->m_InitialTransform->GetSpatialJacobian(ipp, sj0);
   this->m_CurrentTransform->GetSpatialJacobian(ipp, sj1);
-  identity.SetIdentity();
-  sj = sj0 + sj1 - identity;
+  sj = sj0 + sj1 - SpatialJacobianType::GetIdentity();
 
 } // end GetSpatialJacobianUseAddition()
 
