@@ -67,10 +67,6 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldType>;
   using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
 
-  /** Setup VectorImageReader. */
-  using VectorReaderType = itk::ImageFileReader<DeformationFieldType>;
-  auto vectorReader = VectorReaderType::New();
-
   /** Read deformationFieldImage-name from parameter-file. */
   std::string fileName = "";
   this->m_Configuration->ReadParameter(fileName, "DeformationFieldFileName", 0);
@@ -85,13 +81,15 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
   infoChanger->SetOutputDirection(DirectionType::GetIdentity());
   infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
-  infoChanger->SetInput(vectorReader->GetOutput());
 
-  /** Read deformationFieldImage from file. */
-  vectorReader->SetFileName(fileName);
   try
   {
+    const auto image = itk::ReadImage<DeformationFieldType>(fileName);
+    infoChanger->SetInput(image);
     infoChanger->Update();
+
+    /** Store the original direction for later use */
+    this->m_OriginalDeformationFieldDirection = image->GetDirection();
   }
   catch (itk::ExceptionObject & excp)
   {
@@ -104,8 +102,6 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
     throw excp;
   }
 
-  /** Store the original direction for later use */
-  this->m_OriginalDeformationFieldDirection = vectorReader->GetOutput()->GetDirection();
 
   /** Set the deformationFieldImage in the
    * itkDeformationFieldInterpolatingTransform.

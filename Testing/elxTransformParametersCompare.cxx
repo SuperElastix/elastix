@@ -74,7 +74,6 @@ main(int argc, char ** argv)
   using WriterType = itk::ImageFileWriter<CoefficientImageType>;
 
   using MaskImageType = itk::Image<unsigned char, ITK_TEST_DIMENSION_MAX>;
-  using MaskReaderType = itk::ImageFileReader<MaskImageType>;
   using MaskIteratorType = itk::ImageRegionIteratorWithIndex<MaskImageType>;
 
   /** Create command line argument parser. */
@@ -247,10 +246,7 @@ main(int argc, char ** argv)
     MaskIteratorType       itM;
     if (!maskFileName.empty())
     {
-      auto maskReader = MaskReaderType::New();
-      maskReader->SetFileName(maskFileName);
-      maskReader->Update();
-      maskImage = maskReader->GetOutput();
+      maskImage = itk::ReadImage<MaskImageType>(maskFileName);
 
       itM = MaskIteratorType(maskImage, maskImage->GetLargestPossibleRegion());
     }

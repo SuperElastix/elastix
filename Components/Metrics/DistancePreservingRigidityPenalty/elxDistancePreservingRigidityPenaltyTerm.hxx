@@ -41,26 +41,21 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
     segmentedImageName, "SegmentedImageName", this->GetComponentLabel(), 0, -1, false);
 
   using SegmentedImageType = typename Superclass1::SegmentedImageType;
-  using SegmentedImageReaderType = itk::ImageFileReader<SegmentedImageType>;
   using ChangeInfoFilterType = itk::ChangeInformationImageFilter<SegmentedImageType>;
   using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
   using DirectionType = typename SegmentedImageType::DirectionType;
   using SizeValueType = typename SegmentedImageType::SizeType::SizeValueType;
 
-  /** Create the reader and set the filename. */
-  auto segmentedImageReader = SegmentedImageReaderType::New();
-  segmentedImageReader->SetFileName(segmentedImageName);
-  segmentedImageReader->Update();
-
   /** Possibly overrule the direction cosines. */
   ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
   infoChanger->SetOutputDirection(DirectionType::GetIdentity());
   infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
-  infoChanger->SetInput(segmentedImageReader->GetOutput());
 
   /** Do the reading. */
   try
   {
+    const auto image = itk::ReadImage<SegmentedImageType>(segmentedImageName);
+    infoChanger->SetInput(image);
     infoChanger->Update();
   }
   catch (itk::ExceptionObject & excp)

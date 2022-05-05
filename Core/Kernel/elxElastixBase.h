@@ -450,39 +450,37 @@ protected:
       /** Loop over all image filenames. */
       for (const auto & fileName : *fileNameContainer)
       {
-        /** Setup reader. */
-        const auto imageReader = itk::ImageFileReader<TImage>::New();
-        imageReader->SetFileName(fileName);
         const auto infoChanger = itk::ChangeInformationImageFilter<TImage>::New();
         infoChanger->SetOutputDirection(DirectionType::GetIdentity());
         infoChanger->SetChangeDirection(!useDirectionCosines);
-        infoChanger->SetInput(imageReader->GetOutput());
 
         /** Do the reading. */
         try
         {
+          const auto image = itk::ReadImage<TImage>(fileName);
+          infoChanger->SetInput(image);
           infoChanger->Update();
+
+          /** Store the original direction cosines */
+          if (originalDirectionCosines != nullptr)
+          {
+            *originalDirectionCosines = image->GetDirection();
+          }
         }
         catch (itk::ExceptionObject & excp)
         {
           /** Add information to the exception. */
           std::string err_str = excp.GetDescription();
           err_str += "\nError occurred while reading the image described as " + imageDescription + ", with file name " +
-                     imageReader->GetFileName() + "\n";
+                     fileName + "\n";
           excp.SetDescription(err_str);
           /** Pass the exception to the caller of this function. */
           throw excp;
         }
 
         /** Store loaded image in the image container, as a DataObjectPointer. */
-        const auto image = infoChanger->GetOutput();
-        imageContainer->push_back(image);
+        imageContainer->push_back(infoChanger->GetOutput());
 
-        /** Store the original direction cosines */
-        if (originalDirectionCosines != nullptr)
-        {
-          *originalDirectionCosines = imageReader->GetOutput()->GetDirection();
-        }
 
       } // end for
 
