@@ -257,7 +257,6 @@ protected:
   /** Typedefs for multi-threading. */
   using ThreaderType = itk::PlatformMultiThreader;
   using ThreadInfoType = ThreaderType::WorkUnitInfo;
-  ThreaderType::Pointer m_Threader;
 
   /** Launch MultiThread Compute. */
   void
@@ -280,7 +279,6 @@ protected:
   {
     Self * st_Self;
   };
-  mutable MultiThreaderParameterType m_ThreaderParameters;
 
   struct ComputePerThreadStruct
   {
@@ -294,18 +292,9 @@ protected:
   };
   itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, ComputePerThreadStruct, PaddedComputePerThreadStruct);
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct, AlignedComputePerThreadStruct);
-  mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
-  mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
-  bool                                    m_UseMultiThread;
-  SizeValueType                           m_NumberOfPixelsCounted;
 
   /** The type of region used for multithreading */
   using ThreadRegionType = typename ImageType::RegionType;
-
-  SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization;
-  InputPixelType              m_LowerThresholdForCenterGravity;
-  bool                        m_CenterOfGravityUsesLowerThreshold;
-  ImageSampleContainerPointer m_SampleContainer;
 
 private:
   /** Internal helper function. Does post processing at the end of
@@ -316,6 +305,20 @@ private:
   AdvancedImageMomentsCalculator(const Self &);
   void
   operator=(const Self &);
+
+  ThreaderType::Pointer m_Threader;
+
+  mutable MultiThreaderParameterType m_ThreaderParameters;
+
+  mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
+  mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
+  bool                                    m_UseMultiThread;
+  SizeValueType                           m_NumberOfPixelsCounted;
+
+  SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization;
+  InputPixelType              m_LowerThresholdForCenterGravity;
+  bool                        m_CenterOfGravityUsesLowerThreshold;
+  ImageSampleContainerPointer m_SampleContainer;
 
   bool       m_Valid; // Have moments been computed yet?
   ScalarType m_M0;    // Zeroth moment
