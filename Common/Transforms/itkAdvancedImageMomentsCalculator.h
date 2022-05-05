@@ -32,6 +32,8 @@
 
 #include "itkPlatformMultiThreader.h"
 
+#include <vector>
+
 namespace itk
 {
 /** \class AdvancedImageMomentsCalculator
@@ -250,7 +252,7 @@ public:
 
 protected:
   AdvancedImageMomentsCalculator();
-  ~AdvancedImageMomentsCalculator() override;
+  ~AdvancedImageMomentsCalculator() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
@@ -310,10 +312,9 @@ private:
 
   mutable MultiThreaderParameterType m_ThreaderParameters;
 
-  mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
-  mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
-  bool                                    m_UseMultiThread;
-  SizeValueType                           m_NumberOfPixelsCounted;
+  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
+  bool                                               m_UseMultiThread;
+  SizeValueType                                      m_NumberOfPixelsCounted;
 
   SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization;
   InputPixelType              m_LowerThresholdForCenterGravity;

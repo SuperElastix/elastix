@@ -56,22 +56,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeDisplacementDis
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;
 
-  // Multi-threading structs
-  this->m_ComputePerThreadVariables = nullptr;
-  this->m_ComputePerThreadVariablesSize = 0;
-
 } // end Constructor
-
-
-/**
- * ************************* Destructor ************************
- */
-
-template <class TFixedImage, class TTransform>
-ComputeDisplacementDistribution<TFixedImage, TTransform>::~ComputeDisplacementDistribution()
-{
-  delete[] this->m_ComputePerThreadVariables;
-} // end Destructor
 
 
 /**
@@ -93,22 +78,8 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::InitializeThreadingPar
    */
   const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
-  /** Only resize the array of structs when needed. */
-  if (this->m_ComputePerThreadVariablesSize != numberOfThreads)
-  {
-    delete[] this->m_ComputePerThreadVariables;
-    this->m_ComputePerThreadVariables = new AlignedComputePerThreadStruct[numberOfThreads];
-    this->m_ComputePerThreadVariablesSize = numberOfThreads;
-  }
-
-  /** Some initialization. */
-  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-  {
-    this->m_ComputePerThreadVariables[i].st_MaxJJ = 0.0;
-    this->m_ComputePerThreadVariables[i].st_Displacement = 0.0;
-    this->m_ComputePerThreadVariables[i].st_DisplacementSquared = 0.0;
-    this->m_ComputePerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
-  }
+  // For each thread, assign a struct of zero-initialized values.
+  m_ComputePerThreadVariables.assign(numberOfThreads, AlignedComputePerThreadStruct());
 
 } // end InitializeThreadingParameters()
 
@@ -450,11 +421,12 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   }
 
   /** Update the thread struct once. */
-  this->m_ComputePerThreadVariables[threadId].st_MaxJJ = maxJJ;
-  this->m_ComputePerThreadVariables[threadId].st_Displacement = displacement;
-  this->m_ComputePerThreadVariables[threadId].st_DisplacementSquared = displacementSquared;
-  this->m_ComputePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-
+  AlignedComputePerThreadStruct computePerThreadStruct;
+  computePerThreadStruct.st_MaxJJ = maxJJ;
+  computePerThreadStruct.st_Displacement = displacement;
+  computePerThreadStruct.st_DisplacementSquared = displacementSquared;
+  computePerThreadStruct.st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  m_ComputePerThreadVariables[threadId] = computePerThreadStruct;
 } // end ThreadedCompute()
 
 
@@ -466,8 +438,6 @@ template <class TFixedImage, class TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::AfterThreadedCompute(double & jacg, double & maxJJ)
 {
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
-
   /** Reset all variables. */
   maxJJ = 0.0;
   double displacement = 0.0;
@@ -475,19 +445,15 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::AfterThreadedCompute(d
   this->m_NumberOfPixelsCounted = 0.0;
 
   /** Accumulate thread results. */
-  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
+  for (const auto & computePerThreadStruct : m_ComputePerThreadVariables)
   {
-    maxJJ = std::max(maxJJ, this->m_ComputePerThreadVariables[i].st_MaxJJ);
-    displacement += this->m_ComputePerThreadVariables[i].st_Displacement;
-    displacementSquared += this->m_ComputePerThreadVariables[i].st_DisplacementSquared;
-    this->m_NumberOfPixelsCounted += this->m_ComputePerThreadVariables[i].st_NumberOfPixelsCounted;
-
-    /** Reset all variables for the next resolution. */
-    this->m_ComputePerThreadVariables[i].st_MaxJJ = 0;
-    this->m_ComputePerThreadVariables[i].st_Displacement = 0;
-    this->m_ComputePerThreadVariables[i].st_DisplacementSquared = 0;
-    this->m_ComputePerThreadVariables[i].st_NumberOfPixelsCounted = 0;
+    maxJJ = std::max(maxJJ, computePerThreadStruct.st_MaxJJ);
+    displacement += computePerThreadStruct.st_Displacement;
+    displacementSquared += computePerThreadStruct.st_DisplacementSquared;
+    this->m_NumberOfPixelsCounted += computePerThreadStruct.st_NumberOfPixelsCounted;
   }
+  // Reset all variables for the next resolution.
+  std::fill_n(m_ComputePerThreadVariables.begin(), m_ComputePerThreadVariables.size(), AlignedComputePerThreadStruct());
 
   /** Compute the sigma of the distribution of the displacements. */
   const double meanDisplacement = displacement / this->m_NumberOfPixelsCounted;
