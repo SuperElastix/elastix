@@ -1048,8 +1048,6 @@ void
 TransformBase<TElastix>::WriteDeformationFieldImage(
   typename TransformBase<TElastix>::DeformationFieldImageType::Pointer deformationfield) const
 {
-  using DeformationFieldWriterType = itk::ImageFileWriter<DeformationFieldImageType>;
-
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
@@ -1057,15 +1055,10 @@ TransformBase<TElastix>::WriteDeformationFieldImage(
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "deformationField." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  const auto defWriter = DeformationFieldWriterType::New();
-  defWriter->SetInput(deformationfield);
-  defWriter->SetFileName(makeFileName.str().c_str());
-
-  /** Do the writing. */
   elxout << "  Computing and writing the deformation field ..." << std::endl;
   try
   {
-    defWriter->Update();
+    itk::WriteImage(deformationfield, makeFileName.str());
   }
   catch (itk::ExceptionObject & excp)
   {
@@ -1144,15 +1137,10 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "spatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  const auto jacWriter = itk::ImageFileWriter<JacobianImageType>::New();
-  jacWriter->SetInput(infoChanger->GetOutput());
-  jacWriter->SetFileName(makeFileName.str().c_str());
-
-  /** Do the writing. */
   elxout << "  Computing and writing the spatial Jacobian determinant..." << std::endl;
   try
   {
-    jacWriter->Update();
+    itk::WriteImage(infoChanger->GetOutput(), makeFileName.str());
   }
   catch (itk::ExceptionObject & excp)
   {

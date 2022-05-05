@@ -71,7 +71,6 @@ main(int argc, char ** argv)
   using OriginType = CoefficientImageType::PointType;
   using DirectionType = CoefficientImageType::DirectionType;
   using IteratorType = itk::ImageRegionIteratorWithIndex<CoefficientImageType>;
-  using WriterType = itk::ImageFileWriter<CoefficientImageType>;
 
   using MaskImageType = itk::Image<unsigned char, ITK_TEST_DIMENSION_MAX>;
   using MaskIteratorType = itk::ImageRegionIteratorWithIndex<MaskImageType>;
@@ -320,12 +319,9 @@ main(int argc, char ** argv)
     /** Write the difference image. */
     if (diffNormNormalized > 1e-10)
     {
-      auto writer = WriterType::New();
-      writer->SetFileName(diffImageFileName);
-      writer->SetInput(coefImage);
       try
       {
-        writer->Write();
+        itk::WriteImage(coefImage, diffImageFileName);
       }
       catch (itk::ExceptionObject & err)
       {

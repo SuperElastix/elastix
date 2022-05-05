@@ -44,7 +44,6 @@ testMevis()
   using PixelType = unsigned char;
 
   using ImageType = itk::Image<PixelType, Dimension>;
-  using WriterType = itk::ImageFileWriter<ImageType>;
   using ReaderType = itk::ImageFileReader<ImageType>;
   using ComparisonFilterType = itk::Testing::ComparisonImageFilter<ImageType, ImageType>;
   using SizeType = typename ImageType::SizeType;
@@ -53,7 +52,6 @@ testMevis()
   using DirectionType = typename ImageType::DirectionType;
   using IteratorType = itk::ImageRegionIterator<ImageType>;
 
-  auto          writer = WriterType::New();
   auto          reader = ReaderType::New();
   auto          inputImage = ImageType::New();
   SizeType      size;
@@ -160,15 +158,13 @@ testMevis()
   }
 
   std::string testfile("testimageMevisDicomTiff.tif");
-  writer->SetFileName(testfile);
-  writer->SetInput(inputImage);
   reader->SetFileName(testfile);
 
   std::string task("");
   try
   {
     task = "Writing";
-    writer->Update();
+    itk::WriteImage(inputImage, testfile);
     task = "Reading";
     reader->Update();
   }

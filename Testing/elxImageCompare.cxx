@@ -164,13 +164,9 @@ main(int argc, char ** argv)
     diffImageFileName += "_DIFF";
     diffImageFileName += itksys::SystemTools::GetFilenameLastExtension(testImageFileName);
 
-    using WriterType = itk::ImageFileWriter<ImageType>;
-    auto writer = WriterType::New();
-    writer->SetFileName(diffImageFileName);
-    writer->SetInput(comparisonFilter->GetOutput());
     try
     {
-      writer->Write();
+      itk::WriteImage(comparisonFilter->GetOutput(), diffImageFileName);
     }
     catch (itk::ExceptionObject & err)
     {
