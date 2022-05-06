@@ -294,33 +294,6 @@ protected:
   KernelFunctionPointer m_MovingKernel;
   KernelFunctionPointer m_DerivativeMovingKernel;
 
-  /** Threading related parameters. */
-  mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs;
-
-  /** Helper structs that multi-threads the computation of
-   * the metric derivative using ITK threads.
-   */
-  struct ParzenWindowHistogramMultiThreaderParameterType // can't we use the one from AdvancedImageToImageMetric ?
-  {
-    Self * m_Metric;
-  };
-  ParzenWindowHistogramMultiThreaderParameterType m_ParzenWindowHistogramThreaderParameters;
-
-  struct ParzenWindowHistogramGetValueAndDerivativePerThreadStruct
-  {
-    SizeValueType   st_NumberOfPixelsCounted;
-    JointPDFPointer st_JointPDF;
-  };
-  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT,
-               ParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
-               PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct);
-  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
-                    PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
-                    AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct);
-  mutable AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct *
-                       m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
-
   /** Initialize threading related parameters. */
   void
   InitializeThreadingParameters() const override;
@@ -504,6 +477,33 @@ private:
   /** The deleted assignment operator. */
   void
   operator=(const Self &) = delete;
+
+  /** Threading related parameters. */
+  mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs;
+
+  /** Helper structs that multi-threads the computation of
+   * the metric derivative using ITK threads.
+   */
+  struct ParzenWindowHistogramMultiThreaderParameterType // can't we use the one from AdvancedImageToImageMetric ?
+  {
+    Self * m_Metric;
+  };
+  ParzenWindowHistogramMultiThreaderParameterType m_ParzenWindowHistogramThreaderParameters;
+
+  struct ParzenWindowHistogramGetValueAndDerivativePerThreadStruct
+  {
+    SizeValueType   st_NumberOfPixelsCounted;
+    JointPDFPointer st_JointPDF;
+  };
+  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT,
+               ParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
+               PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct);
+  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
+                    PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
+                    AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct);
+  mutable AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct *
+                       m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
+  mutable ThreadIdType m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
 
   /** Variables that can/should be accessed by their Set/Get functions. */
   unsigned long m_NumberOfFixedHistogramBins;

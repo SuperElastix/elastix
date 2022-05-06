@@ -163,30 +163,6 @@ protected:
                                         const MovingImageDerivativeType & movingImageDerivative,
                                         DerivativeType &                  imageJacobian) const override;
 
-  struct PCAMetricMultiThreaderParameterType
-  {
-    Self * m_Metric;
-  };
-
-  PCAMetricMultiThreaderParameterType m_PCAMetricThreaderParameters;
-
-  struct PCAMetricGetSamplesPerThreadStruct
-  {
-    SizeValueType                    st_NumberOfPixelsCounted;
-    MatrixType                       st_DataBlock;
-    std::vector<FixedImagePointType> st_ApprovedSamples;
-    DerivativeType                   st_Derivative;
-  };
-
-  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, PCAMetricGetSamplesPerThreadStruct, PaddedPCAMetricGetSamplesPerThreadStruct);
-
-  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
-                    PaddedPCAMetricGetSamplesPerThreadStruct,
-                    AlignedPCAMetricGetSamplesPerThreadStruct);
-
-  mutable AlignedPCAMetricGetSamplesPerThreadStruct * m_PCAMetricGetSamplesPerThreadVariables;
-  mutable ThreadIdType                                m_PCAMetricGetSamplesPerThreadVariablesSize;
-
   /** Get value and derivatives for each thread. */
   inline void
   ThreadedGetSamples(ThreadIdType threadID);
@@ -223,6 +199,30 @@ private:
   PCAMetric(const Self &) = delete;
   void
   operator=(const Self &) = delete;
+
+  struct PCAMetricMultiThreaderParameterType
+  {
+    Self * m_Metric;
+  };
+
+  PCAMetricMultiThreaderParameterType m_PCAMetricThreaderParameters;
+
+  struct PCAMetricGetSamplesPerThreadStruct
+  {
+    SizeValueType                    st_NumberOfPixelsCounted;
+    MatrixType                       st_DataBlock;
+    std::vector<FixedImagePointType> st_ApprovedSamples;
+    DerivativeType                   st_Derivative;
+  };
+
+  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, PCAMetricGetSamplesPerThreadStruct, PaddedPCAMetricGetSamplesPerThreadStruct);
+
+  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
+                    PaddedPCAMetricGetSamplesPerThreadStruct,
+                    AlignedPCAMetricGetSamplesPerThreadStruct);
+
+  mutable AlignedPCAMetricGetSamplesPerThreadStruct * m_PCAMetricGetSamplesPerThreadVariables;
+  mutable ThreadIdType                                m_PCAMetricGetSamplesPerThreadVariablesSize;
 
   unsigned int m_G;
   unsigned int m_LastDimIndex;
