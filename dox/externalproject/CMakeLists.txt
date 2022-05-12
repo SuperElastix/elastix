@@ -13,7 +13,9 @@ if( OPENMP_FOUND )
 endif()
 
 # Use the version of ITK from Elastix.
-set( ITK_DIR ${ELASTIX_ITK_DIR} )
+if ( DEFINED ELASTIX_ITK_DIR )
+  set( ITK_DIR "${ELASTIX_ITK_DIR}" CACHE PATH "ITK_DIR from Elastix" FORCE )
+endif()
 find_package( ITK REQUIRED )
 
 include(${ELASTIX_CONFIG_TARGETS_FILE})

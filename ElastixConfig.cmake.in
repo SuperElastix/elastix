@@ -1,7 +1,7 @@
 set( Elastix_DIR @PROJECT_BINARY_DIR@ )
 
 # Add include directories needed to use SuperElastix
-set( ELASTIX_INCLUDE_DIRS @elxINCLUDE_DIRECTORIES@ )
+set( ELASTIX_INCLUDE_DIRS @ELX_CONFIG_INCLUDE_DIRECTORIES@ )
 
 # Add list of Elastix library directories
 set( ELASTIX_LIBRARY_DIRS @LIBRARY_OUTPUT_PATH@ )
@@ -20,7 +20,10 @@ set( ELASTIX_USE_OPENCL @ELASTIX_USE_OPENCL@ )
 set( ELASTIX_USE_MEVISDICOMTIFF @ELASTIX_USE_MEVISDICOMTIFF@ )
 set( ELASTIX_DOX_DIR @ELASTIX_DOX_DIR@ )
 set( ELASTIX_HELP_DIR @ELASTIX_HELP_DIR@ )
-set( ELASTIX_ITK_DIR @ELASTIX_ITK_DIR@ )
+
+if (NOT "@ELASTIX_ITK_DIR@" EQUAL "")
+  set( ELASTIX_ITK_DIR @ELASTIX_ITK_DIR@ )
+endif()
 
 # Maintain backwards compatibility by also exporting old-style target information
 set( ELASTIX_ALL_COMPONENT_LIBS @AllComponentLibs@ )
