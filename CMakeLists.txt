@@ -594,10 +594,33 @@ foreach( LIB IN LISTS AllComponentLibs )
   elastix_export_target( ${LIB} )
 endforeach()
 
+# ELASTIX_ITK_DIR -- used (only) for the Config.cmake file in the build tree
 # It appears necessary for Windows Azure Pipelines, to replace backslashes by
 # forward slashes before using the ITK bin directory.
 string(REPLACE "\\" "/" ELASTIX_ITK_DIR ${ITK_DIR})
 
-configure_file( ${elastix_SOURCE_DIR}/ElastixConfig.cmake.in ${elastix_BINARY_DIR}/ElastixConfig.cmake @ONLY )
-configure_file( ${elastix_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${elastix_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
-configure_file( ${elastix_SOURCE_DIR}/UseElastix.cmake.in ${elastix_BINARY_DIR}/UseElastix.cmake @ONLY )
+# Create the Config.cmake file for the build tree:
+set(ELX_CONFIG_INCLUDE_DIRECTORIES "${elxINCLUDE_DIRECTORIES}")
+configure_file( ElastixConfig.cmake.in ElastixConfig.cmake @ONLY )
+
+# Create the Config.cmake file for the install tree:
+set(ELX_CONFIG_INCLUDE_DIRECTORIES "\${CMAKE_CURRENT_LIST_DIR}/../../../include")
+foreach( ELX_INCLUDE_DIR IN ITEMS ${elxINCLUDE_DIRECTORIES} )
+  if (NOT ELX_INCLUDE_DIR STREQUAL CMAKE_BINARY_DIR)
+    string(REPLACE ${CMAKE_SOURCE_DIR} "" ELX_INCLUDE_DIR ${ELX_INCLUDE_DIR})
+    list(APPEND ELX_CONFIG_INCLUDE_DIRECTORIES "\${CMAKE_CURRENT_LIST_DIR}/../../../include${ELX_INCLUDE_DIR}")
+  endif()
+endforeach()
+
+# The Config.cmake file for the install tree should not specify the ITK_DIR.
+unset(ELASTIX_ITK_DIR)
+configure_file( ElastixConfig.cmake.in "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/ElastixConfig.cmake" @ONLY )
+
+configure_file( ElastixConfigVersion.cmake.in ElastixConfigVersion.cmake @ONLY )
+configure_file( UseElastix.cmake.in UseElastix.cmake @ONLY )
+
+install(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/ElastixConfig.cmake"
+  "${PROJECT_BINARY_DIR}/ElastixConfigVersion.cmake"
+  "${PROJECT_BINARY_DIR}/UseElastix.cmake"
+  DESTINATION lib/cmake/elastix)

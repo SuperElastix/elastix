@@ -93,7 +93,10 @@ source_group( "ProgressCommand" FILES ${ProgressCommandFiles} )
 configure_file(
   elxVersionMacros.h.in
   elxVersionMacros.h)
-
+  
+install( FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/elxVersionMacros.h
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Core )
 #---------------------------------------------------------------------
 # Create the elxCore library.
 
