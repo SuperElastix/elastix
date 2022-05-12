@@ -19,6 +19,7 @@
 #define itkAdvancedKappaStatisticImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
+#include <vector>
 
 namespace itk
 {
@@ -168,7 +169,7 @@ public:
 
 protected:
   AdvancedKappaStatisticImageToImageMetric();
-  ~AdvancedKappaStatisticImageToImageMetric() override;
+  ~AdvancedKappaStatisticImageToImageMetric() override = default;
 
   /** PrintSelf. */
   void
@@ -259,8 +260,7 @@ private:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
                     PaddedKappaGetValueAndDerivativePerThreadStruct,
                     AlignedKappaGetValueAndDerivativePerThreadStruct);
-  mutable AlignedKappaGetValueAndDerivativePerThreadStruct * m_KappaGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType                                       m_KappaGetValueAndDerivativePerThreadVariablesSize;
+  mutable std::vector<AlignedKappaGetValueAndDerivativePerThreadStruct> m_KappaGetValueAndDerivativePerThreadVariables;
 };
 
 } // end namespace itk

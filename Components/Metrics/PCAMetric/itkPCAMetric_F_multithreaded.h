@@ -24,6 +24,7 @@
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkExtractImageFilter.h"
+#include <vector>
 
 namespace itk
 {
@@ -135,7 +136,7 @@ public:
 
 protected:
   PCAMetric();
-  ~PCAMetric() override;
+  ~PCAMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
@@ -221,8 +222,7 @@ private:
                     PaddedPCAMetricGetSamplesPerThreadStruct,
                     AlignedPCAMetricGetSamplesPerThreadStruct);
 
-  mutable AlignedPCAMetricGetSamplesPerThreadStruct * m_PCAMetricGetSamplesPerThreadVariables;
-  mutable ThreadIdType                                m_PCAMetricGetSamplesPerThreadVariablesSize;
+  mutable std::vector<AlignedPCAMetricGetSamplesPerThreadStruct> m_PCAMetricGetSamplesPerThreadVariables;
 
   unsigned int m_G;
   unsigned int m_LastDimIndex;

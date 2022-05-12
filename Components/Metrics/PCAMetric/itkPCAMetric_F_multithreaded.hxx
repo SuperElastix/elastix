@@ -46,24 +46,9 @@ PCAMetric<TFixedImage, TMovingImage>::PCAMetric()
   this->SetUseFixedImageLimiter(false);
   this->SetUseMovingImageLimiter(false);
 
-  // Multi-threading structs
-  this->m_PCAMetricGetSamplesPerThreadVariables = nullptr;
-  this->m_PCAMetricGetSamplesPerThreadVariablesSize = 0;
-
   /** Initialize the m_ParzenWindowHistogramThreaderParameters. */
   this->m_PCAMetricThreaderParameters.m_Metric = this;
 } // end constructor
-
-
-/**
- * ******************* Destructor *******************
- */
-
-template <class TFixedImage, class TMovingImage>
-PCAMetric<TFixedImage, TMovingImage>::~PCAMetric()
-{
-  delete[] this->m_PCAMetricGetSamplesPerThreadVariables;
-} // end Destructor
 
 
 /**
@@ -120,18 +105,13 @@ PCAMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
    */
 
   /** Only resize the array of structs when needed. */
-  if (this->m_PCAMetricGetSamplesPerThreadVariablesSize != numberOfThreads)
-  {
-    delete[] this->m_PCAMetricGetSamplesPerThreadVariables;
-    this->m_PCAMetricGetSamplesPerThreadVariables = new AlignedPCAMetricGetSamplesPerThreadStruct[numberOfThreads];
-    this->m_PCAMetricGetSamplesPerThreadVariablesSize = numberOfThreads;
-  }
+  m_PCAMetricGetSamplesPerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
+  for (auto & perThreadVariable : m_PCAMetricGetSamplesPerThreadVariables)
   {
-    this->m_PCAMetricGetSamplesPerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
-    this->m_PCAMetricGetSamplesPerThreadVariables[i].st_Derivative.SetSize(this->GetNumberOfParameters());
+    perThreadVariable.st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
+    perThreadVariable.st_Derivative.SetSize(this->GetNumberOfParameters());
   }
 
   this->m_PixelStartIndex.resize(numberOfThreads);

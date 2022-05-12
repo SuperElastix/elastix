@@ -41,23 +41,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,
   this->SetUseFixedImageLimiter(false);
   this->SetUseMovingImageLimiter(false);
 
-  // Multi-threading structs
-  this->m_CorrelationGetValueAndDerivativePerThreadVariables = nullptr;
-  this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize = 0;
-
 } // end Constructor
-
-
-/**
- * ******************* Destructor *******************
- */
-
-template <class TFixedImage, class TMovingImage>
-AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,
-                                                TMovingImage>::~AdvancedNormalizedCorrelationImageToImageMetric()
-{
-  delete[] this->m_CorrelationGetValueAndDerivativePerThreadVariables;
-} // end Destructor
 
 
 /**
@@ -78,34 +62,26 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
    */
 
   /** Only resize the array of structs when needed. */
-  if (this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
-  {
-    delete[] this->m_CorrelationGetValueAndDerivativePerThreadVariables;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables =
-      new AlignedCorrelationGetValueAndDerivativePerThreadStruct[numberOfThreads];
-    this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
-  }
+  m_CorrelationGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
   const AccumulateType      zero1 = NumericTraits<AccumulateType>::Zero;
   const DerivativeValueType zero2 = NumericTraits<DerivativeValueType>::Zero;
   const auto                numberOfParameters = this->GetNumberOfParameters();
-  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
+  for (auto & perThreadVariable : m_CorrelationGetValueAndDerivativePerThreadVariables)
   {
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted =
-      NumericTraits<SizeValueType>::Zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sff = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Smm = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sfm = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sf = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sm = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF.SetSize(numberOfParameters);
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM.SetSize(numberOfParameters);
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential.SetSize(
-      this->GetNumberOfParameters());
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF.Fill(zero2);
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM.Fill(zero2);
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential.Fill(zero2);
+    perThreadVariable.st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
+    perThreadVariable.st_Sff = zero1;
+    perThreadVariable.st_Smm = zero1;
+    perThreadVariable.st_Sfm = zero1;
+    perThreadVariable.st_Sf = zero1;
+    perThreadVariable.st_Sm = zero1;
+    perThreadVariable.st_DerivativeF.SetSize(numberOfParameters);
+    perThreadVariable.st_DerivativeM.SetSize(numberOfParameters);
+    perThreadVariable.st_Differential.SetSize(this->GetNumberOfParameters());
+    perThreadVariable.st_DerivativeF.Fill(zero2);
+    perThreadVariable.st_DerivativeM.Fill(zero2);
+    perThreadVariable.st_Differential.Fill(zero2);
   }
 
 } // end InitializeThreadingParameters()
