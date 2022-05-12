@@ -20,6 +20,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkKernelFunctionBase2.h"
+#include <vector>
 
 
 namespace itk
@@ -217,7 +218,7 @@ protected:
   ParzenWindowHistogramImageToImageMetric();
 
   /** The destructor. */
-  ~ParzenWindowHistogramImageToImageMetric() override;
+  ~ParzenWindowHistogramImageToImageMetric() override = default;
 
   /** Print Self. */
   void
@@ -501,9 +502,8 @@ private:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
                     PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
                     AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct);
-  mutable AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct *
-                       m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
+  mutable std::vector<AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct>
+    m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
 
   /** Variables that can/should be accessed by their Set/Get functions. */
   unsigned long m_NumberOfFixedHistogramBins;

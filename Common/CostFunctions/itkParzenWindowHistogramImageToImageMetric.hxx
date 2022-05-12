@@ -71,22 +71,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ParzenWindow
   /** Initialize the m_ParzenWindowHistogramThreaderParameters */
   this->m_ParzenWindowHistogramThreaderParameters.m_Metric = this;
 
-  // Multi-threading structs
-  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables = nullptr;
-  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = 0;
-
 } // end Constructor
-
-
-/**
- * ******************* Destructor *******************
- */
-
-template <class TFixedImage, class TMovingImage>
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::~ParzenWindowHistogramImageToImageMetric()
-{
-  delete[] this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
-} // end Destructor
 
 
 /**
@@ -458,22 +443,15 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeTh
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
-  if (this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
-  {
-    delete[] this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
-    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables =
-      new AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct[numberOfThreads];
-    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
-  }
+  m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
+  for (auto & perThreadVariable : m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables)
   {
-    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted =
-      NumericTraits<SizeValueType>::Zero;
+    perThreadVariable.st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
 
     // Initialize the joint pdf
-    JointPDFPointer & jointPDF = this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[i].st_JointPDF;
+    JointPDFPointer & jointPDF = perThreadVariable.st_JointPDF;
     if (jointPDF.IsNull())
     {
       jointPDF = JointPDFType::New();

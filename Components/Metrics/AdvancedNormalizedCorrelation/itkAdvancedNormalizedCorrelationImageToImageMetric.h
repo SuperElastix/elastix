@@ -19,6 +19,7 @@
 #define itkAdvancedNormalizedCorrelationImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
+#include <vector>
 
 namespace itk
 {
@@ -184,7 +185,7 @@ public:
 
 protected:
   AdvancedNormalizedCorrelationImageToImageMetric();
-  ~AdvancedNormalizedCorrelationImageToImageMetric() override;
+  ~AdvancedNormalizedCorrelationImageToImageMetric() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
@@ -275,8 +276,8 @@ private:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
                     PaddedCorrelationGetValueAndDerivativePerThreadStruct,
                     AlignedCorrelationGetValueAndDerivativePerThreadStruct);
-  mutable AlignedCorrelationGetValueAndDerivativePerThreadStruct * m_CorrelationGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType m_CorrelationGetValueAndDerivativePerThreadVariablesSize;
+  mutable std::vector<AlignedCorrelationGetValueAndDerivativePerThreadStruct>
+    m_CorrelationGetValueAndDerivativePerThreadVariables;
 };
 
 } // end namespace itk
