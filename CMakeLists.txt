@@ -9,8 +9,8 @@ if( BUILD_SHARED_LIBS )
 endif()
 
 #---------------------------------------------------------------------
-cmake_policy( SET CMP0012 NEW )
-cmake_policy( SET CMP0042 NEW )
+cmake_policy( SET CMP0012 NEW ) # "if() recognizes numbers and boolean constants"
+cmake_policy( SET CMP0042 NEW ) # "MACOSX_RPATH is enabled by default."
 
 #---------------------------------------------------------------------
 include( CTest )
@@ -580,8 +580,6 @@ endif()
 
 #---------------------------------------------------------------------
 # Make it easier to include elastix functionality in other programs.
-
-
 
 
 # The build settings file. (necessary for elastix?)
