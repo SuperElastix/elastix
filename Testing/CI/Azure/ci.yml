@@ -121,6 +121,9 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
+      brew reinstall -v libomp
+    displayName: Reinstall OpenMP
+  - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
   - script: |

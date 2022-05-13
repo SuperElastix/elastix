@@ -39,6 +39,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Reinstall OpenMP on MacOs
+      if: matrix.os == 'macos-10.15'
+      run: |
+       brew reinstall -v libomp 
     
     - name: Make directory structure
       run: |
