@@ -129,6 +129,12 @@ if( ELASTIX_USE_OPENMP )
   endif()
 endif()
 
+if (APPLE)
+  # Work around MacOS CI errors saying:
+  # Modules/ThirdParty/Eigen3/src/itkeigen/…/itkeigen/Eigen/Core:70:10: fatal error: ‘omp.h’ file not found
+  add_compile_definitions( EIGEN_DONT_PARALLELIZE )
+endif()
+
 #----------------------------------------------------------------------
 # Check for the SuiteSparse package
 # We need to do that here, because the link_directories should be set
