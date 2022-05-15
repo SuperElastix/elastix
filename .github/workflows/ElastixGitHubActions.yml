@@ -120,12 +120,24 @@ jobs:
         if(WIN32)
           set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\$ENV{PATH}")
         endif()
-        set(dashboard_cache "
-        ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
-        ELASTIX_USE_GTEST:BOOL=ON
-        USE_ALL_COMPONENTS:BOOL=ON
-        BUILD_TESTING:BOOL=ON
-        ")
+        if(APPLE)
+          # Switch off OpenMP, to work around macOS specific CI errors, saying:
+          # > fatal error: ‘omp.h’ file not found
+          set(dashboard_cache "
+          ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+          ELASTIX_USE_GTEST:BOOL=ON
+          ELASTIX_USE_OPENMP:BOOL=OFF
+          USE_ALL_COMPONENTS:BOOL=ON
+          BUILD_TESTING:BOOL=ON
+          ")
+        else()
+          set(dashboard_cache "
+          ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+          ELASTIX_USE_GTEST:BOOL=ON
+          USE_ALL_COMPONENTS:BOOL=ON
+          BUILD_TESTING:BOOL=ON
+          ")
+        endif()
         string(TIMESTAMP build_date "%Y-%m-%d")
         message("CDash Build Identifier: \${build_date} \${CTEST_BUILD_NAME}")
         message("CTEST_SITE= \${CTEST_SITE}")
