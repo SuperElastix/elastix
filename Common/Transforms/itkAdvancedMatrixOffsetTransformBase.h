@@ -412,6 +412,18 @@ protected:
   virtual void
   ComputeOffset();
 
+  /** Get offset of an AdvancedMatrixOffsetTransformBase
+   *
+   * This method returns the offset value of the AdvancedMatrixOffsetTransformBase.
+   * To define an affine transform, you must set the matrix,
+   * center, and translation OR the matrix and offset.
+   */
+  const OutputVectorType &
+  GetOffset() const
+  {
+    return this->m_Offset;
+  }
+
   /** (spatial) Jacobians and Hessians can mostly be precomputed by this transform.
    * Store them in these member variables.
    * SpatialJacobian is simply m_Matrix */
