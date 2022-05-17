@@ -29,7 +29,6 @@
 #ifdef DIM_1
 typedef struct {
   float matrix;
-  float inverse_matrix;
   float offset;
 } GPUMatrixOffsetTransformBase1D;
 #endif // DIM_1
@@ -37,7 +36,6 @@ typedef struct {
 #ifdef DIM_2
 typedef struct {
   float4 matrix;
-  float4 inverse_matrix;
   float2 offset;
 } GPUMatrixOffsetTransformBase2D;
 #endif // DIM_2
@@ -45,7 +43,6 @@ typedef struct {
 #ifdef DIM_3
 typedef struct {
   float16 matrix;         // OpenCL does not have float9
-  float16 inverse_matrix; // OpenCL does not have float9
   float3  offset;
 } GPUMatrixOffsetTransformBase3D;
 #endif // DIM_3

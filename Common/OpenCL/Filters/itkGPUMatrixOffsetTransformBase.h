@@ -75,10 +75,6 @@ public:
   virtual const CPUMatrixType &
   GetCPUMatrix() const = 0;
 
-  /** Get CPU inverse matrix of an MatrixOffsetTransformBase. */
-  virtual const CPUInverseMatrixType &
-  GetCPUInverseMatrix() const = 0;
-
   /** Get CPU offset of an MatrixOffsetTransformBase. */
   virtual const CPUOutputVectorType &
   GetCPUOffset() const = 0;

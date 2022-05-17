@@ -235,7 +235,6 @@ GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::
       GPUMatrixOffsetTransformBase1D transformBase;
       SetMatrix1<ScalarType>(GetCPUMatrix(), transformBase.matrix, odim, idim);
       SetOffset1<ScalarType>(GetCPUOffset(), transformBase.offset, odim);
-      SetMatrix1<ScalarType>(GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim);
       this->m_ParametersDataManager->SetCPUBufferPointer(&transformBase);
     }
     break;
@@ -244,7 +243,6 @@ GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::
       GPUMatrixOffsetTransformBase2D transformBase;
       SetMatrix2<ScalarType>(GetCPUMatrix(), transformBase.matrix, odim, idim);
       SetOffset2<ScalarType>(GetCPUOffset(), transformBase.offset, odim);
-      SetMatrix2<ScalarType>(GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim);
       this->m_ParametersDataManager->SetCPUBufferPointer(&transformBase);
     }
     break;
@@ -253,7 +251,6 @@ GPUMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::
       GPUMatrixOffsetTransformBase3D transformBase;
       SetMatrix3<ScalarType>(GetCPUMatrix(), transformBase.matrix, odim, idim);
       SetOffset3<ScalarType>(GetCPUOffset(), transformBase.offset, odim);
-      SetMatrix3<ScalarType>(GetCPUInverseMatrix(), transformBase.inverse_matrix, idim, odim);
       this->m_ParametersDataManager->SetCPUBufferPointer(&transformBase);
     }
     break;

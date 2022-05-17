@@ -65,13 +65,6 @@ public:
     return this->GetMatrix();
   }
 
-  /** Get CPU inverse matrix of an MatrixOffsetTransformBase. */
-  virtual const CPUInverseMatrixType &
-  GetCPUInverseMatrix() const
-  {
-    return this->GetInverseMatrix();
-  }
-
   /** Get CPU offset of an MatrixOffsetTransformBase. */
   virtual const CPUOutputVectorType &
   GetCPUOffset() const
