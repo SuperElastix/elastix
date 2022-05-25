@@ -1,29 +1,47 @@
-set( Elastix_DIR @PROJECT_BINARY_DIR@ )
+# ElastixConfig.cmake - Elastix CMake configuration file for external
+# projects.
+#
+
+# This ElastixConfig file is  configured for the @ElastixConfig_TREE@
+# tree.
+
+# Compute this installation's prefix from this file's location:
+get_filename_component(_ELASTIXConfig_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+@ElastixConfig_CODE@
 
 # Add include directories needed to use SuperElastix
 set( ELASTIX_INCLUDE_DIRS @ELX_CONFIG_INCLUDE_DIRECTORIES@ )
 
 # Add list of Elastix library directories
-set( ELASTIX_LIBRARY_DIRS @LIBRARY_OUTPUT_PATH@ )
+set( ELASTIX_LIBRARY_DIRS "${Elastix_INSTALL_PREFIX}/@ELASTIX_LIBRARY_DIR@" )
 
 # Add list of SuperElastix libraries
 set( ELASTIX_LIBRARIES @ELASTIX_LIBRARIES@ )
 
 # The location of the Elastix use-file
-set( ELASTIX_USE_FILE "${Elastix_DIR}/UseElastix.cmake" )
+set( ELASTIX_USE_FILE "${_ELASTIXConfig_DIR}/UseElastix.cmake" )
 
-set( ELASTIX_CONFIG_TARGETS_FILE "${Elastix_DIR}/ElastixTargets.cmake" )
+if(NOT ITK_CONFIG_TARGETS_FILE)
+  find_package(ITK "@ITK_VERSION@" EXACT REQUIRED)
+endif()
+
+
+# Import ELASTIX targets.
+set( ELASTIX_CONFIG_TARGETS_FILE "${_ELASTIXConfig_DIR}/ElastixTargets.cmake")
+if(NOT ELASTIX_TARGETS_IMPORTED)
+  set(ELASTIX_TARGETS_IMPORTED 1)
+  include("${ELASTIX_CONFIG_TARGETS_FILE}")
+endif()
+
 
 # Set some variables that the user might want to use
 set( ELASTIX_USE_OPENMP @ELASTIX_USE_OPENMP@ )
 set( ELASTIX_USE_OPENCL @ELASTIX_USE_OPENCL@ )
 set( ELASTIX_USE_MEVISDICOMTIFF @ELASTIX_USE_MEVISDICOMTIFF@ )
+
+# FIXME - These variable refer to the source and build directories
 set( ELASTIX_DOX_DIR @ELASTIX_DOX_DIR@ )
 set( ELASTIX_HELP_DIR @ELASTIX_HELP_DIR@ )
-
-if (NOT "@ELASTIX_ITK_DIR@" EQUAL "")
-  set( ELASTIX_ITK_DIR @ELASTIX_ITK_DIR@ )
-endif()
 
 # Maintain backwards compatibility by also exporting old-style target information
 set( ELASTIX_ALL_COMPONENT_LIBS @AllComponentLibs@ )

@@ -197,6 +197,9 @@ set( ELASTIX_LIBRARY_DIR "lib"      CACHE STRING
   "Directory for installing library files; path is relative to CMAKE_INSTALL_PREFIX" )
 set( ELASTIX_RUNTIME_DIR "bin"      CACHE STRING
   "Directory for installing runtime files; path is relative to CMAKE_INSTALL_PREFIX" )
+if(NOT ELASTIX_INSTALL_PACKAGE_DIR)
+  set(ELASTIX_INSTALL_PACKAGE_DIR "${ELASTIX_LIBRARY_DIR}/cmake/elastix")
+endif()
 
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
@@ -598,15 +601,30 @@ endforeach()
 string(REPLACE "\\" "/" ELASTIX_ITK_DIR ${ITK_DIR})
 
 # Create the Config.cmake file for the build tree:
+set(ElastixConfig_TREE "build")
+set(ElastixConfig_CODE "if( NOT DEFINED ITK_DIR)
+  set(ITK_DIR \"${ELASTIX_ITK_DIR}\")
+endif()
+")
 set(ELX_CONFIG_INCLUDE_DIRECTORIES "${elxINCLUDE_DIRECTORIES}")
 configure_file( ElastixConfig.cmake.in ElastixConfig.cmake @ONLY )
 
 # Create the Config.cmake file for the install tree:
-set(ELX_CONFIG_INCLUDE_DIRECTORIES "\${CMAKE_CURRENT_LIST_DIR}/../../../include")
+set(ElastixConfig_TREE "install")
+set(ElastixConfig_CODE "set(Elastix_INSTALL_PREFIX \"\${_ELASTIXConfig_DIR}\")")
+# Construct the proper number of get_filename_component(... PATH)
+# calls to compute the installation prefix.
+string(REGEX REPLACE "/" ";" _count "${ELASTIX_INSTALL_PACKAGE_DIR}")
+foreach(p ${_count})
+  set(ElastixConfig_CODE "${ElastixConfig_CODE}
+get_filename_component(Elastix_INSTALL_PREFIX \"\${Elastix_INSTALL_PREFIX}\" PATH)")
+endforeach(p)
+
+set(ELX_CONFIG_INCLUDE_DIRECTORIES "\${Elastix_INSTALL_PREFIX}/include")
 foreach( ELX_INCLUDE_DIR IN ITEMS ${elxINCLUDE_DIRECTORIES} )
   if (NOT ELX_INCLUDE_DIR STREQUAL CMAKE_BINARY_DIR)
     string(REPLACE ${CMAKE_SOURCE_DIR} "" ELX_INCLUDE_DIR ${ELX_INCLUDE_DIR})
-    list(APPEND ELX_CONFIG_INCLUDE_DIRECTORIES "\${CMAKE_CURRENT_LIST_DIR}/../../../include${ELX_INCLUDE_DIR}")
+    list(APPEND ELX_CONFIG_INCLUDE_DIRECTORIES "\${Elastix_INSTALL_PREFIX}/include${ELX_INCLUDE_DIR}")
   endif()
 endforeach()
 
@@ -621,4 +639,11 @@ install(FILES
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/ElastixConfig.cmake"
   "${PROJECT_BINARY_DIR}/ElastixConfigVersion.cmake"
   "${PROJECT_BINARY_DIR}/UseElastix.cmake"
-  DESTINATION lib/cmake/elastix)
+  DESTINATION ${ELASTIX_INSTALL_PACKAGE_DIR}
+  COMPONENT Development
+  )
+
+install(EXPORT ElastixTargets
+  DESTINATION ${ELASTIX_INSTALL_PACKAGE_DIR}
+  COMPONENT Development
+  )
