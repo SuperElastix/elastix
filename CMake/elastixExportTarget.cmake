@@ -27,5 +27,12 @@ function(elastix_export_target tgt)
 
   export(TARGETS ${tgt}
     APPEND FILE "${elastix_BINARY_DIR}/ElastixTargets.cmake"
-  )
+    )
+
+  install(TARGETS ${tgt}
+    EXPORT ElastixTargets
+    RUNTIME DESTINATION ${ELASTIX_INSTALL_RUNTIME_DIR}
+    LIBRARY DESTINATION ${ELASTIX_INSTALL_LIBRARY_DIR}
+    ARCHIVE DESTINATION ${ELASTIX_INSTALL_ARCHIVE_DIR}
+    )
 endfunction()
