@@ -98,11 +98,8 @@ public:
   /** The main function that performs the computation.
    * B-spline specific thing we tried. Can be removed later.
    */
-  virtual void
-  ComputeForBSplineOnly(const ParametersType & mu,
-                        const double &         delta,
-                        double &               maxJJ,
-                        ParametersType &       preconditioner);
+  void
+  ComputeForBSplineOnly(const ParametersType & mu, const double delta, double & maxJJ, ParametersType & preconditioner);
 
   /** The main function that performs the computation.
    * The aims to be a generic function, working for all transformations.

@@ -87,7 +87,7 @@ template <class TFixedImage, class TTransform>
 void
 ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::ComputeForBSplineOnly(
   const ParametersType & mu,
-  const double &         delta,
+  const double           delta,
   double &               maxJJ,
   ParametersType &       preconditioner)
 {

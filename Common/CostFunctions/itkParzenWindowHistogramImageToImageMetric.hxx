@@ -665,7 +665,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
 template <class TFixedImage, class TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDF(JointPDFType * pdf,
-                                                                                      const double & factor) const
+                                                                                      const double   factor) const
 {
   using JointPDFIteratorType = ImageScanlineIterator<JointPDFType>;
   JointPDFIteratorType it(pdf, pdf->GetBufferedRegion());
@@ -691,7 +691,7 @@ template <class TFixedImage, class TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDFDerivatives(
   JointPDFDerivativesType * pdf,
-  const double &            factor) const
+  const double              factor) const
 {
   using JointPDFDerivativesIteratorType = ImageScanlineIterator<JointPDFDerivativesType>;
   JointPDFDerivativesIteratorType it(pdf, pdf->GetBufferedRegion());
@@ -718,7 +718,7 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeMarginalPDF(
   const JointPDFType * itkNotUsed(jointPDF),
   MarginalPDFType &    marginalPDF,
-  const unsigned int & direction) const
+  const unsigned int   direction) const
 {
   using JointPDFLinearIterator = ImageLinearIteratorWithIndex<JointPDFType>;
   // \todo: bug? shouldn't this be over the function argument jointPDF ?

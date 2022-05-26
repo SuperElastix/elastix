@@ -294,7 +294,7 @@ ResamplerBase<TElastix>::SetComponents()
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, const bool & showProgress)
+ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, const bool showProgress)
 {
   /** Make sure the resampler is updated. */
   this->GetAsITKBaseType()->Modified();
@@ -343,7 +343,7 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, cons
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * filename, const bool & showProgress)
+ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * filename, const bool showProgress)
 {
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
   const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(

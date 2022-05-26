@@ -150,8 +150,8 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
 
 template <class TElastix>
 void
-FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filename,
-                                                   const unsigned int & level) // const
+FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
+                                                   const unsigned int  level) // const
 {
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";

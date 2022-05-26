@@ -126,16 +126,16 @@ public:
   /** Print the progress to screen. A float value between 0.0 and 1.0
    * is expected as input.
    */
-  virtual void
-  PrintProgress(const float & progress) const;
+  void
+  PrintProgress(const float progress) const;
 
   /** Update and possibly print the progress to screen.
    * The progress information on screen is refreshed according to the
    * UpdateFrequency, which is assumed being specified beforehand using the
    * SetUpdateFrequency function.
    */
-  virtual void
-  UpdateAndPrintProgress(const unsigned long & currentVoxelNumber) const;
+  void
+  UpdateAndPrintProgress(const unsigned long currentVoxelNumber) const;
 
   /** Set and get the string starting each progress report. */
   itkSetStringMacro(StartString);

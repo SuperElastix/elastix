@@ -179,7 +179,7 @@ ProgressCommand::Execute(const itk::Object * caller, const itk::EventObject & ev
  */
 
 void
-ProgressCommand::PrintProgress(const float & progress) const
+ProgressCommand::PrintProgress(const float progress) const
 {
   /** Print the progress to the screen. */
   const int progressInt = itk::Math::Round<float>(100 * progress);
@@ -200,7 +200,7 @@ ProgressCommand::PrintProgress(const float & progress) const
  */
 
 void
-ProgressCommand::UpdateAndPrintProgress(const unsigned long & currentVoxelNumber) const
+ProgressCommand::UpdateAndPrintProgress(const unsigned long currentVoxelNumber) const
 {
   if (this->m_StreamOutputIsConsole)
   {

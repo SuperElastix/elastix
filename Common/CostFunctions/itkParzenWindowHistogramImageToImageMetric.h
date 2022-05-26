@@ -369,21 +369,19 @@ protected:
                             const NonZeroJacobianIndicesType & nzji) const;
 
   /** Multiply the pdf entries by the given normalization factor. */
-  virtual void
-  NormalizeJointPDF(JointPDFType * pdf, const double & factor) const;
+  void
+  NormalizeJointPDF(JointPDFType * pdf, const double factor) const;
 
   /** Multiply the pdf derivatives entries by the given normalization factor. */
-  virtual void
-  NormalizeJointPDFDerivatives(JointPDFDerivativesType * pdf, const double & factor) const;
+  void
+  NormalizeJointPDFDerivatives(JointPDFDerivativesType * pdf, const double factor) const;
 
   /** Compute marginal pdfs by summing over the joint pdf
    * direction = 0: fixed marginal pdf
    * direction = 1: moving marginal pdf
    */
-  virtual void
-  ComputeMarginalPDF(const JointPDFType * jointPDF,
-                     MarginalPDFType &    marginalPDF,
-                     const unsigned int & direction) const;
+  void
+  ComputeMarginalPDF(const JointPDFType * jointPDF, MarginalPDFType & marginalPDF, const unsigned int direction) const;
 
   /** Compute incremental marginal pdfs. Integrates the incremental PDF
    * to obtain the fixed and moving marginal pdfs at once.
