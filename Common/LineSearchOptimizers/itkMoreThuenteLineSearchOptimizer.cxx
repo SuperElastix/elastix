@@ -575,18 +575,18 @@ MoreThuenteLineSearchOptimizer::ForceSufficientDecreaseInIntervalWidth()
  */
 
 int
-MoreThuenteLineSearchOptimizer::SafeGuardedStep(double &       stx,
-                                                double &       fx,
-                                                double &       dx,
-                                                double &       sty,
-                                                double &       fy,
-                                                double &       dy,
-                                                double &       stp,
-                                                const double & fp,
-                                                const double & dp,
-                                                bool &         brackt,
-                                                const double & stpmin,
-                                                const double & stpmax) const
+MoreThuenteLineSearchOptimizer::SafeGuardedStep(double &     stx,
+                                                double &     fx,
+                                                double &     dx,
+                                                double &     sty,
+                                                double &     fy,
+                                                double &     dy,
+                                                double &     stp,
+                                                const double fp,
+                                                const double dp,
+                                                bool &       brackt,
+                                                const double stpmin,
+                                                const double stpmax) const
 {
   /** This function is largely just a copy of the following function
    * taken from netlib/lbfgs.c */

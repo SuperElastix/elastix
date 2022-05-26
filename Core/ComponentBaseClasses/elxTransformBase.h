@@ -288,7 +288,7 @@ protected:
    * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
    */
   void
-  AutomaticScalesEstimationStackTransform(const unsigned int & numSubTransforms, ScalesType & scales) const;
+  AutomaticScalesEstimationStackTransform(const unsigned int numSubTransforms, ScalesType & scales) const;
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);

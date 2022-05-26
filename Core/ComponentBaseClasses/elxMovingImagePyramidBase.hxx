@@ -153,8 +153,8 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
 
 template <class TElastix>
 void
-MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string &  filename,
-                                                    const unsigned int & level) // const
+MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
+                                                    const unsigned int  level) // const
 {
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";

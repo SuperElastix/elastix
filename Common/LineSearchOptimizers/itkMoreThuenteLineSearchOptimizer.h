@@ -233,18 +233,18 @@ protected:
    * the interval of uncertainty.
    */
   virtual int
-  SafeGuardedStep(double &       stx,
-                  double &       fx,
-                  double &       dx,
-                  double &       sty,
-                  double &       fy,
-                  double &       dy,
-                  double &       stp,
-                  const double & fp,
-                  const double & dp,
-                  bool &         brackt,
-                  const double & stpmin,
-                  const double & stpmax) const;
+  SafeGuardedStep(double &     stx,
+                  double &     fx,
+                  double &     dx,
+                  double &     sty,
+                  double &     fy,
+                  double &     dy,
+                  double &     stp,
+                  const double fp,
+                  const double dp,
+                  bool &       brackt,
+                  const double stpmin,
+                  const double stpmax) const;
 
   double m_step;
   double m_stepx;

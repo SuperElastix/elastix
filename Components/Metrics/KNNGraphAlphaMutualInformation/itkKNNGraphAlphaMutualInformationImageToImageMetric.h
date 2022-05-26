@@ -302,11 +302,11 @@ private:
    * - The sparse Jacobian of the transformation (dT/dmu).
    * - The spatial derivatives of the moving (feature) images (dm/dx).
    */
-  virtual void
+  void
   ComputeListSampleValuesAndDerivativePlusJacobian(const ListSamplePointer &               listSampleFixed,
                                                    const ListSamplePointer &               listSampleMoving,
                                                    const ListSamplePointer &               listSampleJoint,
-                                                   const bool &                            doDerivative,
+                                                   const bool                              doDerivative,
                                                    TransformJacobianContainerType &        jacobians,
                                                    TransformJacobianIndicesContainerType & jacobiansIndices,
                                                    SpatialDerivativeContainerType &        spatialDerivatives) const;

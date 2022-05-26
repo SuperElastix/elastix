@@ -1401,8 +1401,8 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
 
 template <class TElastix>
 void
-TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned int & numberOfSubTransforms,
-                                                                 ScalesType &         scales) const
+TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned int numberOfSubTransforms,
+                                                                 ScalesType &       scales) const
 {
   using FixedImageRegionType = typename FixedImageType::RegionType;
   using FixedImageIndexType = typename FixedImageType::IndexType;

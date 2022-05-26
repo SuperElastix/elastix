@@ -283,7 +283,7 @@ template <class TElastix>
 void
 SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
                                                   PointSetPointer &   landmarkPointSet,
-                                                  const bool &        landmarksInFixedImage)
+                                                  const bool          landmarksInFixedImage)
 {
   /** Typedef's. */
   using IndexType = typename FixedImageType::IndexType;

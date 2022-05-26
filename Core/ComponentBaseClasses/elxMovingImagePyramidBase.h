@@ -114,9 +114,9 @@ public:
   SetMovingSchedule();
 
   /** Method to write the pyramid image. */
-  virtual void
-  WritePyramidImage(const std::string &  filename,
-                    const unsigned int & level); // const;
+  void
+  WritePyramidImage(const std::string & filename,
+                    const unsigned int  level); // const;
 
 protected:
   /** The constructor. */

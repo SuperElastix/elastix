@@ -86,7 +86,7 @@ public:
 
   /** Evaluate the function. */
   inline void
-  Evaluate(const double & u, double * weights) const
+  Evaluate(const double u, double * weights) const
   {
     Self::FastEvaluate(u, weights);
   }
@@ -124,7 +124,7 @@ private:
 
   /** Second order spline. */
   inline static double
-  Evaluate(const Dispatch<2> &, const double & u)
+  Evaluate(const Dispatch<2> &, const double u)
   {
     double absValue = std::abs(u);
 
@@ -152,7 +152,7 @@ private:
 
 
   inline static void
-  Evaluate(const Dispatch<2> &, const double & u, double * weights)
+  Evaluate(const Dispatch<2> &, const double u, double * weights)
   {
     weights[0] = 1.0;
     weights[1] = -2.0;
@@ -162,7 +162,7 @@ private:
 
   /**  Third order spline. */
   inline static double
-  Evaluate(const Dispatch<3> &, const double & u)
+  Evaluate(const Dispatch<3> &, const double u)
   {
     const double absValue = std::abs(u);
 
@@ -182,7 +182,7 @@ private:
 
 
   inline static void
-  Evaluate(const Dispatch<3> &, const double & u, double * weights)
+  Evaluate(const Dispatch<3> &, const double u, double * weights)
   {
     weights[0] = -u + 2.0;
     weights[1] = 3.0 * u - 5.0;
@@ -193,14 +193,14 @@ private:
 
   /** Unimplemented spline order */
   inline static double
-  Evaluate(const DispatchBase &, const double &)
+  Evaluate(const DispatchBase &, const double)
   {
     itkGenericExceptionMacro("Evaluate not implemented for spline order " << SplineOrder);
   }
 
 
   inline static void
-  Evaluate(const DispatchBase &, const double &, double *)
+  Evaluate(const DispatchBase &, const double, double *)
   {
     itkGenericExceptionMacro("Evaluate not implemented for spline order " << SplineOrder);
   }

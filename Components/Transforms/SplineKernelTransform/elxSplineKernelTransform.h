@@ -228,10 +228,8 @@ protected:
   DetermineTargetLandmarks();
 
   /** General function to read all landmarks. */
-  virtual void
-  ReadLandmarkFile(const std::string & filename,
-                   PointSetPointer &   landmarkPointSet,
-                   const bool &        landmarksInFixedImage);
+  void
+  ReadLandmarkFile(const std::string & filename, PointSetPointer & landmarkPointSet, const bool landmarksInFixedImage);
 
   /** The itk kernel transform. */
   KernelTransformPointer m_KernelTransform;

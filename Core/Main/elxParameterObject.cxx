@@ -44,7 +44,7 @@ ParameterObject::SetParameterMap(const ParameterMapType & parameterMap)
  */
 
 void
-ParameterObject::SetParameterMap(const unsigned int & index, const ParameterMapType & parameterMap)
+ParameterObject::SetParameterMap(const unsigned int index, const ParameterMapType & parameterMap)
 {
   this->m_ParameterMap[index] = parameterMap;
 }
@@ -82,7 +82,7 @@ ParameterObject::AddParameterMap(const ParameterMapType & parameterMap)
  */
 
 const ParameterObject::ParameterMapType &
-ParameterObject::GetParameterMap(const unsigned int & index) const
+ParameterObject::GetParameterMap(const unsigned int index) const
 {
   return this->m_ParameterMap[index];
 }
@@ -93,9 +93,7 @@ ParameterObject::GetParameterMap(const unsigned int & index) const
  */
 
 void
-ParameterObject::SetParameter(const unsigned int &       index,
-                              const ParameterKeyType &   key,
-                              const ParameterValueType & value)
+ParameterObject::SetParameter(const unsigned int index, const ParameterKeyType & key, const ParameterValueType & value)
 {
   this->m_ParameterMap[index][key] = ParameterValueVectorType(1, value);
 }
@@ -106,7 +104,7 @@ ParameterObject::SetParameter(const unsigned int &       index,
  */
 
 void
-ParameterObject::SetParameter(const unsigned int &             index,
+ParameterObject::SetParameter(const unsigned int               index,
                               const ParameterKeyType &         key,
                               const ParameterValueVectorType & value)
 {
@@ -147,7 +145,7 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
  */
 
 const ParameterObject::ParameterValueVectorType &
-ParameterObject::GetParameter(const unsigned int & index, const ParameterKeyType & key)
+ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType & key)
 {
   return this->m_ParameterMap[index][key];
 }
@@ -158,7 +156,7 @@ ParameterObject::GetParameter(const unsigned int & index, const ParameterKeyType
  */
 
 void
-ParameterObject::RemoveParameter(const unsigned int & index, const ParameterKeyType & key)
+ParameterObject::RemoveParameter(const unsigned int index, const ParameterKeyType & key)
 {
   this->m_ParameterMap[index].erase(key);
 }
@@ -379,9 +377,9 @@ ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & paramete
  */
 
 const ParameterObject::ParameterMapType
-ParameterObject::GetDefaultParameterMap(const std::string &  transformName,
-                                        const unsigned int & numberOfResolutions,
-                                        const double &       finalGridSpacingInPhysicalUnits)
+ParameterObject::GetDefaultParameterMap(const std::string & transformName,
+                                        const unsigned int  numberOfResolutions,
+                                        const double        finalGridSpacingInPhysicalUnits)
 {
   // Parameters that depend on size and number of resolutions
   ParameterMapType parameterMap = ParameterMapType();

@@ -734,7 +734,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
   ComputeListSampleValuesAndDerivativePlusJacobian(const ListSamplePointer &               listSampleFixed,
                                                    const ListSamplePointer &               listSampleMoving,
                                                    const ListSamplePointer &               listSampleJoint,
-                                                   const bool &                            doDerivative,
+                                                   const bool                              doDerivative,
                                                    TransformJacobianContainerType &        jacobianContainer,
                                                    TransformJacobianIndicesContainerType & jacobianIndicesContainer,
                                                    SpatialDerivativeContainerType & spatialDerivativesContainer) const

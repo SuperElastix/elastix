@@ -134,7 +134,7 @@ private:
 
   /** First order spline */
   inline static double
-  Evaluate(const Dispatch<1> &, const double & u)
+  Evaluate(const Dispatch<1> &, const double u)
   {
     const double absValue = std::abs(u);
 
@@ -154,7 +154,7 @@ private:
 
 
   inline static void
-  Evaluate(const Dispatch<1> &, const double & u, double * weights)
+  Evaluate(const Dispatch<1> &, const double u, double * weights)
   {
     // MS \todo: check
     const double absValue = std::abs(u);
@@ -179,7 +179,7 @@ private:
 
   /** Second order spline. */
   inline static double
-  Evaluate(const Dispatch<2> &, const double & u)
+  Evaluate(const Dispatch<2> &, const double u)
   {
     double absValue = std::abs(u);
 
@@ -199,7 +199,7 @@ private:
 
 
   inline static void
-  Evaluate(const Dispatch<2> &, const double & u, double * weights)
+  Evaluate(const Dispatch<2> &, const double u, double * weights)
   {
     // MS \todo: check
     weights[0] = u - 1.5;
@@ -210,7 +210,7 @@ private:
 
   /**  Third order spline. */
   inline static double
-  Evaluate(const Dispatch<3> &, const double & u)
+  Evaluate(const Dispatch<3> &, const double u)
   {
     const double absValue = std::abs(u);
     const double sqrValue = u * u;
@@ -249,7 +249,7 @@ private:
 
 
   inline static void
-  Evaluate(const Dispatch<3> &, const double & u, double * weights)
+  Evaluate(const Dispatch<3> &, const double u, double * weights)
   {
     const double absValue = std::abs(u);
     const double sqrValue = u * u;
