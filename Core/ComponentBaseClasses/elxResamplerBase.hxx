@@ -58,13 +58,14 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
    */
   using FixedImageType = typename ElastixType::FixedImageType;
   FixedImageType * fixedImage = this->m_Elastix->GetFixedImage();
+  ITKBaseType &    resampleImageFilter = this->GetSelf();
 
   /** Set the region info to the same values as in the fixedImage. */
-  this->GetAsITKBaseType()->SetSize(fixedImage->GetLargestPossibleRegion().GetSize());
-  this->GetAsITKBaseType()->SetOutputStartIndex(fixedImage->GetLargestPossibleRegion().GetIndex());
-  this->GetAsITKBaseType()->SetOutputOrigin(fixedImage->GetOrigin());
-  this->GetAsITKBaseType()->SetOutputSpacing(fixedImage->GetSpacing());
-  this->GetAsITKBaseType()->SetOutputDirection(fixedImage->GetDirection());
+  resampleImageFilter.SetSize(fixedImage->GetLargestPossibleRegion().GetSize());
+  resampleImageFilter.SetOutputStartIndex(fixedImage->GetLargestPossibleRegion().GetIndex());
+  resampleImageFilter.SetOutputOrigin(fixedImage->GetOrigin());
+  resampleImageFilter.SetOutputSpacing(fixedImage->GetSpacing());
+  resampleImageFilter.SetOutputDirection(fixedImage->GetDirection());
 
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
@@ -73,7 +74,7 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
   this->m_Configuration->ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, false);
 
   /** Set the defaultPixelValue. */
-  this->GetAsITKBaseType()->SetDefaultPixelValue(defaultPixelValue);
+  resampleImageFilter.SetDefaultPixelValue(defaultPixelValue);
 
 } // end BeforeRegistrationBase()
 
@@ -278,12 +279,13 @@ ResamplerBase<TElastix>::SetComponents()
   /** Set the transform, the interpolator and the inputImage
    * (which is the moving image).
    */
-  this->GetAsITKBaseType()->SetTransform(BaseComponent::AsITKBaseType(this->m_Elastix->GetElxTransformBase()));
+  ITKBaseType & resampleImageFilter = this->GetSelf();
 
-  this->GetAsITKBaseType()->SetInterpolator(
-    BaseComponent::AsITKBaseType(this->m_Elastix->GetElxResampleInterpolatorBase()));
+  resampleImageFilter.SetTransform(BaseComponent::AsITKBaseType(this->m_Elastix->GetElxTransformBase()));
 
-  this->GetAsITKBaseType()->SetInput(this->m_Elastix->GetMovingImage());
+  resampleImageFilter.SetInterpolator(BaseComponent::AsITKBaseType(this->m_Elastix->GetElxResampleInterpolatorBase()));
+
+  resampleImageFilter.SetInput(this->m_Elastix->GetMovingImage());
 
 } // end SetComponents()
 
@@ -296,8 +298,10 @@ template <class TElastix>
 void
 ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, const bool showProgress)
 {
+  ITKBaseType & resampleImageFilter = this->GetSelf();
+
   /** Make sure the resampler is updated. */
-  this->GetAsITKBaseType()->Modified();
+  resampleImageFilter.Modified();
 
   /** Add a progress observer to the resampler. */
   const auto progressObserver = BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommandType::New();
@@ -311,7 +315,7 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, cons
   /** Do the resampling. */
   try
   {
-    this->GetAsITKBaseType()->Update();
+    resampleImageFilter.Update();
   }
   catch (itk::ExceptionObject & excp)
   {
@@ -326,7 +330,7 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, cons
   }
 
   /** Perform the writing. */
-  this->WriteResultImage(this->GetAsITKBaseType()->GetOutput(), filename, showProgress);
+  this->WriteResultImage(resampleImageFilter.GetOutput(), filename, showProgress);
 
   /** Disconnect from the resampler. */
   if (showProgress && (progressObserver != nullptr))
@@ -345,9 +349,11 @@ template <class TElastix>
 void
 ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * filename, const bool showProgress)
 {
+  ITKBaseType & resampleImageFilter = this->GetSelf();
+
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
   const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
-    this->GetAsITKBaseType()->GetInterpolator());
+    resampleImageFilter.GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings.
@@ -355,7 +361,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
 
   if (testptr != nullptr)
   {
-    this->GetAsITKBaseType()->SetTransform(testptr->GetTransform());
+    resampleImageFilter.SetTransform(testptr->GetTransform());
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
@@ -429,9 +435,10 @@ void
 ResamplerBase<TElastix>::CreateItkResultImage()
 {
   itk::DataObject::Pointer resultImage;
+  ITKBaseType &            resampleImageFilter = this->GetSelf();
 
   /** Make sure the resampler is updated. */
-  this->GetAsITKBaseType()->Modified();
+  resampleImageFilter.Modified();
 
   const auto progressObserver =
     BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommandType::CreateAndConnect(*(this->GetAsITKBaseType()));
@@ -439,7 +446,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   /** Do the resampling. */
   try
   {
-    this->GetAsITKBaseType()->Update();
+    resampleImageFilter.Update();
   }
   catch (itk::ExceptionObject & excp)
   {
@@ -455,14 +462,14 @@ ResamplerBase<TElastix>::CreateItkResultImage()
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
   const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
-    this->GetAsITKBaseType()->GetInterpolator());
+    resampleImageFilter.GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings */
 
   if (testptr != nullptr)
   {
-    this->GetAsITKBaseType()->SetTransform(testptr->GetTransform());
+    resampleImageFilter.SetTransform(testptr->GetTransform());
   }
 
   /** Read output pixeltype from parameter the file. */
@@ -481,7 +488,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
-  infoChanger->SetInput(this->GetAsITKBaseType()->GetOutput());
+  infoChanger->SetInput(resampleImageFilter.GetOutput());
 
   /** cast the image to the correct output image Type */
   if (resultImagePixelType == "char")
@@ -601,11 +608,13 @@ ResamplerBase<TElastix>::ReadFromFile()
     /** \todo quit program nicely. */
   }
 
+  ITKBaseType & resampleImageFilter = this->GetSelf();
+
   /** Set the region info to the same values as in the fixedImage. */
-  this->GetAsITKBaseType()->SetSize(size);
-  this->GetAsITKBaseType()->SetOutputStartIndex(index);
-  this->GetAsITKBaseType()->SetOutputOrigin(origin);
-  this->GetAsITKBaseType()->SetOutputSpacing(spacing);
+  resampleImageFilter.SetSize(size);
+  resampleImageFilter.SetOutputStartIndex(index);
+  resampleImageFilter.SetOutputOrigin(origin);
+  resampleImageFilter.SetOutputSpacing(spacing);
 
   /** Set the direction cosines. If no direction cosines
    * should be used, set identity cosines, to simulate the
@@ -615,7 +624,7 @@ ResamplerBase<TElastix>::ReadFromFile()
   {
     direction.SetIdentity();
   }
-  this->GetAsITKBaseType()->SetOutputDirection(direction);
+  resampleImageFilter.SetOutputDirection(direction);
 
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
@@ -625,7 +634,7 @@ ResamplerBase<TElastix>::ReadFromFile()
 
   if (found)
   {
-    this->GetAsITKBaseType()->SetDefaultPixelValue(static_cast<OutputPixelType>(defaultPixelValue));
+    resampleImageFilter.SetDefaultPixelValue(static_cast<OutputPixelType>(defaultPixelValue));
   }
 
 } // end ReadFromFile()
@@ -660,7 +669,7 @@ ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType & paramet
   parameterMap["Resampler"] = { this->elxGetClassName() };
 
   /** Store the DefaultPixelValue. */
-  parameterMap["DefaultPixelValue"] = { Conversion::ToString(this->GetAsITKBaseType()->GetDefaultPixelValue()) };
+  parameterMap["DefaultPixelValue"] = { Conversion::ToString(this->GetSelf().GetDefaultPixelValue()) };
 
   /** Store the output image format. */
   std::string resultImageFormat = "mhd";
