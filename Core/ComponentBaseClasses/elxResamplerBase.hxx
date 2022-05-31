@@ -567,7 +567,7 @@ ResamplerBase<TElastix>::ReadFromFile()
   SpacingType     spacing;
   IndexType       index;
   OriginPointType origin;
-  SizeType        size;
+  SizeType        size = { { 0 } };
   auto            direction = DirectionType::GetIdentity();
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
@@ -604,7 +604,7 @@ ResamplerBase<TElastix>::ReadFromFile()
   }
   if (sum > 0)
   {
-    xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
+    xl::xout["error"] << "ERROR: One or more image sizes are 0 or unspecified!" << std::endl;
     /** \todo quit program nicely. */
   }
 
