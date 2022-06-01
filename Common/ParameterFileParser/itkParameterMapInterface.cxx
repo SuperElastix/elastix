@@ -135,11 +135,10 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
   if (!StringCast(parameterValueString, parameterValue))
   {
     /** Trying to read a string other than "true" or "false" as a boolean. */
-    std::stringstream ss;
-    ss << "ERROR: Entry number " << entry_nr << " for the parameter \"" << parameterName
-       << "\" should be a boolean, i.e. either \"true\" or \"false\", but it reads \"" << parameterValueString << "\".";
-
-    itkExceptionMacro(<< ss.str());
+    itkExceptionMacro("ERROR: Entry number "
+                      << entry_nr << " for the parameter \"" << parameterName
+                      << "\" should be a boolean, i.e. either \"true\" or \"false\", but it reads \""
+                      << parameterValueString << "\".");
   }
 
   return dummy;
@@ -319,21 +318,18 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
   /** Check. */
   if (entry_nr_start > entry_nr_end)
   {
-    std::stringstream ss;
-    ss << "WARNING: The entry number start (" << entry_nr_start << ") should be smaller than entry number end ("
-       << entry_nr_end << "). It was requested for parameter \"" << parameterName << "\"." << std::endl;
-
     /** Programming error: just throw an exception. */
-    itkExceptionMacro(<< ss.str());
+    itkExceptionMacro("WARNING: The entry number start ("
+                      << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
+                      << "). It was requested for parameter \"" << parameterName << "\"." << std::endl);
   }
 
   /** Check if it exists at the requested entry numbers. */
   if (entry_nr_end >= numberOfEntries)
   {
-    std::stringstream ss;
-    ss << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number " << entry_nr_end
-       << ".\nThe default empty string \"\" is used instead." << std::endl;
-    itkExceptionMacro(<< ss.str());
+    itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
+                                                  << entry_nr_end << ".\nThe default empty string \"\" is used instead."
+                                                  << std::endl);
   }
 
   /** Get the vector of parameters. */

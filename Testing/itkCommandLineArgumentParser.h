@@ -164,12 +164,10 @@ public:
       /** Check if the cast was successful. */
       if (!castSuccesful)
       {
-        std::stringstream ss;
-        ss << "ERROR: Casting entry number " << 0 << " for the parameter \"" << key << "\" failed!\n"
-           << "  You tried to cast \"" << this->m_Argv[keyIndex + 1] << "\" from std::string to "
-           << typeid(arg[0]).name() << std::endl;
-
-        itkExceptionMacro(<< ss.str());
+        itkExceptionMacro("ERROR: Casting entry number " << 0 << " for the parameter \"" << key << "\" failed!\n"
+                                                         << "  You tried to cast \"" << this->m_Argv[keyIndex + 1]
+                                                         << "\" from std::string to " << typeid(arg[0]).name()
+                                                         << std::endl);
       }
 
       /** Fill the arg vector with the casted value. */
