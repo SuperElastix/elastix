@@ -306,11 +306,11 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
   {
     if (printThisErrorMessage && this->m_PrintErrorMessages)
     {
-      std::ostringstream ss;
-      ss << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers " << entry_nr_start
-         << " and " << entry_nr_end << ", does not exist at all.\n"
-         << "  The default values are used instead." << std::endl;
-      errorMessage = ss.str();
+      std::ostringstream outputStringStream;
+      outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
+                         << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
+                         << "  The default values are used instead." << std::endl;
+      errorMessage = outputStringStream.str();
     }
     return false;
   }
