@@ -274,8 +274,8 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
       ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
       for (unsigned int i = 0; i < parameterMapValueVector.size(); ++i)
       {
-        std::stringstream stream(parameterMapValueVector[i]);
-        float             number;
+        std::istringstream stream(parameterMapValueVector[i]);
+        float              number;
         stream >> number;
         if (stream.fail() || stream.bad())
         {
@@ -507,8 +507,8 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
 
       for (unsigned int j = 0; j < parameterMapValueVector.size(); ++j)
       {
-        std::stringstream stream(parameterMapValueVector[j]);
-        float             number;
+        std::istringstream stream(parameterMapValueVector[j]);
+        float              number;
         stream >> number;
         if (stream.fail())
         {

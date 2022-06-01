@@ -312,7 +312,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     /** Set initial transform to an index number instead of a parameter filename. */
     if (i > 0)
     {
-      std::stringstream toString;
+      std::ostringstream toString;
       toString << (i - 1);
       this->m_TransformParametersList[i]["InitialTransformParametersFileName"][0] = toString.str();
     }
