@@ -190,7 +190,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
     for (MeshIdType meshId = 0; meshId < this->m_NumberOfMeshes; ++meshId, ++ch)
     {
 
-      std::ostringstream makeFileName("");
+      std::ostringstream makeFileName;
       makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "resultmesh" << ch << metricNumber << "."
                    << this->m_Configuration->GetElastixLevel() << ".R" << level << ".It" << std::setfill('0')
                    << std::setw(7) << iter << "." << resultMeshFormat;
@@ -239,7 +239,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
     for (MeshIdType meshId = 0; meshId < this->m_NumberOfMeshes; ++meshId, ++ch)
     {
 
-      std::ostringstream makeFileName("");
+      std::ostringstream makeFileName;
       makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "resultmesh" << ch << metricNumber << "."
                    << this->m_Configuration->GetElastixLevel() << ".R" << level << "." << resultMeshFormat;
 

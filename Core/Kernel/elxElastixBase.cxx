@@ -48,14 +48,14 @@ GenerateFileNameContainer(const Configuration & configuration,
   const auto fileNameContainer = ElastixBase::FileNameContainerType::New();
 
   /** Try optionkey0. */
-  std::ostringstream argusedss("");
+  std::ostringstream argusedss;
   argusedss << optionkey << 0;
   std::string argused = argusedss.str();
   std::string check = configuration.GetCommandLineArgument(argused);
   if (check.empty())
   {
     /** Try optionkey. */
-    std::ostringstream argusedss2("");
+    std::ostringstream argusedss2;
     argusedss2 << optionkey;
     argused = argusedss2.str();
     check = configuration.GetCommandLineArgument(argused);
@@ -93,7 +93,7 @@ GenerateFileNameContainer(const Configuration & configuration,
     bool         readsuccess = true;
     while (readsuccess)
     {
-      std::ostringstream argusedss2("");
+      std::ostringstream argusedss2;
       argusedss2 << optionkey << i;
       argused = argusedss2.str();
       check = configuration.GetCommandLineArgument(argused);
@@ -290,7 +290,7 @@ ElastixBase::BeforeAllBase()
   bool         loop = true;
   while (loop)
   {
-    std::ostringstream tempPname("");
+    std::ostringstream tempPname;
     tempPname << "-p(" << i << ")";
     check = this->GetConfiguration()->GetCommandLineArgument(tempPname.str());
     if (check.empty())

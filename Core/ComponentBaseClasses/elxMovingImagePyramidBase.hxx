@@ -62,7 +62,7 @@ MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
   if (writePyramidImage)
   {
     /** Create a name for the final result. */
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << this->m_Configuration->GetCommandLineArgument("-out");
     makeFileName << this->GetComponentLabel() << "." << this->m_Configuration->GetElastixLevel() << ".R" << level << "."
                  << resultImageFormat;

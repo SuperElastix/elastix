@@ -60,7 +60,7 @@ Conversion::SecondsToDHMS(const double totalSeconds, const unsigned int precisio
 
   /** Create a string in days, hours, minutes and seconds. */
   bool               nonzero = false;
-  std::ostringstream make_string("");
+  std::ostringstream make_string;
   if (days != 0)
   {
     make_string << days << "d";

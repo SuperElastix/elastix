@@ -279,7 +279,7 @@ main(int argc, char * argv[])
     // To do: Add SuiteSparse tests.
 
     // Write L Matrix to Matlab file. For inspection of matrix appearance.
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << argv[2] << "/LMatrix_N" << numberOfLandmarks << ".mat";
     vnl_matlab_filewrite matlabWriter(makeFileName.str().c_str());
     matlabWriter.write(lMatrix, "lMatrix");
