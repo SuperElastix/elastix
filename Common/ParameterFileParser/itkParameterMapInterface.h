@@ -146,12 +146,12 @@ public:
     /** Check if the requested parameter exists. */
     if (numberOfEntries == 0)
     {
-      std::stringstream ss;
-      ss << "WARNING: The parameter \"" << parameterName << "\", requested at entry number " << entry_nr
-         << ", does not exist at all.\n"
-         << "  The default value \"" << parameterValue << "\" is used instead." << std::endl;
       if (printThisErrorMessage && this->m_PrintErrorMessages)
       {
+        std::stringstream ss;
+        ss << "WARNING: The parameter \"" << parameterName << "\", requested at entry number " << entry_nr
+           << ", does not exist at all.\n"
+           << "  The default value \"" << parameterValue << "\" is used instead." << std::endl;
         errorMessage = ss.str();
       }
 
@@ -164,11 +164,11 @@ public:
     /** Check if it exists at the requested entry number. */
     if (entry_nr >= numberOfEntries)
     {
-      std::stringstream ss;
-      ss << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number " << entry_nr
-         << ".\n  The default value \"" << parameterValue << "\" is used instead." << std::endl;
       if (printThisErrorMessage && this->m_PrintErrorMessages)
       {
+        std::stringstream ss;
+        ss << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number " << entry_nr
+           << ".\n  The default value \"" << parameterValue << "\" is used instead." << std::endl;
         errorMessage = ss.str();
       }
       return false;
@@ -296,12 +296,12 @@ public:
     /** Check if the requested parameter exists. */
     if (numberOfEntries == 0)
     {
-      std::stringstream ss;
-      ss << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers " << entry_nr_start
-         << " and " << entry_nr_end << ", does not exist at all.\n"
-         << "  The default values are used instead." << std::endl;
       if (printThisErrorMessage && this->m_PrintErrorMessages)
       {
+        std::stringstream ss;
+        ss << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers " << entry_nr_start
+           << " and " << entry_nr_end << ", does not exist at all.\n"
+           << "  The default values are used instead." << std::endl;
         errorMessage = ss.str();
       }
       return false;

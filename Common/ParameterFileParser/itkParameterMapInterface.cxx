@@ -304,12 +304,12 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
   /** Check if the requested parameter exists. */
   if (numberOfEntries == 0)
   {
-    std::stringstream ss;
-    ss << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers " << entry_nr_start
-       << " and " << entry_nr_end << ", does not exist at all.\n"
-       << "  The default values are used instead." << std::endl;
     if (printThisErrorMessage && this->m_PrintErrorMessages)
     {
+      std::stringstream ss;
+      ss << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers " << entry_nr_start
+         << " and " << entry_nr_end << ", does not exist at all.\n"
+         << "  The default values are used instead." << std::endl;
       errorMessage = ss.str();
     }
     return false;
