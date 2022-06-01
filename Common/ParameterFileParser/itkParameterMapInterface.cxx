@@ -309,7 +309,7 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
       std::ostringstream outputStringStream;
       outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
                          << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
-                         << "  The default values are used instead." << std::endl;
+                         << "  The default values are used instead.\n";
       errorMessage = outputStringStream.str();
     }
     return false;
@@ -321,15 +321,15 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
     /** Programming error: just throw an exception. */
     itkExceptionMacro("WARNING: The entry number start ("
                       << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
-                      << "). It was requested for parameter \"" << parameterName << "\"." << std::endl);
+                      << "). It was requested for parameter \"" << parameterName << "\".\n");
   }
 
   /** Check if it exists at the requested entry numbers. */
   if (entry_nr_end >= numberOfEntries)
   {
     itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
-                                                  << entry_nr_end << ".\nThe default empty string \"\" is used instead."
-                                                  << std::endl);
+                                                  << entry_nr_end
+                                                  << ".\nThe default empty string \"\" is used instead.\n");
   }
 
   /** Get the vector of parameters. */

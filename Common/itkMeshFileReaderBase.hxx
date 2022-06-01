@@ -85,7 +85,7 @@ MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability()
     MeshFileReaderException e(__FILE__, __LINE__);
     std::ostringstream      msg;
     msg << "The file doesn't exists. \n"
-        << "Filename = " << this->m_FileName << std::endl;
+        << "Filename = " << this->m_FileName << '\n';
     e.SetDescription(msg.str().c_str());
     throw e;
     return;
@@ -99,7 +99,7 @@ MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability()
     readTester.close();
     std::ostringstream msg;
     msg << "The file couldn't be opened for reading. \n"
-        << "Filename: " << this->m_FileName << std::endl;
+        << "Filename: " << this->m_FileName << '\n';
     MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
     throw e;
     return;

@@ -913,7 +913,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsi
   this->m_NumberOfPixelsCounted = found;
   if (found < wanted * this->GetRequiredRatioOfValidSamples())
   {
-    itkExceptionMacro("Too many samples map outside moving image buffer: " << found << " / " << wanted << std::endl);
+    itkExceptionMacro("Too many samples map outside moving image buffer: " << found << " / " << wanted << '\n');
   }
 
 } // end CheckNumberOfSamples()

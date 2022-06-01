@@ -151,7 +151,7 @@ public:
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested at entry number "
                            << entry_nr << ", does not exist at all.\n"
-                           << "  The default value \"" << parameterValue << "\" is used instead." << std::endl;
+                           << "  The default value \"" << parameterValue << "\" is used instead.\n";
         errorMessage = outputStringStream.str();
       }
 
@@ -168,8 +168,7 @@ public:
       {
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
-                           << entry_nr << ".\n  The default value \"" << parameterValue << "\" is used instead."
-                           << std::endl;
+                           << entry_nr << ".\n  The default value \"" << parameterValue << "\" is used instead.\n";
         errorMessage = outputStringStream.str();
       }
       return false;
@@ -184,7 +183,7 @@ public:
       itkExceptionMacro("ERROR: Casting entry number "
                         << entry_nr << " for the parameter \"" << parameterName << "\" failed!\n"
                         << "  You tried to cast \"" << vec[entry_nr] << "\" from std::string to "
-                        << typeid(parameterValue).name() << std::endl);
+                        << typeid(parameterValue).name() << '\n');
     }
 
     return true;
@@ -302,7 +301,7 @@ public:
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
                            << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
-                           << "  The default values are used instead." << std::endl;
+                           << "  The default values are used instead.\n";
         errorMessage = outputStringStream.str();
       }
       return false;
@@ -314,7 +313,7 @@ public:
       /** Programming error: just throw an exception. */
       itkExceptionMacro("WARNING: The entry number start ("
                         << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
-                        << "). It was requested for parameter \"" << parameterName << "\"." << std::endl);
+                        << "). It was requested for parameter \"" << parameterName << "\".\n");
     }
 
     /** Check if it exists at the requested entry numbers. */
@@ -322,8 +321,7 @@ public:
     {
       itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
                                                     << entry_nr_end << ".\nThe default value \""
-                                                    << itk::NumericTraits<T>::Zero << "\" is used instead."
-                                                    << std::endl);
+                                                    << itk::NumericTraits<T>::Zero << "\" is used instead.\n");
     }
 
     /** Get the vector of parameters. */
@@ -349,7 +347,7 @@ public:
         itkExceptionMacro("ERROR: Casting entry number "
                           << i << " for the parameter \"" << parameterName << "\" failed!\n"
                           << "  You tried to cast \"" << vec[i] << "\" from std::string to "
-                          << typeid(parameterValues[0]).name() << std::endl);
+                          << typeid(parameterValues[0]).name() << '\n');
       }
     }
 
