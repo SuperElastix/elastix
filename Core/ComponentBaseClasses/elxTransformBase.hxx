@@ -1049,7 +1049,7 @@ TransformBase<TElastix>::WriteDeformationFieldImage(
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  std::ostringstream makeFileName("");
+  std::ostringstream makeFileName;
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "deformationField." << resultImageFormat;
 
   /** Write outputImage to disk. */
@@ -1131,7 +1131,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  std::ostringstream makeFileName("");
+  std::ostringstream makeFileName;
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "spatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
@@ -1210,7 +1210,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  std::ostringstream makeFileName("");
+  std::ostringstream makeFileName;
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "fullSpatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */

@@ -376,7 +376,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
     this->GetConfiguration()->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << this->GetConfiguration()->GetCommandLineArgument("-out") << "result." << resultImageFormat;
 
     /** Write the resampled image to disk.
@@ -590,7 +590,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
   if (writeTransformParameterEachResolution)
   {
     /** Create the TransformParameters filename for this resolution. */
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "TransformParameters."
                  << this->GetConfiguration()->GetElastixLevel() << ".R"
                  << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";
@@ -650,7 +650,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
      * \todo: use sprintf for this. it's much easier. or a formatting string for the
      * ostringstream, if that's possible somehow.
      */
-    std::ostringstream makeIterationString("");
+    std::ostringstream makeIterationString;
     unsigned int       border = 1000000;
     while (border > 1)
     {
@@ -668,7 +668,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
     makeIterationString << this->m_IterationCounter;
 
     /** Create the TransformParameters filename for this iteration. */
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << this->GetConfiguration()->GetCommandLineArgument("-out") << "TransformParameters."
                  << this->GetConfiguration()->GetElastixLevel() << ".R"
                  << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".It"
@@ -708,7 +708,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   this->GetConfiguration()->ReadParameter(writeFinalTansformParameters, "WriteFinalTransformParameters", 0, false);
   if (writeFinalTansformParameters)
   {
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << this->GetConfiguration()->GetCommandLineArgument("-out") << "TransformParameters."
                  << this->GetConfiguration()->GetElastixLevel() << ".txt";
     std::string FileName = makeFileName.str();
@@ -1018,7 +1018,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
   }
 
   /** Create the IterationInfo filename for this resolution. */
-  std::ostringstream makeFileName("");
+  std::ostringstream makeFileName;
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "IterationInfo."
                << this->m_Configuration->GetElastixLevel() << ".R"
                << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";

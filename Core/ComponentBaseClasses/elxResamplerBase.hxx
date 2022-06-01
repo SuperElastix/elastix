@@ -104,7 +104,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
     this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "result."
                  << this->m_Configuration->GetElastixLevel() << ".R" << level << "." << resultImageFormat;
 
@@ -161,7 +161,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
     this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-    std::ostringstream makeFileName("");
+    std::ostringstream makeFileName;
     makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "result."
                  << this->m_Configuration->GetElastixLevel() << ".R" << level << ".It" << std::setfill('0')
                  << std::setw(7) << iter << "." << resultImageFormat;
@@ -232,7 +232,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       /** Create a name for the final result. */
       std::string resultImageFormat = "mhd";
       this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0);
-      std::ostringstream makeFileName("");
+      std::ostringstream makeFileName;
       makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "result."
                    << this->m_Configuration->GetElastixLevel() << "." << resultImageFormat;
 

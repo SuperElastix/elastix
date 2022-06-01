@@ -1267,7 +1267,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
     /** Create parts of the filenames. */
     std::string resultImageFormat = "mhd";
     this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-    std::ostringstream makeFileName1(""), begin(""), end("");
+    std::ostringstream makeFileName1, begin, end;
     begin << this->m_Configuration->GetCommandLineArgument("-out");
     end << ".R" << this->m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".It"
         << this->m_Elastix->GetIterationCounter() << "." << resultImageFormat;
@@ -1292,7 +1292,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
     }
 
     /** Write the GrayValueImage. */
-    std::ostringstream makeFileName2("");
+    std::ostringstream makeFileName2;
     makeFileName2 << begin.str() << "GrayValueImage" << end.str();
 
     /** Do the writing. */
@@ -1313,7 +1313,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
     }
 
     /** Write the diffusedFieldImage. */
-    std::ostringstream makeFileName3("");
+    std::ostringstream makeFileName3;
     makeFileName3 << begin.str() << "diffusedField" << end.str();
 
     /** Do the writing. */

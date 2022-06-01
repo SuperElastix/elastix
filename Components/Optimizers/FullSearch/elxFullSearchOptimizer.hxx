@@ -80,7 +80,7 @@ FullSearch<TElastix>::BeforeEachResolution()
   unsigned int       nrOfSearchSpaceDimensions = 0;
   bool               found = true;
   bool               realGood = true;
-  std::ostringstream makeString("");
+  std::ostringstream makeString;
 
   /** Create fullFieldName, which is "FullSearchSpace0" at level 0. */
   makeString << "FullSearchSpace" << level;
