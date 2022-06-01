@@ -292,15 +292,13 @@ TransformBase<TElastix>::ReadFromFile()
        */
       if (numberOfParametersFound != numberOfParameters)
       {
-        std::ostringstream makeMessage("");
-        makeMessage << "\nERROR: Invalid transform parameter file!\n"
-                    << "The number of parameters in \"TransformParameters\" is " << numberOfParametersFound
-                    << ", which does not match the number specified in \"NumberOfParameters\" (" << numberOfParameters
-                    << ").\n"
-                    << "The transform parameters should be specified as:\n"
-                    << "  (TransformParameters num num ... num)\n"
-                    << "with " << numberOfParameters << " parameters." << std::endl;
-        itkExceptionMacro(<< makeMessage.str().c_str());
+        itkExceptionMacro("\nERROR: Invalid transform parameter file!\n"
+                          << "The number of parameters in \"TransformParameters\" is " << numberOfParametersFound
+                          << ", which does not match the number specified in \"NumberOfParameters\" ("
+                          << numberOfParameters << ").\n"
+                          << "The transform parameters should be specified as:\n"
+                          << "  (TransformParameters num num ... num)\n"
+                          << "with " << numberOfParameters << " parameters." << std::endl);
       }
 
       /** Copy to m_TransformParameters. */

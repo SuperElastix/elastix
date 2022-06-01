@@ -180,12 +180,10 @@ public:
     /** Check if the cast was successful. */
     if (!castSuccesful)
     {
-      std::stringstream ss;
-      ss << "ERROR: Casting entry number " << entry_nr << " for the parameter \"" << parameterName << "\" failed!\n"
-         << "  You tried to cast \"" << vec[entry_nr] << "\" from std::string to " << typeid(parameterValue).name()
-         << std::endl;
-
-      itkExceptionMacro(<< ss.str());
+      itkExceptionMacro("ERROR: Casting entry number "
+                        << entry_nr << " for the parameter \"" << parameterName << "\" failed!\n"
+                        << "  You tried to cast \"" << vec[entry_nr] << "\" from std::string to "
+                        << typeid(parameterValue).name() << std::endl);
     }
 
     return true;
@@ -312,21 +310,19 @@ public:
     /** Check. */
     if (entry_nr_start > entry_nr_end)
     {
-      std::stringstream ss;
-      ss << "WARNING: The entry number start (" << entry_nr_start << ") should be smaller than entry number end ("
-         << entry_nr_end << "). It was requested for parameter \"" << parameterName << "\"." << std::endl;
-
       /** Programming error: just throw an exception. */
-      itkExceptionMacro(<< ss.str());
+      itkExceptionMacro("WARNING: The entry number start ("
+                        << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
+                        << "). It was requested for parameter \"" << parameterName << "\"." << std::endl);
     }
 
     /** Check if it exists at the requested entry numbers. */
     if (entry_nr_end >= numberOfEntries)
     {
-      std::stringstream ss;
-      ss << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number " << entry_nr_end
-         << ".\nThe default value \"" << itk::NumericTraits<T>::Zero << "\" is used instead." << std::endl;
-      itkExceptionMacro(<< ss.str());
+      itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
+                                                    << entry_nr_end << ".\nThe default value \""
+                                                    << itk::NumericTraits<T>::Zero << "\" is used instead."
+                                                    << std::endl);
     }
 
     /** Get the vector of parameters. */
@@ -349,12 +345,10 @@ public:
       /** Check if the cast was successful. */
       if (!castSuccesful)
       {
-        std::stringstream ss;
-        ss << "ERROR: Casting entry number " << i << " for the parameter \"" << parameterName << "\" failed!\n"
-           << "  You tried to cast \"" << vec[i] << "\" from std::string to " << typeid(parameterValues[0]).name()
-           << std::endl;
-
-        itkExceptionMacro(<< ss.str());
+        itkExceptionMacro("ERROR: Casting entry number "
+                          << i << " for the parameter \"" << parameterName << "\" failed!\n"
+                          << "  You tried to cast \"" << vec[i] << "\" from std::string to "
+                          << typeid(parameterValues[0]).name() << std::endl);
       }
     }
 
