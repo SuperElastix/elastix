@@ -148,11 +148,11 @@ public:
     {
       if (printThisErrorMessage && this->m_PrintErrorMessages)
       {
-        std::ostringstream ss;
-        ss << "WARNING: The parameter \"" << parameterName << "\", requested at entry number " << entry_nr
-           << ", does not exist at all.\n"
-           << "  The default value \"" << parameterValue << "\" is used instead." << std::endl;
-        errorMessage = ss.str();
+        std::ostringstream outputStringStream;
+        outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested at entry number "
+                           << entry_nr << ", does not exist at all.\n"
+                           << "  The default value \"" << parameterValue << "\" is used instead." << std::endl;
+        errorMessage = outputStringStream.str();
       }
 
       return false;
@@ -166,10 +166,11 @@ public:
     {
       if (printThisErrorMessage && this->m_PrintErrorMessages)
       {
-        std::ostringstream ss;
-        ss << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number " << entry_nr
-           << ".\n  The default value \"" << parameterValue << "\" is used instead." << std::endl;
-        errorMessage = ss.str();
+        std::ostringstream outputStringStream;
+        outputStringStream << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
+                           << entry_nr << ".\n  The default value \"" << parameterValue << "\" is used instead."
+                           << std::endl;
+        errorMessage = outputStringStream.str();
       }
       return false;
     }
@@ -298,11 +299,11 @@ public:
     {
       if (printThisErrorMessage && this->m_PrintErrorMessages)
       {
-        std::ostringstream ss;
-        ss << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers " << entry_nr_start
-           << " and " << entry_nr_end << ", does not exist at all.\n"
-           << "  The default values are used instead." << std::endl;
-        errorMessage = ss.str();
+        std::ostringstream outputStringStream;
+        outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
+                           << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
+                           << "  The default values are used instead." << std::endl;
+        errorMessage = outputStringStream.str();
       }
       return false;
     }
@@ -456,7 +457,7 @@ private:
 
 
   /** Provide a specialization for std::string, since the general StringCast
-   * (especially ss >> casted) will not work for strings containing spaces.
+   * (especially outputStringStream >> casted) will not work for strings containing spaces.
    */
   static bool
   StringCast(const std::string & parameterValue, std::string & casted);
