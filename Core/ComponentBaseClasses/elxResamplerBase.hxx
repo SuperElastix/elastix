@@ -569,10 +569,16 @@ ResamplerBase<TElastix>::ReadFromFile()
   OriginPointType origin;
   SizeType        size = { { 0 } };
   auto            direction = DirectionType::GetIdentity();
+
+  const bool hasSizeParameter = this->m_Configuration->HasParameter("Size");
+
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
-    /** No default size. Read size from the parameter file. */
-    this->m_Configuration->ReadParameter(size[i], "Size", i);
+    if (hasSizeParameter)
+    {
+      /** No default size. Read size from the parameter file. */
+      this->m_Configuration->ReadParameter(size[i], "Size", i);
+    }
 
     /** Default index. Read index from the parameter file. */
     index[i] = 0;
@@ -590,6 +596,20 @@ ResamplerBase<TElastix>::ReadFromFile()
     for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       this->m_Configuration->ReadParameter(direction(j, i), "Direction", i * ImageDimension + j);
+    }
+  }
+
+  if (!hasSizeParameter)
+  {
+    const auto movingImage = this->m_Elastix->GetMovingImage();
+
+    if (movingImage != nullptr)
+    {
+      size = movingImage->GetBufferedRegion().GetSize();
+
+      xl::xout["error"] << "WARNING: The parameter \"Size\" does not exist.\n"
+                           "  The size of the input image is used instead: "
+                        << size << std::endl;
     }
   }
 
