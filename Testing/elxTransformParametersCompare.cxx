@@ -39,16 +39,14 @@
 std::string
 GetHelpString()
 {
-  std::stringstream ss;
-  ss << "Usage:\n"
-     << "elxTransformParametersCompare\n"
-     << "  -test      transform parameters file to test against baseline\n"
-     << "  -base      baseline transform parameters filename\n"
-     << "  [-mask]    mask image, only supported for the B-spline\n"
-     //<< "  [-t]       intensity difference threshold, default 0\n"
-     << "  [-a]       allowable tolerance (), default 1e-6\n"
-     << "Computes (test - base) / base.";
-  return ss.str();
+  return "Usage:\n"
+         "elxTransformParametersCompare\n"
+         "  -test      transform parameters file to test against baseline\n"
+         "  -base      baseline transform parameters filename\n"
+         "  [-mask]    mask image, only supported for the B-spline\n"
+         //<< "  [-t]       intensity difference threshold, default 0\n"
+         "  [-a]       allowable tolerance (), default 1e-6\n"
+         "Computes (test - base) / base.";
 
 } // end GetHelpString()
 

@@ -35,17 +35,15 @@
 std::string
 GetHelpString()
 {
-  std::stringstream ss;
-  ss << "Usage:\n"
-     << "elxComputeOverlap\n"
-     << "This program computes the overlap of two images.\n"
-     << "The results is computed as:\n"
-     << "    2 * L1( im1 AND im2 )\n"
-     << "  ------------------------\n"
-     << "    L1( im1 ) + L1( im2 )\n\n"
-     << "  -in      inputFilename1 inputFilename2"; // << std::endl
-                                                    //    << "Supported: 2D, 3D, (unsigned) char, (unsigned) short";
-  return ss.str();
+  return "Usage:\n"
+         "elxComputeOverlap\n"
+         "This program computes the overlap of two images.\n"
+         "The results is computed as:\n"
+         "    2 * L1( im1 AND im2 )\n"
+         "  ------------------------\n"
+         "    L1( im1 ) + L1( im2 )\n\n"
+         "  -in      inputFilename1 inputFilename2";
+  // "Supported: 2D, 3D, (unsigned) char, (unsigned) short";
 
 } // end GetHelpString()
 
