@@ -298,7 +298,7 @@ TransformBase<TElastix>::ReadFromFile()
                           << numberOfParameters << ").\n"
                           << "The transform parameters should be specified as:\n"
                           << "  (TransformParameters num num ... num)\n"
-                          << "with " << numberOfParameters << " parameters." << std::endl);
+                          << "with " << numberOfParameters << " parameters.\n");
       }
 
       /** Copy to m_TransformParameters. */
