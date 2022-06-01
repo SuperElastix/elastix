@@ -38,14 +38,12 @@
 std::string
 GetHelpString()
 {
-  std::stringstream ss;
-  ss << "Usage:\n"
-     << "elxInvertTransform\n"
-     << "  -tp    transform parameters file to be inverted\n"
-     << "  -out   output inverted transform parameters filename\n"
-     << "  -m     moving image file name\n"
-     << "Currently only 3D, {Euler, Affine} supported.";
-  return ss.str();
+  return "Usage:\n"
+         "elxInvertTransform\n"
+         "  -tp    transform parameters file to be inverted\n"
+         "  -out   output inverted transform parameters filename\n"
+         "  -m     moving image file name\n"
+         "Currently only 3D, {Euler, Affine} supported.";
 
 } // end GetHelpString()
 

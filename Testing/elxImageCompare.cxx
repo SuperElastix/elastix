@@ -40,14 +40,12 @@
 std::string
 GetHelpString()
 {
-  std::stringstream ss;
-  ss << "Usage:\n"
-     << "elxImageCompare\n"
-     << "  -test      image filename to test against baseline\n"
-     << "  -base      baseline image filename\n"
-     << "  [-t]       intensity difference threshold, default 0\n"
-     << "  [-a]       allowable tolerance (# voxels different), default 0";
-  return ss.str();
+  return "Usage:\n"
+         "elxImageCompare\n"
+         "  -test      image filename to test against baseline\n"
+         "  -base      baseline image filename\n"
+         "  [-t]       intensity difference threshold, default 0\n"
+         "  [-a]       allowable tolerance (# voxels different), default 0";
 
 } // end GetHelpString()
 

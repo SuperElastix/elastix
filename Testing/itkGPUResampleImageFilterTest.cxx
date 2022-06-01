@@ -66,20 +66,18 @@
 std::string
 GetHelpString()
 {
-  std::stringstream ss;
+  return "Usage:\n"
+         "itkGPUResampleImageFilterTest\n"
+         "  -in           input file name\n"
+         "  -out          output file names.(outputCPU outputGPU)\n"
+         "  -rmse         acceptable rmse error\n"
+         "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n"
+         "  [-t]          transforms, one of {Affine, Translation, BSpline, Euler, Similarity} or combinations with "
+         "option \"-c\", default Affine\n"
+         "  [-c]          use combo transform, default false\n"
+         "  [-p]          parameter file for the B-spline transform\n"
+         "  [-threads]    number of threads, default maximum\n";
 
-  ss << "Usage:\n"
-     << "itkGPUResampleImageFilterTest\n"
-     << "  -in           input file name\n"
-     << "  -out          output file names.(outputCPU outputGPU)\n"
-     << "  -rmse         acceptable rmse error\n"
-     << "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n"
-     << "  [-t]          transforms, one of {Affine, Translation, BSpline, Euler, Similarity} or combinations with "
-        "option \"-c\", default Affine\n"
-     << "  [-c]          use combo transform, default false\n"
-     << "  [-p]          parameter file for the B-spline transform\n"
-     << "  [-threads]    number of threads, default maximum\n";
-  return ss.str();
 } // end GetHelpString()
 
 
