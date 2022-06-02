@@ -96,6 +96,10 @@ jobs:
         ninja
       shell: cmd
       
+    - name: Install requirements of PythonTests
+      run: |
+        python -m pip install -r ${{ github.workspace }}/Elastix-source/Testing/PythonTests/requirements.txt
+
     - name: Configure CTest script
       shell: bash
       run: |
