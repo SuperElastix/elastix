@@ -188,6 +188,13 @@ public:
   itkGetConstMacro(LogToFile, bool);
   itkBooleanMacro(LogToFile);
 
+  /** Disables output to log and standard output. */
+  void
+  DisableOutput()
+  {
+    m_EnableOutput = false;
+  }
+
 protected:
   TransformixFilter();
 
@@ -230,6 +237,7 @@ private:
   std::string m_OutputDirectory;
   std::string m_LogFileName;
 
+  bool m_EnableOutput{ true };
   bool m_LogToConsole;
   bool m_LogToFile;
 };
