@@ -37,6 +37,7 @@
 
 #include "itkTransformixFilter.h"
 #include "elxPixelType.h"
+#include <memory> // For unique_ptr.
 
 namespace itk
 {
@@ -156,7 +157,10 @@ TransformixFilter<TMovingImage>::GenerateData()
   }
 
   // Setup xout
-  const elx::xoutManager manager(logFileName, this->GetLogToFile(), this->GetLogToConsole());
+  const auto manager =
+    m_EnableOutput
+      ? std::make_unique<const elx::xoutManager>(logFileName, this->GetLogToFile(), this->GetLogToConsole())
+      : std::unique_ptr<const elx::xoutManager>();
 
   // Instantiate transformix
   TransformixMainPointer transformix = TransformixMainType::New();

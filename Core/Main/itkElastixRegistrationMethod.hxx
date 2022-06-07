@@ -39,6 +39,7 @@
 #include "itkElastixRegistrationMethod.h"
 
 #include <algorithm> // For find.
+#include <memory>    // For unique_ptr.
 
 namespace itk
 {
@@ -217,7 +218,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Setup xout
-  const elastix::xoutManager manager(logFileName, this->GetLogToFile(), this->GetLogToConsole());
+  const auto manager =
+    m_EnableOutput
+      ? std::make_unique<const elx::xoutManager>(logFileName, this->GetLogToFile(), this->GetLogToConsole())
+      : std::unique_ptr<const elx::xoutManager>();
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)
