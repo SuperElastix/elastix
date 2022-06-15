@@ -86,14 +86,14 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
-StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(const InputPointType & ipp) const
-  -> OutputPointType
+StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
+  const InputPointType & inputPoint) const -> OutputPointType
 {
   /** Reduce dimension of input point. */
   SubTransformInputPointType ippr;
   for (unsigned int d = 0; d < ReducedInputSpaceDimension; ++d)
   {
-    ippr[d] = ipp[d];
+    ippr[d] = inputPoint[d];
   }
 
   /** Transform point using right subtransform. */
@@ -101,7 +101,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint
   const unsigned int          subt =
     std::min(static_cast<unsigned int>(this->m_SubTransformContainer.size() - 1),
              static_cast<unsigned int>(
-               std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+               std::max(0, vnl_math::rnd((inputPoint[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
   oppr = this->m_SubTransformContainer[subt]->TransformPoint(ippr);
 
   /** Increase dimension of input point. */
@@ -110,7 +110,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint
   {
     opp[d] = oppr[d];
   }
-  opp[ReducedOutputSpaceDimension] = ipp[ReducedInputSpaceDimension];
+  opp[ReducedOutputSpaceDimension] = inputPoint[ReducedInputSpaceDimension];
 
   return opp;
 
@@ -123,7 +123,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
-StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(const InputPointType &       ipp,
+StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(const InputPointType &       inputPoint,
                                                                               JacobianType &               jac,
                                                                               NonZeroJacobianIndicesType & nzji) const
 {
@@ -131,14 +131,14 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(co
   SubTransformInputPointType ippr;
   for (unsigned int d = 0; d < ReducedInputSpaceDimension; ++d)
   {
-    ippr[d] = ipp[d];
+    ippr[d] = inputPoint[d];
   }
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
     std::min(static_cast<unsigned int>(this->m_SubTransformContainer.size() - 1),
              static_cast<unsigned int>(
-               std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+               std::max(0, vnl_math::rnd((inputPoint[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
   SubTransformJacobianType subjac;
   this->m_SubTransformContainer[subt]->GetJacobian(ippr, subjac, nzji);
 

@@ -180,7 +180,7 @@ public:
    * the dimension of the image.
    */
   virtual void
-  GetJacobian(const InputPointType &       ipp,
+  GetJacobian(const InputPointType &       inputPoint,
               JacobianType &               j,
               NonZeroJacobianIndicesType & nonZeroJacobianIndices) const = 0;
 
@@ -188,7 +188,7 @@ public:
    * The Jacobian is (partially) constructed inside this function, but not returned.
    */
   virtual void
-  EvaluateJacobianWithImageGradientProduct(const InputPointType &          ipp,
+  EvaluateJacobianWithImageGradientProduct(const InputPointType &          inputPoint,
                                            const MovingImageGradientType & movingImageGradient,
                                            DerivativeType &                imageJacobian,
                                            NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const;
@@ -220,7 +220,7 @@ public:
    * the dimension of the image.
    */
   virtual void
-  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const = 0;
+  GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const = 0;
 
   /** Override some pure virtual ITK4 functions. */
   void
@@ -248,7 +248,7 @@ public:
    * with i the i-th component of the transformation.
    */
   virtual void
-  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const = 0;
+  GetSpatialHessian(const InputPointType & inputPoint, SpatialHessianType & sh) const = 0;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation.
    *
@@ -257,7 +257,7 @@ public:
    * a point \f$p\f$.
    */
   virtual void
-  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+  GetJacobianOfSpatialJacobian(const InputPointType &          inputPoint,
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const = 0;
 
@@ -265,7 +265,7 @@ public:
    * spatial Jacobian of the transformation.
    */
   virtual void
-  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+  GetJacobianOfSpatialJacobian(const InputPointType &          inputPoint,
                                SpatialJacobianType &           sj,
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const = 0;
@@ -277,7 +277,7 @@ public:
    * a point \f$p\f$.
    */
   virtual void
-  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+  GetJacobianOfSpatialHessian(const InputPointType &         inputPoint,
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const = 0;
 
@@ -285,7 +285,7 @@ public:
    * spatial Hessian of the transformation.
    */
   virtual void
-  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+  GetJacobianOfSpatialHessian(const InputPointType &         inputPoint,
                               SpatialHessianType &           sh,
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const = 0;

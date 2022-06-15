@@ -685,7 +685,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobian(
-  const InputPointType &       ipp,
+  const InputPointType &       inputPoint,
   JacobianType &               jacobian,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices) const
 {
@@ -713,7 +713,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   int lidx = 0;
-  PointToLabel(ipp, lidx);
+  PointToLabel(inputPoint, lidx);
 
   if (lidx == 0)
   {
@@ -731,12 +731,13 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   ljac.SetSize(SpaceDimension, nnzji);
 
   // nzji should be the same so keep only one
-  m_Trans[0]->GetJacobian(ipp, njac, nonZeroJacobianIndices);
-  m_Trans[lidx]->GetJacobian(ipp, ljac, nonZeroJacobianIndices);
+  m_Trans[0]->GetJacobian(inputPoint, njac, nonZeroJacobianIndices);
+  m_Trans[lidx]->GetJacobian(inputPoint, ljac, nonZeroJacobianIndices);
 
   // Convert the physical point to a continuous index, which
   // is needed for the 'Evaluate()' functions below.
-  const typename TransformType::ContinuousIndexType cindex = m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp);
+  const typename TransformType::ContinuousIndexType cindex =
+    m_Trans[lidx]->TransformPointToContinuousGridIndex(inputPoint);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero Jacobian
@@ -791,7 +792,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
-  const InputPointType & ipp,
+  const InputPointType & inputPoint,
   SpatialJacobianType &  sj) const
 {
   if (this->GetNumberOfParameters() == 0)
@@ -808,15 +809,15 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   int lidx = 0;
-  PointToLabel(ipp, lidx);
+  PointToLabel(inputPoint, lidx);
   if (lidx == 0)
   {
     sj.SetIdentity();
     return;
   }
   SpatialJacobianType nsj;
-  m_Trans[0]->GetSpatialJacobian(ipp, nsj);
-  m_Trans[lidx]->GetSpatialJacobian(ipp, sj);
+  m_Trans[0]->GetSpatialJacobian(inputPoint, nsj);
+  m_Trans[lidx]->GetSpatialJacobian(inputPoint, sj);
   sj += nsj;
 }
 
@@ -824,7 +825,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetSpatialHessian(
-  const InputPointType & ipp,
+  const InputPointType & inputPoint,
   SpatialHessianType &   sh) const
 {
   if (this->GetNumberOfParameters() == 0)
@@ -844,7 +845,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   int lidx = 0;
-  PointToLabel(ipp, lidx);
+  PointToLabel(inputPoint, lidx);
   if (lidx == 0)
   {
     for (unsigned int i = 0; i < sh.Size(); ++i)
@@ -855,8 +856,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   SpatialHessianType nsh, lsh;
-  m_Trans[0]->GetSpatialHessian(ipp, nsh);
-  m_Trans[lidx]->GetSpatialHessian(ipp, lsh);
+  m_Trans[0]->GetSpatialHessian(inputPoint, nsh);
+  m_Trans[lidx]->GetSpatialHessian(inputPoint, lsh);
   for (unsigned i = 0; i < SpaceDimension; ++i)
   {
     for (unsigned j = 0; j < SpaceDimension; ++j)
@@ -873,7 +874,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
-  const InputPointType &          ipp,
+  const InputPointType &          inputPoint,
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
@@ -885,7 +886,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
-  const InputPointType &          ipp,
+  const InputPointType &          inputPoint,
   SpatialJacobianType &           sj,
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
@@ -910,11 +911,12 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   int lidx = 0;
-  PointToLabel(ipp, lidx);
+  PointToLabel(inputPoint, lidx);
 
   // Convert the physical point to a continuous index, which
   // is needed for the 'Evaluate()' functions below.
-  const typename TransformType::ContinuousIndexType cindex = m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp);
+  const typename TransformType::ContinuousIndexType cindex =
+    m_Trans[lidx]->TransformPointToContinuousGridIndex(inputPoint);
 
   if (lidx == 0 || !m_Trans[lidx]->InsideValidRegion(cindex))
   {
@@ -935,8 +937,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   JacobianOfSpatialJacobianType njsj, ljsj;
 
   // nzji should be the same so keep only one
-  m_Trans[0]->GetJacobianOfSpatialJacobian(ipp, nsj, njsj, nonZeroJacobianIndices);
-  m_Trans[lidx]->GetJacobianOfSpatialJacobian(ipp, lsj, ljsj, nonZeroJacobianIndices);
+  m_Trans[0]->GetJacobianOfSpatialJacobian(inputPoint, nsj, njsj, nonZeroJacobianIndices);
+  m_Trans[lidx]->GetJacobianOfSpatialJacobian(inputPoint, lsj, ljsj, nonZeroJacobianIndices);
 
   using BaseContainer = typename ImageBaseType::PixelContainer;
   const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
@@ -985,7 +987,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHessian(
-  const InputPointType &         ipp,
+  const InputPointType &         inputPoint,
   SpatialHessianType &           sh,
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
@@ -1010,11 +1012,12 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   int lidx = 0;
-  PointToLabel(ipp, lidx);
+  PointToLabel(inputPoint, lidx);
 
   // Convert the physical point to a continuous index, which
   // is needed for the 'Evaluate()' functions below.
-  const typename TransformType::ContinuousIndexType cindex = m_Trans[lidx]->TransformPointToContinuousGridIndex(ipp);
+  const typename TransformType::ContinuousIndexType cindex =
+    m_Trans[lidx]->TransformPointToContinuousGridIndex(inputPoint);
 
   if (lidx == 0 || !m_Trans[lidx]->InsideValidRegion(cindex))
   {
@@ -1042,8 +1045,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   JacobianOfSpatialHessianType njsh, ljsh;
 
   // nzji should be the same so keep only one
-  m_Trans[0]->GetJacobianOfSpatialHessian(ipp, nsh, njsh, nonZeroJacobianIndices);
-  m_Trans[lidx]->GetJacobianOfSpatialHessian(ipp, lsh, ljsh, nonZeroJacobianIndices);
+  m_Trans[0]->GetJacobianOfSpatialHessian(inputPoint, nsh, njsh, nonZeroJacobianIndices);
+  m_Trans[lidx]->GetJacobianOfSpatialHessian(inputPoint, lsh, ljsh, nonZeroJacobianIndices);
 
   using BaseContainer = typename ImageBaseType::PixelContainer;
   const BaseContainer & bases = *m_LocalBases->GetPixelContainer();

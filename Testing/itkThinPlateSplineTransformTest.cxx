@@ -126,21 +126,21 @@ main(int argc, char * argv[])
   kernelTransform->SetTargetLandmarks(newTargetLandmarks);
   std::cerr << "Setting source landmarks took " << clock() - startClock << " ms." << std::endl;
 
-  InputPointType ipp;
-  ipp[0] = 10.0;
-  ipp[1] = 20.0;
-  ipp[2] = 30.0;
+  InputPointType inputPoint;
+  inputPoint[0] = 10.0;
+  inputPoint[1] = 20.0;
+  inputPoint[2] = 30.0;
 
   /** Test TransformPoint(). */
   startClock = clock();
-  kernelTransform->TransformPoint(ipp);
+  kernelTransform->TransformPoint(inputPoint);
   std::cerr << "TransformPoint() computation took: " << clock() - startClock << " ms." << std::endl;
 
   /** Test GetJacobian(). */
   startClock = clock();
   JacobianType               jac;
   NonZeroJacobianIndicesType nzji;
-  kernelTransform->GetJacobian(ipp, jac, nzji);
+  kernelTransform->GetJacobian(inputPoint, jac, nzji);
   std::cerr << "GetJacobian() computation took: " << clock() - startClock << " ms." << std::endl;
 
   /** Additional checks. */

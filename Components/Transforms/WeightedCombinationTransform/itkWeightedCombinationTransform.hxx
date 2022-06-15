@@ -84,7 +84,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
-  const InputPointType & ipp) const -> OutputPointType
+  const InputPointType & inputPoint) const -> OutputPointType
 {
   OutputPointType opp;
   opp.Fill(0.0);
@@ -96,7 +96,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
   /** Calculate sum_i w_i T_i(x) */
   for (unsigned int i = 0; i < N; ++i)
   {
-    tempopp = tc[i]->TransformPoint(ipp);
+    tempopp = tc[i]->TransformPoint(inputPoint);
     const double w = param[i];
     for (unsigned int d = 0; d < OutputSpaceDimension; ++d)
     {
@@ -118,7 +118,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
     const double factor = 1.0 - this->m_SumOfWeights;
     for (unsigned int d = 0; d < OutputSpaceDimension; ++d)
     {
-      opp[d] += factor * ipp[d];
+      opp[d] += factor * inputPoint[d];
     }
   }
   return opp;
@@ -133,7 +133,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(
-  const InputPointType &       ipp,
+  const InputPointType &       inputPoint,
   JacobianType &               jac,
   NonZeroJacobianIndicesType & nzji) const
 {
@@ -153,7 +153,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
     opp.Fill(0.0);
     for (unsigned int i = 0; i < N; ++i)
     {
-      tempopp = tc[i]->TransformPoint(ipp);
+      tempopp = tc[i]->TransformPoint(inputPoint);
       const double w = param[i];
       for (unsigned int d = 0; d < OutputSpaceDimension; ++d)
       {
@@ -178,10 +178,10 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
     /** dT/dmu_i = T_i(x) - x */
     for (unsigned int i = 0; i < N; ++i)
     {
-      tempopp = tc[i]->TransformPoint(ipp);
+      tempopp = tc[i]->TransformPoint(inputPoint);
       for (unsigned int d = 0; d < OutputSpaceDimension; ++d)
       {
-        jac(d, i) = tempopp[d] - ipp[d];
+        jac(d, i) = tempopp[d] - inputPoint[d];
       }
     }
   }

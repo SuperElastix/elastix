@@ -380,14 +380,14 @@ public:
 
   /** Compute the Jacobian of the transformation. */
   void
-  GetJacobian(const InputPointType & ipp, JacobianType & j, NonZeroJacobianIndicesType &) const override;
+  GetJacobian(const InputPointType & inputPoint, JacobianType & j, NonZeroJacobianIndicesType &) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
   void
-  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override;
+  GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const override;
 
   void
-  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+  GetJacobianOfSpatialJacobian(const InputPointType &          inputPoint,
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
@@ -399,10 +399,10 @@ public:
 
   /** Compute the spatial Hessian of the transformation. */
   void
-  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override;
+  GetSpatialHessian(const InputPointType & inputPoint, SpatialHessianType & sh) const override;
 
   void
-  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+  GetJacobianOfSpatialHessian(const InputPointType &         inputPoint,
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {

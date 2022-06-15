@@ -180,7 +180,7 @@ public:
 
   /** Must be provided. */
   void
-  GetJacobian(const InputPointType &       ipp,
+  GetJacobian(const InputPointType &       inputPoint,
               JacobianType &               j,
               NonZeroJacobianIndicesType & nonZeroJacobianIndices) const override
   {
@@ -189,21 +189,21 @@ public:
 
 
   void
-  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override
+  GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const override
   {
     itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
   void
-  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override
+  GetSpatialHessian(const InputPointType & inputPoint, SpatialHessianType & sh) const override
   {
     itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
   void
-  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+  GetJacobianOfSpatialJacobian(const InputPointType &          inputPoint,
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
@@ -212,7 +212,7 @@ public:
 
 
   void
-  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+  GetJacobianOfSpatialJacobian(const InputPointType &          inputPoint,
                                SpatialJacobianType &           sj,
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
@@ -222,7 +222,7 @@ public:
 
 
   void
-  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+  GetJacobianOfSpatialHessian(const InputPointType &         inputPoint,
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
@@ -231,7 +231,7 @@ public:
 
 
   void
-  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+  GetJacobianOfSpatialHessian(const InputPointType &         inputPoint,
                               SpatialHessianType &           sh,
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override

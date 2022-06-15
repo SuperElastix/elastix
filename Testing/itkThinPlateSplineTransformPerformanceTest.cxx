@@ -181,7 +181,7 @@ main(int argc, char * argv[])
     }
     usedLandmarks->SetPoints(usedLandmarkPoints);
 
-    /** Set the ipp as source landmarks.
+    /** Set the input points as source landmarks.
      * 1) Compute L matrix
      * 2) Compute inverse of L
      */

@@ -293,7 +293,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
-  const InputPointType & ipp,
+  const InputPointType & inputPoint,
   SpatialJacobianType &  sj) const
 {
   // Can only compute Jacobian if parameters are set via
@@ -306,7 +306,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
-  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(ipp);
+  const ContinuousIndexType cindex = this->TransformPointToContinuousGridIndex(inputPoint);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and identity spatial Jacobian
