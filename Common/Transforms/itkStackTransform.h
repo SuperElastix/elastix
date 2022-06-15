@@ -91,7 +91,7 @@ public:
 
   /**  Method to transform a point. */
   OutputPointType
-  TransformPoint(const InputPointType & ipp) const override;
+  TransformPoint(const InputPointType & inputPoint) const override;
 
   /** This returns a sparse version of the Jacobian of the transformation.
    * In this class however, the Jacobian is not sparse.
@@ -99,7 +99,7 @@ public:
    * by reference, which makes it threadsafe, unlike the normal
    * GetJacobian function. */
   void
-  GetJacobian(const InputPointType & ipp, JacobianType & jac, NonZeroJacobianIndicesType & nzji) const override;
+  GetJacobian(const InputPointType & inputPoint, JacobianType & jac, NonZeroJacobianIndicesType & nzji) const override;
 
   /** Set the parameters. Checks if the number of parameters
    * is correct and sets parameters of sub transforms. */

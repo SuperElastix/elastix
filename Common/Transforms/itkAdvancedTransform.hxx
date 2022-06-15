@@ -74,7 +74,7 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::AdvancedTra
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJacobianWithImageGradientProduct(
-  const InputPointType &          ipp,
+  const InputPointType &          inputPoint,
   const MovingImageGradientType & movingImageGradient,
   DerivativeType &                imageJacobian,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
@@ -82,7 +82,7 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
   /** Obtain the Jacobian. Using thread-local storage, so that both the allocation and the deallocation of the internal
    * data occurs only once per thread, as it has appeared as a major performance bottleneck. */
   thread_local JacobianType jacobian;
-  this->GetJacobian(ipp, jacobian, nonZeroJacobianIndices);
+  this->GetJacobian(inputPoint, jacobian, nonZeroJacobianIndices);
 
   /** Perform a full multiplication. */
   using JacobianIteratorType = typename JacobianType::const_iterator;
