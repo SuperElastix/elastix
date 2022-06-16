@@ -115,7 +115,6 @@ main(int argc, char * argv[])
   using JacobianType = TransformType::JacobianType;
   using NonZeroJacobianIndicesType = TransformType::NonZeroJacobianIndicesType;
   using PointSetType = TransformType::PointSetType;
-  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
 
   using PointsContainerType = PointSetType::PointsContainer;
   using PointsContainerPointer = PointsContainerType::Pointer;
@@ -129,7 +128,7 @@ main(int argc, char * argv[])
   kernelTransform->SetStiffness(0.0); // interpolating
 
   /** Read landmarks. */
-  auto ippReader = IPPReaderType::New();
+  auto ippReader = itk::TransformixInputPointFileReader<PointSetType>::New();
   ippReader->SetFileName(argv[1]);
   try
   {
