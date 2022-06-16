@@ -88,15 +88,16 @@ public:
   GenerateOutputInformation() override;
 
 protected:
-  TransformixInputPointFileReader();
-  ~TransformixInputPointFileReader() override;
+  TransformixInputPointFileReader() = default;
+  ~TransformixInputPointFileReader() override = default;
 
   /** Fill the point container of the output. */
   void
   GenerateData() override;
 
-  unsigned long m_NumberOfPoints;
-  bool          m_PointsAreIndices;
+private:
+  unsigned long m_NumberOfPoints{ 0 };
+  bool          m_PointsAreIndices{ false };
 
   std::ifstream m_Reader;
 

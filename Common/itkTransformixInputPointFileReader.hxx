@@ -25,32 +25,6 @@ namespace itk
 {
 
 /**
- * **************** Constructor ***************
- */
-
-template <class TOutputMesh>
-TransformixInputPointFileReader<TOutputMesh>::TransformixInputPointFileReader()
-{
-  this->m_NumberOfPoints = 0;
-  this->m_PointsAreIndices = false;
-} // end constructor
-
-
-/**
- * **************** Destructor ***************
- */
-
-template <class TOutputMesh>
-TransformixInputPointFileReader<TOutputMesh>::~TransformixInputPointFileReader()
-{
-  if (this->m_Reader.is_open())
-  {
-    this->m_Reader.close();
-  }
-} // end constructor
-
-
-/**
  * ***************GenerateOutputInformation ***********
  */
 
