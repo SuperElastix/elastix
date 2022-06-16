@@ -279,12 +279,11 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
   using IndexType = typename ImageType::IndexType;
   using IndexValueType = typename ImageType::IndexValueType;
   using PointType = typename ImageType::PointType;
-  using PointSetReaderType = itk::TransformixInputPointFileReader<PointSetType>;
 
   elxout << "Loading landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "." << std::endl;
 
   /** Read the landmarks. */
-  auto reader = PointSetReaderType::New();
+  auto reader = itk::TransformixInputPointFileReader<PointSetType>::New();
   reader->SetFileName(landmarkFileName.c_str());
   elxout << "  Reading landmark file: " << landmarkFileName << std::endl;
   try

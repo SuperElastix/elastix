@@ -51,7 +51,6 @@ main(int argc, char * argv[])
   using PointSetType = TransformType::PointSetType;
   using InputPointType = TransformType::InputPointType;
 
-  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
   using PointsContainerType = PointSetType::PointsContainer;
   using PointsContainerPointer = PointsContainerType::Pointer;
   using PointType = PointSetType::PointType;
@@ -62,7 +61,7 @@ main(int argc, char * argv[])
   auto kernelTransform = TransformType::New();
 
   /** Read landmarks. */
-  auto landmarkReader = IPPReaderType::New();
+  auto landmarkReader = itk::TransformixInputPointFileReader<PointSetType>::New();
   landmarkReader->SetFileName(argv[1]);
   try
   {

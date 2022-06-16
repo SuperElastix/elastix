@@ -398,11 +398,10 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   using MeshTraitsType =
     itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
   using PointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
-  using IPPReaderType = itk::TransformixInputPointFileReader<PointSetType>;
   using DeformationVectorType = itk::Vector<float, FixedImageDimension>;
 
   /** Construct an ipp-file reader. */
-  auto ippReader = IPPReaderType::New();
+  auto ippReader = itk::TransformixInputPointFileReader<PointSetType>::New();
   ippReader->SetFileName(filename.c_str());
 
   /** Read the input points. */

@@ -288,10 +288,9 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   /** Typedef's. */
   using IndexType = typename FixedImageType::IndexType;
   using IndexValueType = typename IndexType::IndexValueType;
-  using LandmarkReaderType = itk::TransformixInputPointFileReader<PointSetType>;
 
   /** Construct a landmark file reader and read the points. */
-  auto landmarkReader = LandmarkReaderType::New();
+  auto landmarkReader = itk::TransformixInputPointFileReader<PointSetType>::New();
   landmarkReader->SetFileName(filename.c_str());
   try
   {
