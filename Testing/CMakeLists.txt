@@ -35,8 +35,7 @@ endforeach()
 
 #---------------------------------------------------------------------
 # Python is used by some tests
-find_program( python_executable python
-  HINTS "C:/Program Files/Python2.7" "C:/Program Files/python3.3" "C:/Program Files/Python35" )
+find_program( python_executable python )
 if( NOT python_executable )
   message( WARNING "WARNING: python not found! Some test results can not be evaluated." )
 endif()
