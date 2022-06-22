@@ -42,7 +42,8 @@ class TransformixTestCase(unittest.TestCase):
         return directory_path
 
     def assert_equal_image_info(self, actual: sitk.Image, expected: sitk.Image) -> None:
-        """Asserts that the actual image has the same image information (size, spacing, pixel type, etc) as the expected image."""
+        """Asserts that the actual image has the same image information (size, spacing, pixel type,
+        etc) as the expected image."""
 
         self.assertEqual(actual.GetDimension(), expected.GetDimension())
         self.assertEqual(actual.GetSize(), expected.GetSize())
