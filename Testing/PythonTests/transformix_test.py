@@ -35,6 +35,8 @@ class TransformixTestCase(unittest.TestCase):
     temporary_directory_path = pathlib.Path(sys.argv[2])
 
     def create_test_function_output_directory(self):
+        """Creates an output directory for the current test function, and returns its path."""
+
         directory_path = self.temporary_directory_path / sys._getframe(1).f_code.co_name
         directory_path.mkdir(exist_ok=True)
         return directory_path
