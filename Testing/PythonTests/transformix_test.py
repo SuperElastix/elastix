@@ -57,7 +57,7 @@ class TransformixTestCase(unittest.TestCase):
         """Tests executing transformix without arguments"""
 
         completed = subprocess.run(
-            [str(self.transformix_exe_file_path)], capture_output=True
+            [str(self.transformix_exe_file_path)], capture_output=True, check=True
         )
         self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stderr, b"")
@@ -70,7 +70,9 @@ class TransformixTestCase(unittest.TestCase):
         """Tests --help"""
 
         completed = subprocess.run(
-            [str(self.transformix_exe_file_path), "--help"], capture_output=True
+            [str(self.transformix_exe_file_path), "--help"],
+            capture_output=True,
+            check=True,
         )
         self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stderr, b"")
@@ -83,7 +85,9 @@ class TransformixTestCase(unittest.TestCase):
         """Tests --version"""
 
         completed = subprocess.run(
-            [str(self.transformix_exe_file_path), "--version"], capture_output=True
+            [str(self.transformix_exe_file_path), "--version"],
+            capture_output=True,
+            check=True,
         )
         self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stderr, b"")
@@ -111,6 +115,7 @@ class TransformixTestCase(unittest.TestCase):
                 str(output_directory_path),
             ],
             capture_output=True,
+            check=True,
         )
         self.assertEqual(completed.returncode, 0)
 
@@ -153,6 +158,7 @@ class TransformixTestCase(unittest.TestCase):
                 str(out_directory_path),
             ],
             capture_output=True,
+            check=True,
         )
         self.assertEqual(completed.returncode, 0)
 
