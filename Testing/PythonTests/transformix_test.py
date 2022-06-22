@@ -16,6 +16,8 @@
 #
 # =========================================================================
 
+"""transformix test module."""
+
 import filecmp
 import pathlib
 import subprocess
