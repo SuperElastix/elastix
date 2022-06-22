@@ -18,7 +18,7 @@
 
 if(python_executable)
   add_test(NAME TransformixTest COMMAND ${python_executable}
-    "${CMAKE_CURRENT_LIST_DIR}/TransformixTest.py"
+    "${CMAKE_CURRENT_LIST_DIR}/transformix_test.py"
     "$<TARGET_FILE_DIR:transformix_exe>/transformix"
     "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
