@@ -18,6 +18,7 @@
 
 """transformix test module."""
 
+import os
 import filecmp
 import pathlib
 import subprocess
@@ -31,8 +32,8 @@ class TransformixTestCase(unittest.TestCase):
     """Tests transformix from https://elastix.lumc.nl"""
 
     version_string = "5.0.1"
-    transformix_exe_file_path = pathlib.Path(sys.argv[1])
-    temporary_directory_path = pathlib.Path(sys.argv[2])
+    transformix_exe_file_path = pathlib.Path(os.environ["TRANSFORMIX_EXE"])
+    temporary_directory_path = pathlib.Path(os.environ["TRANSFORMIX_TEST_TEMP_DIR"])
 
     def create_test_function_output_directory(self):
         """Creates an output directory for the current test function, and returns its path."""

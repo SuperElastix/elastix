@@ -18,7 +18,7 @@
 
 if(python_executable)
   add_test(NAME TransformixTest COMMAND ${python_executable}
-    "${CMAKE_CURRENT_LIST_DIR}/transformix_test.py"
-    "$<TARGET_FILE_DIR:transformix_exe>/transformix"
-    "${CMAKE_CURRENT_BINARY_DIR}")
+    "${CMAKE_CURRENT_LIST_DIR}/transformix_test.py")
+  set_tests_properties(TransformixTest PROPERTIES ENVIRONMENT
+    "TRANSFORMIX_EXE=$<TARGET_FILE_DIR:transformix_exe>/transformix;TRANSFORMIX_TEST_TEMP_DIR=${CMAKE_CURRENT_BINARY_DIR}")
 endif()
