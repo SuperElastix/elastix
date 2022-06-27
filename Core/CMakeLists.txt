@@ -233,6 +233,14 @@ add_library(transformix_lib
 set_target_properties(transformix_lib PROPERTIES OUTPUT_NAME transformix)
 target_link_libraries(transformix_lib ${ELASTIX_TARGET_LINK_LIBRARIES})
 
+add_executable(TransformixLibBasedExe
+  Main/TransformixLibBasedExe.cxx
+  Main/elxMainExeUtilities.cxx
+  Main/elxMainExeUtilities.h
+)
+target_link_libraries(TransformixLibBasedExe transformix_lib)
+target_compile_definitions(TransformixLibBasedExe PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}")
+
 set(ELASTIX_LIBRARIES elastix_lib transformix_lib PARENT_SCOPE)
 
 #---------------------------------------------------------------------
