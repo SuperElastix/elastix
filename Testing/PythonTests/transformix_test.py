@@ -98,6 +98,69 @@ class TransformixTestCase(unittest.TestCase):
             "transformix version: " + self.version_string,
         )
 
+    def test_missing_tp_commandline_option(self) -> None:
+        """Tests missing -tp commandline option"""
+
+        completed = subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-in",
+                "InputImageFile.ext",
+                "-out",
+                str(self.create_test_function_output_directory()),
+            ],
+            capture_output=True,
+            check=False,
+        )
+
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertEqual(
+            completed.stderr.decode().strip(),
+            'ERROR: No CommandLine option "-tp" given!',
+        )
+
+    def test_missing_out_commandline_option(self) -> None:
+        """Tests missing -out commandline options"""
+
+        completed = subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-in",
+                "InputImageFile.ext",
+                "-tp",
+                "TransformParameters.txt",
+            ],
+            capture_output=True,
+            check=False,
+        )
+
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertEqual(
+            completed.stderr.decode().strip(),
+            'ERROR: No CommandLine option "-out" given!',
+        )
+
+    def test_missing_input_commandline_option(self) -> None:
+        """Tests missing input commandline option"""
+
+        completed = subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-tp",
+                "TransformParameters.txt",
+                "-out",
+                str(self.create_test_function_output_directory()),
+            ],
+            capture_output=True,
+            check=False,
+        )
+
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertEqual(
+            completed.stderr.decode().strip(),
+            'ERROR: At least one of the CommandLine options "-in", "-def", "-jac", or "-jacmat" should be given!',
+        )
+
     def test_translation(self) -> None:
         """Tests translation of images"""
 
