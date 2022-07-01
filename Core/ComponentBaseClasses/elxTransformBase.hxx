@@ -738,22 +738,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   }
 
   /** Read the input points, as index or as point. */
-  if (!(ippReader->GetPointsAreIndices()))
-  {
-    for (unsigned int j = 0; j < nrofpoints; ++j)
-    {
-      /** Compute index of nearest voxel in fixed image. */
-      InputPointType point{};
-      inputPointSet->GetPoint(j, &point);
-      inputpointvec[j] = point;
-      const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(point);
-      for (unsigned int i = 0; i < FixedImageDimension; ++i)
-      {
-        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
-      }
-    }
-  }
-  else // so: inputasindex
+  if (ippReader->GetPointsAreIndices())
   {
     for (unsigned int j = 0; j < nrofpoints; ++j)
     {
@@ -768,6 +753,21 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
       }
       /** Compute the input point in physical coordinates. */
       dummyImage->TransformIndexToPhysicalPoint(inputindexvec[j], inputpointvec[j]);
+    }
+  }
+  else
+  {
+    for (unsigned int j = 0; j < nrofpoints; ++j)
+    {
+      /** Compute index of nearest voxel in fixed image. */
+      InputPointType point{};
+      inputPointSet->GetPoint(j, &point);
+      inputpointvec[j] = point;
+      const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(point);
+      for (unsigned int i = 0; i < FixedImageDimension; ++i)
+      {
+        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
+      }
     }
   }
 
