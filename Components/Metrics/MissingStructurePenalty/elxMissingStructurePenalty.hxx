@@ -461,16 +461,18 @@ the sequence of points to form a 2d connected polydata contour.
   std::vector<MovingImageIndexType>  outputindexmovingvec(nrofpoints);
   std::vector<DeformationVectorType> deformationvec(nrofpoints);
 
+  const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
+
   /** Make a temporary image with the right region info,
    * which we can use to convert between points and indices.
    * By taking the image from the resampler output, the UseDirectionCosines
    * parameter is automatically taken into account. */
   FixedImageRegionType    region;
-  FixedImageOriginType    origin = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
-  FixedImageSpacingType   spacing = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
-  FixedImageDirectionType direction = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
-  region.SetIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
-  region.SetSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
+  FixedImageOriginType    origin = resampleImageFilter.GetOutputOrigin();
+  FixedImageSpacingType   spacing = resampleImageFilter.GetOutputSpacing();
+  FixedImageDirectionType direction = resampleImageFilter.GetOutputDirection();
+  region.SetIndex(resampleImageFilter.GetOutputStartIndex());
+  region.SetSize(resampleImageFilter.GetSize());
 
   auto dummyImage = FixedImageType::New();
   dummyImage->SetRegions(region);
