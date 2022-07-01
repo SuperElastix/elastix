@@ -718,16 +718,18 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   std::vector<MovingImageIndexType>  outputindexmovingvec(nrofpoints);
   std::vector<DeformationVectorType> deformationvec(nrofpoints);
 
+  const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
+
   /** Make a temporary image with the right region info,
    * which we can use to convert between points and indices.
    * By taking the image from the resampler output, the UseDirectionCosines
    * parameter is automatically taken into account. */
   FixedImageRegionType region;
-  const auto           origin = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
-  const auto           spacing = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
-  const auto           direction = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
-  region.SetIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
-  region.SetSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
+  const auto           origin = resampleImageFilter.GetOutputOrigin();
+  const auto           spacing = resampleImageFilter.GetOutputSpacing();
+  const auto           direction = resampleImageFilter.GetOutputDirection();
+  region.SetIndex(resampleImageFilter.GetOutputStartIndex());
+  region.SetSize(resampleImageFilter.GetSize());
 
   const auto dummyImage = FixedImageType::New();
   dummyImage->SetRegions(region);
@@ -993,13 +995,15 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
     itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordRepType>;
   using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldImageType>;
 
+  const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
+
   /** Create an setup deformation field generator. */
   const auto defGenerator = DeformationFieldGeneratorType::New();
-  defGenerator->SetSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
-  defGenerator->SetOutputSpacing(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing());
-  defGenerator->SetOutputOrigin(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin());
-  defGenerator->SetOutputStartIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
-  defGenerator->SetOutputDirection(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection());
+  defGenerator->SetSize(resampleImageFilter.GetSize());
+  defGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
+  defGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
+  defGenerator->SetOutputStartIndex(resampleImageFilter.GetOutputStartIndex());
+  defGenerator->SetOutputDirection(resampleImageFilter.GetOutputDirection());
   defGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
 
   /** Possibly change direction cosines to their original value, as specified
@@ -1102,14 +1106,16 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   using ChangeInfoFilterType = itk::ChangeInformationImageFilter<JacobianImageType>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
+  const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
+
   /** Create an setup Jacobian generator. */
   const auto jacGenerator = JacobianGeneratorType::New();
   jacGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
-  jacGenerator->SetOutputSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
-  jacGenerator->SetOutputSpacing(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing());
-  jacGenerator->SetOutputOrigin(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin());
-  jacGenerator->SetOutputIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
-  jacGenerator->SetOutputDirection(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection());
+  jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
+  jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
+  jacGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
+  jacGenerator->SetOutputIndex(resampleImageFilter.GetOutputStartIndex());
+  jacGenerator->SetOutputDirection(resampleImageFilter.GetOutputDirection());
   // NOTE: We can not use the following, since the fixed image does not exist in transformix
   //   jacGenerator->SetOutputParametersFromImage(
   //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
@@ -1181,14 +1187,16 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   using ChangeInfoFilterType = itk::ChangeInformationImageFilter<JacobianImageType>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
+  const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
+
   /** Create an setup Jacobian generator. */
   const auto jacGenerator = JacobianGeneratorType::New();
   jacGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
-  jacGenerator->SetOutputSize(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize());
-  jacGenerator->SetOutputSpacing(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing());
-  jacGenerator->SetOutputOrigin(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin());
-  jacGenerator->SetOutputIndex(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex());
-  jacGenerator->SetOutputDirection(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection());
+  jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
+  jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
+  jacGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
+  jacGenerator->SetOutputIndex(resampleImageFilter.GetOutputStartIndex());
+  jacGenerator->SetOutputDirection(resampleImageFilter.GetOutputDirection());
   // NOTE: We can not use the following, since the fixed image does not exist in transformix
   //   jacGenerator->SetOutputParametersFromImage(
   //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
