@@ -345,8 +345,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FillRigidityCoefficientI
 
   /** Fill m_RigidityCoefficientImage. */
   RigidityPixelType      fixedValue, movingValue, in;
-  RigidityImagePointType point;
-  point.Fill(0.0f);
+  RigidityImagePointType point{};
   RigidityImageIndexType index1, index2;
   index1.Fill(0);
   index2.Fill(0);

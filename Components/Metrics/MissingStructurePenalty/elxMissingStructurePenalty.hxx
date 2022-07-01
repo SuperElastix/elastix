@@ -491,8 +491,7 @@ the sequence of points to form a 2d connected polydata contour.
     for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** Compute index of nearest voxel in fixed image. */
-      InputPointType point;
-      point.Fill(0.0f);
+      InputPointType point{};
       inputPointSet->GetPoint(j, &point);
       inputpointvec[j] = point;
       dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
@@ -509,8 +508,7 @@ the sequence of points to form a 2d connected polydata contour.
       /** The read point from the inutPointSet is actually an index
        * Cast to the proper type.
        */
-      InputPointType point;
-      point.Fill(0.0f);
+      InputPointType point{};
       inputPointSet->GetPoint(j, &point);
       for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
