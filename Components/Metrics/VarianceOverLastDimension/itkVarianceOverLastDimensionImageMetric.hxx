@@ -249,8 +249,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
     }
 
     /** Transform sampled point to voxel coordinates. */
-    FixedImageContinuousIndexType voxelCoord;
-    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex(fixedPoint, voxelCoord);
+    auto voxelCoord =
+      this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
     /** Loop over the slowest varying dimension. */
     float              sumValues = 0.0;
@@ -429,8 +429,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
     std::fill(MT.begin(), MT.end(), itk::NumericTraits<RealType>::ZeroValue());
 
     /** Transform sampled point to voxel coordinates. */
-    FixedImageContinuousIndexType voxelCoord;
-    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex(fixedPoint, voxelCoord);
+    auto voxelCoord =
+      this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
     /** Loop over the slowest varying dimension. */
     float        sumValues = 0.0;

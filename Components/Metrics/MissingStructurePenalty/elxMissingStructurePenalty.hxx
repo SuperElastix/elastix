@@ -411,7 +411,6 @@ the sequence of points to form a 2d connected polydata contour.
   using FixedImageIndexType = typename FixedImageType::IndexType;
   using FixedImageIndexValueType = typename FixedImageIndexType::IndexValueType;
   using MovingImageIndexType = typename MovingImageType::IndexType;
-  using FixedImageContinuousIndexType = itk::ContinuousIndex<double, FixedImageDimension>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   using DummyIPPPixelType = unsigned char;
@@ -474,9 +473,6 @@ the sequence of points to form a 2d connected polydata contour.
   dummyImage->SetSpacing(resampleImageFilter.GetOutputSpacing());
   dummyImage->SetDirection(resampleImageFilter.GetOutputDirection());
 
-  /** Temp vars */
-  FixedImageContinuousIndexType fixedcindex;
-
   /** Also output moving image indices if a moving image was supplied. */
   bool                              alsoMovingIndices = false;
   typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
@@ -494,7 +490,7 @@ the sequence of points to form a 2d connected polydata contour.
       InputPointType point{};
       inputPointSet->GetPoint(j, &point);
       inputpointvec[j] = point;
-      dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
+      const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(point);
       for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(fixedcindex[i]));

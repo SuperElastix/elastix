@@ -260,7 +260,6 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
       using CoordRepType = typename PointType::CoordRepType;
       using IndexValueType = typename IndexType::IndexValueType;
       using SizeValueType = typename SizeType::SizeValueType;
-      using CIndexType = ContinuousIndex<CoordRepType, TFixedImage::ImageDimension>;
 
       PointType inputStartPoint;
       PointType inputEndPoint;
@@ -271,8 +270,6 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
       {
         SizeType         size;
         IndexType        start;
-        CIndexType       startcindex;
-        CIndexType       endcindex;
         FixedImageType * fixedImageAtLevel = fixpyr->GetOutput(level);
         /** map the original fixed image region to the image resulting from the
          * FixedImagePyramid at level l.
@@ -280,8 +277,10 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
          * is floored. To see why, consider an image of 4 by 4, and its
          * downsampled version of 2 by 2.
          */
-        fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputStartPoint, startcindex);
-        fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputEndPoint, endcindex);
+        const auto startcindex =
+          fixedImageAtLevel->template TransformPhysicalPointToContinuousIndex<CoordRepType>(inputStartPoint);
+        const auto endcindex =
+          fixedImageAtLevel->template TransformPhysicalPointToContinuousIndex<CoordRepType>(inputEndPoint);
         for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; ++dim)
         {
           start[dim] = static_cast<IndexValueType>(std::ceil(startcindex[dim]));
