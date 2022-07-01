@@ -807,52 +807,41 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   outputPointsFile << std::showpoint << std::fixed;
   elxout << "  The transformed points are saved in: " << outputPointsFileName << std::endl;
 
+  const auto writeToFile = [&outputPointsFile](const auto & rangeOfElements) {
+    for (const auto element : rangeOfElements)
+    {
+      outputPointsFile << element << ' ';
+    }
+  };
+
   /** Print the results. */
   for (unsigned int j = 0; j < nrofpoints; ++j)
   {
     /** The input index. */
     outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; ++i)
-    {
-      outputPointsFile << inputindexvec[j][i] << " ";
-    }
+    writeToFile(inputindexvec[j]);
 
     /** The input point. */
     outputPointsFile << "]\t; InputPoint = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; ++i)
-    {
-      outputPointsFile << inputpointvec[j][i] << " ";
-    }
+    writeToFile(inputpointvec[j]);
 
     /** The output index in fixed image. */
     outputPointsFile << "]\t; OutputIndexFixed = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; ++i)
-    {
-      outputPointsFile << outputindexfixedvec[j][i] << " ";
-    }
+    writeToFile(outputindexfixedvec[j]);
 
     /** The output point. */
     outputPointsFile << "]\t; OutputPoint = [ ";
-    for (unsigned int i = 0; i < FixedImageDimension; ++i)
-    {
-      outputPointsFile << outputpointvec[j][i] << " ";
-    }
+    writeToFile(outputpointvec[j]);
 
     /** The output point minus the input point. */
     outputPointsFile << "]\t; Deformation = [ ";
-    for (unsigned int i = 0; i < MovingImageDimension; ++i)
-    {
-      outputPointsFile << deformationvec[j][i] << " ";
-    }
+    writeToFile(deformationvec[j]);
 
     if (alsoMovingIndices)
     {
       /** The output index in moving image. */
       outputPointsFile << "]\t; OutputIndexMoving = [ ";
-      for (unsigned int i = 0; i < MovingImageDimension; ++i)
-      {
-        outputPointsFile << outputindexmovingvec[j][i] << " ";
-      }
+      writeToFile(outputindexmovingvec[j]);
     }
 
     outputPointsFile << "]" << std::endl;
