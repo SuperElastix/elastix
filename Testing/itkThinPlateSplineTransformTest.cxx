@@ -67,7 +67,7 @@ main(int argc, char * argv[])
   {
     landmarkReader->Update();
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     std::cerr << "  Error while opening landmark file." << std::endl;
     std::cerr << excp << std::endl;

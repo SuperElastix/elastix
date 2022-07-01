@@ -313,7 +313,7 @@ ElastixMain::Run()
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
     this->m_Elastix = this->CreateComponent("Elastix");
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
     xl::xout["error"] << excp << std::endl;
@@ -410,7 +410,7 @@ ElastixMain::Run()
   {
     errorCode = elastixBase.Run();
   }
-  catch (itk::ExceptionObject & excp1)
+  catch (const itk::ExceptionObject & excp1)
   {
     /** We just print the itk::exception and let the program quit. */
     xl::xout["error"] << excp1 << std::endl;
@@ -524,7 +524,7 @@ ElastixMain::InitDBIndex()
         {
           this->GetImageInformationFromFile(fixedImageFileName, this->m_FixedImageDimension);
         }
-        catch (itk::ExceptionObject & err)
+        catch (const itk::ExceptionObject & err)
         {
           xl::xout["error"] << "ERROR: could not read fixed image." << std::endl;
           xl::xout["error"] << err << std::endl;
@@ -601,7 +601,7 @@ ElastixMain::InitDBIndex()
         {
           this->GetImageInformationFromFile(movingImageFileName, this->m_MovingImageDimension);
         }
-        catch (itk::ExceptionObject & err)
+        catch (const itk::ExceptionObject & err)
         {
           xl::xout["error"] << "ERROR: could not read moving image." << std::endl;
           xl::xout["error"] << err << std::endl;
@@ -809,7 +809,7 @@ ElastixMain::CreateComponents(const std::string &              key,
   {
     objectContainer->CreateElementAt(componentnr) = this->CreateComponent(componentName);
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
     xl::xout["error"] << excp << std::endl;
@@ -828,7 +828,7 @@ ElastixMain::CreateComponents(const std::string &              key,
       {
         objectContainer->CreateElementAt(componentnr) = this->CreateComponent(componentName);
       }
-      catch (itk::ExceptionObject & excp)
+      catch (const itk::ExceptionObject & excp)
       {
         xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
         xl::xout["error"] << excp << std::endl;

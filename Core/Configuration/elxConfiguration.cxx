@@ -206,7 +206,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
     xl::xout["standard"] << "Reading the elastix parameters from file ...\n" << std::endl;
     this->m_ParameterFileParser->ReadParameterFile();
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     xl::xout["error"] << "ERROR: when reading the parameter file:\n" << excp << std::endl;
     return 1;

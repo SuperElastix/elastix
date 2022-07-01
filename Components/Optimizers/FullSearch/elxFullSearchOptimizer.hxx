@@ -243,7 +243,7 @@ FullSearch<TElastix>::AfterEachResolution()
       elxout << "\nThe scanned optimization surface is saved as: " << this->m_OptimizationSurface->GetOutputFileName()
              << std::endl;
     }
-    catch (itk::ExceptionObject & err)
+    catch (const itk::ExceptionObject & err)
     {
       xl::xout["error"] << "ERROR: Saving " << this->m_OptimizationSurface->GetOutputFileName() << " failed."
                         << std::endl;

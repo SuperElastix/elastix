@@ -975,7 +975,7 @@ PreconditionedStochasticGradientDescent<TElastix>::GetScaledDerivativeWithExcept
   {
     this->GetScaledValueAndDerivative(parameters, dummyvalue, derivative);
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();

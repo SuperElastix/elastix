@@ -118,7 +118,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
     {
       this->ResampleAndWriteResultImage(makeFileName.str().c_str());
     }
-    catch (itk::ExceptionObject & excp)
+    catch (const itk::ExceptionObject & excp)
     {
       xl::xout["error"] << "Exception caught: " << std::endl;
       xl::xout["error"] << excp << "Resuming elastix." << std::endl;
@@ -171,7 +171,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     {
       this->ResampleAndWriteResultImage(makeFileName.str().c_str(), false);
     }
-    catch (itk::ExceptionObject & excp)
+    catch (const itk::ExceptionObject & excp)
     {
       xl::xout["error"] << "Exception caught: " << std::endl;
       xl::xout["error"] << excp << "Resuming elastix." << std::endl;
@@ -248,7 +248,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       {
         this->ResampleAndWriteResultImage(makeFileName.str().c_str(), this->m_ShowProgress);
       }
-      catch (itk::ExceptionObject & excp)
+      catch (const itk::ExceptionObject & excp)
       {
         xl::xout["error"] << "Exception caught: " << std::endl;
         xl::xout["error"] << excp << "Resuming elastix." << std::endl;

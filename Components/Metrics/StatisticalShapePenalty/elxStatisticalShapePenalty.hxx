@@ -290,7 +290,7 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
   {
     reader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while opening " << landmarkFileName << std::endl;
     xl::xout["error"] << err << std::endl;
