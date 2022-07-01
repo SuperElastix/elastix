@@ -702,7 +702,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   {
     elxout << "  Input points are specified in world coordinates." << std::endl;
   }
-  unsigned int nrofpoints = ippReader->GetNumberOfPoints();
+  const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
   elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
   /** Get the set of input points. */
@@ -730,12 +730,8 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   dummyImage->SetDirection(resampleImageFilter.GetOutputDirection());
 
   /** Also output moving image indices if a moving image was supplied. */
-  bool                              alsoMovingIndices = false;
-  typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
-  if (movingImage.IsNotNull())
-  {
-    alsoMovingIndices = true;
-  }
+  const typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
+  const bool                              alsoMovingIndices = movingImage.IsNotNull();
 
   /** Read the input points, as index or as point. */
   if (ippReader->GetPointsAreIndices())
@@ -801,9 +797,8 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   }
 
   /** Create filename and file stream. */
-  std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out");
-  outputPointsFileName += "outputpoints.txt";
-  std::ofstream outputPointsFile(outputPointsFileName);
+  const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.txt";
+  std::ofstream     outputPointsFile(outputPointsFileName);
   outputPointsFile << std::showpoint << std::fixed;
   elxout << "  The transformed points are saved in: " << outputPointsFileName << std::endl;
 
@@ -890,7 +885,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
 
   /** Some user-feedback. */
   elxout << "  Input points are specified in world coordinates." << std::endl;
-  unsigned long nrofpoints = meshReader->GetOutput()->GetNumberOfPoints();
+  const unsigned long nrofpoints = meshReader->GetOutput()->GetNumberOfPoints();
   elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
   /** Apply the transform. */
@@ -909,8 +904,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
 
   /** Create filename and file stream. */
-  std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out");
-  outputPointsFileName += "outputpoints.vtk";
+  const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.vtk";
   elxout << "  The transformed points are saved in: " << outputPointsFileName << std::endl;
   const auto meshWriter = MeshWriterType::New();
   meshWriter->SetFileName(outputPointsFileName.c_str());
