@@ -724,18 +724,12 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
    * which we can use to convert between points and indices.
    * By taking the image from the resampler output, the UseDirectionCosines
    * parameter is automatically taken into account. */
-  FixedImageRegionType region;
-  const auto           origin = resampleImageFilter.GetOutputOrigin();
-  const auto           spacing = resampleImageFilter.GetOutputSpacing();
-  const auto           direction = resampleImageFilter.GetOutputDirection();
-  region.SetIndex(resampleImageFilter.GetOutputStartIndex());
-  region.SetSize(resampleImageFilter.GetSize());
-
   const auto dummyImage = FixedImageType::New();
-  dummyImage->SetRegions(region);
-  dummyImage->SetOrigin(origin);
-  dummyImage->SetSpacing(spacing);
-  dummyImage->SetDirection(direction);
+  dummyImage->SetRegions(
+    FixedImageRegionType(resampleImageFilter.GetOutputStartIndex(), resampleImageFilter.GetSize()));
+  dummyImage->SetOrigin(resampleImageFilter.GetOutputOrigin());
+  dummyImage->SetSpacing(resampleImageFilter.GetOutputSpacing());
+  dummyImage->SetDirection(resampleImageFilter.GetOutputDirection());
 
   /** Temp vars */
   FixedImageContinuousIndexType  fixedcindex;

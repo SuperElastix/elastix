@@ -445,18 +445,12 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
    * By taking the image from the resampler output, the UseDirectionCosines
    * parameter is automatically taken into account.
    */
-  FixedImageRegionType    region;
-  FixedImageOriginType    origin = resampleImageFilter.GetOutputOrigin();
-  FixedImageSpacingType   spacing = resampleImageFilter.GetOutputSpacing();
-  FixedImageDirectionType direction = resampleImageFilter.GetOutputDirection();
-  region.SetIndex(resampleImageFilter.GetOutputStartIndex());
-  region.SetSize(resampleImageFilter.GetSize());
-
   auto dummyImage = FixedImageType::New();
-  dummyImage->SetRegions(region);
-  dummyImage->SetOrigin(origin);
-  dummyImage->SetSpacing(spacing);
-  dummyImage->SetDirection(direction);
+  dummyImage->SetRegions(
+    FixedImageRegionType(resampleImageFilter.GetOutputStartIndex(), resampleImageFilter.GetSize()));
+  dummyImage->SetOrigin(resampleImageFilter.GetOutputOrigin());
+  dummyImage->SetSpacing(resampleImageFilter.GetOutputSpacing());
+  dummyImage->SetDirection(resampleImageFilter.GetOutputDirection());
 
   /** Temp vars */
   FixedImageContinuousIndexType fixedcindex;
