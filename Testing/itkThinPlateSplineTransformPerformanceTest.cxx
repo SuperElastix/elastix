@@ -134,7 +134,7 @@ main(int argc, char * argv[])
   {
     ippReader->Update();
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     std::cerr << "  Error while opening input point file." << std::endl;
     std::cerr << excp << std::endl;

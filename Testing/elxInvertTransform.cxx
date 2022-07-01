@@ -138,7 +138,7 @@ main(int argc, char * argv[])
   {
     testReader->UpdateOutputInformation();
   }
-  catch (itk::ExceptionObject & e)
+  catch (const itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: Caught ITK exception: " << e << std::endl;
     return EXIT_FAILURE;
@@ -208,7 +208,7 @@ main(int argc, char * argv[])
       return EXIT_FAILURE;
     }
   }
-  catch (itk::ExceptionObject & e)
+  catch (const itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: Caught ITK exception: " << e << std::endl;
     return EXIT_FAILURE;

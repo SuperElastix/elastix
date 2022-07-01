@@ -212,7 +212,7 @@ MissingStructurePenalty<TElastix>::AfterEachIteration()
       {
         this->WriteResultMesh(makeFileName.str().c_str(), meshId);
       }
-      catch (itk::ExceptionObject & excp)
+      catch (const itk::ExceptionObject & excp)
       {
         xl::xout["error"] << "Exception caught: " << std::endl;
         xl::xout["error"] << excp << "Resuming elastix." << std::endl;
@@ -260,7 +260,7 @@ MissingStructurePenalty<TElastix>::AfterEachResolution()
       {
         this->WriteResultMesh(makeFileName.str().c_str(), meshId);
       }
-      catch (itk::ExceptionObject & excp)
+      catch (const itk::ExceptionObject & excp)
       {
         xl::xout["error"] << "Exception caught: " << std::endl;
         xl::xout["error"] << excp << "Resuming elastix." << std::endl;
@@ -289,7 +289,7 @@ MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, ty
   {
     meshReader->UpdateLargestPossibleRegion();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while opening input mesh file." << std::endl;
     xl::xout["error"] << err << std::endl;
@@ -430,7 +430,7 @@ the sequence of points to form a 2d connected polydata contour.
   {
     ippReader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while opening input point file." << std::endl;
     xl::xout["error"] << err << std::endl;

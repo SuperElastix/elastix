@@ -63,7 +63,7 @@ TransformixMain::Run()
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
     this->m_Elastix = this->CreateComponent("Elastix");
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
     xl::xout["error"] << excp << std::endl;
@@ -138,7 +138,7 @@ TransformixMain::Run()
   {
     errorCode = elastixBase.ApplyTransform();
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
     xl::xout["error"] << '\n'

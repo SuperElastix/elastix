@@ -137,7 +137,7 @@ testMevis()
   {
     inputImage->Allocate();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     std::cerr << "ERROR: Failed to allocate test image" << std::endl;
     std::cerr << err << std::endl;
@@ -168,7 +168,7 @@ testMevis()
     task = "Reading";
     reader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     std::cerr << "ERROR: " << task << " mevis dicomtiff failed." << std::endl;
     std::cerr << err << std::endl;

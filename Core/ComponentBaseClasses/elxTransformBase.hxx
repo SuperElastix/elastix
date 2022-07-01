@@ -689,7 +689,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   {
     ippReader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while opening input point file." << std::endl;
     xl::xout["error"] << err << std::endl;
@@ -898,7 +898,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   {
     meshReader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while opening input point file." << std::endl;
     xl::xout["error"] << err << std::endl;
@@ -918,7 +918,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   {
     meshTransformer->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while transforming points." << std::endl;
     xl::xout["error"] << err << std::endl;
@@ -936,7 +936,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   {
     meshWriter->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while saving points." << std::endl;
     xl::xout["error"] << err << std::endl;

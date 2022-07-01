@@ -74,7 +74,7 @@ MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
     {
       this->WritePyramidImage(makeFileName.str(), level);
     }
-    catch (itk::ExceptionObject & excp)
+    catch (const itk::ExceptionObject & excp)
     {
       xl::xout["error"] << "Exception caught: " << std::endl;
       xl::xout["error"] << excp << "Resuming elastix." << std::endl;

@@ -129,7 +129,7 @@ main(int argc, char ** argv)
   {
     parameterFileParser->ReadParameterFile();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     std::cerr << "Error during reading test transform parameters: " << err << std::endl;
     return EXIT_FAILURE;
@@ -148,7 +148,7 @@ main(int argc, char ** argv)
   {
     parameterFileParser->ReadParameterFile();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     std::cerr << "Error during reading baseline transform parameters: " << err << std::endl;
     return EXIT_FAILURE;
@@ -321,7 +321,7 @@ main(int argc, char ** argv)
       {
         itk::WriteImage(coefImage, diffImageFileName);
       }
-      catch (itk::ExceptionObject & err)
+      catch (const itk::ExceptionObject & err)
       {
         std::cerr << "Error during writing difference image: " << err << std::endl;
         return EXIT_FAILURE;

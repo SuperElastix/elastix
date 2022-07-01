@@ -319,7 +319,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   {
     this->GetElxTransformBase()->TransformPoints();
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     xl::xout["error"] << excp << std::endl;
     xl::xout["error"] << "However, transformix continues anyway." << std::endl;
@@ -338,7 +338,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   {
     this->GetElxTransformBase()->ComputeDeterminantOfSpatialJacobian();
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     xl::xout["error"] << excp << std::endl;
     xl::xout["error"] << "However, transformix continues anyway." << std::endl;
@@ -358,7 +358,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   {
     this->GetElxTransformBase()->ComputeSpatialJacobian();
   }
-  catch (itk::ExceptionObject & excp)
+  catch (const itk::ExceptionObject & excp)
   {
     xl::xout["error"] << excp << std::endl;
     xl::xout["error"] << "However, transformix continues anyway." << std::endl;

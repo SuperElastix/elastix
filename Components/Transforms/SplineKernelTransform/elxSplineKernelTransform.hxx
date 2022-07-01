@@ -296,7 +296,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   {
     landmarkReader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject & err)
   {
     xl::xout["error"] << "  Error while opening landmark file." << std::endl;
     xl::xout["error"] << err << std::endl;
