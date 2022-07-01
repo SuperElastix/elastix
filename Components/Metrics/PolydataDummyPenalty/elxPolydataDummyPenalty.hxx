@@ -391,7 +391,6 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   using FixedImageIndexType = typename FixedImageType::IndexType;
   using FixedImageIndexValueType = typename FixedImageIndexType::IndexValueType;
   using MovingImageIndexType = typename MovingImageType::IndexType;
-  using FixedImageContinuousIndexType = itk::ContinuousIndex<double, FixedImageDimension>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   using DummyIPPPixelType = unsigned char;
@@ -452,9 +451,6 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   dummyImage->SetSpacing(resampleImageFilter.GetOutputSpacing());
   dummyImage->SetDirection(resampleImageFilter.GetOutputDirection());
 
-  /** Temp vars */
-  FixedImageContinuousIndexType fixedcindex;
-
   /** Read the input points, as index or as point. */
   if (!(ippReader->GetPointsAreIndices()))
   {
@@ -464,7 +460,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
       InputPointType point{};
       inputPointSet->GetPoint(j, &point);
       inputpointvec[j] = point;
-      dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
+      const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(point);
       for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(vnl_math::rnd(fixedcindex[i]));

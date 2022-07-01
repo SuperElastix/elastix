@@ -227,8 +227,8 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
   /** Convert to continuous index in input image 0. */
   smallestPoint = dir0 * smallestPoint;
   largestPoint = dir0 * largestPoint;
-  this->GetInput(0)->TransformPhysicalPointToContinuousIndex(smallestPoint, smallestContIndex);
-  this->GetInput(0)->TransformPhysicalPointToContinuousIndex(largestPoint, largestContIndex);
+  smallestContIndex = this->GetInput(0)->template TransformPhysicalPointToContinuousIndex<CoordRepType>(smallestPoint);
+  largestContIndex = this->GetInput(0)->template TransformPhysicalPointToContinuousIndex<CoordRepType>(largestPoint);
 
   /** Support for localised mutual information. */
   if (this->GetUseRandomSampleRegion())

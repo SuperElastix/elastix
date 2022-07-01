@@ -328,7 +328,6 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
   using ContinuousIndexType = typename WeightsFunctionType::ContinuousIndexType;
   using ContinuousIndexValueType = double;
 
-  ContinuousIndexType      tindex;
   ContinuousIndexValueType tx, ty, tz;
 
   ContinuousIndexValueType m, n, p, neighbor_m, neighbor_n, neighbor_p;
@@ -344,7 +343,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
   NeighborhoodIteratorType ni(radius, this->m_PenaltyGridImage, penaltyGridImageRegion);
   unsigned int             numberOfNeighborhood = ni.Size();
 
-  ContinuousIndexType      tindex_neighbor, ntindex_start, ntindex_neighbor_start;
+  ContinuousIndexType      ntindex_start, ntindex_neighbor_start;
   ContinuousIndexValueType tx_neighbor, ty_neighbor, tz_neighbor;
 
   typename BSplineKnotImageType::SizeType bSplineKnotImageSize =
@@ -428,9 +427,12 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
               value += penaltyTermBuffer / numberOfRigidGridsNeighbor / (this->m_NumberOfRigidGrids);
 
               // find neighboring B-Spline control points
-              this->m_BSplineKnotImage->TransformPhysicalPointToContinuousIndex(penaltyGridPoint, tindex);
-              this->m_BSplineKnotImage->TransformPhysicalPointToContinuousIndex(neighborPenaltyGridPoint,
-                                                                                tindex_neighbor);
+              const auto tindex =
+                this->m_BSplineKnotImage->template TransformPhysicalPointToContinuousIndex<ContinuousIndexValueType>(
+                  penaltyGridPoint);
+              const auto tindex_neighbor =
+                this->m_BSplineKnotImage->template TransformPhysicalPointToContinuousIndex<ContinuousIndexValueType>(
+                  neighborPenaltyGridPoint);
 
               tx = tindex[0];
               ty = tindex[1];

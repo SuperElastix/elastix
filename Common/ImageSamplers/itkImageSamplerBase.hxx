@@ -344,12 +344,9 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
     cornersIndex->Reserve(cornersWorld->Size());
     typename PointsContainerType::const_iterator itCW = cornersWorld->begin();
     typename PointsContainerType::iterator       itCI = cornersIndex->begin();
-    using CIndexType = itk::ContinuousIndex<InputImagePointValueType, InputImageDimension>;
-    CIndexType cindex;
     while (itCW != cornersWorld->end())
     {
-      inputImage->TransformPhysicalPointToContinuousIndex(*itCW, cindex);
-      *itCI = cindex;
+      *itCI = inputImage->template TransformPhysicalPointToContinuousIndex<InputImagePointValueType>(*itCW);
       itCI++;
       itCW++;
     }

@@ -271,15 +271,16 @@ EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPoint
   if (this->GetUseComposition() && this->Superclass1::GetInitialTransform() != nullptr)
   {
     /** Transform point to voxel coordinates. */
-    InputPointType      fullDimensionCenterPoint;
-    ContinuousIndexType fullDimensionCenterIndex;
+    InputPointType fullDimensionCenterPoint;
     for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
     {
       fullDimensionCenterPoint[i] = point[i];
     }
     fullDimensionCenterPoint[SpaceDimension - 1] = 0;
-    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformPhysicalPointToContinuousIndex(
-      fullDimensionCenterPoint, fullDimensionCenterIndex);
+    auto fullDimensionCenterIndex =
+      this->m_Registration->GetAsITKBaseType()
+        ->GetFixedImage()
+        ->template TransformPhysicalPointToContinuousIndex<CoordRepType>(fullDimensionCenterPoint);
 
     /** Get size of image and number of time points. */
     const SizeType fixedImageSize =

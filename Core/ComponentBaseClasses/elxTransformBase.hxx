@@ -670,8 +670,6 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   using FixedImageIndexValueType = typename FixedImageIndexType::IndexValueType;
   using MovingImageIndexType = typename MovingImageType::IndexType;
   using MovingImageIndexValueType = typename MovingImageIndexType::IndexValueType;
-  using FixedImageContinuousIndexType = itk::ContinuousIndex<double, FixedImageDimension>;
-  using MovingImageContinuousIndexType = itk::ContinuousIndex<double, MovingImageDimension>;
 
   using DummyIPPPixelType = unsigned char;
   using MeshTraitsType =
@@ -731,10 +729,6 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   dummyImage->SetSpacing(resampleImageFilter.GetOutputSpacing());
   dummyImage->SetDirection(resampleImageFilter.GetOutputDirection());
 
-  /** Temp vars */
-  FixedImageContinuousIndexType  fixedcindex;
-  MovingImageContinuousIndexType movingcindex;
-
   /** Also output moving image indices if a moving image was supplied. */
   bool                              alsoMovingIndices = false;
   typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
@@ -752,7 +746,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
       InputPointType point{};
       inputPointSet->GetPoint(j, &point);
       inputpointvec[j] = point;
-      dummyImage->TransformPhysicalPointToContinuousIndex(point, fixedcindex);
+      const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(point);
       for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
         inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
@@ -785,7 +779,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     outputpointvec[j] = this->GetAsITKBaseType()->TransformPoint(inputpointvec[j]);
 
     /** Transform back to index in fixed image domain. */
-    dummyImage->TransformPhysicalPointToContinuousIndex(outputpointvec[j], fixedcindex);
+    const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(outputpointvec[j]);
     for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
       outputindexfixedvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
@@ -794,7 +788,8 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     if (alsoMovingIndices)
     {
       /** Transform back to index in moving image domain. */
-      movingImage->TransformPhysicalPointToContinuousIndex(outputpointvec[j], movingcindex);
+      const auto movingcindex =
+        movingImage->template TransformPhysicalPointToContinuousIndex<double>(outputpointvec[j]);
       for (unsigned int i = 0; i < MovingImageDimension; ++i)
       {
         outputindexmovingvec[j][i] = static_cast<MovingImageIndexValueType>(itk::Math::Round<double>(movingcindex[i]));
