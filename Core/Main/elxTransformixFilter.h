@@ -83,7 +83,7 @@ public:
   virtual void
   RemoveMovingImage();
 
-  /** Set/Get/Remove moving point set filename. */
+  /** Set/Get/Remove fixed point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
   itkGetConstMacro(FixedPointSetFileName, std::string);
   virtual void
