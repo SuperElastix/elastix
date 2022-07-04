@@ -161,7 +161,7 @@ class TransformixTestCase(unittest.TestCase):
             'ERROR: At least one of the CommandLine options "-in", "-def", "-jac", or "-jacmat" should be given!',
         )
 
-    def test_translation(self) -> None:
+    def test_translation_of_images(self) -> None:
         """Tests translation of images"""
 
         source_directory_path = pathlib.Path(__file__).resolve().parent
