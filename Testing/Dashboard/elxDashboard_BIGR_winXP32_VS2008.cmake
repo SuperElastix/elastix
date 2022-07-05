@@ -15,12 +15,12 @@
 # PC: BIGR, SK personal computer.
 
 # Client maintainer: s.klein@erasmusmc.nl
-set( CTEST_SITE "BIGR.PCStefan" )
-set( CTEST_BUILD_NAME "WinXP-32bit-VS2008" )
-#set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
-set( CTEST_TEST_ARGS PARALLEL_LEVEL 2 ) # parallel testing
-set( CTEST_BUILD_CONFIGURATION Release )
-set( CTEST_CMAKE_GENERATOR "Visual Studio 9 2008" )
+set(CTEST_SITE "BIGR.PCStefan")
+set(CTEST_BUILD_NAME "WinXP-32bit-VS2008")
+#set(CTEST_BUILD_FLAGS "-j2") # parallel build for makefiles
+set(CTEST_TEST_ARGS PARALLEL_LEVEL 2) # parallel testing
+set(CTEST_BUILD_CONFIGURATION Release)
+set(CTEST_CMAKE_GENERATOR "Visual Studio 9 2008")
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
@@ -33,20 +33,20 @@ set(CTEST_UPDATE_COMMAND "C:/Program Files/Subversion/bin/svn.exe")
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-set( dashboard_model Nightly )
-if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  set( dashboard_model Experimental )
-elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  set( dashboard_model Continuous )
+set(dashboard_model Nightly)
+if(${CTEST_SCRIPT_ARG} MATCHES Experimental)
+  set(dashboard_model Experimental)
+elseif(${CTEST_SCRIPT_ARG} MATCHES Continuous)
+  set(dashboard_model Continuous)
 endif()
 
 # name of output directory
-set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}" )
+set(CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}")
 
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
 
-set( dashboard_cache "
+set(dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=D:/tk/itk/4.5.0/bin
 
@@ -65,5 +65,5 @@ USE_ALL_COMPONENTS:BOOL=ON
 
 
 # Load the common dashboard script.
-include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
+include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
 

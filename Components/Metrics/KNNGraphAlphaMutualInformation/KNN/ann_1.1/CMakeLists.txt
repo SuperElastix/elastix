@@ -1,19 +1,19 @@
-project( ANN )
+project(ANN)
 
 # Compile time option to select wheter or not to accept self matches
 # during nearest neighbour search. The default is false for backward
 # compatibility.
-mark_as_advanced( ELASTIX_KNN_ALLOW_SELF_MATCH )
-set( ELASTIX_KNN_ALLOW_SELF_MATCH false
-  CACHE BOOL "Allow self matches during kNN search" )
-set( ANN_ALLOW_SELF_MATCH "ANNfalse" )
-if( ${ELASTIX_KNN_ALLOW_SELF_MATCH} )
-  set( ANN_ALLOW_SELF_MATCH "ANNtrue" )
+mark_as_advanced(ELASTIX_KNN_ALLOW_SELF_MATCH)
+set(ELASTIX_KNN_ALLOW_SELF_MATCH false
+  CACHE BOOL "Allow self matches during kNN search")
+set(ANN_ALLOW_SELF_MATCH "ANNfalse")
+if(${ELASTIX_KNN_ALLOW_SELF_MATCH})
+  set(ANN_ALLOW_SELF_MATCH "ANNtrue")
 endif()
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/include/ANN/ANN.h.in
   ${elastix_BINARY_DIR}/ANN/ANN.h
-  @ONLY )
+  @ONLY)
 
 # Include these directories to look for header files.
 include_directories(
@@ -22,7 +22,7 @@ include_directories(
 )
 
 # Sources of non-templated classes.
-set( ANN_SRCS
+set(ANN_SRCS
   src/ANN.cpp
   src/bd_fix_rad_search.cpp
   src/bd_pr_search.cpp
@@ -40,18 +40,18 @@ set( ANN_SRCS
 )
 
 # Create the ANNlib library
-add_library( ANNlib SHARED ${ANN_SRCS} )
+add_library(ANNlib SHARED ${ANN_SRCS})
 
 include(GenerateExportHeader)
-generate_export_header( ANNlib
-  EXPORT_FILE_NAME ${elastix_BINARY_DIR}/ANN/ANNExport.h )
+generate_export_header(ANNlib
+  EXPORT_FILE_NAME ${elastix_BINARY_DIR}/ANN/ANNExport.h)
 
 # Group in IDE's like Visual Studio
-set_property( TARGET ANNlib PROPERTY FOLDER "libraries" )
+set_property(TARGET ANNlib PROPERTY FOLDER "libraries")
 
 # Install
-install( TARGETS ANNlib
+install(TARGETS ANNlib
   ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
   RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
-  COMPONENT RuntimeLibraries )
+  COMPONENT RuntimeLibraries)

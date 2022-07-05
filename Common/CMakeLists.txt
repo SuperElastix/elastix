@@ -1,21 +1,21 @@
 #---------------------------------------------------------------------
-project( elxCommon )
+project(elxCommon)
 
 #---------------------------------------------------------------------
 # Sub-projects.
 
-add_subdirectory( ParameterFileParser )
-add_subdirectory( xout )
-add_subdirectory( MevisDicomTiff )
+add_subdirectory(ParameterFileParser)
+add_subdirectory(xout)
+add_subdirectory(MevisDicomTiff)
 
-if( ELASTIX_USE_OPENCL )
-  add_subdirectory( OpenCL )
+if(ELASTIX_USE_OPENCL)
+  add_subdirectory(OpenCL)
 endif()
 
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.
 
-set( CommonFiles
+set(CommonFiles
   elxDefaultConstructibleSubclass.h
   elxSupportedImageDimensions.h
   itkAdvancedLinearInterpolateImageFunction.h
@@ -64,7 +64,7 @@ set( CommonFiles
   TypeList.h
 )
 
-set( CostFunctionFiles
+set(CostFunctionFiles
   CostFunctions/itkAdvancedImageToImageMetric.h
   CostFunctions/itkAdvancedImageToImageMetric.hxx
   CostFunctions/itkExponentialLimiterFunction.h
@@ -86,7 +86,7 @@ set( CostFunctionFiles
   CostFunctions/itkTransformPenaltyTerm.hxx
 )
 
-set( TransformFiles
+set(TransformFiles
   Transforms/elxTransformFactoryRegistration.h
   Transforms/elxTransformFactoryRegistration.cxx
   Transforms/elxTransformIO.h
@@ -151,14 +151,14 @@ set( TransformFiles
   Transforms/itkUpsampleBSplineParametersFilter.hxx
 )
 
-set( LineSearchOptimizersFiles
+set(LineSearchOptimizersFiles
   LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
   LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.cxx
   LineSearchOptimizers/itkLineSearchOptimizer.h
   LineSearchOptimizers/itkLineSearchOptimizer.cxx
 )
 
-set( ImageSamplersFiles
+set(ImageSamplersFiles
   ImageSamplers/itkImageFullSampler.h
   ImageSamplers/itkImageFullSampler.hxx
   ImageSamplers/itkImageGridSampler.h
@@ -186,37 +186,37 @@ set( ImageSamplersFiles
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.
 
-source_group( "Common" FILES ${CommonFiles} )
-source_group( "CostFunctions" FILES ${CostFunctionFiles} )
-source_group( "Transforms" FILES ${TransformFiles} )
-source_group( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
-source_group( "ImageSamplers" FILES ${ImageSamplersFiles} )
+source_group("Common" FILES ${CommonFiles})
+source_group("CostFunctions" FILES ${CostFunctionFiles})
+source_group("Transforms" FILES ${TransformFiles})
+source_group("LineSearchOptimizers" FILES ${LineSearchOptimizersFiles})
+source_group("ImageSamplers" FILES ${ImageSamplersFiles})
 
 #---------------------------------------------------------------------
 # Create the elxCommon library.
 
-add_library( elxCommon STATIC
+add_library(elxCommon STATIC
   ${CommonFiles}
   ${CostFunctionFiles}
   ${TransformFiles}
   ${LineSearchOptimizersFiles}
   ${ImageSamplersFiles}
 )
-install( TARGETS elxCommon
+install(TARGETS elxCommon
   ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
-  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
+  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR})
 
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-if( UNIX AND NOT APPLE )
-  target_link_libraries( elxCommon
+if(UNIX AND NOT APPLE)
+  target_link_libraries(elxCommon
     ${ITK_LIBRARIES}
     rt # Needed for elxTimer, clock_gettime()
   )
 else()
-  target_link_libraries( elxCommon
+  target_link_libraries(elxCommon
     ${ITK_LIBRARIES}
   )
 endif()

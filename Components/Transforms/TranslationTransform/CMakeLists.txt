@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( TranslationTransformElastix
  itkTranslationTransformInitializer.hxx
  elxTranslationTransform.h
  elxTranslationTransform.hxx
- elxTranslationTransform.cxx )
+ elxTranslationTransform.cxx)
 

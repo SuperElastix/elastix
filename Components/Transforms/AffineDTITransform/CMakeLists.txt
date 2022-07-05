@@ -7,5 +7,5 @@ ADD_ELXCOMPONENT( AffineDTITransformElastix # Was OFF by default before elastix 
  itkAffineDTI2DTransform.hxx
  itkAffineDTI3DTransform.h
  itkAffineDTI3DTransform.hxx
- itkAffineDTITransform.h )
+ itkAffineDTITransform.h)
 

@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( ConjugateGradient
  elxConjugateGradient.hxx
  elxConjugateGradient.cxx
  itkGenericConjugateGradientOptimizer.h
- itkGenericConjugateGradientOptimizer.cxx )
+ itkGenericConjugateGradientOptimizer.cxx)
 

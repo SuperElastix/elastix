@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( QuasiNewtonLBFGS
  elxQuasiNewtonLBFGS.hxx
  elxQuasiNewtonLBFGS.cxx
  itkQuasiNewtonLBFGSOptimizer.h
- itkQuasiNewtonLBFGSOptimizer.cxx )
+ itkQuasiNewtonLBFGSOptimizer.cxx)
 

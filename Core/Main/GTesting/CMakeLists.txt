@@ -7,7 +7,7 @@ add_executable(ElastixLibGTest
   itkTransformixFilterGTest.cxx
 )
 
-target_link_libraries( ElastixLibGTest
+target_link_libraries(ElastixLibGTest
   GTest::GTest
   GTest::Main
   elastix_lib
@@ -17,8 +17,8 @@ target_link_libraries( ElastixLibGTest
 
 target_compile_definitions(ElastixLibGTest PRIVATE ELX_CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}" ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 
-if( ELASTIX_USE_OPENCL )
-  target_link_libraries( ElastixLibGTest elxOpenCL )
+if(ELASTIX_USE_OPENCL)
+  target_link_libraries(ElastixLibGTest elxOpenCL)
 endif()
 
 add_test(NAME ElastixLibGTest_test COMMAND ElastixLibGTest)

@@ -7,12 +7,12 @@ ADD_ELXCOMPONENT( KNNGraphAlphaMutualInformationMetric
  itkKNNGraphAlphaMutualInformationImageToImageMetric.hxx
 )
 
-if( USE_KNNGraphAlphaMutualInformationMetric )
-  add_subdirectory( KNN )
-  target_include_directories( KNNGraphAlphaMutualInformationMetric
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/KNN )
-  target_link_libraries( KNNGraphAlphaMutualInformationMetric KNNlib ANNlib )
-  elastix_export_target( KNNlib )
-  elastix_export_target( ANNlib )
+if(USE_KNNGraphAlphaMutualInformationMetric)
+  add_subdirectory(KNN)
+  target_include_directories(KNNGraphAlphaMutualInformationMetric
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/KNN)
+  target_link_libraries(KNNGraphAlphaMutualInformationMetric KNNlib ANNlib)
+  elastix_export_target(KNNlib)
+  elastix_export_target(ANNlib)
 endif()
 

@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( FiniteDifferenceGradientDescent
  elxFiniteDifferenceGradientDescent.hxx
  elxFiniteDifferenceGradientDescent.cxx
  itkFiniteDifferenceGradientDescentOptimizer.cxx
- itkFiniteDifferenceGradientDescentOptimizer.h )
+ itkFiniteDifferenceGradientDescentOptimizer.h)
 

@@ -17,26 +17,26 @@
 # PC: LKEB (MS), LKEB-ELDB91
 
 # Client maintainer: m.staring@lumc.nl
-set( CTEST_SITE "LKEB-ELDB91" )
-set( CTEST_BUILD_NAME "Linux-64bit-gcc5.4.0-Release" )
-set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
-set( CTEST_TEST_ARGS PARALLEL_LEVEL 2 ) # parallel testing
-set( CTEST_BUILD_CONFIGURATION Release )
-set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/mstaring/nightly/elastix" )
-set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release )
+set(CTEST_SITE "LKEB-ELDB91")
+set(CTEST_BUILD_NAME "Linux-64bit-gcc5.4.0-Release")
+set(CTEST_BUILD_FLAGS "-j2") # parallel build for makefiles
+set(CTEST_TEST_ARGS PARALLEL_LEVEL 2) # parallel testing
+set(CTEST_BUILD_CONFIGURATION Release)
+set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
+set(CTEST_DASHBOARD_ROOT "/home/mstaring/nightly/elastix")
+set(CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release)
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-set( dashboard_model Nightly )
-if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  set( dashboard_model Experimental )
-elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  set( dashboard_model Continuous )
+set(dashboard_model Nightly)
+if(${CTEST_SCRIPT_ARG} MATCHES Experimental)
+  set(dashboard_model Experimental)
+elseif(${CTEST_SCRIPT_ARG} MATCHES Continuous)
+  set(dashboard_model Continuous)
 endif()
 
 # Dashboard settings
-set( dashboard_cache "
+set(dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/home/mstaring/nightly/ITK/bin_release
 
@@ -63,5 +63,5 @@ USE_ALL_COMPONENTS:BOOL=ON
 
 
 # Load the common dashboard script.
-include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
+include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
 

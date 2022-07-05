@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( NormalizedGradientCorrelationMetric # Was OFF by default befor
  elxNormalizedGradientCorrelationMetric.hxx
  elxNormalizedGradientCorrelationMetric.cxx
  itkNormalizedGradientCorrelationImageToImageMetric.h
- itkNormalizedGradientCorrelationImageToImageMetric.hxx )
+ itkNormalizedGradientCorrelationImageToImageMetric.hxx)
 

@@ -3,5 +3,5 @@ ADD_ELXCOMPONENT( PCAMetric ON
  elxPCAMetric.hxx
  elxPCAMetric.cxx
  itkPCAMetric_F_multithreaded.h
- itkPCAMetric_F_multithreaded.hxx )
+ itkPCAMetric_F_multithreaded.hxx)
 

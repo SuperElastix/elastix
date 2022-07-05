@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( StatisticalShapePenalty # Was OFF by default before elastix 5.
  elxStatisticalShapePenalty.h
  elxStatisticalShapePenalty.hxx
  itkStatisticalShapePointPenalty.h
- itkStatisticalShapePointPenalty.hxx )
+ itkStatisticalShapePointPenalty.hxx)
 

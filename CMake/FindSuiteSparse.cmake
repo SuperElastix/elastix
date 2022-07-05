@@ -94,7 +94,7 @@ endif()
 ## This utility macro is used to find all suitesparse projects by giving its name
 ## Since the name structure is the same for lib name and include dir name,
 ## we can use a generic way to find all of these with simple cmake lines of code
-macro(SuiteSparse_FIND_COMPONENTS )
+macro(SuiteSparse_FIND_COMPONENTS)
 
   ## On windows : we absolutly need SuiteSparse_config.h every time for all projects
   if(WIN32)
@@ -386,7 +386,7 @@ if(SuiteSparse_USE_LAPACK_BLAS)
       foreach(searchDir ${SuiteSparse_DLL_SEARCH_DIRS})
         file(GLOB SuiteSparse_DLL_${dllPatternUC} "${searchDir}/${dllPattern}*.dll") ## append the *.dll
         list(LENGTH SuiteSparse_DLL_${dllPatternUC} resultCount)
-        if(${resultCount} GREATER "0" )
+        if(${resultCount} GREATER "0")
           list(APPEND SuiteSparse_LAPACK_BLAS_DLL ${SuiteSparse_DLL_${dllPatternUC}})
           break()
         endif()

@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( AdvancedMeanSquaresMetric
  elxAdvancedMeanSquaresMetric.hxx
  elxAdvancedMeanSquaresMetric.cxx
  itkAdvancedMeanSquaresImageToImageMetric.h
- itkAdvancedMeanSquaresImageToImageMetric.hxx )
+ itkAdvancedMeanSquaresImageToImageMetric.hxx)
 

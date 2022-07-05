@@ -17,34 +17,34 @@
 # PC: LKEB (MS), goliath
 
 # Client maintainer: m.staring@lumc.nl
-set( CTEST_SITE "LKEB.goliath" )
-set( CTEST_BUILD_NAME "Linux-64bit-gcc4.8.2-Debug" )
-set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
-set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
-set( CTEST_BUILD_CONFIGURATION Debug )
-set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix" )
-set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_debug )
+set(CTEST_SITE "LKEB.goliath")
+set(CTEST_BUILD_NAME "Linux-64bit-gcc4.8.2-Debug")
+set(CTEST_BUILD_FLAGS "-j6") # parallel build for makefiles
+set(CTEST_TEST_ARGS PARALLEL_LEVEL 6) # parallel testing
+set(CTEST_BUILD_CONFIGURATION Debug)
+set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
+set(CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix")
+set(CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_debug)
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-set( dashboard_model Nightly )
-if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  set( dashboard_model Experimental )
-elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  set( dashboard_model Continuous )
+set(dashboard_model Nightly)
+if(${CTEST_SCRIPT_ARG} MATCHES Experimental)
+  set(dashboard_model Experimental)
+elseif(${CTEST_SCRIPT_ARG} MATCHES Continuous)
+  set(dashboard_model Continuous)
 endif()
 
 # This machine performs code coverage analysis and dynamic memory checking.
-set( dashboard_do_coverage ON )
-set( dashboard_do_memcheck ON )
+set(dashboard_do_coverage ON)
+set(dashboard_do_memcheck ON)
 
 # Valgrind options
-set( CTEST_MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --tool=memcheck --leak-check=yes --show-reachable=no --num-callers=100 --verbose --demangle=yes" )
-#set( CTEST_MEMORYCHECK_SUPPRESSIONS_FILE ${CTEST_SOURCE_DIRECTORY}/CMake/InsightValgrind.supp )
+set(CTEST_MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --tool=memcheck --leak-check=yes --show-reachable=no --num-callers=100 --verbose --demangle=yes")
+#set(CTEST_MEMORYCHECK_SUPPRESSIONS_FILE ${CTEST_SOURCE_DIRECTORY}/CMake/InsightValgrind.supp)
 
 # Dashboard settings
-set( dashboard_cache "
+set(dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/srv/lkeb-goliath/toolkits/ITK/git/bin_debug
 
@@ -80,5 +80,5 @@ USE_ALL_COMPONENTS:BOOL=ON
 
 
 # Load the common dashboard script.
-include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
+include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
 
