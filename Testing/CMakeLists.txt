@@ -301,7 +301,7 @@ macro( elx_add_run_test testbasename howtocompare )
   # Set maximum test length to 10 minutes
   add_test( NAME ${testname}_OUTPUT
     CONFIGURATIONS Release
-    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/ElastixLibBasedExe
     ${elastixargs} -out ${output_dir} )
   set_tests_properties( ${testname}_OUTPUT
     PROPERTIES TIMEOUT 600 )
@@ -449,7 +449,7 @@ file( MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest" 
 file( MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces" )
 file( MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces" )
 add_test( NAME OutputDirectoryPathContainingSpacesTest
-  COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+  COMMAND ${EXECUTABLE_OUTPUT_PATH}/ElastixLibBasedExe
   -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd" 
   -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
   -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
