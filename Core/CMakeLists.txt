@@ -146,6 +146,8 @@ endif()
 add_executable(elastix_exe
   Main/elastix.cxx
   Main/elastix.h
+  Main/elxMainExeUtilities.cxx
+  Main/elxMainExeUtilities.h
   Kernel/elxElastixMain.cxx
   Kernel/elxElastixMain.h
   ${InstallFilesForExecutables}
@@ -175,6 +177,8 @@ target_link_libraries(elastix_lib ${ELASTIX_TARGET_LINK_LIBRARIES})
 add_executable(transformix_exe
   Main/transformix.cxx
   Main/elastix.h
+  Main/elxMainExeUtilities.cxx
+  Main/elxMainExeUtilities.h
   Kernel/elxElastixMain.cxx
   Kernel/elxElastixMain.h
   Kernel/elxTransformixMain.cxx
