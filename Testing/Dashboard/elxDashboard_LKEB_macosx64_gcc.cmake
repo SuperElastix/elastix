@@ -17,29 +17,29 @@
 # PC: LKEB (MS), MacMini PC of Patrick de Koning
 
 # Client maintainer: m.staring@lumc.nl
-set( CTEST_SITE "LKEB.MacMini" )
-set( CTEST_BUILD_NAME "MacOSX-64bit-gcc4.2.1" )
-set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
-set( CTEST_BUILD_CONFIGURATION Release )
-set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/elastix-nightly/build/" )
+set(CTEST_SITE "LKEB.MacMini")
+set(CTEST_BUILD_NAME "MacOSX-64bit-gcc4.2.1")
+set(CTEST_BUILD_FLAGS "-j2") # parallel build for makefiles
+set(CTEST_BUILD_CONFIGURATION Release)
+set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
+set(CTEST_DASHBOARD_ROOT "/elastix-nightly/build/")
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-set( dashboard_model Nightly )
-if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  set( dashboard_model Experimental )
-elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  set( dashboard_model Continuous )
+set(dashboard_model Nightly)
+if(${CTEST_SCRIPT_ARG} MATCHES Experimental)
+  set(dashboard_model Experimental)
+elseif(${CTEST_SCRIPT_ARG} MATCHES Continuous)
+  set(dashboard_model Continuous)
 endif()
 
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
 
-set( dashboard_cache "
+set(dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/elastix-nightly/itk/git/bin_release
 
@@ -58,5 +58,5 @@ USE_ALL_COMPONENTS:BOOL=ON
 
 
 # Load the common dashboard script.
-include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
+include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
 

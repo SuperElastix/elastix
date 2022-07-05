@@ -6,5 +6,5 @@ ADD_ELXCOMPONENT( RSGDEachParameterApart # Was OFF by default before elastix 5.0
  itkRSGDEachParameterApartOptimizer.h
  itkRSGDEachParameterApartOptimizer.cxx
  itkRSGDEachParameterApartBaseOptimizer.h
- itkRSGDEachParameterApartBaseOptimizer.cxx )
+ itkRSGDEachParameterApartBaseOptimizer.cxx)
 

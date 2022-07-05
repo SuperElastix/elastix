@@ -17,28 +17,28 @@
 # PC: LKEB (MS), goliath
 
 # Client maintainer: m.staring@lumc.nl
-set( CTEST_SITE "LKEB.goliath" )
-set( CTEST_BUILD_NAME "Linux-clang3.9-Debug" )
-set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
-set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
-set( CTEST_BUILD_CONFIGURATION Debug )
-set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix" )
-set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_debug_clang )
-set( CTEST_MEMORYCHECK_TYPE "AddressSanitizer" )
-set( ENV{LD_LIBRARY_PATH} "/usr/local/lib:$ENV{LD_LIBRARY_PATH}" )
+set(CTEST_SITE "LKEB.goliath")
+set(CTEST_BUILD_NAME "Linux-clang3.9-Debug")
+set(CTEST_BUILD_FLAGS "-j6") # parallel build for makefiles
+set(CTEST_TEST_ARGS PARALLEL_LEVEL 6) # parallel testing
+set(CTEST_BUILD_CONFIGURATION Debug)
+set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
+set(CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix")
+set(CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_debug_clang)
+set(CTEST_MEMORYCHECK_TYPE "AddressSanitizer")
+set(ENV{LD_LIBRARY_PATH} "/usr/local/lib:$ENV{LD_LIBRARY_PATH}")
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-set( dashboard_model Nightly )
-if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  set( dashboard_model Experimental )
-elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  set( dashboard_model Continuous )
+set(dashboard_model Nightly)
+if(${CTEST_SCRIPT_ARG} MATCHES Experimental)
+  set(dashboard_model Experimental)
+elseif(${CTEST_SCRIPT_ARG} MATCHES Continuous)
+  set(dashboard_model Continuous)
 endif()
 
 # Dashboard settings
-set( dashboard_cache "
+set(dashboard_cache "
 // Select the clang compiler
 CMAKE_C_COMPILER:FILEPATH=/usr/local/bin/clang
 CMAKE_C_FLAGS:STRING=-Wall -std=c99 -fsanitize=address -fno-omit-frame-pointer
@@ -80,5 +80,5 @@ USE_ALL_COMPONENTS:BOOL=ON
 
 
 # Load the common dashboard script.
-include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
+include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
 

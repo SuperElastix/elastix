@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( SumSquaredTissueVolumeDifferenceMetric
  elxSumSquaredTissueVolumeDifferenceMetric.hxx
  elxSumSquaredTissueVolumeDifferenceMetric.cxx
  itkSumSquaredTissueVolumeDifferenceImageToImageMetric.h
- itkSumSquaredTissueVolumeDifferenceImageToImageMetric.hxx )
+ itkSumSquaredTissueVolumeDifferenceImageToImageMetric.hxx)
 

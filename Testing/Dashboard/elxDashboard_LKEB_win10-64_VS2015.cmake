@@ -16,27 +16,27 @@
 
 
 # Client maintainer: m.staring@lumc.nl
-set( CTEST_SITE "LKEB.PCMarius" )
-set( CTEST_BUILD_NAME "Win10-64bit-VS2015" )
-set( CTEST_TEST_ARGS PARALLEL_LEVEL 3 ) # parallel testing
-set( CTEST_BUILD_CONFIGURATION Release )
-set( CTEST_CMAKE_GENERATOR "Visual Studio 14 2015 Win64" )
-set( CTEST_DASHBOARD_ROOT "D:/toolkits/elastix/nightly" )
-set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_VS2015 )
+set(CTEST_SITE "LKEB.PCMarius")
+set(CTEST_BUILD_NAME "Win10-64bit-VS2015")
+set(CTEST_TEST_ARGS PARALLEL_LEVEL 3) # parallel testing
+set(CTEST_BUILD_CONFIGURATION Release)
+set(CTEST_CMAKE_GENERATOR "Visual Studio 14 2015 Win64")
+set(CTEST_DASHBOARD_ROOT "D:/toolkits/elastix/nightly")
+set(CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_VS2015)
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-set( dashboard_model Nightly )
-if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  set( dashboard_model Experimental )
-elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  set( dashboard_model Continuous )
+set(dashboard_model Nightly)
+if(${CTEST_SCRIPT_ARG} MATCHES Experimental)
+  set(dashboard_model Experimental)
+elseif(${CTEST_SCRIPT_ARG} MATCHES Continuous)
+  set(dashboard_model Continuous)
 endif()
 
-set( dashboard_cache "
+set(dashboard_cache "
 // Which ITK to use:
 ITK_DIR:PATH=D:/toolkits/ITK/latest_release/bin_VS2015
 
@@ -62,5 +62,5 @@ USE_ALL_COMPONENTS:BOOL=ON
 
 
 # Load the common dashboard script.
-include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
+include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
 

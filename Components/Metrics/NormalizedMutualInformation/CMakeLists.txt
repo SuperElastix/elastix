@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( NormalizedMutualInformationMetric
  elxNormalizedMutualInformationMetric.hxx
  elxNormalizedMutualInformationMetric.cxx
  itkParzenWindowNormalizedMutualInformationImageToImageMetric.h
- itkParzenWindowNormalizedMutualInformationImageToImageMetric.hxx )
+ itkParzenWindowNormalizedMutualInformationImageToImageMetric.hxx)
 

@@ -6,7 +6,7 @@ function(elastix_export_target tgt)
     set_property(GLOBAL PROPERTY ELASTIX_FIRST_EXPORTED_TARGET 1)
   endif()
 
-  get_target_property( type ${tgt} TYPE )
+  get_target_property(type ${tgt} TYPE)
   if (type STREQUAL "STATIC_LIBRARY" OR
       type STREQUAL "MODULE_LIBRARY" OR
       type STREQUAL "SHARED_LIBRARY")

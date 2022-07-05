@@ -3,5 +3,5 @@ ADD_ELXCOMPONENT( SimilarityTransformElastix # Was OFF by default before elastix
  elxSimilarityTransform.h
  elxSimilarityTransform.hxx
  elxSimilarityTransform.cxx
- itkSimilarityTransform.h )
+ itkSimilarityTransform.h)
 

@@ -2,5 +2,5 @@ ADD_ELXCOMPONENT( AffineLogStackTransform
  elxAffineLogStackTransform.h
  elxAffineLogStackTransform.hxx
  elxAffineLogStackTransform.cxx
- itkAffineLogStackTransform.h )
+ itkAffineLogStackTransform.h)
 

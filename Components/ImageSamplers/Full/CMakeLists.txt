@@ -2,5 +2,5 @@
 ADD_ELXCOMPONENT( FullSampler
  elxFullSampler.h
  elxFullSampler.hxx
- elxFullSampler.cxx )
+ elxFullSampler.cxx)
 
