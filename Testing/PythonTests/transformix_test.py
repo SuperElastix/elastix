@@ -98,6 +98,23 @@ class TransformixTestCase(unittest.TestCase):
             "transformix version: " + self.version_string,
         )
 
+    def test_extended_version(self) -> None:
+        """Tests --extended-version"""
+
+        completed = subprocess.run(
+            [str(self.transformix_exe_file_path), "--extended-version"],
+            capture_output=True,
+            check=True,
+        )
+        self.assertEqual(completed.returncode, 0)
+        self.assertEqual(completed.stderr, b"")
+
+        output: str = completed.stdout.decode()
+        self.assertTrue("transformix version: " in output)
+        self.assertTrue("ITK version: " in output)
+        self.assertTrue("Memory address size: " in output)
+        self.assertTrue("CMake version: " in output)
+
     def test_missing_tp_commandline_option(self) -> None:
         """Tests missing -tp commandline option"""
 

@@ -102,6 +102,11 @@ main(int argc, char ** argv)
         std::cout << "transformix version: " ELASTIX_VERSION_STRING << std::endl;
         return 0;
       }
+      else if (argument == "--extended-version")
+      {
+        elx::PrintExtendedVersionInformation("transformix");
+        return 0;
+      }
       else
       {
         std::cout << "Use \"transformix --help\" for information about transformix-usage." << std::endl;

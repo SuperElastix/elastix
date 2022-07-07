@@ -186,6 +186,7 @@ add_executable(transformix_exe
   ${InstallFilesForExecutables}
 )
 set_target_properties(transformix_exe PROPERTIES OUTPUT_NAME transformix)
+target_compile_definitions(transformix_exe PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}")
 target_link_libraries(transformix_exe ${ELASTIX_TARGET_LINK_LIBRARIES})
 
 # The library type (STATIC or SHARED) is determined by the parameter
