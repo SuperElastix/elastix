@@ -206,17 +206,6 @@ target_link_libraries(transformix_lib ${ELASTIX_TARGET_LINK_LIBRARIES})
 
 set(ELASTIX_LIBRARIES elastix_lib transformix_lib PARENT_SCOPE)
 
-if(MSVC)
-  # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use
-  # Debug breakpoints in Visual Studio 10.0. It is probably the Visual Studio 10.0 bug.
-  # Or you have to recompile ITK with the same flag in Debug as well.
-  # Or it has something to do with building it with IncrediBuild where this flag is not welcome for PDB files.
-  # Therefore we are going to set it only for Visual Studio 9.0 (2008)
-  if(MSVC90 OR MSVC91)
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/INCREMENTAL:NO")
-  endif()
-endif()
-
 #---------------------------------------------------------------------
 # Define the install directory for elastix and transformix.
 
