@@ -59,18 +59,6 @@
 #ifndef TypeList_h
 #define TypeList_h
 
-#ifndef ELX_TEMPLATE_WORKAROUND
-#  ifdef _MSC_VER
-#    if _MSC_VER < 1910 // Before MSVC++ 14.1 (Visual Studio 2017 version 15.0)
-#      define ELX_TEMPLATE_WORKAROUND
-#    else
-#      define ELX_TEMPLATE_WORKAROUND template
-#    endif
-#  else
-#    define ELX_TEMPLATE_WORKAROUND template
-#  endif
-#endif
-
 namespace typelist
 {
 
@@ -545,9 +533,9 @@ struct Visit
   {
     using Head = typename TTypeList::Head;
     using Tail = typename TTypeList::Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head>();
-    Visit<Tail>                     next;
-    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
+    visitor.template operator()<Head>();
+    Visit<Tail>      next;
+    next.template    operator()<Predicate>(visitor);
   }
 
 
@@ -557,9 +545,9 @@ struct Visit
   {
     using Head = typename TTypeList::Head;
     using Tail = typename TTypeList::Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head>();
-    Visit<Tail>                     next;
-    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
+    visitor.template operator()<Head>();
+    Visit<Tail>      next;
+    next.template    operator()<Predicate>(visitor);
   }
 };
 
@@ -597,9 +585,9 @@ struct VisitDimension
   {
     using Head = typename TTypeList::Head;
     using Tail = typename TTypeList::Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head, Dimension>();
+    visitor.template                operator()<Head, Dimension>();
     VisitDimension<Tail, Dimension> next;
-    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
+    next.template                   operator()<Predicate>(visitor);
   }
 
 
@@ -609,9 +597,9 @@ struct VisitDimension
   {
     using Head = typename TTypeList::Head;
     using Tail = typename TTypeList::Tail;
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<Head, Dimension>();
+    visitor.template                operator()<Head, Dimension>();
     VisitDimension<Tail, Dimension> next;
-    next.ELX_TEMPLATE_WORKAROUND    operator()<Predicate>(visitor);
+    next.template                   operator()<Predicate>(visitor);
   }
 };
 
@@ -654,7 +642,7 @@ struct DualVisit
   operator()(Visitor & visitor) const
   {
     DualVisitImpl<TLeftTypeList, TRightTypeList> impl;
-    return impl.ELX_TEMPLATE_WORKAROUND          operator()<Visitor>(visitor);
+    return impl.template                         operator()<Visitor>(visitor);
   }
 
 
@@ -663,7 +651,7 @@ struct DualVisit
   operator()(const Visitor & visitor) const
   {
     DualVisitImpl<TLeftTypeList, TRightTypeList> impl;
-    return impl.ELX_TEMPLATE_WORKAROUND          operator()<Visitor>(visitor);
+    return impl.template                         operator()<Visitor>(visitor);
   }
 };
 
@@ -693,7 +681,7 @@ struct DualVisitImpl
     goRight.visitRHS<Visitor>(visitor);
 
     DualVisitImpl<LeftTail, TRightTypeList> goLeft;
-    goLeft.ELX_TEMPLATE_WORKAROUND          operator()<Visitor>(visitor);
+    goLeft.template                         operator()<Visitor>(visitor);
   }
 
 
@@ -707,7 +695,7 @@ struct DualVisitImpl
     goRight.visitRHS<Visitor>(visitor);
 
     DualVisitImpl<LeftTail, TRightTypeList> goLeft;
-    goLeft.ELX_TEMPLATE_WORKAROUND          operator()<Visitor>(visitor);
+    goLeft.template                         operator()<Visitor>(visitor);
   }
 
 
@@ -719,10 +707,10 @@ struct DualVisitImpl
     using RightHead = typename TRightTypeList::Head;
     using RightTail = typename TRightTypeList::Tail;
 
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead>();
+    visitor.template operator()<LeftHead, RightHead>();
 
     DualVisitImpl<TLeftTypeList, RightTail> goRight;
-    goRight.ELX_TEMPLATE_WORKAROUND         visitRHS<Visitor>(visitor);
+    goRight.template visitRHS<Visitor>(visitor);
   }
 
 
@@ -734,10 +722,10 @@ struct DualVisitImpl
     using RightHead = typename TRightTypeList::Head;
     using RightTail = typename TRightTypeList::Tail;
 
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead>();
+    visitor.template operator()<LeftHead, RightHead>();
 
     DualVisitImpl<TLeftTypeList, RightTail> goRight;
-    goRight.ELX_TEMPLATE_WORKAROUND         visitRHS<Visitor>(visitor);
+    goRight.template visitRHS<Visitor>(visitor);
   }
 };
 
@@ -804,7 +792,7 @@ struct DualVisitDimension
   operator()(Visitor & visitor) const
   {
     DualVisitDimensionImpl<TLeftTypeList, TRightTypeList, Dimension> impl;
-    return impl.ELX_TEMPLATE_WORKAROUND                              operator()<Visitor>(visitor);
+    return impl.template                                             operator()<Visitor>(visitor);
   }
 
 
@@ -813,7 +801,7 @@ struct DualVisitDimension
   operator()(const Visitor & visitor) const
   {
     DualVisitDimensionImpl<TLeftTypeList, TRightTypeList, Dimension> impl;
-    return impl.ELX_TEMPLATE_WORKAROUND                              operator()<Visitor>(visitor);
+    return impl.template                                             operator()<Visitor>(visitor);
   }
 };
 
@@ -843,7 +831,7 @@ struct DualVisitDimensionImpl
     goRight.visitRHS<Visitor>(visitor);
 
     DualVisitDimensionImpl<LeftTail, TRightTypeList, Dimension> goLeft;
-    goLeft.ELX_TEMPLATE_WORKAROUND                              operator()<Visitor>(visitor);
+    goLeft.template                                             operator()<Visitor>(visitor);
   }
 
 
@@ -857,7 +845,7 @@ struct DualVisitDimensionImpl
     goRight.visitRHS<Visitor>(visitor);
 
     DualVisitDimensionImpl<LeftTail, TRightTypeList, Dimension> goLeft;
-    goLeft.ELX_TEMPLATE_WORKAROUND                              operator()<Visitor>(visitor);
+    goLeft.template                                             operator()<Visitor>(visitor);
   }
 
 
@@ -869,10 +857,10 @@ struct DualVisitDimensionImpl
     using RightHead = typename TRightTypeList::Head;
     using RightTail = typename TRightTypeList::Tail;
 
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead, Dimension>();
+    visitor.template operator()<LeftHead, RightHead, Dimension>();
 
     DualVisitDimensionImpl<TLeftTypeList, RightTail, Dimension> goRight;
-    goRight.ELX_TEMPLATE_WORKAROUND                             visitRHS<Visitor>(visitor);
+    goRight.template visitRHS<Visitor>(visitor);
   }
 
 
@@ -884,10 +872,10 @@ struct DualVisitDimensionImpl
     using RightHead = typename TRightTypeList::Head;
     using RightTail = typename TRightTypeList::Tail;
 
-    visitor.ELX_TEMPLATE_WORKAROUND operator()<LeftHead, RightHead, Dimension>();
+    visitor.template operator()<LeftHead, RightHead, Dimension>();
 
     DualVisitDimensionImpl<TLeftTypeList, RightTail, Dimension> goRight;
-    goRight.ELX_TEMPLATE_WORKAROUND                             visitRHS<Visitor>(visitor);
+    goRight.template visitRHS<Visitor>(visitor);
   }
 };
 
