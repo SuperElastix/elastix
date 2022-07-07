@@ -110,25 +110,7 @@ main(int argc, char ** argv)
       }
       else if (argument == "--extended-version")
       {
-        std::cout << "elastix version: " ELASTIX_VERSION_STRING << "\nITK version: " << ITK_VERSION_MAJOR << '.'
-                  << ITK_VERSION_MINOR << '.' << ITK_VERSION_PATCH << "\nBuild date: " << __DATE__ << ' ' << __TIME__
-#ifdef _MSC_FULL_VER
-                  << "\nCompiler: Visual C++ version " << _MSC_FULL_VER << '.' << _MSC_BUILD
-#endif
-#ifdef __clang__
-                  << "\nCompiler: Clang"
-#  ifdef __VERSION__
-                  << " version " << __VERSION__
-#  endif
-#endif
-#if defined(__GNUC__)
-                  << "\nCompiler: GCC"
-#  ifdef __VERSION__
-                  << " version " << __VERSION__
-#  endif
-#endif
-                  << "\nMemory address size: " << std::numeric_limits<std::size_t>::digits
-                  << "-bit\nCMake version: " << ELX_CMAKE_VERSION << std::endl;
+        elx::PrintExtendedVersionInformation("elastix");
         return 0;
       }
       else
