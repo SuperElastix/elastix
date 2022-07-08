@@ -104,7 +104,7 @@ main(int argc, char ** argv)
       }
       else if (argument == "--extended-version")
       {
-        elx::PrintExtendedVersionInformation("transformix");
+        std::cout << elx::GetExtendedVersionInformation("transformix");
         return 0;
       }
       else

@@ -98,6 +98,28 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/elxVersionMacros.h
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Core)
 #---------------------------------------------------------------------
+
+# Originally based on the answer by Naszta at
+# https://stackoverflow.com/questions/6526451/how-to-include-git-commit-number-into-a-c-executable
+find_package(Git)
+if(GIT_FOUND)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} log -1 --format=%cd
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    OUTPUT_VARIABLE ELX_GIT_REVISION_DATE
+    ERROR_QUIET
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    OUTPUT_VARIABLE ELX_GIT_REVISION_SHA
+    ERROR_QUIET
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
+configure_file(elxGitRevisionInfo.h.in elxGitRevisionInfo.h @ONLY)
+
+#---------------------------------------------------------------------
 # Create the elxCore library.
 
 add_library(elxCore STATIC

@@ -111,9 +111,11 @@ class TransformixTestCase(unittest.TestCase):
 
         output: str = completed.stdout.decode()
         self.assertTrue("transformix version: " in output)
-        self.assertTrue("ITK version: " in output)
+        self.assertTrue("Git revision SHA: " in output)
+        self.assertTrue("Git revision date: " in output)
         self.assertTrue("Memory address size: " in output)
         self.assertTrue("CMake version: " in output)
+        self.assertTrue("ITK version: " in output)
 
     def test_missing_tp_commandline_option(self) -> None:
         """Tests missing -tp commandline option"""

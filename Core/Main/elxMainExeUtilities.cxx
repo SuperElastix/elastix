@@ -20,6 +20,7 @@
 #include "elxMainExeUtilities.h"
 
 #include "xoutmain.h"
+#include <Core/elxGitRevisionInfo.h>
 #include <Core/elxVersionMacros.h>
 #include <itkMacro.h>
 
@@ -68,26 +69,44 @@ elastix::ReportTerminatingException(const char * const executableName, const std
 }
 
 
-void
-elastix::PrintExtendedVersionInformation(const char * const executableName)
+std::string
+elastix::GetExtendedVersionInformation(const char * const executableName)
 {
-  std::cout << executableName << " version: " ELASTIX_VERSION_STRING << "\nITK version: " << ITK_VERSION_MAJOR << '.'
-            << ITK_VERSION_MINOR << '.' << ITK_VERSION_PATCH << "\nBuild date: " << __DATE__ << ' ' << __TIME__
+  std::ostringstream outputStringStream;
+  outputStringStream << executableName << " version: " ELASTIX_VERSION_STRING;
+
+  static_assert(gitRevisionSha, "gitRevisionSha should never be null!");
+  static_assert(gitRevisionDate, "gitRevisionDate should never be null!");
+
+  if (*gitRevisionSha != '\0')
+  {
+    outputStringStream << "\nGit revision SHA: " << gitRevisionSha;
+  }
+
+  if (*gitRevisionDate != '\0')
+  {
+    outputStringStream << "\nGit revision date: " << gitRevisionDate;
+  }
+
+  outputStringStream << "\nBuild date: " << __DATE__ << ' ' << __TIME__
 #ifdef _MSC_FULL_VER
-            << "\nCompiler: Visual C++ version " << _MSC_FULL_VER << '.' << _MSC_BUILD
+                     << "\nCompiler: Visual C++ version " << _MSC_FULL_VER << '.' << _MSC_BUILD
 #endif
 #ifdef __clang__
-            << "\nCompiler: Clang"
+                     << "\nCompiler: Clang"
 #  ifdef __VERSION__
-            << " version " << __VERSION__
+                     << " version " << __VERSION__
 #  endif
 #endif
 #if defined(__GNUC__)
-            << "\nCompiler: GCC"
+                     << "\nCompiler: GCC"
 #  ifdef __VERSION__
-            << " version " << __VERSION__
+                     << " version " << __VERSION__
 #  endif
 #endif
-            << "\nMemory address size: " << std::numeric_limits<std::size_t>::digits
-            << "-bit\nCMake version: " << ELX_CMAKE_VERSION << std::endl;
+                     << "\nMemory address size: " << std::numeric_limits<std::size_t>::digits
+                     << "-bit\nCMake version: " ELX_CMAKE_VERSION "\nITK version: " << ITK_VERSION_MAJOR << '.'
+                     << ITK_VERSION_MINOR << '.' << ITK_VERSION_PATCH << '\n';
+
+  return outputStringStream.str();
 }

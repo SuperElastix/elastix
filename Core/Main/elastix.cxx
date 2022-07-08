@@ -110,7 +110,7 @@ main(int argc, char ** argv)
       }
       else if (argument == "--extended-version")
       {
-        elx::PrintExtendedVersionInformation("elastix");
+        std::cout << elx::GetExtendedVersionInformation("elastix");
         return 0;
       }
       else
