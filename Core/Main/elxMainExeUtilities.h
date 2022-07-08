@@ -19,6 +19,7 @@
 #define elxMainExeUtilities_h
 
 #include <exception>
+#include <string>
 
 
 namespace elastix
@@ -28,8 +29,8 @@ void
 ReportTerminatingException(const char * const executableName, const std::exception & stdException) noexcept;
 
 /** Prints extended version information to standard output. */
-void
-PrintExtendedVersionInformation(const char * const executableName);
+std::string
+GetExtendedVersionInformation(const char * const executableName);
 
 } // namespace elastix
 
