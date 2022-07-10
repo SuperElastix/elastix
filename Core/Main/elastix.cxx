@@ -240,8 +240,10 @@ main(int argc, char ** argv)
     totaltimer.Start();
     elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
-    /** Print where elastix was run. */
-    elxout << "which elastix:   " << argv[0] << std::endl;
+    // Print where elastix was run, and print its version information.
+    elxout << "which elastix:   " << argv[0] << '\n'
+           << elx::GetExtendedVersionInformation("elastix", "  ") << std::flush;
+
     itksys::SystemInformation info;
     info.RunCPUCheck();
     info.RunOSCheck();

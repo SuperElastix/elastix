@@ -232,8 +232,10 @@ main(int argc, char ** argv)
     totaltimer.Start();
     elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
-    /** Print where transformix was run. */
-    elxout << "which transformix:   " << argv[0] << std::endl;
+    // Print where transformix was run, and print its version information.
+    elxout << "which transformix:   " << argv[0] << '\n'
+           << elx::GetExtendedVersionInformation("transformix", "  ") << std::flush;
+
     itksys::SystemInformation info;
     info.RunCPUCheck();
     info.RunOSCheck();
