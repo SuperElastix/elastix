@@ -30,7 +30,7 @@ ReportTerminatingException(const char * const executableName, const std::excepti
 
 /** Prints extended version information to standard output. */
 std::string
-GetExtendedVersionInformation(const char * const executableName);
+GetExtendedVersionInformation(const char * const executableName, const char * const indentation = "");
 
 } // namespace elastix
 
