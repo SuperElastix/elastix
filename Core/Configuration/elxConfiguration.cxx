@@ -76,18 +76,7 @@ AddDataFromExternalTransformFile(const std::string &                        para
  * ********************* Constructor ****************************
  */
 
-Configuration::Configuration()
-{
-  /** Initialize stuff. */
-  this->m_ParameterFileName = "";
-  this->m_ParameterFileParser = itk::ParameterFileParser::New();
-  this->m_ParameterMapInterface = itk::ParameterMapInterface::New();
-
-  this->m_IsInitialized = false;
-  this->m_ElastixLevel = 0;
-  this->m_TotalNumberOfElastixLevels = 1;
-
-} // end Constructor()
+Configuration::Configuration() = default;
 
 
 /**

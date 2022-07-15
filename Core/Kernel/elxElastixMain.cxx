@@ -148,35 +148,7 @@ xoutManager::Guard::~Guard()
  * ********************* Constructor ****************************
  */
 
-ElastixMain::ElastixMain()
-{
-  /** Initialize the components. */
-  this->m_Configuration = Configuration::New();
-
-  this->m_Elastix = nullptr;
-
-  this->m_FixedImagePixelType = "";
-  this->m_FixedImageDimension = 0;
-
-  this->m_MovingImagePixelType = "";
-  this->m_MovingImageDimension = 0;
-
-  this->m_DBIndex = 0;
-
-  this->m_FixedImageContainer = nullptr;
-  this->m_MovingImageContainer = nullptr;
-
-  this->m_FixedMaskContainer = nullptr;
-  this->m_MovingMaskContainer = nullptr;
-
-  this->m_ResultImageContainer = nullptr;
-
-  this->m_FinalTransform = nullptr;
-  this->m_InitialTransform = nullptr;
-  this->m_TransformParametersMap.clear();
-
-} // end Constructor
-
+ElastixMain::ElastixMain() = default;
 
 /**
  * ****************** GetComponentDatabase *********

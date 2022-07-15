@@ -320,41 +320,42 @@ protected:
   /** A pointer to elastix as an itk::object. In run() this
    * pointer will be assigned to an ElastixTemplate<>.
    */
-  ObjectPointer m_Elastix;
+  ObjectPointer m_Elastix{ nullptr };
 
   /** The configuration object, containing the parameters and command-line arguments. */
-  ConfigurationPointer m_Configuration;
+  ConfigurationPointer m_Configuration{ Configuration::New() };
 
   /** A vector of configuration objects, needed when transformix is used as library. */
-  std::vector<ConfigurationPointer> m_Configurations;
+  std::vector<ConfigurationPointer> m_Configurations{};
 
   /** Description of the ImageTypes. */
-  PixelTypeDescriptionType m_FixedImagePixelType;
-  ImageDimensionType       m_FixedImageDimension;
-  PixelTypeDescriptionType m_MovingImagePixelType;
-  ImageDimensionType       m_MovingImageDimension;
+  PixelTypeDescriptionType m_FixedImagePixelType{};
+  ImageDimensionType       m_FixedImageDimension{ 0 };
+  PixelTypeDescriptionType m_MovingImagePixelType{};
+  ImageDimensionType       m_MovingImageDimension{ 0 };
 
-  DBIndexType m_DBIndex;
+  DBIndexType m_DBIndex{ 0 };
 
   /** The images and masks. */
-  DataObjectContainerPointer m_FixedImageContainer;
-  DataObjectContainerPointer m_MovingImageContainer;
-  DataObjectContainerPointer m_FixedMaskContainer;
-  DataObjectContainerPointer m_MovingMaskContainer;
-  DataObjectContainerPointer m_ResultImageContainer;
-  DataObjectContainerPointer m_ResultDeformationFieldContainer;
+  DataObjectContainerPointer m_FixedImageContainer{ nullptr };
+  DataObjectContainerPointer m_MovingImageContainer{ nullptr };
+  DataObjectContainerPointer m_FixedMaskContainer{ nullptr };
+  DataObjectContainerPointer m_MovingMaskContainer{ nullptr };
+  DataObjectContainerPointer m_ResultImageContainer{ nullptr };
+  DataObjectContainerPointer m_ResultDeformationFieldContainer{ nullptr };
 
   /** A transform that is the result of registration. */
-  ObjectPointer m_FinalTransform;
+  ObjectPointer m_FinalTransform{ nullptr };
 
   /** The initial transform. */
-  ObjectPointer m_InitialTransform;
+  ObjectPointer m_InitialTransform{ nullptr };
+
   /** Transformation parameters map containing parameters that is the
    *  result of registration.
    */
-  ParameterMapType m_TransformParametersMap;
+  ParameterMapType m_TransformParametersMap{};
 
-  FlatDirectionCosinesType m_OriginalFixedImageDirection;
+  FlatDirectionCosinesType m_OriginalFixedImageDirection{};
 
   /** InitDBIndex sets m_DBIndex by asking the ImageTypes
    * from the Configuration object and obtaining the corresponding
