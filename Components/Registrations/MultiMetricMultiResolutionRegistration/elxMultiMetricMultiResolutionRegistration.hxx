@@ -82,7 +82,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration()
   unsigned int       width = 0;
   for (unsigned int i = nrOfMetrics; i > 0; i /= 10)
   {
-    width++;
+    ++width;
   }
   for (unsigned int i = 0; i < nrOfMetrics; ++i)
   {
@@ -129,7 +129,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration()
   unsigned int       width = 0;
   for (unsigned int i = nrOfMetrics; i > 0; i /= 10)
   {
-    width++;
+    ++width;
   }
   for (unsigned int i = 0; i < nrOfMetrics; ++i)
   {

@@ -110,7 +110,7 @@ public:
   void
   operator+=(double x) // add sample
   {
-    n++;
+    ++n;
     sum += x;
     sum2 += x * x;
     if (x < minVal)

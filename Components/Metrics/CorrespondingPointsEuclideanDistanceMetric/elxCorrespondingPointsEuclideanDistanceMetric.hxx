@@ -61,7 +61,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
     this->m_Configuration->ReadParameter(metricName, "Metric", i);
     if (metricName == "CorrespondingPointsEuclideanDistanceMetric")
     {
-      count++;
+      ++count;
     }
   }
   if (count == 0)

@@ -280,7 +280,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance
           this->m_MinFixedGradient[iDimension] = gradient;
         }
 
-        nPixels++;
+        ++nPixels;
 
       } // end if sampleOK
 

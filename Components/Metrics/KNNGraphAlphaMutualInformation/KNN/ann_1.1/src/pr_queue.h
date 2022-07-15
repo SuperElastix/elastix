@@ -136,7 +136,7 @@ public:
       ANN_FLOP(2) // increment floating ops
                   // set r to smaller child of p
       if (r < n && pq[r].key > pq[r + 1].key)
-        r++;
+        ++r;
       if (kn <= pq[r].key) // in proper order
         break;
       pq[p] = pq[r]; // else swap with child

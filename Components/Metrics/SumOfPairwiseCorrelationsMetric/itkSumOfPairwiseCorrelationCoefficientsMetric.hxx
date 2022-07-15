@@ -209,7 +209,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
       if (sampleOk)
       {
-        numSamplesOk++;
+        ++numSamplesOk;
         datablock(pixelIndex, d) = movingImageValue;
       }
 
@@ -217,7 +217,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
     if (numSamplesOk == G)
     {
-      pixelIndex++;
+      ++pixelIndex;
       this->m_NumberOfPixelsCounted++;
     }
 
@@ -386,7 +386,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
       if (sampleOk)
       {
-        numSamplesOk++;
+        ++numSamplesOk;
         datablock(pixelIndex, d) = movingImageValue;
 
       } // end if sampleOk
@@ -396,7 +396,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
     if (numSamplesOk == G)
     {
       SamplesOK.push_back(fixedPoint);
-      pixelIndex++;
+      ++pixelIndex;
       this->m_NumberOfPixelsCounted++;
     }
 

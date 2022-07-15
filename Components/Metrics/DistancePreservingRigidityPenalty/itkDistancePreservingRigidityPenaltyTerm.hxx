@@ -230,7 +230,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
 
           if (pixelValue == pixelValueNeighbor)
           {
-            numberOfRigidGridsNeighbor++;
+            ++numberOfRigidGridsNeighbor;
           }
         }
 
@@ -392,7 +392,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
           if (pixelValue == pixelValueNeighbor)
           {
-            numberOfRigidGridsNeighbor++;
+            ++numberOfRigidGridsNeighbor;
           }
         }
 

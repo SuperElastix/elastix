@@ -566,7 +566,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
 
     if (sampleOk)
     {
-      numberOfPixelsCounted++;
+      ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);

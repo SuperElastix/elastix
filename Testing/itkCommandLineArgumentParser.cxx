@@ -117,7 +117,7 @@ CommandLineArgumentParser::ExactlyOneExists(const std::vector<std::string> & key
   {
     if (this->ArgumentExists(keys[i]))
     {
-      counter++;
+      ++counter;
     }
   }
 

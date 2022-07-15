@@ -457,7 +457,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedImage(const unsign
         return itkDynamicCastInDebugMode<const TFixedImage *>(this->ProcessObject::GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -527,7 +527,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingImage(const unsig
         return itkDynamicCastInDebugMode<const TMovingImage *>(this->ProcessObject::GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -585,7 +585,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedMask(const unsigne
         return itkDynamicCastInDebugMode<const FixedMaskType *>(this->ProcessObject::GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -651,7 +651,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingMask(const unsign
         return itkDynamicCastInDebugMode<const MovingMaskType *>(this->ProcessObject::GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -777,7 +777,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfInputsOfType(
   {
     if (this->IsInputOfType(inputType, inputNames[i]))
     {
-      n++;
+      ++n;
     }
   }
 

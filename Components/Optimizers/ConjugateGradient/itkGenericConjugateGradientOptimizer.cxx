@@ -175,7 +175,7 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
         // this->m_CurrentGradient[limitCount] = 1.0;
         // \todo gives errors (way to large gradient), should update
         // initial steplength estimate maybe
-        limitCount++;
+        ++limitCount;
       }
       else
       {

@@ -70,7 +70,7 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase()
     this->m_Configuration->ReadParameter(metricName, "Metric", i);
     if (metricName == this->elxGetClassName())
     {
-      count++;
+      ++count;
     }
   }
   if (count == 0)

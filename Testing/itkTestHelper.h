@@ -382,7 +382,7 @@ ComputeRMSE(const CPUImageType *  cpuImage,
       TScalarType err = cpu - static_cast<TScalarType>(git.Get());
       rmse += err * err;
       sumCPUSquared += cpu * cpu;
-      count++;
+      ++count;
     }
   }
 

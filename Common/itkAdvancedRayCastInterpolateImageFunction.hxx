@@ -657,7 +657,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
 
           || (cross[0][i] >= 0 && cross[1][i] >= 0 && cross[2][i] >= 0 && cross[3][i] >= 0))
       {
-        crossFlag++;
+        ++crossFlag;
       }
     }
 
@@ -666,7 +666,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
       cubeInter[nSidesCrossed][0] = interceptx[j];
       cubeInter[nSidesCrossed][1] = intercepty[j];
       cubeInter[nSidesCrossed][2] = interceptz[j];
-      nSidesCrossed++;
+      ++nSidesCrossed;
     }
 
   } // end of loop over all four planes
@@ -1032,7 +1032,7 @@ RayCastHelper<TInputImage, TCoordRep>::AdjustRayLength()
       m_RayVoxelStartPosition[1] += m_VoxelIncrement[1];
       m_RayVoxelStartPosition[2] += m_VoxelIncrement[2];
 
-      m_TotalRayVoxelPlanes--;
+      --m_TotalRayVoxelPlanes;
     }
 
     Istart[0] = (int)std::floor(m_RayVoxelStartPosition[0] + m_TotalRayVoxelPlanes * m_VoxelIncrement[0]);
@@ -1050,7 +1050,7 @@ RayCastHelper<TInputImage, TCoordRep>::AdjustRayLength()
     }
     else
     {
-      m_TotalRayVoxelPlanes--;
+      --m_TotalRayVoxelPlanes;
     }
 
   } while ((!(startOK && endOK)) && (m_TotalRayVoxelPlanes > 1));

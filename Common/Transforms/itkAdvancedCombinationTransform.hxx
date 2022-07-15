@@ -90,7 +90,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetNumberOfTransforms() 
     }
     else
     {
-      num++;
+      ++num;
     }
   }
 

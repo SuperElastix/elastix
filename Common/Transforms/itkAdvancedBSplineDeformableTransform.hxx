@@ -1118,7 +1118,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
       /** Remember the weights. */
       std::copy_n(weights.begin(), numberOfWeights, weightVector + count * numberOfWeights);
-      count++;
+      ++count;
 
       /** Reset coeffs iterator */
       auto itCoeffs = coeffs.cbegin();

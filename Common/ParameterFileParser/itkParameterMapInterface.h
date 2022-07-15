@@ -339,7 +339,7 @@ public:
     {
       /** Cast the string to type T. */
       bool castSuccesful = Self::StringCast(vec[i], parameterValues[j]);
-      j++;
+      ++j;
 
       /** Check if the cast was successful. */
       if (!castSuccesful)

@@ -194,7 +194,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     {
       fixedGradient[0] += fixedIteratorx.Get();
       fixedGradient[1] += fixedIteratory.Get();
-      nPixels++;
+      ++nPixels;
     }
 
     ++fixedIteratorx;
@@ -270,7 +270,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     {
       movedGradient[0] += movedIteratorx.Get();
       movedGradient[1] += movedIteratory.Get();
-      nPixels++;
+      ++nPixels;
     } // end if sampleOK
 
     ++movedIteratorx;

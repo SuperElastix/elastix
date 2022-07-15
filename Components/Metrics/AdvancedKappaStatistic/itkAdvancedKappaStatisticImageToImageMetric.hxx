@@ -178,30 +178,30 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
         const RealType diffMoving = std::abs(movingImageValue - this->m_ForegroundValue);
         if (diffFixed < this->m_Epsilon)
         {
-          fixedForegroundArea++;
+          ++fixedForegroundArea;
         }
         if (diffMoving < this->m_Epsilon)
         {
-          movingForegroundArea++;
+          ++movingForegroundArea;
         }
         if (diffFixed < this->m_Epsilon && diffMoving < this->m_Epsilon)
         {
-          intersection++;
+          ++intersection;
         }
       }
       else
       {
         if (fixedImageValue > this->m_Epsilon)
         {
-          fixedForegroundArea++;
+          ++fixedForegroundArea;
         }
         if (movingImageValue > this->m_Epsilon)
         {
-          movingForegroundArea++;
+          ++movingForegroundArea;
         }
         if (fixedImageValue > this->m_Epsilon && movingImageValue > this->m_Epsilon)
         {
-          intersection++;
+          ++intersection;
         }
       }
 
@@ -516,7 +516,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
     /** Do the actual calculation of the metric value. */
     if (sampleOk)
     {
-      numberOfPixelsCounted++;
+      ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
@@ -719,32 +719,32 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::UpdateValue
     const RealType diffMoving = std::abs(movingImageValue - this->m_ForegroundValue);
     if (diffFixed < this->m_Epsilon)
     {
-      fixedForegroundArea++;
+      ++fixedForegroundArea;
       usableFixedSample = true;
     }
     if (diffMoving < this->m_Epsilon)
     {
-      movingForegroundArea++;
+      ++movingForegroundArea;
     }
     if (diffFixed < this->m_Epsilon && diffMoving < this->m_Epsilon)
     {
-      intersection++;
+      ++intersection;
     }
   }
   else
   {
     if (fixedImageValue > this->m_Epsilon)
     {
-      fixedForegroundArea++;
+      ++fixedForegroundArea;
       usableFixedSample = true;
     }
     if (movingImageValue > this->m_Epsilon)
     {
-      movingForegroundArea++;
+      ++movingForegroundArea;
     }
     if (fixedImageValue > this->m_Epsilon && movingImageValue > this->m_Epsilon)
     {
-      intersection++;
+      ++intersection;
     }
   }
 

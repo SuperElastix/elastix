@@ -683,7 +683,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
   this->m_PreKernelManager->SetKernelArgWithImage(
     this->m_FilterPreGPUKernelHandle, argidx++, this->m_DeformationFieldBuffer);
 
-  argidx++; // skip deformation field size for now
+  ++argidx; // skip deformation field size for now
 
   // Set output image index_to_physical_point to the kernel
   OpenCLKernelToImageBridge<OutputImageType>::SetDirection(preKernel, argidx++, outputImage->GetIndexToPhysicalPoint());
@@ -732,7 +732,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
     // Set deformation field buffer to the kernel
     this->m_LoopKernelManager->SetKernelArgWithImage(handleId, argidx++, this->m_DeformationFieldBuffer);
 
-    argidx++; // skip deformation field size for now
+    ++argidx; // skip deformation field size for now
 
     // Set output image size to the kernel
     OpenCLKernelToImageBridge<OutputImageType>::SetSize(
@@ -876,7 +876,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
   this->m_PostKernelManager->SetKernelArgWithImage(
     this->m_FilterPostGPUKernelHandle, argidx++, this->m_DeformationFieldBuffer);
 
-  argidx++; // skip deformation field size for now
+  ++argidx; // skip deformation field size for now
 
   // Most interpolators work on the input image.
   // The B-spline interpolator however, works on the coefficients image,

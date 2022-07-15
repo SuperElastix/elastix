@@ -252,7 +252,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
 
     if (sampleOk)
     {
-      numberOfPixelsCounted++;
+      ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);
@@ -572,7 +572,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
 
     if (sampleOk)
     {
-      numberOfPixelsCounted++;
+      ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);
