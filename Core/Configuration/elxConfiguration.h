@@ -287,14 +287,14 @@ private:
   void
   operator=(const Self &) = delete;
 
-  CommandLineArgumentMapType          m_CommandLineArgumentMap;
-  std::string                         m_ParameterFileName;
-  itk::ParameterFileParser::Pointer   m_ParameterFileParser;
-  itk::ParameterMapInterface::Pointer m_ParameterMapInterface;
+  CommandLineArgumentMapType          m_CommandLineArgumentMap{};
+  std::string                         m_ParameterFileName{};
+  itk::ParameterFileParser::Pointer   m_ParameterFileParser{ itk::ParameterFileParser::New() };
+  itk::ParameterMapInterface::Pointer m_ParameterMapInterface{ itk::ParameterMapInterface::New() };
 
-  bool         m_IsInitialized;
-  unsigned int m_ElastixLevel;
-  unsigned int m_TotalNumberOfElastixLevels;
+  bool         m_IsInitialized{ false };
+  unsigned int m_ElastixLevel{ 0 };
+  unsigned int m_TotalNumberOfElastixLevels{ 1 };
 };
 
 } // end namespace elastix
