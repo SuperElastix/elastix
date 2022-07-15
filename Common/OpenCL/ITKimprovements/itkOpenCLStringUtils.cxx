@@ -60,7 +60,7 @@ opencl_simplified(const std::string & str)
   {
     while (from != fromend && opencl_isspace(char(*from)))
     {
-      from++;
+      ++from;
     }
     while (from != fromend && !opencl_isspace(char(*from)))
     {
@@ -77,7 +77,7 @@ opencl_simplified(const std::string & str)
   }
   if (outc > 0 && to[outc - 1] == ' ')
   {
-    outc--;
+    --outc;
   }
   result.resize(outc);
 

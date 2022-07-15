@@ -115,7 +115,7 @@ FullSearchOptimizer::ResumeOptimization()
     this->InvokeEvent(IterationEvent());
 
     /** Prepare for next step */
-    m_CurrentIteration++;
+    ++m_CurrentIteration;
 
     if (m_CurrentIteration >= this->GetNumberOfIterations())
     {
@@ -222,7 +222,7 @@ FullSearchOptimizer::UpdateCurrentPosition()
 
     /** Update the array of parameters. */
     currentPosition[it.Index()] = m_CurrentPointInSearchSpace[ssdim];
-    it++;
+    ++it;
   } // end for
 
 } // end UpdateCurrentPosition
@@ -254,7 +254,7 @@ FullSearchOptimizer::ProcessSearchSpaceChanges()
     {
       RangeType range = it.Value();
       m_SearchSpaceSize[ssdim] = static_cast<unsigned long>((range[1] - range[0]) / range[2]) + 1;
-      it++;
+      ++it;
     }
 
   } // end if search space modified
@@ -384,7 +384,7 @@ FullSearchOptimizer::PointToPosition(const SearchSpacePointType & point)
     param[it.Index()] = point[ssdim];
 
     /** go to next dimension in search space */
-    it++;
+    ++it;
   }
 
   return param;
@@ -423,7 +423,7 @@ FullSearchOptimizer::IndexToPoint(const SearchSpaceIndexType & index)
     point[ssdim] = range[0] + static_cast<double>(range[2] * index[ssdim]);
 
     /** go to next dimension in search space */
-    it++;
+    ++it;
   } // end for
 
   return point;

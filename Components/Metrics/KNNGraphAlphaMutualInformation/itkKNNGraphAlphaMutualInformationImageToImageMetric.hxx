@@ -872,7 +872,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
       /** Update the NumberOfPixelsCounted. */
       this->m_NumberOfPixelsCounted++;
 
-      ii++;
+      ++ii;
 
     } // end if sampleOk
 

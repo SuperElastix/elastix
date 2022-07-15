@@ -87,7 +87,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize()
     /** Compute expected value (mean) and variance. */
     float expectedValue = sum / static_cast<float>(numlast);
     sumvar += sumsq / static_cast<float>(numlast) - expectedValue * expectedValue;
-    num++;
+    ++num;
 
     it.NextLine();
   }
@@ -284,7 +284,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
 
       if (sampleOk)
       {
-        numSamplesOk++;
+        ++numSamplesOk;
         sumValues += movingImageValue;
         sumValuesSquared += movingImageValue * movingImageValue;
       } // end if sampleOk
@@ -465,7 +465,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
       if (sampleOk)
       {
         /** Update value terms **/
-        numSamplesOk++;
+        ++numSamplesOk;
         sumValues += movingImageValue;
         sumValuesSquared += movingImageValue * movingImageValue;
 

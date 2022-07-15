@@ -307,7 +307,7 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
           Cm[i][j] += weight;
         }
       }
-      numberOfPixelsCounted++;
+      ++numberOfPixelsCounted;
     }
   }
   /** Update the thread struct once. */

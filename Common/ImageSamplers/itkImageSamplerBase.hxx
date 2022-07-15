@@ -347,8 +347,8 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
     while (itCW != cornersWorld->end())
     {
       *itCI = inputImage->template TransformPhysicalPointToContinuousIndex<InputImagePointValueType>(*itCW);
-      itCI++;
-      itCW++;
+      ++itCI;
+      ++itCW;
     }
     bbIndex->SetPoints(cornersIndex);
     bbIndex->ComputeBoundingBox();

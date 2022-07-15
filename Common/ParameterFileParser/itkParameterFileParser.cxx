@@ -312,8 +312,8 @@ ParameterFileParser::SplitLine(const std::string &        fullLine,
     {
       /** Start a new element. */
       splittedLine.push_back("");
-      index++;
-      numQuotes++;
+      ++index;
+      ++numQuotes;
     }
     else if (currentChar == ' ')
     {
@@ -323,7 +323,7 @@ ParameterFileParser::SplitLine(const std::string &        fullLine,
       if (numQuotes % 2 == 0)
       {
         splittedLine.push_back("");
-        index++;
+        ++index;
       }
       else
       {

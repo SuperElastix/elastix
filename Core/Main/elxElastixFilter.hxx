@@ -435,7 +435,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GetFixedImage(const unsigned int index
         return itkDynamicCastInDebugMode<const TFixedImage *>(this->GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -524,7 +524,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GetMovingImage(const unsigned int inde
         return itkDynamicCastInDebugMode<const TMovingImage *>(this->GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -601,7 +601,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GetFixedMask(const unsigned int index)
         return itkDynamicCastInDebugMode<const FixedMaskType *>(this->GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -691,7 +691,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GetMovingMask(const unsigned int index
         return itkDynamicCastInDebugMode<const MovingMaskType *>(this->GetInput(inputNames[i]));
       }
 
-      n++;
+      ++n;
     }
   }
 
@@ -789,7 +789,7 @@ ElastixFilter<TFixedImage, TMovingImage>::GetNumberOfInputsOfType(const DataObje
   {
     if (this->IsInputOfType(inputType, inputNames[i]))
     {
-      n++;
+      ++n;
     }
   }
 

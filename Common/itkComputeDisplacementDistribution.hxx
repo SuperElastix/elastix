@@ -417,7 +417,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
     jggMagnitude = Jgg.magnitude();
     displacement += jggMagnitude;
     displacementSquared += vnl_math::sqr(jggMagnitude);
-    numberOfPixelsCounted++;
+    ++numberOfPixelsCounted;
   }
 
   /** Update the thread struct once. */

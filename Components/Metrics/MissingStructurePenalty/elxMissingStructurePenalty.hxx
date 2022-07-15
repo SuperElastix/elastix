@@ -70,7 +70,7 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
     this->m_Configuration->ReadParameter(metricName, "Metric", i);
     if (metricName == "MissingStructurePenalty")
     {
-      count++;
+      ++count;
     }
   }
   if (count == 0)

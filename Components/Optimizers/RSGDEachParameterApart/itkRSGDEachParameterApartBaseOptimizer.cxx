@@ -109,7 +109,7 @@ RSGDEachParameterApartBaseOptimizer::ResumeOptimization()
 
     this->AdvanceOneStep();
 
-    m_CurrentIteration++;
+    ++m_CurrentIteration;
 
     if (m_CurrentIteration == m_NumberOfIterations)
     {

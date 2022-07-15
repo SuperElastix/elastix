@@ -1123,7 +1123,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixFloat2x2Type & value)
     for (unsigned int j = 0; j < nColumns; ++j)
     {
       values.s[id] = value[i][j];
-      id++;
+      ++id;
     }
   }
   return this->SetArg(index, values);
@@ -1146,7 +1146,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble2x2Type & value)
       for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = value[i][j];
-        id++;
+        ++id;
       }
     }
     return this->SetArg(index, values);
@@ -1159,7 +1159,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble2x2Type & value)
       for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = static_cast<float>(value[i][j]);
-        id++;
+        ++id;
       }
     }
     return this->SetArg(index, values);
@@ -1182,7 +1182,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixFloat3x3Type & value)
     for (unsigned int j = 0; j < nColumns; ++j)
     {
       values.s[id] = value[i][j];
-      id++;
+      ++id;
     }
   }
   return this->SetArg(index, values);
@@ -1206,7 +1206,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble3x3Type & value)
       for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = value[i][j];
-        id++;
+        ++id;
       }
     }
     return this->SetArg(index, values);
@@ -1220,7 +1220,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble3x3Type & value)
       for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = static_cast<float>(value[i][j]);
-        id++;
+        ++id;
       }
     }
     return this->SetArg(index, values);
@@ -1243,7 +1243,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixFloat4x4Type & value)
     for (unsigned int j = 0; j < nColumns; ++j)
     {
       values.s[id] = value[i][j];
-      id++;
+      ++id;
     }
   }
   return this->SetArg(index, values);
@@ -1267,7 +1267,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble4x4Type & value)
       for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = value[i][j];
-        id++;
+        ++id;
       }
     }
     return this->SetArg(index, values);
@@ -1281,7 +1281,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble4x4Type & value)
       for (unsigned int j = 0; j < nColumns; ++j)
       {
         values.s[id] = static_cast<float>(value[i][j]);
-        id++;
+        ++id;
       }
     }
     return this->SetArg(index, values);

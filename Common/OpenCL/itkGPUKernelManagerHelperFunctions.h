@@ -93,7 +93,7 @@ SetKernelWithDirection(const typename ImageType::DirectionType & dir,
       for (unsigned int j = 0; j < ImageDim; ++j)
       {
         direction[index] = static_cast<float>(dir[i][j]);
-        index++;
+        ++index;
       }
     }
     for (unsigned int i = 0; i < 4; ++i)
@@ -111,7 +111,7 @@ SetKernelWithDirection(const typename ImageType::DirectionType & dir,
       for (unsigned int j = 0; j < ImageDim; ++j)
       {
         direction[index] = static_cast<float>(dir[i][j]);
-        index++;
+        ++index;
       }
     }
     for (unsigned int i = 9; i < 16; ++i)

@@ -96,31 +96,31 @@ FullSearch<TElastix>::BeforeEachResolution()
     {
       found = this->GetConfiguration()->ReadParameter(name, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
-      entry_nr++;
+      ++entry_nr;
     }
     if (realGood && found)
     {
       found = this->GetConfiguration()->ReadParameter(param_nr, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
-      entry_nr++;
+      ++entry_nr;
     }
     if (realGood && found)
     {
       found = this->GetConfiguration()->ReadParameter(minimum, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
-      entry_nr++;
+      ++entry_nr;
     }
     if (realGood && found)
     {
       found = this->GetConfiguration()->ReadParameter(maximum, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
-      entry_nr++;
+      ++entry_nr;
     }
     if (realGood && found)
     {
       found = this->GetConfiguration()->ReadParameter(stepsize, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
-      entry_nr++;
+      ++entry_nr;
     }
 
     /** Setup this search range. */
@@ -196,7 +196,7 @@ FullSearch<TElastix>::AfterEachIteration()
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     this->GetIterationInfoAt(name_it->second.c_str()) << currentPoint[dim];
-    name_it++;
+    ++name_it;
   }
 
 } // end AfterEachIteration()
@@ -279,7 +279,7 @@ FullSearch<TElastix>::AfterEachResolution()
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     this->RemoveTargetCellFromIterationInfo(name_it->second.c_str());
-    name_it++;
+    ++name_it;
   }
 
   /** Clear the dimension names of the previous resolution's search space. */

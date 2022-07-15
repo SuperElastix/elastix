@@ -599,7 +599,7 @@ ResamplerBase<TElastix>::ReadFromFile()
   {
     if (size[i] == 0)
     {
-      sum++;
+      ++sum;
     }
   }
   if (sum > 0)

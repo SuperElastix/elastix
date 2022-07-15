@@ -129,7 +129,7 @@ public:
     mk[i].key = kv; // store element here
     mk[i].info = inf;
     if (n < k)
-      n++;              // increment number of items
+      ++n;              // increment number of items
     ANN_FLOP(k - i + 1) // increment floating ops
   }
 };

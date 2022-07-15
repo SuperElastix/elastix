@@ -288,7 +288,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
       }
 
       parameterFile << ")" << std::endl;
-      parameterMapIterator++;
+      ++parameterMapIterator;
     }
   }
   catch (std::stringstream::failure e)

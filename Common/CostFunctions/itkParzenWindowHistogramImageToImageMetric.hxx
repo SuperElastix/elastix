@@ -1156,7 +1156,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
 
     if (sampleOk)
     {
-      numberOfPixelsCounted++;
+      ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
       RealType fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);

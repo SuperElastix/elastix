@@ -223,7 +223,7 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
             imageBase2D.Direction.s[index] = static_cast<float>(direction[i][j]);
             imageBase2D.IndexToPhysicalPoint.s[index] = static_cast<float>(i2pp[i][j]);
             imageBase2D.PhysicalPointToIndex.s[index] = static_cast<float>(pp2i[i][j]);
-            index++;
+            ++index;
           }
         }
       }
@@ -280,7 +280,7 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
             imageBase3D.Direction.s[index] = static_cast<float>(direction[i][j]);
             imageBase3D.IndexToPhysicalPoint.s[index] = static_cast<float>(i2pp[i][j]);
             imageBase3D.PhysicalPointToIndex.s[index] = static_cast<float>(pp2i[i][j]);
-            index++;
+            ++index;
           }
         }
         for (unsigned int i = 9; i < 16; ++i)

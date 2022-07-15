@@ -103,7 +103,7 @@ ANNBinaryTreeCreator::DeleteANNBruteForceTree(ANNBruteForceTreeType *& tree)
 void
 ANNBinaryTreeCreator::IncreaseReferenceCount()
 {
-  m_NumberOfANNBinaryTrees++;
+  ++m_NumberOfANNBinaryTrees;
 } // end IncreaseReferenceCount
 
 
@@ -114,7 +114,7 @@ ANNBinaryTreeCreator::IncreaseReferenceCount()
 void
 ANNBinaryTreeCreator::DecreaseReferenceCount()
 {
-  m_NumberOfANNBinaryTrees--;
+  --m_NumberOfANNBinaryTrees;
   if (m_NumberOfANNBinaryTrees == 0)
   {
     annClose();

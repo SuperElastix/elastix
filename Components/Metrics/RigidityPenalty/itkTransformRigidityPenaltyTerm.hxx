@@ -1902,7 +1902,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     {
       derivative[j] = itDIs[i].Get() / rigidityCoefficientSum;
       ++itDIs[i];
-      j++;
+      ++j;
     } // end while
   }   // end for
 
