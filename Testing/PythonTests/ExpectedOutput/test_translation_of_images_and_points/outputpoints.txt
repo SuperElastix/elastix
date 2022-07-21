@@ -1,0 +1,4 @@
+Point	0	; InputIndex = [ 0 0 ]	; InputPoint = [ 0.000000 0.000000 ]	; OutputIndexFixed = [ 1 -2 ]	; OutputPoint = [ 1.000000 -2.000000 ]	; Deformation = [ 1.000000 -2.000000 ]	; OutputIndexMoving = [ 1 -2 ]
+Point	1	; InputIndex = [ 0 1 ]	; InputPoint = [ 0.000000 1.000000 ]	; OutputIndexFixed = [ 1 -1 ]	; OutputPoint = [ 1.000000 -1.000000 ]	; Deformation = [ 1.000000 -2.000000 ]	; OutputIndexMoving = [ 1 -1 ]
+Point	2	; InputIndex = [ 1 0 ]	; InputPoint = [ 1.000000 0.000000 ]	; OutputIndexFixed = [ 2 -2 ]	; OutputPoint = [ 2.000000 -2.000000 ]	; Deformation = [ 1.000000 -2.000000 ]	; OutputIndexMoving = [ 2 -2 ]
+Point	3	; InputIndex = [ 1 1 ]	; InputPoint = [ 1.000000 1.000000 ]	; OutputIndexFixed = [ 2 -1 ]	; OutputPoint = [ 2.000000 -1.000000 ]	; Deformation = [ 1.000000 -2.000000 ]	; OutputIndexMoving = [ 2 -1 ]
