@@ -35,6 +35,11 @@ class TransformixTestCase(unittest.TestCase):
     transformix_exe_file_path = pathlib.Path(os.environ["TRANSFORMIX_EXE"])
     temporary_directory_path = pathlib.Path(os.environ["TRANSFORMIX_TEST_TEMP_DIR"])
 
+    def get_name_of_current_function(self):
+        """Returns the name of the current function"""
+
+        return sys._getframe(1).f_code.co_name
+
     def create_test_function_output_directory(self):
         """Creates an output directory for the current test function, and returns its path."""
 
@@ -251,6 +256,57 @@ class TransformixTestCase(unittest.TestCase):
             filecmp.cmp(
                 out_directory_path / outputpoints_filename,
                 source_directory_path / "ExpectedOutput" / outputpoints_filename,
+                shallow=False,
+            )
+        )
+
+    def test_translation_of_images_and_points(self) -> None:
+        """Tests translation of images and points together"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+        data_directory_path = source_directory_path / ".." / "Data"
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        completed = subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-in",
+                str(data_directory_path / "2D_2x2_square_object_at_(2,1).mhd"),
+                "-def",
+                str(data_directory_path / "2D_unit_square_corner_points.txt"),
+                "-tp",
+                str(parameter_directory_path / "Translation(1,-2).txt"),
+                "-out",
+                str(output_directory_path),
+            ],
+            capture_output=True,
+            check=True,
+        )
+
+        expected_image = sitk.ReadImage(
+            str(data_directory_path / "2D_2x2_square_object_at_(1,3).mhd")
+        )
+        actual_image = sitk.ReadImage(str(output_directory_path / "result.mhd"))
+
+        self.assert_equal_image_info(actual_image, expected_image)
+
+        actual_pixel_data = sitk.GetArrayFromImage(expected_image)
+        expected_pixel_data = sitk.GetArrayFromImage(actual_image)
+
+        max_absolute_difference = 3.0878078e-16
+        np.testing.assert_allclose(
+            actual_pixel_data, expected_pixel_data, atol=max_absolute_difference, rtol=0
+        )
+
+        outputpoints_filename = "outputpoints.txt"
+        self.assertTrue(
+            filecmp.cmp(
+                output_directory_path / outputpoints_filename,
+                source_directory_path
+                / "ExpectedOutput"
+                / self.get_name_of_current_function()
+                / outputpoints_filename,
                 shallow=False,
             )
         )
