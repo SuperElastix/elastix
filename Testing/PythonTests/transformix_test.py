@@ -224,11 +224,7 @@ class TransformixTestCase(unittest.TestCase):
         """Tests translation of points"""
 
         source_directory_path = pathlib.Path(__file__).resolve().parent
-        test_function_output_directory_path = (
-            self.create_test_function_output_directory()
-        )
-        out_directory_path = test_function_output_directory_path / "out"
-        out_directory_path.mkdir(exist_ok=True)
+        output_directory_path = self.create_test_function_output_directory()
 
         data_directory_path = source_directory_path / ".." / "Data"
         parameter_directory_path = source_directory_path / "TransformParameters"
@@ -241,7 +237,7 @@ class TransformixTestCase(unittest.TestCase):
                 "-tp",
                 str(parameter_directory_path / "Translation(1,-2).txt"),
                 "-out",
-                str(out_directory_path),
+                str(output_directory_path),
             ],
             capture_output=True,
             check=True,
@@ -249,8 +245,11 @@ class TransformixTestCase(unittest.TestCase):
 
         self.assertTrue(
             filecmp.cmp(
-                out_directory_path / OUTPUTPOINTS_FILENAME,
-                source_directory_path / "ExpectedOutput" / OUTPUTPOINTS_FILENAME,
+                output_directory_path / OUTPUTPOINTS_FILENAME,
+                source_directory_path
+                / "ExpectedOutput"
+                / self.get_name_of_current_function()
+                / OUTPUTPOINTS_FILENAME,
                 shallow=False,
             )
         )
