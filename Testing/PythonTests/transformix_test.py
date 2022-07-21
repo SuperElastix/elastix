@@ -27,6 +27,8 @@ import unittest
 import SimpleITK as sitk
 import numpy as np
 
+OUTPUTPOINTS_FILENAME = "outputpoints.txt"
+
 
 class TransformixTestCase(unittest.TestCase):
     """Tests transformix from https://elastix.lumc.nl"""
@@ -245,11 +247,10 @@ class TransformixTestCase(unittest.TestCase):
             check=True,
         )
 
-        outputpoints_filename = "outputpoints.txt"
         self.assertTrue(
             filecmp.cmp(
-                out_directory_path / outputpoints_filename,
-                source_directory_path / "ExpectedOutput" / outputpoints_filename,
+                out_directory_path / OUTPUTPOINTS_FILENAME,
+                source_directory_path / "ExpectedOutput" / OUTPUTPOINTS_FILENAME,
                 shallow=False,
             )
         )
@@ -293,14 +294,13 @@ class TransformixTestCase(unittest.TestCase):
             actual_pixel_data, expected_pixel_data, atol=max_absolute_difference, rtol=0
         )
 
-        outputpoints_filename = "outputpoints.txt"
         self.assertTrue(
             filecmp.cmp(
-                output_directory_path / outputpoints_filename,
+                output_directory_path / OUTPUTPOINTS_FILENAME,
                 source_directory_path
                 / "ExpectedOutput"
                 / self.get_name_of_current_function()
-                / outputpoints_filename,
+                / OUTPUTPOINTS_FILENAME,
                 shallow=False,
             )
         )
