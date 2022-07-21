@@ -66,7 +66,6 @@ class TransformixTestCase(unittest.TestCase):
         completed = subprocess.run(
             [str(self.transformix_exe_file_path)], capture_output=True, check=True
         )
-        self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stderr, b"")
         self.assertEqual(
             completed.stdout.decode().strip(),
@@ -81,7 +80,6 @@ class TransformixTestCase(unittest.TestCase):
             capture_output=True,
             check=True,
         )
-        self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stderr, b"")
         self.assertTrue(
             "transformix applies a transform on an input image and/or"
@@ -96,7 +94,6 @@ class TransformixTestCase(unittest.TestCase):
             capture_output=True,
             check=True,
         )
-        self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stderr, b"")
         self.assertEqual(
             completed.stdout.decode().strip(),
@@ -111,7 +108,6 @@ class TransformixTestCase(unittest.TestCase):
             capture_output=True,
             check=True,
         )
-        self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stderr, b"")
 
         output: str = completed.stdout.decode()
@@ -193,7 +189,7 @@ class TransformixTestCase(unittest.TestCase):
         data_directory_path = source_directory_path / ".." / "Data"
         parameter_directory_path = source_directory_path / "TransformParameters"
 
-        completed = subprocess.run(
+        subprocess.run(
             [
                 str(self.transformix_exe_file_path),
                 "-in",
@@ -206,7 +202,6 @@ class TransformixTestCase(unittest.TestCase):
             capture_output=True,
             check=True,
         )
-        self.assertEqual(completed.returncode, 0)
 
         expected_image = sitk.ReadImage(
             str(data_directory_path / "2D_2x2_square_object_at_(1,3).mhd")
@@ -236,7 +231,7 @@ class TransformixTestCase(unittest.TestCase):
         data_directory_path = source_directory_path / ".." / "Data"
         parameter_directory_path = source_directory_path / "TransformParameters"
 
-        completed = subprocess.run(
+        subprocess.run(
             [
                 str(self.transformix_exe_file_path),
                 "-def",
@@ -249,7 +244,6 @@ class TransformixTestCase(unittest.TestCase):
             capture_output=True,
             check=True,
         )
-        self.assertEqual(completed.returncode, 0)
 
         outputpoints_filename = "outputpoints.txt"
         self.assertTrue(
@@ -268,7 +262,7 @@ class TransformixTestCase(unittest.TestCase):
         data_directory_path = source_directory_path / ".." / "Data"
         parameter_directory_path = source_directory_path / "TransformParameters"
 
-        completed = subprocess.run(
+        subprocess.run(
             [
                 str(self.transformix_exe_file_path),
                 "-in",
