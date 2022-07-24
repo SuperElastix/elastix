@@ -230,7 +230,7 @@ ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileNam
 
 
 void
-ParameterObject::WriteParameterFile()
+ParameterObject::WriteParameterFile() const
 {
   ParameterFileNameVectorType parameterFileNameVector;
   for (unsigned int i = 0; i < m_ParameterMap.size(); ++i)
@@ -238,7 +238,7 @@ ParameterObject::WriteParameterFile()
     parameterFileNameVector.push_back("ParametersFile." + std::to_string(i) + ".txt");
   }
 
-  this->WriteParameterFile(this->m_ParameterMap, parameterFileNameVector);
+  Self::WriteParameterFile(this->m_ParameterMap, parameterFileNameVector);
 }
 
 
@@ -260,7 +260,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
   }
   catch (std::ofstream::failure e)
   {
-    itkExceptionMacro("Error opening parameter file: " << e.what());
+    itkGenericExceptionMacro("Error opening parameter file: " << e.what());
   }
 
   try
@@ -293,7 +293,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
   }
   catch (std::stringstream::failure e)
   {
-    itkExceptionMacro("Error writing to paramter file: " << e.what());
+    itkGenericExceptionMacro("Error writing to paramter file: " << e.what());
   }
 
   try
@@ -302,7 +302,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
   }
   catch (std::ofstream::failure e)
   {
-    itkExceptionMacro("Error closing parameter file:" << e.what());
+    itkGenericExceptionMacro("Error closing parameter file:" << e.what());
   }
 }
 
@@ -312,7 +312,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
  */
 
 void
-ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileName)
+ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileName) const
 {
   if (this->m_ParameterMap.empty())
   {
@@ -340,9 +340,9 @@ ParameterObject::WriteParameterFile(const ParameterMapVectorType &      paramete
 {
   if (parameterMapVector.size() != parameterFileNameVector.size())
   {
-    itkExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << parameterMapVector.size()
-                      << ") does not match the number of provided filenames (" << parameterFileNameVector.size()
-                      << ").");
+    itkGenericExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << parameterMapVector.size()
+                             << ") does not match the number of provided filenames (" << parameterFileNameVector.size()
+                             << ").");
   }
 
   // Add initial transform parameter file names. Do not touch the first one,
@@ -355,7 +355,7 @@ ParameterObject::WriteParameterFile(const ParameterMapVectorType &      paramete
       parameterMap["InitialTransformParameterFileName"][0] = parameterFileNameVector[i - 1];
     }
 
-    this->WriteParameterFile(parameterMap, parameterFileNameVector[i]);
+    Self::WriteParameterFile(parameterMap, parameterFileNameVector[i]);
   }
 }
 
@@ -366,9 +366,9 @@ ParameterObject::WriteParameterFile(const ParameterMapVectorType &      paramete
 
 
 void
-ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
+ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const
 {
-  this->WriteParameterFile(this->m_ParameterMap, parameterFileNameVector);
+  Self::WriteParameterFile(this->m_ParameterMap, parameterFileNameVector);
 }
 
 
