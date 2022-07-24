@@ -93,14 +93,14 @@ public:
   void
   AddParameterFile(const ParameterFileNameType & parameterFileName);
   void
-  WriteParameterFile();
-  void
+  WriteParameterFile() const;
+  static void
   WriteParameterFile(const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName);
   void
-  WriteParameterFile(const ParameterFileNameType & parameterFileName);
+  WriteParameterFile(const ParameterFileNameType & parameterFileName) const;
   void
-  WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector);
-  void
+  WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const;
+  static void
   WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
                      const ParameterFileNameVectorType & parameterFileNameVector);
 
