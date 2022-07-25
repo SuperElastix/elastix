@@ -258,7 +258,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
   {
     parameterFile.open(parameterFileName.c_str(), std::ofstream::out);
   }
-  catch (std::ofstream::failure e)
+  catch (const std::ios_base::failure & e)
   {
     itkGenericExceptionMacro("Error opening parameter file: " << e.what());
   }
@@ -291,7 +291,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
       ++parameterMapIterator;
     }
   }
-  catch (std::stringstream::failure e)
+  catch (const std::ios_base::failure & e)
   {
     itkGenericExceptionMacro("Error writing to paramter file: " << e.what());
   }
@@ -300,7 +300,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
   {
     parameterFile.close();
   }
-  catch (std::ofstream::failure e)
+  catch (const std::ios_base::failure & e)
   {
     itkGenericExceptionMacro("Error closing parameter file:" << e.what());
   }
