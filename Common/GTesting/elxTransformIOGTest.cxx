@@ -308,8 +308,8 @@ struct WithDimension
 
       const auto imageContainer = elx::ElastixBase::DataObjectContainerType::New();
       const auto image = itk::Image<float, NDimension>::New();
-      image->SetOrigin(testValue);
-      image->SetSpacing(testValue);
+      image->SetOrigin(itk::Point<double, NDimension>(testValue));
+      image->SetSpacing(itk::Vector<double, NDimension>(testValue));
       imageContainer->push_back(image);
 
       elastixObject->SetFixedImageContainer(imageContainer);
