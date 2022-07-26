@@ -20,8 +20,6 @@
 
 #include "itkMatrix.h"
 
-#include <vnl/vnl_vector.h>
-
 #include <iterator>
 #include <map>
 #include <string>
@@ -49,24 +47,6 @@ public:
   /** Corresponds with typedefs from the elastix class itk::ParameterFileParser. */
   using ParameterValuesType = std::vector<std::string>;
   using ParameterMapType = std::map<std::string, ParameterValuesType>;
-
-  /** Overload set, similar to C++17 `std::size(const TContainer&)` (which can only be
-   * used within the implementation of elastix is upgraded to C++17 or higher).
-   */
-  template <typename TContainer, unsigned NDimension = TContainer::Dimension>
-  static std::size_t
-  GetNumberOfElements(const TContainer &)
-  {
-    return NDimension;
-  }
-
-  template <typename TValue>
-  static std::size_t
-  GetNumberOfElements(const vnl_vector<TValue> & vnlVector)
-  {
-    return vnlVector.size();
-  }
-
 
   /** Convenience function to convert seconds to day, hour, minute, second format. */
   static std::string
@@ -128,9 +108,7 @@ public:
   {
     std::vector<std::string> result;
 
-    // Note: Uses TContainer::Dimension instead of container.size(),
-    // because itk::FixedArray::size() is not yet included with ITK 5.1.1.
-    result.reserve(GetNumberOfElements(container));
+    result.reserve(container.size());
 
     for (const auto element : container)
     {
