@@ -62,6 +62,19 @@ class TransformixTestCase(unittest.TestCase):
             actual.GetPixelIDTypeAsString(), expected.GetPixelIDTypeAsString()
         )
 
+    def create_image_with_sequence_of_natural_numbers(
+        self, number_of_columns, number_of_rows, pixel_type
+    ):
+        """Creates an image, having an incremental sequence of natural numbers (1, 2, 3, ...) as pixel values"""
+
+        image = sitk.Image(number_of_columns, number_of_rows, pixel_type)
+        pixel_value = 0
+        for row in range(number_of_rows):
+            for column in range(number_of_columns):
+                pixel_value += 1
+                image.SetPixel([column, row], pixel_value)
+        return image
+
     def test_without_arguments(self) -> None:
         """Tests executing transformix without arguments"""
 
@@ -303,6 +316,88 @@ class TransformixTestCase(unittest.TestCase):
                 shallow=False,
             )
         )
+
+    def test_transform_image_to_int(self) -> None:
+        """Tests transformation of an image to an int pixel type"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        # Create an image that has a different value for each pixel.
+        number_of_columns = 5
+        number_of_rows = 6
+
+        for pixel_type in [sitk.sitkInt32, sitk.sitkFloat32]:
+            input_image = self.create_image_with_sequence_of_natural_numbers(
+                number_of_columns, number_of_rows, pixel_type
+            )
+            sitk.WriteImage(input_image, str(output_directory_path / "input.mhd"))
+            subprocess.run(
+                [
+                    str(self.transformix_exe_file_path),
+                    "-in",
+                    str(output_directory_path / "input.mhd"),
+                    "-tp",
+                    str(parameter_directory_path / "Transform_to_int_5x6.txt"),
+                    "-out",
+                    str(output_directory_path),
+                ],
+                capture_output=True,
+                check=True,
+            )
+
+            actual_image = sitk.ReadImage(str(output_directory_path / "result.mhd"))
+            expected_image = self.create_image_with_sequence_of_natural_numbers(
+                number_of_columns, number_of_rows, sitk.sitkInt32
+            )
+
+            self.assert_equal_image_info(actual_image, expected_image)
+            np.testing.assert_array_equal(
+                sitk.GetArrayFromImage(actual_image),
+                sitk.GetArrayFromImage(expected_image),
+            )
+
+    def test_transform_image_to_float(self) -> None:
+        """Tests transformation of an image to a float pixel type"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        # Create an image that has a different value for each pixel.
+        number_of_columns = 5
+        number_of_rows = 6
+
+        for pixel_type in [sitk.sitkInt32, sitk.sitkFloat32]:
+            input_image = self.create_image_with_sequence_of_natural_numbers(
+                number_of_columns, number_of_rows, pixel_type
+            )
+            sitk.WriteImage(input_image, str(output_directory_path / "input.mhd"))
+            subprocess.run(
+                [
+                    str(self.transformix_exe_file_path),
+                    "-in",
+                    str(output_directory_path / "input.mhd"),
+                    "-tp",
+                    str(parameter_directory_path / "Transform_to_float_5x6.txt"),
+                    "-out",
+                    str(output_directory_path),
+                ],
+                capture_output=True,
+                check=True,
+            )
+
+            actual_image = sitk.ReadImage(str(output_directory_path / "result.mhd"))
+            expected_image = self.create_image_with_sequence_of_natural_numbers(
+                number_of_columns, number_of_rows, sitk.sitkFloat32
+            )
+
+            self.assert_equal_image_info(actual_image, expected_image)
+            np.testing.assert_array_equal(
+                sitk.GetArrayFromImage(actual_image),
+                sitk.GetArrayFromImage(expected_image),
+            )
 
 
 if __name__ == "__main__":
