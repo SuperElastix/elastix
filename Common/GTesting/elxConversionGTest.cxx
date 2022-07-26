@@ -46,12 +46,6 @@ using elx::CoreMainGTestUtilities::CheckNew;
 
 namespace
 {
-template <typename TContainer>
-void
-Expect_GetNumberOfElements_returns_size(const TContainer & container)
-{
-  EXPECT_EQ(Conversion::GetNumberOfElements(container), container.size());
-}
 
 template <typename TParameterValue>
 TParameterValue
@@ -227,23 +221,6 @@ Expect_lossless_round_trip_of_floating_point_parameter_values()
 }
 
 } // namespace
-
-
-GTEST_TEST(Conversion, GetNumberOfParameters)
-{
-  Expect_GetNumberOfElements_returns_size(itk::Size<>{});
-  Expect_GetNumberOfElements_returns_size(itk::Index<>{});
-
-  // Note: Currently we still support ITK 5.1.1, which does not yet have a
-  // size() member function for itk::Point and itk::Vector.
-  EXPECT_EQ(Conversion::GetNumberOfElements(itk::Point<double>{}), 3);
-  EXPECT_EQ(Conversion::GetNumberOfElements(itk::Vector<double>{}), 3);
-
-  for (std::size_t i{}; i <= 2; ++i)
-  {
-    Expect_GetNumberOfElements_returns_size(itk::OptimizerParameters<double>(i));
-  }
-}
 
 
 GTEST_TEST(Conversion, BoolToString)
