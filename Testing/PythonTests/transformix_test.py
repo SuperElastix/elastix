@@ -24,6 +24,7 @@ import pathlib
 import subprocess
 import sys
 import unittest
+import itk
 import SimpleITK as sitk
 import numpy as np
 
@@ -74,6 +75,14 @@ class TransformixTestCase(unittest.TestCase):
                 pixel_value += 1
                 image.SetPixel([column, row], pixel_value)
         return image
+
+    def assert_equal_mesh(self, actual, expected) -> None:
+        """Asserts that the actual mesh is equal to the expected one."""
+        number_of_points = expected.GetNumberOfPoints()
+        self.assertEqual(actual.GetNumberOfPoints(), number_of_points)
+
+        for i in range(number_of_points):
+            self.assertEqual(actual.GetPoint(i), expected.GetPoint(i))
 
     def test_without_arguments(self) -> None:
         """Tests executing transformix without arguments"""
@@ -398,6 +407,40 @@ class TransformixTestCase(unittest.TestCase):
                 sitk.GetArrayFromImage(actual_image),
                 sitk.GetArrayFromImage(expected_image),
             )
+
+    def test_zero_translation_of_vtk_points(self) -> None:
+        """Tests translation of points"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        input_mesh = itk.Mesh[itk.D, 3].New()
+        input_mesh.SetPoint(0, (0, 0, 0))
+        input_mesh.SetPoint(1, (1, 0, 0))
+        input_mesh.SetPoint(2, (0, 1, 0))
+        input_mesh.SetPoint(3, (0, 0, 1))
+
+        itk.meshwrite(input_mesh, str(output_directory_path / "inputpoints.vtk"))
+
+        subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-def",
+                str(output_directory_path / "inputpoints.vtk"),
+                "-tp",
+                str(parameter_directory_path / "Translation(0,0,0).txt"),
+                "-out",
+                str(output_directory_path),
+            ],
+            capture_output=True,
+            check=True,
+        )
+
+        output_mesh = itk.meshread(str(output_directory_path / "outputpoints.vtk"))
+
+        self.assert_equal_mesh(output_mesh, input_mesh)
 
 
 if __name__ == "__main__":
