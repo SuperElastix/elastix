@@ -367,7 +367,7 @@ MissingStructurePenalty<TElastix>::WriteResultMesh(const char * filename, MeshId
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   if (tempSetPointData)

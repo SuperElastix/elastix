@@ -352,7 +352,7 @@ PolydataDummyPenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdTyp
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   if (tempSetPointData)

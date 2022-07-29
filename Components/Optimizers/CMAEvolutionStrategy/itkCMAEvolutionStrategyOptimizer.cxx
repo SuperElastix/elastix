@@ -155,11 +155,11 @@ CMAEvolutionStrategyOptimizer::ResumeOptimization()
   {
     this->m_CurrentValue = this->GetScaledValue(this->GetScaledCurrentPosition());
   }
-  catch (ExceptionObject & err)
+  catch (ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 
   /** Test if not by chance we are already converged */
@@ -492,7 +492,7 @@ CMAEvolutionStrategyOptimizer::GenerateOffspring()
     {
       costFunctionValue = this->GetScaledValue(x_lam);
     }
-    catch (ExceptionObject & err)
+    catch (ExceptionObject &)
     {
       ++nrOfFails;
       /** try another parameter vector if we haven't tried that for 10 times already */
@@ -504,7 +504,7 @@ CMAEvolutionStrategyOptimizer::GenerateOffspring()
       {
         this->m_StopCondition = MetricError;
         this->StopOptimization();
-        throw err;
+        throw;
       }
     }
     /** Successfull cost function evaluation */
@@ -578,11 +578,11 @@ CMAEvolutionStrategyOptimizer::AdvanceOneStep()
   {
     this->m_CurrentValue = this->GetScaledValue(this->GetScaledCurrentPosition());
   }
-  catch (ExceptionObject & err)
+  catch (ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 } // end AdvanceOneStep
 

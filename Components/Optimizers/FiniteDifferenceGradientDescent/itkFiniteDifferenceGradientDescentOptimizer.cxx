@@ -130,7 +130,7 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization()
       {
         this->m_Value = this->GetScaledValue(param);
       }
-      catch (ExceptionObject & err)
+      catch (ExceptionObject &)
       {
         // An exception has occurred.
         // Terminate immediately.
@@ -138,7 +138,7 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization()
         StopOptimization();
 
         // Pass exception to caller
-        throw err;
+        throw;
       }
       if (m_Stop)
       {
@@ -165,7 +165,7 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization()
 
       } // for j = 0 .. spaceDimension
     }
-    catch (ExceptionObject & err)
+    catch (ExceptionObject &)
     {
       // An exception has occurred.
       // Terminate immediately.
@@ -173,7 +173,7 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization()
       StopOptimization();
 
       // Pass exception to caller
-      throw err;
+      throw;
     }
 
     if (m_Stop)

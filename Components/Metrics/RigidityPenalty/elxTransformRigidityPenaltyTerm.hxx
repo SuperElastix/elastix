@@ -69,7 +69,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
       err_str += "\nError occurred while reading the fixed rigidity image.\n";
       excp.SetDescription(err_str);
       /** Pass the exception to an higher level. */
-      throw excp;
+      throw;
     }
 
     /** Set the fixed rigidity image into the superclass. */
@@ -110,7 +110,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
       err_str += "\nError occurred while reading the moving rigidity image.\n";
       excp.SetDescription(err_str);
       /** Pass the exception to an higher level. */
-      throw excp;
+      throw;
     }
 
     /** Set the moving rigidity image into the superclass. */

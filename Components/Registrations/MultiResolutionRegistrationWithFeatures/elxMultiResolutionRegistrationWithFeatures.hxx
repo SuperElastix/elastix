@@ -168,7 +168,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageRegions()
       err_str += "\nError occured while updating region info of the fixed image.\n";
       excp.SetDescription(err_str);
       /** Pass the exception to an higher level. */
-      throw excp;
+      throw;
     }
 
     /** Set the fixed image region. */

@@ -136,7 +136,7 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayT
       excp.SetDescription(err_str);
 
       /** Pass the exception to an higher level. */
-      throw excp;
+      throw;
     }
 
     /** Get a pointer to the upsampled coefficient image. */

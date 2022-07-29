@@ -1292,7 +1292,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::GetScaledDerivativeWithExce
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 
 } // end GetScaledDerivativeWithExceptionHandling()

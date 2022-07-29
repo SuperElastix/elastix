@@ -99,7 +99,7 @@ RSGDEachParameterApartBaseOptimizer::ResumeOptimization()
     {
       m_StopCondition = MetricError;
       this->StopOptimization();
-      throw err;
+      throw;
     }
 
     if (m_Stop)

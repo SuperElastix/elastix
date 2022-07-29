@@ -1021,11 +1021,11 @@ AdaptiveStochasticGradientDescent<TElastix>::GetScaledDerivativeWithExceptionHan
   {
     this->GetScaledValueAndDerivative(parameters, dummyvalue, derivative);
   }
-  catch (const itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 
 } // end GetScaledDerivativeWithExceptionHandling()

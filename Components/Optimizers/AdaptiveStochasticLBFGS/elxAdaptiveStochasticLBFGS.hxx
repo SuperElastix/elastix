@@ -1495,7 +1495,7 @@ AdaptiveStochasticLBFGS<TElastix>::GetScaledDerivativeWithExceptionHandling(cons
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 
 } // end GetScaledDerivativeWithExceptionHandling()

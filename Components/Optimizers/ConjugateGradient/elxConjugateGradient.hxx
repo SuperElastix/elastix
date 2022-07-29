@@ -128,11 +128,11 @@ ConjugateGradient<TElastix>::LineSearch(const ParametersType searchDir,
   {
     if (this->GetLineSearchOptimizer() == nullptr)
     {
-      throw err;
+      throw;
     }
     else if (this->GetStopCondition() != LineSearchError)
     {
-      throw err;
+      throw;
     }
     else
     {
@@ -366,11 +366,11 @@ ConjugateGradient<TElastix>::AfterEachIteration()
         this->GetScaledValueAndDerivative(
           this->GetScaledCurrentPosition(), this->m_CurrentValue, this->m_CurrentGradient);
       }
-      catch (const itk::ExceptionObject & err)
+      catch (const itk::ExceptionObject &)
       {
         this->m_StopCondition = MetricError;
         this->StopOptimization();
-        throw err;
+        throw;
       }
     } // end if new samples every iteration
   }   // end if not in line search

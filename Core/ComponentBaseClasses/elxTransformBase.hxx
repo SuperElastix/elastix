@@ -1003,7 +1003,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   return infoChanger->GetOutput();
@@ -1040,7 +1040,7 @@ TransformBase<TElastix>::WriteDeformationFieldImage(
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 } // end WriteDeformationFieldImage()
 
@@ -1124,7 +1124,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
 } // end ComputeDeterminantOfSpatialJacobian()
@@ -1256,7 +1256,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
 } // end ComputeSpatialJacobian()

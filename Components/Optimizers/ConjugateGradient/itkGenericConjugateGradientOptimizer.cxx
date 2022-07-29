@@ -111,11 +111,11 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
   {
     this->GetScaledValueAndDerivative(this->GetScaledCurrentPosition(), this->m_CurrentValue, this->m_CurrentGradient);
   }
-  catch (ExceptionObject & err)
+  catch (ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 
   /** Test if not by chance we are already converged */
@@ -295,11 +295,11 @@ GenericConjugateGradientOptimizer::LineSearch(const ParametersType searchDir,
   {
     LSO->StartOptimization();
   }
-  catch (ExceptionObject & err)
+  catch (ExceptionObject &)
   {
     this->m_StopCondition = LineSearchError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
   this->SetInLineSearch(false);
 
@@ -310,11 +310,11 @@ GenericConjugateGradientOptimizer::LineSearch(const ParametersType searchDir,
   {
     LSO->GetCurrentValueAndDerivative(f, g);
   }
-  catch (ExceptionObject & err)
+  catch (ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 
   /** For the next iteration: */
