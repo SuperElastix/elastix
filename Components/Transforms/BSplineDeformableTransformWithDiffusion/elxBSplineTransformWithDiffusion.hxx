@@ -273,7 +273,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
       err_str += "\nError occurred while reading the MovingSegmentationImage.\n";
       excp.SetDescription(err_str);
       /** Pass the exception to an higher level. */
-      throw excp;
+      throw;
     }
 
     /** In this case: check if a FixedSegmentationImage is needed. */
@@ -297,7 +297,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
         err_str += "\nError occurred while reading the FixedSegmentationImage.\n";
         excp.SetDescription(err_str);
         /** Pass the exception to an higher level. */
-        throw excp;
+        throw;
       } // end try/catch
     }   // end if fixed segmentation
   }     // end if moving segmentation
@@ -799,7 +799,7 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
       err_str += "\nError occurred while using decompositionFilter.\n";
       excp.SetDescription(err_str);
       /** Pass the exception to an higher level. */
-      throw excp;
+      throw;
     }
 
     /** Create an upsampled image. */
@@ -866,7 +866,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
     err_str += "\nError while reading the deformationFieldImage.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   /** Get image information and set it in the DeformationFieldTransform. */
@@ -1120,7 +1120,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
     err_str += "\nError occurred while resampling the grayValue image.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   /** First we make a distinction between using segmentation or not. */
@@ -1150,7 +1150,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
         err_str += "\nError occurred when using the maximumImageFilter to get the grayValue image.\n";
         excp.SetDescription(err_str);
         /** Pass the exception to an higher level. */
-        throw excp;
+        throw;
       }
     } // end if alsoFixed
 
@@ -1202,7 +1202,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
         err_str += "\nError occurred when using the maximumImageFilter to get the grayValue image.\n";
         excp.SetDescription(err_str);
         /** Pass the exception to an higher level. */
-        throw excp;
+        throw;
       }
     }
   }
@@ -1234,7 +1234,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
     err_str += "\nError occurred while diffusing the deformation field.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   /** ------------- 5: Update the intermediary transform. ------------- */

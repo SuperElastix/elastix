@@ -212,7 +212,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
     excp.SetDescription(err_str);
 
     /** Pass the exception to a higher level. */
-    throw excp;
+    throw;
   }
 
   /** Save, show results etc. */

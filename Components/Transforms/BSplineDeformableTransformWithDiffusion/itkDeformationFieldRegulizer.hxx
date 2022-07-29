@@ -65,7 +65,7 @@ DeformationFieldRegulizer<TAnyITKTransform>::InitializeDeformationFields()
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while allocating the intermediary deformation field.\n";
     excp.SetDescription(err_str);
-    throw excp;
+    throw;
   }
 
   /** Set everything to zero. */

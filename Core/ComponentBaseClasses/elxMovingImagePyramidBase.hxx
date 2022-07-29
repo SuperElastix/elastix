@@ -194,7 +194,7 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
 } // end WritePyramidImage()

@@ -475,7 +475,7 @@ protected:
                      fileName + "\n";
           excp.SetDescription(err_str);
           /** Pass the exception to the caller of this function. */
-          throw excp;
+          throw;
         }
 
         /** Store loaded image in the image container, as a DataObjectPointer. */

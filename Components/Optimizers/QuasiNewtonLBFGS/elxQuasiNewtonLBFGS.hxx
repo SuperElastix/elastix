@@ -128,11 +128,11 @@ QuasiNewtonLBFGS<TElastix>::LineSearch(const ParametersType searchDir,
   {
     if (this->GetLineSearchOptimizer() == nullptr)
     {
-      throw err;
+      throw;
     }
     else if (this->GetStopCondition() != LineSearchError)
     {
-      throw err;
+      throw;
     }
     else
     {
@@ -358,7 +358,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachIteration()
       {
         this->m_StopCondition = MetricError;
         this->StopOptimization();
-        throw err;
+        throw;
       }
     } // end if new samples every iteration
   }   // end if not in line search

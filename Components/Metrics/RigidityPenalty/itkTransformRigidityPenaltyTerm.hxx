@@ -262,7 +262,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages()
         err_str += "\nError while dilating m_FixedRigidityImage.\n";
         excp.SetDescription(err_str);
         /** Pass the exception to an higher level. */
-        throw excp;
+        throw;
       }
     }
 
@@ -281,7 +281,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages()
         err_str += "\nError while dilating m_MovingRigidityImage.\n";
         excp.SetDescription(err_str);
         /** Pass the exception to an higher level. */
-        throw excp;
+        throw;
       }
     }
 

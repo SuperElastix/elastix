@@ -66,7 +66,7 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
     err_str += "\nError occurred while reading the segmented image.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   this->SetSegmentedImage(infoChanger->GetOutput());

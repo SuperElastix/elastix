@@ -960,7 +960,7 @@ AdaGrad<TElastix>::GetScaledDerivativeWithExceptionHandling(const ParametersType
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
-    throw err;
+    throw;
   }
 
 } // end GetScaledDerivativeWithExceptionHandling()

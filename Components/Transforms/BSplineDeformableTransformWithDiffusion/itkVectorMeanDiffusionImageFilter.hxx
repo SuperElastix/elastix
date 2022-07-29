@@ -147,7 +147,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData()
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while allocating the filter output.\n";
     excp.SetDescription(err_str);
-    throw excp;
+    throw;
   }
 
   /** Allocate a temporary output image. */
@@ -166,7 +166,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData()
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while allocating a temporary copy.\n";
     excp.SetDescription(err_str);
-    throw excp;
+    throw;
   }
 
   // support progress methods/callbacks
@@ -370,7 +370,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::FilterGrayValueIma
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while rescaling the intensities of the grayValue image.\n";
     excp.SetDescription(err_str);
-    throw excp;
+    throw;
   }
 
 } // end FilterGrayValueImage()

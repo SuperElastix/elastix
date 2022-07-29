@@ -139,7 +139,7 @@ RegistrationBase<TElastix>::GenerateFixedMaskSpatialObject(const FixedMaskImageT
     err_str += "\nError while eroding the fixed mask.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   /** Release some memory. */
@@ -201,7 +201,7 @@ RegistrationBase<TElastix>::GenerateMovingMaskSpatialObject(const MovingMaskImag
     err_str += "\nError while eroding the moving mask.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   /** Release some memory */

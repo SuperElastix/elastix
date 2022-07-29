@@ -326,7 +326,7 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, cons
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   /** Perform the writing. */
@@ -420,7 +420,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 } // end WriteResultImage()
 
@@ -457,7 +457,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
-    throw excp;
+    throw;
   }
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator */

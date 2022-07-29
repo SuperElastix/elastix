@@ -68,7 +68,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration()
       err_str += "\nError occurred while updating region info of the fixed image.\n";
       excp.SetDescription(err_str);
       /** Pass the exception to an higher level. */
-      throw excp;
+      throw;
     }
 
     /** Set the fixedImageRegion. */
