@@ -279,10 +279,8 @@ template <class TElastix>
 unsigned int
 MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
-  using MeshReaderType = itk::MeshFileReader<MeshType>;
-
   /** Read the input mesh. */
-  auto meshReader = MeshReaderType::New();
+  auto meshReader = itk::MeshFileReader<MeshType>::New();
   meshReader->SetFileName(meshFileName.c_str());
   elxout << "  Reading input mesh file: " << meshFileName << std::endl;
   try
@@ -312,11 +310,8 @@ template <class TElastix>
 void
 MissingStructurePenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
 {
-  /** Typedef's for writing the output mesh. */
-  using MeshWriterType = itk::MeshFileWriter<MeshType>;
-
   /** Create writer. */
-  auto meshWriter = MeshWriterType::New();
+  auto meshWriter = itk::MeshFileWriter<MeshType>::New();
 
   /** Setup the pipeline. */
 
