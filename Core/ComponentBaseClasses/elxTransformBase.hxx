@@ -865,12 +865,10 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   using MeshTraitsType =
     itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
   using MeshType = itk::Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
-  using MeshReaderType = itk::MeshFileReader<MeshType>;
-  using MeshWriterType = itk::MeshFileWriter<MeshType>;
   using TransformMeshFilterType = itk::TransformMeshFilter<MeshType, MeshType, CombinationTransformType>;
 
   /** Read the input points. */
-  const auto meshReader = MeshReaderType::New();
+  const auto meshReader = itk::MeshFileReader<MeshType>::New();
   meshReader->SetFileName(filename.c_str());
   elxout << "  Reading input point file: " << filename << std::endl;
   try
@@ -906,7 +904,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   /** Create filename and file stream. */
   const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.vtk";
   elxout << "  The transformed points are saved in: " << outputPointsFileName << std::endl;
-  const auto meshWriter = MeshWriterType::New();
+  const auto meshWriter = itk::MeshFileWriter<MeshType>::New();
   meshWriter->SetFileName(outputPointsFileName.c_str());
   meshWriter->SetInput(meshTransformer->GetOutput());
 
