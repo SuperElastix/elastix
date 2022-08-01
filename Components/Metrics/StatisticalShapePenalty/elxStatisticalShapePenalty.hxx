@@ -23,10 +23,9 @@
 
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
-#include "itkVTKPolyDataReader.h"
-#include "itkVTKPolyDataWriter.h"
 #include "itkTransformMeshFilter.h"
 #include <itkMesh.h>
+#include <itkMeshFileReader.h>
 
 #include <fstream>
 #include <typeinfo>
@@ -357,10 +356,9 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
   using MeshTraitsType =
     DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
   using MeshType = Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
-  using MeshReaderType = VTKPolyDataReader<MeshType>;
 
   /** Read the input points. */
-  auto meshReader = MeshReaderType::New();
+  auto meshReader = MeshFileReader<MeshType>::New();
   meshReader->SetFileName(ShapeFileName.c_str());
   elxout << "  Reading input point file: " << ShapeFileName << std::endl;
   try
