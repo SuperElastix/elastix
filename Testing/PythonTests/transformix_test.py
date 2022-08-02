@@ -408,8 +408,8 @@ class TransformixTestCase(unittest.TestCase):
                 sitk.GetArrayFromImage(expected_image),
             )
 
-    def test_zero_translation_of_vtk_points(self) -> None:
-        """Tests translation of points"""
+    def test_zero_translation_of_vtk_3d_points(self) -> None:
+        """Tests zero-translation of VTK points in 3D"""
 
         source_directory_path = pathlib.Path(__file__).resolve().parent
         output_directory_path = self.create_test_function_output_directory()
@@ -440,6 +440,45 @@ class TransformixTestCase(unittest.TestCase):
 
         output_mesh = itk.meshread(str(output_directory_path / "outputpoints.vtk"))
 
+        self.assert_equal_mesh(output_mesh, input_mesh)
+
+    def test_zero_translation_of_vtk_2d_points(self) -> None:
+        """Tests zero-translation of VTK points in 2D"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        input_mesh = itk.Mesh[itk.D, 2].New()
+        input_mesh.SetPoint(0, (0, 0))
+        input_mesh.SetPoint(1, (1, 0))
+        input_mesh.SetPoint(2, (0, 1))
+        input_mesh.SetPoint(3, (0, 0))
+
+        itk.meshwrite(input_mesh, str(output_directory_path / "inputpoints.vtk"))
+
+        subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-def",
+                str(output_directory_path / "inputpoints.vtk"),
+                "-tp",
+                str(parameter_directory_path / "Translation(0,0).txt"),
+                "-out",
+                str(output_directory_path),
+            ],
+            capture_output=True,
+            check=True,
+        )
+
+        # Note that itk.meshread does not work, as the following produces a 3D mesh, instead of a 2D mesh.
+        #
+        # output_mesh = itk.meshread(str(output_directory_path / "outputpoints.vtk"))
+        reader = itk.MeshFileReader[itk.Mesh[itk.D, 2]].New()
+        reader.SetFileName(str(output_directory_path / "outputpoints.vtk"))
+        reader.Update()
+        output_mesh = reader.GetOutput()
         self.assert_equal_mesh(output_mesh, input_mesh)
 
 
