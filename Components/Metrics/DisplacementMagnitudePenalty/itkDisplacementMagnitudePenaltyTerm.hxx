@@ -85,7 +85,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const Param
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -187,7 +187,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);

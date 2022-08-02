@@ -155,7 +155,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   for (iter = begin; iter != end; ++iter)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Apply scales, if necessary. */
@@ -378,7 +378,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*threader_fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & point = threader_fiter->Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Apply scales, if necessary. */
@@ -534,7 +534,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   for (iter = begin; iter != end; ++iter)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Apply scales, if necessary. */

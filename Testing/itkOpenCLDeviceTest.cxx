@@ -34,7 +34,7 @@ main()
   const std::list<itk::OpenCLDevice> devices = itk::OpenCLDevice::GetAllDevices();
   for (std::list<itk::OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
   {
-    if (((*dev).GetDeviceType() & itk::OpenCLDevice::GPU) != 0)
+    if ((dev->GetDeviceType() & itk::OpenCLDevice::GPU) != 0)
     {
       gpus.push_back(*dev);
       std::cout << (*dev);

@@ -197,7 +197,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
@@ -377,7 +377,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
@@ -716,7 +716,7 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedGetSamples(ThreadIdType threadId)
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = threader_fiter->Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =

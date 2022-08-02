@@ -193,26 +193,26 @@ OpenCLPlatform::GetPlatform(const OpenCLPlatform::VendorType vendor)
   for (std::list<itk::OpenCLPlatform>::const_iterator platform = platforms.begin(); platform != platforms.end();
        ++platform)
   {
-    const std::string vendorName = opencl_simplified((*platform).GetVendor());
+    const std::string vendorName = opencl_simplified(platform->GetVendor());
 
     if ((vendorName.compare(0, 20, "Intel(R) Corporation") == 0) && (vendor == OpenCLPlatform::Intel))
     {
-      platformID = (*platform).GetPlatformId();
+      platformID = platform->GetPlatformId();
       break;
     }
     else if ((vendorName.compare(0, 18, "NVIDIA Corporation") == 0) && (vendor == OpenCLPlatform::NVidia))
     {
-      platformID = (*platform).GetPlatformId();
+      platformID = platform->GetPlatformId();
       break;
     }
     else if ((vendorName.compare(0, 28, "Advanced Micro Devices, Inc.") == 0) && (vendor == OpenCLPlatform::AMD))
     {
-      platformID = (*platform).GetPlatformId();
+      platformID = platform->GetPlatformId();
       break;
     }
     else if ((vendorName.compare(0, 3, "IBM") == 0) && (vendor == OpenCLPlatform::IBM))
     {
-      platformID = (*platform).GetPlatformId();
+      platformID = platform->GetPlatformId();
       break;
     }
   }

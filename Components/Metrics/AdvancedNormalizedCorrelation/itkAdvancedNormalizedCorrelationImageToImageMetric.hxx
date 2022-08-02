@@ -204,7 +204,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
 
     /** Transform point. */
@@ -225,7 +225,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<double>((*fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<double>(fiter->Value().m_ImageValue);
 
       /** Update some sums needed to calculate NC. */
       sff += fixedImageValue * fixedImageValue;
@@ -358,7 +358,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -382,7 +382,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
@@ -545,7 +545,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = threader_fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -569,7 +569,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(threader_fiter->Value().m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

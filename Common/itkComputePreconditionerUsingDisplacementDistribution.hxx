@@ -205,7 +205,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   for (iter = begin; iter != end; ++iter)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Compute the product jac_j * gradient. */
@@ -395,7 +395,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   for (iter = begin; iter != end; ++iter)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
@@ -636,7 +636,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   for (iter = begin; iter != end; ++iter)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */

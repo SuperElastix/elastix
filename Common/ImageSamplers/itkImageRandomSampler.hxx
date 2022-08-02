@@ -68,9 +68,9 @@ ImageRandomSampler<TInputImage>::GenerateData()
     {
       /** Get the index, transform it to the physical coordinates and put it in the sample. */
       InputImageIndexType index = randIter.GetIndex();
-      inputImage->TransformIndexToPhysicalPoint(index, (*iter).Value().m_ImageCoordinates);
+      inputImage->TransformIndexToPhysicalPoint(index, iter->Value().m_ImageCoordinates);
       /** Get the value and put it in the sample. */
-      (*iter).Value().m_ImageValue = randIter.Get();
+      iter->Value().m_ImageValue = randIter.Get();
       /** Jump to a random position. */
       ++randIter;
 
@@ -116,8 +116,8 @@ ImageRandomSampler<TInputImage>::GenerateData()
       } while (!insideMask);
 
       /** Put the coordinates and the value in the sample. */
-      (*iter).Value().m_ImageCoordinates = inputPoint;
-      (*iter).Value().m_ImageValue = randIter.Get();
+      iter->Value().m_ImageCoordinates = inputPoint;
+      iter->Value().m_ImageValue = randIter.Get();
 
     } // end for loop
 
@@ -185,10 +185,10 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
     }
 
     /** Transform index to the physical coordinates and put it in the sample. */
-    inputImage->TransformIndexToPhysicalPoint(positionIndex, (*iter).Value().m_ImageCoordinates);
+    inputImage->TransformIndexToPhysicalPoint(positionIndex, iter->Value().m_ImageCoordinates);
 
     /** Get the value and put it in the sample. */
-    (*iter).Value().m_ImageValue = static_cast<ImageSampleValueType>(inputImage->GetPixel(positionIndex));
+    iter->Value().m_ImageValue = static_cast<ImageSampleValueType>(inputImage->GetPixel(positionIndex));
 
   } // end for loop
 

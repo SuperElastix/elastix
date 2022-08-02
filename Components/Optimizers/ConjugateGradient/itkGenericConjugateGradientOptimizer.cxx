@@ -335,7 +335,7 @@ GenericConjugateGradientOptimizer::ComputeBeta(const DerivativeType & previousGr
 
   ComputeBetaFunctionType betaComputer = this->m_BetaDefinitionMap[this->GetBetaDefinition()];
 
-  return ((*this).*betaComputer)(previousGradient, gradient, previousSearchDir);
+  return (this->*betaComputer)(previousGradient, gradient, previousSearchDir);
 
 } // end ComputeBeta
 

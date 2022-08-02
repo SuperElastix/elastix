@@ -95,7 +95,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
 
     /** Transform point. */
@@ -123,7 +123,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<double>((*fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<double>(fiter->Value().m_ImageValue);
 
       /** The difference squared. */
       const RealType diff = ((fixedImageValue - this->m_AirValue) - detjac * (movingImageValue - this->m_AirValue)) /
@@ -233,7 +233,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = threader_fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
 
     /** Transform point. */
@@ -255,7 +255,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(threader_fiter->Value().m_ImageValue);
 
       /** Get the SpatialJacobian dT/dx. */
       this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
@@ -387,7 +387,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -411,7 +411,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
@@ -551,7 +551,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = threader_fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -575,7 +575,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(threader_fiter->Value().m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);

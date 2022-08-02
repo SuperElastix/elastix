@@ -176,7 +176,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
@@ -353,7 +353,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
