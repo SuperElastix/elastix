@@ -179,7 +179,7 @@ ImageRandomSamplerSparseMask<TInputImage>::ThreadedGenerateData(const InputImage
   for (iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++)
   {
     unsigned long randomIndex = static_cast<unsigned long>(this->m_RandomNumberList[sampleId]);
-    (*iter).Value() = allValidSamples->ElementAt(randomIndex);
+    iter->Value() = allValidSamples->ElementAt(randomIndex);
   }
 
 } // end ThreadedGenerateData()

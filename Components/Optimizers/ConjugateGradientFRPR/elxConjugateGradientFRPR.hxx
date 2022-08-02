@@ -296,7 +296,7 @@ ConjugateGradientFRPR<TElastix>::GetValueAndDerivative(ParametersType p, double 
   }
 
   this->Superclass1::GetValueAndDerivative(p, val, xi);
-  this->m_CurrentDerivativeMagnitude = (*xi).magnitude();
+  this->m_CurrentDerivativeMagnitude = xi->magnitude();
 
 } // end GetValueAndDerivative
 

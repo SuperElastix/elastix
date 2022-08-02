@@ -312,7 +312,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and create some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -334,7 +334,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      RealType fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
@@ -468,7 +468,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and create some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -490,7 +490,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      RealType fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);

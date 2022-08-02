@@ -234,7 +234,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     FixedImageContinuousIndexType voxelCoord;
@@ -478,7 +478,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     FixedImageContinuousIndexType voxelCoord;

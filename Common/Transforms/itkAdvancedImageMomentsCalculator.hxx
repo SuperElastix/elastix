@@ -290,9 +290,9 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
 
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
-    double value = (*threader_fiter).Value().m_ImageValue;
-    // IndexType indexPosition = (*threader_fiter).GetIndex();
-    Point<double, ImageDimension> physicalPosition = (*threader_fiter).Value().m_ImageCoordinates;
+    double value = threader_fiter->Value().m_ImageValue;
+    // IndexType indexPosition = threader_fiter->GetIndex();
+    Point<double, ImageDimension> physicalPosition = threader_fiter->Value().m_ImageCoordinates;
 
     if (m_SpatialObjectMask.IsNull() || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition))
     {

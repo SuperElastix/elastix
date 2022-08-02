@@ -147,7 +147,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -169,7 +169,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
 
       /** Update the intermediate values. */
       if (this->m_UseForegroundValue)
@@ -315,7 +315,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -339,7 +339,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
@@ -495,7 +495,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -519,7 +519,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

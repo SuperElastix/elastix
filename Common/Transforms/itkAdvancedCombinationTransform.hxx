@@ -1422,7 +1422,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPoint(const Inp
   -> OutputPointType
 {
   /** Call the selected TransformPoint. */
-  return ((*this).*m_SelectedTransformPointFunction)(point);
+  return (this->*m_SelectedTransformPointFunction)(point);
 
 } // end TransformPoint()
 
@@ -1439,7 +1439,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobian(
   NonZeroJacobianIndicesType & nonZeroJacobianIndices) const
 {
   /** Call the selected GetJacobian. */
-  return ((*this).*m_SelectedGetSparseJacobianFunction)(inputPoint, j, nonZeroJacobianIndices);
+  return (this->*m_SelectedGetSparseJacobianFunction)(inputPoint, j, nonZeroJacobianIndices);
 
 } // end GetJacobian()
 
@@ -1457,7 +1457,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImag
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
   /** Call the selected EvaluateJacobianWithImageGradientProduct. */
-  return ((*this).*m_SelectedEvaluateJacobianWithImageGradientProductFunction)(
+  return (this->*m_SelectedEvaluateJacobianWithImageGradientProductFunction)(
     inputPoint, movingImageGradient, imageJacobian, nonZeroJacobianIndices);
 
 } // end EvaluateJacobianWithImageGradientProduct()
@@ -1473,7 +1473,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const
                                                                            SpatialJacobianType &  sj) const
 {
   /** Call the selected GetSpatialJacobian. */
-  return ((*this).*m_SelectedGetSpatialJacobianFunction)(inputPoint, sj);
+  return (this->*m_SelectedGetSpatialJacobianFunction)(inputPoint, sj);
 
 } // end GetSpatialJacobian()
 
@@ -1488,7 +1488,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessian(const 
                                                                           SpatialHessianType &   sh) const
 {
   /** Call the selected GetSpatialHessian. */
-  return ((*this).*m_SelectedGetSpatialHessianFunction)(inputPoint, sh);
+  return (this->*m_SelectedGetSpatialHessianFunction)(inputPoint, sh);
 
 } // end GetSpatialHessian()
 
@@ -1505,7 +1505,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
   /** Call the selected GetJacobianOfSpatialJacobian. */
-  return ((*this).*m_SelectedGetJacobianOfSpatialJacobianFunction)(inputPoint, jsj, nonZeroJacobianIndices);
+  return (this->*m_SelectedGetJacobianOfSpatialJacobianFunction)(inputPoint, jsj, nonZeroJacobianIndices);
 
 } // end GetJacobianOfSpatialJacobian()
 
@@ -1523,7 +1523,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
   /** Call the selected GetJacobianOfSpatialJacobian. */
-  return ((*this).*m_SelectedGetJacobianOfSpatialJacobianFunction2)(inputPoint, sj, jsj, nonZeroJacobianIndices);
+  return (this->*m_SelectedGetJacobianOfSpatialJacobianFunction2)(inputPoint, sj, jsj, nonZeroJacobianIndices);
 
 } // end GetJacobianOfSpatialJacobian()
 
@@ -1540,7 +1540,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
   NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
 {
   /** Call the selected GetJacobianOfSpatialHessian. */
-  return ((*this).*m_SelectedGetJacobianOfSpatialHessianFunction)(inputPoint, jsh, nonZeroJacobianIndices);
+  return (this->*m_SelectedGetJacobianOfSpatialHessianFunction)(inputPoint, jsh, nonZeroJacobianIndices);
 
 } // end GetJacobianOfSpatialHessian()
 
@@ -1558,7 +1558,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
   NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
 {
   /** Call the selected GetJacobianOfSpatialHessian. */
-  return ((*this).*m_SelectedGetJacobianOfSpatialHessianFunction2)(inputPoint, sh, jsh, nonZeroJacobianIndices);
+  return (this->*m_SelectedGetJacobianOfSpatialHessianFunction2)(inputPoint, sh, jsh, nonZeroJacobianIndices);
 
 } // end GetJacobianOfSpatialHessian()
 

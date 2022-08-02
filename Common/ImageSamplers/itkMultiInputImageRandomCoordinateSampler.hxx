@@ -90,8 +90,8 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
     for (iter = sampleContainer->Begin(); iter != end; ++iter)
     {
       /** Make a reference to the current sample in the container. */
-      InputImagePointType &  samplePoint = (*iter).Value().m_ImageCoordinates;
-      ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
+      InputImagePointType &  samplePoint = iter->Value().m_ImageCoordinates;
+      ImageSampleValueType & sampleValue = iter->Value().m_ImageValue;
 
       /** Generate a point in the input image region. */
       this->GenerateRandomCoordinate(smallestContIndex, largestContIndex, sampleContIndex);
@@ -119,8 +119,8 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
     for (iter = sampleContainer->Begin(); iter != end; ++iter)
     {
       /** Make a reference to the current sample in the container. */
-      InputImagePointType &  samplePoint = (*iter).Value().m_ImageCoordinates;
-      ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
+      InputImagePointType &  samplePoint = iter->Value().m_ImageCoordinates;
+      ImageSampleValueType & sampleValue = iter->Value().m_ImageValue;
 
       /** Walk over the image until we find a valid point. */
       do

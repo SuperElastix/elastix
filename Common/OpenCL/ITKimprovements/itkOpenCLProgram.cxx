@@ -248,9 +248,9 @@ OpenCLProgram::Build(const std::list<OpenCLDevice> & devices, const std::string 
 
   for (std::list<OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
   {
-    if ((*dev).GetDeviceId())
+    if (dev->GetDeviceId())
     {
-      devs.push_back((*dev).GetDeviceId());
+      devs.push_back(dev->GetDeviceId());
     }
   }
 
@@ -346,13 +346,12 @@ OpenCLProgram::GetLog() const
   for (std::list<itk::OpenCLDevice>::const_iterator dev = devs.begin(); dev != devs.end(); ++dev)
   {
     std::size_t size = 0;
-    if (clGetProgramBuildInfo(this->m_Id, (*dev).GetDeviceId(), CL_PROGRAM_BUILD_LOG, 0, 0, &size) != CL_SUCCESS ||
-        !size)
+    if (clGetProgramBuildInfo(this->m_Id, dev->GetDeviceId(), CL_PROGRAM_BUILD_LOG, 0, 0, &size) != CL_SUCCESS || !size)
     {
       continue;
     }
     std::string buffer(size, '\0');
-    if (clGetProgramBuildInfo(this->m_Id, (*dev).GetDeviceId(), CL_PROGRAM_BUILD_LOG, size, &buffer[0], 0) !=
+    if (clGetProgramBuildInfo(this->m_Id, dev->GetDeviceId(), CL_PROGRAM_BUILD_LOG, size, &buffer[0], 0) !=
           CL_SUCCESS ||
         !size)
     {

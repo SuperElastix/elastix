@@ -77,7 +77,7 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
   const std::list<itk::OpenCLDevice> allDevices = itk::OpenCLDevice::GetAllDevices();
   for (std::list<itk::OpenCLDevice>::const_iterator device = allDevices.begin(); device != allDevices.end(); ++device)
   {
-    if (((*device).GetDeviceType() & deviceType) != 0)
+    if ((device->GetDeviceType() & deviceType) != 0)
     {
       devicesByType.push_back(*device);
     }
@@ -98,12 +98,12 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
          ++device)
     {
       errorMessageStream << indent << "OpenCL device ID: " << deviceID << std::endl;
-      errorMessageStream << indent << indent << "Name: " << (*device).GetName() << std::endl;
-      errorMessageStream << indent << indent << "Vendor: " << (*device).GetVendor() << std::endl;
-      errorMessageStream << indent << indent << "Has double support: " << ((*device).HasDouble() ? "Yes" : "No")
+      errorMessageStream << indent << indent << "Name: " << device->GetName() << std::endl;
+      errorMessageStream << indent << indent << "Vendor: " << device->GetVendor() << std::endl;
+      errorMessageStream << indent << indent << "Has double support: " << (device->HasDouble() ? "Yes" : "No")
                          << std::endl;
       errorMessageStream << indent << indent << "Device type: ";
-      switch ((*device).GetDeviceType())
+      switch (device->GetDeviceType())
       {
         case OpenCLDevice::Default:
           errorMessageStream << "Default";

@@ -392,7 +392,7 @@ OpenCLKernelManager::SetGlobalWorkSizeForAllKernels(const OpenCLSize & size)
 
   for (std::vector<OpenCLKernel>::iterator kernel = this->m_Kernels.begin(); kernel != this->m_Kernels.end(); ++kernel)
   {
-    (*kernel).SetGlobalWorkSize(size);
+    kernel->SetGlobalWorkSize(size);
   }
 }
 
@@ -408,7 +408,7 @@ OpenCLKernelManager::SetLocalWorkSizeForAllKernels(const OpenCLSize & size)
 
   for (std::vector<OpenCLKernel>::iterator kernel = this->m_Kernels.begin(); kernel != this->m_Kernels.end(); ++kernel)
   {
-    (*kernel).SetLocalWorkSize(size);
+    kernel->SetLocalWorkSize(size);
   }
 }
 
@@ -424,7 +424,7 @@ OpenCLKernelManager::SetGlobalWorkOffsetForAllKernels(const OpenCLSize & offset)
 
   for (std::vector<OpenCLKernel>::iterator kernel = this->m_Kernels.begin(); kernel != this->m_Kernels.end(); ++kernel)
   {
-    (*kernel).SetGlobalWorkOffset(offset);
+    kernel->SetGlobalWorkOffset(offset);
   }
 }
 

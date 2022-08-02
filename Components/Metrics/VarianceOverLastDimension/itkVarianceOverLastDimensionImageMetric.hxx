@@ -240,7 +240,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Determine random last dimension positions if needed. */
     if (this->m_SampleLastDimensionRandomly)
@@ -417,7 +417,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
 
     /** Determine random last dimension positions if needed. */
     if (this->m_SampleLastDimensionRandomly)
