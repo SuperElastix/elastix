@@ -21,6 +21,7 @@
 import os
 import filecmp
 import pathlib
+import random
 import subprocess
 import sys
 import unittest
@@ -28,6 +29,7 @@ import itk
 import SimpleITK as sitk
 import numpy as np
 
+FLOAT32_MAX = 3.402823e+38
 OUTPUTPOINTS_FILENAME = "outputpoints.txt"
 
 
@@ -83,6 +85,11 @@ class TransformixTestCase(unittest.TestCase):
 
         for i in range(number_of_points):
             self.assertEqual(actual.GetPoint(i), expected.GetPoint(i))
+
+    def random_finite_float32(self):
+        """Returns a pseudo-random float, for testing purposes"""
+
+        return random.uniform(-FLOAT32_MAX, FLOAT32_MAX)
 
     def test_without_arguments(self) -> None:
         """Tests executing transformix without arguments"""
@@ -417,10 +424,15 @@ class TransformixTestCase(unittest.TestCase):
         parameter_directory_path = source_directory_path / "TransformParameters"
 
         input_mesh = itk.Mesh[itk.D, 3].New()
-        input_mesh.SetPoint(0, (0, 0, 0))
-        input_mesh.SetPoint(1, (1, 0, 0))
-        input_mesh.SetPoint(2, (0, 1, 0))
-        input_mesh.SetPoint(3, (0, 0, 1))
+        for i in range(4):
+            input_mesh.SetPoint(
+                i,
+                (
+                    self.random_finite_float32(),
+                    self.random_finite_float32(),
+                    self.random_finite_float32(),
+                ),
+            )
 
         itk.meshwrite(input_mesh, str(output_directory_path / "inputpoints.vtk"))
 
@@ -451,10 +463,8 @@ class TransformixTestCase(unittest.TestCase):
         parameter_directory_path = source_directory_path / "TransformParameters"
 
         input_mesh = itk.Mesh[itk.D, 2].New()
-        input_mesh.SetPoint(0, (0, 0))
-        input_mesh.SetPoint(1, (1, 0))
-        input_mesh.SetPoint(2, (0, 1))
-        input_mesh.SetPoint(3, (0, 0))
+        for i in range(4):
+            input_mesh.SetPoint(i, (self.random_finite_float32(), self.random_finite_float32()))
 
         itk.meshwrite(input_mesh, str(output_directory_path / "inputpoints.vtk"))
 
