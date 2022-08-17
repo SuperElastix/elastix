@@ -112,3 +112,30 @@ elastix::GetExtendedVersionInformation(const char * const executableName, const 
 
   return outputStringStream.str();
 }
+
+
+void
+elastix::PrintArguments(xoutlibrary::xoutbase & output, const char * const * const arguments)
+{
+  if ((arguments == nullptr) || (*arguments == nullptr) || (*(arguments + 1) == nullptr))
+  {
+    assert(!"There should be at least two arguments!");
+  }
+  else
+  {
+    const auto AddDoubleQuotesIfStringHasSpace = [](const std::string & str) {
+      return (str.find(' ') == std::string::npos) ? str : ('"' + str + '"');
+    };
+
+    // Skip the first argument, as it is usually just the executable name.
+    output << "\nCommand-line arguments: \n  " << AddDoubleQuotesIfStringHasSpace(*(arguments + 1));
+
+    auto argument = arguments + 2;
+    while (*argument != nullptr)
+    {
+      output << ' ' << AddDoubleQuotesIfStringHasSpace(*argument);
+      ++argument;
+    }
+    output << '\n' << std::endl;
+  }
+}

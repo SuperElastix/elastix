@@ -241,8 +241,8 @@ main(int argc, char ** argv)
     elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
     // Print where elastix was run, and print its version information.
-    elxout << "which elastix:   " << argv[0] << '\n'
-           << elx::GetExtendedVersionInformation("elastix", "  ") << std::flush;
+    elxout << "which elastix:   " << argv[0] << '\n' << elx::GetExtendedVersionInformation("elastix", "  ");
+    elx::PrintArguments(elxout, argv);
 
     itksys::SystemInformation info;
     info.RunCPUCheck();
