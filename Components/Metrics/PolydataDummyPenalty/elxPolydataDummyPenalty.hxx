@@ -299,9 +299,6 @@ template <class TElastix>
 void
 PolydataDummyPenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
 {
-  /** Create writer. */
-  auto meshWriter = itk::MeshFileWriter<MeshType>::New();
-
   /** Set the points of the latest transformation. */
   const MappedMeshContainerPointer mappedMeshContainer = this->GetModifiableMappedMeshContainer();
   FixedMeshPointer                 mappedMesh = mappedMeshContainer->ElementAt(meshId);
@@ -331,12 +328,9 @@ PolydataDummyPenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdTyp
   mappedMesh->Modified();
   mappedMesh->Update();
 
-  meshWriter->SetInput(mappedMesh);
-  meshWriter->SetFileName(filename);
-
   try
   {
-    meshWriter->Update();
+    itk::WriteMesh(mappedMesh, filename);
   }
   catch (itk::ExceptionObject & excp)
   {

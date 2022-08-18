@@ -310,9 +310,6 @@ template <class TElastix>
 void
 MissingStructurePenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
 {
-  /** Create writer. */
-  auto meshWriter = itk::MeshFileWriter<MeshType>::New();
-
   /** Setup the pipeline. */
 
   /** Set the points of the latest transformation. */
@@ -346,12 +343,9 @@ MissingStructurePenalty<TElastix>::WriteResultMesh(const char * filename, MeshId
   mappedMesh->Modified();
   mappedMesh->Update();
 
-  meshWriter->SetInput(mappedMesh);
-  meshWriter->SetFileName(filename);
-
   try
   {
-    meshWriter->Update();
+    itk::WriteMesh(mappedMesh, filename);
   }
   catch (itk::ExceptionObject & excp)
   {
