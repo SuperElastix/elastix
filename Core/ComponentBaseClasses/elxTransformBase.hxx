@@ -904,13 +904,10 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   /** Create filename and file stream. */
   const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.vtk";
   elxout << "  The transformed points are saved in: " << outputPointsFileName << std::endl;
-  const auto meshWriter = itk::MeshFileWriter<MeshType>::New();
-  meshWriter->SetFileName(outputPointsFileName.c_str());
-  meshWriter->SetInput(meshTransformer->GetOutput());
 
   try
   {
-    meshWriter->Update();
+    itk::WriteMesh(meshTransformer->GetOutput(), outputPointsFileName);
   }
   catch (const itk::ExceptionObject & err)
   {
