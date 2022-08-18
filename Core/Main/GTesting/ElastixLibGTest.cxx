@@ -19,6 +19,7 @@
 
 // First include the header file to be tested:
 #include "elastixlib.h"
+#include "elxForEachSupportedImageType.h"
 
 #include "elxCoreMainGTestUtilities.h"
 
@@ -40,7 +41,6 @@
 using elx::CoreMainGTestUtilities::ConvertToOffset;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::FillImageRegion;
-using elx::CoreMainGTestUtilities::ForEachSupportedImageType;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromMaps;
 
 
@@ -201,7 +201,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
 // fixed and the moving image are the same.
 GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
 {
-  ForEachSupportedImageType([](const auto elxTypedef) {
+  elx::ForEachSupportedImageType([](const auto elxTypedef) {
     using ElxTypedef = decltype(elxTypedef);
     using ImageType = typename ElxTypedef::FixedImageType;
     constexpr auto Dimension = ImageType::ImageDimension;

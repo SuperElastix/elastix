@@ -25,6 +25,7 @@
 
 #include "elxCoreMainGTestUtilities.h"
 #include "elxDefaultConstructibleSubclass.h"
+#include "elxTransformIO.h"
 #include "GTesting/elxGTestUtilities.h"
 
 #include <itkStackTransform.h>

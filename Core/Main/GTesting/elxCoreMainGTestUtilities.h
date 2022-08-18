@@ -19,8 +19,8 @@
 #ifndef elxCoreMainGTestUtilities_h
 #define elxCoreMainGTestUtilities_h
 
+#include <elxBaseComponent.h> // For elx.
 #include <elxParameterObject.h>
-#include <elxSupportedImageTypes.h>
 
 #include <itkImage.h>
 #include <itkImageBufferRange.h>
@@ -37,7 +37,6 @@
 #include <numeric> // For iota.
 #include <string>
 #include <type_traits> // For is_pointer, is_same, and integral_constant.
-#include <utility>     // For index_sequence.
 #include <vector>
 
 // GoogleTest header file:
@@ -285,35 +284,6 @@ CreateImageFilledWithSequenceOfNaturalNumbers(const itk::Size<VImageDimension> &
   const itk::ImageBufferRange<ImageType> imageBufferRange{ *image };
   std::iota(imageBufferRange.begin(), imageBufferRange.end(), TPixel{ 1 });
   return image;
-}
-
-
-template <typename TFunction, std::size_t... VIndexSequence>
-void
-ForEachSupportedImageType(const TFunction & func, const std::index_sequence<VIndexSequence...> &)
-{
-  struct Empty
-  {};
-
-  const auto supportImageTypeWithIndex = [&func](const auto index) {
-    // Use `index + 1` instead of `index`, because the indices from SupportedImageTypes start with 1, while the sequence
-    // returned by `std::make_index_sequence()` starts with zero.
-    func(elx::ElastixTypedef<index + 1>{});
-    return Empty{};
-  };
-
-  // Expand the "variadic template" index sequence by the initialization of a dummy array.
-  const Empty dummyArray[] = { supportImageTypeWithIndex(std::integral_constant<std::size_t, VIndexSequence>{})... };
-  (void)dummyArray;
-}
-
-
-// Runs a function `func(ElastixTypedef<VIndex>{})`, for each supported image type from "elxSupportedImageTypes.h".
-template <typename TFunction>
-void
-ForEachSupportedImageType(const TFunction & func)
-{
-  ForEachSupportedImageType(func, std::make_index_sequence<elx::NrOfSupportedImageTypes>());
 }
 
 
