@@ -155,7 +155,7 @@ CMAEvolutionStrategyOptimizer::ResumeOptimization()
   {
     this->m_CurrentValue = this->GetScaledValue(this->GetScaledCurrentPosition());
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
@@ -492,7 +492,7 @@ CMAEvolutionStrategyOptimizer::GenerateOffspring()
     {
       costFunctionValue = this->GetScaledValue(x_lam);
     }
-    catch (ExceptionObject &)
+    catch (const ExceptionObject &)
     {
       ++nrOfFails;
       /** try another parameter vector if we haven't tried that for 10 times already */
@@ -578,7 +578,7 @@ CMAEvolutionStrategyOptimizer::AdvanceOneStep()
   {
     this->m_CurrentValue = this->GetScaledValue(this->GetScaledCurrentPosition());
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();

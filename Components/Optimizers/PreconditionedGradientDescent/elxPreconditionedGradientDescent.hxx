@@ -388,7 +388,7 @@ PreconditionedGradientDescent<TElastix>::SetSelfHessian()
   {
     metricWithSelfHessian->GetSelfHessian(this->GetCurrentPosition(), H);
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
@@ -768,7 +768,7 @@ PreconditionedGradientDescent<TElastix>::GetScaledDerivativeWithExceptionHandlin
   {
     this->GetScaledValueAndDerivative(parameters, dummyvalue, derivative);
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();

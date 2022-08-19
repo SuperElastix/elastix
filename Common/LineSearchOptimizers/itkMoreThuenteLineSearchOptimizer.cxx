@@ -252,7 +252,7 @@ MoreThuenteLineSearchOptimizer::GetInitialValueAndDerivative()
         this->GetCostFunction()->GetDerivative(this->GetInitialPosition(), this->m_g);
       }
     }
-    catch (ExceptionObject &)
+    catch (const ExceptionObject &)
     {
       this->m_StopCondition = MetricError;
       // this->StopOptimization(); //not here since no start event has been generated yet
@@ -388,7 +388,7 @@ MoreThuenteLineSearchOptimizer::ComputeCurrentValueAndDerivative()
   {
     this->GetCostFunction()->GetValueAndDerivative(this->GetCurrentPosition(), this->m_f, this->m_g);
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();

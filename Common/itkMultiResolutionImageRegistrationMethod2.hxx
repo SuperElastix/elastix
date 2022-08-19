@@ -312,7 +312,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StartRegistr
         // initialize the interconnects between components
         this->Initialize();
       }
-      catch (ExceptionObject &)
+      catch (const ExceptionObject &)
       {
         this->m_LastTransformParameters = ParametersType(1);
         this->m_LastTransformParameters.Fill(0.0f);
@@ -326,7 +326,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StartRegistr
         // do the optimization
         this->m_Optimizer->StartOptimization();
       }
-      catch (ExceptionObject &)
+      catch (const ExceptionObject &)
       {
         // An error has occurred in the optimization.
         // Update the parameters
