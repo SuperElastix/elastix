@@ -22,6 +22,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
+#include "elxDefaultConstructibleSubclass.h"
 #include "elxElastixBase.h"
 #include "itkAdvancedTransform.h"
 #include "itkAdvancedCombinationTransform.h"
@@ -31,6 +32,8 @@
 // ITK header files:
 #include <itkImage.h>
 #include <itkOptimizerParameters.h>
+#include <itkTransformMeshFilter.h>
+
 
 namespace elastix
 {
@@ -257,6 +260,19 @@ public:
    */
   void
   SetFinalParameters();
+
+  /** Transforms the specified mesh.
+   */
+  template <typename TMesh>
+  typename TMesh::Pointer
+  TransformMesh(const TMesh & mesh) const
+  {
+    DefaultConstructibleSubclass<itk::TransformMeshFilter<TMesh, TMesh, CombinationTransformType>> transformMeshFilter;
+    transformMeshFilter.SetTransform(&const_cast<CombinationTransformType &>(this->GetSelf()));
+    transformMeshFilter.SetInput(&mesh);
+    transformMeshFilter.Update();
+    return transformMeshFilter.GetOutput();
+  }
 
 protected:
   /** The default-constructor. */
