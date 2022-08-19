@@ -103,7 +103,7 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
   {
     this->GetScaledValueAndDerivative(this->GetScaledCurrentPosition(), this->m_CurrentValue, this->m_CurrentGradient);
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
@@ -344,7 +344,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(const ParametersType searchDir,
   {
     LSO->StartOptimization();
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     this->m_StopCondition = LineSearchError;
     this->StopOptimization();
