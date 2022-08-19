@@ -354,7 +354,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachIteration()
         this->GetScaledValueAndDerivative(
           this->GetScaledCurrentPosition(), this->m_CurrentValue, this->m_CurrentGradient);
       }
-      catch (const itk::ExceptionObject & err)
+      catch (const itk::ExceptionObject &)
       {
         this->m_StopCondition = MetricError;
         this->StopOptimization();
