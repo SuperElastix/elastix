@@ -456,6 +456,61 @@ GTEST_TEST(itkTransformixFilter, Translation2D)
 }
 
 
+// Tests translating a mesh of two points.
+GTEST_TEST(itkTransformixFilter, MeshTranslation2D)
+{
+  constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using TransformixFilterType = itk::TransformixFilter<itk::Image<PixelType, ImageDimension>>;
+  using VectorType = itk::Vector<float, ImageDimension>;
+
+  for (const auto & translationVector : { VectorType{}, VectorType(0.5f), itk::MakeVector(1.0f, -2.0f) })
+  {
+    elx::DefaultConstructibleSubclass<TransformixFilterType> transformixFilter;
+    const auto                                               inputMesh = TransformixFilterType::MeshType::New();
+    inputMesh->SetPoint(0, {});
+    inputMesh->SetPoint(1, itk::MakePoint(1.0f, 2.0f));
+
+    transformixFilter.SetInputMesh(inputMesh);
+    const auto movingImage =
+      CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(itk::Size<ImageDimension>::Filled(1));
+
+    transformixFilter.SetMovingImage(movingImage);
+
+    const ParameterValuesType imageDimensionParameterValue = { std::to_string(ImageDimension) };
+    const ParameterValuesType zeroParameterValues(ImageDimension, "0");
+    const ParameterValuesType oneParameterValues(ImageDimension, "1");
+
+    transformixFilter.SetTransformParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
+                              { "FixedImageDimension", imageDimensionParameterValue },
+                              { "Index", zeroParameterValues },
+                              { "MovingImageDimension", imageDimensionParameterValue },
+                              { "NumberOfParameters", imageDimensionParameterValue },
+                              { "Origin", zeroParameterValues },
+                              { "Size", oneParameterValues },
+                              { "Spacing", oneParameterValues },
+                              { "Transform", ParameterValuesType{ "TranslationTransform" } },
+                              { "TransformParameters", ConvertToParameterValues(translationVector) } }));
+    transformixFilter.Update();
+
+    const auto outputMesh = transformixFilter.GetOutputMesh();
+    const auto expectedNumberOfPoints = inputMesh->GetNumberOfPoints();
+
+    const auto & inputPoints = Deref(DerefSmartPointer(inputMesh).GetPoints());
+    const auto & outputPoints = Deref(Deref(outputMesh).GetPoints());
+
+    ASSERT_EQ(outputPoints.size(), expectedNumberOfPoints);
+
+    for (size_t i = 0; i < expectedNumberOfPoints; ++i)
+    {
+      EXPECT_EQ(outputPoints[i], inputPoints[i] + translationVector);
+    }
+  }
+}
+
+
 // Tests translating a small (5x7x9) binary 3D image, having a 2x2x2 white cube.
 GTEST_TEST(itkTransformixFilter, Translation3D)
 {

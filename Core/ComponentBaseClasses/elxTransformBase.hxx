@@ -39,7 +39,6 @@
 #include "itkMesh.h"
 #include "itkMeshFileReader.h"
 #include "itkMeshFileWriter.h"
-#include "itkTransformMeshFilter.h"
 #include "itkCommonEnums.h"
 
 #include <cassert>
@@ -865,7 +864,6 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   using MeshTraitsType =
     itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
   using MeshType = itk::Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
-  using TransformMeshFilterType = itk::TransformMeshFilter<MeshType, MeshType, CombinationTransformType>;
 
   /** Read the input points. */
   const auto meshReader = itk::MeshFileReader<MeshType>::New();
@@ -881,19 +879,21 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
     xl::xout["error"] << err << std::endl;
   }
 
+  const auto & inputMesh = *(meshReader->GetOutput());
+
   /** Some user-feedback. */
   elxout << "  Input points are specified in world coordinates." << std::endl;
-  const unsigned long nrofpoints = meshReader->GetOutput()->GetNumberOfPoints();
+  const unsigned long nrofpoints = inputMesh.GetNumberOfPoints();
   elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
   /** Apply the transform. */
   elxout << "  The input points are transformed." << std::endl;
-  const auto meshTransformer = TransformMeshFilterType::New();
-  meshTransformer->SetTransform(const_cast<CombinationTransformType *>(this->GetAsITKBaseType()));
-  meshTransformer->SetInput(meshReader->GetOutput());
+
+  typename MeshType::ConstPointer outputMesh;
+
   try
   {
-    meshTransformer->Update();
+    outputMesh = Self::TransformMesh(inputMesh);
   }
   catch (const itk::ExceptionObject & err)
   {
@@ -907,7 +907,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
 
   try
   {
-    itk::WriteMesh(meshTransformer->GetOutput(), outputPointsFileName);
+    itk::WriteMesh(outputMesh, outputPointsFileName);
   }
   catch (const itk::ExceptionObject & err)
   {

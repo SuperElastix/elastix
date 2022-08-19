@@ -35,8 +35,10 @@
 #ifndef itkTransformixFilter_hxx
 #define itkTransformixFilter_hxx
 
+#include "elxElastixTemplate.h"
 #include "itkTransformixFilter.h"
 #include "elxPixelType.h"
+#include "elxTransformBase.h"
 #include <memory> // For unique_ptr.
 
 namespace itk
@@ -206,6 +208,24 @@ TransformixFilter<TMovingImage>::GenerateData()
   try
   {
     isError = transformix->Run(argumentMap, transformParameterMapVector);
+
+    if (m_InputMesh)
+    {
+      m_OutputMesh = nullptr;
+
+      const auto * const transformContainer = transformix->GetElastixBase().GetTransformContainer();
+
+      if ((transformContainer != nullptr) && (!transformContainer->empty()))
+      {
+        const auto transformBase = dynamic_cast<elx::TransformBase<elx::ElastixTemplate<TMovingImage, TMovingImage>> *>(
+          transformContainer->front().GetPointer());
+
+        if (transformBase)
+        {
+          m_OutputMesh = transformBase->TransformMesh(*m_InputMesh);
+        }
+      }
+    }
   }
   catch (itk::ExceptionObject & e)
   {

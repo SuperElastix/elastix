@@ -36,6 +36,7 @@
 #define itkTransformixFilter_h
 
 #include "itkImageSource.h"
+#include "itkMesh.h"
 
 #include "elxTransformixMain.h"
 #include "elxParameterObject.h"
@@ -85,6 +86,8 @@ public:
   using ParameterObjectConstPointer = typename ParameterObjectType::ConstPointer;
 
   using typename Superclass::OutputImageType;
+  using typename Superclass::OutputImagePixelType;
+
   using OutputDeformationFieldType =
     typename itk::Image<itk::Vector<float, TMovingImage::ImageDimension>, TMovingImage::ImageDimension>;
 
@@ -92,6 +95,8 @@ public:
 
   using InputImageType = TMovingImage;
   itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);
+
+  using MeshType = Mesh<OutputImagePixelType, MovingImageDimension>;
 
   /** Set/Get/Add moving image. */
   virtual void
@@ -195,6 +200,24 @@ public:
     m_EnableOutput = false;
   }
 
+  /** Sets an (optional) input mesh. An Update() will transform its points, and store them in the output mesh.  */
+  void
+  SetInputMesh(typename MeshType::ConstPointer mesh)
+  {
+    if (mesh != m_InputMesh)
+    {
+      m_InputMesh = mesh;
+      this->Modified();
+    }
+  }
+
+  /** Retrieves the output mesh, produced by an Update(), when an input mesh was specified.  */
+  const MeshType *
+  GetOutputMesh() const
+  {
+    return m_OutputMesh;
+  }
+
 protected:
   TransformixFilter();
 
@@ -240,6 +263,9 @@ private:
   bool m_EnableOutput{ true };
   bool m_LogToConsole;
   bool m_LogToFile;
+
+  typename MeshType::ConstPointer m_InputMesh;
+  typename MeshType::Pointer      m_OutputMesh;
 };
 
 } // namespace itk
