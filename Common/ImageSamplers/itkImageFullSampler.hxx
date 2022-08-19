@@ -62,7 +62,7 @@ ImageFullSampler<TInputImage>::GenerateData()
     {
       sampleContainer->Reserve(this->GetCroppedInputImageRegion().GetNumberOfPixels());
     }
-    catch (std::exception & excp)
+    catch (const std::exception & excp)
     {
       std::string message = "std: ";
       message += excp.what();
@@ -157,7 +157,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     {
       sampleContainerThisThread->Reserve(chunkSize);
     }
-    catch (std::exception & excp)
+    catch (const std::exception & excp)
     {
       std::string message = "std: ";
       message += excp.what();
