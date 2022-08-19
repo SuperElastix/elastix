@@ -388,7 +388,7 @@ ElastixMain::Run()
     xl::xout["error"] << excp1 << std::endl;
     errorCode = 1;
   }
-  catch (std::exception & excp2)
+  catch (const std::exception & excp2)
   {
     /** We just print the std::exception and let the program quit. */
     xl::xout["error"] << "std: " << excp2.what() << std::endl;
