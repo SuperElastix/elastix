@@ -22,7 +22,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
-#include "elxDefaultConstructibleSubclass.h"
+#include "elxDefaultConstruct.h"
 #include "elxElastixBase.h"
 #include "itkAdvancedTransform.h"
 #include "itkAdvancedCombinationTransform.h"
@@ -267,7 +267,7 @@ public:
   typename TMesh::Pointer
   TransformMesh(const TMesh & mesh) const
   {
-    DefaultConstructibleSubclass<itk::TransformMeshFilter<TMesh, TMesh, CombinationTransformType>> transformMeshFilter;
+    DefaultConstruct<itk::TransformMeshFilter<TMesh, TMesh, CombinationTransformType>> transformMeshFilter;
     transformMeshFilter.SetTransform(&const_cast<CombinationTransformType &>(this->GetSelf()));
     transformMeshFilter.SetInput(&mesh);
     transformMeshFilter.Update();

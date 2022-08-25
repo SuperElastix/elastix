@@ -22,7 +22,7 @@
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
 #include "itkRecursiveBSplineTransformImplementation.h"
-#include "elxDefaultConstructibleSubclass.h"
+#include "elxDefaultConstruct.h"
 
 namespace itk
 {
@@ -195,7 +195,7 @@ private:
   using RecursiveBSplineWeightFunctionType =
     itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>;
 
-  elastix::DefaultConstructibleSubclass<RecursiveBSplineWeightFunctionType> m_RecursiveBSplineWeightFunction;
+  elastix::DefaultConstruct<RecursiveBSplineWeightFunctionType> m_RecursiveBSplineWeightFunction;
 };
 
 } // end namespace itk
