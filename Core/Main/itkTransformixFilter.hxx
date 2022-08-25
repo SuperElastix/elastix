@@ -520,7 +520,7 @@ template <typename TMovingImage>
 void
 TransformixFilter<TMovingImage>::SetLogFileName(std::string logFileName)
 {
-  this->m_LogFileName = logFileName;
+  m_LogFileName = logFileName;
   this->LogToFileOn();
 }
 
@@ -529,7 +529,7 @@ template <typename TMovingImage>
 void
 TransformixFilter<TMovingImage>::RemoveLogFileName()
 {
-  this->m_LogFileName = "";
+  m_LogFileName = "";
   this->LogToFileOff();
 }
 

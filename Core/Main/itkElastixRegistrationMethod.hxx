@@ -142,19 +142,19 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   // Setup argument map
   ArgumentMapType argumentMap;
 
-  if (!this->m_InitialTransformParameterFileName.empty())
+  if (!m_InitialTransformParameterFileName.empty())
   {
-    argumentMap.insert(ArgumentMapEntryType("-t0", this->m_InitialTransformParameterFileName));
+    argumentMap.insert(ArgumentMapEntryType("-t0", m_InitialTransformParameterFileName));
   }
 
-  if (!this->m_FixedPointSetFileName.empty())
+  if (!m_FixedPointSetFileName.empty())
   {
-    argumentMap.insert(ArgumentMapEntryType("-fp", this->m_FixedPointSetFileName));
+    argumentMap.insert(ArgumentMapEntryType("-fp", m_FixedPointSetFileName));
   }
 
-  if (!this->m_MovingPointSetFileName.empty())
+  if (!m_MovingPointSetFileName.empty())
   {
-    argumentMap.insert(ArgumentMapEntryType("-mp", this->m_MovingPointSetFileName));
+    argumentMap.insert(ArgumentMapEntryType("-mp", m_MovingPointSetFileName));
   }
 
   // Setup output directory
@@ -198,9 +198,9 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Set Number of threads
-  if (this->m_NumberOfThreads > 0)
+  if (m_NumberOfThreads > 0)
   {
-    argumentMap.insert(ArgumentMapEntryType("-threads", std::to_string(this->m_NumberOfThreads)));
+    argumentMap.insert(ArgumentMapEntryType("-threads", std::to_string(m_NumberOfThreads)));
   }
 
   // Setup xout
@@ -721,7 +721,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetLogFileName(const std::string logFileName)
 {
-  this->m_LogFileName = logFileName;
+  m_LogFileName = logFileName;
   this->LogToFileOn();
 }
 
@@ -730,7 +730,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::RemoveLogFileName()
 {
-  this->m_LogFileName = "";
+  m_LogFileName = "";
   this->LogToFileOff();
 }
 
@@ -739,7 +739,7 @@ template <typename TFixedImage, typename TMovingImage>
 std::string
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::MakeUniqueName(const DataObjectIdentifierType & inputName)
 {
-  return inputName + std::to_string(this->m_InputUID++);
+  return inputName + std::to_string(m_InputUID++);
 }
 
 
