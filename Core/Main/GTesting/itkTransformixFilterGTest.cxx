@@ -63,6 +63,7 @@ using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
+using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
@@ -445,6 +446,47 @@ GTEST_TEST(itkTransformixFilter, IsDefaultInitialized)
   EXPECT_FALSE(transformixFilter.GetLogToConsole());
   EXPECT_FALSE(transformixFilter.GetLogToFile());
   EXPECT_EQ(transformixFilter.GetOutputMesh(), nullptr);
+  EXPECT_EQ(transformixFilter.GetNumberOfThreads(), 0);
+}
+
+
+GTEST_TEST(itkTransformixFilter, NumberOfThreadsEqualsGlobalMaximumNumberOfThreads)
+{
+  constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using TransformixFilterType = itk::TransformixFilter<ImageType>;
+
+  elx::DefaultConstruct<TransformixFilterType> transformixFilter;
+
+  constexpr auto imageSize = ImageType::SizeType::Filled(1);
+  const auto     image = CreateImage<PixelType>(imageSize);
+
+  transformixFilter.SetMovingImage(image);
+  transformixFilter.SetTransformParameterObject(
+    CreateParameterObject({ // Parameters in alphabetic order:
+                            { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
+                            { "Index", ParameterValuesType(ImageDimension, "0") },
+                            { "NumberOfParameters", { std::to_string(ImageDimension) } },
+                            { "Origin", ParameterValuesType(ImageDimension, "0") },
+                            { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                            { "Size", ConvertToParameterValues(imageSize) },
+                            { "Transform", ParameterValuesType{ "TranslationTransform" } },
+                            { "TransformParameters", ParameterValuesType(ImageDimension, "0") },
+                            { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
+
+  const auto initialGlobalMaximumNumberOfThreads = itk::MultiThreaderBase::GetGlobalMaximumNumberOfThreads();
+  ASSERT_GE(initialGlobalMaximumNumberOfThreads, 1);
+  ASSERT_LE(initialGlobalMaximumNumberOfThreads, itk::ITK_MAX_THREADS);
+
+  for (const int numberOfThreads :
+       { 1, 2, int{ itk::ITK_MAX_THREADS }, static_cast<int>(initialGlobalMaximumNumberOfThreads) })
+  {
+    transformixFilter.SetNumberOfThreads(numberOfThreads);
+    ASSERT_EQ(transformixFilter.GetNumberOfThreads(), numberOfThreads);
+    transformixFilter.Update();
+    EXPECT_EQ(itk::MultiThreaderBase::GetGlobalMaximumNumberOfThreads(), numberOfThreads);
+  }
 }
 
 
