@@ -285,20 +285,20 @@ private:
   /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;
 
-  std::string m_InitialTransformParameterFileName;
-  std::string m_FixedPointSetFileName;
-  std::string m_MovingPointSetFileName;
+  std::string m_InitialTransformParameterFileName{};
+  std::string m_FixedPointSetFileName{};
+  std::string m_MovingPointSetFileName{};
 
-  std::string m_OutputDirectory;
-  std::string m_LogFileName;
+  std::string m_OutputDirectory{};
+  std::string m_LogFileName{};
 
   bool m_EnableOutput{ true };
-  bool m_LogToConsole;
-  bool m_LogToFile;
+  bool m_LogToConsole{ false };
+  bool m_LogToFile{ false };
 
-  int m_NumberOfThreads;
+  int m_NumberOfThreads{ 0 };
 
-  unsigned int m_InputUID;
+  unsigned int m_InputUID{ 0 };
 };
 
 } // namespace itk

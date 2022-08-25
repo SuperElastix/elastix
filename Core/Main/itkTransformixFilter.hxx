@@ -51,17 +51,6 @@ TransformixFilter<TMovingImage>::TransformixFilter()
   this->AddRequiredInputName("TransformParameterObject", 1);
 
   this->SetOutput("ResultDeformationField", this->MakeOutput("ResultDeformationField"));
-
-  this->m_FixedPointSetFileName = "";
-  this->m_ComputeSpatialJacobian = false;
-  this->m_ComputeDeterminantOfSpatialJacobian = false;
-  this->m_ComputeDeformationField = false;
-
-  this->m_OutputDirectory = "";
-  this->m_LogFileName = "";
-
-  this->m_LogToConsole = false;
-  this->m_LogToFile = false;
 }
 
 
