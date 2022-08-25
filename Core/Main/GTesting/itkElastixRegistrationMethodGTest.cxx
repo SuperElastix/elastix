@@ -139,6 +139,26 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
 } // namespace
 
 
+GTEST_TEST(itkElastixRegistrationMethod, IsDefaultInitialized)
+{
+  constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+
+  const elx::DefaultConstructibleSubclass<itk::ElastixRegistrationMethod<ImageType, ImageType>>
+    elastixRegistrationMethod;
+
+  EXPECT_EQ(elastixRegistrationMethod.GetInitialTransformParameterFileName(), std::string{});
+  EXPECT_EQ(elastixRegistrationMethod.GetFixedPointSetFileName(), std::string{});
+  EXPECT_EQ(elastixRegistrationMethod.GetMovingPointSetFileName(), std::string{});
+  EXPECT_EQ(elastixRegistrationMethod.GetOutputDirectory(), std::string{});
+  EXPECT_EQ(elastixRegistrationMethod.GetLogFileName(), std::string{});
+  EXPECT_FALSE(elastixRegistrationMethod.GetLogToConsole());
+  EXPECT_FALSE(elastixRegistrationMethod.GetLogToFile());
+  EXPECT_EQ(elastixRegistrationMethod.GetNumberOfThreads(), 0);
+}
+
+
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
 GTEST_TEST(itkElastixRegistrationMethod, Translation)
 {
