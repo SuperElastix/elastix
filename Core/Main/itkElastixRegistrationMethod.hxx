@@ -158,9 +158,9 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Setup output directory
-  if (this->GetOutputDirectory().empty())
+  if (m_OutputDirectory.empty())
   {
-    if (this->GetLogToFile())
+    if (m_LogToFile)
     {
       itkExceptionMacro("LogToFileOn() requires an output directory to be specified.")
     }
@@ -170,30 +170,30 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
   else
   {
-    if (!itksys::SystemTools::FileExists(this->GetOutputDirectory()))
+    if (!itksys::SystemTools::FileExists(m_OutputDirectory))
     {
-      itkExceptionMacro("Output directory \"" << this->GetOutputDirectory() << "\" does not exist.");
+      itkExceptionMacro("Output directory \"" << m_OutputDirectory << "\" does not exist.");
     }
 
-    if (this->GetOutputDirectory().back() != '/' && this->GetOutputDirectory().back() != '\\')
+    if (m_OutputDirectory.back() != '/' && m_OutputDirectory.back() != '\\')
     {
-      this->SetOutputDirectory(this->GetOutputDirectory() + "/");
+      this->SetOutputDirectory(m_OutputDirectory + "/");
     }
 
-    argumentMap.insert(ArgumentMapEntryType("-out", this->GetOutputDirectory()));
+    argumentMap.insert(ArgumentMapEntryType("-out", m_OutputDirectory));
   }
 
   // Setup log file
   std::string logFileName;
-  if (this->GetLogToFile())
+  if (m_LogToFile)
   {
-    if (this->GetLogFileName().empty())
+    if (m_LogFileName.empty())
     {
-      logFileName = this->GetOutputDirectory() + "elastix.log";
+      logFileName = m_OutputDirectory + "elastix.log";
     }
     else
     {
-      logFileName = this->GetOutputDirectory() + this->GetLogFileName();
+      logFileName = m_OutputDirectory + m_LogFileName;
     }
   }
 
@@ -204,10 +204,9 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Setup xout
-  const auto manager =
-    m_EnableOutput
-      ? std::make_unique<const elx::xoutManager>(logFileName, this->GetLogToFile(), this->GetLogToConsole())
-      : std::unique_ptr<const elx::xoutManager>();
+  const auto manager = m_EnableOutput
+                         ? std::make_unique<const elx::xoutManager>(logFileName, m_LogToFile, m_LogToConsole)
+                         : std::unique_ptr<const elx::xoutManager>();
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)

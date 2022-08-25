@@ -64,9 +64,8 @@ TransformixFilter<TMovingImage>::GenerateData()
   // on some platforms.
   const unsigned int movingImageDimension = MovingImageDimension;
 
-  if (this->IsEmpty(this->GetMovingImage()) && this->GetFixedPointSetFileName().empty() &&
-      !this->GetComputeSpatialJacobian() && !this->GetComputeDeterminantOfSpatialJacobian() &&
-      !this->GetComputeDeformationField())
+  if (this->IsEmpty(this->GetMovingImage()) && m_FixedPointSetFileName.empty() && !m_ComputeSpatialJacobian &&
+      !m_ComputeDeterminantOfSpatialJacobian && !m_ComputeDeformationField)
   {
     itkExceptionMacro(
       "Expected at least one of SetMovingImage(), SetFixedPointSetFileName() ComputeSpatialJacobianOn(), "
@@ -75,7 +74,7 @@ TransformixFilter<TMovingImage>::GenerateData()
 
   // TODO: Patch upstream transformix to split this into seperate arguments
   // Transformix uses "-def" for path to point sets AND as flag for writing deformation field
-  if (this->GetComputeDeformationField() && !this->GetFixedPointSetFileName().empty())
+  if (m_ComputeDeformationField && !m_FixedPointSetFileName.empty())
   {
     itkExceptionMacro(<< "For backwards compatibility, only one of ComputeDeformationFieldOn() or "
                          "SetFixedPointSetFileName() can be active at any one time.")
@@ -84,74 +83,73 @@ TransformixFilter<TMovingImage>::GenerateData()
   // Setup argument map which transformix uses internally ito figure out what needs to be done
   ArgumentMapType argumentMap;
 
-  if (this->GetComputeSpatialJacobian())
+  if (m_ComputeSpatialJacobian)
   {
     argumentMap.insert(ArgumentMapEntryType("-jacmat", "all"));
   }
 
-  if (this->GetComputeDeterminantOfSpatialJacobian())
+  if (m_ComputeDeterminantOfSpatialJacobian)
   {
     argumentMap.insert(ArgumentMapEntryType("-jac", "all"));
   }
 
-  if (this->GetComputeDeformationField())
+  if (m_ComputeDeformationField)
   {
     argumentMap.insert(ArgumentMapEntryType("-def", "all"));
   }
 
-  if (!this->GetFixedPointSetFileName().empty())
+  if (!m_FixedPointSetFileName.empty())
   {
-    argumentMap.insert(ArgumentMapEntryType("-def", this->GetFixedPointSetFileName()));
+    argumentMap.insert(ArgumentMapEntryType("-def", m_FixedPointSetFileName));
   }
 
   // Setup output directory
   // Only the input "MovingImage" does not require an output directory
-  if ((this->GetComputeSpatialJacobian() || this->GetComputeDeterminantOfSpatialJacobian() ||
-       this->GetComputeDeformationField() || !this->GetFixedPointSetFileName().empty() || this->GetLogToFile()) &&
-      this->GetOutputDirectory().empty())
+  if ((m_ComputeSpatialJacobian || m_ComputeDeterminantOfSpatialJacobian || m_ComputeDeformationField ||
+       !m_FixedPointSetFileName.empty() || m_LogToFile) &&
+      m_OutputDirectory.empty())
   {
     this->SetOutputDirectory(".");
   }
 
-  if (!this->GetOutputDirectory().empty() && !itksys::SystemTools::FileExists(this->GetOutputDirectory()))
+  if (!m_OutputDirectory.empty() && !itksys::SystemTools::FileExists(m_OutputDirectory))
   {
-    itkExceptionMacro("Output directory \"" << this->GetOutputDirectory() << "\" does not exist.")
+    itkExceptionMacro("Output directory \"" << m_OutputDirectory << "\" does not exist.")
   }
 
-  if (this->GetOutputDirectory().empty())
+  if (m_OutputDirectory.empty())
   {
     // There must be an "-out", this is checked later in the code
     argumentMap.insert(ArgumentMapEntryType("-out", "output_path_not_set"));
   }
   else
   {
-    if (this->GetOutputDirectory().back() != '/' && this->GetOutputDirectory().back() != '\\')
+    if (m_OutputDirectory.back() != '/' && m_OutputDirectory.back() != '\\')
     {
-      this->SetOutputDirectory(this->GetOutputDirectory() + "/");
+      this->SetOutputDirectory(m_OutputDirectory + "/");
     }
 
-    argumentMap.insert(ArgumentMapEntryType("-out", this->GetOutputDirectory()));
+    argumentMap.insert(ArgumentMapEntryType("-out", m_OutputDirectory));
   }
 
   // Setup log file
   std::string logFileName;
-  if (this->GetLogToFile())
+  if (m_LogToFile)
   {
-    if (this->GetLogFileName().empty())
+    if (m_LogFileName.empty())
     {
-      logFileName = this->GetOutputDirectory() + "transformix.log";
+      logFileName = m_OutputDirectory + "transformix.log";
     }
     else
     {
-      logFileName = this->GetOutputDirectory() + this->GetLogFileName();
+      logFileName = m_OutputDirectory + m_LogFileName;
     }
   }
 
   // Setup xout
-  const auto manager =
-    m_EnableOutput
-      ? std::make_unique<const elx::xoutManager>(logFileName, this->GetLogToFile(), this->GetLogToConsole())
-      : std::unique_ptr<const elx::xoutManager>();
+  const auto manager = m_EnableOutput
+                         ? std::make_unique<const elx::xoutManager>(logFileName, m_LogToFile, m_LogToConsole)
+                         : std::unique_ptr<const elx::xoutManager>();
 
   // Instantiate transformix
   TransformixMainPointer transformix = TransformixMainType::New();
