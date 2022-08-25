@@ -53,18 +53,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::ElastixRegistrationMethod(
   this->AddRequiredInputName("MovingImage", 1);
   this->AddRequiredInputName("ParameterObject", 2);
 
-  this->m_InitialTransformParameterFileName = "";
-  this->m_FixedPointSetFileName = "";
-  this->m_MovingPointSetFileName = "";
-
-  this->m_OutputDirectory = "";
-  this->m_LogFileName = "";
-
-  this->m_LogToConsole = false;
-  this->m_LogToFile = false;
-
-  this->m_NumberOfThreads = 0;
-
   ParameterObjectPointer defaultParameterObject = elastix::ParameterObject::New();
   defaultParameterObject->AddParameterMap(elastix::ParameterObject::GetDefaultParameterMap("translation"));
   defaultParameterObject->AddParameterMap(elastix::ParameterObject::GetDefaultParameterMap("affine"));
@@ -80,8 +68,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::ElastixRegistrationMethod(
   // defaultParameterObject->SetParameter( "OpenCLMovingGenericImagePyramidUseOpenCL", "true" );
 #endif
   this->SetParameterObject(defaultParameterObject);
-
-  this->m_InputUID = 0;
 }
 
 

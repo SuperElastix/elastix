@@ -252,20 +252,20 @@ private:
    */
   using ProcessObject::RemoveInput;
 
-  std::string m_FixedPointSetFileName;
-  bool        m_ComputeSpatialJacobian;
-  bool        m_ComputeDeterminantOfSpatialJacobian;
-  bool        m_ComputeDeformationField;
+  std::string m_FixedPointSetFileName{};
+  bool        m_ComputeSpatialJacobian{ false };
+  bool        m_ComputeDeterminantOfSpatialJacobian{ false };
+  bool        m_ComputeDeformationField{ false };
 
-  std::string m_OutputDirectory;
-  std::string m_LogFileName;
+  std::string m_OutputDirectory{};
+  std::string m_LogFileName{};
 
   bool m_EnableOutput{ true };
-  bool m_LogToConsole;
-  bool m_LogToFile;
+  bool m_LogToConsole{ false };
+  bool m_LogToFile{ false };
 
-  typename MeshType::ConstPointer m_InputMesh;
-  typename MeshType::Pointer      m_OutputMesh;
+  typename MeshType::ConstPointer m_InputMesh{ nullptr };
+  typename MeshType::Pointer      m_OutputMesh{ nullptr };
 };
 
 } // namespace itk
