@@ -90,16 +90,14 @@ private:
     using DiskImageType = Image<OutputComponentType, InputImageDimension>;
     using InputImageComponentType = typename PixelTraits<InputImagePixelType>::ValueType;
     using ScalarInputImageType = Image<InputImageComponentType, InputImageDimension>;
-    using CasterType = CastImageFilter<ScalarInputImageType, DiskImageType>;
 
     /** Reconfigure the imageIO */
-    // this->GetImageIO()->SetPixelTypeInfo( typeid(OutputComponentType) );
     this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast<const OutputComponentType *>(nullptr));
 
     /** cast the input image */
-    auto caster = CasterType::New();
+    const auto caster = CastImageFilter<ScalarInputImageType, DiskImageType>::New();
     this->m_Caster = caster;
-    auto localInputImage = ScalarInputImageType::New();
+    const auto localInputImage = ScalarInputImageType::New();
 
     localInputImage->Graft(static_cast<const ScalarInputImageType *>(inputImage));
 
@@ -107,9 +105,7 @@ private:
     caster->Update();
 
     /** return the pixel buffer of the casted image */
-    OutputComponentType * pixelBuffer = caster->GetOutput()->GetBufferPointer();
-    void *                convertedBuffer = static_cast<void *>(pixelBuffer);
-    return convertedBuffer;
+    return caster->GetOutput()->GetBufferPointer();
   }
 
 
