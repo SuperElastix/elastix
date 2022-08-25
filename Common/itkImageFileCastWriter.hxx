@@ -33,36 +33,19 @@ namespace itk
 
 //---------------------------------------------------------
 template <class TInputImage>
-ImageFileCastWriter<TInputImage>::ImageFileCastWriter()
-{
-  this->m_Caster = nullptr;
-  this->m_OutputComponentType = this->GetDefaultOutputComponentType();
-}
-
-
-//---------------------------------------------------------
-template <class TInputImage>
 std::string
-ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType() const
+ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType()
 {
   /** Make a dummy imageIO object, which has some handy functions */
-  auto dummyImageIO = MetaImageIO::New();
+  const auto dummyImageIO = MetaImageIO::New();
 
   /** Set the pixeltype. */
   using ScalarType = typename InputImageType::InternalPixelType;
-  // dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));
+
   dummyImageIO->SetPixelTypeInfo(static_cast<const ScalarType *>(nullptr));
 
   /** Get its description. */
-  return dummyImageIO->GetComponentTypeAsString(dummyImageIO->GetComponentType());
-}
-
-
-//---------------------------------------------------------
-template <class TInputImage>
-ImageFileCastWriter<TInputImage>::~ImageFileCastWriter()
-{
-  this->m_Caster = nullptr;
+  return ImageIOBase::GetComponentTypeAsString(dummyImageIO->GetComponentType());
 }
 
 
