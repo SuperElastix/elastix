@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef elxDefaultConstructibleSubclass_h
-#define elxDefaultConstructibleSubclass_h
+#ifndef elxDefaultConstruct_h
+#define elxDefaultConstruct_h
 
 #include <itkLightObject.h>
 
@@ -25,16 +25,16 @@ namespace elastix
 /// Allows default-constructing an `itk::LightObject` derived object without calling `New()`.
 /// May improve the runtime performance, by avoiding heap allocation and pointer indirection.
 template <typename TObject>
-class DefaultConstructibleSubclass : public TObject
+class DefaultConstruct : public TObject
 {
 public:
-  ITK_DISALLOW_COPY_AND_MOVE(DefaultConstructibleSubclass);
+  ITK_DISALLOW_COPY_AND_MOVE(DefaultConstruct);
 
   /// Public default-constructor. Just calls the (typically protected) default-constructor of `TObject`.
-  DefaultConstructibleSubclass() = default;
+  DefaultConstruct() = default;
 
   /// Public destructor. Just calls the (typically protected) destructor of `TObject`.
-  ~DefaultConstructibleSubclass() override
+  ~DefaultConstruct() override
   {
     // Suppress warning "Trying to delete object with non-zero reference count."
     this->itk::LightObject::m_ReferenceCount = 0;

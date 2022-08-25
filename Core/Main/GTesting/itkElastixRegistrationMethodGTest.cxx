@@ -22,7 +22,7 @@
 #include <itkElastixRegistrationMethod.h>
 
 #include "elxCoreMainGTestUtilities.h"
-#include "elxDefaultConstructibleSubclass.h"
+#include "elxDefaultConstruct.h"
 #include "elxTransformIO.h"
 
 // ITK header file:
@@ -74,7 +74,7 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
   const auto image = CreateImage<PixelType>(itk::Size<NDimension>::Filled(4));
 
   using ItkBSplineTransformType = itk::BSplineTransform<double, NDimension, NSplineOrder>;
-  const elx::DefaultConstructibleSubclass<ItkBSplineTransformType> itkBSplineTransform;
+  const elx::DefaultConstruct<ItkBSplineTransformType> itkBSplineTransform;
 
   const auto defaultFixedParameters = itkBSplineTransform.GetFixedParameters();
 
@@ -145,8 +145,7 @@ GTEST_TEST(itkElastixRegistrationMethod, IsDefaultInitialized)
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
 
-  const elx::DefaultConstructibleSubclass<itk::ElastixRegistrationMethod<ImageType, ImageType>>
-    elastixRegistrationMethod;
+  const elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> elastixRegistrationMethod;
 
   EXPECT_EQ(elastixRegistrationMethod.GetInitialTransformParameterFileName(), std::string{});
   EXPECT_EQ(elastixRegistrationMethod.GetFixedPointSetFileName(), std::string{});

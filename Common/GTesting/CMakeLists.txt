@@ -1,6 +1,6 @@
 add_executable(CommonGTest
   elxConversionGTest.cxx
-  elxDefaultConstructibleSubclassGTest.cxx
+  elxDefaultConstructGTest.cxx
   elxElastixMainGTest.cxx
   elxGTestUtilities.h
   elxResampleInterpolatorGTest.cxx

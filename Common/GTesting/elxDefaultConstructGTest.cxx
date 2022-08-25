@@ -17,20 +17,20 @@
  *=========================================================================*/
 
 // First include the header file to be tested:
-#include "elxDefaultConstructibleSubclass.h"
+#include "elxDefaultConstruct.h"
 #include <itkImage.h>
 #include <gtest/gtest.h>
 #include <type_traits> // For is_base_of and is_default_constructible.
 
 // The class template to be tested:
-using elastix::DefaultConstructibleSubclass;
+using elastix::DefaultConstruct;
 
-// Example type, to be used as template argument of DefaultConstructibleSubclass.
+// Example type, to be used as template argument of DefaultConstruct.
 using ImageType = itk::Image<int>;
 
 namespace
 {
-// A minimal test class, to be used as template argument of DefaultConstructibleSubclass.
+// A minimal test class, to be used as template argument of DefaultConstruct.
 class TestObject : public itk::LightObject
 {
 public:
@@ -62,18 +62,18 @@ private:
 } // namespace
 
 
-static_assert(std::is_base_of<TestObject, DefaultConstructibleSubclass<TestObject>>{} &&
-                std::is_base_of<ImageType, DefaultConstructibleSubclass<ImageType>>{},
-              "DefaultConstructibleSubclass<T> must be a subclass of T! ");
+static_assert(std::is_base_of<TestObject, DefaultConstruct<TestObject>>{} &&
+                std::is_base_of<ImageType, DefaultConstruct<ImageType>>{},
+              "DefaultConstruct<T> must be a subclass of T! ");
 
-static_assert(std::is_default_constructible<DefaultConstructibleSubclass<TestObject>>{} &&
-                std::is_default_constructible<DefaultConstructibleSubclass<ImageType>>{},
-              "DefaultConstructibleSubclass<T> must be default-constructible! ");
+static_assert(std::is_default_constructible<DefaultConstruct<TestObject>>{} &&
+                std::is_default_constructible<DefaultConstruct<ImageType>>{},
+              "DefaultConstruct<T> must be default-constructible! ");
 
-GTEST_TEST(DefaultConstructibleSubclass, Check)
+GTEST_TEST(DefaultConstruct, Check)
 {
-  const DefaultConstructibleSubclass<ImageType>  defaultConstructedImage{};
-  const DefaultConstructibleSubclass<TestObject> defaultConstructedTestObject{};
+  const DefaultConstruct<ImageType>  defaultConstructedImage{};
+  const DefaultConstruct<TestObject> defaultConstructedTestObject{};
 
   EXPECT_EQ(defaultConstructedTestObject, *TestObject::New());
   EXPECT_EQ(defaultConstructedImage, *ImageType::New());

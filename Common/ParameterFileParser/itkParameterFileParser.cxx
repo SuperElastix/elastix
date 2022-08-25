@@ -17,7 +17,7 @@
  *=========================================================================*/
 
 #include "itkParameterFileParser.h"
-#include "elxDefaultConstructibleSubclass.h"
+#include "elxDefaultConstruct.h"
 
 #include <itksys/SystemTools.hxx>
 #include <itksys/RegularExpression.hxx>
@@ -400,7 +400,7 @@ ParameterFileParser::ReturnParameterFileAsString()
 auto
 ParameterFileParser::ReadParameterMap(const std::string & fileName) -> ParameterMapType
 {
-  elastix::DefaultConstructibleSubclass<ParameterFileParser> parameterFileParser;
+  elastix::DefaultConstruct<ParameterFileParser> parameterFileParser;
   parameterFileParser.m_ParameterFileName = fileName;
   parameterFileParser.ReadParameterFile();
 
