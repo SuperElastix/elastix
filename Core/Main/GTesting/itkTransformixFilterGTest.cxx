@@ -428,6 +428,26 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
 } // namespace
 
 
+GTEST_TEST(itkTransformixFilter, IsDefaultInitialized)
+{
+  constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using TransformixFilterType = itk::TransformixFilter<itk::Image<PixelType, ImageDimension>>;
+
+  const elx::DefaultConstructibleSubclass<TransformixFilterType> transformixFilter;
+
+  EXPECT_EQ(transformixFilter.GetFixedPointSetFileName(), std::string{});
+  EXPECT_EQ(transformixFilter.GetOutputDirectory(), std::string{});
+  EXPECT_FALSE(transformixFilter.GetComputeSpatialJacobian());
+  EXPECT_FALSE(transformixFilter.GetComputeDeterminantOfSpatialJacobian());
+  EXPECT_FALSE(transformixFilter.GetComputeDeformationField());
+  EXPECT_EQ(transformixFilter.GetLogFileName(), std::string{});
+  EXPECT_FALSE(transformixFilter.GetLogToConsole());
+  EXPECT_FALSE(transformixFilter.GetLogToFile());
+  EXPECT_EQ(transformixFilter.GetOutputMesh(), nullptr);
+}
+
+
 // Tests translating a small (5x6) binary image, having a 2x2 white square.
 GTEST_TEST(itkTransformixFilter, Translation2D)
 {
