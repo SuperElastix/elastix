@@ -66,19 +66,19 @@ public:
   itkSetStringMacro(OutputComponentType);
   itkGetStringMacro(OutputComponentType);
 
-  /** Determine the default outputcomponentType */
-  std::string
-  GetDefaultOutputComponentType() const;
-
 protected:
-  ImageFileCastWriter();
-  ~ImageFileCastWriter() override;
+  ImageFileCastWriter() = default;
+  ~ImageFileCastWriter() override = default;
 
   /** Does the real work. */
   void
   GenerateData() override;
 
 private:
+  /** Determine the default outputcomponentType */
+  static std::string
+  GetDefaultOutputComponentType();
+
   /** Templated function that casts the input image and returns a
    * a pointer to the PixelBuffer. Assumes scalar singlecomponent images
    * The buffer data is valid until this->m_Caster is destroyed or assigned
@@ -113,13 +113,13 @@ private:
   }
 
 
-  ProcessObject::Pointer m_Caster;
+  ProcessObject::Pointer m_Caster{ nullptr };
 
   ImageFileCastWriter(const Self &) = delete;
   void
   operator=(const Self &) = delete;
 
-  std::string m_OutputComponentType;
+  std::string m_OutputComponentType{ Self::GetDefaultOutputComponentType() };
 };
 
 } // end namespace itk
