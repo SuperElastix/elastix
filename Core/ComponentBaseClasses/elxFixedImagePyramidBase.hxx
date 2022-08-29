@@ -166,21 +166,11 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
   bool doCompression = false;
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
 
-  /** Create writer. */
-  using WriterType = itk::ImageFileCastWriter<OutputImageType>;
-  auto writer = WriterType::New();
-
-  /** Setup the pipeline. */
-  writer->SetInput(this->GetAsITKBaseType()->GetOutput(level));
-  writer->SetFileName(filename.c_str());
-  writer->SetOutputComponentType(resultImagePixelType.c_str());
-  writer->SetUseCompression(doCompression);
-
   /** Do the writing. */
   xl::xout["coutonly"] << "  Writing fixed pyramid image ..." << std::endl;
   try
   {
-    writer->Update();
+    itk::WriteCastedImage(*(this->GetAsITKBaseType()->GetOutput(level)), filename, resultImagePixelType, doCompression);
   }
   catch (itk::ExceptionObject & excp)
   {

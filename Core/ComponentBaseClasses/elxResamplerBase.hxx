@@ -378,8 +378,6 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Typedef's for writing the output image. */
-  using WriterType = itk::ImageFileCastWriter<OutputImageType>;
-  using WriterPointer = typename WriterType::Pointer;
   using ChangeInfoFilterType = itk::ChangeInformationImageFilter<OutputImageType>;
 
   /** Possibly change direction cosines to their original value, as specified
@@ -393,15 +391,6 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(image);
 
-  /** Create writer. */
-  WriterPointer writer = WriterType::New();
-
-  /** Setup the pipeline. */
-  writer->SetInput(infoChanger->GetOutput());
-  writer->SetFileName(filename);
-  writer->SetOutputComponentType(resultImagePixelType.c_str());
-  writer->SetUseCompression(doCompression);
-
   /** Do the writing. */
   if (showProgress)
   {
@@ -409,7 +398,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   }
   try
   {
-    writer->Update();
+    itk::WriteCastedImage(*(infoChanger->GetOutput()), filename, resultImagePixelType, doCompression);
   }
   catch (itk::ExceptionObject & excp)
   {

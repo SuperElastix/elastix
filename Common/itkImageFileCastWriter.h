@@ -24,6 +24,7 @@
 #include "itkSize.h"
 #include "itkImageIORegion.h"
 #include "itkCastImageFilter.h"
+#include "elxDefaultConstruct.h"
 
 namespace itk
 {
@@ -117,6 +118,22 @@ private:
 
   std::string m_OutputComponentType{ Self::GetDefaultOutputComponentType() };
 };
+
+/** Convenience function for writing a casted image. */
+template <typename TImage>
+void
+WriteCastedImage(const TImage &      image,
+                 const std::string & filename,
+                 const std::string & outputComponentType,
+                 bool                compress)
+{
+  elx::DefaultConstruct<ImageFileCastWriter<TImage>> writer;
+  writer.SetInput(&image);
+  writer.SetFileName(filename);
+  writer.SetOutputComponentType(outputComponentType);
+  writer.SetUseCompression(compress);
+  writer.Update();
+}
 
 } // end namespace itk
 
