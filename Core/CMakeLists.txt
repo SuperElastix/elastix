@@ -142,6 +142,12 @@ target_link_libraries(elxCore
   #  ${ITK_LIBRARIES}
 )
 
+# Support #include <double-conversion.h>, which is either in the root of the
+# ITK install directory (its "install prefix"), or at the following location
+# of the ITK source tree (which is the parent directory of "{ITK_CMAKE_DIR}"):
+target_include_directories(elxCore PRIVATE
+  ${ITK_CMAKE_DIR}/../Modules/ThirdParty/DoubleConversion/src/double-conversion)
+
 elastix_export_target(elxCommon)
 elastix_export_target(xoutlib)
 elastix_export_target(param)

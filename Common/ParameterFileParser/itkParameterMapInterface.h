@@ -19,6 +19,8 @@
 #ifndef itkParameterMapInterface_h
 #define itkParameterMapInterface_h
 
+#include "elxConversion.h"
+
 #include "itkObject.h"
 #include "itkObjectFactory.h"
 #include "itkMacro.h"
@@ -175,7 +177,7 @@ public:
     }
 
     /** Cast the string to type T. */
-    bool castSuccesful = Self::StringCast(vec[entry_nr], parameterValue);
+    bool castSuccesful = elastix::Conversion::StringToValue(vec[entry_nr], parameterValue);
 
     /** Check if the cast was successful. */
     if (!castSuccesful)
@@ -338,7 +340,7 @@ public:
     for (unsigned int i = entry_nr_start; i < entry_nr_end + 1; ++i)
     {
       /** Cast the string to type T. */
-      bool castSuccesful = Self::StringCast(vec[i], parameterValues[j]);
+      bool castSuccesful = elastix::Conversion::StringToValue(vec[i], parameterValues[j]);
       ++j;
 
       /** Check if the cast was successful. */
@@ -393,7 +395,7 @@ public:
     {
       T value{};
 
-      if (Self::StringCast(str, value))
+      if (elastix::Conversion::StringToValue(str, value))
       {
         result.push_back(value);
       }
@@ -421,76 +423,6 @@ private:
   ParameterMapType m_ParameterMap;
 
   bool m_PrintErrorMessages{ true };
-
-  /** A templated function to cast strings to a type T.
-   * Returns true when casting was successful and false otherwise.
-   * We make use of the casting functionality of string streams.
-   */
-  template <class T>
-  static bool
-  StringCast(const std::string & parameterValue, T & casted)
-  {
-    // Conversion to bool is supported by another StringCast overload.
-    static_assert(!std::is_same<T, bool>::value, "This StringCast<T> overload does not support bool!");
-
-    // 8-bits (signed/unsigned) char types are supported by other StringCast
-    // overloads.
-    static_assert(sizeof(T) > 1, "This StringCast<T> overload does not support (signed/unsigned) char!");
-
-    auto inputStream = [&parameterValue] {
-      const auto decimalPointPos = parameterValue.find_first_of('.');
-      const bool hasDecimalPointAndTrailingZeros =
-        (decimalPointPos != std::string::npos) &&
-        (std::count(parameterValue.cbegin() + decimalPointPos + 1, parameterValue.cend(), '0') ==
-         (parameterValue.size() - decimalPointPos - 1));
-      return std::istringstream(hasDecimalPointAndTrailingZeros
-                                  ? std::string(parameterValue.cbegin(), parameterValue.cbegin() + decimalPointPos)
-                                  : parameterValue);
-    }();
-
-    // Note: `inputStream >> casted` evaluates to false when the `badbit` or the `failbit` is set.
-    return (inputStream >> casted) && inputStream.eof();
-
-  } // end StringCast()
-
-
-  /** Provide a specialization for std::string, since the general StringCast
-   * (especially outputStringStream >> casted) will not work for strings containing spaces.
-   */
-  static bool
-  StringCast(const std::string & parameterValue, std::string & casted);
-
-  /** Provide specializations for floating point types, to support NaN and infinity.
-   */
-  template <typename TFloatingPoint>
-  static bool
-  StringCastToFloatingPoint(const std::string & parameterValue, TFloatingPoint & casted);
-
-  static bool
-  StringCast(const std::string & parameterValue, double & casted);
-
-  static bool
-  StringCast(const std::string & parameterValue, float & casted);
-
-  /** Provide specializations for signed/unsigned char types, in order to
-   * process them as 8-bits integer types, rather than as character types.
-   */
-  template <typename TChar>
-  static bool
-  StringCastToCharType(const std::string & parameterValue, TChar & casted);
-
-  static bool
-  StringCast(const std::string & parameterValue, char & casted);
-
-  static bool
-  StringCast(const std::string & parameterValue, signed char & casted);
-
-  static bool
-  StringCast(const std::string & parameterValue, unsigned char & casted);
-
-  /** Overload to cast a string to a bool. Returns true when casting was successful and false otherwise. */
-  static bool
-  StringCast(const std::string & parameterValue, bool & casted);
 };
 
 } // end of namespace itk
