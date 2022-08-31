@@ -21,13 +21,119 @@
 #include <itkNumberToString.h>
 #include <itkOptimizerParameters.h>
 
+#include <double-conversion.h>
+
+// Standard C++ header files:
 #include <cassert>
-#include <cmath>   // For fmod.
+#include <cmath>   // For fmod, fpclassify and FP_SUBNORMAL.
 #include <iomanip> // For setprecision.
+#include <limits>
 #include <numeric> // For accumulate.
 #include <regex>
-#include <sstream> // For ostringstream.
+#include <sstream>     // For ostringstream.
+#include <type_traits> // For is_floating_point.
 
+
+namespace
+{
+
+template <typename TFloatingPoint>
+TFloatingPoint
+ConvertStringToFloatingPoint(const double_conversion::StringToDoubleConverter &, const char *, int, int *);
+
+template <>
+float
+ConvertStringToFloatingPoint(const double_conversion::StringToDoubleConverter & converter,
+                             const char * const                                 buffer,
+                             const int                                          length,
+                             int * const                                        processed_characters_count)
+{
+  return converter.StringToFloat(buffer, length, processed_characters_count);
+}
+
+template <>
+double
+ConvertStringToFloatingPoint(const double_conversion::StringToDoubleConverter & converter,
+                             const char * const                                 buffer,
+                             const int                                          length,
+                             int * const                                        processed_characters_count)
+{
+  return converter.StringToDouble(buffer, length, processed_characters_count);
+}
+
+
+template <typename TFloatingPoint>
+bool
+StringToFloatingPointValue(const std::string & str, TFloatingPoint & value)
+{
+  static_assert(std::is_floating_point<TFloatingPoint>::value,
+                "This function template only supports floating point types.");
+
+  using NumericLimits = std::numeric_limits<TFloatingPoint>;
+
+  if (str == "NaN")
+  {
+    value = NumericLimits::quiet_NaN();
+    return true;
+  }
+  if (str == "Infinity")
+  {
+    value = NumericLimits::infinity();
+    return true;
+  }
+  if (str == "-Infinity")
+  {
+    value = -NumericLimits::infinity();
+    return true;
+  }
+  const auto numberOfChars = str.size();
+
+  if (numberOfChars > std::numeric_limits<int>::max())
+  {
+    return false;
+  }
+
+  constexpr auto double_NaN = std::numeric_limits<double>::quiet_NaN();
+  int            processed_characters_count{};
+
+  const double_conversion::StringToDoubleConverter converter(0, double_NaN, double_NaN, "inf", "nan");
+
+  const auto conversionResult = ConvertStringToFloatingPoint<TFloatingPoint>(
+    converter, str.c_str(), static_cast<int>(numberOfChars), &processed_characters_count);
+
+  if (std::isnan(conversionResult) || (processed_characters_count != static_cast<int>(numberOfChars)))
+  {
+    // Conversion failed: the result is NaN (while `str` is not
+    // "NaN"), or the converter did not process all characters.
+    return false;
+  }
+  value = conversionResult;
+  return true;
+}
+
+
+template <typename TChar>
+bool
+StringToCharValue(const std::string & str, TChar & value)
+{
+  static_assert(sizeof(TChar) < sizeof(int), "StringToValueCharType only supports character types smaller than int");
+
+  int temp{};
+
+  if (elastix::Conversion::StringToValue<int>(str, temp))
+  {
+    // Check that `temp` can be copied losslessly to `value`.
+    if ((temp >= std::numeric_limits<TChar>::lowest()) && (temp <= std::numeric_limits<TChar>::max()))
+    {
+      value = static_cast<TChar>(temp);
+      return true;
+    }
+  }
+  return false;
+}
+
+
+} // namespace
 
 namespace elastix
 {
@@ -232,6 +338,69 @@ Conversion::ToNativePathNameSeparators(const std::string & pathName)
   auto result = pathName;
   std::replace(result.begin(), result.end(), nonNativeSeparator, nativeSeparator);
   return result;
+}
+
+/**
+ * **************** StringToValue ***************
+ */
+
+bool
+Conversion::StringToValue(const std::string & str, std::string & value)
+{
+  value = str;
+  return true;
+} // end StringToValue()
+
+
+bool
+Conversion::StringToValue(const std::string & str, float & value)
+{
+  return StringToFloatingPointValue(str, value);
+}
+
+
+bool
+Conversion::StringToValue(const std::string & str, double & value)
+{
+  return StringToFloatingPointValue(str, value);
+}
+
+
+bool
+Conversion::StringToValue(const std::string & str, char & value)
+{
+  return StringToCharValue(str, value);
+}
+
+
+bool
+Conversion::StringToValue(const std::string & str, signed char & value)
+{
+  return StringToCharValue(str, value);
+}
+
+
+bool
+Conversion::StringToValue(const std::string & str, unsigned char & value)
+{
+  return StringToCharValue(str, value);
+}
+
+
+bool
+Conversion::StringToValue(const std::string & str, bool & value)
+{
+  if (str == "false")
+  {
+    value = false;
+    return true;
+  }
+  if (str == "true")
+  {
+    value = true;
+    return true;
+  }
+  return false;
 }
 
 

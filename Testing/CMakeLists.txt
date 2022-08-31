@@ -433,12 +433,12 @@ set_property(TARGET elxImageCompare PROPERTY FOLDER "tests/Executable")
 
 # Create elxTransformParametersCompare
 add_executable(elxTransformParametersCompare elxTransformParametersCompare.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxTransformParametersCompare param ${ITK_LIBRARIES})
+target_link_libraries(elxTransformParametersCompare elxCore param ${ITK_LIBRARIES})
 set_property(TARGET elxTransformParametersCompare PROPERTY FOLDER "tests/Executable")
 
 # Create elxInvertTransform
 add_executable(elxInvertTransform elxInvertTransform.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxInvertTransform param ${ITK_LIBRARIES})
+target_link_libraries(elxInvertTransform elxCore param ${ITK_LIBRARIES})
 set_property(TARGET elxInvertTransform PROPERTY FOLDER "tests/Executable")
 
 #---------------------------------------------------------------------
