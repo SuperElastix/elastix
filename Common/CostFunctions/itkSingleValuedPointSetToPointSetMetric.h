@@ -171,7 +171,7 @@ public:
   itkBooleanMacro(UseMetricSingleThreaded);
 
 protected:
-  SingleValuedPointSetToPointSetMetric();
+  SingleValuedPointSetToPointSetMetric() = default;
   ~SingleValuedPointSetToPointSetMetric() override = default;
 
   /** PrintSelf. */
@@ -179,16 +179,16 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  FixedPointSetConstPointer   m_FixedPointSet;
-  MovingPointSetConstPointer  m_MovingPointSet;
-  FixedImageMaskConstPointer  m_FixedImageMask;
-  MovingImageMaskConstPointer m_MovingImageMask;
-  mutable TransformPointer    m_Transform;
+  FixedPointSetConstPointer   m_FixedPointSet{ nullptr };
+  MovingPointSetConstPointer  m_MovingPointSet{ nullptr };
+  FixedImageMaskConstPointer  m_FixedImageMask{ nullptr };
+  MovingImageMaskConstPointer m_MovingImageMask{ nullptr };
+  mutable TransformPointer    m_Transform{ nullptr };
 
-  mutable unsigned int m_NumberOfPointsCounted;
+  mutable unsigned int m_NumberOfPointsCounted{ 0 };
 
   /** Variables for multi-threading. */
-  bool m_UseMetricSingleThreaded;
+  bool m_UseMetricSingleThreaded{ true };
 
 private:
   SingleValuedPointSetToPointSetMetric(const Self &) = delete;

@@ -40,26 +40,6 @@ namespace itk
 {
 
 /**
- * ******************* Constructor ***********************
- */
-
-template <class TFixedPointSet, class TMovingPointSet>
-SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::SingleValuedPointSetToPointSetMetric()
-{
-  this->m_FixedPointSet = nullptr;  // has to be provided by the user.
-  this->m_MovingPointSet = nullptr; // has to be provided by the user.
-  this->m_Transform = nullptr;      // has to be provided by the user.
-  this->m_FixedImageMask = nullptr;
-  this->m_MovingImageMask = nullptr;
-
-  this->m_NumberOfPointsCounted = 0;
-
-  this->m_UseMetricSingleThreaded = true;
-
-} // end Constructor
-
-
-/**
  * ******************* SetTransformParameters ***********************
  */
 

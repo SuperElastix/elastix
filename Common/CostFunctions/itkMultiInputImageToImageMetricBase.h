@@ -346,7 +346,7 @@ public:
 
 protected:
   /** Constructor. */
-  MultiInputImageToImageMetricBase();
+  MultiInputImageToImageMetricBase() = default;
 
   /** Destructor. */
   ~MultiInputImageToImageMetricBase() override = default;
@@ -393,7 +393,7 @@ protected:
   InterpolatorVectorType           m_InterpolatorVector;
   FixedImageInterpolatorVectorType m_FixedImageInterpolatorVector;
 
-  bool                          m_InterpolatorsAreBSpline;
+  bool                          m_InterpolatorsAreBSpline{ false };
   BSplineInterpolatorVectorType m_BSplineInterpolatorVector;
 
 private:
@@ -411,13 +411,13 @@ private:
   /** Private member variables. */
   FixedImageRegionType m_DummyFixedImageRegion;
 
-  unsigned int m_NumberOfFixedImages;
-  unsigned int m_NumberOfFixedImageMasks;
-  unsigned int m_NumberOfFixedImageRegions;
-  unsigned int m_NumberOfMovingImages;
-  unsigned int m_NumberOfMovingImageMasks;
-  unsigned int m_NumberOfInterpolators;
-  unsigned int m_NumberOfFixedImageInterpolators;
+  unsigned int m_NumberOfFixedImages{ 0 };
+  unsigned int m_NumberOfFixedImageMasks{ 0 };
+  unsigned int m_NumberOfFixedImageRegions{ 0 };
+  unsigned int m_NumberOfMovingImages{ 0 };
+  unsigned int m_NumberOfMovingImageMasks{ 0 };
+  unsigned int m_NumberOfInterpolators{ 0 };
+  unsigned int m_NumberOfFixedImageInterpolators{ 0 };
 };
 
 } // end namespace itk

@@ -92,26 +92,6 @@
 namespace itk
 {
 
-/**
- * ************************ Constructor *************************
- */
-
-template <class TFixedImage, class TMovingImage>
-MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::MultiInputImageToImageMetricBase()
-{
-  this->m_NumberOfFixedImages = 0;
-  this->m_NumberOfFixedImageMasks = 0;
-  this->m_NumberOfFixedImageRegions = 0;
-  this->m_NumberOfMovingImages = 0;
-  this->m_NumberOfMovingImageMasks = 0;
-  this->m_NumberOfInterpolators = 0;
-  this->m_NumberOfFixedImageInterpolators = 0;
-
-  this->m_InterpolatorsAreBSpline = false;
-
-} // end Constructor()
-
-
 /** Set components. */
 itkImplementationSetObjectMacro(FixedImage, const FixedImageType);
 itkImplementationSetObjectMacro(FixedImageMask, FixedImageMaskType);
