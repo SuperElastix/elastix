@@ -1,5 +1,5 @@
 <a href="https://elastix.lumc.nl/">
-  <img src="https://github.com/SuperElastix/elastix/blob/develop/dox/art/elastix_logo_full_small.bmp" alt="elastix logo" title="elastix" align="right" height="80" />
+  <img src="https://github.com/SuperElastix/elastix/blob/main/dox/art/elastix_logo_full_small.bmp" alt="elastix logo" title="elastix" align="right" height="80" />
 </a>
 
 # elastix image registration toolbox #

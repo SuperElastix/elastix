@@ -64,7 +64,7 @@ endif()
 
 # Select branch to use
 if(NOT DEFINED dashboard_git_branch)
-  set(dashboard_git_branch develop)
+  set(dashboard_git_branch main)
 endif()
 
 # Select a source directory name.
