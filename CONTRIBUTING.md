@@ -27,9 +27,9 @@
 
 ### Did you write a patch that fixes a bug? ###
 
-* Open a new [GitHub pull request](https://github.com/SuperElastix/elastix/pull/new/develop) (PR) with the patch.
+* Open a new [GitHub pull request](https://github.com/SuperElastix/elastix/pull/new/main) (PR) with the patch.
 
-* Make sure the PR is done with respect to the [develop branch](https://github.com/SuperElastix/elastix/tree/develop).
+* Make sure the PR is done with respect to the [main branch](https://github.com/SuperElastix/elastix/tree/main).
 
 * Ensure the PR description (log message) _clearly describes the problem and solution_. Include the relevant issue number if applicable. One-line messages are fine for small changes, but bigger changes should look like this:
     $ git commit -m "ENH: A brief summary of the commit

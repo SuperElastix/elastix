@@ -66,11 +66,11 @@ def main():
   # Argument to select the elastix branch (optional)
   # e.g. -b performance_ITK4
   #parser.add_argument( "-b", "--branch",
-  #  default='develop', dest='branch',
+  #  default='main', dest='branch',
   #  help='select elastix branch' );
   # This is currently hard-coded in elxDashboardCommon.cmake,
   # and cannot be an option here atm.
-  branch = "develop";
+  branch = "main";
 
   options = parser.parse_args();
 
@@ -109,7 +109,7 @@ def main():
   # elastix.git can be approached as follows:
   # svn export https://github.com/SuperElastix/elastix/trunk/path/to/file
   # for the main branch 'master'. Branches can be approached like:
-  # svn export https://github.com/SuperElastix/elastix/branches/develop/path/to/file
+  # svn export https://github.com/SuperElastix/elastix/branches/main/path/to/file
 
   # Create local temporary directory to checkout dashboard scripts to
   shutil.rmtree( tmpdir, True );
