@@ -7,6 +7,7 @@ add_executable(CommonGTest
   elxResamplerGTest.cxx
   elxTransformIOGTest.cxx
   itkComputeImageExtremaFilterGTest.cxx
+  itkImageGridSamplerGTest.cxx
   itkParameterMapInterfaceTest.cxx
   )
 target_link_libraries(CommonGTest
