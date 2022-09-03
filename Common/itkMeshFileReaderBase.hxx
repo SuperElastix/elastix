@@ -27,17 +27,6 @@ namespace itk
 {
 
 /**
- * **************** Constructor ***************
- */
-
-template <class TOutputMesh>
-MeshFileReaderBase<TOutputMesh>::MeshFileReaderBase()
-{
-  this->m_FileName = "";
-} // end constructor
-
-
-/**
  * ***************GenerateOutputInformation ***********
  */
 
@@ -47,10 +36,10 @@ MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation()
 {
   OutputMeshPointer output = this->GetOutput();
 
-  itkDebugMacro(<< "Reading file for GenerateOutputInformation(): " << this->m_FileName);
+  itkDebugMacro(<< "Reading file for GenerateOutputInformation(): " << m_FileName);
 
   /** Check to see if we can read the file given the name or prefix */
-  if (this->m_FileName.empty())
+  if (m_FileName.empty())
   {
     throw MeshFileReaderException(__FILE__, __LINE__, "FileName must be specified", ITK_LOCATION);
   }
@@ -80,31 +69,21 @@ void
 MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability()
 {
   // Test if the file exists.
-  if (!itksys::SystemTools::FileExists(this->m_FileName.c_str()))
+  if (!itksys::SystemTools::FileExists(m_FileName))
   {
-    MeshFileReaderException e(__FILE__, __LINE__);
-    std::ostringstream      msg;
-    msg << "The file doesn't exists. \n"
-        << "Filename = " << this->m_FileName << '\n';
-    e.SetDescription(msg.str().c_str());
-    throw e;
-    return;
+    std::ostringstream msg;
+    msg << "The file doesn't exists. \nFilename = " << m_FileName << '\n';
+    throw MeshFileReaderException(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
   }
 
   // Test if the file can be open for reading access.
-  std::ifstream readTester;
-  readTester.open(this->m_FileName.c_str());
+  const std::ifstream readTester(m_FileName);
   if (readTester.fail())
   {
-    readTester.close();
     std::ostringstream msg;
-    msg << "The file couldn't be opened for reading. \n"
-        << "Filename: " << this->m_FileName << '\n';
-    MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
-    throw e;
-    return;
+    msg << "The file couldn't be opened for reading. \nFilename: " << m_FileName << '\n';
+    throw MeshFileReaderException(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
   }
-  readTester.close();
 
 } // end TestFileExistanceAndReadability()
 
