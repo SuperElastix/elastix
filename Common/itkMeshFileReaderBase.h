@@ -73,7 +73,7 @@ public:
   EnlargeOutputRequestedRegion(DataObject * output) override;
 
 protected:
-  MeshFileReaderBase();
+  MeshFileReaderBase() = default;
   ~MeshFileReaderBase() override = default;
 
   /** Test whether the given filename exist and it is readable,
@@ -85,7 +85,7 @@ protected:
   virtual void
   TestFileExistanceAndReadability();
 
-  std::string m_FileName;
+  std::string m_FileName{};
 
 private:
   MeshFileReaderBase(const Self &) = delete;
