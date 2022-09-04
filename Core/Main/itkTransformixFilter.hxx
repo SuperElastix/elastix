@@ -39,6 +39,7 @@
 #include "itkTransformixFilter.h"
 #include "elxPixelType.h"
 #include "elxTransformBase.h"
+#include "elxDefaultConstruct.h"
 #include <memory> // For unique_ptr.
 
 namespace itk
@@ -152,7 +153,7 @@ TransformixFilter<TMovingImage>::GenerateData()
                          : std::unique_ptr<const elx::xoutManager>();
 
   // Instantiate transformix
-  TransformixMainPointer transformix = TransformixMainType::New();
+  elx::DefaultConstruct<TransformixMainType> transformixMain;
 
   // Setup transformix for warping input image if given
   DataObjectContainerPointer inputImageContainer = nullptr;
@@ -160,7 +161,7 @@ TransformixFilter<TMovingImage>::GenerateData()
   {
     inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->InsertElement(0, const_cast<InputImageType *>(this->GetMovingImage()));
-    transformix->SetInputImageContainer(inputImageContainer);
+    transformixMain.SetInputImageContainer(inputImageContainer);
   }
 
   // Get ParameterMap
@@ -194,13 +195,13 @@ TransformixFilter<TMovingImage>::GenerateData()
   unsigned int isError = 0;
   try
   {
-    isError = transformix->Run(argumentMap, transformParameterMapVector);
+    isError = transformixMain.Run(argumentMap, transformParameterMapVector);
 
     if (m_InputMesh)
     {
       m_OutputMesh = nullptr;
 
-      const auto * const transformContainer = transformix->GetElastixBase().GetTransformContainer();
+      const auto * const transformContainer = transformixMain.GetElastixBase().GetTransformContainer();
 
       if ((transformContainer != nullptr) && (!transformContainer->empty()))
       {
@@ -225,14 +226,14 @@ TransformixFilter<TMovingImage>::GenerateData()
   }
 
   // Save result image
-  DataObjectContainerPointer resultImageContainer = transformix->GetResultImageContainer();
+  DataObjectContainerPointer resultImageContainer = transformixMain.GetResultImageContainer();
   if (resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 &&
       resultImageContainer->ElementAt(0).IsNotNull())
   {
     this->GraftOutput(resultImageContainer->ElementAt(0));
   }
   // Optionally, save result deformation field
-  DataObjectContainerPointer resultDeformationFieldContainer = transformix->GetResultDeformationFieldContainer();
+  DataObjectContainerPointer resultDeformationFieldContainer = transformixMain.GetResultDeformationFieldContainer();
   if (resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 &&
       resultDeformationFieldContainer->ElementAt(0).IsNotNull())
   {
