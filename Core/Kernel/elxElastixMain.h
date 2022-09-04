@@ -313,6 +313,13 @@ public:
   virtual ParameterMapType
   GetTransformParametersMap() const;
 
+  void
+  SetNumberOfWorkUnits(const itk::ThreadIdType newValue)
+  {
+    m_NumberOfWorkUnits = newValue;
+  }
+
+
 protected:
   ElastixMain();
   ~ElastixMain() override;
@@ -399,6 +406,8 @@ private:
   ElastixMain(const Self &) = delete;
   void
   operator=(const Self &) = delete;
+
+  itk::ThreadIdType m_NumberOfWorkUnits{ 0 };
 };
 
 } // end namespace elastix

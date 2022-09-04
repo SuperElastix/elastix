@@ -227,6 +227,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
     // Create new instance of ElastixMain
     elx::DefaultConstruct<ElastixMainType> elastixMain;
+    elastixMain.SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
 
     // Set elastix levels
     elastixMain.SetElastixLevel(i);

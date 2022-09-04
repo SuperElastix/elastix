@@ -730,6 +730,16 @@ ElastixMain::CreateComponent(const ComponentDescriptionType & name)
     itkExceptionMacro(<< "The following component could not be created: " << name);
   }
 
+  if (m_NumberOfWorkUnits > 0)
+  {
+    const auto processObject = dynamic_cast<itk::ProcessObject *>(component.GetPointer());
+
+    if (processObject)
+    {
+      processObject->SetNumberOfWorkUnits(m_NumberOfWorkUnits);
+    }
+  }
+
   return component;
 
 } // end CreateComponent()
