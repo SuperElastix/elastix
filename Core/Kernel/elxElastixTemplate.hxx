@@ -300,9 +300,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   timer.Reset();
   timer.Start();
   elxout << "Calling all ReadFromFile()'s ..." << std::endl;
+
   this->GetElxResampleInterpolatorBase()->ReadFromFile();
-  this->GetElxResamplerBase()->ReadFromFile();
-  this->GetElxTransformBase()->ReadFromFile();
+
+  auto & elxResamplerBase = *(this->GetElxResamplerBase());
+  auto & elxTransformBase = *(this->GetElxTransformBase());
+
+  elxResamplerBase.ReadFromFile();
+  elxTransformBase.ReadFromFile();
 
   /** Tell the user. */
   timer.Stop();
@@ -317,7 +322,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   elxout << "Transforming points ..." << std::endl;
   try
   {
-    this->GetElxTransformBase()->TransformPoints();
+    elxTransformBase.TransformPoints();
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -336,7 +341,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   elxout << "Compute determinant of spatial Jacobian ..." << std::endl;
   try
   {
-    this->GetElxTransformBase()->ComputeDeterminantOfSpatialJacobian();
+    elxTransformBase.ComputeDeterminantOfSpatialJacobian();
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -356,7 +361,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   elxout << "Compute spatial Jacobian (full matrix) ..." << std::endl;
   try
   {
-    this->GetElxTransformBase()->ComputeSpatialJacobian();
+    elxTransformBase.ComputeSpatialJacobian();
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -385,11 +390,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
      */
     if (!BaseComponent::IsElastixLibrary())
     {
-      this->GetElxResamplerBase()->ResampleAndWriteResultImage(makeFileName.str().c_str());
+      elxResamplerBase.ResampleAndWriteResultImage(makeFileName.str().c_str());
     }
     else
     {
-      this->GetElxResamplerBase()->CreateItkResultImage();
+      elxResamplerBase.CreateItkResultImage();
     }
 
     /** Print the elapsed time for the resampling. */
