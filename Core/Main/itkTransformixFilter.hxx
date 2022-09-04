@@ -274,9 +274,9 @@ TransformixFilter<TMovingImage>::GenerateOutputInformation()
   OutputImageType *            outputPtr = this->GetOutput();
   OutputDeformationFieldType * outputOutputDeformationFieldPtr = this->GetOutputDeformationField();
 
-  itkAssertInDebugAndIgnoreInReleaseMacro(transformParameterObjectPtr != ITK_NULLPTR);
-  itkAssertInDebugAndIgnoreInReleaseMacro(outputPtr != ITK_NULLPTR);
-  itkAssertInDebugAndIgnoreInReleaseMacro(outputOutputDeformationFieldPtr != ITK_NULLPTR);
+  itkAssertInDebugAndIgnoreInReleaseMacro(transformParameterObjectPtr != nullptr);
+  itkAssertInDebugAndIgnoreInReleaseMacro(outputPtr != nullptr);
+  itkAssertInDebugAndIgnoreInReleaseMacro(outputOutputDeformationFieldPtr != nullptr);
 
   // Get world coordinate system from the last map
   const unsigned int     lastIndex = transformParameterObjectPtr->GetNumberOfParameterMaps() - 1;

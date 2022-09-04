@@ -403,7 +403,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::AddFixedImage(TFixedImage * fixedImage)
 {
-  if (this->ProcessObject::GetInput("FixedImage") == ITK_NULLPTR)
+  if (this->ProcessObject::GetInput("FixedImage") == nullptr)
   {
     this->SetFixedImage(fixedImage);
   }
@@ -473,7 +473,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::AddMovingImage(TMovingImage * movingImage)
 {
-  if (this->ProcessObject::GetInput("MovingImage") == ITK_NULLPTR)
+  if (this->ProcessObject::GetInput("MovingImage") == nullptr)
   {
     this->SetMovingImage(movingImage);
   }
