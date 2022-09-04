@@ -37,6 +37,7 @@
 
 #include "elxPixelType.h"
 #include "itkElastixRegistrationMethod.h"
+#include "elxDefaultConstruct.h"
 
 #include <algorithm> // For find.
 #include <memory>    // For unique_ptr.
@@ -225,26 +226,26 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     }
 
     // Create new instance of ElastixMain
-    ElastixMainPointer elastix = ElastixMainType::New();
+    elx::DefaultConstruct<ElastixMainType> elastixMain;
 
     // Set elastix levels
-    elastix->SetElastixLevel(i);
-    elastix->SetTotalNumberOfElastixLevels(parameterMapVector.size());
+    elastixMain.SetElastixLevel(i);
+    elastixMain.SetTotalNumberOfElastixLevels(parameterMapVector.size());
 
     // Set stuff we get from a previous registration
-    elastix->SetInitialTransform(transform);
-    elastix->SetFixedImageContainer(fixedImageContainer);
-    elastix->SetMovingImageContainer(movingImageContainer);
-    elastix->SetFixedMaskContainer(fixedMaskContainer);
-    elastix->SetMovingMaskContainer(movingMaskContainer);
-    elastix->SetResultImageContainer(resultImageContainer);
-    elastix->SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirection);
+    elastixMain.SetInitialTransform(transform);
+    elastixMain.SetFixedImageContainer(fixedImageContainer);
+    elastixMain.SetMovingImageContainer(movingImageContainer);
+    elastixMain.SetFixedMaskContainer(fixedMaskContainer);
+    elastixMain.SetMovingMaskContainer(movingMaskContainer);
+    elastixMain.SetResultImageContainer(resultImageContainer);
+    elastixMain.SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirection);
 
     // Start registration
     unsigned int isError = 0;
     try
     {
-      isError = elastix->Run(argumentMap, parameterMapVector[i]);
+      isError = elastixMain.Run(argumentMap, parameterMapVector[i]);
     }
     catch (itk::ExceptionObject & e)
     {
@@ -257,15 +258,15 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     }
 
     // Get stuff in order to put it in the next registration
-    transform = elastix->GetFinalTransform();
-    fixedImageContainer = elastix->GetFixedImageContainer();
-    movingImageContainer = elastix->GetMovingImageContainer();
-    fixedMaskContainer = elastix->GetFixedMaskContainer();
-    movingMaskContainer = elastix->GetMovingMaskContainer();
-    resultImageContainer = elastix->GetResultImageContainer();
-    fixedImageOriginalDirection = elastix->GetOriginalFixedImageDirectionFlat();
+    transform = elastixMain.GetFinalTransform();
+    fixedImageContainer = elastixMain.GetFixedImageContainer();
+    movingImageContainer = elastixMain.GetMovingImageContainer();
+    fixedMaskContainer = elastixMain.GetFixedMaskContainer();
+    movingMaskContainer = elastixMain.GetMovingMaskContainer();
+    resultImageContainer = elastixMain.GetResultImageContainer();
+    fixedImageOriginalDirection = elastixMain.GetOriginalFixedImageDirectionFlat();
 
-    transformParameterMapVector.push_back(elastix->GetTransformParametersMap());
+    transformParameterMapVector.push_back(elastixMain.GetTransformParametersMap());
     if (i > 0)
     {
       transformParameterMapVector[i]["InitialTransformParametersFileName"] =
