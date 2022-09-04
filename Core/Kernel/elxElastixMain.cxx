@@ -703,13 +703,13 @@ ElastixBase &
 ElastixMain::GetElastixBase() const
 {
   /** Convert ElastixAsObject to a pointer to an ElastixBase. */
-  const auto testpointer = dynamic_cast<ElastixBase *>(this->m_Elastix.GetPointer());
-  if (testpointer == nullptr)
+  const auto elastixBase = dynamic_cast<ElastixBase *>(this->m_Elastix.GetPointer());
+  if (elastixBase == nullptr)
   {
     itkExceptionMacro(<< "Probably GetElastixBase() is called before having called Run()");
   }
 
-  return *testpointer;
+  return *elastixBase;
 
 } // end GetElastixBase()
 
@@ -722,15 +722,15 @@ ElastixMain::ObjectPointer
 ElastixMain::CreateComponent(const ComponentDescriptionType & name)
 {
   /** A pointer to the New() function. */
-  const PtrToCreator  testcreator = GetComponentDatabase().GetCreator(name, this->m_DBIndex);
-  const ObjectPointer testpointer = (testcreator == nullptr) ? nullptr : testcreator();
+  const PtrToCreator  creator = GetComponentDatabase().GetCreator(name, this->m_DBIndex);
+  const ObjectPointer component = (creator == nullptr) ? nullptr : creator();
 
-  if (testpointer.IsNull())
+  if (component.IsNull())
   {
     itkExceptionMacro(<< "The following component could not be created: " << name);
   }
 
-  return testpointer;
+  return component;
 
 } // end CreateComponent()
 
