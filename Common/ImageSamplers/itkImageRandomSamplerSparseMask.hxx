@@ -24,21 +24,6 @@ namespace itk
 {
 
 /**
- * ******************* Constructor *******************
- */
-
-template <class TInputImage>
-ImageRandomSamplerSparseMask<TInputImage>::ImageRandomSamplerSparseMask()
-{
-  /** Setup random generator. */
-  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
-
-  this->m_InternalFullSampler = InternalFullSamplerType::New();
-
-} // end Constructor
-
-
-/**
  * ******************* GenerateData *******************
  */
 

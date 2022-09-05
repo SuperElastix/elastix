@@ -134,7 +134,7 @@ public:
 
 protected:
   /** The constructor. */
-  ImageGridSampler();
+  ImageGridSampler() = default;
 
   /** The destructor. */
   ~ImageGridSampler() override = default;
@@ -148,10 +148,10 @@ protected:
   GenerateData() override;
 
   /** An array of integer spacing factors */
-  SampleGridSpacingType m_SampleGridSpacing;
+  SampleGridSpacingType m_SampleGridSpacing{ itk::MakeFilled<SampleGridSpacingType>(1) };
 
   /** The number of samples entered in the SetNumberOfSamples method */
-  unsigned long m_RequestedNumberOfSamples;
+  unsigned long m_RequestedNumberOfSamples{ 0 };
 
 private:
   /** The deleted copy constructor. */

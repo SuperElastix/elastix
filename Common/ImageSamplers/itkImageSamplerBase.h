@@ -181,7 +181,7 @@ public:
 
 protected:
   /** The constructor. */
-  ImageSamplerBase();
+  ImageSamplerBase() = default;
 
   /** The destructor. */
   ~ImageSamplerBase() override = default;
@@ -220,11 +220,11 @@ protected:
   AfterThreadedGenerateData() override;
 
   /***/
-  unsigned long                            m_NumberOfSamples;
+  unsigned long                            m_NumberOfSamples{ 0 };
   std::vector<ImageSampleContainerPointer> m_ThreaderSampleContainer;
 
   // tmp?
-  bool m_UseMultiThread;
+  bool m_UseMultiThread{ false };
 
 private:
   /** The deleted copy constructor. */
@@ -234,12 +234,12 @@ private:
   operator=(const Self &) = delete;
 
   /** Member variables. */
-  MaskConstPointer           m_Mask;
+  MaskConstPointer           m_Mask{ nullptr };
   MaskVectorType             m_MaskVector;
-  unsigned int               m_NumberOfMasks;
+  unsigned int               m_NumberOfMasks{ 0 };
   InputImageRegionType       m_InputImageRegion;
   InputImageRegionVectorType m_InputImageRegionVector;
-  unsigned int               m_NumberOfInputImageRegions;
+  unsigned int               m_NumberOfInputImageRegions{ 0 };
 
   InputImageRegionType m_CroppedInputImageRegion;
   InputImageRegionType m_DummyInputImageRegion;
