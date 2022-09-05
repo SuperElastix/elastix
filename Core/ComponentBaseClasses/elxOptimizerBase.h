@@ -110,7 +110,7 @@ public:
 
 protected:
   /** The constructor. */
-  OptimizerBase();
+  OptimizerBase() = default;
   /** The destructor. */
   ~OptimizerBase() override = default;
 
@@ -136,7 +136,7 @@ private:
   /** Member variable to store the user preference for using new
    * samples each iteration.
    */
-  bool m_NewSamplesEveryIteration;
+  bool m_NewSamplesEveryIteration{ false };
 };
 
 } // end namespace elastix
