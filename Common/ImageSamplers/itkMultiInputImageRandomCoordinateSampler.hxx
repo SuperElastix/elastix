@@ -26,27 +26,6 @@ namespace itk
 {
 
 /**
- * ******************* Constructor ********************
- */
-
-template <class TInputImage>
-MultiInputImageRandomCoordinateSampler<TInputImage>::MultiInputImageRandomCoordinateSampler()
-{
-  /** Set the default interpolator. */
-  auto bsplineInterpolator = DefaultInterpolatorType::New();
-  bsplineInterpolator->SetSplineOrder(3);
-  this->m_Interpolator = bsplineInterpolator;
-
-  /** Setup the random generator. */
-  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
-
-  this->m_UseRandomSampleRegion = false;
-  this->m_SampleRegionSize.Fill(1.0);
-
-} // end Constructor()
-
-
-/**
  * ******************* GenerateData *******************
  */
 

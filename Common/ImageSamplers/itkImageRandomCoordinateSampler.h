@@ -104,7 +104,8 @@ protected:
   using InputImageContinuousIndexType = typename InterpolatorType::ContinuousIndexType;
 
   /** The constructor. */
-  ImageRandomCoordinateSampler();
+  ImageRandomCoordinateSampler() = default;
+
   /** The destructor. */
   ~ImageRandomCoordinateSampler() override = default;
 
@@ -129,9 +130,14 @@ protected:
                            const InputImageContinuousIndexType & largestContIndex,
                            InputImageContinuousIndexType &       randomContIndex);
 
-  InterpolatorPointer    m_Interpolator;
-  RandomGeneratorPointer m_RandomGenerator;
-  InputImageSpacingType  m_SampleRegionSize;
+  InterpolatorPointer m_Interpolator = [] {
+    const auto interpolator = DefaultInterpolatorType::New();
+    interpolator->SetSplineOrder(3);
+    return interpolator;
+  }();
+
+  RandomGeneratorPointer m_RandomGenerator{ RandomGeneratorType::GetInstance() };
+  InputImageSpacingType  m_SampleRegionSize{ itk::MakeFilled<InputImageSpacingType>(1.0) };
 
   /** Generate the two corners of a sampling region, given the two corners
    * of an image. If UseRandomSampleRegion=false, the smallesPoint and largestPoint
@@ -151,7 +157,7 @@ private:
   void
   operator=(const Self &) = delete;
 
-  bool m_UseRandomSampleRegion;
+  bool m_UseRandomSampleRegion{ false };
 };
 
 } // end namespace itk

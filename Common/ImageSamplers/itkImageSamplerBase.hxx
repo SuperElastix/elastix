@@ -24,24 +24,6 @@ namespace itk
 {
 
 /**
- * ******************* Constructor *******************
- */
-
-template <class TInputImage>
-ImageSamplerBase<TInputImage>::ImageSamplerBase()
-{
-  this->m_Mask = nullptr;
-  this->m_NumberOfMasks = 0;
-  this->m_NumberOfInputImageRegions = 0;
-  this->m_NumberOfSamples = 0;
-
-  // tmp?
-  this->m_UseMultiThread = false;
-
-} // end Constructor()
-
-
-/**
  * ******************* SetMask *******************
  */
 

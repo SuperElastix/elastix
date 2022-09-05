@@ -80,7 +80,7 @@ protected:
   using InternalFullSamplerPointer = typename InternalFullSamplerType::Pointer;
 
   /** The constructor. */
-  ImageRandomSamplerSparseMask();
+  ImageRandomSamplerSparseMask() = default;
   /** The destructor. */
   ~ImageRandomSamplerSparseMask() override = default;
 
@@ -99,8 +99,8 @@ protected:
   void
   ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
 
-  RandomGeneratorPointer     m_RandomGenerator;
-  InternalFullSamplerPointer m_InternalFullSampler;
+  RandomGeneratorPointer     m_RandomGenerator{ RandomGeneratorType::GetInstance() };
+  InternalFullSamplerPointer m_InternalFullSampler{ InternalFullSamplerType::New() };
 
 private:
   /** The deleted copy constructor. */

@@ -26,18 +26,6 @@ namespace itk
 {
 
 /**
- * ******************* Constructor *******************
- */
-
-template <class TInputImage>
-ImageGridSampler<TInputImage>::ImageGridSampler()
-{
-  this->m_SampleGridSpacing.Fill(1);
-  this->m_RequestedNumberOfSamples = 0;
-} // end Constructor
-
-
-/**
  * ******************* SetSampleGridSpacing *******************
  */
 
