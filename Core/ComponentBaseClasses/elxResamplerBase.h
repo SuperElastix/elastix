@@ -194,7 +194,7 @@ public:
 
 protected:
   /** The constructor. */
-  ResamplerBase();
+  ResamplerBase() = default;
   /** The destructor. */
   ~ResamplerBase() override = default;
 
@@ -203,7 +203,7 @@ protected:
   SetComponents();
 
   /** Variable that defines to print the progress or not. */
-  bool m_ShowProgress;
+  bool m_ShowProgress{ true };
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);

@@ -30,17 +30,6 @@ namespace elastix
 {
 
 /**
- * ******************* Constructor *******************
- */
-
-template <class TElastix>
-ResamplerBase<TElastix>::ResamplerBase()
-{
-  this->m_ShowProgress = true;
-} // end Constructor
-
-
-/**
  * ******************* BeforeRegistrationBase *******************
  */
 

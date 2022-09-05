@@ -24,23 +24,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TElastix>
-MetricBase<TElastix>::MetricBase()
-{
-  /** Initialize. */
-  this->m_ShowExactMetricValue = false;
-  this->m_ExactMetricSampler = nullptr;
-  this->m_CurrentExactMetricValue = 0.0;
-  this->m_ExactMetricSampleGridSpacing.Fill(1);
-  this->m_ExactMetricEachXNumberOfIterations = 1;
-
-} // end Constructor
-
-
-/**
  * ******************* BeforeEachResolutionBase ******************
  */
 

@@ -27,18 +27,6 @@ namespace elastix
 {
 
 /**
- * ****************** Constructor ***********************************
- */
-
-template <class TElastix>
-OptimizerBase<TElastix>::OptimizerBase()
-{
-  this->m_NewSamplesEveryIteration = false;
-
-} // end Constructor
-
-
-/**
  * ****************** SetCurrentPositionPublic ************************
  */
 
