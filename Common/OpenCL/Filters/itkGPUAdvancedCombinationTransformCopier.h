@@ -243,9 +243,7 @@ private:
                             TransformSpaceDimensionToType<3>);
 
 private:
-  GPUAdvancedCombinationTransformCopier(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedCombinationTransformCopier);
 
   CPUComboTransformConstPointer m_InputTransform;
   GPUComboTransformPointer      m_Output;

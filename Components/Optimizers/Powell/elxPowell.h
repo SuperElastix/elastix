@@ -105,9 +105,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  Powell(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(Powell);
 };
 
 } // end namespace elastix

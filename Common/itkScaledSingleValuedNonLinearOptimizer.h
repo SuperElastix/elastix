@@ -181,11 +181,7 @@ protected:
                               DerivativeType &       derivative) const;
 
 private:
-  /** The deleted copy constructor. */
-  ScaledSingleValuedNonLinearOptimizer(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ScaledSingleValuedNonLinearOptimizer);
 
   /** Variable to store the CurrentPosition, when the function
    * GetCurrentPosition is called. This method needs a member variable,

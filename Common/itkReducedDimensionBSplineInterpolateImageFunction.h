@@ -194,9 +194,7 @@ protected:
   typename CoefficientImageType::ConstPointer m_Coefficients; // Spline coefficients
 
 private:
-  ReducedDimensionBSplineInterpolateImageFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ReducedDimensionBSplineInterpolateImageFunction);
 
   SizeType
   GetRadius() const override

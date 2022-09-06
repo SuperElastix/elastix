@@ -117,9 +117,7 @@ protected:
   Register3D() override;
 
 private:
-  GPUShrinkImageFilterFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUShrinkImageFilterFactory2);
 };
 
 } // end namespace itk

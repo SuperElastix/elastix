@@ -64,9 +64,7 @@ protected:
   ~MevisDicomTiffImageIOFactory();
 
 private:
-  MevisDicomTiffImageIOFactory(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MevisDicomTiffImageIOFactory);
 };
 
 // end class MevisDicomTiffImageIOFactory

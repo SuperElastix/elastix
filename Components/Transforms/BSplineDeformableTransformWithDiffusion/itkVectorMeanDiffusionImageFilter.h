@@ -138,9 +138,7 @@ protected:
   GenerateData() override;
 
 private:
-  VectorMeanDiffusionImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(VectorMeanDiffusionImageFilter);
 
   /** Declare member variables. */
   InputSizeType m_Radius;

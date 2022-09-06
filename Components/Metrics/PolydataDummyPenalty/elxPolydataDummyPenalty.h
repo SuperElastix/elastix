@@ -199,11 +199,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  /** The deleted copy constructor. */
-  PolydataDummyPenalty(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(PolydataDummyPenalty);
 
   unsigned int m_NumberOfMeshes;
 };

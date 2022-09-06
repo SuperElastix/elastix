@@ -314,9 +314,7 @@ protected:
   FixedImageRegionType m_NullFixedImageRegion;
 
 private:
-  MultiInputMultiResolutionImageRegistrationMethodBase(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MultiInputMultiResolutionImageRegistrationMethodBase);
 
   MultiInputMetricPointer m_MultiInputMetric;
 };

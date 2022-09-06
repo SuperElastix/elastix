@@ -187,9 +187,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  ConjugateGradient(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ConjugateGradient);
 
   void
   InvokeIterationEvent(const itk::EventObject & event);

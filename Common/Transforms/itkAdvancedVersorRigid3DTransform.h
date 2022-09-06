@@ -138,9 +138,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  AdvancedVersorRigid3DTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedVersorRigid3DTransform);
 };
 
 // class AdvancedVersorRigid3DTransform

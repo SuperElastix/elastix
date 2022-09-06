@@ -98,9 +98,7 @@ protected:
   ~GPUImageDataManager() override = default;
 
 private:
-  GPUImageDataManager(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUImageDataManager);
 
   typename ImageType::Pointer m_Image;
 };

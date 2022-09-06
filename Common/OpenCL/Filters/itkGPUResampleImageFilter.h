@@ -178,9 +178,7 @@ protected:
   GetGPUBSplineBaseTransform(const std::size_t transformIndex);
 
 private:
-  GPUResampleImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUResampleImageFilter);
 
   GPUInterpolatorBase * m_InterpolatorBase;
   GPUTransformBase *    m_TransformBase;

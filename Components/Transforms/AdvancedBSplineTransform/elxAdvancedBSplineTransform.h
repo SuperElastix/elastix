@@ -260,11 +260,7 @@ private:
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
 
-  /** The deleted copy constructor. */
-  AdvancedBSplineTransform(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedBSplineTransform);
 
   /** Private variables. */
   BSplineTransformBasePointer m_BSplineTransform;

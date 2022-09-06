@@ -176,9 +176,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  StatisticalShapePointPenalty(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(StatisticalShapePointPenalty);
 
   void
   FillProposalVector(const OutputPointType & fixedPoint, const unsigned int vertexindex) const;

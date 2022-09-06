@@ -151,9 +151,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  StandardGradientDescent(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(StandardGradientDescent);
 
   /** Private variables for the sampling attempts. */
   unsigned long m_MaximumNumberOfSamplingAttempts;

@@ -159,9 +159,7 @@ protected:
   ResetArguments(const std::size_t kernelIdx);
 
 private:
-  OpenCLKernelManager(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLKernelManager);
 
   OpenCLContext * m_Context;
 

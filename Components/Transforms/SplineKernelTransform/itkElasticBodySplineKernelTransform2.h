@@ -153,9 +153,7 @@ protected:
   TScalarType m_Alpha;
 
 private:
-  ElasticBodySplineKernelTransform2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ElasticBodySplineKernelTransform2);
 };
 
 } // namespace itk

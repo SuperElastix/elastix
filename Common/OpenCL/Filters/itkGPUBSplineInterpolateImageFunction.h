@@ -99,9 +99,7 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  GPUBSplineInterpolateImageFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUBSplineInterpolateImageFunction);
 
   GPUCoefficientImagePointer m_GPUCoefficients;
   GPUDataManagerPointer      m_GPUCoefficientsImageBase;

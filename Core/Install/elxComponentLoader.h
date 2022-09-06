@@ -75,9 +75,7 @@ protected:
 
 private:
   /** Standard private (copy)constructor. */
-  ComponentLoader(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ComponentLoader);
 };
 
 } // end namespace elastix

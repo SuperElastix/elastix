@@ -152,9 +152,7 @@ protected:
   TScalarType m_Alpha;
 
 private:
-  ElasticBodyReciprocalSplineKernelTransform2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ElasticBodyReciprocalSplineKernelTransform2);
 };
 
 } // namespace itk

@@ -165,9 +165,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  AdvancedSimilarity3DTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedSimilarity3DTransform);
 
   ScaleType m_Scale;
 };

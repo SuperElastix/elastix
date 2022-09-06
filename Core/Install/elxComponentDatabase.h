@@ -123,9 +123,7 @@ private:
   CreatorMapType CreatorMap;
   IndexMapType   IndexMap;
 
-  ComponentDatabase(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ComponentDatabase);
 };
 
 } // end namespace elastix

@@ -300,9 +300,7 @@ protected:
   }
 
 private:
-  StackTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(StackTransform);
 
   /** Each override of this pure virtual member function should create a subtransform for the specific (derived) stack
    * transform type. For example, for an `TranslationStackTransform` it should create an `AdvancedTranslationTransform`,

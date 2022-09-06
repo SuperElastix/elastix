@@ -130,9 +130,7 @@ protected:
   DerivativeType m_PreviousGradient;
 
 private:
-  AdaptiveStochasticVarianceReducedGradientOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticVarianceReducedGradientOptimizer);
 
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };

@@ -171,9 +171,7 @@ private:
   void
   SubVector(const VectorType & fullVector, SubVectorType & subVector, const unsigned int leaveOutIndex) const;
 
-  MissingVolumeMeshPenalty(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MissingVolumeMeshPenalty);
 };
 
 } // end namespace itk

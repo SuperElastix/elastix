@@ -133,9 +133,7 @@ protected:
   GenerateData() override;
 
 private:
-  ErodeMaskImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ErodeMaskImageFilter);
 
   bool         m_IsMovingMask;
   unsigned int m_ResolutionLevel;

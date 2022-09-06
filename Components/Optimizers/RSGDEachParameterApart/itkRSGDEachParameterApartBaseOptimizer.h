@@ -154,9 +154,7 @@ protected:
 
 
 private:
-  RSGDEachParameterApartBaseOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(RSGDEachParameterApartBaseOptimizer);
 
   DerivativeType m_Gradient;
   DerivativeType m_PreviousGradient;

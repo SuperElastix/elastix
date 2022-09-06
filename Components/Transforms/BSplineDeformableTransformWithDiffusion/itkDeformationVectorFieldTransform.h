@@ -114,11 +114,7 @@ protected:
   ~DeformationVectorFieldTransform() override;
 
 private:
-  /** The deleted copy constructor. */
-  DeformationVectorFieldTransform(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(DeformationVectorFieldTransform);
 
   /** Member variables. */
   CoefficientImagePointer m_Images[SpaceDimension];

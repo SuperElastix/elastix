@@ -201,9 +201,7 @@ protected:
   unsigned long m_LBFGSMemory{ 0 };
 
 private:
-  StochasticGradientDescentOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(StochasticGradientDescentOptimizer);
 
   // multi-threaded AdvanceOneStep:
   bool m_UseMultiThread{ false };

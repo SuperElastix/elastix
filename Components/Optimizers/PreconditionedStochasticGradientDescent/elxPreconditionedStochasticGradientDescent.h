@@ -397,9 +397,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  PreconditionedStochasticGradientDescent(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(PreconditionedStochasticGradientDescent);
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;

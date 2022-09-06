@@ -116,11 +116,7 @@ private:
     return {};
   }
 
-  /** The deleted copy constructor. */
-  ResampleInterpolatorBase(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ResampleInterpolatorBase);
 };
 
 } // end namespace elastix

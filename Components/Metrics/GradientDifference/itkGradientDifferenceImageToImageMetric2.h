@@ -186,9 +186,7 @@ protected:
   using MovedSobelFilter = NeighborhoodOperatorImageFilter<MovedGradientImageType, MovedGradientImageType>;
 
 private:
-  GradientDifferenceImageToImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GradientDifferenceImageToImageMetric);
 
   /** The variance of the moving image gradients. */
   mutable MovedGradientPixelType m_Variance[FixedImageDimension];

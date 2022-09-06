@@ -117,9 +117,7 @@ protected:
   Register3D() override;
 
 private:
-  GPUCastImageFilterFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUCastImageFilterFactory2);
 };
 
 } // end namespace itk

@@ -252,9 +252,7 @@ protected:
                   const ParametersType & previousSearchDir);
 
 private:
-  GenericConjugateGradientOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GenericConjugateGradientOptimizer);
 
   unsigned long m_MaximumNumberOfIterations{ 100 };
   double        m_ValueTolerance{ 1e-5 };

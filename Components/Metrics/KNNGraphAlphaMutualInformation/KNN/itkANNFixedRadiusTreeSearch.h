@@ -88,9 +88,7 @@ protected:
   double m_SquaredRadius;
 
 private:
-  ANNFixedRadiusTreeSearch(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ANNFixedRadiusTreeSearch);
 };
 
 } // end namespace itk

@@ -432,9 +432,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  AdaptiveStochasticVarianceReducedGradient(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticVarianceReducedGradient);
 
   // multi-threaded AdvanceOneStep:
   struct MultiThreaderParameterType

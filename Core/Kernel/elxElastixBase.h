@@ -498,9 +498,7 @@ protected:
   GenerateDataObjectContainer(DataObjectPointer dataObject);
 
 private:
-  ElastixBase(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ElastixBase);
 
   xl::xoutrow m_IterationInfo;
 

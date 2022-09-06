@@ -105,9 +105,7 @@ protected:
 
 
 private:
-  BSplineSecondOrderDerivativeKernelFunction2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineSecondOrderDerivativeKernelFunction2);
 
   /** Structures to control overloaded versions of Evaluate */
   struct DispatchBase

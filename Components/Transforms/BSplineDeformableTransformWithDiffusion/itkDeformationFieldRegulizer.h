@@ -116,11 +116,7 @@ protected:
   ~DeformationFieldRegulizer() override = default;
 
 private:
-  /** The deleted copy constructor. */
-  DeformationFieldRegulizer(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldRegulizer);
 
   /** Declaration of members. */
   IntermediaryDFTransformPointer m_IntermediaryDeformationFieldTransform;

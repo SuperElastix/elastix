@@ -211,9 +211,7 @@ protected:
   InterpolatorPointer m_Interpolator;
 
 private:
-  AdvancedRayCastInterpolateImageFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedRayCastInterpolateImageFunction);
 
   SizeType
   GetRadius() const override

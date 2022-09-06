@@ -114,9 +114,7 @@ private:
   void
   Evaluate(const ContinuousIndexType & index, WeightsType & weights, IndexType & startIndex) const override;
 
-  RecursiveBSplineInterpolationWeightFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineInterpolationWeightFunction);
 
   /** Private members; We unfortunatly cannot use those of the superclass. */
   unsigned int m_NumberOfWeights;

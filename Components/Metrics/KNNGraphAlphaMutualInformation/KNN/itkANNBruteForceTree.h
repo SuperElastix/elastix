@@ -84,9 +84,7 @@ protected:
   ANNBruteForceTreeType * m_ANNTree;
 
 private:
-  ANNBruteForceTree(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ANNBruteForceTree);
 };
 
 } // end namespace itk

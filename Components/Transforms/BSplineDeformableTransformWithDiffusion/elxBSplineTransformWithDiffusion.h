@@ -361,11 +361,7 @@ private:
   void
   WriteDerivedTransformDataToFile() const override;
 
-  /** The deleted copy constructor. */
-  BSplineTransformWithDiffusion(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineTransformWithDiffusion);
 
   /** Member variables for diffusion. */
   DiffusionFilterPointer      m_Diffusion;

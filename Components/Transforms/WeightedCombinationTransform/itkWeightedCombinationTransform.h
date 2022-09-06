@@ -246,9 +246,7 @@ protected:
   NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
 
 private:
-  WeightedCombinationTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(WeightedCombinationTransform);
 
   bool m_NormalizeWeights;
 };

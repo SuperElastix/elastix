@@ -121,9 +121,7 @@ protected:
   Register3D();
 
 private:
-  GPUNearestNeighborInterpolateImageFunctionFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUNearestNeighborInterpolateImageFunctionFactory2);
 };
 
 } // end namespace itk

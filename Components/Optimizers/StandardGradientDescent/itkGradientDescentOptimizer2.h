@@ -149,9 +149,7 @@ protected:
   StopConditionType m_StopCondition{ MaximumNumberOfIterations };
 
 private:
-  GradientDescentOptimizer2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GradientDescentOptimizer2);
 
   double        m_Value{ 0.0 };
   double        m_LearningRate{ 1.0 };

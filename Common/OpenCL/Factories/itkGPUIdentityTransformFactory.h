@@ -92,9 +92,7 @@ protected:
   Register3D() override;
 
 private:
-  GPUIdentityTransformFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUIdentityTransformFactory2);
 };
 
 } // end namespace itk

@@ -170,9 +170,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  AffineDTI3DTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AffineDTI3DTransform);
 
   ScalarArrayType m_Angle;
   ScalarArrayType m_Shear;

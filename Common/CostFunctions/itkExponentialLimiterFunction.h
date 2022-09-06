@@ -89,9 +89,7 @@ protected:
   double m_LTminLBinv;
 
 private:
-  ExponentialLimiterFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ExponentialLimiterFunction);
 };
 
 } // end namespace itk

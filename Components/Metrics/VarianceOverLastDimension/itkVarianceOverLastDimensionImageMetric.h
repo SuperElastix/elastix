@@ -178,9 +178,7 @@ protected:
                                         DerivativeType &                  imageJacobian) const override;
 
 private:
-  VarianceOverLastDimensionImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(VarianceOverLastDimensionImageMetric);
 
   /** Sample n random numbers from 0..m and add them to the vector. */
   void

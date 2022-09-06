@@ -81,9 +81,7 @@ protected:
   GPUGenerateData();
 
 private:
-  GPUBSplineDecompositionImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUBSplineDecompositionImageFilter);
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;

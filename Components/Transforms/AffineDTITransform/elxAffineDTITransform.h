@@ -215,11 +215,7 @@ private:
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
 
-  /** The deleted copy constructor. */
-  AffineDTITransformElastix(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AffineDTITransformElastix);
 
   const AffineDTITransformPointer m_AffineDTITransform{ AffineDTITransformType::New() };
 };

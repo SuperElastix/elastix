@@ -107,9 +107,7 @@ protected:
   Register3D();
 
 private:
-  GPUBSplineTransformFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUBSplineTransformFactory2);
 };
 
 } // end namespace itk

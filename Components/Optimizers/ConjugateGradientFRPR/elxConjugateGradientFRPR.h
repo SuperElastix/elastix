@@ -210,9 +210,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  ConjugateGradientFRPR(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ConjugateGradientFRPR);
 
   bool m_LineOptimizing;
   bool m_LineBracketing;

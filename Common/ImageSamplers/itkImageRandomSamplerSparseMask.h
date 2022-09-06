@@ -103,11 +103,7 @@ protected:
   InternalFullSamplerPointer m_InternalFullSampler{ InternalFullSamplerType::New() };
 
 private:
-  /** The deleted copy constructor. */
-  ImageRandomSamplerSparseMask(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ImageRandomSamplerSparseMask);
 };
 
 } // end namespace itk

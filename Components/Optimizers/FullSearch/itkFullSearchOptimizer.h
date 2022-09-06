@@ -239,9 +239,7 @@ protected:
   ProcessSearchSpaceChanges();
 
 private:
-  FullSearchOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(FullSearchOptimizer);
 
   unsigned long m_CurrentIteration{ 0 };
 };

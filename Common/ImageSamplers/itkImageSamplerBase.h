@@ -227,11 +227,7 @@ protected:
   bool m_UseMultiThread{ false };
 
 private:
-  /** The deleted copy constructor. */
-  ImageSamplerBase(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ImageSamplerBase);
 
   /** Member variables. */
   MaskConstPointer           m_Mask{ nullptr };

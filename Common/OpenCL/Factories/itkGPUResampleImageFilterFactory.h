@@ -155,9 +155,7 @@ protected:
   Register3D() override;
 
 private:
-  GPUResampleImageFilterFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUResampleImageFilterFactory2);
 };
 
 } // end namespace itk

@@ -107,9 +107,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  AffineLogTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AffineLogTransform);
 
   MatrixType m_MatrixLogDomain;
 };

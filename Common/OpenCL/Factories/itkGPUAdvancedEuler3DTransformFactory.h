@@ -84,9 +84,7 @@ protected:
   Register3D();
 
 private:
-  GPUAdvancedEuler3DTransformFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedEuler3DTransformFactory2);
 };
 
 } // end namespace itk

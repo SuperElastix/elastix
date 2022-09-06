@@ -141,11 +141,7 @@ private:
   void
   WriteDerivedTransformDataToFile() const override;
 
-  /** The deleted copy constructor. */
-  DeformationFieldTransform(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldTransform);
 
   using DirectionType = typename DeformationFieldType::DirectionType;
 

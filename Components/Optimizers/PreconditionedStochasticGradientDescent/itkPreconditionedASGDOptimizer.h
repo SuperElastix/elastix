@@ -134,9 +134,7 @@ protected:
   std::string    m_StepSizeStrategy;
 
 private:
-  PreconditionedASGDOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(PreconditionedASGDOptimizer);
 
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };

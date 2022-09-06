@@ -81,9 +81,7 @@ protected:
   unsigned int      m_DataDimension;
 
 private:
-  BinaryTreeSearchBase(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BinaryTreeSearchBase);
 };
 
 } // end namespace itk

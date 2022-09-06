@@ -126,9 +126,7 @@ protected:
 
 
 private:
-  BSplineKernelFunction2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineKernelFunction2);
 
   /** Structures to control overloaded versions of Evaluate */
   template <unsigned int>

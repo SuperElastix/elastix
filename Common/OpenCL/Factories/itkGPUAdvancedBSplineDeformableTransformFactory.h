@@ -110,9 +110,7 @@ protected:
   Register3D();
 
 private:
-  GPUAdvancedBSplineDeformableTransformFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedBSplineDeformableTransformFactory2);
 };
 
 } // end namespace itk

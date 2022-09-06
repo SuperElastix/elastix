@@ -299,9 +299,7 @@ protected:
   bool m_HasNonZeroJacobianOfSpatialHessian;
 
 private:
-  AdvancedTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedTransform);
 };
 
 } // end namespace itk

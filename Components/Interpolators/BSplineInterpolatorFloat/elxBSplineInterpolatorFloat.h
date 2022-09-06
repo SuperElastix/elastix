@@ -112,11 +112,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  /** The deleted copy constructor. */
-  BSplineInterpolatorFloat(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolatorFloat);
 };
 
 } // end namespace elastix

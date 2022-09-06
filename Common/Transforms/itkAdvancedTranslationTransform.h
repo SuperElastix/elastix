@@ -250,9 +250,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  AdvancedTranslationTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedTranslationTransform);
 
   OutputVectorType m_Offset{}; // Offset of the transformation
 

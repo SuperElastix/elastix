@@ -121,9 +121,7 @@ protected:
   ~AdvancedLinearInterpolateImageFunction() override = default;
 
 private:
-  AdvancedLinearInterpolateImageFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedLinearInterpolateImageFunction);
 
   /** Helper struct to select the correct dimension. */
   struct DispatchBase
