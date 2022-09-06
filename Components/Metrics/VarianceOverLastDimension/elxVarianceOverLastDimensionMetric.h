@@ -70,6 +70,8 @@ class ITK_TEMPLATE_EXPORT VarianceOverLastDimensionMetric
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(VarianceOverLastDimensionMetric);
+
   /** Standard ITK-stuff. */
   using Self = VarianceOverLastDimensionMetric;
   using Superclass1 = itk::VarianceOverLastDimensionImageMetric<typename MetricBase<TElastix>::FixedImageType,
@@ -180,8 +182,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(VarianceOverLastDimensionMetric);
 };
 
 } // end namespace elastix

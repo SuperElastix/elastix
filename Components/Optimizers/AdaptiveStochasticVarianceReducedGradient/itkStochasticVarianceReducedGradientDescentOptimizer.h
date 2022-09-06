@@ -52,6 +52,8 @@ namespace itk
 class StochasticVarianceReducedGradientDescentOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(StochasticVarianceReducedGradientDescentOptimizer);
+
   /** Standard class typedefs. */
   using Self = StochasticVarianceReducedGradientDescentOptimizer;
   using Superclass = ScaledSingleValuedNonLinearOptimizer;
@@ -200,8 +202,6 @@ protected:
   unsigned long m_LBFGSMemory{ 0 };
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(StochasticVarianceReducedGradientDescentOptimizer);
-
   // multi-threaded AdvanceOneStep:
   bool m_UseMultiThread{ false };
   struct MultiThreaderParameterType

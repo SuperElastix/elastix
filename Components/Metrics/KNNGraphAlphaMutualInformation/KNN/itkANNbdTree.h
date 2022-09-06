@@ -36,6 +36,8 @@ template <class TListSample>
 class ITK_TEMPLATE_EXPORT ANNbdTree : public ANNkDTree<TListSample>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ANNbdTree);
+
   /** Standard itk. */
   using Self = ANNbdTree;
   using Superclass = ANNkDTree<TListSample>;
@@ -86,9 +88,6 @@ protected:
 
   /** Member variables. */
   ShrinkingRuleType m_ShrinkingRule;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ANNbdTree);
 };
 
 } // end namespace itk

@@ -77,6 +77,8 @@ class ITK_TEMPLATE_EXPORT AdvancedRigid2DTransform
   : public AdvancedMatrixOffsetTransformBase<TScalarType, 2, 2> // Dimensions of input and output spaces
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedRigid2DTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedRigid2DTransform;
   using Superclass = AdvancedMatrixOffsetTransformBase<TScalarType, 2, 2>;
@@ -224,8 +226,6 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedRigid2DTransform);
-
   TScalarType m_Angle;
 };
 

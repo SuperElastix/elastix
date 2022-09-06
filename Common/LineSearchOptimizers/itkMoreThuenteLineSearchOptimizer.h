@@ -71,6 +71,8 @@ namespace itk
 class MoreThuenteLineSearchOptimizer : public LineSearchOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MoreThuenteLineSearchOptimizer);
+
   using Self = MoreThuenteLineSearchOptimizer;
   using Superclass = LineSearchOptimizer;
   using Pointer = SmartPointer<Self>;
@@ -272,8 +274,6 @@ protected:
   bool m_SafeGuardedStepFailed;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(MoreThuenteLineSearchOptimizer);
-
   unsigned long m_MaximumNumberOfIterations;
   double        m_ValueTolerance;
   double        m_GradientTolerance;

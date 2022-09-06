@@ -44,6 +44,8 @@ template <class TInputImage>
 class ITK_TEMPLATE_EXPORT ImageGridSampler : public ImageSamplerBase<TInputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageGridSampler);
+
   /** Standard ITK-stuff. */
   using Self = ImageGridSampler;
   using Superclass = ImageSamplerBase<TInputImage>;
@@ -152,9 +154,6 @@ protected:
 
   /** The number of samples entered in the SetNumberOfSamples method */
   unsigned long m_RequestedNumberOfSamples{ 0 };
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ImageGridSampler);
 };
 
 } // end namespace itk

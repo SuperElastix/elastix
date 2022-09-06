@@ -76,6 +76,8 @@ class ITK_TEMPLATE_EXPORT ConjugateGradientFRPR
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ConjugateGradientFRPR);
+
   /** Standard ITK.*/
   using Self = ConjugateGradientFRPR;
   using Superclass1 = itk::FRPROptimizer;
@@ -209,8 +211,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(ConjugateGradientFRPR);
 
   bool m_LineOptimizing;
   bool m_LineBracketing;

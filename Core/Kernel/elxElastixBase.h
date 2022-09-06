@@ -145,6 +145,8 @@ class ElastixBase
   , public BaseComponent
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ElastixBase);
+
   /** Standard typedefs etc. */
   using Self = ElastixBase;
   using Superclass = BaseComponent;
@@ -498,8 +500,6 @@ protected:
   GenerateDataObjectContainer(DataObjectPointer dataObject);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ElastixBase);
-
   xl::xoutrow m_IterationInfo;
 
   int m_DefaultOutputPrecision;

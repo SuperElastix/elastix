@@ -65,6 +65,8 @@ template <class TScalarType = double>
 class ITK_TEMPLATE_EXPORT AdvancedEuler3DTransform : public AdvancedRigid3DTransform<TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedEuler3DTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedEuler3DTransform;
   using Superclass = AdvancedRigid3DTransform<TScalarType>;
@@ -157,8 +159,6 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedEuler3DTransform);
-
   ScalarType m_AngleX;
   ScalarType m_AngleY;
   ScalarType m_AngleZ;

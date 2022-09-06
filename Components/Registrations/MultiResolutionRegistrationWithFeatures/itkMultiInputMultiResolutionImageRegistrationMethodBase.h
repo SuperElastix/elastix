@@ -74,6 +74,8 @@ class ITK_TEMPLATE_EXPORT MultiInputMultiResolutionImageRegistrationMethodBase
   : public MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiInputMultiResolutionImageRegistrationMethodBase);
+
   /** Standard class typedefs. */
   using Self = MultiInputMultiResolutionImageRegistrationMethodBase;
   using Superclass = MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>;
@@ -314,8 +316,6 @@ protected:
   FixedImageRegionType m_NullFixedImageRegion;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(MultiInputMultiResolutionImageRegistrationMethodBase);
-
   MultiInputMetricPointer m_MultiInputMetric;
 };
 

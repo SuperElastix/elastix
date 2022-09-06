@@ -75,6 +75,8 @@ class ITK_TEMPLATE_EXPORT KNNGraphAlphaMutualInformationImageToImageMetric
   : public MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(KNNGraphAlphaMutualInformationImageToImageMetric);
+
   /** Standard itk. */
   using Self = KNNGraphAlphaMutualInformationImageToImageMetric;
   using Superclass = MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>;
@@ -276,8 +278,6 @@ protected:
   double m_AvoidDivisionBy;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(KNNGraphAlphaMutualInformationImageToImageMetric);
-
   /** Typedef's for the computation of the derivative. */
   using typename Superclass::FixedImagePointType;
   using typename Superclass::MovingImagePointType;

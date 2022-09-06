@@ -40,6 +40,8 @@ class ITK_TEMPLATE_EXPORT GradientDifferenceMetric
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GradientDifferenceMetric);
+
   /** Standard ITK-stuff. */
   using Self = GradientDifferenceMetric;
   using Superclass1 = itk::GradientDifferenceImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
@@ -139,8 +141,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(GradientDifferenceMetric);
 };
 
 } // end namespace elastix

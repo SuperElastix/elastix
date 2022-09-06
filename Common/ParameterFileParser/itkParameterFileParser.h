@@ -78,6 +78,8 @@ namespace itk
 class ParameterFileParser : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ParameterFileParser);
+
   /** Standard ITK typedefs. */
   using Self = ParameterFileParser;
   using Superclass = Object;
@@ -121,8 +123,6 @@ protected:
   ~ParameterFileParser() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ParameterFileParser);
-
   /** Performs the following checks:
    * - Is a filename is given
    * - Does the file exist

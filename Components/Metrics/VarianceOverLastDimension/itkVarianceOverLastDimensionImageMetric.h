@@ -53,6 +53,8 @@ class ITK_TEMPLATE_EXPORT VarianceOverLastDimensionImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(VarianceOverLastDimensionImageMetric);
+
   /** Standard class typedefs. */
   using Self = VarianceOverLastDimensionImageMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -178,8 +180,6 @@ protected:
                                         DerivativeType &                  imageJacobian) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(VarianceOverLastDimensionImageMetric);
-
   /** Sample n random numbers from 0..m and add them to the vector. */
   void
   SampleRandom(const int n, const int m, std::vector<int> & numbers) const;

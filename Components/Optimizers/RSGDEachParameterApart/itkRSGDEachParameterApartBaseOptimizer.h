@@ -36,6 +36,8 @@ namespace itk
 class RSGDEachParameterApartBaseOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RSGDEachParameterApartBaseOptimizer);
+
   /** Standard "Self" typedef. */
   using Self = RSGDEachParameterApartBaseOptimizer;
   using Superclass = SingleValuedNonLinearOptimizer;
@@ -154,8 +156,6 @@ protected:
 
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(RSGDEachParameterApartBaseOptimizer);
-
   DerivativeType m_Gradient;
   DerivativeType m_PreviousGradient;
 

@@ -39,6 +39,8 @@ template <class TArray, class TImage>
 class ITK_TEMPLATE_EXPORT UpsampleBSplineParametersFilter : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(UpsampleBSplineParametersFilter);
+
   /** Standard class typedefs. */
   using Self = UpsampleBSplineParametersFilter;
   using Superclass = Object;
@@ -112,8 +114,6 @@ protected:
   DoUpsampling();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(UpsampleBSplineParametersFilter);
-
   /** Private member variables. */
   OriginType    m_CurrentGridOrigin;
   SpacingType   m_CurrentGridSpacing;

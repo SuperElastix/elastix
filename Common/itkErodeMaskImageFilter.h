@@ -57,6 +57,8 @@ template <class TImage>
 class ITK_TEMPLATE_EXPORT ErodeMaskImageFilter : public ImageToImageFilter<TImage, TImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ErodeMaskImageFilter);
+
   /** Standard ITK stuff. */
   using Self = ErodeMaskImageFilter;
   using Superclass = ImageToImageFilter<TImage, TImage>;
@@ -133,8 +135,6 @@ protected:
   GenerateData() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ErodeMaskImageFilter);
-
   bool         m_IsMovingMask;
   unsigned int m_ResolutionLevel;
   ScheduleType m_Schedule;

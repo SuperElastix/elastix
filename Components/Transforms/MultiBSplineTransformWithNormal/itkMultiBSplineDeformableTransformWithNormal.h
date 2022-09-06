@@ -43,6 +43,8 @@ class ITK_TEMPLATE_EXPORT MultiBSplineDeformableTransformWithNormal
   : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiBSplineDeformableTransformWithNormal);
+
   /** Standard class typedefs. */
   using Self = MultiBSplineDeformableTransformWithNormal;
   using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
@@ -507,8 +509,6 @@ protected:
   ImageBasePointer                             m_LocalBases;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(MultiBSplineDeformableTransformWithNormal);
-
   void
   DispatchParameters(const ParametersType & parameters);
 

@@ -39,6 +39,8 @@ namespace itk
 class ScaledSingleValuedCostFunction : public SingleValuedCostFunction
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ScaledSingleValuedCostFunction);
+
   /** Standard ITK-stuff. */
   using Self = ScaledSingleValuedCostFunction;
   using Superclass = SingleValuedCostFunction;
@@ -141,8 +143,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ScaledSingleValuedCostFunction);
-
   /** Member variables. */
   ScalesType                      m_Scales;
   ScalesType                      m_SquaredScales;

@@ -41,6 +41,8 @@ class ITK_TEMPLATE_EXPORT MyStandardResampler
   , public ResamplerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MyStandardResampler);
+
   /** Standard ITK-stuff. */
   using Self = MyStandardResampler;
   using Superclass1 = typename ResamplerBase<TElastix>::ITKBaseType;
@@ -92,8 +94,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MyStandardResampler);
 };
 
 } // end namespace elastix

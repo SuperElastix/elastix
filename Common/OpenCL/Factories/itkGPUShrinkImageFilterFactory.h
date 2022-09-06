@@ -37,6 +37,8 @@ template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPUShrinkImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUShrinkImageFilterFactory2);
+
   using Self = GPUShrinkImageFilterFactory2;
   using Superclass = GPUObjectFactoryBase<NDimensions>;
   using Pointer = SmartPointer<Self>;
@@ -115,9 +117,6 @@ protected:
   /** Register methods for 3D. */
   void
   Register3D() override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUShrinkImageFilterFactory2);
 };
 
 } // end namespace itk

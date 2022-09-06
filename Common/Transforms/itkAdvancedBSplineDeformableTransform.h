@@ -134,6 +134,8 @@ class ITK_TEMPLATE_EXPORT AdvancedBSplineDeformableTransform
   : public AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedBSplineDeformableTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedBSplineDeformableTransform;
   using Superclass = AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>;
@@ -314,8 +316,6 @@ protected:
   std::vector<std::vector<SODerivativeWeightsFunctionPointer>> m_SODerivativeWeightsFunctions;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedBSplineDeformableTransform);
-
   friend class MultiBSplineDeformableTransformWithNormal<ScalarType, Self::SpaceDimension, VSplineOrder>;
 };
 

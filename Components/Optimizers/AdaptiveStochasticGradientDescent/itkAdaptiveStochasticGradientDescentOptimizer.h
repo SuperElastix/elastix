@@ -72,6 +72,8 @@ namespace itk
 class AdaptiveStochasticGradientDescentOptimizer : public StandardGradientDescentOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticGradientDescentOptimizer);
+
   /** Standard ITK.*/
   using Self = AdaptiveStochasticGradientDescentOptimizer;
   using Superclass = StandardGradientDescentOptimizer;
@@ -132,8 +134,6 @@ protected:
   DerivativeType m_PreviousGradient;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticGradientDescentOptimizer);
-
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };
   double m_SigmoidMax{ 1.0 };

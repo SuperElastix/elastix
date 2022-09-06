@@ -44,6 +44,8 @@ class ITK_TEMPLATE_EXPORT AffineLogStackTransform
   , public elx::TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AffineLogStackTransform);
+
   /** Standard ITK-stuff. */
   using Self = AffineLogStackTransform;
   using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
@@ -173,8 +175,6 @@ private:
   CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
-  ITK_DISALLOW_COPY_AND_MOVE(AffineLogStackTransform);
-
   /** Typedef for stack transform. */
   using StackTransformType = itk::AffineLogStackTransform<SpaceDimension>;
 

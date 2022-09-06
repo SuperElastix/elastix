@@ -76,6 +76,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT ResamplerBase : public BaseComponentSE<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ResamplerBase);
+
   /** Standard ITK stuff. */
   using Self = ResamplerBase;
   using Superclass = BaseComponentSE<TElastix>;
@@ -213,8 +215,6 @@ private:
   {
     return {};
   }
-
-  ITK_DISALLOW_COPY_AND_MOVE(ResamplerBase);
 
   /** Release memory. */
   void

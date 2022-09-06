@@ -58,6 +58,8 @@ template <class TPixel>
 class ITK_TEMPLATE_EXPORT NDImageBase : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(NDImageBase);
+
   /** Standard class typedefs.*/
   using Self = NDImageBase;
   using Superclass = Object;
@@ -247,9 +249,6 @@ protected:
   ~NDImageBase() override = default;
 
   // virtual void PrintSelf(std::ostream& os, Indent indent) const = 0;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(NDImageBase);
 };
 
 } // end namespace itk

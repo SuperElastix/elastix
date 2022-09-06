@@ -84,6 +84,8 @@ class ITK_TEMPLATE_EXPORT EulerStackTransform
   , public elx::TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(EulerStackTransform);
+
   /** Standard ITK-stuff. */
   using Self = EulerStackTransform;
   using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
@@ -220,8 +222,6 @@ private:
   CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
-  ITK_DISALLOW_COPY_AND_MOVE(EulerStackTransform);
-
   /** Typedef for stack transform. */
   using StackTransformType = itk::EulerStackTransform<SpaceDimension>;
 

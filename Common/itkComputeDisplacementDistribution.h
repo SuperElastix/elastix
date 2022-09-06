@@ -48,6 +48,8 @@ template <class TFixedImage, class TTransform>
 class ITK_TEMPLATE_EXPORT ComputeDisplacementDistribution : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ComputeDisplacementDistribution);
+
   /** Standard ITK.*/
   using Self = ComputeDisplacementDistribution;
   using Superclass = ScaledSingleValuedNonLinearOptimizer;
@@ -221,8 +223,6 @@ private:
   SizeValueType               m_NumberOfPixelsCounted;
   bool                        m_UseMultiThread;
   ImageSampleContainerPointer m_SampleContainer;
-
-  ITK_DISALLOW_COPY_AND_MOVE(ComputeDisplacementDistribution);
 };
 
 } // end namespace itk

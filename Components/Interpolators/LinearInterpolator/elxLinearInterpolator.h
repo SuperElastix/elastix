@@ -47,6 +47,8 @@ class ITK_TEMPLATE_EXPORT LinearInterpolator
   , public InterpolatorBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(LinearInterpolator);
+
   /** Standard ITK-stuff. */
   using Self = LinearInterpolator;
   using Superclass1 = itk::AdvancedLinearInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
@@ -90,8 +92,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(LinearInterpolator);
 };
 
 } // end namespace elastix

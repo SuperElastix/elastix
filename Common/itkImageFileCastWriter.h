@@ -41,6 +41,8 @@ template <class TInputImage>
 class ITK_TEMPLATE_EXPORT ImageFileCastWriter : public ImageFileWriter<TInputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageFileCastWriter);
+
   /** Standard class typedefs. */
   using Self = ImageFileCastWriter;
   using Superclass = ImageFileWriter<TInputImage>;
@@ -111,8 +113,6 @@ private:
 
 
   ProcessObject::Pointer m_Caster{ nullptr };
-
-  ITK_DISALLOW_COPY_AND_MOVE(ImageFileCastWriter);
 
   std::string m_OutputComponentType{ Self::GetDefaultOutputComponentType() };
 };

@@ -41,6 +41,8 @@ template <class TAnyITKTransform>
 class ITK_TEMPLATE_EXPORT DeformationFieldRegulizer : public TAnyITKTransform
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldRegulizer);
+
   /** Standard itk. */
   using Self = DeformationFieldRegulizer;
   using Superclass = TAnyITKTransform;
@@ -116,8 +118,6 @@ protected:
   ~DeformationFieldRegulizer() override = default;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldRegulizer);
-
   /** Declaration of members. */
   IntermediaryDFTransformPointer m_IntermediaryDeformationFieldTransform;
   bool                           m_Initialized;

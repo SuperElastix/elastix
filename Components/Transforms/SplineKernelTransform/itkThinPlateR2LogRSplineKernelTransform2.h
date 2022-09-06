@@ -54,6 +54,8 @@ template <class TScalarType, // Data type for scalars (float or double)
 class ITK_TEMPLATE_EXPORT ThinPlateR2LogRSplineKernelTransform2 : public KernelTransform2<TScalarType, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ThinPlateR2LogRSplineKernelTransform2);
+
   /** Standard class typedefs. */
   using Self = ThinPlateR2LogRSplineKernelTransform2;
   using Superclass = KernelTransform2<TScalarType, NDimensions>;
@@ -113,9 +115,6 @@ protected:
       to the global deformation of the space  */
   void
   ComputeDeformationContribution(const InputPointType & inputPoint, OutputPointType & result) const override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ThinPlateR2LogRSplineKernelTransform2);
 };
 
 } // namespace itk

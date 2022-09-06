@@ -117,6 +117,8 @@ class ITK_TEMPLATE_EXPORT CMAEvolutionStrategy
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CMAEvolutionStrategy);
+
   /** Standard ITK.*/
   using Self = CMAEvolutionStrategy;
   using Superclass1 = CMAEvolutionStrategyOptimizer;
@@ -181,8 +183,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(CMAEvolutionStrategy);
 };
 
 } // end namespace elastix

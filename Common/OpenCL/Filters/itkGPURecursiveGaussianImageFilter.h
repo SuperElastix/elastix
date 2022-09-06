@@ -43,6 +43,8 @@ class ITK_EXPORT GPURecursiveGaussianImageFilter
   : public GPUInPlaceImageFilter<TInputImage, TOutputImage, RecursiveGaussianImageFilter<TInputImage, TOutputImage>>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPURecursiveGaussianImageFilter);
+
   /** Standard class typedefs. */
   using Self = GPURecursiveGaussianImageFilter;
   using CPUSuperclass = RecursiveGaussianImageFilter<TInputImage, TOutputImage>;
@@ -83,8 +85,6 @@ protected:
   GPUGenerateData() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPURecursiveGaussianImageFilter);
-
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;
 };

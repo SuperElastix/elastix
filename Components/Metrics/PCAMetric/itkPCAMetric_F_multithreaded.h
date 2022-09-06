@@ -32,6 +32,8 @@ template <class TFixedImage, class TMovingImage>
 class ITK_TEMPLATE_EXPORT PCAMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(PCAMetric);
+
   /** Standard class typedefs. */
   using Self = PCAMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -197,8 +199,6 @@ protected:
   InitializeThreadingParameters() const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(PCAMetric);
-
   struct PCAMetricMultiThreaderParameterType
   {
     Self * m_Metric;

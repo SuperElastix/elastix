@@ -46,6 +46,8 @@ class ITK_TEMPLATE_EXPORT PatternIntensityImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(PatternIntensityImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = PatternIntensityImageToImageMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -175,8 +177,6 @@ protected:
   ComputePIDiff(const TransformParametersType & parameters, float scalingfactor) const;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(PatternIntensityImageToImageMetric);
-
   TransformMovingImageFilterPointer  m_TransformMovingImageFilter;
   DifferenceImageFilterPointer       m_DifferenceImageFilter;
   RescaleIntensityImageFilterPointer m_RescaleImageFilter;

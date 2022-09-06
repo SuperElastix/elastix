@@ -79,6 +79,8 @@ template <class TScalarType = double>
 class ITK_TEMPLATE_EXPORT AdvancedSimilarity2DTransform : public AdvancedRigid2DTransform<TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedSimilarity2DTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedSimilarity2DTransform;
   using Superclass = AdvancedRigid2DTransform<TScalarType>;
@@ -227,8 +229,6 @@ protected:
   PrecomputeJacobianOfSpatialJacobian() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedSimilarity2DTransform);
-
   ScaleType m_Scale;
 };
 

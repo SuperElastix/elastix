@@ -53,6 +53,8 @@ class ITK_TEMPLATE_EXPORT SumSquaredTissueVolumeDifferenceMetric
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(SumSquaredTissueVolumeDifferenceMetric);
+
   /** Standard ITK-stuff. */
   using Self = SumSquaredTissueVolumeDifferenceMetric;
   using Superclass1 =
@@ -149,8 +151,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(SumSquaredTissueVolumeDifferenceMetric);
 
 }; // end class SumSquaredTissueVolumeDifferenceMetric
 

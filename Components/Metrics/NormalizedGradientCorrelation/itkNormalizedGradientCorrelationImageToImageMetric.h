@@ -45,6 +45,8 @@ class ITK_TEMPLATE_EXPORT NormalizedGradientCorrelationImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(NormalizedGradientCorrelationImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = NormalizedGradientCorrelationImageToImageMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -171,8 +173,6 @@ protected:
   using MovedSobelFilter = NeighborhoodOperatorImageFilter<MovedGradientImageType, MovedGradientImageType>;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(NormalizedGradientCorrelationImageToImageMetric);
-
   ScalesType                  m_Scales;
   double                      m_DerivativeDelta;
   CombinationTransformPointer m_CombinationTransform;

@@ -52,6 +52,8 @@ class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunctionBase
                         FixedArray<double, Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension)>>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationWeightFunctionBase);
+
   /** Standard class typedefs. */
   using Self = BSplineInterpolationWeightFunctionBase;
   using Superclass = FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>,
@@ -143,8 +145,6 @@ protected:
   TableType     m_OffsetToIndexTable;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationWeightFunctionBase);
-
   /** Function to initialize the support region. */
   void
   InitializeSupport();

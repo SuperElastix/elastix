@@ -85,6 +85,8 @@ class ITK_TEMPLATE_EXPORT SimultaneousPerturbation
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(SimultaneousPerturbation);
+
   /** Standard ITK.*/
   using Self = SimultaneousPerturbation;
   using Superclass1 = SPSAOptimizer;
@@ -147,8 +149,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(SimultaneousPerturbation);
 };
 
 } // end namespace elastix

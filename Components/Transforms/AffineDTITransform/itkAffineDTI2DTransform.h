@@ -65,6 +65,8 @@ template <class TScalarType = double>
 class AffineDTI2DTransform : public AdvancedMatrixOffsetTransformBase<TScalarType, 2, 2>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AffineDTI2DTransform);
+
   /** Standard class typedefs. */
   using Self = AffineDTI2DTransform;
   using Superclass = AdvancedMatrixOffsetTransformBase<TScalarType, 2, 2>;
@@ -155,8 +157,6 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AffineDTI2DTransform);
-
   ScalarArrayType m_Angle;
   ScalarArrayType m_Shear;
   ScalarArrayType m_Scale;

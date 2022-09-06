@@ -50,6 +50,8 @@ class ITK_TEMPLATE_EXPORT TransformBendingEnergyPenalty
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformBendingEnergyPenalty);
+
   /** Standard ITK-stuff. */
   using Self = TransformBendingEnergyPenalty;
   using Superclass1 = itk::TransformBendingEnergyPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>;
@@ -142,8 +144,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(TransformBendingEnergyPenalty);
 };
 
 } // end namespace elastix

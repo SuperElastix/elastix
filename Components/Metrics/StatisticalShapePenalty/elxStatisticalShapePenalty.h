@@ -61,6 +61,8 @@ class ITK_TEMPLATE_EXPORT StatisticalShapePenalty
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(StatisticalShapePenalty);
+
   /** Standard ITK-stuff. */
   using Self = StatisticalShapePenalty;
   using Superclass1 = StatisticalShapePointPenalty<typename MetricBase<TElastix>::FixedPointSetType,
@@ -175,8 +177,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(StatisticalShapePenalty);
 };
 
 } // end namespace elastix

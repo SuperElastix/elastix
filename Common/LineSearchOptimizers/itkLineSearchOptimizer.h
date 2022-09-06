@@ -37,6 +37,8 @@ namespace itk
 class LineSearchOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(LineSearchOptimizer);
+
   using Self = LineSearchOptimizer;
   using Superclass = SingleValuedNonLinearOptimizer;
   using Pointer = SmartPointer<Self>;
@@ -140,8 +142,6 @@ protected:
   DirectionalDerivative(const DerivativeType & derivative) const;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(LineSearchOptimizer);
-
   ParametersType m_LineSearchDirection;
 
   double m_MinimumStepLength;

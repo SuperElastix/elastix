@@ -40,6 +40,8 @@ template <typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPUObjectFactoryBase : public ObjectFactoryBase
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUObjectFactoryBase);
+
   using Self = GPUObjectFactoryBase;
   using Superclass = ObjectFactoryBase;
   using Pointer = SmartPointer<Self>;
@@ -83,9 +85,6 @@ protected:
   virtual void
   Register3D()
   {}
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUObjectFactoryBase);
 };
 
 } // end namespace itk

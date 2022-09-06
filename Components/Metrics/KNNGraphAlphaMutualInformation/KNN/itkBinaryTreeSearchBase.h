@@ -39,6 +39,8 @@ template <class TListSample>
 class ITK_TEMPLATE_EXPORT BinaryTreeSearchBase : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BinaryTreeSearchBase);
+
   /** Standard itk. */
   using Self = BinaryTreeSearchBase;
   using Superclass = Object;
@@ -79,9 +81,6 @@ protected:
   BinaryTreePointer m_BinaryTree;
   unsigned int      m_KNearestNeighbors;
   unsigned int      m_DataDimension;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(BinaryTreeSearchBase);
 };
 
 } // end namespace itk

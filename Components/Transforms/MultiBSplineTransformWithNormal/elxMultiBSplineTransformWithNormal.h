@@ -93,6 +93,8 @@ class ITK_TEMPLATE_EXPORT MultiBSplineTransformWithNormal
   , public TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiBSplineTransformWithNormal);
+
   /** Standard ITK-stuff. */
   using Self = MultiBSplineTransformWithNormal;
   using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
@@ -255,8 +257,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MultiBSplineTransformWithNormal);
 
   /** Private variables. */
   typename MultiBSplineTransformWithNormalCubicType::Pointer m_MultiBSplineTransformWithNormal;

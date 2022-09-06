@@ -47,6 +47,8 @@ class ITK_TEMPLATE_EXPORT DeformationFieldInterpolatingTransform
   : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldInterpolatingTransform);
+
   /** Standard class typedefs. */
   using Self = DeformationFieldInterpolatingTransform;
   using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
@@ -255,9 +257,6 @@ protected:
   DeformationFieldPointer             m_DeformationField;
   DeformationFieldPointer             m_ZeroDeformationField;
   DeformationFieldInterpolatorPointer m_DeformationFieldInterpolator;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldInterpolatingTransform);
 };
 
 } // namespace itk

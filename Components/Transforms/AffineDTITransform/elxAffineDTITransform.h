@@ -81,6 +81,8 @@ class ITK_TEMPLATE_EXPORT AffineDTITransformElastix
   , public elx::TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AffineDTITransformElastix);
+
   /** Standard ITK-stuff.*/
   using Self = AffineDTITransformElastix;
   using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
@@ -214,8 +216,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(AffineDTITransformElastix);
 
   const AffineDTITransformPointer m_AffineDTITransform{ AffineDTITransformType::New() };
 };

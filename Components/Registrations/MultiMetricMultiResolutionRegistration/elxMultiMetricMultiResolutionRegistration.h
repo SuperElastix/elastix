@@ -98,6 +98,8 @@ class ITK_TEMPLATE_EXPORT MultiMetricMultiResolutionRegistration
   , public RegistrationBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiMetricMultiResolutionRegistration);
+
   /** Standard ITK: Self */
   using Self = MultiMetricMultiResolutionRegistration;
 
@@ -232,8 +234,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MultiMetricMultiResolutionRegistration);
 };
 
 } // end namespace elastix

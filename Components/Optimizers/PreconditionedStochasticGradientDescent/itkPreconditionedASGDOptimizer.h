@@ -70,6 +70,8 @@ namespace itk
 class PreconditionedASGDOptimizer : public StandardGradientDescentOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(PreconditionedASGDOptimizer);
+
   /** Standard ITK.*/
   using Self = PreconditionedASGDOptimizer;
   using Superclass = StandardGradientDescentOptimizer;
@@ -134,8 +136,6 @@ protected:
   std::string    m_StepSizeStrategy;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(PreconditionedASGDOptimizer);
-
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };
   double m_SigmoidMax{ 1.0 };

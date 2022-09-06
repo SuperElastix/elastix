@@ -69,6 +69,8 @@ namespace itk
 class AdaptiveStochasticLBFGSOptimizer : public StandardStochasticGradientOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticLBFGSOptimizer);
+
   /** Standard ITK.*/
   using Self = AdaptiveStochasticLBFGSOptimizer;
   using Superclass = StandardStochasticGradientOptimizer;
@@ -139,8 +141,6 @@ protected:
   std::string   m_StepSizeStrategy;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticLBFGSOptimizer);
-
   /** Settings */
 
   double m_SigmoidMax{ 1.0 };

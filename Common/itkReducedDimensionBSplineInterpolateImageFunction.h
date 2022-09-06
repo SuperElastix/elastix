@@ -88,6 +88,8 @@ class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineInterpolateImageFunction
   : public InterpolateImageFunction<TImageType, TCoordRep>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ReducedDimensionBSplineInterpolateImageFunction);
+
   /** Standard class typedefs. */
   using Self = ReducedDimensionBSplineInterpolateImageFunction;
   using Superclass = InterpolateImageFunction<TImageType, TCoordRep>;
@@ -194,8 +196,6 @@ protected:
   typename CoefficientImageType::ConstPointer m_Coefficients; // Spline coefficients
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ReducedDimensionBSplineInterpolateImageFunction);
-
   SizeType
   GetRadius() const override
   {

@@ -45,6 +45,8 @@ template <class TMeasurementVector, class TInternalValue = typename TMeasurement
 class ITK_TEMPLATE_EXPORT ListSampleCArray : public Sample<TMeasurementVector>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ListSampleCArray);
+
   /** Standard itk. */
   using Self = ListSampleCArray;
   using Superclass = Sample<TMeasurementVector>;
@@ -137,8 +139,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ListSampleCArray);
-
   /** The internal storage of the data in a C array. */
   InternalDataContainerType m_InternalContainer;
   InstanceIdentifier        m_InternalContainerSize;

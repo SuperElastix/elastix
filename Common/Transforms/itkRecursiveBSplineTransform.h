@@ -40,6 +40,8 @@ class ITK_TEMPLATE_EXPORT RecursiveBSplineTransform
   : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineTransform);
+
   /** Standard class typedefs. */
   using Self = RecursiveBSplineTransform;
   using Superclass = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>;
@@ -185,8 +187,6 @@ protected:
                                 const RegionType &           supportRegion) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineTransform);
-
   using ImplementationType =
     RecursiveBSplineTransformImplementation<NDimensions, NDimensions, VSplineOrder, TScalarType>;
 

@@ -58,6 +58,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT FixedImagePyramidBase : public BaseComponentSE<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FixedImagePyramidBase);
+
   /** Standard ITK-stuff. */
   using Self = FixedImagePyramidBase;
   using Superclass = BaseComponentSE<TElastix>;
@@ -124,8 +126,6 @@ protected:
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
-
-  ITK_DISALLOW_COPY_AND_MOVE(FixedImagePyramidBase);
 };
 
 } // end namespace elastix

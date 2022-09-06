@@ -41,6 +41,8 @@ namespace elastix
 class ComponentLoader : public itk::Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ComponentLoader);
+
   /** Standard ITK typedef's. */
   using Self = ComponentLoader;
   using Superclass = itk::Object;
@@ -75,7 +77,6 @@ protected:
 
 private:
   /** Standard private (copy)constructor. */
-  ITK_DISALLOW_COPY_AND_MOVE(ComponentLoader);
 };
 
 } // end namespace elastix

@@ -71,6 +71,8 @@ class ITK_TEMPLATE_EXPORT MovingGenericPyramid
   , public MovingImagePyramidBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MovingGenericPyramid);
+
   /** Standard ITK-stuff. */
   using Self = MovingGenericPyramid;
   using Superclass1 =
@@ -128,8 +130,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MovingGenericPyramid);
 };
 
 } // end namespace elastix

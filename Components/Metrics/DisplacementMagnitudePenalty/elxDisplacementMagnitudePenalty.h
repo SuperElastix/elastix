@@ -47,6 +47,8 @@ class ITK_TEMPLATE_EXPORT DisplacementMagnitudePenalty
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DisplacementMagnitudePenalty);
+
   /** Standard ITK-stuff. */
   using Self = DisplacementMagnitudePenalty;
   using Superclass1 = itk::DisplacementMagnitudePenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>;
@@ -132,8 +134,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(DisplacementMagnitudePenalty);
 };
 
 } // end namespace elastix

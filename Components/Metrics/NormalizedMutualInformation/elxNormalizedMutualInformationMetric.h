@@ -77,6 +77,8 @@ class ITK_TEMPLATE_EXPORT NormalizedMutualInformationMetric
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(NormalizedMutualInformationMetric);
+
   /** Standard ITK-stuff. */
   using Self = NormalizedMutualInformationMetric;
   using Superclass1 =
@@ -173,8 +175,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(NormalizedMutualInformationMetric);
 };
 
 } // end namespace elastix

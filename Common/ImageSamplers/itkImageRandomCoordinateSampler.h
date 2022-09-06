@@ -40,6 +40,8 @@ template <class TInputImage>
 class ITK_TEMPLATE_EXPORT ImageRandomCoordinateSampler : public ImageRandomSamplerBase<TInputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageRandomCoordinateSampler);
+
   /** Standard ITK-stuff. */
   using Self = ImageRandomCoordinateSampler;
   using Superclass = ImageRandomSamplerBase<TInputImage>;
@@ -151,8 +153,6 @@ protected:
                        InputImageContinuousIndexType &       largestContIndex);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ImageRandomCoordinateSampler);
-
   bool m_UseRandomSampleRegion{ false };
 };
 

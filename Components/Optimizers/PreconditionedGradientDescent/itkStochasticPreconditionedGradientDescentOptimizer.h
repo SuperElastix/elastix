@@ -56,6 +56,8 @@ namespace itk
 class StochasticPreconditionedGradientDescentOptimizer : public PreconditionedGradientDescentOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(StochasticPreconditionedGradientDescentOptimizer);
+
   /** Standard ITK.*/
   using Self = StochasticPreconditionedGradientDescentOptimizer;
   using Superclass = PreconditionedGradientDescentOptimizer;
@@ -139,8 +141,6 @@ protected:
   double m_CurrentTime{ 0.0 };
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(StochasticPreconditionedGradientDescentOptimizer);
-
   /**Parameters, as described by Spall. */
   double m_Param_a{ 1.0 };
   double m_Param_A{ 1.0 };

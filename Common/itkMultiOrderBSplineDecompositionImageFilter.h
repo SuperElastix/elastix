@@ -83,6 +83,8 @@ class ITK_TEMPLATE_EXPORT MultiOrderBSplineDecompositionImageFilter
   : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiOrderBSplineDecompositionImageFilter);
+
   /** Standard class typedefs. */
   using Self = MultiOrderBSplineDecompositionImageFilter;
   using Superclass = ImageToImageFilter<TInputImage, TOutputImage>;
@@ -162,8 +164,6 @@ protected:
   unsigned int m_IteratorDirection;           // Direction for iterator incrementing
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(MultiOrderBSplineDecompositionImageFilter);
-
   /** Determines the poles for dimension given the Spline Order. */
   virtual void
   SetPoles(unsigned int dimension);

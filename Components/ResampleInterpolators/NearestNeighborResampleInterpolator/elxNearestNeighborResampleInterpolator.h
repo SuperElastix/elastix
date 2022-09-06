@@ -47,6 +47,8 @@ class ITK_TEMPLATE_EXPORT NearestNeighborResampleInterpolator
   , public ResampleInterpolatorBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(NearestNeighborResampleInterpolator);
+
   /** Standard ITK-stuff. */
   using Self = NearestNeighborResampleInterpolator;
   using Superclass1 =
@@ -90,8 +92,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(NearestNeighborResampleInterpolator);
 };
 
 } // end namespace elastix

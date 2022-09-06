@@ -42,6 +42,8 @@ class ITK_TEMPLATE_EXPORT GPUInterpolateImageFunction
   , public GPUInterpolatorBase
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUInterpolateImageFunction);
+
   /** Standard class typedefs. */
   using Self = GPUInterpolateImageFunction;
   using CPUSuperclass = TParentInterpolateImageFunction;
@@ -69,9 +71,6 @@ protected:
   /** Returns data manager that stores all settings for the transform. */
   GPUDataManager::Pointer
   GetParametersDataManager() const override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUInterpolateImageFunction);
 };
 
 } // end namespace itk

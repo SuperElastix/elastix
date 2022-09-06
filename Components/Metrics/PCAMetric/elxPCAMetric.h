@@ -65,6 +65,8 @@ class ITK_TEMPLATE_EXPORT PCAMetric
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(PCAMetric);
+
   /** Standard ITK-stuff. */
   using Self = PCAMetric;
   using Superclass1 =
@@ -168,8 +170,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(PCAMetric);
 };
 
 } // end namespace elastix

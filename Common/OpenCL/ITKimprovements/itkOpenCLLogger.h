@@ -36,6 +36,8 @@ namespace itk
 class OpenCLLogger : public LoggerBase
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLLogger);
+
   using Self = OpenCLLogger;
   using Superclass = LoggerBase;
   using Pointer = SmartPointer<Self>;
@@ -92,8 +94,6 @@ protected:
 
 private:
   static Pointer m_Instance;
-
-  ITK_DISALLOW_COPY_AND_MOVE(OpenCLLogger);
 
   std::string m_FileName;
   std::string m_OutputDirectory;

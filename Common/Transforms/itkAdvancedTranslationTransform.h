@@ -55,6 +55,8 @@ template <class TScalarType = double, // Data type for scalars (float or double)
 class ITK_TEMPLATE_EXPORT AdvancedTranslationTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedTranslationTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedTranslationTransform;
   using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
@@ -250,8 +252,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedTranslationTransform);
-
   OutputVectorType m_Offset{}; // Offset of the transformation
 
   JacobianType                        m_LocalJacobian{ JacobianType(NDimensions, NDimensions) };

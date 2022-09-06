@@ -58,6 +58,8 @@ class ITK_TEMPLATE_EXPORT AdvancedKappaStatisticImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedKappaStatisticImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = AdvancedKappaStatisticImageToImageMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -223,8 +225,6 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedKappaStatisticImageToImageMetric);
-
   bool     m_UseForegroundValue;
   RealType m_ForegroundValue;
   RealType m_Epsilon;

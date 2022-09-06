@@ -47,6 +47,8 @@ class ITK_TEMPLATE_EXPORT MultiResolutionRegistration
   , public RegistrationBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionRegistration);
+
   /** Standard ITK. */
   using Self = MultiResolutionRegistration;
   using Superclass1 = typename RegistrationBase<TElastix>::ITKBaseType;
@@ -155,8 +157,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionRegistration);
 };
 
 } // end namespace elastix

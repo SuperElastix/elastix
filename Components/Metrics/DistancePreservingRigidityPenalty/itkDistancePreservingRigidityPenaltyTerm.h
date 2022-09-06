@@ -76,6 +76,8 @@ template <class TFixedImage, class TScalarType>
 class ITK_TEMPLATE_EXPORT DistancePreservingRigidityPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DistancePreservingRigidityPenaltyTerm);
+
   /** Standard itk stuff. */
   using Self = DistancePreservingRigidityPenaltyTerm;
   using Superclass = TransformPenaltyTerm<TFixedImage, TScalarType>;
@@ -210,8 +212,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(DistancePreservingRigidityPenaltyTerm);
-
   /** Member variables. */
   BSplineTransformPointer m_BSplineTransform;
 

@@ -50,6 +50,8 @@ class ITK_EXPORT GPUResampleImageFilter
                                  ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUResampleImageFilter);
+
   /** Standard class typedefs. */
   using Self = GPUResampleImageFilter;
   using CPUSuperclass = ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>;
@@ -178,8 +180,6 @@ protected:
   GetGPUBSplineBaseTransform(const std::size_t transformIndex);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUResampleImageFilter);
-
   GPUInterpolatorBase * m_InterpolatorBase;
   GPUTransformBase *    m_TransformBase;
 

@@ -37,6 +37,8 @@ template <typename TTypeListIn, typename TTypeListOut, typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPURecursiveGaussianImageFilterFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPURecursiveGaussianImageFilterFactory2);
+
   using Self = GPURecursiveGaussianImageFilterFactory2;
   using Superclass = GPUObjectFactoryBase<NDimensions>;
   using Pointer = SmartPointer<Self>;
@@ -119,9 +121,6 @@ protected:
   /** Register methods for 3D. */
   void
   Register3D() override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPURecursiveGaussianImageFilterFactory2);
 };
 
 } // end namespace itk

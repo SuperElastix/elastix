@@ -67,6 +67,8 @@ template <class TScalarType = double>
 class ITK_TEMPLATE_EXPORT AdvancedRigid3DTransform : public AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedRigid3DTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedRigid3DTransform;
   using Superclass = AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3>;
@@ -148,9 +150,6 @@ protected:
    **/
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedRigid3DTransform);
 };
 
 } // namespace itk

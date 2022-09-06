@@ -195,6 +195,8 @@ class ITK_TEMPLATE_EXPORT AdaptiveStochasticVarianceReducedGradient
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticVarianceReducedGradient);
+
   /** Standard ITK. */
   using Self = AdaptiveStochasticVarianceReducedGradient;
   using Superclass1 = AdaptiveStochasticVarianceReducedGradientOptimizer;
@@ -431,8 +433,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticVarianceReducedGradient);
 
   // multi-threaded AdvanceOneStep:
   struct MultiThreaderParameterType

@@ -62,6 +62,8 @@ namespace itk
 class ScaledSingleValuedNonLinearOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ScaledSingleValuedNonLinearOptimizer);
+
   /** Standard ITK-stuff. */
   using Self = ScaledSingleValuedNonLinearOptimizer;
   using Superclass = SingleValuedNonLinearOptimizer;
@@ -181,8 +183,6 @@ protected:
                               DerivativeType &       derivative) const;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ScaledSingleValuedNonLinearOptimizer);
-
   /** Variable to store the CurrentPosition, when the function
    * GetCurrentPosition is called. This method needs a member variable,
    * because the GetCurrentPosition return something by reference.

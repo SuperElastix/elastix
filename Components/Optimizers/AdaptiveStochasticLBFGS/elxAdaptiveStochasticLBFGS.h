@@ -105,6 +105,8 @@ class ITK_TEMPLATE_EXPORT AdaptiveStochasticLBFGS
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticLBFGS);
+
   /** Standard ITK. */
   using Self = AdaptiveStochasticLBFGS;
   using Superclass1 = AdaptiveStochasticLBFGSOptimizer;
@@ -399,8 +401,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticLBFGS);
 
   // multi-threaded AdvanceOneStep:
   struct MultiThreaderParameterType

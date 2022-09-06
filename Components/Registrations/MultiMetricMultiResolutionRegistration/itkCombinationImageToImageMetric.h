@@ -59,6 +59,8 @@ template <class TFixedImage, class TMovingImage>
 class ITK_TEMPLATE_EXPORT CombinationImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CombinationImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = CombinationImageToImageMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -460,8 +462,6 @@ protected:
   DerivativeType       m_NullDerivative;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(CombinationImageToImageMetric);
-
   /** Initialize some multi-threading related parameters.
    * Overrides function in AdvancedImageToImageMetric, because
    * here we use other parameters.

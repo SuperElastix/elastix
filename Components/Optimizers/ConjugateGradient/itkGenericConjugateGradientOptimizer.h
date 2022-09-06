@@ -40,6 +40,8 @@ namespace itk
 class GenericConjugateGradientOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GenericConjugateGradientOptimizer);
+
   using Self = GenericConjugateGradientOptimizer;
   using Superclass = ScaledSingleValuedNonLinearOptimizer;
   using Pointer = SmartPointer<Self>;
@@ -252,8 +254,6 @@ protected:
                   const ParametersType & previousSearchDir);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GenericConjugateGradientOptimizer);
-
   unsigned long m_MaximumNumberOfIterations{ 100 };
   double        m_ValueTolerance{ 1e-5 };
   double        m_GradientMagnitudeTolerance{ 1e-5 };

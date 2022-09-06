@@ -32,6 +32,8 @@ template <class TOutputVectorContainer>
 class ITK_TEMPLATE_EXPORT VectorContainerSource : public ProcessObject
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(VectorContainerSource);
+
   /** Standard ITK-stuff. */
   using Self = VectorContainerSource;
   using Superclass = ProcessObject;
@@ -80,8 +82,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(VectorContainerSource);
-
   /** Member variables. */
   int m_GenerateDataRegion;
   int m_GenerateDataNumberOfRegions;

@@ -97,6 +97,8 @@ template <class TScalarType, // probably only float and double make sense here
 class ITK_TEMPLATE_EXPORT KernelTransform2 : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(KernelTransform2);
+
   /** Standard class typedefs. */
   using Self = KernelTransform2;
   using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
@@ -531,8 +533,6 @@ protected:
   bool m_FastComputationPossible;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(KernelTransform2);
-
   TScalarType m_PoissonRatio;
 
   /** Using SVD or QR decomposition. */

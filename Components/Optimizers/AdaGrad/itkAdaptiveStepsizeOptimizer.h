@@ -71,6 +71,8 @@ namespace itk
 class AdaptiveStepsizeOptimizer : public StandardGradientDescentOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStepsizeOptimizer);
+
   /** Standard ITK.*/
   using Self = AdaptiveStepsizeOptimizer;
   using Superclass = StandardGradientDescentOptimizer;
@@ -135,8 +137,6 @@ protected:
   std::string    m_StepSizeStrategy;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStepsizeOptimizer);
-
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };
   double m_SigmoidMax{ 1.0 };

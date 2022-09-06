@@ -52,6 +52,8 @@ class ITK_TEMPLATE_EXPORT AdvancedKappaStatisticMetric
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedKappaStatisticMetric);
+
   /** Standard ITK-stuff. */
   using Self = AdvancedKappaStatisticMetric;
   using Superclass1 = itk::AdvancedKappaStatisticImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
@@ -146,8 +148,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedKappaStatisticMetric);
 };
 
 } // end namespace elastix

@@ -58,6 +58,8 @@ class ITK_TEMPLATE_EXPORT ElasticBodyReciprocalSplineKernelTransform2
   : public KernelTransform2<TScalarType, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ElasticBodyReciprocalSplineKernelTransform2);
+
   /** Standard class typedefs. */
   using Self = ElasticBodyReciprocalSplineKernelTransform2;
   using Superclass = KernelTransform2<TScalarType, NDimensions>;
@@ -150,9 +152,6 @@ protected:
 
   /** alpha, Poisson's ratio */
   TScalarType m_Alpha;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ElasticBodyReciprocalSplineKernelTransform2);
 };
 
 } // namespace itk

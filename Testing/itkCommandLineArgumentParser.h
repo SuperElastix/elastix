@@ -77,6 +77,8 @@ namespace itk
 class CommandLineArgumentParser : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CommandLineArgumentParser);
+
   /** Standard class typedefs. */
   using Self = CommandLineArgumentParser;
   using Superclass = Object;
@@ -278,9 +280,6 @@ protected:
   std::vector<std::pair<std::vector<std::string>, std::string>> m_RequiredExactlyOneArguments;
 
   std::string m_ProgramHelpText;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(CommandLineArgumentParser);
 };
 
 // end class CommandLineArgumentParser

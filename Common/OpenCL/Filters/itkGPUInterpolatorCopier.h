@@ -65,6 +65,8 @@ template <typename TTypeList, typename NDimensions, typename TInterpolator, type
 class ITK_TEMPLATE_EXPORT GPUInterpolatorCopier : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUInterpolatorCopier);
+
   /** Standard class typedefs. */
   using Self = GPUInterpolatorCopier;
   using Superclass = Object;
@@ -132,8 +134,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUInterpolatorCopier);
-
   CPUInterpolatorConstPointer    m_InputInterpolator;
   GPUInterpolatorPointer         m_Output;
   GPUExplicitInterpolatorPointer m_ExplicitOutput;

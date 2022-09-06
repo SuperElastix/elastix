@@ -44,6 +44,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT InterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(InterpolatorBase);
+
   /** Standard ITK-stuff. */
   using Self = InterpolatorBase;
   using Superclass = BaseComponentSE<TElastix>;
@@ -86,8 +88,6 @@ protected:
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
-
-  ITK_DISALLOW_COPY_AND_MOVE(InterpolatorBase);
 };
 
 } // end namespace elastix

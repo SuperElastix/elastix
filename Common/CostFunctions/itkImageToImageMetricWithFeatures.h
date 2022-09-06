@@ -41,6 +41,8 @@ template <class TFixedImage,
 class ITK_TEMPLATE_EXPORT ImageToImageMetricWithFeatures : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageToImageMetricWithFeatures);
+
   /** Standard class typedefs. */
   using Self = ImageToImageMetricWithFeatures;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -251,9 +253,6 @@ protected:
    */
   virtual void
   CheckForBSplineFeatureInterpolators();
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ImageToImageMetricWithFeatures);
 };
 
 } // end namespace itk

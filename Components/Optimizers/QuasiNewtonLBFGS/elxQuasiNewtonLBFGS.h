@@ -90,6 +90,8 @@ class ITK_TEMPLATE_EXPORT QuasiNewtonLBFGS
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(QuasiNewtonLBFGS);
+
   /** Standard ITK.*/
   using Self = QuasiNewtonLBFGS;
   using Superclass1 = QuasiNewtonLBFGSOptimizer;
@@ -183,8 +185,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(QuasiNewtonLBFGS);
 
   void
   InvokeIterationEvent(const itk::EventObject & event);

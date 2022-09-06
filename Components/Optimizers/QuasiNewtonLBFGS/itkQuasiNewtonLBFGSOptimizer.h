@@ -58,6 +58,8 @@ namespace itk
 class QuasiNewtonLBFGSOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(QuasiNewtonLBFGSOptimizer);
+
   using Self = QuasiNewtonLBFGSOptimizer;
   using Superclass = ScaledSingleValuedNonLinearOptimizer;
   using Pointer = SmartPointer<Self>;
@@ -196,8 +198,6 @@ protected:
   TestConvergence(bool firstLineSearchDone);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(QuasiNewtonLBFGSOptimizer);
-
   unsigned long              m_MaximumNumberOfIterations{ 100 };
   double                     m_GradientMagnitudeTolerance{ 1e-5 };
   LineSearchOptimizerPointer m_LineSearchOptimizer{ nullptr };

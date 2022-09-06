@@ -71,6 +71,8 @@ template <class TScalarType, unsigned int NDimensions = 3>
 class ITK_TEMPLATE_EXPORT AdvancedIdentityTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedIdentityTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedIdentityTransform;
   using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
@@ -327,8 +329,6 @@ protected:
   ~AdvancedIdentityTransform() override = default;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedIdentityTransform);
-
   JacobianType                  m_LocalJacobian;
   SpatialJacobianType           m_SpatialJacobian;
   SpatialHessianType            m_SpatialHessian;

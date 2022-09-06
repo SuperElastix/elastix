@@ -71,6 +71,8 @@ class ITK_TEMPLATE_EXPORT FixedGenericPyramid
   , public FixedImagePyramidBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FixedGenericPyramid);
+
   /** Standard ITK-stuff. */
   using Self = FixedGenericPyramid;
   using Superclass1 =
@@ -128,8 +130,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(FixedGenericPyramid);
 };
 
 } // end namespace elastix

@@ -88,6 +88,8 @@ template <class TScalarType, unsigned int Dimension>
 class ITK_TEMPLATE_EXPORT EulerTransform : public EulerGroupTemplate<TScalarType, Dimension>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(EulerTransform);
+
   /** Standard ITK-stuff. */
   using Self = EulerTransform;
   using Superclass = EulerGroupTemplate<TScalarType, Dimension>;
@@ -151,15 +153,14 @@ public:
 protected:
   EulerTransform() = default;
   ~EulerTransform() override = default;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(EulerTransform);
 };
 
 template <class TScalarType>
 class ITK_TEMPLATE_EXPORT EulerTransform<TScalarType, 3> : public EulerGroupTemplate<TScalarType, 3>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(EulerTransform);
+
   /** Standard ITK-stuff. */
   using Self = EulerTransform;
   using Superclass = EulerGroupTemplate<TScalarType, 3>;
@@ -217,9 +218,6 @@ public:
 protected:
   EulerTransform() = default;
   ~EulerTransform() override = default;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(EulerTransform);
 };
 
 } // end namespace itk

@@ -125,6 +125,8 @@ class ITK_TEMPLATE_EXPORT MultiResolutionGaussianSmoothingPyramidImageFilter
   : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionGaussianSmoothingPyramidImageFilter);
+
   /** Standard class typedefs. */
   using Self = MultiResolutionGaussianSmoothingPyramidImageFilter;
   using Superclass = MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>;
@@ -199,9 +201,6 @@ protected:
    * because it uses internally a filter that does this. */
   void
   EnlargeOutputRequestedRegion(DataObject * output) override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionGaussianSmoothingPyramidImageFilter);
 };
 
 } // namespace itk

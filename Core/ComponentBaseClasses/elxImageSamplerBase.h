@@ -44,6 +44,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT ImageSamplerBase : public BaseComponentSE<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageSamplerBase);
+
   /** Standard ITK-stuff. */
   using Self = ImageSamplerBase;
   using Superclass = BaseComponentSE<TElastix>;
@@ -92,8 +94,6 @@ protected:
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
-
-  ITK_DISALLOW_COPY_AND_MOVE(ImageSamplerBase);
 };
 
 } // end namespace elastix

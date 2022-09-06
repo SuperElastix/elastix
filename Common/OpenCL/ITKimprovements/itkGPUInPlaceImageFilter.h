@@ -63,6 +63,8 @@ class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUInPlaceImageFilter
   : public GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUInPlaceImageFilter);
+
   /** Standard class typedefs. */
   using Self = GPUInPlaceImageFilter;
   using GPUSuperclass = GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>;
@@ -123,9 +125,6 @@ protected:
    * \sa ProcessObject::ReleaseInputs() */
   void
   ReleaseInputs() override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUInPlaceImageFilter);
 };
 
 } // end namespace itk

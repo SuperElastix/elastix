@@ -45,6 +45,8 @@ class ITK_TEMPLATE_EXPORT CyclicBSplineDeformableTransform
   : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CyclicBSplineDeformableTransform);
+
   /** Standard class typedefs. */
   using Self = CyclicBSplineDeformableTransform;
   using Superclass = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>;
@@ -132,9 +134,6 @@ protected:
               const RegionType & inRegion,
               RegionType &       outRegion1,
               RegionType &       outRegion2) const;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(CyclicBSplineDeformableTransform);
 };
 
 } // namespace itk

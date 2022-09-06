@@ -50,6 +50,8 @@ template <class TFixedImage, class TScalarType>
 class ITK_TEMPLATE_EXPORT TransformBendingEnergyPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformBendingEnergyPenaltyTerm);
+
   /** Standard ITK stuff. */
   using Self = TransformBendingEnergyPenaltyTerm;
   using Superclass = TransformPenaltyTerm<TFixedImage, TScalarType>;
@@ -178,8 +180,6 @@ protected:
   ~TransformBendingEnergyPenaltyTerm() override = default;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(TransformBendingEnergyPenaltyTerm);
-
   unsigned int m_NumberOfSamplesForSelfHessian;
 };
 

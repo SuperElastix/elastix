@@ -43,6 +43,8 @@ class ITK_TEMPLATE_EXPORT CorrespondingPointsEuclideanDistanceMetric
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CorrespondingPointsEuclideanDistanceMetric);
+
   /** Standard ITK-stuff. */
   using Self = CorrespondingPointsEuclideanDistanceMetric;
   using Superclass1 =
@@ -146,8 +148,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(CorrespondingPointsEuclideanDistanceMetric);
 };
 
 } // end namespace elastix

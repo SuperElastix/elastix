@@ -38,6 +38,8 @@ namespace elastix
 class TransformixMain : public ElastixMain
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformixMain);
+
   /** Standard itk. */
   using Self = TransformixMain;
   using Superclass = ElastixMain;
@@ -104,9 +106,6 @@ protected:
    */
   int
   InitDBIndex() override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(TransformixMain);
 };
 
 } // end namespace elastix

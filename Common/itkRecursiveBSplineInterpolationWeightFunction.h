@@ -49,6 +49,8 @@ class ITK_TEMPLATE_EXPORT RecursiveBSplineInterpolationWeightFunction
   : public BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineInterpolationWeightFunction);
+
   /** Standard class typedefs. */
   using Self = RecursiveBSplineInterpolationWeightFunction;
   using Superclass = BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>;
@@ -113,8 +115,6 @@ private:
    */
   void
   Evaluate(const ContinuousIndexType & index, WeightsType & weights, IndexType & startIndex) const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineInterpolationWeightFunction);
 
   /** Private members; We unfortunatly cannot use those of the superclass. */
   unsigned int m_NumberOfWeights;

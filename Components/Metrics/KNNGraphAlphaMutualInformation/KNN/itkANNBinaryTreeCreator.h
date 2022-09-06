@@ -38,6 +38,8 @@ namespace itk
 class ANNBinaryTreeCreator : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ANNBinaryTreeCreator);
+
   /** Standard itk. */
   using Self = ANNBinaryTreeCreator;
   using Superclass = Object;
@@ -104,8 +106,6 @@ protected:
   ~ANNBinaryTreeCreator() override = default;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ANNBinaryTreeCreator);
-
   /** Member variables. */
   static unsigned int m_NumberOfANNBinaryTrees;
 };

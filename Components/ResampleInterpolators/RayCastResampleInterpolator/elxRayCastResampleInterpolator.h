@@ -41,6 +41,8 @@ class ITK_TEMPLATE_EXPORT RayCastResampleInterpolator
   , public ResampleInterpolatorBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RayCastResampleInterpolator);
+
   /** Standard ITK-stuff. */
   using Self = RayCastResampleInterpolator;
   using Superclass1 =
@@ -122,8 +124,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) interpolator type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(RayCastResampleInterpolator);
 
   EulerTransformPointer       m_PreTransform;
   TransformParametersType     m_PreParameters;

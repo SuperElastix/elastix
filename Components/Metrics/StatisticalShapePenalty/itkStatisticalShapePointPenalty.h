@@ -57,6 +57,8 @@ class ITK_TEMPLATE_EXPORT StatisticalShapePointPenalty
   : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(StatisticalShapePointPenalty);
+
   /** Standard class typedefs. */
   using Self = StatisticalShapePointPenalty;
   using Superclass = SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>;
@@ -176,8 +178,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(StatisticalShapePointPenalty);
-
   void
   FillProposalVector(const OutputPointType & fixedPoint, const unsigned int vertexindex) const;
 
