@@ -400,9 +400,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  AdaptiveStochasticLBFGS(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticLBFGS);
 
   // multi-threaded AdvanceOneStep:
   struct MultiThreaderParameterType

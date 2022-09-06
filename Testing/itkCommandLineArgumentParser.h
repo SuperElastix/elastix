@@ -280,9 +280,7 @@ protected:
   std::string m_ProgramHelpText;
 
 private:
-  CommandLineArgumentParser(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(CommandLineArgumentParser);
 };
 
 // end class CommandLineArgumentParser

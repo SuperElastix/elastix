@@ -415,9 +415,7 @@ protected:
   ~ParameterMapInterface() override;
 
 private:
-  ParameterMapInterface(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ParameterMapInterface);
 
   /** Member variable to store the parameters. */
   ParameterMapType m_ParameterMap;

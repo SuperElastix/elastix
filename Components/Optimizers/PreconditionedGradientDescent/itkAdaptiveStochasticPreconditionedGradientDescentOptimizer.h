@@ -144,9 +144,7 @@ protected:
   DerivativeType m_PreviousSearchDirection;
 
 private:
-  AdaptiveStochasticPreconditionedGradientDescentOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticPreconditionedGradientDescentOptimizer);
 
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };

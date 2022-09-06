@@ -104,9 +104,7 @@ protected:
   ~ANNBinaryTreeCreator() override = default;
 
 private:
-  ANNBinaryTreeCreator(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ANNBinaryTreeCreator);
 
   /** Member variables. */
   static unsigned int m_NumberOfANNBinaryTrees;

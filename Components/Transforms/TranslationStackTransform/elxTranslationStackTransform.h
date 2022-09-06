@@ -146,9 +146,7 @@ private:
   CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
-  TranslationStackTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(TranslationStackTransform);
 
   /** Typedef for stack transform. */
   using StackTransformType = itk::TranslationStackTransform<SpaceDimension>;

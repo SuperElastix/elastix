@@ -70,9 +70,7 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  GPULinearInterpolateImageFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPULinearInterpolateImageFunction);
 
   std::vector<std::string> m_Sources;
 };

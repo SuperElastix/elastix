@@ -126,9 +126,7 @@ protected:
   typename OpenCLKernelManager::Pointer m_GPUKernelManager;
 
 private:
-  GPUImageToImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUImageToImageFilter);
 
   bool m_GPUEnabled;
 };

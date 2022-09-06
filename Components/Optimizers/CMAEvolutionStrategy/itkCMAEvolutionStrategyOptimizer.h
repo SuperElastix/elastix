@@ -422,9 +422,7 @@ protected:
   TestConvergence(bool firstCheck);
 
 private:
-  CMAEvolutionStrategyOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(CMAEvolutionStrategyOptimizer);
 
   /** Settings that are only inspected/changed by the associated get/set member functions. */
   unsigned long m_MaximumNumberOfIterations{ 100 };

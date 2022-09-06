@@ -221,9 +221,7 @@ private:
                             TransformSpaceDimensionToType<3>);
 
 private:
-  GPUTransformCopier(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUTransformCopier);
 
   CPUTransformConstPointer m_InputTransform;
   GPUTransformPointer      m_Output;

@@ -223,9 +223,7 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  AdvancedKappaStatisticImageToImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedKappaStatisticImageToImageMetric);
 
   bool     m_UseForegroundValue;
   RealType m_ForegroundValue;

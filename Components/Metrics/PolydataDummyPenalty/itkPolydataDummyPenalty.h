@@ -184,9 +184,7 @@ protected:
   mutable MappedMeshContainerPointer     m_MappedMeshContainer;
 
 private:
-  MeshPenalty(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MeshPenalty);
 };
 
 } // end namespace itk

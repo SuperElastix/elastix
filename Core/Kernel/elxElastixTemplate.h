@@ -304,9 +304,7 @@ private:
   SetOriginalFixedImageDirection(const FixedImageDirectionType & arg);
 
 private:
-  ElastixTemplate(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ElastixTemplate);
 };
 
 } // end namespace elastix

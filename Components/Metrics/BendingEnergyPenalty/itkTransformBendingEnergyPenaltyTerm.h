@@ -178,11 +178,7 @@ protected:
   ~TransformBendingEnergyPenaltyTerm() override = default;
 
 private:
-  /** The deleted copy constructor. */
-  TransformBendingEnergyPenaltyTerm(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(TransformBendingEnergyPenaltyTerm);
 
   unsigned int m_NumberOfSamplesForSelfHessian;
 };

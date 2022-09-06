@@ -214,9 +214,7 @@ protected:
   bool           m_CenterOfGravityUsesLowerThreshold;
 
 private:
-  CenteredTransformInitializer2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(CenteredTransformInitializer2);
 
   TransformPointer m_Transform;
 

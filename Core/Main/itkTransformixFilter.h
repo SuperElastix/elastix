@@ -235,9 +235,7 @@ protected:
   GenerateData() override;
 
 private:
-  TransformixFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(TransformixFilter);
 
   /** Private using-declarations, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;

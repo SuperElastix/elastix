@@ -471,11 +471,7 @@ protected:
   {}
 
 private:
-  /** The deleted copy constructor. */
-  ParzenWindowHistogramImageToImageMetric(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ParzenWindowHistogramImageToImageMetric);
 
   /** Threading related parameters. */
   mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs;

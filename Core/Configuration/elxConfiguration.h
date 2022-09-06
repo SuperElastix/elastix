@@ -283,9 +283,7 @@ protected:
   PrintParameterFile() const;
 
 private:
-  Configuration(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(Configuration);
 
   CommandLineArgumentMapType          m_CommandLineArgumentMap{};
   std::string                         m_ParameterFileName{};

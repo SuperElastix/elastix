@@ -127,11 +127,7 @@ protected:
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
 
-  /** The deleted copy constructor. */
-  OptimizerBase(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(OptimizerBase);
 
   /** Member variable to store the user preference for using new
    * samples each iteration.

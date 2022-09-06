@@ -223,11 +223,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  /** The deleted copy constructor. */
-  AdvancedMattesMutualInformationMetric(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedMattesMutualInformationMetric);
 
   double m_Param_c;
   double m_Param_gamma;

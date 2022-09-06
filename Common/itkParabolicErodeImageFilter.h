@@ -83,9 +83,7 @@ protected:
   //   void PrintSelf(std::ostream& os, Indent indent) const;
 
 private:
-  ParabolicErodeImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ParabolicErodeImageFilter);
 };
 
 } // end namespace itk

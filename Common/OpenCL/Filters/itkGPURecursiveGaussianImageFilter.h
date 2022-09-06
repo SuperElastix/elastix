@@ -83,9 +83,7 @@ protected:
   GPUGenerateData() override;
 
 private:
-  GPURecursiveGaussianImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPURecursiveGaussianImageFilter);
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;

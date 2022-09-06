@@ -189,11 +189,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  /** The deleted copy constructor. */
-  ImageToVectorContainerFilter(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ImageToVectorContainerFilter);
 };
 
 } // end namespace itk

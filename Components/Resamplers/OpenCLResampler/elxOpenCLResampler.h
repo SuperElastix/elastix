@@ -157,11 +157,7 @@ private:
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
 
-  /** The deleted copy constructor. */
-  OpenCLResampler(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLResampler);
 
   /** Helper method to report switching to CPU mode. */
   void

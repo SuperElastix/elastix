@@ -79,9 +79,7 @@ protected:
   double m_ErrorBound;
 
 private:
-  ANNStandardTreeSearch(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ANNStandardTreeSearch);
 };
 
 } // end namespace itk

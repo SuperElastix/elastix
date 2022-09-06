@@ -102,9 +102,7 @@ private:
   std::ifstream m_Reader;
 
 private:
-  TransformixInputPointFileReader(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(TransformixInputPointFileReader);
 };
 
 } // end namespace itk

@@ -84,9 +84,7 @@ protected:
   Register2D();
 
 private:
-  GPUSimilarity2DTransformFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUSimilarity2DTransformFactory2);
 };
 
 } // end namespace itk

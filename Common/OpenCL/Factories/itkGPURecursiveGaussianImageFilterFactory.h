@@ -121,9 +121,7 @@ protected:
   Register3D() override;
 
 private:
-  GPURecursiveGaussianImageFilterFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPURecursiveGaussianImageFilterFactory2);
 };
 
 } // end namespace itk

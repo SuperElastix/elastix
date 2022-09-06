@@ -163,9 +163,7 @@ protected:
   Compute_c(unsigned long k) const;
 
 private:
-  FiniteDifferenceGradientDescentOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(FiniteDifferenceGradientDescentOptimizer);
 
   /** Private member variables.*/
   bool              m_Stop{ false };

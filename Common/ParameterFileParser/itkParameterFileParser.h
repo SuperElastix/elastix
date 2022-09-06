@@ -121,9 +121,7 @@ protected:
   ~ParameterFileParser() override;
 
 private:
-  ParameterFileParser(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ParameterFileParser);
 
   /** Performs the following checks:
    * - Is a filename is given

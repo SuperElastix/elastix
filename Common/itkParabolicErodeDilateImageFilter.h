@@ -154,9 +154,7 @@ protected:
   bool m_UseImageSpacing;
 
 private:
-  ParabolicErodeDilateImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ParabolicErodeDilateImageFilter);
 
   RadiusType                      m_Scale;
   typename TInputImage::PixelType m_Extreme;

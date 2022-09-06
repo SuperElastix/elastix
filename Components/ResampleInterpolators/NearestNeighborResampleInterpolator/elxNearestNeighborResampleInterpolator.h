@@ -91,11 +91,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  /** The deleted copy constructor. */
-  NearestNeighborResampleInterpolator(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(NearestNeighborResampleInterpolator);
 };
 
 } // end namespace elastix

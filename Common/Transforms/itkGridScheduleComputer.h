@@ -170,9 +170,7 @@ protected:
                         SpacingType &   finalGridSpacing) const;
 
 private:
-  GridScheduleComputer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GridScheduleComputer);
 
   /** Declare member variables, needed in functions. */
   OriginType    m_ImageOrigin;

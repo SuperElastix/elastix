@@ -236,9 +236,7 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  AdvancedNormalizedCorrelationImageToImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedNormalizedCorrelationImageToImageMetric);
 
   mutable bool m_SubtractMean;
 

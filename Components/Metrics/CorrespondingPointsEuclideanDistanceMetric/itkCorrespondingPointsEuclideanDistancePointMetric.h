@@ -95,9 +95,7 @@ protected:
   ~CorrespondingPointsEuclideanDistancePointMetric() override = default;
 
 private:
-  CorrespondingPointsEuclideanDistancePointMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(CorrespondingPointsEuclideanDistancePointMetric);
 };
 
 } // end namespace itk

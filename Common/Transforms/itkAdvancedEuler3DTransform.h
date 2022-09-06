@@ -157,9 +157,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  AdvancedEuler3DTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedEuler3DTransform);
 
   ScalarType m_AngleX;
   ScalarType m_AngleY;

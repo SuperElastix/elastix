@@ -132,9 +132,7 @@ protected:
   ~AffineDTITransform() override = default;
 
 private:
-  AffineDTITransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AffineDTITransform);
 };
 
 } // end namespace itk

@@ -144,9 +144,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  FiniteDifferenceGradientDescent(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(FiniteDifferenceGradientDescent);
 };
 
 } // end namespace elastix

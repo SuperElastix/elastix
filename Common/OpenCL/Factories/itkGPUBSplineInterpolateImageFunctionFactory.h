@@ -123,9 +123,7 @@ protected:
   Register3D();
 
 private:
-  GPUBSplineInterpolateImageFunctionFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUBSplineInterpolateImageFunctionFactory2);
 };
 
 } // end namespace itk

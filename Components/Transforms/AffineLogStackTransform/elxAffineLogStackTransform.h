@@ -173,9 +173,7 @@ private:
   CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
-  AffineLogStackTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AffineLogStackTransform);
 
   /** Typedef for stack transform. */
   using StackTransformType = itk::AffineLogStackTransform<SpaceDimension>;

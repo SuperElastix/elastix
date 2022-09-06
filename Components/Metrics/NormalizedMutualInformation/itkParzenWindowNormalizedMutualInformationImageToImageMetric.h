@@ -195,11 +195,7 @@ protected:
   ComputeNormalizedMutualInformation(MeasureType & jointEntropy) const;
 
 private:
-  /** The deleted copy constructor. */
-  ParzenWindowNormalizedMutualInformationImageToImageMetric(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ParzenWindowNormalizedMutualInformationImageToImageMetric);
 };
 
 } // end namespace itk

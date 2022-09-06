@@ -137,9 +137,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ListSampleCArray(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ListSampleCArray);
 
   /** The internal storage of the data in a C array. */
   InternalDataContainerType m_InternalContainer;

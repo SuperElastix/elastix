@@ -112,9 +112,7 @@ private:
 
   ProcessObject::Pointer m_Caster{ nullptr };
 
-  ImageFileCastWriter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ImageFileCastWriter);
 
   std::string m_OutputComponentType{ Self::GetDefaultOutputComponentType() };
 };

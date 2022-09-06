@@ -140,9 +140,7 @@ protected:
   DirectionalDerivative(const DerivativeType & derivative) const;
 
 private:
-  LineSearchOptimizer(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(LineSearchOptimizer);
 
   ParametersType m_LineSearchDirection;
 

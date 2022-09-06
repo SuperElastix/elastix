@@ -262,9 +262,7 @@ protected:
   MakeOutput(DataObjectPointerArraySizeType idx) override;
 
 private:
-  ElastixRegistrationMethod(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ElastixRegistrationMethod);
 
   /** MakeUniqueName. */
   std::string

@@ -84,9 +84,7 @@ protected:
   Register3D();
 
 private:
-  GPUAdvancedSimilarity3DTransformFactory2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedSimilarity3DTransformFactory2);
 };
 
 } // end namespace itk

@@ -185,9 +185,7 @@ protected:
                                 const RegionType &           supportRegion) const override;
 
 private:
-  RecursiveBSplineTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineTransform);
 
   using ImplementationType =
     RecursiveBSplineTransformImplementation<NDimensions, NDimensions, VSplineOrder, TScalarType>;

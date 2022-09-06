@@ -272,9 +272,7 @@ private:
   CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
-  BSplineStackTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineStackTransform);
 
   /** Typedef for stack transform. */
   using StackTransformType = itk::BSplineStackTransform<SpaceDimension>;

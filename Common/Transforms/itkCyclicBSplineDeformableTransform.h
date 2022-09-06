@@ -134,9 +134,7 @@ protected:
               RegionType &       outRegion2) const;
 
 private:
-  CyclicBSplineDeformableTransform(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(CyclicBSplineDeformableTransform);
 };
 
 } // namespace itk

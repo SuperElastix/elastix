@@ -88,9 +88,7 @@ protected:
   ShrinkingRuleType m_ShrinkingRule;
 
 private:
-  ANNbdTree(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ANNbdTree);
 };
 
 } // end namespace itk

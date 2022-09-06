@@ -88,9 +88,7 @@ protected:
   GPUGenerateData() override;
 
 private:
-  GPUShrinkImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUShrinkImageFilter);
 
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;

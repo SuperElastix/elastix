@@ -396,9 +396,7 @@ protected:
   GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const;
 
 private:
-  ElastixMain(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ElastixMain);
 };
 
 } // end namespace elastix

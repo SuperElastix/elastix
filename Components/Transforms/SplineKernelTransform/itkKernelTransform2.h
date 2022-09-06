@@ -531,9 +531,7 @@ protected:
   bool m_FastComputationPossible;
 
 private:
-  KernelTransform2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(KernelTransform2);
 
   TScalarType m_PoissonRatio;
 

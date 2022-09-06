@@ -115,12 +115,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  /** The deleted copy constructor. */
-  RayCastInterpolator(const Self &) = delete;
-
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(RayCastInterpolator);
 
   EulerTransformPointer       m_PreTransform;
   TransformParametersType     m_PreParameters;

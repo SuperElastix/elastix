@@ -120,9 +120,7 @@ protected:
 
 
 private:
-  BSplineDerivativeKernelFunction2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineDerivativeKernelFunction2);
 
   /** Structures to control overloaded versions of Evaluate */
   template <unsigned int>

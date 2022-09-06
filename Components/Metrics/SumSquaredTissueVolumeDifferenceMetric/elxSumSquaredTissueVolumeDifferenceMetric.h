@@ -150,11 +150,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  /** The deleted copy constructor. */
-  SumSquaredTissueVolumeDifferenceMetric(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(SumSquaredTissueVolumeDifferenceMetric);
 
 }; // end class SumSquaredTissueVolumeDifferenceMetric
 

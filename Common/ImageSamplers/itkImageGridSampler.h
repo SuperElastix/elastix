@@ -154,11 +154,7 @@ protected:
   unsigned long m_RequestedNumberOfSamples{ 0 };
 
 private:
-  /** The deleted copy constructor. */
-  ImageGridSampler(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ImageGridSampler);
 };
 
 } // end namespace itk

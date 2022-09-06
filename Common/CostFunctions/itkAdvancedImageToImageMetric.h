@@ -578,9 +578,7 @@ protected:
   double m_MovingLimitRangeRatio{ 0.01 };
 
 private:
-  AdvancedImageToImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedImageToImageMetric);
 
   template <typename... TOptionalThreadId>
   bool

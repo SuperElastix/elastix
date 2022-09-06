@@ -507,9 +507,7 @@ protected:
   ImageBasePointer                             m_LocalBases;
 
 private:
-  MultiBSplineDeformableTransformWithNormal(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MultiBSplineDeformableTransformWithNormal);
 
   void
   DispatchParameters(const ParametersType & parameters);

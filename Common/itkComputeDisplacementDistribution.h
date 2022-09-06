@@ -222,9 +222,7 @@ private:
   bool                        m_UseMultiThread;
   ImageSampleContainerPointer m_SampleContainer;
 
-  ComputeDisplacementDistribution(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ComputeDisplacementDistribution);
 };
 
 } // end namespace itk

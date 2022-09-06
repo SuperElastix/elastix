@@ -151,11 +151,7 @@ protected:
                        InputImageContinuousIndexType &       largestContIndex);
 
 private:
-  /** The deleted copy constructor. */
-  ImageRandomCoordinateSampler(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ImageRandomCoordinateSampler);
 
   bool m_UseRandomSampleRegion{ false };
 };

@@ -72,9 +72,7 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  GPUNearestNeighborInterpolateImageFunction(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUNearestNeighborInterpolateImageFunction);
 
   std::vector<std::string> m_Sources;
 };

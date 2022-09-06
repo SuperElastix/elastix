@@ -148,9 +148,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  SimultaneousPerturbation(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(SimultaneousPerturbation);
 };
 
 } // end namespace elastix

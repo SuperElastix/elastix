@@ -460,9 +460,7 @@ protected:
   DerivativeType       m_NullDerivative;
 
 private:
-  CombinationImageToImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(CombinationImageToImageMetric);
 
   /** Initialize some multi-threading related parameters.
    * Overrides function in AdvancedImageToImageMetric, because

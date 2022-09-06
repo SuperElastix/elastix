@@ -233,11 +233,7 @@ protected:
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
 
-  /** The deleted copy constructor. */
-  MetricBase(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MetricBase);
 };
 
 } // end namespace elastix

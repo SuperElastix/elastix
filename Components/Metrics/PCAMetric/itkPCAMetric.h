@@ -174,9 +174,7 @@ protected:
   mutable int                m_NumberOfSamples;
 
 private:
-  PCAMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(PCAMetric);
 
   /** Sample n random numbers from 0..m and add them to the vector. */
   void

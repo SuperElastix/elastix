@@ -107,9 +107,7 @@ protected:
   GPUGenerateData() override;
 
 private:
-  GPUCastImageFilter(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUCastImageFilter);
 };
 
 } // end of namespace itk

@@ -107,11 +107,7 @@ protected:
   ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
 
 private:
-  /** The deleted copy constructor. */
-  ImageFullSampler(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ImageFullSampler);
 };
 
 } // end namespace itk

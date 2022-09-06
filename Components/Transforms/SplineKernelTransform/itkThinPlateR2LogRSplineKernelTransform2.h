@@ -115,9 +115,7 @@ protected:
   ComputeDeformationContribution(const InputPointType & inputPoint, OutputPointType & result) const override;
 
 private:
-  ThinPlateR2LogRSplineKernelTransform2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ThinPlateR2LogRSplineKernelTransform2);
 };
 
 } // namespace itk

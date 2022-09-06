@@ -280,9 +280,7 @@ protected:
   bool           m_Stop;
 
 private:
-  MultiResolutionImageRegistrationMethod2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionImageRegistrationMethod2);
 
   /** Member variables. */
   MetricPointer          m_Metric;

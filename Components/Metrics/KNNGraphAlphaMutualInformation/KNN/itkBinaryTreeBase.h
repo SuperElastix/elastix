@@ -85,9 +85,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  BinaryTreeBase(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BinaryTreeBase);
 
   /** Store the samples. */
   typename SampleType::Pointer m_Sample;

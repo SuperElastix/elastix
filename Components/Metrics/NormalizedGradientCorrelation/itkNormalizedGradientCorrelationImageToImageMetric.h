@@ -171,9 +171,7 @@ protected:
   using MovedSobelFilter = NeighborhoodOperatorImageFilter<MovedGradientImageType, MovedGradientImageType>;
 
 private:
-  NormalizedGradientCorrelationImageToImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(NormalizedGradientCorrelationImageToImageMetric);
 
   ScalesType                  m_Scales;
   double                      m_DerivativeDelta;

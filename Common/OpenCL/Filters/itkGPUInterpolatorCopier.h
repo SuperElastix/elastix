@@ -132,9 +132,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  GPUInterpolatorCopier(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(GPUInterpolatorCopier);
 
   CPUInterpolatorConstPointer    m_InputInterpolator;
   GPUInterpolatorPointer         m_Output;

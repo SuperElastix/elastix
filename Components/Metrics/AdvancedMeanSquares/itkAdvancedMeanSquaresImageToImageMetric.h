@@ -251,9 +251,7 @@ protected:
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
 private:
-  AdvancedMeanSquaresImageToImageMetric(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedMeanSquaresImageToImageMetric);
 
   bool         m_UseNormalization;
   double       m_SelfHessianSmoothingSigma;

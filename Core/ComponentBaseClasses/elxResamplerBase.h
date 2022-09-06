@@ -214,11 +214,7 @@ private:
     return {};
   }
 
-  /** The deleted copy constructor. */
-  ResamplerBase(const Self &) = delete;
-  /** The deleted assignment operator. */
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(ResamplerBase);
 
   /** Release memory. */
   void

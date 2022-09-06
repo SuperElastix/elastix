@@ -90,9 +90,7 @@ protected:
                    OneDWeightsType &           weights1D) const override;
 
 private:
-  BSplineInterpolationWeightFunction2(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationWeightFunction2);
 };
 
 } // end namespace itk

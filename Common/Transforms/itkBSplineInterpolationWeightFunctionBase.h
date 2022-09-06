@@ -143,9 +143,7 @@ protected:
   TableType     m_OffsetToIndexTable;
 
 private:
-  BSplineInterpolationWeightFunctionBase(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationWeightFunctionBase);
 
   /** Function to initialize the support region. */
   void

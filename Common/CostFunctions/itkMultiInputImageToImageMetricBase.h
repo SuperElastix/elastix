@@ -397,9 +397,7 @@ protected:
   BSplineInterpolatorVectorType m_BSplineInterpolatorVector;
 
 private:
-  MultiInputImageToImageMetricBase(const Self &) = delete;
-  void
-  operator=(const Self &) = delete;
+  ITK_DISALLOW_COPY_AND_MOVE(MultiInputImageToImageMetricBase);
 
   /// Avoids accidentally calling `this->FastEvaluateMovingImageValueAndDerivative(mappedPoint, ..., threadId)`, when
   /// `*this` is derived from `MultiInputImageToImageMetricBase`. (The non-virtual member function
