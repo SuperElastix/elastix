@@ -91,7 +91,7 @@ public:
   itkGetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
 
 protected:
-  ComputeImageExtremaFilter();
+  ComputeImageExtremaFilter() = default;
   ~ComputeImageExtremaFilter() override = default;
 
   /** Initialize some accumulators before the threads run. */
@@ -115,8 +115,8 @@ protected:
   RegionType                   m_ImageRegion;
   ImageMaskConstPointer        m_ImageMask;
   ImageSpatialMaskConstPointer m_ImageSpatialMask;
-  bool                         m_UseMask;
-  bool                         m_SameGeometry;
+  bool                         m_UseMask{ false };
+  bool                         m_SameGeometry{ false };
 
 private:
   ComputeImageExtremaFilter(const Self &);

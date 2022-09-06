@@ -105,19 +105,19 @@ public:
   Compute(double & TrC, double & TrCC, double & maxJJ, double & maxJCJ);
 
 protected:
-  ComputeJacobianTerms();
+  ComputeJacobianTerms() = default;
   ~ComputeJacobianTerms() override = default;
 
-  typename FixedImageType::ConstPointer m_FixedImage;
+  typename FixedImageType::ConstPointer m_FixedImage{ nullptr };
   FixedImageRegionType                  m_FixedImageRegion;
-  FixedImageMaskConstPointer            m_FixedImageMask;
-  TransformPointer                      m_Transform;
+  FixedImageMaskConstPointer            m_FixedImageMask{ nullptr };
+  TransformPointer                      m_Transform{ nullptr };
   ScalesType                            m_Scales;
-  bool                                  m_UseScales;
+  bool                                  m_UseScales{ false };
 
-  unsigned int  m_MaxBandCovSize;
-  unsigned int  m_NumberOfBandStructureSamples;
-  SizeValueType m_NumberOfJacobianMeasurements;
+  unsigned int  m_MaxBandCovSize{ 0 };
+  unsigned int  m_NumberOfBandStructureSamples{ 0 };
+  SizeValueType m_NumberOfJacobianMeasurements{ 0 };
 
   using FixedImageIndexType = typename FixedImageType::IndexType;
   using FixedImagePointType = typename FixedImageType::PointType;

@@ -225,14 +225,14 @@ public:
   GetInputFileName() override;
 
 protected:
-  NDImageTemplate();
+  NDImageTemplate() = default;
   ~NDImageTemplate() override = default;
 
   // virtual void PrintSelf(std::ostream& os, Indent indent) const;
 
-  ImagePointer  m_Image;
-  WriterPointer m_Writer;
-  ReaderPointer m_Reader;
+  ImagePointer  m_Image{ nullptr };
+  WriterPointer m_Writer{ nullptr };
+  ReaderPointer m_Reader{ nullptr };
 
   template <class TIn, class TOut>
   class ITK_TEMPLATE_EXPORT ConvertToDynamicArray

@@ -189,7 +189,7 @@ public:
 
 protected:
   /// Constructor
-  AdvancedRayCastInterpolateImageFunction();
+  AdvancedRayCastInterpolateImageFunction() = default;
 
   /// Destructor
   ~AdvancedRayCastInterpolateImageFunction() override = default;
@@ -202,10 +202,10 @@ protected:
   TransformPointer m_Transform;
 
   /// The focal point or position of the ray source
-  InputPointType m_FocalPoint;
+  InputPointType m_FocalPoint{};
 
   /// The threshold above which voxels along the ray path are integrated.
-  double m_Threshold;
+  double m_Threshold{ 0.0 };
 
   /// Pointer to the interpolator
   InterpolatorPointer m_Interpolator;
