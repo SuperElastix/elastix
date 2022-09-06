@@ -1480,21 +1480,6 @@ namespace itk
  **************************************************************************/
 
 /* -----------------------------------------------------------------------
-   Constructor
-   ----------------------------------------------------------------------- */
-
-template <class TInputImage, class TCoordRep>
-AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::AdvancedRayCastInterpolateImageFunction()
-{
-  m_Threshold = 0.;
-
-  m_FocalPoint[0] = 0.;
-  m_FocalPoint[1] = 0.;
-  m_FocalPoint[2] = 0.;
-}
-
-
-/* -----------------------------------------------------------------------
    PrintSelf
    ----------------------------------------------------------------------- */
 

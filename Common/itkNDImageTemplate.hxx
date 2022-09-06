@@ -24,16 +24,6 @@
 namespace itk
 {
 
-/** Constructor */
-template <class TPixel, unsigned int VDimension>
-NDImageTemplate<TPixel, VDimension>::NDImageTemplate()
-{
-  this->m_Image = nullptr;
-  this->m_Writer = nullptr;
-  this->m_Reader = nullptr;
-}
-
-
 template <class TPixel, unsigned int VDimension>
 void
 NDImageTemplate<TPixel, VDimension>::SetRegions(SizeType size)

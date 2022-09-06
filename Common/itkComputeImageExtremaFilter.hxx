@@ -24,17 +24,6 @@
 namespace itk
 {
 
-/**
- * ********************* Constructor ****************************
- */
-
-template <typename TInputImage>
-ComputeImageExtremaFilter<TInputImage>::ComputeImageExtremaFilter()
-{
-  this->m_UseMask = false;
-  this->m_SameGeometry = false;
-}
-
 template <typename TInputImage>
 void
 ComputeImageExtremaFilter<TInputImage>::BeforeStreamedGenerateData()

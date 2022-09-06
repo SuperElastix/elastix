@@ -27,25 +27,6 @@
 
 namespace itk
 {
-/**
- * ************************* Constructor ************************
- */
-
-template <class TFixedImage, class TTransform>
-ComputeJacobianTerms<TFixedImage, TTransform>::ComputeJacobianTerms()
-{
-  this->m_FixedImage = nullptr;
-  this->m_FixedImageMask = nullptr;
-  this->m_Transform = nullptr;
-  this->m_FixedImageMask = nullptr;
-  this->m_UseScales = false;
-
-  this->m_MaxBandCovSize = 0;
-  this->m_NumberOfBandStructureSamples = 0;
-  this->m_NumberOfJacobianMeasurements = 0;
-
-} // end Constructor
-
 
 /**
  * ************************* Compute ************************
