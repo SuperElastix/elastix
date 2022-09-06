@@ -65,6 +65,8 @@ template <class TScalarType = double>
 class ITK_TEMPLATE_EXPORT AdvancedVersorRigid3DTransform : public AdvancedVersorTransform<TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedVersorRigid3DTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedVersorRigid3DTransform;
   using Superclass = AdvancedVersorTransform<TScalarType>;
@@ -136,9 +138,6 @@ protected:
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedVersorRigid3DTransform);
 };
 
 // class AdvancedVersorRigid3DTransform

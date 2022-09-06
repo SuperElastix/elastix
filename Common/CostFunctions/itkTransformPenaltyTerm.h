@@ -45,6 +45,8 @@ template <class TFixedImage, class TScalarType = double>
 class ITK_TEMPLATE_EXPORT TransformPenaltyTerm : public AdvancedImageToImageMetric<TFixedImage, TFixedImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformPenaltyTerm);
+
   /** Standard ITK stuff. */
   using Self = TransformPenaltyTerm;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TFixedImage>;
@@ -135,9 +137,6 @@ protected:
   /** A function to check if the transform is B-spline, for speedup. */
   virtual bool
   CheckForBSplineTransform2(BSplineOrder3TransformPointer & bspline) const;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(TransformPenaltyTerm);
 };
 
 } // end namespace itk

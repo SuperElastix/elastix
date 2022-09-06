@@ -42,6 +42,8 @@ class ITK_TEMPLATE_EXPORT AdvancedBSplineDeformableTransformBase
   : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedBSplineDeformableTransformBase);
+
   /** Standard class typedefs. */
   using Self = AdvancedBSplineDeformableTransformBase;
   using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
@@ -411,9 +413,6 @@ protected:
 
   void
   UpdateGridOffsetTable();
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedBSplineDeformableTransformBase);
 };
 
 } // namespace itk

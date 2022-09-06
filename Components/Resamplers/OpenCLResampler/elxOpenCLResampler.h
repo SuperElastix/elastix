@@ -54,6 +54,8 @@ class OpenCLResampler
   , public ResamplerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLResampler);
+
   /** Standard ITK-stuff. */
   using Self = OpenCLResampler;
 
@@ -156,8 +158,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) resampler type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(OpenCLResampler);
 
   /** Helper method to report switching to CPU mode. */
   void

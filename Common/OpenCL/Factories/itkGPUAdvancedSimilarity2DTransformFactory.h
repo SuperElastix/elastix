@@ -37,6 +37,8 @@ template <typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPUAdvancedSimilarity2DTransformFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedSimilarity2DTransformFactory2);
+
   using Self = GPUAdvancedSimilarity2DTransformFactory2;
   using Superclass = GPUObjectFactoryBase<NDimensions>;
   using Pointer = SmartPointer<Self>;
@@ -82,9 +84,6 @@ protected:
   /** Register methods for 2D. */
   virtual void
   Register2D();
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedSimilarity2DTransformFactory2);
 };
 
 } // end namespace itk

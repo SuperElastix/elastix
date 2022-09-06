@@ -56,6 +56,8 @@ class ITK_TEMPLATE_EXPORT MultiResolutionImageRegistrationMethodWithFeatures
   : public MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionImageRegistrationMethodWithFeatures);
+
   /** Standard class typedefs. */
   using Self = MultiResolutionImageRegistrationMethodWithFeatures;
   using Superclass = MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>;
@@ -109,9 +111,6 @@ protected:
    */
   void
   CheckPyramids() override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(MultiResolutionImageRegistrationMethodWithFeatures);
 };
 
 } // end namespace itk

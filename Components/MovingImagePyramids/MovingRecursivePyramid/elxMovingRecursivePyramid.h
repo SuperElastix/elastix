@@ -42,6 +42,8 @@ class ITK_TEMPLATE_EXPORT MovingRecursivePyramid
   , public MovingImagePyramidBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MovingRecursivePyramid);
+
   /** Standard ITK. */
   using Self = MovingRecursivePyramid;
   using Superclass1 =
@@ -86,8 +88,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MovingRecursivePyramid);
 };
 
 } // end namespace elastix

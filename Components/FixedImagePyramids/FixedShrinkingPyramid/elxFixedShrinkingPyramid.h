@@ -42,6 +42,8 @@ class ITK_TEMPLATE_EXPORT FixedShrinkingPyramid
   , public FixedImagePyramidBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FixedShrinkingPyramid);
+
   /** Standard ITK-stuff. */
   using Self = FixedShrinkingPyramid;
   using Superclass1 =
@@ -87,8 +89,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(FixedShrinkingPyramid);
 };
 
 } // end namespace elastix

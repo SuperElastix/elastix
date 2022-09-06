@@ -57,6 +57,8 @@ class ITK_TEMPLATE_EXPORT DeformationFieldTransform
   , public TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldTransform);
+
   /** Standard ITK-stuff. */
   using Self = DeformationFieldTransform;
 
@@ -140,8 +142,6 @@ private:
   /** Writes its deformation field to a file. */
   void
   WriteDerivedTransformDataToFile() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(DeformationFieldTransform);
 
   using DirectionType = typename DeformationFieldType::DirectionType;
 

@@ -67,6 +67,8 @@ class ITK_TEMPLATE_EXPORT RegularStepGradientDescent
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RegularStepGradientDescent);
+
   /** Standard ITK.*/
   using Self = RegularStepGradientDescent;
   using Superclass1 = RegularStepGradientDescentOptimizer;
@@ -128,8 +130,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(RegularStepGradientDescent);
 };
 
 } // end namespace elastix

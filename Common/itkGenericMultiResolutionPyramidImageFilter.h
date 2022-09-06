@@ -118,6 +118,8 @@ class ITK_TEMPLATE_EXPORT GenericMultiResolutionPyramidImageFilter
   : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GenericMultiResolutionPyramidImageFilter);
+
   /** Standard class typedefs. */
   using Self = GenericMultiResolutionPyramidImageFilter;
   using Superclass = MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>;
@@ -358,9 +360,6 @@ private:
   /** Returns true if rescale has been used in pipeline, otherwise return false. */
   bool
   IsRescaleUsed() const;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GenericMultiResolutionPyramidImageFilter);
 };
 
 } // namespace itk

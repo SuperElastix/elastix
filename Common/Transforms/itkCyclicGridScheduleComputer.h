@@ -42,6 +42,8 @@ class ITK_TEMPLATE_EXPORT CyclicGridScheduleComputer
   : public GridScheduleComputer<TTransformScalarType, VImageDimension>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CyclicGridScheduleComputer);
+
   /** Standard class typedefs. */
   using Self = CyclicGridScheduleComputer;
   using Superclass = GridScheduleComputer<TTransformScalarType, VImageDimension>;
@@ -88,9 +90,6 @@ protected:
 
   /** The destructor. */
   ~CyclicGridScheduleComputer() override = default;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(CyclicGridScheduleComputer);
 };
 
 } // end namespace itk

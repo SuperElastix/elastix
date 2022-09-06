@@ -53,6 +53,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT OptimizerBase : public BaseComponentSE<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(OptimizerBase);
+
   /** Standard ITK-stuff. */
   using Self = OptimizerBase;
   using Superclass = BaseComponentSE<TElastix>;
@@ -126,8 +128,6 @@ protected:
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
-
-  ITK_DISALLOW_COPY_AND_MOVE(OptimizerBase);
 
   /** Member variable to store the user preference for using new
    * samples each iteration.

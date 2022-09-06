@@ -57,6 +57,8 @@ class ITK_TEMPLATE_EXPORT MissingStructurePenalty
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MissingStructurePenalty);
+
   /** Standard ITK-stuff. */
   using Self = MissingStructurePenalty;
   using Superclass1 = itk::MissingVolumeMeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
@@ -178,8 +180,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MissingStructurePenalty);
 
   unsigned int m_NumberOfMeshes;
 };

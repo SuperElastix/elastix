@@ -83,6 +83,8 @@ template <class TFixedImage, class TMovingImage>
 class ITK_TEMPLATE_EXPORT AdvancedImageToImageMetric : public ImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = AdvancedImageToImageMetric;
   using Superclass = ImageToImageMetric<TFixedImage, TMovingImage>;
@@ -578,8 +580,6 @@ protected:
   double m_MovingLimitRangeRatio{ 0.01 };
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedImageToImageMetric);
-
   template <typename... TOptionalThreadId>
   bool
   EvaluateMovingImageValueAndDerivativeWithOptionalThreadId(const MovingImagePointType & mappedPoint,

@@ -46,6 +46,8 @@ namespace itk
 class FullSearchOptimizer : public SingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FullSearchOptimizer);
+
   /** Standard class typedefs. */
   using Self = FullSearchOptimizer;
   using Superclass = SingleValuedNonLinearOptimizer;
@@ -239,8 +241,6 @@ protected:
   ProcessSearchSpaceChanges();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(FullSearchOptimizer);
-
   unsigned long m_CurrentIteration{ 0 };
 };
 

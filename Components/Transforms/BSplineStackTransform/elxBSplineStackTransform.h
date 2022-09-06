@@ -115,6 +115,8 @@ class ITK_TEMPLATE_EXPORT BSplineStackTransform
   , public TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineStackTransform);
+
   /** Standard ITK-stuff. */
   using Self = BSplineStackTransform;
   using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
@@ -272,8 +274,6 @@ private:
   CreateDerivedTransformParametersMap() const override;
 
   /** The deleted copy constructor and assignment operator. */
-  ITK_DISALLOW_COPY_AND_MOVE(BSplineStackTransform);
-
   /** Typedef for stack transform. */
   using StackTransformType = itk::BSplineStackTransform<SpaceDimension>;
 

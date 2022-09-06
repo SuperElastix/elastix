@@ -57,6 +57,8 @@ class ITK_TEMPLATE_EXPORT AdvancedRayCastInterpolateImageFunction
   : public InterpolateImageFunction<TInputImage, TCoordRep>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedRayCastInterpolateImageFunction);
+
   /** Standard class typedefs. */
   using Self = AdvancedRayCastInterpolateImageFunction;
   using Superclass = InterpolateImageFunction<TInputImage, TCoordRep>;
@@ -211,8 +213,6 @@ protected:
   InterpolatorPointer m_Interpolator;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedRayCastInterpolateImageFunction);
-
   SizeType
   GetRadius() const override
   {

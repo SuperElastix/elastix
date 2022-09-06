@@ -36,6 +36,8 @@ template <class TListSample>
 class ITK_TEMPLATE_EXPORT ANNBruteForceTree : public BinaryANNTreeBase<TListSample>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ANNBruteForceTree);
+
   /** Standard itk. */
   using Self = ANNBruteForceTree;
   using Superclass = BinaryANNTreeBase<TListSample>;
@@ -82,9 +84,6 @@ protected:
 
   /** Member variables. */
   ANNBruteForceTreeType * m_ANNTree;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ANNBruteForceTree);
 };
 
 } // end namespace itk

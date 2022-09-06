@@ -55,6 +55,8 @@ template <typename TMovingImage>
 class ITK_TEMPLATE_EXPORT TransformixFilter : public ImageSource<TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformixFilter);
+
   /** Standard ITK typedefs. */
   using Self = TransformixFilter;
   using Superclass = ImageSource<TMovingImage>;
@@ -235,8 +237,6 @@ protected:
   GenerateData() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(TransformixFilter);
-
   /** Private using-declarations, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;
   using Superclass::MakeOutput;

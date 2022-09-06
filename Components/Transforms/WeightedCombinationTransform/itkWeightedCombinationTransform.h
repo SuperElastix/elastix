@@ -43,6 +43,8 @@ class ITK_TEMPLATE_EXPORT WeightedCombinationTransform
   : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(WeightedCombinationTransform);
+
   /** Standard class typedefs. */
   using Self = WeightedCombinationTransform;
   using Superclass = AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>;
@@ -246,8 +248,6 @@ protected:
   NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(WeightedCombinationTransform);
-
   bool m_NormalizeWeights;
 };
 

@@ -49,6 +49,8 @@ template <class TInputImage, class TGrayValueImage>
 class ITK_TEMPLATE_EXPORT VectorMeanDiffusionImageFilter : public ImageToImageFilter<TInputImage, TInputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(VectorMeanDiffusionImageFilter);
+
   /** Convenient typedefs for simplifying declarations. */
   using InputImageType = TInputImage;
   using GrayValueImageType = TGrayValueImage;
@@ -138,8 +140,6 @@ protected:
   GenerateData() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(VectorMeanDiffusionImageFilter);
-
   /** Declare member variables. */
   InputSizeType m_Radius;
   unsigned int  m_NumberOfIterations;

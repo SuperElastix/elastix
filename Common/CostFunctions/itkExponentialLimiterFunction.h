@@ -43,6 +43,8 @@ template <class TInput, unsigned int NDimension>
 class ITK_TEMPLATE_EXPORT ExponentialLimiterFunction : public LimiterFunctionBase<TInput, NDimension>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ExponentialLimiterFunction);
+
   /** Standard class typedefs. */
   using Self = ExponentialLimiterFunction;
   using Superclass = LimiterFunctionBase<TInput, NDimension>;
@@ -87,9 +89,6 @@ protected:
   double m_UTminUBinv;
   double m_LTminLB;
   double m_LTminLBinv;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ExponentialLimiterFunction);
 };
 
 } // end namespace itk

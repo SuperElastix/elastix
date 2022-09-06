@@ -74,6 +74,8 @@ class ITK_TEMPLATE_EXPORT PreconditionedGradientDescent
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(PreconditionedGradientDescent);
+
   /** Standard ITK.*/
   using Self = PreconditionedGradientDescent;
   using Superclass1 = AdaptiveStochasticPreconditionedGradientDescentOptimizer;
@@ -251,8 +253,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(PreconditionedGradientDescent);
 
   /** Private variables for the sampling attempts. */
   unsigned long m_MaximumNumberOfSamplingAttempts;

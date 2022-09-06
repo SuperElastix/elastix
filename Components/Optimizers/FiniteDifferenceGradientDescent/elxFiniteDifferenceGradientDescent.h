@@ -82,6 +82,8 @@ class ITK_TEMPLATE_EXPORT FiniteDifferenceGradientDescent
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FiniteDifferenceGradientDescent);
+
   /** Standard ITK.*/
   using Self = FiniteDifferenceGradientDescent;
   using Superclass1 = FiniteDifferenceGradientDescentOptimizer;
@@ -143,8 +145,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(FiniteDifferenceGradientDescent);
 };
 
 } // end namespace elastix

@@ -195,6 +195,8 @@ class ITK_TEMPLATE_EXPORT AdaptiveStochasticGradientDescent
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticGradientDescent);
+
   /** Standard ITK. */
   using Self = AdaptiveStochasticGradientDescent;
   using Superclass1 = AdaptiveStochasticGradientDescentOptimizer;
@@ -401,8 +403,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticGradientDescent);
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;

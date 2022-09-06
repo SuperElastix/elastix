@@ -75,6 +75,8 @@ template <class TOutputImage, class TTransformPrecisionType = double>
 class ITK_TEMPLATE_EXPORT TransformToDeterminantOfSpatialJacobianSource : public ImageSource<TOutputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformToDeterminantOfSpatialJacobianSource);
+
   /** Standard class typedefs. */
   using Self = TransformToDeterminantOfSpatialJacobianSource;
   using Superclass = ImageSource<TOutputImage>;
@@ -211,8 +213,6 @@ protected:
   LinearGenerateData();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(TransformToDeterminantOfSpatialJacobianSource);
-
   /** Member variables. */
   RegionType           m_OutputRegion{}; // region of the output image
   TransformPointerType m_Transform{

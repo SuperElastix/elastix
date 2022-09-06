@@ -126,6 +126,8 @@ private:
 class ElastixMain : public itk::Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ElastixMain);
+
   /** Standard itk. */
   using Self = ElastixMain;
   using Superclass = itk::Object;
@@ -394,9 +396,6 @@ protected:
   /** Helper function to obtain information from images on disk. */
   void
   GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ElastixMain);
 };
 
 } // end namespace elastix

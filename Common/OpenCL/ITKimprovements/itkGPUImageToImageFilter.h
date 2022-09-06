@@ -65,6 +65,8 @@ template <typename TInputImage,
 class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUImageToImageFilter : public TParentImageFilter
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUImageToImageFilter);
+
   /** Standard class typedefs. */
   using Self = GPUImageToImageFilter;
   using Superclass = TParentImageFilter;
@@ -126,8 +128,6 @@ protected:
   typename OpenCLKernelManager::Pointer m_GPUKernelManager;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUImageToImageFilter);
-
   bool m_GPUEnabled;
 };
 

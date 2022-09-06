@@ -66,6 +66,8 @@ template <typename TTypeList,
 class ITK_TEMPLATE_EXPORT GPUAdvancedCombinationTransformCopier : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedCombinationTransformCopier);
+
   /** Standard class typedefs. */
   using Self = GPUAdvancedCombinationTransformCopier;
   using Superclass = Object;
@@ -243,8 +245,6 @@ private:
                             TransformSpaceDimensionToType<3>);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUAdvancedCombinationTransformCopier);
-
   CPUComboTransformConstPointer m_InputTransform;
   GPUComboTransformPointer      m_Output;
   ModifiedTimeType              m_InternalTransformTime;

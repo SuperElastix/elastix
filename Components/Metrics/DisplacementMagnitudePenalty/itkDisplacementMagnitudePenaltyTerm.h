@@ -34,6 +34,8 @@ template <class TFixedImage, class TScalarType>
 class ITK_TEMPLATE_EXPORT DisplacementMagnitudePenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DisplacementMagnitudePenaltyTerm);
+
   /** Standard ITK stuff. */
   using Self = DisplacementMagnitudePenaltyTerm;
   using Superclass = TransformPenaltyTerm<TFixedImage, TScalarType>;
@@ -131,9 +133,6 @@ protected:
 
   /** PrintSelf. *
   void PrintSelf( std::ostream& os, Indent indent ) const;*/
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(DisplacementMagnitudePenaltyTerm);
 };
 
 } // end namespace itk

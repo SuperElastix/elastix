@@ -64,6 +64,8 @@ template <class TScalarType = double>
 class ITK_TEMPLATE_EXPORT AdvancedSimilarity3DTransform : public AdvancedVersorRigid3DTransform<TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedSimilarity3DTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedSimilarity3DTransform;
   using Superclass = AdvancedVersorRigid3DTransform<TScalarType>;
@@ -165,8 +167,6 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedSimilarity3DTransform);
-
   ScaleType m_Scale;
 };
 

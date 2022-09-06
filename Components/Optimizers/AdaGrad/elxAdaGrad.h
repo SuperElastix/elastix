@@ -192,6 +192,8 @@ class ITK_TEMPLATE_EXPORT AdaGrad
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaGrad);
+
   /** Standard ITK. */
   using Self = AdaGrad;
   using Superclass1 = AdaptiveStepsizeOptimizer;
@@ -409,8 +411,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(AdaGrad);
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;

@@ -47,6 +47,8 @@ class ITK_TEMPLATE_EXPORT DeformationVectorFieldTransform
   : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DeformationVectorFieldTransform);
+
   /** Standard class typedefs. */
   using Self = DeformationVectorFieldTransform;
   using Superclass = AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0>;
@@ -114,8 +116,6 @@ protected:
   ~DeformationVectorFieldTransform() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(DeformationVectorFieldTransform);
-
   /** Member variables. */
   CoefficientImagePointer m_Images[SpaceDimension];
 };

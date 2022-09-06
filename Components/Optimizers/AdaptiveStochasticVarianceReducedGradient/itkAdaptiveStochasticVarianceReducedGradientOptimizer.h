@@ -70,6 +70,8 @@ namespace itk
 class AdaptiveStochasticVarianceReducedGradientOptimizer : public StandardStochasticVarianceReducedGradientOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticVarianceReducedGradientOptimizer);
+
   /** Standard ITK.*/
   using Self = AdaptiveStochasticVarianceReducedGradientOptimizer;
   using Superclass = StandardStochasticVarianceReducedGradientOptimizer;
@@ -130,8 +132,6 @@ protected:
   DerivativeType m_PreviousGradient;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticVarianceReducedGradientOptimizer);
-
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };
   double m_SigmoidMax{ 1.0 };

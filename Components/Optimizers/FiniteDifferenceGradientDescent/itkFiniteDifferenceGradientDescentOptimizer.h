@@ -55,6 +55,8 @@ namespace itk
 class FiniteDifferenceGradientDescentOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FiniteDifferenceGradientDescentOptimizer);
+
   /** Standard class typedefs. */
   using Self = FiniteDifferenceGradientDescentOptimizer;
   using Superclass = ScaledSingleValuedNonLinearOptimizer;
@@ -163,8 +165,6 @@ protected:
   Compute_c(unsigned long k) const;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(FiniteDifferenceGradientDescentOptimizer);
-
   /** Private member variables.*/
   bool              m_Stop{ false };
   double            m_Value{ 0.0 };

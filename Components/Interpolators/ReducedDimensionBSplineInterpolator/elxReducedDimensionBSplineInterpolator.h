@@ -53,6 +53,8 @@ class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineInterpolator
     public InterpolatorBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ReducedDimensionBSplineInterpolator);
+
   /** Standard ITK-stuff. */
   using Self = ReducedDimensionBSplineInterpolator;
   using Superclass1 =
@@ -109,8 +111,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(ReducedDimensionBSplineInterpolator);
 };
 
 } // end namespace elastix

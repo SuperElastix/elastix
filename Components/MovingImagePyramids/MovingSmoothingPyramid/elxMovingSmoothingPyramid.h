@@ -43,6 +43,8 @@ class ITK_TEMPLATE_EXPORT MovingSmoothingPyramid
   , public MovingImagePyramidBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MovingSmoothingPyramid);
+
   /** Standard ITK. */
   using Self = MovingSmoothingPyramid;
   using Superclass1 =
@@ -87,8 +89,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MovingSmoothingPyramid);
 };
 
 } // end namespace elastix

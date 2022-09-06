@@ -37,6 +37,8 @@ template <typename TTypeList, typename NDimensions>
 class ITK_TEMPLATE_EXPORT GPULinearInterpolateImageFunctionFactory2 : public GPUObjectFactoryBase<NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPULinearInterpolateImageFunctionFactory2);
+
   using Self = GPULinearInterpolateImageFunctionFactory2;
   using Superclass = GPUObjectFactoryBase<NDimensions>;
   using Pointer = SmartPointer<Self>;
@@ -115,9 +117,6 @@ protected:
   /** Register methods for 3D. */
   void
   Register3D() override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPULinearInterpolateImageFunctionFactory2);
 };
 
 } // end namespace itk

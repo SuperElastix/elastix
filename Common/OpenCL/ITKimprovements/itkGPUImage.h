@@ -63,6 +63,8 @@ template <typename TPixel, unsigned int VImageDimension = 2>
 class ITK_TEMPLATE_EXPORT ITKOpenCL_EXPORT GPUImage : public Image<TPixel, VImageDimension>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUImage);
+
   using Self = GPUImage;
   using Superclass = Image<TPixel, VImageDimension>;
   using Pointer = SmartPointer<Self>;
@@ -254,8 +256,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUImage);
-
   bool m_Graft;
 
   typename GPUImageDataManager<GPUImage>::Pointer m_DataManager;

@@ -31,6 +31,8 @@ template <class TFixedImage, class TMovingImage>
 class ITK_TEMPLATE_EXPORT PCAMetric2 : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(PCAMetric2);
+
   /** Standard class typedefs. */
   using Self = PCAMetric2;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -152,8 +154,6 @@ protected:
                                         DerivativeType &                  imageJacobian) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(PCAMetric2);
-
   /** Sample n random numbers from 0..m and add them to the vector. */
   void
   SampleRandom(const int n, const int m, std::vector<int> & numbers) const;

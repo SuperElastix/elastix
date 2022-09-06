@@ -77,6 +77,8 @@ class ITK_TEMPLATE_EXPORT EulerTransformElastix
   , public elx::TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(EulerTransformElastix);
+
   /** Standard ITK-stuff.*/
   using Self = EulerTransformElastix;
 
@@ -217,8 +219,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(EulerTransformElastix);
 
   const EulerTransformPointer m_EulerTransform{ EulerTransformType::New() };
 };

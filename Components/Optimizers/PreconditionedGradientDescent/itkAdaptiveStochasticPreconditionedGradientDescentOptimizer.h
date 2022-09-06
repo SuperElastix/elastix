@@ -78,6 +78,8 @@ namespace itk
 class AdaptiveStochasticPreconditionedGradientDescentOptimizer : public StochasticPreconditionedGradientDescentOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticPreconditionedGradientDescentOptimizer);
+
   /** Standard ITK.*/
   using Self = AdaptiveStochasticPreconditionedGradientDescentOptimizer;
   using Superclass = StochasticPreconditionedGradientDescentOptimizer;
@@ -144,8 +146,6 @@ protected:
   DerivativeType m_PreviousSearchDirection;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdaptiveStochasticPreconditionedGradientDescentOptimizer);
-
   /** Settings */
   bool   m_UseAdaptiveStepSizes{ true };
   double m_SigmoidMax{ 1.0 };

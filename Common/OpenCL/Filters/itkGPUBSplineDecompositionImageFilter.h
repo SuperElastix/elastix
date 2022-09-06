@@ -42,6 +42,8 @@ class ITK_TEMPLATE_EXPORT GPUBSplineDecompositionImageFilter
   : public GPUImageToImageFilter<TInputImage, TOutputImage, BSplineDecompositionImageFilter<TInputImage, TOutputImage>>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUBSplineDecompositionImageFilter);
+
   /** Standard ITK-stuff. */
   using Self = GPUBSplineDecompositionImageFilter;
   using CPUSuperclass = BSplineDecompositionImageFilter<TInputImage, TOutputImage>;
@@ -81,8 +83,6 @@ protected:
   GPUGenerateData();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUBSplineDecompositionImageFilter);
-
   std::size_t m_FilterGPUKernelHandle;
   std::size_t m_DeviceLocalMemorySize;
 };

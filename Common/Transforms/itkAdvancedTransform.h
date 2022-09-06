@@ -83,6 +83,8 @@ template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOu
 class ITK_TEMPLATE_EXPORT AdvancedTransform : public Transform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedTransform);
+
   /** Standard class typedefs. */
   using Self = AdvancedTransform;
   using Superclass = Transform<TScalarType, NInputDimensions, NOutputDimensions>;
@@ -297,9 +299,6 @@ protected:
 
   bool m_HasNonZeroSpatialHessian;
   bool m_HasNonZeroJacobianOfSpatialHessian;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedTransform);
 };
 
 } // end namespace itk

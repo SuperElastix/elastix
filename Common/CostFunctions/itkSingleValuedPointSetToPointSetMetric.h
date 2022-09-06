@@ -62,6 +62,8 @@ template <class TFixedPointSet, class TMovingPointSet>
 class ITK_TEMPLATE_EXPORT SingleValuedPointSetToPointSetMetric : public SingleValuedCostFunction
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(SingleValuedPointSetToPointSetMetric);
+
   /** Standard class typedefs. */
   using Self = SingleValuedPointSetToPointSetMetric;
   using Superclass = SingleValuedCostFunction;
@@ -189,9 +191,6 @@ protected:
 
   /** Variables for multi-threading. */
   bool m_UseMetricSingleThreaded{ true };
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(SingleValuedPointSetToPointSetMetric);
 };
 
 } // end namespace itk

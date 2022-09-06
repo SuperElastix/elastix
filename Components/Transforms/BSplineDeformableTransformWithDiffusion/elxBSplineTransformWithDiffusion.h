@@ -166,6 +166,8 @@ class ITK_TEMPLATE_EXPORT BSplineTransformWithDiffusion
     public TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineTransformWithDiffusion);
+
   /** Standard ITK-stuff. */
   using Self = BSplineTransformWithDiffusion;
   using Superclass1 = itk::DeformationFieldRegulizer<
@@ -360,8 +362,6 @@ private:
   /** Writes its deformation field to a file. */
   void
   WriteDerivedTransformDataToFile() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(BSplineTransformWithDiffusion);
 
   /** Member variables for diffusion. */
   DiffusionFilterPointer      m_Diffusion;

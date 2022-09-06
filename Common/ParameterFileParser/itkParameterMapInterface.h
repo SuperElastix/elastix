@@ -78,6 +78,8 @@ namespace itk
 class ParameterMapInterface : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ParameterMapInterface);
+
   /** Standard ITK typedefs. */
   using Self = ParameterMapInterface;
   using Superclass = Object;
@@ -415,8 +417,6 @@ protected:
   ~ParameterMapInterface() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ParameterMapInterface);
-
   /** Member variable to store the parameters. */
   ParameterMapType m_ParameterMap;
 

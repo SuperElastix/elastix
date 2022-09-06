@@ -92,6 +92,8 @@ template <class TTransform, class TFixedImage, class TMovingImage>
 class ITK_TEMPLATE_EXPORT CenteredTransformInitializer2 : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CenteredTransformInitializer2);
+
   /** Standard class typedefs. */
   using Self = CenteredTransformInitializer2;
   using Superclass = Object;
@@ -214,8 +216,6 @@ protected:
   bool           m_CenterOfGravityUsesLowerThreshold;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(CenteredTransformInitializer2);
-
   TransformPointer m_Transform;
 
   FixedImagePointer      m_FixedImage;

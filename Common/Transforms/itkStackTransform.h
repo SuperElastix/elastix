@@ -38,6 +38,8 @@ template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutput
 class ITK_TEMPLATE_EXPORT StackTransform : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(StackTransform);
+
   /** Standard class typedefs. */
   using Self = StackTransform;
   using Superclass = AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>;
@@ -300,8 +302,6 @@ protected:
   }
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(StackTransform);
-
   /** Each override of this pure virtual member function should create a subtransform for the specific (derived) stack
    * transform type. For example, for an `TranslationStackTransform` it should create an `AdvancedTranslationTransform`,
    * and for an `EulerStackTransform` it should create an `EulerTransform`. */

@@ -50,6 +50,8 @@ class ITK_TEMPLATE_EXPORT MultiInputImageToImageMetricBase
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiInputImageToImageMetricBase);
+
   /** Standard class typedefs. */
   using Self = MultiInputImageToImageMetricBase;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -397,8 +399,6 @@ protected:
   BSplineInterpolatorVectorType m_BSplineInterpolatorVector;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(MultiInputImageToImageMetricBase);
-
   /// Avoids accidentally calling `this->FastEvaluateMovingImageValueAndDerivative(mappedPoint, ..., threadId)`, when
   /// `*this` is derived from `MultiInputImageToImageMetricBase`. (The non-virtual member function
   /// `AdvancedImageToImageMetric::FastEvaluateMovingImageValueAndDerivative` does not entirely replace the

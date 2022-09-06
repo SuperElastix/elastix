@@ -56,6 +56,8 @@ template <typename TScalarType, unsigned int NDimensions = 3>
 class ITK_TEMPLATE_EXPORT AdvancedCombinationTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedCombinationTransform);
+
   /** Standard itk. */
   using Self = AdvancedCombinationTransform;
   using Superclass = AdvancedTransform<TScalarType, NDimensions, NDimensions>;
@@ -617,9 +619,6 @@ private:
   /** How to combine the transformations. Composition by default. */
   bool m_UseAddition{ false };
   bool m_UseComposition{ true };
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedCombinationTransform);
 };
 
 } // end namespace itk

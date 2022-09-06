@@ -33,6 +33,8 @@ template <class TScalarType = double, unsigned int Dimension = 2> // Data type f
 class AffineLogTransform : public AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AffineLogTransform);
+
   /** Standard class typedefs. */
   using Self = AffineLogTransform;
   using Superclass = AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>;
@@ -107,8 +109,6 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AffineLogTransform);
-
   MatrixType m_MatrixLogDomain;
 };
 

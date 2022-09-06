@@ -54,6 +54,8 @@ template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT ElastixRegistrationMethod : public itk::ImageSource<TFixedImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ElastixRegistrationMethod);
+
   /** Standard ITK typedefs. */
   using Self = ElastixRegistrationMethod;
   using Superclass = ImageSource<TFixedImage>;
@@ -262,8 +264,6 @@ protected:
   MakeOutput(DataObjectPointerArraySizeType idx) override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ElastixRegistrationMethod);
-
   /** MakeUniqueName. */
   std::string
   MakeUniqueName(const DataObjectIdentifierType & key);

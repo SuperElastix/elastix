@@ -67,6 +67,8 @@ class OpenCLContext;
 class ITKOpenCL_EXPORT OpenCLKernelManager : public LightObject
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLKernelManager);
+
   /** Standard class typedefs. */
   using Self = OpenCLKernelManager;
   using Superclass = LightObject;
@@ -159,8 +161,6 @@ protected:
   ResetArguments(const std::size_t kernelIdx);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(OpenCLKernelManager);
-
   OpenCLContext * m_Context;
 
   struct KernelArgumentList

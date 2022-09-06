@@ -71,6 +71,8 @@ template <class TFixedImage, class TScalarType>
 class ITK_TEMPLATE_EXPORT TransformRigidityPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformRigidityPenaltyTerm);
+
   /** Standard itk stuff. */
   using Self = TransformRigidityPenaltyTerm;
   using Superclass = TransformPenaltyTerm<TFixedImage, TScalarType>;
@@ -297,8 +299,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(TransformRigidityPenaltyTerm);
-
   /** Internal function to dilate the rigidity images. */
   virtual void
   DilateRigidityImages();

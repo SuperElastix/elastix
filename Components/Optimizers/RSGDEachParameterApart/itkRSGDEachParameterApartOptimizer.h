@@ -53,6 +53,8 @@ namespace itk
 class RSGDEachParameterApartOptimizer : public RSGDEachParameterApartBaseOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RSGDEachParameterApartOptimizer);
+
   /** Standard class typedefs. */
   using Self = RSGDEachParameterApartOptimizer;
   using Superclass = RSGDEachParameterApartBaseOptimizer;
@@ -80,9 +82,6 @@ protected:
    * \sa AdvanceOneStep */
   void
   StepAlongGradient(const DerivativeType & factor, const DerivativeType & transformedGradient) override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(RSGDEachParameterApartOptimizer);
 };
 
 } // end namespace itk

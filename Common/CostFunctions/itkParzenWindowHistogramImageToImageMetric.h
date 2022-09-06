@@ -76,6 +76,8 @@ class ITK_TEMPLATE_EXPORT ParzenWindowHistogramImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ParzenWindowHistogramImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = ParzenWindowHistogramImageToImageMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -471,8 +473,6 @@ protected:
   {}
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ParzenWindowHistogramImageToImageMetric);
-
   /** Threading related parameters. */
   mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs;
 

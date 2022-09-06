@@ -46,6 +46,8 @@ class ITK_TEMPLATE_EXPORT AffineLogTransformElastix
   , public elx::TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AffineLogTransformElastix);
+
   /** Standard ITK-stuff.*/
   using Self = AffineLogTransformElastix;
   using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
@@ -178,8 +180,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(AffineLogTransformElastix);
 
   const AffineLogTransformPointer m_AffineLogTransform{ AffineLogTransformType::New() };
 };

@@ -43,6 +43,8 @@ class ITK_TEMPLATE_EXPORT ImageSamplerBase
   : public ImageToVectorContainerFilter<TInputImage, VectorDataContainer<std::size_t, ImageSample<TInputImage>>>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageSamplerBase);
+
   /** Standard ITK-stuff. */
   using Self = ImageSamplerBase;
   using Superclass =
@@ -227,8 +229,6 @@ protected:
   bool m_UseMultiThread{ false };
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ImageSamplerBase);
-
   /** Member variables. */
   MaskConstPointer           m_Mask{ nullptr };
   MaskVectorType             m_MaskVector;

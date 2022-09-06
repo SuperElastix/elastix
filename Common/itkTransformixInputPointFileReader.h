@@ -46,6 +46,8 @@ template <class TOutputMesh>
 class ITK_TEMPLATE_EXPORT TransformixInputPointFileReader : public MeshFileReaderBase<TOutputMesh>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformixInputPointFileReader);
+
   /** Standard class typedefs. */
   using Self = TransformixInputPointFileReader;
   using Superclass = MeshFileReaderBase<TOutputMesh>;
@@ -100,9 +102,6 @@ private:
   bool          m_PointsAreIndices{ false };
 
   std::ifstream m_Reader;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(TransformixInputPointFileReader);
 };
 
 } // end namespace itk

@@ -72,6 +72,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT MetricBase : public BaseComponentSE<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MetricBase);
+
   /** Standard ITK stuff. */
   using Self = MetricBase;
   using Superclass = BaseComponentSE<TElastix>;
@@ -232,8 +234,6 @@ protected:
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
-
-  ITK_DISALLOW_COPY_AND_MOVE(MetricBase);
 };
 
 } // end namespace elastix

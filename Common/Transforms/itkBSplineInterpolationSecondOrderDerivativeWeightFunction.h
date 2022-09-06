@@ -46,6 +46,8 @@ class ITK_TEMPLATE_EXPORT BSplineInterpolationSecondOrderDerivativeWeightFunctio
   : public BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationSecondOrderDerivativeWeightFunction);
+
   /** Standard class typedefs. */
   using Self = BSplineInterpolationSecondOrderDerivativeWeightFunction;
   using Superclass = BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>;
@@ -104,8 +106,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationSecondOrderDerivativeWeightFunction);
-
   vnl_vector_fixed<double, 2> m_DerivativeDirections;
   bool                        m_EqualDerivativeDirections;
 };

@@ -52,6 +52,8 @@ class Configuration
   , public BaseComponent
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(Configuration);
+
   /** Standard itk.*/
   using Self = Configuration;
   using Superclass1 = itk::Object;
@@ -283,8 +285,6 @@ protected:
   PrintParameterFile() const;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(Configuration);
-
   CommandLineArgumentMapType          m_CommandLineArgumentMap{};
   std::string                         m_ParameterFileName{};
   itk::ParameterFileParser::Pointer   m_ParameterFileParser{ itk::ParameterFileParser::New() };

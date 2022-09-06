@@ -74,6 +74,8 @@ class ITK_TEMPLATE_EXPORT RSGDEachParameterApart
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RSGDEachParameterApart);
+
   /** Standard ITK.*/
   using Self = RSGDEachParameterApart;
   using Superclass1 = RSGDEachParameterApartOptimizer;
@@ -134,8 +136,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(RSGDEachParameterApart);
 };
 
 } // end namespace elastix

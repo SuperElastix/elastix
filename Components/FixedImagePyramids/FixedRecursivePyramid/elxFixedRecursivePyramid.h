@@ -42,6 +42,8 @@ class ITK_TEMPLATE_EXPORT FixedRecursivePyramid
   , public FixedImagePyramidBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FixedRecursivePyramid);
+
   /** Standard ITK-stuff. */
   using Self = FixedRecursivePyramid;
   using Superclass1 =
@@ -87,8 +89,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(FixedRecursivePyramid);
 };
 
 } // end namespace elastix

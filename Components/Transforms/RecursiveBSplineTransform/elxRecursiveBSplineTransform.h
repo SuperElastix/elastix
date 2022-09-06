@@ -112,6 +112,8 @@ class ITK_TEMPLATE_EXPORT RecursiveBSplineTransform
   , public TransformBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineTransform);
+
   /** Standard ITK-stuff. */
   using Self = RecursiveBSplineTransform;
   using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
@@ -259,8 +261,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineTransform);
 
   /** Private variables. */
   BSplineTransformBasePointer m_BSplineTransform;

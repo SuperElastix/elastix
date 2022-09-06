@@ -66,6 +66,8 @@ class ITK_TEMPLATE_EXPORT DistancePreservingRigidityPenalty
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(DistancePreservingRigidityPenalty);
+
   /** Standard ITK-stuff. */
   using Self = DistancePreservingRigidityPenalty;
   using Superclass1 = itk::DistancePreservingRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>;
@@ -165,8 +167,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(DistancePreservingRigidityPenalty);
 };
 
 } // end namespace elastix

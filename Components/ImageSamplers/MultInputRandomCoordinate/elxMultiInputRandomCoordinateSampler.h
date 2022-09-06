@@ -86,6 +86,8 @@ class ITK_TEMPLATE_EXPORT MultiInputRandomCoordinateSampler
   , public elx::ImageSamplerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiInputRandomCoordinateSampler);
+
   /** Standard ITK-stuff. */
   using Self = MultiInputRandomCoordinateSampler;
   using Superclass1 =
@@ -155,8 +157,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(MultiInputRandomCoordinateSampler);
 };
 
 } // end namespace elastix

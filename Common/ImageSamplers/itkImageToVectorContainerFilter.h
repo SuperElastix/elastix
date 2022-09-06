@@ -34,6 +34,8 @@ template <class TInputImage, class TOutputVectorContainer>
 class ITK_TEMPLATE_EXPORT ImageToVectorContainerFilter : public VectorContainerSource<TOutputVectorContainer>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageToVectorContainerFilter);
+
   /** Standard ITK-stuff. */
   using Self = ImageToVectorContainerFilter;
   using Superclass = VectorContainerSource<TOutputVectorContainer>;
@@ -187,9 +189,6 @@ protected:
   /** PrintSelf. */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ImageToVectorContainerFilter);
 };
 
 } // end namespace itk

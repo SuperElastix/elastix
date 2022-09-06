@@ -36,6 +36,8 @@ template <class TListSample>
 class ITK_TEMPLATE_EXPORT BinaryTreeBase : public DataObject
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BinaryTreeBase);
+
   /** Standard itk. */
   using Self = BinaryTreeBase;
   using Superclass = DataObject;
@@ -85,8 +87,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(BinaryTreeBase);
-
   /** Store the samples. */
   typename SampleType::Pointer m_Sample;
 };

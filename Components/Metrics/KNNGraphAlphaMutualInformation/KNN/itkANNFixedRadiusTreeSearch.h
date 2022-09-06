@@ -36,6 +36,8 @@ template <class TListSample>
 class ITK_TEMPLATE_EXPORT ANNFixedRadiusTreeSearch : public BinaryANNTreeSearchBase<TListSample>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ANNFixedRadiusTreeSearch);
+
   /** Standard itk. */
   using Self = ANNFixedRadiusTreeSearch;
   using Superclass = BinaryANNTreeSearchBase<TListSample>;
@@ -86,9 +88,6 @@ protected:
   /** Member variables. */
   double m_ErrorBound;
   double m_SquaredRadius;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ANNFixedRadiusTreeSearch);
 };
 
 } // end namespace itk

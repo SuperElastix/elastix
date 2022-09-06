@@ -112,6 +112,8 @@ class ITK_TEMPLATE_EXPORT TransformRigidityPenalty
   , public MetricBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TransformRigidityPenalty);
+
   /** Standard ITK-stuff. */
   using Self = TransformRigidityPenalty;
   using Superclass1 = itk::TransformRigidityPenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>;
@@ -230,8 +232,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(TransformRigidityPenalty);
 };
 
 } // end namespace elastix

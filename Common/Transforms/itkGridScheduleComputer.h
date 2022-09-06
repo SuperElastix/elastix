@@ -40,6 +40,8 @@ template <typename TTransformScalarType, unsigned int VImageDimension>
 class ITK_TEMPLATE_EXPORT GridScheduleComputer : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GridScheduleComputer);
+
   /** Standard class typedefs. */
   using Self = GridScheduleComputer;
   using Superclass = Object;
@@ -170,8 +172,6 @@ protected:
                         SpacingType &   finalGridSpacing) const;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GridScheduleComputer);
-
   /** Declare member variables, needed in functions. */
   OriginType    m_ImageOrigin;
   SpacingType   m_ImageSpacing;

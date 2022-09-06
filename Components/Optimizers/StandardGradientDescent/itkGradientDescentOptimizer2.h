@@ -54,6 +54,8 @@ namespace itk
 class GradientDescentOptimizer2 : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GradientDescentOptimizer2);
+
   /** Standard class typedefs. */
   using Self = GradientDescentOptimizer2;
   using Superclass = ScaledSingleValuedNonLinearOptimizer;
@@ -149,8 +151,6 @@ protected:
   StopConditionType m_StopCondition{ MaximumNumberOfIterations };
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GradientDescentOptimizer2);
-
   double        m_Value{ 0.0 };
   double        m_LearningRate{ 1.0 };
   bool          m_Stop{ false };

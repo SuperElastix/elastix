@@ -48,6 +48,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT OpenCLFixedGenericPyramid : public FixedGenericPyramid<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(OpenCLFixedGenericPyramid);
+
   /** Standard ITK-stuff. */
   using Self = OpenCLFixedGenericPyramid;
   using Superclass = FixedGenericPyramid<TElastix>;
@@ -112,8 +114,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(OpenCLFixedGenericPyramid);
 
   /** Register/Unregister factories. */
   void

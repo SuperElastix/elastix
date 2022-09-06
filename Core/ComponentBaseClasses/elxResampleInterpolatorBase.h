@@ -43,6 +43,8 @@ template <class TElastix>
 class ITK_TEMPLATE_EXPORT ResampleInterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ResampleInterpolatorBase);
+
   /** Standard ITK stuff. */
   using Self = ResampleInterpolatorBase;
   using Superclass = BaseComponentSE<TElastix>;
@@ -115,8 +117,6 @@ private:
   {
     return {};
   }
-
-  ITK_DISALLOW_COPY_AND_MOVE(ResampleInterpolatorBase);
 };
 
 } // end namespace elastix

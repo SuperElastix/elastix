@@ -57,6 +57,8 @@ class ITK_TEMPLATE_EXPORT AdvancedMeanSquaresImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(AdvancedMeanSquaresImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = AdvancedMeanSquaresImageToImageMetric;
   using Superclass = AdvancedImageToImageMetric<TFixedImage, TMovingImage>;
@@ -251,8 +253,6 @@ protected:
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(AdvancedMeanSquaresImageToImageMetric);
-
   bool         m_UseNormalization;
   double       m_SelfHessianSmoothingSigma;
   double       m_SelfHessianNoiseRange;

@@ -37,6 +37,8 @@ template <class TFixedImage, class TTransform>
 class ITK_TEMPLATE_EXPORT ComputeJacobianTerms : public Object
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ComputeJacobianTerms);
+
   /** Standard ITK.*/
   using Self = ComputeJacobianTerms;
   using Superclass = Object;
@@ -145,9 +147,6 @@ protected:
   // in the future it would be better to refactoring this part of the code.
   virtual void
   SampleFixedImageForJacobianTerms(ImageSampleContainerPointer & sampleContainer);
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ComputeJacobianTerms);
 };
 
 } // end namespace itk

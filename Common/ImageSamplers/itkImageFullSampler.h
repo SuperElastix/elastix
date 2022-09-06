@@ -37,6 +37,8 @@ template <class TInputImage>
 class ITK_TEMPLATE_EXPORT ImageFullSampler : public ImageSamplerBase<TInputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageFullSampler);
+
   /** Standard ITK-stuff. */
   using Self = ImageFullSampler;
   using Superclass = ImageSamplerBase<TInputImage>;
@@ -105,9 +107,6 @@ protected:
   /** Multi-threaded function that does the work. */
   void
   ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ImageFullSampler);
 };
 
 } // end namespace itk

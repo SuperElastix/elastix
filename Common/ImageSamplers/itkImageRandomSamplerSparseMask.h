@@ -38,6 +38,8 @@ template <class TInputImage>
 class ITK_TEMPLATE_EXPORT ImageRandomSamplerSparseMask : public ImageRandomSamplerBase<TInputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ImageRandomSamplerSparseMask);
+
   /** Standard ITK-stuff. */
   using Self = ImageRandomSamplerSparseMask;
   using Superclass = ImageRandomSamplerBase<TInputImage>;
@@ -101,9 +103,6 @@ protected:
 
   RandomGeneratorPointer     m_RandomGenerator{ RandomGeneratorType::GetInstance() };
   InternalFullSamplerPointer m_InternalFullSampler{ InternalFullSamplerType::New() };
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ImageRandomSamplerSparseMask);
 };
 
 } // end namespace itk

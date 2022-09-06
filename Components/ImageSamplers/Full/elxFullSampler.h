@@ -46,6 +46,8 @@ class ITK_TEMPLATE_EXPORT FullSampler
   , public elx::ImageSamplerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(FullSampler);
+
   /** Standard ITK-stuff. */
   using Self = FullSampler;
   using Superclass1 = itk::ImageFullSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>;
@@ -96,8 +98,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(FullSampler);
 };
 
 } // end namespace elastix

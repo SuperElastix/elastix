@@ -41,6 +41,8 @@ class ITK_TEMPLATE_EXPORT ComputePreconditionerUsingDisplacementDistribution
   : public ComputeDisplacementDistribution<TFixedImage, TTransform>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ComputePreconditionerUsingDisplacementDistribution);
+
   /** Standard ITK.*/
   using Self = ComputePreconditionerUsingDisplacementDistribution;
   using Superclass = ComputeDisplacementDistribution<TFixedImage, TTransform>;
@@ -139,9 +141,6 @@ protected:
   double m_MaximumStepLength;
   double m_RegularizationKappa;
   double m_ConditionNumber;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ComputePreconditionerUsingDisplacementDistribution);
 };
 
 } // end namespace itk

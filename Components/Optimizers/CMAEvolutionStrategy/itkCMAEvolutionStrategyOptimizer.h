@@ -49,6 +49,8 @@ namespace itk
 class CMAEvolutionStrategyOptimizer : public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(CMAEvolutionStrategyOptimizer);
+
   using Self = CMAEvolutionStrategyOptimizer;
   using Superclass = ScaledSingleValuedNonLinearOptimizer;
   using Pointer = SmartPointer<Self>;
@@ -422,8 +424,6 @@ protected:
   TestConvergence(bool firstCheck);
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(CMAEvolutionStrategyOptimizer);
-
   /** Settings that are only inspected/changed by the associated get/set member functions. */
   unsigned long m_MaximumNumberOfIterations{ 100 };
   bool          m_UseDecayingSigma{ false };

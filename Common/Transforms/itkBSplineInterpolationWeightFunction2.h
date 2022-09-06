@@ -44,6 +44,8 @@ class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunction2
   : public BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationWeightFunction2);
+
   /** Standard class typedefs. */
   using Self = BSplineInterpolationWeightFunction2;
   using Superclass = BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>;
@@ -88,9 +90,6 @@ protected:
   Compute1DWeights(const ContinuousIndexType & index,
                    const IndexType &           startIndex,
                    OneDWeightsType &           weights1D) const override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationWeightFunction2);
 };
 
 } // end namespace itk

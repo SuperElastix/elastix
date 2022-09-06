@@ -45,6 +45,8 @@ class ITK_EXPORT GPULinearInterpolateImageFunction
   : public GPUInterpolateImageFunction<TInputImage, TCoordRep, LinearInterpolateImageFunction<TInputImage, TCoordRep>>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPULinearInterpolateImageFunction);
+
   /** Standard class typedefs. */
   using Self = GPULinearInterpolateImageFunction;
   using CPUSuperclass = LinearInterpolateImageFunction<TInputImage, TCoordRep>;
@@ -70,8 +72,6 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPULinearInterpolateImageFunction);
-
   std::vector<std::string> m_Sources;
 };
 

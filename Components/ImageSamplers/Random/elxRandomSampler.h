@@ -54,6 +54,8 @@ class ITK_TEMPLATE_EXPORT RandomSampler
   , public elx::ImageSamplerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(RandomSampler);
+
   /** Standard ITK-stuff. */
   using Self = RandomSampler;
   using Superclass1 = itk::ImageRandomSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>;
@@ -110,8 +112,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(RandomSampler);
 };
 
 } // end namespace elastix

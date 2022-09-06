@@ -47,6 +47,8 @@ DisplayDebugText - <Debug>
 class TestOutputWindow : public OutputWindow
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(TestOutputWindow);
+
   /** Standard class typedefs. */
   using Self = TestOutputWindow;
   using Superclass = OutputWindow;
@@ -68,9 +70,6 @@ protected:
   ~TestOutputWindow() override {}
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(TestOutputWindow);
 };
 
 } // end namespace itk

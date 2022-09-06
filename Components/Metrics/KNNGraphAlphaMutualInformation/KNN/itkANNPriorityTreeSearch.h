@@ -36,6 +36,8 @@ template <class TListSample>
 class ITK_TEMPLATE_EXPORT ANNPriorityTreeSearch : public BinaryANNTreeSearchBase<TListSample>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ANNPriorityTreeSearch);
+
   /** Standard itk. */
   using Self = ANNPriorityTreeSearch;
   using Superclass = BinaryANNTreeSearchBase<TListSample>;
@@ -85,9 +87,6 @@ protected:
   /** Member variables. */
   double          m_ErrorBound;
   ANNkDTreeType * m_BinaryTreeAskDTree;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(ANNPriorityTreeSearch);
 };
 
 } // end namespace itk

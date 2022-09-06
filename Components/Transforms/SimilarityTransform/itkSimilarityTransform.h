@@ -89,6 +89,8 @@ template <class TScalarType, unsigned int Dimension>
 class ITK_TEMPLATE_EXPORT SimilarityTransform : public SimilarityGroupTemplate<TScalarType, Dimension>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(SimilarityTransform);
+
   /** Standard ITK-stuff. */
   using Self = SimilarityTransform;
   using Superclass = SimilarityGroupTemplate<TScalarType, Dimension>;
@@ -131,9 +133,6 @@ public:
 protected:
   SimilarityTransform() = default;
   ~SimilarityTransform() override = default;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(SimilarityTransform);
 };
 
 } // end namespace itk

@@ -73,6 +73,8 @@ class ITK_EXPORT GPUCastImageFilter
       CastImageFilter<TInputImage, TOutputImage>>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(GPUCastImageFilter);
+
   /** Standard class typedefs. */
   using Self = GPUCastImageFilter;
   using GPUSuperclass =
@@ -105,9 +107,6 @@ protected:
   multi-threaded */
   void
   GPUGenerateData() override;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(GPUCastImageFilter);
 };
 
 } // end of namespace itk

@@ -45,6 +45,8 @@ template <class TPixel, unsigned int VDimension>
 class ITK_TEMPLATE_EXPORT NDImageTemplate : public NDImageBase<TPixel>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(NDImageTemplate);
+
   /** Standard class typedefs.*/
   using Self = NDImageTemplate;
   using Superclass = NDImageBase<TPixel>;
@@ -267,9 +269,6 @@ protected:
       return out;
     }
   };
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(NDImageTemplate);
 };
 
 } // end namespace itk

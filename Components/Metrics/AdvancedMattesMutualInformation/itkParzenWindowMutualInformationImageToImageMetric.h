@@ -76,6 +76,8 @@ class ITK_TEMPLATE_EXPORT ParzenWindowMutualInformationImageToImageMetric
   : public ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ParzenWindowMutualInformationImageToImageMetric);
+
   /** Standard class typedefs. */
   using Self = ParzenWindowMutualInformationImageToImageMetric;
   using Superclass = ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>;
@@ -253,8 +255,6 @@ protected:
   LaunchComputeDerivativeLowMemoryThreaderCallback() const;
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(ParzenWindowMutualInformationImageToImageMetric);
-
   /** Helper array for storing the values of the JointPDF ratios. */
   using PRatioType = double;
   using PRatioArrayType = Array2D<PRatioType>;

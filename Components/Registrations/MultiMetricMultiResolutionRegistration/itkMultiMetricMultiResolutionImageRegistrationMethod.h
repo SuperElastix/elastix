@@ -78,6 +78,8 @@ class ITK_TEMPLATE_EXPORT MultiMetricMultiResolutionImageRegistrationMethod
   : public MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(MultiMetricMultiResolutionImageRegistrationMethod);
+
   /** Standard class typedefs. */
   using Self = MultiMetricMultiResolutionImageRegistrationMethod;
   using Superclass = MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>;
@@ -334,9 +336,6 @@ protected:
 
   /** Dummy image region. */
   FixedImageRegionType m_NullFixedImageRegion;
-
-private:
-  ITK_DISALLOW_COPY_AND_MOVE(MultiMetricMultiResolutionImageRegistrationMethod);
 };
 
 } // end namespace itk

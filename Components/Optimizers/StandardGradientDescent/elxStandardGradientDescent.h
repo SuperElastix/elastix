@@ -70,6 +70,8 @@ class ITK_TEMPLATE_EXPORT StandardGradientDescent
   , public OptimizerBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(StandardGradientDescent);
+
   /** Standard ITK.*/
   using Self = StandardGradientDescent;
   using Superclass1 = StandardGradientDescentOptimizer;
@@ -150,8 +152,6 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-
-  ITK_DISALLOW_COPY_AND_MOVE(StandardGradientDescent);
 
   /** Private variables for the sampling attempts. */
   unsigned long m_MaximumNumberOfSamplingAttempts;

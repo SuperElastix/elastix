@@ -59,6 +59,8 @@ template <unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineDerivativeKernelFunction2 : public KernelFunctionBase2<double>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineDerivativeKernelFunction2);
+
   /** Standard class typedefs. */
   using Self = BSplineDerivativeKernelFunction2;
   using Superclass = KernelFunctionBase2<double>;
@@ -120,8 +122,6 @@ protected:
 
 
 private:
-  ITK_DISALLOW_COPY_AND_MOVE(BSplineDerivativeKernelFunction2);
-
   /** Structures to control overloaded versions of Evaluate */
   template <unsigned int>
   struct ITK_TEMPLATE_EXPORT Dispatch

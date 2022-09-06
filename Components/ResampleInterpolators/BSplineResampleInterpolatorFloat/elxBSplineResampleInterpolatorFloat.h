@@ -59,6 +59,8 @@ class ITK_TEMPLATE_EXPORT BSplineResampleInterpolatorFloat
     public ResampleInterpolatorBase<TElastix>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(BSplineResampleInterpolatorFloat);
+
   /** Standard ITK-stuff. */
   using Self = BSplineResampleInterpolatorFloat;
   using Superclass1 = itk::BSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
@@ -124,8 +126,6 @@ private:
   /** Creates a map of the parameters specific for this (derived) interpolator type. */
   ParameterMapType
   CreateDerivedTransformParametersMap() const override;
-
-  ITK_DISALLOW_COPY_AND_MOVE(BSplineResampleInterpolatorFloat);
 };
 
 } // end namespace elastix
