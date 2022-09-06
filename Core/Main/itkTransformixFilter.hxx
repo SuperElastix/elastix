@@ -154,6 +154,7 @@ TransformixFilter<TMovingImage>::GenerateData()
 
   // Instantiate transformix
   elx::DefaultConstruct<TransformixMainType> transformixMain;
+  transformixMain.SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
 
   // Setup transformix for warping input image if given
   DataObjectContainerPointer inputImageContainer = nullptr;
