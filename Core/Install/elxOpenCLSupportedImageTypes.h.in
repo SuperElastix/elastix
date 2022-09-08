@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxOpenCLSupportedImageTypes_h
-#define __elxOpenCLSupportedImageTypes_h
+#ifndef elxOpenCLSupportedImageTypes_h
+#define elxOpenCLSupportedImageTypes_h
 
 #include "itkMacro.h"
 #include "TypeList.h"
@@ -42,4 +42,4 @@ namespace elastix
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxOpenCLSupportedImageTypes_h
+#endif // end #ifndef elxOpenCLSupportedImageTypes_h

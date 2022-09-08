@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkOpenCLKernels_h
-#define __itkOpenCLKernels_h
+#ifndef itkOpenCLKernels_h
+#define itkOpenCLKernels_h
 
 /** \class OpenCLKernels Debug support file.
  * \brief The directory for OpenCL debug kernel files.
@@ -27,4 +27,4 @@ namespace itk
   const char* const OpenCLKernelsDebugDirectory = "@OPENCL_KERNELS_DEBUG_DIR@";
 } // end namespace itk
 
-#endif /* __itkOpenCLKernels_h */
+#endif /* itkOpenCLKernels_h */
