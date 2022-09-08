@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __elxSupportedImageTypes_h
-#define __elxSupportedImageTypes_h
+#ifndef elxSupportedImageTypes_h
+#define elxSupportedImageTypes_h
 
 #include "elxInstallFunctions.h"
 #include "elxPrepareImageTypeSupport.h"
@@ -54,5 +54,5 @@ namespace elastix
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxSupportedImageTypes_h
+#endif // end #ifndef elxSupportedImageTypes_h
 
