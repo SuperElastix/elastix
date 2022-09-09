@@ -164,7 +164,7 @@ jobs:
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
   - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_translation_example
     displayName: 'Run externalproject'
-  - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
+  - bash: Python3 -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
     displayName: 'Install PythonTests requirements'
   - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
