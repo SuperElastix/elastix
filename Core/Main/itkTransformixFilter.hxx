@@ -37,7 +37,7 @@
 
 #include "elxElastixTemplate.h"
 #include "itkTransformixFilter.h"
-#include "elxPixelType.h"
+#include "elxPixelTypeToString.h"
 #include "elxTransformBase.h"
 #include "elxDefaultConstruct.h"
 #include <memory> // For unique_ptr.
@@ -182,7 +182,7 @@ TransformixFilter<TMovingImage>::GenerateData()
     transformParameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
     transformParameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
     transformParameterMap["ResultImagePixelType"] =
-      ParameterValueVectorType(1, elastix::PixelType<typename TMovingImage::PixelType>::ToString());
+      ParameterValueVectorType(1, elastix::PixelTypeToString<typename TMovingImage::PixelType>());
 
     if (i > 0)
     {
