@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [macos-11, ubuntu-18.04, windows-2019]
+        os: [macos-12, ubuntu-18.04, windows-2019]
         include:
           - os: ubuntu-18.04
             c-compiler: "gcc"
@@ -29,7 +29,7 @@ jobs:
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.0.dll"
             vcvars64: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-          - os: macos-11
+          - os: macos-12
             c-compiler: "clang"  
             cxx-compiler: "clang++"
             itk-git-tag: "v5.3rc04"
@@ -138,7 +138,7 @@ jobs:
         cat dashboard.cmake
 
     - name: Test MacOs
-      if: matrix.os == 'macos-11'
+      if: matrix.os == 'macos-12'
       run: |
        ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
       
