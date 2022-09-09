@@ -35,7 +35,7 @@
 #ifndef itkElastixRegistrationMethod_hxx
 #define itkElastixRegistrationMethod_hxx
 
-#include "elxPixelType.h"
+#include "elxPixelTypeToString.h"
 #include "itkElastixRegistrationMethod.h"
 #include "elxDefaultConstruct.h"
 
@@ -218,7 +218,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     parameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(fixedImageDimension));
     parameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
     parameterMap["ResultImagePixelType"] =
-      ParameterValueVectorType(1, elastix::PixelType<typename TFixedImage::PixelType>::ToString());
+      ParameterValueVectorType(1, elastix::PixelTypeToString<typename TFixedImage::PixelType>());
 
     // Initial transform parameter files are handled via arguments and enclosing loop, not
     // InitialTransformParametersFileName
