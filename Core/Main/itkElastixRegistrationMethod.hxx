@@ -212,17 +212,19 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)
   {
+    auto & parameterMap = parameterMapVector[i];
+
     // Set image dimension from input images (overrides user settings)
-    parameterMapVector[i]["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(fixedImageDimension));
-    parameterMapVector[i]["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
-    parameterMapVector[i]["ResultImagePixelType"] =
+    parameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(fixedImageDimension));
+    parameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
+    parameterMap["ResultImagePixelType"] =
       ParameterValueVectorType(1, elastix::PixelType<typename TFixedImage::PixelType>::ToString());
 
     // Initial transform parameter files are handled via arguments and enclosing loop, not
     // InitialTransformParametersFileName
-    if (parameterMapVector[i].find("InitialTransformParametersFileName") != parameterMapVector[i].end())
+    if (parameterMap.find("InitialTransformParametersFileName") != parameterMap.end())
     {
-      parameterMapVector[i]["InitialTransformParametersFileName"] = ParameterValueVectorType(1, "NoInitialTransform");
+      parameterMap["InitialTransformParametersFileName"] = ParameterValueVectorType(1, "NoInitialTransform");
     }
 
     // Create new instance of ElastixMain
@@ -245,7 +247,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     unsigned int isError = 0;
     try
     {
-      isError = elastixMain.Run(argumentMap, parameterMapVector[i]);
+      isError = elastixMain.Run(argumentMap, parameterMap);
     }
     catch (itk::ExceptionObject & e)
     {
@@ -274,7 +276,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     }
 
     // TODO: Fix elastix corrupting default pixel value parameter
-    transformParameterMapVector.back()["DefaultPixelValue"] = parameterMapVector[i]["DefaultPixelValue"];
+    transformParameterMapVector.back()["DefaultPixelValue"] = parameterMap["DefaultPixelValue"];
   } // End loop over registrations
 
   // Save result image

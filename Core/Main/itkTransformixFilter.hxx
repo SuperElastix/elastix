@@ -177,17 +177,16 @@ TransformixFilter<TMovingImage>::GenerateData()
   // Set pixel types from input image, override user settings
   for (unsigned int i = 0; i < transformParameterMapVector.size(); ++i)
   {
-    transformParameterMapVector[i]["FixedImageDimension"] =
-      ParameterValueVectorType(1, std::to_string(movingImageDimension));
-    transformParameterMapVector[i]["MovingImageDimension"] =
-      ParameterValueVectorType(1, std::to_string(movingImageDimension));
-    transformParameterMapVector[i]["ResultImagePixelType"] =
+    auto & transformParameterMap = transformParameterMapVector[i];
+
+    transformParameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
+    transformParameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
+    transformParameterMap["ResultImagePixelType"] =
       ParameterValueVectorType(1, elastix::PixelType<typename TMovingImage::PixelType>::ToString());
 
     if (i > 0)
     {
-      transformParameterMapVector[i]["InitialTransformParametersFileName"] =
-        ParameterValueVectorType(1, std::to_string(i - 1));
+      transformParameterMap["InitialTransformParametersFileName"] = ParameterValueVectorType(1, std::to_string(i - 1));
     }
   }
 
