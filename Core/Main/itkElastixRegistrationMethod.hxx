@@ -54,10 +54,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::ElastixRegistrationMethod(
   this->AddRequiredInputName("MovingImage", 1);
   this->AddRequiredInputName("ParameterObject", 2);
 
-  ParameterObjectPointer defaultParameterObject = elastix::ParameterObject::New();
-  defaultParameterObject->AddParameterMap(elastix::ParameterObject::GetDefaultParameterMap("translation"));
-  defaultParameterObject->AddParameterMap(elastix::ParameterObject::GetDefaultParameterMap("affine"));
-  defaultParameterObject->AddParameterMap(elastix::ParameterObject::GetDefaultParameterMap("bspline"));
+  ParameterObjectPointer defaultParameterObject = elx::ParameterObject::New();
+  defaultParameterObject->AddParameterMap(elx::ParameterObject::GetDefaultParameterMap("translation"));
+  defaultParameterObject->AddParameterMap(elx::ParameterObject::GetDefaultParameterMap("affine"));
+  defaultParameterObject->AddParameterMap(elx::ParameterObject::GetDefaultParameterMap("bspline"));
   defaultParameterObject->SetParameter("FixedInternalImagePixelType", "float");
 #ifdef ELASTIX_USE_OPENCL
   defaultParameterObject->SetParameter("Resampler", "OpenCLResampler");
@@ -78,7 +78,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 {
   // Force compiler to instantiate the image dimensions, otherwise we may get
   //   Undefined symbols for architecture x86_64:
-  //     "elastix::ElastixRegistrationMethod<itk::Image<float, 2u> >::FixedImageDimension"
+  //     "elx::ElastixRegistrationMethod<itk::Image<float, 2u> >::FixedImageDimension"
   // on some platforms.
   const unsigned int fixedImageDimension = FixedImageDimension;
   const unsigned int movingImageDimension = MovingImageDimension;
@@ -132,7 +132,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
   // Set ParameterMap
   ParameterObjectPointer parameterObject =
-    itkDynamicCastInDebugMode<elastix::ParameterObject *>(this->ProcessObject::GetInput("ParameterObject"));
+    itkDynamicCastInDebugMode<elx::ParameterObject *>(this->ProcessObject::GetInput("ParameterObject"));
   ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMap();
 
   if (parameterMapVector.empty())
@@ -218,7 +218,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     parameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(fixedImageDimension));
     parameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
     parameterMap["ResultImagePixelType"] =
-      ParameterValueVectorType(1, elastix::PixelTypeToString<typename TFixedImage::PixelType>());
+      ParameterValueVectorType(1, elx::PixelTypeToString<typename TFixedImage::PixelType>());
 
     // Initial transform parameter files are handled via arguments and enclosing loop, not
     // InitialTransformParametersFileName
@@ -301,7 +301,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Save parameter map
-  elastix::ParameterObject::Pointer transformParameterObject = elastix::ParameterObject::New();
+  elx::ParameterObject::Pointer transformParameterObject = elx::ParameterObject::New();
   transformParameterObject->SetParameterMap(transformParameterMapVector);
   this->SetNthOutput(1, transformParameterObject);
 }
@@ -385,7 +385,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::MakeOutput(DataObjectPoint
 {
   if (idx == 1)
   {
-    elastix::ParameterObject::Pointer transformParameterObject = elastix::ParameterObject::New();
+    elx::ParameterObject::Pointer transformParameterObject = elx::ParameterObject::New();
     return transformParameterObject.GetPointer();
   }
   return Superclass::MakeOutput(idx);

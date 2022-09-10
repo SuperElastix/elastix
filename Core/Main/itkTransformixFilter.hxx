@@ -182,7 +182,7 @@ TransformixFilter<TMovingImage>::GenerateData()
     transformParameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
     transformParameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
     transformParameterMap["ResultImagePixelType"] =
-      ParameterValueVectorType(1, elastix::PixelTypeToString<typename TMovingImage::PixelType>());
+      ParameterValueVectorType(1, elx::PixelTypeToString<typename TMovingImage::PixelType>());
 
     if (i > 0)
     {
