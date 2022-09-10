@@ -214,7 +214,7 @@ TransformixFilter<TMovingImage>::GenerateData()
       }
     }
   }
-  catch (itk::ExceptionObject & e)
+  catch (const itk::ExceptionObject & e)
   {
     itkExceptionMacro("Errors occured during execution: " << e.what());
   }
