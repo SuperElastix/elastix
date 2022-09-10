@@ -249,7 +249,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     {
       isError = elastixMain.Run(argumentMap, parameterMap);
     }
-    catch (itk::ExceptionObject & e)
+    catch (const itk::ExceptionObject & e)
     {
       itkExceptionMacro(<< "Errors occurred during registration: " << e.what());
     }
