@@ -70,7 +70,7 @@ public:
   itkTypeMacro(TransformixFilter, ImageSource);
 
   /** Typedefs. */
-  using TransformixMainType = elastix::TransformixMain;
+  using TransformixMainType = elx::TransformixMain;
   using TransformixMainPointer = TransformixMainType::Pointer;
   using ArgumentMapType = TransformixMainType::ArgumentMapType;
   using ArgumentMapEntryType = ArgumentMapType::value_type;
@@ -80,7 +80,7 @@ public:
   using DataObjectContainerType = TransformixMainType::DataObjectContainerType;
   using DataObjectContainerPointer = TransformixMainType::DataObjectContainerPointer;
 
-  using ParameterObjectType = elastix::ParameterObject;
+  using ParameterObjectType = elx::ParameterObject;
   using ParameterMapVectorType = ParameterObjectType::ParameterMapVectorType;
   using ParameterMapType = ParameterObjectType::ParameterMapType;
   using ParameterValueVectorType = ParameterObjectType::ParameterValueVectorType;

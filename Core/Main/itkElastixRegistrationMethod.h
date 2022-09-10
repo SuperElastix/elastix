@@ -69,7 +69,7 @@ public:
   itkTypeMacro(ElastixRegistrationMethod, ImageSource);
 
   /** Typedefs. */
-  using ElastixMainType = elastix::ElastixMain;
+  using ElastixMainType = elx::ElastixMain;
   using ElastixMainPointer = ElastixMainType::Pointer;
   using ElastixMainVectorType = std::vector<ElastixMainPointer>;
   using ElastixMainObjectPointer = ElastixMainType::ObjectPointer;
@@ -84,7 +84,7 @@ public:
   using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
   using NameArrayType = ProcessObject::NameArray;
 
-  using ParameterObjectType = elastix::ParameterObject;
+  using ParameterObjectType = elx::ParameterObject;
   using ParameterMapType = ParameterObjectType::ParameterMapType;
   using ParameterMapVectorType = ParameterObjectType::ParameterMapVectorType;
   using ParameterValueVectorType = ParameterObjectType::ParameterValueVectorType;
