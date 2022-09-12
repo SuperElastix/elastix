@@ -96,6 +96,17 @@ public:
 
   using NeighborhoodAccessorFunctorType = NeighborhoodAccessorFunctor<Self>;
 
+  /** Override Rebind and RebindImageType of itk::Image class */
+  template <typename UPixelType, unsigned int VUImageDimension = VImageDimension>
+  struct Rebind
+  {
+    using Type = itk::GPUImage<UPixelType, VUImageDimension>;
+  };
+
+  template <typename UPixelType, unsigned int VUImageDimension = VImageDimension>
+  using RebindImageType = itk::GPUImage<UPixelType, VUImageDimension>;
+
+
   /** Allocate CPU and GPU memory space */
   void
   Allocate(bool initialize = false) override;
