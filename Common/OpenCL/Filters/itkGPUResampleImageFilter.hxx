@@ -48,8 +48,12 @@ namespace itk
  * ***************** Constructor ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GPUResampleImageFilter()
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  GPUResampleImageFilter()
 {
   this->m_PreKernelManager = OpenCLKernelManager::New();
   this->m_LoopKernelManager = OpenCLKernelManager::New();
@@ -143,9 +147,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
  * ***************** SetInterpolator ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetInterpolator(InterpolatorType * _arg)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::SetInterpolator(
+  InterpolatorType * _arg)
 {
   itkDebugMacro("setting Interpolator to " << _arg);
   CPUSuperclass::SetInterpolator(_arg);
@@ -214,9 +222,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  * ***************** SetExtrapolator ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetExtrapolator(ExtrapolatorType * _arg)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::SetExtrapolator(
+  ExtrapolatorType * _arg)
 {
   // CPUSuperclass::SetExtrapolator( _arg );
   itkWarningMacro(<< "Setting Extrapolator for GPUResampleImageFilter not supported yet.");
@@ -227,9 +239,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  * ***************** SetTransform ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetTransform(const TransformType * _arg)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::SetTransform(
+  const TransformType * _arg)
 {
   itkDebugMacro("setting Transform to " << _arg);
   CPUSuperclass::SetTransform(_arg);
@@ -371,9 +387,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  * ***************** GPUGenerateData ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GPUGenerateData()
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  GPUGenerateData()
 {
   itkDebugMacro(<< "GPUResampleImageFilter::GPUGenerateData() called");
 
@@ -668,10 +688,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
  * ***************** SetArgumentsForPreKernelManager ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetArgumentsForPreKernelManager(
-  const typename GPUOutputImage::Pointer & outputImage)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  SetArgumentsForPreKernelManager(const typename GPUOutputImage::Pointer & outputImage)
 {
   itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager called");
 
@@ -703,11 +726,14 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  * ***************** SetArgumentsForLoopKernelManager ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetArgumentsForLoopKernelManager(
-  const typename GPUInputImage::Pointer &  input,
-  const typename GPUOutputImage::Pointer & output)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  SetArgumentsForLoopKernelManager(const typename GPUInputImage::Pointer &  input,
+                                   const typename GPUOutputImage::Pointer & output)
 {
   itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForLoopKernelManager(" << input->GetNameOfClass() << ", "
                 << output->GetNameOfClass() << ") called");
@@ -747,9 +773,12 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  * ***************** SetTransformArgumentsForLoopKernelManager ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
   SetTransformParametersForLoopKernelManager(const std::size_t transformIndex)
 {
   itkDebugMacro(<< "GPUResampleImageFilter::SetTransformArgumentsForLoopKernelManager(" << transformIndex
@@ -793,10 +822,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::
  * ***************** SetBSplineTransformCoefficientsToGPU ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetBSplineTransformCoefficientsToGPU(
-  const std::size_t transformIndex)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  SetBSplineTransformCoefficientsToGPU(const std::size_t transformIndex)
 {
   itkDebugMacro(<< "GPUResampleImageFilter::SetBSplineTransformCoefficientsToGPU(" << transformIndex << ") called");
 
@@ -858,11 +890,14 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  * ***************** SetArgumentsForPostKernelManager ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::SetArgumentsForPostKernelManager(
-  const typename GPUInputImage::Pointer &  input,
-  const typename GPUOutputImage::Pointer & output)
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  SetArgumentsForPostKernelManager(const typename GPUInputImage::Pointer &  input,
+                                   const typename GPUOutputImage::Pointer & output)
 {
   itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPostKernelManager(" << input->GetNameOfClass() << ", "
                 << output->GetNameOfClass() << ") called");
@@ -935,10 +970,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::S
  * ***************** GetTransformType ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 auto
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetTransformType(
-  const int & transformIndex) const -> const GPUTransformTypeEnum
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  GetTransformType(const int & transformIndex) const -> const GPUTransformTypeEnum
 {
   if (this->m_TransformIsCombo)
   {
@@ -990,9 +1028,12 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
  * ***************** HasTransform ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 bool
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::HasTransform(
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::HasTransform(
   const GPUTransformTypeEnum type) const
 {
   if (this->m_FilterLoopGPUKernelHandle.empty())
@@ -1014,10 +1055,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::H
  * ***************** GetTransformHandle ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 int
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetTransformHandle(
-  const GPUTransformTypeEnum type) const
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  GetTransformHandle(const GPUTransformTypeEnum type) const
 {
   if (this->m_FilterLoopGPUKernelHandle.empty())
   {
@@ -1038,11 +1082,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
  * ***************** GetKernelIdFromTransformId ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 bool
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetKernelIdFromTransformId(
-  const std::size_t & transformIndex,
-  std::size_t &       kernelId) const
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  GetKernelIdFromTransformId(const std::size_t & transformIndex, std::size_t & kernelId) const
 {
   if (this->m_TransformIsCombo)
   {
@@ -1102,10 +1148,13 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
  * ***************** GetGPUBSplineBaseTransform ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 auto
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::GetGPUBSplineBaseTransform(
-  const std::size_t transformIndex) -> GPUBSplineBaseTransformType *
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
+  GetGPUBSplineBaseTransform(const std::size_t transformIndex) -> GPUBSplineBaseTransformType *
 {
   GPUBSplineBaseTransformType * GPUBSplineTransformBase = nullptr;
 
@@ -1135,10 +1184,14 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::G
  * ***************** PrintSelf ***********************
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType,
+          typename TTransformPrecisionType>
 void
-GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::PrintSelf(std::ostream & os,
-                                                                                         Indent         indent) const
+GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::PrintSelf(
+  std::ostream & os,
+  Indent         indent) const
 {
   CPUSuperclass::PrintSelf(os, indent);
   GPUSuperclass::PrintSelf(os, indent);
