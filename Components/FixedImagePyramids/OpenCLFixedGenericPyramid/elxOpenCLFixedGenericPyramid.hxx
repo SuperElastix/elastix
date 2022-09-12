@@ -196,8 +196,12 @@ OpenCLFixedGenericPyramid<TElastix>::GenerateData()
 
   if (computedUsingOpenCL)
   {
-    // Graft output
-    this->GraftOutput(this->m_GPUPyramid->GetOutput());
+    // Graft outputs
+    const auto numberOfLevels = this->GetNumberOfLevels();
+    for (unsigned int i = 0; i < numberOfLevels; i++)
+    {
+      this->GraftNthOutput(i, this->m_GPUPyramid->GetOutput(i));
+    }
 
     // Report OpenCL device to the log
     this->ReportToLog();
