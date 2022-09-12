@@ -43,18 +43,23 @@ itkGPUKernelClassMacro(GPUResampleImageFilterKernel);
  *
  * \ingroup GPUCommon
  */
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType = float>
+template <typename TInputImage,
+          typename TOutputImage,
+          typename TInterpolatorPrecisionType = float,
+          typename TTransformPrecisionType = TInterpolatorPrecisionType>
 class ITK_EXPORT GPUResampleImageFilter
-  : public GPUImageToImageFilter<TInputImage,
-                                 TOutputImage,
-                                 ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>>
+  : public GPUImageToImageFilter<
+      TInputImage,
+      TOutputImage,
+      ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(GPUResampleImageFilter);
 
   /** Standard class typedefs. */
   using Self = GPUResampleImageFilter;
-  using CPUSuperclass = ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>;
+  using CPUSuperclass =
+    ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>;
   using GPUSuperclass = GPUImageToImageFilter<TInputImage, TOutputImage, CPUSuperclass>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
