@@ -119,9 +119,9 @@ ParameterObject::SetParameter(const unsigned int               index,
 void
 ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValueType & value)
 {
-  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); ++index)
+  for (auto & parameterMap : m_ParameterMaps)
   {
-    this->SetParameter(index, key, value);
+    parameterMap[key] = ParameterValueVectorType(1, value);
   }
 }
 
@@ -133,9 +133,9 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
 void
 ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value)
 {
-  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); ++index)
+  for (auto & parameterMap : m_ParameterMaps)
   {
-    this->SetParameter(index, key, value);
+    parameterMap[key] = value;
   }
 }
 
@@ -201,14 +201,14 @@ ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameter
 
   m_ParameterMaps.clear();
 
-  for (unsigned int i = 0; i < parameterFileNameVector.size(); ++i)
+  for (const auto & parameterFileName : parameterFileNameVector)
   {
-    if (!itksys::SystemTools::FileExists(parameterFileNameVector[i]))
+    if (!itksys::SystemTools::FileExists(parameterFileName))
     {
-      itkExceptionMacro("Parameter file \"" << parameterFileNameVector[i] << "\" does not exist.")
+      itkExceptionMacro("Parameter file \"" << parameterFileName << "\" does not exist.")
     }
 
-    this->AddParameterFile(parameterFileNameVector[i]);
+    this->AddParameterFile(parameterFileName);
   }
 }
 
