@@ -58,16 +58,22 @@ public:
   void
   SetParameterMap(const unsigned int index, const ParameterMapType & parameterMap);
   void
-  SetParameterMap(const ParameterMapVectorType & parameterMap);
+  SetParameterMap(const ParameterMapVectorType & parameterMaps);
   void
   AddParameterMap(const ParameterMapType & parameterMap);
   const ParameterMapType &
   GetParameterMap(const unsigned int index) const;
-  itkGetConstReferenceMacro(ParameterMap, ParameterMapVectorType);
+
+  const ParameterMapVectorType &
+  GetParameterMap() const
+  {
+    return m_ParameterMaps;
+  }
+
   unsigned int
   GetNumberOfParameterMaps() const
   {
-    return static_cast<unsigned int>(m_ParameterMap.size());
+    return static_cast<unsigned int>(m_ParameterMaps.size());
   }
 
   void
@@ -115,7 +121,7 @@ protected:
   PrintSelf(std::ostream & os, itk::Indent indent) const override;
 
 private:
-  ParameterMapVectorType m_ParameterMap;
+  ParameterMapVectorType m_ParameterMaps;
 };
 
 } // namespace elastix
