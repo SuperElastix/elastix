@@ -72,6 +72,9 @@ using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
 using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::GTestUtilities::GeneratePseudoRandomParameters;
 
+template <typename TMovingImage>
+using DefaultConstructibleTransformixFilter = elx::DefaultConstruct<itk::TransformixFilter<TMovingImage>>;
+
 
 namespace
 {
@@ -130,10 +133,10 @@ TranslateImage(TImage & image, const typename TImage::OffsetType & translationOf
 {
   constexpr auto ImageDimension = TImage::ImageDimension;
 
-  const auto filter = CheckNew<itk::TransformixFilter<TImage>>();
+  DefaultConstructibleTransformixFilter<TImage> filter;
 
-  filter->SetMovingImage(&image);
-  filter->SetTransformParameterObject(
+  filter.SetMovingImage(&image);
+  filter.SetTransformParameterObject(
     CreateParameterObject({ // Parameters in alphabetic order:
                             { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
                             { "Index", ParameterValuesType(ImageDimension, "0") },
@@ -144,9 +147,9 @@ TranslateImage(TImage & image, const typename TImage::OffsetType & translationOf
                             { "Transform", ParameterValuesType{ "TranslationTransform" } },
                             { "TransformParameters", ConvertToParameterValues(translationOffset) },
                             { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
-  filter->Update();
+  filter.Update();
 
-  return &Deref(filter->GetOutput());
+  return &Deref(filter.GetOutput());
 }
 
 
@@ -334,15 +337,15 @@ Expect_Transformix_output_equals_registration_output_from_file(const testing::Te
   itk::FileTools::CreateDirectory(outputDirectoryPath);
 
 
-  const auto registration = CheckNew<itk::ElastixRegistrationMethod<TImage, TImage>>();
+  elx::DefaultConstruct<itk::ElastixRegistrationMethod<TImage, TImage>> registration;
 
-  registration->SetFixedImage(&fixedImage);
-  registration->SetMovingImage(&movingImage);
-  registration->SetParameterObject(CreateParameterObject(parameterMap));
-  registration->SetOutputDirectory(outputDirectoryPath);
-  registration->Update();
+  registration.SetFixedImage(&fixedImage);
+  registration.SetMovingImage(&movingImage);
+  registration.SetParameterObject(CreateParameterObject(parameterMap));
+  registration.SetOutputDirectory(outputDirectoryPath);
+  registration.Update();
 
-  const auto & registrationOutputImage = Deref(registration->GetOutput());
+  const auto & registrationOutputImage = Deref(registration.GetOutput());
 
   const itk::ImageBufferRange<const TImage> registrationOutputImageBufferRange(registrationOutputImage);
   const auto beginOfRegistrationOutputImageBuffer = registrationOutputImageBufferRange.cbegin();
@@ -367,20 +370,20 @@ Expect_Transformix_output_equals_registration_output_from_file(const testing::Te
                           movingImageBufferRange.cbegin(),
                           movingImageBufferRange.cend()));
 
-  const auto transformixFilter = CheckNew<itk::TransformixFilter<TImage>>();
+  DefaultConstructibleTransformixFilter<TImage> transformixFilter;
 
-  transformixFilter->SetMovingImage(&movingImage);
+  transformixFilter.SetMovingImage(&movingImage);
 
   const auto parameterObject = CheckNew<elx::ParameterObject>();
 
   parameterObject->SetParameterMap(
     itk::ParameterFileParser::ReadParameterMap(outputDirectoryPath + "/TransformParameters.0.txt"));
 
-  transformixFilter->SetTransformParameterObject(parameterObject);
+  transformixFilter.SetTransformParameterObject(parameterObject);
 
-  transformixFilter->Update();
+  transformixFilter.Update();
 
-  EXPECT_EQ(Deref(transformixFilter->GetOutput()), registrationOutputImage);
+  EXPECT_EQ(Deref(transformixFilter.GetOutput()), registrationOutputImage);
 }
 
 
@@ -396,8 +399,8 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
   bsplineTransform.SetTransformDomainPhysicalDimensions(ConvertToItkVector(imageSize));
   bsplineTransform.SetParameters(GeneratePseudoRandomParameters(bsplineTransform.GetParameters().size(), -1.0));
 
-  const auto transformixFilter = CheckNew<itk::TransformixFilter<itk::Image<PixelType, NDimension>>>();
-  transformixFilter->SetMovingImage(inputImage);
+  DefaultConstructibleTransformixFilter<itk::Image<PixelType, NDimension>> transformixFilter;
+  transformixFilter.SetMovingImage(inputImage);
 
   for (const std::string fileNameExtension : { "h5", "tfm" })
   {
@@ -405,7 +408,7 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
                                               "D_SplineOrder=" + std::to_string(NSplineOrder) + '.' + fileNameExtension;
     elx::TransformIO::Write(bsplineTransform, transformFilePathName);
 
-    transformixFilter->SetTransformParameterObject(
+    transformixFilter.SetTransformParameterObject(
       CreateParameterObject({ // Parameters in alphabetic order:
                               { "Direction", CreateDefaultDirectionParameterValues<NDimension>() },
                               { "Index", ParameterValuesType(NDimension, "0") },
@@ -415,11 +418,11 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
                               { "Transform", ParameterValuesType{ "File" } },
                               { "TransformFileName", { transformFilePathName } },
                               { "Spacing", ParameterValuesType(NDimension, "1") } }));
-    transformixFilter->Update();
+    transformixFilter.Update();
 
     const auto resampleImageFilter = CreateResampleImageFilter(*inputImage, bsplineTransform);
 
-    ExpectEqualImages(Deref(transformixFilter->GetOutput()), Deref(resampleImageFilter->GetOutput()));
+    ExpectEqualImages(Deref(transformixFilter.GetOutput()), Deref(resampleImageFilter->GetOutput()));
   }
 }
 
@@ -572,10 +575,10 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
        { "ITK-Transform.tfm", "ITK-HDF5-Transform.h5", "Special characters [(0-9,;!@#$%&)]/ITK-Transform.tfm" })
   {
     const auto transformFilePathName = GetDataDirectoryPath() + "/Translation(1,-2)/" + transformFileName;
-    const auto filter = CheckNew<itk::TransformixFilter<itk::Image<PixelType, ImageDimension>>>();
+    DefaultConstructibleTransformixFilter<itk::Image<PixelType, ImageDimension>> filter;
 
-    filter->SetMovingImage(movingImage);
-    filter->SetTransformParameterObject(
+    filter.SetMovingImage(movingImage);
+    filter.SetTransformParameterObject(
       CreateParameterObject({ // Parameters in alphabetic order:
                               { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
                               { "Index", ParameterValuesType(ImageDimension, "0") },
@@ -585,8 +588,8 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
                               { "Transform", ParameterValuesType{ "File" } },
                               { "TransformFileName", { transformFilePathName } },
                               { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
-    filter->Update();
-    const auto * const outputImage = filter->GetOutput();
+    filter.Update();
+    const auto * const outputImage = filter.GetOutput();
     ExpectEqualImages(Deref(outputImage), *expectedOutputImage);
   }
 }

@@ -63,6 +63,10 @@ using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
 
 
+template <typename TFixedImage, typename TMovingImage>
+using DefaultConstructibleElastixRegistrationMethod =
+  elx::DefaultConstruct<itk::ElastixRegistrationMethod<TFixedImage, TMovingImage>>;
+
 namespace
 {
 template <unsigned NDimension, unsigned NSplineOrder>
@@ -84,10 +88,10 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
   constexpr auto expectedNumberOfFixedParameters = NDimension * (NDimension + 3);
   ASSERT_EQ(defaultFixedParameters.size(), expectedNumberOfFixedParameters);
 
-  const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-  registration->SetFixedImage(image);
-  registration->SetMovingImage(image);
+  registration.SetFixedImage(image);
+  registration.SetMovingImage(image);
 
   for (const std::string fileNameExtension : { "h5", "tfm" })
   {
@@ -96,8 +100,8 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
                                             "_FileNameExtension=" + fileNameExtension;
     itk::FileTools::CreateDirectory(outputDirectoryPath);
 
-    registration->SetOutputDirectory(outputDirectoryPath);
-    registration->SetParameterObject(
+    registration.SetOutputDirectory(outputDirectoryPath);
+    registration.SetParameterObject(
       CreateParameterObject({ // Parameters in alphabetic order:
                               { "AutomaticTransformInitialization", "false" },
                               { "ImageSampler", "Full" },
@@ -107,7 +111,7 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
                               { "Metric", "AdvancedNormalizedCorrelation" },
                               { "Optimizer", "AdaptiveStochasticGradientDescent" },
                               { "Transform", "BSplineTransform" } }));
-    registration->Update();
+    registration.Update();
 
     const itk::TransformBase::ConstPointer readTransform =
       elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0." + fileNameExtension);
@@ -178,19 +182,19 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
   const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-  registration->SetFixedImage(fixedImage);
-  registration->SetMovingImage(movingImage);
-  registration->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                           { "ImageSampler", "Full" },
-                                                           { "MaximumNumberOfIterations", "2" },
-                                                           { "Metric", "AdvancedNormalizedCorrelation" },
-                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                           { "Transform", "TranslationTransform" } }));
-  registration->Update();
+  registration.SetFixedImage(fixedImage);
+  registration.SetMovingImage(movingImage);
+  registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                          { "ImageSampler", "Full" },
+                                                          { "MaximumNumberOfIterations", "2" },
+                                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                          { "Transform", "TranslationTransform" } }));
+  registration.Update();
 
-  const auto transformParameters = GetTransformParametersFromFilter(*registration);
+  const auto transformParameters = GetTransformParametersFromFilter(registration);
   EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
 }
 
@@ -218,19 +222,19 @@ GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
   for (const auto optimizer :
        { "AdaptiveStochasticGradientDescent", "FiniteDifferenceGradientDescent", "StandardGradientDescent" })
   {
-    const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-    registration->SetFixedImage(fixedImage);
-    registration->SetMovingImage(movingImage);
-    registration->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                             { "ImageSampler", "Full" },
-                                                             { "MaximumNumberOfIterations", "0" },
-                                                             { "Metric", "AdvancedNormalizedCorrelation" },
-                                                             { "Optimizer", optimizer },
-                                                             { "Transform", "TranslationTransform" } }));
-    registration->Update();
+    registration.SetFixedImage(fixedImage);
+    registration.SetMovingImage(movingImage);
+    registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                            { "ImageSampler", "Full" },
+                                                            { "MaximumNumberOfIterations", "0" },
+                                                            { "Metric", "AdvancedNormalizedCorrelation" },
+                                                            { "Optimizer", optimizer },
+                                                            { "Transform", "TranslationTransform" } }));
+    registration.Update();
 
-    const auto transformParameters = GetTransformParametersFromFilter(*registration);
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
 
     for (const auto & transformParameter : transformParameters)
     {
@@ -262,11 +266,11 @@ GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterO
 
   for (const bool automaticTransformInitialization : { false, true })
   {
-    const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-    registration->SetFixedImage(fixedImage);
-    registration->SetMovingImage(movingImage);
-    registration->SetParameterObject(CreateParameterObject(
+    registration.SetFixedImage(fixedImage);
+    registration.SetMovingImage(movingImage);
+    registration.SetParameterObject(CreateParameterObject(
       { // Parameters in alphabetic order:
         { "AutomaticTransformInitialization", automaticTransformInitialization ? "true" : "false" },
         { "AutomaticTransformInitializationMethod", "CenterOfGravity" },
@@ -275,9 +279,9 @@ GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterO
         { "Metric", "AdvancedNormalizedCorrelation" },
         { "Optimizer", "AdaptiveStochasticGradientDescent" },
         { "Transform", "TranslationTransform" } }));
-    registration->Update();
+    registration.Update();
 
-    const auto transformParameters = GetTransformParametersFromFilter(*registration);
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
     const auto estimatedOffset = ConvertToOffset<ImageDimension>(transformParameters);
     EXPECT_EQ(estimatedOffset == translationOffset, automaticTransformInitialization);
   }
@@ -306,11 +310,11 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 
   for (const bool writeResultImage : { true, false })
   {
-    const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-    registration->SetFixedImage(fixedImage);
-    registration->SetMovingImage(movingImage);
-    registration->SetParameterObject(
+    registration.SetFixedImage(fixedImage);
+    registration.SetMovingImage(movingImage);
+    registration.SetParameterObject(
       CreateParameterObject({ // Parameters in alphabetic order:
                               { "ImageSampler", "Full" },
                               { "MaximumNumberOfIterations", "2" },
@@ -318,9 +322,9 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
                               { "Optimizer", "AdaptiveStochasticGradientDescent" },
                               { "Transform", "TranslationTransform" },
                               { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
-    registration->Update();
+    registration.Update();
 
-    const auto &       output = Deref(registration->GetOutput());
+    const auto &       output = Deref(registration.GetOutput());
     const auto &       outputImageSize = output.GetBufferedRegion().GetSize();
     const auto * const outputBufferPointer = output.GetBufferPointer();
 
@@ -342,7 +346,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
       EXPECT_EQ(outputBufferPointer, nullptr);
     }
 
-    const auto transformParameters = GetTransformParametersFromFilter(*registration);
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
     EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
   }
 }
@@ -377,19 +381,19 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
     {
       movingImage->SetOrigin(movingImageOrigin);
 
-      const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+      DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-      registration->SetFixedImage(fixedImage);
-      registration->SetMovingImage(movingImage);
-      registration->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                               { "ImageSampler", "Full" },
-                                                               { "MaximumNumberOfIterations", "2" },
-                                                               { "Metric", "AdvancedNormalizedCorrelation" },
-                                                               { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                               { "Transform", "TranslationTransform" } }));
-      registration->Update();
+      registration.SetFixedImage(fixedImage);
+      registration.SetMovingImage(movingImage);
+      registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                              { "ImageSampler", "Full" },
+                                                              { "MaximumNumberOfIterations", "2" },
+                                                              { "Metric", "AdvancedNormalizedCorrelation" },
+                                                              { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                              { "Transform", "TranslationTransform" } }));
+      registration.Update();
 
-      const auto & output = Deref(registration->GetOutput());
+      const auto & output = Deref(registration.GetOutput());
 
       // The most essential check of this test.
       EXPECT_EQ(output.GetOrigin(), fixedImageOrigin);
@@ -403,7 +407,7 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
         EXPECT_EQ(std::round(output.GetPixel(index)), std::round(fixedImage->GetPixel(index)));
       }
 
-      const auto transformParameters = GetTransformParametersFromFilter(*registration);
+      const auto transformParameters = GetTransformParametersFromFilter(registration);
 
       ASSERT_EQ(transformParameters.size(), ImageDimension);
 
@@ -436,18 +440,18 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-  registration->SetFixedImage(fixedImage);
-  registration->SetInitialTransformParameterFileName(GetDataDirectoryPath() +
-                                                     "/Translation(1,-2)/TransformParameters.txt");
+  registration.SetFixedImage(fixedImage);
+  registration.SetInitialTransformParameterFileName(GetDataDirectoryPath() +
+                                                    "/Translation(1,-2)/TransformParameters.txt");
 
-  registration->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                           { "ImageSampler", "Full" },
-                                                           { "MaximumNumberOfIterations", "2" },
-                                                           { "Metric", "AdvancedNormalizedCorrelation" },
-                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                           { "Transform", "TranslationTransform" } }));
+  registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                          { "ImageSampler", "Full" },
+                                                          { "MaximumNumberOfIterations", "2" },
+                                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                          { "Transform", "TranslationTransform" } }));
 
   const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
 
@@ -456,10 +460,10 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
   {
     movingImage->FillBuffer(0);
     FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
-    registration->SetMovingImage(movingImage);
-    registration->Update();
+    registration.SetMovingImage(movingImage);
+    registration.Update();
 
-    const auto transformParameters = GetTransformParametersFromFilter(*registration);
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
     ASSERT_EQ(transformParameters.size(), ImageDimension);
 
     for (unsigned i{}; i < ImageDimension; ++i)
@@ -567,16 +571,16 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
     itk::Transform<double, ImageDimension, ImageDimension>::Pointer itkTransform;
   };
 
-  const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
-  registration->SetFixedImage(image);
-  registration->SetMovingImage(image);
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  registration.SetFixedImage(image);
+  registration.SetMovingImage(image);
 
   const std::string rootOutputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
   itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
 
   for (const bool useInitialTransform : { false, true })
   {
-    registration->SetInitialTransformParameterFileName(
+    registration.SetInitialTransformParameterFileName(
       useInitialTransform ? (GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt") : "");
 
     const std::string outputSubdirectoryPath =
@@ -597,9 +601,9 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
           outputSubdirectoryPath + "/" + nameAndItkTransform.name + fileNameExtension;
         itk::FileTools::CreateDirectory(outputDirectoryPath);
 
-        registration->SetOutputDirectory(outputDirectoryPath);
+        registration.SetOutputDirectory(outputDirectoryPath);
 
-        registration->SetParameterObject(
+        registration.SetParameterObject(
           CreateParameterObject({ // Parameters in alphabetic order:
                                   { "AutomaticTransformInitialization", "false" },
                                   { "ImageSampler", "Full" },
@@ -609,7 +613,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
                                   { "Optimizer", "AdaptiveStochasticGradientDescent" },
                                   { "Transform", nameAndItkTransform.name },
                                   { "WriteITKCompositeTransform", "true" } }));
-        registration->Update();
+        registration.Update();
 
         if (!fileNameExtension.empty())
         {
@@ -696,15 +700,15 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
   const auto fixedImage = CreateImage<PixelType>(imageSize);
   setPixelsOfSquareRegion(*fixedImage, fixedImageRegionIndex);
 
-  const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
-  registration->SetFixedImage(fixedImage);
-  registration->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                           { "AutomaticTransformInitialization", "false" },
-                                                           { "ImageSampler", "Full" },
-                                                           { "MaximumNumberOfIterations", "2" },
-                                                           { "Metric", "AdvancedNormalizedCorrelation" },
-                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                           { "Transform", "EulerTransform" } }));
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  registration.SetFixedImage(fixedImage);
+  registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                          { "AutomaticTransformInitialization", "false" },
+                                                          { "ImageSampler", "Full" },
+                                                          { "MaximumNumberOfIterations", "2" },
+                                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                          { "Transform", "EulerTransform" } }));
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
@@ -715,10 +719,10 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
     const OffsetType translation = index - IndexType::Filled(1);
     setPixelsOfSquareRegion(*movingImage, fixedImageRegionIndex + translation);
 
-    registration->SetMovingImage(movingImage);
-    registration->Update();
+    registration.SetMovingImage(movingImage);
+    registration.Update();
 
-    const auto transformParameters = GetTransformParametersFromFilter(*registration);
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
     ASSERT_EQ(transformParameters.size(), 3);
 
     // The detected rotation angle is expected to be close to zero.
@@ -780,16 +784,16 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
 
-  registration->SetFixedImage(fixedImage);
-  registration->SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                           { "AutomaticTransformInitialization", "false" },
-                                                           { "ImageSampler", "Full" },
-                                                           { "MaximumNumberOfIterations", "50" },
-                                                           { "Metric", "AdvancedNormalizedCorrelation" },
-                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                           { "Transform", "EulerTransform" } }));
+  registration.SetFixedImage(fixedImage);
+  registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                          { "AutomaticTransformInitialization", "false" },
+                                                          { "ImageSampler", "Full" },
+                                                          { "MaximumNumberOfIterations", "50" },
+                                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                          { "Transform", "EulerTransform" } }));
 
   for (const auto degree :
        { -1
@@ -804,10 +808,10 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
     constexpr auto radiansPerDegree = M_PI / 180.0;
 
     setPixelsOfDisc(*movingImage, degree * radiansPerDegree);
-    registration->SetMovingImage(movingImage);
-    registration->Update();
+    registration.SetMovingImage(movingImage);
+    registration.Update();
 
-    const auto transformParameters = GetTransformParametersFromFilter(*registration);
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
     ASSERT_EQ(transformParameters.size(), 3);
 
     EXPECT_EQ(std::round(transformParameters[0] / radiansPerDegree), -degree); // rotation angle
