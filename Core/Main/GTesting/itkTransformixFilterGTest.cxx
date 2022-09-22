@@ -355,12 +355,10 @@ Expect_Transformix_output_equals_registration_output_from_file(const testing::Te
 
   // Check that the registrationOutputImage is not a uniform image, otherwise the test
   // probably just does does not make much sense.
-  EXPECT_NE(std::find_if_not(beginOfRegistrationOutputImageBuffer,
-                             endOfRegistrationOutputImageBuffer,
-                             [firstRegistrationOutputPixel](const auto pixelValue) {
-                               return pixelValue == firstRegistrationOutputPixel;
-                             }),
-            endOfRegistrationOutputImageBuffer);
+  EXPECT_FALSE(std::all_of(
+    beginOfRegistrationOutputImageBuffer,
+    endOfRegistrationOutputImageBuffer,
+    [firstRegistrationOutputPixel](const auto pixelValue) { return pixelValue == firstRegistrationOutputPixel; }));
 
   // Check that the registrationOutputImage has different pixel values than the moving image, otherwise the test
   // probably just does does not make much sense either.
