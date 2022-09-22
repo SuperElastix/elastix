@@ -67,7 +67,7 @@ public:
   unsigned int
   GetNumberOfParameterMaps() const
   {
-    return static_cast<unsigned int>(this->m_ParameterMap.size());
+    return static_cast<unsigned int>(m_ParameterMap.size());
   }
 
   void

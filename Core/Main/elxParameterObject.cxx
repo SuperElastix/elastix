@@ -46,7 +46,7 @@ ParameterObject::SetParameterMap(const ParameterMapType & parameterMap)
 void
 ParameterObject::SetParameterMap(const unsigned int index, const ParameterMapType & parameterMap)
 {
-  this->m_ParameterMap[index] = parameterMap;
+  m_ParameterMap[index] = parameterMap;
 }
 
 
@@ -57,9 +57,9 @@ ParameterObject::SetParameterMap(const unsigned int index, const ParameterMapTyp
 void
 ParameterObject::SetParameterMap(const ParameterMapVectorType & parameterMap)
 {
-  if (this->m_ParameterMap != parameterMap)
+  if (m_ParameterMap != parameterMap)
   {
-    this->m_ParameterMap = parameterMap;
+    m_ParameterMap = parameterMap;
     this->Modified();
   }
 }
@@ -72,7 +72,7 @@ ParameterObject::SetParameterMap(const ParameterMapVectorType & parameterMap)
 void
 ParameterObject::AddParameterMap(const ParameterMapType & parameterMap)
 {
-  this->m_ParameterMap.push_back(parameterMap);
+  m_ParameterMap.push_back(parameterMap);
   this->Modified();
 }
 
@@ -84,7 +84,7 @@ ParameterObject::AddParameterMap(const ParameterMapType & parameterMap)
 const ParameterObject::ParameterMapType &
 ParameterObject::GetParameterMap(const unsigned int index) const
 {
-  return this->m_ParameterMap[index];
+  return m_ParameterMap[index];
 }
 
 
@@ -95,7 +95,7 @@ ParameterObject::GetParameterMap(const unsigned int index) const
 void
 ParameterObject::SetParameter(const unsigned int index, const ParameterKeyType & key, const ParameterValueType & value)
 {
-  this->m_ParameterMap[index][key] = ParameterValueVectorType(1, value);
+  m_ParameterMap[index][key] = ParameterValueVectorType(1, value);
 }
 
 
@@ -108,7 +108,7 @@ ParameterObject::SetParameter(const unsigned int               index,
                               const ParameterKeyType &         key,
                               const ParameterValueVectorType & value)
 {
-  this->m_ParameterMap[index][key] = value;
+  m_ParameterMap[index][key] = value;
 }
 
 
@@ -147,7 +147,7 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
 const ParameterObject::ParameterValueVectorType &
 ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType & key)
 {
-  return this->m_ParameterMap[index][key];
+  return m_ParameterMap[index][key];
 }
 
 
@@ -158,7 +158,7 @@ ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType &
 void
 ParameterObject::RemoveParameter(const unsigned int index, const ParameterKeyType & key)
 {
-  this->m_ParameterMap[index].erase(key);
+  m_ParameterMap[index].erase(key);
 }
 
 
@@ -199,7 +199,7 @@ ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameter
     itkExceptionMacro("Parameter filename container is empty.");
   }
 
-  this->m_ParameterMap.clear();
+  m_ParameterMap.clear();
 
   for (unsigned int i = 0; i < parameterFileNameVector.size(); ++i)
   {
@@ -220,7 +220,7 @@ ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameter
 void
 ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileName)
 {
-  this->m_ParameterMap.push_back(itk::ParameterFileParser::ReadParameterMap(parameterFileName));
+  m_ParameterMap.push_back(itk::ParameterFileParser::ReadParameterMap(parameterFileName));
 }
 
 
@@ -238,7 +238,7 @@ ParameterObject::WriteParameterFile() const
     parameterFileNameVector.push_back("ParametersFile." + std::to_string(i) + ".txt");
   }
 
-  Self::WriteParameterFile(this->m_ParameterMap, parameterFileNameVector);
+  Self::WriteParameterFile(m_ParameterMap, parameterFileNameVector);
 }
 
 
@@ -314,19 +314,19 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
 void
 ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileName) const
 {
-  if (this->m_ParameterMap.empty())
+  if (m_ParameterMap.empty())
   {
     itkExceptionMacro("Error writing parameter map to disk: The parameter object is empty.");
   }
 
-  if (this->m_ParameterMap.size() > 1)
+  if (m_ParameterMap.size() > 1)
   {
     itkExceptionMacro(
-      << "Error writing to disk: The number of parameter maps (" << this->m_ParameterMap.size()
+      << "Error writing to disk: The number of parameter maps (" << m_ParameterMap.size()
       << ") does not match the number of provided filenames (1). Please provide a vector of filenames.");
   }
 
-  this->WriteParameterFile(this->m_ParameterMap[0], parameterFileName);
+  this->WriteParameterFile(m_ParameterMap[0], parameterFileName);
 }
 
 
@@ -368,7 +368,7 @@ ParameterObject::WriteParameterFile(const ParameterMapVectorType &      paramete
 void
 ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const
 {
-  Self::WriteParameterFile(this->m_ParameterMap, parameterFileNameVector);
+  Self::WriteParameterFile(m_ParameterMap, parameterFileNameVector);
 }
 
 
@@ -495,11 +495,11 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
 
-  for (unsigned int i = 0; i < this->m_ParameterMap.size(); ++i)
+  for (unsigned int i = 0; i < m_ParameterMap.size(); ++i)
   {
     os << "ParameterMap " << i << ": " << std::endl;
-    ParameterMapConstIterator parameterMapIterator = this->m_ParameterMap[i].begin();
-    ParameterMapConstIterator parameterMapIteratorEnd = this->m_ParameterMap[i].end();
+    ParameterMapConstIterator parameterMapIterator = m_ParameterMap[i].begin();
+    ParameterMapConstIterator parameterMapIteratorEnd = m_ParameterMap[i].end();
     while (parameterMapIterator != parameterMapIteratorEnd)
     {
       os << "  (" << parameterMapIterator->first;
