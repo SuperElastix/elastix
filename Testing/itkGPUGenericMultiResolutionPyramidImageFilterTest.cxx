@@ -88,7 +88,8 @@ main(int argc, char * argv[])
   using OutputImageType = itk::Image<OutputPixelType, Dimension>;
 
   // CPU Typedefs
-  using FilterType = itk::GenericMultiResolutionPyramidImageFilter<InputImageType, OutputImageType>;
+  using PrecisionType = float;
+  using FilterType = itk::GenericMultiResolutionPyramidImageFilter<InputImageType, OutputImageType, PrecisionType>;
   using ReaderType = itk::ImageFileReader<InputImageType>;
 
   // Reader
