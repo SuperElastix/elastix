@@ -90,7 +90,6 @@ main(int argc, char * argv[])
   // CPU Typedefs
   using FilterType = itk::GenericMultiResolutionPyramidImageFilter<InputImageType, OutputImageType>;
   using ReaderType = itk::ImageFileReader<InputImageType>;
-  using WriterType = itk::ImageFileWriter<OutputImageType>;
 
   // Reader
   auto reader = ReaderType::New();
@@ -189,12 +188,9 @@ main(int argc, char * argv[])
   std::cout << "CPU " << cpuFilter->GetNumberOfWorkUnits() << " " << cputimer.GetMean() / runTimes << std::endl;
 
   /** Write the CPU result. */
-  auto writer = WriterType::New();
-  writer->SetInput(cpuFilter->GetOutput(numberOfLevels - 1));
-  writer->SetFileName(outputFileNameCPU.c_str());
   try
   {
-    writer->Update();
+    itk::WriteImage(cpuFilter->GetOutput(numberOfLevels - 1), outputFileNameCPU);
   }
   catch (itk::ExceptionObject & e)
   {
@@ -313,12 +309,9 @@ main(int argc, char * argv[])
   std::cout << "GPU x " << gputimer.GetMean() / runTimes << " " << cputimer.GetMean() / gputimer.GetMean();
 
   /** Write the GPU result. */
-  auto gpuWriter = WriterType::New();
-  gpuWriter->SetInput(gpuFilter->GetOutput(numberOfLevels - 1));
-  gpuWriter->SetFileName(outputFileNameGPU.c_str());
   try
   {
-    gpuWriter->Update();
+    itk::WriteImage(gpuFilter->GetOutput(numberOfLevels - 1), outputFileNameGPU);
   }
   catch (itk::ExceptionObject & e)
   {
