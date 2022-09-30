@@ -35,6 +35,7 @@
 #include "itkTimeProbe.h"
 
 #include <iomanip> // setprecision, etc.
+#include <random>  // For mt19937.
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the
@@ -101,6 +102,7 @@ main(int argc, char * argv[])
 
   using RandomNumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
   RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
+  randomNum->SetSeed(std::mt19937::default_seed);
 
   RescaleScheduleType   rescaleSchedule(numberOfLevels, Dimension);
   SmoothingScheduleType smoothingSchedule(numberOfLevels, Dimension);
