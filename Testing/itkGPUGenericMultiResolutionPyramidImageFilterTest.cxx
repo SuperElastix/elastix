@@ -86,10 +86,14 @@ main(int argc, char * argv[])
   using OutputPixelType = float;
   using InputImageType = itk::Image<InputPixelType, Dimension>;
   using OutputImageType = itk::Image<OutputPixelType, Dimension>;
+  using GPUInputImageType = itk::GPUImage<InputPixelType, Dimension>;
+  using GPUOutputImageType = itk::GPUImage<OutputPixelType, Dimension>;
 
   // CPU Typedefs
   using PrecisionType = float;
   using FilterType = itk::GenericMultiResolutionPyramidImageFilter<InputImageType, OutputImageType, PrecisionType>;
+  using GPUFilterType =
+    itk::GenericMultiResolutionPyramidImageFilter<GPUInputImageType, GPUOutputImageType, PrecisionType>;
   using ReaderType = itk::ImageFileReader<InputImageType>;
 
   // Reader
@@ -220,10 +224,10 @@ main(int argc, char * argv[])
   // Construct the filter
   // Use a try/catch, because construction of this filter will trigger
   // OpenCL compilation, which may fail.
-  FilterType::Pointer gpuFilter;
+  GPUFilterType::Pointer gpuFilter;
   try
   {
-    gpuFilter = FilterType::New();
+    gpuFilter = GPUFilterType::New();
     itk::ITKObjectEnableWarnings(gpuFilter.GetPointer());
   }
   catch (itk::ExceptionObject & e)
@@ -259,12 +263,20 @@ main(int argc, char * argv[])
   // The following line is however not needed in a pure CPU implementation.
   gpuReader->Update();
 
+  // GPU input image
+  GPUInputImageType::Pointer gpuInputImage = GPUInputImageType::New();
+  gpuInputImage->GraftITKImage(gpuReader->GetOutput());
+  gpuInputImage->AllocateGPU();
+  gpuInputImage->GetGPUDataManager()->SetCPUBufferLock(true);
+  gpuInputImage->GetGPUDataManager()->SetGPUDirtyFlag(true);
+  gpuInputImage->GetGPUDataManager()->UpdateGPUBuffer();
+
   // Time the filter, run on the GPU
   itk::TimeProbe gputimer;
   gputimer.Start();
   for (unsigned int i = 0; i < runTimes; ++i)
   {
-    gpuFilter->SetInput(gpuReader->GetOutput());
+    gpuFilter->SetInput(gpuInputImage);
 
     if (!computeOnlyForCurrentLevel)
     {
