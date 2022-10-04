@@ -45,6 +45,29 @@
 // The filter takes an input image and produces an output image.
 // We compare the CPU and GPU output image write RMSE and speed.
 
+template <typename FilterType>
+void
+UpdateFilterNTimes(typename FilterType::Pointer filter, const unsigned int N, const bool computeOnlyForCurrentLevel)
+{
+  for (unsigned int i = 0; i < N; ++i)
+  {
+    filter->Modified();
+
+    if (!computeOnlyForCurrentLevel)
+    {
+      filter->Update();
+    }
+    else
+    {
+      for (unsigned int j = 0; j < filter->GetNumberOfLevels(); ++j)
+      {
+        filter->SetCurrentLevel(j);
+        filter->Update();
+      }
+    }
+  }
+} // end UpdateFilterNTimes
+
 int
 main(int argc, char * argv[])
 {
@@ -146,44 +169,15 @@ main(int argc, char * argv[])
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
   cputimer.Start();
-  for (unsigned int i = 0; i < runTimes; ++i)
+  cpuFilter->SetInput(inputImage);
+  try
   {
-    cpuFilter->SetInput(inputImage);
-
-    if (!computeOnlyForCurrentLevel)
-    {
-      try
-      {
-        cpuFilter->Update();
-      }
-      catch (itk::ExceptionObject & e)
-      {
-        std::cerr << "ERROR: " << e << std::endl;
-        return EXIT_FAILURE;
-      }
-      cpuFilter->Modified();
-    }
-    else
-    {
-      for (unsigned int j = 0; j < cpuFilter->GetNumberOfLevels(); ++j)
-      {
-        cpuFilter->SetCurrentLevel(j);
-        try
-        {
-          cpuFilter->Update();
-        }
-        catch (itk::ExceptionObject & e)
-        {
-          std::cerr << "ERROR: " << e << std::endl;
-          return EXIT_FAILURE;
-        }
-        // Modify the filter, only not the last iteration
-        if (i != runTimes - 1)
-        {
-          cpuFilter->Modified();
-        }
-      }
-    }
+    UpdateFilterNTimes<FilterType>(cpuFilter, runTimes, computeOnlyForCurrentLevel);
+  }
+  catch (itk::ExceptionObject & e)
+  {
+    std::cerr << "ERROR: " << e << std::endl;
+    return EXIT_FAILURE;
   }
   cputimer.Stop();
 
@@ -257,48 +251,15 @@ main(int argc, char * argv[])
   // Time the filter, run on the GPU
   itk::TimeProbe gputimer;
   gputimer.Start();
-  for (unsigned int i = 0; i < runTimes; ++i)
+  gpuFilter->SetInput(gpuInputImage);
+  try
   {
-    gpuFilter->SetInput(gpuInputImage);
-
-    if (!computeOnlyForCurrentLevel)
-    {
-      try
-      {
-        gpuFilter->Update();
-      }
-      catch (itk::ExceptionObject & e)
-      {
-        std::cerr << "ERROR: " << e << std::endl;
-        return EXIT_FAILURE;
-      }
-      // Modify the filter, only not the last iteration
-      if (i != runTimes - 1)
-      {
-        gpuFilter->Modified();
-      }
-    }
-    else
-    {
-      for (unsigned int j = 0; j < gpuFilter->GetNumberOfLevels(); ++j)
-      {
-        gpuFilter->SetCurrentLevel(j);
-        try
-        {
-          gpuFilter->Update();
-        }
-        catch (itk::ExceptionObject & e)
-        {
-          std::cerr << "ERROR: " << e << std::endl;
-          return EXIT_FAILURE;
-        }
-        // Modify the filter, only not the last iteration
-        if (i != runTimes - 1)
-        {
-          gpuFilter->Modified();
-        }
-      }
-    }
+    UpdateFilterNTimes<GPUFilterType>(gpuFilter, runTimes, computeOnlyForCurrentLevel);
+  }
+  catch (itk::ExceptionObject & e)
+  {
+    std::cerr << "ERROR: " << e << std::endl;
+    return EXIT_FAILURE;
   }
   gputimer.Stop();
 
