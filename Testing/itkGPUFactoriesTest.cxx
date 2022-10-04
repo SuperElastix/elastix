@@ -197,7 +197,7 @@ TestGPUFilterFactories()
 
   // Print all elastix registered factories
   PrintAllRegisteredFactories();
-  if (!IsRegistered(1, 64))
+  if (!IsRegistered(1, 32))
   {
     return false;
   }
