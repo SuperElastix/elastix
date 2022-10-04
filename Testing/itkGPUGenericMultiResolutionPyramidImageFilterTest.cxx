@@ -94,12 +94,9 @@ main(int argc, char * argv[])
   using FilterType = itk::GenericMultiResolutionPyramidImageFilter<InputImageType, OutputImageType, PrecisionType>;
   using GPUFilterType =
     itk::GenericMultiResolutionPyramidImageFilter<GPUInputImageType, GPUOutputImageType, PrecisionType>;
-  using ReaderType = itk::ImageFileReader<InputImageType>;
 
-  // Reader
-  auto reader = ReaderType::New();
-  reader->SetFileName(inputFileName);
-  reader->Update();
+  // Read image
+  InputImageType::Pointer inputImage = itk::ReadImage<InputImageType>(inputFileName);
 
   // Construct the filter
   auto cpuFilter = FilterType::New();
@@ -151,7 +148,7 @@ main(int argc, char * argv[])
   cputimer.Start();
   for (unsigned int i = 0; i < runTimes; ++i)
   {
-    cpuFilter->SetInput(reader->GetOutput());
+    cpuFilter->SetInput(inputImage);
 
     if (!computeOnlyForCurrentLevel)
     {
@@ -249,23 +246,9 @@ main(int argc, char * argv[])
   gpuFilter->SetUseShrinkImageFilter(useShrinkImageFilter);
   gpuFilter->SetComputeOnlyForCurrentLevel(computeOnlyForCurrentLevel);
 
-  // Also need to re-construct the image reader, so that it now
-  // reads a GPUImage instead of a normal image.
-  // Otherwise, you will get an exception when running the GPU filter:
-  // "ERROR: The GPU InputImage is NULL. Filter unable to perform."
-  auto gpuReader = ReaderType::New();
-  gpuReader->SetFileName(inputFileName);
-
-  // \todo: If the following line is uncommented something goes wrong with
-  // the ITK pipeline synchronization.
-  // Something is still read in, but I guess it is not properly copied to
-  // the GPU. The output of the shrink filter is then bogus.
-  // The following line is however not needed in a pure CPU implementation.
-  gpuReader->Update();
-
   // GPU input image
   GPUInputImageType::Pointer gpuInputImage = GPUInputImageType::New();
-  gpuInputImage->GraftITKImage(gpuReader->GetOutput());
+  gpuInputImage->GraftITKImage(inputImage);
   gpuInputImage->AllocateGPU();
   gpuInputImage->GetGPUDataManager()->SetCPUBufferLock(true);
   gpuInputImage->GetGPUDataManager()->SetGPUDirtyFlag(true);
