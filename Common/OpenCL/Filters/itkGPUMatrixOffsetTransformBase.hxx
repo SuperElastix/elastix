@@ -27,21 +27,18 @@ namespace ITKGPUMatrixOffsetTransformBase
 typedef struct
 {
   cl_float matrix;
-  cl_float inverse_matrix;
   cl_float offset;
 } GPUMatrixOffsetTransformBase1D;
 
 typedef struct
 {
   cl_float4 matrix;
-  cl_float4 inverse_matrix;
   cl_float2 offset;
 } GPUMatrixOffsetTransformBase2D;
 
 typedef struct
 {
-  cl_float16 matrix;         // OpenCL does not have float9
-  cl_float16 inverse_matrix; // OpenCL does not have float9
+  cl_float16 matrix; // OpenCL does not have float9
   cl_float3  offset;
 } GPUMatrixOffsetTransformBase3D;
 
