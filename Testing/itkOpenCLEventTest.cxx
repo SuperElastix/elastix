@@ -18,6 +18,8 @@
 #include "itkTestHelper.h"
 #include "itkOpenCLEventTest.h"
 
+#include "itkOpenCLContextScopeGuard.h"
+
 int
 main()
 {
@@ -33,9 +35,9 @@ main()
     // Create and check OpenCL context
     if (!itk::CreateContext())
     {
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
+    const itk::OpenCLContextScopeGuard openCLContextScopeGuard{};
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
 
@@ -43,14 +45,12 @@ main()
 #ifdef OPENCL_PROFILING
     if (!context->GetDefaultCommandQueue().IsProfilingEnabled())
     {
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 #else
     itk::OpenCLCommandQueue queue = context->CreateCommandQueue(CL_QUEUE_PROFILING_ENABLE);
     if (!queue.IsProfilingEnabled())
     {
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
     context->SetCommandQueue(queue);
@@ -90,25 +90,21 @@ main()
     // Check the event execution times
     if (event.GetFinishTime() == 0)
     {
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
     if (event.GetSubmitTime() <= event.GetQueueTime())
     {
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
     if (event.GetRunTime() <= event.GetSubmitTime())
     {
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
     if (event.GetFinishTime() <= event.GetRunTime())
     {
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
@@ -117,10 +113,8 @@ main()
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
-  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }

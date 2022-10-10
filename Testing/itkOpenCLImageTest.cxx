@@ -39,7 +39,6 @@ main()
     if (!context->IsCreated())
     {
       std::cerr << "OpenCL-enabled device is not present." << std::endl;
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
@@ -111,10 +110,8 @@ main()
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
-  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }

@@ -22,6 +22,8 @@
 #include "itkGPURecursiveGaussianImageFilterFactory.h"
 #include "itkGPUCastImageFilterFactory.h" // used internally in smoothing filter
 
+#include "itkOpenCLContextScopeGuard.h"
+
 // ITK include files
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkImageFileReader.h"
@@ -56,6 +58,7 @@ main(int argc, char * argv[])
   {
     return EXIT_FAILURE;
   }
+  const itk::OpenCLContextScopeGuard openCLContextScopeGuard{};
 
   /** Get the command line arguments. */
   const std::string  inputFileName = argv[1];
@@ -108,7 +111,6 @@ main(int argc, char * argv[])
     catch (itk::ExceptionObject & e)
     {
       std::cerr << "ERROR: " << e << std::endl;
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
     filter->Modified();
@@ -128,7 +130,6 @@ main(int argc, char * argv[])
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -158,7 +159,6 @@ main(int argc, char * argv[])
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
   gpuFilter->SetSigmaArray(sigmaArray);
@@ -190,7 +190,6 @@ main(int argc, char * argv[])
     catch (itk::ExceptionObject & e)
     {
       std::cerr << "ERROR: " << e << std::endl;
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
     gpuFilter->Modified();
@@ -211,7 +210,6 @@ main(int argc, char * argv[])
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -225,11 +223,9 @@ main(int argc, char * argv[])
   if (RMSerror > epsilon)
   {
     std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
   // End program.
-  itk::ReleaseContext();
   return EXIT_SUCCESS;
 } // end main()

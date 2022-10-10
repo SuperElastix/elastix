@@ -25,17 +25,14 @@ main()
   context->Create(itk::OpenCLContext::DevelopmentSingleMaximumFlopsDevice);
   if (!context->IsCreated())
   {
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
   itk::OpenCLKernelManager::Pointer kernelManager = itk::OpenCLKernelManager::New();
   if (kernelManager.IsNull())
   {
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
-  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }
