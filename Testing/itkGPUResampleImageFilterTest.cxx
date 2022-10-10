@@ -61,6 +61,7 @@
 
 // Other include files
 #include <iomanip> // setprecision, etc.
+#include <random>  // For mt19937.
 #include <sstream>
 
 //------------------------------------------------------------------------------
@@ -798,6 +799,7 @@ main(int argc, char * argv[])
 
   using RandomNumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
   RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
+  randomNum->SetSeed(std::mt19937::default_seed);
 
   InputImageType::ConstPointer        inputImage = cpuReader->GetOutput();
   const InputImageType::SpacingType   inputSpacing = inputImage->GetSpacing();

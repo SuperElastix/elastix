@@ -554,7 +554,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_GPU.mha
     -i   NearestNeighbor
     -t   Affine
-    -rmse 2.8)
+    -rmse 0.2)
 
   elx_add_opencl_test(GPUResampleImageFilterTest "-LinearAffine" "OpenCL" ""
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -562,7 +562,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_affine_GPU.mha
     -i   Linear
     -t   Affine
-    -rmse 1.0)
+    -rmse 0.05)
 
   elx_add_opencl_test(GPUResampleImageFilterTest "-BSplineAffine" "OpenCL" ""
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -570,7 +570,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_affine_GPU.mha
     -i   BSpline
     -t   Affine
-    -rmse 1.0)
+    -rmse 0.1)
 
   # Translation transform tests
   elx_add_opencl_test(GPUResampleImageFilterTest "-NearestTranslation" "OpenCL" ""
@@ -587,7 +587,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_translation_GPU.mha
     -i   Linear
     -t   Translation
-    -rmse 0.1)
+    -rmse 0.05)
 
   elx_add_opencl_test(GPUResampleImageFilterTest "-BSplineTranslation" "OpenCL" ""
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -595,7 +595,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_translation_GPU.mha
     -i   BSpline
     -t   Translation
-    -rmse 0.11)
+    -rmse 0.05)
 
   # BSpline transform tests
   elx_add_opencl_test(GPUResampleImageFilterTest "-NearestBSpline" "OpenCL" ""
@@ -605,7 +605,7 @@ if(ELASTIX_USE_OPENCL)
     -i   NearestNeighbor
     -t   BSpline
     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-    -rmse 0.5)
+    -rmse 0.05)
 
   elx_add_opencl_test(GPUResampleImageFilterTest "-LinearBSpline" "OpenCL" ""
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -623,7 +623,7 @@ if(ELASTIX_USE_OPENCL)
     -i   BSpline
     -t   BSpline
     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-    -rmse 0.04)
+    -rmse 0.05)
 
   # Euler transform tests
   elx_add_opencl_test(GPUResampleImageFilterTest "-NearestEuler" "OpenCL" ""
@@ -640,7 +640,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_euler_GPU.mha
     -i   Linear
     -t   Euler
-    -rmse 0.1)
+    -rmse 0.03)
 
   elx_add_opencl_test(GPUResampleImageFilterTest "-BSplineEuler" "OpenCL" ""
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -648,7 +648,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_euler_GPU.mha
     -i   BSpline
     -t   Euler
-    -rmse 0.11)
+    -rmse 0.05)
 
   # Similarity transform tests
   elx_add_opencl_test(GPUResampleImageFilterTest "-NearestSimilarity" "OpenCL" ""
@@ -665,7 +665,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_similarity_GPU.mha
     -i   Linear
     -t   Similarity
-    -rmse 0.1)
+    -rmse 0.03)
 
   elx_add_opencl_test(GPUResampleImageFilterTest "-BSplineSimilarity" "OpenCL" ""
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -673,7 +673,7 @@ if(ELASTIX_USE_OPENCL)
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_similarity_GPU.mha
     -i   BSpline
     -t   Similarity
-    -rmse 0.1)
+    -rmse 0.05)
 
   elx_add_opencl_test(GPUResampleImageFilterTest "-NearestComboAffine" "OpenCL" ""
      -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -681,7 +681,7 @@ if(ELASTIX_USE_OPENCL)
           ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_GPU.mha
      -i   NearestNeighbor
      -t   Affine
-     -c -rmse 2.8)
+     -c -rmse 2.0)
 
    elx_add_opencl_test(GPUResampleImageFilterTest "-NearestComboBSpline" "OpenCL" ""
      -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -699,7 +699,7 @@ if(ELASTIX_USE_OPENCL)
      -i   NearestNeighbor
      -t   Affine BSpline
      -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-     -c -rmse 0.3)
+     -c -rmse 0.2)
 
 endif()
 
