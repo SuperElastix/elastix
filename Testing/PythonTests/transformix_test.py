@@ -492,6 +492,46 @@ class TransformixTestCase(unittest.TestCase):
         self.assert_equal_mesh(output_mesh, input_mesh)
 
 
+    def test_translation_deformation_field(self) -> None:
+        """Tests zero-translation of VTK points in 2D"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-def",
+                "all",
+                "-tp",
+                str(parameter_directory_path / "Translation(1,-2).txt"),
+                "-out",
+                str(output_directory_path),
+            ],
+            capture_output=True,
+            check=True,
+        )
+
+        number_of_columns = 5
+        number_of_rows = 6
+        translation_vector = (1, -2)
+
+        actual_image = sitk.ReadImage(str(output_directory_path / "deformationField.mhd"))
+        expected_image = sitk.Image(number_of_columns, number_of_rows, sitk.sitkVectorFloat32)
+        for row in range(number_of_rows):
+            for column in range(number_of_columns):
+                expected_image.SetPixel([column, row], translation_vector)
+
+        self.assert_equal_image_info(actual_image, expected_image)
+
+        actual_pixel_data = sitk.GetArrayFromImage(expected_image)
+        expected_pixel_data = sitk.GetArrayFromImage(actual_image)
+
+        np.testing.assert_allclose(actual_pixel_data, expected_pixel_data, rtol=0)
+
+
 if __name__ == "__main__":
     # Specify argv to avoid sys.argv to be used directly by unittest.main
     # Note: Use '--verbose' option just as long as the output fits the screen!
