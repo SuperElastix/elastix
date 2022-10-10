@@ -29,7 +29,7 @@ import itk
 import SimpleITK as sitk
 import numpy as np
 
-FLOAT32_MAX = 3.402823e+38
+FLOAT32_MAX = 3.402823e38
 OUTPUTPOINTS_FILENAME = "outputpoints.txt"
 
 
@@ -464,7 +464,9 @@ class TransformixTestCase(unittest.TestCase):
 
         input_mesh = itk.Mesh[itk.D, 2].New()
         for i in range(4):
-            input_mesh.SetPoint(i, (self.random_finite_float32(), self.random_finite_float32()))
+            input_mesh.SetPoint(
+                i, (self.random_finite_float32(), self.random_finite_float32())
+            )
 
         itk.meshwrite(input_mesh, str(output_directory_path / "inputpoints.vtk"))
 
@@ -490,7 +492,6 @@ class TransformixTestCase(unittest.TestCase):
         reader.Update()
         output_mesh = reader.GetOutput()
         self.assert_equal_mesh(output_mesh, input_mesh)
-
 
     def test_translation_deformation_field(self) -> None:
         """Tests zero-translation of VTK points in 2D"""
@@ -518,8 +519,12 @@ class TransformixTestCase(unittest.TestCase):
         number_of_rows = 6
         translation_vector = (1, -2)
 
-        actual_image = sitk.ReadImage(str(output_directory_path / "deformationField.mhd"))
-        expected_image = sitk.Image(number_of_columns, number_of_rows, sitk.sitkVectorFloat32)
+        actual_image = sitk.ReadImage(
+            str(output_directory_path / "deformationField.mhd")
+        )
+        expected_image = sitk.Image(
+            number_of_columns, number_of_rows, sitk.sitkVectorFloat32
+        )
         for row in range(number_of_rows):
             for column in range(number_of_columns):
                 expected_image.SetPixel([column, row], translation_vector)
