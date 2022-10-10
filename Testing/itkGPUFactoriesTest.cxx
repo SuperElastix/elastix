@@ -27,6 +27,8 @@
 #include "itkGPUResampleImageFilterFactory.h"
 #include "itkGPUShrinkImageFilterFactory.h"
 
+#include "itkOpenCLContextScopeGuard.h"
+
 // Interpolate includes
 #include "itkGPULinearInterpolateImageFunctionFactory.h"
 #include "itkGPUNearestNeighborInterpolateImageFunctionFactory.h"
@@ -517,6 +519,7 @@ main()
   {
     return EXIT_FAILURE;
   }
+  const itk::OpenCLContextScopeGuard openCLContextScopeGuard{};
 
   // ITK creates some factories unregister them
   itk::ObjectFactoryBase::UnRegisterAllFactories();

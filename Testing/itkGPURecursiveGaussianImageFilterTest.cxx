@@ -20,6 +20,8 @@
 // GPU include files
 #include "itkGPURecursiveGaussianImageFilter.h"
 
+#include "itkOpenCLContextScopeGuard.h"
+
 // ITK include files
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
@@ -65,6 +67,7 @@ main(int argc, char * argv[])
   {
     return EXIT_FAILURE;
   }
+  const itk::OpenCLContextScopeGuard openCLContextScopeGuard{};
 
   // Some hard-coded testing options
   const std::string  inputFileName = argv[1];
@@ -87,7 +90,6 @@ main(int argc, char * argv[])
   catch (itk::ExceptionObject & excp)
   {
     std::cerr << "ERROR: " << excp << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -126,7 +128,6 @@ main(int argc, char * argv[])
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -142,7 +143,6 @@ main(int argc, char * argv[])
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -168,7 +168,6 @@ main(int argc, char * argv[])
   catch (itk::ExceptionObject & e)
   {
     std::cerr << "ERROR: " << e << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -182,7 +181,6 @@ main(int argc, char * argv[])
   if (RMSerror > epsilon)
   {
     std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -226,12 +224,10 @@ main(int argc, char * argv[])
     if (RMSerror > epsilon)
     {
       std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
-      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
   }
 
   // End program.
-  itk::ReleaseContext();
   return EXIT_SUCCESS;
 } // end main()

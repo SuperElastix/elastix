@@ -25,7 +25,6 @@ main()
 
   if (contextNull->IsCreated())
   {
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -34,7 +33,6 @@ main()
   // Check the pointers, they should be the same
   if (contextNull.GetPointer() != context.GetPointer())
   {
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -46,7 +44,6 @@ main()
 
   if (!context->IsCreated())
   {
-    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -57,6 +54,5 @@ main()
   }
 
   // Release and exit
-  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }
