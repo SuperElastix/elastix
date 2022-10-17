@@ -28,7 +28,8 @@ endif()
 
 # Import ELASTIX targets.
 set( ELASTIX_CONFIG_TARGETS_FILE "${_ELASTIXConfig_DIR}/ElastixTargets.cmake")
-if(NOT ELASTIX_TARGETS_IMPORTED)
+list( GET ELASTIX_LIBRARIES 0 _first_library)
+if(NOT ELASTIX_TARGETS_IMPORTED AND NOT TARGET ${_first_library})
   set(ELASTIX_TARGETS_IMPORTED 1)
   include("${ELASTIX_CONFIG_TARGETS_FILE}")
 endif()
