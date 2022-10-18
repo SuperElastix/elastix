@@ -39,7 +39,11 @@
 #include "itkTransformixFilter.h"
 #include "elxPixelTypeToString.h"
 #include "elxTransformBase.h"
+#include "elxTransformIO.h"
 #include "elxDefaultConstruct.h"
+
+#include <itkCompositeTransform.h>
+
 #include <memory> // For unique_ptr.
 
 namespace itk
@@ -172,6 +176,73 @@ TransformixFilter<TMovingImage>::GenerateData()
   if (transformParameterMapVector.empty())
   {
     itkExceptionMacro("Empty parameter map in parameter object.");
+  }
+
+  if (m_Transform)
+  {
+    // Adjust the local transformParameterMap according to this m_Transform.
+
+    const auto transformToMap = [](const itk::TransformBase & transform, auto & transformParameterMap) {
+      const auto convertToParameterValues = [](const itk::OptimizerParameters<double> & optimizerParameters) {
+        ParameterValueVectorType parameterValues(optimizerParameters.size());
+        std::transform(optimizerParameters.begin(),
+                       optimizerParameters.end(),
+                       parameterValues.begin(),
+                       itk::NumberToString<double>{});
+        return parameterValues;
+      };
+
+      transformParameterMap["ITKTransformFixedParameters"] = convertToParameterValues(transform.GetFixedParameters());
+      transformParameterMap["ITKTransformParameters"] = convertToParameterValues(transform.GetParameters());
+      transformParameterMap["ITKTransformType"] = { transform.GetTransformTypeAsString() };
+      transformParameterMap["Transform"] = { elx::TransformIO::ConvertITKNameOfClassToElastixClassName(
+        transform.GetNameOfClass()) };
+    };
+    const auto compositeTransform =
+      dynamic_cast<const CompositeTransform<double, MovingImageDimension> *>(&*m_Transform);
+
+    if (compositeTransform)
+    {
+      const auto & transformQueue = compositeTransform->GetTransformQueue();
+
+      const auto numberOfTransforms = transformQueue.size();
+
+      if (numberOfTransforms == 0)
+      {
+        itkExceptionMacro(
+          "The specified composite transform has no subtransforms! At least one subtransform is required!");
+      }
+
+      if (numberOfTransforms != transformParameterMapVector.size())
+      {
+        // The last TransformParameterMap is special, as it needs to be used for the final transformation.
+        auto lastTransformParameterMap = transformParameterMapVector.back();
+        transformParameterMapVector.resize(numberOfTransforms);
+        transformParameterMapVector.back() = std::move(lastTransformParameterMap);
+      }
+      for (unsigned int i = 0; i < numberOfTransforms; ++i)
+      {
+        auto &     transformParameterMap = transformParameterMapVector[numberOfTransforms - i - 1];
+        const auto transform = transformQueue[i];
+
+        if (transform == nullptr)
+        {
+          itkExceptionMacro("One of the subtransforms of the specified composite transform is null!");
+        }
+        transformToMap(*transform, transformParameterMap);
+      }
+    }
+    else
+    {
+      // Assume in this case that it is just a single transform.
+      assert((dynamic_cast<const MultiTransform<double, MovingImageDimension> *>(&*m_Transform)) == nullptr);
+
+      // For a single transform, there should be only a single transform parameter map.
+      auto transformParameterMap = std::move(transformParameterMapVector.back());
+      transformToMap(*m_Transform, transformParameterMap);
+      transformParameterMapVector.clear();
+      transformParameterMapVector.push_back(std::move(transformParameterMap));
+    }
   }
 
   // Set pixel types from input image, override user settings
