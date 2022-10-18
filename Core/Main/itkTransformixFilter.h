@@ -37,6 +37,7 @@
 
 #include "itkImageSource.h"
 #include "itkMesh.h"
+#include "itkTransformBase.h"
 
 #include "elxTransformixMain.h"
 #include "elxParameterObject.h"
@@ -220,6 +221,11 @@ public:
     return m_OutputMesh;
   }
 
+  /** Sets the transformation. If null, the transformation is entirely specified by the transform
+   * parameter object that is set by SetTransformParameterObject. Otherwise, the transformation is specified by this
+   * transform object, with additional information from the specified transform parameter object. */
+  itkSetConstObjectMacro(Transform, TransformBase);
+
 protected:
   TransformixFilter();
 
@@ -264,6 +270,8 @@ private:
 
   typename MeshType::ConstPointer m_InputMesh{ nullptr };
   typename MeshType::Pointer      m_OutputMesh{ nullptr };
+
+  TransformBase::ConstPointer m_Transform;
 };
 
 } // namespace itk
