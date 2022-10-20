@@ -19,11 +19,18 @@
 #define elxDefaultConstruct_h
 
 #include <itkLightObject.h>
+#include <cassert>
 
 namespace elastix
 {
 /// Allows default-constructing an `itk::LightObject` derived object without calling `New()`.
 /// May improve the runtime performance, by avoiding heap allocation and pointer indirection.
+///
+/// Follows C++ Core Guidelines, September 23, 2022, "Prefer scoped objects, don't heap-allocate unnecessarily", from
+/// http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rr-scoped
+///
+/// \note While `New()` may use a factory (`itk::ObjectFactory`) to create the object, `DefaultConstruct` just
+/// default-constructs the object.
 template <typename TObject>
 class DefaultConstruct : public TObject
 {
@@ -36,6 +43,18 @@ public:
   /// Public destructor. Just calls the (typically protected) destructor of `TObject`.
   ~DefaultConstruct() override
   {
+    // Note: This assertion may fail when a filter is default-constructed _before_ its input, e.g.:
+    //
+    // {
+    //   DefaultConstruct<itk::TransformixFilter<ImageType>> transformixFilter{};
+    //   DefaultConstruct<ImageType>                         movingImage{};
+    //   transformixFilter.SetMovingImage(&movingImage);
+    // } // <== Assertion failure!
+    //
+    // Such a failure may be solved by reordering the declarations (declaring the input first), or by declaring the
+    // input by their static `New()` member function (instead of by `DefaultConstruct`).
+    assert(this->itk::LightObject::m_ReferenceCount == 1);
+
     // Suppress warning "Trying to delete object with non-zero reference count."
     this->itk::LightObject::m_ReferenceCount = 0;
   }
