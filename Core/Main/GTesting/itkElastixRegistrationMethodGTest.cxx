@@ -789,21 +789,15 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
   registration.SetFixedImage(fixedImage);
   registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
                                                           { "AutomaticTransformInitialization", "false" },
+                                                          { "AutomaticScalesEstimation", "true" },
                                                           { "ImageSampler", "Full" },
-                                                          { "MaximumNumberOfIterations", "50" },
+                                                          { "MaximumNumberOfIterations", "16" },
                                                           { "Metric", "AdvancedNormalizedCorrelation" },
-                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                          { "Transform", "EulerTransform" } }));
+                                                          { "Optimizer", "RegularStepGradientDescent" },
+                                                          { "Transform", "EulerTransform" },
+                                                          { "WriteResultImage", "false" } }));
 
-  for (const auto degree :
-       { -1
-#ifdef NDEBUG
-         // Test three degrees only in Release mode, as it takes too much time for a Debug configuration.
-         ,
-         0,
-         1
-#endif
-       })
+  for (const auto degree : { -2, 0, 1, 30 })
   {
     constexpr auto radiansPerDegree = M_PI / 180.0;
 
