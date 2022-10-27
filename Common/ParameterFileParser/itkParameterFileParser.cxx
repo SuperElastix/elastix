@@ -209,8 +209,7 @@ ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut
   /** 3. Check if line is between brackets. */
   if (!itksys::SystemTools::StringStartsWith(lineOut, "(") || !itksys::SystemTools::StringEndsWith(lineOut, ")"))
   {
-    const std::string hint = "Line is not between brackets: \"(...)\".";
-    ThrowException(lineIn, hint);
+    ThrowException(lineIn, "Line is not between brackets: \"(...)\".");
   }
 
   /** Remove brackets. */
@@ -221,8 +220,7 @@ ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut
   const bool                match4 = reTwoWords.find(lineOut);
   if (!match4)
   {
-    const std::string hint = "Line does not contain a parameter name and value.";
-    ThrowException(lineIn, hint);
+    ThrowException(lineIn, "Line does not contain a parameter name and value.");
   }
 
   /** At this point we know its at least a line containing a parameter.
@@ -275,15 +273,14 @@ ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const st
   const bool                match = reInvalidCharacters1.find(parameterName);
   if (match)
   {
-    const std::string hint = "The parameter \"" + parameterName + "\" contains invalid characters (.,:;!@#$%^&-+|<>?).";
-    ThrowException(fullLine, hint);
+    ThrowException(fullLine,
+                   "The parameter \"" + parameterName + "\" contains invalid characters (.,:;!@#$%^&-+|<>?).");
   }
 
   /** 5) Insert this combination in the parameter map. */
   if (this->m_ParameterMap.count(parameterName))
   {
-    const std::string hint = "The parameter \"" + parameterName + "\" is specified more than once.";
-    ThrowException(fullLine, hint);
+    ThrowException(fullLine, "The parameter \"" + parameterName + "\" is specified more than once.");
   }
   else
   {
@@ -313,8 +310,7 @@ ParameterFileParser::SplitLine(const std::string &        fullLine,
   if (numQuotes % 2 == 1)
   {
     /** An invalid parameter line. */
-    const std::string hint = "This line has an odd number of quotes (\").";
-    ThrowException(fullLine, hint);
+    ThrowException(fullLine, "This line has an odd number of quotes (\").");
   }
 
   /** Loop over the line. */
