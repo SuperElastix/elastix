@@ -347,12 +347,9 @@ ParameterFileParser::SplitLine(const std::string &        fullLine,
 void
 ParameterFileParser::ThrowException(const std::string & line, const std::string & hint) const
 {
-  /** Construct an error message. */
-  const std::string errorMessage = "ERROR: the following line in your parameter file is invalid: \n\"" + line + "\"\n" +
-                                   hint + "\nPlease correct you parameter file!";
-
-  /** Throw exception. */
-  itkExceptionMacro(<< errorMessage);
+  itkExceptionMacro("ERROR: the following line in your parameter file is invalid: \n\""
+                    << line + "\"\n"
+                    << hint << "\nPlease correct you parameter file!");
 
 } // end ThrowException()
 
