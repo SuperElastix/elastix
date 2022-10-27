@@ -39,6 +39,61 @@ ThrowException(const std::string & line, const std::string & hint)
 
 } // end ThrowException()
 
+
+// Splits a line in parameter name and values.
+void
+SplitLine(const std::string & fullLine, const std::string & line, std::vector<std::string> & splittedLine)
+{
+  splittedLine.clear();
+  splittedLine.resize(1);
+
+  /** Count the number of quotes in the line. If it is an odd value, the
+   * line contains an error; strings should start and end with a quote, so
+   * the total number of quotes is even.
+   */
+  std::size_t numQuotes = itksys::SystemTools::CountChar(line.c_str(), '"');
+  if (numQuotes % 2 == 1)
+  {
+    /** An invalid parameter line. */
+    ThrowException(fullLine, "This line has an odd number of quotes (\").");
+  }
+
+  /** Loop over the line. */
+  unsigned int index = 0;
+  numQuotes = 0;
+  for (const char currentChar : line)
+  {
+    if (currentChar == '"')
+    {
+      /** Start a new element. */
+      splittedLine.push_back("");
+      ++index;
+      ++numQuotes;
+    }
+    else if (currentChar == ' ')
+    {
+      /** Only start a new element if it is not a quote, otherwise just add
+       * the space to the string.
+       */
+      if (numQuotes % 2 == 0)
+      {
+        splittedLine.push_back("");
+        ++index;
+      }
+      else
+      {
+        splittedLine[index].push_back(currentChar);
+      }
+    }
+    else
+    {
+      /** Add this character to the element. */
+      splittedLine[index].push_back(currentChar);
+    }
+  }
+
+} // end SplitLine()
+
 } // namespace
 
 /**
@@ -251,7 +306,7 @@ ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const st
 
   /** 1) Split the line. */
   std::vector<std::string> splittedLine;
-  this->SplitLine(fullLine, line, splittedLine);
+  SplitLine(fullLine, line, splittedLine);
 
   /** 2) Get the parameter name. */
   std::string parameterName = splittedLine[0];
@@ -288,66 +343,6 @@ ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const st
   }
 
 } // end GetParameterFromLine()
-
-
-/**
- * **************** SplitLine ***************
- */
-
-void
-ParameterFileParser::SplitLine(const std::string &        fullLine,
-                               const std::string &        line,
-                               std::vector<std::string> & splittedLine) const
-{
-  splittedLine.clear();
-  splittedLine.resize(1);
-
-  /** Count the number of quotes in the line. If it is an odd value, the
-   * line contains an error; strings should start and end with a quote, so
-   * the total number of quotes is even.
-   */
-  std::size_t numQuotes = itksys::SystemTools::CountChar(line.c_str(), '"');
-  if (numQuotes % 2 == 1)
-  {
-    /** An invalid parameter line. */
-    ThrowException(fullLine, "This line has an odd number of quotes (\").");
-  }
-
-  /** Loop over the line. */
-  unsigned int index = 0;
-  numQuotes = 0;
-  for (const char currentChar : line)
-  {
-    if (currentChar == '"')
-    {
-      /** Start a new element. */
-      splittedLine.push_back("");
-      ++index;
-      ++numQuotes;
-    }
-    else if (currentChar == ' ')
-    {
-      /** Only start a new element if it is not a quote, otherwise just add
-       * the space to the string.
-       */
-      if (numQuotes % 2 == 0)
-      {
-        splittedLine.push_back("");
-        ++index;
-      }
-      else
-      {
-        splittedLine[index].push_back(currentChar);
-      }
-    }
-    else
-    {
-      /** Add this character to the element. */
-      splittedLine[index].push_back(currentChar);
-    }
-  }
-
-} // end SplitLine()
 
 
 /**
