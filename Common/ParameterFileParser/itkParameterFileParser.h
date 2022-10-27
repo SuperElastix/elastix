@@ -132,14 +132,6 @@ private:
   void
   BasicFileChecking() const;
 
-  /** Checks a line.
-   * - Returns  true if it is a valid line: containing a parameter.
-   * - Returns false if it is a valid line: empty or comment.
-   * - Throws an exception if it is not a valid line.
-   */
-  bool
-  CheckLine(const std::string & line, std::string & lineOut) const;
-
   /** Member variables. */
   std::string      m_ParameterFileName;
   ParameterMapType m_ParameterMap;
