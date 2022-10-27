@@ -118,6 +118,11 @@ public:
   static ParameterMapType
   ReadParameterMap(const std::string & fileName);
 
+  /** Converts the specified text string to the corresponding parameter map, assuming that the text is formatted
+   * according to the elastix parameter text file format. */
+  static ParameterMapType
+  ConvertToParameterMap(const std::string & text);
+
 protected:
   ParameterFileParser();
   ~ParameterFileParser() override;

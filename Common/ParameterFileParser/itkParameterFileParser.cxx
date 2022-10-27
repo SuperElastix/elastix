@@ -271,6 +271,34 @@ BasicFileChecking(const std::string & parameterFileName)
 
 } // end BasicFileChecking()
 
+
+void
+ReadParameterMapFromInputStream(ParameterFileParser::ParameterMapType & parameterMap, std::istream & inputStream)
+{
+  /** Clear the map. */
+  parameterMap.clear();
+
+  /** Loop over the parameter file, line by line. */
+  std::string lineIn;
+  std::string lineOut;
+  while (inputStream.good())
+  {
+    /** Extract a line. */
+    itksys::SystemTools::GetLineFromStream(inputStream, lineIn);
+
+    /** Check this line. */
+    const bool validLine = CheckLine(lineIn, lineOut);
+
+    if (validLine)
+    {
+      /** Get the parameter name from this line and store it. */
+      GetParameterFromLine(parameterMap, lineIn, lineOut);
+    }
+    // Otherwise, we simply ignore this line
+  }
+}
+
+
 } // namespace
 
 /**
@@ -318,27 +346,7 @@ ParameterFileParser::ReadParameterFile()
     itkExceptionMacro(<< "ERROR: could not open " << this->m_ParameterFileName << " for reading.");
   }
 
-  /** Clear the map. */
-  this->m_ParameterMap.clear();
-
-  /** Loop over the parameter file, line by line. */
-  std::string lineIn;
-  std::string lineOut;
-  while (parameterFile.good())
-  {
-    /** Extract a line. */
-    itksys::SystemTools::GetLineFromStream(parameterFile, lineIn);
-
-    /** Check this line. */
-    const bool validLine = CheckLine(lineIn, lineOut);
-
-    if (validLine)
-    {
-      /** Get the parameter name from this line and store it. */
-      GetParameterFromLine(m_ParameterMap, lineIn, lineOut);
-    }
-    // Otherwise, we simply ignore this line
-  }
+  ReadParameterMapFromInputStream(m_ParameterMap, parameterFile);
 
 } // end ReadParameterFile()
 
@@ -392,6 +400,20 @@ ParameterFileParser::ReadParameterMap(const std::string & fileName) -> Parameter
 
   // Use fast move semantics, because `parameterFileParser` is destructed afterwards anyway.
   return std::move(parameterFileParser.m_ParameterMap);
+}
+
+
+/**
+ * **************** ConvertToParameterMap ***************
+ */
+
+auto
+ParameterFileParser::ConvertToParameterMap(const std::string & text) -> ParameterMapType
+{
+  ParameterMapType   parameterMap;
+  std::istringstream inputStringStream(text);
+  ReadParameterMapFromInputStream(parameterMap, inputStringStream);
+  return parameterMap;
 }
 
 
