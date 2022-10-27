@@ -144,10 +144,6 @@ private:
   void
   GetParameterFromLine(const std::string & fullLine, const std::string & line);
 
-  /** Splits a line in parameter name and values. */
-  void
-  SplitLine(const std::string & fullLine, const std::string & line, std::vector<std::string> & splittedLine) const;
-
   /** Member variables. */
   std::string      m_ParameterFileName;
   ParameterMapType m_ParameterMap;
