@@ -41,11 +41,10 @@ ThrowException(const std::string & line, const std::string & hint)
 
 
 // Splits a line in parameter name and values.
-void
-SplitLine(const std::string & fullLine, const std::string & line, std::vector<std::string> & splittedLine)
+std::vector<std::string>
+SplitLine(const std::string & fullLine, const std::string & line)
 {
-  splittedLine.clear();
-  splittedLine.resize(1);
+  std::vector<std::string> splittedLine(1);
 
   /** Count the number of quotes in the line. If it is an odd value, the
    * line contains an error; strings should start and end with a quote, so
@@ -91,6 +90,7 @@ SplitLine(const std::string & fullLine, const std::string & line, std::vector<st
       splittedLine[index].push_back(currentChar);
     }
   }
+  return splittedLine;
 
 } // end SplitLine()
 
@@ -305,8 +305,7 @@ ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const st
    */
 
   /** 1) Split the line. */
-  std::vector<std::string> splittedLine;
-  SplitLine(fullLine, line, splittedLine);
+  std::vector<std::string> splittedLine = SplitLine(fullLine, line);
 
   /** 2) Get the parameter name. */
   std::string parameterName = splittedLine[0];
