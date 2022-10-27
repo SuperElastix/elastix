@@ -19,6 +19,7 @@
 // First include the header file to be tested:
 #include "elxConversion.h"
 
+#include "itkParameterFileParser.h"
 #include "itkParameterMapInterface.h"
 #include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
 
@@ -43,9 +44,49 @@ using elastix::Conversion;
 
 // Using-declaration:
 using elx::CoreMainGTestUtilities::CheckNew;
+using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
 
 namespace
 {
+
+// A realistic test example of a parameter map and its text string representation:
+namespace TestExample
+{
+const ParameterMapType parameterMap = { { "Direction", { "0", "0", "0", "0" } },
+                                        { "FixedImageDimension", { "2" } },
+                                        { "FixedInternalImagePixelType", { "float" } },
+                                        { "HowToCombineTransforms", { "Compose" } },
+                                        { "Index", { "0", "0" } },
+                                        { "InitialTransformParametersFileName", { "NoInitialTransform" } },
+                                        { "MovingImageDimension", { "2" } },
+                                        { "MovingInternalImagePixelType", { "float" } },
+                                        { "NumberOfParameters", { "2" } },
+                                        { "Origin", { "0", "0" } },
+                                        { "Size", { "0", "0" } },
+                                        { "Spacing", { "1", "1" } },
+                                        { "Transform", { "TranslationTransform" } },
+                                        { "TransformParameters", { "0", "0" } },
+                                        { "UseDirectionCosines", { "true" } } };
+
+const std::string parameterMapTextString = R"((Direction 0 0 0 0)
+(FixedImageDimension 2)
+(FixedInternalImagePixelType "float")
+(HowToCombineTransforms "Compose")
+(Index 0 0)
+(InitialTransformParametersFileName "NoInitialTransform")
+(MovingImageDimension 2)
+(MovingInternalImagePixelType "float")
+(NumberOfParameters 2)
+(Origin 0 0)
+(Size 0 0)
+(Spacing 1 1)
+(Transform "TranslationTransform")
+(TransformParameters 0 0)
+(UseDirectionCosines "true")
+)";
+
+} // namespace TestExample
+
 
 template <typename TParameterValue>
 TParameterValue
@@ -265,41 +306,20 @@ GTEST_TEST(Conversion, ParameterMapToString)
   EXPECT_EQ(Conversion::ParameterMapToString({ { "A", {} } }), "(A)\n");
   EXPECT_EQ(Conversion::ParameterMapToString({ { "Numbers", { "0", "1" } } }), "(Numbers 0 1)\n");
   EXPECT_EQ(Conversion::ParameterMapToString({ { "Letters", { "a", "z" } } }), "(Letters \"a\" \"z\")\n");
+  EXPECT_EQ(Conversion::ParameterMapToString(TestExample::parameterMap), TestExample::parameterMapTextString);
+}
 
-  // A realistic example:
-  const std::string expectedString = R"((Direction 0 0 0 0)
-(FixedImageDimension 2)
-(FixedInternalImagePixelType "float")
-(HowToCombineTransforms "Compose")
-(Index 0 0)
-(InitialTransformParametersFileName "NoInitialTransform")
-(MovingImageDimension 2)
-(MovingInternalImagePixelType "float")
-(NumberOfParameters 2)
-(Origin 0 0)
-(Size 0 0)
-(Spacing 1 1)
-(Transform "TranslationTransform")
-(TransformParameters 0 0)
-(UseDirectionCosines "true")
-)";
 
-  EXPECT_EQ(Conversion::ParameterMapToString({ { "Direction", { "0", "0", "0", "0" } },
-                                               { "FixedImageDimension", { "2" } },
-                                               { "FixedInternalImagePixelType", { "float" } },
-                                               { "HowToCombineTransforms", { "Compose" } },
-                                               { "Index", { "0", "0" } },
-                                               { "InitialTransformParametersFileName", { "NoInitialTransform" } },
-                                               { "MovingImageDimension", { "2" } },
-                                               { "MovingInternalImagePixelType", { "float" } },
-                                               { "NumberOfParameters", { "2" } },
-                                               { "Origin", { "0", "0" } },
-                                               { "Size", { "0", "0" } },
-                                               { "Spacing", { "1", "1" } },
-                                               { "Transform", { "TranslationTransform" } },
-                                               { "TransformParameters", { "0", "0" } },
-                                               { "UseDirectionCosines", { "true" } } }),
-            expectedString);
+GTEST_TEST(ParameterFileParser, ConvertTextToParameterMap)
+{
+  using itk::ParameterFileParser;
+
+  EXPECT_EQ(ParameterFileParser::ConvertToParameterMap(""), ParameterMapType{});
+  EXPECT_EQ(ParameterFileParser::ConvertToParameterMap("(Numbers 0 1)\n"),
+            ParameterMapType({ { "Numbers", { "0", "1" } } }));
+  EXPECT_EQ(ParameterFileParser::ConvertToParameterMap("(Letters \"a\" \"z\")\n"),
+            ParameterMapType({ { "Letters", { "a", "z" } } }));
+  EXPECT_EQ(ParameterFileParser::ConvertToParameterMap(TestExample::parameterMapTextString), TestExample::parameterMap);
 }
 
 
