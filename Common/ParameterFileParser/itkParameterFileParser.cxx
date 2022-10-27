@@ -149,121 +149,12 @@ GetParameterFromLine(ParameterFileParser::ParameterMapType & parameterMap,
 } // end GetParameterFromLine()
 
 
-} // namespace
-
-/**
- * **************** Constructor ***************
- */
-
-ParameterFileParser::ParameterFileParser() = default;
-
-
-/**
- * **************** Destructor ***************
- */
-
-ParameterFileParser ::~ParameterFileParser() = default;
-
-
-/**
- * **************** GetParameterMap ***************
- */
-
-const ParameterFileParser::ParameterMapType &
-ParameterFileParser::GetParameterMap() const
-{
-  return this->m_ParameterMap;
-
-} // end GetParameterMap()
-
-
-/**
- * **************** ReadParameterFile ***************
- */
-
-void
-ParameterFileParser::ReadParameterFile()
-{
-  /** Perform some basic checks. */
-  this->BasicFileChecking();
-
-  /** Open the parameter file for reading. */
-  std::ifstream parameterFile(this->m_ParameterFileName);
-
-  /** Check if it opened. */
-  if (!parameterFile.is_open())
-  {
-    itkExceptionMacro(<< "ERROR: could not open " << this->m_ParameterFileName << " for reading.");
-  }
-
-  /** Clear the map. */
-  this->m_ParameterMap.clear();
-
-  /** Loop over the parameter file, line by line. */
-  std::string lineIn;
-  std::string lineOut;
-  while (parameterFile.good())
-  {
-    /** Extract a line. */
-    itksys::SystemTools::GetLineFromStream(parameterFile, lineIn);
-
-    /** Check this line. */
-    const bool validLine = this->CheckLine(lineIn, lineOut);
-
-    if (validLine)
-    {
-      /** Get the parameter name from this line and store it. */
-      GetParameterFromLine(m_ParameterMap, lineIn, lineOut);
-    }
-    // Otherwise, we simply ignore this line
-  }
-
-} // end ReadParameterFile()
-
-
-/**
- * **************** BasicFileChecking ***************
- */
-
-void
-ParameterFileParser::BasicFileChecking() const
-{
-  /** Check if the file name is given. */
-  if (this->m_ParameterFileName.empty())
-  {
-    itkExceptionMacro(<< "ERROR: FileName has not been set.");
-  }
-
-  /** Basic error checking: existence. */
-  const bool exists = itksys::SystemTools::FileExists(this->m_ParameterFileName);
-  if (!exists)
-  {
-    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " does not exist.");
-  }
-
-  /** Basic error checking: file or directory. */
-  const bool isDir = itksys::SystemTools::FileIsDirectory(this->m_ParameterFileName);
-  if (isDir)
-  {
-    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " is a directory.");
-  }
-
-  /** Check the extension. */
-  const std::string ext = itksys::SystemTools::GetFilenameLastExtension(this->m_ParameterFileName);
-  if (ext != ".txt")
-  {
-    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " should be a text file (*.txt).");
-  }
-
-} // end BasicFileChecking()
-
-
-/**
- * **************** CheckLine ***************
- */
-
+// Checks a line.
+// - Returns  true if it is a valid line: containing a parameter.
+// - Returns false if it is a valid line: empty or comment.
+// - Throws an exception if it is not a valid line.
 bool
-ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut) const
+CheckLine(const std::string & lineIn, std::string & lineOut)
 {
   /** Preprocessing of lineIn:
    * 1) Replace tabs with spaces
@@ -340,8 +231,115 @@ ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut
    */
 
   return true;
+}
 
-} // end CheckLine()
+} // namespace
+
+/**
+ * **************** Constructor ***************
+ */
+
+ParameterFileParser::ParameterFileParser() = default;
+
+
+/**
+ * **************** Destructor ***************
+ */
+
+ParameterFileParser ::~ParameterFileParser() = default;
+
+
+/**
+ * **************** GetParameterMap ***************
+ */
+
+const ParameterFileParser::ParameterMapType &
+ParameterFileParser::GetParameterMap() const
+{
+  return this->m_ParameterMap;
+
+} // end GetParameterMap()
+
+
+/**
+ * **************** ReadParameterFile ***************
+ */
+
+void
+ParameterFileParser::ReadParameterFile()
+{
+  /** Perform some basic checks. */
+  this->BasicFileChecking();
+
+  /** Open the parameter file for reading. */
+  std::ifstream parameterFile(this->m_ParameterFileName);
+
+  /** Check if it opened. */
+  if (!parameterFile.is_open())
+  {
+    itkExceptionMacro(<< "ERROR: could not open " << this->m_ParameterFileName << " for reading.");
+  }
+
+  /** Clear the map. */
+  this->m_ParameterMap.clear();
+
+  /** Loop over the parameter file, line by line. */
+  std::string lineIn;
+  std::string lineOut;
+  while (parameterFile.good())
+  {
+    /** Extract a line. */
+    itksys::SystemTools::GetLineFromStream(parameterFile, lineIn);
+
+    /** Check this line. */
+    const bool validLine = CheckLine(lineIn, lineOut);
+
+    if (validLine)
+    {
+      /** Get the parameter name from this line and store it. */
+      GetParameterFromLine(m_ParameterMap, lineIn, lineOut);
+    }
+    // Otherwise, we simply ignore this line
+  }
+
+} // end ReadParameterFile()
+
+
+/**
+ * **************** BasicFileChecking ***************
+ */
+
+void
+ParameterFileParser::BasicFileChecking() const
+{
+  /** Check if the file name is given. */
+  if (this->m_ParameterFileName.empty())
+  {
+    itkExceptionMacro(<< "ERROR: FileName has not been set.");
+  }
+
+  /** Basic error checking: existence. */
+  const bool exists = itksys::SystemTools::FileExists(this->m_ParameterFileName);
+  if (!exists)
+  {
+    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " does not exist.");
+  }
+
+  /** Basic error checking: file or directory. */
+  const bool isDir = itksys::SystemTools::FileIsDirectory(this->m_ParameterFileName);
+  if (isDir)
+  {
+    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " is a directory.");
+  }
+
+  /** Check the extension. */
+  const std::string ext = itksys::SystemTools::GetFilenameLastExtension(this->m_ParameterFileName);
+  if (ext != ".txt")
+  {
+    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " should be a text file (*.txt).");
+  }
+
+} // end BasicFileChecking()
 
 
 /**
