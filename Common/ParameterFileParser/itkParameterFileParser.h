@@ -140,10 +140,6 @@ private:
   bool
   CheckLine(const std::string & line, std::string & lineOut) const;
 
-  /** Fills m_ParameterMap with valid entries. */
-  void
-  GetParameterFromLine(const std::string & fullLine, const std::string & line);
-
   /** Member variables. */
   std::string      m_ParameterFileName;
   ParameterMapType m_ParameterMap;

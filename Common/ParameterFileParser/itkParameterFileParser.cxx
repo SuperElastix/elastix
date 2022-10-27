@@ -94,6 +94,61 @@ SplitLine(const std::string & fullLine, const std::string & line)
 
 } // end SplitLine()
 
+
+// Fills the specified ParameterMap with valid entries.
+void
+GetParameterFromLine(ParameterFileParser::ParameterMapType & parameterMap,
+                     const std::string &                     fullLine,
+                     const std::string &                     line)
+{
+  /** A line has a parameter name followed by one or more parameters.
+   * They are all separated by one or more spaces (all tabs have been
+   * removed previously) or by quotes in case of strings. So,
+   * 1) we split the line at the spaces or quotes
+   * 2) the first one is the parameter name
+   * 3) the other strings that are not a series of spaces, are parameter values
+   */
+
+  /** 1) Split the line. */
+  std::vector<std::string> splittedLine = SplitLine(fullLine, line);
+
+  /** 2) Get the parameter name. */
+  std::string parameterName = splittedLine[0];
+  itksys::SystemTools::ReplaceString(parameterName, " ", "");
+  splittedLine.erase(splittedLine.begin());
+
+  /** 3) Get the parameter values. */
+  std::vector<std::string> parameterValues;
+  for (const auto & value : splittedLine)
+  {
+    if (!value.empty())
+    {
+      parameterValues.push_back(value);
+    }
+  }
+
+  /** 4) Perform some checks on the parameter name. */
+  itksys::RegularExpression reInvalidCharacters1("[.,:;!@#$%^&-+|<>?]");
+  const bool                match = reInvalidCharacters1.find(parameterName);
+  if (match)
+  {
+    ThrowException(fullLine,
+                   "The parameter \"" + parameterName + "\" contains invalid characters (.,:;!@#$%^&-+|<>?).");
+  }
+
+  /** 5) Insert this combination in the parameter map. */
+  if (parameterMap.count(parameterName))
+  {
+    ThrowException(fullLine, "The parameter \"" + parameterName + "\" is specified more than once.");
+  }
+  else
+  {
+    parameterMap.insert(make_pair(parameterName, parameterValues));
+  }
+
+} // end GetParameterFromLine()
+
+
 } // namespace
 
 /**
@@ -158,7 +213,7 @@ ParameterFileParser::ReadParameterFile()
     if (validLine)
     {
       /** Get the parameter name from this line and store it. */
-      this->GetParameterFromLine(lineIn, lineOut);
+      GetParameterFromLine(m_ParameterMap, lineIn, lineOut);
     }
     // Otherwise, we simply ignore this line
   }
@@ -287,61 +342,6 @@ ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut
   return true;
 
 } // end CheckLine()
-
-
-/**
- * **************** GetParameterFromLine ***************
- */
-
-void
-ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const std::string & line)
-{
-  /** A line has a parameter name followed by one or more parameters.
-   * They are all separated by one or more spaces (all tabs have been
-   * removed previously) or by quotes in case of strings. So,
-   * 1) we split the line at the spaces or quotes
-   * 2) the first one is the parameter name
-   * 3) the other strings that are not a series of spaces, are parameter values
-   */
-
-  /** 1) Split the line. */
-  std::vector<std::string> splittedLine = SplitLine(fullLine, line);
-
-  /** 2) Get the parameter name. */
-  std::string parameterName = splittedLine[0];
-  itksys::SystemTools::ReplaceString(parameterName, " ", "");
-  splittedLine.erase(splittedLine.begin());
-
-  /** 3) Get the parameter values. */
-  std::vector<std::string> parameterValues;
-  for (const auto & value : splittedLine)
-  {
-    if (!value.empty())
-    {
-      parameterValues.push_back(value);
-    }
-  }
-
-  /** 4) Perform some checks on the parameter name. */
-  itksys::RegularExpression reInvalidCharacters1("[.,:;!@#$%^&-+|<>?]");
-  const bool                match = reInvalidCharacters1.find(parameterName);
-  if (match)
-  {
-    ThrowException(fullLine,
-                   "The parameter \"" + parameterName + "\" contains invalid characters (.,:;!@#$%^&-+|<>?).");
-  }
-
-  /** 5) Insert this combination in the parameter map. */
-  if (this->m_ParameterMap.count(parameterName))
-  {
-    ThrowException(fullLine, "The parameter \"" + parameterName + "\" is specified more than once.");
-  }
-  else
-  {
-    this->m_ParameterMap.insert(make_pair(parameterName, parameterValues));
-  }
-
-} // end GetParameterFromLine()
 
 
 /**
