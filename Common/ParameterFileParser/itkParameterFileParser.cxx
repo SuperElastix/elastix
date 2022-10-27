@@ -233,6 +233,44 @@ CheckLine(const std::string & lineIn, std::string & lineOut)
   return true;
 }
 
+
+// Performs the following checks:
+// - Is a filename is given
+// - Does the file exist
+// - Is a text file, i.e. does it end with .txt
+// If one of these conditions fail, an exception is thrown.
+void
+BasicFileChecking(const std::string & parameterFileName)
+{
+  /** Check if the file name is given. */
+  if (parameterFileName.empty())
+  {
+    itkGenericExceptionMacro("ERROR: FileName has not been set.");
+  }
+
+  /** Basic error checking: existence. */
+  const bool exists = itksys::SystemTools::FileExists(parameterFileName);
+  if (!exists)
+  {
+    itkGenericExceptionMacro("ERROR: the file " << parameterFileName << " does not exist.");
+  }
+
+  /** Basic error checking: file or directory. */
+  const bool isDir = itksys::SystemTools::FileIsDirectory(parameterFileName);
+  if (isDir)
+  {
+    itkGenericExceptionMacro("ERROR: the file " << parameterFileName << " is a directory.");
+  }
+
+  /** Check the extension. */
+  const std::string ext = itksys::SystemTools::GetFilenameLastExtension(parameterFileName);
+  if (ext != ".txt")
+  {
+    itkGenericExceptionMacro("ERROR: the file " << parameterFileName << " should be a text file (*.txt).");
+  }
+
+} // end BasicFileChecking()
+
 } // namespace
 
 /**
@@ -269,7 +307,7 @@ void
 ParameterFileParser::ReadParameterFile()
 {
   /** Perform some basic checks. */
-  this->BasicFileChecking();
+  BasicFileChecking(m_ParameterFileName);
 
   /** Open the parameter file for reading. */
   std::ifstream parameterFile(this->m_ParameterFileName);
@@ -306,43 +344,6 @@ ParameterFileParser::ReadParameterFile()
 
 
 /**
- * **************** BasicFileChecking ***************
- */
-
-void
-ParameterFileParser::BasicFileChecking() const
-{
-  /** Check if the file name is given. */
-  if (this->m_ParameterFileName.empty())
-  {
-    itkExceptionMacro(<< "ERROR: FileName has not been set.");
-  }
-
-  /** Basic error checking: existence. */
-  const bool exists = itksys::SystemTools::FileExists(this->m_ParameterFileName);
-  if (!exists)
-  {
-    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " does not exist.");
-  }
-
-  /** Basic error checking: file or directory. */
-  const bool isDir = itksys::SystemTools::FileIsDirectory(this->m_ParameterFileName);
-  if (isDir)
-  {
-    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " is a directory.");
-  }
-
-  /** Check the extension. */
-  const std::string ext = itksys::SystemTools::GetFilenameLastExtension(this->m_ParameterFileName);
-  if (ext != ".txt")
-  {
-    itkExceptionMacro(<< "ERROR: the file " << this->m_ParameterFileName << " should be a text file (*.txt).");
-  }
-
-} // end BasicFileChecking()
-
-
-/**
  * **************** ReturnParameterFileAsString ***************
  */
 
@@ -350,7 +351,7 @@ std::string
 ParameterFileParser::ReturnParameterFileAsString()
 {
   /** Perform some basic checks. */
-  this->BasicFileChecking();
+  BasicFileChecking(m_ParameterFileName);
 
   /** Open the parameter file for reading. */
   std::ifstream parameterFile(this->m_ParameterFileName);
