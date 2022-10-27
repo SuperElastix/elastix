@@ -123,15 +123,6 @@ protected:
   ~ParameterFileParser() override;
 
 private:
-  /** Performs the following checks:
-   * - Is a filename is given
-   * - Does the file exist
-   * - Is a text file, i.e. does it end with .txt
-   * If one of these conditions fail, an exception is thrown.
-   */
-  void
-  BasicFileChecking() const;
-
   /** Member variables. */
   std::string      m_ParameterFileName;
   ParameterMapType m_ParameterMap;
