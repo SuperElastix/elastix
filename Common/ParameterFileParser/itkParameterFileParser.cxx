@@ -27,6 +27,20 @@
 namespace itk
 {
 
+namespace
+{
+// Uniform way to throw exceptions when the parameter file appears to be invalid.
+void
+ThrowException(const std::string & line, const std::string & hint)
+{
+  itkGenericExceptionMacro("ERROR: the following line in your parameter file is invalid: \n\""
+                           << line + "\"\n"
+                           << hint << "\nPlease correct you parameter file!");
+
+} // end ThrowException()
+
+} // namespace
+
 /**
  * **************** Constructor ***************
  */
@@ -196,7 +210,7 @@ ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut
   if (!itksys::SystemTools::StringStartsWith(lineOut, "(") || !itksys::SystemTools::StringEndsWith(lineOut, ")"))
   {
     const std::string hint = "Line is not between brackets: \"(...)\".";
-    this->ThrowException(lineIn, hint);
+    ThrowException(lineIn, hint);
   }
 
   /** Remove brackets. */
@@ -208,7 +222,7 @@ ParameterFileParser::CheckLine(const std::string & lineIn, std::string & lineOut
   if (!match4)
   {
     const std::string hint = "Line does not contain a parameter name and value.";
-    this->ThrowException(lineIn, hint);
+    ThrowException(lineIn, hint);
   }
 
   /** At this point we know its at least a line containing a parameter.
@@ -262,14 +276,14 @@ ParameterFileParser::GetParameterFromLine(const std::string & fullLine, const st
   if (match)
   {
     const std::string hint = "The parameter \"" + parameterName + "\" contains invalid characters (.,:;!@#$%^&-+|<>?).";
-    this->ThrowException(fullLine, hint);
+    ThrowException(fullLine, hint);
   }
 
   /** 5) Insert this combination in the parameter map. */
   if (this->m_ParameterMap.count(parameterName))
   {
     const std::string hint = "The parameter \"" + parameterName + "\" is specified more than once.";
-    this->ThrowException(fullLine, hint);
+    ThrowException(fullLine, hint);
   }
   else
   {
@@ -300,7 +314,7 @@ ParameterFileParser::SplitLine(const std::string &        fullLine,
   {
     /** An invalid parameter line. */
     const std::string hint = "This line has an odd number of quotes (\").";
-    this->ThrowException(fullLine, hint);
+    ThrowException(fullLine, hint);
   }
 
   /** Loop over the line. */
@@ -338,20 +352,6 @@ ParameterFileParser::SplitLine(const std::string &        fullLine,
   }
 
 } // end SplitLine()
-
-
-/**
- * **************** ThrowException ***************
- */
-
-void
-ParameterFileParser::ThrowException(const std::string & line, const std::string & hint) const
-{
-  itkExceptionMacro("ERROR: the following line in your parameter file is invalid: \n\""
-                    << line + "\"\n"
-                    << hint << "\nPlease correct you parameter file!");
-
-} // end ThrowException()
 
 
 /**

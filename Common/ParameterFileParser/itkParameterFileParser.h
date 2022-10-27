@@ -148,12 +148,6 @@ private:
   void
   SplitLine(const std::string & fullLine, const std::string & line, std::vector<std::string> & splittedLine) const;
 
-  /** Uniform way to throw exceptions when the parameter file appears to be
-   * invalid.
-   */
-  void
-  ThrowException(const std::string & line, const std::string & hint) const;
-
   /** Member variables. */
   std::string      m_ParameterFileName;
   ParameterMapType m_ParameterMap;
