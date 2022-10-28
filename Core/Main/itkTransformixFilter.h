@@ -204,15 +204,7 @@ public:
   }
 
   /** Sets an (optional) input mesh. An Update() will transform its points, and store them in the output mesh.  */
-  void
-  SetInputMesh(typename MeshType::ConstPointer mesh)
-  {
-    if (mesh != m_InputMesh)
-    {
-      m_InputMesh = mesh;
-      this->Modified();
-    }
-  }
+  itkSetConstObjectMacro(InputMesh, MeshType);
 
   /** Retrieves the output mesh, produced by an Update(), when an input mesh was specified.  */
   const MeshType *
