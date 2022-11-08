@@ -79,7 +79,6 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
 
   /** Possibly overrule the direction cosines. */
   ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
-  infoChanger->SetOutputDirection(DirectionType::GetIdentity());
   infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
 
   try

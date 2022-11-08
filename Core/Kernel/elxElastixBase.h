@@ -453,7 +453,6 @@ protected:
       for (const auto & fileName : *fileNameContainer)
       {
         const auto infoChanger = itk::ChangeInformationImageFilter<TImage>::New();
-        infoChanger->SetOutputDirection(DirectionType::GetIdentity());
         infoChanger->SetChangeDirection(!useDirectionCosines);
 
         /** Do the reading. */
