@@ -51,7 +51,6 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
 
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
-    infoChanger->SetOutputDirection(DirectionType::GetIdentity());
     infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
 
     /** Do the reading. */
@@ -92,7 +91,6 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
 
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
-    infoChanger->SetOutputDirection(DirectionType::GetIdentity());
     infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
 
     /** Do the reading. */
