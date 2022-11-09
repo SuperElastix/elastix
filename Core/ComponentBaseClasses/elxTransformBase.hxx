@@ -956,13 +956,11 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
 {
   /** Typedef's. */
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
-  using DeformationFieldGeneratorType =
-    itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordRepType>;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
   /** Create an setup deformation field generator. */
-  const auto defGenerator = DeformationFieldGeneratorType::New();
+  const auto defGenerator = itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordRepType>::New();
   defGenerator->SetSize(resampleImageFilter.GetSize());
   defGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
   defGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
@@ -1066,13 +1064,12 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
 
   /** Typedef's. */
   using JacobianImageType = itk::Image<float, FixedImageDimension>;
-  using JacobianGeneratorType = itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
   /** Create an setup Jacobian generator. */
-  const auto jacGenerator = JacobianGeneratorType::New();
+  const auto jacGenerator = itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType>::New();
   jacGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
   jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
   jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
@@ -1146,13 +1143,12 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   using OutputSpatialJacobianType =
     itk::Matrix<SpatialJacobianComponentType, MovingImageDimension, FixedImageDimension>;
   using JacobianImageType = itk::Image<OutputSpatialJacobianType, FixedImageDimension>;
-  using JacobianGeneratorType = itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
   /** Create an setup Jacobian generator. */
-  const auto jacGenerator = JacobianGeneratorType::New();
+  const auto jacGenerator = itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType>::New();
   jacGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
   jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
   jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
