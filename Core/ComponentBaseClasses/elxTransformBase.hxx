@@ -545,8 +545,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   const auto & largestPossibleRegion = fixedImage.GetLargestPossibleRegion();
 
   /** The following line would be logically: */
-  // FixedImageDirectionType direction =
-  //  this->m_Elastix->GetFixedImage()->GetDirection();
+  // auto direction = this->m_Elastix->GetFixedImage()->GetDirection();
   /** But to support the UseDirectionCosines option, we should do it like this: */
   typename FixedImageType::DirectionType direction;
   elastixObject.GetOriginalFixedImageDirection(direction);
@@ -954,9 +953,6 @@ template <class TElastix>
 auto
 TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename DeformationFieldImageType::Pointer
 {
-  /** Typedef's. */
-  using FixedImageDirectionType = typename FixedImageType::DirectionType;
-
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
   /** Create an setup deformation field generator. */
@@ -971,9 +967,9 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  const auto              infoChanger = itk::ChangeInformationImageFilter<DeformationFieldImageType>::New();
-  FixedImageDirectionType originalDirection;
-  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
+  const auto infoChanger = itk::ChangeInformationImageFilter<DeformationFieldImageType>::New();
+  typename FixedImageType::DirectionType originalDirection;
+  bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(defGenerator->GetOutput());
@@ -1062,9 +1058,8 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
     return;
   }
 
-  /** Typedef's. */
+  /** Typedef. */
   using JacobianImageType = itk::Image<float, FixedImageDimension>;
-  using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
@@ -1083,9 +1078,9 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  const auto              infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
-  FixedImageDirectionType originalDirection;
-  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
+  const auto                             infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
+  typename FixedImageType::DirectionType originalDirection;
+  bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(jacGenerator->GetOutput());
@@ -1143,7 +1138,6 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   using OutputSpatialJacobianType =
     itk::Matrix<SpatialJacobianComponentType, MovingImageDimension, FixedImageDimension>;
   using JacobianImageType = itk::Image<OutputSpatialJacobianType, FixedImageDimension>;
-  using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
@@ -1163,9 +1157,9 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  const auto              infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
-  FixedImageDirectionType originalDirection;
-  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
+  const auto                             infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
+  typename FixedImageType::DirectionType originalDirection;
+  bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(jacGenerator->GetOutput());
