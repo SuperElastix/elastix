@@ -962,7 +962,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   defGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
   defGenerator->SetOutputStartIndex(resampleImageFilter.GetOutputStartIndex());
   defGenerator->SetOutputDirection(resampleImageFilter.GetOutputDirection());
-  defGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
+  defGenerator->SetTransform(this->GetAsITKBaseType());
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
@@ -1065,7 +1065,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
 
   /** Create an setup Jacobian generator. */
   const auto jacGenerator = itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType>::New();
-  jacGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
+  jacGenerator->SetTransform(this->GetAsITKBaseType());
   jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
   jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
   jacGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
@@ -1143,7 +1143,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
 
   /** Create an setup Jacobian generator. */
   const auto jacGenerator = itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType>::New();
-  jacGenerator->SetTransform(const_cast<const ITKBaseType *>(this->GetAsITKBaseType()));
+  jacGenerator->SetTransform(this->GetAsITKBaseType());
   jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
   jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
   jacGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
