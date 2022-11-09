@@ -366,14 +366,11 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   bool doCompression = false;
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
 
-  /** Typedef's for writing the output image. */
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<OutputImageType>;
-
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  auto          infoChanger = ChangeInfoFilterType::New();
+  const auto    infoChanger = itk::ChangeInformationImageFilter<OutputImageType>::New();
   DirectionType originalDirection;
   bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
@@ -454,14 +451,11 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
 
-  /** Typedef's for writing the output image. */
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<OutputImageType>;
-
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  auto          infoChanger = ChangeInfoFilterType::New();
+  const auto    infoChanger = itk::ChangeInformationImageFilter<OutputImageType>::New();
   DirectionType originalDirection;
   bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);

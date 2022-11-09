@@ -958,7 +958,6 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
   using DeformationFieldGeneratorType =
     itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordRepType>;
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldImageType>;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
@@ -974,7 +973,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  const auto              infoChanger = ChangeInfoFilterType::New();
+  const auto              infoChanger = itk::ChangeInformationImageFilter<DeformationFieldImageType>::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
@@ -1068,7 +1067,6 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   /** Typedef's. */
   using JacobianImageType = itk::Image<float, FixedImageDimension>;
   using JacobianGeneratorType = itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType>;
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<JacobianImageType>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
@@ -1088,7 +1086,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  const auto              infoChanger = ChangeInfoFilterType::New();
+  const auto              infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
@@ -1149,7 +1147,6 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
     itk::Matrix<SpatialJacobianComponentType, MovingImageDimension, FixedImageDimension>;
   using JacobianImageType = itk::Image<OutputSpatialJacobianType, FixedImageDimension>;
   using JacobianGeneratorType = itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType>;
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<JacobianImageType>;
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
@@ -1170,7 +1167,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  const auto              infoChanger = ChangeInfoFilterType::New();
+  const auto              infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);

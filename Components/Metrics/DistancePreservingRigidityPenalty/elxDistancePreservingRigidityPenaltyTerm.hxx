@@ -41,13 +41,11 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
     segmentedImageName, "SegmentedImageName", this->GetComponentLabel(), 0, -1, false);
 
   using SegmentedImageType = typename Superclass1::SegmentedImageType;
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<SegmentedImageType>;
-  using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
   using DirectionType = typename SegmentedImageType::DirectionType;
   using SizeValueType = typename SegmentedImageType::SizeType::SizeValueType;
 
   /** Possibly overrule the direction cosines. */
-  ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = itk::ChangeInformationImageFilter<SegmentedImageType>::New();
   infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
 
   /** Do the reading. */

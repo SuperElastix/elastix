@@ -40,8 +40,6 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
     fixedRigidityImageName, "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false);
 
   using RigidityImageType = typename Superclass1::RigidityImageType;
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<RigidityImageType>;
-  using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
   using DirectionType = typename RigidityImageType::DirectionType;
 
   if (!fixedRigidityImageName.empty())
@@ -50,7 +48,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
     this->SetUseFixedRigidityImage(true);
 
     /** Possibly overrule the direction cosines. */
-    ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+    const auto infoChanger = itk::ChangeInformationImageFilter<RigidityImageType>::New();
     infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
 
     /** Do the reading. */
@@ -90,7 +88,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
     this->SetUseMovingRigidityImage(true);
 
     /** Possibly overrule the direction cosines. */
-    ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+    const auto infoChanger = itk::ChangeInformationImageFilter<RigidityImageType>::New();
     infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
 
     /** Do the reading. */
