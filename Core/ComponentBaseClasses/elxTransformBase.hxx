@@ -1299,8 +1299,6 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
   using ImageSamplerType = itk::ImageGridSampler<FixedImageType>;
   using ImageSampleContainerType = typename ImageSamplerType::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
-  using JacobianType = typename ITKBaseType::JacobianType;
-  using NonZeroJacobianIndicesType = typename ITKBaseType::NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int        outdim = MovingImageDimension;
@@ -1334,8 +1332,8 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
   {
     const InputPointType & point = sample.m_ImageCoordinates;
     // const JacobianType & jacobian = thisITK->GetJacobian( point );
-    JacobianType               jacobian;
-    NonZeroJacobianIndicesType nzji;
+    typename ITKBaseType::JacobianType               jacobian;
+    typename ITKBaseType::NonZeroJacobianIndicesType nzji;
     thisITK->GetJacobian(point, jacobian, nzji);
 
     /** Square each element of the Jacobian and add each row
@@ -1368,8 +1366,6 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
   using ImageSamplerType = itk::ImageGridSampler<FixedImageType>;
   using ImageSampleContainerType = typename ImageSamplerType::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
-  using JacobianType = typename ITKBaseType::JacobianType;
-  using NonZeroJacobianIndicesType = typename ITKBaseType::NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int        outdim = FixedImageDimension;
@@ -1417,8 +1413,8 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
   }
 
   /** Read fixed coordinates and get Jacobian. */
-  JacobianType               jacobian;
-  NonZeroJacobianIndicesType nzji;
+  typename ITKBaseType::JacobianType               jacobian;
+  typename ITKBaseType::NonZeroJacobianIndicesType nzji;
   for (const auto & sample : *sampleContainer)
   {
     const InputPointType & point = sample.m_ImageCoordinates;
