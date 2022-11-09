@@ -64,9 +64,6 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   /** Call the ReadFromFile from the TransformBase. */
   this->Superclass2::ReadFromFile();
 
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldType>;
-  using ChangeInfoFilterPointer = typename ChangeInfoFilterType::Pointer;
-
   /** Read deformationFieldImage-name from parameter-file. */
   std::string fileName = "";
   this->m_Configuration->ReadParameter(fileName, "DeformationFieldFileName", 0);
@@ -78,7 +75,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   }
 
   /** Possibly overrule the direction cosines. */
-  ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = itk::ChangeInformationImageFilter<DeformationFieldType>::New();
   infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
 
   try
@@ -146,14 +143,12 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
 {
   // \todo Finish and Test this function.
 
-  using ChangeInfoFilterType = itk::ChangeInformationImageFilter<DeformationFieldType>;
-
   /** Write the interpolation order to file */
   std::string interpolatorName =
     this->m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
 
   /** Possibly change the direction cosines to there original value */
-  auto infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = itk::ChangeInformationImageFilter<DeformationFieldType>::New();
   infoChanger->SetOutputDirection(this->m_OriginalDeformationFieldDirection);
   infoChanger->SetChangeDirection(!this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(this->m_DeformationFieldInterpolatingTransform->GetDeformationField());
