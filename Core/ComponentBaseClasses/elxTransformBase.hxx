@@ -1034,12 +1034,44 @@ TransformBase<TElastix>::WriteDeformationFieldImage(
 
 
 /**
- * ************** ComputeDeterminantOfSpatialJacobian **********************
+ * ************** ComputeSpatialJacobianDeterminantImage **********************
+ */
+
+template <class TElastix>
+auto
+TransformBase<TElastix>::ComputeSpatialJacobianDeterminantImage() const ->
+  typename SpatialJacobianDeterminantImageType::Pointer
+{
+  const auto jacGenerator =
+    CreateJacobianSource<itk::TransformToDeterminantOfSpatialJacobianSource, SpatialJacobianDeterminantImageType>();
+  const auto infoChanger = CreateChangeInformationImageFilter(jacGenerator->GetOutput());
+  infoChanger->Update();
+  return infoChanger->GetOutput();
+}
+
+
+/**
+ * ************** ComputeSpatialJacobianMatrixImage **********************
+ */
+
+template <class TElastix>
+auto
+TransformBase<TElastix>::ComputeSpatialJacobianMatrixImage() const -> typename SpatialJacobianMatrixImageType::Pointer
+{
+  const auto jacGenerator =
+    CreateJacobianSource<itk::TransformToSpatialJacobianSource, SpatialJacobianMatrixImageType>();
+  const auto infoChanger = CreateChangeInformationImageFilter(jacGenerator->GetOutput());
+  infoChanger->Update();
+  return infoChanger->GetOutput();
+}
+
+/**
+ * ************** ComputeAndWriteSpatialJacobianDeterminantImage **********************
  */
 
 template <class TElastix>
 void
-TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
+TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
 {
   /** If the optional command "-jac" is given in the command line arguments,
    * then and only then we continue.
@@ -1058,32 +1090,9 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
     return;
   }
 
-  /** Typedef. */
-  using JacobianImageType = itk::Image<float, FixedImageDimension>;
-
-  const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
-
-  /** Create an setup Jacobian generator. */
-  const auto jacGenerator = itk::TransformToDeterminantOfSpatialJacobianSource<JacobianImageType, CoordRepType>::New();
-  jacGenerator->SetTransform(this->GetAsITKBaseType());
-  jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
-  jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
-  jacGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
-  jacGenerator->SetOutputIndex(resampleImageFilter.GetOutputStartIndex());
-  jacGenerator->SetOutputDirection(resampleImageFilter.GetOutputDirection());
-  // NOTE: We can not use the following, since the fixed image does not exist in transformix
-  //   jacGenerator->SetOutputParametersFromImage(
-  //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
-
-  /** Possibly change direction cosines to their original value, as specified
-   * in the tp-file, or by the fixed image. This is only necessary when
-   * the UseDirectionCosines flag was set to false. */
-  const auto                             infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
-  typename FixedImageType::DirectionType originalDirection;
-  bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
-  infoChanger->SetOutputDirection(originalDirection);
-  infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
-  infoChanger->SetInput(jacGenerator->GetOutput());
+  const auto jacGenerator =
+    CreateJacobianSource<itk::TransformToDeterminantOfSpatialJacobianSource, SpatialJacobianDeterminantImageType>();
+  const auto infoChanger = CreateChangeInformationImageFilter(jacGenerator->GetOutput());
 
   /** Track the progress of the generation of the deformation field. */
   const auto progressObserver =
@@ -1103,7 +1112,7 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
   catch (itk::ExceptionObject & excp)
   {
     /** Add information to the exception. */
-    excp.SetLocation("TransformBase - ComputeDeterminantOfSpatialJacobian()");
+    excp.SetLocation("TransformBase - ComputeSpatialJacobianDeterminantImage()");
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while writing spatial Jacobian determinant image.\n";
     excp.SetDescription(err_str);
@@ -1112,16 +1121,16 @@ TransformBase<TElastix>::ComputeDeterminantOfSpatialJacobian() const
     throw;
   }
 
-} // end ComputeDeterminantOfSpatialJacobian()
+} // end ComputeAndWriteSpatialJacobianDeterminantImage()
 
 
 /**
- * ************** ComputeSpatialJacobian **********************
+ * ************** ComputeAndWriteSpatialJacobianMatrixImage **********************
  */
 
 template <class TElastix>
 void
-TransformBase<TElastix>::ComputeSpatialJacobian() const
+TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
 {
   /** If the optional command "-jacmat" is given in the command line arguments,
    * then and only then we continue.
@@ -1133,36 +1142,10 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
     return;
   }
 
-  /** Typedef's. */
-  using SpatialJacobianComponentType = float;
-  using OutputSpatialJacobianType =
-    itk::Matrix<SpatialJacobianComponentType, MovingImageDimension, FixedImageDimension>;
-  using JacobianImageType = itk::Image<OutputSpatialJacobianType, FixedImageDimension>;
+  const auto jacGenerator =
+    CreateJacobianSource<itk::TransformToSpatialJacobianSource, SpatialJacobianMatrixImageType>();
 
-  const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
-
-  /** Create an setup Jacobian generator. */
-  const auto jacGenerator = itk::TransformToSpatialJacobianSource<JacobianImageType, CoordRepType>::New();
-  jacGenerator->SetTransform(this->GetAsITKBaseType());
-  jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
-  jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
-  jacGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
-  jacGenerator->SetOutputIndex(resampleImageFilter.GetOutputStartIndex());
-  jacGenerator->SetOutputDirection(resampleImageFilter.GetOutputDirection());
-  // NOTE: We can not use the following, since the fixed image does not exist in transformix
-  //   jacGenerator->SetOutputParametersFromImage(
-  //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
-
-  /** Possibly change direction cosines to their original value, as specified
-   * in the tp-file, or by the fixed image. This is only necessary when
-   * the UseDirectionCosines flag was set to false.
-   */
-  const auto                             infoChanger = itk::ChangeInformationImageFilter<JacobianImageType>::New();
-  typename FixedImageType::DirectionType originalDirection;
-  bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
-  infoChanger->SetOutputDirection(originalDirection);
-  infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
-  infoChanger->SetInput(jacGenerator->GetOutput());
+  const auto infoChanger = CreateChangeInformationImageFilter(jacGenerator->GetOutput());
 
   const auto progressObserver =
     BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommandType::CreateAndConnect(*jacGenerator);
@@ -1173,7 +1156,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "fullSpatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  const auto jacWriter = itk::ImageFileWriter<JacobianImageType>::New();
+  const auto jacWriter = itk::ImageFileWriter<SpatialJacobianMatrixImageType>::New();
   jacWriter->SetInput(infoChanger->GetOutput());
   jacWriter->SetFileName(makeFileName.str().c_str());
 
@@ -1195,7 +1178,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
     itkNewMacro(Self);
 
   private:
-    using PrivateJacobianImageType = JacobianImageType;
+    using PrivateJacobianImageType = SpatialJacobianMatrixImageType;
 
     /** Set the pixel type to VECTOR */
     void
@@ -1232,7 +1215,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
   catch (itk::ExceptionObject & excp)
   {
     /** Add information to the exception. */
-    excp.SetLocation("TransformBase - ComputeSpatialJacobian()");
+    excp.SetLocation("TransformBase - ComputeSpatialJacobianMatrixImage()");
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while writing spatial Jacobian image.\n";
     excp.SetDescription(err_str);
@@ -1241,7 +1224,7 @@ TransformBase<TElastix>::ComputeSpatialJacobian() const
     throw;
   }
 
-} // end ComputeSpatialJacobian()
+} // end ComputeAndWriteSpatialJacobianMatrixImage()
 
 
 /**

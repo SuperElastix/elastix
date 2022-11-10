@@ -35,7 +35,6 @@
 #ifndef itkTransformixFilter_hxx
 #define itkTransformixFilter_hxx
 
-#include "elxElastixTemplate.h"
 #include "itkTransformixFilter.h"
 #include "elxPixelTypeToString.h"
 #include "elxTransformBase.h"
@@ -157,7 +156,8 @@ TransformixFilter<TMovingImage>::GenerateData()
                          : std::unique_ptr<const elx::xoutManager>();
 
   // Instantiate transformix
-  elx::DefaultConstruct<TransformixMainType> transformixMain;
+  const auto transformixMain = elx::TransformixMain::New();
+  m_TransformixMain = transformixMain;
 
   // Setup transformix for warping input image if given
   DataObjectContainerPointer inputImageContainer = nullptr;
@@ -165,7 +165,7 @@ TransformixFilter<TMovingImage>::GenerateData()
   {
     inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->InsertElement(0, const_cast<InputImageType *>(this->GetMovingImage()));
-    transformixMain.SetInputImageContainer(inputImageContainer);
+    transformixMain->SetInputImageContainer(inputImageContainer);
   }
 
   // Get ParameterMap
@@ -265,13 +265,13 @@ TransformixFilter<TMovingImage>::GenerateData()
   unsigned int isError = 0;
   try
   {
-    isError = transformixMain.Run(argumentMap, transformParameterMapVector);
+    isError = transformixMain->Run(argumentMap, transformParameterMapVector);
 
     if (m_InputMesh)
     {
       m_OutputMesh = nullptr;
 
-      const auto * const transformContainer = transformixMain.GetElastixBase().GetTransformContainer();
+      const auto * const transformContainer = transformixMain->GetElastixBase().GetTransformContainer();
 
       if ((transformContainer != nullptr) && (!transformContainer->empty()))
       {
@@ -296,19 +296,39 @@ TransformixFilter<TMovingImage>::GenerateData()
   }
 
   // Save result image
-  DataObjectContainerPointer resultImageContainer = transformixMain.GetResultImageContainer();
+  DataObjectContainerPointer resultImageContainer = transformixMain->GetResultImageContainer();
   if (resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 &&
       resultImageContainer->ElementAt(0).IsNotNull())
   {
     this->GraftOutput(resultImageContainer->ElementAt(0));
   }
   // Optionally, save result deformation field
-  DataObjectContainerPointer resultDeformationFieldContainer = transformixMain.GetResultDeformationFieldContainer();
+  DataObjectContainerPointer resultDeformationFieldContainer = transformixMain->GetResultDeformationFieldContainer();
   if (resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 &&
       resultDeformationFieldContainer->ElementAt(0).IsNotNull())
   {
     this->GraftOutput("ResultDeformationField", resultDeformationFieldContainer->ElementAt(0));
   }
+}
+
+
+template <typename TMovingImage>
+auto
+TransformixFilter<TMovingImage>::ComputeSpatialJacobianDeterminantImage() const
+  -> SmartPointer<SpatialJacobianDeterminantImageType>
+{
+  const auto transformBase = GetFirstElastixTransformBase();
+  return transformBase ? transformBase->ComputeSpatialJacobianDeterminantImage() : nullptr;
+}
+
+
+template <typename TMovingImage>
+auto
+TransformixFilter<TMovingImage>::ComputeSpatialJacobianMatrixImage() const
+  -> SmartPointer<SpatialJacobianMatrixImageType>
+{
+  const auto transformBase = GetFirstElastixTransformBase();
+  return transformBase ? transformBase->ComputeSpatialJacobianMatrixImage() : nullptr;
 }
 
 
@@ -600,6 +620,20 @@ TransformixFilter<TMovingImage>::RemoveLogFileName()
 {
   m_LogFileName = "";
   this->LogToFileOff();
+}
+
+
+template <typename TMovingImage>
+auto
+TransformixFilter<TMovingImage>::GetFirstElastixTransformBase() const -> const ElastixTransformBaseType *
+{
+  const auto * const transformContainer = m_TransformixMain->GetElastixBase().GetTransformContainer();
+
+  if ((transformContainer != nullptr) && (!transformContainer->empty()))
+  {
+    return dynamic_cast<ElastixTransformBaseType *>(transformContainer->front().GetPointer());
+  }
+  return nullptr;
 }
 
 

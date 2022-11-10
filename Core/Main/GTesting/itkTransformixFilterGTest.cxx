@@ -1159,3 +1159,56 @@ GTEST_TEST(itkTransformixFilter, SetCompositeTransformOfTranslationAndScale)
               *(CreateResampleImageFilter(*inputImage, compositeTransform)->GetOutput()));
   }
 }
+
+
+// Tests ComputeSpatialJacobianDeterminantImage and ComputeSpatialJacobianMatrixImage on a simple translation.
+GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImage)
+{
+  using PixelType = float;
+  constexpr unsigned int ImageDimension{ 2 };
+
+  using SizeType = itk::Size<ImageDimension>;
+  const SizeType imageSize{ { 5, 6 } };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using TransformixFilterType = itk::TransformixFilter<ImageType>;
+
+  elx::DefaultConstruct<ImageType> movingImage{};
+  movingImage.SetRegions(imageSize);
+  movingImage.Allocate(true);
+
+  elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> transform{};
+  transform.SetOffset(itk::MakeVector(1.0, -2.0));
+
+  elx::DefaultConstruct<TransformixFilterType> transformixFilter{};
+  transformixFilter.SetMovingImage(&movingImage);
+  transformixFilter.SetTransform(&transform);
+  transformixFilter.SetTransformParameterObject(
+    CreateParameterObject({ // Parameters in alphabetic order:
+                            { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
+                            { "Index", ParameterValuesType(ImageDimension, "0") },
+                            { "Origin", ParameterValuesType(ImageDimension, "0") },
+                            { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                            { "Size", ConvertToParameterValues(imageSize) },
+                            { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
+  transformixFilter.Update();
+
+  const auto determinantImage = transformixFilter.ComputeSpatialJacobianDeterminantImage();
+  const auto matrixImage = transformixFilter.ComputeSpatialJacobianMatrixImage();
+
+  const itk::ImageRegion<ImageDimension> expectedBufferedRegion({}, imageSize);
+  EXPECT_EQ(DerefSmartPointer(determinantImage).GetBufferedRegion(), expectedBufferedRegion);
+  EXPECT_EQ(DerefSmartPointer(matrixImage).GetBufferedRegion(), expectedBufferedRegion);
+
+  for (const auto determinant : itk::MakeImageBufferRange(determinantImage.GetPointer()))
+  {
+    EXPECT_EQ(determinant, 1.0f);
+  }
+
+  const auto expectedMatrix = TransformixFilterType::SpatialJacobianMatrixImageType::PixelType::GetIdentity();
+
+  for (const auto & matrix : itk::MakeImageBufferRange(matrixImage.GetPointer()))
+  {
+    EXPECT_EQ(matrix, expectedMatrix);
+  }
+}
