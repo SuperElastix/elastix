@@ -189,6 +189,12 @@ public:
   using OptimizerType = typename ITKRegistrationType::OptimizerType;
   using ScalesType = typename OptimizerType::ScalesType;
 
+  /** Typedefs for images of determinants of spatial Jacobian matrices, and images of spatial Jacobian matrices */
+  using SpatialJacobianDeterminantImageType = itk::Image<float, FixedImageDimension>;
+  using SpatialJacobianMatrixImageType =
+    itk::Image<itk::Matrix<float, MovingImageDimension, FixedImageDimension>, FixedImageDimension>;
+
+
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = typename TElastix::ParameterMapType;
 
@@ -247,13 +253,21 @@ public:
   void
   TransformPoints() const;
 
-  /** Function to compute the determinant of the spatial Jacobian. */
-  void
-  ComputeDeterminantOfSpatialJacobian() const;
+  /** Computes the spatial Jacobian determinant for each pixel, and returns the image. */
+  typename SpatialJacobianDeterminantImageType::Pointer
+  ComputeSpatialJacobianDeterminantImage() const;
 
-  /** Function to compute the determinant of the spatial Jacobian. */
+  /** Computes the spatial Jacobian matrix for each pixel, and returns the image. */
+  typename SpatialJacobianMatrixImageType::Pointer
+  ComputeSpatialJacobianMatrixImage() const;
+
+  /** Computes the determinant of the spatial Jacobian and writes it to file. */
   void
-  ComputeSpatialJacobian() const;
+  ComputeAndWriteSpatialJacobianDeterminantImage() const;
+
+  /** Computes the spatial Jacobian and writes it to file. */
+  void
+  ComputeAndWriteSpatialJacobianMatrixImage() const;
 
   /** Makes sure that the final parameters from the registration components
    * are copied, set, and stored.
@@ -308,6 +322,49 @@ protected:
 
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
+
+  /** Supports either TransformToDeterminantOfSpatialJacobianSource or TransformToSpatialJacobianSource as TSource. */
+  template <template <typename, typename> class TSource, typename TOutputImage>
+  auto
+  CreateJacobianSource() const
+  {
+    const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
+
+    /** Create an setup Jacobian generator. */
+    const auto jacGenerator = TSource<TOutputImage, CoordRepType>::New();
+
+    jacGenerator->SetTransform(this->GetAsITKBaseType());
+    jacGenerator->SetOutputSize(resampleImageFilter.GetSize());
+    jacGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
+    jacGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());
+    jacGenerator->SetOutputIndex(resampleImageFilter.GetOutputStartIndex());
+    jacGenerator->SetOutputDirection(resampleImageFilter.GetOutputDirection());
+    // NOTE: We can not use the following, since the fixed image does not exist in transformix
+    //   jacGenerator->SetOutputParametersFromImage(
+    //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
+
+    return jacGenerator;
+  }
+
+
+  /** Creates an info changer that may change the direction of the image to the original value. */
+  template <typename TImage>
+  auto
+  CreateChangeInformationImageFilter(TImage * image) const
+  {
+    /** Possibly change direction cosines to their original value, as specified
+     * in the tp-file, or by the fixed image. This is only necessary when
+     * the UseDirectionCosines flag was set to false. */
+    const auto                             infoChanger = itk::ChangeInformationImageFilter<TImage>::New();
+    typename FixedImageType::DirectionType originalDirection;
+    const bool                             retdc = this->m_Elastix->GetOriginalFixedImageDirection(originalDirection);
+    infoChanger->SetOutputDirection(originalDirection);
+    infoChanger->SetChangeDirection(retdc & !this->m_Elastix->GetUseDirectionCosines());
+    infoChanger->SetInput(image);
+
+    return infoChanger;
+  }
+
 
   /** Function to read the initial transform parameters from the specified configuration object.
    */

@@ -332,7 +332,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   timer.Stop();
   elxout << "  Transforming points done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
-  /** Call ComputeDeterminantOfSpatialJacobian.
+  /** Call ComputeSpatialJacobianDeterminantImage.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */
@@ -341,7 +341,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   elxout << "Compute determinant of spatial Jacobian ..." << std::endl;
   try
   {
-    elxTransformBase.ComputeDeterminantOfSpatialJacobian();
+    elxTransformBase.ComputeAndWriteSpatialJacobianDeterminantImage();
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -352,7 +352,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   elxout << "  Computing determinant of spatial Jacobian done, it took "
          << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
 
-  /** Call ComputeSpatialJacobian.
+  /** Call ComputeAndWriteSpatialJacobianMatrixImage.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */
@@ -361,7 +361,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   elxout << "Compute spatial Jacobian (full matrix) ..." << std::endl;
   try
   {
-    elxTransformBase.ComputeSpatialJacobian();
+    elxTransformBase.ComputeAndWriteSpatialJacobianMatrixImage();
   }
   catch (const itk::ExceptionObject & excp)
   {

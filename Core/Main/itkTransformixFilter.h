@@ -39,6 +39,8 @@
 #include "itkMesh.h"
 #include "itkTransformBase.h"
 
+#include "elxElastixTemplate.h"
+#include "elxTransformBase.h"
 #include "elxTransformixMain.h"
 #include "elxParameterObject.h"
 
@@ -100,6 +102,11 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);
 
   using MeshType = Mesh<OutputImagePixelType, MovingImageDimension>;
+
+  /** Typedefs for images of determinants of spatial Jacobian matrices, and images of spatial Jacobian matrices */
+  using SpatialJacobianDeterminantImageType = itk::Image<float, MovingImageDimension>;
+  using SpatialJacobianMatrixImageType =
+    itk::Image<itk::Matrix<float, MovingImageDimension, MovingImageDimension>, MovingImageDimension>;
 
   /** Set/Get/Add moving image. */
   virtual void
@@ -218,6 +225,16 @@ public:
    * transform object, with additional information from the specified transform parameter object. */
   itkSetConstObjectMacro(Transform, TransformBase);
 
+  /** Computes the spatial Jacobian determinant for each pixel, and returns an image of the computed values.
+  \note Before calling this member function, Update() must be called. */
+  SmartPointer<SpatialJacobianDeterminantImageType>
+  ComputeSpatialJacobianDeterminantImage() const;
+
+  /** Computes the spatial Jacobian matrix for each pixel, and returns an image of the computed matrices.
+  \note Before calling this member function, Update() must be called. */
+  SmartPointer<SpatialJacobianMatrixImageType>
+  ComputeSpatialJacobianMatrixImage() const;
+
 protected:
   TransformixFilter();
 
@@ -247,6 +264,13 @@ private:
    *  from ProcessObject and TransformixFilter.
    */
   using ProcessObject::RemoveInput;
+
+  using ElastixTransformBaseType = elx::TransformBase<elx::ElastixTemplate<TMovingImage, TMovingImage>>;
+
+  const ElastixTransformBaseType *
+  GetFirstElastixTransformBase() const;
+
+  SmartPointer<const elx::TransformixMain> m_TransformixMain{ nullptr };
 
   std::string m_FixedPointSetFileName{};
   bool        m_ComputeSpatialJacobian{ false };
