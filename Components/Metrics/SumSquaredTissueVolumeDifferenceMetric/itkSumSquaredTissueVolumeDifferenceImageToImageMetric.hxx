@@ -117,7 +117,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       this->m_NumberOfPixelsCounted++;
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      spatialJac = this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
@@ -258,7 +258,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       const RealType & fixedImageValue = static_cast<RealType>(threader_fiter->Value().m_ImageValue);
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      spatialJac = this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
@@ -420,7 +420,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       this->EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      spatialJac = this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
@@ -584,7 +584,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       this->EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      spatialJac = this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));

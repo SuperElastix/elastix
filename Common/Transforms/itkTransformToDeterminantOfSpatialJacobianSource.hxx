@@ -244,7 +244,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
     outputPtr->TransformIndexToPhysicalPoint(it.GetIndex(), point);
 
     SpatialJacobianType sj;
-    this->m_Transform->GetSpatialJacobian(point, sj);
+    sj = this->m_Transform->GetSpatialJacobian(point);
     const PixelType detjac = static_cast<PixelType>(vnl_det(sj.GetVnlMatrix()));
 
     // Set it
@@ -275,7 +275,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
   PointType point;
   outputPtr->TransformIndexToPhysicalPoint(index, point);
   SpatialJacobianType sj;
-  this->m_Transform->GetSpatialJacobian(point, sj);
+  sj = this->m_Transform->GetSpatialJacobian(point);
   const PixelType detjac = static_cast<PixelType>(vnl_det(sj.GetVnlMatrix()));
 
   outputPtr->FillBuffer(detjac);

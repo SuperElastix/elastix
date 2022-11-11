@@ -235,7 +235,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Nonline
     // Determine the coordinates of the current voxel
     outputPtr->TransformIndexToPhysicalPoint(it.GetIndex(), point);
 
-    this->m_Transform->GetSpatialJacobian(point, sj);
+    sj = this->m_Transform->GetSpatialJacobian(point);
 
     // cast spatial jacobian to output pixel type
     vnl_copy(sj.GetVnlMatrix().begin(), sjOut.GetVnlMatrix().begin(), nrElements);
@@ -271,7 +271,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::LinearG
   SpatialJacobianType sj;
   PixelType           sjOut;
   const unsigned int  nrElements = sj.GetVnlMatrix().size();
-  this->m_Transform->GetSpatialJacobian(point, sj);
+  sj = this->m_Transform->GetSpatialJacobian(point);
 
   // cast spatial jacobian to output pixel type
   vnl_copy(sj.GetVnlMatrix().begin(), sjOut.GetVnlMatrix().begin(), nrElements);

@@ -177,7 +177,7 @@ main(int argc, char * argv[])
   transform->GetJacobian(inputPoint, jacobian, nzji);
 
   /** The spatial Jacobian. */
-  transform->GetSpatialJacobian(inputPoint, spatialJacobian);
+  spatialJacobian = transform->GetSpatialJacobian(inputPoint);
 
   /** The spatial Hessian. */
   transform->GetSpatialHessian(inputPoint, spatialHessian);
@@ -232,7 +232,7 @@ main(int argc, char * argv[])
   startClock = clock();
   for (unsigned int i = 0; i < N; ++i)
   {
-    transform->GetSpatialJacobian(inputPoint, spatialJacobian);
+    spatialJacobian = transform->GetSpatialJacobian(inputPoint);
   }
   endClock = clock();
   clockITK = endClock - startClock;
@@ -274,7 +274,7 @@ main(int argc, char * argv[])
   startClock = clock();
   for (unsigned int i = 0; i < N; ++i)
   {
-    transform->GetSpatialJacobian(inputPoint, spatialJacobian);
+    spatialJacobian = transform->GetSpatialJacobian(inputPoint);
     transform->GetJacobianOfSpatialJacobian(inputPoint, jacobianOfSpatialJacobian, nzji);
   }
   endClock = clock();

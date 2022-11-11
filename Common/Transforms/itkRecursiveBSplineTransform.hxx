@@ -460,7 +460,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
   this->GetJacobianOfSpatialJacobian(inputPoint, jsj, nonZeroJacobianIndices);
-  this->GetSpatialJacobian(inputPoint, sj);
+  sj = this->GetSpatialJacobian(inputPoint);
 } // end GetJacobianOfSpatialJacobian()
 
 

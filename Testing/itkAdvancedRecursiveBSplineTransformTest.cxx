@@ -211,7 +211,7 @@ main(int argc, char * argv[])
   recursiveTransform->GetJacobian(inputPoint, jacobian, nzji);
 
   /** The spatial Jacobian. */
-  recursiveTransform->GetSpatialJacobian(inputPoint, spatialJacobian);
+  spatialJacobian = recursiveTransform->GetSpatialJacobian(inputPoint);
 
   /** The spatial Hessian. */
   recursiveTransform->GetSpatialHessian(inputPoint, spatialHessian);
@@ -287,14 +287,14 @@ main(int argc, char * argv[])
   timeCollector.Start("SpatialJacobian elastix          ");
   for (unsigned int i = 0; i < N; ++i)
   {
-    transform->GetSpatialJacobian(pointList[i], sj);
+    sj = transform->GetSpatialJacobian(pointList[i]);
   }
   timeCollector.Stop("SpatialJacobian elastix          ");
 
   timeCollector.Start("SpatialJacobian recursive        ");
   for (unsigned int i = 0; i < N; ++i)
   {
-    recursiveTransform->GetSpatialJacobian(pointList[i], sjRecursive);
+    sjRecursive = recursiveTransform->GetSpatialJacobian(pointList[i]);
   }
   timeCollector.Stop("SpatialJacobian recursive        ");
 
@@ -419,8 +419,8 @@ main(int argc, char * argv[])
   }
 
   /** Spatial Jacobian. */
-  transform->GetSpatialJacobian(inputPoint, sj);
-  recursiveTransform->GetSpatialJacobian(inputPoint, sjRecursive);
+  sj = transform->GetSpatialJacobian(inputPoint);
+  sjRecursive = recursiveTransform->GetSpatialJacobian(inputPoint);
 
   SpatialJacobianType sjDifferenceMatrix = sj - sjRecursive;
   double              sjDifference = sjDifferenceMatrix.GetVnlMatrix().frobenius_norm();

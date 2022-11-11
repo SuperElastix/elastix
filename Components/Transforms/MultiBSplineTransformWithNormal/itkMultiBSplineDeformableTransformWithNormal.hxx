@@ -816,8 +816,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     return;
   }
   SpatialJacobianType nsj;
-  m_Trans[0]->GetSpatialJacobian(inputPoint, nsj);
-  m_Trans[lidx]->GetSpatialJacobian(inputPoint, sj);
+  nsj = m_Trans[0]->GetSpatialJacobian(inputPoint);
+  sj = m_Trans[lidx]->GetSpatialJacobian(inputPoint);
   sj += nsj;
 }
 
