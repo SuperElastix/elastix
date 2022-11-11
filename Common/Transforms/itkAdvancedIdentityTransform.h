@@ -234,9 +234,9 @@ public:
 
   /** Compute the spatial Jacobian of the transformation. */
   SpatialJacobianType
-  GetSpatialJacobian(const InputPointType & inputPoint) const override;
+  GetSpatialJacobian(const InputPointType & inputPoint) const override
   {
-    sj = this->m_SpatialJacobian;
+    return this->m_SpatialJacobian;
   }
 
 

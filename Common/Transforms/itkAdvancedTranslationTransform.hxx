@@ -179,12 +179,12 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobian(
  */
 
 template <class TScalarType, unsigned int NDimensions>
-void
-AdvancedTranslationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const InputPointType & itkNotUsed(p),
-                                                                           SpatialJacobianType &  sj) const
+auto
+AdvancedTranslationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const InputPointType & itkNotUsed(p)) const
+  -> SpatialJacobianType
 {
   /** Return pre-stored spatial Jacobian */
-  sj = this->m_SpatialJacobian;
+  return this->m_SpatialJacobian;
 } // end GetSpatialJacobian()
 
 

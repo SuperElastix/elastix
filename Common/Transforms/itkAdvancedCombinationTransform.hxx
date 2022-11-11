@@ -1468,12 +1468,15 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImag
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const InputPointType & inputPoint,
-                                                                           SpatialJacobianType &  sj) const
+auto
+AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const InputPointType & inputPoint) const
+  -> SpatialJacobianType
 {
+  SpatialJacobianType sj;
+
   /** Call the selected GetSpatialJacobian. */
-  return (this->*m_SelectedGetSpatialJacobianFunction)(inputPoint, sj);
+  (this->*m_SelectedGetSpatialJacobianFunction)(inputPoint, sj);
+  return sj;
 
 } // end GetSpatialJacobian()
 

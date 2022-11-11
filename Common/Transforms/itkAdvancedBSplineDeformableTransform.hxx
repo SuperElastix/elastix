@@ -452,10 +452,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
  */
 
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void
+auto
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
-  const InputPointType & inputPoint,
-  SpatialJacobianType &  sj) const
+  const InputPointType & inputPoint) const -> SpatialJacobianType
 {
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
@@ -466,8 +465,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   // we assume zero displacement and identity spatial Jacobian
   if (!this->InsideValidRegion(cindex))
   {
-    sj.SetIdentity();
-    return;
+    return SpatialJacobianType::GetIdentity();
   }
 
   /** Compute the number of affected B-spline parameters. */
@@ -503,7 +501,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   /** Compute the spatial Jacobian sj:
    *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights * PointToGridIndex.
    */
-  sj.Fill(0.0);
+  SpatialJacobianType sj{};
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
@@ -540,6 +538,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   {
     sj(dim, dim) += 1.0;
   }
+  return sj;
 
 } // end GetSpatialJacobian()
 

@@ -291,10 +291,9 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
  */
 
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void
+auto
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
-  const InputPointType & inputPoint,
-  SpatialJacobianType &  sj) const
+  const InputPointType & inputPoint) const -> SpatialJacobianType
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
@@ -312,8 +311,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   // we assume zero displacement and identity spatial Jacobian
   if (!this->InsideValidRegion(cindex))
   {
-    sj.SetIdentity();
-    return;
+    return SpatialJacobianType::GetIdentity();
   }
 
   /** Compute the number of affected B-spline parameters. */
@@ -329,7 +327,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   this->SplitRegion(
     this->m_CoefficientImages[0]->GetLargestPossibleRegion(), supportRegion, supportRegions[0], supportRegions[1]);
 
-  sj.Fill(0.0);
+  SpatialJacobianType sj{};
 
   /** Compute the spatial Jacobian sj:
    *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
@@ -377,6 +375,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   {
     sj(dim, dim) += 1.0;
   }
+  return sj;
 
 } // end GetSpatialJacobian()
 

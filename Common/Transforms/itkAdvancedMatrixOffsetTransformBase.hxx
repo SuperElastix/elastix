@@ -465,12 +465,11 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  */
 
 template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-void
+auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetSpatialJacobian(
-  const InputPointType &,
-  SpatialJacobianType & sj) const
+  const InputPointType &) const -> SpatialJacobianType
 {
-  sj = this->GetMatrix();
+  return this->GetMatrix();
 
 } // end GetSpatialJacobian()
 

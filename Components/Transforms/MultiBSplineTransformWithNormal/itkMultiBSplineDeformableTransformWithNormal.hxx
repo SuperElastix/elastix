@@ -790,15 +790,13 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void
+auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
-  const InputPointType & inputPoint,
-  SpatialJacobianType &  sj) const
+  const InputPointType & inputPoint) const -> SpatialJacobianType
 {
   if (this->GetNumberOfParameters() == 0)
   {
-    sj.SetIdentity();
-    return;
+    return SpatialJacobianType::GetIdentity();
   }
 
   // Can only compute Jacobian if parameters are set via
@@ -812,13 +810,13 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   PointToLabel(inputPoint, lidx);
   if (lidx == 0)
   {
-    sj.SetIdentity();
-    return;
+    return SpatialJacobianType::GetIdentity();
   }
   SpatialJacobianType nsj;
   nsj = m_Trans[0]->GetSpatialJacobian(inputPoint);
-  sj = m_Trans[lidx]->GetSpatialJacobian(inputPoint);
+  SpatialJacobianType sj = m_Trans[lidx]->GetSpatialJacobian(inputPoint);
   sj += nsj;
+  return sj;
 }
 
 

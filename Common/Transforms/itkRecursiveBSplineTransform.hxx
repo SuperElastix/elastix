@@ -216,9 +216,9 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
  */
 
 template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
-void
-RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobian(const InputPointType & inputPoint,
-                                                                                  SpatialJacobianType &  sj) const
+auto
+RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobian(
+  const InputPointType & inputPoint) const -> SpatialJacobianType
 {
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
@@ -229,8 +229,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
   // we assume zero displacement and identity spatial Jacobian
   if (!this->InsideValidRegion(cindex))
   {
-    sj.SetIdentity();
-    return;
+    return SpatialJacobianType::GetIdentity();
   }
 
   /** Compute the interpolation weights.
@@ -262,6 +261,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
   ImplementationType::GetSpatialJacobian(
     spatialJacobian, mu, bsplineOffsetTable, weights1D.data(), derivativeWeights1D.data());
 
+  SpatialJacobianType sj;
+
   /** Copy the correct elements to the spatial Jacobian.
    * The first SpaceDimension elements are actually the displacement, i.e. the recursive
    * function GetSpatialJacobian() has the TransformPoint as a free by-product.
@@ -282,6 +283,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
   {
     sj(j, j) += 1.0;
   }
+  return sj;
 
 } // end GetSpatialJacobian()
 
