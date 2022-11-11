@@ -221,8 +221,8 @@ public:
    * with \f$m\f$ the number of parameters, i.e. the size of \f$\mu\f$, and \f$d\f$
    * the dimension of the image.
    */
-  virtual void
-  GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const = 0;
+  virtual SpatialJacobianType
+  GetSpatialJacobian(const InputPointType & inputPoint) const = 0;
 
   /** Override some pure virtual ITK4 functions. */
   void

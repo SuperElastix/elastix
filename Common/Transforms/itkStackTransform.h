@@ -332,8 +332,8 @@ private:
 
 
   /** Must be provided. */
-  void
-  GetSpatialJacobian(const InputPointType &, SpatialJacobianType &) const override
+  SpatialJacobianType
+  GetSpatialJacobian(const InputPointType &) const override
   {
     itkExceptionMacro(<< unimplementedOverrideMessage);
   }

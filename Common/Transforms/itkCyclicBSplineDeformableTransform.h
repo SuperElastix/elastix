@@ -113,8 +113,8 @@ public:
   GetJacobian(const InputPointType & inputPoint, WeightsType & weights, ParameterIndexArrayType & indices) const;
 
   /** Compute the spatial Jacobian of the transformation. */
-  void
-  GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const override;
+  SpatialJacobianType
+  GetSpatialJacobian(const InputPointType & inputPoint) const override;
 
 protected:
   CyclicBSplineDeformableTransform();

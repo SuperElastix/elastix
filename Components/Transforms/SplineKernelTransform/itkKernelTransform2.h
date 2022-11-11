@@ -302,8 +302,8 @@ public:
   itkGetConstReferenceMacro(MatrixInversionMethod, std::string);
 
   /** Must be provided. */
-  void
-  GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const override
+  SpatialJacobianType
+  GetSpatialJacobian(const InputPointType & inputPoint) const override
   {
     itkExceptionMacro(<< "Not implemented for KernelTransform2");
   }

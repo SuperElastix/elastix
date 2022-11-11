@@ -158,8 +158,8 @@ public:
   GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  void
-  GetSpatialJacobian(const InputPointType &, SpatialJacobianType &) const override;
+  SpatialJacobianType
+  GetSpatialJacobian(const InputPointType & inputPoint) const override;
 
   /** Compute the spatial Hessian of the transformation. */
   void

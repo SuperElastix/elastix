@@ -233,8 +233,8 @@ public:
 
 
   /** Compute the spatial Jacobian of the transformation. */
-  void
-  GetSpatialJacobian(const InputPointType &, SpatialJacobianType & sj) const override
+  SpatialJacobianType
+  GetSpatialJacobian(const InputPointType & inputPoint) const override;
   {
     sj = this->m_SpatialJacobian;
   }
