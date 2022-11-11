@@ -399,22 +399,22 @@ protected:
    */
 
   /** ADDITION: \f$J(x) = J_1(x)\f$ */
-  inline void
-  GetSpatialJacobianUseAddition(const InputPointType & inputPoint, SpatialJacobianType & sj) const;
+  inline SpatialJacobianType
+  GetSpatialJacobianUseAddition(const InputPointType & inputPoint) const;
 
   /** COMPOSITION: \f$J(x) = J_1( T_0(x) )\f$
    * \warning: assumes that input and output point type are the same.
    */
-  inline void
-  GetSpatialJacobianUseComposition(const InputPointType & inputPoint, SpatialJacobianType & sj) const;
+  inline SpatialJacobianType
+  GetSpatialJacobianUseComposition(const InputPointType & inputPoint) const;
 
   /** CURRENT ONLY: \f$J(x) = J_1(x)\f$ */
-  inline void
-  GetSpatialJacobianNoInitialTransform(const InputPointType & inputPoint, SpatialJacobianType & sj) const;
+  inline SpatialJacobianType
+  GetSpatialJacobianNoInitialTransform(const InputPointType & inputPoint) const;
 
   /** NO CURRENT TRANSFORM SET: throw an exception. */
-  inline void
-  GetSpatialJacobianNoCurrentTransform(const InputPointType & inputPoint, SpatialJacobianType & sj) const;
+  inline SpatialJacobianType
+  GetSpatialJacobianNoCurrentTransform(const InputPointType & inputPoint) const;
 
   /** ************************************************
    * Methods to compute the spatial Hessian.
@@ -563,7 +563,7 @@ private:
                                                                                  const MovingImageGradientType &,
                                                                                  DerivativeType &,
                                                                                  NonZeroJacobianIndicesType &) const;
-  using GetSpatialJacobianFunctionPointer = void (Self::*)(const InputPointType &, SpatialJacobianType &) const;
+  using GetSpatialJacobianFunctionPointer = SpatialJacobianType (Self::*)(const InputPointType &) const;
   using GetSpatialHessianFunctionPointer = void (Self::*)(const InputPointType &, SpatialHessianType &) const;
   using GetJacobianOfSpatialJacobianFunctionPointer = void (Self::*)(const InputPointType &,
                                                                      JacobianOfSpatialJacobianType &,
