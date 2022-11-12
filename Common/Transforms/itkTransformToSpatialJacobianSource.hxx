@@ -225,9 +225,8 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Nonline
   // Support for progress methods/callbacks
   ProgressReporter progress(this, threadId, outputRegionForThread.GetNumberOfPixels());
 
-  SpatialJacobianType sj;
-  PixelType           sjOut;
-  const unsigned int  nrElements = sj.GetVnlMatrix().size();
+  PixelType          sjOut;
+  const unsigned int nrElements = SpatialJacobianType::RowDimensions * SpatialJacobianType::ColumnDimensions;
 
   // Walk the output region
   while (!it.IsAtEnd())
@@ -235,7 +234,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Nonline
     // Determine the coordinates of the current voxel
     outputPtr->TransformIndexToPhysicalPoint(it.GetIndex(), point);
 
-    sj = this->m_Transform->GetSpatialJacobian(point);
+    const SpatialJacobianType sj = this->m_Transform->GetSpatialJacobian(point);
 
     // cast spatial jacobian to output pixel type
     vnl_copy(sj.GetVnlMatrix().begin(), sjOut.GetVnlMatrix().begin(), nrElements);
@@ -268,10 +267,9 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::LinearG
   PointType point;
   outputPtr->TransformIndexToPhysicalPoint(index, point);
 
-  SpatialJacobianType sj;
-  PixelType           sjOut;
-  const unsigned int  nrElements = sj.GetVnlMatrix().size();
-  sj = this->m_Transform->GetSpatialJacobian(point);
+  PixelType                 sjOut;
+  const unsigned int        nrElements = SpatialJacobianType::RowDimensions * SpatialJacobianType::ColumnDimensions;
+  const SpatialJacobianType sj = this->m_Transform->GetSpatialJacobian(point);
 
   // cast spatial jacobian to output pixel type
   vnl_copy(sj.GetVnlMatrix().begin(), sjOut.GetVnlMatrix().begin(), nrElements);
