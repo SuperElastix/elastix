@@ -240,7 +240,7 @@ protected:
   class ITK_TEMPLATE_EXPORT ConvertToDynamicArray
   {
   public:
-    inline static TOut
+    static TOut
     DO(const TIn & in)
     {
       TOut out(VDimension);
@@ -257,7 +257,7 @@ protected:
   class ITK_TEMPLATE_EXPORT ConvertToStaticArray
   {
   public:
-    inline static TOut
+    static TOut
     DO(const TIn & in)
     {
       TOut out;

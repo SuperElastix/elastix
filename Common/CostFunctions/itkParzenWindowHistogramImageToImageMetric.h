@@ -302,11 +302,11 @@ protected:
   InitializeThreadingParameters() const override;
 
   /** Multi-threaded versions of the ComputePDF function. */
-  inline void
+  void
   ThreadedComputePDFs(ThreadIdType threadId);
 
   /** Single-threadedly accumulate results. */
-  inline void
+  void
   AfterThreadedComputePDFs() const;
 
   /** Helper function to launch the threads. */

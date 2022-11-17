@@ -131,21 +131,21 @@ private:
   {};
 
   /** Method to compute both the value and the derivative. 2D specialization. */
-  inline void
+  void
   EvaluateValueAndDerivativeOptimized(const Dispatch<2> &,
                                       const ContinuousIndexType & x,
                                       OutputType &                value,
                                       CovariantVectorType &       deriv) const;
 
   /** Method to compute both the value and the derivative. 3D specialization. */
-  inline void
+  void
   EvaluateValueAndDerivativeOptimized(const Dispatch<3> &,
                                       const ContinuousIndexType & x,
                                       OutputType &                value,
                                       CovariantVectorType &       deriv) const;
 
   /** Method to compute both the value and the derivative. Generic. */
-  inline void
+  void
   EvaluateValueAndDerivativeOptimized(const DispatchBase &,
                                       const ContinuousIndexType & x,
                                       OutputType &                value,
@@ -156,7 +156,7 @@ private:
 
 
   /** Method to compute both the value and the derivative. Generic. */
-  inline void
+  void
   EvaluateValueAndDerivativeUnOptimized(const ContinuousIndexType & x,
                                         OutputType &                value,
                                         CovariantVectorType &       deriv) const

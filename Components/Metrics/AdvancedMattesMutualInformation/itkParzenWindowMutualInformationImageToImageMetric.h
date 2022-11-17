@@ -239,11 +239,11 @@ protected:
   ParzenWindowMutualInformationMultiThreaderParameterType m_ParzenWindowMutualInformationThreaderParameters;
 
   /** Multi-threaded versions of the ComputePDF function. */
-  inline void
+  void
   ThreadedComputeDerivativeLowMemory(ThreadIdType threadId);
 
   /** Single-threadedly accumulate results. */
-  inline void
+  void
   AfterThreadedComputeDerivativeLowMemory(DerivativeType & derivative) const;
 
   /** Helper function to launch the threads. */

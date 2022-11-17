@@ -167,17 +167,17 @@ protected:
                                         DerivativeType &                  imageJacobian) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void
+  void
   ThreadedGetSamples(ThreadIdType threadID);
 
-  inline void
+  void
   ThreadedComputeDerivative(ThreadIdType threadID);
 
   /** Gather the values and derivatives from all threads */
-  inline void
+  void
   AfterThreadedGetSamples(MeasureType & value) const;
 
-  inline void
+  void
   AfterThreadedComputeDerivative(DerivativeType & derivative) const;
 
   /** Helper function to launch the threads. */

@@ -94,7 +94,7 @@ public:
 
 
   /** Evaluate the function. */
-  inline double
+  double
   Evaluate(const double & u) const override
   {
     return Self::FastEvaluate(u);
@@ -102,7 +102,7 @@ public:
 
 
   /** Evaluate the function. */
-  inline void
+  void
   Evaluate(const double & u, double * weights) const override
   {
     return Self::FastEvaluate(u, weights);
@@ -131,7 +131,7 @@ private:
   // Derivative not defined.
 
   /** First order spline */
-  inline static double
+  static double
   Evaluate(const Dispatch<1> &, const double u)
   {
     const double absValue = std::abs(u);
@@ -151,7 +151,7 @@ private:
   }
 
 
-  inline static void
+  static void
   Evaluate(const Dispatch<1> &, const double u, double * weights)
   {
     // MS \todo: check
@@ -176,7 +176,7 @@ private:
 
 
   /** Second order spline. */
-  inline static double
+  static double
   Evaluate(const Dispatch<2> &, const double u)
   {
     double absValue = std::abs(u);
@@ -196,7 +196,7 @@ private:
   }
 
 
-  inline static void
+  static void
   Evaluate(const Dispatch<2> &, const double u, double * weights)
   {
     // MS \todo: check
@@ -207,7 +207,7 @@ private:
 
 
   /**  Third order spline. */
-  inline static double
+  static double
   Evaluate(const Dispatch<3> &, const double u)
   {
     const double absValue = std::abs(u);
@@ -246,7 +246,7 @@ private:
   }
 
 
-  inline static void
+  static void
   Evaluate(const Dispatch<3> &, const double u, double * weights)
   {
     const double absValue = std::abs(u);
