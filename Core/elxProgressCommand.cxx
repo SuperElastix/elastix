@@ -36,15 +36,6 @@ ProgressCommand::ProgressCommand()
   this->m_NumberOfVoxels = 0;
   this->m_NumberOfUpdates = 0;
 
-  /** Check if the output of the stream is a console. */
-  this->m_StreamOutputIsConsole = false;
-  std::string streamOutput = "cout";
-  int         currentPos = xl::xout["coutonly"].GetCOutputs().find(streamOutput)->second->tellp();
-  if (currentPos == -1)
-  {
-    this->m_StreamOutputIsConsole = true;
-  }
-
 } // end Constructor()
 
 
@@ -102,12 +93,9 @@ ProgressCommand::ConnectObserver(itk::ProcessObject * filter)
   this->DisconnectObserver(this->m_ObservedProcessObject);
 
   /** Connect to the new filter. */
-  if (this->m_StreamOutputIsConsole)
-  {
-    this->m_Tag = filter->AddObserver(itk::ProgressEvent(), this);
-    this->m_TagIsSet = true;
-    this->m_ObservedProcessObject = filter;
-  }
+  this->m_Tag = filter->AddObserver(itk::ProgressEvent(), this);
+  this->m_TagIsSet = true;
+  this->m_ObservedProcessObject = filter;
 
 } // end ConnectObserver()
 
@@ -119,14 +107,11 @@ ProgressCommand::ConnectObserver(itk::ProcessObject * filter)
 void
 ProgressCommand::DisconnectObserver(itk::ProcessObject * filter)
 {
-  if (this->m_StreamOutputIsConsole)
+  if (this->m_TagIsSet)
   {
-    if (this->m_TagIsSet)
-    {
-      filter->RemoveObserver(this->m_Tag);
-      this->m_TagIsSet = false;
-      this->m_ObservedProcessObject = nullptr;
-    }
+    filter->RemoveObserver(this->m_Tag);
+    this->m_TagIsSet = false;
+    this->m_ObservedProcessObject = nullptr;
   }
 
 } // end DisconnectObserver()
@@ -183,8 +168,7 @@ ProgressCommand::PrintProgress(const float progress) const
 {
   /** Print the progress to the screen. */
   const int progressInt = itk::Math::Round<float>(100 * progress);
-  xl::xout["coutonly"] << "\r" << this->m_StartString << progressInt << this->m_EndString;
-  xl::xout["coutonly"] << std::flush;
+  std::cout << "\r" << this->m_StartString << progressInt << this->m_EndString << std::flush;
 
   /** If the process is completed, print an end-of-line. *
   if ( progress > 0.99999 )
@@ -202,13 +186,10 @@ ProgressCommand::PrintProgress(const float progress) const
 void
 ProgressCommand::UpdateAndPrintProgress(const unsigned long currentVoxelNumber) const
 {
-  if (this->m_StreamOutputIsConsole)
+  const unsigned long frac = static_cast<unsigned long>(this->m_NumberOfVoxels / this->m_NumberOfUpdates);
+  if (currentVoxelNumber % frac == 0)
   {
-    const unsigned long frac = static_cast<unsigned long>(this->m_NumberOfVoxels / this->m_NumberOfUpdates);
-    if (currentVoxelNumber % frac == 0)
-    {
-      this->PrintProgress(static_cast<float>(currentVoxelNumber) / static_cast<float>(this->m_NumberOfVoxels));
-    }
+    this->PrintProgress(static_cast<float>(currentVoxelNumber) / static_cast<float>(this->m_NumberOfVoxels));
   }
 
 } // end PrintProgress()
