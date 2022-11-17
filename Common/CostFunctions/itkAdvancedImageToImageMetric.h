@@ -375,12 +375,12 @@ protected:
   /** Multi-threaded metric computation. */
 
   /** Multi-threaded version of GetValue(). */
-  virtual inline void
+  virtual void
   ThreadedGetValue(ThreadIdType threadID)
   {}
 
   /** Finalize multi-threaded metric computation. */
-  virtual inline void
+  virtual void
   AfterThreadedGetValue(MeasureType & value) const
   {}
 
@@ -393,12 +393,12 @@ protected:
   LaunchGetValueThreaderCallback() const;
 
   /** Multi-threaded version of GetValueAndDerivative(). */
-  virtual inline void
+  virtual void
   ThreadedGetValueAndDerivative(ThreadIdType threadID)
   {}
 
   /** Finalize multi-threaded metric computation. */
-  virtual inline void
+  virtual void
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const
   {}
 

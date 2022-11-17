@@ -213,11 +213,11 @@ protected:
   InitializeThreadingParameters() const override;
 
   /** Get value and derivatives for each thread. */
-  inline void
+  void
   ThreadedGetValueAndDerivative(ThreadIdType threadID) override;
 
   /** Gather the values and derivatives from all threads */
-  inline void
+  void
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
   /** AccumulateDerivatives threader callback function */

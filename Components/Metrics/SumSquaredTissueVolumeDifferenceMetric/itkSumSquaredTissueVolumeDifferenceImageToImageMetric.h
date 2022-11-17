@@ -225,19 +225,19 @@ protected:
     DerivativeType &                      jacobianOfSpatialJacobianDeterminant) const;
 
   /** Get value for each thread. */
-  inline void
+  void
   ThreadedGetValue(ThreadIdType threadID) override;
 
   /** Gather the values from all threads. */
-  inline void
+  void
   AfterThreadedGetValue(MeasureType & value) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void
+  void
   ThreadedGetValueAndDerivative(ThreadIdType threadId) override;
 
   /** Gather the values and derivatives from all threads */
-  inline void
+  void
   AfterThreadedGetValueAndDerivative(MeasureType & measure, DerivativeType & derivative) const override;
 
 private:

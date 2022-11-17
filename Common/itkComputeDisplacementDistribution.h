@@ -192,7 +192,7 @@ protected:
   ComputeThreaderCallback(void * arg);
 
   /** The threaded implementation of Compute(). */
-  virtual inline void
+  virtual void
   ThreadedCompute(ThreadIdType threadID);
 
   /** Initialize some multi-threading related parameters. */

@@ -98,7 +98,7 @@ public:
 
 
   /** Evaluate the function at one point. */
-  inline double
+  double
   Evaluate(const double & u) const override
   {
     return Self::FastEvaluate(u);
@@ -108,7 +108,7 @@ public:
   /** Evaluate the function at the entire support. This is slightly faster,
    * since no if's are needed.
    */
-  inline void
+  void
   Evaluate(const double & u, double * weights) const override
   {
     Self::FastEvaluate(u, weights);
@@ -138,7 +138,7 @@ private:
    */
 
   /** Zeroth order spline. */
-  inline static double
+  static double
   Evaluate(const Dispatch<0> &, const double u)
   {
     const double absValue = std::abs(u);
@@ -159,7 +159,7 @@ private:
 
 
   /** First order spline */
-  inline static double
+  static double
   Evaluate(const Dispatch<1> &, const double u)
   {
     const double absValue = std::abs(u);
@@ -176,7 +176,7 @@ private:
 
 
   /** Second order spline. */
-  inline static double
+  static double
   Evaluate(const Dispatch<2> &, const double u)
   {
     const double absValue = std::abs(u);
@@ -197,7 +197,7 @@ private:
 
 
   /** Third order spline. */
-  inline static double
+  static double
   Evaluate(const Dispatch<3> &, const double u)
   {
     const double absValue = std::abs(u);
@@ -223,7 +223,7 @@ private:
    */
 
   /** Zeroth order spline. */
-  inline static void
+  static void
   Evaluate(const Dispatch<0> &, const double u, double * weights)
   {
     const double absValue = std::abs(u);
@@ -244,7 +244,7 @@ private:
 
 
   /** First order spline */
-  inline static void
+  static void
   Evaluate(const Dispatch<1> &, const double u, double * weights)
   {
     const double absValue = std::abs(u);
@@ -255,7 +255,7 @@ private:
 
 
   /** Second order spline. */
-  inline static void
+  static void
   Evaluate(const Dispatch<2> &, const double u, double * weights)
   {
     const double absValue = std::abs(u);
@@ -268,7 +268,7 @@ private:
 
 
   /**  Third order spline. */
-  inline static void
+  static void
   Evaluate(const Dispatch<3> &, const double u, double * weights)
   {
     const double absValue = std::abs(u);

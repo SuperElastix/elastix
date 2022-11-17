@@ -629,7 +629,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 #undef LOOP_ON_LABELS
 
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-inline void
+void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::PointToLabel(
   const InputPointType & p,
   int &                  l) const
