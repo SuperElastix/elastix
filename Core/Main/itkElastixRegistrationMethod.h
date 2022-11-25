@@ -283,6 +283,8 @@ private:
   /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;
 
+  SmartPointer<const elx::ElastixMain> m_ElastixMain{ nullptr };
+
   std::string m_InitialTransformParameterFileName{};
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};
