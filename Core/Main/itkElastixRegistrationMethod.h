@@ -258,6 +258,10 @@ public:
   unsigned int
   GetNumberOfTransforms() const;
 
+  /** Returns the nth transformation, produced during the last Update(). */
+  SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+  GetNthTransform(const unsigned int n) const;
+
 protected:
   ElastixRegistrationMethod();
 

@@ -806,6 +806,28 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfTransforms() co
 }
 
 
+template <typename TFixedImage, typename TMovingImage>
+auto
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsigned int n) const
+  -> SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+{
+  const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
+
+  if ((transformContainer == nullptr) || transformContainer->empty())
+  {
+    return nullptr;
+  }
+
+  const auto * const elxTransformBase =
+    dynamic_cast<ElastixTransformBaseType *>(transformContainer->front().GetPointer());
+
+  if (elxTransformBase == nullptr)
+  {
+    return nullptr;
+  }
+  return elxTransformBase->GetAsITKBaseType()->GetNthTransform(n);
+}
+
 } // namespace itk
 
 #endif
