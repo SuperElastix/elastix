@@ -83,6 +83,40 @@ public:
   }
 
 
+  /// Converts the specified combination of transforms from elastix to the corresponding composition of ITK transform.
+  /// Returns null when the combination transform does not use composition, or when some of the transforms does not have
+  /// a corresponding ITK transform.
+  template <unsigned NDimension>
+  static itk::SmartPointer<itk::CompositeTransform<double, NDimension>>
+  ConvertToCompositionOfItkTransforms(
+    const itk::AdvancedCombinationTransform<double, NDimension> & advancedCombinationTransform)
+  {
+    const auto numberOfTransforms = advancedCombinationTransform.GetNumberOfTransforms();
+
+    if ((numberOfTransforms > 1) && (!advancedCombinationTransform.GetUseComposition()))
+    {
+      // A combination of multiple transforms can only be converted to CompositeTransform when the original combination
+      // uses composition.
+      return nullptr;
+    }
+
+    const auto compositeTransform = itk::CompositeTransform<double, NDimension>::New();
+
+    for (itk::SizeValueType n{}; n < numberOfTransforms; ++n)
+    {
+      const auto nthTransform = advancedCombinationTransform.GetNthTransform(n);
+      const auto singleItkTransform = ConvertToSingleItkTransform(*nthTransform);
+
+      if (singleItkTransform == nullptr)
+      {
+        return nullptr;
+      }
+      compositeTransform->AddTransform(singleItkTransform);
+    }
+    return compositeTransform;
+  }
+
+
   /// Converts the specified single transform from elastix to the corresponding ITK transform. Returns null when ITK has
   /// no transform type that corresponds with this elastix transform.
   template <unsigned NDimension>
