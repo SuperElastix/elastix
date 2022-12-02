@@ -190,7 +190,7 @@ protected:
   virtual void
   StoreCurrentPoint(const ParametersType & step, const DerivativeType & grad_dif);
 
-  /** Check if convergence has occured;
+  /** Check if convergence has occurred;
    * The firstLineSearchDone bool allows the implementation of TestConvergence to
    * decide to skip a few convergence checks when no line search has performed yet
    * (so, before the actual optimisation begins)  */

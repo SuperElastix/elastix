@@ -261,7 +261,7 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
       subTransforms[i] = testPointer;
     }
 
-    /** Check if no errors occured: */
+    /** Check if no errors occurred: */
     if (subTransforms[i].IsNull())
     {
       xl::xout["error"] << "ERROR: Error while trying to load the SubTransform " << subTransformFileName << std::endl;

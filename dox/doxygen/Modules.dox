@@ -88,7 +88,7 @@ ResampleInterpolators are used to interpolate the intensity of an image when res
 /**
 \defgroup Resamplers Resamplers
 \ingroup Components
-Resamplers are used to calculate a new deformed image from a tranform and an input image.
+Resamplers are used to calculate a new deformed image from a transform and an input image.
 */
 
 /**

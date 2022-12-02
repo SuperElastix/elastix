@@ -410,7 +410,7 @@ protected:
   virtual void
   FixNumericalErrors();
 
-  /** Check if convergence has occured:
+  /** Check if convergence has occurred:
    * \li Check if the maximum number of iterations will not be exceeded in the following iteration
    * \li Check if the step was not too large:
    *     if ( sigma * sqrt(C[i,i]) > PositionToleranceMax*sigma0   for any i )
