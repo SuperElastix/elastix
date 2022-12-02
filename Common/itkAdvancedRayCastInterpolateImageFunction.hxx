@@ -647,7 +647,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcRayIntercepts()
       cross[i][2] = (int)((ax * by - ay * bx) / 100);
     }
 
-    // See if a sign change occured between all these cross products
+    // See if a sign change occurred between all these cross products
     // if not, then the ray went through this plane
 
     crossFlag = 0;

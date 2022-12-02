@@ -44,8 +44,8 @@ namespace itk
 
 /** \brief Translation transformation of a vector space (e.g. space coordinates)
  *
- * The same functionality could be obtained by using the Affine tranform,
- * but with a large difference in performace.
+ * The same functionality could be obtained by using the Affine transform,
+ * but with a large difference in performance.
  *
  * \ingroup Transforms
  */

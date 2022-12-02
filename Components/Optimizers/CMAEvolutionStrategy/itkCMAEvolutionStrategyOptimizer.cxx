@@ -206,7 +206,7 @@ CMAEvolutionStrategyOptimizer::ResumeOptimization()
     this->UpdateBD();
     this->FixNumericalErrors();
 
-    /** Test if convergence has occured in some sense */
+    /** Test if convergence has occurred in some sense */
     convergence = this->TestConvergence(false);
     if (convergence)
     {
