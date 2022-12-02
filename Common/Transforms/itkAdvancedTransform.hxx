@@ -40,34 +40,6 @@ namespace itk
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::AdvancedTransform()
-  : Superclass()
-{
-  this->m_HasNonZeroSpatialHessian = true;
-  this->m_HasNonZeroJacobianOfSpatialHessian = true;
-
-} // end Constructor
-
-
-/**
- * ********************* Constructor ****************************
- */
-
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::AdvancedTransform(
-  NumberOfParametersType numberOfParameters)
-  : Superclass(numberOfParameters)
-{
-  this->m_HasNonZeroSpatialHessian = true;
-  this->m_HasNonZeroJacobianOfSpatialHessian = true;
-} // end Constructor
-
-
-/**
  * ********************* EvaluateJacobianWithImageGradientProduct ****************************
  */
 
