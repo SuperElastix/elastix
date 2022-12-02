@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedRigid3DTransform.h,v $
-  Language:  C++
   Date:      $Date: 2007-02-13 21:46:04 $
   Version:   $Revision: 1.38 $
 

@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedVersorTransform.txx,v $
-  Language:  C++
   Date:      $Date: 2006-08-09 04:35:32 $
   Version:   $Revision: 1.17 $
 

@@ -15,12 +15,10 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkReducedDimBSplineInterpolateImageFunction.h,v $
-  Language:  C++
   Date:      $Date: 2009-04-25 12:27:05 $
   Version:   $Revision: 1.24 $
 

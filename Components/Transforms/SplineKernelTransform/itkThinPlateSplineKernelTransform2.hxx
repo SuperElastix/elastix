@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkThinPlateSplineKernelTransform2.txx,v $
-  Language:  C++
   Date:      $Date: 2006-11-28 14:22:18 $
   Version:   $Revision: 1.1 $
 

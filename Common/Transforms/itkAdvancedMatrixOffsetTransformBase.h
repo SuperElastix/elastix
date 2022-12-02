@@ -20,7 +20,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedMatrixOffsetTransformBase.h,v $
-  Language:  C++
   Date:      $Date: 2008-06-29 12:58:58 $
   Version:   $Revision: 1.20 $
 

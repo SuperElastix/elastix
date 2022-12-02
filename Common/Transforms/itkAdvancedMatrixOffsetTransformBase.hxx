@@ -15,12 +15,10 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedMatrixOffsetTransformBase.txx,v $
-  Language:  C++
   Date:      $Date: 2008-06-29 12:58:58 $
   Version:   $Revision: 1.17 $
 

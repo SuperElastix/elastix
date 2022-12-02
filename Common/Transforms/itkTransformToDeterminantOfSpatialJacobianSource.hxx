@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkTransformToDeterminantOfSpatialJacobianSource.txx,v $
-  Language:  C++
   Date:      $Date: 2008-08-01 13:42:00 $
   Version:   $Revision: 1.2 $
 

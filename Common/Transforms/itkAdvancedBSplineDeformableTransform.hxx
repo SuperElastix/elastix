@@ -21,7 +21,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkBSplineDeformableTransform.txx,v $
-  Language:  C++
   Date:      $Date: 2008-05-08 23:22:35 $
   Version:   $Revision: 1.41 $
 
