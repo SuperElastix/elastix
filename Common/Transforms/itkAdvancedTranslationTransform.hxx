@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedTranslationTransform.txx,v $
-  Language:  C++
   Date:      $Date: 2007-11-14 20:17:26 $
   Version:   $Revision: 1.31 $
 

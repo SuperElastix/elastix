@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedSimilarity2DTransform.txx,v $
-  Language:  C++
   Date:      $Date: 2008-01-24 05:12:41 $
   Version:   $Revision: 1.23 $
 

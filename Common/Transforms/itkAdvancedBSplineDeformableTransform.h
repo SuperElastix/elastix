@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedBSplineDeformableTransform.h,v $
-  Language:  C++
   Date:      $Date: 2008-04-11 16:28:11 $
   Version:   $Revision: 1.38 $
 

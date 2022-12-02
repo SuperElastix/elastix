@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkIdentityTransform.h,v $
-  Language:  C++
   Date:      $Date: 2009-06-28 14:41:47 $
   Version:   $Revision: 1.19 $
 

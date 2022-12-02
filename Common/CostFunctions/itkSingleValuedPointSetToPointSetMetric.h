@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkSingleValuedPointSetToPointSetMetric.h,v $
-  Language:  C++
   Date:      $Date: 2009-01-26 21:45:56 $
   Version:   $Revision: 1.2 $
 

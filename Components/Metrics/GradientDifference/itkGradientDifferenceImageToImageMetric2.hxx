@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkGradientDifferenceImageToImageMetric2.hxx,v $
-  Language:  C++
   Date:      $Date: 2011-29-04 14:33 $
   Version:   $Revision: 2.0 $
 

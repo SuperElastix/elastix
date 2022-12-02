@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkVolumeSplineKernelTransform2.txx,v $
-  Language:  C++
   Date:      $Date: 2006/03/18 18:06:38 $
   Version:   $Revision: 1.8 $
 

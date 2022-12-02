@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedEuler3DTransform.txx,v $
-  Language:  C++
   Date:      $Date: 2008-10-13 15:36:31 $
   Version:   $Revision: 1.24 $
 

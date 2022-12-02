@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkCenteredTransformInitializer2.h,v $
-  Language:  C++
   Date:      $Date: 2010-07-04 10:30:49 $
   Version:   $Revision: 1.11 $
 

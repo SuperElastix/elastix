@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkThinPlateR2LogRSplineKernelTransform2.txx,v $
-  Language:  C++
   Date:      $Date: 2006/03/19 04:36:59 $
   Version:   $Revision: 1.8 $
 

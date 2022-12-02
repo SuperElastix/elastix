@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkMultiOrderBSplineDecompositionImageFilter.txx,v $
-  Language:  C++
   Date:      $Date: 2010-03-19 07:06:01 $
   Version:   $Revision: 1.14 $
 

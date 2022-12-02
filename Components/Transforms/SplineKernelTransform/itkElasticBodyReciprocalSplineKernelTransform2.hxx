@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkElasticBodyReciprocalSplineKernelTransform2.txx,v $
-  Language:  C++
   Date:      $Date: 2004/12/12 22:05:02 $
   Version:   $Revision: 1.8 $
 

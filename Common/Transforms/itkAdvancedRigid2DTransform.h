@@ -19,7 +19,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedRigid2DTransform.h,v $
-  Language:  C++
   Date:      $Date: 2009-01-14 18:39:05 $
   Version:   $Revision: 1.22 $
 

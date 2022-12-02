@@ -24,7 +24,6 @@
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile$
-  Language:  C++
   Date:      $Date: 2008-11-06 16:31:54 +0100 (Thu, 06 Nov 2008) $
   Version:   $Revision: 2637 $
 
