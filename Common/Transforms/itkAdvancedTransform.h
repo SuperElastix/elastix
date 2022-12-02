@@ -293,12 +293,15 @@ public:
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const = 0;
 
 protected:
-  AdvancedTransform();
-  explicit AdvancedTransform(NumberOfParametersType numberOfParameters);
+  AdvancedTransform() = default;
+
+  // Inherit the other (non-default) constructor from itk::Transform.
+  using Superclass::Superclass;
+
   ~AdvancedTransform() override = default;
 
-  bool m_HasNonZeroSpatialHessian;
-  bool m_HasNonZeroJacobianOfSpatialHessian;
+  bool m_HasNonZeroSpatialHessian{ true };
+  bool m_HasNonZeroJacobianOfSpatialHessian{ true };
 };
 
 } // end namespace itk
