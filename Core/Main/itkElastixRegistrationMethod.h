@@ -262,6 +262,11 @@ public:
   SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
   GetNthTransform(const unsigned int n) const;
 
+  /** Converts the specified elastix Transform object to the corresponding ITK Transform object. Returns null if there
+   * is no corresponding ITK Transform type. */
+  static SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+  ConvertToItkTransform(const Transform<double, FixedImageDimension, MovingImageDimension> &);
+
 protected:
   ElastixRegistrationMethod();
 
