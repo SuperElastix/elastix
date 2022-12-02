@@ -254,7 +254,10 @@ protected:
 private:
   OutputVectorType m_Offset{}; // Offset of the transformation
 
-  JacobianType                        m_LocalJacobian{ JacobianType(NDimensions, NDimensions) };
+  // The Jacobian of this transform is constant. Therefore it can be shared among all the threads.
+  const JacobianType m_LocalJacobian{
+    Matrix<TScalarType, NDimensions, NDimensions>::GetIdentity().GetVnlMatrix().as_matrix()
+  };
   const SpatialJacobianType           m_SpatialJacobian{ SpatialJacobianType::GetIdentity() };
   const SpatialHessianType            m_SpatialHessian{};
   NonZeroJacobianIndicesType          m_NonZeroJacobianIndices{ NonZeroJacobianIndicesType(NDimensions) };
