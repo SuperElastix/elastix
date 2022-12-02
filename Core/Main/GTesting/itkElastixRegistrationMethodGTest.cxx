@@ -625,6 +625,43 @@ GTEST_TEST(itkElastixRegistrationMethod, GetNthTransform)
 }
 
 
+GTEST_TEST(itkElastixRegistrationMethod, ConvertToItkTransform)
+{
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
+
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+
+  registration.SetFixedImage(image);
+  registration.SetMovingImage(image);
+
+  for (const bool useInitialTransform : { false, true })
+  {
+    registration.SetInitialTransformParameterFileName(
+      useInitialTransform ? (GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt") : "");
+
+    const std::string nameOfLastTransform = "BSplineTransform";
+    registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                            { "AutomaticTransformInitialization", "false" },
+                                                            { "ImageSampler", "Full" },
+                                                            { "MaximumNumberOfIterations", "0" },
+                                                            { "Metric", "AdvancedNormalizedCorrelation" },
+                                                            { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                            { "Transform", nameOfLastTransform } }));
+    registration.Update();
+
+    const unsigned int numberOfTransforms{ useInitialTransform ? 2U : 1U };
+
+    for (unsigned int n{ 0 }; n < numberOfTransforms; ++n)
+    {
+      // TODO Check result
+      itk::ElastixRegistrationMethod<ImageType, ImageType>::ConvertToItkTransform(*registration.GetNthTransform(n));
+    }
+  }
+}
+
 GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
 {
   constexpr auto ImageDimension = 2U;

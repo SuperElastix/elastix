@@ -828,6 +828,26 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsi
   return elxTransformBase->GetAsITKBaseType()->GetNthTransform(n);
 }
 
+
+template <typename TFixedImage, typename TMovingImage>
+auto
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::ConvertToItkTransform(
+  const Transform<double, FixedImageDimension, MovingImageDimension> & elxTransform)
+  -> SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+{
+  const auto * const combinationTransform =
+    dynamic_cast<const itk::AdvancedCombinationTransform<double, FixedImageDimension> *>(&elxTransform);
+
+  const auto itkTransform = combinationTransform
+                              ? elx::TransformIO::ConvertToCompositionOfItkTransforms(*combinationTransform)
+                              : elx::TransformIO::ConvertToSingleItkTransform(elxTransform);
+  if (itkTransform)
+  {
+    return itkTransform;
+  }
+  itkGenericExceptionMacro("Failed to convert transform object " << elxTransform);
+}
+
 } // namespace itk
 
 #endif
