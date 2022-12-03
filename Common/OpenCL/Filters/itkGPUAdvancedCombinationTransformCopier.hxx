@@ -74,7 +74,6 @@ GPUAdvancedCombinationTransformCopier<TTypeList,
   if (!this->m_InputTransform)
   {
     itkExceptionMacro(<< "ERROR: m_InputTransform not set");
-    return;
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified

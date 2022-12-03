@@ -411,12 +411,10 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   if (inPtr.IsNull())
   {
     itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
-    return;
   }
   if (outPtr.IsNull())
   {
     itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
-    return;
   }
 
   // Get the largest possible output region.
@@ -424,7 +422,6 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   if (outputLargestRegion.GetNumberOfPixels() == 0)
   {
     itkExceptionMacro(<< "GPUResampleImageFilter has not been properly initialized. Filter unable to perform.");
-    return;
   }
 
   // Define filter parameters:

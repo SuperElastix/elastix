@@ -107,7 +107,6 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateData()
               << "Filename: " << this->m_FileName << '\n';
           MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
           throw e;
-          return;
         }
       }
       points->push_back(point);
@@ -120,7 +119,6 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateData()
         << "Filename: " << this->m_FileName << '\n';
     MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
     throw e;
-    return;
   }
 
   /** set in output */

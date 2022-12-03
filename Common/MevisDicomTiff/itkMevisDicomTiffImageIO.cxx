@@ -690,7 +690,6 @@ MevisDicomTiffImageIO::ReadImageInformation()
   if (m_TIFFImage == nullptr)
   {
     itkExceptionMacro(<< "mevisIO:readimageinformation: error opening file " << m_TiffFileName);
-    return;
   }
 
   // sanity checks, dim and sizes; NB: the value 3 below for the 4d case is not a typo! :)
@@ -831,7 +830,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
     if (p != 1)
     {
       itkExceptionMacro(<< "mevisIO:read(): non-contiguous data!");
-      return;
     }
   }
 
@@ -843,7 +841,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
     if (m_TIFFDimension == 3 && m_TileDepth != 1)
     {
       itkExceptionMacro(<< "mevisIO:read(): unsupported tiledepth (should be one)! ");
-      return;
     }
 
     // buffer pointer is scanline based (one dimensional array)
@@ -877,7 +874,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
           {
             _TIFFfree(tilebuf);
             itkExceptionMacro(<< "mevisIO:read(): error reading tile (topleft)");
-            return;
           }
           else
           {
@@ -917,7 +913,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
             {
               _TIFFfree(tilebuf);
               itkExceptionMacro(<< "mevisIO:read(): error reading tile (top image)");
-              return;
             }
             else
             {
@@ -945,7 +940,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
             {
               _TIFFfree(tilebuf);
               itkExceptionMacro(<< "mevisIO:read(): error reading tile (strip bottom)");
-              return;
             }
             else
             {
@@ -982,7 +976,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
             {
               _TIFFfree(tilebuf);
               itkExceptionMacro(<< "mevisIO:read(): error reading tile (top image)");
-              return;
             }
             else
             {
@@ -1010,7 +1003,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
             {
               _TIFFfree(tilebuf);
               itkExceptionMacro(<< "mevisIO:read(): error reading tile (strip right)");
-              return;
             }
             else
             {
@@ -1062,7 +1054,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
             {
               _TIFFfree(tilebuf);
               itkExceptionMacro(<< "mevisIO:read(): error reading tile (topleft image)");
-              return;
             }
             else
             {
@@ -1098,7 +1089,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
             {
               _TIFFfree(tilebuf);
               itkExceptionMacro(<< "mevisIO:read(): error reading tile (ydirection)");
-              return;
             }
             else
             {
@@ -1128,7 +1118,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
             {
               _TIFFfree(tilebuf);
               itkExceptionMacro(<< "mevisIO:read(): error reading tile (x-direction)");
-              return;
             }
             else
             {
@@ -1160,7 +1149,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
           {
             _TIFFfree(tilebuf);
             itkExceptionMacro(<< "mevisIO:read(): error reading tile (corner bottom)");
-            return;
           }
           else
           {
@@ -1182,7 +1170,6 @@ MevisDicomTiffImageIO::Read(void * buffer)
   {
     // if not tiled then img is stripped
     itkExceptionMacro(<< "mevisIO:read(): non-tiled dcm/tiff reading not (yet) implemented");
-    return;
   }
   return;
 }
@@ -1499,7 +1486,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
       if (this->GetNumberOfComponents() != 1)
       {
         itkExceptionMacro(<< "mevisIO:write(): nr of Components should be 1 for SCALAR");
-        return;
       }
       gdcm::Attribute<0x0028, 0x0002> atsamples;
       atsamples.SetValue(1);
@@ -1508,7 +1494,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     break;
     default:
       itkExceptionMacro("mevisIO:write(): only SCALAR pixeltypes supported");
-      return;
   }
 
   // bits allocated, stored, high
@@ -1577,7 +1562,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     default:
     {
       itkExceptionMacro(<< "mevisIO:write(): error writing dcm-file unsupported component type");
-      return;
     }
   }
 
@@ -1800,7 +1784,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
       if (this->GetNumberOfComponents() != 1)
       {
         itkExceptionMacro(<< "mevisIO:write(): nr of Components should be 1 for SCALAR");
-        return;
       }
       if (!TIFFSetField(m_TIFFImage, TIFFTAG_SAMPLESPERPIXEL, 1))
       {
@@ -1810,7 +1793,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     break;
     default:
       itkExceptionMacro(<< "mevisIO:write(): only SCALAR pixeltypes supported");
-      return;
   }
   // componenttype
   bool suc(false);
@@ -1861,7 +1843,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     default:
     {
       itkExceptionMacro("mevisIO:write(): unsupported component type");
-      return;
     }
   }
   if (!suc)
@@ -1987,7 +1968,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     TIFFClose(m_TIFFImage);
     itkExceptionMacro(<< "mevisIO:write(): image x,y smaller than tilesize (16)! Consider different layout for tif (eg "
                          "scanline layout)");
-    return;
   }
   else
   {
@@ -2028,7 +2008,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
             _TIFFfree(tilebuf);
             TIFFClose(m_TIFFImage);
             itkExceptionMacro(<< "mevisIO:write(): error writing tile.");
-            return;
           }
         }
       }
@@ -2062,7 +2041,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
             _TIFFfree(tilebuf);
             TIFFClose(m_TIFFImage);
             itkExceptionMacro(<< "mevisIO:write(): error writing tile (ydirection)");
-            return;
           }
         }
       }
@@ -2092,7 +2070,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
             _TIFFfree(tilebuf);
             TIFFClose(m_TIFFImage);
             itkExceptionMacro(<< "mevisIO:write(): error writing tile (x-direction)");
-            return;
           }
         }
       }
@@ -2124,7 +2101,6 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
           _TIFFfree(tilebuf);
           TIFFClose(m_TIFFImage);
           itkExceptionMacro(<< "mevisIO:write(): error writing tile (corner bottom)");
-          return;
         }
       }
     } // end z

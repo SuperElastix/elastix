@@ -97,12 +97,10 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   if (inPtr.IsNull())
   {
     itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
-    return;
   }
   if (otPtr.IsNull())
   {
     itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
-    return;
   }
 
   const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
@@ -121,7 +119,6 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   if (maxLength > this->m_DeviceLocalMemorySize)
   {
     itkExceptionMacro(<< "GPUBSplineDecompositionImageFilter unable to perform.");
-    return;
   }
 
   // Cast here, see the same call in this->CopyImageToImage() of
