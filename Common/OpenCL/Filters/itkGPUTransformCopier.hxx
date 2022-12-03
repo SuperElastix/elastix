@@ -62,7 +62,6 @@ GPUTransformCopier<TTypeList, NDimensions, TTransform, TOutputTransformPrecision
   if (!this->m_InputTransform)
   {
     itkExceptionMacro(<< "Input Transform has not been connected");
-    return;
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified

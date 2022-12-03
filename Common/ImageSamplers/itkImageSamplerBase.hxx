@@ -162,7 +162,6 @@ ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
   if (this->GetNumberOfInputs() == 0)
   {
     itkExceptionMacro(<< "ERROR: Input image not set");
-    return;
   }
 
   /** Get a pointer to the input image. */

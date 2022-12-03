@@ -55,7 +55,6 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
   if (!this->m_InputInterpolator)
   {
     itkExceptionMacro(<< "Input Interpolator has not been connected");
-    return;
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified

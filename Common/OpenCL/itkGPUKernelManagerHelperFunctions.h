@@ -144,14 +144,12 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
   if (kernelManager.IsNull())
   {
     itkGenericExceptionMacro(<< "The kernel manager is NULL.");
-    return;
   }
 
   if (image.IsNull())
   {
     itkGenericExceptionMacro(<< "The ITK image is NULL. "
                                 "Unable to set ITK image information to the kernel manager.");
-    return;
   }
 
   // Set ITK image to the kernelManager

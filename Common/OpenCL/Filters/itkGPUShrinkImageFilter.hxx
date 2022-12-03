@@ -78,12 +78,10 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   if (inPtr.IsNull())
   {
     itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
-    return;
   }
   if (otPtr.IsNull())
   {
     itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
-    return;
   }
 
   // Convert the factor for convenient multiplication
