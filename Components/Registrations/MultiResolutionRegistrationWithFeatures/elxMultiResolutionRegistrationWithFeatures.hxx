@@ -165,7 +165,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageRegions()
       /** Add information to the exception. */
       excp.SetLocation("MultiResolutionRegistrationWithFeatures - BeforeRegistration()");
       std::string err_str = excp.GetDescription();
-      err_str += "\nError occured while updating region info of the fixed image.\n";
+      err_str += "\nError occurred while updating region info of the fixed image.\n";
       excp.SetDescription(err_str);
       /** Pass the exception to an higher level. */
       throw;

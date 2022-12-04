@@ -296,7 +296,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
     if (writeResultImage)
     {
-      itkExceptionMacro("Errors occured during registration: Could not read result image.");
+      itkExceptionMacro("Errors occurred during registration: Could not read result image.");
     }
   }
 

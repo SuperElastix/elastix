@@ -92,7 +92,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
     /** Add information to the exception. */
     excp.SetLocation("DeformationFieldTransform - ReadFromFile()");
     std::string err_str = excp.GetDescription();
-    err_str += "\nError occured while reading the deformationField image.\n";
+    err_str += "\nError occurred while reading the deformationField image.\n";
     excp.SetDescription(err_str);
     /** Pass the exception to an higher level. */
     throw;
