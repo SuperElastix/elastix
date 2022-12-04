@@ -303,7 +303,7 @@ public:
 
   /** Empty ApplyTransform()-function to be overridden. */
   virtual int
-  ApplyTransform() = 0;
+  ApplyTransform(bool doReadTransform) = 0;
 
   /** Function that is called at the very beginning of ElastixTemplate::Run().
    * It checks the command line input arguments.

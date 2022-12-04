@@ -64,6 +64,7 @@ using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
+using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
@@ -1018,6 +1019,84 @@ GTEST_TEST(itkTransformixFilter, SetTranslationTransform)
   for (size_t i = 0; i < expectedNumberOfPoints; ++i)
   {
     EXPECT_EQ(outputPoints[i], inputPoints[i] + translationVector);
+  }
+}
+
+
+GTEST_TEST(itkTransformixFilter, SetCombinationTransform)
+{
+  constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
+
+  const auto numberOfPixels =
+    std::accumulate(imageSize.cbegin(), imageSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  std::mt19937 randomNumberEngine;
+
+  std::generate_n(fixedImage->GetBufferPointer(), numberOfPixels, [&randomNumberEngine] {
+    return std::uniform_real_distribution<>{ 1, 32 }(randomNumberEngine);
+  });
+  std::generate_n(movingImage->GetBufferPointer(), numberOfPixels, [&randomNumberEngine] {
+    return std::uniform_real_distribution<>{ 32, 64 }(randomNumberEngine);
+  });
+
+  EXPECT_NE(*movingImage, *fixedImage);
+
+  for (const bool useInitialTransform : { false, true })
+  {
+    const std::string initialTransformParameterFileName =
+      useInitialTransform ? (GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt") : "";
+
+    for (const char * const transformName : { "AffineTransform",
+                                              "BSplineTransform",
+                                              "EulerTransform",
+                                              "RecursiveBSplineTransform",
+                                              "SimilarityTransform",
+                                              "TranslationTransform" })
+    {
+      elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> registration;
+      registration.SetFixedImage(fixedImage);
+      registration.SetMovingImage(movingImage);
+      registration.SetInitialTransformParameterFileName(initialTransformParameterFileName);
+      registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                              { "AutomaticTransformInitialization", { "false" } },
+                                                              { "ImageSampler", { "Full" } },
+                                                              { "MaximumNumberOfIterations", { "2" } },
+                                                              { "Metric", { "AdvancedNormalizedCorrelation" } },
+                                                              { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                                              { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                                                              { "Transform", { transformName } } }));
+      registration.Update();
+
+      const ImageType & registrationOutputImage = Deref(registration.GetOutput());
+
+      EXPECT_NE(registrationOutputImage, *fixedImage);
+      EXPECT_NE(registrationOutputImage, *movingImage);
+
+      const auto combinationTransform = registration.GetCombinationTransform();
+
+      EXPECT_NE(combinationTransform, nullptr);
+
+      elx::DefaultConstruct<itk::TransformixFilter<ImageType>> transformixFilter{};
+      transformixFilter.SetMovingImage(movingImage);
+      transformixFilter.SetCombinationTransform(combinationTransform);
+      transformixFilter.SetTransformParameterObject(
+        CreateParameterObject({ // Parameters in alphabetic order:
+                                { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
+                                { "Index", ParameterValuesType(ImageDimension, "0") },
+                                { "Origin", ParameterValuesType(ImageDimension, "0") },
+                                { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                                { "Size", ConvertToParameterValues(imageSize) },
+                                { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
+      transformixFilter.Update();
+
+      ExpectEqualImages(Deref(transformixFilter.GetOutput()), registrationOutputImage);
+    }
   }
 }
 
