@@ -355,8 +355,7 @@ ElastixMain::Run()
   /** Check if all component could be created. */
   if (errorCode != 0)
   {
-    xl::xout["error"] << "ERROR:" << std::endl;
-    xl::xout["error"] << "One or more components could not be created." << std::endl;
+    xl::xout["error"] << "ERROR: One or more components could not be created." << std::endl;
     return 1;
   }
 
@@ -534,8 +533,7 @@ ElastixMain::InitDBIndex()
       /** Just a sanity check, probably not needed. */
       if (this->m_FixedImageDimension == 0)
       {
-        xl::xout["error"] << "ERROR:" << std::endl;
-        xl::xout["error"] << "The FixedImageDimension is not given." << std::endl;
+        xl::xout["error"] << "ERROR: The FixedImageDimension is not given." << std::endl;
         return 1;
       }
     }
@@ -611,8 +609,7 @@ ElastixMain::InitDBIndex()
       /** Just a sanity check, probably not needed. */
       if (this->m_MovingImageDimension == 0)
       {
-        xl::xout["error"] << "ERROR:" << std::endl;
-        xl::xout["error"] << "The MovingImageDimension is not given." << std::endl;
+        xl::xout["error"] << "ERROR: The MovingImageDimension is not given." << std::endl;
         return 1;
       }
     }
@@ -624,16 +621,14 @@ ElastixMain::InitDBIndex()
                                                       this->m_MovingImageDimension);
     if (this->m_DBIndex == 0)
     {
-      xl::xout["error"] << "ERROR:" << std::endl;
-      xl::xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
+      xl::xout["error"] << "ERROR: Something went wrong in the ComponentDatabase" << std::endl;
       return 1;
     }
 
   } // end if m_Configuration->Initialized();
   else
   {
-    xl::xout["error"] << "ERROR:" << std::endl;
-    xl::xout["error"] << "The configuration object has not been initialized." << std::endl;
+    xl::xout["error"] << "ERROR: The configuration object has not been initialized." << std::endl;
     return 1;
   }
 
