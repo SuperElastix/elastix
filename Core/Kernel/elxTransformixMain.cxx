@@ -46,6 +46,19 @@ namespace elastix
 int
 TransformixMain::Run()
 {
+  return RunWithTransform(nullptr);
+}
+
+/**
+ * **************************** RunWithTransform *****************************
+ *
+ * Assuming EnterCommandLineParameters has already been invoked.
+ * or that m_Configuration is initialized in another way.
+ */
+
+int
+TransformixMain::RunWithTransform(itk::TransformBase * const transform)
+{
   /** Set process properties. */
   this->SetProcessPriority();
   this->SetMaximumNumberOfThreads();
@@ -113,7 +126,16 @@ TransformixMain::Run()
 
   elastixBase.SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
 
-  elastixBase.SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
+  if (transform)
+  {
+    const auto transformContainer = elx::ElastixBase::ObjectContainerType::New();
+    transformContainer->push_back(transform);
+    elastixBase.SetTransformContainer(transformContainer);
+  }
+  else
+  {
+    elastixBase.SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
+  }
 
   /** Check if all components could be created. */
   if (errorCode != 0)
@@ -135,7 +157,7 @@ TransformixMain::Run()
   /** ApplyTransform! */
   try
   {
-    errorCode = elastixBase.ApplyTransform();
+    errorCode = elastixBase.ApplyTransform(transform == nullptr);
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -185,10 +207,12 @@ TransformixMain::Run(const ArgumentMapType & argmap, const ParameterMapType & in
  */
 
 int
-TransformixMain::Run(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
+TransformixMain::Run(const ArgumentMapType &               argmap,
+                     const std::vector<ParameterMapType> & inputMaps,
+                     itk::TransformBase * const            transform)
 {
   this->EnterCommandLineArguments(argmap, inputMaps);
-  return this->Run();
+  return this->RunWithTransform(transform);
 } // end Run()
 
 

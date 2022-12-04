@@ -255,7 +255,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
 
 template <class TFixedImage, class TMovingImage>
 int
-ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
+ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTransform)
 {
   /** Timer. */
   itk::TimeProbe timer;
@@ -307,7 +307,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform()
   auto & elxTransformBase = *(this->GetElxTransformBase());
 
   elxResamplerBase.ReadFromFile();
-  elxTransformBase.ReadFromFile();
+
+  if (doReadTransform)
+  {
+    elxTransformBase.ReadFromFile();
+  }
 
   /** Tell the user. */
   timer.Stop();

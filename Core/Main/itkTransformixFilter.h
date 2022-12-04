@@ -103,6 +103,8 @@ public:
 
   using MeshType = Mesh<OutputImagePixelType, MovingImageDimension>;
 
+  using TransformType = Transform<double, MovingImageDimension, MovingImageDimension>;
+
   /** Typedefs for images of determinants of spatial Jacobian matrices, and images of spatial Jacobian matrices */
   using SpatialJacobianDeterminantImageType = itk::Image<float, MovingImageDimension>;
   using SpatialJacobianMatrixImageType =
@@ -225,6 +227,8 @@ public:
    * transform object, with additional information from the specified transform parameter object. */
   itkSetConstObjectMacro(Transform, TransformBase);
 
+  itkSetObjectMacro(CombinationTransform, TransformType);
+
   /** Computes the spatial Jacobian determinant for each pixel, and returns an image of the computed values.
   \note Before calling this member function, Update() must be called. */
   SmartPointer<SpatialJacobianDeterminantImageType>
@@ -288,6 +292,8 @@ private:
   typename MeshType::Pointer      m_OutputMesh{ nullptr };
 
   TransformBase::ConstPointer m_Transform;
+
+  SmartPointer<TransformType> m_CombinationTransform;
 };
 
 } // namespace itk

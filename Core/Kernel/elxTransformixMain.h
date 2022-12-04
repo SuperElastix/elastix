@@ -19,6 +19,7 @@
 #define elxTransformixMain_h
 
 #include "elxElastixMain.h"
+#include <itkTransformBase.h>
 
 namespace elastix
 {
@@ -90,8 +91,8 @@ public:
   Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap) override;
 
   /** Run version for using transformix as library. */
-  virtual int
-  Run(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps);
+  int
+  Run(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps, itk::TransformBase * = nullptr);
 
   /** Get and Set input- and outputImage. */
   virtual void
@@ -106,6 +107,11 @@ protected:
    */
   int
   InitDBIndex() override;
+
+private:
+  /** Does Run with an optionally specified Transform. */
+  int
+  RunWithTransform(itk::TransformBase *);
 };
 
 } // end namespace elastix

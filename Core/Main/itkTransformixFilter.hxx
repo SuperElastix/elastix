@@ -265,7 +265,7 @@ TransformixFilter<TMovingImage>::GenerateData()
   unsigned int isError = 0;
   try
   {
-    isError = transformixMain->Run(argumentMap, transformParameterMapVector);
+    isError = transformixMain->Run(argumentMap, transformParameterMapVector, m_CombinationTransform);
 
     if (m_InputMesh)
     {

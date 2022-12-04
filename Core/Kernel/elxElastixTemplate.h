@@ -217,7 +217,7 @@ public:
   Run() override;
 
   int
-  ApplyTransform() override;
+  ApplyTransform(bool doReadTransform) override;
 
   /** The Callback functions. */
   int
