@@ -262,6 +262,10 @@ public:
   SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
   GetNthTransform(const unsigned int n) const;
 
+  /** Returns the combination transformation, produced during the last Update(). */
+  SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+  GetCombinationTransform() const;
+
   /** Converts the specified elastix Transform object to the corresponding ITK Transform object. Returns null if there
    * is no corresponding ITK Transform type. */
   static SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
