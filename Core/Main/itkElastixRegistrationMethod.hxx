@@ -788,6 +788,24 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::RemoveInputsOfType(const D
 }
 
 
+template <typename TFixedImage, typename TMovingImage>
+unsigned int
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfTransforms() const
+{
+  const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
+
+  if ((transformContainer == nullptr) || transformContainer->empty())
+  {
+    return 0;
+  }
+
+  const auto * const elxTransformBase =
+    dynamic_cast<ElastixTransformBaseType *>(transformContainer->front().GetPointer());
+
+  return (elxTransformBase == nullptr) ? 0 : elxTransformBase->GetAsITKBaseType()->GetNumberOfTransforms();
+}
+
+
 } // namespace itk
 
 #endif

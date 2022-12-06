@@ -254,6 +254,10 @@ public:
   itkSetMacro(NumberOfThreads, int);
   itkGetConstMacro(NumberOfThreads, int);
 
+  /** Returns the number of transformations, produced during the last Update(). */
+  unsigned int
+  GetNumberOfTransforms() const;
+
 protected:
   ElastixRegistrationMethod();
 
