@@ -809,7 +809,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfTransforms() co
 template <typename TFixedImage, typename TMovingImage>
 auto
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsigned int n) const
-  -> SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+  -> SmartPointer<TransformType>
 {
   const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
 
@@ -831,8 +831,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsi
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetCombinationTransform() const
-  -> SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetCombinationTransform() const -> SmartPointer<TransformType>
 {
   const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
 
@@ -853,9 +852,8 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetCombinationTransform() 
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-ElastixRegistrationMethod<TFixedImage, TMovingImage>::ConvertToItkTransform(
-  const Transform<double, FixedImageDimension, MovingImageDimension> & elxTransform)
-  -> SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::ConvertToItkTransform(const TransformType & elxTransform)
+  -> SmartPointer<TransformType>
 {
   const auto * const combinationTransform =
     dynamic_cast<const itk::AdvancedCombinationTransform<double, FixedImageDimension> *>(&elxTransform);

@@ -98,6 +98,7 @@ public:
 
   using FixedMaskType = Image<unsigned char, FixedImageDimension>;
   using MovingMaskType = Image<unsigned char, MovingImageDimension>;
+  using TransformType = Transform<double, FixedImageDimension, MovingImageDimension>;
 
   using FixedImageType = TFixedImage;
   using MovingImageType = TMovingImage;
@@ -259,17 +260,17 @@ public:
   GetNumberOfTransforms() const;
 
   /** Returns the nth transformation, produced during the last Update(). */
-  SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+  SmartPointer<TransformType>
   GetNthTransform(const unsigned int n) const;
 
   /** Returns the combination transformation, produced during the last Update(). */
-  SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
+  SmartPointer<TransformType>
   GetCombinationTransform() const;
 
   /** Converts the specified elastix Transform object to the corresponding ITK Transform object. Returns null if there
    * is no corresponding ITK Transform type. */
-  static SmartPointer<Transform<double, FixedImageDimension, MovingImageDimension>>
-  ConvertToItkTransform(const Transform<double, FixedImageDimension, MovingImageDimension> &);
+  static SmartPointer<TransformType>
+  ConvertToItkTransform(const TransformType &);
 
 protected:
   ElastixRegistrationMethod();
