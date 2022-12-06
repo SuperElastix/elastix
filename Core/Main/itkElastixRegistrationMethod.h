@@ -38,6 +38,8 @@
 #include "itkImageSource.h"
 
 #include "elxElastixMain.h"
+#include "elxElastixTemplate.h"
+#include "elxTransformBase.h"
 #include "elxParameterObject.h"
 
 /**
@@ -282,6 +284,8 @@ private:
 
   /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;
+
+  using ElastixTransformBaseType = elx::TransformBase<elx::ElastixTemplate<TFixedImage, TMovingImage>>;
 
   SmartPointer<const elx::ElastixMain> m_ElastixMain{ nullptr };
 
