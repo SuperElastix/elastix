@@ -23,16 +23,51 @@ function(elastix_export_target tgt)
       set_property(TARGET ${tgt} PROPERTY
         OUTPUT_NAME ${tgt}-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR})
     endif()
+
+    if(type STREQUAL "STATIC_LIBRARY")
+      if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
+        install(TARGETS ${tgt}
+          EXPORT ElastixTargets
+          RUNTIME DESTINATION ${ELASTIX_INSTALL_RUNTIME_DIR}
+          LIBRARY DESTINATION ${ELASTIX_INSTALL_LIBRARY_DIR}
+          ARCHIVE DESTINATION ${ELASTIX_INSTALL_ARCHIVE_DIR}
+          COMPONENT Development
+          )
+      endif()
+    else()
+      if(NOT ELASTIX_NO_INSTALL_RUNTIME_LIBRARIES)
+        install(TARGETS ${tgt}
+          EXPORT ElastixTargets
+          RUNTIME DESTINATION ${ELASTIX_INSTALL_RUNTIME_DIR}
+          LIBRARY DESTINATION ${ELASTIX_INSTALL_LIBRARY_DIR}
+          ARCHIVE DESTINATION ${ELASTIX_INSTALL_ARCHIVE_DIR}
+          COMPONENT RuntimeLibraries
+          )
+      endif()
+    endif()
+  elseif(type STREQUAL "EXECUTABLE")
+    if(NOT ELASTIX_NO_INSTALL_RUNTIME_LIBRARIES)
+      install(TARGETS ${tgt}
+        EXPORT ElastixTargets
+        RUNTIME DESTINATION ${ELASTIX_INSTALL_RUNTIME_DIR}
+        LIBRARY DESTINATION ${ELASTIX_INSTALL_LIBRARY_DIR}
+        ARCHIVE DESTINATION ${ELASTIX_INSTALL_ARCHIVE_DIR}
+        COMPONENT Executables
+        )
+    endif()
+  else()
+    if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
+      install(TARGETS ${tgt}
+        EXPORT ElastixTargets
+        RUNTIME DESTINATION ${ELASTIX_INSTALL_RUNTIME_DIR}
+        LIBRARY DESTINATION ${ELASTIX_INSTALL_LIBRARY_DIR}
+        ARCHIVE DESTINATION ${ELASTIX_INSTALL_ARCHIVE_DIR}
+        COMPONENT Development
+        )
+    endif()
   endif()
 
   export(TARGETS ${tgt}
     APPEND FILE "${elastix_BINARY_DIR}/ElastixTargets.cmake"
-    )
-
-  install(TARGETS ${tgt}
-    EXPORT ElastixTargets
-    RUNTIME DESTINATION ${ELASTIX_INSTALL_RUNTIME_DIR}
-    LIBRARY DESTINATION ${ELASTIX_INSTALL_LIBRARY_DIR}
-    ARCHIVE DESTINATION ${ELASTIX_INSTALL_ARCHIVE_DIR}
     )
 endfunction()

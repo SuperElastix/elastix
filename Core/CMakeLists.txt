@@ -93,10 +93,14 @@ source_group("ProgressCommand" FILES ${ProgressCommandFiles})
 configure_file(
   elxVersionMacros.h.in
   elxVersionMacros.h)
-  
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/elxVersionMacros.h
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Core)
+
+if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/elxVersionMacros.h
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Core
+    COMPONENT Development
+    )
+endif()
 #---------------------------------------------------------------------
 
 # Originally based on the answer by Naszta at
@@ -244,26 +248,32 @@ if(NOT WIN32)
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}")
 endif()
 
-install(TARGETS elastix_exe transformix_exe elastix_lib transformix_lib elxCore
-  ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
-  LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
-  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
-  COMPONENT RuntimeLibraries)
+if(NOT ELASTIX_NO_INSTALL_EXECUTABLES)
+  install(TARGETS elastix_exe transformix_exe
+    ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
+    LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
+    RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
+    COMPONENT Executables)
+endif()
 
 # Install all header files.
-install(DIRECTORY
-  ${elastix_SOURCE_DIR}/Common
-  ${elastix_SOURCE_DIR}/Core
-  ${elastix_SOURCE_DIR}/Components
-  DESTINATION ${ELASTIX_INCLUDE_DIR}
-  FILES_MATCHING PATTERN "*.h" PATTERN "*.hxx")
-install(FILES
-  ${elastix_BINARY_DIR}/elxInstallComponentFunctionCalls.h
-  ${elastix_BINARY_DIR}/elxInstallComponentFunctionDeclarations.h
-  ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
-  ${elastix_BINARY_DIR}/ITKFactoryRegistration/itkImageIOFactoryRegisterManager.h
-  ${elastix_BINARY_DIR}/ITKFactoryRegistration/itkTransformIOFactoryRegisterManager.h
-  DESTINATION ${ELASTIX_INCLUDE_DIR})
+if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
+  install(DIRECTORY
+    ${elastix_SOURCE_DIR}/Common
+    ${elastix_SOURCE_DIR}/Core
+    ${elastix_SOURCE_DIR}/Components
+    DESTINATION ${ELASTIX_INCLUDE_DIR}
+    COMPONENT Development
+    FILES_MATCHING PATTERN "*.h" PATTERN "*.hxx")
+  install(FILES
+    ${elastix_BINARY_DIR}/elxInstallComponentFunctionCalls.h
+    ${elastix_BINARY_DIR}/elxInstallComponentFunctionDeclarations.h
+    ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
+    ${elastix_BINARY_DIR}/ITKFactoryRegistration/itkImageIOFactoryRegisterManager.h
+    ${elastix_BINARY_DIR}/ITKFactoryRegistration/itkTransformIOFactoryRegisterManager.h
+    DESTINATION ${ELASTIX_INCLUDE_DIR}
+    COMPONENT Development)
+endif()
 
 #---------------------------------------------------------------------
 # The Core/Install directory contains a CMakeLists file for

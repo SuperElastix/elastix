@@ -48,10 +48,3 @@ generate_export_header(ANNlib
 
 # Group in IDE's like Visual Studio
 set_property(TARGET ANNlib PROPERTY FOLDER "libraries")
-
-# Install
-install(TARGETS ANNlib
-  ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
-  LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
-  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
-  COMPONENT RuntimeLibraries)

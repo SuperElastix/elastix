@@ -20,10 +20,13 @@ set(xouthfiles
 
 # a lib defining the global variable xout.
 add_library(xoutlib STATIC ${xoutcxxfiles} ${xouthfiles})
-install(TARGETS xoutlib
-  ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
-  LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
-  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR})
+if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
+  install(TARGETS xoutlib
+    ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
+    LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
+    RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
+    COMPONENT Development)
+endif()
 
 # Group in IDE's like Visual Studio
 set_property(TARGET xoutlib PROPERTY FOLDER "libraries")
