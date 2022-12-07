@@ -24,21 +24,13 @@
 // Setup symbol export
 #define ITKOpenCL_HIDDEN ITK_ABI_HIDDEN
 
-#if !defined(ITKSTATIC)
-#  ifdef ITKOpenCL_EXPORTS
-#    define ITKOpenCL_EXPORT ITK_ABI_EXPORT
-#  else
-#    define ITKOpenCL_EXPORT ITK_ABI_IMPORT
-#  endif /* ITKOpenCL_EXPORTS */
-#else
 /* ITKOpenCL is build as a static lib */
-#  if __GNUC__ >= 4
+#if __GNUC__ >= 4
 // Don't hide symbols in the static ITKOpenCL library in case
 // -fvisibility=hidden is used
-#    define ITKOpenCL_EXPORT ITK_ABI_EXPORT
-#  else
-#    define ITKOpenCL_EXPORT
-#  endif
+#  define ITKOpenCL_EXPORT ITK_ABI_EXPORT
+#else
+#  define ITKOpenCL_EXPORT
 #endif
 
 #endif /* itkOpenCLExport_h */
