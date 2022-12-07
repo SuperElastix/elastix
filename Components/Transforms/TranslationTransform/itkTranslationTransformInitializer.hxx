@@ -60,14 +60,8 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initiali
   }
 
   // If images come from filters, then update those filters.
-  if (this->m_FixedImage->GetSource())
-  {
-    this->m_FixedImage->GetSource()->Update();
-  }
-  if (this->m_MovingImage->GetSource())
-  {
-    this->m_MovingImage->GetSource()->Update();
-  }
+  this->m_FixedImage->UpdateSource();
+  this->m_MovingImage->UpdateSource();
 
   OutputVectorType translationVector;
 

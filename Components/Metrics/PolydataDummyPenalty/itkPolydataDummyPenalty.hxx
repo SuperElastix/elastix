@@ -62,10 +62,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
   {
     FixedMeshConstPointer fixedMesh = this->m_FixedMeshContainer->ElementAt(meshId);
     // If the mesh is provided by a source, update the source.
-    if (fixedMesh->GetSource())
-    {
-      fixedMesh->GetSource()->Update();
-    }
+    fixedMesh->UpdateSource();
 
     MeshPointsContainerConstPointer fixedPoints = fixedMesh->GetPoints();
     const unsigned int              numberOfPoints = fixedPoints->Size();

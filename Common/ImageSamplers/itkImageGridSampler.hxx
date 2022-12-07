@@ -145,10 +145,8 @@ ImageGridSampler<TInputImage>::GenerateData()
   } // end if no mask
   else
   {
-    if (mask->GetSource())
-    {
-      mask->GetSource()->Update();
-    }
+    mask->UpdateSource();
+
     /* Ugly loop over the grid; checks also if a sample falls within the mask. */
     for (unsigned int t = 0; t < dim_t; ++t)
     {
