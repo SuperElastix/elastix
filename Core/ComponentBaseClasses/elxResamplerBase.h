@@ -23,6 +23,7 @@
 
 #include "elxBaseComponentSE.h"
 #include "itkResampleImageFilter.h"
+#include "itkCastImageFilter.h"
 #include "elxProgressCommand.h"
 
 namespace elastix
