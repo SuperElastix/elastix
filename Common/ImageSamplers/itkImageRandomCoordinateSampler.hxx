@@ -91,10 +91,8 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   else
   {
     /** Update the mask. */
-    if (mask->GetSource())
-    {
-      mask->GetSource()->Update();
-    }
+    mask->UpdateSource();
+
     /** Set up some variable that are used to make sure we are not forever
      * walking around on this image, trying to look for valid samples. */
     unsigned long numberOfSamplesTried = 0;

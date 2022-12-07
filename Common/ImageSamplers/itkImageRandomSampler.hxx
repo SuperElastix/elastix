@@ -79,10 +79,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
   else
   {
     /** Update the mask. */
-    if (mask->GetSource())
-    {
-      mask->GetSource()->Update();
-    }
+    mask->UpdateSource();
 
     /** Make sure we are not eternally trying to find samples: */
     randIter.SetNumberOfSamples(10 * this->GetNumberOfSamples());
