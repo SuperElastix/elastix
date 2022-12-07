@@ -204,6 +204,13 @@ if(NOT ELASTIX_INSTALL_PACKAGE_DIR)
 endif()
 
 #---------------------------------------------------------------------
+# Provide options to avoid installing runtime or development components
+option(ELASTIX_NO_INSTALL_RUNTIME_LIBRARIES "Do not install runtime libraries" OFF)
+option(ELASTIX_NO_INSTALL_EXECUTABLES "Do not install executables" OFF)
+option(ELASTIX_NO_INSTALL_DEVELOPMENT "Do not install development headers and static libraries" OFF)
+mark_as_advanced(ELASTIX_NO_INSTALL_EXECUTABLES ELASTIX_NO_INSTALL_RUNTIME_LIBRARIES ELASTIX_NO_INSTALL_DEVELOPMENT)
+
+#---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
 mark_as_advanced(ELASTIX_USE_MEVISDICOMTIFF)
 option(ELASTIX_USE_MEVISDICOMTIFF
@@ -637,15 +644,17 @@ configure_file(ElastixConfig.cmake.in "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECT
 configure_file(ElastixConfigVersion.cmake.in ElastixConfigVersion.cmake @ONLY)
 configure_file(UseElastix.cmake.in UseElastix.cmake @ONLY)
 
-install(FILES
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/ElastixConfig.cmake"
-  "${PROJECT_BINARY_DIR}/ElastixConfigVersion.cmake"
-  "${PROJECT_BINARY_DIR}/UseElastix.cmake"
-  DESTINATION ${ELASTIX_INSTALL_PACKAGE_DIR}
-  COMPONENT Development
-  )
+if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
+  install(FILES
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/ElastixConfig.cmake"
+    "${PROJECT_BINARY_DIR}/ElastixConfigVersion.cmake"
+    "${PROJECT_BINARY_DIR}/UseElastix.cmake"
+    DESTINATION ${ELASTIX_INSTALL_PACKAGE_DIR}
+    COMPONENT Development
+    )
 
-install(EXPORT ElastixTargets
-  DESTINATION ${ELASTIX_INSTALL_PACKAGE_DIR}
-  COMPONENT Development
-  )
+  install(EXPORT ElastixTargets
+    DESTINATION ${ELASTIX_INSTALL_PACKAGE_DIR}
+    COMPONENT Development
+    )
+endif()
