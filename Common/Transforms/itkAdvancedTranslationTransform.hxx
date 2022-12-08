@@ -35,6 +35,8 @@
 
 #include "itkAdvancedTranslationTransform.h"
 
+#include <numeric> // For iota.
+
 namespace itk
 {
 
@@ -44,10 +46,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::AdvancedTranslationTrans
   : Superclass(ParametersDimension)
 {
   /** Nonzero Jacobian indices, for GetJacobian */
-  for (unsigned int i = 0; i < ParametersDimension; ++i)
-  {
-    this->m_NonZeroJacobianIndices[i] = i;
-  }
+  std::iota(m_NonZeroJacobianIndices.begin(), m_NonZeroJacobianIndices.end(), 0u);
 
   /** m_SpatialHessian is automatically initialized with zeros */
   this->m_HasNonZeroSpatialHessian = false;
