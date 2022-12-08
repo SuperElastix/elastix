@@ -29,6 +29,8 @@
 #include "itkMaskImageFilter.h"
 #include "itkConstantPadImageFilter.h"
 
+#include <numeric> // For iota.
+
 namespace itk
 {
 
@@ -719,10 +721,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   {
     // Return some dummy
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -745,10 +744,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   {
     // Return some dummy
     nonZeroJacobianIndices.resize(m_Trans[lidx]->GetNumberOfNonZeroJacobianIndices());
-    for (unsigned int i = 0; i < m_Trans[lidx]->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -926,10 +922,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       jsj[i].Fill(0.0);
     }
     nonZeroJacobianIndices.resize(nnzji);
-    for (unsigned int i = 0; i < nnzji; ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -1034,10 +1027,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       sh[i].Fill(0.0);
     }
     nonZeroJacobianIndices.resize(nnzji);
-    for (unsigned int i = 0; i < nnzji; ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 

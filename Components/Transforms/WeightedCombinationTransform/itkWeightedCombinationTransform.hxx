@@ -20,6 +20,8 @@
 
 #include "itkWeightedCombinationTransform.h"
 
+#include <numeric> // For iota.
+
 namespace itk
 {
 
@@ -66,10 +68,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
   if (nrParams != this->m_NonZeroJacobianIndices.size())
   {
     this->m_NonZeroJacobianIndices.resize(nrParams);
-    for (unsigned int i = 0; i < nrParams; ++i)
-    {
-      this->m_NonZeroJacobianIndices[i] = i;
-    }
+    std::iota(m_NonZeroJacobianIndices.begin(), m_NonZeroJacobianIndices.end(), 0u);
   }
 
   this->Modified();

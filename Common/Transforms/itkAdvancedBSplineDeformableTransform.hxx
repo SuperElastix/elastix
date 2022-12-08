@@ -40,7 +40,9 @@
 #include "itkImageScanlineConstIterator.h"
 #include "itkIdentityTransform.h"
 #include <vnl/vnl_math.h>
+
 #include <array>
+#include <numeric> // For iota.
 #include <vector>
 #include <algorithm> // For std::copy_n.
 
@@ -340,10 +342,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   if (!this->InsideValidRegion(cindex))
   {
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -404,10 +403,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
   if (!this->InsideValidRegion(cindex))
   {
     nonZeroJacobianIndices.resize(nnzji);
-    for (NumberOfParametersType i = 0; i < nnzji; ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     imageJacobian.Fill(0.0);
     return;
   }
@@ -686,10 +682,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       jsj[i].Fill(0.0);
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -784,10 +777,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       jsj[i].Fill(0.0);
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -939,10 +929,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       }
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -1058,10 +1045,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       sh[i].Fill(0.0);
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 

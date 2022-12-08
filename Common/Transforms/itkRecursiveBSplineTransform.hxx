@@ -20,6 +20,7 @@
 
 #include "itkRecursiveBSplineTransform.h"
 
+#include <numeric> // For iota.
 
 namespace itk
 {
@@ -120,10 +121,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
   if (!this->InsideValidRegion(cindex))
   {
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -174,10 +172,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
   if (!this->InsideValidRegion(cindex))
   {
     nonZeroJacobianIndices.resize(nnzji);
-    for (NumberOfParametersType i = 0; i < nnzji; ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -412,10 +407,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
       jsj[i].Fill(0.0);
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 
@@ -501,10 +493,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
       }
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
-    for (NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i)
-    {
-      nonZeroJacobianIndices[i] = i;
-    }
+    std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
     return;
   }
 

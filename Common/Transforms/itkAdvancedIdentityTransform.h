@@ -44,6 +44,8 @@
 
 #include "itkObjectFactory.h"
 
+#include <numeric> // For iota.
+
 namespace itk
 {
 
@@ -310,10 +312,7 @@ protected:
 
     /** Nonzero Jacobian indices, for GetJacobian. */
     this->m_NonZeroJacobianIndices.resize(ParametersDimension);
-    for (unsigned int i = 0; i < ParametersDimension; ++i)
-    {
-      this->m_NonZeroJacobianIndices[i] = i;
-    }
+    std::iota(m_NonZeroJacobianIndices.begin(), m_NonZeroJacobianIndices.end(), 0u);
 
     /** Set to correct size. The elements are automatically initialized to 0. */
     this->m_HasNonZeroSpatialHessian = false;
