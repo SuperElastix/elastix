@@ -92,40 +92,39 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   FlatDirectionCosinesType   fixedImageOriginalDirection;
 
   // Split inputs into separate containers
-  const NameArrayType inputNames = this->GetInputNames();
-  for (unsigned int i = 0; i < inputNames.size(); ++i)
+  for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType("FixedImage", inputNames[i]))
+    if (this->IsInputOfType("FixedImage", inputName))
     {
-      fixedImageContainer->push_back(this->ProcessObject::GetInput(inputNames[i]));
+      fixedImageContainer->push_back(this->ProcessObject::GetInput(inputName));
       continue;
     }
 
-    if (this->IsInputOfType("MovingImage", inputNames[i]))
+    if (this->IsInputOfType("MovingImage", inputName))
     {
-      movingImageContainer->push_back(this->ProcessObject::GetInput(inputNames[i]));
+      movingImageContainer->push_back(this->ProcessObject::GetInput(inputName));
       continue;
     }
 
-    if (this->IsInputOfType("FixedMask", inputNames[i]))
+    if (this->IsInputOfType("FixedMask", inputName))
     {
       if (fixedMaskContainer.IsNull())
       {
         fixedMaskContainer = DataObjectContainerType::New();
       }
 
-      fixedMaskContainer->push_back(this->ProcessObject::GetInput(inputNames[i]));
+      fixedMaskContainer->push_back(this->ProcessObject::GetInput(inputName));
       continue;
     }
 
-    if (this->IsInputOfType("MovingMask", inputNames[i]))
+    if (this->IsInputOfType("MovingMask", inputName))
     {
       if (movingMaskContainer.IsNull())
       {
         movingMaskContainer = DataObjectContainerType::New();
       }
 
-      movingMaskContainer->push_back(this->ProcessObject::GetInput(inputNames[i]));
+      movingMaskContainer->push_back(this->ProcessObject::GetInput(inputName));
     }
   }
 
@@ -434,15 +433,14 @@ auto
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedImage(const unsigned int index) const
   -> const FixedImageType *
 {
-  unsigned int  n = 0;
-  NameArrayType inputNames = this->GetInputNames();
-  for (unsigned int i = 0; i < inputNames.size(); ++i)
+  unsigned int n = 0;
+  for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType("FixedImage", inputNames[i]))
+    if (this->IsInputOfType("FixedImage", inputName))
     {
       if (index == n)
       {
-        return itkDynamicCastInDebugMode<const TFixedImage *>(this->ProcessObject::GetInput(inputNames[i]));
+        return itkDynamicCastInDebugMode<const TFixedImage *>(this->ProcessObject::GetInput(inputName));
       }
 
       ++n;
@@ -504,15 +502,14 @@ auto
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingImage(const unsigned int index) const
   -> const MovingImageType *
 {
-  unsigned int  n = 0;
-  NameArrayType inputNames = this->GetInputNames();
-  for (unsigned int i = 0; i < inputNames.size(); ++i)
+  unsigned int n = 0;
+  for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType("MovingImage", inputNames[i]))
+    if (this->IsInputOfType("MovingImage", inputName))
     {
       if (index == n)
       {
-        return itkDynamicCastInDebugMode<const TMovingImage *>(this->ProcessObject::GetInput(inputNames[i]));
+        return itkDynamicCastInDebugMode<const TMovingImage *>(this->ProcessObject::GetInput(inputName));
       }
 
       ++n;
@@ -562,15 +559,14 @@ auto
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedMask(const unsigned int index) const
   -> const FixedMaskType *
 {
-  unsigned int  n = 0;
-  NameArrayType inputNames = this->GetInputNames();
-  for (unsigned int i = 0; i < inputNames.size(); ++i)
+  unsigned int n = 0;
+  for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType("FixedMask", inputNames[i]))
+    if (this->IsInputOfType("FixedMask", inputName))
     {
       if (index == n)
       {
-        return itkDynamicCastInDebugMode<const FixedMaskType *>(this->ProcessObject::GetInput(inputNames[i]));
+        return itkDynamicCastInDebugMode<const FixedMaskType *>(this->ProcessObject::GetInput(inputName));
       }
 
       ++n;
@@ -628,15 +624,14 @@ auto
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingMask(const unsigned int index) const
   -> const MovingMaskType *
 {
-  unsigned int  n = 0;
-  NameArrayType inputNames = this->GetInputNames();
-  for (unsigned int i = 0; i < inputNames.size(); ++i)
+  unsigned int n = 0;
+  for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType("MovingMask", inputNames[i]))
+    if (this->IsInputOfType("MovingMask", inputName))
     {
       if (index == n)
       {
-        return itkDynamicCastInDebugMode<const MovingMaskType *>(this->ProcessObject::GetInput(inputNames[i]));
+        return itkDynamicCastInDebugMode<const MovingMaskType *>(this->ProcessObject::GetInput(inputName));
       }
 
       ++n;
@@ -759,11 +754,10 @@ unsigned int
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfInputsOfType(
   const DataObjectIdentifierType & inputType) const
 {
-  unsigned int  n = 0;
-  NameArrayType inputNames = this->GetInputNames();
-  for (unsigned int i = 0; i < inputNames.size(); ++i)
+  unsigned int n = 0;
+  for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType(inputType, inputNames[i]))
+    if (this->IsInputOfType(inputType, inputName))
     {
       ++n;
     }
@@ -777,12 +771,11 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::RemoveInputsOfType(const DataObjectIdentifierType & inputType)
 {
-  NameArrayType inputNames = this->GetInputNames();
-  for (unsigned int i = 0; i < inputNames.size(); ++i)
+  for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType(inputType, inputNames[i]))
+    if (this->IsInputOfType(inputType, inputName))
     {
-      this->RemoveInput(inputNames[i]);
+      this->RemoveInput(inputName);
     }
   }
 }
