@@ -162,9 +162,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    xl::xout["error"] << '\n'
-                      << "--------------- Exception ---------------\n"
-                      << excp << "-----------------------------------------" << std::endl;
+    xl::xout["error"] << "Exception while trying to apply a tranformation:\n" << excp << std::endl;
     errorCode = 1;
   }
 
