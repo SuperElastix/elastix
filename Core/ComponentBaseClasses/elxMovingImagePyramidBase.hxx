@@ -104,9 +104,9 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
   }
   /** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
 
-  /** Create a default movingSchedule. Set the numberOfLevels first. */
+  /** Create a default schedule. Set the numberOfLevels first. */
   this->GetAsITKBaseType()->SetNumberOfLevels(numberOfResolutions);
-  ScheduleType movingSchedule = this->GetAsITKBaseType()->GetSchedule();
+  ScheduleType schedule = this->GetAsITKBaseType()->GetSchedule();
 
   /** Set the movingPyramidSchedule to the MovingImagePyramidSchedule given
    * in the parameter-file. The following parameter file fields can be used:
@@ -121,11 +121,10 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * ImageDimension + j;
-      ijfound |= this->m_Configuration->ReadParameter(movingSchedule[i][j], "ImagePyramidSchedule", entrynr, false);
+      ijfound |= this->m_Configuration->ReadParameter(schedule[i][j], "ImagePyramidSchedule", entrynr, false);
+      ijfound |= this->m_Configuration->ReadParameter(schedule[i][j], "MovingImagePyramidSchedule", entrynr, false);
       ijfound |=
-        this->m_Configuration->ReadParameter(movingSchedule[i][j], "MovingImagePyramidSchedule", entrynr, false);
-      ijfound |= this->m_Configuration->ReadParameter(
-        movingSchedule[i][j], "Schedule", this->GetComponentLabel(), entrynr, -1, false);
+        this->m_Configuration->ReadParameter(schedule[i][j], "Schedule", this->GetComponentLabel(), entrynr, -1, false);
 
       /** Remember if for at least one schedule element no value could be found. */
       found &= ijfound;
@@ -141,7 +140,7 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
   else
   {
     /** Set the schedule into this class. */
-    this->GetAsITKBaseType()->SetSchedule(movingSchedule);
+    this->GetAsITKBaseType()->SetSchedule(schedule);
   }
 
 } // end SetMovingSchedule()

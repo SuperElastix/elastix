@@ -102,9 +102,9 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
     numberOfResolutions = 1;
   }
 
-  /** Create a default fixedSchedule. Set the numberOfLevels first. */
+  /** Create a default schedule. Set the numberOfLevels first. */
   this->GetAsITKBaseType()->SetNumberOfLevels(numberOfResolutions);
-  ScheduleType fixedSchedule = this->GetAsITKBaseType()->GetSchedule();
+  ScheduleType schedule = this->GetAsITKBaseType()->GetSchedule();
 
   /** Set the fixedPyramidSchedule to the FixedImagePyramidSchedule given
    * in the parameter-file. The following parameter file fields can be used:
@@ -119,10 +119,10 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * ImageDimension + j;
-      ijfound |= this->m_Configuration->ReadParameter(fixedSchedule[i][j], "ImagePyramidSchedule", entrynr, false);
-      ijfound |= this->m_Configuration->ReadParameter(fixedSchedule[i][j], "FixedImagePyramidSchedule", entrynr, false);
-      ijfound |= this->m_Configuration->ReadParameter(
-        fixedSchedule[i][j], "Schedule", this->GetComponentLabel(), entrynr, -1, false);
+      ijfound |= this->m_Configuration->ReadParameter(schedule[i][j], "ImagePyramidSchedule", entrynr, false);
+      ijfound |= this->m_Configuration->ReadParameter(schedule[i][j], "FixedImagePyramidSchedule", entrynr, false);
+      ijfound |=
+        this->m_Configuration->ReadParameter(schedule[i][j], "Schedule", this->GetComponentLabel(), entrynr, -1, false);
 
       /** Remember if for at least one schedule element no value could be found. */
       found &= ijfound;
@@ -138,7 +138,7 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
   else
   {
     /** Set the schedule into this class. */
-    this->GetAsITKBaseType()->SetSchedule(fixedSchedule);
+    this->GetAsITKBaseType()->SetSchedule(schedule);
   }
 
 } // end SetFixedSchedule()
