@@ -42,7 +42,7 @@ FixedGenericPyramid<TElastix>::SetFixedSchedule()
     numberOfResolutions = 1;
   }
 
-  /** Create a default fixedSchedule. Set the numberOfLevels first. */
+  /** Create a default schedule. Set the numberOfLevels first. */
   this->GetAsITKBaseType()->SetNumberOfLevels(numberOfResolutions);
   RescaleScheduleType   rescaleSchedule = this->GetRescaleSchedule();
   SmoothingScheduleType smoothingSchedule = this->GetSmoothingSchedule();
