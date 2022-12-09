@@ -92,7 +92,7 @@ void
 FixedImagePyramidBase<TElastix>::SetFixedSchedule()
 {
   /** Get the ImageDimension. */
-  const unsigned int FixedImageDimension = InputImageType::ImageDimension;
+  const unsigned int ImageDimension = InputImageType::ImageDimension;
 
   /** Read numberOfResolutions. */
   unsigned int numberOfResolutions = 3;
@@ -115,10 +115,10 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
   bool found = true;
   for (unsigned int i = 0; i < numberOfResolutions; ++i)
   {
-    for (unsigned int j = 0; j < FixedImageDimension; ++j)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       bool               ijfound = false;
-      const unsigned int entrynr = i * FixedImageDimension + j;
+      const unsigned int entrynr = i * ImageDimension + j;
       ijfound |= this->m_Configuration->ReadParameter(fixedSchedule[i][j], "ImagePyramidSchedule", entrynr, false);
       ijfound |= this->m_Configuration->ReadParameter(fixedSchedule[i][j], "FixedImagePyramidSchedule", entrynr, false);
       ijfound |= this->m_Configuration->ReadParameter(
@@ -127,7 +127,7 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
       /** Remember if for at least one schedule element no value could be found. */
       found &= ijfound;
 
-    } // end for FixedImageDimension
+    } // end for ImageDimension
   }   // end for numberOfResolutions
 
   if (!found && this->GetConfiguration()->GetPrintErrorMessages())
