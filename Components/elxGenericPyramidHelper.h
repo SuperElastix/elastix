@@ -109,6 +109,16 @@ public:
     {
       /** Set the rescale schedule into this class. */
       pyramid.SetRescaleSchedule(rescaleSchedule);
+
+      const auto newSchedule = pyramid.GetRescaleSchedule();
+
+      if (newSchedule != rescaleSchedule)
+      {
+        xl::xout["warning"] << "WARNING: the " << pyramidAdjective
+                            << " pyramid rescale schedule is adjusted!\n  Input schedule from configuration:\n"
+                            << rescaleSchedule << "\n  Adjusted schedule:\n"
+                            << newSchedule << std::endl;
+      }
     }
 
     /** Set the schedule for smoothing (sigmas).
@@ -144,6 +154,16 @@ public:
     {
       /** Set the rescale schedule into this class. */
       pyramid.SetSmoothingSchedule(smoothingSchedule);
+
+      const auto newSchedule = pyramid.GetSmoothingSchedule();
+
+      if (newSchedule != smoothingSchedule)
+      {
+        xl::xout["warning"] << "WARNING: the " << pyramidAdjective
+                            << " pyramid smoothing schedule is adjusted!\n  Input schedule from configuration:\n"
+                            << smoothingSchedule << "\n  Adjusted schedule:\n"
+                            << newSchedule << std::endl;
+      }
     }
 
     // configuration.CountNumberOfParameterEntries( "ImagePyramidRescaleSchedule" );
