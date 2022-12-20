@@ -52,6 +52,7 @@ using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::ConvertToOffset;
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
+using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
 using elx::CoreMainGTestUtilities::Deref;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
@@ -348,6 +349,81 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 
     const auto transformParameters = GetTransformParametersFromFilter(registration);
     EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
+  }
+}
+
+
+// Tests registering two images, having a custom "ResultImageName" specified.
+GTEST_TEST(itkElastixRegistrationMethod, ResultImageName)
+{
+  constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType translationOffset{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  const std::string rootOutputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
+  itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
+
+  const auto        numberOfResolutions = 2u;
+  const std::string customResultImageName = "CustomResultImageName";
+
+  const auto getOutputSubdirectoryPath = [rootOutputDirectoryPath](const bool useCustomResultImageName) {
+    return rootOutputDirectoryPath + '/' +
+           (useCustomResultImageName ? "DefaultResultImageName" : "CustomResultImageName");
+  };
+
+  for (const bool useCustomResultImageName : { true, false })
+  {
+    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+
+    const std::string outputSubdirectoryPath = getOutputSubdirectoryPath(useCustomResultImageName);
+    itk::FileTools::CreateDirectory(outputSubdirectoryPath);
+    registration.SetOutputDirectory(outputSubdirectoryPath);
+    registration.SetFixedImage(fixedImage);
+    registration.SetMovingImage(movingImage);
+
+    auto parameterMap = CreateParameterMap({ // Parameters in alphabetic order:
+                                             { "ImageSampler", "Full" },
+                                             { "MaximumNumberOfIterations", "2" },
+                                             { "Metric", "AdvancedNormalizedCorrelation" },
+                                             { "NumberOfResolutions", std::to_string(numberOfResolutions) },
+                                             { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                             { "Transform", "TranslationTransform" },
+                                             { "WriteResultImageAfterEachResolution", "true" } });
+
+    if (useCustomResultImageName)
+    {
+      parameterMap["ResultImageName"] = { customResultImageName };
+    }
+    const auto parameterObject = elx::ParameterObject::New();
+    parameterObject->SetParameterMap(parameterMap);
+    registration.SetParameterObject(parameterObject);
+    registration.Update();
+  }
+
+  for (unsigned int resolutionNumber{ 0 }; resolutionNumber < numberOfResolutions; ++resolutionNumber)
+  {
+    const auto fileNamePostFix = ".0.R" + std::to_string(resolutionNumber) + ".mhd";
+    const auto expectedImage =
+      itk::ReadImage<ImageType>(getOutputSubdirectoryPath(false) + "/result" + fileNamePostFix);
+    const auto actualImage =
+      itk::ReadImage<ImageType>(getOutputSubdirectoryPath(true) + '/' + customResultImageName + fileNamePostFix);
+
+    ASSERT_NE(expectedImage, nullptr);
+    ASSERT_NE(actualImage, nullptr);
+    EXPECT_EQ(*actualImage, *expectedImage);
   }
 }
 

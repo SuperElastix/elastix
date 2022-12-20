@@ -249,6 +249,53 @@ class TransformixTestCase(unittest.TestCase):
             actual_pixel_data, expected_pixel_data, atol=max_absolute_difference, rtol=0
         )
 
+    def test_custom_result_image_name(self) -> None:
+        """Tests the ResultImageName parameter"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+        data_directory_path = source_directory_path / ".." / "Data"
+        input_file_path = data_directory_path / "2D_2x2_square_object_at_(2,1).mhd";
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-in",
+                str(input_file_path),
+                "-tp",
+                str(parameter_directory_path / "Translation(1,-2).txt"),
+                "-out",
+                str(output_directory_path),
+            ],
+            capture_output=True,
+            check=True,
+        )
+
+        expected_image = sitk.ReadImage(str(output_directory_path / "result.mhd"))
+
+        subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-in",
+                str(input_file_path),
+                "-tp",
+                str(parameter_directory_path / "Translation(1,-2)-CustomResultImageName.txt"),
+                "-out",
+                str(output_directory_path),
+            ],
+            capture_output=True,
+            check=True,
+        )
+
+        actual_image = sitk.ReadImage(str(output_directory_path / "CustomResultImageName.mhd"))
+
+        self.assert_equal_image_info(actual_image, expected_image)
+        np.testing.assert_array_equal(
+            sitk.GetArrayFromImage(actual_image),
+            sitk.GetArrayFromImage(expected_image),
+        )
+
     def test_translation_of_points(self) -> None:
         """Tests translation of points"""
 
