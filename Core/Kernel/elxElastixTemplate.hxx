@@ -392,10 +392,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
       const Configuration & configuration = *Superclass::m_Configuration;
 
       /** Create a name for the final result. */
+      const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
       std::string resultImageFormat = "mhd";
       configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
       std::ostringstream makeFileName;
-      makeFileName << configuration.GetCommandLineArgument("-out") << "result." << resultImageFormat;
+      makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.' << resultImageFormat;
 
       elxResamplerBase.ResampleAndWriteResultImage(makeFileName.str().c_str());
     }
