@@ -129,50 +129,7 @@ GenerateFileNameContainer(const Configuration & configuration,
  * ********************* Constructor ****************************
  */
 
-ElastixBase::ElastixBase()
-{
-  /** Initialize. */
-  this->m_Configuration = nullptr;
-  this->m_DBIndex = 0;
-
-  /** The default output precision of elxout is set to 6. */
-  this->m_DefaultOutputPrecision = 6;
-
-  /** Create the component containers. */
-  this->m_FixedImagePyramidContainer = ObjectContainerType::New();
-  this->m_MovingImagePyramidContainer = ObjectContainerType::New();
-  this->m_InterpolatorContainer = ObjectContainerType::New();
-  this->m_ImageSamplerContainer = ObjectContainerType::New();
-  this->m_MetricContainer = ObjectContainerType::New();
-  this->m_OptimizerContainer = ObjectContainerType::New();
-  this->m_RegistrationContainer = ObjectContainerType::New();
-  this->m_ResamplerContainer = ObjectContainerType::New();
-  this->m_ResampleInterpolatorContainer = ObjectContainerType::New();
-  this->m_TransformContainer = ObjectContainerType::New();
-
-  /** Create image and mask containers. */
-  this->m_FixedImageContainer = DataObjectContainerType::New();
-  this->m_MovingImageContainer = DataObjectContainerType::New();
-  this->m_FixedImageFileNameContainer = FileNameContainerType::New();
-  this->m_MovingImageFileNameContainer = FileNameContainerType::New();
-
-  this->m_FixedMaskContainer = DataObjectContainerType::New();
-  this->m_MovingMaskContainer = DataObjectContainerType::New();
-  this->m_FixedMaskFileNameContainer = FileNameContainerType::New();
-  this->m_MovingMaskFileNameContainer = FileNameContainerType::New();
-
-  this->m_ResultImageContainer = DataObjectContainerType::New();
-
-  /** Initialize initialTransform and final transform. */
-  this->m_InitialTransform = nullptr;
-  this->m_FinalTransform = nullptr;
-
-  /** From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
-   * backward compatability. From Elastix 4.8: set it to true by default.*/
-  this->m_UseDirectionCosines = true;
-
-} // end Constructor
-
+ElastixBase::ElastixBase() = default;
 
 /**
  * ********************* GenerateDataObjectContainer ***********************

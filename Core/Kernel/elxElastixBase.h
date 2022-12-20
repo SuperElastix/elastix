@@ -399,8 +399,8 @@ protected:
   ElastixBase();
   ~ElastixBase() override = default;
 
-  ConfigurationPointer m_Configuration;
-  DBIndexType          m_DBIndex;
+  ConfigurationPointer m_Configuration{ nullptr };
+  DBIndexType          m_DBIndex{ 0 };
 
   FlatDirectionCosinesType m_OriginalFixedImageDirection;
 
@@ -501,46 +501,49 @@ protected:
 private:
   xl::xoutrow m_IterationInfo;
 
-  int m_DefaultOutputPrecision;
+  /** The default output precision of elxout is set to 6. */
+  int m_DefaultOutputPrecision{ 6 };
 
   /** The component containers. These containers contain
    * SmartPointer's to itk::Object.
    */
-  ObjectContainerPointer m_FixedImagePyramidContainer;
-  ObjectContainerPointer m_MovingImagePyramidContainer;
-  ObjectContainerPointer m_InterpolatorContainer;
-  ObjectContainerPointer m_ImageSamplerContainer;
-  ObjectContainerPointer m_MetricContainer;
-  ObjectContainerPointer m_OptimizerContainer;
-  ObjectContainerPointer m_RegistrationContainer;
-  ObjectContainerPointer m_ResamplerContainer;
-  ObjectContainerPointer m_ResampleInterpolatorContainer;
-  ObjectContainerPointer m_TransformContainer;
+  ObjectContainerPointer m_FixedImagePyramidContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_MovingImagePyramidContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_InterpolatorContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_ImageSamplerContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_MetricContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_OptimizerContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_RegistrationContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_ResamplerContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_ResampleInterpolatorContainer{ ObjectContainerType::New() };
+  ObjectContainerPointer m_TransformContainer{ ObjectContainerType::New() };
 
   /** The Image and Mask containers. These are stored as pointers to itk::DataObject. */
-  DataObjectContainerPointer m_FixedImageContainer;
-  DataObjectContainerPointer m_MovingImageContainer;
-  DataObjectContainerPointer m_FixedMaskContainer;
-  DataObjectContainerPointer m_MovingMaskContainer;
+  DataObjectContainerPointer m_FixedImageContainer{ DataObjectContainerType::New() };
+  DataObjectContainerPointer m_MovingImageContainer{ DataObjectContainerType::New() };
+  DataObjectContainerPointer m_FixedMaskContainer{ DataObjectContainerType::New() };
+  DataObjectContainerPointer m_MovingMaskContainer{ DataObjectContainerType::New() };
 
   /** The result image container. These are stored as pointers to itk::DataObject. */
-  DataObjectContainerPointer m_ResultImageContainer;
+  DataObjectContainerPointer m_ResultImageContainer{ DataObjectContainerType::New() };
 
   /** The result deformation field container. These are stored as pointers to itk::DataObject. */
   DataObjectContainerPointer m_ResultDeformationFieldContainer;
 
   /** The image and mask FileNameContainers. */
-  FileNameContainerPointer m_FixedImageFileNameContainer;
-  FileNameContainerPointer m_MovingImageFileNameContainer;
-  FileNameContainerPointer m_FixedMaskFileNameContainer;
-  FileNameContainerPointer m_MovingMaskFileNameContainer;
+  FileNameContainerPointer m_FixedImageFileNameContainer{ FileNameContainerType::New() };
+  FileNameContainerPointer m_MovingImageFileNameContainer{ FileNameContainerType::New() };
+  FileNameContainerPointer m_FixedMaskFileNameContainer{ FileNameContainerType::New() };
+  FileNameContainerPointer m_MovingMaskFileNameContainer{ FileNameContainerType::New() };
 
   /** The initial and final transform. */
-  ObjectPointer m_InitialTransform;
-  ObjectPointer m_FinalTransform;
+  ObjectPointer m_InitialTransform{ nullptr };
+  ObjectPointer m_FinalTransform{ nullptr };
 
-  /** Use or ignore direction cosines. */
-  bool m_UseDirectionCosines;
+  /** Use or ignore direction cosines.
+   * From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
+   * backward compatability. From Elastix 4.8: set it to true by default. */
+  bool m_UseDirectionCosines{ true };
 };
 
 } // end namespace elastix
