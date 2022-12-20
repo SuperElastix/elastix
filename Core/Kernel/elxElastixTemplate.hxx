@@ -382,11 +382,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
     timer.Start();
     elxout << "Resampling image and writing to disk ..." << std::endl;
 
+    // It is assumed the configuration is not null at this point in time.
+    const Configuration & configuration = *Superclass::m_Configuration;
+    
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
-    this->GetConfiguration()->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+    configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
     std::ostringstream makeFileName;
-    makeFileName << this->GetConfiguration()->GetCommandLineArgument("-out") << "result." << resultImageFormat;
+    makeFileName << configuration.GetCommandLineArgument("-out") << "result." << resultImageFormat;
 
     /** Write the resampled image to disk.
      * Actually we could loop over all resamplers.
