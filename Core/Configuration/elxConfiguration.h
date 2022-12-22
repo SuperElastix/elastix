@@ -251,6 +251,32 @@ public:
     return m_ParameterMapInterface->RetrieveValues<T>(parameterName);
   }
 
+  /** Retrieves the value of the specified parameter (from the parameter file). Returns the specified default parameter
+   * value if the parameter cannot be found. */
+  template <typename T>
+  T
+  RetrieveParameterValue(const T &           defaultParameterValue,
+                         const std::string & parameterName,
+                         const unsigned int  entry_nr,
+                         const bool          printThisErrorMessage) const
+  {
+    auto parameterValue = defaultParameterValue;
+    (void)Self::ReadParameter<T>(parameterValue, parameterName, entry_nr, printThisErrorMessage);
+    return parameterValue;
+  }
+
+
+  /** Retrieves the string value of the specified parameter (from the parameter file). Returns the specified default
+   * parameter value if the parameter cannot be found. */
+  std::string
+  RetrieveParameterStringValue(const std::string & defaultParameterValue,
+                               const std::string & parameterName,
+                               const unsigned int  entry_nr,
+                               const bool          printThisErrorMessage) const
+  {
+    return Self::RetrieveParameterValue(defaultParameterValue, parameterName, entry_nr, printThisErrorMessage);
+  }
+
 
   /** Read a range of parameters from the parameter file. */
   template <class T>
