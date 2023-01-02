@@ -79,7 +79,7 @@ jobs:
         git checkout ${{ matrix.itk-git-tag }}
    
     - name: Build ITK
-      if: steps.cache.outputs.cache-hit != 'true' && matrix.os != 'windows-2019'
+      if: steps.cache.outputs.cache-hit != 'true' && ! startsWith(matrix.os, 'windows')
       run: |
         mkdir ITK-build
         cd ITK-build
@@ -87,7 +87,7 @@ jobs:
         ninja
         
     - name: Build ITK
-      if: steps.cache.outputs.cache-hit != 'true' && matrix.os == 'windows-2019'
+      if: steps.cache.outputs.cache-hit != 'true' && startsWith(matrix.os, 'windows')
       run: |
         mkdir ITK-build
         cd ITK-build
@@ -138,24 +138,24 @@ jobs:
         cat dashboard.cmake
 
     - name: Test MacOs
-      if: matrix.os == 'macos-11'
+      if: startsWith(matrix.os, 'macos')
       run: |
        ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
       
     - name: Test Windows
-      if: matrix.os == 'windows-2019'
+      if: startsWith(matrix.os, 'windows')
       run: |
         call "${{ matrix.vcvars64 }}"
         ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
       shell: cmd
 
     - name: Test Ubuntu
-      if: matrix.os == 'ubuntu-18.04'
+      if: startsWith(matrix.os, 'ubuntu')
       run: |
         ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
       
     - name: Build externalproject example
-      if: matrix.os != 'windows-2019'
+      if: ! startsWith(matrix.os, 'windows')
       run: |
         mkdir externalproject-build
         cd externalproject-build
@@ -163,7 +163,7 @@ jobs:
         ninja
         
     - name: Build externalproject example
-      if: matrix.os == 'windows-2019'
+      if: startsWith(matrix.os, 'windows')
       run: |
         mkdir externalproject-build
         cd externalproject-build
@@ -173,19 +173,19 @@ jobs:
       shell: cmd
 
     - name: Run externalproject example
-      if: matrix.os != 'windows-2019'
+      if: ! startsWith(matrix.os, 'windows')
       run: |
         externalproject-build/elastix_translation_example
 
     - name: Run externalproject example
-      if: matrix.os == 'windows-2019'
+      if: startsWith(matrix.os, 'windows')
       run: |
         set path=${{ github.workspace }}\Elastix-build\bin
         externalproject-build\elastix_translation_example.exe
       shell: cmd
       
     - name: Prepare Artifacts Unix
-      if: matrix.os != 'windows-2019'
+      if: ! startsWith(matrix.os, 'windows')
       shell: bash
       run: |
         mkdir bin
@@ -201,7 +201,7 @@ jobs:
         mv lib uploads
       
     - name: Prepare Artifacts Windows
-      if: matrix.os == 'windows-2019'
+      if: startsWith(matrix.os, 'windows')
       shell: bash
       run: |
         mkdir uploads
@@ -218,14 +218,14 @@ jobs:
         path: uploads
         
     - name: Login to Docker Hub
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(matrix.os, 'ubuntu')
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
     - name: Build and push
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && matrix.os == 'ubuntu-18.04'     
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(matrix.os, 'ubuntu')     
       run: |
         mkdir output
         docker build -t superelastix/elastix:${GITHUB_REF#refs/tags/} .
