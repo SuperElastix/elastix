@@ -255,7 +255,7 @@ class TransformixTestCase(unittest.TestCase):
         source_directory_path = pathlib.Path(__file__).resolve().parent
         output_directory_path = self.create_test_function_output_directory()
         data_directory_path = source_directory_path / ".." / "Data"
-        input_file_path = data_directory_path / "2D_2x2_square_object_at_(2,1).mhd";
+        input_file_path = data_directory_path / "2D_2x2_square_object_at_(2,1).mhd"
         parameter_directory_path = source_directory_path / "TransformParameters"
 
         subprocess.run(
@@ -531,7 +531,8 @@ class TransformixTestCase(unittest.TestCase):
             check=True,
         )
 
-        # Note that itk.meshread does not work, as the following produces a 3D mesh, instead of a 2D mesh.
+        # Note that itk.meshread does not work, as the following produces a 3D mesh, instead of a 2D
+        # mesh.
         #
         # output_mesh = itk.meshread(str(output_directory_path / "outputpoints.vtk"))
         reader = itk.MeshFileReader[itk.Mesh[itk.D, 2]].New()
