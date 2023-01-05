@@ -79,7 +79,7 @@ jobs:
         git checkout ${{ matrix.itk-git-tag }}
    
     - name: Build ITK
-      if: steps.cache.outputs.cache-hit != 'true' && matrix.os != 'windows-2019'
+      if: ${{ steps.cache.outputs.cache-hit != 'true' && !startsWith(matrix.os, 'windows') }}
       run: |
         mkdir ITK-build
         cd ITK-build
@@ -155,7 +155,7 @@ jobs:
         ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
       
     - name: Build externalproject example
-      if: matrix.os != 'windows-2019'
+      if: ${{ !startsWith(matrix.os, 'windows') }}
       run: |
         mkdir externalproject-build
         cd externalproject-build
@@ -173,7 +173,7 @@ jobs:
       shell: cmd
 
     - name: Run externalproject example
-      if: matrix.os != 'windows-2019'
+      if: ${{ !startsWith(matrix.os, 'windows') }}
       run: |
         externalproject-build/elastix_translation_example
 
@@ -185,7 +185,7 @@ jobs:
       shell: cmd
       
     - name: Prepare Artifacts Unix
-      if: matrix.os != 'windows-2019'
+      if: ${{ !startsWith(matrix.os, 'windows') }}
       shell: bash
       run: |
         mkdir bin
