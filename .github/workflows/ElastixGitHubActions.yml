@@ -13,9 +13,9 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [macos-11, ubuntu-18.04, windows-2019]
+        os: [macos-11, ubuntu-20.04, windows-2019]
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
             itk-git-tag: "v5.3.0"
