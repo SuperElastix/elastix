@@ -38,7 +38,7 @@ jobs:
             ANNLib2: "libANNlib-5.1.dylib"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Make directory structure
       run: |
@@ -50,7 +50,7 @@ jobs:
         mv Elastix-source/Dockerfile .
       shell: bash
       
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       id: cache
       with:
         path: |
@@ -59,7 +59,7 @@ jobs:
         key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }} 
         
     - name: Set up Python 3.7
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v3
       with:
         python-version: 3.7
 
@@ -69,7 +69,7 @@ jobs:
         python -m pip install ninja
         
     - name: Get specific version of CMake, Ninja
-      uses: lukka/get-cmake@v3.18.3
+      uses: lukka/get-cmake@v3.24.2
       
     - name: Download ITK
       if: steps.cache.outputs.cache-hit != 'true'
@@ -212,7 +212,7 @@ jobs:
         mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
   
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with: 
         name: "${{ matrix.os }}"
         path: uploads
