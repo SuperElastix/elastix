@@ -1491,7 +1491,7 @@ AdaptiveStochasticLBFGS<TElastix>::GetScaledDerivativeWithExceptionHandling(cons
   {
     this->GetScaledValueAndDerivative(parameters, dummyvalue, derivative);
   }
-  catch (itk::ExceptionObject & err)
+  catch (const itk::ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
