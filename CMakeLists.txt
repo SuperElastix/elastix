@@ -75,6 +75,10 @@ include(elastixVersion)
 # Function for exporting targets
 include(elastixExportTarget)
 
+if (MSVC)
+  add_compile_options(/W3)
+endif()
+
 #---------------------------------------------------------------------
 # Find OpenCL.
 if(ELASTIX_USE_OPENCL)
