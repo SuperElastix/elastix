@@ -359,7 +359,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(const ParametersType searchDir,
   {
     LSO->GetCurrentValueAndDerivative(f, g);
   }
-  catch (ExceptionObject & err)
+  catch (const ExceptionObject &)
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();

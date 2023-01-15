@@ -95,7 +95,7 @@ RSGDEachParameterApartBaseOptimizer::ResumeOptimization()
     {
       m_CostFunction->GetValueAndDerivative(this->GetCurrentPosition(), m_Value, m_Gradient);
     }
-    catch (ExceptionObject & err)
+    catch (const ExceptionObject &)
     {
       m_StopCondition = MetricError;
       this->StopOptimization();

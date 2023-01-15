@@ -88,7 +88,7 @@ FullSearchOptimizer::ResumeOptimization()
     {
       m_Value = m_CostFunction->GetValue(this->GetCurrentPosition());
     }
-    catch (ExceptionObject & err)
+    catch (const ExceptionObject &)
     {
       // An exception has occurred.
       // Terminate immediately.
