@@ -606,11 +606,9 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   elxout << "  Computing the preconditioner took " << Conversion::SecondsToDHMS(timer_P.GetMean(), 6) << std::endl;
 
 #if 0
-  elxout << std::scientific;
-  elxout << "The preconditioner: [ ";
+  elxout << std::scientific << "The preconditioner: [ ";
   for( unsigned int i = 0; i < numberOfParameters; ++i ) elxout << m_PreconditionVector[ i ] << " ";
-  elxout << "]" <<  std::endl;
-  elxout << std::fixed;
+  elxout << "]" <<  std::endl << std::fixed;
 #endif
 
   /** Set the sampler back to the original. */
@@ -664,9 +662,9 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
   this->m_NoiseFactor = gg / (gg + ee + 1e-14);
   timer_noise.Stop();
-  elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << std::endl;
-  elxout << "  The NoiseFactor is: " << m_NoiseFactor << std::endl;
-  elxout << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer_noise.GetMean(), 6)
+  elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << std::endl
+         << "  The NoiseFactor is: " << m_NoiseFactor << std::endl
+         << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer_noise.GetMean(), 6)
          << std::endl;
 
   // MS: the following can probably be removed or moved.

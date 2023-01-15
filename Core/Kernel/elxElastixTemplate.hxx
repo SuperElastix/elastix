@@ -330,8 +330,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << std::endl;
-    xl::xout["error"] << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << std::endl << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Transforming points done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
@@ -349,8 +348,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << std::endl;
-    xl::xout["error"] << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << std::endl << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Computing determinant of spatial Jacobian done, it took "
@@ -369,8 +367,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << std::endl;
-    xl::xout["error"] << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << std::endl << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Computing spatial Jacobian done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
@@ -588,8 +585,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
   elxout << std::setprecision(3);
   this->m_ResolutionTimer.Stop();
   elxout << "Time spent in resolution " << (level)
-         << " (ITK initialization and iterating): " << this->m_ResolutionTimer.GetMean() << " s.\n";
-  elxout << std::setprecision(this->GetDefaultOutputPrecision());
+         << " (ITK initialization and iterating): " << this->m_ResolutionTimer.GetMean() << " s.\n"
+         << std::setprecision(this->GetDefaultOutputPrecision());
 
   /** Call all the AfterEachResolution() functions. */
   this->AfterEachResolutionBase();

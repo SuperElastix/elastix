@@ -248,10 +248,10 @@ main(int argc, char ** argv)
     info.RunCPUCheck();
     info.RunOSCheck();
     info.RunMemoryCheck();
-    elxout << "elastix runs at: " << info.GetHostname() << std::endl;
-    elxout << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
-           << info.GetOSVersion() << std::endl;
-    elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
+    elxout << "elastix runs at: " << info.GetHostname() << std::endl
+           << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
+           << info.GetOSVersion() << std::endl
+           << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
            << " cores @ " << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz." << std::endl;
 
 
@@ -296,8 +296,10 @@ main(int argc, char ** argv)
       parameterFileList.pop();
 
       /** Print a start message. */
-      elxout << "-------------------------------------------------------------------------\n" << std::endl;
-      elxout << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\".\n" << std::endl;
+      elxout << "-------------------------------------------------------------------------\n"
+             << std::endl
+             << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\".\n"
+             << std::endl;
 
       /** Declare a timer, start it and print the start time. */
       itk::TimeProbe timer;
@@ -330,8 +332,8 @@ main(int argc, char ** argv)
 
       /** Stop timer and print it. */
       timer.Stop();
-      elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
-      elxout << "Time used for running elastix with this parameter file:\n  "
+      elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl
+             << "Time used for running elastix with this parameter file:\n  "
              << ConvertSecondsToDHMS(timer.GetMean(), 1) << ".\n"
              << std::endl;
     } // end loop over registrations

@@ -309,13 +309,13 @@ OpenCLResampler<TElastix>::SwitchingToCPUAndReport(const bool configError)
 {
   if (!configError)
   {
-    xl::xout["warning"] << "WARNING: The OpenCL context could not be created.\n";
-    xl::xout["warning"] << "  The OpenCLResampler is switching back to CPU mode." << std::endl;
+    xl::xout["warning"] << "WARNING: The OpenCL context could not be created.\n"
+                        << "  The OpenCLResampler is switching back to CPU mode." << std::endl;
   }
   else
   {
-    xl::xout["warning"] << "WARNING: Unable to configure the GPU.\n";
-    xl::xout["warning"] << "  The OpenCLResampler is switching back to CPU mode." << std::endl;
+    xl::xout["warning"] << "WARNING: Unable to configure the GPU.\n"
+                        << "  The OpenCLResampler is switching back to CPU mode." << std::endl;
   }
   this->m_GPUResamplerReady = false;
 

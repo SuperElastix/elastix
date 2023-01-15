@@ -183,8 +183,7 @@ ProgressCommand::PrintProgress(const float progress) const
 {
   /** Print the progress to the screen. */
   const int progressInt = itk::Math::Round<float>(100 * progress);
-  xl::xout["coutonly"] << "\r" << this->m_StartString << progressInt << this->m_EndString;
-  xl::xout["coutonly"] << std::flush;
+  xl::xout["coutonly"] << "\r" << this->m_StartString << progressInt << this->m_EndString << std::flush;
 
   /** If the process is completed, print an end-of-line. *
   if ( progress > 0.99999 )

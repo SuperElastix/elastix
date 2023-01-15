@@ -34,8 +34,8 @@ template <class TElastix>
 void
 OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** param */)
 {
-  xl::xout["error"] << "ERROR: This function should be overridden or just not used.\n";
-  xl::xout["error"] << "  Are you using BSplineTransformWithDiffusion in combination with another optimizer than the "
+  xl::xout["error"] << "ERROR: This function should be overridden or just not used.\n"
+                    << "  Are you using BSplineTransformWithDiffusion in combination with another optimizer than the "
                        "StandardGradientDescentOptimizer? Don't!"
                     << std::endl;
 

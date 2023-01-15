@@ -75,8 +75,7 @@ FixedImagePyramidBase<TElastix>::BeforeEachResolutionBase()
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+      xl::xout["error"] << "Exception caught: " << std::endl << excp << "Resuming elastix." << std::endl;
     }
   } // end if
 
@@ -132,8 +131,8 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
 
   if (!found && this->GetConfiguration()->GetPrintErrorMessages())
   {
-    xl::xout["warning"] << "WARNING: the fixed pyramid schedule is not fully specified!\n";
-    xl::xout["warning"] << "  A default pyramid schedule is used." << std::endl;
+    xl::xout["warning"] << "WARNING: the fixed pyramid schedule is not fully specified!\n"
+                        << "  A default pyramid schedule is used." << std::endl;
   }
   else
   {

@@ -161,8 +161,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening " << landmarkFileName << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout["error"] << "  Error while opening " << landmarkFileName << std::endl << err << std::endl;
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 

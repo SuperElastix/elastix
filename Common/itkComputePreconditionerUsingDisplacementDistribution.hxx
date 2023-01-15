@@ -318,12 +318,9 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
     }
 
 #if 0
-    elxout << std::scientific;
-    elxout << "The preconditioner before interpolation: [ ";
+    elxout << std::scientific << "The preconditioner before interpolation: [ ";
     //elxout << sigma << " ";
-    elxout << preconditioner[i] << " ";
-    elxout << "]" << std::endl;
-    elxout << std::fixed;
+    elxout << preconditioner[i] << " " << "]" << std::endl << std::fixed;
 #endif
   } // end loop over localStepSize vector
 
@@ -559,17 +556,13 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   double conditionNumber = maxEigenvalue / minEigenvalue;
 
 #if 1
-  elxout << std::scientific;
-  elxout << "The max eigen value is: [ ";
-  elxout << maxEigenvalue << " ";
-  elxout << "]" << std::endl;
-  elxout << "The min eigen value is: [ ";
-  elxout << minEigenvalue << " ";
-  elxout << "]" << std::endl;
-  elxout << "The condition number before constraints is: [ ";
-  elxout << conditionNumber << " ";
-  elxout << "]" << std::endl;
-  elxout << std::fixed;
+  elxout << std::scientific << "The max eigen value is: [ " << maxEigenvalue << " "
+         << "]" << std::endl
+         << "The min eigen value is: [ " << minEigenvalue << " "
+         << "]" << std::endl
+         << "The condition number before constraints is: [ " << conditionNumber << " "
+         << "]" << std::endl
+         << std::fixed;
 #endif
 
   if (transformIsBSpline && conditionNumber > this->m_ConditionNumber)
@@ -675,13 +668,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   }
 
 #if 0
-  elxout << std::scientific;
-  elxout << "The max eigen value is: [ ";
-  elxout << maxEigenvalue << " ";
-  elxout << "]" << std::endl;
-  elxout << "The min eigen value is: [ ";
-  elxout << minEigenvalue << " ";
-  elxout << "]" << std::endl;
+  elxout << std::scientific << "The max eigen value is: [ " << maxEigenvalue << " " << "]" << std::endl << "The min eigen value is: [ " << minEigenvalue << " " << "]" << std::endl;
 #endif
 
   /** Condition number check. */
@@ -700,11 +687,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   }
 
 #if 0
-  elxout << std::scientific;
-  elxout << "The condition number after constraints is: [ ";
-  elxout << maxEigenvalue / minEigenvalue << " ";
-  elxout << "]" << std::endl;
-  elxout << std::fixed;
+  elxout << std::scientific << "The condition number after constraints is: [ " << maxEigenvalue / minEigenvalue << " " << "]" << std::endl << std::fixed;
 #endif
 } // end ComputeJacobiTypePreconditioner()
 

@@ -102,8 +102,8 @@ public:
     if (!foundRescale && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {
       xl::xout["warning"] << "WARNING: the " << pyramidAdjective
-                          << " pyramid rescale schedule is not fully specified!\n";
-      xl::xout["warning"] << "  A default pyramid rescale schedule is used." << std::endl;
+                          << " pyramid rescale schedule is not fully specified!\n"
+                          << "  A default pyramid rescale schedule is used." << std::endl;
     }
     else
     {
@@ -147,8 +147,8 @@ public:
     if (!foundSmoothing && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {
       xl::xout["warning"] << "WARNING: the " << pyramidAdjective
-                          << " pyramid smoothing schedule is not fully specified!\n";
-      xl::xout["warning"] << "  A default pyramid smoothing schedule is used." << std::endl;
+                          << " pyramid smoothing schedule is not fully specified!\n"
+                          << "  A default pyramid smoothing schedule is used." << std::endl;
     }
     else
     {

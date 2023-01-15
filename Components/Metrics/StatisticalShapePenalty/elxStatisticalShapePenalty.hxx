@@ -291,8 +291,7 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening " << landmarkFileName << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout["error"] << "  Error while opening " << landmarkFileName << std::endl << err << std::endl;
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 
@@ -367,8 +366,7 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
   }
   catch (ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file." << std::endl << err << std::endl;
   }
 
   /** Some user-feedback. */

@@ -99,8 +99,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   if (!creatingContextSuccessful)
   {
     /** Report and disable the GPU by releasing the context. */
-    elxout << errorMessage << std::endl;
-    elxout << "  OpenCL processing in transformix is disabled.\n" << std::endl;
+    elxout << errorMessage << std::endl << "  OpenCL processing in transformix is disabled.\n" << std::endl;
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();

@@ -176,9 +176,9 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   }
   else if (p.empty() && tp.empty())
   {
-    xl::xout["error"] << "ERROR: No (Transform-)Parameter file has been entered" << std::endl;
-    xl::xout["error"] << "for elastix: command line option \"-p\"" << std::endl;
-    xl::xout["error"] << "for transformix: command line option \"-tp\"" << std::endl;
+    xl::xout["error"] << "ERROR: No (Transform-)Parameter file has been entered" << std::endl
+                      << "for elastix: command line option \"-p\"" << std::endl
+                      << "for transformix: command line option \"-tp\"" << std::endl;
     return 1;
   }
   else
