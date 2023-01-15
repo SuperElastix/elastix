@@ -201,8 +201,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        xl::xout["error"] << "Exception caught: " << std::endl;
-        xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+        xl::xout["error"] << "Exception caught: " << std::endl << excp << "Resuming elastix." << std::endl;
       }
     } // end for
   }   // end if
@@ -249,8 +248,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        xl::xout["error"] << "Exception caught: " << std::endl;
-        xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+        xl::xout["error"] << "Exception caught: " << std::endl << excp << "Resuming elastix." << std::endl;
       }
     } // end for
   }   // end if
@@ -278,8 +276,7 @@ PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typen
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input mesh file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout["error"] << "  Error while opening input mesh file." << std::endl << err << std::endl;
   }
 
   /** Some user-feedback. */
@@ -400,8 +397,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file." << std::endl << err << std::endl;
   }
 
   /** Some user-feedback. */

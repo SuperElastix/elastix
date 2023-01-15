@@ -121,8 +121,8 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   }
   else
   {
-    xl::xout["error"] << "Error while reading DeformationFieldInterpolationOrder from the parameter file" << std::endl;
-    xl::xout["error"] << "DeformationFieldInterpolationOrder can only be 0 or 1!" << std::endl;
+    xl::xout["error"] << "Error while reading DeformationFieldInterpolationOrder from the parameter file" << std::endl
+                      << "DeformationFieldInterpolationOrder can only be 0 or 1!" << std::endl;
     itkExceptionMacro(<< "Invalid deformation field interpolation order selected!");
   }
   this->m_DeformationFieldInterpolatingTransform->SetDeformationFieldInterpolator(interpolator);

@@ -240,10 +240,10 @@ main(int argc, char ** argv)
     info.RunCPUCheck();
     info.RunOSCheck();
     info.RunMemoryCheck();
-    elxout << "transformix runs at: " << info.GetHostname() << std::endl;
-    elxout << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
-           << info.GetOSVersion() << std::endl;
-    elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
+    elxout << "transformix runs at: " << info.GetHostname() << std::endl
+           << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
+           << info.GetOSVersion() << std::endl
+           << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
            << " cores @ " << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz." << std::endl;
 
     /**
@@ -268,8 +268,9 @@ main(int argc, char ** argv)
 
     /** Stop timer and print it. */
     totaltimer.Stop();
-    elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
-    elxout << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n" << std::endl;
+    elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl
+           << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n"
+           << std::endl;
 
     /** Clean up. */
     transformix = nullptr;

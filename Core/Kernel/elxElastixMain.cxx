@@ -113,8 +113,7 @@ elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
   returndummy |= xl::xout.AddTargetCell("coutonly", &g_data.CoutOnlyXout);
 
   /** Format the output. */
-  xl::xout["standard"] << std::fixed;
-  xl::xout["standard"] << std::showpoint;
+  xl::xout["standard"] << std::fixed << std::showpoint;
 
   /** Return a value. */
   return returndummy;
@@ -308,8 +307,7 @@ ElastixMain::Run()
   if (!creatingContextSuccessful)
   {
     /** Report and disable the GPU by releasing the context. */
-    elxout << errorMessage << std::endl;
-    elxout << "  OpenCL processing in elastix is disabled.\n" << std::endl;
+    elxout << errorMessage << std::endl << "  OpenCL processing in elastix is disabled.\n" << std::endl;
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();
@@ -485,8 +483,8 @@ ElastixMain::InitDBIndex()
         /** Sanity check. */
         if (fixedImageFileName.empty())
         {
-          xl::xout["error"] << "ERROR: could not read fixed image." << std::endl;
-          xl::xout["error"] << "  both -f and -f0 are unspecified" << std::endl;
+          xl::xout["error"] << "ERROR: could not read fixed image." << std::endl
+                            << "  both -f and -f0 are unspecified" << std::endl;
           return 1;
         }
 
@@ -497,8 +495,7 @@ ElastixMain::InitDBIndex()
         }
         catch (const itk::ExceptionObject & err)
         {
-          xl::xout["error"] << "ERROR: could not read fixed image." << std::endl;
-          xl::xout["error"] << err << std::endl;
+          xl::xout["error"] << "ERROR: could not read fixed image." << std::endl << err << std::endl;
           return 1;
         }
 
@@ -561,8 +558,8 @@ ElastixMain::InitDBIndex()
         /** Sanity check. */
         if (movingImageFileName.empty())
         {
-          xl::xout["error"] << "ERROR: could not read moving image." << std::endl;
-          xl::xout["error"] << "  both -m and -m0 are unspecified" << std::endl;
+          xl::xout["error"] << "ERROR: could not read moving image." << std::endl
+                            << "  both -m and -m0 are unspecified" << std::endl;
           return 1;
         }
 
@@ -573,8 +570,7 @@ ElastixMain::InitDBIndex()
         }
         catch (const itk::ExceptionObject & err)
         {
-          xl::xout["error"] << "ERROR: could not read moving image." << std::endl;
-          xl::xout["error"] << err << std::endl;
+          xl::xout["error"] << "ERROR: could not read moving image." << std::endl << err << std::endl;
           return 1;
         }
 
@@ -778,8 +774,8 @@ ElastixMain::CreateComponents(const std::string &              key,
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
-    xl::xout["error"] << excp << std::endl;
+    xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl
+                      << excp << std::endl;
     errorcode = 1;
     return objectContainer;
   }
@@ -797,8 +793,8 @@ ElastixMain::CreateComponents(const std::string &              key,
       }
       catch (const itk::ExceptionObject & excp)
       {
-        xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl;
-        xl::xout["error"] << excp << std::endl;
+        xl::xout["error"] << "ERROR: error occurred while creating " << key << " " << componentnr << "." << std::endl
+                          << excp << std::endl;
         errorcode = 1;
         return objectContainer;
       }

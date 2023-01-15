@@ -54,8 +54,8 @@ OpenCLMovingGenericPyramid<TElastix>::OpenCLMovingGenericPyramid()
   // To avoid it, we simply run it on CPU for 2D images.
   if (ImageDimension <= 2)
   {
-    xl::xout["warning"] << "WARNING: Creating the moving pyramid with OpenCL for 2D images is not beneficial.\n";
-    xl::xout["warning"] << "  The OpenCLMovingGenericPyramid is switching back to CPU mode." << std::endl;
+    xl::xout["warning"] << "WARNING: Creating the moving pyramid with OpenCL for 2D images is not beneficial.\n"
+                        << "  The OpenCLMovingGenericPyramid is switching back to CPU mode." << std::endl;
     return;
   }
 
@@ -208,8 +208,8 @@ OpenCLMovingGenericPyramid<TElastix>::GenerateData()
   }
   else
   {
-    xl::xout["warning"] << "WARNING: The moving pyramid computation with OpenCL failed due to the error.\n";
-    xl::xout["warning"] << "  The OpenCLMovingGenericPyramid is switching back to CPU mode." << std::endl;
+    xl::xout["warning"] << "WARNING: The moving pyramid computation with OpenCL failed due to the error.\n"
+                        << "  The OpenCLMovingGenericPyramid is switching back to CPU mode." << std::endl;
     Superclass1::GenerateData();
   }
 } // end GenerateData()
@@ -322,13 +322,13 @@ OpenCLMovingGenericPyramid<TElastix>::SwitchingToCPUAndReport(const bool configE
 {
   if (!configError)
   {
-    xl::xout["warning"] << "WARNING: The OpenCL context could not be created.\n";
-    xl::xout["warning"] << "  The OpenCLMovingGenericImagePyramid is switching back to CPU mode." << std::endl;
+    xl::xout["warning"] << "WARNING: The OpenCL context could not be created.\n"
+                        << "  The OpenCLMovingGenericImagePyramid is switching back to CPU mode." << std::endl;
   }
   else
   {
-    xl::xout["warning"] << "WARNING: Unable to configure the GPU.\n";
-    xl::xout["warning"] << "  The OpenCLMovingGenericImagePyramid is switching back to CPU mode." << std::endl;
+    xl::xout["warning"] << "WARNING: Unable to configure the GPU.\n"
+                        << "  The OpenCLMovingGenericImagePyramid is switching back to CPU mode." << std::endl;
   }
   this->m_GPUPyramidReady = false;
 

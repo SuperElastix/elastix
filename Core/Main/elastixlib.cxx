@@ -270,8 +270,9 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     elastixMain->SetTotalNumberOfElastixLevels(nrOfParameterFiles);
 
     /** Print a start message. */
-    elxout << "-------------------------------------------------------------------------\n" << std::endl;
-    elxout << "Running elastix with parameter map " << i << std::endl;
+    elxout << "-------------------------------------------------------------------------\n"
+           << std::endl
+           << "Running elastix with parameter map " << i << std::endl;
 
     /** Declare a timer, start it and print the start time. */
     itk::TimeProbe timer;
@@ -301,8 +302,8 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
 
     /** Stop timer and print it. */
     timer.Stop();
-    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
-    elxout << "Time used for running elastix with this parameter file: " << ConvertSecondsToDHMS(timer.GetMean(), 1)
+    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl
+           << "Time used for running elastix with this parameter file: " << ConvertSecondsToDHMS(timer.GetMean(), 1)
            << ".\n"
            << std::endl;
 

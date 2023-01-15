@@ -136,8 +136,7 @@ QuasiNewtonLBFGS<TElastix>::LineSearch(const ParametersType searchDir,
     }
     else
     {
-      xl::xout["error"] << err << std::endl;
-      xl::xout["error"] << "The error is ignored and convergence is assumed." << std::endl;
+      xl::xout["error"] << err << std::endl << "The error is ignored and convergence is assumed." << std::endl;
       step = 0.0;
       x = this->GetScaledCurrentPosition();
       f = this->GetCurrentValue();

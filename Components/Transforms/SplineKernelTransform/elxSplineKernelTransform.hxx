@@ -298,8 +298,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening landmark file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout["error"] << "  Error while opening landmark file." << std::endl << err << std::endl;
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 

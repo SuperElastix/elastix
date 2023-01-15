@@ -323,8 +323,7 @@ ElastixBase::BeforeAllTransformixBase()
   int returndummy = 0;
 
   /** Print to log file. */
-  elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n";
-  elxout << std::setprecision(this->GetDefaultOutputPrecision());
+  elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n" << std::setprecision(this->GetDefaultOutputPrecision());
 
   /** Check Command line options and print them to the logfile. */
   elxout << "Command line options from ElastixBase:" << std::endl;
