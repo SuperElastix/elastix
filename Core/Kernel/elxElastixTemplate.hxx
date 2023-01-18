@@ -330,7 +330,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << std::endl << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << '\n' << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Transforming points done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
@@ -348,7 +348,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << std::endl << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << '\n' << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Computing determinant of spatial Jacobian done, it took "
@@ -367,7 +367,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << std::endl << "However, transformix continues anyway." << std::endl;
+    xl::xout["error"] << excp << '\n' << "However, transformix continues anyway." << std::endl;
   }
   timer.Stop();
   elxout << "  Computing spatial Jacobian done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;

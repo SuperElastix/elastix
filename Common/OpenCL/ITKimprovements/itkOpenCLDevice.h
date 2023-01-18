@@ -708,7 +708,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
   strm << indent << "Has writable image 3D: " << (device.HasWritableImage3D() ? "Yes" : "No") << '\n'
        << indent << "Maximum samplers: " << device.GetMaximumSamplers() << '\n'
        << indent << "Maximum read images: " << device.GetMaximumReadImages() << '\n'
-       << indent << "Maximum write images: " << device.GetMaximumWriteImages() << std::endl
+       << indent << "Maximum write images: " << device.GetMaximumWriteImages() << '\n'
 
        << indent << "Preferred char vector size: " << device.GetPreferredCharVectorSize() << '\n'
        << indent << "Preferred short vector size: " << device.GetPreferredShortVectorSize() << '\n'
@@ -716,7 +716,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
        << indent << "Preferred long vector size: " << device.GetPreferredLongVectorSize() << '\n'
        << indent << "Preferred float vector size: " << device.GetPreferredFloatVectorSize() << '\n'
        << indent << "Preferred double vector size: " << device.GetPreferredDoubleVectorSize() << '\n'
-       << indent << "Preferred half float vector size: " << device.GetPreferredHalfFloatVectorSize() << std::endl
+       << indent << "Preferred half float vector size: " << device.GetPreferredHalfFloatVectorSize() << '\n'
 
        << indent << "Native char vector size: " << device.GetNativeCharVectorSize() << '\n'
        << indent << "Native short vector size: " << device.GetNativeShortVectorSize() << '\n'

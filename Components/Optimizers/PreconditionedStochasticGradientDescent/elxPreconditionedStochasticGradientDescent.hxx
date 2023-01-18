@@ -662,8 +662,8 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
   this->m_NoiseFactor = gg / (gg + ee + 1e-14);
   timer_noise.Stop();
-  elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << std::endl
-         << "  The NoiseFactor is: " << m_NoiseFactor << std::endl
+  elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << '\n'
+         << "  The NoiseFactor is: " << m_NoiseFactor << '\n'
          << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer_noise.GetMean(), 6)
          << std::endl;
 
