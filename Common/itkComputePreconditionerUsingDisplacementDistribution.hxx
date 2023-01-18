@@ -556,12 +556,9 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   double conditionNumber = maxEigenvalue / minEigenvalue;
 
 #if 1
-  elxout << std::scientific << "The max eigen value is: [ " << maxEigenvalue << " "
-         << "]\n"
-         << "The min eigen value is: [ " << minEigenvalue << " "
-         << "]\n"
-         << "The condition number before constraints is: [ " << conditionNumber << " "
-         << "]" << std::endl
+  elxout << std::scientific << "The max eigen value is: [ " << maxEigenvalue << " ]\n"
+         << "The min eigen value is: [ " << minEigenvalue << " ]\n"
+         << "The condition number before constraints is: [ " << conditionNumber << " ]" << std::endl
          << std::fixed;
 #endif
 
