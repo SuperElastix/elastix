@@ -1548,9 +1548,9 @@ AdaptiveStochasticLBFGS<TElastix>::StoreCurrentPoint(const ParametersType & step
   this->m_HessianFillValue[this->m_CurrentT] = fill_value;
 
 
-  elxout << "parameter difference s: " << step.magnitude() << std::endl
-         << "gradient difference y: " << grad_dif.magnitude() << std::endl
-         << "rho: " << this->m_Rho[this->m_CurrentT] << std::endl
+  elxout << "parameter difference s: " << step.magnitude() << '\n'
+         << "gradient difference y: " << grad_dif.magnitude() << '\n'
+         << "rho: " << this->m_Rho[this->m_CurrentT] << '\n'
          << "New H0: " << fill_value << std::endl;
 
 } // end StoreCurrentPoint()

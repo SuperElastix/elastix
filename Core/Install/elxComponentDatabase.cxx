@@ -41,7 +41,7 @@ ComponentDatabase::SetCreator(const ComponentDescriptionType & name, IndexType i
    */
   if (CreatorMap.count(key)) //==1
   {
-    xl::xout["error"] << "Error: " << std::endl
+    xl::xout["error"] << "Error: " << '\n'
                       << name << "(index " << i << ") - This component has already been installed!" << std::endl;
     return 1;
   }
@@ -73,9 +73,9 @@ ComponentDatabase::SetIndex(const PixelTypeDescriptionType & fixedPixelType,
   /** Insert the key+index in the map, if it hadn't been done before yet.*/
   if (IndexMap.count(key)) //==1
   {
-    xl::xout["error"] << "Error:" << std::endl
-                      << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl
-                      << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl
+    xl::xout["error"] << "Error:" << '\n'
+                      << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << '\n'
+                      << "MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'
                       << "Elastix already supports this combination of ImageTypes!" << std::endl;
     return 1;
   }
@@ -105,7 +105,7 @@ ComponentDatabase::GetCreator(const ComponentDescriptionType & name, IndexType i
    */
   if (found == end(CreatorMap))
   {
-    xl::xout["error"] << "Error: " << std::endl
+    xl::xout["error"] << "Error: " << '\n'
                       << name << "(index " << i << ") - This component is not installed!" << std::endl;
     return nullptr;
   }

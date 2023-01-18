@@ -240,9 +240,9 @@ main(int argc, char ** argv)
     info.RunCPUCheck();
     info.RunOSCheck();
     info.RunMemoryCheck();
-    elxout << "transformix runs at: " << info.GetHostname() << std::endl
+    elxout << "transformix runs at: " << info.GetHostname() << '\n'
            << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
-           << info.GetOSVersion() << std::endl
+           << info.GetOSVersion() << '\n'
            << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
            << " cores @ " << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz." << std::endl;
 
@@ -268,7 +268,7 @@ main(int argc, char ** argv)
 
     /** Stop timer and print it. */
     totaltimer.Stop();
-    elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl
+    elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << '\n'
            << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n"
            << std::endl;
 

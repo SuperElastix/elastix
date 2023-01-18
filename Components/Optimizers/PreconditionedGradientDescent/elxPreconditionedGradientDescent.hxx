@@ -401,8 +401,8 @@ PreconditionedGradientDescent<TElastix>::SetSelfHessian()
   timer.Start();
   elxout << "Computing Cholesky decomposition of SelfHessian." << std::endl;
   this->SetPreconditionMatrix(H);
-  elxout << "Sparsity: " << this->GetSparsity() << std::endl
-         << "Largest eigenvalue: " << this->GetLargestEigenValue() << std::endl
+  elxout << "Sparsity: " << this->GetSparsity() << '\n'
+         << "Largest eigenvalue: " << this->GetLargestEigenValue() << '\n'
          << "Condition number: " << this->GetConditionNumber() << std::endl;
   timer.Stop();
 

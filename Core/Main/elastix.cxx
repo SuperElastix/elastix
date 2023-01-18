@@ -248,9 +248,9 @@ main(int argc, char ** argv)
     info.RunCPUCheck();
     info.RunOSCheck();
     info.RunMemoryCheck();
-    elxout << "elastix runs at: " << info.GetHostname() << std::endl
+    elxout << "elastix runs at: " << info.GetHostname() << '\n'
            << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
-           << info.GetOSVersion() << std::endl
+           << info.GetOSVersion() << '\n'
            << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
            << " cores @ " << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz." << std::endl;
 
@@ -297,7 +297,7 @@ main(int argc, char ** argv)
 
       /** Print a start message. */
       elxout << "-------------------------------------------------------------------------\n"
-             << std::endl
+             << '\n'
              << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\".\n"
              << std::endl;
 
@@ -332,7 +332,7 @@ main(int argc, char ** argv)
 
       /** Stop timer and print it. */
       timer.Stop();
-      elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl
+      elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << '\n'
              << "Time used for running elastix with this parameter file:\n  "
              << ConvertSecondsToDHMS(timer.GetMean(), 1) << ".\n"
              << std::endl;

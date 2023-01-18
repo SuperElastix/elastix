@@ -687,7 +687,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file." << '\n' << err << std::endl;
   }
 
   /** Some user-feedback. */
@@ -873,7 +873,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file." << '\n' << err << std::endl;
   }
 
   const auto & inputMesh = *(meshReader->GetOutput());
@@ -894,7 +894,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while transforming points." << std::endl << err << std::endl;
+    xl::xout["error"] << "  Error while transforming points." << '\n' << err << std::endl;
   }
 
   /** Create filename and file stream. */
@@ -907,7 +907,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while saving points." << std::endl << err << std::endl;
+    xl::xout["error"] << "  Error while saving points." << '\n' << err << std::endl;
   }
 
 } // end TransformPointsSomePointsVTK()
@@ -1365,7 +1365,7 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
   /** Set size of last dimension to 0. */
   size[FixedImageDimension - 1] = 0;
 
-  elxout << "start region for scales: " << start << std::endl << "size region for scales: " << size << std::endl;
+  elxout << "start region for scales: " << start << '\n' << "size region for scales: " << size << std::endl;
 
   FixedImageRegionType desiredRegion;
   desiredRegion.SetSize(size);

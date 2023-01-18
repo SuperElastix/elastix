@@ -223,7 +223,7 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
 
   /** Stop timer and print it. */
   totaltimer.Stop();
-  elxout << "\nTransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl
+  elxout << "\nTransformix has finished at " << GetCurrentDateAndTime() << "." << '\n'
          << "Elapsed time: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n"
          << std::endl;
 
