@@ -366,7 +366,7 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
   }
   catch (ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file." << '\n' << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file.\n" << err << std::endl;
   }
 
   /** Some user-feedback. */

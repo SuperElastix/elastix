@@ -484,7 +484,7 @@ BSplineTransformWithDiffusion<TElastix>::AfterEachIteration()
     /** Checking DiffusionEachNIterations. */
     if (diffusionEachNIterations < 1)
     {
-      xl::xout["warning"] << "WARNING: DiffusionEachNIterations < 1" << '\n'
+      xl::xout["warning"] << "WARNING: DiffusionEachNIterations < 1\n"
                           << "\t\tDiffusionEachNIterations is set to 1" << std::endl;
       diffusionEachNIterations = 1;
     }

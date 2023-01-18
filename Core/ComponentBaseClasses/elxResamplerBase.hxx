@@ -111,7 +111,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: " << '\n' << excp << "Resuming elastix." << std::endl;
+      xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
     }
 
     /** Print the elapsed time for the resampling. */
@@ -165,7 +165,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: " << '\n' << excp << "Resuming elastix." << std::endl;
+      xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
     }
 
   } // end if
@@ -243,7 +243,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        xl::xout["error"] << "Exception caught: " << '\n' << excp << "Resuming elastix." << std::endl;
+        xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
       }
 
       /** Print the elapsed time for the resampling. */

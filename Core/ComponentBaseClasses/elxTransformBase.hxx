@@ -687,7 +687,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file." << '\n' << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file.\n" << err << std::endl;
   }
 
   /** Some user-feedback. */
@@ -873,7 +873,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file." << '\n' << err << std::endl;
+    xl::xout["error"] << "  Error while opening input point file.\n" << err << std::endl;
   }
 
   const auto & inputMesh = *(meshReader->GetOutput());
@@ -894,7 +894,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while transforming points." << '\n' << err << std::endl;
+    xl::xout["error"] << "  Error while transforming points.\n" << err << std::endl;
   }
 
   /** Create filename and file stream. */
@@ -907,7 +907,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while saving points." << '\n' << err << std::endl;
+    xl::xout["error"] << "  Error while saving points.\n" << err << std::endl;
   }
 
 } // end TransformPointsSomePointsVTK()

@@ -245,7 +245,7 @@ FullSearch<TElastix>::AfterEachResolution()
     }
     catch (const itk::ExceptionObject & err)
     {
-      xl::xout["error"] << "ERROR: Saving " << this->m_OptimizationSurface->GetOutputFileName() << " failed." << '\n'
+      xl::xout["error"] << "ERROR: Saving " << this->m_OptimizationSurface->GetOutputFileName() << " failed.\n"
                         << err << std::endl;
       // do not throw an error, since we would like to go on.
     }
