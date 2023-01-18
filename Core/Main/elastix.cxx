@@ -332,7 +332,7 @@ main(int argc, char ** argv)
 
       /** Stop timer and print it. */
       timer.Stop();
-      elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << '\n'
+      elxout << "\nCurrent time: " << GetCurrentDateAndTime() << ".\n"
              << "Time used for running elastix with this parameter file:\n  "
              << ConvertSecondsToDHMS(timer.GetMean(), 1) << ".\n"
              << std::endl;

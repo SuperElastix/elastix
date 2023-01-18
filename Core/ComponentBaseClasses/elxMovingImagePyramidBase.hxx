@@ -76,7 +76,7 @@ MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: " << '\n' << excp << "Resuming elastix." << std::endl;
+      xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
     }
   } // end if
 

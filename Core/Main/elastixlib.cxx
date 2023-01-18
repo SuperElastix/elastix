@@ -302,7 +302,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
 
     /** Stop timer and print it. */
     timer.Stop();
-    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << '\n'
+    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << ".\n"
            << "Time used for running elastix with this parameter file: " << ConvertSecondsToDHMS(timer.GetMean(), 1)
            << ".\n"
            << std::endl;
