@@ -318,9 +318,9 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
     }
 
 #if 0
-    elxout << std::scientific << "The preconditioner before interpolation: [ ";
     //elxout << sigma << " ";
-    elxout << preconditioner[i] << " " << "]" << std::endl << std::fixed;
+    elxout << std::scientific << "The preconditioner before interpolation: [ "
+      << preconditioner[i] << " " << "]" << std::endl << std::fixed;
 #endif
   } // end loop over localStepSize vector
 
