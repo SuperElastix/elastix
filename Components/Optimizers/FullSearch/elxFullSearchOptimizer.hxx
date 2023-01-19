@@ -264,9 +264,9 @@ FullSearch<TElastix>::AfterEachResolution()
   {
     elxout << bestIndex[dim] << " ";
   }
-  elxout << "]" << std::endl;
+  elxout << "]" << std::endl
 
-  elxout << "The corresponding parameter values: [ ";
+         << "The corresponding parameter values: [ ";
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     elxout << bestPoint[dim] << " ";
