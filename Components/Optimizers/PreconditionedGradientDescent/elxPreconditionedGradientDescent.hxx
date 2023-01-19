@@ -279,9 +279,10 @@ PreconditionedGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();
-  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
+  elxout << '\n'
+         << "Final metric value  = " << bestValue << std::endl
 
-  elxout << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
+         << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
   this->PrintSettingsVector(this->m_SettingsVector);
 
 } // end AfterRegistration()
@@ -712,44 +713,44 @@ PreconditionedGradientDescent<TElastix>::PrintSettingsVector(const SettingsVecto
   {
     elxout << settings[i].a << " ";
   }
-  elxout << ")\n";
+  elxout << ")\n"
 
-  elxout << "( SP_A ";
+         << "( SP_A ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
     elxout << settings[i].A << " ";
   }
-  elxout << ")\n";
+  elxout << ")\n"
 
-  elxout << "( SP_alpha ";
+         << "( SP_alpha ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
     elxout << settings[i].alpha << " ";
   }
-  elxout << ")\n";
+  elxout << ")\n"
 
-  elxout << "( SigmoidMax ";
+         << "( SigmoidMax ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
     elxout << settings[i].fmax << " ";
   }
-  elxout << ")\n";
+  elxout << ")\n"
 
-  elxout << "( SigmoidMin ";
+         << "( SigmoidMin ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
     elxout << settings[i].fmin << " ";
   }
-  elxout << ")\n";
+  elxout << ")\n"
 
-  elxout << "( SigmoidScale ";
+         << "( SigmoidScale ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
     elxout << settings[i].omega << " ";
   }
-  elxout << ")\n";
+  elxout << ")\n"
 
-  elxout << std::endl;
+         << std::endl;
 
 } // end PrintSettingsVector()
 
