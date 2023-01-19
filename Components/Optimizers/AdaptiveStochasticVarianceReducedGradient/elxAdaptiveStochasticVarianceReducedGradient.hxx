@@ -369,7 +369,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachResolution()
   SettingsVectorType tempSettingsVector;
   tempSettingsVector.push_back(settings);
   elxout << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":" << std::endl;
-  this->PrintSettingsVector(tempSettingsVector);
+  Superclass2::PrintSettingsVector(tempSettingsVector);
 
 } // end AfterEachResolution()
 
@@ -389,7 +389,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterRegistration()
          << "Final metric value  = " << bestValue << '\n'
 
          << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
-  this->PrintSettingsVector(this->m_SettingsVector);
+  Superclass2::PrintSettingsVector(this->m_SettingsVector);
 
 } // end AfterRegistration()
 
@@ -1214,64 +1214,6 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const Param
   }
 
 } // end SampleGradients()
-
-
-/**
- * **************** PrintSettingsVector **********************
- */
-
-template <class TElastix>
-void
-AdaptiveStochasticVarianceReducedGradient<TElastix>::PrintSettingsVector(const SettingsVectorType & settings) const
-{
-  const unsigned long nrofres = settings.size();
-
-  /** Print to log file */
-  elxout << "( SP_a ";
-  for (unsigned int i = 0; i < nrofres; ++i)
-  {
-    elxout << settings[i].a << " ";
-  }
-  elxout << ")\n"
-
-         << "( SP_A ";
-  for (unsigned int i = 0; i < nrofres; ++i)
-  {
-    elxout << settings[i].A << " ";
-  }
-  elxout << ")\n"
-
-         << "( SP_alpha ";
-  for (unsigned int i = 0; i < nrofres; ++i)
-  {
-    elxout << settings[i].alpha << " ";
-  }
-  elxout << ")\n"
-
-         << "( SigmoidMax ";
-  for (unsigned int i = 0; i < nrofres; ++i)
-  {
-    elxout << settings[i].fmax << " ";
-  }
-  elxout << ")\n"
-
-         << "( SigmoidMin ";
-  for (unsigned int i = 0; i < nrofres; ++i)
-  {
-    elxout << settings[i].fmin << " ";
-  }
-  elxout << ")\n"
-
-         << "( SigmoidScale ";
-  for (unsigned int i = 0; i < nrofres; ++i)
-  {
-    elxout << settings[i].omega << " ";
-  }
-  elxout << ")\n"
-
-         << std::endl;
-
-} // end PrintSettingsVector()
 
 
 /**

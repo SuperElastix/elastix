@@ -305,11 +305,8 @@ protected:
   using TransformType = typename itkRegistrationType::TransformType;
   using JacobianType = typename TransformType::JacobianType;
   using JacobianValueType = typename JacobianType::ValueType;
-  struct SettingsType
-  {
-    double a, A, alpha, fmax, fmin, omega;
-  };
-  using SettingsVectorType = typename std::vector<SettingsType>;
+  using typename Superclass2::SettingsType;
+  using typename Superclass2::SettingsVectorType;
   using OutputImageType = typename ElastixType::FixedImageType;
 
   using PreconditionerEstimationType =
@@ -375,10 +372,6 @@ protected:
   double m_GlobalStepSize;
   double m_RegularizationKappa;
   double m_ConditionNumber;
-
-  /** Print the contents of the settings vector to elxout. */
-  virtual void
-  PrintSettingsVector(const SettingsVectorType & settings) const;
 
   /** Select different method to estimate some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and

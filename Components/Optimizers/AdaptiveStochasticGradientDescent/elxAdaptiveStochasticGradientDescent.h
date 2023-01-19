@@ -300,12 +300,8 @@ protected:
   using JacobianType = typename TransformType::JacobianType;
   using ComputeJacobianTermsType = itk::ComputeJacobianTerms<FixedImageType, TransformType>;
   using JacobianValueType = typename JacobianType::ValueType;
-  struct SettingsType
-  {
-    double a, A, alpha, fmax, fmin, omega;
-  };
-  using SettingsVectorType = typename std::vector<SettingsType>;
-
+  using typename Superclass2::SettingsType;
+  using typename Superclass2::SettingsVectorType;
   using ComputeDisplacementDistributionType = itk::ComputeDisplacementDistribution<FixedImageType, TransformType>;
 
   /** Samplers: */
@@ -354,10 +350,6 @@ protected:
   RandomGeneratorPointer m_RandomGenerator;
 
   double m_SigmoidScaleFactor;
-
-  /** Print the contents of the settings vector to elxout. */
-  virtual void
-  PrintSettingsVector(const SettingsVectorType & settings) const;
 
   /** Select different method to estimate some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and

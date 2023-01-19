@@ -126,6 +126,16 @@ protected:
   virtual bool
   GetNewSamplesEveryIteration() const;
 
+  struct SettingsType
+  {
+    double a, A, alpha, fmax, fmin, omega;
+  };
+  using SettingsVectorType = typename std::vector<SettingsType>;
+
+  /** Print the contents of the settings vector to elxout. */
+  static void
+  PrintSettingsVector(const SettingsVectorType & settings);
+
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
 

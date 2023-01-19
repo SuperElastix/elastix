@@ -174,11 +174,8 @@ public:
   ResumeOptimization();
 
 protected:
-  struct SettingsType
-  {
-    double a, A, alpha, fmax, fmin, omega;
-  };
-  using SettingsVectorType = typename std::vector<SettingsType>;
+  using typename Superclass2::SettingsType;
+  using typename Superclass2::SettingsVectorType;
 
   /** Other protected typedefs */
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
@@ -214,10 +211,6 @@ protected:
   /** Get the SelfHessian from the metric and submit as Precondition matrix */
   virtual void
   SetSelfHessian();
-
-  /** Print the contents of the settings vector to elxout. */
-  virtual void
-  PrintSettingsVector(const SettingsVectorType & settings) const;
 
   /** Estimates some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale.
