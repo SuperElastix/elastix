@@ -127,6 +127,64 @@ OptimizerBase<TElastix>::GetNewSamplesEveryIteration() const
 
 
 /**
+ * **************** PrintSettingsVector **********************
+ */
+
+template <class TElastix>
+void
+OptimizerBase<TElastix>::PrintSettingsVector(const SettingsVectorType & settings)
+{
+  const unsigned long nrofres = settings.size();
+
+  /** Print to log file */
+  elxout << "( SP_a ";
+  for (unsigned int i = 0; i < nrofres; ++i)
+  {
+    elxout << settings[i].a << " ";
+  }
+  elxout << ")\n"
+
+         << "( SP_A ";
+  for (unsigned int i = 0; i < nrofres; ++i)
+  {
+    elxout << settings[i].A << " ";
+  }
+  elxout << ")\n"
+
+         << "( SP_alpha ";
+  for (unsigned int i = 0; i < nrofres; ++i)
+  {
+    elxout << settings[i].alpha << " ";
+  }
+  elxout << ")\n"
+
+         << "( SigmoidMax ";
+  for (unsigned int i = 0; i < nrofres; ++i)
+  {
+    elxout << settings[i].fmax << " ";
+  }
+  elxout << ")\n"
+
+         << "( SigmoidMin ";
+  for (unsigned int i = 0; i < nrofres; ++i)
+  {
+    elxout << settings[i].fmin << " ";
+  }
+  elxout << ")\n"
+
+         << "( SigmoidScale ";
+  for (unsigned int i = 0; i < nrofres; ++i)
+  {
+    elxout << settings[i].omega << " ";
+  }
+  elxout << ")\n"
+
+         << std::endl;
+
+} // end PrintSettingsVector()
+
+
+/**
  * ****************** SetSinusScales ********************
  */
 
