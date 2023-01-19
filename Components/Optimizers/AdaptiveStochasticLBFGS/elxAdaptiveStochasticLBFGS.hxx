@@ -446,7 +446,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterRegistration()
 
   double bestValue = this->GetValue();
   elxout << '\n'
-         << "Final metric value  = " << bestValue << std::endl
+         << "Final metric value  = " << bestValue << '\n'
 
          << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
   this->PrintSettingsVector(this->m_SettingsVector);
