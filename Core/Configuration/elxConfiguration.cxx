@@ -89,17 +89,11 @@ Configuration::PrintParameterFile() const
   /** Read what's in the parameter file. */
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
 
-  /** Separate clearly in log-file. */
+  /** Separate clearly in log-file, before and after writing the parameter file. */
   xl::xout["logonly"] << '\n'
                       << "=============== start of ParameterFile: " << this->GetParameterFileName()
-                      << " ===============" << std::endl;
-
-  /** Write the parameter file. */
-  xl::xout["logonly"] << params;
-  // std::cerr << params;
-
-  /** Separate clearly in log-file. */
-  xl::xout["logonly"] << '\n'
+                      << " ===============\n"
+                      << params << '\n'
                       << "=============== end of ParameterFile: " << this->GetParameterFileName()
                       << " ===============\n"
                       << std::endl;
