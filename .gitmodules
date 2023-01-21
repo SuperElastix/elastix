@@ -3,3 +3,6 @@
 	url = https://github.com/SuperElastix/manual.git
 	update = merge
 	branch = main
+[submodule "ThirdParty/spdlog"]
+	path = ThirdParty/spdlog
+	url = https://github.com/gabime/spdlog
