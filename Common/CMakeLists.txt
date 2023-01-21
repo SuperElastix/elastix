@@ -214,14 +214,7 @@ endif()
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-if(UNIX AND NOT APPLE)
-  target_link_libraries(elxCommon
-    ${ITK_LIBRARIES}
-    rt # Needed for elxTimer, clock_gettime()
-  )
-else()
-  target_link_libraries(elxCommon
-    ${ITK_LIBRARIES}
-  )
-endif()
+target_link_libraries(elxCommon
+  ${ITK_LIBRARIES}
+)
 
