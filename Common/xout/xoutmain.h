@@ -23,6 +23,7 @@
 #include "xoutsimple.h"
 #include "xoutrow.h"
 #include "xoutcell.h"
+#include "elxlog.h"
 
 /** Define a namespace alias. */
 namespace xl = xoutlibrary;

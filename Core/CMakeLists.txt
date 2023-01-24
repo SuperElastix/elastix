@@ -16,6 +16,8 @@ set(KernelFilesForComponents
   Kernel/elxElastixBase.h
   Kernel/elxElastixTemplate.h
   Kernel/elxElastixTemplate.hxx
+  Kernel/elxlog.h
+  Kernel/elxlog.cxx
 )
 
 set(InstallFilesForExecutables
@@ -133,6 +135,8 @@ add_library(elxCore STATIC
   ${ComponentBaseClassFiles}
   ${ProgressCommandFiles}
 )
+
+set_source_files_properties(Kernel/elxlog.cxx PROPERTIES INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/ThirdParty/spdlog/include")
 
 elastix_export_target(elxCore)
 
