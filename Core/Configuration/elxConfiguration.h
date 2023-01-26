@@ -157,7 +157,7 @@ public:
       parameterValue, parameterName, entry_nr, printThisErrorMessage, errorMessage);
     if (!errorMessage.empty())
     {
-      xl::xout["error"] << errorMessage;
+      log::error(errorMessage);
     }
 
     return found;
@@ -173,7 +173,7 @@ public:
     bool found = this->m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, errorMessage);
     if (!errorMessage.empty())
     {
-      xl::xout["error"] << errorMessage;
+      log::error(errorMessage);
     }
 
     return found;
@@ -195,7 +195,7 @@ public:
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, printThisErrorMessage, errorMessage);
     if (!errorMessage.empty())
     {
-      xl::xout["error"] << errorMessage;
+      log::error(errorMessage);
     }
 
     return found;
@@ -216,7 +216,7 @@ public:
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, errorMessage);
     if (!errorMessage.empty())
     {
-      xl::xout["error"] << errorMessage;
+      log::error(errorMessage);
     }
 
     return found;
@@ -292,7 +292,7 @@ public:
       parameterValues, parameterName, entry_nr_start, entry_nr_end, printThisErrorMessage, errorMessage);
     if (!errorMessage.empty())
     {
-      xl::xout["error"] << errorMessage;
+      log::error(errorMessage);
     }
 
     return found;

@@ -52,14 +52,15 @@ elastix::ReportTerminatingException(const char * const executableName, const std
     }
     else
     {
-      outputStringStream << "\nWhat message: " << stdException.what() << '\n';
+      outputStringStream << "\nWhat message: " << stdException.what();
     }
 
     const std::string message = outputStringStream.str();
 
-    // Insert the message into the standard error stream, as well as into xout, because xout might not yet be set up.
-    std::cerr << message;
-    xl::xout["error"] << message << std::flush;
+    // Insert the message into the standard error stream, as well as to the log, because the log system might not yet be
+    // set up.
+    std::cerr << message << '\n';
+    log::error(message);
   }
   catch (...)
   {
