@@ -134,7 +134,7 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
       std::ostringstream outputStringStream;
       outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
                          << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
-                         << "  The default values are used instead.\n";
+                         << "  The default values are used instead.";
       errorMessage = outputStringStream.str();
     }
     return false;

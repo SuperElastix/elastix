@@ -155,7 +155,7 @@ public:
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested at entry number "
                            << entry_nr << ", does not exist at all.\n"
-                           << "  The default value \"" << parameterValue << "\" is used instead.\n";
+                           << "  The default value \"" << parameterValue << "\" is used instead.";
         errorMessage = outputStringStream.str();
       }
 
@@ -172,7 +172,7 @@ public:
       {
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
-                           << entry_nr << ".\n  The default value \"" << parameterValue << "\" is used instead.\n";
+                           << entry_nr << ".\n  The default value \"" << parameterValue << "\" is used instead.";
         errorMessage = outputStringStream.str();
       }
       return false;
@@ -305,7 +305,7 @@ public:
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
                            << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
-                           << "  The default values are used instead.\n";
+                           << "  The default values are used instead.";
         errorMessage = outputStringStream.str();
       }
       return false;
@@ -325,7 +325,7 @@ public:
     {
       itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
                                                     << entry_nr_end << ".\nThe default value \""
-                                                    << itk::NumericTraits<T>::Zero << "\" is used instead.\n");
+                                                    << itk::NumericTraits<T>::Zero << "\" is used instead.");
     }
 
     /** Get the vector of parameters. */
