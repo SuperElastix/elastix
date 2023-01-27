@@ -19,6 +19,7 @@
 #include "elxConfiguration.h"
 
 #include "elxConversion.h"
+#include "elxMacro.h" // For elxout.
 #include "elxTransformIO.h"
 #include "elxTransformFactoryRegistration.h"
 
@@ -186,7 +187,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   this->m_ParameterFileParser->SetParameterFileName(this->m_ParameterFileName);
   try
   {
-    xl::xout["standard"] << "Reading the elastix parameters from file ...\n" << std::endl;
+    elxout << "Reading the elastix parameters from file ...\n" << std::endl;
     this->m_ParameterFileParser->ReadParameterFile();
   }
   catch (const itk::ExceptionObject & excp)
