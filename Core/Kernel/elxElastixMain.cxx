@@ -113,7 +113,7 @@ elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
   returndummy |= xl::xout.AddTargetCell("coutonly", &g_data.CoutOnlyXout);
 
   /** Format the output. */
-  xl::xout["standard"] << std::fixed << std::showpoint;
+  elxout << std::fixed << std::showpoint;
 
   /** Return a value. */
   return returndummy;
