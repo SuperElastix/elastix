@@ -398,8 +398,7 @@ void
 ElastixBase::BeforeRegistrationBase()
 {
   /** Set up the "iteration" writing field. */
-  this->m_IterationInfo.SetCOutputs(xl::xout.GetCOutputs());
-  this->m_IterationInfo.SetXOutputs(xl::xout.GetXOutputs());
+  this->m_IterationInfo.SetOutputs(xl::xout.GetCOutputs(), xl::xout.GetXOutputs());
 
 } // end BeforeRegistrationBase()
 

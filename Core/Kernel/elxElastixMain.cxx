@@ -97,13 +97,9 @@ elastix::xoutSetup(const char * logfilename, bool setupLogging, bool setupCout)
   returndummy |= g_data.CoutOnlyXout.AddOutput("cout", &std::cout);
 
   /** Copy the outputs to the warning-, error- and standard-xouts. */
-  g_data.WarningXout.SetCOutputs(xl::xout.GetCOutputs());
-  g_data.ErrorXout.SetCOutputs(xl::xout.GetCOutputs());
-  g_data.StandardXout.SetCOutputs(xl::xout.GetCOutputs());
-
-  g_data.WarningXout.SetXOutputs(xl::xout.GetXOutputs());
-  g_data.ErrorXout.SetXOutputs(xl::xout.GetXOutputs());
-  g_data.StandardXout.SetXOutputs(xl::xout.GetXOutputs());
+  g_data.WarningXout.SetOutputs(xl::xout.GetCOutputs(), xl::xout.GetXOutputs());
+  g_data.ErrorXout.SetOutputs(xl::xout.GetCOutputs(), xl::xout.GetXOutputs());
+  g_data.StandardXout.SetOutputs(xl::xout.GetCOutputs(), xl::xout.GetXOutputs());
 
   /** Link the warning-, error- and standard-xouts to xout. */
   returndummy |= xl::xout.AddTargetCell("warning", &g_data.WarningXout);

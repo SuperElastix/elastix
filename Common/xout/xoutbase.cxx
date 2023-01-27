@@ -267,6 +267,20 @@ xoutbase::SetXOutputs(const XStreamMapType & outputmap)
 
 
 /**
+ * **************** SetOutputs (std::ostreams, xoutobjects) ********************
+ */
+
+void
+xoutbase::SetOutputs(const CStreamMapType & coutputs, const XStreamMapType & xoutputs)
+{
+  // Note that these are virtual function calls, as they may be overridden.
+  this->SetCOutputs(coutputs);
+  this->SetXOutputs(xoutputs);
+
+} // end SetOutputs
+
+
+/**
  * **************** GetOutputs (map of xoutobjects) *************
  */
 

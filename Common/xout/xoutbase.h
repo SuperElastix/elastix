@@ -127,6 +127,9 @@ public:
   virtual void
   SetXOutputs(const XStreamMapType & outputmap);
 
+  void
+  SetOutputs(const CStreamMapType & coutputs, const XStreamMapType & xoutputs);
+
   /** Get the output maps. */
   virtual const CStreamMapType &
   GetCOutputs();
