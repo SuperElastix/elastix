@@ -122,10 +122,10 @@ public:
   RemoveOutput(const char * name);
 
   virtual void
-  SetOutputs(const CStreamMapType & outputmap);
+  SetCOutputs(const CStreamMapType & outputmap);
 
   virtual void
-  SetOutputs(const XStreamMapType & outputmap);
+  SetXOutputs(const XStreamMapType & outputmap);
 
   /** Get the output maps. */
   virtual const CStreamMapType &

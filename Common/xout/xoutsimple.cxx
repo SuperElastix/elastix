@@ -58,27 +58,27 @@ xoutsimple::RemoveOutput(const char * name)
 
 
 /**
- * **************** SetOutputs (std::ostreams) ******************
+ * **************** SetCOutputs (std::ostreams) ******************
  */
 
 void
-xoutsimple::SetOutputs(const CStreamMapType & outputmap)
+xoutsimple::SetCOutputs(const CStreamMapType & outputmap)
 {
   this->SetCTargetCells(outputmap);
 
-} // end SetOutputs
+} // end SetCOutputs
 
 
 /**
- * **************** SetOutputs (xoutobjects) ********************
+ * **************** SetXOutputs (xoutobjects) ********************
  */
 
 void
-xoutsimple::SetOutputs(const XStreamMapType & outputmap)
+xoutsimple::SetXOutputs(const XStreamMapType & outputmap)
 {
   this->SetXTargetCells(outputmap);
 
-} // end SetOutputs()
+} // end SetXOutputs()
 
 
 /**
