@@ -243,27 +243,27 @@ xoutbase::RemoveOutput(const char * name)
 
 
 /**
- * ******************* SetOutputs (std::ostreams) ***************
+ * ******************* SetCOutputs (std::ostreams) ***************
  */
 
 void
-xoutbase::SetOutputs(const CStreamMapType & outputmap)
+xoutbase::SetCOutputs(const CStreamMapType & outputmap)
 {
   this->m_COutputs = outputmap;
 
-} // end SetOutputs
+} // end SetCOutputs
 
 
 /**
- * **************** SetOutputs (xoutobjects) ********************
+ * **************** SetXOutputs (xoutobjects) ********************
  */
 
 void
-xoutbase::SetOutputs(const XStreamMapType & outputmap)
+xoutbase::SetXOutputs(const XStreamMapType & outputmap)
 {
   this->m_XOutputs = outputmap;
 
-} // end SetOutputs
+} // end SetXOutputs
 
 
 /**

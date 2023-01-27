@@ -84,10 +84,10 @@ public:
   RemoveOutput(const char * name) override;
 
   void
-  SetOutputs(const CStreamMapType & outputmap) override;
+  SetCOutputs(const CStreamMapType & outputmap) override;
 
   void
-  SetOutputs(const XStreamMapType & outputmap) override;
+  SetXOutputs(const XStreamMapType & outputmap) override;
 
 protected:
   /** Method to set all targets at once. The outputs of these targets

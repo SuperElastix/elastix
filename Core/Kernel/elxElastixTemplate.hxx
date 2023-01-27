@@ -768,8 +768,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   std::ofstream  transformParameterFile;
 
   /** Set up the "TransformationParameters" writing field. */
-  transformationParameterInfo.SetOutputs(xl::xout.GetCOutputs());
-  transformationParameterInfo.SetOutputs(xl::xout.GetXOutputs());
+  transformationParameterInfo.SetCOutputs(xl::xout.GetCOutputs());
+  transformationParameterInfo.SetXOutputs(xl::xout.GetXOutputs());
 
   /** Set it in the Transform, for later use. */
   this->GetElxTransformBase()->SetTransformParametersFileName(fileName.c_str());

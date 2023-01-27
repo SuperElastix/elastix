@@ -70,8 +70,8 @@ xoutrow::AddNewTargetCell(const char * name)
     auto & cellReference = *cell;
 
     /** Set the outputs equal to the outputs of this object. */
-    cell->SetOutputs(this->m_COutputs);
-    cell->SetOutputs(this->m_XOutputs);
+    cell->SetCOutputs(this->m_COutputs);
+    cell->SetXOutputs(this->m_XOutputs);
 
     /** Stored in a map, to make sure that later we can
      * delete all memory, assigned in this function.
@@ -200,41 +200,41 @@ xoutrow::RemoveOutput(const char * name)
 
 
 /**
- * ******************* SetOutputs (std::ostreams) ***************
+ * ******************* SetCOutputs (std::ostreams) ***************
  */
 
 void
-xoutrow::SetOutputs(const CStreamMapType & outputmap)
+xoutrow::SetCOutputs(const CStreamMapType & outputmap)
 {
   /** Set the output in all cells. */
   for (const auto & cell : this->m_XTargetCells)
   {
-    cell.second->SetOutputs(outputmap);
+    cell.second->SetCOutputs(outputmap);
   }
 
   /** Call the Superclass's implementation. */
-  this->Superclass::SetOutputs(outputmap);
+  this->Superclass::SetCOutputs(outputmap);
 
-} // end SetOutputs()
+} // end SetCOutputs()
 
 
 /**
- * ******************* SetOutputs (xoutobjects) *****************
+ * ******************* SetXOutputs (xoutobjects) *****************
  */
 
 void
-xoutrow::SetOutputs(const XStreamMapType & outputmap)
+xoutrow::SetXOutputs(const XStreamMapType & outputmap)
 {
   /** Set the output in all cells. */
   for (const auto & cell : this->m_XTargetCells)
   {
-    cell.second->SetOutputs(outputmap);
+    cell.second->SetXOutputs(outputmap);
   }
 
   /** Call the Superclass's implementation. */
-  this->Superclass::SetOutputs(outputmap);
+  this->Superclass::SetXOutputs(outputmap);
 
-} // end SetOutputs()
+} // end SetXOutputs()
 
 
 /**
@@ -248,8 +248,8 @@ xoutrow::WriteHeaders()
   Self headerwriter;
   headerwriter.SetXTargetCells(this->m_XTargetCells);
   // no CTargetCells, because they are not used in xoutrow!
-  headerwriter.SetOutputs(this->m_COutputs);
-  headerwriter.SetOutputs(this->m_XOutputs);
+  headerwriter.SetCOutputs(this->m_COutputs);
+  headerwriter.SetXOutputs(this->m_XOutputs);
 
   /** Write the cell-names to the cells of the headerwriter. */
   for (const auto & cell : this->m_XTargetCells)

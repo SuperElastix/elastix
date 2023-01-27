@@ -56,10 +56,10 @@ public:
   RemoveOutput(const char * name) override;
 
   void
-  SetOutputs(const CStreamMapType & outputmap) override;
+  SetCOutputs(const CStreamMapType & outputmap) override;
 
   void
-  SetOutputs(const XStreamMapType & outputmap) override;
+  SetXOutputs(const XStreamMapType & outputmap) override;
 
   /** Get the output maps. */
   const CStreamMapType &
