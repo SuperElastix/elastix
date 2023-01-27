@@ -70,8 +70,7 @@ xoutrow::AddNewTargetCell(const char * name)
     auto & cellReference = *cell;
 
     /** Set the outputs equal to the outputs of this object. */
-    cell->SetCOutputs(this->m_COutputs);
-    cell->SetXOutputs(this->m_XOutputs);
+    cell->SetOutputs(this->m_COutputs, this->m_XOutputs);
 
     /** Stored in a map, to make sure that later we can
      * delete all memory, assigned in this function.
@@ -248,8 +247,7 @@ xoutrow::WriteHeaders()
   Self headerwriter;
   headerwriter.SetXTargetCells(this->m_XTargetCells);
   // no CTargetCells, because they are not used in xoutrow!
-  headerwriter.SetCOutputs(this->m_COutputs);
-  headerwriter.SetXOutputs(this->m_XOutputs);
+  headerwriter.SetOutputs(this->m_COutputs, this->m_XOutputs);
 
   /** Write the cell-names to the cells of the headerwriter. */
   for (const auto & cell : this->m_XTargetCells)
