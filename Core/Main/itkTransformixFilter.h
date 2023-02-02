@@ -212,6 +212,9 @@ public:
     m_EnableOutput = false;
   }
 
+  itkSetMacro(NumberOfThreads, int);
+  itkGetConstMacro(NumberOfThreads, int);
+
   /** Sets an (optional) input mesh. An Update() will transform its points, and store them in the output mesh.  */
   itkSetConstObjectMacro(InputMesh, MeshType);
 
@@ -287,6 +290,8 @@ private:
   bool m_EnableOutput{ true };
   bool m_LogToConsole{ false };
   bool m_LogToFile{ false };
+
+  int m_NumberOfThreads{ 0 };
 
   typename MeshType::ConstPointer m_InputMesh{ nullptr };
   typename MeshType::Pointer      m_OutputMesh{ nullptr };

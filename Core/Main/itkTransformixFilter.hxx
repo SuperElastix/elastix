@@ -150,6 +150,11 @@ TransformixFilter<TMovingImage>::GenerateData()
     }
   }
 
+  if (m_NumberOfThreads > 0)
+  {
+    argumentMap.insert(ArgumentMapEntryType("-threads", std::to_string(m_NumberOfThreads)));
+  }
+
   // Setup xout
   const auto manager = m_EnableOutput
                          ? std::make_unique<const elx::xoutManager>(logFileName, m_LogToFile, m_LogToConsole)
