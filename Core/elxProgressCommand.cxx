@@ -38,8 +38,7 @@ ProgressCommand::ProgressCommand()
 
   /** Check if the output of the stream is a console. */
   this->m_StreamOutputIsConsole = false;
-  std::string streamOutput = "cout";
-  int         currentPos = xl::xout["coutonly"].GetCOutputs().find(streamOutput)->second->tellp();
+  int currentPos = std::cout.tellp();
   if (currentPos == -1)
   {
     this->m_StreamOutputIsConsole = true;
@@ -183,12 +182,12 @@ ProgressCommand::PrintProgress(const float progress) const
 {
   /** Print the progress to the screen. */
   const int progressInt = itk::Math::Round<float>(100 * progress);
-  xl::xout["coutonly"] << "\r" << this->m_StartString << progressInt << this->m_EndString << std::flush;
+  std::cout << "\r" << this->m_StartString << progressInt << this->m_EndString << std::flush;
 
   /** If the process is completed, print an end-of-line. *
   if ( progress > 0.99999 )
   {
-    xl::xout["coutonly"] << std::endl;
+    std::cout << std::endl;
   }*/
 
 } // end PrintProgress()
