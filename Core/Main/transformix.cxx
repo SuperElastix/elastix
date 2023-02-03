@@ -233,8 +233,9 @@ main(int argc, char ** argv)
     elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
     // Print where transformix was run, and print its version information.
-    elxout << "which transformix:   " << argv[0] << '\n' << elx::GetExtendedVersionInformation("transformix", "  ");
-    elx::PrintArguments(elxout, argv);
+    elxout << "which transformix:   " << argv[0] << '\n'
+           << elx::GetExtendedVersionInformation("transformix", "  ") << elx::MakeStringOfCommandLineArguments(argv)
+           << std::endl;
 
     itksys::SystemInformation info;
     info.RunCPUCheck();

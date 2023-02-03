@@ -114,9 +114,11 @@ elastix::GetExtendedVersionInformation(const char * const executableName, const 
 }
 
 
-void
-elastix::PrintArguments(xoutlibrary::xoutbase & output, const char * const * const arguments)
+std::string
+elastix::MakeStringOfCommandLineArguments(const char * const * const arguments)
 {
+  std::ostringstream outputStringStream;
+
   if ((arguments == nullptr) || (*arguments == nullptr) || (*(arguments + 1) == nullptr))
   {
     assert(!"There should be at least two arguments!");
@@ -128,14 +130,15 @@ elastix::PrintArguments(xoutlibrary::xoutbase & output, const char * const * con
     };
 
     // Skip the first argument, as it is usually just the executable name.
-    output << "\nCommand-line arguments: \n  " << AddDoubleQuotesIfStringHasSpace(*(arguments + 1));
+    outputStringStream << "\nCommand-line arguments: \n  " << AddDoubleQuotesIfStringHasSpace(*(arguments + 1));
 
     auto argument = arguments + 2;
     while (*argument != nullptr)
     {
-      output << ' ' << AddDoubleQuotesIfStringHasSpace(*argument);
+      outputStringStream << ' ' << AddDoubleQuotesIfStringHasSpace(*argument);
       ++argument;
     }
-    output << '\n' << std::endl;
+    outputStringStream << '\n';
   }
+  return outputStringStream.str();
 }
