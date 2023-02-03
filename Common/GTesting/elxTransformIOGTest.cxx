@@ -23,7 +23,6 @@
 
 #include "elxConversion.h"
 #include "elxDefaultConstruct.h"
-#include "elxElastixMain.h" // For xoutManager.
 #include "elxElastixTemplate.h"
 #include "elxGTestUtilities.h"
 #include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
@@ -243,8 +242,6 @@ struct WithDimension
                      .append("\n  ElastixTransformType = ")
                      .append(typeid(ElastixTransformType).name()));
 
-      const elx::xoutManager manager("", false, false);
-
       const auto elxTransform = CheckNew<ElastixTransformType>();
       const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();
 
@@ -294,8 +291,6 @@ struct WithDimension
     static void
     Test_CreateTransformParametersMap_double_precision()
     {
-      const elx::xoutManager manager("", false, false);
-
       // Use 0.3333333333333333... as test value.
       constexpr auto testValue = 1.0 / 3.0;
       constexpr auto expectedPrecision = 16;
@@ -337,8 +332,6 @@ struct WithDimension
     static void
     Test_CreateTransformParametersMap_SetUseAddition()
     {
-      const elx::xoutManager manager("", false, false);
-
       const auto elxTransform = CheckNew<ElastixTransformType>();
 
       const auto elastixObject = CreateDefaultElastixObject<ElastixType<NDimension>>();

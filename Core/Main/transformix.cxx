@@ -190,7 +190,7 @@ main(int argc, char ** argv)
       returndummy |= -1;
     }
 
-    /** Check if the -out option is given and setup xout. */
+    /** Check if the -out option is given and setup the log system. */
     if (outFolderPresent)
     {
       /** Check if the output directory exists. */
@@ -203,12 +203,12 @@ main(int argc, char ** argv)
       }
       else
       {
-        /** Setup xout. */
+        /** Setup the log system. */
         logFileName = argMap["-out"] + "transformix.log";
-        int returndummy2 = elx::xoutSetup(logFileName.c_str(), true, true);
+        int returndummy2 = elx::log::setup(logFileName, true, true) ? 0 : 1;
         if (returndummy2)
         {
-          std::cerr << "ERROR while setting up xout." << std::endl;
+          std::cerr << "ERROR while setting up the log system." << std::endl;
         }
         returndummy |= returndummy2;
       }

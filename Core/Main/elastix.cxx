@@ -211,12 +211,13 @@ main(int argc, char ** argv)
       }
       else
       {
-        /** Setup xout. */
+        /** Setup the log system. */
         const std::string logFileName = outFolder + "elastix.log";
-        const int         returndummy2{ elx::xoutSetup(logFileName.c_str(), true, true) };
+        const int         returndummy2 = elx::log::setup(logFileName, true, true) ? 0 : 1;
+
         if (returndummy2 != 0)
         {
-          std::cerr << "ERROR while setting up xout." << std::endl;
+          std::cerr << "ERROR while setting up the log system." << std::endl;
         }
         returndummy |= returndummy2;
       }

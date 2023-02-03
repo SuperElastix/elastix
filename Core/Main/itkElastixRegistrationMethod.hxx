@@ -202,10 +202,8 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     argumentMap.insert(ArgumentMapEntryType("-threads", std::to_string(m_NumberOfThreads)));
   }
 
-  // Setup xout
-  const auto manager = m_EnableOutput
-                         ? std::make_unique<const elx::xoutManager>(logFileName, m_LogToFile, m_LogToConsole)
-                         : std::unique_ptr<const elx::xoutManager>();
+  // Setup logging.
+  const elx::log::guard lockGuard(logFileName, m_EnableOutput && m_LogToFile, m_EnableOutput && m_LogToConsole);
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)
