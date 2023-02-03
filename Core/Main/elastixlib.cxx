@@ -191,15 +191,15 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     return -2;
   }
 
-  /** Setup xout. */
-  const std::string      logFileName = performLogging ? (outFolder + "elastix.log") : "";
-  const elx::xoutManager manager{};
-  int                    returndummy = elx::xoutSetup(logFileName.c_str(), performLogging, performCout);
+  /** Setup the log system. */
+  const std::string     logFileName = performLogging ? (outFolder + "elastix.log") : "";
+  const elx::log::guard logGuard{};
+  int                   returndummy = elx::log::setup(logFileName, performLogging, performCout) ? 0 : 1;
   if ((returndummy != 0) && performCout)
   {
     if (performCout)
     {
-      std::cerr << "ERROR while setting up xout." << std::endl;
+      std::cerr << "ERROR while setting up the log system." << std::endl;
     }
     return returndummy;
   }

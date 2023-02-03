@@ -34,54 +34,6 @@
 namespace elastix
 {
 
-///
-/// ********************** Global Functions **********************
-///
-/// NB: not part of the ElastixMain class.
-///
-
-/**
- * function xoutSetup
- * Configure the xl::xout variable, which has to be used for
- * for writing messages. The function adds some default fields,
- * such as "warning", "error", "standard", "logonly" and "coutonly",
- * and it sets the outputs to std::cout and/or a logfile.
- *
- * The method takes a logfile name as its input argument.
- * It returns 0 if everything went ok. 1 otherwise.
- */
-extern int
-xoutSetup(const char * logfilename, bool setupLogging, bool setupCout);
-
-
-/** Manages setting up and closing the "xout" output streams.
- */
-class xoutManager
-{
-public:
-  ITK_DISALLOW_COPY_AND_MOVE(xoutManager);
-
-  /** This explicit constructor does set up the "xout" output streams. */
-  explicit xoutManager(const std::string & logfilename, const bool setupLogging, const bool setupCout);
-
-  /** The default-constructor only just constructs a manager object */
-  xoutManager() = default;
-
-  /** The destructor closes the "xout" output streams. */
-  ~xoutManager() = default;
-
-private:
-  struct Guard
-  {
-    ITK_DISALLOW_COPY_AND_MOVE(Guard);
-    Guard() = default;
-    ~Guard();
-  };
-
-  const Guard m_Guard{};
-};
-
-
 /**
  * \class ElastixMain
  * \brief A class with all functionality to configure elastix.

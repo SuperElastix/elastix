@@ -25,8 +25,6 @@
 // Tests retrieving the component data base and a component creator in parallel.
 GTEST_TEST(ElastixMain, GetComponentDatabaseAndCreatorInParallel)
 {
-  const elx::xoutManager manager("", false, false);
-
 #pragma omp parallel for
   for (auto i = 0; i <= 9; ++i)
   {

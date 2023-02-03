@@ -166,7 +166,6 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
     }
     else
     {
-      /** Setup xout. */
       if (performLogging)
       {
         logFileName = outFolder + "transformix.log";
@@ -177,14 +176,14 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
   /** The argv0 argument, required for finding the component.dll/so's. */
   argMap.insert(ArgumentMapEntryType("-argv0", "transformix"));
 
-  /** Setup xout. */
-  const elx::xoutManager manager{};
-  int                    returndummy2 = elx::xoutSetup(logFileName.c_str(), performLogging, performCout);
+  /** Setup the log system. */
+  const elx::log::guard logGuard{};
+  int                   returndummy2 = elx::log::setup(logFileName, performLogging, performCout) ? 0 : 1;
   if (returndummy2 && performCout)
   {
     if (performCout)
     {
-      std::cerr << "ERROR while setting up xout." << std::endl;
+      std::cerr << "ERROR while setting up the log system." << std::endl;
     }
     return (returndummy2);
   }
