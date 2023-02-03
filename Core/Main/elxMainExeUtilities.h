@@ -18,8 +18,6 @@
 #ifndef elxMainExeUtilities_h
 #define elxMainExeUtilities_h
 
-#include "xoutbase.h"
-
 #include <exception>
 #include <string>
 
@@ -34,9 +32,9 @@ ReportTerminatingException(const char * const executableName, const std::excepti
 std::string
 GetExtendedVersionInformation(const char * const executableName, const char * const indentation = "");
 
-/** Prints the command-line arguments to the specified output. */
-void
-PrintArguments(xoutlibrary::xoutbase & output, const char * const * const arguments);
+/** Makes a string of all command-line arguments. */
+std::string
+MakeStringOfCommandLineArguments(const char * const * const arguments);
 
 } // namespace elastix
 
