@@ -34,10 +34,10 @@ template <class TElastix>
 void
 OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** param */)
 {
-  xl::xout["error"] << "ERROR: This function should be overridden or just not used.\n"
-                    << "  Are you using BSplineTransformWithDiffusion in combination with another optimizer than the "
-                       "StandardGradientDescentOptimizer? Don't!"
-                    << std::endl;
+  log::error(log::get_ostringstream()
+             << "ERROR: This function should be overridden or just not used.\n"
+             << "  Are you using BSplineTransformWithDiffusion in combination with another optimizer than the "
+                "StandardGradientDescentOptimizer? Don't!");
 
   /** Throw an exception if this function is not overridden. */
   itkExceptionMacro(<< "ERROR: The SetCurrentPositionPublic method is not implemented in your optimizer");
@@ -88,7 +88,7 @@ OptimizerBase<TElastix>::AfterRegistrationBase()
   uLong                 crc = crc32(0L, Z_NULL, 0);
   crc = crc32(crc, crcInputData, N * sizeof(ParametersValueType));
 
-  elxout << "\nRegistration result checksum: " << crc << std::endl;
+  log::info(log::get_ostringstream() << "\nRegistration result checksum: " << crc);
 
 } // end AfterRegistrationBase()
 
@@ -177,9 +177,9 @@ OptimizerBase<TElastix>::PrintSettingsVector(const SettingsVectorType & settings
   {
     elxout << settings[i].omega << " ";
   }
-  elxout << ")\n"
+  log::info(log::get_ostringstream() << ")\n"
 
-         << std::endl;
+  );
 
 } // end PrintSettingsVector()
 

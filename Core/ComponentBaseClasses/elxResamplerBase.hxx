@@ -104,19 +104,20 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
     timer.Start();
 
     /** Apply the final transform, and save the result. */
-    elxout << "Applying transform this resolution ..." << std::endl;
+    log::info("Applying transform this resolution ...");
     try
     {
       this->ResampleAndWriteResultImage(makeFileName.str().c_str());
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
+      log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
     }
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
-    elxout << "  Applying transform took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+    log::info(log::get_ostringstream() << "  Applying transform took "
+                                       << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   } // end if
 
@@ -165,7 +166,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
+      log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
     }
 
   } // end if
@@ -236,24 +237,26 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       /** Apply the final transform, and save the result,
        * by calling ResampleAndWriteResultImage.
        */
-      elxout << "\nApplying final transform ..." << std::endl;
+      log::info("\nApplying final transform ...");
       try
       {
         this->ResampleAndWriteResultImage(makeFileName.str().c_str(), this->m_ShowProgress);
       }
       catch (const itk::ExceptionObject & excp)
       {
-        xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
+        log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
       }
 
       /** Print the elapsed time for the resampling. */
       timer.Stop();
-      elxout << "  Applying final transform took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+      log::info(log::get_ostringstream() << "  Applying final transform took "
+                                         << Conversion::SecondsToDHMS(timer.GetMean(), 2));
     }
     else
     {
       /** Do not apply the final transform. */
-      elxout << '\n' << "Skipping applying final transform, no resulting output image generated." << std::endl;
+      log::info(log::get_ostringstream() << '\n'
+                                         << "Skipping applying final transform, no resulting output image generated.");
     } // end if
   }
 
@@ -383,7 +386,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
   /** Do the writing. */
   if (showProgress)
   {
-    xl::xout["coutonly"] << "\n  Writing image ..." << std::endl;
+    log::to_stdout("\n  Writing image ...");
   }
   try
   {
@@ -579,7 +582,7 @@ ResamplerBase<TElastix>::ReadFromFile()
   }
   if (sum > 0)
   {
-    xl::xout["error"] << "ERROR: One or more image sizes are 0 or unspecified!" << std::endl;
+    log::error("ERROR: One or more image sizes are 0 or unspecified!");
     /** \todo quit program nicely. */
   }
 

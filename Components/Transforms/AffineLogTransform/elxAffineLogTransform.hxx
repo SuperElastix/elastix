@@ -31,7 +31,7 @@ namespace elastix
 template <class TElastix>
 AffineLogTransformElastix<TElastix>::AffineLogTransformElastix()
 {
-  elxout << "Constructor" << std::endl;
+  log::info("Constructor");
   this->SetCurrentTransform(this->m_AffineLogTransform);
 
 } // end Constructor
@@ -45,7 +45,7 @@ template <class TElastix>
 void
 AffineLogTransformElastix<TElastix>::BeforeRegistration()
 {
-  elxout << "BeforeRegistration" << std::endl;
+  log::info("BeforeRegistration");
   /** Set center of rotation and initial translation. */
   this->InitializeTransform();
 
@@ -63,7 +63,7 @@ template <class TElastix>
 void
 AffineLogTransformElastix<TElastix>::ReadFromFile()
 {
-  elxout << "ReadFromFile" << std::endl;
+  log::info("ReadFromFile");
   /** Variables. */
   InputPointType centerOfRotationPoint;
   centerOfRotationPoint.Fill(0.0);
@@ -76,7 +76,7 @@ AffineLogTransformElastix<TElastix>::ReadFromFile()
 
   if (!pointRead)
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
+    log::error("ERROR: No center of rotation is specified in the transform parameter file");
     itkExceptionMacro(<< "Transform parameter file is corrupt.");
   }
 
@@ -118,7 +118,7 @@ template <class TElastix>
 void
 AffineLogTransformElastix<TElastix>::InitializeTransform()
 {
-  elxout << "InitializeTransform" << std::endl;
+  log::info("InitializeTransform");
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineLogTransform->SetIdentity();
 
@@ -174,13 +174,13 @@ AffineLogTransformElastix<TElastix>::InitializeTransform()
   /** Give a warning if necessary. */
   if (!CORIndexInImage && centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not within image boundaries!" << std::endl;
+    log::warn("WARNING: Center of Rotation (index) is not within image boundaries!");
   }
 
   /** Give a warning if necessary. */
   if (!CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not within image boundaries!" << std::endl;
+    log::warn("WARNING: Center of Rotation (point) is not within image boundaries!");
   }
 
   /** Check if user wants automatic transform initialization; false by default.
@@ -243,7 +243,7 @@ AffineLogTransformElastix<TElastix>::InitializeTransform()
       this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformIndexToPhysicalPoint(centerOfRotationIndex,
                                                                                                centerOfRotationPoint);
     }
-    elxout << "cor: " << centerOfRotationPoint << std::endl;
+    log::info(log::get_ostringstream() << "cor: " << centerOfRotationPoint);
 
     this->m_AffineLogTransform->SetCenter(centerOfRotationPoint);
   }
@@ -273,14 +273,14 @@ template <class TElastix>
 void
 AffineLogTransformElastix<TElastix>::SetScales()
 {
-  elxout << "SetScales" << std::endl;
+  log::info("SetScales");
   /** Create the new scales. */
   const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
   ScalesType                   newscales(numberOfParameters);
   newscales.Fill(1.0);
 
   /** Always estimate scales automatically */
-  elxout << "Scales are estimated automatically." << std::endl;
+  log::info("Scales are estimated automatically.");
   this->AutomaticScalesEstimation(newscales);
 
   std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
@@ -308,7 +308,7 @@ AffineLogTransformElastix<TElastix>::SetScales()
     itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
   }
 
-  elxout << "Scales for transform parameters are: " << newscales << std::endl;
+  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
 
   /** Set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);
@@ -324,7 +324,7 @@ template <class TElastix>
 bool
 AffineLogTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {
-  elxout << "ReadCenterOfRotationPoint" << std::endl;
+  log::info("ReadCenterOfRotationPoint");
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */

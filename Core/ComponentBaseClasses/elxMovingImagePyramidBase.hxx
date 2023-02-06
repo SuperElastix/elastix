@@ -68,15 +68,15 @@ MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
                  << resultImageFormat;
 
     /** Save the fixed pyramid image. */
-    elxout << "Writing moving pyramid image " << this->GetComponentLabel() << " from resolution " << level << "..."
-           << std::endl;
+    log::info(log::get_ostringstream() << "Writing moving pyramid image " << this->GetComponentLabel()
+                                       << " from resolution " << level << "...");
     try
     {
       this->WritePyramidImage(makeFileName.str(), level);
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
+      log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
     }
   } // end if
 
@@ -99,7 +99,7 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
   this->m_Configuration->ReadParameter(numberOfResolutions, "NumberOfResolutions", 0, true);
   if (numberOfResolutions == 0)
   {
-    xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
+    log::error("ERROR: NumberOfResolutions not specified!");
   }
   /** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
 
@@ -133,8 +133,8 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
 
   if (!found && this->GetConfiguration()->GetPrintErrorMessages())
   {
-    xl::xout["warning"] << "WARNING: the moving pyramid schedule is not fully specified!\n"
-                        << "  A default pyramid schedule is used." << std::endl;
+    log::warn(log::get_ostringstream() << "WARNING: the moving pyramid schedule is not fully specified!\n"
+                                       << "  A default pyramid schedule is used.");
   }
   else
   {
@@ -168,7 +168,7 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Do the writing. */
-  xl::xout["coutonly"] << "  Writing moving pyramid image ..." << std::endl;
+  log::to_stdout("  Writing moving pyramid image ...");
   try
   {
     itk::WriteCastedImage(*(this->GetAsITKBaseType()->GetOutput(level)), filename, resultImagePixelType, doCompression);

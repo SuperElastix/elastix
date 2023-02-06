@@ -50,15 +50,16 @@ elastix::OpenCLResampler<TElastix>::OpenCLResampler()
       itk::OpenCLLogger::Pointer logger = itk::OpenCLLogger::GetInstance();
       logger->Write(itk::LoggerBase::PriorityLevelEnum::CRITICAL, e.GetDescription());
 
-      xl::xout["error"] << "ERROR: OpenCL program has not been compiled during GPU resampler creation.\n"
-                        << "  Please check the '" << logger->GetLogFileName() << "' in output directory." << std::endl;
+      log::error(log::get_ostringstream()
+                 << "ERROR: OpenCL program has not been compiled during GPU resampler creation.\n"
+                 << "  Please check the '" << logger->GetLogFileName() << "' in output directory.");
 
       this->SwitchingToCPUAndReport(true);
       this->m_GPUResamplerCreated = false;
     }
     catch (itk::ExceptionObject & e)
     {
-      xl::xout["error"] << "ERROR: Exception during GPU resampler creation: " << e << std::endl;
+      log::error(log::get_ostringstream() << "ERROR: Exception during GPU resampler creation: " << e);
       this->SwitchingToCPUAndReport(true);
       this->m_GPUResamplerCreated = false;
     }
@@ -138,7 +139,7 @@ OpenCLResampler<TElastix>::BeforeGenerateData()
   }
   catch (itk::ExceptionObject & e)
   {
-    xl::xout["error"] << "ERROR: Exception during making GPU copy of the transform: " << e << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: Exception during making GPU copy of the transform: " << e);
     this->SwitchingToCPUAndReport(true);
   }
 
@@ -152,7 +153,7 @@ OpenCLResampler<TElastix>::BeforeGenerateData()
     }
     catch (itk::ExceptionObject & e)
     {
-      xl::xout["error"] << "ERROR: Exception during making GPU copy of the interpolator: " << e << std::endl;
+      log::error(log::get_ostringstream() << "ERROR: Exception during making GPU copy of the interpolator: " << e);
       this->SwitchingToCPUAndReport(true);
     }
   }
@@ -171,7 +172,7 @@ OpenCLResampler<TElastix>::BeforeGenerateData()
     }
     catch (itk::ExceptionObject & e)
     {
-      xl::xout["error"] << "ERROR: Exception during creating GPU input image: " << e << std::endl;
+      log::error(log::get_ostringstream() << "ERROR: Exception during creating GPU input image: " << e);
       this->SwitchingToCPUAndReport(true);
     }
   }
@@ -201,14 +202,15 @@ OpenCLResampler<TElastix>::BeforeGenerateData()
       itk::OpenCLLogger::Pointer logger = itk::OpenCLLogger::GetInstance();
       logger->Write(itk::LoggerBase::PriorityLevelEnum::CRITICAL, e.GetDescription());
 
-      xl::xout["error"] << "ERROR: OpenCL program has not been compiled during setting GPU resampler.\n"
-                        << "  Please check the '" << logger->GetLogFileName() << "' in output directory." << std::endl;
+      log::error(log::get_ostringstream()
+                 << "ERROR: OpenCL program has not been compiled during setting GPU resampler.\n"
+                 << "  Please check the '" << logger->GetLogFileName() << "' in output directory.");
 
       this->SwitchingToCPUAndReport(true);
     }
     catch (itk::ExceptionObject & e)
     {
-      xl::xout["error"] << "ERROR: Exception during setting GPU resampler: " << e << std::endl;
+      log::error(log::get_ostringstream() << "ERROR: Exception during setting GPU resampler: " << e);
       this->SwitchingToCPUAndReport(true);
     }
   }
@@ -309,13 +311,13 @@ OpenCLResampler<TElastix>::SwitchingToCPUAndReport(const bool configError)
 {
   if (!configError)
   {
-    xl::xout["warning"] << "WARNING: The OpenCL context could not be created.\n"
-                        << "  The OpenCLResampler is switching back to CPU mode." << std::endl;
+    log::warn(log::get_ostringstream() << "WARNING: The OpenCL context could not be created.\n"
+                                       << "  The OpenCLResampler is switching back to CPU mode.");
   }
   else
   {
-    xl::xout["warning"] << "WARNING: Unable to configure the GPU.\n"
-                        << "  The OpenCLResampler is switching back to CPU mode." << std::endl;
+    log::warn(log::get_ostringstream() << "WARNING: Unable to configure the GPU.\n"
+                                       << "  The OpenCLResampler is switching back to CPU mode.");
   }
   this->m_GPUResamplerReady = false;
 
@@ -332,8 +334,8 @@ OpenCLResampler<TElastix>::ReportToLog()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
   itk::OpenCLDevice           device = context->GetDefaultDevice();
-  elxout << "  Applying final transform was performed by " << device.GetName() << " from " << device.GetVendor() << "."
-         << std::endl;
+  log::info(log::get_ostringstream() << "  Applying final transform was performed by " << device.GetName() << " from "
+                                     << device.GetVendor() << ".");
 } // end ReportToLog()
 
 

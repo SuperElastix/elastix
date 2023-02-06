@@ -64,8 +64,8 @@ GenerateFileNameContainer(const Configuration & configuration,
       /** Both failed; return an error message, if desired. */
       if (printerrors)
       {
-        xl::xout["error"] << "ERROR: No CommandLine option \"" << optionkey << "\" or \"" << optionkey << 0
-                          << "\" given!" << std::endl;
+        log::error(log::get_ostringstream()
+                   << "ERROR: No CommandLine option \"" << optionkey << "\" or \"" << optionkey << 0 << "\" given!");
       }
       errorcode |= 1;
 
@@ -84,7 +84,7 @@ GenerateFileNameContainer(const Configuration & configuration,
       unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
       std::string  spaces = "";
       spaces.resize(nrSpaces, ' ');
-      elxout << argused << spaces << check << std::endl;
+      log::info(log::get_ostringstream() << argused << spaces << check);
     }
     fileNameContainer->CreateElementAt(0) = check;
 
@@ -110,7 +110,7 @@ GenerateFileNameContainer(const Configuration & configuration,
           unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
           std::string  spaces = "";
           spaces.resize(nrSpaces, ' ');
-          elxout << argused << spaces << check << std::endl;
+          log::info(log::get_ostringstream() << argused << spaces << check);
         }
         fileNameContainer->CreateElementAt(i) = check;
         ++i;
@@ -184,7 +184,7 @@ ElastixBase::BeforeAllBase()
   elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n";
 
   /** Check Command line options and print them to the logfile. */
-  elxout << "Command line options from ElastixBase:" << std::endl;
+  log::info("Command line options from ElastixBase:");
   std::string check = "";
 
   /** Read the fixed and moving image filenames. These are obliged options,
@@ -207,14 +207,14 @@ ElastixBase::BeforeAllBase()
     GenerateFileNameContainer(*(this->m_Configuration), "-fMask", maskreturndummy, false, true);
   if (maskreturndummy != 0)
   {
-    elxout << "-fMask    unspecified, so no fixed mask used" << std::endl;
+    log::info("-fMask    unspecified, so no fixed mask used");
   }
   maskreturndummy = 0;
   this->m_MovingMaskFileNameContainer =
     GenerateFileNameContainer(*(this->m_Configuration), "-mMask", maskreturndummy, false, true);
   if (maskreturndummy != 0)
   {
-    elxout << "-mMask    unspecified, so no moving mask used" << std::endl;
+    log::info("-mMask    unspecified, so no moving mask used");
   }
 
   /** Check for appearance of "-out".
@@ -224,7 +224,7 @@ ElastixBase::BeforeAllBase()
   check = this->GetConfiguration()->GetCommandLineArgument("-out");
   if (check.empty())
   {
-    xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: No CommandLine option \"-out\" given!");
     returndummy |= 1;
   }
   else
@@ -239,7 +239,7 @@ ElastixBase::BeforeAllBase()
 
       this->GetConfiguration()->SetCommandLineArgument("-out", folder);
     }
-    elxout << "-out      " << check << std::endl;
+    log::info(log::get_ostringstream() << "-out      " << check);
   }
 
   /** Print all "-p". */
@@ -256,7 +256,7 @@ ElastixBase::BeforeAllBase()
     }
     else
     {
-      elxout << "-p        " << check << std::endl;
+      log::info(log::get_ostringstream() << "-p        " << check);
     }
     ++i;
   }
@@ -266,11 +266,11 @@ ElastixBase::BeforeAllBase()
   check = this->GetConfiguration()->GetCommandLineArgument("-priority");
   if (check.empty())
   {
-    elxout << "-priority unspecified, so NORMAL process priority" << std::endl;
+    log::info("-priority unspecified, so NORMAL process priority");
   }
   else
   {
-    elxout << "-priority " << check << std::endl;
+    log::info(log::get_ostringstream() << "-priority " << check);
   }
 #endif
 
@@ -278,21 +278,21 @@ ElastixBase::BeforeAllBase()
   check = this->GetConfiguration()->GetCommandLineArgument("-threads");
   if (check.empty())
   {
-    elxout << "-threads  unspecified, so all available threads are used" << std::endl;
+    log::info("-threads  unspecified, so all available threads are used");
   }
   else
   {
-    elxout << "-threads  " << check << std::endl;
+    log::info(log::get_ostringstream() << "-threads  " << check);
   }
 
   /** Check the very important UseDirectionCosines parameter. */
   bool retudc = this->GetConfiguration()->ReadParameter(this->m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
-    xl::xout["warning"] << "\nWARNING: The option \"UseDirectionCosines\" was not found in your parameter file.\n"
-                        << "  From elastix 4.8 it defaults to true!\n"
-                        << "This may change the behavior of your registrations considerably.\n"
-                        << std::endl;
+    log::warn(log::get_ostringstream()
+              << "\nWARNING: The option \"UseDirectionCosines\" was not found in your parameter file.\n"
+              << "  From elastix 4.8 it defaults to true!\n"
+              << "This may change the behavior of your registrations considerably.\n");
   }
 
   /** Set the random seed. Use 121212 as a default, which is the same as
@@ -326,7 +326,7 @@ ElastixBase::BeforeAllTransformixBase()
   elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n" << std::setprecision(this->GetDefaultOutputPrecision());
 
   /** Check Command line options and print them to the logfile. */
-  elxout << "Command line options from ElastixBase:" << std::endl;
+  log::info("Command line options from ElastixBase:");
   if (!BaseComponent::IsElastixLibrary())
   {
     /** Read the input image filenames. These are not obliged options,
@@ -339,14 +339,14 @@ ElastixBase::BeforeAllTransformixBase()
       GenerateFileNameContainer(*(this->m_Configuration), "-in", inreturndummy, false, true);
     if (inreturndummy != 0)
     {
-      elxout << "-in       unspecified, so no input image specified" << std::endl;
+      log::info("-in       unspecified, so no input image specified");
     }
   }
   /** Check for appearance of "-out". */
   std::string check = this->GetConfiguration()->GetCommandLineArgument("-out");
   if (check.empty())
   {
-    xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: No CommandLine option \"-out\" given!");
     returndummy |= 1;
   }
   else
@@ -356,33 +356,32 @@ ElastixBase::BeforeAllTransformixBase()
     {
       this->GetConfiguration()->SetCommandLineArgument("-out", check + '/');
     }
-    elxout << "-out      " << check << std::endl;
+    log::info(log::get_ostringstream() << "-out      " << check);
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
   check = this->GetConfiguration()->GetCommandLineArgument("-threads");
   if (check.empty())
   {
-    elxout << "-threads  unspecified, so all available threads are used" << std::endl;
+    log::info("-threads  unspecified, so all available threads are used");
   }
   else
   {
-    elxout << "-threads  " << check << std::endl;
+    log::info(log::get_ostringstream() << "-threads  " << check);
   }
   if (!BaseComponent::IsElastixLibrary())
   {
     /** Print "-tp". */
     check = this->GetConfiguration()->GetCommandLineArgument("-tp");
-    elxout << "-tp       " << check << std::endl;
+    log::info(log::get_ostringstream() << "-tp       " << check);
   }
   /** Check the very important UseDirectionCosines parameter. */
   bool retudc = this->GetConfiguration()->ReadParameter(this->m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
-    xl::xout["warning"] << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
-                        << "the UseDirectionCosines option to your parameter file! See\n"
-                        << "http://elastix.lumc.nl/whatsnew_04_3.php for more information.\n"
-                        << std::endl;
+    log::warn(log::get_ostringstream() << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
+                                       << "the UseDirectionCosines option to your parameter file! See\n"
+                                       << "http://elastix.lumc.nl/whatsnew_04_3.php for more information.\n");
   }
 
   return returndummy;

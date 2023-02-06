@@ -150,7 +150,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
 
   /** Start the timer for reading images. */
   this->m_Timer0.Start();
-  elxout << "\nReading images..." << std::endl;
+  log::info("\nReading images...");
 
   /** Read images and masks, if not set already. */
   const bool              useDirCos = this->GetUseDirectionCosines();
@@ -192,8 +192,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
 
   /** Print the time spent on reading images. */
   this->m_Timer0.Stop();
-  elxout << "Reading images took " << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.\n"
-         << std::endl;
+  log::info(log::get_ostringstream() << "Reading images took "
+                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.\n");
 
   /** Give all components the opportunity to do some initialization. */
   this->BeforeRegistration();
@@ -280,7 +280,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
     timer.Start();
 
     /** Tell the user. */
-    elxout << '\n' << "Reading input image ..." << std::endl;
+    log::info(log::get_ostringstream() << '\n' << "Reading input image ...");
 
     /** Load the image from disk, if it wasn't set already by the user. */
     const bool useDirCos = this->GetUseDirectionCosines();
@@ -292,14 +292,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
 
     /** Tell the user. */
     timer.Stop();
-    elxout << "  Reading input image took " << timer.GetMean() << " s" << std::endl;
+    log::info(log::get_ostringstream() << "  Reading input image took " << timer.GetMean() << " s");
 
   } // end if inputImageFileName
 
   /** Call all the ReadFromFile() functions. */
   timer.Reset();
   timer.Start();
-  elxout << "Calling all ReadFromFile()'s ..." << std::endl;
+  log::info("Calling all ReadFromFile()'s ...");
 
   this->GetElxResampleInterpolatorBase()->ReadFromFile();
 
@@ -315,7 +315,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
 
   /** Tell the user. */
   timer.Stop();
-  elxout << "  Calling all ReadFromFile()'s took " << timer.GetMean() << " s" << std::endl;
+  log::info(log::get_ostringstream() << "  Calling all ReadFromFile()'s took " << timer.GetMean() << " s");
 
   /** Call TransformPoints.
    * Actually we could loop over all transforms.
@@ -323,17 +323,18 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
    */
   timer.Reset();
   timer.Start();
-  elxout << "Transforming points ..." << std::endl;
+  log::info("Transforming points ...");
   try
   {
     elxTransformBase.TransformPoints();
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << '\n' << "However, transformix continues anyway." << std::endl;
+    log::error(log::get_ostringstream() << excp << '\n' << "However, transformix continues anyway.");
   }
   timer.Stop();
-  elxout << "  Transforming points done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  log::info(log::get_ostringstream() << "  Transforming points done, it took "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Call ComputeSpatialJacobianDeterminantImage.
    * Actually we could loop over all transforms.
@@ -341,18 +342,18 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
    */
   timer.Reset();
   timer.Start();
-  elxout << "Compute determinant of spatial Jacobian ..." << std::endl;
+  log::info("Compute determinant of spatial Jacobian ...");
   try
   {
     elxTransformBase.ComputeAndWriteSpatialJacobianDeterminantImage();
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << '\n' << "However, transformix continues anyway." << std::endl;
+    log::error(log::get_ostringstream() << excp << '\n' << "However, transformix continues anyway.");
   }
   timer.Stop();
-  elxout << "  Computing determinant of spatial Jacobian done, it took "
-         << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  log::info(log::get_ostringstream() << "  Computing determinant of spatial Jacobian done, it took "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Call ComputeAndWriteSpatialJacobianMatrixImage.
    * Actually we could loop over all transforms.
@@ -360,24 +361,25 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
    */
   timer.Reset();
   timer.Start();
-  elxout << "Compute spatial Jacobian (full matrix) ..." << std::endl;
+  log::info("Compute spatial Jacobian (full matrix) ...");
   try
   {
     elxTransformBase.ComputeAndWriteSpatialJacobianMatrixImage();
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << excp << '\n' << "However, transformix continues anyway." << std::endl;
+    log::error(log::get_ostringstream() << excp << '\n' << "However, transformix continues anyway.");
   }
   timer.Stop();
-  elxout << "  Computing spatial Jacobian done, it took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  log::info(log::get_ostringstream() << "  Computing spatial Jacobian done, it took "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Resample the image. */
   if (this->GetMovingImage() != nullptr)
   {
     timer.Reset();
     timer.Start();
-    elxout << "Resampling image and writing to disk ..." << std::endl;
+    log::info("Resampling image and writing to disk ...");
 
     /** Write the resampled image to disk.
      * Actually we could loop over all resamplers.
@@ -404,7 +406,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
-    elxout << "  Resampling took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+    log::info(log::get_ostringstream() << "  Resampling took " << Conversion::SecondsToDHMS(timer.GetMean(), 2));
   }
 
   /** Return a value. */
@@ -537,7 +539,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   this->m_IterationCounter = 0;
 
   /** Print the current resolution. */
-  elxout << "\nResolution: " << level << std::endl;
+  log::info(log::get_ostringstream() << "\nResolution: " << level);
 
   /** Create a TransformParameter-file for the current resolution. */
   bool writeIterationInfo = true;
@@ -711,7 +713,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   timer.Start();
 
   /** A white line. */
-  elxout << std::endl;
+  elx::log::info("");
 
   /** Create the final TransformParameters filename. */
   bool writeFinalTansformParameters = true;
@@ -734,7 +736,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   }
 
   timer.Stop();
-  elxout << "\nCreating the TransformParameterFile took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  log::info(log::get_ostringstream() << "\nCreating the TransformParameterFile took "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();
@@ -777,7 +780,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   transformParameterFile.open(fileName.c_str());
   if (!transformParameterFile.is_open())
   {
-    xl::xout["error"] << "ERROR: File \"" << fileName << "\" could not be opened!" << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: File \"" << fileName << "\" could not be opened!");
   }
 
   /** This xout["transpar"] writes to the log and to the TransformParameter file. */
@@ -791,7 +794,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   /** Separate clearly in log-file. */
   if (toLog)
   {
-    xl::xout["logonly"] << "\n=============== start of TransformParameterFile ===============" << std::endl;
+    log::to_log_file("\n=============== start of TransformParameterFile ===============");
   }
 
   /** Call all the WriteToFile() functions.
@@ -806,7 +809,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   /** Separate clearly in log-file. */
   if (toLog)
   {
-    xl::xout["logonly"] << "\n=============== end of TransformParameterFile ===============" << std::endl;
+    log::to_log_file("\n=============== end of TransformParameterFile ===============");
   }
 
 } // end CreateTransformParameterFile()
@@ -1037,7 +1040,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
   this->m_IterationInfoFile.open(fileName.c_str());
   if (!(this->m_IterationInfoFile.is_open()))
   {
-    xl::xout["error"] << "ERROR: File \"" << fileName << "\" could not be opened!" << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: File \"" << fileName << "\" could not be opened!");
   }
   else
   {

@@ -47,8 +47,8 @@ MissingStructurePenalty<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of MissingStructurePenalty metric took: " << static_cast<long>(timer.GetMean() * 1000)
-         << " ms." << std::endl;
+  log::info(log::get_ostringstream() << "Initialization of MissingStructurePenalty metric took: "
+                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 } // end Initialize()
 
 
@@ -85,7 +85,7 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
   //  check = this->m_Configuration->GetCommandLineArgument( fmeshArgument );
   //  if ( check.empty() )
   //  {
-  //  elxout << "-fmesh       " << check << std::endl;
+  //  log::info(log::get_ostringstream()  << "-fmesh       " << check);
   //  m_NumberOfMeshes = 1;
   //  return 0;
   //  }
@@ -95,7 +95,8 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
   std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
   /** Check Command line options and print them to the log file. */
-  elxout << "Command line options from MissingStructurePenalty (" << componentLabel << "):" << std::endl;
+  log::info(log::get_ostringstream() << "Command line options from MissingStructurePenalty (" << componentLabel
+                                     << "):");
   std::string check("");
 
   this->m_NumberOfMeshes = 0;
@@ -111,7 +112,7 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
     }
     else
     {
-      elxout << fmeshArgument.str() << "\t" << check << std::endl;
+      log::info(log::get_ostringstream() << fmeshArgument.str() << "\t" << check);
       this->m_NumberOfMeshes++;
     }
   }
@@ -132,7 +133,7 @@ MissingStructurePenalty<TElastix>::BeforeRegistration()
   std::string componentLabel(this->GetComponentLabel());
   std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
-  elxout << "MissingStructurePenalty" << metricNumber << " BeforeRegistration " << std::endl;
+  log::info(log::get_ostringstream() << "MissingStructurePenalty" << metricNumber << " BeforeRegistration ");
 
   FixedMeshContainerPointer meshPointerContainer = FixedMeshContainerType::New();
   meshPointerContainer->Reserve(this->m_NumberOfMeshes);
@@ -214,7 +215,7 @@ MissingStructurePenalty<TElastix>::AfterEachIteration()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
+        log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
   }   // end if
@@ -261,7 +262,7 @@ MissingStructurePenalty<TElastix>::AfterEachResolution()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
+        log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
   }   // end if
@@ -280,20 +281,20 @@ MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, ty
   /** Read the input mesh. */
   auto meshReader = itk::MeshFileReader<MeshType>::New();
   meshReader->SetFileName(meshFileName.c_str());
-  elxout << "  Reading input mesh file: " << meshFileName << std::endl;
+  log::info(log::get_ostringstream() << "  Reading input mesh file: " << meshFileName);
   try
   {
     meshReader->UpdateLargestPossibleRegion();
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input mesh file.\n" << err << std::endl;
+    log::error(log::get_ostringstream() << "  Error while opening input mesh file.\n" << err);
   }
 
   /** Some user-feedback. */
   mesh = meshReader->GetOutput();
   unsigned long nrofpoints = mesh->GetNumberOfPoints();
-  elxout << "  Number of specified input points: " << nrofpoints << std::endl;
+  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
 
   return nrofpoints;
 } // end ReadMesh()
@@ -410,27 +411,27 @@ the sequence of points to form a 2d connected polydata contour.
   ippReader->SetFileName(filename.c_str());
 
   /** Read the input points. */
-  elxout << "  Reading input point file: " << filename << std::endl;
+  log::info(log::get_ostringstream() << "  Reading input point file: " << filename);
   try
   {
     ippReader->Update();
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening input point file.\n" << err << std::endl;
+    log::error(log::get_ostringstream() << "  Error while opening input point file.\n" << err);
   }
 
   /** Some user-feedback. */
   if (ippReader->GetPointsAreIndices())
   {
-    elxout << "  Input points are specified as image indices." << std::endl;
+    log::info("  Input points are specified as image indices.");
   }
   else
   {
-    elxout << "  Input points are specified in world coordinates." << std::endl;
+    log::info("  Input points are specified in world coordinates.");
   }
   const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
-  elxout << "  Number of specified input points: " << nrofpoints << std::endl;
+  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
 
   /** Get the set of input points. */
   typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();

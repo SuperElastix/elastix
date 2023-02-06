@@ -91,13 +91,11 @@ Configuration::PrintParameterFile() const
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file, before and after writing the parameter file. */
-  xl::xout["logonly"] << '\n'
-                      << "=============== start of ParameterFile: " << this->GetParameterFileName()
-                      << " ===============\n"
-                      << params << '\n'
-                      << "=============== end of ParameterFile: " << this->GetParameterFileName()
-                      << " ===============\n"
-                      << std::endl;
+  log::to_log_file(log::get_ostringstream()
+                   << '\n'
+                   << "=============== start of ParameterFile: " << this->GetParameterFileName() << " ===============\n"
+                   << params << '\n'
+                   << "=============== end of ParameterFile: " << this->GetParameterFileName() << " ===============\n");
 
 } // end PrintParameterFile()
 
@@ -171,15 +169,15 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   }
   else if (p.empty() && tp.empty())
   {
-    xl::xout["error"] << "ERROR: No (Transform-)Parameter file has been entered\n"
-                      << "for elastix: command line option \"-p\"\n"
-                      << "for transformix: command line option \"-tp\"" << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: No (Transform-)Parameter file has been entered\n"
+                                        << "for elastix: command line option \"-p\"\n"
+                                        << "for transformix: command line option \"-tp\"");
     return 1;
   }
   else
   {
     /** Both "p" and "tp" are used, which is prohibited. */
-    xl::xout["error"] << "ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited." << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited.");
     return 1;
   }
 
@@ -187,12 +185,12 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   this->m_ParameterFileParser->SetParameterFileName(this->m_ParameterFileName);
   try
   {
-    elxout << "Reading the elastix parameters from file ...\n" << std::endl;
+    log::info("Reading the elastix parameters from file ...\n");
     this->m_ParameterFileParser->ReadParameterFile();
   }
   catch (const itk::ExceptionObject & excp)
   {
-    xl::xout["error"] << "ERROR: when reading the parameter file:\n" << excp << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: when reading the parameter file:\n" << excp);
     return 1;
   }
 

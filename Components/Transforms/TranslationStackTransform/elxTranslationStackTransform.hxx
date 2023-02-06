@@ -34,7 +34,7 @@ template <class TElastix>
 unsigned int
 TranslationStackTransform<TElastix>::InitializeTranslationTransform()
 {
-  xl::xout["error"] << "InitializeTranslationTransform" << std::endl;
+  log::error("InitializeTranslationTransform");
 
   this->m_DummySubTransform = ReducedDimensionTranslationTransformType::New();
   return 0;
@@ -49,7 +49,7 @@ template <class TElastix>
 int
 TranslationStackTransform<TElastix>::BeforeAll()
 {
-  xl::xout["error"] << "BeforeAll" << std::endl;
+  log::error("BeforeAll");
 
   /** Initialize translation transform. */
   return InitializeTranslationTransform();
@@ -64,7 +64,7 @@ template <class TElastix>
 void
 TranslationStackTransform<TElastix>::BeforeRegistration()
 {
-  xl::xout["error"] << "BeforeRegistration" << std::endl;
+  log::error("BeforeRegistration");
 
   /** Task 1 - Set the stack transform parameters. */
 
@@ -97,7 +97,7 @@ template <class TElastix>
 void
 TranslationStackTransform<TElastix>::InitializeTransform()
 {
-  xl::xout["error"] << "InitializeTransform" << std::endl;
+  log::error("InitializeTransform");
 
   /** Initialize the m_DummySubTransform */
   this->m_DummySubTransform->SetIdentity();
@@ -121,7 +121,7 @@ template <class TElastix>
 void
 TranslationStackTransform<TElastix>::ReadFromFile()
 {
-  xl::xout["error"] << "ReadFromFile" << std::endl;
+  log::error("ReadFromFile");
 
   if (!this->HasITKTransformParameters())
   {

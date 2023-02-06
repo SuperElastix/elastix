@@ -136,7 +136,7 @@ QuasiNewtonLBFGS<TElastix>::LineSearch(const ParametersType searchDir,
     }
     else
     {
-      xl::xout["error"] << err << '\n' << "The error is ignored and convergence is assumed." << std::endl;
+      log::error(log::get_ostringstream() << err << '\n' << "The error is ignored and convergence is assumed.");
       step = 0.0;
       x = this->GetScaledCurrentPosition();
       f = this->GetCurrentValue();
@@ -426,7 +426,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition */
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution
 
@@ -442,7 +442,7 @@ QuasiNewtonLBFGS<TElastix>::AfterRegistration()
   /** Print the best metric value */
 
   double bestValue = this->GetCurrentValue();
-  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
+  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration
 

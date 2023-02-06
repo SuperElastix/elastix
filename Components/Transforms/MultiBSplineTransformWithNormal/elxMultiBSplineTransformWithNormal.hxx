@@ -90,8 +90,9 @@ MultiBSplineTransformWithNormal<TElastix>::BeforeAll()
   }
   else
   {
-    xl::xout["error"] << "ERROR: The MultiBSplineTransformWithNormal need a -labels command line option"
-                      << " that indicates where to find the sliding objects segmentation." << std::endl;
+    log::error(
+      log::get_ostringstream() << "ERROR: The MultiBSplineTransformWithNormal need a -labels command line option"
+                               << " that indicates where to find the sliding objects segmentation.");
     itkExceptionMacro(<< "ERROR: Missing -labels argument!");
   }
 
@@ -302,9 +303,9 @@ MultiBSplineTransformWithNormal<TElastix>::PreComputeGridInformation()
   }
   else
   {
-    xl::xout["error"] << "ERROR: Invalid GridSpacingSchedule! The number of entries behind the GridSpacingSchedule "
-                         "option should equal the numberOfResolutions, or the numberOfResolutions * ImageDimension."
-                      << std::endl;
+    log::error(log::get_ostringstream()
+               << "ERROR: Invalid GridSpacingSchedule! The number of entries behind the GridSpacingSchedule "
+                  "option should equal the numberOfResolutions, or the numberOfResolutions * ImageDimension.");
     itkExceptionMacro(<< "ERROR: Invalid GridSpacingSchedule!");
   }
 
@@ -648,9 +649,9 @@ MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int
     insetgridsize[i] = static_cast<unsigned int>(std::max(0, static_cast<int>(gridsize[i] - 2 * edgeWidth)));
     if (insetgridsize[i] == 0)
     {
-      xl::xout["error"] << "ERROR: you specified a PassiveEdgeWidth of " << edgeWidth
-                        << ", while the total grid size in dimension " << i << " is only " << gridsize[i] << "."
-                        << std::endl;
+      log::error(log::get_ostringstream()
+                 << "ERROR: you specified a PassiveEdgeWidth of " << edgeWidth
+                 << ", while the total grid size in dimension " << i << " is only " << gridsize[i] << ".");
       itkExceptionMacro(<< "ERROR: the PassiveEdgeWidth is too large!");
     }
     insetgridindex[i] = gridindex[i] + edgeWidth;

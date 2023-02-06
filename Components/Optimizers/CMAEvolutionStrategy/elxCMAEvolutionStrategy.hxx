@@ -66,12 +66,12 @@ CMAEvolutionStrategy<TElastix>::InitializeProgressVariables()
   this->Superclass1::InitializeProgressVariables();
 
   /** Print some settings that can be automatically determined by the optimizer. */
-  elxout << "The CMAEvolutionStrategy optimizer uses the following settings:\n"
-         << "PopulationSize = " << this->GetPopulationSize() << "\n"
-         << "NumberOfParents = " << this->GetNumberOfParents() << "\n"
-         << "UseCovarianceMatrixAdaptation = " << this->GetUseCovarianceMatrixAdaptation() << "\n"
-         << "UpdateBDPeriod = " << this->GetUpdateBDPeriod() << "\n"
-         << std::endl;
+  log::info(log::get_ostringstream() << "The CMAEvolutionStrategy optimizer uses the following settings:\n"
+                                     << "PopulationSize = " << this->GetPopulationSize() << "\n"
+                                     << "NumberOfParents = " << this->GetNumberOfParents() << "\n"
+                                     << "UseCovarianceMatrixAdaptation = " << this->GetUseCovarianceMatrixAdaptation()
+                                     << "\n"
+                                     << "UpdateBDPeriod = " << this->GetUpdateBDPeriod() << "\n");
 
 } // end InitializeProgressVariables
 
@@ -275,7 +275,7 @@ CMAEvolutionStrategy<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition */
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution
 
@@ -291,7 +291,7 @@ CMAEvolutionStrategy<TElastix>::AfterRegistration()
   /** Print the best metric value */
 
   double bestValue = this->GetCurrentValue();
-  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
+  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration
 

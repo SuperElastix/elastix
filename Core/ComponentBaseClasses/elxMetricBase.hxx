@@ -126,7 +126,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase()
 
       /** Set and report. */
       thisAsAdvanced->SetMovingImageDerivativeScales(movingImageDerivativeScales);
-      elxout << "Multiplying moving image derivatives by: " << movingImageDerivativeScales << std::endl;
+      log::info(log::get_ostringstream() << "Multiplying moving image derivatives by: " << movingImageDerivativeScales);
 
       /** Check if the scales are applied taking into account the moving image orientation. */
       bool wrtMoving = false;
@@ -202,8 +202,8 @@ MetricBase<TElastix>::SelectNewSamples()
      * method is called for a metric without sampler support.
      * To avoid the warning, this method may be overridden by a subclass.
      */
-    xl::xout["warning"] << "WARNING: The NewSamplesEveryIteration option was set to \"true\", but "
-                        << this->GetComponentLabel() << " does not use a sampler." << std::endl;
+    log::warn(log::get_ostringstream() << "WARNING: The NewSamplesEveryIteration option was set to \"true\", but "
+                                       << this->GetComponentLabel() << " does not use a sampler.");
   }
 
 } // end SelectNewSamples()

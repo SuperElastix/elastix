@@ -138,7 +138,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
   this->m_Configuration->ReadParameter(iterations, "NumberOfDiffusionIterations", 0);
   if (iterations < 1)
   {
-    xl::xout["warning"] << "WARNING: NumberOfDiffusionIterations == 0" << std::endl;
+    log::warn("WARNING: NumberOfDiffusionIterations == 0");
   }
 
   /** Get diffusion information: threshold information. */
@@ -181,7 +181,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
     this->m_Configuration->ReadParameter(this->m_MovingSegmentationFileName, "MovingSegmentationFileName", 0);
     if (m_MovingSegmentationFileName.empty())
     {
-      xl::xout["error"] << "ERROR: No MovingSegmentation filename specified." << std::endl;
+      log::error("ERROR: No MovingSegmentation filename specified.");
       /** Create and throw an exception. */
       itkExceptionMacro(<< "ERROR: No MovingSegmentation filename specified.");
     }
@@ -205,7 +205,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
     this->m_Configuration->ReadParameter(this->m_FixedSegmentationFileName, "FixedSegmentationFileName", 0);
     if (m_FixedSegmentationFileName.empty())
     {
-      xl::xout["error"] << "ERROR: No FixedSegmentation filename specified." << std::endl;
+      log::error("ERROR: No FixedSegmentation filename specified.");
       /** Create and throw an exception. */
       itkExceptionMacro(<< "ERROR: No FixedSegmentation filename specified.");
     }
@@ -313,8 +313,8 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
   }
   else
   {
-    xl::xout["error"] << "ERROR: So what are you using for the GrayValueImage,\n"
-                      << "either a threshold or a segmentation, make a choice!" << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: So what are you using for the GrayValueImage,\n"
+                                        << "either a threshold or a segmentation, make a choice!");
 
     /** Create and throw an exception. */
     itkExceptionMacro(<< "ERROR: Difficulty determining how to create the GrayValueImage. Check your parameter file.");
@@ -458,7 +458,7 @@ BSplineTransformWithDiffusion<TElastix>::AfterEachIteration()
   if (filterPattern != 1 && filterPattern != 2)
   {
     filterPattern = 1;
-    xl::xout["warning"] << "WARNING: filterPattern set to 1" << std::endl;
+    log::warn("WARNING: filterPattern set to 1");
   }
 
   /** Get the current iteration number. */
@@ -484,8 +484,8 @@ BSplineTransformWithDiffusion<TElastix>::AfterEachIteration()
     /** Checking DiffusionEachNIterations. */
     if (diffusionEachNIterations < 1)
     {
-      xl::xout["warning"] << "WARNING: DiffusionEachNIterations < 1\n"
-                          << "\t\tDiffusionEachNIterations is set to 1" << std::endl;
+      log::warn(log::get_ostringstream() << "WARNING: DiffusionEachNIterations < 1\n"
+                                         << "\t\tDiffusionEachNIterations is set to 1");
       diffusionEachNIterations = 1;
     }
 
@@ -844,8 +844,8 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
   /** Error checking ... */
   if (fileName.empty())
   {
-    xl::xout["error"] << "ERROR: DeformationFieldFileName not specified.\n"
-                      << "Unable to read and set the transform parameters." << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: DeformationFieldFileName not specified.\n"
+                                        << "Unable to read and set the transform parameters.");
     // \todo quit program nicely or throw an exception
   }
 
@@ -992,7 +992,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile() const
     err_str += "\nError while writing the deformationFieldImage.\n";
     excp.SetDescription(err_str);
     /** Print the exception. */
-    xl::xout["error"] << excp << std::endl;
+    log::error(log::get_ostringstream() << excp);
   }
 
 } // end WriteDerivedTransformDataToFile()
@@ -1288,7 +1288,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
       err_str += "\nError occurred while writing the deformationField image.\n";
       excp.SetDescription(err_str);
       /** Print the exception. */
-      xl::xout["error"] << excp << std::endl;
+      log::error(log::get_ostringstream() << excp);
     }
 
     /** Write the GrayValueImage. */
@@ -1309,7 +1309,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
       err_str += "\nError occurred while writing the grayValue image.\n";
       excp.SetDescription(err_str);
       /** Print the exception. */
-      xl::xout["error"] << excp << std::endl;
+      log::error(log::get_ostringstream() << excp);
     }
 
     /** Write the diffusedFieldImage. */
@@ -1329,7 +1329,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
       err_str += "\nError occurred while writing the diffusedField image.\n";
       excp.SetDescription(err_str);
       /** Print the exception. */
-      xl::xout["error"] << excp << std::endl;
+      log::error(log::get_ostringstream() << excp);
     }
 
   } // end if this->m_WriteDiffusionFiles

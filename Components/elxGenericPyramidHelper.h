@@ -101,9 +101,9 @@ public:
 
     if (!foundRescale && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {
-      xl::xout["warning"] << "WARNING: the " << pyramidAdjective
-                          << " pyramid rescale schedule is not fully specified!\n"
-                          << "  A default pyramid rescale schedule is used." << std::endl;
+      log::warn(log::get_ostringstream() << "WARNING: the " << pyramidAdjective
+                                         << " pyramid rescale schedule is not fully specified!\n"
+                                         << "  A default pyramid rescale schedule is used.");
     }
     else
     {
@@ -114,10 +114,11 @@ public:
 
       if (newSchedule != rescaleSchedule)
       {
-        xl::xout["warning"] << "WARNING: the " << pyramidAdjective
-                            << " pyramid rescale schedule is adjusted!\n  Input schedule from configuration:\n"
-                            << rescaleSchedule << "\n  Adjusted schedule:\n"
-                            << newSchedule << std::endl;
+        log::warn(log::get_ostringstream()
+                  << "WARNING: the " << pyramidAdjective
+                  << " pyramid rescale schedule is adjusted!\n  Input schedule from configuration:\n"
+                  << rescaleSchedule << "\n  Adjusted schedule:\n"
+                  << newSchedule);
       }
     }
 
@@ -146,9 +147,9 @@ public:
 
     if (!foundSmoothing && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {
-      xl::xout["warning"] << "WARNING: the " << pyramidAdjective
-                          << " pyramid smoothing schedule is not fully specified!\n"
-                          << "  A default pyramid smoothing schedule is used." << std::endl;
+      log::warn(log::get_ostringstream() << "WARNING: the " << pyramidAdjective
+                                         << " pyramid smoothing schedule is not fully specified!\n"
+                                         << "  A default pyramid smoothing schedule is used.");
     }
     else
     {
@@ -159,10 +160,11 @@ public:
 
       if (newSchedule != smoothingSchedule)
       {
-        xl::xout["warning"] << "WARNING: the " << pyramidAdjective
-                            << " pyramid smoothing schedule is adjusted!\n  Input schedule from configuration:\n"
-                            << smoothingSchedule << "\n  Adjusted schedule:\n"
-                            << newSchedule << std::endl;
+        log::warn(log::get_ostringstream()
+                  << "WARNING: the " << pyramidAdjective
+                  << " pyramid smoothing schedule is adjusted!\n  Input schedule from configuration:\n"
+                  << smoothingSchedule << "\n  Adjusted schedule:\n"
+                  << newSchedule);
       }
     }
 

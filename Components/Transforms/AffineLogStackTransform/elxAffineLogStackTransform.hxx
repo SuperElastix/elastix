@@ -116,7 +116,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile()
 
     if (!pointRead)
     {
-      xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
+      log::error("ERROR: No center of rotation is specified in the transform parameter file");
       itkExceptionMacro(<< "Transform parameter file is corrupt.")
     }
 
@@ -285,17 +285,15 @@ AffineLogStackTransform<TElastix>::SetScales()
 
   if (automaticScalesEstimationStackTransform)
   {
-    xl::xout["warning"]
-      << "WARNING: AutomaticScalesEstimationStackTransform is deprecated, use AutomaticScalesEstimation instead."
-      << std::endl;
+    log::warn("WARNING: AutomaticScalesEstimationStackTransform is deprecated, use AutomaticScalesEstimation instead.");
     automaticScalesEstimation = automaticScalesEstimationStackTransform;
   }
 
   if (automaticScalesEstimation)
   {
-    elxout << "Scales are estimated automatically." << std::endl;
+    log::info("Scales are estimated automatically.");
     this->AutomaticScalesEstimationStackTransform(this->m_StackTransform->GetNumberOfSubTransforms(), newscales);
-    elxout << "finished setting scales" << std::endl;
+    log::info("finished setting scales");
   }
   else
   {
@@ -395,7 +393,7 @@ AffineLogStackTransform<TElastix>::SetScales()
 
   } // end else: no automaticScalesEstimation
 
-  elxout << "Scales for transform parameters are: " << newscales << std::endl;
+  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

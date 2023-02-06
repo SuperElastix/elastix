@@ -137,7 +137,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetComponents()
     }
     else
     {
-      xl::xout["error"] << "No ImageSampler has been specified." << std::endl;
+      log::error("No ImageSampler has been specified.");
       itkExceptionMacro(<< "The metric requires an ImageSampler, but it is not available!");
     }
   }
@@ -245,7 +245,8 @@ MultiResolutionRegistrationWithFeatures<TElastix>::UpdateFixedMasks(unsigned int
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
-  elxout << "Setting the fixed masks took: " << static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
+  log::info(log::get_ostringstream() << "Setting the fixed masks took: " << static_cast<long>(timer.GetMean() * 1000)
+                                     << " ms.");
 
 } // end UpdateFixedMasks()
 
@@ -283,7 +284,8 @@ MultiResolutionRegistrationWithFeatures<TElastix>::UpdateMovingMasks(unsigned in
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
-  elxout << "Setting the moving masks took: " << static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
+  log::info(log::get_ostringstream() << "Setting the moving masks took: " << static_cast<long>(timer.GetMean() * 1000)
+                                     << " ms.");
 
 } // end UpdateMovingMasks()
 

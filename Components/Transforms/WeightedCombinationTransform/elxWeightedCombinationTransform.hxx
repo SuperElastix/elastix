@@ -149,7 +149,7 @@ WeightedCombinationTransformElastix<TElastix>::SetScales()
 
   if (automaticScalesEstimation)
   {
-    elxout << "Scales are estimated automatically." << std::endl;
+    log::info("Scales are estimated automatically.");
     this->AutomaticScalesEstimation(newscales);
   }
   else
@@ -177,7 +177,7 @@ WeightedCombinationTransformElastix<TElastix>::SetScales()
 
   } // end else: no automaticScalesEstimation
 
-  elxout << "Scales for transform parameters are: " << newscales << std::endl;
+  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);
@@ -264,7 +264,8 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
     /** Check if no errors occurred: */
     if (subTransforms[i].IsNull())
     {
-      xl::xout["error"] << "ERROR: Error while trying to load the SubTransform " << subTransformFileName << std::endl;
+      log::error(log::get_ostringstream()
+                 << "ERROR: Error while trying to load the SubTransform " << subTransformFileName);
       itkExceptionMacro(<< "ERROR: Loading SubTransforms failed!");
     }
 

@@ -41,8 +41,8 @@ ComponentDatabase::SetCreator(const ComponentDescriptionType & name, IndexType i
    */
   if (CreatorMap.count(key)) //==1
   {
-    xl::xout["error"] << "Error: \n"
-                      << name << "(index " << i << ") - This component has already been installed!" << std::endl;
+    log::error(log::get_ostringstream() << "Error: \n"
+                                        << name << "(index " << i << ") - This component has already been installed!");
     return 1;
   }
   else
@@ -73,10 +73,10 @@ ComponentDatabase::SetIndex(const PixelTypeDescriptionType & fixedPixelType,
   /** Insert the key+index in the map, if it hadn't been done before yet.*/
   if (IndexMap.count(key)) //==1
   {
-    xl::xout["error"] << "Error:\n"
-                      << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << '\n'
-                      << "MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'
-                      << "Elastix already supports this combination of ImageTypes!" << std::endl;
+    log::error(log::get_ostringstream() << "Error:\n"
+                                        << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << '\n'
+                                        << "MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'
+                                        << "Elastix already supports this combination of ImageTypes!");
     return 1;
   }
   else
@@ -105,7 +105,8 @@ ComponentDatabase::GetCreator(const ComponentDescriptionType & name, IndexType i
    */
   if (found == end(CreatorMap))
   {
-    xl::xout["error"] << "Error: \n" << name << "(index " << i << ") - This component is not installed!" << std::endl;
+    log::error(log::get_ostringstream() << "Error: \n"
+                                        << name << "(index " << i << ") - This component is not installed!");
     return nullptr;
   }
   else
@@ -138,16 +139,16 @@ ComponentDatabase::GetIndex(const PixelTypeDescriptionType & fixedPixelType,
    */
   if (found == end(IndexMap))
   {
-    xl::xout["error"] << "ERROR:\n"
-                      << "  FixedImageType:  " << fixedDimension << "D " << fixedPixelType << '\n'
-                      << "  MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'
-                      << "  elastix was not compiled with this combination of ImageTypes!\n"
-                      << "  You have two options to solve this:\n"
-                      << "  1. Add the combination to the CMake parameters ELASTIX_IMAGE_nD_PIXELTYPES and "
-                         "ELASTIX_IMAGE_DIMENSIONS, re-cmake and re-compile.\n"
-                      << "  2. Change the parameters FixedInternalImagePixelType and/or MovingInternalImagePixelType "
-                         "in the elastix parameter file.\n"
-                      << std::endl;
+    log::error(log::get_ostringstream()
+               << "ERROR:\n"
+               << "  FixedImageType:  " << fixedDimension << "D " << fixedPixelType << '\n'
+               << "  MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'
+               << "  elastix was not compiled with this combination of ImageTypes!\n"
+               << "  You have two options to solve this:\n"
+               << "  1. Add the combination to the CMake parameters ELASTIX_IMAGE_nD_PIXELTYPES and "
+                  "ELASTIX_IMAGE_DIMENSIONS, re-cmake and re-compile.\n"
+               << "  2. Change the parameters FixedInternalImagePixelType and/or MovingInternalImagePixelType "
+                  "in the elastix parameter file.\n");
     return 0;
   }
   else
