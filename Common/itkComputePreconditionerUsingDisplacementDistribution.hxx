@@ -317,11 +317,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
       ++counter_tmp;
     }
 
-#if 0
-    //elxout << sigma << " ";
-    elxout << std::scientific << "The preconditioner before interpolation: [ "
-      << preconditioner[i] << " " << "]" << std::endl << std::fixed;
-#endif
   } // end loop over localStepSize vector
 
   if (counter_tmp > 0)
@@ -555,13 +550,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   /** Constrained the condition number into a given range, here we first try kappa = 2. */
   double conditionNumber = maxEigenvalue / minEigenvalue;
 
-#if 1
-  elxout << std::scientific << "The max eigen value is: [ " << maxEigenvalue << " ]\n"
-         << "The min eigen value is: [ " << minEigenvalue << " ]\n"
-         << "The condition number before constraints is: [ " << conditionNumber << " ]" << std::endl
-         << std::fixed;
-#endif
-
   if (transformIsBSpline && conditionNumber > this->m_ConditionNumber)
   {
     minEigenvalue = maxEigenvalue / this->m_ConditionNumber;
@@ -664,10 +652,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
     }
   }
 
-#if 0
-  elxout << std::scientific << "The max eigen value is: [ " << maxEigenvalue << " " << "]\n" << "The min eigen value is: [ " << minEigenvalue << " " << "]" << std::endl;
-#endif
-
   /** Condition number check. */
   double conditionNumber = maxEigenvalue / minEigenvalue;
 
@@ -683,9 +667,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
     }
   }
 
-#if 0
-  elxout << std::scientific << "The condition number after constraints is: [ " << maxEigenvalue / minEigenvalue << " " << "]" << std::endl << std::fixed;
-#endif
 } // end ComputeJacobiTypePreconditioner()
 
 
