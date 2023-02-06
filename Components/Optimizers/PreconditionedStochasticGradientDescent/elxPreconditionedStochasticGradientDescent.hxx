@@ -135,12 +135,12 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
   this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
   if (maximumNumberOfSamplingAttempts > 5)
   {
-    xl::xout["warning"] << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
-                        << maximumNumberOfSamplingAttempts << ".\n"
-                        << "  This functionality is known to cause problems (stack overflow) for large values.\n"
-                        << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
-                        << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n"
-                        << std::endl;
+    log::warn(log::get_ostringstream()
+              << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to " << maximumNumberOfSamplingAttempts
+              << ".\n"
+              << "  This functionality is known to cause problems (stack overflow) for large values.\n"
+              << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
+              << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n");
   }
 
   /** Set/Get the initial time. Default: 0.0. Should be >= 0. */
@@ -358,7 +358,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition. */
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
 
   /** Store the used parameters, for later printing to screen. */
   SettingsType settings;
@@ -373,7 +373,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution()
   /** Print settings that were used in this resolution. */
   SettingsVectorType tempSettingsVector;
   tempSettingsVector.push_back(settings);
-  elxout << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":" << std::endl;
+  log::info(log::get_ostringstream() << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":");
   Superclass2::PrintSettingsVector(tempSettingsVector);
 
 } // end AfterEachResolution()
@@ -389,10 +389,10 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value. */
   double bestValue = this->GetValue();
-  elxout << '\n'
-         << "Final metric value  = " << bestValue << '\n'
+  log::info(log::get_ostringstream() << '\n'
+                                     << "Final metric value  = " << bestValue << '\n'
 
-         << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
+                                     << "Settings of " << this->elxGetClassName() << " for all resolutions:");
   Superclass2::PrintSettingsVector(this->m_SettingsVector);
 
 } // end AfterRegistration()
@@ -517,7 +517,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   /** Total time. */
   itk::TimeProbe timer;
   timer.Start();
-  elxout << "Starting preconditioner estimation for " << this->elxGetClassName() << " ..." << std::endl;
+  log::info(log::get_ostringstream() << "Starting preconditioner estimation for " << this->elxGetClassName() << " ...");
 
   /** Get current position to start the parameter estimation. */
   this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(this->GetCurrentPosition());
@@ -586,7 +586,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   /** Compute the preconditioner. */
   itk::TimeProbe timer_P;
   timer_P.Start();
-  elxout << "  Computing preconditioner ..." << std::endl;
+  log::info("  Computing preconditioner ...");
   double maxJJ = 0; // needed for the noise compensation term
 
   bool useJacobiType = false;
@@ -604,7 +604,8 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   }
 
   timer_P.Stop();
-  elxout << "  Computing the preconditioner took " << Conversion::SecondsToDHMS(timer_P.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "  Computing the preconditioner took "
+                                     << Conversion::SecondsToDHMS(timer_P.GetMean(), 6));
 
 #if 0
   elxout << std::scientific << "The preconditioner: [ ";
@@ -639,13 +640,13 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
       maximumDisplacementEstimationMethod, "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
 
     /** Compute the Jacobian terms. */
-    elxout << "  Computing displacement distribution ..." << std::endl;
+    log::info("  Computing displacement distribution ...");
     timer4.Start();
     computeDisplacementDistribution->Compute(
       this->GetScaledCurrentPosition(), jacg, maxJJ, maximumDisplacementEstimationMethod);
     timer4.Stop();
-    elxout << "  Computing the displacement distribution took " << Conversion::SecondsToDHMS(timer4.GetMean(), 6)
-           << std::endl;
+    log::info(log::get_ostringstream() << "  Computing the displacement distribution took "
+                                       << Conversion::SecondsToDHMS(timer4.GetMean(), 6));
   }
 
   /** Sample the fixed image to estimate the noise factor. */
@@ -653,7 +654,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   timer_noise.Start();
   double sigma4factor = 1.0;
   double sigma4 = 0.0;
-  elxout << "  The estimated MaxJJ is: " << maxJJ << std::endl;
+  log::info(log::get_ostringstream() << "  The estimated MaxJJ is: " << maxJJ);
   if (maxJJ > 1e-14)
   {
     sigma4 = sigma4factor * this->m_MaximumStepLength / std::sqrt(maxJJ);
@@ -663,10 +664,10 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
   this->m_NoiseFactor = gg / (gg + ee + 1e-14);
   timer_noise.Stop();
-  elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << '\n'
-         << "  The NoiseFactor is: " << m_NoiseFactor << '\n'
-         << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer_noise.GetMean(), 6)
-         << std::endl;
+  log::info(log::get_ostringstream() << "  The MaxJJ used for noisefactor is: " << maxJJ << '\n'
+                                     << "  The NoiseFactor is: " << m_NoiseFactor << '\n'
+                                     << "  Compute the noise compensation took "
+                                     << Conversion::SecondsToDHMS(timer_noise.GetMean(), 6));
 
   // MS: the following can probably be removed or moved.
   // YQ: these variables are used to update the time for adaptive step size.
@@ -693,7 +694,8 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
 
   /** Print the elapsed time. */
   timer.Stop();
-  elxout << "Automatic preconditioner estimation took " << Conversion::SecondsToDHMS(timer.GetMean(), 2) << std::endl;
+  log::info(log::get_ostringstream() << "Automatic preconditioner estimation took "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
 } // end AutomaticPreconditionerEstimation()
 
@@ -753,9 +755,8 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
           {
             if (this->m_StepSizeStrategy == "Adaptive")
             {
-              xl::xout["warning"]
-                << "WARNING: StepSizeStrategy is set to Constant, because UseRandomSampleRegion is set to \"true\"."
-                << std::endl;
+              log::warn(
+                "WARNING: StepSizeStrategy is set to Constant, because UseRandomSampleRegion is set to \"true\".");
               this->m_StepSizeStrategy = "Constant";
             }
           }
@@ -795,7 +796,7 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
     BaseComponent::IsElastixLibrary()
       ? nullptr
       : ProgressCommandType::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements);
-  elxout << "  Sampling gradients ..." << std::endl;
+  log::info("  Sampling gradients ...");
 
   /** Initialize some variables for storing gradients and their magnitudes. */
   const unsigned int numberOfParameters =

@@ -78,7 +78,7 @@ AffineDTITransformElastix<TElastix>::ReadFromFile()
 
   if (!pointRead)
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
+    log::error("ERROR: No center of rotation is specified in the transform parameter file");
     itkExceptionMacro(<< "Transform parameter file is corrupt.")
   }
 
@@ -173,13 +173,13 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
   /** Give a warning if necessary. */
   if (!CORIndexInImage && centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not within image boundaries!" << std::endl;
+    log::warn("WARNING: Center of Rotation (index) is not within image boundaries!");
   }
 
   /** Give a warning if necessary. */
   if (!CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not within image boundaries!" << std::endl;
+    log::warn("WARNING: Center of Rotation (point) is not within image boundaries!");
   }
 
   /** Check if user wants automatic transform initialization; false by default.
@@ -261,7 +261,7 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
-  elxout << "Transform parameters are initialized as: " << this->GetParameters() << std::endl;
+  log::info(log::get_ostringstream() << "Transform parameters are initialized as: " << this->GetParameters());
 
 } // end InitializeTransform()
 
@@ -280,7 +280,7 @@ AffineDTITransformElastix<TElastix>::SetScales()
   newscales.Fill(1.0);
 
   /** Always estimate scales automatically */
-  elxout << "Scales are estimated automatically." << std::endl;
+  log::info("Scales are estimated automatically.");
   this->AutomaticScalesEstimation(newscales);
 
   std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
@@ -308,7 +308,7 @@ AffineDTITransformElastix<TElastix>::SetScales()
     itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
   }
 
-  elxout << "Scales for transform parameters are: " << newscales << std::endl;
+  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
 
   /** Set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

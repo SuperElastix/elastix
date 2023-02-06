@@ -67,15 +67,15 @@ FixedImagePyramidBase<TElastix>::BeforeEachResolutionBase()
                  << resultImageFormat;
 
     /** Save the fixed pyramid image. */
-    elxout << "Writing fixed pyramid image " << this->GetComponentLabel() << " from resolution " << level << "..."
-           << std::endl;
+    log::info(log::get_ostringstream() << "Writing fixed pyramid image " << this->GetComponentLabel()
+                                       << " from resolution " << level << "...");
     try
     {
       this->WritePyramidImage(makeFileName.str(), level);
     }
     catch (const itk::ExceptionObject & excp)
     {
-      xl::xout["error"] << "Exception caught: \n" << excp << "Resuming elastix." << std::endl;
+      log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
     }
   } // end if
 
@@ -131,8 +131,8 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
 
   if (!found && this->GetConfiguration()->GetPrintErrorMessages())
   {
-    xl::xout["warning"] << "WARNING: the fixed pyramid schedule is not fully specified!\n"
-                        << "  A default pyramid schedule is used." << std::endl;
+    log::warn(log::get_ostringstream() << "WARNING: the fixed pyramid schedule is not fully specified!\n"
+                                       << "  A default pyramid schedule is used.");
   }
   else
   {
@@ -166,7 +166,7 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
   this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Do the writing. */
-  xl::xout["coutonly"] << "  Writing fixed pyramid image ..." << std::endl;
+  log::to_stdout("  Writing fixed pyramid image ...");
   try
   {
     itk::WriteCastedImage(*(this->GetAsITKBaseType()->GetOutput(level)), filename, resultImagePixelType, doCompression);

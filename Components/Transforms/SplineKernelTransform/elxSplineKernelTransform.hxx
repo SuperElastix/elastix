@@ -114,20 +114,20 @@ SplineKernelTransform<TElastix>::BeforeAll()
   // Backwards compatibility stuff:
   if (!ipp.empty())
   {
-    xl::xout["warning"] << "WARNING: -ipp is deprecated, use -fp instead." << std::endl;
+    log::warn("WARNING: -ipp is deprecated, use -fp instead.");
     fp = ipp;
   }
 
   /** Is the fixed landmark file specified? */
   if (ipp.empty() && fp.empty())
   {
-    xl::xout["error"] << "ERROR: -fp should be given for " << this->elxGetClassName()
-                      << " in order to define the fixed image (source) landmarks." << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: -fp should be given for " << this->elxGetClassName()
+                                        << " in order to define the fixed image (source) landmarks.");
     return 1;
   }
   else
   {
-    elxout << "-fp       " << fp << std::endl;
+    log::info(log::get_ostringstream() << "-fp       " << fp);
   }
 
   /** Check if -mp is given. If the optional command "-mp"
@@ -138,11 +138,11 @@ SplineKernelTransform<TElastix>::BeforeAll()
   /** Is the moving landmark file specified? */
   if (mp.empty())
   {
-    elxout << "-mp       unspecified, assumed equal to -fp" << std::endl;
+    log::info("-mp       unspecified, assumed equal to -fp");
   }
   else
   {
-    elxout << "-mp       " << mp << std::endl;
+    log::info(log::get_ostringstream() << "-mp       " << mp);
   }
 
   return 0;
@@ -164,7 +164,7 @@ SplineKernelTransform<TElastix>::BeforeRegistration()
   bool knownType = this->SetKernelType(kernelType);
   if (!knownType)
   {
-    xl::xout["error"] << "ERROR: The kernel type " << kernelType << " is not supported." << std::endl;
+    log::error(log::get_ostringstream() << "ERROR: The kernel type " << kernelType << " is not supported.");
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 
@@ -216,8 +216,8 @@ void
 SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
 {
   /** Load the fixed image landmarks. */
-  elxout << "Loading fixed image landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "."
-         << std::endl;
+  log::info(log::get_ostringstream() << "Loading fixed image landmarks for " << this->GetComponentLabel() << ":"
+                                     << this->elxGetClassName() << ".");
 
   // fp used to be ipp
   std::string ipp = this->GetConfiguration()->GetCommandLineArgument("-ipp");
@@ -232,10 +232,11 @@ SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
   /** Set the fp as source landmarks. */
   itk::TimeProbe timer;
   timer.Start();
-  elxout << "  Setting the fixed image landmarks (requiring large matrix inversion) ..." << std::endl;
+  log::info("  Setting the fixed image landmarks (requiring large matrix inversion) ...");
   this->m_KernelTransform->SetSourceLandmarks(landmarkPointSet);
   timer.Stop();
-  elxout << "  Setting the fixed image landmarks took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "  Setting the fixed image landmarks took: "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 6));
 
 } // end DetermineSourceLandmarks()
 
@@ -256,8 +257,8 @@ SplineKernelTransform<TElastix>::DetermineTargetLandmarks()
   }
 
   /** Load the moving image landmarks. */
-  elxout << "Loading moving image landmarks for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << "."
-         << std::endl;
+  log::info(log::get_ostringstream() << "Loading moving image landmarks for " << this->GetComponentLabel() << ":"
+                                     << this->elxGetClassName() << ".");
 
   PointSetPointer landmarkPointSet;
   this->ReadLandmarkFile(mp, landmarkPointSet, false);
@@ -265,10 +266,11 @@ SplineKernelTransform<TElastix>::DetermineTargetLandmarks()
   /** Set the mp as target landmarks. */
   itk::TimeProbe timer;
   timer.Start();
-  elxout << "  Setting the moving image landmarks ..." << std::endl;
+  log::info("  Setting the moving image landmarks ...");
   this->m_KernelTransform->SetTargetLandmarks(landmarkPointSet);
   timer.Stop();
-  elxout << "  Setting the moving image landmarks took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "  Setting the moving image landmarks took: "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 6));
 
   return true;
 
@@ -298,21 +300,21 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   }
   catch (const itk::ExceptionObject & err)
   {
-    xl::xout["error"] << "  Error while opening landmark file.\n" << err << std::endl;
+    log::error(log::get_ostringstream() << "  Error while opening landmark file.\n" << err);
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 
   /** Some user-feedback. */
   if (landmarkReader->GetPointsAreIndices())
   {
-    elxout << "  Landmarks are specified as image indices." << std::endl;
+    log::info("  Landmarks are specified as image indices.");
   }
   else
   {
-    elxout << "  Landmarks are specified in world coordinates." << std::endl;
+    log::info("  Landmarks are specified in world coordinates.");
   }
   const unsigned int nrofpoints = landmarkReader->GetNumberOfPoints();
-  elxout << "  Number of specified input points: " << nrofpoints << std::endl;
+  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
 
   /** Get the set of input points. */
   landmarkPointSet = landmarkReader->GetOutput();
@@ -385,7 +387,7 @@ SplineKernelTransform<TElastix>::ReadFromFile()
   }
   else
   {
-    xl::xout["error"] << "ERROR: the SplineKernelType is not given in the transform parameter file." << std::endl;
+    log::error("ERROR: the SplineKernelType is not given in the transform parameter file.");
     itkExceptionMacro(<< "ERROR: unable to configure transform.");
   }
 
@@ -410,7 +412,7 @@ SplineKernelTransform<TElastix>::ReadFromFile()
     fixedImageLandmarks, "FixedImageLandmarks", 0, numberOfParameters - 1, true);
   if (!retfil)
   {
-    xl::xout["error"] << "ERROR: the FixedImageLandmarks are not given in the transform parameter file." << std::endl;
+    log::error("ERROR: the FixedImageLandmarks are not given in the transform parameter file.");
     itkExceptionMacro(<< "ERROR: unable to configure transform.");
   }
 

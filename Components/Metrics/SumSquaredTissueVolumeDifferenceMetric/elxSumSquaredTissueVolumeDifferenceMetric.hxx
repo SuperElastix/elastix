@@ -36,8 +36,8 @@ SumSquaredTissueVolumeDifferenceMetric<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of SumSquaredTissueVolumeDifference metric took: "
-         << static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
+  log::info(log::get_ostringstream() << "Initialization of SumSquaredTissueVolumeDifference metric took: "
+                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 

@@ -160,7 +160,7 @@ RSGDEachParameterApart<TElastix>::AfterEachResolution()
   }
   /** Print the stopping condition */
 
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution
 
@@ -175,7 +175,7 @@ RSGDEachParameterApart<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();
-  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
+  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration
 

@@ -148,23 +148,23 @@ ComponentLoader::LoadComponents()
     installReturnCode = this->InstallSupportedImageTypes();
     if (installReturnCode != 0)
     {
-      xl::xout["error"] << "ERROR: ImageTypeSupport installation failed. " << std::endl;
+      log::error("ERROR: ImageTypeSupport installation failed. ");
       return installReturnCode;
     }
   } // end if !ImageTypeSupportInstalled
 
-  elxout << "Installing all components." << std::endl;
+  log::info("Installing all components.");
 
   /** Fill the component database */
   installReturnCode = InstallAllComponents(this->m_ComponentDatabase);
 
   if (installReturnCode)
   {
-    xl::xout["error"] << "ERROR: Installing of at least one of components failed." << std::endl;
+    log::error("ERROR: Installing of at least one of components failed.");
     return installReturnCode;
   }
 
-  elxout << "InstallingComponents was successful.\n" << std::endl;
+  log::info("InstallingComponents was successful.\n");
 
   return 0;
 

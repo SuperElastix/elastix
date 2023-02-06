@@ -59,7 +59,7 @@ AdvancedAffineTransformElastix<TElastix>::BeforeRegistration()
 
   /** Print the elapsed time. */
   timer1.Stop();
-  elxout << "InitializeTransform took " << Conversion::SecondsToDHMS(timer1.GetMean(), 2) << std::endl;
+  log::info(log::get_ostringstream() << "InitializeTransform took " << Conversion::SecondsToDHMS(timer1.GetMean(), 2));
 
   /** Task 2 - Set the scales. */
   this->SetScales();
@@ -107,7 +107,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
   {
     if (itkFixedParameterValues == nullptr)
     {
-      xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
+      log::error("ERROR: No center of rotation is specified in the transform parameter file");
       itkExceptionMacro(<< "Transform parameter file is corrupt.")
     }
   }
@@ -195,13 +195,13 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
   /** Give a warning if necessary. */
   if (!CORIndexInImage && centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not within image boundaries!" << std::endl;
+    log::warn("WARNING: Center of Rotation (index) is not within image boundaries!");
   }
 
   /** Give a warning if necessary. */
   if (!CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex)
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not within image boundaries!" << std::endl;
+    log::warn("WARNING: Center of Rotation (point) is not within image boundaries!");
   }
 
   /** Check if user wants automatic transform initialization; false by default.
@@ -315,7 +315,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
-  elxout << "Transform parameters are initialized as: " << this->GetParameters() << std::endl;
+  log::info(log::get_ostringstream() << "Transform parameters are initialized as: " << this->GetParameters());
 
 } // end InitializeTransform()
 
@@ -339,7 +339,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
 
   if (automaticScalesEstimation)
   {
-    elxout << "Scales are estimated automatically." << std::endl;
+    log::info("Scales are estimated automatically.");
     this->AutomaticScalesEstimation(newscales);
   }
   else
@@ -425,7 +425,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
 
   } // end else: no automaticScalesEstimation
 
-  elxout << "Scales for transform parameters are: " << newscales << std::endl;
+  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

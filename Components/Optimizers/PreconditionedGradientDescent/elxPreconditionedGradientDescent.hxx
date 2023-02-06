@@ -248,7 +248,7 @@ PreconditionedGradientDescent<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition */
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
 
   /** Store the used parameters, for later printing to screen. */
   SettingsType settings;
@@ -263,7 +263,7 @@ PreconditionedGradientDescent<TElastix>::AfterEachResolution()
   /** Print settings that were used in this resolution. */
   SettingsVectorType tempSettingsVector;
   tempSettingsVector.push_back(settings);
-  elxout << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":" << std::endl;
+  log::info(log::get_ostringstream() << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":");
   Superclass2::PrintSettingsVector(tempSettingsVector);
 
 } // end AfterEachResolution()
@@ -279,10 +279,10 @@ PreconditionedGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();
-  elxout << '\n'
-         << "Final metric value  = " << bestValue << '\n'
+  log::info(log::get_ostringstream() << '\n'
+                                     << "Final metric value  = " << bestValue << '\n'
 
-         << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
+                                     << "Settings of " << this->elxGetClassName() << " for all resolutions:");
   Superclass2::PrintSettingsVector(this->m_SettingsVector);
 
 } // end AfterRegistration()
@@ -384,7 +384,7 @@ PreconditionedGradientDescent<TElastix>::SetSelfHessian()
                          "the AdvancedImageToImage metric!");
   }
 
-  elxout << "Computing SelfHessian." << std::endl;
+  log::info("Computing SelfHessian.");
   try
   {
     metricWithSelfHessian->GetSelfHessian(this->GetCurrentPosition(), H);
@@ -397,17 +397,19 @@ PreconditionedGradientDescent<TElastix>::SetSelfHessian()
   }
 
   timer.Stop();
-  elxout << "Computing SelfHessian took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "Computing SelfHessian took: "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 6));
 
   timer.Start();
-  elxout << "Computing Cholesky decomposition of SelfHessian." << std::endl;
+  log::info("Computing Cholesky decomposition of SelfHessian.");
   this->SetPreconditionMatrix(H);
-  elxout << "Sparsity: " << this->GetSparsity() << '\n'
-         << "Largest eigenvalue: " << this->GetLargestEigenValue() << '\n'
-         << "Condition number: " << this->GetConditionNumber() << std::endl;
+  log::info(log::get_ostringstream() << "Sparsity: " << this->GetSparsity() << '\n'
+                                     << "Largest eigenvalue: " << this->GetLargestEigenValue() << '\n'
+                                     << "Condition number: " << this->GetConditionNumber());
   timer.Stop();
 
-  elxout << "Computing Cholesky decomposition took: " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "Computing Cholesky decomposition took: "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 6));
 
 } // end SetSelfHessian()
 
@@ -455,7 +457,7 @@ PreconditionedGradientDescent<TElastix>::AutomaticParameterEstimation()
   /** Setup timer. */
   itk::TimeProbe timer;
   timer.Start();
-  elxout << "Starting automatic parameter estimation ..." << std::endl;
+  log::info("Starting automatic parameter estimation ...");
 
   const unsigned int P = this->GetScaledCostFunction()->GetNumberOfParameters();
   const double       Pd = static_cast<double>(P);
@@ -476,8 +478,8 @@ PreconditionedGradientDescent<TElastix>::AutomaticParameterEstimation()
     const double K = 1.5;
     this->m_NumberOfGradientMeasurements = static_cast<unsigned int>(std::ceil(8.0 / P / (K - 1) / (K - 1)));
     this->m_NumberOfGradientMeasurements = std::max(static_cast<unsigned int>(2), this->m_NumberOfGradientMeasurements);
-    elxout << "  NumberOfGradientMeasurements to estimate sigma_i: " << this->m_NumberOfGradientMeasurements
-           << std::endl;
+    log::info(log::get_ostringstream() << "  NumberOfGradientMeasurements to estimate sigma_i: "
+                                       << this->m_NumberOfGradientMeasurements);
   }
 
   /** Measure sigma1 and sigma2
@@ -507,7 +509,8 @@ PreconditionedGradientDescent<TElastix>::AutomaticParameterEstimation()
 
   /** Print the elapsed time. */
   timer.Stop();
-  elxout << "Automatic parameter estimation took " << Conversion::SecondsToDHMS(timer.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "Automatic parameter estimation took "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 6));
 
 } // end AutomaticParameterEstimation()
 
@@ -564,9 +567,8 @@ PreconditionedGradientDescent<TElastix>::SampleGradients(const ParametersType & 
           {
             if (this->GetUseAdaptiveStepSizes())
             {
-              xl::xout["warning"]
-                << "WARNING: UseAdaptiveStepSizes is turned off, because UseRandomSampleRegion is set to \"true\"."
-                << std::endl;
+              log::warn(
+                "WARNING: UseAdaptiveStepSizes is turned off, because UseRandomSampleRegion is set to \"true\".");
               this->SetUseAdaptiveStepSizes(false);
             }
           }
@@ -590,7 +592,7 @@ PreconditionedGradientDescent<TElastix>::SampleGradients(const ParametersType & 
   }   // end if NewSamplesEveryIteration.
 
   /** Prepare for progress printing. */
-  elxout << "  Sampling exact gradient..." << std::endl;
+  log::info("  Sampling exact gradient...");
 
   /** Initialize some variables for storing gradients and their magnitudes. */
   DerivativeType gradient(P);
@@ -615,7 +617,7 @@ PreconditionedGradientDescent<TElastix>::SampleGradients(const ParametersType & 
   this->CholmodSolve(gradient, searchDirection);
   exactgg += inner_product(gradient, searchDirection); // gPg
   sigma1 = exactgg / Pd;
-  elxout << "sigma1 " << sigma1 << " exactgg: " << exactgg << std::endl;
+  log::info(log::get_ostringstream() << "sigma1 " << sigma1 << " exactgg: " << exactgg);
 
   /** If all samplers are deterministic, simply set sigma2 to sigma1. */
   sigma2 = sigma1;
@@ -627,7 +629,7 @@ PreconditionedGradientDescent<TElastix>::SampleGradients(const ParametersType & 
     ProgressCommandPointer progressObserver = ProgressCommandType::New();
     progressObserver->SetUpdateFrequency(this->m_NumberOfGradientMeasurements, this->m_NumberOfGradientMeasurements);
     progressObserver->SetStartString("  Progress: ");
-    elxout << "  Sampling approximate gradients..." << std::endl;
+    log::info("  Sampling approximate gradients...");
 
     /** Set random sampler(s). */
     for (unsigned int m = 0; m < M; ++m)
@@ -668,7 +670,7 @@ PreconditionedGradientDescent<TElastix>::SampleGradients(const ParametersType & 
       this->CholmodSolve(gradient, searchDirection);
       approxgg += inner_product(gradient, searchDirection); // gPg
 
-      elxout << "approxgg: " << approxgg << std::endl;
+      log::info(log::get_ostringstream() << "approxgg: " << approxgg);
 
     } // end for loop over gradient measurements
 
@@ -683,7 +685,7 @@ PreconditionedGradientDescent<TElastix>::SampleGradients(const ParametersType & 
 
   } // end if stochastic gradient sampling
 
-  elxout << "sigma2 " << sigma2 << std::endl;
+  log::info(log::get_ostringstream() << "sigma2 " << sigma2);
 
   /** Set back useRandomSampleRegion flag to what it was. */
   for (unsigned int m = 0; m < M; ++m)

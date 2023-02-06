@@ -188,12 +188,12 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
     }
     return (returndummy2);
   }
-  elxout << std::endl;
+  elx::log::info("");
 
   /** Declare a timer, start it and print the start time. */
   itk::TimeProbe totaltimer;
   totaltimer.Start();
-  elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
+  elx::log::info(std::ostringstream{} << "transformix is started at " << GetCurrentDateAndTime() << ".\n");
 
   /**
    * ********************* START TRANSFORMATION *******************
@@ -214,7 +214,7 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
   /** Check if transformix run without errors. */
   if (returndummy != 0)
   {
-    xl::xout["error"] << "Errors occurred" << std::endl;
+    elx::log::error("Errors occurred");
     return returndummy;
   }
 
@@ -223,9 +223,8 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
 
   /** Stop timer and print it. */
   totaltimer.Stop();
-  elxout << "\nTransformix has finished at " << GetCurrentDateAndTime() << ".\n"
-         << "Elapsed time: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n"
-         << std::endl;
+  elx::log::info(std::ostringstream{} << "\nTransformix has finished at " << GetCurrentDateAndTime() << ".\n"
+                                      << "Elapsed time: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n");
 
   this->m_ResultImage = resultImageContainer->ElementAt(0);
 

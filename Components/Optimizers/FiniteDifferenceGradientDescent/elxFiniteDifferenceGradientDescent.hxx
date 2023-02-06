@@ -174,7 +174,7 @@ FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution()
   }
   /** Print the stopping condition */
 
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution
 
@@ -192,14 +192,14 @@ FiniteDifferenceGradientDescent<TElastix>::AfterRegistration()
   if (this->m_ShowMetricValues)
   {
     bestValue = this->GetValue();
-    elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
+    log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
   }
   else
   {
-    elxout << '\n'
-           << "Run Elastix again with the option \"ShowMetricValues\" set to \"true\", to see information about the "
-              "metric values. "
-           << std::endl;
+    log::info(log::get_ostringstream()
+              << '\n'
+              << "Run Elastix again with the option \"ShowMetricValues\" set to \"true\", to see information about the "
+                 "metric values. ");
   }
 
 } // end AfterRegistration

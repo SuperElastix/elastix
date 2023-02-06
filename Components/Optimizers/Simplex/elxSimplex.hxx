@@ -125,7 +125,7 @@ Simplex<TElastix>::AfterEachResolution()
   std::string stopcondition = this->GetStopConditionDescription();
 
   /** Print the stopping condition */
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution()
 
@@ -141,7 +141,7 @@ Simplex<TElastix>::AfterRegistration()
   /** Print the best metric value */
   // double bestValue = this->GetValue();
   double bestValue = this->GetCachedValue();
-  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
+  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration()
 

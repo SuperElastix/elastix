@@ -233,27 +233,28 @@ main(int argc, char ** argv)
       return returndummy;
     }
 
-    elxout << std::endl;
+    elx::log::info("");
 
     /** Declare a timer, start it and print the start time. */
     itk::TimeProbe totaltimer;
     totaltimer.Start();
-    elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
+    elx::log::info(std::ostringstream{} << "elastix is started at " << GetCurrentDateAndTime() << ".\n");
 
     // Print where elastix was run, and print its version information.
-    elxout << "which elastix:   " << argv[0] << '\n'
-           << elx::GetExtendedVersionInformation("elastix", "  ") << elx::MakeStringOfCommandLineArguments(argv)
-           << std::endl;
+    elx::log::info(std::ostringstream{} << "which elastix:   " << argv[0] << '\n'
+                                        << elx::GetExtendedVersionInformation("elastix", "  ")
+                                        << elx::MakeStringOfCommandLineArguments(argv));
 
     itksys::SystemInformation info;
     info.RunCPUCheck();
     info.RunOSCheck();
     info.RunMemoryCheck();
-    elxout << "elastix runs at: " << info.GetHostname() << '\n'
-           << "  " << info.GetOSName() << " " << info.GetOSRelease() << (info.Is64Bits() ? " (x64), " : ", ")
-           << info.GetOSVersion() << '\n'
-           << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and " << info.GetNumberOfPhysicalCPU()
-           << " cores @ " << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz." << std::endl;
+    elx::log::info(std::ostringstream{} << "elastix runs at: " << info.GetHostname() << '\n'
+                                        << "  " << info.GetOSName() << " " << info.GetOSRelease()
+                                        << (info.Is64Bits() ? " (x64), " : ", ") << info.GetOSVersion() << '\n'
+                                        << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and "
+                                        << info.GetNumberOfPhysicalCPU() << " cores @ "
+                                        << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz.");
 
 
     ObjectPointer              transform = nullptr;
@@ -297,15 +298,15 @@ main(int argc, char ** argv)
       parameterFileList.pop();
 
       /** Print a start message. */
-      elxout << "-------------------------------------------------------------------------\n"
-             << '\n'
-             << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\".\n"
-             << std::endl;
+      elx::log::info(std::ostringstream{}
+                     << "-------------------------------------------------------------------------\n"
+                     << '\n'
+                     << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\".\n");
 
       /** Declare a timer, start it and print the start time. */
       itk::TimeProbe timer;
       timer.Start();
-      elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
+      elx::log::info(std::ostringstream{} << "Current time: " << GetCurrentDateAndTime() << ".");
 
       /** Start registration. */
       returndummy = elastixMain->Run(argMap);
@@ -313,7 +314,7 @@ main(int argc, char ** argv)
       /** Check for errors. */
       if (returndummy != 0)
       {
-        xl::xout["error"] << "Errors occurred!" << std::endl;
+        elx::log::error("Errors occurred!");
         return returndummy;
       }
 
@@ -328,22 +329,22 @@ main(int argc, char ** argv)
       fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
 
       /** Print a finish message. */
-      elxout << "Running elastix with parameter file " << i << ": \"" << parameterFileName << "\", has finished.\n"
-             << std::endl;
+      elx::log::info(std::ostringstream{} << "Running elastix with parameter file " << i << ": \"" << parameterFileName
+                                          << "\", has finished.\n");
 
       /** Stop timer and print it. */
       timer.Stop();
-      elxout << "\nCurrent time: " << GetCurrentDateAndTime() << ".\n"
-             << "Time used for running elastix with this parameter file:\n  "
-             << ConvertSecondsToDHMS(timer.GetMean(), 1) << ".\n"
-             << std::endl;
+      elx::log::info(std::ostringstream{} << "\nCurrent time: " << GetCurrentDateAndTime() << ".\n"
+                                          << "Time used for running elastix with this parameter file:\n  "
+                                          << ConvertSecondsToDHMS(timer.GetMean(), 1) << ".\n");
     } // end loop over registrations
 
-    elxout << "-------------------------------------------------------------------------\n" << std::endl;
+    elx::log::info("-------------------------------------------------------------------------\n");
 
     /** Stop totaltimer and print it. */
     totaltimer.Stop();
-    elxout << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n" << std::endl;
+    elx::log::info(std::ostringstream{} << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1)
+                                        << ".\n");
 
     /**
      * Make sure all the components that are defined in a Module (.DLL/.so)

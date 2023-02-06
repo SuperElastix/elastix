@@ -69,8 +69,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   this->m_Configuration->ReadParameter(fileName, "DeformationFieldFileName", 0);
   if (fileName.empty())
   {
-    xl::xout["error"]
-      << "ERROR: the entry (DeformationFieldFileName \"...\") is missing in the transform parameter file!" << std::endl;
+    log::error("ERROR: the entry (DeformationFieldFileName \"...\") is missing in the transform parameter file!");
     itkExceptionMacro(<< "Error while reading transform parameter file!");
   }
 
@@ -121,8 +120,9 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   }
   else
   {
-    xl::xout["error"] << "Error while reading DeformationFieldInterpolationOrder from the parameter file\n"
-                      << "DeformationFieldInterpolationOrder can only be 0 or 1!" << std::endl;
+    log::error(
+      log::get_ostringstream() << "Error while reading DeformationFieldInterpolationOrder from the parameter file\n"
+                               << "DeformationFieldInterpolationOrder can only be 0 or 1!");
     itkExceptionMacro(<< "Invalid deformation field interpolation order selected!");
   }
   this->m_DeformationFieldInterpolatingTransform->SetDeformationFieldInterpolator(interpolator);
@@ -166,7 +166,7 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
     err_str += "\nError while writing the deformationFieldImage.\n";
     excp.SetDescription(err_str);
     /** Print the exception. */
-    xl::xout["error"] << excp << std::endl;
+    log::error(log::get_ostringstream() << excp);
   }
 
 } // end WriteDerivedTransformDataToFile()

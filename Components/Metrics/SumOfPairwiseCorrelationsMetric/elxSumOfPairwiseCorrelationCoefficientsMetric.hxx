@@ -37,8 +37,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of SumOfPairwiseCorrelationCoefficientsMetric metric took: "
-         << static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
+  log::info(log::get_ostringstream() << "Initialization of SumOfPairwiseCorrelationCoefficientsMetric metric took: "
+                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
@@ -86,7 +86,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
   {
     this->SetUseMovingImageDerivativeScales(true);
     this->SetMovingImageDerivativeScales(movingImageDerivativeScales);
-    elxout << "Multiplying moving image derivatives by: " << movingImageDerivativeScales << std::endl;
+    log::info(log::get_ostringstream() << "Multiplying moving image derivatives by: " << movingImageDerivativeScales);
   }
 
   /** Check if this transform is a B-spline transform. */
@@ -124,7 +124,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
       }
     }
   }
-  elxout << "end BeforeEachResolution" << std::endl;
+  log::info("end BeforeEachResolution");
 
 } // end BeforeEachResolution()
 

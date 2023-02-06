@@ -79,7 +79,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    xl::xout["error"] << excp << std::endl;
+    log::error(log::get_ostringstream() << excp);
     errorCode = 1;
     return errorCode;
   }
@@ -99,7 +99,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   if (!creatingContextSuccessful)
   {
     /** Report and disable the GPU by releasing the context. */
-    elxout << errorMessage << '\n' << "  OpenCL processing in transformix is disabled.\n" << std::endl;
+    log::info(log::get_ostringstream() << errorMessage << '\n' << "  OpenCL processing in transformix is disabled.\n");
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();
@@ -139,7 +139,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   /** Check if all components could be created. */
   if (errorCode != 0)
   {
-    xl::xout["error"] << "ERROR: One or more components could not be created." << std::endl;
+    log::error("ERROR: One or more components could not be created.");
     return 1;
   }
 
@@ -161,7 +161,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    xl::xout["error"] << "Exception while trying to apply a tranformation:\n" << excp << std::endl;
+    log::error(log::get_ostringstream() << "Exception while trying to apply a tranformation:\n" << excp);
     errorCode = 1;
   }
 
@@ -268,7 +268,7 @@ TransformixMain::InitDBIndex()
 
       if (this->m_MovingImageDimension == 0)
       {
-        xl::xout["error"] << "ERROR: The MovingImageDimension is not given." << std::endl;
+        log::error("ERROR: The MovingImageDimension is not given.");
         return 1;
       }
     }
@@ -281,7 +281,7 @@ TransformixMain::InitDBIndex()
 
       if (this->m_FixedImageDimension == 0)
       {
-        xl::xout["error"] << "ERROR: The FixedImageDimension is not given." << std::endl;
+        log::error("ERROR: The FixedImageDimension is not given.");
         return 1;
       }
     }
@@ -293,14 +293,14 @@ TransformixMain::InitDBIndex()
                                                             this->m_MovingImageDimension);
     if (this->m_DBIndex == 0)
     {
-      xl::xout["error"] << "ERROR: Something went wrong in the ComponentDatabase." << std::endl;
+      log::error("ERROR: Something went wrong in the ComponentDatabase.");
       return 1;
     }
 
   } // end if m_Configuration->Initialized();
   else
   {
-    xl::xout["error"] << "ERROR: The configuration object has not been initialized." << std::endl;
+    log::error("ERROR: The configuration object has not been initialized.");
     return 1;
   }
 

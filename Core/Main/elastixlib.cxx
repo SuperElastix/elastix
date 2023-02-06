@@ -203,12 +203,12 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     }
     return returndummy;
   }
-  elxout << std::endl;
+  elx::log::info("");
 
   /** Declare a timer, start it and print the start time. */
   itk::TimeProbe totaltimer;
   totaltimer.Start();
-  elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
+  elx::log::info(std::ostringstream{} << "elastix is started at " << GetCurrentDateAndTime() << ".\n");
 
   /************************************************************************
    *                                              *
@@ -270,14 +270,14 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     elastixMain->SetTotalNumberOfElastixLevels(nrOfParameterFiles);
 
     /** Print a start message. */
-    elxout << "-------------------------------------------------------------------------\n"
-           << '\n'
-           << "Running elastix with parameter map " << i << std::endl;
+    elx::log::info(std::ostringstream{} << "-------------------------------------------------------------------------\n"
+                                        << '\n'
+                                        << "Running elastix with parameter map " << i);
 
     /** Declare a timer, start it and print the start time. */
     itk::TimeProbe timer;
     timer.Start();
-    elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
+    elx::log::info(std::ostringstream{} << "Current time: " << GetCurrentDateAndTime() << ".");
 
     /** Start registration. */
     returndummy = elastixMain->Run(argMap, parameterMaps[i]);
@@ -285,7 +285,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     /** Check for errors. */
     if (returndummy != 0)
     {
-      xl::xout["error"] << "Errors occurred!" << std::endl;
+      elx::log::error("Errors occurred!");
       return returndummy;
     }
 
@@ -302,10 +302,9 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
 
     /** Stop timer and print it. */
     timer.Stop();
-    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << ".\n"
-           << "Time used for running elastix with this parameter file: " << ConvertSecondsToDHMS(timer.GetMean(), 1)
-           << ".\n"
-           << std::endl;
+    elx::log::info(std::ostringstream{} << "\nCurrent time: " << GetCurrentDateAndTime() << ".\n"
+                                        << "Time used for running elastix with this parameter file: "
+                                        << ConvertSecondsToDHMS(timer.GetMean(), 1) << ".\n");
 
     /** Get the transformation parameter map. */
     this->m_TransformParametersList.push_back(elastixMain->GetTransformParametersMap());
@@ -319,11 +318,12 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     }
   } // end loop over registrations
 
-  elxout << "-------------------------------------------------------------------------\n" << std::endl;
+  elx::log::info("-------------------------------------------------------------------------\n");
 
   /** Stop totaltimer and print it. */
   totaltimer.Stop();
-  elxout << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1) << ".\n" << std::endl;
+  elx::log::info(std::ostringstream{} << "Total time elapsed: " << ConvertSecondsToDHMS(totaltimer.GetMean(), 1)
+                                      << ".\n");
 
   /************************************************************************
    *                                *

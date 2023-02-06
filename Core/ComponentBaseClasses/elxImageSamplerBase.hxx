@@ -46,8 +46,8 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
     bool ret = this->GetAsITKBaseType()->SelectingNewSamplesOnUpdateSupported();
     if (!ret)
     {
-      xl::xout["warning"] << "WARNING: You want to select new samples every iteration,\n"
-                          << "but the selected ImageSampler is not suited for that." << std::endl;
+      log::warn(log::get_ostringstream() << "WARNING: You want to select new samples every iteration,\n"
+                                         << "but the selected ImageSampler is not suited for that.");
     }
   }
 

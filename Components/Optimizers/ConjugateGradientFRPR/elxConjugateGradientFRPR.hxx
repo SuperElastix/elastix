@@ -240,7 +240,7 @@ ConjugateGradientFRPR<TElastix>::AfterRegistration()
   /** Print the best metric value */
 
   double bestValue = this->GetValue();
-  elxout << '\n' << "Final metric value  = " << bestValue << std::endl;
+  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration
 

@@ -175,12 +175,12 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
   this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
   if (maximumNumberOfSamplingAttempts > 5)
   {
-    xl::xout["warning"] << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
-                        << maximumNumberOfSamplingAttempts << ".\n"
-                        << "  This functionality is known to cause problems (stack overflow) for large values.\n"
-                        << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
-                        << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n"
-                        << std::endl;
+    log::warn(log::get_ostringstream()
+              << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to " << maximumNumberOfSamplingAttempts
+              << ".\n"
+              << "  This functionality is known to cause problems (stack overflow) for large values.\n"
+              << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
+              << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n");
   }
 
   /** Set/Get the initial time. Default: 0.0. Should be >=0. */
@@ -412,7 +412,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition. */
-  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
   this->m_CurrentTime = 0.0;
 
   /** Store the used parameters, for later printing to screen. */
@@ -428,7 +428,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution()
   /** Print settings that were used in this resolution. */
   SettingsVectorType tempSettingsVector;
   tempSettingsVector.push_back(settings);
-  elxout << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":" << std::endl;
+  log::info(log::get_ostringstream() << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":");
   Superclass2::PrintSettingsVector(tempSettingsVector);
 
 } // end AfterEachResolution()
@@ -445,10 +445,10 @@ AdaptiveStochasticLBFGS<TElastix>::AfterRegistration()
   /** Print the best metric value. */
 
   double bestValue = this->GetValue();
-  elxout << '\n'
-         << "Final metric value  = " << bestValue << '\n'
+  log::info(log::get_ostringstream() << '\n'
+                                     << "Final metric value  = " << bestValue << '\n'
 
-         << "Settings of " << this->elxGetClassName() << " for all resolutions:" << std::endl;
+                                     << "Settings of " << this->elxGetClassName() << " for all resolutions:");
   Superclass2::PrintSettingsVector(this->m_SettingsVector);
 
 } // end AfterRegistration()
@@ -719,7 +719,7 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
         timer_ape.Start();
         this->AutomaticLBFGSStepsizeEstimation();
         timer_ape.Stop();
-        elxout << "ape: " << timer_ape.GetMean() * 1000.0 << " ms" << std::endl;
+        log::info(log::get_ostringstream() << "ape: " << timer_ape.GetMean() * 1000.0 << " ms");
 
         // Currently not used, so outcommented
         // this->m_SearchLengthScale = this->m_SearchDir.magnitude();
@@ -782,7 +782,7 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
       this->GetScaledDerivativeWithExceptionHandling(meanCurrentCurvaturePosition, meanCurrentCurvatureGradient);
       this->GetScaledDerivativeWithExceptionHandling(previousCurvaturePosition, previousCurvatureGradient);
       timer_gvad.Stop();
-      elxout << "gvad: " << timer_gvad.GetMean() * 1000.0 << " ms" << std::endl;
+      log::info(log::get_ostringstream() << "gvad: " << timer_gvad.GetMean() * 1000.0 << " ms");
 
       /** Set the sampler back to the original. */
       for (unsigned int m = 0; m < M; ++m)
@@ -871,7 +871,8 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation()
 
   /** Total time. */
   timer1.Start();
-  elxout << "Starting automatic parameter estimation for " << this->elxGetClassName() << " ..." << std::endl;
+  log::info(log::get_ostringstream() << "Starting automatic parameter estimation for " << this->elxGetClassName()
+                                     << " ...");
 
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
@@ -899,7 +900,8 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation()
 
   /** Print the elapsed time. */
   timer1.Stop();
-  elxout << "Automatic parameter estimation took " << Conversion::SecondsToDHMS(timer1.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "Automatic parameter estimation took "
+                                     << Conversion::SecondsToDHMS(timer1.GetMean(), 6));
 
 } // end AutomaticParameterEstimation()
 
@@ -957,11 +959,12 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
   }
 
   /** Compute the Jacobian terms. */
-  elxout << "  Computing JacobianTerms ..." << std::endl;
+  log::info("  Computing JacobianTerms ...");
   timer2.Start();
   computeJacobianTerms->Compute(TrC, TrCC, maxJJ, maxJCJ);
   timer2.Stop();
-  elxout << "  Computing the Jacobian terms took " << Conversion::SecondsToDHMS(timer2.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "  Computing the Jacobian terms took "
+                                     << Conversion::SecondsToDHMS(timer2.GetMean(), 6));
 
   /** Determine number of gradient measurements such that
    * E + 2\sqrt(Var) < K E
@@ -986,8 +989,8 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
     }
     this->m_NumberOfGradientMeasurements =
       std::max(static_cast<SizeValueType>(2), this->m_NumberOfGradientMeasurements);
-    elxout << "  NumberOfGradientMeasurements to estimate sigma_i: " << this->m_NumberOfGradientMeasurements
-           << std::endl;
+    log::info(log::get_ostringstream() << "  NumberOfGradientMeasurements to estimate sigma_i: "
+                                       << this->m_NumberOfGradientMeasurements);
   }
 
   /** Measure square magnitude of exact gradient and approximation error. */
@@ -1001,7 +1004,8 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
   }
   this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
   timer3.Stop();
-  elxout << "  Sampling the gradients took " << Conversion::SecondsToDHMS(timer3.GetMean(), 6) << std::endl;
+  log::info(log::get_ostringstream() << "  Sampling the gradients took "
+                                     << Conversion::SecondsToDHMS(timer3.GetMean(), 6));
 
   /** Determine parameter settings. */
   double sigma1 = 0.0;
@@ -1101,13 +1105,13 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
     maximumDisplacementEstimationMethod, "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
 
   /** Compute the Jacobian terms. */
-  elxout << "  Computing displacement distribution ..." << std::endl;
+  log::info("  Computing displacement distribution ...");
   timer4.Start();
   computeDisplacementDistribution->Compute(
     this->GetScaledCurrentPosition(), jacg, maxJJ, maximumDisplacementEstimationMethod);
   timer4.Stop();
-  elxout << "  Computing the displacement distribution took " << Conversion::SecondsToDHMS(timer4.GetMean(), 6)
-         << std::endl;
+  log::info(log::get_ostringstream() << "  Computing the displacement distribution took "
+                                     << Conversion::SecondsToDHMS(timer4.GetMean(), 6));
 
   /** Initial of the variables. */
   double       a = 0.0;
@@ -1131,8 +1135,8 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
     {
       this->m_NumberOfGradientMeasurements =
         std::max(static_cast<SizeValueType>(2), this->m_NumberOfGradientMeasurements);
-      elxout << "  NumberOfGradientMeasurements to estimate sigma_i: " << this->m_NumberOfGradientMeasurements
-             << std::endl;
+      log::info(log::get_ostringstream() << "  NumberOfGradientMeasurements to estimate sigma_i: "
+                                         << this->m_NumberOfGradientMeasurements);
     }
     timer5.Start();
     if (maxJJ > 1e-14)
@@ -1145,7 +1149,8 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
     this->m_NoiseFactor = noisefactor;
     a = delta * std::pow(A + 1.0, alpha) / jacg * noisefactor;
     timer5.Stop();
-    elxout << "  Compute the noise compensation took " << Conversion::SecondsToDHMS(timer5.GetMean(), 6) << std::endl;
+    log::info(log::get_ostringstream() << "  Compute the noise compensation took "
+                                       << Conversion::SecondsToDHMS(timer5.GetMean(), 6));
   }
   else
   {
@@ -1298,9 +1303,8 @@ AdaptiveStochasticLBFGS<TElastix>::SampleGradients(const ParametersType & mu0,
           {
             if (this->GetUseAdaptiveStepSizes())
             {
-              xl::xout["warning"]
-                << "WARNING: UseAdaptiveStepSizes is turned off, because UseRandomSampleRegion is set to \"true\"."
-                << std::endl;
+              log::warn(
+                "WARNING: UseAdaptiveStepSizes is turned off, because UseRandomSampleRegion is set to \"true\".");
               this->SetUseAdaptiveStepSizes(false);
             }
           }
@@ -1491,10 +1495,10 @@ AdaptiveStochasticLBFGS<TElastix>::StoreCurrentPoint(const ParametersType & step
   this->m_HessianFillValue[this->m_CurrentT] = fill_value;
 
 
-  elxout << "parameter difference s: " << step.magnitude() << '\n'
-         << "gradient difference y: " << grad_dif.magnitude() << '\n'
-         << "rho: " << this->m_Rho[this->m_CurrentT] << '\n'
-         << "New H0: " << fill_value << std::endl;
+  log::info(log::get_ostringstream() << "parameter difference s: " << step.magnitude() << '\n'
+                                     << "gradient difference y: " << grad_dif.magnitude() << '\n'
+                                     << "rho: " << this->m_Rho[this->m_CurrentT] << '\n'
+                                     << "New H0: " << fill_value);
 
 } // end StoreCurrentPoint()
 
@@ -1521,7 +1525,7 @@ AdaptiveStochasticLBFGS<TElastix>::ComputeDiagonalMatrix(DiagonalMatrixType & di
     fill_value = this->m_HessianFillValue[this->m_PreviousT];
   }
 
-  elxout << "H0: " << fill_value << std::endl;
+  log::info(log::get_ostringstream() << "H0: " << fill_value);
   diag_H0.Fill(fill_value);
 
 } // end ComputeDiagonalMatrix()
