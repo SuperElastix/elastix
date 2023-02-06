@@ -27,8 +27,6 @@
 #  include <omp.h>
 #endif
 
-#include "itkTimeProbe.h"
-
 namespace itk
 {
 
@@ -193,9 +191,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
       itkExceptionMacro(<< "No fixed image limiter has been set!");
     }
 
-    itk::TimeProbe timer;
-    timer.Start();
-
     using ComputeFixedImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<FixedImageType>;
     typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema =
       ComputeFixedImageExtremaFilterType::New();
@@ -218,9 +213,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
     }
 
     computeFixedImageExtrema->Update();
-    timer.Stop();
-    elxout << "  Computing the fixed image extrema took " << static_cast<long>(timer.GetMean() * 1000) << " ms."
-           << std::endl;
 
     this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
     this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
@@ -248,9 +240,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
       itkExceptionMacro(<< "No moving image limiter has been set!");
     }
 
-    itk::TimeProbe timer;
-    timer.Start();
-
     using ComputeMovingImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<MovingImageType>;
     typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema =
       ComputeMovingImageExtremaFilterType::New();
@@ -271,10 +260,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
       }
     }
     computeMovingImageExtrema->Update();
-
-    timer.Stop();
-    elxout << "  Computing the moving image extrema took " << static_cast<long>(timer.GetMean() * 1000) << " ms."
-           << std::endl;
 
     this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
     this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
