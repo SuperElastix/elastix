@@ -336,7 +336,7 @@ public:
   SetResultDeformationField(DataObjectPointer result_deformationfield);
 
 
-  /** Get the default precision of xout.
+  /** Get the default precision of the log system.
    * (The value assumed when no DefaultOutputPrecision is given in the
    * parameter file.
    */

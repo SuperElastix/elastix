@@ -74,7 +74,7 @@ namespace elastix
  *   auto command = ProgressCommandType::New();
  *   command->SetStartString( "  Progress: " );
  *   command->SetEndString( "%" );
- *   elxout << "Reading, casting, writing..."
+ *   // Reading, casting, writing...
  *   command->PrintProgress( 0.0 );
  *   reader->Update();
  *   command->PrintProgress( 0.33 );

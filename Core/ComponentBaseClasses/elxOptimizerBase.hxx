@@ -136,50 +136,53 @@ OptimizerBase<TElastix>::PrintSettingsVector(const SettingsVectorType & settings
 {
   const unsigned long nrofres = settings.size();
 
+  auto outputStringStream = log::get_ostringstream();
+  outputStringStream << std::showpoint << std::fixed;
+
   /** Print to log file */
-  elxout << "( SP_a ";
+  outputStringStream << "( SP_a ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[i].a << " ";
+    outputStringStream << settings[i].a << " ";
   }
-  elxout << ")\n"
+  outputStringStream << ")\n"
 
-         << "( SP_A ";
+                     << "( SP_A ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[i].A << " ";
+    outputStringStream << settings[i].A << " ";
   }
-  elxout << ")\n"
+  outputStringStream << ")\n"
 
-         << "( SP_alpha ";
+                     << "( SP_alpha ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[i].alpha << " ";
+    outputStringStream << settings[i].alpha << " ";
   }
-  elxout << ")\n"
+  outputStringStream << ")\n"
 
-         << "( SigmoidMax ";
+                     << "( SigmoidMax ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[i].fmax << " ";
+    outputStringStream << settings[i].fmax << " ";
   }
-  elxout << ")\n"
+  outputStringStream << ")\n"
 
-         << "( SigmoidMin ";
+                     << "( SigmoidMin ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[i].fmin << " ";
+    outputStringStream << settings[i].fmin << " ";
   }
-  elxout << ")\n"
+  outputStringStream << ")\n"
 
-         << "( SigmoidScale ";
+                     << "( SigmoidScale ";
   for (unsigned int i = 0; i < nrofres; ++i)
   {
-    elxout << settings[i].omega << " ";
+    outputStringStream << settings[i].omega << " ";
   }
-  log::info(log::get_ostringstream() << ")\n"
+  outputStringStream << ")\n";
 
-  );
+  log::info(outputStringStream.str());
 
 } // end PrintSettingsVector()
 

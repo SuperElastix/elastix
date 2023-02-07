@@ -19,7 +19,6 @@
 #include "elxConfiguration.h"
 
 #include "elxConversion.h"
-#include "elxMacro.h" // For elxout.
 #include "elxTransformIO.h"
 #include "elxTransformFactoryRegistration.h"
 
