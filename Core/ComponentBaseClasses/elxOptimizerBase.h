@@ -132,7 +132,7 @@ protected:
   };
   using SettingsVectorType = typename std::vector<SettingsType>;
 
-  /** Print the contents of the settings vector to elxout. */
+  /** Print the contents of the settings vector to log::info. */
   static void
   PrintSettingsVector(const SettingsVectorType & settings);
 

@@ -348,7 +348,8 @@ OpenCLMovingGenericPyramid<TElastix>::ReportToLog()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
   itk::OpenCLDevice           device = context->GetDefaultDevice();
-  elxout << "  Moving pyramid was computed by " << device.GetName() << " from " << device.GetVendor() << ".";
+  log::info(log::get_ostringstream() << "  Moving pyramid was computed by " << device.GetName() << " from "
+                                     << device.GetVendor() << ".");
 } // end ReportToLog()
 
 

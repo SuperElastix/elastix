@@ -178,13 +178,10 @@ ElastixBase::BeforeAllBase()
 
   /** Set the default precision of floating values in the output. */
   this->m_Configuration->ReadParameter(this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, false);
-  elxout << std::setprecision(this->m_DefaultOutputPrecision);
-
-  /** Print to log file. */
-  elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n";
+  log::set_precision(this->m_DefaultOutputPrecision);
 
   /** Check Command line options and print them to the logfile. */
-  log::info("Command line options from ElastixBase:");
+  log::info("ELASTIX version: " ELASTIX_VERSION_STRING "\nCommand line options from ElastixBase:");
   std::string check = "";
 
   /** Read the fixed and moving image filenames. These are obliged options,
@@ -323,7 +320,8 @@ ElastixBase::BeforeAllTransformixBase()
   int returndummy = 0;
 
   /** Print to log file. */
-  elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n" << std::setprecision(this->GetDefaultOutputPrecision());
+  log::info("ELASTIX version: " ELASTIX_VERSION_STRING);
+  log::set_precision(this->GetDefaultOutputPrecision());
 
   /** Check Command line options and print them to the logfile. */
   log::info("Command line options from ElastixBase:");

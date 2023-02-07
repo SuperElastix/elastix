@@ -503,8 +503,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration()
 
   /** Print time for initializing. */
   this->m_Timer0.Stop();
-  elxout << "Initialization of all components (before registration) took: "
-         << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.\n";
+  log::info(log::get_ostringstream() << "Initialization of all components (before registration) took: "
+                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
 
   /** Start Timer0 here, to make it possible to measure the time needed for
    * preparation of the first resolution.
@@ -529,8 +529,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   if (level == 0)
   {
     this->m_Timer0.Stop();
-    elxout << "Preparation of the image pyramids took: " << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000)
-           << " ms.\n";
+    log::info(log::get_ostringstream() << "Preparation of the image pyramids took: "
+                                       << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
     this->m_Timer0.Reset();
     this->m_Timer0.Start();
   }
@@ -556,8 +556,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
 
   /** Print the extra preparation time needed for this resolution. */
   this->m_Timer0.Stop();
-  elxout << "Elastix initialization of all components (for this resolution) took: "
-         << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.\n";
+  log::info(log::get_ostringstream() << "Elastix initialization of all components (for this resolution) took: "
+                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
 
   /** Start ResolutionTimer, which measures the total iteration time in this resolution. */
   this->m_ResolutionTimer.Reset();
@@ -584,11 +584,9 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
   unsigned long level = this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Print the total iteration time. */
-  elxout << std::setprecision(3);
   this->m_ResolutionTimer.Stop();
-  elxout << "Time spent in resolution " << (level)
-         << " (ITK initialization and iterating): " << this->m_ResolutionTimer.GetMean() << " s.\n"
-         << std::setprecision(this->GetDefaultOutputPrecision());
+  log::info(std::ostringstream{} << std::setprecision(3) << "Time spent in resolution " << (level)
+                                 << " (ITK initialization and iterating): " << this->m_ResolutionTimer.GetMean());
 
   /** Call all the AfterEachResolution() functions. */
   this->AfterEachResolutionBase();
@@ -746,8 +744,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
 
   /** Print the time spent on things after the registration. */
   this->m_Timer0.Stop();
-  elxout << "Time spent on saving the results, applying the final transform etc.: "
-         << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.\n";
+  log::info(log::get_ostringstream() << "Time spent on saving the results, applying the final transform etc.: "
+                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
 
 } // end AfterRegistration()
 

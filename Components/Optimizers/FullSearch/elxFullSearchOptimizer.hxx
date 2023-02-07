@@ -260,19 +260,22 @@ FullSearch<TElastix>::AfterEachResolution()
   SearchSpacePointType bestPoint = this->GetBestPointInSearchSpace();
   unsigned int         nrOfSSDims = bestIndex.GetSize();
 
-  elxout << "Index of the point in the optimization surface image that has the best metric value: [ ";
-  for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
-  {
-    elxout << bestIndex[dim] << " ";
-  }
-  elxout << "]\n"
+  auto outputStringStream = log::get_ostringstream();
 
-         << "The corresponding parameter values: [ ";
+  outputStringStream << "Index of the point in the optimization surface image that has the best metric value: [ ";
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
-    elxout << bestPoint[dim] << " ";
+    outputStringStream << bestIndex[dim] << " ";
   }
-  log::info("]\n");
+  outputStringStream << "]\n"
+
+                     << "The corresponding parameter values: [ ";
+  for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
+  {
+    outputStringStream << bestPoint[dim] << " ";
+  }
+  outputStringStream << "]\n";
+  log::info(outputStringStream.str());
 
   /** Remove the columns from IterationInfo. */
   NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();

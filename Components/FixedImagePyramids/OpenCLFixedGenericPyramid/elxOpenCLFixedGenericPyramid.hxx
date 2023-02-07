@@ -348,7 +348,8 @@ OpenCLFixedGenericPyramid<TElastix>::ReportToLog()
 {
   itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
   itk::OpenCLDevice           device = context->GetDefaultDevice();
-  elxout << "  Fixed pyramid was computed by " << device.GetName() << " from " << device.GetVendor() << ".";
+  log::info(log::get_ostringstream() << "  Fixed pyramid was computed by " << device.GetName() << " from "
+                                     << device.GetVendor() << ".");
 } // end ReportToLog()
 
 
