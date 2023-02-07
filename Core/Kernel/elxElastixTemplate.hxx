@@ -753,7 +753,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
 /**
  * ************** CreateTransformParameterFile ******************
  *
- * Setup the xout transform parameter file, which will
+ * Setup the transform parameter file, which will
  * contain the final transform parameters.
  */
 
@@ -764,36 +764,17 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   /** Store CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = fileName;
 
-  /** Create transformParameterFile and transformationParameterInfo. */
-  xl::xoutsimple transformationParameterInfo;
-  std::ofstream  transformParameterFile;
-
-  /** Set up the "TransformationParameters" writing field. */
-  transformationParameterInfo.SetOutputs(xl::xout.GetCOutputs(), xl::xout.GetXOutputs());
-
   /** Set it in the Transform, for later use. */
   this->GetElxTransformBase()->SetTransformParametersFileName(fileName.c_str());
-
-  /** Open the TransformParameter file. */
-  transformParameterFile.open(fileName.c_str());
-  if (!transformParameterFile.is_open())
-  {
-    log::error(log::get_ostringstream() << "ERROR: File \"" << fileName << "\" could not be opened!");
-  }
-
-  /** This xout["transpar"] writes to the log and to the TransformParameter file. */
-  transformationParameterInfo.RemoveOutput("cout");
-  transformationParameterInfo.AddOutput("tpf", &transformParameterFile);
-  if (!toLog)
-  {
-    transformationParameterInfo.RemoveOutput("log");
-  }
 
   /** Separate clearly in log-file. */
   if (toLog)
   {
     log::to_log_file("\n=============== start of TransformParameterFile ===============");
   }
+
+  /** Create transformationParameterInfo. */
+  std::ostringstream transformationParameterInfo;
 
   /** Call all the WriteToFile() functions.
    * Actually we could loop over all resample interpolators, resamplers,
@@ -804,10 +785,22 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   this->GetElxResampleInterpolatorBase()->WriteToFile(transformationParameterInfo);
   this->GetElxResamplerBase()->WriteToFile(transformationParameterInfo);
 
+  std::ofstream transformParameterFile(fileName);
+
+  if (transformParameterFile.is_open())
+  {
+    transformParameterFile << transformationParameterInfo.str();
+  }
+  else
+  {
+    log::error(log::get_ostringstream() << "ERROR: File \"" << fileName << "\" could not be opened!");
+  }
+
   /** Separate clearly in log-file. */
   if (toLog)
   {
-    log::to_log_file("\n=============== end of TransformParameterFile ===============");
+    log::to_log_file(transformationParameterInfo.str());
+    log::to_log_file("=============== end of TransformParameterFile ===============");
   }
 
 } // end CreateTransformParameterFile()

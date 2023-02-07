@@ -239,7 +239,7 @@ public:
 
   /** Function to write transform-parameters to a file. */
   void
-  WriteToFile(xl::xoutsimple & transformationParameterInfo, const ParametersType & param) const;
+  WriteToFile(std::ostream & transformationParameterInfo, const ParametersType & param) const;
 
   /** Macro for reading and writing the transform parameters in WriteToFile or not. */
   void

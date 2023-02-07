@@ -177,7 +177,7 @@ public:
 
   /** Function to write transform-parameters to a file. */
   void
-  WriteToFile(xl::xoutsimple & transformationParameterInfo) const;
+  WriteToFile(std::ostream & transformationParameterInfo) const;
 
   /** Function to create transform-parameters map. */
   void
