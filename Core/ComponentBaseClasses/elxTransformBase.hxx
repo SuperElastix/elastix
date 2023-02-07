@@ -454,7 +454,7 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
 
 template <class TElastix>
 void
-TransformBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo, const ParametersType & param) const
+TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo, const ParametersType & param) const
 {
   const auto & configuration = *(this->Superclass::m_Configuration);
   const auto   itkTransformOutputFileNameExtensions =

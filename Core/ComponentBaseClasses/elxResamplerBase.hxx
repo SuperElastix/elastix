@@ -624,7 +624,7 @@ ResamplerBase<TElastix>::ReadFromFile()
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo) const
+ResamplerBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
   ParameterMapType parameterMap;
   Self::CreateTransformParametersMap(parameterMap);

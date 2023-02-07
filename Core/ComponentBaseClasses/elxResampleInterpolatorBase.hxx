@@ -44,7 +44,7 @@ ResampleInterpolatorBase<TElastix>::ReadFromFile()
 
 template <class TElastix>
 void
-ResampleInterpolatorBase<TElastix>::WriteToFile(xl::xoutsimple & transformationParameterInfo) const
+ResampleInterpolatorBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
   ParameterMapType parameterMap;
   this->CreateTransformParametersMap(parameterMap);
