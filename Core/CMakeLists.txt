@@ -16,6 +16,8 @@ set(KernelFilesForComponents
   Kernel/elxElastixBase.h
   Kernel/elxElastixTemplate.h
   Kernel/elxElastixTemplate.hxx
+  Kernel/elxIterationInfo.cxx
+  Kernel/elxIterationInfo.h
   Kernel/elxlog.h
   Kernel/elxlog.cxx
 )
