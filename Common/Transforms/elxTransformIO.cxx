@@ -26,7 +26,7 @@
 #include "elxConfiguration.h"
 #include "elxSupportedImageDimensions.h"
 
-#include "xoutmain.h"
+#include "elxlog.h"
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
 

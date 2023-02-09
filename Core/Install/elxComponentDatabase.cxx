@@ -22,7 +22,7 @@
  */
 
 #include "elxComponentDatabase.h"
-#include "xoutmain.h"
+#include "elxlog.h"
 
 namespace elastix
 {

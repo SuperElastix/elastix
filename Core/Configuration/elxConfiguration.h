@@ -24,7 +24,7 @@
 #include "itkParameterFileParser.h"
 #include "itkParameterMapInterface.h"
 #include <map>
-#include "xoutmain.h"
+#include "elxlog.h"
 
 namespace elastix
 {

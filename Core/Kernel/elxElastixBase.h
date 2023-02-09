@@ -33,7 +33,7 @@
 #include "elxConfiguration.h"
 #include "elxIterationInfo.h"
 #include "elxMacro.h"
-#include "xoutmain.h"
+#include "elxlog.h"
 
 // ITK header files:
 #include <itkChangeInformationImageFilter.h>

@@ -17,7 +17,7 @@
  *=========================================================================*/
 
 #include "elxProgressCommand.h"
-#include "xoutmain.h"
+#include "elxlog.h"
 #include "itkMath.h" // itk::Math::Round
 
 namespace elastix
