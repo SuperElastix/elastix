@@ -19,7 +19,7 @@
 // Its own header file:
 #include "elxMainExeUtilities.h"
 
-#include "xoutmain.h"
+#include "elxlog.h"
 #include <Core/elxGitRevisionInfo.h>
 #include <Core/elxVersionMacros.h>
 #include <itkMacro.h>
@@ -27,6 +27,7 @@
 // Standard Library header files:
 #include <cassert>
 #include <exception>
+#include <iostream>
 #include <limits>
 #include <sstream>
 #include <typeinfo>

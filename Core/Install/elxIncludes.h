@@ -40,6 +40,6 @@
 #include "elxSupportedImageTypes.h"
 
 /** Writing to screen and logfiles etc. */
-#include "xoutmain.h"
+#include "elxlog.h"
 
 #endif //#ifndef elxIncludes_h
