@@ -13,7 +13,6 @@ project(elxComponents)
 if(UNIX)
   if(NOT APPLE)
     set(elxLinkLibs
-      xoutlib
       elxCommon
       elxCore
       ${ITK_LIBRARIES})
@@ -24,7 +23,6 @@ endif()
 if(WIN32 OR APPLE)
   set(elxLinkLibs
     param
-    xoutlib
     elxCommon
     elxCore
     ${ITK_LIBRARIES})

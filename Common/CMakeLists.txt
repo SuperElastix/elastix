@@ -5,7 +5,6 @@ project(elxCommon)
 # Sub-projects.
 
 add_subdirectory(ParameterFileParser)
-add_subdirectory(xout)
 add_subdirectory(MevisDicomTiff)
 
 if(ELASTIX_USE_OPENCL)

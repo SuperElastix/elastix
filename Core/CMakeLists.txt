@@ -147,7 +147,6 @@ elastix_export_target(elxCore)
 
 target_link_libraries(elxCore
   elxCommon
-  xoutlib
   param # Needed for elxConfiguration
   #  ${ITK_LIBRARIES}
 )
@@ -159,7 +158,6 @@ target_include_directories(elxCore PRIVATE
   ${ITK_CMAKE_DIR}/../Modules/ThirdParty/DoubleConversion/src/double-conversion)
 
 elastix_export_target(elxCommon)
-elastix_export_target(xoutlib)
 elastix_export_target(param)
 
 #---------------------------------------------------------------------
@@ -168,7 +166,6 @@ set(mevisdcmtifflib mevisdcmtiff)
 
 set(ELASTIX_TARGET_LINK_LIBRARIES
   param
-  xoutlib
   elxCommon
   elxCore
   ${mevisdcmtifflib}
