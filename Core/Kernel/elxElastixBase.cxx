@@ -388,19 +388,6 @@ ElastixBase::BeforeAllTransformixBase()
 
 
 /**
- * ************************ BeforeRegistrationBase ******************
- */
-
-void
-ElastixBase::BeforeRegistrationBase()
-{
-  /** Set up the "iteration" writing field. */
-  this->m_IterationInfo.SetOutputs(xl::xout.GetCOutputs(), xl::xout.GetXOutputs());
-
-} // end BeforeRegistrationBase()
-
-
-/**
  * ********************** GetResultImage *************************
  */
 

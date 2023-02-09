@@ -88,13 +88,13 @@ public:
     return this->m_Elastix.GetPointer();
   }
 
-  int
+  void
   RemoveTargetCellFromIterationInfo(const char * const name)
   {
-    return this->m_Elastix->GetIterationInfo().xl::xoutrow::RemoveTargetCell(name);
+    this->m_Elastix->GetIterationInfo().RemoveTargetCell(name);
   }
 
-  xl::xoutbase &
+  auto &
   GetIterationInfoAt(const char * const name)
   {
     return this->m_Elastix->GetIterationInfoAt(name);

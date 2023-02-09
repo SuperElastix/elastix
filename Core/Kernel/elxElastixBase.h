@@ -31,6 +31,7 @@
 #include "elxBaseComponent.h"
 #include "elxComponentDatabase.h"
 #include "elxConfiguration.h"
+#include "elxIterationInfo.h"
 #include "elxMacro.h"
 #include "xoutmain.h"
 
@@ -317,12 +318,6 @@ public:
   int
   BeforeAllTransformixBase();
 
-  /** Function called before registration.
-   * It installs the IterationInfo field.
-   */
-  void
-  BeforeRegistrationBase() override;
-
   ResultImageType *
   GetResultImage(const unsigned int idx = 0) const;
 
@@ -377,13 +372,13 @@ public:
   ConfigurationPointer
   GetConfiguration(const size_t index) const;
 
-  xl::xoutrow &
+  IterationInfo &
   GetIterationInfo()
   {
     return m_IterationInfo;
   }
 
-  xl::xoutbase &
+  std::ostream &
   GetIterationInfoAt(const char * const name)
   {
     return m_IterationInfo[name];
@@ -499,7 +494,7 @@ protected:
   GenerateDataObjectContainer(DataObjectPointer dataObject);
 
 private:
-  xl::xoutrow m_IterationInfo;
+  IterationInfo m_IterationInfo;
 
   /** The default output precision of elxout is set to 6. */
   int m_DefaultOutputPrecision{ 6 };

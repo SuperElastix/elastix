@@ -1013,7 +1013,7 @@ void
 ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
 {
   /** Remove the current iteration info output file, if any. */
-  this->GetIterationInfo().RemoveOutput("IterationInfoFile");
+  this->GetIterationInfo().RemoveOutputFile();
 
   if (this->m_IterationInfoFile.is_open())
   {
@@ -1036,7 +1036,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
   else
   {
     /** Add this file to the list of outputs of IterationInfo. */
-    this->GetIterationInfo().AddOutput("IterationInfoFile", &(this->m_IterationInfoFile));
+    this->GetIterationInfo().SetOutputFile(this->m_IterationInfoFile);
   }
 
 } // end OpenIterationInfoFile()
