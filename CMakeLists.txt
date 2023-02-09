@@ -263,7 +263,6 @@ set(elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common/LineSearchOptimizers
   ${elastix_SOURCE_DIR}/Common/ParameterFileParser
   ${elastix_SOURCE_DIR}/Common/Transforms
-  ${elastix_SOURCE_DIR}/Common/xout
   ${elastix_SOURCE_DIR}/Common/MevisDicomTiff
 )
 
