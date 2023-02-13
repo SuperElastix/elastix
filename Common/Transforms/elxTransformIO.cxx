@@ -196,7 +196,7 @@ elastix::TransformIO::Write(const itk::TransformBase & itkTransform, const std::
   }
   catch (const std::exception & stdException)
   {
-    log::error(log::get_ostringstream() << "Error trying to write " << fileName << ":\n" << stdException.what());
+    log::error(std::ostringstream{} << "Error trying to write " << fileName << ":\n" << stdException.what());
   }
 }
 

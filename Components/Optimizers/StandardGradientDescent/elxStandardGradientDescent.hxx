@@ -97,12 +97,12 @@ StandardGradientDescent<TElastix>::BeforeEachResolution()
   this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
   if (maximumNumberOfSamplingAttempts > 5)
   {
-    log::warn(log::get_ostringstream()
-              << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to " << maximumNumberOfSamplingAttempts
-              << ".\n"
-              << "  This functionality is known to cause problems (stack overflow) for large values.\n"
-              << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
-              << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n");
+    log::warn(
+      std::ostringstream{} << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
+                           << maximumNumberOfSamplingAttempts << ".\n"
+                           << "  This functionality is known to cause problems (stack overflow) for large values.\n"
+                           << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
+                           << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n");
   }
 
 } // end BeforeEachResolution()
@@ -159,7 +159,7 @@ StandardGradientDescent<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition */
-  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
+  log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution()
 
@@ -174,7 +174,7 @@ StandardGradientDescent<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
   double bestValue = this->GetValue();
-  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
+  log::info(std::ostringstream{} << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration()
 

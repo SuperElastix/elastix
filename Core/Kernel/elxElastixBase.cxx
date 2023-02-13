@@ -64,8 +64,8 @@ GenerateFileNameContainer(const Configuration & configuration,
       /** Both failed; return an error message, if desired. */
       if (printerrors)
       {
-        log::error(log::get_ostringstream()
-                   << "ERROR: No CommandLine option \"" << optionkey << "\" or \"" << optionkey << 0 << "\" given!");
+        log::error(std::ostringstream{} << "ERROR: No CommandLine option \"" << optionkey << "\" or \"" << optionkey
+                                        << 0 << "\" given!");
       }
       errorcode |= 1;
 
@@ -84,7 +84,7 @@ GenerateFileNameContainer(const Configuration & configuration,
       unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
       std::string  spaces = "";
       spaces.resize(nrSpaces, ' ');
-      log::info(log::get_ostringstream() << argused << spaces << check);
+      log::info(std::ostringstream{} << argused << spaces << check);
     }
     fileNameContainer->CreateElementAt(0) = check;
 
@@ -110,7 +110,7 @@ GenerateFileNameContainer(const Configuration & configuration,
           unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
           std::string  spaces = "";
           spaces.resize(nrSpaces, ' ');
-          log::info(log::get_ostringstream() << argused << spaces << check);
+          log::info(std::ostringstream{} << argused << spaces << check);
         }
         fileNameContainer->CreateElementAt(i) = check;
         ++i;
@@ -217,7 +217,7 @@ ElastixBase::BeforeAllBase()
   check = this->GetConfiguration()->GetCommandLineArgument("-out");
   if (check.empty())
   {
-    log::error(log::get_ostringstream() << "ERROR: No CommandLine option \"-out\" given!");
+    log::error(std::ostringstream{} << "ERROR: No CommandLine option \"-out\" given!");
     returndummy |= 1;
   }
   else
@@ -232,7 +232,7 @@ ElastixBase::BeforeAllBase()
 
       this->GetConfiguration()->SetCommandLineArgument("-out", folder);
     }
-    log::info(log::get_ostringstream() << "-out      " << check);
+    log::info(std::ostringstream{} << "-out      " << check);
   }
 
   /** Print all "-p". */
@@ -249,7 +249,7 @@ ElastixBase::BeforeAllBase()
     }
     else
     {
-      log::info(log::get_ostringstream() << "-p        " << check);
+      log::info(std::ostringstream{} << "-p        " << check);
     }
     ++i;
   }
@@ -263,7 +263,7 @@ ElastixBase::BeforeAllBase()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-priority " << check);
+    log::info(std::ostringstream{} << "-priority " << check);
   }
 #endif
 
@@ -275,17 +275,17 @@ ElastixBase::BeforeAllBase()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-threads  " << check);
+    log::info(std::ostringstream{} << "-threads  " << check);
   }
 
   /** Check the very important UseDirectionCosines parameter. */
   bool retudc = this->GetConfiguration()->ReadParameter(this->m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
-    log::warn(log::get_ostringstream()
-              << "\nWARNING: The option \"UseDirectionCosines\" was not found in your parameter file.\n"
-              << "  From elastix 4.8 it defaults to true!\n"
-              << "This may change the behavior of your registrations considerably.\n");
+    log::warn(
+      std::ostringstream{} << "\nWARNING: The option \"UseDirectionCosines\" was not found in your parameter file.\n"
+                           << "  From elastix 4.8 it defaults to true!\n"
+                           << "This may change the behavior of your registrations considerably.\n");
   }
 
   /** Set the random seed. Use 121212 as a default, which is the same as
@@ -339,7 +339,7 @@ ElastixBase::BeforeAllTransformixBase()
   std::string check = this->GetConfiguration()->GetCommandLineArgument("-out");
   if (check.empty())
   {
-    log::error(log::get_ostringstream() << "ERROR: No CommandLine option \"-out\" given!");
+    log::error(std::ostringstream{} << "ERROR: No CommandLine option \"-out\" given!");
     returndummy |= 1;
   }
   else
@@ -349,7 +349,7 @@ ElastixBase::BeforeAllTransformixBase()
     {
       this->GetConfiguration()->SetCommandLineArgument("-out", check + '/');
     }
-    log::info(log::get_ostringstream() << "-out      " << check);
+    log::info(std::ostringstream{} << "-out      " << check);
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
@@ -360,21 +360,21 @@ ElastixBase::BeforeAllTransformixBase()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-threads  " << check);
+    log::info(std::ostringstream{} << "-threads  " << check);
   }
   if (!BaseComponent::IsElastixLibrary())
   {
     /** Print "-tp". */
     check = this->GetConfiguration()->GetCommandLineArgument("-tp");
-    log::info(log::get_ostringstream() << "-tp       " << check);
+    log::info(std::ostringstream{} << "-tp       " << check);
   }
   /** Check the very important UseDirectionCosines parameter. */
   bool retudc = this->GetConfiguration()->ReadParameter(this->m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
-    log::warn(log::get_ostringstream() << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
-                                       << "the UseDirectionCosines option to your parameter file! See\n"
-                                       << "http://elastix.lumc.nl/whatsnew_04_3.php for more information.\n");
+    log::warn(std::ostringstream{} << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
+                                   << "the UseDirectionCosines option to your parameter file! See\n"
+                                   << "http://elastix.lumc.nl/whatsnew_04_3.php for more information.\n");
   }
 
   return returndummy;

@@ -41,7 +41,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::BeforeRegistration()
     this->m_Configuration->ReadParameter(splineOrder, "FinalReducedDimensionBSplineInterpolationOrder", 0, false);
   if (oldstyle)
   {
-    log::warn(log::get_ostringstream()
+    log::warn(std::ostringstream{}
               << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. Replace it by "
                  "FinalBSplineInterpolationOrder");
   }
@@ -74,7 +74,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile()
     this->m_Configuration->ReadParameter(splineOrder, "FinalReducedDimensionBSplineInterpolationOrder", 0, false);
   if (oldstyle)
   {
-    log::warn(log::get_ostringstream()
+    log::warn(std::ostringstream{}
               << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. Replace it by "
                  "FinalBSplineInterpolationOrder");
   }

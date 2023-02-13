@@ -98,7 +98,7 @@ TranslationTransformElastix<TElastix>::InitializeTransform()
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
-  log::info(log::get_ostringstream() << "Transform parameters are initialized as: " << this->GetParameters());
+  log::info(std::ostringstream{} << "Transform parameters are initialized as: " << this->GetParameters());
 
 } // end InitializeTransform()
 

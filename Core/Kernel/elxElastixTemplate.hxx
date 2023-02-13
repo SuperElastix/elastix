@@ -192,8 +192,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
 
   /** Print the time spent on reading images. */
   this->m_Timer0.Stop();
-  log::info(log::get_ostringstream() << "Reading images took "
-                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.\n");
+  log::info(std::ostringstream{} << "Reading images took "
+                                 << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.\n");
 
   /** Give all components the opportunity to do some initialization. */
   this->BeforeRegistration();
@@ -280,7 +280,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
     timer.Start();
 
     /** Tell the user. */
-    log::info(log::get_ostringstream() << '\n' << "Reading input image ...");
+    log::info(std::ostringstream{} << '\n' << "Reading input image ...");
 
     /** Load the image from disk, if it wasn't set already by the user. */
     const bool useDirCos = this->GetUseDirectionCosines();
@@ -292,7 +292,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
 
     /** Tell the user. */
     timer.Stop();
-    log::info(log::get_ostringstream() << "  Reading input image took " << timer.GetMean() << " s");
+    log::info(std::ostringstream{} << "  Reading input image took " << timer.GetMean() << " s");
 
   } // end if inputImageFileName
 
@@ -315,7 +315,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
 
   /** Tell the user. */
   timer.Stop();
-  log::info(log::get_ostringstream() << "  Calling all ReadFromFile()'s took " << timer.GetMean() << " s");
+  log::info(std::ostringstream{} << "  Calling all ReadFromFile()'s took " << timer.GetMean() << " s");
 
   /** Call TransformPoints.
    * Actually we could loop over all transforms.
@@ -330,11 +330,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    log::error(log::get_ostringstream() << excp << '\n' << "However, transformix continues anyway.");
+    log::error(std::ostringstream{} << excp << '\n' << "However, transformix continues anyway.");
   }
   timer.Stop();
-  log::info(log::get_ostringstream() << "  Transforming points done, it took "
-                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
+  log::info(std::ostringstream{} << "  Transforming points done, it took "
+                                 << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Call ComputeSpatialJacobianDeterminantImage.
    * Actually we could loop over all transforms.
@@ -349,11 +349,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    log::error(log::get_ostringstream() << excp << '\n' << "However, transformix continues anyway.");
+    log::error(std::ostringstream{} << excp << '\n' << "However, transformix continues anyway.");
   }
   timer.Stop();
-  log::info(log::get_ostringstream() << "  Computing determinant of spatial Jacobian done, it took "
-                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
+  log::info(std::ostringstream{} << "  Computing determinant of spatial Jacobian done, it took "
+                                 << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Call ComputeAndWriteSpatialJacobianMatrixImage.
    * Actually we could loop over all transforms.
@@ -368,11 +368,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
   }
   catch (const itk::ExceptionObject & excp)
   {
-    log::error(log::get_ostringstream() << excp << '\n' << "However, transformix continues anyway.");
+    log::error(std::ostringstream{} << excp << '\n' << "However, transformix continues anyway.");
   }
   timer.Stop();
-  log::info(log::get_ostringstream() << "  Computing spatial Jacobian done, it took "
-                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
+  log::info(std::ostringstream{} << "  Computing spatial Jacobian done, it took "
+                                 << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Resample the image. */
   if (this->GetMovingImage() != nullptr)
@@ -406,7 +406,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
-    log::info(log::get_ostringstream() << "  Resampling took " << Conversion::SecondsToDHMS(timer.GetMean(), 2));
+    log::info(std::ostringstream{} << "  Resampling took " << Conversion::SecondsToDHMS(timer.GetMean(), 2));
   }
 
   /** Return a value. */
@@ -503,8 +503,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration()
 
   /** Print time for initializing. */
   this->m_Timer0.Stop();
-  log::info(log::get_ostringstream() << "Initialization of all components (before registration) took: "
-                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Initialization of all components (before registration) took: "
+                                 << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
 
   /** Start Timer0 here, to make it possible to measure the time needed for
    * preparation of the first resolution.
@@ -529,8 +529,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   if (level == 0)
   {
     this->m_Timer0.Stop();
-    log::info(log::get_ostringstream() << "Preparation of the image pyramids took: "
-                                       << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
+    log::info(std::ostringstream{} << "Preparation of the image pyramids took: "
+                                   << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
     this->m_Timer0.Reset();
     this->m_Timer0.Start();
   }
@@ -539,7 +539,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   this->m_IterationCounter = 0;
 
   /** Print the current resolution. */
-  log::info(log::get_ostringstream() << "\nResolution: " << level);
+  log::info(std::ostringstream{} << "\nResolution: " << level);
 
   /** Create a TransformParameter-file for the current resolution. */
   bool writeIterationInfo = true;
@@ -556,8 +556,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
 
   /** Print the extra preparation time needed for this resolution. */
   this->m_Timer0.Stop();
-  log::info(log::get_ostringstream() << "Elastix initialization of all components (for this resolution) took: "
-                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Elastix initialization of all components (for this resolution) took: "
+                                 << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
 
   /** Start ResolutionTimer, which measures the total iteration time in this resolution. */
   this->m_ResolutionTimer.Reset();
@@ -734,8 +734,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   }
 
   timer.Stop();
-  log::info(log::get_ostringstream() << "\nCreating the TransformParameterFile took "
-                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
+  log::info(std::ostringstream{} << "\nCreating the TransformParameterFile took "
+                                 << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();
@@ -744,8 +744,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
 
   /** Print the time spent on things after the registration. */
   this->m_Timer0.Stop();
-  log::info(log::get_ostringstream() << "Time spent on saving the results, applying the final transform etc.: "
-                                     << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Time spent on saving the results, applying the final transform etc.: "
+                                 << static_cast<unsigned long>(this->m_Timer0.GetMean() * 1000) << " ms.");
 
 } // end AfterRegistration()
 
@@ -793,7 +793,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   }
   else
   {
-    log::error(log::get_ostringstream() << "ERROR: File \"" << fileName << "\" could not be opened!");
+    log::error(std::ostringstream{} << "ERROR: File \"" << fileName << "\" could not be opened!");
   }
 
   /** Separate clearly in log-file. */
@@ -1031,7 +1031,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
   this->m_IterationInfoFile.open(fileName.c_str());
   if (!(this->m_IterationInfoFile.is_open()))
   {
-    log::error(log::get_ostringstream() << "ERROR: File \"" << fileName << "\" could not be opened!");
+    log::error(std::ostringstream{} << "ERROR: File \"" << fileName << "\" could not be opened!");
   }
   else
   {

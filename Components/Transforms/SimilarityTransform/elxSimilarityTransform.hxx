@@ -261,7 +261,7 @@ SimilarityTransformElastix<TElastix>::InitializeTransform()
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
-  log::info(log::get_ostringstream() << "Transform parameters are initialized as: " << this->GetParameters());
+  log::info(std::ostringstream{} << "Transform parameters are initialized as: " << this->GetParameters());
 
 } // end InitializeTransform()
 
@@ -320,7 +320,7 @@ SimilarityTransformElastix<TElastix>::SetScales()
     }
   } // end else: no automatic parameter estimation
 
-  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
+  log::info(std::ostringstream{} << "Scales for transform parameters are: " << newscales);
 
   /** Set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

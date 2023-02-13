@@ -243,7 +243,7 @@ AffineLogTransformElastix<TElastix>::InitializeTransform()
       this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformIndexToPhysicalPoint(centerOfRotationIndex,
                                                                                                centerOfRotationPoint);
     }
-    log::info(log::get_ostringstream() << "cor: " << centerOfRotationPoint);
+    log::info(std::ostringstream{} << "cor: " << centerOfRotationPoint);
 
     this->m_AffineLogTransform->SetCenter(centerOfRotationPoint);
   }
@@ -308,7 +308,7 @@ AffineLogTransformElastix<TElastix>::SetScales()
     itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
   }
 
-  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
+  log::info(std::ostringstream{} << "Scales for transform parameters are: " << newscales);
 
   /** Set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

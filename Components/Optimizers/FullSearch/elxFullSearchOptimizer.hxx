@@ -165,8 +165,8 @@ FullSearch<TElastix>::BeforeEachResolution()
                << this->GetConfiguration()->GetElastixLevel() << ".R" << level << "." << resultImageFormat;
     this->m_OptimizationSurface->SetOutputFileName(makeString.str().c_str());
 
-    log::info(log::get_ostringstream() << "Total number of iterations needed in this resolution: "
-                                       << this->GetNumberOfIterations() << ".");
+    log::info(std::ostringstream{} << "Total number of iterations needed in this resolution: "
+                                   << this->GetNumberOfIterations() << ".");
   }
   else
   {
@@ -229,7 +229,7 @@ FullSearch<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition */
-  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
+  log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");
 
   /** Write the optimization surface to disk */
   bool writeSurfaceEachResolution = false;
@@ -240,27 +240,27 @@ FullSearch<TElastix>::AfterEachResolution()
     try
     {
       this->m_OptimizationSurface->Write();
-      log::info(log::get_ostringstream() << "\nThe scanned optimization surface is saved as: "
-                                         << this->m_OptimizationSurface->GetOutputFileName());
+      log::info(std::ostringstream{} << "\nThe scanned optimization surface is saved as: "
+                                     << this->m_OptimizationSurface->GetOutputFileName());
     }
     catch (const itk::ExceptionObject & err)
     {
-      log::error(log::get_ostringstream()
-                 << "ERROR: Saving " << this->m_OptimizationSurface->GetOutputFileName() << " failed.\n"
-                 << err);
+      log::error(std::ostringstream{} << "ERROR: Saving " << this->m_OptimizationSurface->GetOutputFileName()
+                                      << " failed.\n"
+                                      << err);
       // do not throw an error, since we would like to go on.
     }
   }
 
   /** Print the best metric value */
-  log::info(log::get_ostringstream() << '\n' << "Best metric value in this resolution = " << this->GetBestValue());
+  log::info(std::ostringstream{} << '\n' << "Best metric value in this resolution = " << this->GetBestValue());
 
   /** Print the best index and point */
   SearchSpaceIndexType bestIndex = this->GetBestIndexInSearchSpace();
   SearchSpacePointType bestPoint = this->GetBestPointInSearchSpace();
   unsigned int         nrOfSSDims = bestIndex.GetSize();
 
-  auto outputStringStream = log::get_ostringstream();
+  std::ostringstream outputStringStream;
 
   outputStringStream << "Index of the point in the optimization surface image that has the best metric value: [ ";
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
@@ -303,7 +303,7 @@ FullSearch<TElastix>::AfterRegistration()
 {
   /** Print the best metric value. */
   double bestValue = this->GetBestValue();
-  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
+  log::info(std::ostringstream{} << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration()
 
@@ -323,9 +323,9 @@ FullSearch<TElastix>::CheckSearchSpaceRangeDefinition(const std::string & fullFi
    */
   if (!found && (entry_nr == 0 || (entry_nr % 5 != 0)))
   {
-    log::error(log::get_ostringstream() << "ERROR:\nNo (valid) range specified for the full search optimizer!\n"
-                                        << "Please define the field (" << fullFieldName
-                                        << " \"name\" parameter_nr min max stepsize) correctly in the parameter file");
+    log::error(std::ostringstream{} << "ERROR:\nNo (valid) range specified for the full search optimizer!\n"
+                                    << "Please define the field (" << fullFieldName
+                                    << " \"name\" parameter_nr min max stepsize) correctly in the parameter file");
     return false;
   }
 

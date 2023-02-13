@@ -90,11 +90,12 @@ Configuration::PrintParameterFile() const
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file, before and after writing the parameter file. */
-  log::to_log_file(log::get_ostringstream()
-                   << '\n'
-                   << "=============== start of ParameterFile: " << this->GetParameterFileName() << " ===============\n"
-                   << params << '\n'
-                   << "=============== end of ParameterFile: " << this->GetParameterFileName() << " ===============\n");
+  log::to_log_file(std::ostringstream{} << '\n'
+                                        << "=============== start of ParameterFile: " << this->GetParameterFileName()
+                                        << " ===============\n"
+                                        << params << '\n'
+                                        << "=============== end of ParameterFile: " << this->GetParameterFileName()
+                                        << " ===============\n");
 
 } // end PrintParameterFile()
 
@@ -168,15 +169,15 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   }
   else if (p.empty() && tp.empty())
   {
-    log::error(log::get_ostringstream() << "ERROR: No (Transform-)Parameter file has been entered\n"
-                                        << "for elastix: command line option \"-p\"\n"
-                                        << "for transformix: command line option \"-tp\"");
+    log::error(std::ostringstream{} << "ERROR: No (Transform-)Parameter file has been entered\n"
+                                    << "for elastix: command line option \"-p\"\n"
+                                    << "for transformix: command line option \"-tp\"");
     return 1;
   }
   else
   {
     /** Both "p" and "tp" are used, which is prohibited. */
-    log::error(log::get_ostringstream() << "ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited.");
+    log::error(std::ostringstream{} << "ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited.");
     return 1;
   }
 
@@ -189,7 +190,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   }
   catch (const itk::ExceptionObject & excp)
   {
-    log::error(log::get_ostringstream() << "ERROR: when reading the parameter file:\n" << excp);
+    log::error(std::ostringstream{} << "ERROR: when reading the parameter file:\n" << excp);
     return 1;
   }
 

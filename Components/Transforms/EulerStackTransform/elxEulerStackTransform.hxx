@@ -224,7 +224,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
     this->m_Configuration->ReadParameter(UseDirectionCosines, "UseDirectionCosines", 0);
     if (!UseDirectionCosines)
     {
-      log::info(log::get_ostringstream()
+      log::info(std::ostringstream{}
                 << "warning: a wrong center of rotation could have been set,  please check the transform matrix in the "
                    "header file");
     }
@@ -454,7 +454,7 @@ EulerStackTransform<TElastix>::SetScales()
 
   } // end else: no automaticScalesEstimation
 
-  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
+  log::info(std::ostringstream{} << "Scales for transform parameters are: " << newscales);
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

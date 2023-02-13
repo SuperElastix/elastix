@@ -46,8 +46,8 @@ PolydataDummyPenalty<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  log::info(log::get_ostringstream() << "Initialization of PolydataDummyPenalty metric took: "
-                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Initialization of PolydataDummyPenalty metric took: "
+                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
@@ -82,8 +82,8 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase()
   std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
   /** Check Command line options and print them to the log file. */
-  log::info(log::get_ostringstream() << "Command line options from " << this->elxGetClassName() << ": ("
-                                     << componentLabel << "):");
+  log::info(std::ostringstream{} << "Command line options from " << this->elxGetClassName() << ": (" << componentLabel
+                                 << "):");
   std::string check("");
 
   this->m_NumberOfMeshes = 0;
@@ -100,7 +100,7 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase()
     }
     else
     {
-      log::info(log::get_ostringstream() << fmeshArgument.str() << "\t" << check);
+      log::info(std::ostringstream{} << fmeshArgument.str() << "\t" << check);
       this->m_NumberOfMeshes++;
     }
   }
@@ -121,8 +121,8 @@ PolydataDummyPenalty<TElastix>::BeforeRegistration()
   std::string componentLabel(this->GetComponentLabel());
   std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
 
-  log::info(log::get_ostringstream() << "Loading meshes for " << this->GetComponentLabel() << ":"
-                                     << this->elxGetClassName() << ".");
+  log::info(std::ostringstream{} << "Loading meshes for " << this->GetComponentLabel() << ":" << this->elxGetClassName()
+                                 << ".");
 
   FixedMeshContainerPointer meshPointerContainer = FixedMeshContainerType::New();
   meshPointerContainer->Reserve(this->m_NumberOfMeshes);
@@ -203,7 +203,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
+        log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
   }   // end if
@@ -250,7 +250,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
+        log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
   }   // end if
@@ -270,7 +270,7 @@ PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typen
   auto meshReader = itk::MeshFileReader<MeshType>::New();
   meshReader->SetFileName(meshFileName.c_str());
 
-  log::info(log::get_ostringstream() << "  Reading input mesh file: " << meshFileName);
+  log::info(std::ostringstream{} << "  Reading input mesh file: " << meshFileName);
   try
   {
     // meshReader->Update();
@@ -278,13 +278,13 @@ PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typen
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening input mesh file.\n" << err);
+    log::error(std::ostringstream{} << "  Error while opening input mesh file.\n" << err);
   }
 
   /** Some user-feedback. */
   mesh = meshReader->GetOutput();
   unsigned long nrofpoints = mesh->GetNumberOfPoints();
-  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   return nrofpoints;
 } // end ReadMesh()
@@ -392,14 +392,14 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   ippReader->SetFileName(filename.c_str());
 
   /** Read the input points. */
-  log::info(log::get_ostringstream() << "  Reading input point file: " << filename);
+  log::info(std::ostringstream{} << "  Reading input point file: " << filename);
   try
   {
     ippReader->Update();
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening input point file.\n" << err);
+    log::error(std::ostringstream{} << "  Error while opening input point file.\n" << err);
   }
 
   /** Some user-feedback. */
@@ -412,7 +412,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
     log::info("  Input points are specified in world coordinates.");
   }
   const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
-  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   /** Get the set of input points. */
   typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();

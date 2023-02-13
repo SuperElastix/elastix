@@ -41,8 +41,8 @@ ComponentDatabase::SetCreator(const ComponentDescriptionType & name, IndexType i
    */
   if (CreatorMap.count(key)) //==1
   {
-    log::error(log::get_ostringstream() << "Error: \n"
-                                        << name << "(index " << i << ") - This component has already been installed!");
+    log::error(std::ostringstream{} << "Error: \n"
+                                    << name << "(index " << i << ") - This component has already been installed!");
     return 1;
   }
   else
@@ -73,10 +73,10 @@ ComponentDatabase::SetIndex(const PixelTypeDescriptionType & fixedPixelType,
   /** Insert the key+index in the map, if it hadn't been done before yet.*/
   if (IndexMap.count(key)) //==1
   {
-    log::error(log::get_ostringstream() << "Error:\n"
-                                        << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << '\n'
-                                        << "MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'
-                                        << "Elastix already supports this combination of ImageTypes!");
+    log::error(std::ostringstream{} << "Error:\n"
+                                    << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << '\n'
+                                    << "MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'
+                                    << "Elastix already supports this combination of ImageTypes!");
     return 1;
   }
   else
@@ -105,8 +105,7 @@ ComponentDatabase::GetCreator(const ComponentDescriptionType & name, IndexType i
    */
   if (found == end(CreatorMap))
   {
-    log::error(log::get_ostringstream() << "Error: \n"
-                                        << name << "(index " << i << ") - This component is not installed!");
+    log::error(std::ostringstream{} << "Error: \n" << name << "(index " << i << ") - This component is not installed!");
     return nullptr;
   }
   else
@@ -139,7 +138,7 @@ ComponentDatabase::GetIndex(const PixelTypeDescriptionType & fixedPixelType,
    */
   if (found == end(IndexMap))
   {
-    log::error(log::get_ostringstream()
+    log::error(std::ostringstream{}
                << "ERROR:\n"
                << "  FixedImageType:  " << fixedDimension << "D " << fixedPixelType << '\n'
                << "  MovingImageType: " << movingDimension << "D " << movingPixelType << '\n'

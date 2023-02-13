@@ -59,7 +59,7 @@ AdvancedAffineTransformElastix<TElastix>::BeforeRegistration()
 
   /** Print the elapsed time. */
   timer1.Stop();
-  log::info(log::get_ostringstream() << "InitializeTransform took " << Conversion::SecondsToDHMS(timer1.GetMean(), 2));
+  log::info(std::ostringstream{} << "InitializeTransform took " << Conversion::SecondsToDHMS(timer1.GetMean(), 2));
 
   /** Task 2 - Set the scales. */
   this->SetScales();
@@ -315,7 +315,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
-  log::info(log::get_ostringstream() << "Transform parameters are initialized as: " << this->GetParameters());
+  log::info(std::ostringstream{} << "Transform parameters are initialized as: " << this->GetParameters());
 
 } // end InitializeTransform()
 
@@ -425,7 +425,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
 
   } // end else: no automaticScalesEstimation
 
-  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
+  log::info(std::ostringstream{} << "Scales for transform parameters are: " << newscales);
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

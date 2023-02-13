@@ -79,7 +79,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    log::error(log::get_ostringstream() << excp);
+    log::error(std::ostringstream{} << excp);
     errorCode = 1;
     return errorCode;
   }
@@ -99,7 +99,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   if (!creatingContextSuccessful)
   {
     /** Report and disable the GPU by releasing the context. */
-    log::info(log::get_ostringstream() << errorMessage << '\n' << "  OpenCL processing in transformix is disabled.\n");
+    log::info(std::ostringstream{} << errorMessage << '\n' << "  OpenCL processing in transformix is disabled.\n");
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();
@@ -161,7 +161,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    log::error(log::get_ostringstream() << "Exception while trying to apply a tranformation:\n" << excp);
+    log::error(std::ostringstream{} << "Exception while trying to apply a tranformation:\n" << excp);
     errorCode = 1;
   }
 

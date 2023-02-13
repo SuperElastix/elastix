@@ -111,13 +111,12 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
     }
     catch (const itk::ExceptionObject & excp)
     {
-      log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
+      log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
     }
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
-    log::info(log::get_ostringstream() << "  Applying transform took "
-                                       << Conversion::SecondsToDHMS(timer.GetMean(), 2));
+    log::info(std::ostringstream{} << "  Applying transform took " << Conversion::SecondsToDHMS(timer.GetMean(), 2));
 
   } // end if
 
@@ -166,7 +165,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     }
     catch (const itk::ExceptionObject & excp)
     {
-      log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
+      log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
     }
 
   } // end if
@@ -244,19 +243,19 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       }
       catch (const itk::ExceptionObject & excp)
       {
-        log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
+        log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
       }
 
       /** Print the elapsed time for the resampling. */
       timer.Stop();
-      log::info(log::get_ostringstream() << "  Applying final transform took "
-                                         << Conversion::SecondsToDHMS(timer.GetMean(), 2));
+      log::info(std::ostringstream{} << "  Applying final transform took "
+                                     << Conversion::SecondsToDHMS(timer.GetMean(), 2));
     }
     else
     {
       /** Do not apply the final transform. */
-      log::info(log::get_ostringstream() << '\n'
-                                         << "Skipping applying final transform, no resulting output image generated.");
+      log::info(std::ostringstream{} << '\n'
+                                     << "Skipping applying final transform, no resulting output image generated.");
     } // end if
   }
 

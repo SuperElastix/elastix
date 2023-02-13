@@ -101,9 +101,9 @@ public:
 
     if (!foundRescale && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {
-      log::warn(log::get_ostringstream() << "WARNING: the " << pyramidAdjective
-                                         << " pyramid rescale schedule is not fully specified!\n"
-                                         << "  A default pyramid rescale schedule is used.");
+      log::warn(std::ostringstream{} << "WARNING: the " << pyramidAdjective
+                                     << " pyramid rescale schedule is not fully specified!\n"
+                                     << "  A default pyramid rescale schedule is used.");
     }
     else
     {
@@ -114,11 +114,11 @@ public:
 
       if (newSchedule != rescaleSchedule)
       {
-        log::warn(log::get_ostringstream()
-                  << "WARNING: the " << pyramidAdjective
-                  << " pyramid rescale schedule is adjusted!\n  Input schedule from configuration:\n"
-                  << rescaleSchedule << "\n  Adjusted schedule:\n"
-                  << newSchedule);
+        log::warn(
+          std::ostringstream{} << "WARNING: the " << pyramidAdjective
+                               << " pyramid rescale schedule is adjusted!\n  Input schedule from configuration:\n"
+                               << rescaleSchedule << "\n  Adjusted schedule:\n"
+                               << newSchedule);
       }
     }
 
@@ -147,9 +147,9 @@ public:
 
     if (!foundSmoothing && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {
-      log::warn(log::get_ostringstream() << "WARNING: the " << pyramidAdjective
-                                         << " pyramid smoothing schedule is not fully specified!\n"
-                                         << "  A default pyramid smoothing schedule is used.");
+      log::warn(std::ostringstream{} << "WARNING: the " << pyramidAdjective
+                                     << " pyramid smoothing schedule is not fully specified!\n"
+                                     << "  A default pyramid smoothing schedule is used.");
     }
     else
     {
@@ -160,11 +160,11 @@ public:
 
       if (newSchedule != smoothingSchedule)
       {
-        log::warn(log::get_ostringstream()
-                  << "WARNING: the " << pyramidAdjective
-                  << " pyramid smoothing schedule is adjusted!\n  Input schedule from configuration:\n"
-                  << smoothingSchedule << "\n  Adjusted schedule:\n"
-                  << newSchedule);
+        log::warn(
+          std::ostringstream{} << "WARNING: the " << pyramidAdjective
+                               << " pyramid smoothing schedule is adjusted!\n  Input schedule from configuration:\n"
+                               << smoothingSchedule << "\n  Adjusted schedule:\n"
+                               << newSchedule);
       }
     }
 

@@ -245,8 +245,8 @@ MultiResolutionRegistrationWithFeatures<TElastix>::UpdateFixedMasks(unsigned int
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
-  log::info(log::get_ostringstream() << "Setting the fixed masks took: " << static_cast<long>(timer.GetMean() * 1000)
-                                     << " ms.");
+  log::info(std::ostringstream{} << "Setting the fixed masks took: " << static_cast<long>(timer.GetMean() * 1000)
+                                 << " ms.");
 
 } // end UpdateFixedMasks()
 
@@ -284,8 +284,8 @@ MultiResolutionRegistrationWithFeatures<TElastix>::UpdateMovingMasks(unsigned in
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
-  log::info(log::get_ostringstream() << "Setting the moving masks took: " << static_cast<long>(timer.GetMean() * 1000)
-                                     << " ms.");
+  log::info(std::ostringstream{} << "Setting the moving masks took: " << static_cast<long>(timer.GetMean() * 1000)
+                                 << " ms.");
 
 } // end UpdateMovingMasks()
 

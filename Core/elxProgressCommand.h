@@ -60,7 +60,7 @@ namespace elastix
  *   command->SetUpdateFrequency( maxnrofvoxels, 100 );
  *   command->SetStartString( "  Progress: " );
  *   command->SetEndString( "%" );
- *   log::info(log::get_ostringstream()  << "Looping over voxels... ");
+ *   log::info(std::ostringstream{}  << "Looping over voxels... ");
  *   for ( unsigned int i =0; i < maxnrofvoxels; ++i )
  *   {
  *     command->UpdateAndPrintProgress( i );

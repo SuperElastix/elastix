@@ -141,8 +141,8 @@ ElastixMain::EnterCommandLineArguments(const ArgumentMapType & argmap, const std
     int dummy = this->m_Configurations[i]->Initialize(argmap, inputMaps[i]);
     if (dummy)
     {
-      log::error(log::get_ostringstream()
-                 << "ERROR: Something went wrong during initialization of configuration object " << i << ".");
+      log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "
+                                      << i << ".");
     }
   }
 
@@ -182,7 +182,7 @@ ElastixMain::Run()
   catch (const itk::ExceptionObject & excp)
   {
     /** We just print the exception and let the program quit. */
-    log::error(log::get_ostringstream() << excp);
+    log::error(std::ostringstream{} << excp);
     errorCode = 1;
     return errorCode;
   }
@@ -202,7 +202,7 @@ ElastixMain::Run()
   if (!creatingContextSuccessful)
   {
     /** Report and disable the GPU by releasing the context. */
-    log::info(log::get_ostringstream() << errorMessage << '\n' << "  OpenCL processing in elastix is disabled.\n");
+    log::info(std::ostringstream{} << errorMessage << '\n' << "  OpenCL processing in elastix is disabled.\n");
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();
@@ -277,20 +277,20 @@ ElastixMain::Run()
   catch (const itk::ExceptionObject & excp1)
   {
     /** We just print the itk::exception and let the program quit. */
-    log::error(log::get_ostringstream() << excp1);
+    log::error(std::ostringstream{} << excp1);
     errorCode = 1;
   }
   catch (const std::exception & excp2)
   {
     /** We just print the std::exception and let the program quit. */
-    log::error(log::get_ostringstream() << "std: " << excp2.what());
+    log::error(std::ostringstream{} << "std: " << excp2.what());
     errorCode = 1;
   }
   catch (...)
   {
     /** We don't know what happened and just print a general message. */
-    log::error(log::get_ostringstream() << "ERROR: an unknown non-ITK, non-std exception was caught.\n"
-                                        << "Please report this to elastix@bigr.nl.");
+    log::error(std::ostringstream{} << "ERROR: an unknown non-ITK, non-std exception was caught.\n"
+                                    << "Please report this to elastix@bigr.nl.");
     errorCode = 1;
   }
 
@@ -378,8 +378,8 @@ ElastixMain::InitDBIndex()
         /** Sanity check. */
         if (fixedImageFileName.empty())
         {
-          log::error(log::get_ostringstream() << "ERROR: could not read fixed image.\n"
-                                              << "  both -f and -f0 are unspecified");
+          log::error(std::ostringstream{} << "ERROR: could not read fixed image.\n"
+                                          << "  both -f and -f0 are unspecified");
           return 1;
         }
 
@@ -390,7 +390,7 @@ ElastixMain::InitDBIndex()
         }
         catch (const itk::ExceptionObject & err)
         {
-          log::error(log::get_ostringstream() << "ERROR: could not read fixed image.\n" << err);
+          log::error(std::ostringstream{} << "ERROR: could not read fixed image.\n" << err);
           return 1;
         }
 
@@ -407,7 +407,7 @@ ElastixMain::InitDBIndex()
         {
           if (fixDimParameterFile != this->m_FixedImageDimension)
           {
-            log::error(log::get_ostringstream()
+            log::error(std::ostringstream{}
                        << "ERROR: problem defining fixed image dimension.\n"
                        << "  The parameter file says:     " << fixDimParameterFile << "\n"
                        << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
@@ -453,8 +453,8 @@ ElastixMain::InitDBIndex()
         /** Sanity check. */
         if (movingImageFileName.empty())
         {
-          log::error(log::get_ostringstream() << "ERROR: could not read moving image.\n"
-                                              << "  both -m and -m0 are unspecified");
+          log::error(std::ostringstream{} << "ERROR: could not read moving image.\n"
+                                          << "  both -m and -m0 are unspecified");
           return 1;
         }
 
@@ -465,7 +465,7 @@ ElastixMain::InitDBIndex()
         }
         catch (const itk::ExceptionObject & err)
         {
-          log::error(log::get_ostringstream() << "ERROR: could not read moving image.\n" << err);
+          log::error(std::ostringstream{} << "ERROR: could not read moving image.\n" << err);
           return 1;
         }
 
@@ -482,7 +482,7 @@ ElastixMain::InitDBIndex()
         {
           if (movDimParameterFile != this->m_MovingImageDimension)
           {
-            log::error(log::get_ostringstream()
+            log::error(std::ostringstream{}
                        << "ERROR: problem defining moving image dimension.\n"
                        << "  The parameter file says:      " << movDimParameterFile << "\n"
                        << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
@@ -650,7 +650,7 @@ ElastixMain::CreateComponents(const std::string &              key,
   {
     if (mandatoryComponent)
     {
-      log::error(log::get_ostringstream() << "ERROR: the following component has not been specified: " << key);
+      log::error(std::ostringstream{} << "ERROR: the following component has not been specified: " << key);
       errorcode = 1;
       return objectContainer;
     }
@@ -669,8 +669,8 @@ ElastixMain::CreateComponents(const std::string &              key,
   }
   catch (const itk::ExceptionObject & excp)
   {
-    log::error(log::get_ostringstream() << "ERROR: error occurred while creating " << key << " " << componentnr << ".\n"
-                                        << excp);
+    log::error(std::ostringstream{} << "ERROR: error occurred while creating " << key << " " << componentnr << ".\n"
+                                    << excp);
     errorcode = 1;
     return objectContainer;
   }
@@ -688,9 +688,8 @@ ElastixMain::CreateComponents(const std::string &              key,
       }
       catch (const itk::ExceptionObject & excp)
       {
-        log::error(log::get_ostringstream()
-                   << "ERROR: error occurred while creating " << key << " " << componentnr << ".\n"
-                   << excp);
+        log::error(std::ostringstream{} << "ERROR: error occurred while creating " << key << " " << componentnr << ".\n"
+                                        << excp);
         errorcode = 1;
         return objectContainer;
       }
