@@ -494,8 +494,8 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
     }
   }
 
-  std::cout << "mesh->GetNumberOfCells()" << mesh->GetNumberOfCells() << std::endl;
-  std::cout << "mesh->GetNumberOfPoints()" << mesh->GetNumberOfPoints() << std::endl;
+  std::cout << "mesh->GetNumberOfCells()" << mesh->GetNumberOfCells() << std::endl
+            << "mesh->GetNumberOfPoints()" << mesh->GetNumberOfPoints() << std::endl;
   typename MeshType::PointsContainer::ConstPointer points = mesh->GetPoints();
 
   typename MeshType::PointsContainerConstIterator pointsBegin = points->Begin();

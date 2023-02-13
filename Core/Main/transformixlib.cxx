@@ -146,9 +146,9 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
   else if (performCout)
   {
     /** Duplicate arguments. */
-    std::cerr << "WARNING!" << std::endl;
-    std::cerr << "Argument " << key.c_str() << "is only required once." << std::endl;
-    std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
+    std::cerr << "WARNING!" << std::endl
+              << "Argument " << key.c_str() << "is only required once." << std::endl
+              << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
   }
 
   if (performLogging)
@@ -159,8 +159,8 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
     {
       if (performCout)
       {
-        std::cerr << "ERROR: the output directory does not exist." << std::endl;
-        std::cerr << "You are responsible for creating it." << std::endl;
+        std::cerr << "ERROR: the output directory does not exist." << std::endl
+                  << "You are responsible for creating it." << std::endl;
       }
       return (-2);
     }

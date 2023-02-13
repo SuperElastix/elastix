@@ -163,9 +163,9 @@ main(int argc, char ** argv)
       else
       {
         /** Duplicate arguments. */
-        std::cerr << "WARNING!" << std::endl;
-        std::cerr << "Argument " << key.c_str() << "is only required once." << std::endl;
-        std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
+        std::cerr << "WARNING!" << std::endl
+                  << "Argument " << key.c_str() << "is only required once." << std::endl
+                  << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
       }
 
     } // end for loop
@@ -197,8 +197,8 @@ main(int argc, char ** argv)
       bool outFolderExists = itksys::SystemTools::FileIsDirectory(outFolder);
       if (!outFolderExists)
       {
-        std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl;
-        std::cerr << "You are responsible for creating it." << std::endl;
+        std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl
+                  << "You are responsible for creating it." << std::endl;
         returndummy |= -2;
       }
       else
