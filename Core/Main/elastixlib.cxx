@@ -185,8 +185,8 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
   {
     if (performCout)
     {
-      std::cerr << "ERROR: the output directory does not exist." << std::endl;
-      std::cerr << "You are responsible for creating it." << std::endl;
+      std::cerr << "ERROR: the output directory does not exist." << std::endl
+                << "You are responsible for creating it." << std::endl;
     }
     return -2;
   }
