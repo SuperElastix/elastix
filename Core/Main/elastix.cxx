@@ -178,8 +178,8 @@ main(int argc, char ** argv)
         else
         {
           /** Duplicate arguments. */
-          std::cerr << "WARNING!" << std::endl
-                    << "Argument " << key << "is only required once." << std::endl
+          std::cerr << "WARNING!\n"
+                    << "Argument " << key << "is only required once.\n"
                     << "Arguments " << key << " " << value << "are ignored" << std::endl;
         }
 
@@ -205,7 +205,7 @@ main(int argc, char ** argv)
       /** Check if the output directory exists. */
       if (!itksys::SystemTools::FileIsDirectory(outFolder))
       {
-        std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl
+        std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist.\n"
                   << "You are responsible for creating it." << std::endl;
         returndummy |= -2;
       }
