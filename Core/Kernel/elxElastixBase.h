@@ -94,10 +94,6 @@ namespace elastix
  * \parameter RandomSeed: Sets a global seed for the random generator.\n
  *   example: <tt>(RandomSeed 121212)</tt>\n
  *   It must be a positive integer number. Default: 121212.
- * \parameter DefaultOutputPrecision: Set the default precision of floating values in the output.
- *   Most importantly, it affects the output precision of the parameters in the transform parameter file.\n
- *   example: <tt>(DefaultOutputPrecision 6)</tt>\n
- *   Default value: 6.
  *
  * The command line arguments used by this class are:
  * \commandlinearg -f: mandatory argument for elastix with the file name of the fixed image. \n
@@ -331,17 +327,6 @@ public:
   SetResultDeformationField(DataObjectPointer result_deformationfield);
 
 
-  /** Get the default precision of the log system.
-   * (The value assumed when no DefaultOutputPrecision is given in the
-   * parameter file.
-   */
-  int
-  GetDefaultOutputPrecision() const
-  {
-    return this->m_DefaultOutputPrecision;
-  }
-
-
   /** Get whether direction cosines should be taken into account (true)
    * or ignored (false). This depends on the UseDirectionCosines
    * parameter. */
@@ -495,9 +480,6 @@ protected:
 
 private:
   IterationInfo m_IterationInfo;
-
-  /** The default output precision of elxout is set to 6. */
-  int m_DefaultOutputPrecision{ 6 };
 
   /** The component containers. These containers contain
    * SmartPointer's to itk::Object.

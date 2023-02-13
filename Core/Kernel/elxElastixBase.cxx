@@ -176,10 +176,6 @@ ElastixBase::BeforeAllBase()
   /** Declare the return value and initialize it. */
   int returndummy = 0;
 
-  /** Set the default precision of floating values in the output. */
-  this->m_Configuration->ReadParameter(this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, false);
-  log::set_precision(this->m_DefaultOutputPrecision);
-
   /** Check Command line options and print them to the logfile. */
   log::info("ELASTIX version: " ELASTIX_VERSION_STRING "\nCommand line options from ElastixBase:");
   std::string check = "";
@@ -321,7 +317,6 @@ ElastixBase::BeforeAllTransformixBase()
 
   /** Print to log file. */
   log::info("ELASTIX version: " ELASTIX_VERSION_STRING);
-  log::set_precision(this->GetDefaultOutputPrecision());
 
   /** Check Command line options and print them to the logfile. */
   log::info("Command line options from ElastixBase:");
