@@ -48,14 +48,6 @@ public:
     ~guard();
   };
 
-  /** Allows specifying the precision of the string representation of floating point values. */
-  static void
-  set_precision(int);
-
-  /** Returns an output string stream that has the precision specified by `set_precision`. */
-  static std::ostringstream
-  get_ostringstream();
-
   ///@{
   /** Just passes the message to the corresponding spdlog function. */
   static void

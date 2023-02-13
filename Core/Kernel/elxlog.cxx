@@ -27,7 +27,6 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_sinks.h>
 
-#include <atomic>
 #include <cassert>
 #include <memory> // For make_shared.
 
@@ -57,23 +56,10 @@ public:
     return m_loggers.multi_logger;
   }
 
-  int
-  get_precision() const
-  {
-    return m_precision.load();
-  }
-
-  void
-  set_precision(const int value)
-  {
-    m_precision.store(value);
-  }
-
   void
   reset()
   {
     m_loggers = {};
-    m_precision.store(default_precision);
   }
 
 private:
@@ -83,13 +69,6 @@ private:
     spdlog::logger stdout_logger{ "elastix stdout logger" };
     spdlog::logger multi_logger{ "elastix multi logger" };
   };
-
-  // The default value of precision, according to
-  // https://en.cppreference.com/w/cpp/io/manip/setprecision
-  // and C++ Working Draft N4901, 2021-10-23 [basic.ios.cons]
-  static constexpr int default_precision{ 6 };
-
-  std::atomic<int> m_precision{ default_precision };
 
   loggers m_loggers;
 };
@@ -173,20 +152,6 @@ log::setup(const std::string & log_filename, const bool do_log_to_file, const bo
   {
     return false;
   }
-}
-
-void
-log::set_precision(const int value)
-{
-  get_log_data().set_precision(value);
-}
-
-std::ostringstream
-log::get_ostringstream()
-{
-  std::ostringstream stream{};
-  stream.precision(get_log_data().get_precision());
-  return stream;
 }
 
 
