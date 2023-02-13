@@ -44,8 +44,8 @@ StatisticalShapePenalty<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  log::info(log::get_ostringstream() << "Initialization of StatisticalShape metric took: "
-                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Initialization of StatisticalShape metric took: "
+                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
@@ -91,7 +91,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
     meanVector->read_ascii(datafile);
     datafile.close();
     datafile.clear();
-    log::info(log::get_ostringstream() << " meanVector " << meanVectorName << " read");
+    log::info(std::ostringstream{} << " meanVector " << meanVectorName << " read");
   }
   else
   {
@@ -131,7 +131,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
     covarianceMatrix->read_ascii(datafile);
     datafile.close();
     datafile.clear();
-    log::info(log::get_ostringstream() << "covarianceMatrix " << covarianceMatrixName << " read");
+    log::info(std::ostringstream{} << "covarianceMatrix " << covarianceMatrixName << " read");
   }
   else
   {
@@ -150,7 +150,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
     eigenVectors->read_ascii(datafile);
     datafile.close();
     datafile.clear();
-    log::info(log::get_ostringstream() << "eigenvectormatrix " << eigenVectorsName << " read");
+    log::info(std::ostringstream{} << "eigenvectormatrix " << eigenVectorsName << " read");
   }
   else
   {
@@ -168,7 +168,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
     eigenValues->read_ascii(datafile);
     datafile.close();
     datafile.clear();
-    log::info(log::get_ostringstream() << "eigenvaluevector " << eigenValuesName << " read");
+    log::info(std::ostringstream{} << "eigenvaluevector " << eigenValuesName << " read");
   }
   else
   {
@@ -279,20 +279,20 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
   using IndexValueType = typename ImageType::IndexValueType;
   using PointType = typename ImageType::PointType;
 
-  log::info(log::get_ostringstream() << "Loading landmarks for " << this->GetComponentLabel() << ":"
-                                     << this->elxGetClassName() << ".");
+  log::info(std::ostringstream{} << "Loading landmarks for " << this->GetComponentLabel() << ":"
+                                 << this->elxGetClassName() << ".");
 
   /** Read the landmarks. */
   auto reader = itk::TransformixInputPointFileReader<PointSetType>::New();
   reader->SetFileName(landmarkFileName.c_str());
-  log::info(log::get_ostringstream() << "  Reading landmark file: " << landmarkFileName);
+  log::info(std::ostringstream{} << "  Reading landmark file: " << landmarkFileName);
   try
   {
     reader->Update();
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening " << landmarkFileName << '\n' << err);
+    log::error(std::ostringstream{} << "  Error while opening " << landmarkFileName << '\n' << err);
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 
@@ -306,7 +306,7 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
   {
     log::info("  Landmarks are specified in world coordinates.");
   }
-  log::info(log::get_ostringstream() << "  Number of specified points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified points: " << nrofpoints);
 
   /** Get the pointset. */
   pointSet = reader->GetOutput();
@@ -360,20 +360,20 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
   /** Read the input points. */
   auto meshReader = MeshFileReader<MeshType>::New();
   meshReader->SetFileName(ShapeFileName.c_str());
-  log::info(log::get_ostringstream() << "  Reading input point file: " << ShapeFileName);
+  log::info(std::ostringstream{} << "  Reading input point file: " << ShapeFileName);
   try
   {
     meshReader->Update();
   }
   catch (ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening input point file.\n" << err);
+    log::error(std::ostringstream{} << "  Error while opening input point file.\n" << err);
   }
 
   /** Some user-feedback. */
   log::info("  Input points are specified in world coordinates.");
   unsigned long nrofpoints = meshReader->GetOutput()->GetNumberOfPoints();
-  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   typename MeshType::Pointer mesh = meshReader->GetOutput();
   pointSet = PointSetType::New();

@@ -34,7 +34,7 @@ template <class TElastix>
 void
 OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** param */)
 {
-  log::error(log::get_ostringstream()
+  log::error(std::ostringstream{}
              << "ERROR: This function should be overridden or just not used.\n"
              << "  Are you using BSplineTransformWithDiffusion in combination with another optimizer than the "
                 "StandardGradientDescentOptimizer? Don't!");
@@ -88,7 +88,7 @@ OptimizerBase<TElastix>::AfterRegistrationBase()
   uLong                 crc = crc32(0L, Z_NULL, 0);
   crc = crc32(crc, crcInputData, N * sizeof(ParametersValueType));
 
-  log::info(log::get_ostringstream() << "\nRegistration result checksum: " << crc);
+  log::info(std::ostringstream{} << "\nRegistration result checksum: " << crc);
 
 } // end AfterRegistrationBase()
 
@@ -136,7 +136,7 @@ OptimizerBase<TElastix>::PrintSettingsVector(const SettingsVectorType & settings
 {
   const unsigned long nrofres = settings.size();
 
-  auto outputStringStream = log::get_ostringstream();
+  std::ostringstream outputStringStream;
   outputStringStream << std::showpoint << std::fixed;
 
   /** Print to log file */

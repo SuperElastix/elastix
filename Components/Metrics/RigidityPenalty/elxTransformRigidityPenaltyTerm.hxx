@@ -120,9 +120,8 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
   /** Important check: at least one rigidity image must be given. */
   if (fixedRigidityImageName.empty() && movingRigidityImageName.empty())
   {
-    log::warn(
-      log::get_ostringstream() << "WARNING: FixedRigidityImageName and MovingRigidityImage are both not supplied.\n"
-                               << "  The rigidity penalty term is evaluated on entire input transform domain.");
+    log::warn(std::ostringstream{} << "WARNING: FixedRigidityImageName and MovingRigidityImage are both not supplied.\n"
+                                   << "  The rigidity penalty term is evaluated on entire input transform domain.");
   }
 
   /** Add target cells to IterationInfo. */
@@ -156,8 +155,8 @@ TransformRigidityPenalty<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  log::info(log::get_ostringstream() << "Initialization of TransformRigidityPenalty metric took: "
-                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Initialization of TransformRigidityPenalty metric took: "
+                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
   /** Check stuff. */
   this->CheckUseAndCalculationBooleans();

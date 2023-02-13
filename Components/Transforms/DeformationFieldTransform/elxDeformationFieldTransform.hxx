@@ -121,8 +121,8 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   else
   {
     log::error(
-      log::get_ostringstream() << "Error while reading DeformationFieldInterpolationOrder from the parameter file\n"
-                               << "DeformationFieldInterpolationOrder can only be 0 or 1!");
+      std::ostringstream{} << "Error while reading DeformationFieldInterpolationOrder from the parameter file\n"
+                           << "DeformationFieldInterpolationOrder can only be 0 or 1!");
     itkExceptionMacro(<< "Invalid deformation field interpolation order selected!");
   }
   this->m_DeformationFieldInterpolatingTransform->SetDeformationFieldInterpolator(interpolator);
@@ -166,7 +166,7 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
     err_str += "\nError while writing the deformationFieldImage.\n";
     excp.SetDescription(err_str);
     /** Print the exception. */
-    log::error(log::get_ostringstream() << excp);
+    log::error(std::ostringstream{} << excp);
   }
 
 } // end WriteDerivedTransformDataToFile()

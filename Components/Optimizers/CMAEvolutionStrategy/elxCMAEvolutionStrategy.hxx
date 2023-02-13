@@ -66,12 +66,12 @@ CMAEvolutionStrategy<TElastix>::InitializeProgressVariables()
   this->Superclass1::InitializeProgressVariables();
 
   /** Print some settings that can be automatically determined by the optimizer. */
-  log::info(log::get_ostringstream() << "The CMAEvolutionStrategy optimizer uses the following settings:\n"
-                                     << "PopulationSize = " << this->GetPopulationSize() << "\n"
-                                     << "NumberOfParents = " << this->GetNumberOfParents() << "\n"
-                                     << "UseCovarianceMatrixAdaptation = " << this->GetUseCovarianceMatrixAdaptation()
-                                     << "\n"
-                                     << "UpdateBDPeriod = " << this->GetUpdateBDPeriod() << "\n");
+  log::info(std::ostringstream{} << "The CMAEvolutionStrategy optimizer uses the following settings:\n"
+                                 << "PopulationSize = " << this->GetPopulationSize() << "\n"
+                                 << "NumberOfParents = " << this->GetNumberOfParents() << "\n"
+                                 << "UseCovarianceMatrixAdaptation = " << this->GetUseCovarianceMatrixAdaptation()
+                                 << "\n"
+                                 << "UpdateBDPeriod = " << this->GetUpdateBDPeriod() << "\n");
 
 } // end InitializeProgressVariables
 
@@ -275,7 +275,7 @@ CMAEvolutionStrategy<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition */
-  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
+  log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution
 
@@ -291,7 +291,7 @@ CMAEvolutionStrategy<TElastix>::AfterRegistration()
   /** Print the best metric value */
 
   double bestValue = this->GetCurrentValue();
-  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
+  log::info(std::ostringstream{} << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration
 

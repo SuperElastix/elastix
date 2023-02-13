@@ -121,13 +121,13 @@ SplineKernelTransform<TElastix>::BeforeAll()
   /** Is the fixed landmark file specified? */
   if (ipp.empty() && fp.empty())
   {
-    log::error(log::get_ostringstream() << "ERROR: -fp should be given for " << this->elxGetClassName()
-                                        << " in order to define the fixed image (source) landmarks.");
+    log::error(std::ostringstream{} << "ERROR: -fp should be given for " << this->elxGetClassName()
+                                    << " in order to define the fixed image (source) landmarks.");
     return 1;
   }
   else
   {
-    log::info(log::get_ostringstream() << "-fp       " << fp);
+    log::info(std::ostringstream{} << "-fp       " << fp);
   }
 
   /** Check if -mp is given. If the optional command "-mp"
@@ -142,7 +142,7 @@ SplineKernelTransform<TElastix>::BeforeAll()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-mp       " << mp);
+    log::info(std::ostringstream{} << "-mp       " << mp);
   }
 
   return 0;
@@ -164,7 +164,7 @@ SplineKernelTransform<TElastix>::BeforeRegistration()
   bool knownType = this->SetKernelType(kernelType);
   if (!knownType)
   {
-    log::error(log::get_ostringstream() << "ERROR: The kernel type " << kernelType << " is not supported.");
+    log::error(std::ostringstream{} << "ERROR: The kernel type " << kernelType << " is not supported.");
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 
@@ -216,8 +216,8 @@ void
 SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
 {
   /** Load the fixed image landmarks. */
-  log::info(log::get_ostringstream() << "Loading fixed image landmarks for " << this->GetComponentLabel() << ":"
-                                     << this->elxGetClassName() << ".");
+  log::info(std::ostringstream{} << "Loading fixed image landmarks for " << this->GetComponentLabel() << ":"
+                                 << this->elxGetClassName() << ".");
 
   // fp used to be ipp
   std::string ipp = this->GetConfiguration()->GetCommandLineArgument("-ipp");
@@ -235,8 +235,8 @@ SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
   log::info("  Setting the fixed image landmarks (requiring large matrix inversion) ...");
   this->m_KernelTransform->SetSourceLandmarks(landmarkPointSet);
   timer.Stop();
-  log::info(log::get_ostringstream() << "  Setting the fixed image landmarks took: "
-                                     << Conversion::SecondsToDHMS(timer.GetMean(), 6));
+  log::info(std::ostringstream{} << "  Setting the fixed image landmarks took: "
+                                 << Conversion::SecondsToDHMS(timer.GetMean(), 6));
 
 } // end DetermineSourceLandmarks()
 
@@ -257,8 +257,8 @@ SplineKernelTransform<TElastix>::DetermineTargetLandmarks()
   }
 
   /** Load the moving image landmarks. */
-  log::info(log::get_ostringstream() << "Loading moving image landmarks for " << this->GetComponentLabel() << ":"
-                                     << this->elxGetClassName() << ".");
+  log::info(std::ostringstream{} << "Loading moving image landmarks for " << this->GetComponentLabel() << ":"
+                                 << this->elxGetClassName() << ".");
 
   PointSetPointer landmarkPointSet;
   this->ReadLandmarkFile(mp, landmarkPointSet, false);
@@ -269,8 +269,8 @@ SplineKernelTransform<TElastix>::DetermineTargetLandmarks()
   log::info("  Setting the moving image landmarks ...");
   this->m_KernelTransform->SetTargetLandmarks(landmarkPointSet);
   timer.Stop();
-  log::info(log::get_ostringstream() << "  Setting the moving image landmarks took: "
-                                     << Conversion::SecondsToDHMS(timer.GetMean(), 6));
+  log::info(std::ostringstream{} << "  Setting the moving image landmarks took: "
+                                 << Conversion::SecondsToDHMS(timer.GetMean(), 6));
 
   return true;
 
@@ -300,7 +300,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening landmark file.\n" << err);
+    log::error(std::ostringstream{} << "  Error while opening landmark file.\n" << err);
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 
@@ -314,7 +314,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
     log::info("  Landmarks are specified in world coordinates.");
   }
   const unsigned int nrofpoints = landmarkReader->GetNumberOfPoints();
-  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   /** Get the set of input points. */
   landmarkPointSet = landmarkReader->GetOutput();

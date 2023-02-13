@@ -184,7 +184,7 @@ SimultaneousPerturbation<TElastix>::AfterEachResolution()
   }
   /** Print the stopping condition */
 
-  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
+  log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");
 
 } // end AfterEachResolution
 
@@ -201,7 +201,7 @@ SimultaneousPerturbation<TElastix>::AfterRegistration()
   double bestValue;
 
   bestValue = this->GetValue();
-  log::info(log::get_ostringstream() << '\n' << "Final metric value  = " << bestValue);
+  log::info(std::ostringstream{} << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration
 

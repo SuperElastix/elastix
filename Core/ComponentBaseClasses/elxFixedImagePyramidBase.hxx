@@ -67,15 +67,15 @@ FixedImagePyramidBase<TElastix>::BeforeEachResolutionBase()
                  << resultImageFormat;
 
     /** Save the fixed pyramid image. */
-    log::info(log::get_ostringstream() << "Writing fixed pyramid image " << this->GetComponentLabel()
-                                       << " from resolution " << level << "...");
+    log::info(std::ostringstream{} << "Writing fixed pyramid image " << this->GetComponentLabel() << " from resolution "
+                                   << level << "...");
     try
     {
       this->WritePyramidImage(makeFileName.str(), level);
     }
     catch (const itk::ExceptionObject & excp)
     {
-      log::error(log::get_ostringstream() << "Exception caught: \n" << excp << "Resuming elastix.");
+      log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
     }
   } // end if
 
@@ -131,8 +131,8 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
 
   if (!found && this->GetConfiguration()->GetPrintErrorMessages())
   {
-    log::warn(log::get_ostringstream() << "WARNING: the fixed pyramid schedule is not fully specified!\n"
-                                       << "  A default pyramid schedule is used.");
+    log::warn(std::ostringstream{} << "WARNING: the fixed pyramid schedule is not fully specified!\n"
+                                   << "  A default pyramid schedule is used.");
   }
   else
   {

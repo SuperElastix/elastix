@@ -70,7 +70,7 @@ TransformBase<TElastix>::BeforeAllBase()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-t0       " << check);
+    log::info(std::ostringstream{} << "-t0       " << check);
   }
 
   /** Return a value. */
@@ -97,9 +97,9 @@ TransformBase<TElastix>::BeforeAllTransformix()
   check = this->m_Configuration->GetCommandLineArgument("-ipp");
   if (!check.empty())
   {
-    log::info(log::get_ostringstream() << "-ipp      " << check);
+    log::info(std::ostringstream{} << "-ipp      " << check);
     // Deprecated since elastix 4.3
-    log::warn(log::get_ostringstream() << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!");
+    log::warn(std::ostringstream{} << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!");
   }
 
   /** Check for appearance of "-def". */
@@ -110,7 +110,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-def      " << check);
+    log::info(std::ostringstream{} << "-def      " << check);
   }
 
   /** Check for appearance of "-jac". */
@@ -121,7 +121,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-jac      " << check);
+    log::info(std::ostringstream{} << "-jac      " << check);
   }
 
   /** Check for appearance of "-jacmat". */
@@ -132,7 +132,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-jacmat   " << check);
+    log::info(std::ostringstream{} << "-jacmat   " << check);
   }
 
   /** Return a value. */
@@ -499,7 +499,7 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
 
     if (compositeTransform == nullptr)
     {
-      log::error(log::get_ostringstream()
+      log::error(std::ostringstream{}
                  << "Failed to convert a combination of transform to an ITK CompositeTransform. Please check "
                     "that the combination does use composition");
     }
@@ -639,8 +639,7 @@ TransformBase<TElastix>::TransformPoints() const
   else
   {
     // just a message
-    log::info(
-      log::get_ostringstream() << "  The command-line option \"-def\" is not used, so no points are transformed");
+    log::info(std::ostringstream{} << "  The command-line option \"-def\" is not used, so no points are transformed");
   }
 
 } // end TransformPoints()
@@ -681,14 +680,14 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   ippReader->SetFileName(filename.c_str());
 
   /** Read the input points. */
-  log::info(log::get_ostringstream() << "  Reading input point file: " << filename);
+  log::info(std::ostringstream{} << "  Reading input point file: " << filename);
   try
   {
     ippReader->Update();
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening input point file.\n" << err);
+    log::error(std::ostringstream{} << "  Error while opening input point file.\n" << err);
   }
 
   /** Some user-feedback. */
@@ -701,7 +700,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     log::info("  Input points are specified in world coordinates.");
   }
   const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
-  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   /** Get the set of input points. */
   typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
@@ -798,7 +797,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.txt";
   std::ofstream     outputPointsFile(outputPointsFileName);
   outputPointsFile << std::showpoint << std::fixed;
-  log::info(log::get_ostringstream() << "  The transformed points are saved in: " << outputPointsFileName);
+  log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
 
   const auto writeToFile = [&outputPointsFile](const auto & rangeOfElements) {
     for (const auto element : rangeOfElements)
@@ -867,14 +866,14 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   /** Read the input points. */
   const auto meshReader = itk::MeshFileReader<MeshType>::New();
   meshReader->SetFileName(filename.c_str());
-  log::info(log::get_ostringstream() << "  Reading input point file: " << filename);
+  log::info(std::ostringstream{} << "  Reading input point file: " << filename);
   try
   {
     meshReader->Update();
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening input point file.\n" << err);
+    log::error(std::ostringstream{} << "  Error while opening input point file.\n" << err);
   }
 
   const auto & inputMesh = *(meshReader->GetOutput());
@@ -882,7 +881,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   /** Some user-feedback. */
   log::info("  Input points are specified in world coordinates.");
   const unsigned long nrofpoints = inputMesh.GetNumberOfPoints();
-  log::info(log::get_ostringstream() << "  Number of specified input points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   /** Apply the transform. */
   log::info("  The input points are transformed.");
@@ -895,12 +894,12 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while transforming points.\n" << err);
+    log::error(std::ostringstream{} << "  Error while transforming points.\n" << err);
   }
 
   /** Create filename and file stream. */
   const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.vtk";
-  log::info(log::get_ostringstream() << "  The transformed points are saved in: " << outputPointsFileName);
+  log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
 
   try
   {
@@ -908,7 +907,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while saving points.\n" << err);
+    log::error(std::ostringstream{} << "  Error while saving points.\n" << err);
   }
 
 } // end TransformPointsSomePointsVTK()
@@ -1076,15 +1075,14 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
   std::string jac = this->GetConfiguration()->GetCommandLineArgument("-jac");
   if (jac.empty())
   {
-    log::info(log::get_ostringstream() << "  The command-line option \"-jac\" is not used, so no det(dT/dx) computed.");
+    log::info(std::ostringstream{} << "  The command-line option \"-jac\" is not used, so no det(dT/dx) computed.");
     return;
   }
   else if (jac != "all")
   {
-    log::info(
-      log::get_ostringstream() << "  WARNING: The command-line option \"-jac\" should be used as \"-jac all\",\n"
-                               << "    but is specified as \"-jac " << jac << "\"\n"
-                               << "    Therefore det(dT/dx) is not computed.");
+    log::info(std::ostringstream{} << "  WARNING: The command-line option \"-jac\" should be used as \"-jac all\",\n"
+                                   << "    but is specified as \"-jac " << jac << "\"\n"
+                                   << "    Therefore det(dT/dx) is not computed.");
     return;
   }
 
@@ -1136,7 +1134,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
   std::string jac = this->GetConfiguration()->GetCommandLineArgument("-jacmat");
   if (jac != "all")
   {
-    log::info(log::get_ostringstream() << "  The command-line option \"-jacmat\" is not used, so no dT/dx computed.");
+    log::info(std::ostringstream{} << "  The command-line option \"-jacmat\" is not used, so no dT/dx computed.");
     return;
   }
 
@@ -1367,8 +1365,7 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
   /** Set size of last dimension to 0. */
   size[FixedImageDimension - 1] = 0;
 
-  log::info(log::get_ostringstream() << "start region for scales: " << start << '\n'
-                                     << "size region for scales: " << size);
+  log::info(std::ostringstream{} << "start region for scales: " << start << '\n' << "size region for scales: " << size);
 
   FixedImageRegionType desiredRegion;
   desiredRegion.SetSize(size);

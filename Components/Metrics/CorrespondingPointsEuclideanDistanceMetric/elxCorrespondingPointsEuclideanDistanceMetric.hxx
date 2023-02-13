@@ -37,8 +37,8 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  log::info(log::get_ostringstream() << "Initialization of CorrespondingPointsEuclideanDistance metric took: "
-                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Initialization of CorrespondingPointsEuclideanDistance metric took: "
+                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
@@ -81,7 +81,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-fp       " << check);
+    log::info(std::ostringstream{} << "-fp       " << check);
   }
 
   /** Check for appearance of "-mp". */
@@ -92,7 +92,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   }
   else
   {
-    log::info(log::get_ostringstream() << "-mp       " << check);
+    log::info(std::ostringstream{} << "-mp       " << check);
   }
 
   /** Return a value. */
@@ -149,20 +149,20 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   using IndexValueType = typename ImageType::IndexValueType;
   using PointType = typename ImageType::PointType;
 
-  log::info(log::get_ostringstream() << "Loading landmarks for " << this->GetComponentLabel() << ":"
-                                     << this->elxGetClassName() << ".");
+  log::info(std::ostringstream{} << "Loading landmarks for " << this->GetComponentLabel() << ":"
+                                 << this->elxGetClassName() << ".");
 
   /** Read the landmarks. */
   auto reader = itk::TransformixInputPointFileReader<PointSetType>::New();
   reader->SetFileName(landmarkFileName.c_str());
-  log::info(log::get_ostringstream() << "  Reading landmark file: " << landmarkFileName);
+  log::info(std::ostringstream{} << "  Reading landmark file: " << landmarkFileName);
   try
   {
     reader->Update();
   }
   catch (const itk::ExceptionObject & err)
   {
-    log::error(log::get_ostringstream() << "  Error while opening " << landmarkFileName << '\n' << err);
+    log::error(std::ostringstream{} << "  Error while opening " << landmarkFileName << '\n' << err);
     itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
   }
 
@@ -176,7 +176,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   {
     log::info("  Landmarks are specified in world coordinates.");
   }
-  log::info(log::get_ostringstream() << "  Number of specified points: " << nrofpoints);
+  log::info(std::ostringstream{} << "  Number of specified points: " << nrofpoints);
 
   /** Get the pointset. */
   pointSet = reader->GetOutput();

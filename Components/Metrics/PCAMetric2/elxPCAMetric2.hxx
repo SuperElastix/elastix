@@ -36,8 +36,8 @@ PCAMetric2<TElastix>::Initialize()
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  log::info(log::get_ostringstream() << "Initialization of PCAMetric2 metric took: "
-                                     << static_cast<long>(timer.GetMean() * 1000) << " ms.");
+  log::info(std::ostringstream{} << "Initialization of PCAMetric2 metric took: "
+                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
@@ -85,7 +85,7 @@ PCAMetric2<TElastix>::BeforeEachResolution()
   {
     this->SetUseMovingImageDerivativeScales(true);
     this->SetMovingImageDerivativeScales(movingImageDerivativeScales);
-    log::info(log::get_ostringstream() << "Multiplying moving image derivatives by: " << movingImageDerivativeScales);
+    log::info(std::ostringstream{} << "Multiplying moving image derivatives by: " << movingImageDerivativeScales);
   }
 
   /** Check if this transform is a B-spline transform. */

@@ -393,7 +393,7 @@ AffineLogStackTransform<TElastix>::SetScales()
 
   } // end else: no automaticScalesEstimation
 
-  log::info(log::get_ostringstream() << "Scales for transform parameters are: " << newscales);
+  log::info(std::ostringstream{} << "Scales for transform parameters are: " << newscales);
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);

@@ -158,12 +158,12 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
   this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
   if (maximumNumberOfSamplingAttempts > 5)
   {
-    log::warn(log::get_ostringstream()
-              << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to " << maximumNumberOfSamplingAttempts
-              << ".\n"
-              << "  This functionality is known to cause problems (stack overflow) for large values.\n"
-              << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
-              << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n");
+    log::warn(
+      std::ostringstream{} << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
+                           << maximumNumberOfSamplingAttempts << ".\n"
+                           << "  This functionality is known to cause problems (stack overflow) for large values.\n"
+                           << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
+                           << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n");
   }
 
   /** Set/Get the initial time. Default: 0.0. Should be >=0. */
@@ -352,7 +352,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachResolution()
   }
 
   /** Print the stopping condition. */
-  log::info(log::get_ostringstream() << "Stopping condition: " << stopcondition << ".");
+  log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");
   this->m_CurrentTime = 0.0;
 
   /** Store the used parameters, for later printing to screen. */
@@ -368,7 +368,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachResolution()
   /** Print settings that were used in this resolution. */
   SettingsVectorType tempSettingsVector;
   tempSettingsVector.push_back(settings);
-  log::info(log::get_ostringstream() << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":");
+  log::info(std::ostringstream{} << "Settings of " << this->elxGetClassName() << " in resolution " << level << ":");
   Superclass2::PrintSettingsVector(tempSettingsVector);
 
 } // end AfterEachResolution()
@@ -385,10 +385,10 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterRegistration()
   /** Print the best metric value. */
 
   double bestValue = this->GetValue();
-  log::info(log::get_ostringstream() << '\n'
-                                     << "Final metric value  = " << bestValue << '\n'
+  log::info(std::ostringstream{} << '\n'
+                                 << "Final metric value  = " << bestValue << '\n'
 
-                                     << "Settings of " << this->elxGetClassName() << " for all resolutions:");
+                                 << "Settings of " << this->elxGetClassName() << " for all resolutions:");
   Superclass2::PrintSettingsVector(this->m_SettingsVector);
 
 } // end AfterRegistration()
@@ -727,8 +727,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
 
   /** Total time. */
   timer1.Start();
-  log::info(log::get_ostringstream() << "Starting automatic parameter estimation for " << this->elxGetClassName()
-                                     << " ...");
+  log::info(std::ostringstream{} << "Starting automatic parameter estimation for " << this->elxGetClassName()
+                                 << " ...");
 
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
@@ -756,8 +756,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
 
   /** Print the elapsed time. */
   timer1.Stop();
-  log::info(log::get_ostringstream() << "Automatic parameter estimation took "
-                                     << Conversion::SecondsToDHMS(timer1.GetMean(), 6));
+  log::info(std::ostringstream{} << "Automatic parameter estimation took "
+                                 << Conversion::SecondsToDHMS(timer1.GetMean(), 6));
 
 } // end AutomaticParameterEstimation()
 
@@ -820,8 +820,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   timer2.Start();
   computeJacobianTerms->Compute(TrC, TrCC, maxJJ, maxJCJ);
   timer2.Stop();
-  log::info(log::get_ostringstream() << "  Computing the Jacobian terms took "
-                                     << Conversion::SecondsToDHMS(timer2.GetMean(), 6));
+  log::info(std::ostringstream{} << "  Computing the Jacobian terms took "
+                                 << Conversion::SecondsToDHMS(timer2.GetMean(), 6));
 
   /** Determine number of gradient measurements such that
    * E + 2\sqrt(Var) < K E
@@ -846,8 +846,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
     }
     this->m_NumberOfGradientMeasurements =
       std::max(static_cast<SizeValueType>(2), this->m_NumberOfGradientMeasurements);
-    log::info(log::get_ostringstream() << "  NumberOfGradientMeasurements to estimate sigma_i: "
-                                       << this->m_NumberOfGradientMeasurements);
+    log::info(std::ostringstream{} << "  NumberOfGradientMeasurements to estimate sigma_i: "
+                                   << this->m_NumberOfGradientMeasurements);
   }
 
   /** Measure square magnitude of exact gradient and approximation error. */
@@ -861,8 +861,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   }
   this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
   timer3.Stop();
-  log::info(log::get_ostringstream() << "  Sampling the gradients took "
-                                     << Conversion::SecondsToDHMS(timer3.GetMean(), 6));
+  log::info(std::ostringstream{} << "  Sampling the gradients took " << Conversion::SecondsToDHMS(timer3.GetMean(), 6));
 
   /** Determine parameter settings. */
   double sigma1 = 0.0;
@@ -968,8 +967,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   computeDisplacementDistribution->Compute(
     this->GetScaledCurrentPosition(), jacg, maxJJ, maximumDisplacementEstimationMethod);
   timer4.Stop();
-  log::info(log::get_ostringstream() << "  Computing the displacement distribution took "
-                                     << Conversion::SecondsToDHMS(timer4.GetMean(), 6));
+  log::info(std::ostringstream{} << "  Computing the displacement distribution took "
+                                 << Conversion::SecondsToDHMS(timer4.GetMean(), 6));
 
   /** Initial of the variables. */
   double       a = 0.0;
@@ -993,8 +992,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
     {
       this->m_NumberOfGradientMeasurements =
         std::max(static_cast<SizeValueType>(2), this->m_NumberOfGradientMeasurements);
-      log::info(log::get_ostringstream() << "  NumberOfGradientMeasurements to estimate sigma_i: "
-                                         << this->m_NumberOfGradientMeasurements);
+      log::info(std::ostringstream{} << "  NumberOfGradientMeasurements to estimate sigma_i: "
+                                     << this->m_NumberOfGradientMeasurements);
     }
     timer5.Start();
     if (maxJJ > 1e-14)
@@ -1007,8 +1006,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
     this->m_NoiseFactor = noisefactor;
     a = delta * std::pow(A + 1.0, alpha) / jacg * noisefactor;
     timer5.Stop();
-    log::info(log::get_ostringstream() << "  Compute the noise compensation took "
-                                       << Conversion::SecondsToDHMS(timer5.GetMean(), 6));
+    log::info(std::ostringstream{} << "  Compute the noise compensation took "
+                                   << Conversion::SecondsToDHMS(timer5.GetMean(), 6));
   }
   else
   {

@@ -323,7 +323,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
          */
         if (this->GetElastix()->GetElxFixedImagePyramidBase(i))
         {
-          log::error(log::get_ostringstream() << "ERROR: An ImageSamper for metric " << i << " must be provided!");
+          log::error(std::ostringstream{} << "ERROR: An ImageSamper for metric " << i << " must be provided!");
           itkExceptionMacro(<< "Not enough ImageSamplers provided!\nProvide an ImageSampler for metric " << i
                             << ", like:\n  (ImageSampler \"Random\" ... \"Random\")");
         }
@@ -429,8 +429,8 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int 
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
-  log::info(log::get_ostringstream() << "Setting the fixed masks took: " << static_cast<long>(timer.GetMean() * 1000)
-                                     << " ms.");
+  log::info(std::ostringstream{} << "Setting the fixed masks took: " << static_cast<long>(timer.GetMean() * 1000)
+                                 << " ms.");
 
 } // end UpdateFixedMasks()
 
@@ -517,8 +517,8 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
-  log::info(log::get_ostringstream() << "Setting the moving masks took: " << static_cast<long>(timer.GetMean() * 1000)
-                                     << " ms.");
+  log::info(std::ostringstream{} << "Setting the moving masks took: " << static_cast<long>(timer.GetMean() * 1000)
+                                 << " ms.");
 
 } // end UpdateMovingMasks()
 
