@@ -137,18 +137,7 @@ TransformixFilter<TMovingImage>::GenerateData()
   }
 
   // Setup log file
-  std::string logFileName;
-  if (m_LogToFile)
-  {
-    if (m_LogFileName.empty())
-    {
-      logFileName = m_OutputDirectory + "transformix.log";
-    }
-    else
-    {
-      logFileName = m_OutputDirectory + m_LogFileName;
-    }
-  }
+  const std::string logFileName = m_OutputDirectory + (m_LogFileName.empty() ? "transformix.log" : m_LogFileName);
 
   // Setup logging.
   const elx::log::guard logGuard(logFileName, m_EnableOutput && m_LogToFile, m_EnableOutput && m_LogToConsole);

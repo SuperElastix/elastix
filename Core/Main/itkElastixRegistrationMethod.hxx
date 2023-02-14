@@ -183,18 +183,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Setup log file
-  std::string logFileName;
-  if (m_LogToFile)
-  {
-    if (m_LogFileName.empty())
-    {
-      logFileName = m_OutputDirectory + "elastix.log";
-    }
-    else
-    {
-      logFileName = m_OutputDirectory + m_LogFileName;
-    }
-  }
+  const std::string logFileName = m_OutputDirectory + (m_LogFileName.empty() ? "elastix.log" : m_LogFileName);
 
   // Set Number of threads
   if (m_NumberOfThreads > 0)
