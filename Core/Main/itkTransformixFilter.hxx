@@ -359,40 +359,20 @@ TransformixFilter<TMovingImage>::GenerateOutputInformation()
   const unsigned int     lastIndex = transformParameterObjectPtr->GetNumberOfParameterMaps() - 1;
   const ParameterMapType transformParameterMap = transformParameterObjectPtr->GetParameterMap(lastIndex);
 
-  ParameterMapType::const_iterator spacingMapIter = transformParameterMap.find("Spacing");
-  if (spacingMapIter == transformParameterMap.end())
-  {
-    itkExceptionMacro("No entry Spacing found in transformParameterMap");
-  }
-  const ParameterValueVectorType spacingStrings = spacingMapIter->second;
+  const auto getTransformParameter = [&transformParameterMap](const char * const parameterName) {
+    const auto it = transformParameterMap.find(parameterName);
+    if (it == transformParameterMap.end())
+    {
+      itkGenericExceptionMacro("No entry " << parameterName << " found in transformParameterMap");
+    }
+    return it->second;
+  };
 
-  ParameterMapType::const_iterator sizeMapIter = transformParameterMap.find("Size");
-  if (sizeMapIter == transformParameterMap.end())
-  {
-    itkExceptionMacro("No entry Size found in transformParameterMap");
-  }
-  const ParameterValueVectorType sizeStrings = sizeMapIter->second;
-
-  ParameterMapType::const_iterator indexMapIter = transformParameterMap.find("Index");
-  if (indexMapIter == transformParameterMap.end())
-  {
-    itkExceptionMacro("No entry Index found in transformParameterMap");
-  }
-  const ParameterValueVectorType indexStrings = indexMapIter->second;
-
-  ParameterMapType::const_iterator originMapIter = transformParameterMap.find("Origin");
-  if (originMapIter == transformParameterMap.end())
-  {
-    itkExceptionMacro("No entry Origin found in transformParameterMap");
-  }
-  const ParameterValueVectorType originStrings = originMapIter->second;
-
-  ParameterMapType::const_iterator directionMapIter = transformParameterMap.find("Direction");
-  if (directionMapIter == transformParameterMap.end())
-  {
-    itkExceptionMacro("No entry Direction found in transformParameterMap");
-  }
-  const ParameterValueVectorType directionStrings = directionMapIter->second;
+  const ParameterValueVectorType spacingStrings = getTransformParameter("Spacing");
+  const ParameterValueVectorType sizeStrings = getTransformParameter("Size");
+  const ParameterValueVectorType indexStrings = getTransformParameter("Index");
+  const ParameterValueVectorType originStrings = getTransformParameter("Origin");
+  const ParameterValueVectorType directionStrings = getTransformParameter("Direction");
 
   typename TMovingImage::SpacingType   outputSpacing;
   typename TMovingImage::SizeType      outputSize;
