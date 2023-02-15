@@ -141,20 +141,16 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   // Setup argument map
   ArgumentMapType argumentMap;
 
-  if (!m_InitialTransformParameterFileName.empty())
-  {
-    argumentMap.insert(ArgumentMapEntryType("-t0", m_InitialTransformParameterFileName));
-  }
+  const auto insertIfNotEmpty = [&argumentMap](const char * const argument, const std::string & fileName) {
+    if (!fileName.empty())
+    {
+      argumentMap.insert(ArgumentMapEntryType(argument, fileName));
+    }
+  };
 
-  if (!m_FixedPointSetFileName.empty())
-  {
-    argumentMap.insert(ArgumentMapEntryType("-fp", m_FixedPointSetFileName));
-  }
-
-  if (!m_MovingPointSetFileName.empty())
-  {
-    argumentMap.insert(ArgumentMapEntryType("-mp", m_MovingPointSetFileName));
-  }
+  insertIfNotEmpty("-t0", m_InitialTransformParameterFileName);
+  insertIfNotEmpty("-fp", m_FixedPointSetFileName);
+  insertIfNotEmpty("-mp", m_MovingPointSetFileName);
 
   // Setup output directory
   if (m_OutputDirectory.empty())
