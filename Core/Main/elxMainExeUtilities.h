@@ -18,6 +18,8 @@
 #ifndef elxMainExeUtilities_h
 #define elxMainExeUtilities_h
 
+#include "elxlog.h"
+
 #include <exception>
 #include <string>
 
@@ -35,6 +37,9 @@ GetExtendedVersionInformation(const char * const executableName, const char * co
 /** Makes a string of all command-line arguments. */
 std::string
 MakeStringOfCommandLineArguments(const char * const * const arguments);
+
+bool
+ToLogLevel(const std::string & str, log::level & logLevel);
 
 } // namespace elastix
 

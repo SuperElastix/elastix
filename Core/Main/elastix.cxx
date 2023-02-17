@@ -64,6 +64,7 @@ constexpr const char * elastixHelpText =
   "  -fp       point set for fixed image\n"
   "  -mp       point set for moving image\n"
   "  -t0       parameter file for initial transform\n"
+  "  -loglevel set the log level to \"off\", \"error\", \"warning\", or \"info\" (default),\n"
   "  -priority set the process priority to high, abovenormal, normal (default),\n"
   "            belownormal, or idle (Windows only option)\n"
   "  -threads  set the maximum number of threads of elastix\n\n"
@@ -135,6 +136,7 @@ main(int argc, char ** argv)
     ArgumentMapType         argMap;
     std::queue<std::string> parameterFileList;
     std::string             outFolder;
+    auto                    level = elx::log::level::info;
 
     /** Put command line parameters into parameterFileList. */
     for (unsigned int i = 1; static_cast<long>(i) < (argc - 1); i += 2)
@@ -155,37 +157,46 @@ main(int argc, char ** argv)
       }
       else
       {
-        if (key == "-out")
+        if (key == "-loglevel")
         {
-          /** Make sure that last character of the output folder equals a '/' or '\'. */
-          const char last = value.back();
-          if (last != '/' && last != '\\')
+          if (!ToLogLevel(value, level))
           {
-            value.append("/");
+            // Unsupported log level value.
+            return EXIT_FAILURE;
           }
-          value = elx::Conversion::ToNativePathNameSeparators(value);
-
-          /** Save this information. */
-          outFolder = value;
-
-        } // end if key == "-out"
-
-        /** Attempt to save the arguments in the ArgumentMap. */
-        if (argMap.count(key) == 0)
-        {
-          argMap.insert(ArgumentMapEntryType(key, value));
         }
         else
         {
-          /** Duplicate arguments. */
-          std::cerr << "WARNING!\n"
-                    << "Argument " << key << "is only required once.\n"
-                    << "Arguments " << key << " " << value << "are ignored" << std::endl;
+          if (key == "-out")
+          {
+            /** Make sure that last character of the output folder equals a '/' or '\'. */
+            const char last = value.back();
+            if (last != '/' && last != '\\')
+            {
+              value.append("/");
+            }
+            value = elx::Conversion::ToNativePathNameSeparators(value);
+
+            /** Save this information. */
+            outFolder = value;
+
+          } // end if key == "-out"
+
+          /** Attempt to save the arguments in the ArgumentMap. */
+          if (argMap.count(key) == 0)
+          {
+            argMap.insert(ArgumentMapEntryType(key, value));
+          }
+          else
+          {
+            /** Duplicate arguments. */
+            std::cerr << "WARNING!\n"
+                      << "Argument " << key << "is only required once.\n"
+                      << "Arguments " << key << " " << value << "are ignored" << std::endl;
+          }
         }
-
       } // end else (so, if key does not equal "-p")
-
-    } // end for loop
+    }   // end for loop
 
     /** The argv0 argument, required for finding the component.dll/so's. */
     argMap.insert(ArgumentMapEntryType("-argv0", argv[0]));
@@ -213,7 +224,7 @@ main(int argc, char ** argv)
       {
         /** Setup the log system. */
         const std::string logFileName = outFolder + "elastix.log";
-        const int         returndummy2 = elx::log::setup(logFileName, true, true) ? 0 : 1;
+        const int         returndummy2 = elx::log::setup(logFileName, true, true, level) ? 0 : 1;
 
         if (returndummy2 != 0)
         {

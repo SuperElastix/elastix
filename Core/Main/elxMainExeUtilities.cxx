@@ -144,3 +144,37 @@ elastix::MakeStringOfCommandLineArguments(const char * const * const arguments)
   }
   return outputStringStream.str();
 }
+
+bool
+elastix::ToLogLevel(const std::string & str, log::level & logLevel)
+{
+  constexpr std::pair<log::level, const char *> levels[] = { { log::level::info, "info" },
+                                                             { log::level::warn, "warning" },
+                                                             { log::level::err, "error" },
+                                                             { log::level::off, "off" } };
+  for (const auto & pair : levels)
+  {
+    if (str == pair.second)
+    {
+      logLevel = pair.first;
+      return true;
+    }
+  }
+
+  std::string supportedLevels;
+
+  for (const auto & pair : levels)
+  {
+    if (!supportedLevels.empty())
+    {
+      // Use comma as separator.
+      supportedLevels += ", ";
+    }
+    supportedLevels += '"';
+    supportedLevels += pair.second;
+    supportedLevels += '"';
+  }
+  std::cerr << "ERROR: The specified log level (\"" << str
+            << "\") is not supported. Supported levels: " << supportedLevels << ".\n";
+  return false;
+}
