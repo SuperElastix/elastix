@@ -30,9 +30,20 @@ namespace elastix
 class log
 {
 public:
+  enum class level
+  {
+    info,
+    warn,
+    err,
+    off
+  };
+
   /** Does setup the logging system. Optionally enables log to file and/or log to stdout. */
   static bool
-  setup(const std::string & log_filename, const bool do_log_to_file, const bool do_log_to_stdout);
+  setup(const std::string & log_filename,
+        const bool          do_log_to_file,
+        const bool          do_log_to_stdout,
+        const level         log_level = {});
 
   /** Does setup and reset the logging system, according to the C++ "RAII" principle) */
   class guard
@@ -42,7 +53,10 @@ public:
     guard();
 
     /** Does setup the logging system. */
-    guard(const std::string & log_filename, const bool do_log_to_file, const bool do_log_to_stdout);
+    guard(const std::string & log_filename,
+          const bool          do_log_to_file,
+          const bool          do_log_to_stdout,
+          const level         log_level = {});
 
     /** Does reset the logging system. */
     ~guard();
