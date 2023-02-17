@@ -6,6 +6,17 @@ variables:
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
   ELASTIX_BINARY_DIR: $(Agent.BuildDirectory)/Elastix-build
 
+trigger:
+  paths:
+    exclude:
+    - CODE_OF_CONDUCT.md
+    - CONTRIBUTING.md
+    - GOVERNANCE.md
+    - README.md
+    - LICENSE
+    - .github/workflows/*
+    - tools/*
+
 jobs:
 - job: Windows
   timeoutInMinutes: 0
