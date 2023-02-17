@@ -5,6 +5,8 @@ project(elxCore)
 # Define lists of files in the subdirectories.
 
 set(KernelFilesForExecutables
+  Kernel/elxMainBase.cxx
+  Kernel/elxMainBase.h
   Kernel/elxElastixMain.cxx
   Kernel/elxElastixMain.h
   Kernel/elxTransformixMain.cxx
@@ -183,6 +185,8 @@ add_executable(elastix_exe
   Main/elastix.h
   Main/elxMainExeUtilities.cxx
   Main/elxMainExeUtilities.h
+  Kernel/elxMainBase.cxx
+  Kernel/elxMainBase.h
   Kernel/elxElastixMain.cxx
   Kernel/elxElastixMain.h
   ${InstallFilesForExecutables}
@@ -198,6 +202,8 @@ add_library(elastix_lib
   Main/elxParameterObject.h
   Main/elastixlib.cxx
   Main/elastixlib.h
+  Kernel/elxMainBase.cxx
+  Kernel/elxMainBase.h
   Kernel/elxElastixMain.cxx
   Kernel/elxElastixMain.h
   ${InstallFilesForExecutables}
@@ -214,8 +220,8 @@ add_executable(transformix_exe
   Main/elastix.h
   Main/elxMainExeUtilities.cxx
   Main/elxMainExeUtilities.h
-  Kernel/elxElastixMain.cxx
-  Kernel/elxElastixMain.h
+  Kernel/elxMainBase.cxx
+  Kernel/elxMainBase.h
   Kernel/elxTransformixMain.cxx
   Kernel/elxTransformixMain.h
   ${InstallFilesForExecutables}
@@ -231,8 +237,8 @@ add_library(transformix_lib
   Main/elxParameterObject.h
   Main/transformixlib.cxx
   Main/transformixlib.h
-  Kernel/elxElastixMain.cxx
-  Kernel/elxElastixMain.h
+  Kernel/elxMainBase.cxx
+  Kernel/elxMainBase.h
   Kernel/elxTransformixMain.cxx
   Kernel/elxTransformixMain.h
   ${InstallFilesForExecutables}

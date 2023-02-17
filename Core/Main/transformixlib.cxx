@@ -93,9 +93,8 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
   using TransformixMainPointer = TransformixMainType::Pointer;
   using ArgumentMapType = TransformixMainType::ArgumentMapType;
   using ArgumentMapEntryType = ArgumentMapType::value_type;
-  using ElastixMainType = elx::ElastixMain;
-  using DataObjectContainerType = ElastixMainType::DataObjectContainerType;
-  using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
+  using DataObjectContainerType = elx::MainBase::DataObjectContainerType;
+  using DataObjectContainerPointer = elx::MainBase::DataObjectContainerPointer;
 
   /** Declare an instance of the Transformix class. */
   TransformixMainPointer transformix;
