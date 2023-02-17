@@ -58,6 +58,7 @@ constexpr const char * transformixHelpText =
   "            spatial Jacobian\n"
   "  -jacmat   use \"-jacmat all\" to generate an image with the spatial Jacobian\n"
   "            matrix at each voxel\n"
+  "  -loglevel set the log level to \"off\", \"error\", \"warning\", or \"info\" (default),\n"
   "  -priority set the process priority to high, abovenormal, normal (default),\n"
   "            belownormal, or idle (Windows only option)\n"
   "  -threads  set the maximum number of threads of transformix\n"
@@ -132,6 +133,7 @@ main(int argc, char ** argv)
     bool            outFolderPresent = false;
     std::string     outFolder = "";
     std::string     logFileName = "";
+    auto            level = elx::log::level::info;
 
     /** Put command line parameters into parameterFileList. */
     for (unsigned int i = 1; static_cast<long>(i) < argc - 1; i += 2)
@@ -139,22 +141,32 @@ main(int argc, char ** argv)
       std::string key(argv[i]);
       std::string value(argv[i + 1]);
 
-      if (key == "-out")
+      if (key == "-loglevel")
       {
-        /** Make sure that last character of the output folder equals a '/' or '\'. */
-        const char last = value.back();
-        if (last != '/' && last != '\\')
+        if (!ToLogLevel(value, level))
         {
-          value.append("/");
+          // Unsupported log level value.
+          return EXIT_FAILURE;
         }
-        value = elx::Conversion::ToNativePathNameSeparators(value);
+      }
+      else
+      {
+        if (key == "-out")
+        {
+          /** Make sure that last character of the output folder equals a '/' or '\'. */
+          const char last = value.back();
+          if (last != '/' && last != '\\')
+          {
+            value.append("/");
+          }
+          value = elx::Conversion::ToNativePathNameSeparators(value);
 
-        /** Save this information. */
-        outFolderPresent = true;
-        outFolder = value;
+          /** Save this information. */
+          outFolderPresent = true;
+          outFolder = value;
 
-      } // end if key == "-out"
-
+        } // end if key == "-out"
+      }
       /** Attempt to save the arguments in the ArgumentMap. */
       if (argMap.count(key) == 0)
       {
@@ -205,7 +217,7 @@ main(int argc, char ** argv)
       {
         /** Setup the log system. */
         logFileName = argMap["-out"] + "transformix.log";
-        int returndummy2 = elx::log::setup(logFileName, true, true) ? 0 : 1;
+        int returndummy2 = elx::log::setup(logFileName, true, true, level) ? 0 : 1;
         if (returndummy2)
         {
           std::cerr << "ERROR while setting up the log system." << std::endl;
