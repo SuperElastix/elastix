@@ -103,8 +103,41 @@ get_string_from_stream(const std::ostream & stream)
 }
 
 
+spdlog::level::level_enum
+to_spdlog_level_enum(const log::level log_level)
+{
+  switch (log_level)
+  {
+    case log::level::info:
+    {
+      return spdlog::level::info;
+    }
+    case log::level::warn:
+    {
+      return spdlog::level::warn;
+    }
+    case log::level::err:
+    {
+      return spdlog::level::err;
+    }
+    case log::level::off:
+    {
+      return spdlog::level::off;
+    }
+    default:
+    {
+      assert(!"Unsupported log level!");
+      return spdlog::level::level_enum{};
+    }
+  }
+}
+
+
 void
-setup_implementation(const std::string & log_filename, const bool do_log_to_file, const bool do_log_to_stdout)
+setup_implementation(const std::string & log_filename,
+                     const bool          do_log_to_file,
+                     const bool          do_log_to_stdout,
+                     const log::level    log_level)
 {
   std::vector<spdlog::sink_ptr> log_file_sink;
   std::vector<spdlog::sink_ptr> stdout_sink;
@@ -134,18 +167,25 @@ setup_implementation(const std::string & log_filename, const bool do_log_to_file
   // From here, the code is exception free, so all sinks will be set properly.
   data.get_log_file_logger().sinks() = std::move(log_file_sink);
   data.get_stdout_logger().sinks() = std::move(stdout_sink);
-  data.get_multi_logger().sinks() = std::move(all_sinks);
+
+  auto & multi_logger = data.get_multi_logger();
+
+  multi_logger.set_level(to_spdlog_level_enum(log_level));
+  multi_logger.sinks() = std::move(all_sinks);
 }
 
 } // namespace
 
 
 bool
-log::setup(const std::string & log_filename, const bool do_log_to_file, const bool do_log_to_stdout)
+log::setup(const std::string & log_filename,
+           const bool          do_log_to_file,
+           const bool          do_log_to_stdout,
+           const log::level    log_level)
 {
   try
   {
-    setup_implementation(log_filename, do_log_to_file, do_log_to_stdout);
+    setup_implementation(log_filename, do_log_to_file, do_log_to_stdout, log_level);
     return true;
   }
   catch (const std::exception &)
@@ -157,9 +197,12 @@ log::setup(const std::string & log_filename, const bool do_log_to_file, const bo
 
 log::guard::guard() = default;
 
-log::guard::guard(const std::string & log_filename, const bool do_log_to_file, const bool do_log_to_stdout)
+log::guard::guard(const std::string & log_filename,
+                  const bool          do_log_to_file,
+                  const bool          do_log_to_stdout,
+                  const log::level    log_level)
 {
-  setup_implementation(log_filename, do_log_to_file, do_log_to_stdout);
+  setup_implementation(log_filename, do_log_to_file, do_log_to_stdout, log_level);
 }
 
 log::guard::~guard()
