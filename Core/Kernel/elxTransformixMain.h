@@ -18,7 +18,7 @@
 #ifndef elxTransformixMain_h
 #define elxTransformixMain_h
 
-#include "elxElastixMain.h"
+#include "elxMainBase.h"
 #include <itkTransformBase.h>
 
 namespace elastix
@@ -36,14 +36,14 @@ namespace elastix
  * \ingroup Kernel
  */
 
-class TransformixMain : public ElastixMain
+class TransformixMain : public MainBase
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(TransformixMain);
 
   /** Standard itk. */
   using Self = TransformixMain;
-  using Superclass = ElastixMain;
+  using Superclass = MainBase;
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
 
