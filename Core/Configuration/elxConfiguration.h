@@ -150,11 +150,11 @@ public:
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
                 const unsigned int  entry_nr,
-                const bool          printThisErrorMessage) const
+                const bool          produceWarningMessage) const
   {
     std::string warningMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, entry_nr, printThisErrorMessage, warningMessage);
+      parameterValue, parameterName, entry_nr, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
       log::warn(warningMessage);
@@ -188,11 +188,11 @@ public:
                 const std::string & prefix,
                 const unsigned int  entry_nr,
                 const int           default_entry_nr,
-                const bool          printThisErrorMessage) const
+                const bool          produceWarningMessage) const
   {
     std::string warningMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, printThisErrorMessage, warningMessage);
+      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
       log::warn(warningMessage);
@@ -258,10 +258,10 @@ public:
   RetrieveParameterValue(const T &           defaultParameterValue,
                          const std::string & parameterName,
                          const unsigned int  entry_nr,
-                         const bool          printThisErrorMessage) const
+                         const bool          produceWarningMessage) const
   {
     auto parameterValue = defaultParameterValue;
-    (void)Self::ReadParameter<T>(parameterValue, parameterName, entry_nr, printThisErrorMessage);
+    (void)Self::ReadParameter<T>(parameterValue, parameterName, entry_nr, produceWarningMessage);
     return parameterValue;
   }
 
@@ -272,9 +272,9 @@ public:
   RetrieveParameterStringValue(const std::string & defaultParameterValue,
                                const std::string & parameterName,
                                const unsigned int  entry_nr,
-                               const bool          printThisErrorMessage) const
+                               const bool          produceWarningMessage) const
   {
-    return Self::RetrieveParameterValue(defaultParameterValue, parameterName, entry_nr, printThisErrorMessage);
+    return Self::RetrieveParameterValue(defaultParameterValue, parameterName, entry_nr, produceWarningMessage);
   }
 
 
@@ -285,11 +285,11 @@ public:
                 const std::string & parameterName,
                 const unsigned int  entry_nr_start,
                 const unsigned int  entry_nr_end,
-                const bool          printThisErrorMessage) const
+                const bool          produceWarningMessage) const
   {
     std::string warningMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
-      parameterValues, parameterName, entry_nr_start, entry_nr_end, printThisErrorMessage, warningMessage);
+      parameterValues, parameterName, entry_nr_start, entry_nr_end, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
       log::warn(warningMessage);

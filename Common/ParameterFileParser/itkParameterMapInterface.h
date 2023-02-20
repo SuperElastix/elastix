@@ -138,7 +138,7 @@ public:
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
                 const unsigned int  entry_nr,
-                const bool          printThisErrorMessage,
+                const bool          produceWarningMessage,
                 std::string &       warningMessage) const
   {
     /** Reset the warning message. */
@@ -150,7 +150,7 @@ public:
     /** Check if the requested parameter exists. */
     if (numberOfEntries == 0)
     {
-      if (printThisErrorMessage && this->m_PrintErrorMessages)
+      if (produceWarningMessage && this->m_PrintErrorMessages)
       {
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested at entry number "
@@ -168,7 +168,7 @@ public:
     /** Check if it exists at the requested entry number. */
     if (entry_nr >= numberOfEntries)
     {
-      if (printThisErrorMessage && this->m_PrintErrorMessages)
+      if (produceWarningMessage && this->m_PrintErrorMessages)
       {
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
@@ -200,11 +200,11 @@ public:
   ReadParameter(bool &              parameterValue,
                 const std::string & parameterName,
                 const unsigned int  entry_nr,
-                const bool          printThisErrorMessage,
+                const bool          produceWarningMessage,
                 std::string &       warningMessage) const;
 
   /** A shorter version of ReadParameter() that does not require the boolean
-   * printThisErrorMessage. Instead the default value true is used.
+   * produceWarningMessage. Instead the default value true is used.
    */
   template <class T>
   bool
@@ -229,7 +229,7 @@ public:
                 const std::string & prefix,
                 const unsigned int  entry_nr,
                 const int           default_entry_nr,
-                const bool          printThisErrorMessage,
+                const bool          produceWarningMessage,
                 std::string &       warningMessage) const
   {
     std::string fullname = prefix + parameterName;
@@ -256,7 +256,7 @@ public:
     /** If we haven't found anything, give a warning that the default value
      * provided by the caller is used.
      */
-    if (!found && printThisErrorMessage && this->m_PrintErrorMessages)
+    if (!found && produceWarningMessage && this->m_PrintErrorMessages)
     {
       return this->ReadParameter(parameterValue, parameterName, entry_nr, true, warningMessage);
     }
@@ -266,7 +266,7 @@ public:
 
 
   /** A shorter version of the extended ReadParameter() that does not require
-   * the boolean printThisErrorMessage. Instead the default value true is used.
+   * the boolean produceWarningMessage. Instead the default value true is used.
    */
   template <class T>
   bool
@@ -288,7 +288,7 @@ public:
                 const std::string & parameterName,
                 const unsigned int  entry_nr_start,
                 const unsigned int  entry_nr_end,
-                const bool          printThisErrorMessage,
+                const bool          produceWarningMessage,
                 std::string &       warningMessage) const
   {
     /** Reset the warning message. */
@@ -300,7 +300,7 @@ public:
     /** Check if the requested parameter exists. */
     if (numberOfEntries == 0)
     {
-      if (printThisErrorMessage && this->m_PrintErrorMessages)
+      if (produceWarningMessage && this->m_PrintErrorMessages)
       {
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
@@ -365,7 +365,7 @@ public:
                 const std::string &        parameterName,
                 const unsigned int         entry_nr_start,
                 const unsigned int         entry_nr_end,
-                const bool                 printThisErrorMessage,
+                const bool                 produceWarningMessage,
                 std::string &              warningMessage) const;
 
 
