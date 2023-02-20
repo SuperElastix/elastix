@@ -64,9 +64,9 @@ namespace itk
  * unsigned long parameterValue = 3;
  * unsigned int index = 2;
  * bool printWarning = true;
- * std::string errorMessage = "";
+ * std::string warningMessage = "";
  * bool success = p_interface->ReadParameter( parameterValue,
- *   "ParameterName", index, printWarning, errorMessage );
+ *   "ParameterName", index, printWarning, warningMessage );
  *
  *
  * Note that some of the templated functions are defined in the header to
@@ -139,10 +139,10 @@ public:
                 const std::string & parameterName,
                 const unsigned int  entry_nr,
                 const bool          printThisErrorMessage,
-                std::string &       errorMessage) const
+                std::string &       warningMessage) const
   {
-    /** Reset the error message. */
-    errorMessage = "";
+    /** Reset the warning message. */
+    warningMessage = "";
 
     /** Get the number of entries. */
     std::size_t numberOfEntries = this->CountNumberOfParameterEntries(parameterName);
@@ -156,7 +156,7 @@ public:
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested at entry number "
                            << entry_nr << ", does not exist at all.\n"
                            << "  The default value \"" << parameterValue << "\" is used instead.";
-        errorMessage = outputStringStream.str();
+        warningMessage = outputStringStream.str();
       }
 
       return false;
@@ -173,7 +173,7 @@ public:
         std::ostringstream outputStringStream;
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
                            << entry_nr << ".\n  The default value \"" << parameterValue << "\" is used instead.";
-        errorMessage = outputStringStream.str();
+        warningMessage = outputStringStream.str();
       }
       return false;
     }
@@ -201,7 +201,7 @@ public:
                 const std::string & parameterName,
                 const unsigned int  entry_nr,
                 const bool          printThisErrorMessage,
-                std::string &       errorMessage) const;
+                std::string &       warningMessage) const;
 
   /** A shorter version of ReadParameter() that does not require the boolean
    * printThisErrorMessage. Instead the default value true is used.
@@ -211,9 +211,9 @@ public:
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
                 const unsigned int  entry_nr,
-                std::string &       errorMessage) const
+                std::string &       warningMessage) const
   {
-    return this->ReadParameter(parameterValue, parameterName, entry_nr, true, errorMessage);
+    return this->ReadParameter(parameterValue, parameterName, entry_nr, true, warningMessage);
   }
 
 
@@ -230,7 +230,7 @@ public:
                 const unsigned int  entry_nr,
                 const int           default_entry_nr,
                 const bool          printThisErrorMessage,
-                std::string &       errorMessage) const
+                std::string &       warningMessage) const
   {
     std::string fullname = prefix + parameterName;
     bool        found = false;
@@ -258,7 +258,7 @@ public:
      */
     if (!found && printThisErrorMessage && this->m_PrintErrorMessages)
     {
-      return this->ReadParameter(parameterValue, parameterName, entry_nr, true, errorMessage);
+      return this->ReadParameter(parameterValue, parameterName, entry_nr, true, warningMessage);
     }
 
     return found;
@@ -275,9 +275,9 @@ public:
                 const std::string & prefix,
                 const unsigned int  entry_nr,
                 const unsigned int  default_entry_nr,
-                std::string &       errorMessage) const
+                std::string &       warningMessage) const
   {
-    return this->ReadParameter(parameterValue, parameterName, prefix, entry_nr, default_entry_nr, true, errorMessage);
+    return this->ReadParameter(parameterValue, parameterName, prefix, entry_nr, default_entry_nr, true, warningMessage);
   }
 
 
@@ -289,10 +289,10 @@ public:
                 const unsigned int  entry_nr_start,
                 const unsigned int  entry_nr_end,
                 const bool          printThisErrorMessage,
-                std::string &       errorMessage) const
+                std::string &       warningMessage) const
   {
-    /** Reset the error message. */
-    errorMessage = "";
+    /** Reset the warning message. */
+    warningMessage = "";
 
     /** Get the number of entries. */
     std::size_t numberOfEntries = this->CountNumberOfParameterEntries(parameterName);
@@ -306,7 +306,7 @@ public:
         outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
                            << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
                            << "  The default values are used instead.";
-        errorMessage = outputStringStream.str();
+        warningMessage = outputStringStream.str();
       }
       return false;
     }
@@ -366,7 +366,7 @@ public:
                 const unsigned int         entry_nr_start,
                 const unsigned int         entry_nr_end,
                 const bool                 printThisErrorMessage,
-                std::string &              errorMessage) const;
+                std::string &              warningMessage) const;
 
 
   /** Returns the values of the specified parameter. */
