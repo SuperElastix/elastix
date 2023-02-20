@@ -165,12 +165,18 @@ setup_implementation(const std::string & log_filename,
   auto & data = get_log_data();
 
   // From here, the code is exception free, so all sinks will be set properly.
-  data.get_log_file_logger().sinks() = std::move(log_file_sink);
+  const auto spdlog_level = to_spdlog_level_enum(log_level);
+
+  auto & log_file_logger = data.get_log_file_logger();
+
+  log_file_logger.sinks() = std::move(log_file_sink);
+  log_file_logger.set_level(spdlog_level);
+
   data.get_stdout_logger().sinks() = std::move(stdout_sink);
 
   auto & multi_logger = data.get_multi_logger();
 
-  multi_logger.set_level(to_spdlog_level_enum(log_level));
+  multi_logger.set_level(spdlog_level);
   multi_logger.sinks() = std::move(all_sinks);
 }
 
@@ -249,15 +255,15 @@ log::error(const std::ostream & stream)
 }
 
 void
-log::to_log_file(const std::string & message)
+log::info_to_log_file(const std::string & message)
 {
   get_log_data().get_log_file_logger().info(message);
 }
 
 void
-log::to_log_file(const std::ostream & stream)
+log::info_to_log_file(const std::ostream & stream)
 {
-  log::to_log_file(get_string_from_stream(stream));
+  log::info_to_log_file(get_string_from_stream(stream));
 }
 
 void

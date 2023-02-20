@@ -90,12 +90,12 @@ Configuration::PrintParameterFile() const
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file, before and after writing the parameter file. */
-  log::to_log_file(std::ostringstream{} << '\n'
-                                        << "=============== start of ParameterFile: " << this->GetParameterFileName()
-                                        << " ===============\n"
-                                        << params << '\n'
-                                        << "=============== end of ParameterFile: " << this->GetParameterFileName()
-                                        << " ===============\n");
+  log::info_to_log_file(std::ostringstream{} << '\n'
+                                             << "=============== start of ParameterFile: "
+                                             << this->GetParameterFileName() << " ===============\n"
+                                             << params << '\n'
+                                             << "=============== end of ParameterFile: " << this->GetParameterFileName()
+                                             << " ===============\n");
 
 } // end PrintParameterFile()
 

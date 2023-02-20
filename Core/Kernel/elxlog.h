@@ -85,10 +85,10 @@ public:
   ///@{
   /** Passes the message only to the log file, not to stdout. */
   static void
-  to_log_file(const std::string & message);
+  info_to_log_file(const std::string & message);
 
   static void
-  to_log_file(const std::ostream & stream);
+  info_to_log_file(const std::ostream & stream);
   ///@}
 
   ///@{
