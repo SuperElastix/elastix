@@ -75,7 +75,7 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
                                      const std::string & parameterName,
                                      const unsigned int  entry_nr,
                                      const bool          printThisErrorMessage,
-                                     std::string &       errorMessage) const
+                                     std::string &       warningMessage) const
 {
   /** Translate the default boolean to string. */
   std::string parameterValueString;
@@ -89,7 +89,8 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
   }
 
   /** Read the boolean as a string. */
-  bool dummy = this->ReadParameter(parameterValueString, parameterName, entry_nr, printThisErrorMessage, errorMessage);
+  bool dummy =
+    this->ReadParameter(parameterValueString, parameterName, entry_nr, printThisErrorMessage, warningMessage);
 
   /** Translate the read-in string to boolean. */
   parameterValue = false;
@@ -118,10 +119,10 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
                                      const unsigned int         entry_nr_start,
                                      const unsigned int         entry_nr_end,
                                      const bool                 printThisErrorMessage,
-                                     std::string &              errorMessage) const
+                                     std::string &              warningMessage) const
 {
-  /** Reset the error message. */
-  errorMessage = "";
+  /** Reset the warning message. */
+  warningMessage = "";
 
   /** Get the number of entries. */
   std::size_t numberOfEntries = this->CountNumberOfParameterEntries(parameterName);
@@ -135,7 +136,7 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
       outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
                          << entry_nr_start << " and " << entry_nr_end << ", does not exist at all.\n"
                          << "  The default values are used instead.";
-      errorMessage = outputStringStream.str();
+      warningMessage = outputStringStream.str();
     }
     return false;
   }

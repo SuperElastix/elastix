@@ -152,12 +152,12 @@ public:
                 const unsigned int  entry_nr,
                 const bool          printThisErrorMessage) const
   {
-    std::string errorMessage = "";
+    std::string warningMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, entry_nr, printThisErrorMessage, errorMessage);
-    if (!errorMessage.empty())
+      parameterValue, parameterName, entry_nr, printThisErrorMessage, warningMessage);
+    if (!warningMessage.empty())
     {
-      log::error(errorMessage);
+      log::warn(warningMessage);
     }
 
     return found;
@@ -169,11 +169,11 @@ public:
   bool
   ReadParameter(T & parameterValue, const std::string & parameterName, const unsigned int entry_nr) const
   {
-    std::string errorMessage = "";
-    bool found = this->m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, errorMessage);
-    if (!errorMessage.empty())
+    std::string warningMessage = "";
+    bool found = this->m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, warningMessage);
+    if (!warningMessage.empty())
     {
-      log::error(errorMessage);
+      log::warn(warningMessage);
     }
 
     return found;
@@ -190,12 +190,12 @@ public:
                 const int           default_entry_nr,
                 const bool          printThisErrorMessage) const
   {
-    std::string errorMessage = "";
+    std::string warningMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, printThisErrorMessage, errorMessage);
-    if (!errorMessage.empty())
+      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, printThisErrorMessage, warningMessage);
+    if (!warningMessage.empty())
     {
-      log::error(errorMessage);
+      log::warn(warningMessage);
     }
 
     return found;
@@ -211,12 +211,12 @@ public:
                 const unsigned int  entry_nr,
                 const int           default_entry_nr) const
   {
-    std::string errorMessage = "";
+    std::string warningMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
-      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, errorMessage);
-    if (!errorMessage.empty())
+      parameterValue, parameterName, prefix, entry_nr, default_entry_nr, warningMessage);
+    if (!warningMessage.empty())
     {
-      log::error(errorMessage);
+      log::warn(warningMessage);
     }
 
     return found;
@@ -287,12 +287,12 @@ public:
                 const unsigned int  entry_nr_end,
                 const bool          printThisErrorMessage) const
   {
-    std::string errorMessage = "";
+    std::string warningMessage = "";
     bool        found = this->m_ParameterMapInterface->ReadParameter(
-      parameterValues, parameterName, entry_nr_start, entry_nr_end, printThisErrorMessage, errorMessage);
-    if (!errorMessage.empty())
+      parameterValues, parameterName, entry_nr_start, entry_nr_end, printThisErrorMessage, warningMessage);
+    if (!warningMessage.empty())
     {
-      log::error(errorMessage);
+      log::warn(warningMessage);
     }
 
     return found;
