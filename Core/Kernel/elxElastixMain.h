@@ -105,6 +105,13 @@ public:
    */
   itkGetModifiableObjectMacro(FinalTransform, itk::Object);
 
+  /** Set/Get the initial transform
+   * the type is itk::Object, but the pointer should actually point
+   * to an itk::Transform type (or inherited from that one).
+   */
+  itkSetObjectMacro(InitialTransform, itk::Object);
+  itkGetModifiableObjectMacro(InitialTransform, itk::Object);
+
   /** Set/Get the original fixed image direction as a flat array
    * (d11 d21 d31 d21 d22 etc ) */
   virtual void
@@ -153,6 +160,9 @@ protected:
 
   /** A transform that is the result of registration. */
   ObjectPointer m_FinalTransform{ nullptr };
+
+  /** The initial transform. */
+  ObjectPointer m_InitialTransform{ nullptr };
 
   /** Transformation parameters map containing parameters that is the
    *  result of registration.
