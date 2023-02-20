@@ -74,7 +74,7 @@ bool
 ParameterMapInterface::ReadParameter(bool &              parameterValue,
                                      const std::string & parameterName,
                                      const unsigned int  entry_nr,
-                                     const bool          printThisErrorMessage,
+                                     const bool          produceWarningMessage,
                                      std::string &       warningMessage) const
 {
   /** Translate the default boolean to string. */
@@ -90,7 +90,7 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
 
   /** Read the boolean as a string. */
   bool dummy =
-    this->ReadParameter(parameterValueString, parameterName, entry_nr, printThisErrorMessage, warningMessage);
+    this->ReadParameter(parameterValueString, parameterName, entry_nr, produceWarningMessage, warningMessage);
 
   /** Translate the read-in string to boolean. */
   parameterValue = false;
@@ -118,7 +118,7 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
                                      const std::string &        parameterName,
                                      const unsigned int         entry_nr_start,
                                      const unsigned int         entry_nr_end,
-                                     const bool                 printThisErrorMessage,
+                                     const bool                 produceWarningMessage,
                                      std::string &              warningMessage) const
 {
   /** Reset the warning message. */
@@ -130,7 +130,7 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
   /** Check if the requested parameter exists. */
   if (numberOfEntries == 0)
   {
-    if (printThisErrorMessage && this->m_PrintErrorMessages)
+    if (produceWarningMessage && this->m_PrintErrorMessages)
     {
       std::ostringstream outputStringStream;
       outputStringStream << "WARNING: The parameter \"" << parameterName << "\", requested between entry numbers "
