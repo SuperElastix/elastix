@@ -148,11 +148,6 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
    */
   elastixBase.SetMovingImageContainer(this->GetModifiableMovingImageContainer());
 
-  /** Set the initial transform, if it happens to be there
-   * \todo: Does this make sense for transformix?
-   */
-  elastixBase.SetInitialTransform(this->GetModifiableInitialTransform());
-
   /** ApplyTransform! */
   try
   {

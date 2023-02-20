@@ -126,13 +126,6 @@ public:
   ElastixBase &
   GetElastixBase() const;
 
-  /** Set/Get the initial transform
-   * the type is itk::Object, but the pointer should actually point
-   * to an itk::Transform type (or inherited from that one).
-   */
-  itkSetObjectMacro(InitialTransform, itk::Object);
-  itkGetModifiableObjectMacro(InitialTransform, itk::Object);
-
   /** Returns the Index that is used in elx::ComponentDatabase. */
   itkGetConstMacro(DBIndex, DBIndexType);
 
@@ -213,9 +206,6 @@ protected:
   DataObjectContainerPointer m_MovingImageContainer{ nullptr };
   DataObjectContainerPointer m_ResultImageContainer{ nullptr };
   DataObjectContainerPointer m_ResultDeformationFieldContainer{ nullptr };
-
-  /** The initial transform. */
-  ObjectPointer m_InitialTransform{ nullptr };
 
   /** InitDBIndex sets m_DBIndex by asking the ImageTypes
    * from the Configuration object and obtaining the corresponding
