@@ -770,7 +770,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   /** Separate clearly in log-file. */
   if (toLog)
   {
-    log::to_log_file("\n=============== start of TransformParameterFile ===============");
+    log::info_to_log_file("\n=============== start of TransformParameterFile ===============");
   }
 
   /** Create transformationParameterInfo. */
@@ -799,8 +799,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   /** Separate clearly in log-file. */
   if (toLog)
   {
-    log::to_log_file(transformationParameterInfo.str());
-    log::to_log_file("=============== end of TransformParameterFile ===============");
+    log::info_to_log_file(transformationParameterInfo.str());
+    log::info_to_log_file("=============== end of TransformParameterFile ===============");
   }
 
 } // end CreateTransformParameterFile()
