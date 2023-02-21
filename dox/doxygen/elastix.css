@@ -1,3 +1,6 @@
+/* Only apply elastix style when the user's web browser appearance setting has the light color scheme selected. */
+@media (prefers-color-scheme: light) {
+
 H1, H1.groupheader {
     text-align: left;
     color: #CC0000;
@@ -350,4 +353,6 @@ A.logo2:hover {
 .small {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 9;
+}
+
 }
