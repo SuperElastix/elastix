@@ -82,12 +82,6 @@ get_log_data()
   return static_log_data;
 }
 
-auto &
-get_multi_logger()
-{
-  return get_log_data().get_multi_logger();
-}
-
 std::string
 get_string_from_stream(const std::ostream & stream)
 {
@@ -184,6 +178,30 @@ setup_implementation(const std::string & log_filename,
   multi_logger.sinks() = std::move(multi_logger_sinks);
 }
 
+template <spdlog::level::level_enum spdlog_level>
+void
+log_to_multi_logger(const std::string & message)
+{
+  auto & logger = get_log_data().get_multi_logger();
+
+  if (!logger.sinks().empty())
+  {
+    logger.log(spdlog_level, message);
+  }
+}
+
+template <spdlog::level::level_enum spdlog_level>
+void
+log_to_multi_logger(const std::ostream & stream)
+{
+  auto & logger = get_log_data().get_multi_logger();
+
+  if (!logger.sinks().empty())
+  {
+    logger.log(spdlog_level, get_string_from_stream(stream));
+  }
+}
+
 } // namespace
 
 
@@ -224,50 +242,60 @@ log::guard::~guard()
 void
 log::info(const std::string & message)
 {
-  get_multi_logger().info(message);
+  log_to_multi_logger<spdlog::level::info>(message);
 }
 
 void
 log::warn(const std::string & message)
 {
-  get_multi_logger().warn(message);
+  log_to_multi_logger<spdlog::level::warn>(message);
 }
 
 void
 log::error(const std::string & message)
 {
-  get_multi_logger().error(message);
+  log_to_multi_logger<spdlog::level::err>(message);
 }
 
 
 void
 log::info(const std::ostream & stream)
 {
-  get_multi_logger().info(get_string_from_stream(stream));
+  log_to_multi_logger<spdlog::level::info>(stream);
 }
 
 void
 log::warn(const std::ostream & stream)
 {
-  get_multi_logger().warn(get_string_from_stream(stream));
+  log_to_multi_logger<spdlog::level::warn>(stream);
 }
 
 void
 log::error(const std::ostream & stream)
 {
-  get_multi_logger().error(get_string_from_stream(stream));
+  log_to_multi_logger<spdlog::level::err>(stream);
 }
 
 void
 log::info_to_log_file(const std::string & message)
 {
-  get_log_data().get_log_file_logger().info(message);
+  auto & logger = get_log_data().get_log_file_logger();
+
+  if (!logger.sinks().empty())
+  {
+    logger.info(message);
+  }
 }
 
 void
 log::info_to_log_file(const std::ostream & stream)
 {
-  log::info_to_log_file(get_string_from_stream(stream));
+  auto & logger = get_log_data().get_log_file_logger();
+
+  if (!logger.sinks().empty())
+  {
+    logger.info(get_string_from_stream(stream));
+  }
 }
 
 void
