@@ -141,16 +141,16 @@ setup_implementation(const std::string & log_filename,
 {
   std::vector<spdlog::sink_ptr> log_file_sink;
   std::vector<spdlog::sink_ptr> stdout_sink;
-  std::vector<spdlog::sink_ptr> all_sinks;
+  std::vector<spdlog::sink_ptr> multi_logger_sinks;
 
-  if (do_log_to_file)
+  if (do_log_to_file && (log_level != log::level::off))
   {
     // Throws an exception when the log file cannot be opened.
     auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_filename, true);
     sink->set_pattern("%v");
 
     log_file_sink = { sink };
-    all_sinks.push_back(sink);
+    multi_logger_sinks.push_back(sink);
   }
 
   if (do_log_to_stdout)
@@ -159,7 +159,11 @@ setup_implementation(const std::string & log_filename,
     sink->set_pattern("%v");
 
     stdout_sink = { sink };
-    all_sinks.push_back(sink);
+
+    if (log_level != log::level::off)
+    {
+      multi_logger_sinks.push_back(sink);
+    }
   }
 
   auto & data = get_log_data();
@@ -177,7 +181,7 @@ setup_implementation(const std::string & log_filename,
   auto & multi_logger = data.get_multi_logger();
 
   multi_logger.set_level(spdlog_level);
-  multi_logger.sinks() = std::move(all_sinks);
+  multi_logger.sinks() = std::move(multi_logger_sinks);
 }
 
 } // namespace
