@@ -188,7 +188,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Setup logging.
-  const elx::log::guard logGuard(logFileName, m_EnableOutput && m_LogToFile, m_EnableOutput && m_LogToConsole);
+  const elx::log::guard logGuard(logFileName,
+                                 m_EnableOutput && m_LogToFile,
+                                 m_EnableOutput && m_LogToConsole,
+                                 static_cast<elastix::log::level>(m_LogLevel));
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)

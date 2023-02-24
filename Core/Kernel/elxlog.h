@@ -30,7 +30,7 @@ namespace elastix
 class log
 {
 public:
-  enum class level
+  enum class level : uint8_t
   {
     info,
     warn,
@@ -56,7 +56,7 @@ public:
     guard(const std::string & log_filename,
           const bool          do_log_to_file,
           const bool          do_log_to_stdout,
-          const level         log_level = {});
+          const level         log_level);
 
     /** Does reset the logging system. */
     ~guard();
