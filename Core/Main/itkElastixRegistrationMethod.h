@@ -36,6 +36,7 @@
 #define itkElastixRegistrationMethod_h
 
 #include "itkImageSource.h"
+#include "itkElastixLogLevel.h"
 
 #include "elxElastixMain.h"
 #include "elxElastixTemplate.h"
@@ -252,6 +253,9 @@ public:
     m_EnableOutput = false;
   }
 
+  itkSetMacro(LogLevel, ElastixLogLevel);
+  itkGetConstMacro(LogLevel, ElastixLogLevel);
+
   itkSetMacro(NumberOfThreads, int);
   itkGetConstMacro(NumberOfThreads, int);
 
@@ -317,6 +321,8 @@ private:
   bool m_EnableOutput{ true };
   bool m_LogToConsole{ false };
   bool m_LogToFile{ false };
+
+  ElastixLogLevel m_LogLevel{};
 
   int m_NumberOfThreads{ 0 };
 

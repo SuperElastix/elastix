@@ -35,6 +35,7 @@
 #ifndef itkTransformixFilter_h
 #define itkTransformixFilter_h
 
+#include "itkElastixLogLevel.h"
 #include "itkImageSource.h"
 #include "itkMesh.h"
 #include "itkTransformBase.h"
@@ -212,6 +213,9 @@ public:
     m_EnableOutput = false;
   }
 
+  itkSetMacro(LogLevel, ElastixLogLevel);
+  itkGetConstMacro(LogLevel, ElastixLogLevel);
+
   /** Sets an (optional) input mesh. An Update() will transform its points, and store them in the output mesh.  */
   itkSetConstObjectMacro(InputMesh, MeshType);
 
@@ -287,6 +291,8 @@ private:
   bool m_EnableOutput{ true };
   bool m_LogToConsole{ false };
   bool m_LogToFile{ false };
+
+  ElastixLogLevel m_LogLevel{};
 
   typename MeshType::ConstPointer m_InputMesh{ nullptr };
   typename MeshType::Pointer      m_OutputMesh{ nullptr };

@@ -144,6 +144,38 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
 } // namespace
 
 
+static_assert(sizeof(itk::ElastixLogLevel) == sizeof(elx::log::level),
+              "The log level enum types should have the same size!");
+
+static_assert(sizeof(itk::ElastixLogLevel) == 1, "The log level enum type should have just one byte!");
+
+static_assert(itk::ElastixLogLevel::Info == itk::ElastixLogLevel{}, "The default log level should be `Info`!");
+
+static_assert(static_cast<int>(itk::ElastixLogLevel::Info) == static_cast<int>(elx::log::level::info) &&
+                static_cast<int>(itk::ElastixLogLevel::Warning) == static_cast<int>(elx::log::level::warn) &&
+                static_cast<int>(itk::ElastixLogLevel::Error) == static_cast<int>(elx::log::level::err) &&
+                static_cast<int>(itk::ElastixLogLevel::Off) == static_cast<int>(elx::log::level::off),
+              "Corresponding log level enumerators should have the same underlying integer value!");
+
+
+GTEST_TEST(itkElastixRegistrationMethod, LogLevel)
+{
+  using ImageType = itk::Image<float>;
+  elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> elastixRegistrationMethod;
+
+  ASSERT_EQ(elastixRegistrationMethod.GetLogLevel(), itk::ElastixLogLevel{});
+
+  for (const auto logLevel : { itk::ElastixLogLevel::Info,
+                               itk::ElastixLogLevel::Warning,
+                               itk::ElastixLogLevel::Error,
+                               itk::ElastixLogLevel::Off })
+  {
+    elastixRegistrationMethod.SetLogLevel(logLevel);
+    EXPECT_EQ(elastixRegistrationMethod.GetLogLevel(), logLevel);
+  }
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, IsDefaultInitialized)
 {
   constexpr auto ImageDimension = 2U;
