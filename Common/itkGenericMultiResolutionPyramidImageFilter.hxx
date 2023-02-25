@@ -24,30 +24,6 @@
 #include "itkShrinkImageFilter.h"
 #include "itkImageAlgorithm.h"
 
-namespace // anonymous namespace
-{
-/**
- * ******************* UpdateAndGraft ***********************
- */
-
-template <class GenericMultiResolutionPyramidImageFilterType, class ImageToImageFilterType, typename OutputImageType>
-void
-UpdateAndGraft(typename GenericMultiResolutionPyramidImageFilterType::Pointer thisFilter,
-               typename ImageToImageFilterType::Pointer &                     filter,
-               OutputImageType *                                              outImage,
-               const unsigned int                                             ilevel)
-{
-  filter->GraftOutput(outImage);
-
-  // force to always update in case shrink factors are the same
-  filter->Modified();
-  filter->UpdateLargestPossibleRegion();
-  thisFilter->GraftNthOutput(ilevel, filter->GetOutput());
-} // end UpdateAndGraft()
-
-
-} // namespace
-
 namespace itk
 {
 /**
@@ -339,7 +315,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
     if (this->ComputeForCurrentLevel(level))
     {
       // Allocate memory for each output
-      OutputImagePointer outputPtr = this->GetOutput(level);
+      const OutputImagePointer outputPtr = this->GetOutput(level);
       outputPtr->SetBufferedRegion(outputPtr->GetRequestedRegion());
       outputPtr->Allocate();
 
@@ -350,10 +326,19 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
       const int shrinkerOrResamplerIsUsed = this->SetupShrinkerOrResampler(
         level, smoother, smootherIsUsed, input, outputPtr, rescaleSameTypes, rescaleDifferentTypes);
 
+      const auto updateAndGraft = [this, level, outputPtr](auto & filter) {
+        filter.GraftOutput(outputPtr);
+
+        // force to always update in case shrink factors are the same
+        filter.Modified();
+        filter.UpdateLargestPossibleRegion();
+        this->GraftNthOutput(level, filter.GetOutput());
+      };
+
       // Update the pipeline and graft or copy results to this filters output
       if (shrinkerOrResamplerIsUsed == 0 && smootherIsUsed)
       {
-        UpdateAndGraft<Self, SmootherType, OutputImageType>(this, smoother, outputPtr, level);
+        updateAndGraft(*smoother);
       }
       else if (shrinkerOrResamplerIsUsed == 0)
       {
@@ -364,12 +349,11 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
       }
       else if (shrinkerOrResamplerIsUsed == 1)
       {
-        UpdateAndGraft<Self, ImageToImageFilterSameTypes, OutputImageType>(this, rescaleSameTypes, outputPtr, level);
+        updateAndGraft(*rescaleSameTypes);
       }
       else if (shrinkerOrResamplerIsUsed == 2)
       {
-        UpdateAndGraft<Self, ImageToImageFilterDifferentTypes, OutputImageType>(
-          this, rescaleDifferentTypes, outputPtr, level);
+        updateAndGraft(*rescaleDifferentTypes);
       }
       // no else needed
     }
