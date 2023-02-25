@@ -88,45 +88,16 @@
  * not less.
  *
  * Details: a function "int _classname##InstallComponent( _cdb )" is defined.
- * In this function a template is defined, _classname\#\#_install<VIndex>.
+ * In this function a ComponentInstaller template is instantiated.
  * It contains the ElastixTypedef<VIndex>, and recursive function DO(cdb).
  * DO installs the component for all defined ElastixTypedefs (so for all
  * supported image types).
  *
  */
 #define elxInstallMacro(_classname)                                                                                    \
-  template <unsigned VIndex>                                                                                           \
-  class ITK_TEMPLATE_EXPORT _classname##_install                                                                       \
-  {                                                                                                                    \
-  public:                                                                                                              \
-    static int                                                                                                         \
-    DO(::elastix::ComponentDatabase * cdb)                                                                             \
-    {                                                                                                                  \
-      using ElastixType = typename ::elastix::ElastixTypedef<VIndex>::ElastixType;                                     \
-      const auto name = ::elastix::_classname<ElastixType>::elxGetClassNameStatic();                                   \
-      const int  dummy =                                                                                               \
-        ::elastix::InstallFunctions<::elastix::_classname<ElastixType>>::InstallComponent(name, VIndex, cdb);          \
-      if (::elastix::ElastixTypedef<VIndex + 1>::IsDefined)                                                            \
-      {                                                                                                                \
-        return _classname##_install<VIndex + 1>::DO(cdb);                                                              \
-      }                                                                                                                \
-      return dummy;                                                                                                    \
-    }                                                                                                                  \
-  };                                                                                                                   \
-  template <>                                                                                                          \
-  class _classname##_install<::elastix::NrOfSupportedImageTypes + 1>                                                   \
-  {                                                                                                                    \
-  public:                                                                                                              \
-    static int                                                                                                         \
-    DO(::elastix::ComponentDatabase * /** cdb */)                                                                      \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
-  };                                                                                                                   \
   extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb)                                     \
   {                                                                                                                    \
-    int _InstallDummy##_classname = _classname##_install<1>::DO(_cdb);                                                 \
-    return _InstallDummy##_classname;                                                                                  \
+    return ::elastix::ComponentInstaller<::elastix::_classname>::DO(_cdb);                                             \
   } // ignore semicolon
 
 
