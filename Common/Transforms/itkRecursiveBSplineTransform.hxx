@@ -34,17 +34,11 @@ auto
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(const InputPointType & point) const
   -> OutputPointType
 {
-  /** Initialize output point. */
-  OutputPointType outputPoint;
-
-  /** Allocate weights on the stack: */
-
   /** Check if the coefficient image has been set. */
   if (!this->m_CoefficientImages[0])
   {
     itkWarningMacro(<< "B-spline coefficients have not been set");
-    outputPoint = point;
-    return outputPoint;
+    return point;
   }
 
   /** Convert to continuous index. */
@@ -52,11 +46,9 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and return the input point
-  bool inside = this->InsideValidRegion(cindex);
-  if (!inside)
+  if (!this->InsideValidRegion(cindex))
   {
-    outputPoint = point;
-    return outputPoint;
+    return point;
   }
 
   // Compute interpolation weighs and store them in weights1D
@@ -80,6 +72,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
   /** Call the recursive TransformPoint function. */
   ScalarType displacement[SpaceDimension];
   ImplementationType::TransformPoint(displacement, mu, bsplineOffsetTable, weights1D.data());
+
+  OutputPointType outputPoint;
 
   // The output point is the start point + displacement.
   for (unsigned int j = 0; j < SpaceDimension; ++j)
