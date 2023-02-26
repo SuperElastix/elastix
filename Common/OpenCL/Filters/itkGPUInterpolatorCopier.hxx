@@ -118,12 +118,18 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 
     // Try BSpline
     using BSplineInterpolatorType =
-      BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, CPUCoordRepType>;
+      BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, double>;
     const typename BSplineInterpolatorType::ConstPointer bspline =
       dynamic_cast<const BSplineInterpolatorType *>(m_InputInterpolator.GetPointer());
 
-    if (bspline)
+    using BSplineInterpolatorFloatType = BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, float>;
+    const typename BSplineInterpolatorFloatType::ConstPointer bsplineFloat =
+      dynamic_cast<const BSplineInterpolatorFloatType *>(m_InputInterpolator.GetPointer());
+
+    if (bspline || bsplineFloat)
     {
+      const auto splineOrder = bspline ? bspline->GetSplineOrder() : bsplineFloat->GetSplineOrder();
+
       if (this->m_ExplicitMode)
       {
         // Register image factory because BSplineInterpolateImageFunction
@@ -144,7 +150,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
         using GPUBSplineInterpolatorType =
           GPUBSplineInterpolateImageFunction<GPUInputImageType, GPUCoordRepType, GPUCoordRepType>;
         auto bsplineInterpolator = GPUBSplineInterpolatorType::New();
-        bsplineInterpolator->SetSplineOrder(bspline->GetSplineOrder());
+        bsplineInterpolator->SetSplineOrder(splineOrder);
 
         // UnRegister factories
         itk::ObjectFactoryBase::UnRegisterFactory(imageFactory);
@@ -158,7 +164,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
         using GPUBSplineInterpolatorType =
           BSplineInterpolateImageFunction<CPUInputImageType, GPUCoordRepType, GPUCoordRepType>;
         auto bsplineInterpolator = GPUBSplineInterpolatorType::New();
-        bsplineInterpolator->SetSplineOrder(bspline->GetSplineOrder());
+        bsplineInterpolator->SetSplineOrder(splineOrder);
         this->m_Output = bsplineInterpolator;
       }
       return;
