@@ -105,12 +105,16 @@ template <class TElastix>
 void
 OpenCLResampler<TElastix>::SetInterpolator(InterpolatorType * _arg)
 {
-  Superclass1::SetInterpolator(_arg);
-
   if (this->m_ContextCreated && this->m_GPUResamplerCreated)
   {
     // Set input for the interpolate copier
     this->m_InterpolatorCopier->SetInputInterpolator(_arg);
+  }
+  else
+  {
+    // Change the default LinearInterpolator only when the OpenCL
+    // is not properly setup
+    Superclass1::SetInterpolator(_arg);
   }
 } // end SetInterpolator()
 
