@@ -30,8 +30,9 @@
 #include "itkGPULinearInterpolateImageFunction.h"
 #include "itkGPUBSplineInterpolateImageFunction.h"
 
-// GPU factory include
+// GPU factories include
 #include "itkGPUImageFactory.h"
+#include "itkGPUBSplineDecompositionImageFilterFactory.h"
 
 namespace itk
 {
@@ -126,11 +127,18 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
       if (this->m_ExplicitMode)
       {
         // Register image factory because BSplineInterpolateImageFunction
-        // using m_Coefficients as ITK images inside the implementation
+        // using m_Coefficients as ITK images inside the implementation,
+        // and also BSplineDecompositionImageFilter for the calculations
         using GPUImageFactoryType = itk::GPUImageFactory2<TTypeList, NDimensions>;
         using GPUImageFactoryPointer = typename GPUImageFactoryType::Pointer;
         GPUImageFactoryPointer imageFactory = GPUImageFactoryType::New();
         itk::ObjectFactoryBase::RegisterFactory(imageFactory);
+
+        using GPUBSplineDecompositionImageFilterFactoryType = itk::GPUBSplineDecompositionImageFilterFactory2<TTypeList, TTypeList, NDimensions>;
+        using GPUBSplineDecompositionImageFilterFactoryTypePointer = typename GPUBSplineDecompositionImageFilterFactoryType::Pointer;
+        GPUBSplineDecompositionImageFilterFactoryTypePointer decompositionFactory =
+          GPUBSplineDecompositionImageFilterFactoryType::New();
+        itk::ObjectFactoryBase::RegisterFactory(decompositionFactory);
 
         // Create GPU BSpline interpolator in explicit mode
         using GPUBSplineInterpolatorType =
@@ -138,8 +146,9 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
         auto bsplineInterpolator = GPUBSplineInterpolatorType::New();
         bsplineInterpolator->SetSplineOrder(bspline->GetSplineOrder());
 
-        // UnRegister image factory
+        // UnRegister factories
         itk::ObjectFactoryBase::UnRegisterFactory(imageFactory);
+        itk::ObjectFactoryBase::UnRegisterFactory(decompositionFactory);
 
         this->m_ExplicitOutput = bsplineInterpolator;
       }
