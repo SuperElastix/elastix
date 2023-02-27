@@ -223,6 +223,8 @@ private:
     }
     return input->GetLargestPossibleRegion().GetSize();
   }
+
+  class RayCastHelper;
 };
 
 } // namespace itk
