@@ -9,12 +9,18 @@ variables:
 trigger:
   paths:
     exclude:
-    - CODE_OF_CONDUCT.md
-    - CONTRIBUTING.md
-    - GOVERNANCE.md
-    - README.md
+    - '*.md'
     - LICENSE
     - .github/workflows/*
+    - dox/doxygen/*
+    - tools/*
+pr:
+  paths:
+    exclude:
+    - '*.md'
+    - LICENSE
+    - .github/workflows/*
+    - dox/doxygen/*
     - tools/*
 
 jobs:
