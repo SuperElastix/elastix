@@ -1241,7 +1241,7 @@ GTEST_TEST(itkTransformixFilter, SetCompositeTransformOfTranslationAndScale)
 
 
 // Tests ComputeSpatialJacobianDeterminantImage and ComputeSpatialJacobianMatrixImage on a simple translation.
-GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImage)
+GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImageOfTranslationTransform)
 {
   using PixelType = float;
   constexpr unsigned int ImageDimension{ 2 };
@@ -1289,5 +1289,66 @@ GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImage)
   for (const auto & matrix : itk::MakeImageBufferRange(matrixImage.GetPointer()))
   {
     EXPECT_EQ(matrix, expectedMatrix);
+  }
+}
+
+
+// Tests ComputeSpatialJacobianDeterminantImage and ComputeSpatialJacobianMatrixImage on a simple affine transformation.
+GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImageOfAffineTransform)
+{
+  using PixelType = float;
+  constexpr unsigned int ImageDimension{ 2 };
+
+  using SizeType = itk::Size<ImageDimension>;
+  const SizeType imageSize{ { 5, 6 } };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using TransformixFilterType = itk::TransformixFilter<ImageType>;
+
+  elx::DefaultConstruct<ImageType> movingImage{};
+  movingImage.SetRegions(imageSize);
+  movingImage.Allocate(true);
+
+  elx::DefaultConstruct<itk::AffineTransform<double, ImageDimension>> transform{};
+  transform.SetOffset(itk::MakeVector(1.0, -2.0));
+  transform.Scale(2.0);
+
+  elx::DefaultConstruct<TransformixFilterType> transformixFilter{};
+  transformixFilter.SetMovingImage(&movingImage);
+  transformixFilter.SetTransform(&transform);
+  transformixFilter.SetTransformParameterObject(
+    CreateParameterObject({ // Parameters in alphabetic order:
+                            { "Direction", CreateDefaultDirectionParameterValues<ImageDimension>() },
+                            { "Index", ParameterValuesType(ImageDimension, "0") },
+                            { "Origin", ParameterValuesType(ImageDimension, "0") },
+                            { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                            { "Size", ConvertToParameterValues(imageSize) },
+                            { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
+  transformixFilter.Update();
+
+  const auto determinantImage = transformixFilter.ComputeSpatialJacobianDeterminantImage();
+  const auto matrixImage = transformixFilter.ComputeSpatialJacobianMatrixImage();
+
+  const itk::ImageRegion<ImageDimension> expectedBufferedRegion({}, imageSize);
+  EXPECT_EQ(DerefSmartPointer(determinantImage).GetBufferedRegion(), expectedBufferedRegion);
+  EXPECT_EQ(DerefSmartPointer(matrixImage).GetBufferedRegion(), expectedBufferedRegion);
+
+  const auto & expectedMatrix = transform.GetMatrix().GetVnlMatrix();
+  const auto   expectedDeterminant = vnl_det(expectedMatrix);
+
+  for (const auto determinant : itk::MakeImageBufferRange(determinantImage.GetPointer()))
+  {
+    EXPECT_EQ(determinant, expectedDeterminant);
+  }
+
+  constexpr auto     expectedNumberOfElements = ImageDimension * ImageDimension;
+  const auto * const expectedData = expectedMatrix.data_block();
+  static_assert(decltype(expectedMatrix){}.size() == expectedNumberOfElements, "Check expected size");
+
+  for (const auto & actualMatrix : itk::MakeImageBufferRange(matrixImage.GetPointer()))
+  {
+    static_assert(decltype(actualMatrix.GetVnlMatrix()){}.size() == expectedNumberOfElements, "Check actual size");
+    EXPECT_TRUE(
+      std::equal(expectedData, expectedData + expectedNumberOfElements, actualMatrix.GetVnlMatrix().data_block()));
   }
 }
