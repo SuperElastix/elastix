@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef elxMyStandardResampler_h
-#define elxMyStandardResampler_h
+#ifndef elxDefaultResampler_h
+#define elxDefaultResampler_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkResampleImageFilter.h"
@@ -99,7 +99,7 @@ private:
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  include "elxMyStandardResampler.hxx"
+#  include "elxDefaultResampler.hxx"
 #endif
 
-#endif // end #ifndef elxMyStandardResampler_h
+#endif // end #ifndef elxDefaultResampler_h
