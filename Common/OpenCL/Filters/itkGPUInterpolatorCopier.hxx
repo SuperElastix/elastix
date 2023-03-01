@@ -72,8 +72,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 
     // Try Nearest
     using NearestNeighborInterpolatorType = NearestNeighborInterpolateImageFunction<CPUInputImageType, CPUCoordRepType>;
-    const typename NearestNeighborInterpolatorType::ConstPointer nearest =
-      dynamic_cast<const NearestNeighborInterpolatorType *>(m_InputInterpolator.GetPointer());
+    const auto nearest = dynamic_cast<const NearestNeighborInterpolatorType *>(m_InputInterpolator.GetPointer());
 
     if (nearest)
     {
@@ -96,8 +95,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 
     // Try Linear
     using LinearInterpolatorType = LinearInterpolateImageFunction<CPUInputImageType, CPUCoordRepType>;
-    const typename LinearInterpolatorType::ConstPointer linear =
-      dynamic_cast<const LinearInterpolatorType *>(m_InputInterpolator.GetPointer());
+    const auto linear = dynamic_cast<const LinearInterpolatorType *>(m_InputInterpolator.GetPointer());
 
     if (linear)
     {
@@ -117,14 +115,11 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
     }
 
     // Try BSpline
-    using BSplineInterpolatorType =
-      BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, double>;
-    const typename BSplineInterpolatorType::ConstPointer bspline =
-      dynamic_cast<const BSplineInterpolatorType *>(m_InputInterpolator.GetPointer());
+    using BSplineInterpolatorType = BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, double>;
+    const auto bspline = dynamic_cast<const BSplineInterpolatorType *>(m_InputInterpolator.GetPointer());
 
     using BSplineInterpolatorFloatType = BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, float>;
-    const typename BSplineInterpolatorFloatType::ConstPointer bsplineFloat =
-      dynamic_cast<const BSplineInterpolatorFloatType *>(m_InputInterpolator.GetPointer());
+    const auto bsplineFloat = dynamic_cast<const BSplineInterpolatorFloatType *>(m_InputInterpolator.GetPointer());
 
     if (bspline || bsplineFloat)
     {
@@ -136,14 +131,12 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
         // using m_Coefficients as ITK images inside the implementation,
         // and also BSplineDecompositionImageFilter for the calculations
         using GPUImageFactoryType = itk::GPUImageFactory2<TTypeList, NDimensions>;
-        using GPUImageFactoryPointer = typename GPUImageFactoryType::Pointer;
-        GPUImageFactoryPointer imageFactory = GPUImageFactoryType::New();
+        auto imageFactory = GPUImageFactoryType::New();
         itk::ObjectFactoryBase::RegisterFactory(imageFactory);
 
-        using GPUBSplineDecompositionImageFilterFactoryType = itk::GPUBSplineDecompositionImageFilterFactory2<TTypeList, TTypeList, NDimensions>;
-        using GPUBSplineDecompositionImageFilterFactoryTypePointer = typename GPUBSplineDecompositionImageFilterFactoryType::Pointer;
-        GPUBSplineDecompositionImageFilterFactoryTypePointer decompositionFactory =
-          GPUBSplineDecompositionImageFilterFactoryType::New();
+        using GPUBSplineDecompositionImageFilterFactoryType =
+          itk::GPUBSplineDecompositionImageFilterFactory2<TTypeList, TTypeList, NDimensions>;
+        auto decompositionFactory = GPUBSplineDecompositionImageFilterFactoryType::New();
         itk::ObjectFactoryBase::RegisterFactory(decompositionFactory);
 
         // Create GPU BSpline interpolator in explicit mode
