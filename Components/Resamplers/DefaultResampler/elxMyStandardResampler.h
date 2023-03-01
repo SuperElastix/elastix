@@ -25,7 +25,7 @@ namespace elastix
 {
 
 /**
- * \class MyStandardResampler
+ * \class DefaultResampler
  * \brief A resampler based on the itk::ResampleImageFilter.
  *
  * The parameters used in this class are:
@@ -36,15 +36,15 @@ namespace elastix
  */
 
 template <class TElastix>
-class ITK_TEMPLATE_EXPORT MyStandardResampler
+class ITK_TEMPLATE_EXPORT DefaultResampler
   : public ResamplerBase<TElastix>::ITKBaseType
   , public ResamplerBase<TElastix>
 {
 public:
-  ITK_DISALLOW_COPY_AND_MOVE(MyStandardResampler);
+  ITK_DISALLOW_COPY_AND_MOVE(DefaultResampler);
 
   /** Standard ITK-stuff. */
-  using Self = MyStandardResampler;
+  using Self = DefaultResampler;
   using Superclass1 = typename ResamplerBase<TElastix>::ITKBaseType;
   using Superclass2 = ResamplerBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
@@ -54,7 +54,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MyStandardResampler, ResampleImageFilter);
+  itkTypeMacro(DefaultResampler, ResampleImageFilter);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific resampler. \n
@@ -88,9 +88,9 @@ public:
 
 protected:
   /** The constructor. */
-  MyStandardResampler() = default;
+  DefaultResampler() = default;
   /** The destructor. */
-  ~MyStandardResampler() override = default;
+  ~DefaultResampler() override = default;
 
 private:
   elxOverrideGetSelfMacro;

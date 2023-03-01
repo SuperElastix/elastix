@@ -18,4 +18,4 @@
 
 #include "elxMyStandardResampler.h"
 
-elxInstallMacro(MyStandardResampler);
+elxInstallMacro(DefaultResampler);
