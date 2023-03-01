@@ -16,6 +16,11 @@
  *
  *=========================================================================*/
 
-#include "elxMyStandardResampler.h"
+#ifndef elxDefaultResampler_hxx
+#define elxDefaultResampler_hxx
 
-elxInstallMacro(DefaultResampler);
+#include "elxDefaultResampler.h"
+
+// nothing
+
+#endif
