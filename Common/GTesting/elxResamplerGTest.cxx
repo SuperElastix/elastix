@@ -17,7 +17,7 @@
  *=========================================================================*/
 
 // First include the header files to be tested:
-#include "MyStandardResampler/elxMyStandardResampler.h"
+#include "DefaultResampler/elxMyStandardResampler.h"
 #ifdef ELASTIX_USE_OPENCL
 #  include "OpenCLResampler/elxOpenCLResampler.h"
 #endif
