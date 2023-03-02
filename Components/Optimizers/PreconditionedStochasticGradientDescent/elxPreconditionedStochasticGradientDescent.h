@@ -320,8 +320,6 @@ protected:
   /** Other protected typedefs */
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
   using RandomGeneratorPointer = typename RandomGeneratorType::Pointer;
-  using ProgressCommandType = ProgressCommand;
-  using ProgressCommandPointer = typename ProgressCommand::Pointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   using TransformJacobianType = JacobianType;

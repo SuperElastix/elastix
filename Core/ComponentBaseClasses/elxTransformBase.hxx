@@ -972,7 +972,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
 
   /** Track the progress of the generation of the deformation field. */
   const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommandType::CreateAndConnect(*defGenerator);
+    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*defGenerator);
 
   try
   {
@@ -1092,7 +1092,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
 
   /** Track the progress of the generation of the deformation field. */
   const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommandType::CreateAndConnect(*jacGenerator);
+    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*jacGenerator);
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
@@ -1144,7 +1144,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
   const auto infoChanger = CreateChangeInformationImageFilter(jacGenerator->GetOutput());
 
   const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommandType::CreateAndConnect(*jacGenerator);
+    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*jacGenerator);
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);

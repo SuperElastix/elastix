@@ -113,9 +113,6 @@ public:
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = typename ElastixType::ParameterMapType;
 
-  /** Typedef for the ProgressCommand. */
-  using ProgressCommandType = elx::ProgressCommand;
-
   /** Get the ImageDimension. */
   itkStaticConstMacro(ImageDimension, unsigned int, OutputImageType::ImageDimension);
 

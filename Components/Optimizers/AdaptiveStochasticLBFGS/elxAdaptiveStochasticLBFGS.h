@@ -268,10 +268,8 @@ protected:
   using ImageSampleContainerType = typename ImageGridSamplerType::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
 
-  /** Other protected typedefs */
+  /** Other protected typedef */
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
-  using ProgressCommandType = ProgressCommand;
-  using ProgressCommandPointer = typename ProgressCommand::Pointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   using TransformJacobianType = JacobianType;

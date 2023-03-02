@@ -1121,10 +1121,9 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const Param
   }   // end if NewSamplesEveryIteration.
 
   /** Prepare for progress printing. */
-  const auto progressObserver =
-    BaseComponent::IsElastixLibrary()
-      ? nullptr
-      : ProgressCommandType::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements);
+  const auto progressObserver = BaseComponent::IsElastixLibrary()
+                                  ? nullptr
+                                  : ProgressCommand::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements);
   log::info("  Sampling gradients ...");
 
   /** Initialize some variables for storing gradients and their magnitudes. */

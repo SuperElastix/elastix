@@ -180,8 +180,6 @@ protected:
   /** Other protected typedefs */
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
   using RandomGeneratorPointer = typename RandomGeneratorType::Pointer;
-  using ProgressCommandType = ProgressCommand;
-  using ProgressCommandPointer = typename ProgressCommand::Pointer;
 
   /** Samplers: */
   using FixedImageType = typename RegistrationType::FixedImageType;

@@ -158,9 +158,6 @@ public:
   using ComponentDescriptionType = ComponentDatabase::ComponentDescriptionType;
   using PtrToCreator = ComponentDatabase::PtrToCreator;
 
-  /** Typedef for the ProgressCommand. */
-  using ProgressCommandType = elx::ProgressCommand;
-
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 
