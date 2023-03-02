@@ -625,7 +625,7 @@ PreconditionedGradientDescent<TElastix>::SampleGradients(const ParametersType & 
   if (stochasticgradients)
   {
     /** Prepare for progress printing. */
-    ProgressCommandPointer progressObserver = ProgressCommandType::New();
+    const auto progressObserver = ProgressCommand::New();
     progressObserver->SetUpdateFrequency(this->m_NumberOfGradientMeasurements, this->m_NumberOfGradientMeasurements);
     progressObserver->SetStartString("  Progress: ");
     log::info("  Sampling approximate gradients...");
