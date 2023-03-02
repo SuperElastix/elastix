@@ -87,7 +87,7 @@ void
 Configuration::PrintParameterFile() const
 {
   /** Read what's in the parameter file. */
-  std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
+  std::string params = m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file, before and after writing the parameter file. */
   log::info_to_log_file(std::ostringstream{} << '\n'
@@ -145,7 +145,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
    */
 
   /** Store the command line arguments. */
-  this->m_CommandLineArgumentMap = _arg;
+  m_CommandLineArgumentMap = _arg;
 
   /** This function can either be called by elastix or transformix.
    * If called by elastix the command line argument "-p" has to be
@@ -182,11 +182,11 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   }
 
   /** Read the ParameterFile. */
-  this->m_ParameterFileParser->SetParameterFileName(this->m_ParameterFileName);
+  m_ParameterFileParser->SetParameterFileName(m_ParameterFileName);
   try
   {
     log::info("Reading the elastix parameters from file ...\n");
-    this->m_ParameterFileParser->ReadParameterFile();
+    m_ParameterFileParser->ReadParameterFile();
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -195,17 +195,17 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   }
 
   /** Connect the parameter file reader to the interface. */
-  this->m_ParameterMapInterface->SetParameterMap(
+  m_ParameterMapInterface->SetParameterMap(
     AddDataFromExternalTransformFile(m_ParameterFileName, m_ParameterFileParser->GetParameterMap()));
 
   /** Silently check in the parameter file if error messages should be printed. */
-  this->m_ParameterMapInterface->SetPrintErrorMessages(false);
+  m_ParameterMapInterface->SetPrintErrorMessages(false);
   bool printErrorMessages = true;
   this->ReadParameter(printErrorMessages, "PrintErrorMessages", 0, false);
-  this->m_ParameterMapInterface->SetPrintErrorMessages(printErrorMessages);
+  m_ParameterMapInterface->SetPrintErrorMessages(printErrorMessages);
 
   /** Set the initialized flag. */
-  this->m_IsInitialized = true;
+  m_IsInitialized = true;
 
   /** Return a value.*/
   return 0;
@@ -230,18 +230,18 @@ Configuration::Initialize(const CommandLineArgumentMapType &                 _ar
    */
 
   /** Store the command line arguments. */
-  this->m_CommandLineArgumentMap = _arg;
+  m_CommandLineArgumentMap = _arg;
 
-  this->m_ParameterMapInterface->SetParameterMap(AddDataFromExternalTransformFile(m_ParameterFileName, inputMap));
+  m_ParameterMapInterface->SetParameterMap(AddDataFromExternalTransformFile(m_ParameterFileName, inputMap));
 
   /** Silently check in the parameter file if error messages should be printed. */
-  this->m_ParameterMapInterface->SetPrintErrorMessages(false);
+  m_ParameterMapInterface->SetPrintErrorMessages(false);
   bool printErrorMessages = true;
   this->ReadParameter(printErrorMessages, "PrintErrorMessages", 0, false);
-  this->m_ParameterMapInterface->SetPrintErrorMessages(printErrorMessages);
+  m_ParameterMapInterface->SetPrintErrorMessages(printErrorMessages);
 
   /** Set the initialized flag. */
-  this->m_IsInitialized = true;
+  m_IsInitialized = true;
 
   /** Return a value.*/
   return 0;
@@ -256,7 +256,7 @@ Configuration::Initialize(const CommandLineArgumentMapType &                 _ar
 bool
 Configuration::IsInitialized() const
 {
-  return this->m_IsInitialized;
+  return m_IsInitialized;
 
 } // end IsInitialized()
 
@@ -268,10 +268,10 @@ Configuration::IsInitialized() const
 std::string
 Configuration::GetCommandLineArgument(const std::string & key) const
 {
-  const auto found = this->m_CommandLineArgumentMap.find(key);
+  const auto found = m_CommandLineArgumentMap.find(key);
 
   /** Check if the argument was given. If no return "". */
-  if (found == this->m_CommandLineArgumentMap.end())
+  if (found == m_CommandLineArgumentMap.end())
   {
     return "";
   }
@@ -288,7 +288,7 @@ Configuration::GetCommandLineArgument(const std::string & key) const
 void
 Configuration::SetCommandLineArgument(const std::string & key, const std::string & value)
 {
-  this->m_CommandLineArgumentMap[key] = value;
+  m_CommandLineArgumentMap[key] = value;
 
 } // end SetCommandLineArgument()
 
