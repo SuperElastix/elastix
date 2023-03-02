@@ -113,7 +113,7 @@ public:
   bool
   GetPrintErrorMessages()
   {
-    return this->m_ParameterMapInterface->GetPrintErrorMessages();
+    return m_ParameterMapInterface->GetPrintErrorMessages();
   }
 
 
@@ -140,7 +140,7 @@ public:
   std::size_t
   CountNumberOfParameterEntries(const std::string & parameterName) const
   {
-    return this->m_ParameterMapInterface->CountNumberOfParameterEntries(parameterName);
+    return m_ParameterMapInterface->CountNumberOfParameterEntries(parameterName);
   }
 
 
@@ -153,7 +153,7 @@ public:
                 const bool          produceWarningMessage) const
   {
     std::string warningMessage = "";
-    bool        found = this->m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, entry_nr, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
@@ -170,7 +170,7 @@ public:
   ReadParameter(T & parameterValue, const std::string & parameterName, const unsigned int entry_nr) const
   {
     std::string warningMessage = "";
-    bool found = this->m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, warningMessage);
+    bool        found = m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, warningMessage);
     if (!warningMessage.empty())
     {
       log::warn(warningMessage);
@@ -191,7 +191,7 @@ public:
                 const bool          produceWarningMessage) const
   {
     std::string warningMessage = "";
-    bool        found = this->m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
@@ -212,7 +212,7 @@ public:
                 const int           default_entry_nr) const
   {
     std::string warningMessage = "";
-    bool        found = this->m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, warningMessage);
     if (!warningMessage.empty())
     {
@@ -288,7 +288,7 @@ public:
                 const bool          produceWarningMessage) const
   {
     std::string warningMessage = "";
-    bool        found = this->m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValues, parameterName, entry_nr_start, entry_nr_end, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
