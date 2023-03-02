@@ -192,6 +192,17 @@ TransformBase<TElastix>::BeforeRegistrationBase()
         itkExceptionMacro(<< "ERROR: the file " << fileName << " does not exist!");
       }
     }
+    else
+    {
+      const auto & initialTransformParameterMap = this->m_Configuration->GetInitialTransformParameterMap();
+
+      if (!initialTransformParameterMap.empty())
+      {
+        const auto initialTransformConfiguration = Configuration::New();
+        initialTransformConfiguration->Initialize({}, initialTransformParameterMap);
+        this->ReadInitialTransformFromConfiguration(initialTransformConfiguration);
+      }
+    }
   }
 
 } // end BeforeRegistrationBase()

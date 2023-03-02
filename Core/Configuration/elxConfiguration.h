@@ -71,6 +71,8 @@ public:
   using CommandLineArgumentMapType = std::map<std::string, std::string>;
   using CommandLineEntryType = CommandLineArgumentMapType::value_type;
 
+  using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
+
   /** Get and Set CommandLine arguments into the argument map. */
   std::string
   GetCommandLineArgument(const std::string & key) const;
@@ -108,6 +110,18 @@ public:
   /** Get and Set the total number of elastix levels. */
   itkSetMacro(TotalNumberOfElastixLevels, unsigned int);
   itkGetConstMacro(TotalNumberOfElastixLevels, unsigned int);
+
+  void
+  SetInitialTransformParameterMap(const ParameterMapType & parameterMap)
+  {
+    m_InitialTransformParameterMap = parameterMap;
+  }
+
+  ParameterMapType
+  GetInitialTransformParameterMap() const
+  {
+    return m_InitialTransformParameterMap;
+  }
 
   /***/
   bool
@@ -312,6 +326,7 @@ protected:
 
 private:
   CommandLineArgumentMapType                m_CommandLineArgumentMap{};
+  ParameterMapType                          m_InitialTransformParameterMap{};
   std::string                               m_ParameterFileName{};
   const itk::ParameterFileParser::Pointer   m_ParameterFileParser{ itk::ParameterFileParser::New() };
   const itk::ParameterMapInterface::Pointer m_ParameterMapInterface{ itk::ParameterMapInterface::New() };

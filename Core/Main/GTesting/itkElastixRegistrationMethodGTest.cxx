@@ -582,6 +582,60 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 }
 
 
+GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterMap)
+{
+  using PixelType = float;
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType initialTranslation{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+
+  registration.SetFixedImage(fixedImage);
+  registration.SetInitialTransformParameterMap({ { "NumberOfParameters", { "2" } },
+                                                 { "Transform", { "TranslationTransform" } },
+                                                 { "TransformParameters", { "1", "-2" } } });
+
+  registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                          { "ImageSampler", "Full" },
+                                                          { "MaximumNumberOfIterations", "2" },
+                                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                          { "Transform", "TranslationTransform" } }));
+
+  const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
+
+  for (const auto index :
+       itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+  {
+    movingImage->FillBuffer(0);
+    FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
+    registration.SetMovingImage(movingImage);
+    registration.Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
+    ASSERT_EQ(transformParameters.size(), ImageDimension);
+
+    for (unsigned i{}; i < ImageDimension; ++i)
+    {
+      EXPECT_EQ(std::round(transformParameters[i]), index[i] - initialTranslation[i]);
+    }
+  }
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTransformFile)
 {
   using PixelType = float;

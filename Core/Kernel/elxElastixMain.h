@@ -19,6 +19,7 @@
 #define elxElastixMain_h
 
 #include "elxMainBase.h"
+#include "elxDeref.h"
 
 
 namespace elastix
@@ -112,6 +113,21 @@ public:
   itkSetObjectMacro(InitialTransform, itk::Object);
   itkGetModifiableObjectMacro(InitialTransform, itk::Object);
 
+  void
+  SetInitialTransformParameterMap(const ParameterMapType & parameterMap)
+  {
+    Configuration & configuration = Deref(Superclass::GetConfiguration());
+    configuration.SetInitialTransformParameterMap(parameterMap);
+  }
+
+  ParameterMapType
+  GetInitialTransformParameterMap() const
+  {
+    const Configuration * const configuration = Superclass::GetConfiguration();
+    return configuration ? configuration->GetInitialTransformParameterMap() : ParameterMapType{};
+  }
+
+
   /** Set/Get the original fixed image direction as a flat array
    * (d11 d21 d31 d21 d22 etc ) */
   virtual void
@@ -163,6 +179,8 @@ protected:
 
   /** The initial transform. */
   ObjectPointer m_InitialTransform{ nullptr };
+
+  ParameterMapType m_InitialTransformParameterMap{};
 
   /** Transformation parameters map containing parameters that is the
    *  result of registration.
