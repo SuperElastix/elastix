@@ -89,14 +89,14 @@ public:
    * The specified (transform) parameter file is read by the
    * itk::ParameterFileParser and passed to the itk::ParameterMapInterface.
    */
-  virtual int
+  int
   Initialize(const CommandLineArgumentMapType & _arg);
 
-  virtual int
+  int
   Initialize(const CommandLineArgumentMapType & _arg, const itk::ParameterFileParser::ParameterMapType & inputMap);
 
   /** True, if Initialize was successfully called. */
-  virtual bool
+  bool
   IsInitialized() const; // to elxconfigurationbase
 
   /** Other elastix related information. */
@@ -110,7 +110,7 @@ public:
   itkGetConstMacro(TotalNumberOfElastixLevels, unsigned int);
 
   /***/
-  virtual bool
+  bool
   GetPrintErrorMessages()
   {
     return this->m_ParameterMapInterface->GetPrintErrorMessages();
@@ -131,7 +131,7 @@ public:
   /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
    * \li Prints the parameter file
    */
-  virtual int
+  int
   BeforeAllTransformix();
 
   /** Interface to the ParameterMapInterface. */
@@ -307,7 +307,7 @@ protected:
    * This function is not really generic. It's just added because it needs to be
    * called by both BeforeAll and BeforeAllTransformix.
    */
-  virtual void
+  void
   PrintParameterFile() const;
 
 private:
