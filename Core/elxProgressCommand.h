@@ -145,9 +145,6 @@ public:
   itkSetStringMacro(EndString);
   itkGetStringMacro(EndString);
 
-  /** Get a boolean indicating if the output is a console. */
-  itkGetConstReferenceMacro(StreamOutputIsConsole, bool);
-
   static Pointer
   CreateAndSetUpdateFrequency(unsigned long numberOfVoxels);
 
@@ -167,7 +164,6 @@ private:
   std::string m_EndString;
 
   /** Member variables to keep track of what is set. */
-  bool                 m_StreamOutputIsConsole;
   unsigned long        m_Tag;
   bool                 m_TagIsSet;
   ProcessObjectPointer m_ObservedProcessObject;
