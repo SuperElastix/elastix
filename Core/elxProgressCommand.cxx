@@ -36,14 +36,6 @@ ProgressCommand::ProgressCommand()
   m_NumberOfVoxels = 0;
   m_NumberOfUpdates = 0;
 
-  /** Check if the output of the stream is a console. */
-  m_StreamOutputIsConsole = false;
-  int currentPos = std::cout.tellp();
-  if (currentPos == -1)
-  {
-    m_StreamOutputIsConsole = true;
-  }
-
 } // end Constructor()
 
 
@@ -101,12 +93,9 @@ ProgressCommand::ConnectObserver(itk::ProcessObject * filter)
   this->DisconnectObserver(m_ObservedProcessObject);
 
   /** Connect to the new filter. */
-  if (m_StreamOutputIsConsole)
-  {
-    m_Tag = filter->AddObserver(itk::ProgressEvent(), this);
-    m_TagIsSet = true;
-    m_ObservedProcessObject = filter;
-  }
+  m_Tag = filter->AddObserver(itk::ProgressEvent(), this);
+  m_TagIsSet = true;
+  m_ObservedProcessObject = filter;
 
 } // end ConnectObserver()
 
@@ -118,14 +107,11 @@ ProgressCommand::ConnectObserver(itk::ProcessObject * filter)
 void
 ProgressCommand::DisconnectObserver(itk::ProcessObject * filter)
 {
-  if (m_StreamOutputIsConsole)
+  if (m_TagIsSet)
   {
-    if (m_TagIsSet)
-    {
-      filter->RemoveObserver(m_Tag);
-      m_TagIsSet = false;
-      m_ObservedProcessObject = nullptr;
-    }
+    filter->RemoveObserver(m_Tag);
+    m_TagIsSet = false;
+    m_ObservedProcessObject = nullptr;
   }
 
 } // end DisconnectObserver()
@@ -203,13 +189,10 @@ ProgressCommand::PrintProgress(const float progress) const
 void
 ProgressCommand::UpdateAndPrintProgress(const unsigned long currentVoxelNumber) const
 {
-  if (m_StreamOutputIsConsole)
+  const unsigned long frac = static_cast<unsigned long>(m_NumberOfVoxels / m_NumberOfUpdates);
+  if (currentVoxelNumber % frac == 0)
   {
-    const unsigned long frac = static_cast<unsigned long>(m_NumberOfVoxels / m_NumberOfUpdates);
-    if (currentVoxelNumber % frac == 0)
-    {
-      this->PrintProgress(static_cast<float>(currentVoxelNumber) / static_cast<float>(m_NumberOfVoxels));
-    }
+    this->PrintProgress(static_cast<float>(currentVoxelNumber) / static_cast<float>(m_NumberOfVoxels));
   }
 
 } // end PrintProgress()
