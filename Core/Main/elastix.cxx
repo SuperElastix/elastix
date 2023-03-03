@@ -65,6 +65,7 @@ constexpr const char * elastixHelpText =
   "  -mp       point set for moving image\n"
   "  -t0       parameter file for initial transform\n"
   "  -loglevel set the log level to \"off\", \"error\", \"warning\", or \"info\" (default),\n"
+  "  -progress set progress percentage indication \"on\" or \"off\" (default),\n"
   "  -priority set the process priority to high, abovenormal, normal (default),\n"
   "            belownormal, or idle (Windows only option)\n"
   "  -threads  set the maximum number of threads of elastix\n\n"
@@ -137,6 +138,7 @@ main(int argc, char ** argv)
     std::queue<std::string> parameterFileList;
     std::string             outFolder;
     auto                    level = elx::log::level::info;
+    bool                    showProgressPercentage = false;
 
     /** Put command line parameters into parameterFileList. */
     for (unsigned int i = 1; static_cast<long>(i) < (argc - 1); i += 2)
@@ -167,21 +169,31 @@ main(int argc, char ** argv)
         }
         else
         {
-          if (key == "-out")
+          if (key == "-progress")
           {
-            /** Make sure that last character of the output folder equals a '/' or '\'. */
-            const char last = value.back();
-            if (last != '/' && last != '\\')
+            if (value == "on")
             {
-              value.append("/");
+              showProgressPercentage = true;
             }
-            value = elx::Conversion::ToNativePathNameSeparators(value);
+          }
+          else
+          {
 
-            /** Save this information. */
-            outFolder = value;
+            if (key == "-out")
+            {
+              /** Make sure that last character of the output folder equals a '/' or '\'. */
+              const char last = value.back();
+              if (last != '/' && last != '\\')
+              {
+                value.append("/");
+              }
+              value = elx::Conversion::ToNativePathNameSeparators(value);
 
-          } // end if key == "-out"
+              /** Save this information. */
+              outFolder = value;
 
+            } // end if key == "-out"
+          }
           /** Attempt to save the arguments in the ArgumentMap. */
           if (argMap.count(key) == 0)
           {
@@ -224,7 +236,7 @@ main(int argc, char ** argv)
       {
         /** Setup the log system. */
         const std::string logFileName = outFolder + "elastix.log";
-        const int         returndummy2 = elx::log::setup(logFileName, true, true, level) ? 0 : 1;
+        const int returndummy2 = elx::log::setup(logFileName, true, true, level, showProgressPercentage) ? 0 : 1;
 
         if (returndummy2 != 0)
         {

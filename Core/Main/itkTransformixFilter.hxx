@@ -143,7 +143,8 @@ TransformixFilter<TMovingImage>::GenerateData()
   const elx::log::guard logGuard(logFileName,
                                  m_EnableOutput && m_LogToFile,
                                  m_EnableOutput && m_LogToConsole,
-                                 static_cast<elastix::log::level>(m_LogLevel));
+                                 static_cast<elastix::log::level>(m_LogLevel),
+                                 m_ShowProgressPercentage);
 
   // Instantiate transformix
   const auto transformixMain = elx::TransformixMain::New();

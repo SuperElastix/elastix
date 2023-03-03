@@ -58,7 +58,7 @@ public:
           const bool          do_log_to_file,
           const bool          do_log_to_stdout,
           const level         log_level,
-          const bool          show_progress_percentage = false);
+          const bool          show_progress_percentage);
 
     /** Does reset the logging system. */
     ~guard();

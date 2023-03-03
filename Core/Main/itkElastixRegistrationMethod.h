@@ -256,6 +256,10 @@ public:
   itkSetMacro(LogLevel, ElastixLogLevel);
   itkGetConstMacro(LogLevel, ElastixLogLevel);
 
+  itkSetMacro(ShowProgressPercentage, bool);
+  itkGetConstReferenceMacro(ShowProgressPercentage, bool);
+  itkBooleanMacro(ShowProgressPercentage);
+
   itkSetMacro(NumberOfThreads, int);
   itkGetConstMacro(NumberOfThreads, int);
 
@@ -323,6 +327,7 @@ private:
   bool m_LogToFile{ false };
 
   ElastixLogLevel m_LogLevel{};
+  bool            m_ShowProgressPercentage{ false };
 
   int m_NumberOfThreads{ 0 };
 

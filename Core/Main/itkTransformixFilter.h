@@ -216,6 +216,10 @@ public:
   itkSetMacro(LogLevel, ElastixLogLevel);
   itkGetConstMacro(LogLevel, ElastixLogLevel);
 
+  itkSetMacro(ShowProgressPercentage, bool);
+  itkGetConstReferenceMacro(ShowProgressPercentage, bool);
+  itkBooleanMacro(ShowProgressPercentage);
+
   /** Sets an (optional) input mesh. An Update() will transform its points, and store them in the output mesh.  */
   itkSetConstObjectMacro(InputMesh, MeshType);
 
@@ -293,6 +297,7 @@ private:
   bool m_LogToFile{ false };
 
   ElastixLogLevel m_LogLevel{};
+  bool            m_ShowProgressPercentage{ false };
 
   typename MeshType::ConstPointer m_InputMesh{ nullptr };
   typename MeshType::Pointer      m_OutputMesh{ nullptr };
