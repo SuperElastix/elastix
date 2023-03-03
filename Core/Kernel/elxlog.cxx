@@ -60,6 +60,19 @@ public:
   reset()
   {
     m_loggers = {};
+    m_show_progress_percentage = false;
+  }
+
+  void
+  set_show_progress_percentage(const bool new_value)
+  {
+    m_show_progress_percentage = new_value;
+  }
+
+  bool
+  is_progress_percentage_shown() const
+  {
+    return m_show_progress_percentage;
   }
 
 private:
@@ -71,6 +84,7 @@ private:
   };
 
   loggers m_loggers;
+  bool    m_show_progress_percentage{ false };
 };
 
 
@@ -131,7 +145,8 @@ void
 setup_implementation(const std::string & log_filename,
                      const bool          do_log_to_file,
                      const bool          do_log_to_stdout,
-                     const log::level    log_level)
+                     const log::level    log_level,
+                     const bool          show_progress_percentage)
 {
   std::vector<spdlog::sink_ptr> log_file_sink;
   std::vector<spdlog::sink_ptr> stdout_sink;
@@ -176,6 +191,8 @@ setup_implementation(const std::string & log_filename,
 
   multi_logger.set_level(spdlog_level);
   multi_logger.sinks() = std::move(multi_logger_sinks);
+
+  data.set_show_progress_percentage(show_progress_percentage);
 }
 
 template <spdlog::level::level_enum spdlog_level>
@@ -209,11 +226,12 @@ bool
 log::setup(const std::string & log_filename,
            const bool          do_log_to_file,
            const bool          do_log_to_stdout,
-           const log::level    log_level)
+           const log::level    log_level,
+           const bool          show_progress_percentage)
 {
   try
   {
-    setup_implementation(log_filename, do_log_to_file, do_log_to_stdout, log_level);
+    setup_implementation(log_filename, do_log_to_file, do_log_to_stdout, log_level, show_progress_percentage);
     return true;
   }
   catch (const std::exception &)
@@ -228,9 +246,10 @@ log::guard::guard() = default;
 log::guard::guard(const std::string & log_filename,
                   const bool          do_log_to_file,
                   const bool          do_log_to_stdout,
-                  const log::level    log_level)
+                  const log::level    log_level,
+                  const bool          show_progress_percentage)
 {
-  setup_implementation(log_filename, do_log_to_file, do_log_to_stdout, log_level);
+  setup_implementation(log_filename, do_log_to_file, do_log_to_stdout, log_level, show_progress_percentage);
 }
 
 log::guard::~guard()
@@ -308,6 +327,12 @@ void
 log::to_stdout(const std::ostream & stream)
 {
   log::to_stdout(get_string_from_stream(stream));
+}
+
+bool
+log::is_progress_percentage_shown()
+{
+  return get_log_data().is_progress_percentage_shown();
 }
 
 } // end namespace elastix

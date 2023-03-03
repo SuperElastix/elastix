@@ -792,9 +792,9 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
   } // end if NewSamplesEveryIteration.
 
   /** Prepare for progress printing. */
-  const auto progressObserver = BaseComponent::IsElastixLibrary()
-                                  ? nullptr
-                                  : ProgressCommand::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements);
+  const auto progressObserver = log::is_progress_percentage_shown()
+                                  ? ProgressCommand::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements)
+                                  : nullptr;
   log::info("  Sampling gradients ...");
 
   /** Initialize some variables for storing gradients and their magnitudes. */

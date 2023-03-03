@@ -298,9 +298,9 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, cons
   resampleImageFilter.Modified();
 
   /** Add a progress observer to the resampler. */
-  const auto progressObserver = (!showProgress || BaseComponent::IsElastixLibrary())
-                                  ? nullptr
-                                  : ProgressCommand::CreateAndConnect(resampleImageFilter);
+  const auto progressObserver = (showProgress && log::is_progress_percentage_shown())
+                                  ? ProgressCommand::CreateAndConnect(resampleImageFilter)
+                                  : nullptr;
 
   /** Do the resampling. */
   try
@@ -417,7 +417,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   resampleImageFilter.Modified();
 
   const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*(this->GetAsITKBaseType()));
+    log::is_progress_percentage_shown() ? ProgressCommand::CreateAndConnect(*(this->GetAsITKBaseType())) : nullptr;
 
   /** Do the resampling. */
   try

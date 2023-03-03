@@ -43,7 +43,8 @@ public:
   setup(const std::string & log_filename,
         const bool          do_log_to_file,
         const bool          do_log_to_stdout,
-        const level         log_level = {});
+        const level         log_level = {},
+        const bool          show_progress_percentage = false);
 
   /** Does setup and reset the logging system, according to the C++ "RAII" principle) */
   class guard
@@ -56,7 +57,8 @@ public:
     guard(const std::string & log_filename,
           const bool          do_log_to_file,
           const bool          do_log_to_stdout,
-          const level         log_level);
+          const level         log_level,
+          const bool          show_progress_percentage = false);
 
     /** Does reset the logging system. */
     ~guard();
@@ -99,6 +101,9 @@ public:
   static void
   to_stdout(const std::ostream & stream);
   ///@}
+
+  static bool
+  is_progress_percentage_shown();
 };
 
 } // end namespace elastix
