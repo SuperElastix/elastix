@@ -129,8 +129,8 @@ protected:
 
 private:
   /** Member variables. */
-  std::string      m_ParameterFileName;
-  ParameterMapType m_ParameterMap;
+  std::string      m_ParameterFileName{};
+  ParameterMapType m_ParameterMap{};
 };
 
 } // end of namespace itk

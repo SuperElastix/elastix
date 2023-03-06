@@ -142,15 +142,15 @@ protected:
   using ThreaderType = itk::PlatformMultiThreader;
   using ThreadInfoType = ThreaderType::WorkUnitInfo;
 
-  typename FixedImageType::ConstPointer   m_FixedImage;
-  FixedImageRegionType                    m_FixedImageRegion;
-  FixedImageMaskConstPointer              m_FixedImageMask;
-  TransformPointer                        m_Transform;
-  ScaledSingleValuedCostFunction::Pointer m_CostFunction;
-  SizeValueType                           m_NumberOfJacobianMeasurements;
-  DerivativeType                          m_ExactGradient;
-  SizeValueType                           m_NumberOfParameters;
-  ThreaderType::Pointer                   m_Threader;
+  typename FixedImageType::ConstPointer   m_FixedImage{};
+  FixedImageRegionType                    m_FixedImageRegion{};
+  FixedImageMaskConstPointer              m_FixedImageMask{};
+  TransformPointer                        m_Transform{};
+  ScaledSingleValuedCostFunction::Pointer m_CostFunction{};
+  SizeValueType                           m_NumberOfJacobianMeasurements{};
+  DerivativeType                          m_ExactGradient{};
+  SizeValueType                           m_NumberOfParameters{};
+  ThreaderType::Pointer                   m_Threader{};
 
   using FixedImageIndexType = typename FixedImageType::IndexType;
   using FixedImagePointType = typename FixedImageType::PointType;
@@ -216,13 +216,13 @@ protected:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct, AlignedComputePerThreadStruct);
 
 private:
-  mutable MultiThreaderParameterType m_ThreaderParameters;
+  mutable MultiThreaderParameterType m_ThreaderParameters{};
 
-  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
+  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
 
-  SizeValueType               m_NumberOfPixelsCounted;
-  bool                        m_UseMultiThread;
-  ImageSampleContainerPointer m_SampleContainer;
+  SizeValueType               m_NumberOfPixelsCounted{};
+  bool                        m_UseMultiThread{};
+  ImageSampleContainerPointer m_SampleContainer{};
 };
 
 } // end namespace itk

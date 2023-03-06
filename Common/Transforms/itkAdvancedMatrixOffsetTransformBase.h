@@ -426,10 +426,10 @@ protected:
   /** (spatial) Jacobians and Hessians can mostly be precomputed by this transform.
    * Store them in these member variables.
    * SpatialJacobian is simply m_Matrix */
-  NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;
-  SpatialHessianType            m_SpatialHessian;
-  JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
-  JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian;
+  NonZeroJacobianIndicesType    m_NonZeroJacobianIndices{};
+  SpatialHessianType            m_SpatialHessian{};
+  JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian{};
+  JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian{};
 
 private:
   AdvancedMatrixOffsetTransformBase(const Self & other);
@@ -454,8 +454,8 @@ private:
   OutputVectorType m_Translation{};
 
   /** To avoid recomputation of the inverse if not needed. */
-  TimeStamp         m_MatrixMTime;
-  mutable TimeStamp m_InverseMatrixMTime;
+  TimeStamp         m_MatrixMTime{};
+  mutable TimeStamp m_InverseMatrixMTime{};
 };
 
 } // namespace itk

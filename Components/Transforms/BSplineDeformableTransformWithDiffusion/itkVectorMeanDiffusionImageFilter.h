@@ -141,14 +141,14 @@ protected:
 
 private:
   /** Declare member variables. */
-  InputSizeType m_Radius;
-  unsigned int  m_NumberOfIterations;
+  InputSizeType m_Radius{};
+  unsigned int  m_NumberOfIterations{};
 
   /** Declare member images. */
-  GrayValueImagePointer m_GrayValueImage;
-  DoubleImagePointer    m_Cx;
+  GrayValueImagePointer m_GrayValueImage{};
+  DoubleImagePointer    m_Cx{};
 
-  RescaleImageFilterPointer m_RescaleFilter;
+  RescaleImageFilterPointer m_RescaleFilter{};
 
   /** For calculating a feature image from the input m_GrayValueImage. */
   void

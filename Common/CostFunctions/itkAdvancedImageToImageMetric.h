@@ -417,7 +417,7 @@ protected:
   /** Variables for multi-threading. */
   bool m_UseMetricSingleThreaded{ true };
   bool m_UseMultiThread{ false };
-  bool m_UseOpenMP;
+  bool m_UseOpenMP{};
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.
@@ -430,7 +430,7 @@ protected:
     DerivativeValueType * st_DerivativePointer;
     DerivativeValueType   st_NormalizationFactor;
   };
-  mutable MultiThreaderParameterType m_ThreaderMetricParameters;
+  mutable MultiThreaderParameterType m_ThreaderMetricParameters{};
 
   /** Most metrics will perform multi-threading by letting
    * each thread compute a part of the value and derivative.

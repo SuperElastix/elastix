@@ -131,7 +131,7 @@ protected:
   UpdateCurrentTime() override;
 
   /** The PreviousGradient, necessary for the CruzAcceleration */
-  DerivativeType m_PreviousGradient;
+  DerivativeType m_PreviousGradient{};
 
 private:
   /** Settings */

@@ -166,7 +166,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ScaleType m_Scale;
+  ScaleType m_Scale{};
 };
 
 // class AdvancedSimilarity3DTransform

@@ -85,10 +85,10 @@ protected:
   virtual void
   ComputeLimiterSettings();
 
-  double m_UTminUB;
-  double m_UTminUBinv;
-  double m_LTminLB;
-  double m_LTminLBinv;
+  double m_UTminUB{};
+  double m_UTminUBinv{};
+  double m_LTminLB{};
+  double m_LTminLBinv{};
 };
 
 } // end namespace itk

@@ -127,7 +127,7 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  double m_CurrentStepLength;
+  double m_CurrentStepLength{};
 
   /** Set the current step length AND the current position, where
    * the current position is computed as:
@@ -142,11 +142,11 @@ protected:
   DirectionalDerivative(const DerivativeType & derivative) const;
 
 private:
-  ParametersType m_LineSearchDirection;
+  ParametersType m_LineSearchDirection{};
 
-  double m_MinimumStepLength;
-  double m_MaximumStepLength;
-  double m_InitialStepLengthEstimate;
+  double m_MinimumStepLength{};
+  double m_MaximumStepLength{};
+  double m_InitialStepLengthEstimate{};
 };
 
 } // end namespace itk

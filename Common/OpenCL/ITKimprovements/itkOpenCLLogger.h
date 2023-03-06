@@ -95,12 +95,12 @@ protected:
 private:
   static Pointer m_Instance;
 
-  std::string m_FileName;
-  std::string m_OutputDirectory;
+  std::string m_FileName{};
+  std::string m_OutputDirectory{};
 
-  itk::StdStreamLogOutput::Pointer m_Stream;
-  std::ostream *                   m_FileStream;
-  bool                             m_Created;
+  itk::StdStreamLogOutput::Pointer m_Stream{};
+  std::ostream *                   m_FileStream{};
+  bool                             m_Created{};
 };
 
 } // end namespace itk

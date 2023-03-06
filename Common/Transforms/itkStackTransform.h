@@ -381,7 +381,7 @@ private:
 
 
   // Transform container
-  std::vector<SubTransformPointer> m_SubTransformContainer;
+  std::vector<SubTransformPointer> m_SubTransformContainer{};
 
   // Stack spacing and origin of last dimension
   TScalarType m_StackSpacing{ 1.0 };

@@ -180,7 +180,7 @@ protected:
   ~TransformBendingEnergyPenaltyTerm() override = default;
 
 private:
-  unsigned int m_NumberOfSamplesForSelfHessian;
+  unsigned int m_NumberOfSamplesForSelfHessian{};
 };
 
 } // end namespace itk

@@ -223,10 +223,10 @@ private:
                             TransformSpaceDimensionToType<3>);
 
 private:
-  CPUTransformConstPointer m_InputTransform;
-  GPUTransformPointer      m_Output;
-  ModifiedTimeType         m_InternalTransformTime;
-  bool                     m_ExplicitMode;
+  CPUTransformConstPointer m_InputTransform{};
+  GPUTransformPointer      m_Output{};
+  ModifiedTimeType         m_InternalTransformTime{};
+  bool                     m_ExplicitMode{};
 };
 
 } // end namespace itk

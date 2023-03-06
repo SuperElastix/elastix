@@ -90,8 +90,8 @@ protected:
   GPUGenerateData() override;
 
 private:
-  std::size_t m_FilterGPUKernelHandle;
-  std::size_t m_DeviceLocalMemorySize;
+  std::size_t m_FilterGPUKernelHandle{};
+  std::size_t m_DeviceLocalMemorySize{};
 };
 
 } // end namespace itk

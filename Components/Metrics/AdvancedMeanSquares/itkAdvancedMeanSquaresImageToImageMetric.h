@@ -217,7 +217,7 @@ protected:
     NearestNeighborInterpolateImageFunction<FixedImageType, CoordinateRepresentationType>;
   using SelfHessianSamplerType = ImageGridSampler<FixedImageType>;
 
-  double m_NormalizationFactor;
+  double m_NormalizationFactor{};
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
@@ -253,10 +253,10 @@ protected:
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
 private:
-  bool         m_UseNormalization;
-  double       m_SelfHessianSmoothingSigma;
-  double       m_SelfHessianNoiseRange;
-  unsigned int m_NumberOfSamplesForSelfHessian;
+  bool         m_UseNormalization{};
+  double       m_SelfHessianSmoothingSigma{};
+  double       m_SelfHessianNoiseRange{};
+  unsigned int m_NumberOfSamplesForSelfHessian{};
 };
 
 } // end namespace itk

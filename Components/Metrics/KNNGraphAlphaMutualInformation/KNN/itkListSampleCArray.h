@@ -140,12 +140,12 @@ protected:
 
 private:
   /** The internal storage of the data in a C array. */
-  InternalDataContainerType m_InternalContainer;
-  InstanceIdentifier        m_InternalContainerSize;
-  InstanceIdentifier        m_ActualSize;
+  InternalDataContainerType m_InternalContainer{};
+  InstanceIdentifier        m_InternalContainerSize{};
+  InstanceIdentifier        m_ActualSize{};
 
   /** Dummy needed for GetMeasurementVector(). */
-  mutable MeasurementVectorType m_TemporaryMeasurementVector;
+  mutable MeasurementVectorType m_TemporaryMeasurementVector{};
 
   /** Function to allocate the memory of the data container. */
   void

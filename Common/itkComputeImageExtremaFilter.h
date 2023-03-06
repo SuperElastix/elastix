@@ -112,9 +112,9 @@ protected:
   ThreadedGenerateDataImageMask(const RegionType &);
   virtual void
                                SameGeometry();
-  RegionType                   m_ImageRegion;
-  ImageMaskConstPointer        m_ImageMask;
-  ImageSpatialMaskConstPointer m_ImageSpatialMask;
+  RegionType                   m_ImageRegion{};
+  ImageMaskConstPointer        m_ImageMask{};
+  ImageSpatialMaskConstPointer m_ImageSpatialMask{};
   bool                         m_UseMask{ false };
   bool                         m_SameGeometry{ false };
 
@@ -129,7 +129,7 @@ private:
   PixelType                      m_ThreadMin{ 1 };
   PixelType                      m_ThreadMax{ 1 };
 
-  std::mutex m_Mutex;
+  std::mutex m_Mutex{};
 }; // end of class
 } // end namespace itk
 

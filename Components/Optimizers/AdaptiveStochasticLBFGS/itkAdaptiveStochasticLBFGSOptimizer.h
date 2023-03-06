@@ -134,11 +134,11 @@ protected:
   // m_previousGradient m_PrePreviousGradient are not used, where should I put them?
   // DerivativeType m_previousGradient;
   // DerivativeType m_PrePreviousGradient;
-  unsigned long m_UpdateFrequenceL;
-  bool          m_UseSearchDirForAdaptiveStepSize;
+  unsigned long m_UpdateFrequenceL{};
+  bool          m_UseSearchDirForAdaptiveStepSize{};
   bool          m_UseAdaptiveStepSizes{ true };
   double        m_SearchLengthScale{ 10 };
-  std::string   m_StepSizeStrategy;
+  std::string   m_StepSizeStrategy{};
 
 private:
   /** Settings */

@@ -327,12 +327,12 @@ protected:
   ~AdvancedIdentityTransform() override = default;
 
 private:
-  JacobianType                  m_LocalJacobian;
-  SpatialJacobianType           m_SpatialJacobian;
-  SpatialHessianType            m_SpatialHessian;
-  NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;
-  JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
-  JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian;
+  JacobianType                  m_LocalJacobian{};
+  SpatialJacobianType           m_SpatialJacobian{};
+  SpatialHessianType            m_SpatialHessian{};
+  NonZeroJacobianIndicesType    m_NonZeroJacobianIndices{};
+  JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian{};
+  JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian{};
 };
 
 } // end namespace itk

@@ -115,10 +115,10 @@ protected:
 
   ~LimiterFunctionBase() override = default;
 
-  OutputType m_UpperBound;
-  OutputType m_LowerBound;
-  InputType  m_UpperThreshold;
-  InputType  m_LowerThreshold;
+  OutputType m_UpperBound{};
+  OutputType m_LowerBound{};
+  InputType  m_UpperThreshold{};
+  InputType  m_LowerThreshold{};
 };
 
 } // end namespace itk

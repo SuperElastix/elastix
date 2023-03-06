@@ -188,10 +188,10 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   // These are needed by the smoothing spline routine.
-  typename TImageType::SizeType m_DataLength;  // Image size
-  unsigned int                  m_SplineOrder; // User specified spline order (3rd or cubic is the default)
+  typename TImageType::SizeType m_DataLength{};  // Image size
+  unsigned int                  m_SplineOrder{}; // User specified spline order (3rd or cubic is the default)
 
-  typename CoefficientImageType::ConstPointer m_Coefficients; // Spline coefficients
+  typename CoefficientImageType::ConstPointer m_Coefficients{}; // Spline coefficients
 
 private:
   SizeType
@@ -230,13 +230,13 @@ private:
   void
   ApplyMirrorBoundaryConditions(vnl_matrix<long> & evaluateIndex, unsigned int splineOrder) const;
 
-  std::vector<IndexType> m_PointsToIndex; // Preallocation of interpolation neighborhood indicies
+  std::vector<IndexType> m_PointsToIndex{}; // Preallocation of interpolation neighborhood indicies
 
-  CoefficientFilterPointer m_CoefficientFilter;
+  CoefficientFilterPointer m_CoefficientFilter{};
 
   // flag to take or not the image direction into account when computing the
   // derivatives.
-  bool m_UseImageDirection;
+  bool m_UseImageDirection{};
 };
 
 } // namespace itk

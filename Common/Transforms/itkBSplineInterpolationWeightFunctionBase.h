@@ -140,9 +140,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  unsigned long m_NumberOfWeights;
-  SizeType      m_SupportSize;
-  TableType     m_OffsetToIndexTable;
+  unsigned long m_NumberOfWeights{};
+  SizeType      m_SupportSize{};
+  TableType     m_OffsetToIndexTable{};
 
 private:
   /** Function to initialize the support region. */

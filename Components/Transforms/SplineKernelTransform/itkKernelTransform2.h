@@ -395,10 +395,10 @@ public:
   using ColumnMatrixType = vnl_matrix_fixed<TScalarType, NDimensions, 1>;
 
   /** The list of source landmarks, denoted 'p'. */
-  PointSetPointer m_SourceLandmarks;
+  PointSetPointer m_SourceLandmarks{};
 
   /** The list of target landmarks, denoted 'q'. */
-  PointSetPointer m_TargetLandmarks;
+  PointSetPointer m_TargetLandmarks{};
 
 protected:
   /** Compute G(x)
@@ -455,43 +455,43 @@ protected:
   ReorganizeW();
 
   /** Stiffness parameter. */
-  double m_Stiffness;
+  double m_Stiffness{};
 
   /** The list of displacements.
    * d[i] = q[i] - p[i];
    */
-  VectorSetPointer m_Displacements;
+  VectorSetPointer m_Displacements{};
 
   /** The L matrix. */
-  LMatrixType m_LMatrix;
+  LMatrixType m_LMatrix{};
 
   /** The inverse of L, which we also cache. */
-  LMatrixType m_LMatrixInverse;
+  LMatrixType m_LMatrixInverse{};
 
   /** The K matrix. */
-  KMatrixType m_KMatrix;
+  KMatrixType m_KMatrix{};
 
   /** The P matrix. */
-  PMatrixType m_PMatrix;
+  PMatrixType m_PMatrix{};
 
   /** The Y matrix. */
-  YMatrixType m_YMatrix;
+  YMatrixType m_YMatrix{};
 
   /** The W matrix. */
-  WMatrixType m_WMatrix;
+  WMatrixType m_WMatrix{};
 
   /** The Deformation matrix.
    * This is an auxiliary matrix that will hold the Deformation (non-affine)
    * part of the transform. Those are the coefficients that will multiply the
    * Kernel function.
    */
-  DMatrixType m_DMatrix;
+  DMatrixType m_DMatrix{};
 
   /** Rotational/Shearing part of the Affine component of the Transformation. */
-  AMatrixType m_AMatrix;
+  AMatrixType m_AMatrix{};
 
   /** Translational part of the Affine component of the Transformation. */
-  BMatrixType m_BVector;
+  BMatrixType m_BVector{};
 
   /** The G matrix.
    * It used to be mutable because m_GMatrix was made an ivar only to avoid
@@ -501,13 +501,13 @@ protected:
   // GMatrixType m_GMatrix;
 
   /** Has the W matrix been computed? */
-  bool m_WMatrixComputed;
+  bool m_WMatrixComputed{};
   /** Has the L matrix been computed? */
-  bool m_LMatrixComputed;
+  bool m_LMatrixComputed{};
   /** Has the L inverse matrix been computed? */
-  bool m_LInverseComputed;
+  bool m_LInverseComputed{};
   /** Has the L matrix decomposition been computed? */
-  bool m_LMatrixDecompositionComputed;
+  bool m_LMatrixDecompositionComputed{};
 
   /** Decompositions, needed for the L matrix.
    * These decompositions are cached for performance reasons during registration.
@@ -518,25 +518,25 @@ protected:
   using SVDDecompositionType = vnl_svd<ScalarType>;
   using QRDecompositionType = vnl_qr<ScalarType>;
 
-  SVDDecompositionType * m_LMatrixDecompositionSVD;
-  QRDecompositionType *  m_LMatrixDecompositionQR;
+  SVDDecompositionType * m_LMatrixDecompositionSVD{};
+  QRDecompositionType *  m_LMatrixDecompositionQR{};
 
   /** Identity matrix. */
-  IMatrixType m_I;
+  IMatrixType m_I{};
 
   /** Precomputed nonzero Jacobian indices (simply all params) */
-  NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
+  NonZeroJacobianIndicesType m_NonZeroJacobianIndices{};
 
   /** The Jacobian can be computed much faster for some of the
    * derived kerbel transforms, most notably the TPS.
    */
-  bool m_FastComputationPossible;
+  bool m_FastComputationPossible{};
 
 private:
-  TScalarType m_PoissonRatio;
+  TScalarType m_PoissonRatio{};
 
   /** Using SVD or QR decomposition. */
-  std::string m_MatrixInversionMethod;
+  std::string m_MatrixInversionMethod{};
 };
 
 } // end namespace itk

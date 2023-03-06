@@ -223,7 +223,7 @@ protected:
 
   /***/
   unsigned long                            m_NumberOfSamples{ 0 };
-  std::vector<ImageSampleContainerPointer> m_ThreaderSampleContainer;
+  std::vector<ImageSampleContainerPointer> m_ThreaderSampleContainer{};
 
   // tmp?
   bool m_UseMultiThread{ false };
@@ -231,14 +231,14 @@ protected:
 private:
   /** Member variables. */
   MaskConstPointer           m_Mask{ nullptr };
-  MaskVectorType             m_MaskVector;
+  MaskVectorType             m_MaskVector{};
   unsigned int               m_NumberOfMasks{ 0 };
-  InputImageRegionType       m_InputImageRegion;
-  InputImageRegionVectorType m_InputImageRegionVector;
+  InputImageRegionType       m_InputImageRegion{};
+  InputImageRegionVectorType m_InputImageRegionVector{};
   unsigned int               m_NumberOfInputImageRegions{ 0 };
 
-  InputImageRegionType m_CroppedInputImageRegion;
-  InputImageRegionType m_DummyInputImageRegion;
+  InputImageRegionType m_CroppedInputImageRegion{};
+  InputImageRegionType m_DummyInputImageRegion{};
 };
 
 } // end namespace itk

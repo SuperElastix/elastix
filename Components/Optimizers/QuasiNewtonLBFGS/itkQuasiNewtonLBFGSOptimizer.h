@@ -142,7 +142,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override
   {}
 
-  DerivativeType    m_CurrentGradient;
+  DerivativeType    m_CurrentGradient{};
   MeasureType       m_CurrentValue{ 0.0 };
   unsigned long     m_CurrentIteration{ 0 };
   StopConditionType m_StopCondition{ Unknown };
@@ -152,9 +152,9 @@ protected:
   /** Is true when the LineSearchOptimizer has been started. */
   bool m_InLineSearch{ false };
 
-  RhoType m_Rho;
-  SType   m_S;
-  YType   m_Y;
+  RhoType m_Rho{};
+  SType   m_S{};
+  YType   m_Y{};
 
   unsigned int m_Point{ 0 };
   unsigned int m_PreviousPoint{ 0 };

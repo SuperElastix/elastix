@@ -151,12 +151,12 @@ protected:
   double m_CurrentTime{ 0.0 };
 
   /** Constant step size or others, different value of k. */
-  bool m_UseConstantStep;
+  bool m_UseConstantStep{};
 
 private:
   /**Parameters, as described by Spall.*/
   double m_Param_a{ 1.0 };
-  double m_Param_beta;
+  double m_Param_beta{};
   double m_Param_A{ 1.0 };
   double m_Param_alpha{ 0.602 };
 

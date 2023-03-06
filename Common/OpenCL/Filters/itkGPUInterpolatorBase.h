@@ -56,7 +56,7 @@ protected:
   GPUInterpolatorBase();
   virtual ~GPUInterpolatorBase() = default;
 
-  GPUDataManager::Pointer m_ParametersDataManager;
+  GPUDataManager::Pointer m_ParametersDataManager{};
 };
 
 } // end namespace itk

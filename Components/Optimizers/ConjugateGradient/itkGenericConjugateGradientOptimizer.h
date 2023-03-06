@@ -144,7 +144,7 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  DerivativeType    m_CurrentGradient;
+  DerivativeType    m_CurrentGradient{};
   MeasureType       m_CurrentValue{ 0.0 };
   unsigned long     m_CurrentIteration{ 0 };
   StopConditionType m_StopCondition{ Unknown };
@@ -166,11 +166,11 @@ protected:
   bool m_PreviousGradientAndSearchDirValid{ false };
 
   /** The name of the BetaDefinition */
-  BetaDefinitionType m_BetaDefinition;
+  BetaDefinitionType m_BetaDefinition{};
 
   /** A mapping that links the names of the BetaDefinitions to functions that
    * compute \f$\beta\f$. */
-  BetaDefinitionMapType m_BetaDefinitionMap;
+  BetaDefinitionMapType m_BetaDefinitionMap{};
 
   /** Function to add a new beta definition. The first argument should be a name
    * via which a user can select this \f$\beta\f$ definition. The second argument is a

@@ -156,8 +156,8 @@ protected:
 
 
 private:
-  DerivativeType m_Gradient;
-  DerivativeType m_PreviousGradient;
+  DerivativeType m_Gradient{};
+  DerivativeType m_PreviousGradient{};
 
   bool        m_Stop{ false };
   bool        m_Maximize{ false };
@@ -167,7 +167,7 @@ private:
   double      m_MinimumStepLength{ 1e-3 };
 
   /** All current step lengths */
-  DerivativeType m_CurrentStepLengths;
+  DerivativeType m_CurrentStepLengths{};
   /** The average current step length */
   double m_CurrentStepLength{ 0 };
 

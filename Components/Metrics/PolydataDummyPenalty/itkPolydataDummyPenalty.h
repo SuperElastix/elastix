@@ -182,8 +182,8 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  mutable FixedMeshContainerConstPointer m_FixedMeshContainer;
-  mutable MappedMeshContainerPointer     m_MappedMeshContainer;
+  mutable FixedMeshContainerConstPointer m_FixedMeshContainer{};
+  mutable MappedMeshContainerPointer     m_MappedMeshContainer{};
 };
 
 } // end namespace itk

@@ -134,11 +134,11 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  CPUInterpolatorConstPointer    m_InputInterpolator;
-  GPUInterpolatorPointer         m_Output;
-  GPUExplicitInterpolatorPointer m_ExplicitOutput;
-  ModifiedTimeType               m_InternalTransformTime;
-  bool                           m_ExplicitMode;
+  CPUInterpolatorConstPointer    m_InputInterpolator{};
+  GPUInterpolatorPointer         m_Output{};
+  GPUExplicitInterpolatorPointer m_ExplicitOutput{};
+  ModifiedTimeType               m_InternalTransformTime{};
+  bool                           m_ExplicitMode{};
 };
 
 } // end namespace itk

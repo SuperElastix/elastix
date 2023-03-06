@@ -161,7 +161,7 @@ protected:
   ResetArguments(const std::size_t kernelIdx);
 
 private:
-  OpenCLContext * m_Context;
+  OpenCLContext * m_Context{};
 
   struct KernelArgumentList
   {
@@ -169,8 +169,8 @@ private:
     GPUDataManager::Pointer m_GPUDataManager;
   };
 
-  std::vector<OpenCLKernel>                    m_Kernels;
-  std::vector<std::vector<KernelArgumentList>> m_KernelArgumentReady;
+  std::vector<OpenCLKernel>                    m_Kernels{};
+  std::vector<std::vector<KernelArgumentList>> m_KernelArgumentReady{};
 };
 
 } // end namespace itk

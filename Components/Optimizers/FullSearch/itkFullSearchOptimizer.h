@@ -229,11 +229,11 @@ protected:
   StopConditionType m_StopCondition{ FullRangeSearched };
 
   SearchSpacePointer   m_SearchSpace{ nullptr };
-  SearchSpacePointType m_CurrentPointInSearchSpace;
-  SearchSpaceIndexType m_CurrentIndexInSearchSpace;
-  SearchSpacePointType m_BestPointInSearchSpace;
-  SearchSpaceIndexType m_BestIndexInSearchSpace;
-  SearchSpaceSizeType  m_SearchSpaceSize;
+  SearchSpacePointType m_CurrentPointInSearchSpace{};
+  SearchSpaceIndexType m_CurrentIndexInSearchSpace{};
+  SearchSpacePointType m_BestPointInSearchSpace{};
+  SearchSpaceIndexType m_BestIndexInSearchSpace{};
+  SearchSpaceSizeType  m_SearchSpaceSize{};
   unsigned int         m_NumberOfSearchSpaceDimensions{ 0 };
 
   unsigned long m_LastSearchSpaceChanges{ 0 };

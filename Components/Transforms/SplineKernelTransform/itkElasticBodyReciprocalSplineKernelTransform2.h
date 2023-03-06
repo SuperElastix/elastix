@@ -150,7 +150,7 @@ protected:
   ComputeG(const InputVectorType & x, GMatrixType & GMatrix) const override;
 
   /** alpha, Poisson's ratio */
-  TScalarType m_Alpha;
+  TScalarType m_Alpha{};
 };
 
 } // namespace itk

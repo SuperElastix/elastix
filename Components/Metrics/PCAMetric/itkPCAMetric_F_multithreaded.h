@@ -204,7 +204,7 @@ private:
     Self * m_Metric;
   };
 
-  PCAMetricMultiThreaderParameterType m_PCAMetricThreaderParameters;
+  PCAMetricMultiThreaderParameterType m_PCAMetricThreaderParameters{};
 
   struct PCAMetricGetSamplesPerThreadStruct
   {
@@ -220,16 +220,16 @@ private:
                     PaddedPCAMetricGetSamplesPerThreadStruct,
                     AlignedPCAMetricGetSamplesPerThreadStruct);
 
-  mutable std::vector<AlignedPCAMetricGetSamplesPerThreadStruct> m_PCAMetricGetSamplesPerThreadVariables;
+  mutable std::vector<AlignedPCAMetricGetSamplesPerThreadStruct> m_PCAMetricGetSamplesPerThreadVariables{};
 
-  unsigned int m_G;
-  unsigned int m_LastDimIndex;
+  unsigned int m_G{};
+  unsigned int m_LastDimIndex{};
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_SubtractMean{ false };
 
   /** GridSize of B-spline transform. */
-  FixedImageSizeType m_GridSize;
+  FixedImageSizeType m_GridSize{};
 
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
   bool m_TransformIsStackTransform{ false };
@@ -238,12 +238,12 @@ private:
   unsigned int m_NumEigenValues{ 6 };
 
   /** Matrices, needed for derivative calculation */
-  mutable std::vector<unsigned int> m_PixelStartIndex;
-  mutable MatrixType                m_Atmm;
-  mutable DerivativeMatrixType      m_vSAtmm;
-  mutable DerivativeMatrixType      m_CSv;
-  mutable DerivativeMatrixType      m_Sv;
-  mutable DerivativeMatrixType      m_vdSdmu_part1;
+  mutable std::vector<unsigned int> m_PixelStartIndex{};
+  mutable MatrixType                m_Atmm{};
+  mutable DerivativeMatrixType      m_vSAtmm{};
+  mutable DerivativeMatrixType      m_CSv{};
+  mutable DerivativeMatrixType      m_Sv{};
+  mutable DerivativeMatrixType      m_vdSdmu_part1{};
 };
 
 } // end namespace itk

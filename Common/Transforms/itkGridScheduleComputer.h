@@ -150,12 +150,12 @@ protected:
   ~GridScheduleComputer() override = default;
 
   /** Declare member variables, needed for B-spline grid. */
-  VectorSpacingType           m_GridSpacings;
-  VectorOriginType            m_GridOrigins;
-  VectorDirectionType         m_GridDirections;
-  VectorRegionType            m_GridRegions;
-  TransformConstPointer       m_InitialTransform;
-  VectorGridSpacingFactorType m_GridSpacingFactors;
+  VectorSpacingType           m_GridSpacings{};
+  VectorOriginType            m_GridOrigins{};
+  VectorDirectionType         m_GridDirections{};
+  VectorRegionType            m_GridRegions{};
+  TransformConstPointer       m_InitialTransform{};
+  VectorGridSpacingFactorType m_GridSpacingFactors{};
 
   /** PrintSelf. */
   void
@@ -173,19 +173,19 @@ protected:
 
 private:
   /** Declare member variables, needed in functions. */
-  OriginType    m_ImageOrigin;
-  SpacingType   m_ImageSpacing;
-  RegionType    m_ImageRegion;
-  DirectionType m_ImageDirection;
-  unsigned int  m_BSplineOrder;
-  unsigned int  m_NumberOfLevels;
-  SpacingType   m_FinalGridSpacing;
+  OriginType    m_ImageOrigin{};
+  SpacingType   m_ImageSpacing{};
+  RegionType    m_ImageRegion{};
+  DirectionType m_ImageDirection{};
+  unsigned int  m_BSplineOrder{};
+  unsigned int  m_NumberOfLevels{};
+  SpacingType   m_FinalGridSpacing{};
 
   /** Clamp the upsampling factor. */
   itkSetClampMacro(UpsamplingFactor, float, 1.0, NumericTraits<float>::max());
 
   /** Declare member variables, needed internally. */
-  float m_UpsamplingFactor;
+  float m_UpsamplingFactor{};
 };
 
 } // end namespace itk

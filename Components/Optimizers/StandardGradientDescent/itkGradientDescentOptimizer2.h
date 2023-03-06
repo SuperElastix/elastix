@@ -146,8 +146,8 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   // made protected so subclass can access
-  DerivativeType    m_Gradient;
-  DerivativeType    m_SearchDirection;
+  DerivativeType    m_Gradient{};
+  DerivativeType    m_SearchDirection{};
   StopConditionType m_StopCondition{ MaximumNumberOfIterations };
 
 private:
@@ -157,7 +157,7 @@ private:
   unsigned long m_NumberOfIterations{ 100 };
   unsigned long m_CurrentIteration{ 0 };
 
-  bool m_UseOpenMP;
+  bool m_UseOpenMP{};
 };
 
 } // end namespace itk

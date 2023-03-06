@@ -78,7 +78,7 @@ protected:
   ~BinaryANNTreeSearchBase() override = default;
 
   /** Member variables. */
-  typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
+  typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType{};
 };
 
 } // end namespace itk

@@ -104,7 +104,7 @@ protected:
 
 private:
   /** Member variables. */
-  unsigned int m_DerivativeDirection;
+  unsigned int m_DerivativeDirection{};
 };
 
 } // end namespace itk

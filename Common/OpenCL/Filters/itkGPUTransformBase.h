@@ -96,7 +96,7 @@ protected:
   GPUTransformBase();
   virtual ~GPUTransformBase() = default;
 
-  GPUDataManager::Pointer m_ParametersDataManager;
+  GPUDataManager::Pointer m_ParametersDataManager{};
 
 private:
   GPUTransformBase(const Self & other) = delete;

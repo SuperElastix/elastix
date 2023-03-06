@@ -185,14 +185,14 @@ protected:
   GetGPUBSplineBaseTransform(const std::size_t transformIndex);
 
 private:
-  GPUInterpolatorBase * m_InterpolatorBase;
-  GPUTransformBase *    m_TransformBase;
+  GPUInterpolatorBase * m_InterpolatorBase{};
+  GPUTransformBase *    m_TransformBase{};
 
-  GPUDataManagerPointer m_InputGPUImageBase;
-  GPUDataManagerPointer m_OutputGPUImageBase;
-  GPUDataManagerPointer m_FilterParameters;
-  GPUDataManagerPointer m_DeformationFieldBuffer;
-  unsigned int          m_RequestedNumberOfSplits;
+  GPUDataManagerPointer m_InputGPUImageBase{};
+  GPUDataManagerPointer m_OutputGPUImageBase{};
+  GPUDataManagerPointer m_FilterParameters{};
+  GPUDataManagerPointer m_DeformationFieldBuffer{};
+  unsigned int          m_RequestedNumberOfSplits{};
 
   using TransformHandle = std::pair<int, bool>;
   using TransformsHandle = std::map<GPUTransformTypeEnum, TransformHandle>;
@@ -215,26 +215,26 @@ private:
 
   };
 
-  std::vector< TransformKernelHelper > m_SupportedTransformKernels;
+  std::vector< TransformKernelHelper > m_SupportedTransformKernels{};
 #endif
 
-  std::vector<std::string> m_Sources;
-  std::size_t              m_SourceIndex;
+  std::vector<std::string> m_Sources{};
+  std::size_t              m_SourceIndex{};
 
-  std::size_t m_InterpolatorSourceLoadedIndex;
-  std::size_t m_TransformSourceLoadedIndex;
+  std::size_t m_InterpolatorSourceLoadedIndex{};
+  std::size_t m_TransformSourceLoadedIndex{};
 
-  bool m_InterpolatorIsBSpline;
-  bool m_TransformIsCombo;
+  bool m_InterpolatorIsBSpline{};
+  bool m_TransformIsCombo{};
 
-  std::size_t      m_FilterPreGPUKernelHandle;
-  TransformsHandle m_FilterLoopGPUKernelHandle;
-  std::size_t      m_FilterPostGPUKernelHandle;
+  std::size_t      m_FilterPreGPUKernelHandle{};
+  TransformsHandle m_FilterLoopGPUKernelHandle{};
+  std::size_t      m_FilterPostGPUKernelHandle{};
 
   // GPU kernel managers
-  GPUKernelManagerPointer m_PreKernelManager;
-  GPUKernelManagerPointer m_LoopKernelManager;
-  GPUKernelManagerPointer m_PostKernelManager;
+  GPUKernelManagerPointer m_PreKernelManager{};
+  GPUKernelManagerPointer m_LoopKernelManager{};
+  GPUKernelManagerPointer m_PostKernelManager{};
 };
 
 } // end namespace itk

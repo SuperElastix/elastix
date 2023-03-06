@@ -270,10 +270,10 @@ protected:
   void
   ReleaseOutputs();
 
-  SmoothingScheduleType m_SmoothingSchedule;
-  unsigned int          m_CurrentLevel;
-  bool                  m_ComputeOnlyForCurrentLevel;
-  bool                  m_SmoothingScheduleDefined;
+  SmoothingScheduleType m_SmoothingSchedule{};
+  unsigned int          m_CurrentLevel{};
+  bool                  m_ComputeOnlyForCurrentLevel{};
+  bool                  m_SmoothingScheduleDefined{};
 
 private:
   /** Typedef for smoother. Smooth always happens first, then only from

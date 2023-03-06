@@ -88,7 +88,7 @@ protected:
 
 private:
   /** Store the samples. */
-  typename SampleType::Pointer m_Sample;
+  typename SampleType::Pointer m_Sample{};
 };
 
 } // end namespace itk

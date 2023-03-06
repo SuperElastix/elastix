@@ -86,8 +86,8 @@ protected:
   ~ANNFixedRadiusTreeSearch() override = default;
 
   /** Member variables. */
-  double m_ErrorBound;
-  double m_SquaredRadius;
+  double m_ErrorBound{};
+  double m_SquaredRadius{};
 };
 
 } // end namespace itk

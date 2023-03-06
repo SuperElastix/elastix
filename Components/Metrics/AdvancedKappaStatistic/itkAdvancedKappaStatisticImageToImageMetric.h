@@ -225,10 +225,10 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  bool     m_UseForegroundValue;
-  RealType m_ForegroundValue;
-  RealType m_Epsilon;
-  bool     m_Complement;
+  bool     m_UseForegroundValue{};
+  RealType m_ForegroundValue{};
+  RealType m_Epsilon{};
+  bool     m_Complement{};
 
   /** Threading related parameters. */
 
@@ -258,7 +258,8 @@ private:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
                     PaddedKappaGetValueAndDerivativePerThreadStruct,
                     AlignedKappaGetValueAndDerivativePerThreadStruct);
-  mutable std::vector<AlignedKappaGetValueAndDerivativePerThreadStruct> m_KappaGetValueAndDerivativePerThreadVariables;
+  mutable std::vector<AlignedKappaGetValueAndDerivativePerThreadStruct>
+    m_KappaGetValueAndDerivativePerThreadVariables{};
 };
 
 } // end namespace itk

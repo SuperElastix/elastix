@@ -266,20 +266,20 @@ protected:
   StringCast(const std::string & parameterValue, std::string & casted) const;
 
   /** A vector of strings to store the command line arguments. */
-  std::vector<std::string> m_Argv;
+  std::vector<std::string> m_Argv{};
 
   /** A map to store the arguments and their indices. The arguments are stored
    * INCLUDING the leading dash. I.e. an example pair is ("-test", 2)
    */
-  ArgumentMapType m_ArgumentMap;
+  ArgumentMapType m_ArgumentMap{};
 
   /** The list of required arguments. They are stored with an accompanying help text string. */
-  std::vector<std::pair<std::string, std::string>> m_RequiredArguments;
+  std::vector<std::pair<std::string, std::string>> m_RequiredArguments{};
 
   /** A list of arguments with the condition that exactly one in each set must exist. */
-  std::vector<std::pair<std::vector<std::string>, std::string>> m_RequiredExactlyOneArguments;
+  std::vector<std::pair<std::vector<std::string>, std::string>> m_RequiredExactlyOneArguments{};
 
-  std::string m_ProgramHelpText;
+  std::string m_ProgramHelpText{};
 };
 
 // end class CommandLineArgumentParser

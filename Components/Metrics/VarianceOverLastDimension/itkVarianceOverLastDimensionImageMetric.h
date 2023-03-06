@@ -187,17 +187,17 @@ private:
   /** Variables to control random sampling in last dimension. */
   bool         m_SampleLastDimensionRandomly{ false };
   unsigned int m_NumSamplesLastDimension{ 10 };
-  unsigned int m_NumAdditionalSamplesFixed;
-  unsigned int m_ReducedDimensionIndex;
+  unsigned int m_NumAdditionalSamplesFixed{};
+  unsigned int m_ReducedDimensionIndex{};
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_SubtractMean{ false };
 
   /** Initial variance in last dimension, used as normalization factor. */
-  float m_InitialVariance;
+  float m_InitialVariance{};
 
   /** GridSize of B-spline transform. */
-  FixedImageSizeType m_GridSize;
+  FixedImageSizeType m_GridSize{};
 
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
   bool m_TransformIsStackTransform{ false };

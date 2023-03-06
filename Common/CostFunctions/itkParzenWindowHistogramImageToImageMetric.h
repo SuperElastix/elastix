@@ -269,33 +269,33 @@ protected:
   /** Protected variables **************************** */
 
   /** Variables for Alpha (the normalization factor of the histogram). */
-  mutable double         m_Alpha;
-  mutable DerivativeType m_PerturbedAlphaRight;
-  mutable DerivativeType m_PerturbedAlphaLeft;
+  mutable double         m_Alpha{};
+  mutable DerivativeType m_PerturbedAlphaRight{};
+  mutable DerivativeType m_PerturbedAlphaLeft{};
 
   /** Variables for the pdfs (actually: histograms). */
-  mutable MarginalPDFType       m_FixedImageMarginalPDF;
-  mutable MarginalPDFType       m_MovingImageMarginalPDF;
-  JointPDFPointer               m_JointPDF;
-  JointPDFDerivativesPointer    m_JointPDFDerivatives;
-  JointPDFDerivativesPointer    m_IncrementalJointPDFRight;
-  JointPDFDerivativesPointer    m_IncrementalJointPDFLeft;
-  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFRight;
-  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFRight;
-  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFLeft;
-  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFLeft;
-  mutable JointPDFRegionType    m_JointPDFWindow; // no need for mutable anymore?
-  double                        m_MovingImageNormalizedMin;
-  double                        m_FixedImageNormalizedMin;
-  double                        m_FixedImageBinSize;
-  double                        m_MovingImageBinSize;
-  double                        m_FixedParzenTermToIndexOffset;
-  double                        m_MovingParzenTermToIndexOffset;
+  mutable MarginalPDFType       m_FixedImageMarginalPDF{};
+  mutable MarginalPDFType       m_MovingImageMarginalPDF{};
+  JointPDFPointer               m_JointPDF{};
+  JointPDFDerivativesPointer    m_JointPDFDerivatives{};
+  JointPDFDerivativesPointer    m_IncrementalJointPDFRight{};
+  JointPDFDerivativesPointer    m_IncrementalJointPDFLeft{};
+  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFRight{};
+  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFRight{};
+  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFLeft{};
+  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFLeft{};
+  mutable JointPDFRegionType    m_JointPDFWindow{}; // no need for mutable anymore?
+  double                        m_MovingImageNormalizedMin{};
+  double                        m_FixedImageNormalizedMin{};
+  double                        m_FixedImageBinSize{};
+  double                        m_MovingImageBinSize{};
+  double                        m_FixedParzenTermToIndexOffset{};
+  double                        m_MovingParzenTermToIndexOffset{};
 
   /** Kernels for computing Parzen histograms and derivatives. */
-  KernelFunctionPointer m_FixedKernel;
-  KernelFunctionPointer m_MovingKernel;
-  KernelFunctionPointer m_DerivativeMovingKernel;
+  KernelFunctionPointer m_FixedKernel{};
+  KernelFunctionPointer m_MovingKernel{};
+  KernelFunctionPointer m_DerivativeMovingKernel{};
 
   /** Initialize threading related parameters. */
   void
@@ -474,7 +474,7 @@ protected:
 
 private:
   /** Threading related parameters. */
-  mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs;
+  mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs{};
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.
@@ -483,7 +483,7 @@ private:
   {
     Self * m_Metric;
   };
-  ParzenWindowHistogramMultiThreaderParameterType m_ParzenWindowHistogramThreaderParameters;
+  ParzenWindowHistogramMultiThreaderParameterType m_ParzenWindowHistogramThreaderParameters{};
 
   struct ParzenWindowHistogramGetValueAndDerivativePerThreadStruct
   {
@@ -500,14 +500,14 @@ private:
     m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
 
   /** Variables that can/should be accessed by their Set/Get functions. */
-  unsigned long m_NumberOfFixedHistogramBins;
-  unsigned long m_NumberOfMovingHistogramBins;
-  unsigned int  m_FixedKernelBSplineOrder;
-  unsigned int  m_MovingKernelBSplineOrder;
-  bool          m_UseDerivative;
-  bool          m_UseExplicitPDFDerivatives;
-  bool          m_UseFiniteDifferenceDerivative;
-  double        m_FiniteDifferencePerturbation;
+  unsigned long m_NumberOfFixedHistogramBins{};
+  unsigned long m_NumberOfMovingHistogramBins{};
+  unsigned int  m_FixedKernelBSplineOrder{};
+  unsigned int  m_MovingKernelBSplineOrder{};
+  bool          m_UseDerivative{};
+  bool          m_UseExplicitPDFDerivatives{};
+  bool          m_UseFiniteDifferenceDerivative{};
+  double        m_FiniteDifferencePerturbation{};
 };
 
 } // end namespace itk

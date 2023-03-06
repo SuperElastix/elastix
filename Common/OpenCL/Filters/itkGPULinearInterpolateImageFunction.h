@@ -72,7 +72,7 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  std::vector<std::string> m_Sources;
+  std::vector<std::string> m_Sources{};
 };
 
 } // end namespace itk

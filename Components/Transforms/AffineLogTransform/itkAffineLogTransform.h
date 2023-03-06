@@ -109,7 +109,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  MatrixType m_MatrixLogDomain;
+  MatrixType m_MatrixLogDomain{};
 };
 
 } // namespace itk

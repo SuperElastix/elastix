@@ -100,7 +100,7 @@ protected:
   ~GPUImageDataManager() override = default;
 
 private:
-  typename ImageType::Pointer m_Image;
+  typename ImageType::Pointer m_Image{};
 };
 
 } // namespace itk

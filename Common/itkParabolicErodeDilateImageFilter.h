@@ -153,14 +153,14 @@ protected:
   void
   EnlargeOutputRequestedRegion(DataObject * output) override;
 
-  bool m_UseImageSpacing;
+  bool m_UseImageSpacing{};
 
 private:
-  RadiusType                      m_Scale;
-  typename TInputImage::PixelType m_Extreme;
+  RadiusType                      m_Scale{};
+  typename TInputImage::PixelType m_Extreme{};
 
-  int m_MagnitudeSign;
-  int m_CurrentDimension;
+  int m_MagnitudeSign{};
+  int m_CurrentDimension{};
 };
 
 } // end namespace itk

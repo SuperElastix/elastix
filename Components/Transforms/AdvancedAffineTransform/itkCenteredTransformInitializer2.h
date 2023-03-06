@@ -210,24 +210,24 @@ protected:
   itkGetModifiableObjectMacro(Transform, TransformType);
 
   /** Settings for MomentsCalculator. */
-  SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;
-  InputPixelType m_LowerThresholdForCenterGravity;
-  bool           m_CenterOfGravityUsesLowerThreshold;
+  SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization{};
+  InputPixelType m_LowerThresholdForCenterGravity{};
+  bool           m_CenterOfGravityUsesLowerThreshold{};
 
 private:
-  TransformPointer m_Transform;
+  TransformPointer m_Transform{};
 
-  FixedImagePointer      m_FixedImage;
-  MovingImagePointer     m_MovingImage;
-  FixedImageMaskPointer  m_FixedImageMask;
-  MovingImageMaskPointer m_MovingImageMask;
+  FixedImagePointer      m_FixedImage{};
+  MovingImagePointer     m_MovingImage{};
+  FixedImageMaskPointer  m_FixedImageMask{};
+  MovingImageMaskPointer m_MovingImageMask{};
 
-  bool m_UseMoments;
-  bool m_UseOrigins;
-  bool m_UseTop;
+  bool m_UseMoments{};
+  bool m_UseOrigins{};
+  bool m_UseTop{};
 
-  FixedImageCalculatorPointer  m_FixedCalculator;
-  MovingImageCalculatorPointer m_MovingCalculator;
+  FixedImageCalculatorPointer  m_FixedCalculator{};
+  MovingImageCalculatorPointer m_MovingCalculator{};
 };
 
 } // namespace itk
