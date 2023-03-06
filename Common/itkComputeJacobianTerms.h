@@ -111,10 +111,10 @@ protected:
   ~ComputeJacobianTerms() override = default;
 
   typename FixedImageType::ConstPointer m_FixedImage{ nullptr };
-  FixedImageRegionType                  m_FixedImageRegion;
+  FixedImageRegionType                  m_FixedImageRegion{};
   FixedImageMaskConstPointer            m_FixedImageMask{ nullptr };
   TransformPointer                      m_Transform{ nullptr };
-  ScalesType                            m_Scales;
+  ScalesType                            m_Scales{};
   bool                                  m_UseScales{ false };
 
   unsigned int  m_MaxBandCovSize{ 0 };

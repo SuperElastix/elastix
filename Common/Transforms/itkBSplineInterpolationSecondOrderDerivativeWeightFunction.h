@@ -106,8 +106,8 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  vnl_vector_fixed<double, 2> m_DerivativeDirections;
-  bool                        m_EqualDerivativeDirections;
+  vnl_vector_fixed<double, 2> m_DerivativeDirections{};
+  bool                        m_EqualDerivativeDirections{};
 };
 
 } // end namespace itk

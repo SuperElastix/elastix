@@ -105,9 +105,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  ANNkDTreeType *   m_ANNTree;
-  SplittingRuleType m_SplittingRule;
-  BucketSizeType    m_BucketSize;
+  ANNkDTreeType *   m_ANNTree{};
+  SplittingRuleType m_SplittingRule{};
+  BucketSizeType    m_BucketSize{};
 };
 
 } // end namespace itk

@@ -177,19 +177,19 @@ protected:
   ComputePIDiff(const TransformParametersType & parameters, float scalingfactor) const;
 
 private:
-  TransformMovingImageFilterPointer  m_TransformMovingImageFilter;
-  DifferenceImageFilterPointer       m_DifferenceImageFilter;
-  RescaleIntensityImageFilterPointer m_RescaleImageFilter;
-  MultiplyImageFilterPointer         m_MultiplyImageFilter;
-  double                             m_NoiseConstant;
-  unsigned int                       m_NeighborhoodRadius;
-  double                             m_DerivativeDelta;
-  double                             m_NormalizationFactor;
-  double                             m_Rescalingfactor;
-  bool                               m_OptimizeNormalizationFactor;
-  ScalesType                         m_Scales;
-  MeasureType                        m_FixedMeasure;
-  CombinationTransformPointer        m_CombinationTransform;
+  TransformMovingImageFilterPointer  m_TransformMovingImageFilter{};
+  DifferenceImageFilterPointer       m_DifferenceImageFilter{};
+  RescaleIntensityImageFilterPointer m_RescaleImageFilter{};
+  MultiplyImageFilterPointer         m_MultiplyImageFilter{};
+  double                             m_NoiseConstant{};
+  unsigned int                       m_NeighborhoodRadius{};
+  double                             m_DerivativeDelta{};
+  double                             m_NormalizationFactor{};
+  double                             m_Rescalingfactor{};
+  bool                               m_OptimizeNormalizationFactor{};
+  ScalesType                         m_Scales{};
+  MeasureType                        m_FixedMeasure{};
+  CombinationTransformPointer        m_CombinationTransform{};
 };
 
 } // end namespace itk

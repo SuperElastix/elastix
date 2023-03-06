@@ -144,11 +144,11 @@ protected:
 
 private:
   /** Member variables. */
-  ScalesType                      m_Scales;
-  ScalesType                      m_SquaredScales;
-  SingleValuedCostFunctionPointer m_UnscaledCostFunction;
-  bool                            m_UseScales;
-  bool                            m_NegateCostFunction;
+  ScalesType                      m_Scales{};
+  ScalesType                      m_SquaredScales{};
+  SingleValuedCostFunctionPointer m_UnscaledCostFunction{};
+  bool                            m_UseScales{};
+  bool                            m_NegateCostFunction{};
 };
 
 } // end namespace itk

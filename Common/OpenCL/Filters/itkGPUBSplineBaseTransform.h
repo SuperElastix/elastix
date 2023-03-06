@@ -95,18 +95,18 @@ protected:
   bool
   GetSourceCode(std::string & source) const override;
 
-  GPUCoefficientImageArray     m_GPUBSplineTransformCoefficientImages;
-  GPUCoefficientImageBaseArray m_GPUBSplineTransformCoefficientImagesBase;
+  GPUCoefficientImageArray     m_GPUBSplineTransformCoefficientImages{};
+  GPUCoefficientImageBaseArray m_GPUBSplineTransformCoefficientImagesBase{};
 
 private:
   GPUBSplineBaseTransform(const Self & other) = delete;
   const Self &
   operator=(const Self &) = delete;
 
-  std::vector<std::string> m_Sources;
+  std::vector<std::string> m_Sources{};
 
   // User specified spline order (3rd or cubic is the default)
-  unsigned int m_SplineOrder;
+  unsigned int m_SplineOrder{};
 };
 
 } // end namespace itk

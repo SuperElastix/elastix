@@ -317,25 +317,25 @@ protected:
   CheckOnInitialize();
 
   /** Variables already defined in the superclass, but as private...  */
-  bool           m_Stop;
-  ParametersType m_LastTransformParameters;
+  bool           m_Stop{};
+  ParametersType m_LastTransformParameters{};
 
   /** A shortcut to m_Metric of type CombinationMetricPointer. */
-  CombinationMetricPointer m_CombinationMetric;
+  CombinationMetricPointer m_CombinationMetric{};
 
   /** Containers for the pointers supplied by the user. */
-  std::vector<FixedImageConstPointer>    m_FixedImages;
-  std::vector<MovingImageConstPointer>   m_MovingImages;
-  std::vector<FixedImageRegionType>      m_FixedImageRegions;
-  std::vector<FixedImagePyramidPointer>  m_FixedImagePyramids;
-  std::vector<MovingImagePyramidPointer> m_MovingImagePyramids;
-  std::vector<InterpolatorPointer>       m_Interpolators;
+  std::vector<FixedImageConstPointer>    m_FixedImages{};
+  std::vector<MovingImageConstPointer>   m_MovingImages{};
+  std::vector<FixedImageRegionType>      m_FixedImageRegions{};
+  std::vector<FixedImagePyramidPointer>  m_FixedImagePyramids{};
+  std::vector<MovingImagePyramidPointer> m_MovingImagePyramids{};
+  std::vector<InterpolatorPointer>       m_Interpolators{};
 
   /** This vector is filled by the PrepareAllPyramids function. */
-  std::vector<FixedImageRegionPyramidType> m_FixedImageRegionPyramids;
+  std::vector<FixedImageRegionPyramidType> m_FixedImageRegionPyramids{};
 
   /** Dummy image region. */
-  FixedImageRegionType m_NullFixedImageRegion;
+  FixedImageRegionType m_NullFixedImageRegion{};
 };
 
 } // end namespace itk

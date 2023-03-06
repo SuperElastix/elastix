@@ -180,27 +180,27 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 protected:
-  unsigned int m_BufferSize; // # of bytes
+  unsigned int m_BufferSize{}; // # of bytes
 
-  OpenCLContext * m_Context;
+  OpenCLContext * m_Context{};
 
   /** buffer type */
-  cl_mem_flags m_MemFlags;
+  cl_mem_flags m_MemFlags{};
 
   /** buffer pointers */
-  cl_mem m_GPUBuffer;
-  void * m_CPUBuffer;
+  cl_mem m_GPUBuffer{};
+  void * m_CPUBuffer{};
 
   /** checks if buffer needs to be updated */
-  bool m_IsGPUBufferDirty;
-  bool m_IsCPUBufferDirty;
+  bool m_IsGPUBufferDirty{};
+  bool m_IsCPUBufferDirty{};
 
   /** extra safety flags */
-  bool m_CPUBufferLock;
-  bool m_GPUBufferLock;
+  bool m_CPUBufferLock{};
+  bool m_GPUBufferLock{};
 
   /** Mutex lock to prevent r/w hazard for multithreaded code */
-  std::mutex m_Mutex;
+  std::mutex m_Mutex{};
 };
 
 } // namespace itk

@@ -225,7 +225,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  TScalarType m_Angle;
+  TScalarType m_Angle{};
 };
 
 

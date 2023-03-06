@@ -83,8 +83,8 @@ protected:
 
 private:
   /** Member variables. */
-  int m_GenerateDataRegion;
-  int m_GenerateDataNumberOfRegions;
+  int m_GenerateDataRegion{};
+  int m_GenerateDataNumberOfRegions{};
 };
 
 } // end namespace itk

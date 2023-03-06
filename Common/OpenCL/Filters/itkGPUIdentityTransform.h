@@ -84,7 +84,7 @@ private:
   const Self &
   operator=(const Self &) = delete;
 
-  std::vector<std::string> m_Sources;
+  std::vector<std::string> m_Sources{};
 };
 
 } // end namespace itk

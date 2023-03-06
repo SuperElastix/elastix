@@ -146,7 +146,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   // made protected so subclass can access
-  DerivativeType m_Gradient;
+  DerivativeType m_Gradient{};
   double         m_LearningRate{ 0.0 };
   double         m_GradientMagnitude{ 0.0 };
 

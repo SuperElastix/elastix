@@ -387,16 +387,16 @@ protected:
   IsInsideMovingMask(const MovingImagePointType & mappedPoint) const override;
 
   /** Protected member variables. */
-  FixedImageVectorType             m_FixedImageVector;
-  FixedImageMaskVectorType         m_FixedImageMaskVector;
-  FixedImageRegionVectorType       m_FixedImageRegionVector;
-  MovingImageVectorType            m_MovingImageVector;
-  MovingImageMaskVectorType        m_MovingImageMaskVector;
-  InterpolatorVectorType           m_InterpolatorVector;
-  FixedImageInterpolatorVectorType m_FixedImageInterpolatorVector;
+  FixedImageVectorType             m_FixedImageVector{};
+  FixedImageMaskVectorType         m_FixedImageMaskVector{};
+  FixedImageRegionVectorType       m_FixedImageRegionVector{};
+  MovingImageVectorType            m_MovingImageVector{};
+  MovingImageMaskVectorType        m_MovingImageMaskVector{};
+  InterpolatorVectorType           m_InterpolatorVector{};
+  FixedImageInterpolatorVectorType m_FixedImageInterpolatorVector{};
 
   bool                          m_InterpolatorsAreBSpline{ false };
-  BSplineInterpolatorVectorType m_BSplineInterpolatorVector;
+  BSplineInterpolatorVectorType m_BSplineInterpolatorVector{};
 
 private:
   /// Avoids accidentally calling `this->FastEvaluateMovingImageValueAndDerivative(mappedPoint, ..., threadId)`, when
@@ -407,7 +407,7 @@ private:
   FastEvaluateMovingImageValueAndDerivative(...) const = delete;
 
   /** Private member variables. */
-  FixedImageRegionType m_DummyFixedImageRegion;
+  FixedImageRegionType m_DummyFixedImageRegion{};
 
   unsigned int m_NumberOfFixedImages{ 0 };
   unsigned int m_NumberOfFixedImageMasks{ 0 };

@@ -475,7 +475,7 @@ protected:
   // bool m_SplineOrderOdd;
 
   /** Keep a pointer to the input parameters. */
-  const ParametersType * m_InputParametersPointer;
+  const ParametersType * m_InputParametersPointer{};
 
   /** Jacobian as SpaceDimension number of images. */
   /*
@@ -483,7 +483,7 @@ protected:
   using JacobianImageType = Image< JacobianPixelType,
     itkGetStaticConstMacro( SpaceDimension ) >;
 
-  typename JacobianImageType::Pointer m_JacobianImage[ NDimensions ];
+  typename JacobianImageType::Pointer m_JacobianImage[ NDimensions ]{};
   */
 
   /** Keep track of last support region used in computing the Jacobian
@@ -495,18 +495,18 @@ protected:
   // ImagePointer    m_WrappedImage[ NDimensions ];
 
   /** Internal parameters buffer. */
-  ParametersType m_InternalParametersBuffer;
+  ParametersType m_InternalParametersBuffer{};
 
   using TransformType = AdvancedBSplineDeformableTransform<TScalarType, Self::SpaceDimension, VSplineOrder>;
 
-  unsigned char                                m_NbLabels;
-  ImageLabelPointer                            m_Labels;
-  ImageLabelInterpolatorPointer                m_LabelsInterpolator;
-  ImageVectorPointer                           m_LabelsNormals;
-  std::vector<typename TransformType::Pointer> m_Trans;
-  std::vector<ParametersType>                  m_Para;
-  mutable int                                  m_LastJacobian;
-  ImageBasePointer                             m_LocalBases;
+  unsigned char                                m_NbLabels{};
+  ImageLabelPointer                            m_Labels{};
+  ImageLabelInterpolatorPointer                m_LabelsInterpolator{};
+  ImageVectorPointer                           m_LabelsNormals{};
+  std::vector<typename TransformType::Pointer> m_Trans{};
+  std::vector<ParametersType>                  m_Para{};
+  mutable int                                  m_LastJacobian{};
+  ImageBasePointer                             m_LocalBases{};
 
 private:
   void

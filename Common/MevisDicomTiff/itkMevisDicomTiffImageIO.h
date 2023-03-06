@@ -166,28 +166,28 @@ private:
   FindElement(const gdcm::DataSet ds, const gdcm::Tag tag, gdcm::DataElement & de, const bool breadthfirstsearch);
 
   // the following may include the pathname
-  std::string m_DcmFileName;
-  std::string m_TiffFileName;
+  std::string m_DcmFileName{};
+  std::string m_TiffFileName{};
 
-  TIFF *         m_TIFFImage;
-  unsigned int   m_TIFFDimension;
-  bool           m_IsOpen;
-  unsigned short m_Compression;
-  unsigned int   m_BitsPerSample;
-  unsigned int   m_Width;
-  unsigned int   m_Length;
-  unsigned int   m_Depth;
-  bool           m_IsTiled;
-  unsigned int   m_TileWidth;
-  unsigned int   m_TileLength;
-  unsigned int   m_TileDepth;
-  unsigned short m_NumberOfTiles;
+  TIFF *         m_TIFFImage{};
+  unsigned int   m_TIFFDimension{};
+  bool           m_IsOpen{};
+  unsigned short m_Compression{};
+  unsigned int   m_BitsPerSample{};
+  unsigned int   m_Width{};
+  unsigned int   m_Length{};
+  unsigned int   m_Depth{};
+  bool           m_IsTiled{};
+  unsigned int   m_TileWidth{};
+  unsigned int   m_TileLength{};
+  unsigned int   m_TileDepth{};
+  unsigned short m_NumberOfTiles{};
 
-  double m_RescaleSlope;
-  double m_RescaleIntercept;
-  double m_GantryTilt;
-  double m_EstimatedMinimum;
-  double m_EstimatedMaximum;
+  double m_RescaleSlope{};
+  double m_RescaleIntercept{};
+  double m_GantryTilt{};
+  double m_EstimatedMinimum{};
+  double m_EstimatedMaximum{};
 };
 
 } // end namespace itk

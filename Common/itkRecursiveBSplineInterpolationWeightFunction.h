@@ -117,9 +117,9 @@ private:
   Evaluate(const ContinuousIndexType & index, WeightsType & weights, IndexType & startIndex) const override;
 
   /** Private members; We unfortunatly cannot use those of the superclass. */
-  unsigned int m_NumberOfWeights;
-  unsigned int m_NumberOfIndices;
-  SizeType     m_SupportSize;
+  unsigned int m_NumberOfWeights{};
+  unsigned int m_NumberOfIndices{};
+  SizeType     m_SupportSize{};
 
   /** Interpolation kernel type. */
   using KernelType = BSplineKernelFunction2<VSplineOrder>;

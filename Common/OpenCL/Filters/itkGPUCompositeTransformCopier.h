@@ -138,11 +138,11 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  CPUCompositeTransformConstPointer m_InputTransform;
-  GPUCompositeTransformPointer      m_Output;
-  ModifiedTimeType                  m_InternalTransformTime;
-  bool                              m_ExplicitMode;
-  GPUTransformCopierPointer         m_TransformCopier;
+  CPUCompositeTransformConstPointer m_InputTransform{};
+  GPUCompositeTransformPointer      m_Output{};
+  ModifiedTimeType                  m_InternalTransformTime{};
+  bool                              m_ExplicitMode{};
+  GPUTransformCopierPointer         m_TransformCopier{};
 };
 
 } // end namespace itk

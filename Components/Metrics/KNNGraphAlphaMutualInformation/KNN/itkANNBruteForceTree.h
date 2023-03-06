@@ -83,7 +83,7 @@ protected:
   ~ANNBruteForceTree() override;
 
   /** Member variables. */
-  ANNBruteForceTreeType * m_ANNTree;
+  ANNBruteForceTreeType * m_ANNTree{};
 };
 
 } // end namespace itk

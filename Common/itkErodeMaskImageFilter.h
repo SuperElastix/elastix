@@ -135,9 +135,9 @@ protected:
   GenerateData() override;
 
 private:
-  bool         m_IsMovingMask;
-  unsigned int m_ResolutionLevel;
-  ScheduleType m_Schedule;
+  bool         m_IsMovingMask{};
+  unsigned int m_ResolutionLevel{};
+  ScheduleType m_Schedule{};
 };
 
 } // end namespace itk

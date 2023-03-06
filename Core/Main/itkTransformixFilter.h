@@ -297,7 +297,7 @@ private:
   typename MeshType::ConstPointer m_InputMesh{ nullptr };
   typename MeshType::Pointer      m_OutputMesh{ nullptr };
 
-  TransformBase::ConstPointer m_Transform;
+  TransformBase::ConstPointer m_Transform{};
 
   SmartPointer<TransformType> m_CombinationTransform;
 };

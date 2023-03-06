@@ -143,7 +143,7 @@ protected:
   UpdateCurrentTime();
 
   /** The Previous search direction = P g, necessary for the CruzAcceleration */
-  DerivativeType m_PreviousSearchDirection;
+  DerivativeType m_PreviousSearchDirection{};
 
 private:
   /** Settings */

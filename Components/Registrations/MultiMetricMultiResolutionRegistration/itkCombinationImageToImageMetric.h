@@ -446,20 +446,20 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Store the metrics and the corresponding weights. */
-  unsigned int                                 m_NumberOfMetrics;
-  std::vector<SingleValuedCostFunctionPointer> m_Metrics;
-  std::vector<double>                          m_MetricWeights;
-  std::vector<double>                          m_MetricRelativeWeights;
-  bool                                         m_UseRelativeWeights;
-  std::vector<bool>                            m_UseMetric;
-  mutable std::vector<MeasureType>             m_MetricValues;
-  mutable std::vector<DerivativeType>          m_MetricDerivatives;
-  mutable std::vector<double>                  m_MetricDerivativesMagnitude;
-  mutable std::vector<double>                  m_MetricComputationTime;
+  unsigned int                                 m_NumberOfMetrics{};
+  std::vector<SingleValuedCostFunctionPointer> m_Metrics{};
+  std::vector<double>                          m_MetricWeights{};
+  std::vector<double>                          m_MetricRelativeWeights{};
+  bool                                         m_UseRelativeWeights{};
+  std::vector<bool>                            m_UseMetric{};
+  mutable std::vector<MeasureType>             m_MetricValues{};
+  mutable std::vector<DerivativeType>          m_MetricDerivatives{};
+  mutable std::vector<double>                  m_MetricDerivativesMagnitude{};
+  mutable std::vector<double>                  m_MetricComputationTime{};
 
   /** Dummy image region and derivatives. */
-  FixedImageRegionType m_NullFixedImageRegion;
-  DerivativeType       m_NullDerivative;
+  FixedImageRegionType m_NullFixedImageRegion{};
+  DerivativeType       m_NullDerivative{};
 
 private:
   /** Initialize some multi-threading related parameters.

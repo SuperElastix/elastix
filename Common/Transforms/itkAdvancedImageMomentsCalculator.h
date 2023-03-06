@@ -308,30 +308,30 @@ private:
   void
   operator=(const Self &);
 
-  ThreaderType::Pointer m_Threader;
+  ThreaderType::Pointer m_Threader{};
 
-  mutable MultiThreaderParameterType m_ThreaderParameters;
+  mutable MultiThreaderParameterType m_ThreaderParameters{};
 
-  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
-  bool                                               m_UseMultiThread;
-  SizeValueType                                      m_NumberOfPixelsCounted;
+  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
+  bool                                               m_UseMultiThread{};
+  SizeValueType                                      m_NumberOfPixelsCounted{};
 
-  SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization;
-  InputPixelType              m_LowerThresholdForCenterGravity;
-  bool                        m_CenterOfGravityUsesLowerThreshold;
-  ImageSampleContainerPointer m_SampleContainer;
+  SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization{};
+  InputPixelType              m_LowerThresholdForCenterGravity{};
+  bool                        m_CenterOfGravityUsesLowerThreshold{};
+  ImageSampleContainerPointer m_SampleContainer{};
 
-  bool       m_Valid; // Have moments been computed yet?
-  ScalarType m_M0;    // Zeroth moment
-  VectorType m_M1;    // First moments about origin
-  MatrixType m_M2;    // Second moments about origin
-  VectorType m_Cg;    // Center of gravity (physical units)
-  MatrixType m_Cm;    // Second central moments (physical)
-  VectorType m_Pm;    // Principal moments (physical)
-  MatrixType m_Pa;    // Principal axes (physical)
+  bool       m_Valid{}; // Have moments been computed yet?
+  ScalarType m_M0{};    // Zeroth moment
+  VectorType m_M1{};    // First moments about origin
+  MatrixType m_M2{};    // Second moments about origin
+  VectorType m_Cg{};    // Center of gravity (physical units)
+  MatrixType m_Cm{};    // Second central moments (physical)
+  VectorType m_Pm{};    // Principal moments (physical)
+  MatrixType m_Pa{};    // Principal axes (physical)
 
-  ImageConstPointer         m_Image;
-  SpatialObjectConstPointer m_SpatialObjectMask;
+  ImageConstPointer         m_Image{};
+  SpatialObjectConstPointer m_SpatialObjectMask{};
 
 }; // class AdvancedImageMomentsCalculator
 } // end namespace itk

@@ -101,10 +101,10 @@ protected:
   GetSourceCode(std::string & source) const override;
 
 private:
-  GPUCoefficientImagePointer m_GPUCoefficients;
-  GPUDataManagerPointer      m_GPUCoefficientsImageBase;
+  GPUCoefficientImagePointer m_GPUCoefficients{};
+  GPUDataManagerPointer      m_GPUCoefficientsImageBase{};
 
-  std::vector<std::string> m_Sources;
+  std::vector<std::string> m_Sources{};
 };
 
 } // end namespace itk

@@ -78,7 +78,7 @@ protected:
   ~ANNStandardTreeSearch() override = default;
 
   /** Member variables. */
-  double m_ErrorBound;
+  double m_ErrorBound{};
 };
 
 } // end namespace itk

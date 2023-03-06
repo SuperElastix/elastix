@@ -241,14 +241,14 @@ protected:
   WeightedCombinationTransform();
   ~WeightedCombinationTransform() override = default;
 
-  TransformContainerType m_TransformContainer;
-  double                 m_SumOfWeights;
+  TransformContainerType m_TransformContainer{};
+  double                 m_SumOfWeights{};
 
   /** Precomputed nonzero Jacobian indices (simply all params) */
-  NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
+  NonZeroJacobianIndicesType m_NonZeroJacobianIndices{};
 
 private:
-  bool m_NormalizeWeights;
+  bool m_NormalizeWeights{};
 };
 
 } // end namespace itk

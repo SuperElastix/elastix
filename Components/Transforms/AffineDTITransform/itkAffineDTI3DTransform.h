@@ -170,9 +170,9 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ScalarArrayType m_Angle;
-  ScalarArrayType m_Shear;
-  ScalarArrayType m_Scale;
+  ScalarArrayType m_Angle{};
+  ScalarArrayType m_Shear{};
+  ScalarArrayType m_Scale{};
 };
 
 } // namespace itk

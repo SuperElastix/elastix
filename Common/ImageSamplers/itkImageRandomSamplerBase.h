@@ -83,7 +83,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variable used when threading. */
-  std::vector<double> m_RandomNumberList;
+  std::vector<double> m_RandomNumberList{};
 };
 
 } // end namespace itk

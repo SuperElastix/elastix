@@ -117,7 +117,7 @@ protected:
 
 private:
   /** Member variables. */
-  CoefficientImagePointer m_Images[SpaceDimension];
+  CoefficientImagePointer m_Images[SpaceDimension]{};
 };
 
 } // end namespace itk

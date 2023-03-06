@@ -277,29 +277,29 @@ protected:
    * itk::MultiResolutionImageRegistrationMethod these member variables
    * are made protected, so they can be accessed by children classes.
    */
-  ParametersType m_LastTransformParameters;
-  bool           m_Stop;
+  ParametersType m_LastTransformParameters{};
+  bool           m_Stop{};
 
 private:
   /** Member variables. */
-  MetricPointer          m_Metric;
-  OptimizerType::Pointer m_Optimizer;
-  TransformPointer       m_Transform;
-  InterpolatorPointer    m_Interpolator;
+  MetricPointer          m_Metric{};
+  OptimizerType::Pointer m_Optimizer{};
+  TransformPointer       m_Transform{};
+  InterpolatorPointer    m_Interpolator{};
 
-  ParametersType m_InitialTransformParameters;
-  ParametersType m_InitialTransformParametersOfNextLevel;
+  ParametersType m_InitialTransformParameters{};
+  ParametersType m_InitialTransformParametersOfNextLevel{};
 
-  MovingImageConstPointer   m_MovingImage;
-  FixedImageConstPointer    m_FixedImage;
-  MovingImagePyramidPointer m_MovingImagePyramid;
-  FixedImagePyramidPointer  m_FixedImagePyramid;
+  MovingImageConstPointer   m_MovingImage{};
+  FixedImageConstPointer    m_FixedImage{};
+  MovingImagePyramidPointer m_MovingImagePyramid{};
+  FixedImagePyramidPointer  m_FixedImagePyramid{};
 
-  FixedImageRegionType        m_FixedImageRegion;
-  FixedImageRegionPyramidType m_FixedImageRegionPyramid;
+  FixedImageRegionType        m_FixedImageRegion{};
+  FixedImageRegionPyramidType m_FixedImageRegionPyramid{};
 
-  unsigned long m_NumberOfLevels;
-  unsigned long m_CurrentLevel;
+  unsigned long m_NumberOfLevels{};
+  unsigned long m_CurrentLevel{};
 };
 
 } // end namespace itk

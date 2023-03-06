@@ -85,8 +85,8 @@ protected:
   ~ANNPriorityTreeSearch() override = default;
 
   /** Member variables. */
-  double          m_ErrorBound;
-  ANNkDTreeType * m_BinaryTreeAskDTree;
+  double          m_ErrorBound{};
+  ANNkDTreeType * m_BinaryTreeAskDTree{};
 };
 
 } // end namespace itk

@@ -164,16 +164,16 @@ protected:
                                         const MovingImageDerivativeType & movingImageDerivative,
                                         DerivativeType &                  imageJacobian) const;
 
-  mutable vnl_vector<double> m_firstEigenVector;
-  mutable vnl_vector<double> m_secondEigenVector;
-  mutable vnl_vector<double> m_thirdEigenVector;
-  mutable vnl_vector<double> m_fourthEigenVector;
-  mutable vnl_vector<double> m_fifthEigenVector;
-  mutable vnl_vector<double> m_sixthEigenVector;
-  mutable vnl_vector<double> m_seventhEigenVector;
-  mutable vnl_vector<double> m_eigenValues;
-  mutable vnl_vector<double> m_normdCdmu;
-  mutable int                m_NumberOfSamples;
+  mutable vnl_vector<double> m_firstEigenVector{};
+  mutable vnl_vector<double> m_secondEigenVector{};
+  mutable vnl_vector<double> m_thirdEigenVector{};
+  mutable vnl_vector<double> m_fourthEigenVector{};
+  mutable vnl_vector<double> m_fifthEigenVector{};
+  mutable vnl_vector<double> m_sixthEigenVector{};
+  mutable vnl_vector<double> m_seventhEigenVector{};
+  mutable vnl_vector<double> m_eigenValues{};
+  mutable vnl_vector<double> m_normdCdmu{};
+  mutable int                m_NumberOfSamples{};
 
 private:
   /** Sample n random numbers from 0..m and add them to the vector. */
@@ -181,28 +181,28 @@ private:
   SampleRandom(const int n, const int m, std::vector<int> & numbers) const;
 
   /** Variables to control random sampling in last dimension. */
-  bool         m_SampleLastDimensionRandomly;
-  unsigned int m_NumSamplesLastDimension;
-  unsigned int m_NumAdditionalSamplesFixed;
-  unsigned int m_ReducedDimensionIndex;
+  bool         m_SampleLastDimensionRandomly{};
+  unsigned int m_NumSamplesLastDimension{};
+  unsigned int m_NumAdditionalSamplesFixed{};
+  unsigned int m_ReducedDimensionIndex{};
 
-  bool m_DeNoise;
+  bool m_DeNoise{};
 
-  double m_VarNoise;
+  double m_VarNoise{};
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
-  bool m_SubtractMean;
+  bool m_SubtractMean{};
 
   /** GridSize of B-spline transform. */
-  FixedImageSizeType m_GridSize;
+  FixedImageSizeType m_GridSize{};
 
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
-  bool m_TransformIsStackTransform;
+  bool m_TransformIsStackTransform{};
 
   /** Integer to indicate how many eigenvalues you want to use in the metric */
-  unsigned int m_NumEigenValues;
+  unsigned int m_NumEigenValues{};
 
-  bool m_UseDerivativeOfMean;
+  bool m_UseDerivativeOfMean{};
 };
 
 } // end namespace itk

@@ -164,10 +164,10 @@ protected:
   // void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Member variables. */
-  FixedMeshConstPointer m_FixedMesh;
+  FixedMeshConstPointer m_FixedMesh{};
 
-  mutable FixedMeshContainerConstPointer m_FixedMeshContainer;
-  mutable MappedMeshContainerPointer     m_MappedMeshContainer;
+  mutable FixedMeshContainerConstPointer m_FixedMeshContainer{};
+  mutable MappedMeshContainerPointer     m_MappedMeshContainer{};
 
 private:
   void

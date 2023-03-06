@@ -78,9 +78,9 @@ protected:
   ~BinaryTreeSearchBase() override = default;
 
   /** Member variables. */
-  BinaryTreePointer m_BinaryTree;
-  unsigned int      m_KNearestNeighbors;
-  unsigned int      m_DataDimension;
+  BinaryTreePointer m_BinaryTree{};
+  unsigned int      m_KNearestNeighbors{};
+  unsigned int      m_DataDimension{};
 };
 
 } // end namespace itk

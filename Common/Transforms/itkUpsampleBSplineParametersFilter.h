@@ -115,15 +115,15 @@ protected:
 
 private:
   /** Private member variables. */
-  OriginType    m_CurrentGridOrigin;
-  SpacingType   m_CurrentGridSpacing;
-  DirectionType m_CurrentGridDirection;
-  RegionType    m_CurrentGridRegion;
-  OriginType    m_RequiredGridOrigin;
-  SpacingType   m_RequiredGridSpacing;
-  DirectionType m_RequiredGridDirection;
-  RegionType    m_RequiredGridRegion;
-  unsigned int  m_BSplineOrder;
+  OriginType    m_CurrentGridOrigin{};
+  SpacingType   m_CurrentGridSpacing{};
+  DirectionType m_CurrentGridDirection{};
+  RegionType    m_CurrentGridRegion{};
+  OriginType    m_RequiredGridOrigin{};
+  SpacingType   m_RequiredGridSpacing{};
+  DirectionType m_RequiredGridDirection{};
+  RegionType    m_RequiredGridRegion{};
+  unsigned int  m_BSplineOrder{};
 };
 
 } // end namespace itk

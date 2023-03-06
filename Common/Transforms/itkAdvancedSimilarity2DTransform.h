@@ -228,7 +228,7 @@ protected:
   PrecomputeJacobianOfSpatialJacobian() override;
 
 private:
-  ScaleType m_Scale;
+  ScaleType m_Scale{};
 };
 
 // class AdvancedSimilarity2DTransform

@@ -125,10 +125,10 @@ protected:
   {}
 
   // GPU kernel manager
-  typename OpenCLKernelManager::Pointer m_GPUKernelManager;
+  typename OpenCLKernelManager::Pointer m_GPUKernelManager{};
 
 private:
-  bool m_GPUEnabled;
+  bool m_GPUEnabled{};
 };
 
 } // end namespace itk

@@ -138,9 +138,9 @@ protected:
   using typename Superclass::CoordinateRepresentationType;
   using typename Superclass::NumberOfParametersType;
 
-  double m_MaximumStepLength;
-  double m_RegularizationKappa;
-  double m_ConditionNumber;
+  double m_MaximumStepLength{};
+  double m_RegularizationKappa{};
+  double m_ConditionNumber{};
 };
 
 } // end namespace itk

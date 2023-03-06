@@ -319,39 +319,39 @@ private:
   FilterSeparable(const CoefficientImageType *, const std::vector<NeighborhoodType> & Operators) const;
 
   /** Member variables. */
-  BSplineTransformPointer m_BSplineTransform;
-  ScalarType              m_LinearityConditionWeight;
-  ScalarType              m_OrthonormalityConditionWeight;
-  ScalarType              m_PropernessConditionWeight;
+  BSplineTransformPointer m_BSplineTransform{};
+  ScalarType              m_LinearityConditionWeight{};
+  ScalarType              m_OrthonormalityConditionWeight{};
+  ScalarType              m_PropernessConditionWeight{};
 
-  mutable MeasureType m_RigidityPenaltyTermValue;
-  mutable MeasureType m_LinearityConditionValue;
-  mutable MeasureType m_OrthonormalityConditionValue;
-  mutable MeasureType m_PropernessConditionValue;
-  mutable MeasureType m_LinearityConditionGradientMagnitude;
-  mutable MeasureType m_OrthonormalityConditionGradientMagnitude;
-  mutable MeasureType m_PropernessConditionGradientMagnitude;
+  mutable MeasureType m_RigidityPenaltyTermValue{};
+  mutable MeasureType m_LinearityConditionValue{};
+  mutable MeasureType m_OrthonormalityConditionValue{};
+  mutable MeasureType m_PropernessConditionValue{};
+  mutable MeasureType m_LinearityConditionGradientMagnitude{};
+  mutable MeasureType m_OrthonormalityConditionGradientMagnitude{};
+  mutable MeasureType m_PropernessConditionGradientMagnitude{};
 
-  bool m_UseLinearityCondition;
-  bool m_UseOrthonormalityCondition;
-  bool m_UsePropernessCondition;
-  bool m_CalculateLinearityCondition;
-  bool m_CalculateOrthonormalityCondition;
-  bool m_CalculatePropernessCondition;
+  bool m_UseLinearityCondition{};
+  bool m_UseOrthonormalityCondition{};
+  bool m_UsePropernessCondition{};
+  bool m_CalculateLinearityCondition{};
+  bool m_CalculateOrthonormalityCondition{};
+  bool m_CalculatePropernessCondition{};
 
   /** Rigidity image variables. */
-  CoordinateRepresentationType     m_DilationRadiusMultiplier;
-  bool                             m_DilateRigidityImages;
-  mutable bool                     m_RigidityCoefficientImageIsFilled;
-  RigidityImagePointer             m_FixedRigidityImage;
-  RigidityImagePointer             m_MovingRigidityImage;
-  RigidityImagePointer             m_RigidityCoefficientImage;
-  std::vector<DilateFilterPointer> m_FixedRigidityImageDilation;
-  std::vector<DilateFilterPointer> m_MovingRigidityImageDilation;
-  RigidityImagePointer             m_FixedRigidityImageDilated;
-  RigidityImagePointer             m_MovingRigidityImageDilated;
-  bool                             m_UseFixedRigidityImage;
-  bool                             m_UseMovingRigidityImage;
+  CoordinateRepresentationType     m_DilationRadiusMultiplier{};
+  bool                             m_DilateRigidityImages{};
+  mutable bool                     m_RigidityCoefficientImageIsFilled{};
+  RigidityImagePointer             m_FixedRigidityImage{};
+  RigidityImagePointer             m_MovingRigidityImage{};
+  RigidityImagePointer             m_RigidityCoefficientImage{};
+  std::vector<DilateFilterPointer> m_FixedRigidityImageDilation{};
+  std::vector<DilateFilterPointer> m_MovingRigidityImageDilation{};
+  RigidityImagePointer             m_FixedRigidityImageDilated{};
+  RigidityImagePointer             m_MovingRigidityImageDilated{};
+  bool                             m_UseFixedRigidityImage{};
+  bool                             m_UseMovingRigidityImage{};
 };
 
 } // end namespace itk

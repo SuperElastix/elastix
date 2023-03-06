@@ -254,9 +254,9 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  DeformationFieldPointer             m_DeformationField;
-  DeformationFieldPointer             m_ZeroDeformationField;
-  DeformationFieldInterpolatorPointer m_DeformationFieldInterpolator;
+  DeformationFieldPointer             m_DeformationField{};
+  DeformationFieldPointer             m_ZeroDeformationField{};
+  DeformationFieldInterpolatorPointer m_DeformationFieldInterpolator{};
 };
 
 } // namespace itk

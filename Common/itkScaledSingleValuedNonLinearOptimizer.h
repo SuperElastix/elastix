@@ -142,8 +142,8 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  ParametersType            m_ScaledCurrentPosition;
-  ScaledCostFunctionPointer m_ScaledCostFunction;
+  ParametersType            m_ScaledCurrentPosition{};
+  ScaledCostFunctionPointer m_ScaledCostFunction{};
 
   /** Set m_ScaledCurrentPosition. */
   virtual void
@@ -187,8 +187,8 @@ private:
    * GetCurrentPosition is called. This method needs a member variable,
    * because the GetCurrentPosition return something by reference.
    */
-  mutable ParametersType m_UnscaledCurrentPosition;
-  bool                   m_Maximize;
+  mutable ParametersType m_UnscaledCurrentPosition{};
+  bool                   m_Maximize{};
 };
 
 } // end namespace itk

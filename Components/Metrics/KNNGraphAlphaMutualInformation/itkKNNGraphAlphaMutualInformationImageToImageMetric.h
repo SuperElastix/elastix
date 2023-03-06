@@ -266,16 +266,16 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  BinaryKNNTreePointer m_BinaryKNNTreeFixed;
-  BinaryKNNTreePointer m_BinaryKNNTreeMoving;
-  BinaryKNNTreePointer m_BinaryKNNTreeJoint;
+  BinaryKNNTreePointer m_BinaryKNNTreeFixed{};
+  BinaryKNNTreePointer m_BinaryKNNTreeMoving{};
+  BinaryKNNTreePointer m_BinaryKNNTreeJoint{};
 
-  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherFixed;
-  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherMoving;
-  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherJoint;
+  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherFixed{};
+  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherMoving{};
+  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherJoint{};
 
-  double m_Alpha;
-  double m_AvoidDivisionBy;
+  double m_Alpha{};
+  double m_AvoidDivisionBy{};
 
 private:
   /** Typedef's for the computation of the derivative. */

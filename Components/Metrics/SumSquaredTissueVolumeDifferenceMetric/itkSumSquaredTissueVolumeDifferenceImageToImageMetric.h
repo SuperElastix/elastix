@@ -242,10 +242,10 @@ protected:
 
 private:
   /** Intensity value to use for air.  Default is -1000 */
-  RealType m_AirValue;
+  RealType m_AirValue{};
 
   /** Intensity value to use for tissue.  Default is 55 */
-  RealType m_TissueValue;
+  RealType m_TissueValue{};
 
 }; // end class SumSquaredTissueVolumeDifferenceImageToImageMetric
 

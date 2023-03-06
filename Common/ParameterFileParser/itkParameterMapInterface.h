@@ -418,7 +418,7 @@ protected:
 
 private:
   /** Member variable to store the parameters. */
-  ParameterMapType m_ParameterMap;
+  ParameterMapType m_ParameterMap{};
 
   bool m_PrintErrorMessages{ true };
 };

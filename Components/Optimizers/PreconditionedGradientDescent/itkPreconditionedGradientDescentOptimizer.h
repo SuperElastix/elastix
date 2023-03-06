@@ -202,15 +202,15 @@ protected:
   using cholmod_l = int CInt; // change to UF_long if using;
 
   // made protected so subclass can access
-  DerivativeType    m_Gradient;
+  DerivativeType    m_Gradient{};
   double            m_LearningRate{ 1.0 };
   StopConditionType m_StopCondition{ MaximumNumberOfIterations };
-  DerivativeType    m_SearchDirection;
+  DerivativeType    m_SearchDirection{};
   double            m_LargestEigenValue{ 1.0 };
   double            m_ConditionNumber{ 1.0 };
   double            m_Sparsity{ 1.0 };
 
-  cholmod_common * m_CholmodCommon;
+  cholmod_common * m_CholmodCommon{};
   cholmod_factor * m_CholmodFactor{ nullptr };
   cholmod_sparse * m_CholmodGradient{ nullptr };
 

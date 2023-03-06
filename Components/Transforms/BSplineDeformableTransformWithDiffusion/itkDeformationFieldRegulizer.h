@@ -119,13 +119,13 @@ protected:
 
 private:
   /** Declaration of members. */
-  IntermediaryDFTransformPointer m_IntermediaryDeformationFieldTransform;
-  bool                           m_Initialized;
+  IntermediaryDFTransformPointer m_IntermediaryDeformationFieldTransform{};
+  bool                           m_Initialized{};
 
   /** Declarations of region things. */
-  RegionType  m_DeformationFieldRegion;
-  OriginType  m_DeformationFieldOrigin;
-  SpacingType m_DeformationFieldSpacing;
+  RegionType  m_DeformationFieldRegion{};
+  OriginType  m_DeformationFieldOrigin{};
+  SpacingType m_DeformationFieldSpacing{};
 };
 
 } // end namespace itk

@@ -151,15 +151,15 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  TransformPointer   m_Transform;
-  FixedImagePointer  m_FixedImage;
-  MovingImagePointer m_MovingImage;
-  FixedMaskPointer   m_FixedMask;
-  MovingMaskPointer  m_MovingMask;
-  bool               m_UseMoments;
+  TransformPointer   m_Transform{};
+  FixedImagePointer  m_FixedImage{};
+  MovingImagePointer m_MovingImage{};
+  FixedMaskPointer   m_FixedMask{};
+  MovingMaskPointer  m_MovingMask{};
+  bool               m_UseMoments{};
 
-  FixedImageCalculatorPointer  m_FixedCalculator;
-  MovingImageCalculatorPointer m_MovingCalculator;
+  FixedImageCalculatorPointer  m_FixedCalculator{};
+  MovingImageCalculatorPointer m_MovingCalculator{};
 };
 
 } // namespace itk

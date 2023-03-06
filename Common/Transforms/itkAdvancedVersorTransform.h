@@ -186,7 +186,7 @@ private:
   operator=(const Self &); // Not implemented
 
   /** Versor containing the rotation */
-  VersorType m_Versor;
+  VersorType m_Versor{};
 };
 
 // class AdvancedVersorTransform

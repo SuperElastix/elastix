@@ -267,9 +267,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  bool m_Graft;
+  bool m_Graft{};
 
-  typename GPUImageDataManager<GPUImage>::Pointer m_DataManager;
+  typename GPUImageDataManager<GPUImage>::Pointer m_DataManager{};
 };
 
 //------------------------------------------------------------------------------

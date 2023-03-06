@@ -213,16 +213,16 @@ protected:
 
 private:
   /** Member variables. */
-  BSplineTransformPointer m_BSplineTransform;
+  BSplineTransformPointer m_BSplineTransform{};
 
-  mutable MeasureType m_RigidityPenaltyTermValue;
+  mutable MeasureType m_RigidityPenaltyTermValue{};
 
-  BSplineKnotImagePointer m_BSplineKnotImage;
-  PenaltyGridImagePointer m_PenaltyGridImage;
-  SegmentedImagePointer   m_SegmentedImage;
-  SegmentedImagePointer   m_SampledSegmentedImage;
+  BSplineKnotImagePointer m_BSplineKnotImage{};
+  PenaltyGridImagePointer m_PenaltyGridImage{};
+  SegmentedImagePointer   m_SegmentedImage{};
+  SegmentedImagePointer   m_SampledSegmentedImage{};
 
-  unsigned int m_NumberOfRigidGrids;
+  unsigned int m_NumberOfRigidGrids{};
 };
 
 // end class DistancePreservingRigidityPenaltyTerm

@@ -201,7 +201,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /// Transformation used to calculate the new focal point position
-  TransformPointer m_Transform;
+  TransformPointer m_Transform{};
 
   /// The focal point or position of the ray source
   InputPointType m_FocalPoint{};
@@ -210,7 +210,7 @@ protected:
   double m_Threshold{ 0.0 };
 
   /// Pointer to the interpolator
-  InterpolatorPointer m_Interpolator;
+  InterpolatorPointer m_Interpolator{};
 
 private:
   SizeType

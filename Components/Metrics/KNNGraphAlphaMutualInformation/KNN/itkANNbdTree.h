@@ -87,7 +87,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  ShrinkingRuleType m_ShrinkingRule;
+  ShrinkingRuleType m_ShrinkingRule{};
 };
 
 } // end namespace itk

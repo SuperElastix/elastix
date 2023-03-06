@@ -158,10 +158,10 @@ protected:
   PrecomputeJacobianOfSpatialJacobian();
 
 private:
-  ScalarType m_AngleX;
-  ScalarType m_AngleY;
-  ScalarType m_AngleZ;
-  bool       m_ComputeZYX;
+  ScalarType m_AngleX{};
+  ScalarType m_AngleY{};
+  ScalarType m_AngleZ{};
+  bool       m_ComputeZYX{};
 };
 
 // class AdvancedEuler3DTransform

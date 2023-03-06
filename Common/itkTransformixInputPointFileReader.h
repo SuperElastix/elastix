@@ -101,7 +101,7 @@ private:
   unsigned long m_NumberOfPoints{ 0 };
   bool          m_PointsAreIndices{ false };
 
-  std::ifstream m_Reader;
+  std::ifstream m_Reader{};
 };
 
 } // end namespace itk
