@@ -932,7 +932,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessianUseComp
 
   /** Transform the input point. */
   // \todo this has already been computed and it is expensive.
-  InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
+  const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
 
   /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
    * internal transforms.
@@ -1197,7 +1197,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
 
   /** Transform the input point. */
   // \todo: this has already been computed and it is expensive.
-  InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
+  const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
 
   /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
    * internal transforms. */
@@ -1260,7 +1260,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
 
   /** Transform the input point. */
   // \todo this has already been computed and it is expensive.
-  InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
+  const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
 
   /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
    * internal transforms.
