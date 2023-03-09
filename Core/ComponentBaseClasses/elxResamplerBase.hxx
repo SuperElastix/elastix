@@ -20,6 +20,7 @@
 
 #include "elxResamplerBase.h"
 #include "elxConversion.h"
+#include "elxDeref.h"
 
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
@@ -56,11 +57,13 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
   resampleImageFilter.SetOutputSpacing(fixedImage->GetSpacing());
   resampleImageFilter.SetOutputDirection(fixedImage->GetDirection());
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
    */
   OutputPixelType defaultPixelValue{};
-  this->m_Configuration->ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, false);
+  configuration.ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, false);
 
   /** Set the defaultPixelValue. */
   resampleImageFilter.SetDefaultPixelValue(defaultPixelValue);
@@ -82,22 +85,23 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Decide whether or not to write the result image this resolution. */
   bool writeResultImageThisResolution = false;
-  this->m_Configuration->ReadParameter(
+  configuration.ReadParameter(
     writeResultImageThisResolution, "WriteResultImageAfterEachResolution", "", level, 0, false);
 
   /** Writing result image. */
   if (writeResultImageThisResolution)
   {
     /** Create a name for the final result. */
-    const auto resultImageName =
-      this->m_Configuration->RetrieveParameterStringValue("result", "ResultImageName", 0, false);
+    const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+    configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
     std::ostringstream makeFileName;
-    makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << resultImageName << '.'
-                 << this->m_Configuration->GetElastixLevel() << ".R" << level << "." << resultImageFormat;
+    makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.'
+                 << configuration.GetElastixLevel() << ".R" << level << "." << resultImageFormat;
 
     /** Time the resampling. */
     itk::TimeProbe timer;
@@ -137,10 +141,11 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
   /** What is the current iteration number? */
   const unsigned int iter = this->m_Elastix->GetIterationCounter();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Decide whether or not to write the result image this iteration. */
   bool writeResultImageThisIteration = false;
-  this->m_Configuration->ReadParameter(
-    writeResultImageThisIteration, "WriteResultImageAfterEachIteration", "", level, 0, false);
+  configuration.ReadParameter(writeResultImageThisIteration, "WriteResultImageAfterEachIteration", "", level, 0, false);
 
   /** Writing result image. */
   if (writeResultImageThisIteration)
@@ -149,14 +154,13 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
 
     /** Create a name for the final result. */
-    const auto resultImageName =
-      this->m_Configuration->RetrieveParameterStringValue("result", "ResultImageName", 0, false);
+    const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+    configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
     std::ostringstream makeFileName;
-    makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << resultImageName << '.'
-                 << this->m_Configuration->GetElastixLevel() << ".R" << level << ".It" << std::setfill('0')
-                 << std::setw(7) << iter << "." << resultImageFormat;
+    makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.'
+                 << configuration.GetElastixLevel() << ".R" << level << ".It" << std::setfill('0') << std::setw(7)
+                 << iter << "." << resultImageFormat;
 
     /** Apply the final transform, and save the result. */
     try
@@ -184,9 +188,11 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
   /** Set the final transform parameters. */
   this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Decide whether or not to write the result image. */
   std::string writeResultImage = "true";
-  this->m_Configuration->ReadParameter(writeResultImage, "WriteResultImage", 0);
+  configuration.ReadParameter(writeResultImage, "WriteResultImage", 0);
 
   const auto isElastixLibrary = BaseComponent::IsElastixLibrary();
 
@@ -198,7 +204,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
    */
   bool releaseMemoryBeforeResampling{ !isElastixLibrary };
 
-  this->m_Configuration->ReadParameter(releaseMemoryBeforeResampling, "ReleaseMemoryBeforeResampling", 0, false);
+  configuration.ReadParameter(releaseMemoryBeforeResampling, "ReleaseMemoryBeforeResampling", 0, false);
   if (releaseMemoryBeforeResampling)
   {
     this->ReleaseMemory();
@@ -221,13 +227,12 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
     if (writeResultImage == "true")
     {
       /** Create a name for the final result. */
-      const auto resultImageName =
-        this->m_Configuration->RetrieveParameterStringValue("result", "ResultImageName", 0, false);
+      const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
       std::string resultImageFormat = "mhd";
-      this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0);
+      configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0);
       std::ostringstream makeFileName;
-      makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << resultImageName << '.'
-                   << this->m_Configuration->GetElastixLevel() << "." << resultImageFormat;
+      makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.'
+                   << configuration.GetElastixLevel() << "." << resultImageFormat;
 
       /** Time the resampling. */
       itk::TimeProbe timer;
@@ -354,9 +359,11 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
     resampleImageFilter.SetTransform(testptr->GetTransform());
   }
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
-  this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
+  configuration.ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
   const std::string::size_type pos = resultImagePixelType.find(" ");
   if (pos != std::string::npos)
   {
@@ -365,7 +372,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * 
 
   /** Read from the parameter file if compression is desired. */
   bool doCompression = false;
-  this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
+  configuration.ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
@@ -448,9 +455,11 @@ ResamplerBase<TElastix>::CreateItkResultImage()
     resampleImageFilter.SetTransform(testptr->GetTransform());
   }
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Read output pixeltype from parameter the file. */
   std::string resultImagePixelType = "short";
-  this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
+  configuration.ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
@@ -536,6 +545,8 @@ ResamplerBase<TElastix>::ReadFromFile()
   /** Connect the components. */
   this->SetComponents();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Get spacing, origin and size of the image to be produced by the resampler. */
   SpacingType     spacing;
   IndexType       index;
@@ -545,24 +556,24 @@ ResamplerBase<TElastix>::ReadFromFile()
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     /** No default size. Read size from the parameter file. */
-    this->m_Configuration->ReadParameter(size[i], "Size", i);
+    configuration.ReadParameter(size[i], "Size", i);
 
     /** Default index. Read index from the parameter file. */
     index[i] = 0;
-    this->m_Configuration->ReadParameter(index[i], "Index", i);
+    configuration.ReadParameter(index[i], "Index", i);
 
     /** Default spacing. Read spacing from the parameter file. */
     spacing[i] = 1.0;
-    this->m_Configuration->ReadParameter(spacing[i], "Spacing", i);
+    configuration.ReadParameter(spacing[i], "Spacing", i);
 
     /** Default origin. Read origin from the parameter file. */
     origin[i] = 0.0;
-    this->m_Configuration->ReadParameter(origin[i], "Origin", i);
+    configuration.ReadParameter(origin[i], "Origin", i);
 
     /** Read direction cosines. Default identity */
     for (unsigned int j = 0; j < ImageDimension; ++j)
     {
-      this->m_Configuration->ReadParameter(direction(j, i), "Direction", i * ImageDimension + j);
+      configuration.ReadParameter(direction(j, i), "Direction", i * ImageDimension + j);
     }
   }
 
@@ -603,7 +614,7 @@ ResamplerBase<TElastix>::ReadFromFile()
    * that come from outside the original (moving) image.
    */
   double defaultPixelValue = 0.0;
-  bool   found = this->m_Configuration->ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, false);
+  bool   found = configuration.ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, false);
 
   if (found)
   {
@@ -644,19 +655,21 @@ ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType & paramet
   /** Store the DefaultPixelValue. */
   parameterMap["DefaultPixelValue"] = { Conversion::ToString(this->GetSelf().GetDefaultPixelValue()) };
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Store the output image format. */
   std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+  configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
   parameterMap["ResultImageFormat"] = { resultImageFormat };
 
   /** Store output pixel type. */
   std::string resultImagePixelType = "short";
-  this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
+  configuration.ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
   parameterMap["ResultImagePixelType"] = { resultImagePixelType };
 
   /** Store compression flag. */
   std::string doCompression = "false";
-  this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
+  configuration.ReadParameter(doCompression, "CompressResultImage", 0, false);
   parameterMap["CompressResultImage"] = { doCompression };
 
   // Derived classes may add some extra parameters
@@ -678,13 +691,15 @@ template <class TElastix>
 void
 ResamplerBase<TElastix>::ReleaseMemory()
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Release some memory. Sometimes it is not possible to
    * resample and write an image, because too much memory is consumed by
    * elastix. Releasing some memory at this point helps a lot.
    */
 
   /** Release more memory, but only if this is the final elastix level. */
-  if (this->GetConfiguration()->GetElastixLevel() + 1 == this->GetConfiguration()->GetTotalNumberOfElastixLevels())
+  if (configuration.GetElastixLevel() + 1 == configuration.GetTotalNumberOfElastixLevels())
   {
     /** Release fixed image memory. */
     const unsigned int nofi = this->GetElastix()->GetNumberOfFixedImages();

@@ -21,6 +21,7 @@
 #include "elxTransformBase.h"
 
 #include "elxConversion.h"
+#include "elxDeref.h"
 #include "elxElastixMain.h"
 #include "elxTransformIO.h"
 
@@ -58,12 +59,15 @@ template <class TElastix>
 int
 TransformBase<TElastix>::BeforeAllBase()
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Check Command line options and print them to the logfile. */
   log::info("Command line options from TransformBase:");
+
   std::string check("");
 
   /** Check for appearance of "-t0". */
-  check = this->m_Configuration->GetCommandLineArgument("-t0");
+  check = configuration.GetCommandLineArgument("-t0");
   if (check.empty())
   {
     log::info("-t0       unspecified, so no initial transform used");
@@ -87,6 +91,8 @@ template <class TElastix>
 int
 TransformBase<TElastix>::BeforeAllTransformix()
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Declare the return value and initialize it. */
   int returndummy = 0;
 
@@ -94,7 +100,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   std::string check = "";
 
   /** Check for appearance of "-ipp". */
-  check = this->m_Configuration->GetCommandLineArgument("-ipp");
+  check = configuration.GetCommandLineArgument("-ipp");
   if (!check.empty())
   {
     log::info(std::ostringstream{} << "-ipp      " << check);
@@ -103,7 +109,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
 
   /** Check for appearance of "-def". */
-  check = this->m_Configuration->GetCommandLineArgument("-def");
+  check = configuration.GetCommandLineArgument("-def");
   if (check.empty())
   {
     log::info("-def      unspecified, so no input points transformed");
@@ -114,7 +120,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
 
   /** Check for appearance of "-jac". */
-  check = this->m_Configuration->GetCommandLineArgument("-jac");
+  check = configuration.GetCommandLineArgument("-jac");
   if (check.empty())
   {
     log::info("-jac      unspecified, so no det(dT/dx) computed");
@@ -125,7 +131,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
 
   /** Check for appearance of "-jacmat". */
-  check = this->m_Configuration->GetCommandLineArgument("-jacmat");
+  check = configuration.GetCommandLineArgument("-jacmat");
   if (check.empty())
   {
     log::info("-jacmat   unspecified, so no dT/dx computed");
@@ -149,11 +155,13 @@ template <class TElastix>
 void
 TransformBase<TElastix>::BeforeRegistrationBase()
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Read from the configuration file how to combine the initial
    * transform with the current transform.
    */
   std::string howToCombineTransforms = "Compose";
-  this->m_Configuration->ReadParameter(howToCombineTransforms, "HowToCombineTransforms", 0, false);
+  configuration.ReadParameter(howToCombineTransforms, "HowToCombineTransforms", 0, false);
 
   this->GetAsITKBaseType()->SetUseComposition(howToCombineTransforms == "Compose");
 
@@ -172,7 +180,7 @@ TransformBase<TElastix>::BeforeRegistrationBase()
   }
   else
   {
-    std::string fileName = this->m_Configuration->GetCommandLineArgument("-t0");
+    std::string fileName = configuration.GetCommandLineArgument("-t0");
     if (!fileName.empty())
     {
       if (itksys::SystemTools::FileExists(fileName.c_str()))
@@ -260,31 +268,30 @@ void
 TransformBase<TElastix>::ReadFromFile()
 {
   /** NOTE:
-   * This method assumes this->m_Configuration is initialized with a
+   * This method assumes the configuration is initialized with a
    * transform parameter file, so not an elastix parameter file!!
    */
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
 
   /** Task 1 - Read the parameters from file. */
 
   /** Read the TransformParameters. */
   if (this->m_ReadWriteTransformParameters)
   {
-    const auto itkParameterValues =
-      this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformParameters");
+    const auto itkParameterValues = configuration.RetrieveValuesOfParameter<double>("ITKTransformParameters");
 
     if (itkParameterValues == nullptr)
     {
       /** Get the number of TransformParameters. */
       unsigned int numberOfParameters = 0;
-      this->m_Configuration->ReadParameter(numberOfParameters, "NumberOfParameters", 0);
+      configuration.ReadParameter(numberOfParameters, "NumberOfParameters", 0);
 
       /** Read the TransformParameters. */
       std::vector<ValueType> vecPar(numberOfParameters);
-      this->m_Configuration->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true);
+      configuration.ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true);
 
       /** Do not rely on vecPar.size(), since it is unchanged by ReadParameter(). */
-      const std::size_t numberOfParametersFound =
-        this->m_Configuration->CountNumberOfParameterEntries("TransformParameters");
+      const std::size_t numberOfParametersFound = configuration.CountNumberOfParameterEntries("TransformParameters");
 
       /** Sanity check. Are the number of found parameters the same as
        * the number of specified parameters?
@@ -310,7 +317,7 @@ TransformBase<TElastix>::ReadFromFile()
       m_TransformParameters = Conversion::ToOptimizerParameters(*itkParameterValues);
 
       const auto itkFixedParameterValues =
-        this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformFixedParameters");
+        configuration.RetrieveValuesOfParameter<double>("ITKTransformFixedParameters");
 
       if (itkFixedParameterValues != nullptr)
       {
@@ -327,7 +334,7 @@ TransformBase<TElastix>::ReadFromFile()
 
   /** Get the InitialTransformName. */
   std::string fileName = "NoInitialTransform";
-  this->m_Configuration->ReadParameter(fileName, "InitialTransformParametersFileName", 0);
+  configuration.ReadParameter(fileName, "InitialTransformParametersFileName", 0);
 
   /** Call the function ReadInitialTransformFromFile. */
   if (fileName != "NoInitialTransform")
@@ -355,7 +362,7 @@ TransformBase<TElastix>::ReadFromFile()
        * we will have an infinite loop.
        */
       std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName);
-      std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(this->m_Configuration->GetParameterFileName());
+      std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
       if (fullFileName1 == fullFileName2)
       {
         itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName is identical to the current "
@@ -371,7 +378,7 @@ TransformBase<TElastix>::ReadFromFile()
    * initial transform with the current transform.
    */
   std::string howToCombineTransforms = "Compose"; // default
-  this->m_Configuration->ReadParameter(howToCombineTransforms, "HowToCombineTransforms", 0, true);
+  configuration.ReadParameter(howToCombineTransforms, "HowToCombineTransforms", 0, true);
 
   /** Convert 'this' to a pointer to a CombinationTransform and set how
    * to combine the current transform with the initial transform.
@@ -382,7 +389,7 @@ TransformBase<TElastix>::ReadFromFile()
    * This will be needed when another transform will use this transform
    * as an initial transform (see the WriteToFile method)
    */
-  this->SetTransformParametersFileName(this->GetConfiguration()->GetCommandLineArgument("-tp").c_str());
+  this->SetTransformParametersFileName(configuration.GetCommandLineArgument("-tp").c_str());
 
 } // end ReadFromFile()
 
@@ -456,8 +463,9 @@ template <class TElastix>
 void
 TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo, const ParametersType & param) const
 {
-  const auto & configuration = *(this->Superclass::m_Configuration);
-  const auto   itkTransformOutputFileNameExtensions =
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
+  const auto itkTransformOutputFileNameExtensions =
     configuration.GetValuesOfParameter("ITKTransformOutputFileNameExtension");
   const std::string itkTransformOutputFileNameExtension =
     itkTransformOutputFileNameExtensions.empty() ? "" : itkTransformOutputFileNameExtensions.front();
@@ -489,8 +497,7 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
     }
   }
 
-  const auto writeCompositeTransform =
-    configuration.template RetrieveValuesOfParameter<bool>("WriteITKCompositeTransform");
+  const auto writeCompositeTransform = configuration.RetrieveValuesOfParameter<bool>("WriteITKCompositeTransform");
 
   if ((writeCompositeTransform != nullptr) && (*writeCompositeTransform == std::vector<bool>{ true }) &&
       !itkTransformOutputFileNameExtension.empty())
@@ -528,6 +535,8 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
                                                       ParameterMapType &     parameterMap,
                                                       const bool             includeDerivedTransformParameters) const
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   const auto & elastixObject = *(this->GetElastix());
 
   /** The way Transforms are combined. */
@@ -537,8 +546,8 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   std::string fixpix = "float";
   std::string movpix = "float";
 
-  this->m_Configuration->ReadParameter(fixpix, "FixedInternalImagePixelType", 0);
-  this->m_Configuration->ReadParameter(movpix, "MovingInternalImagePixelType", 0);
+  configuration.ReadParameter(fixpix, "FixedInternalImagePixelType", 0);
+  configuration.ReadParameter(movpix, "MovingInternalImagePixelType", 0);
 
   /** Get the Size, Spacing and Origin of the fixed image. */
   const auto & fixedImage = *(this->m_Elastix->GetFixedImage());
@@ -599,11 +608,13 @@ template <class TElastix>
 void
 TransformBase<TElastix>::TransformPoints() const
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** If the optional command "-def" is given in the command
    * line arguments, then and only then we continue.
    */
-  const std::string ipp = this->GetConfiguration()->GetCommandLineArgument("-ipp");
-  std::string       def = this->GetConfiguration()->GetCommandLineArgument("-def");
+  const std::string ipp = configuration.GetCommandLineArgument("-ipp");
+  std::string       def = configuration.GetCommandLineArgument("-def");
 
   /** For backwards compatibility def = ipp. */
   if (!def.empty() && !ipp.empty())
@@ -793,8 +804,10 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     deformationvec[j].CastFrom(outputpointvec[j] - inputpointvec[j]);
   }
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Create filename and file stream. */
-  const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.txt";
+  const std::string outputPointsFileName = configuration.GetCommandLineArgument("-out") + "outputpoints.txt";
   std::ofstream     outputPointsFile(outputPointsFileName);
   outputPointsFile << std::showpoint << std::fixed;
   log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
@@ -897,8 +910,10 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
     log::error(std::ostringstream{} << "  Error while transforming points.\n" << err);
   }
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Create filename and file stream. */
-  const std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument("-out") + "outputpoints.vtk";
+  const std::string outputPointsFileName = configuration.GetCommandLineArgument("-out") + "outputpoints.vtk";
   log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
 
   try
@@ -1003,11 +1018,13 @@ void
 TransformBase<TElastix>::WriteDeformationFieldImage(
   typename TransformBase<TElastix>::DeformationFieldImageType::Pointer deformationfield) const
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+  configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
   std::ostringstream makeFileName;
-  makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "deformationField." << resultImageFormat;
+  makeFileName << configuration.GetCommandLineArgument("-out") << "deformationField." << resultImageFormat;
 
   /** Write outputImage to disk. */
   log::info("  Computing and writing the deformation field ...");
@@ -1069,10 +1086,12 @@ template <class TElastix>
 void
 TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** If the optional command "-jac" is given in the command line arguments,
    * then and only then we continue.
    */
-  std::string jac = this->GetConfiguration()->GetCommandLineArgument("-jac");
+  std::string jac = configuration.GetCommandLineArgument("-jac");
   if (jac.empty())
   {
     log::info(std::ostringstream{} << "  The command-line option \"-jac\" is not used, so no det(dT/dx) computed.");
@@ -1095,9 +1114,9 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
     BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*jacGenerator);
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+  configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
   std::ostringstream makeFileName;
-  makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "spatialJacobian." << resultImageFormat;
+  makeFileName << configuration.GetCommandLineArgument("-out") << "spatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
   log::info("  Computing and writing the spatial Jacobian determinant...");
@@ -1128,10 +1147,12 @@ template <class TElastix>
 void
 TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** If the optional command "-jacmat" is given in the command line arguments,
    * then and only then we continue.
    */
-  std::string jac = this->GetConfiguration()->GetCommandLineArgument("-jacmat");
+  std::string jac = configuration.GetCommandLineArgument("-jacmat");
   if (jac != "all")
   {
     log::info(std::ostringstream{} << "  The command-line option \"-jacmat\" is not used, so no dT/dx computed.");
@@ -1147,9 +1168,9 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
     BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*jacGenerator);
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+  configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
   std::ostringstream makeFileName;
-  makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "fullSpatialJacobian." << resultImageFormat;
+  makeFileName << configuration.GetCommandLineArgument("-out") << "fullSpatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
   const auto jacWriter = itk::ImageFileWriter<SpatialJacobianMatrixImageType>::New();

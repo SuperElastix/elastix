@@ -19,6 +19,7 @@
 #define elxFixedImagePyramidBase_hxx
 
 #include "elxFixedImagePyramidBase.h"
+#include "elxDeref.h"
 #include "itkImageFileCastWriter.h"
 
 namespace elastix
@@ -49,21 +50,23 @@ FixedImagePyramidBase<TElastix>::BeforeEachResolutionBase()
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Decide whether or not to write the pyramid images this resolution. */
   bool writePyramidImage = false;
-  this->m_Configuration->ReadParameter(writePyramidImage, "WritePyramidImagesAfterEachResolution", "", level, 0, false);
+  configuration.ReadParameter(writePyramidImage, "WritePyramidImagesAfterEachResolution", "", level, 0, false);
 
   /** Get the desired extension / file format. */
   std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+  configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
 
   /** Writing result image. */
   if (writePyramidImage)
   {
     /** Create a name for the final result. */
     std::ostringstream makeFileName;
-    makeFileName << this->m_Configuration->GetCommandLineArgument("-out");
-    makeFileName << this->GetComponentLabel() << "." << this->m_Configuration->GetElastixLevel() << ".R" << level << "."
+    makeFileName << configuration.GetCommandLineArgument("-out");
+    makeFileName << this->GetComponentLabel() << "." << configuration.GetElastixLevel() << ".R" << level << "."
                  << resultImageFormat;
 
     /** Save the fixed pyramid image. */
@@ -93,9 +96,11 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
   /** Get the ImageDimension. */
   const unsigned int ImageDimension = InputImageType::ImageDimension;
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Read numberOfResolutions. */
   unsigned int numberOfResolutions = 3;
-  this->m_Configuration->ReadParameter(numberOfResolutions, "NumberOfResolutions", 0, true);
+  configuration.ReadParameter(numberOfResolutions, "NumberOfResolutions", 0, true);
   if (numberOfResolutions == 0)
   {
     numberOfResolutions = 1;
@@ -118,10 +123,9 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
     {
       bool               ijfound = false;
       const unsigned int entrynr = i * ImageDimension + j;
-      ijfound |= this->m_Configuration->ReadParameter(schedule[i][j], "ImagePyramidSchedule", entrynr, false);
-      ijfound |= this->m_Configuration->ReadParameter(schedule[i][j], "FixedImagePyramidSchedule", entrynr, false);
-      ijfound |=
-        this->m_Configuration->ReadParameter(schedule[i][j], "Schedule", this->GetComponentLabel(), entrynr, -1, false);
+      ijfound |= configuration.ReadParameter(schedule[i][j], "ImagePyramidSchedule", entrynr, false);
+      ijfound |= configuration.ReadParameter(schedule[i][j], "FixedImagePyramidSchedule", entrynr, false);
+      ijfound |= configuration.ReadParameter(schedule[i][j], "Schedule", this->GetComponentLabel(), entrynr, -1, false);
 
       /** Remember if for at least one schedule element no value could be found. */
       found &= ijfound;
@@ -129,7 +133,7 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
     } // end for ImageDimension
   }   // end for numberOfResolutions
 
-  if (!found && this->GetConfiguration()->GetPrintErrorMessages())
+  if (!found && configuration.GetPrintErrorMessages())
   {
     log::warn(std::ostringstream{} << "WARNING: the fixed pyramid schedule is not fully specified!\n"
                                    << "  A default pyramid schedule is used.");
@@ -152,9 +156,11 @@ void
 FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
                                                    const unsigned int  level) // const
 {
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
-  this->m_Configuration->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
+  configuration.ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, false);
   const std::string::size_type pos = resultImagePixelType.find(" ");
   if (pos != std::string::npos)
   {
@@ -163,7 +169,7 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
 
   /** Read from the parameter file if compression is desired. */
   bool doCompression = false;
-  this->m_Configuration->ReadParameter(doCompression, "CompressResultImage", 0, false);
+  configuration.ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Do the writing. */
   log::to_stdout("  Writing fixed pyramid image ...");

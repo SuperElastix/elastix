@@ -23,6 +23,7 @@
 
 #include "elxBaseComponentSE.h"
 #include "elxDefaultConstruct.h"
+#include "elxDeref.h"
 #include "elxElastixBase.h"
 #include "itkAdvancedTransform.h"
 #include "itkAdvancedCombinationTransform.h"
@@ -295,7 +296,8 @@ protected:
   bool
   HasITKTransformParameters() const
   {
-    return this->BaseComponentSE<TElastix>::m_Configuration->HasParameter("ITKTransformParameters");
+    const Configuration & configuration = Deref(Superclass::GetConfiguration());
+    return configuration.HasParameter("ITKTransformParameters");
   }
 
   /** Estimate a scales vector

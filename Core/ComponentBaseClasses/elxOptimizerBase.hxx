@@ -19,6 +19,7 @@
 #define elxOptimizerBase_hxx
 
 #include "elxOptimizerBase.h"
+#include "elxDeref.h"
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 #include "itk_zlib.h"
@@ -56,9 +57,11 @@ OptimizerBase<TElastix>::BeforeEachResolutionBase()
   /** Get the current resolution level. */
   unsigned int level = this->GetRegistration()->GetAsITKBaseType()->GetCurrentLevel();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Check if after every iteration a new sample set should be created. */
   this->m_NewSamplesEveryIteration = false;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     this->m_NewSamplesEveryIteration, "NewSamplesEveryIteration", this->GetComponentLabel(), level, 0);
 
 } // end BeforeEachResolutionBase()
