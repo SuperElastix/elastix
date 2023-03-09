@@ -19,6 +19,7 @@
 #define elxRegistrationBase_hxx
 
 #include "elxRegistrationBase.h"
+#include "elxDeref.h"
 
 namespace elastix
 {
@@ -52,10 +53,12 @@ RegistrationBase<TElastix>::ReadMaskParameters(UseMaskErosionArrayType & useMask
   /** Read the parameters. */
   if (nrOfMasks > 0)
   {
+    const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
     /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask. */
     bool erosionOrNot = true;
-    this->GetConfiguration()->ReadParameter(erosionOrNot, "ErodeMask", "", level, 0, false);
-    this->GetConfiguration()->ReadParameter(erosionOrNot, whichErodeMaskOption, "", level, 0);
+    configuration.ReadParameter(erosionOrNot, "ErodeMask", "", level, 0, false);
+    configuration.ReadParameter(erosionOrNot, whichErodeMaskOption, "", level, 0);
     if (erosionOrNot)
     {
       /** fill with 'true's. */
@@ -71,7 +74,7 @@ RegistrationBase<TElastix>::ReadMaskParameters(UseMaskErosionArrayType & useMask
       std::ostringstream makestring;
       makestring << whichErodeMaskOption << i; // key for parameter file
       bool erosionOrNot_i = erosionOrNot;      // default value
-      this->GetConfiguration()->ReadParameter(erosionOrNot_i, makestring.str(), "", level, 0, false);
+      configuration.ReadParameter(erosionOrNot_i, makestring.str(), "", level, 0, false);
       if (erosionOrNot_i)
       {
         useMaskErosionArray[i] = true;

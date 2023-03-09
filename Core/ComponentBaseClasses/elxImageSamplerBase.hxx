@@ -20,6 +20,7 @@
 #define elxImageSamplerBase_hxx
 
 #include "elxImageSamplerBase.h"
+#include "elxDeref.h"
 
 namespace elastix
 {
@@ -35,11 +36,13 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler.
    * The "" argument means that no prefix is supplied.
    */
   bool newSamples = false;
-  this->m_Configuration->ReadParameter(newSamples, "NewSamplesEveryIteration", "", level, 0, true);
+  configuration.ReadParameter(newSamples, "NewSamplesEveryIteration", "", level, 0, true);
 
   if (newSamples)
   {
@@ -52,7 +55,7 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
   }
 
   /** Temporary?: Use the multi-threaded version or not. */
-  std::string useMultiThread = this->m_Configuration->GetCommandLineArgument("-mts"); // mts: multi-threaded samplers
+  std::string useMultiThread = configuration.GetCommandLineArgument("-mts"); // mts: multi-threaded samplers
   if (useMultiThread == "true")
   {
     this->GetAsITKBaseType()->SetUseMultiThread(true);
