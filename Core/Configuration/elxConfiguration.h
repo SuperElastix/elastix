@@ -111,7 +111,7 @@ public:
 
   /***/
   bool
-  GetPrintErrorMessages()
+  GetPrintErrorMessages() const
   {
     return m_ParameterMapInterface->GetPrintErrorMessages();
   }
