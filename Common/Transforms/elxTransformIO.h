@@ -152,7 +152,7 @@ private:
   ConvertItkTransformBaseToSingleItkTransform(const itk::TransformBase & elxTransform);
 
   static std::string
-  MakeDeformationFieldFileName(Configuration & configuration, const std::string & transformParameterFileName);
+  MakeDeformationFieldFileName(const Configuration & configuration, const std::string & transformParameterFileName);
 };
 } // namespace elastix
 

@@ -22,6 +22,7 @@
 #include <type_traits> // For is_same.
 
 #include "elxConfiguration.h"
+#include "elxDeref.h"
 
 namespace elastix
 {
@@ -54,7 +55,7 @@ public:
     // "src/Components/FixedImagePyramids/FixedGenericPyramid/elxFixedGenericPyramid.hxx" revision
     // f84ac0d1094ebdb13e456b1b8cf1f6f9bfcd0a38 "ENH: First checkin of a generic pyramid...", Marius Staring, 2012-02-02
 
-    Configuration & configuration = *(pyramid.GetConfiguration());
+    const Configuration & configuration = Deref(pyramid.GetConfiguration());
 
     /** Get the ImageDimension. */
     const unsigned int ImageDimension = TPyramid::ImageDimension;
