@@ -25,6 +25,7 @@
 #endif
 
 #include "elxTransformixMain.h"
+#include "elxDeref.h"
 
 #include "elxMacro.h"
 
@@ -84,14 +85,16 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
     return errorCode;
   }
 
+  const Configuration & configuration = Deref(MainBase::GetConfiguration());
+
   /** Create OpenCL context and logger here. */
 #ifdef ELASTIX_USE_OPENCL
   /** Check if user overrides OpenCL device selection. */
   std::string userSuppliedOpenCLDeviceType = "GPU";
-  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceType, "OpenCLDeviceType", 0, false);
+  configuration.ReadParameter(userSuppliedOpenCLDeviceType, "OpenCLDeviceType", 0, false);
 
   int userSuppliedOpenCLDeviceID = -1;
-  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceID, "OpenCLDeviceID", 0, false);
+  configuration.ReadParameter(userSuppliedOpenCLDeviceID, "OpenCLDeviceID", 0, false);
 
   std::string errorMessage = "";
   const bool  creatingContextSuccessful =
@@ -106,7 +109,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   }
 
   /** Create a log file. */
-  itk::CreateOpenCLLogger("transformix", this->m_Configuration->GetCommandLineArgument("-out"));
+  itk::CreateOpenCLLogger("transformix", configuration.GetCommandLineArgument("-out"));
 #endif
   auto & elastixBase = this->GetElastixBase();
 
@@ -244,22 +247,24 @@ TransformixMain::~TransformixMain()
 int
 TransformixMain::InitDBIndex()
 {
+  const Configuration & configuration = Deref(MainBase::GetConfiguration());
+
   /** Check if configuration object was already initialized. */
-  if (this->m_Configuration->IsInitialized())
+  if (configuration.IsInitialized())
   {
     /** Try to read MovingImagePixelType from the parameter file. */
     this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-    this->m_Configuration->ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
+    configuration.ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
 
     /** Try to read FixedImagePixelType from the parameter file. */
     this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-    this->m_Configuration->ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
+    configuration.ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
 
     /** MovingImageDimension. */
     if (this->m_MovingImageDimension == 0)
     {
       /** Try to read it from the transform parameter file. */
-      this->m_Configuration->ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0);
+      configuration.ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0);
 
       if (this->m_MovingImageDimension == 0)
       {
@@ -272,7 +277,7 @@ TransformixMain::InitDBIndex()
     if (this->m_FixedImageDimension == 0)
     {
       /** Try to read it from the transform parameter file. */
-      this->m_Configuration->ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0);
+      configuration.ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0);
 
       if (this->m_FixedImageDimension == 0)
       {
@@ -292,7 +297,7 @@ TransformixMain::InitDBIndex()
       return 1;
     }
 
-  } // end if m_Configuration->Initialized();
+  } // end if configuration.Initialized();
   else
   {
     log::error("ERROR: The configuration object has not been initialized.");
