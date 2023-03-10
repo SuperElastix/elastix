@@ -110,7 +110,7 @@ public:
    * The configuration object provides functionality to
    * read parameters and command line arguments.
    */
-  Configuration *
+  const Configuration *
   GetConfiguration() const
   {
     return this->m_Configuration.GetPointer();

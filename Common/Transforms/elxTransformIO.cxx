@@ -220,8 +220,8 @@ elastix::TransformIO::Read(const std::string & fileName)
 
 
 std::string
-elastix::TransformIO::MakeDeformationFieldFileName(Configuration &     configuration,
-                                                   const std::string & transformParameterFileName)
+elastix::TransformIO::MakeDeformationFieldFileName(const Configuration & configuration,
+                                                   const std::string &   transformParameterFileName)
 {
   // Get the last part of the filename of the transformParameter-file,
   // which is going to be part of the filename of the deformationField image.
