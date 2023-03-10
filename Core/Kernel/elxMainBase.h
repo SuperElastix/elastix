@@ -188,9 +188,6 @@ protected:
    */
   ObjectPointer m_Elastix{ nullptr };
 
-  /** The configuration object, containing the parameters and command-line arguments. */
-  ConfigurationPointer m_Configuration{ Configuration::New() };
-
   /** A vector of configuration objects, needed when transformix is used as library. */
   std::vector<ConfigurationPointer> m_Configurations{};
 
@@ -240,6 +237,10 @@ protected:
                    const ComponentDescriptionType & defaultComponentName,
                    int &                            errorcode,
                    bool                             mandatoryComponent = true);
+
+private:
+  /** The configuration object, containing the parameters and command-line arguments. */
+  ConfigurationPointer m_Configuration{ Configuration::New() };
 };
 
 } // end namespace elastix

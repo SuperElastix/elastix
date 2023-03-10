@@ -102,7 +102,7 @@ ElastixMain::Run()
   auto & elastixBase = this->GetElastixBase();
 
   /** Set some information in the ElastixBase. */
-  elastixBase.SetConfiguration(this->m_Configuration);
+  elastixBase.SetConfiguration(MainBase::GetConfiguration());
   elastixBase.SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. ImageSampler is not mandatory.

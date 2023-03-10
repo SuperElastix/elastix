@@ -116,7 +116,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   }
 
   /** Set some information in the ElastixBase. */
-  elastixBase.SetConfiguration(this->m_Configuration);
+  elastixBase.SetConfiguration(MainBase::GetConfiguration());
   elastixBase.SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. No default is specified for the Transform. */
