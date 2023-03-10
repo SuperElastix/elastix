@@ -19,6 +19,7 @@
 #define elxPreconditionedGradientDescent_hxx
 
 #include "elxPreconditionedGradientDescent.h"
+#include "elxDeref.h"
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkTimeProbe.h"
@@ -85,50 +86,51 @@ PreconditionedGradientDescent<TElastix>::BeforeEachResolution()
   /** Get the current resolution level. */
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Set the maximumNumberOfIterations. */
   unsigned int maximumNumberOfIterations = 500;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
   this->SetNumberOfIterations(maximumNumberOfIterations);
 
   /** Set the gain parameter A. */
   double A = 20.0;
-  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
   this->SetParam_A(A);
 
   /** Set the MaximumNumberOfSamplingAttempts. */
   unsigned int maximumNumberOfSamplingAttempts = 0;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfSamplingAttempts, "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0);
   this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
 
   /** Set/Get the initial time. Default: 0.0. Should be >=0. */
   double initialTime = 0.0;
-  this->GetConfiguration()->ReadParameter(initialTime, "SigmoidInitialTime", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(initialTime, "SigmoidInitialTime", this->GetComponentLabel(), level, 0);
   this->SetInitialTime(initialTime);
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true
    * NB: the setting is turned of in case of UseRandomSampleRegion=true.
    */
   bool useAdaptiveStepSizes = true;
-  this->GetConfiguration()->ReadParameter(
-    useAdaptiveStepSizes, "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useAdaptiveStepSizes, "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0);
   this->SetUseAdaptiveStepSizes(useAdaptiveStepSizes);
 
   /** Set the diagonal weight for the precondition matrix */
   double diagonalWeight = 1e-6;
-  this->GetConfiguration()->ReadParameter(diagonalWeight, "DiagonalWeight", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(diagonalWeight, "DiagonalWeight", this->GetComponentLabel(), level, 0);
   this->SetDiagonalWeight(diagonalWeight);
 
   /** Set the minimum element magnitude for the gradient */
   double minimumGradientElementMagnitude = 1e-10;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     minimumGradientElementMagnitude, "MinimumGradientElementMagnitude", this->GetComponentLabel(), level, 0);
   this->SetMinimumGradientElementMagnitude(minimumGradientElementMagnitude);
 
   /** Set whether automatic gain estimation is required; default: true. */
   this->m_AutomaticParameterEstimation = true;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     this->m_AutomaticParameterEstimation, "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0);
 
   if (this->m_AutomaticParameterEstimation)
@@ -138,7 +140,7 @@ PreconditionedGradientDescent<TElastix>::BeforeEachResolution()
      * A value of 0 (default) means automatic estimation.
      */
     this->m_NumberOfGradientMeasurements = 0;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfGradientMeasurements, "NumberOfGradientMeasurements", this->GetComponentLabel(), level, 0);
 
     /** Set the number of image samples used to compute the 'exact' gradient.
@@ -146,15 +148,14 @@ PreconditionedGradientDescent<TElastix>::BeforeEachResolution()
      * If the image is smaller, the number of samples is automatically reduced later.
      */
     this->m_NumberOfSamplesForExactGradient = 100000;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfSamplesForExactGradient, "NumberOfSamplesForExactGradient", this->GetComponentLabel(), level, 0);
 
     /** Set/Get the scaling factor zeta of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 0.1. Should be > 0.
      */
     double sigmoidScaleFactor = 0.1;
-    this->GetConfiguration()->ReadParameter(
-      sigmoidScaleFactor, "SigmoidScaleFactor", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidScaleFactor, "SigmoidScaleFactor", this->GetComponentLabel(), level, 0);
     this->m_SigmoidScaleFactor = sigmoidScaleFactor;
 
   } // end if automatic parameter estimation
@@ -166,28 +167,28 @@ PreconditionedGradientDescent<TElastix>::BeforeEachResolution()
     const double noisefactor = 0.2; // eta
 
     double alpha = 1.0;
-    this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
     this->SetParam_alpha(alpha);
 
     double a = 2.0 * noisefactor * std::pow(this->GetParam_A() + 1.0, alpha);
-    this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
     this->SetParam_a(a);
 
     /** Set/Get the maximum of the sigmoid. Should be >0. Default: 1.0. */
     double sigmoidMax = 1.0;
-    this->GetConfiguration()->ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMax(sigmoidMax);
 
     /** Set/Get the minimum of the sigmoid. Should be <0. Default ~ -0.8. */
     double sigmoidMin = -0.99 + 0.98 * noisefactor;
-    this->GetConfiguration()->ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMin(sigmoidMin);
 
     /** Set/Get the scaling of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 1e-8. Should be >0.
      */
     double sigmoidScale = 1e-8;
-    this->GetConfiguration()->ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
     this->SetSigmoidScale(sigmoidScale);
 
   } // end else: no automatic parameter estimation

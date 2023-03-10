@@ -20,6 +20,7 @@
 #define elxSimultaneousPerturbation_hxx
 
 #include "elxSimultaneousPerturbation.h"
+#include "elxDeref.h"
 #include <iomanip>
 #include <string>
 #include <vnl/vnl_math.h>
@@ -46,8 +47,10 @@ template <class TElastix>
 void
 SimultaneousPerturbation<TElastix>::BeforeRegistration()
 {
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   std::string showMetricValues("false");
-  this->GetConfiguration()->ReadParameter(showMetricValues, "ShowMetricValues", 0);
+  configuration.ReadParameter(showMetricValues, "ShowMetricValues", 0);
   if (showMetricValues == "false")
   {
     this->m_ShowMetricValues = false;
@@ -81,16 +84,17 @@ SimultaneousPerturbation<TElastix>::BeforeEachResolution()
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Set the maximumNumberOfIterations.*/
   unsigned int maximumNumberOfIterations = 500;
-  this->m_Configuration->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
   this->SetMaximumNumberOfIterations(maximumNumberOfIterations);
 
   /** Set the number of perturbation used to construct a gradient estimate g_k. */
   unsigned int numberOfPerturbations = 1;
-  this->m_Configuration->ReadParameter(
-    numberOfPerturbations, "NumberOfPerturbations", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfPerturbations, "NumberOfPerturbations", this->GetComponentLabel(), level, 0);
   this->SetNumberOfPerturbations(numberOfPerturbations);
 
   /** \todo call the GuessParameters function */
@@ -100,11 +104,11 @@ SimultaneousPerturbation<TElastix>::BeforeEachResolution()
   double alpha = 0.602;
   double gamma = 0.101;
 
-  this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
-  this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0);
-  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
-  this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
-  this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0);
 
   this->Seta(a);
   this->Setc(c);

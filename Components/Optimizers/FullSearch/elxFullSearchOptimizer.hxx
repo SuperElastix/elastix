@@ -19,6 +19,7 @@
 #define elxFullSearchOptimizer_hxx
 
 #include "elxFullSearchOptimizer.h"
+#include "elxDeref.h"
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -67,6 +68,8 @@ FullSearch<TElastix>::BeforeEachResolution()
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Read FullSearchRange from the parameter file. */
 
   /** declare variables */
@@ -94,31 +97,31 @@ FullSearch<TElastix>::BeforeEachResolution()
 
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(name, fullFieldName, entry_nr, false);
+      found = configuration.ReadParameter(name, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(param_nr, fullFieldName, entry_nr, false);
+      found = configuration.ReadParameter(param_nr, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(minimum, fullFieldName, entry_nr, false);
+      found = configuration.ReadParameter(minimum, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(maximum, fullFieldName, entry_nr, false);
+      found = configuration.ReadParameter(maximum, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
-      found = this->GetConfiguration()->ReadParameter(stepsize, fullFieldName, entry_nr, false);
+      found = configuration.ReadParameter(stepsize, fullFieldName, entry_nr, false);
       realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
       ++entry_nr;
     }
@@ -159,10 +162,10 @@ FullSearch<TElastix>::BeforeEachResolution()
 
     /** Set the name of this image on disk. */
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+    configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
     makeString.str("");
-    makeString << this->GetConfiguration()->GetCommandLineArgument("-out") << "OptimizationSurface."
-               << this->GetConfiguration()->GetElastixLevel() << ".R" << level << "." << resultImageFormat;
+    makeString << configuration.GetCommandLineArgument("-out") << "OptimizationSurface."
+               << configuration.GetElastixLevel() << ".R" << level << "." << resultImageFormat;
     this->m_OptimizationSurface->SetOutputFileName(makeString.str().c_str());
 
     log::info(std::ostringstream{} << "Total number of iterations needed in this resolution: "
@@ -210,6 +213,8 @@ template <class TElastix>
 void
 FullSearch<TElastix>::AfterEachResolution()
 {
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   // enum StopConditionType {FullRangeSearched,  MetricError };
   std::string stopcondition;
 
@@ -233,8 +238,7 @@ FullSearch<TElastix>::AfterEachResolution()
 
   /** Write the optimization surface to disk */
   bool writeSurfaceEachResolution = false;
-  this->GetConfiguration()->ReadParameter(
-    writeSurfaceEachResolution, "WriteOptimizationSurfaceEachResolution", 0, false);
+  configuration.ReadParameter(writeSurfaceEachResolution, "WriteOptimizationSurfaceEachResolution", 0, false);
   if (writeSurfaceEachResolution)
   {
     try

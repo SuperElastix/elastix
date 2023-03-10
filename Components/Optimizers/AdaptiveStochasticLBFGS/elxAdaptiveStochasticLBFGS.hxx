@@ -19,6 +19,7 @@
 #define elxAdaptiveStochasticLBFGS_hxx
 
 #include "elxAdaptiveStochasticLBFGS.h"
+#include "elxDeref.h"
 
 #include <iomanip>
 #include <string>
@@ -129,48 +130,49 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Set the LBFGSMemory. */
   SizeValueType memory = 5;
-  this->GetConfiguration()->ReadParameter(memory, "LBFGSMemory", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(memory, "LBFGSMemory", this->GetComponentLabel(), level, 0);
   this->m_LBFGSMemory = memory;
 
   /** Set the updateFrequenceL. */
   SizeValueType updateFrequenceL = 5;
-  this->GetConfiguration()->ReadParameter(updateFrequenceL, "UpdateFrequenceL", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(updateFrequenceL, "UpdateFrequenceL", this->GetComponentLabel(), level, 0);
   this->m_UpdateFrequenceL = updateFrequenceL;
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
   this->m_OutsideIterations = maximumNumberOfIterations;
   this->SetNumberOfIterations(this->m_OutsideIterations);
 
   /** Set the numberOfInnerLoopSamples. */
   SizeValueType numberOfInnerLoopSamples = 10;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     numberOfInnerLoopSamples, "NumberOfInnerLoopSamples", this->GetComponentLabel(), level, 0);
   this->m_NumberOfInnerLoopSamples = numberOfInnerLoopSamples;
 
   /** Set the NumberOfSpatialSamples. */
   unsigned long numberOfSpatialSamples = 5000;
-  this->GetConfiguration()->ReadParameter(
-    numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
   this->m_NumberOfSpatialSamples = numberOfSpatialSamples;
 
   /** Set the gain parameter A. */
   double A = 20.0;
-  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
   this->SetParam_A(A);
 
   /** Set the gain parameter beta. */
   double beta = 20.0;
-  this->GetConfiguration()->ReadParameter(beta, "SP_beta", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(beta, "SP_beta", this->GetComponentLabel(), level, 0);
   this->SetParam_beta(beta);
 
   /** Set the MaximumNumberOfSamplingAttempts. */
   SizeValueType maximumNumberOfSamplingAttempts = 0;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfSamplingAttempts, "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0);
   this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
   if (maximumNumberOfSamplingAttempts > 5)
@@ -185,17 +187,16 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
 
   /** Set/Get the initial time. Default: 0.0. Should be >=0. */
   double initialTime = 0.0;
-  this->GetConfiguration()->ReadParameter(initialTime, "SigmoidInitialTime", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(initialTime, "SigmoidInitialTime", this->GetComponentLabel(), level, 0);
   this->SetInitialTime(initialTime);
 
   /** Set the maximum band size of the covariance matrix. */
   this->m_MaxBandCovSize = 192;
-  this->GetConfiguration()->ReadParameter(
-    this->m_MaxBandCovSize, "MaxBandCovSize", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(this->m_MaxBandCovSize, "MaxBandCovSize", this->GetComponentLabel(), level, 0);
 
   /** Set the number of random samples used to estimate the structure of the covariance matrix. */
   this->m_NumberOfBandStructureSamples = 10;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     this->m_NumberOfBandStructureSamples, "NumberOfBandStructureSamples", this->GetComponentLabel(), level, 0);
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true
@@ -203,35 +204,33 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
    * Deprecated alias UseCruzAcceleration is also still supported.
    */
   bool useAdaptiveStepSizes = true;
-  this->GetConfiguration()->ReadParameter(
-    useAdaptiveStepSizes, "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false);
-  this->GetConfiguration()->ReadParameter(
-    useAdaptiveStepSizes, "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useAdaptiveStepSizes, "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false);
+  configuration.ReadParameter(useAdaptiveStepSizes, "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0);
   this->SetUseAdaptiveStepSizes(useAdaptiveStepSizes);
 
   /** Set whether the adaptive LBFGS step size mechanism is desired. Default: true */
   bool useAdaptiveLBFGSStepSizes = true;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     useAdaptiveLBFGSStepSizes, "UseAdaptiveLBFGSStepSizes", this->GetComponentLabel(), level, 0);
   this->m_UseAdaptiveLBFGSStepSizes = useAdaptiveLBFGSStepSizes;
 
   /** Set whether automatic gain estimation is required; default: true. */
   this->m_AutomaticParameterEstimation = true;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     this->m_AutomaticParameterEstimation, "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0);
 
   /** Set whether automatic gain estimation is required; default: true. */
   this->m_AutomaticLBFGSStepsizeEstimation = true;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     this->m_AutomaticLBFGSStepsizeEstimation, "AutomaticLBFGSstepsizeEstimation", this->GetComponentLabel(), level, 0);
 
   /** Set the scale of the windowa for H0. */
   double windowScale = 5;
-  this->m_Configuration->ReadParameter(windowScale, "WindowScale", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(windowScale, "WindowScale", this->GetComponentLabel(), level, 0);
   this->m_WindowScale = windowScale;
 
   std::string stepSizeStrategy = "Adaptive";
-  this->GetConfiguration()->ReadParameter(stepSizeStrategy, "StepSizeStrategy", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(stepSizeStrategy, "StepSizeStrategy", this->GetComponentLabel(), 0, 0);
   this->m_StepSizeStrategy = stepSizeStrategy;
 
   if (this->m_AutomaticParameterEstimation)
@@ -253,15 +252,14 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
     this->m_MaximumStepLength = sum / static_cast<double>(fixdim + movdim);
 
     /** Read user setting */
-    this->GetConfiguration()->ReadParameter(
-      this->m_MaximumStepLength, "MaximumStepLength", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(this->m_MaximumStepLength, "MaximumStepLength", this->GetComponentLabel(), level, 0);
 
     /** Number of gradients N to estimate the average square magnitudes
      * of the exact gradient and the approximation error.
      * A value of 0 (default) means automatic estimation.
      */
     this->m_NumberOfGradientMeasurements = 0;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfGradientMeasurements, "NumberOfGradientMeasurements", this->GetComponentLabel(), level, 0);
 
     /** Set the number of Jacobian measurements M.
@@ -270,7 +268,7 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
     this->m_NumberOfJacobianMeasurements = std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(P));
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfJacobianMeasurements, "NumberOfJacobianMeasurements", this->GetComponentLabel(), level, 0);
 
     /** Set the number of image samples used to compute the 'exact' gradient.
@@ -278,32 +276,31 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
      * If the image is smaller, the number of samples is automatically reduced later.
      */
     this->m_NumberOfSamplesForExactGradient = 100000;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfSamplesForExactGradient, "NumberOfSamplesForExactGradient", this->GetComponentLabel(), level, 0);
 
     /** Set/Get the scaling factor zeta of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 0.1. Should be >0.
      */
     double sigmoidScaleFactor = 0.1;
-    this->GetConfiguration()->ReadParameter(
-      sigmoidScaleFactor, "SigmoidScaleFactor", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidScaleFactor, "SigmoidScaleFactor", this->GetComponentLabel(), level, 0);
     this->m_SigmoidScaleFactor = sigmoidScaleFactor;
 
     /** Set/Get the scaling of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 1e-8. Should be >0.
      */
     double sigmoidScale = 1e-8;
-    this->GetConfiguration()->ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
     this->SetSigmoidScale(sigmoidScale);
 
     /** Set/Get the maximum of the sigmoid. Should be >0. Default: 1.0. */
     double sigmoidMax = 1.0;
-    this->GetConfiguration()->ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMax(sigmoidMax);
 
     /** Set/Get the minimum of the sigmoid. Should be <0. Default: -0.8. */
     double sigmoidMin = -0.8;
-    this->GetConfiguration()->ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMin(sigmoidMin);
 
   } // end if automatic parameter estimation
@@ -314,26 +311,26 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
      */
     double a = 400.0; // arbitrary guess
     double alpha = 0.602;
-    this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
-    this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
     this->SetParam_a(a);
     this->SetParam_alpha(alpha);
 
     /** Set/Get the maximum of the sigmoid. Should be >0. Default: 1.0. */
     double sigmoidMax = 1.0;
-    this->GetConfiguration()->ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMax(sigmoidMax);
 
     /** Set/Get the minimum of the sigmoid. Should be <0. Default: -0.8. */
     double sigmoidMin = -0.8;
-    this->GetConfiguration()->ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMin(sigmoidMin);
 
     /** Set/Get the scaling of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 1e-8. Should be >0.
      */
     double sigmoidScale = 1e-8;
-    this->GetConfiguration()->ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
     this->SetSigmoidScale(sigmoidScale);
 
   } // end else: no automatic parameter estimation
@@ -642,9 +639,11 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
     originalSampler[m] = sampler.GetPointer();
   }
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Get the sampler that is used for the curvature pair update. */
   std::string curvatureSamplerType = "Random";
-  this->GetConfiguration()->ReadParameter(curvatureSamplerType, "CurvatureSampler", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(curvatureSamplerType, "CurvatureSampler", this->GetComponentLabel(), 0, 0);
 
   /** Create some samplers that can be used for the curvature computation. */
   std::vector<ImageSamplerBasePointer>             curvatureSamplers(M);
@@ -729,12 +728,12 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
 
         /** Set whether the Search Direction used for adaptive step size mechanism is desired. Default: false */
         bool useSearchDirForAdaptiveStepSize = false;
-        this->GetConfiguration()->ReadParameter(useSearchDirForAdaptiveStepSize,
-                                                "UseSearchDirForAdaptiveStepSize",
-                                                this->GetComponentLabel(),
-                                                level,
-                                                0,
-                                                false);
+        configuration.ReadParameter(useSearchDirForAdaptiveStepSize,
+                                    "UseSearchDirForAdaptiveStepSize",
+                                    this->GetComponentLabel(),
+                                    level,
+                                    0,
+                                    false);
         this->SetUseSearchDirForAdaptiveStepSize(useSearchDirForAdaptiveStepSize);
 
         /** Reset the current time to initial time. */
@@ -874,9 +873,11 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation()
   log::info(std::ostringstream{} << "Starting automatic parameter estimation for " << this->elxGetClassName()
                                  << " ...");
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     asgdParameterEstimationMethod, "ASGDParameterEstimationMethod", this->GetComponentLabel(), 0, 0);
 
   /** Perform automatic optimizer parameter estimation by the desired method. */
@@ -1098,9 +1099,11 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
     computeDisplacementDistribution->SetUseScales(false);
   }
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   double      jacg = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumDisplacementEstimationMethod, "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
 
   /** Compute the Jacobian terms. */
@@ -1118,8 +1121,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
   const double alpha = 1.0;
 
   this->m_UseNoiseCompensation = true;
-  this->GetConfiguration()->ReadParameter(
-    this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
 
   /** Use noise Compensation factor or not. */
   if (this->m_UseNoiseCompensation == true)
@@ -1209,9 +1211,11 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
     computeDisplacementDistribution->SetUseScales(false);
   }
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   double      jacg = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumDisplacementEstimationMethod, "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
 
   /** Compute the Jacobian terms. */
@@ -1224,8 +1228,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
   const double alpha = 1.0;
 
   this->m_UseNoiseCompensation = true;
-  this->GetConfiguration()->ReadParameter(
-    this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
 
   /** Use noise Compensation factor or not. */
   if (this->m_UseNoiseCompensation == true)
