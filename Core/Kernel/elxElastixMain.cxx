@@ -17,6 +17,7 @@
  *=========================================================================*/
 
 #include "elxElastixMain.h"
+#include "elxDeref.h"
 
 #ifdef ELASTIX_USE_OPENCL
 #  include "itkOpenCLContext.h"
@@ -75,14 +76,16 @@ ElastixMain::Run()
     return errorCode;
   }
 
+  const Configuration & configuration = Deref(MainBase::GetConfiguration());
+
   /** Create OpenCL context and logger here. */
 #ifdef ELASTIX_USE_OPENCL
   /** Check if user overrides OpenCL device selection. */
   std::string userSuppliedOpenCLDeviceType = "GPU";
-  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceType, "OpenCLDeviceType", 0, false);
+  configuration.ReadParameter(userSuppliedOpenCLDeviceType, "OpenCLDeviceType", 0, false);
 
   int userSuppliedOpenCLDeviceID = -1;
-  this->m_Configuration->ReadParameter(userSuppliedOpenCLDeviceID, "OpenCLDeviceID", 0, false);
+  configuration.ReadParameter(userSuppliedOpenCLDeviceID, "OpenCLDeviceID", 0, false);
 
   std::string errorMessage = "";
   const bool  creatingContextSuccessful =
@@ -97,7 +100,7 @@ ElastixMain::Run()
   }
 
   /** Create a log file. */
-  itk::CreateOpenCLLogger("elastix", this->m_Configuration->GetCommandLineArgument("-out"));
+  itk::CreateOpenCLLogger("elastix", configuration.GetCommandLineArgument("-out"));
 #endif
   auto & elastixBase = this->GetElastixBase();
 
@@ -216,15 +219,17 @@ ElastixMain::Run()
 int
 ElastixMain::InitDBIndex()
 {
+  const Configuration & configuration = Deref(MainBase::GetConfiguration());
+
   /** Only do something when the configuration object wasn't initialized yet. */
-  if (this->m_Configuration->IsInitialized())
+  if (configuration.IsInitialized())
   {
     /** FixedImagePixelType. */
     if (this->m_FixedImagePixelType.empty())
     {
       /** Try to read it from the parameter file. */
       this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-      this->m_Configuration->ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
+      configuration.ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
     }
 
     /** FixedImageDimension. */
@@ -233,10 +238,10 @@ ElastixMain::InitDBIndex()
       if (!BaseComponent::IsElastixLibrary())
       {
         /** Get the fixed image file name. */
-        std::string fixedImageFileName = this->m_Configuration->GetCommandLineArgument("-f");
+        std::string fixedImageFileName = configuration.GetCommandLineArgument("-f");
         if (fixedImageFileName.empty())
         {
-          fixedImageFileName = this->m_Configuration->GetCommandLineArgument("-f0");
+          fixedImageFileName = configuration.GetCommandLineArgument("-f0");
         }
 
         /** Sanity check. */
@@ -263,8 +268,7 @@ ElastixMain::InitDBIndex()
          * from the parameter file, but now we read it from the image header.
          */
         unsigned int fixDimParameterFile = 0;
-        bool         foundInParameterFile =
-          this->m_Configuration->ReadParameter(fixDimParameterFile, "FixedImageDimension", 0, false);
+        bool foundInParameterFile = configuration.ReadParameter(fixDimParameterFile, "FixedImageDimension", 0, false);
 
         /** Check. */
         if (foundInParameterFile)
@@ -283,7 +287,7 @@ ElastixMain::InitDBIndex()
       }
       else
       {
-        this->m_Configuration->ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0, false);
+        configuration.ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0, false);
       }
 
       /** Just a sanity check, probably not needed. */
@@ -299,7 +303,7 @@ ElastixMain::InitDBIndex()
     {
       /** Try to read it from the parameter file. */
       this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-      this->m_Configuration->ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
+      configuration.ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
     }
 
     /** MovingImageDimension. */
@@ -308,10 +312,10 @@ ElastixMain::InitDBIndex()
       if (!BaseComponent::IsElastixLibrary())
       {
         /** Get the moving image file name. */
-        std::string movingImageFileName = this->m_Configuration->GetCommandLineArgument("-m");
+        std::string movingImageFileName = configuration.GetCommandLineArgument("-m");
         if (movingImageFileName.empty())
         {
-          movingImageFileName = this->m_Configuration->GetCommandLineArgument("-m0");
+          movingImageFileName = configuration.GetCommandLineArgument("-m0");
         }
 
         /** Sanity check. */
@@ -338,8 +342,7 @@ ElastixMain::InitDBIndex()
          * from the parameter file, but now we read it from the image header.
          */
         unsigned int movDimParameterFile = 0;
-        bool         foundInParameterFile =
-          this->m_Configuration->ReadParameter(movDimParameterFile, "MovingImageDimension", 0, false);
+        bool foundInParameterFile = configuration.ReadParameter(movDimParameterFile, "MovingImageDimension", 0, false);
 
         /** Check. */
         if (foundInParameterFile)
@@ -358,7 +361,7 @@ ElastixMain::InitDBIndex()
       }
       else
       {
-        this->m_Configuration->ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0, false);
+        configuration.ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0, false);
       }
 
       /** Just a sanity check, probably not needed. */
@@ -380,7 +383,7 @@ ElastixMain::InitDBIndex()
       return 1;
     }
 
-  } // end if m_Configuration->Initialized();
+  } // end if configuration.Initialized();
   else
   {
     log::error("ERROR: The configuration object has not been initialized.");
@@ -401,7 +404,8 @@ void
 ElastixMain::SetElastixLevel(unsigned int level)
 {
   /** Call SetElastixLevel from MyConfiguration. */
-  this->m_Configuration->SetElastixLevel(level);
+  Configuration & configuration = Deref(MainBase::GetConfiguration());
+  configuration.SetElastixLevel(level);
 
 } // end SetElastixLevel()
 
@@ -414,7 +418,8 @@ unsigned int
 ElastixMain::GetElastixLevel() const
 {
   /** Call GetElastixLevel from MyConfiguration. */
-  return this->m_Configuration->GetElastixLevel();
+  const Configuration & configuration = Deref(MainBase::GetConfiguration());
+  return configuration.GetElastixLevel();
 
 } // end GetElastixLevel()
 
@@ -427,7 +432,8 @@ void
 ElastixMain::SetTotalNumberOfElastixLevels(unsigned int levels)
 {
   /** Call SetTotalNumberOfElastixLevels from MyConfiguration. */
-  this->m_Configuration->SetTotalNumberOfElastixLevels(levels);
+  Configuration & configuration = Deref(MainBase::GetConfiguration());
+  configuration.SetTotalNumberOfElastixLevels(levels);
 
 } // end SetTotalNumberOfElastixLevels()
 
@@ -440,7 +446,8 @@ unsigned int
 ElastixMain::GetTotalNumberOfElastixLevels() const
 {
   /** Call GetTotalNumberOfElastixLevels from MyConfiguration. */
-  return this->m_Configuration->GetTotalNumberOfElastixLevels();
+  const Configuration & configuration = Deref(MainBase::GetConfiguration());
+  return configuration.GetTotalNumberOfElastixLevels();
 
 } // end GetTotalNumberOfElastixLevels()
 
