@@ -54,7 +54,7 @@ using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
-using elx::CoreMainGTestUtilities::Deref;
+using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::Front;
@@ -357,7 +357,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
                               { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
     registration.Update();
 
-    const auto &       output = Deref(registration.GetOutput());
+    const auto &       output = DerefRawPointer(registration.GetOutput());
     const auto &       outputImageSize = output.GetBufferedRegion().GetSize();
     const auto * const outputBufferPointer = output.GetBufferPointer();
 
@@ -501,7 +501,7 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
                                                               { "Transform", "TranslationTransform" } }));
       registration.Update();
 
-      const auto & output = Deref(registration.GetOutput());
+      const auto & output = DerefRawPointer(registration.GetOutput());
 
       // The most essential check of this test.
       EXPECT_EQ(output.GetOrigin(), fixedImageOrigin);
@@ -637,8 +637,9 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
       const auto updateAndRetrieveTransformParameterMap = [movingImage](RegistrationMethodType & registration) {
         registration.SetMovingImage(movingImage);
         registration.Update();
-        const elx::ParameterObject & transformParameterObject = Deref(registration.GetTransformParameterObject());
-        const auto &                 transformParameterMaps = transformParameterObject.GetParameterMap();
+        const elx::ParameterObject & transformParameterObject =
+          DerefRawPointer(registration.GetTransformParameterObject());
+        const auto & transformParameterMaps = transformParameterObject.GetParameterMap();
         EXPECT_EQ(transformParameterMaps.size(), 1);
         return Front(transformParameterMaps);
       };
@@ -898,7 +899,8 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
           const itk::TransformBase::Pointer compositeTransform =
             elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0-Composite." + fileNameExtension);
           const auto & transformQueue =
-            Deref(dynamic_cast<const CompositeTransformType *>(compositeTransform.GetPointer())).GetTransformQueue();
+            DerefRawPointer(dynamic_cast<const CompositeTransformType *>(compositeTransform.GetPointer()))
+              .GetTransformQueue();
 
           ASSERT_EQ(transformQueue.size(), useInitialTransform ? 2 : 1);
 
@@ -906,7 +908,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
 
           for (const auto actualTransformPtr : { singleTransform.GetPointer(), frontTransform })
           {
-            const itk::TransformBase & actualTransform = Deref(actualTransformPtr);
+            const itk::TransformBase & actualTransform = DerefRawPointer(actualTransformPtr);
 
             EXPECT_EQ(typeid(actualTransform), typeid(expectedItkTransform));
             EXPECT_EQ(actualTransform.GetParameters(), expectedItkTransform.GetParameters());
@@ -923,7 +925,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
             // InitialTransformParameterFileName.
             const auto & backTransform = DerefSmartPointer(transformQueue.back());
             const auto & translationTransform =
-              Deref(dynamic_cast<const itk::TranslationTransform<double, ImageDimension> *>(&backTransform));
+              DerefRawPointer(dynamic_cast<const itk::TranslationTransform<double, ImageDimension> *>(&backTransform));
             EXPECT_EQ(translationTransform.GetOffset(), itk::MakeVector(1.0, -2.0));
           }
         }

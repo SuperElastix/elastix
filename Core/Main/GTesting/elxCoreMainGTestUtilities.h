@@ -78,13 +78,13 @@ public:
 /// Dereferences the specified raw pointer. Throws an `Exception` instead, when the pointer is null.
 template <typename TRawPointer>
 decltype(auto)
-Deref(const TRawPointer ptr)
+DerefRawPointer(const TRawPointer ptr)
 {
   static_assert(std::is_pointer<TRawPointer>::value, "For smart pointers, use DerefSmartPointer instead!");
 
   if (ptr == nullptr)
   {
-    throw Exception("Deref error: the pointer should not be null!");
+    throw Exception("DerefRawPointer error: the pointer should not be null!");
   }
   return *ptr;
 }
@@ -94,11 +94,11 @@ template <typename TSmartPointer>
 decltype(auto)
 DerefSmartPointer(const TSmartPointer & ptr)
 {
-  static_assert(!std::is_pointer<TSmartPointer>::value, "For raw pointers, use Deref instead!");
+  static_assert(!std::is_pointer<TSmartPointer>::value, "For raw pointers, use DerefRawPointer instead!");
 
   if (ptr == nullptr)
   {
-    throw Exception("Deref error: the (smart) pointer should not be null!");
+    throw Exception("DerefRawPointer error: the (smart) pointer should not be null!");
   }
   return *ptr;
 }
@@ -255,7 +255,7 @@ std::vector<double>
 GetTransformParametersFromFilter(TFilter & filter)
 {
   const auto   transformParameterObject = filter.GetTransformParameterObject();
-  const auto & transformParameterMaps = Deref(transformParameterObject).GetParameterMap();
+  const auto & transformParameterMaps = DerefRawPointer(transformParameterObject).GetParameterMap();
   return GetTransformParametersFromMaps(transformParameterMaps);
 }
 
