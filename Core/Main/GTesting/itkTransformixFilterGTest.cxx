@@ -66,7 +66,7 @@ using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
 using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
-using elx::CoreMainGTestUtilities::Deref;
+using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath;
@@ -151,7 +151,7 @@ TranslateImage(TImage & image, const typename TImage::OffsetType & translationOf
                             { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
   filter.Update();
 
-  return &Deref(filter.GetOutput());
+  return &DerefRawPointer(filter.GetOutput());
 }
 
 
@@ -239,8 +239,8 @@ Expect_TransformixFilter_output_equals_ResampleImageFilter_output(
   const auto resampleImageFilter = CreateResampleImageFilter(inputImage, itkTransform);
   const auto transformixFilter = CreateTransformixFilter(inputImage, itkTransform);
 
-  const auto & resampleImageFilterOutput = Deref(DerefSmartPointer(resampleImageFilter).GetOutput());
-  const auto & transformixFilterOutput = Deref(DerefSmartPointer(transformixFilter).GetOutput());
+  const auto & resampleImageFilterOutput = DerefRawPointer(DerefSmartPointer(resampleImageFilter).GetOutput());
+  const auto & transformixFilterOutput = DerefRawPointer(DerefSmartPointer(transformixFilter).GetOutput());
 
   // Check that the ResampleImageFilter output isn't equal to the input image,
   // otherwise the test itself would be less interesting.
@@ -335,7 +335,7 @@ Expect_Transformix_output_equals_registration_output_from_file(const testing::Te
   registration.SetOutputDirectory(outputDirectoryPath);
   registration.Update();
 
-  const auto & registrationOutputImage = Deref(registration.GetOutput());
+  const auto & registrationOutputImage = DerefRawPointer(registration.GetOutput());
 
   const itk::ImageBufferRange<const TImage> registrationOutputImageBufferRange(registrationOutputImage);
   const auto beginOfRegistrationOutputImageBuffer = registrationOutputImageBufferRange.cbegin();
@@ -373,7 +373,7 @@ Expect_Transformix_output_equals_registration_output_from_file(const testing::Te
 
   transformixFilter.Update();
 
-  EXPECT_EQ(Deref(transformixFilter.GetOutput()), registrationOutputImage);
+  EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), registrationOutputImage);
 }
 
 
@@ -412,7 +412,8 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
 
     const auto resampleImageFilter = CreateResampleImageFilter(*inputImage, bsplineTransform);
 
-    ExpectEqualImages(Deref(transformixFilter.GetOutput()), Deref(resampleImageFilter->GetOutput()));
+    ExpectEqualImages(DerefRawPointer(transformixFilter.GetOutput()),
+                      DerefRawPointer(resampleImageFilter->GetOutput()));
   }
 }
 
@@ -509,8 +510,8 @@ GTEST_TEST(itkTransformixFilter, MeshTranslation2D)
     const auto outputMesh = transformixFilter.GetOutputMesh();
     const auto expectedNumberOfPoints = inputMesh->GetNumberOfPoints();
 
-    const auto & inputPoints = Deref(DerefSmartPointer(inputMesh).GetPoints());
-    const auto & outputPoints = Deref(Deref(outputMesh).GetPoints());
+    const auto & inputPoints = DerefRawPointer(DerefSmartPointer(inputMesh).GetPoints());
+    const auto & outputPoints = DerefRawPointer(DerefRawPointer(outputMesh).GetPoints());
 
     ASSERT_EQ(outputPoints.size(), expectedNumberOfPoints);
 
@@ -580,7 +581,7 @@ GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
                               { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
     filter.Update();
     const auto * const outputImage = filter.GetOutput();
-    ExpectEqualImages(Deref(outputImage), *expectedOutputImage);
+    ExpectEqualImages(DerefRawPointer(outputImage), *expectedOutputImage);
   }
 }
 
@@ -743,7 +744,7 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndDefaultTransform)
   elx::DefaultConstruct<itk::TranslationTransform<ParametersValueType, dimension>> translationTransform;
   translationTransform.SetOffset(itk::MakeVector(1, -2));
   const auto   resampleImageFilter = CreateResampleImageFilter(*inputImage, translationTransform);
-  const auto & expectedOutputImage = Deref(resampleImageFilter->GetOutput());
+  const auto & expectedOutputImage = DerefRawPointer(resampleImageFilter->GetOutput());
 
   const std::string initialTransformParametersFileName =
     GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt";
@@ -1006,13 +1007,13 @@ GTEST_TEST(itkTransformixFilter, SetTranslationTransform)
                             { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
   transformixFilter.Update();
 
-  ExpectEqualImages(Deref(transformixFilter.GetOutput()), fixedImage);
+  ExpectEqualImages(DerefRawPointer(transformixFilter.GetOutput()), fixedImage);
 
   const auto outputMesh = transformixFilter.GetOutputMesh();
   const auto expectedNumberOfPoints = inputMesh.GetNumberOfPoints();
 
-  const auto & inputPoints = Deref(inputMesh.GetPoints());
-  const auto & outputPoints = Deref(Deref(outputMesh).GetPoints());
+  const auto & inputPoints = DerefRawPointer(inputMesh.GetPoints());
+  const auto & outputPoints = DerefRawPointer(DerefRawPointer(outputMesh).GetPoints());
 
   ASSERT_EQ(outputPoints.size(), expectedNumberOfPoints);
 
@@ -1073,7 +1074,7 @@ GTEST_TEST(itkTransformixFilter, SetCombinationTransform)
                                                               { "Transform", { transformName } } }));
       registration.Update();
 
-      const ImageType & registrationOutputImage = Deref(registration.GetOutput());
+      const ImageType & registrationOutputImage = DerefRawPointer(registration.GetOutput());
 
       EXPECT_NE(registrationOutputImage, *fixedImage);
       EXPECT_NE(registrationOutputImage, *movingImage);
@@ -1095,7 +1096,7 @@ GTEST_TEST(itkTransformixFilter, SetCombinationTransform)
                                 { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
       transformixFilter.Update();
 
-      ExpectEqualImages(Deref(transformixFilter.GetOutput()), registrationOutputImage);
+      ExpectEqualImages(DerefRawPointer(transformixFilter.GetOutput()), registrationOutputImage);
     }
   }
 }
@@ -1234,7 +1235,7 @@ GTEST_TEST(itkTransformixFilter, SetCompositeTransformOfTranslationAndScale)
     transformixFilter.SetTransformParameterObject(&transformParameterObject);
     transformixFilter.Update();
 
-    EXPECT_EQ(Deref(transformixFilter.GetOutput()),
+    EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()),
               *(CreateResampleImageFilter(*inputImage, compositeTransform)->GetOutput()));
   }
 }
