@@ -125,14 +125,14 @@ public:
   SetElastixLevel(unsigned int level);
 
   unsigned int
-  GetElastixLevel();
+  GetElastixLevel() const;
 
   /** Get and Set the total number of elastix levels. */
   void
   SetTotalNumberOfElastixLevels(unsigned int levels);
 
   unsigned int
-  GetTotalNumberOfElastixLevels();
+  GetTotalNumberOfElastixLevels() const;
 
   using Superclass::Run;
 
