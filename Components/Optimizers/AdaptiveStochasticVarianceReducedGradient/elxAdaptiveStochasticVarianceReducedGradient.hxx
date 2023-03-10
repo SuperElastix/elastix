@@ -19,6 +19,7 @@
 #define elxAdaptiveStochasticVarianceReducedGradient_hxx
 
 #include "elxAdaptiveStochasticVarianceReducedGradient.h"
+#include "elxDeref.h"
 
 #include <iomanip>
 #include <string>
@@ -121,39 +122,40 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Set the maximumNumberOfInnerLoopIterations. */
   SizeValueType maximumNumberOfInnerLoopIterations = 50;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfInnerLoopIterations, "MaximumNumberOfInnerLoopIterations", this->GetComponentLabel(), level, 0);
   this->m_NumberOfInnerIterations = maximumNumberOfInnerLoopIterations;
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfIterations, "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0);
   this->m_OutsideIterations = maximumNumberOfIterations;
   this->SetNumberOfIterations(this->m_OutsideIterations);
 
   /** Set the numberOfInnerLoopSamples. */
   SizeValueType numberOfInnerLoopSamples = 10;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     numberOfInnerLoopSamples, "NumberOfInnerLoopSamples", this->GetComponentLabel(), level, 0);
   this->m_NumberOfInnerLoopSamples = numberOfInnerLoopSamples;
 
   /** Set the NumberOfSpatialSamples. */
   unsigned long numberOfSpatialSamples = 5000;
-  this->GetConfiguration()->ReadParameter(
-    numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
   this->m_NumberOfSpatialSamples = numberOfSpatialSamples;
 
   /** Set the gain parameter A. */
   double A = 20.0;
-  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0);
   this->SetParam_A(A);
 
   /** Set the MaximumNumberOfSamplingAttempts. */
   SizeValueType maximumNumberOfSamplingAttempts = 0;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumNumberOfSamplingAttempts, "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0);
   this->SetMaximumNumberOfSamplingAttempts(maximumNumberOfSamplingAttempts);
   if (maximumNumberOfSamplingAttempts > 5)
@@ -168,17 +170,16 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
 
   /** Set/Get the initial time. Default: 0.0. Should be >=0. */
   double initialTime = 0.0;
-  this->GetConfiguration()->ReadParameter(initialTime, "SigmoidInitialTime", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(initialTime, "SigmoidInitialTime", this->GetComponentLabel(), level, 0);
   this->SetInitialTime(initialTime);
 
   /** Set the maximum band size of the covariance matrix. */
   this->m_MaxBandCovSize = 192;
-  this->GetConfiguration()->ReadParameter(
-    this->m_MaxBandCovSize, "MaxBandCovSize", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(this->m_MaxBandCovSize, "MaxBandCovSize", this->GetComponentLabel(), level, 0);
 
   /** Set the number of random samples used to estimate the structure of the covariance matrix. */
   this->m_NumberOfBandStructureSamples = 10;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     this->m_NumberOfBandStructureSamples, "NumberOfBandStructureSamples", this->GetComponentLabel(), level, 0);
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true
@@ -186,15 +187,13 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
    * Deprecated alias UseCruzAcceleration is also still supported.
    */
   bool useAdaptiveStepSizes = true;
-  this->GetConfiguration()->ReadParameter(
-    useAdaptiveStepSizes, "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false);
-  this->GetConfiguration()->ReadParameter(
-    useAdaptiveStepSizes, "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useAdaptiveStepSizes, "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false);
+  configuration.ReadParameter(useAdaptiveStepSizes, "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0);
   this->SetUseAdaptiveStepSizes(useAdaptiveStepSizes);
 
   /** Set whether automatic gain estimation is required; default: true. */
   this->m_AutomaticParameterEstimation = true;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     this->m_AutomaticParameterEstimation, "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0);
 
   if (this->m_AutomaticParameterEstimation)
@@ -215,15 +214,14 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
     }
     this->m_MaximumStepLength = sum / static_cast<double>(fixdim + movdim);
     /** Read user setting */
-    this->GetConfiguration()->ReadParameter(
-      this->m_MaximumStepLength, "MaximumStepLength", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(this->m_MaximumStepLength, "MaximumStepLength", this->GetComponentLabel(), level, 0);
 
     /** Number of gradients N to estimate the average square magnitudes
      * of the exact gradient and the approximation error.
      * A value of 0 (default) means automatic estimation.
      */
     this->m_NumberOfGradientMeasurements = 0;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfGradientMeasurements, "NumberOfGradientMeasurements", this->GetComponentLabel(), level, 0);
 
     /** Set the number of Jacobian measurements M.
@@ -232,7 +230,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
     this->m_NumberOfJacobianMeasurements = std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(P));
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfJacobianMeasurements, "NumberOfJacobianMeasurements", this->GetComponentLabel(), level, 0);
 
     /** Set the number of image samples used to compute the 'exact' gradient.
@@ -240,15 +238,14 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
      * If the image is smaller, the number of samples is automatically reduced later.
      */
     this->m_NumberOfSamplesForExactGradient = 100000;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       this->m_NumberOfSamplesForExactGradient, "NumberOfSamplesForExactGradient", this->GetComponentLabel(), level, 0);
 
     /** Set/Get the scaling factor zeta of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 0.1. Should be >0.
      */
     double sigmoidScaleFactor = 0.1;
-    this->GetConfiguration()->ReadParameter(
-      sigmoidScaleFactor, "SigmoidScaleFactor", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidScaleFactor, "SigmoidScaleFactor", this->GetComponentLabel(), level, 0);
     this->m_SigmoidScaleFactor = sigmoidScaleFactor;
 
   } // end if automatic parameter estimation
@@ -259,26 +256,26 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
      */
     double a = 400.0; // arbitrary guess
     double alpha = 0.602;
-    this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
-    this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
     this->SetParam_a(a);
     this->SetParam_alpha(alpha);
 
     /** Set/Get the maximum of the sigmoid. Should be >0. Default: 1.0. */
     double sigmoidMax = 1.0;
-    this->GetConfiguration()->ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMax, "SigmoidMax", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMax(sigmoidMax);
 
     /** Set/Get the minimum of the sigmoid. Should be <0. Default: -0.8. */
     double sigmoidMin = -0.8;
-    this->GetConfiguration()->ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidMin, "SigmoidMin", this->GetComponentLabel(), level, 0);
     this->SetSigmoidMin(sigmoidMin);
 
     /** Set/Get the scaling of the sigmoid width. Large values
      * cause a more wide sigmoid. Default: 1e-8. Should be >0.
      */
     double sigmoidScale = 1e-8;
-    this->GetConfiguration()->ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(sigmoidScale, "SigmoidScale", this->GetComponentLabel(), level, 0);
     this->SetSigmoidScale(sigmoidScale);
 
   } // end else: no automatic parameter estimation
@@ -609,6 +606,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization()
       }
     }
 
+    const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
     this->m_CurrentInnerIteration = 0;
 
     for (unsigned i = 0; i < this->m_NumberOfInnerIterations; ++i)
@@ -624,8 +623,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization()
       timeCollector.Start("gvr");
       // this->m_Gradient = localCurrentGradient - localPreviousGradient + this->m_PreviousGradient;
       this->m_UseNoiseFactor = true;
-      this->GetConfiguration()->ReadParameter(
-        this->m_UseNoiseFactor, "UseNoiseFactor", this->GetComponentLabel(), 0, 0);
+      configuration.ReadParameter(this->m_UseNoiseFactor, "UseNoiseFactor", this->GetComponentLabel(), 0, 0);
 
       if (this->m_UseNoiseFactor)
       {
@@ -730,9 +728,11 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   log::info(std::ostringstream{} << "Starting automatic parameter estimation for " << this->elxGetClassName()
                                  << " ...");
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     asgdParameterEstimationMethod, "ASGDParameterEstimationMethod", this->GetComponentLabel(), 0, 0);
 
   /** Perform automatic optimizer parameter estimation by the desired method. */
@@ -956,9 +956,11 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
     computeDisplacementDistribution->SetUseScales(false);
   }
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   double      jacg = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     maximumDisplacementEstimationMethod, "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
 
   /** Compute the Jacobian terms. */
@@ -976,8 +978,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   const double alpha = 1.0;
 
   this->m_UseNoiseCompensation = true;
-  this->GetConfiguration()->ReadParameter(
-    this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
 
   /** Use noise Compensation factor or not. */
   if (this->m_UseNoiseCompensation == true)
@@ -1041,6 +1042,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const Param
   std::vector<ImageRandomCoordinateSamplerPointer> randomCoordinateSamplerVec(M);
   std::vector<ImageGridSamplerPointer>             gridSamplerVec(M);
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler
    * for the exact gradients, and set the stochasticgradients flag to true.
@@ -1093,8 +1096,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const Param
 
         /** Decide which method is to be used. */
         std::string sampleGradientMethod = "OriginalLargeNumber";
-        this->GetConfiguration()->ReadParameter(
-          sampleGradientMethod, "SampleGradientMethod", this->GetComponentLabel(), 0, 0);
+        configuration.ReadParameter(sampleGradientMethod, "SampleGradientMethod", this->GetComponentLabel(), 0, 0);
         if (sampleGradientMethod == "OriginalLargeNumber")
         {
           gridSamplerVec[m]->SetNumberOfSamples(this->m_NumberOfSpatialSamples);
