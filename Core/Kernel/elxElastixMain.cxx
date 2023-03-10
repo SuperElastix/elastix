@@ -411,7 +411,7 @@ ElastixMain::SetElastixLevel(unsigned int level)
  */
 
 unsigned int
-ElastixMain::GetElastixLevel()
+ElastixMain::GetElastixLevel() const
 {
   /** Call GetElastixLevel from MyConfiguration. */
   return this->m_Configuration->GetElastixLevel();
@@ -437,7 +437,7 @@ ElastixMain::SetTotalNumberOfElastixLevels(unsigned int levels)
  */
 
 unsigned int
-ElastixMain::GetTotalNumberOfElastixLevels()
+ElastixMain::GetTotalNumberOfElastixLevels() const
 {
   /** Call GetTotalNumberOfElastixLevels from MyConfiguration. */
   return this->m_Configuration->GetTotalNumberOfElastixLevels();
