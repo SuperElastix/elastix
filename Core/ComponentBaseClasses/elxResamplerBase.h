@@ -184,10 +184,6 @@ public:
   void
   ResampleAndWriteResultImage(const char * filename, const bool showProgress);
 
-  /** Function to write the result output image to a file. */
-  void
-  WriteResultImage(OutputImageType * imageimage, const char * filename, const bool showProgress);
-
   /** Function to create the result image in the format of an itk::Image. */
   virtual void
   CreateItkResultImage();
@@ -213,6 +209,10 @@ private:
   {
     return {};
   }
+
+  /** Function to write the result output image to a file. */
+  void
+  WriteResultImage(OutputImageType * imageimage, const char * filename, const bool showProgress);
 
   /** Release memory. */
   void
