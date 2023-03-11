@@ -182,11 +182,11 @@ public:
 
   /** Function to perform resample and write the result output image to a file. */
   void
-  ResampleAndWriteResultImage(const char * filename, const bool showProgress = true);
+  ResampleAndWriteResultImage(const char * filename, const bool showProgress);
 
   /** Function to write the result output image to a file. */
   void
-  WriteResultImage(OutputImageType * imageimage, const char * filename, const bool showProgress = true);
+  WriteResultImage(OutputImageType * imageimage, const char * filename, const bool showProgress);
 
   /** Function to create the result image in the format of an itk::Image. */
   virtual void

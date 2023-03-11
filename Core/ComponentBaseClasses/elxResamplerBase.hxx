@@ -111,7 +111,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
     log::info("Applying transform this resolution ...");
     try
     {
-      this->ResampleAndWriteResultImage(makeFileName.str().c_str());
+      this->ResampleAndWriteResultImage(makeFileName.str().c_str(), true);
     }
     catch (const itk::ExceptionObject & excp)
     {

@@ -397,7 +397,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
       std::ostringstream makeFileName;
       makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.' << resultImageFormat;
 
-      elxResamplerBase.ResampleAndWriteResultImage(makeFileName.str().c_str());
+      elxResamplerBase.ResampleAndWriteResultImage(makeFileName.str().c_str(), true);
     }
     else
     {
