@@ -244,7 +244,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       log::info("\nApplying final transform ...");
       try
       {
-        this->ResampleAndWriteResultImage(makeFileName.str().c_str(), this->m_ShowProgress);
+        this->ResampleAndWriteResultImage(makeFileName.str().c_str(), true);
       }
       catch (const itk::ExceptionObject & excp)
       {

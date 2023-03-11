@@ -198,9 +198,6 @@ protected:
   virtual void
   SetComponents();
 
-  /** Variable that defines to print the progress or not. */
-  bool m_ShowProgress{ true };
-
 private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
 
