@@ -302,10 +302,12 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, cons
   /** Make sure the resampler is updated. */
   resampleImageFilter.Modified();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Add a progress observer to the resampler. */
-  const auto progressObserver = (!showProgress || BaseComponent::IsElastixLibrary())
-                                  ? nullptr
-                                  : ProgressCommand::CreateAndConnect(resampleImageFilter);
+  const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
+  const auto progressObserver =
+    (showProgress && showProgressPercentage) ? ProgressCommand::CreateAndConnect(resampleImageFilter) : nullptr;
 
   /** Do the resampling. */
   try
@@ -423,8 +425,11 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   /** Make sure the resampler is updated. */
   resampleImageFilter.Modified();
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
+  const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
   const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*(this->GetAsITKBaseType()));
+    showProgressPercentage ? ProgressCommand::CreateAndConnect(*(this->GetAsITKBaseType())) : nullptr;
 
   /** Do the resampling. */
   try
@@ -454,8 +459,6 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   {
     resampleImageFilter.SetTransform(testptr->GetTransform());
   }
-
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
 
   /** Read output pixeltype from parameter the file. */
   std::string resultImagePixelType = "short";

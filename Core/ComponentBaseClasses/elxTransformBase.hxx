@@ -985,9 +985,11 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(defGenerator->GetOutput());
 
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
   /** Track the progress of the generation of the deformation field. */
-  const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*defGenerator);
+  const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
+  const auto progressObserver = showProgressPercentage ? ProgressCommand::CreateAndConnect(*defGenerator) : nullptr;
 
   try
   {
@@ -1110,8 +1112,8 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
   const auto infoChanger = CreateChangeInformationImageFilter(jacGenerator->GetOutput());
 
   /** Track the progress of the generation of the deformation field. */
-  const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*jacGenerator);
+  const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
+  const auto progressObserver = showProgressPercentage ? ProgressCommand::CreateAndConnect(*jacGenerator) : nullptr;
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
@@ -1164,8 +1166,8 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
 
   const auto infoChanger = CreateChangeInformationImageFilter(jacGenerator->GetOutput());
 
-  const auto progressObserver =
-    BaseComponent::IsElastixLibrary() ? nullptr : ProgressCommand::CreateAndConnect(*jacGenerator);
+  const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
+  const auto progressObserver = showProgressPercentage ? ProgressCommand::CreateAndConnect(*jacGenerator) : nullptr;
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
