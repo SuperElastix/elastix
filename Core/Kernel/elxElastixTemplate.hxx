@@ -19,6 +19,7 @@
 #  define elxElastixTemplate_hxx
 
 #  include "elxElastixTemplate.h"
+#  include "elxDeref.h"
 
 #  define elxCheckAndSetComponentMacro(_name)                                                                          \
     _name##BaseType * base = this->GetElx##_name##Base(i);                                                             \
@@ -30,7 +31,7 @@
     else                                                                                                               \
     {                                                                                                                  \
       std::string par = "";                                                                                            \
-      this->m_Configuration->ReadParameter(par, #_name, i, false);                                                     \
+      Deref(ElastixBase::GetConfiguration()).ReadParameter(par, #_name, i, false);                                     \
       itkExceptionMacro(<< "ERROR: entry " << i << " of " << #_name << " reads \"" << par                              \
                         << "\", which is not of type " << #_name << "BaseType.");                                      \
     }
@@ -388,7 +389,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
     if (!BaseComponent::IsElastixLibrary())
     {
       // It is assumed the configuration is not null at this point in time.
-      const Configuration & configuration = *Superclass::m_Configuration;
+      const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
 
       /** Create a name for the final result. */
       const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
@@ -599,10 +600,12 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
     writeTransformParameterEachResolution, "WriteTransformParametersEachResolution", 0, false);
   if (writeTransformParameterEachResolution)
   {
+    const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+
     /** Create the TransformParameters filename for this resolution. */
     std::ostringstream makeFileName;
-    makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "TransformParameters."
-                 << this->GetConfiguration()->GetElastixLevel() << ".R"
+    makeFileName << configuration.GetCommandLineArgument("-out") << "TransformParameters."
+                 << configuration.GetElastixLevel() << ".R"
                  << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";
     std::string fileName = makeFileName.str();
 
@@ -1020,11 +1023,12 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
     this->m_IterationInfoFile.close();
   }
 
+  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+
   /** Create the IterationInfo filename for this resolution. */
   std::ostringstream makeFileName;
-  makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "IterationInfo."
-               << this->m_Configuration->GetElastixLevel() << ".R"
-               << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";
+  makeFileName << configuration.GetCommandLineArgument("-out") << "IterationInfo." << configuration.GetElastixLevel()
+               << ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";
   std::string fileName = makeFileName.str();
 
   /** Open the IterationInfoFile. */
@@ -1055,6 +1059,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
 {
   if (this->GetFixedImage() == nullptr)
   {
+    const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+
     /** Try to read direction cosines from (transform-)parameter file. */
     bool                    retdc = true;
     FixedImageDirectionType directionRead = direction;
@@ -1062,7 +1068,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
     {
       for (unsigned int j = 0; j < FixedDimension; ++j)
       {
-        retdc &= this->m_Configuration->ReadParameter(directionRead(j, i), "Direction", i * FixedDimension + j, false);
+        retdc &= configuration.ReadParameter(directionRead(j, i), "Direction", i * FixedDimension + j, false);
       }
     }
     if (retdc)
