@@ -379,8 +379,7 @@ protected:
   ElastixBase();
   ~ElastixBase() override = default;
 
-  ConfigurationPointer m_Configuration{ nullptr };
-  DBIndexType          m_DBIndex{ 0 };
+  DBIndexType m_DBIndex{ 0 };
 
   FlatDirectionCosinesType m_OriginalFixedImageDirection;
 
@@ -391,9 +390,6 @@ protected:
 
   /** Store the CurrentTransformParameterFileName. */
   std::string m_CurrentTransformParameterFileName;
-
-  /** A vector of configuration objects, needed when transformix is used as library. */
-  std::vector<ConfigurationPointer> m_Configurations;
 
   /** Count the number of iterations. */
   unsigned int m_IterationCounter{};
@@ -479,6 +475,11 @@ protected:
   GenerateDataObjectContainer(DataObjectPointer dataObject);
 
 private:
+  ConfigurationPointer m_Configuration{ nullptr };
+
+  /** A vector of configuration objects, needed when transformix is used as library. */
+  std::vector<ConfigurationPointer> m_Configurations;
+
   IterationInfo m_IterationInfo;
 
   /** The component containers. These containers contain
