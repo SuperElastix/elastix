@@ -497,4 +497,15 @@ ElastixBase::GetConfiguration(const size_t index) const
 }
 
 
+/**
+ * ************** GetNumberOfConfigurations *********************
+ */
+
+size_t
+ElastixBase::GetNumberOfConfigurations() const
+{
+  return m_Configurations.size();
+}
+
+
 } // end namespace elastix
