@@ -357,6 +357,10 @@ public:
   Configuration::ConstPointer
   GetConfiguration(const size_t index) const;
 
+  /** Returns the number of configurations in the vector of configurations. */
+  size_t
+  GetNumberOfConfigurations() const;
+
   IterationInfo &
   GetIterationInfo()
   {
