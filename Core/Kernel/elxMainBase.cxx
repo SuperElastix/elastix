@@ -94,7 +94,7 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap)
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
-  int dummy = this->m_Configuration->Initialize(argmap);
+  int dummy = m_Configuration->Initialize(argmap);
   if (dummy)
   {
     log::error("ERROR: Something went wrong during initialization of the configuration object.");
@@ -113,7 +113,7 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const Parame
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
-  int dummy = this->m_Configuration->Initialize(argmap, inputMap);
+  int dummy = m_Configuration->Initialize(argmap, inputMap);
   if (dummy)
   {
     log::error("ERROR: Something went wrong during initialization of the configuration object.");
@@ -129,16 +129,16 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const Parame
 void
 MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
 {
-  this->m_Configurations.clear();
-  this->m_Configurations.resize(inputMaps.size());
+  m_Configurations.clear();
+  m_Configurations.resize(inputMaps.size());
 
   for (size_t i = 0; i < inputMaps.size(); ++i)
   {
     /** Initialize the configuration object with the
      * command line parameters entered by the user.
      */
-    this->m_Configurations[i] = Configuration::New();
-    int dummy = this->m_Configurations[i]->Initialize(argmap, inputMaps[i]);
+    m_Configurations[i] = Configuration::New();
+    int dummy = m_Configurations[i]->Initialize(argmap, inputMaps[i]);
     if (dummy)
     {
       log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "
@@ -147,7 +147,7 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::v
   }
 
   /** Copy last configuration object to m_Configuration. */
-  this->m_Configuration = this->m_Configurations[inputMaps.size() - 1];
+  m_Configuration = m_Configurations[inputMaps.size() - 1];
 } // end EnterCommandLineArguments()
 
 
@@ -183,7 +183,7 @@ ElastixBase &
 MainBase::GetElastixBase() const
 {
   /** Convert ElastixAsObject to a pointer to an ElastixBase. */
-  const auto elastixBase = dynamic_cast<ElastixBase *>(this->m_Elastix.GetPointer());
+  const auto elastixBase = dynamic_cast<ElastixBase *>(m_Elastix.GetPointer());
   if (elastixBase == nullptr)
   {
     itkExceptionMacro(<< "Probably GetElastixBase() is called before having called Run()");
@@ -202,7 +202,7 @@ MainBase::ObjectPointer
 MainBase::CreateComponent(const ComponentDescriptionType & name)
 {
   /** A pointer to the New() function. */
-  const PtrToCreator  creator = GetComponentDatabase().GetCreator(name, this->m_DBIndex);
+  const PtrToCreator  creator = GetComponentDatabase().GetCreator(name, m_DBIndex);
   const ObjectPointer component = (creator == nullptr) ? nullptr : creator();
 
   if (component.IsNull())
@@ -234,7 +234,7 @@ MainBase::CreateComponents(const std::string &              key,
    * If the user hasn't specified any component names, use
    * the default, and give a warning.
    */
-  bool found = this->m_Configuration->ReadParameter(componentName, key, componentnr, true);
+  bool found = m_Configuration->ReadParameter(componentName, key, componentnr, true);
 
   /** If the default equals "" (so no default), the mandatoryComponent
    * flag is true, and not component was given by the user,
@@ -273,7 +273,7 @@ MainBase::CreateComponents(const std::string &              key,
   while (found)
   {
     ++componentnr;
-    found = this->m_Configuration->ReadParameter(componentName, key, componentnr, false);
+    found = m_Configuration->ReadParameter(componentName, key, componentnr, false);
     if (found)
     {
       try
@@ -303,7 +303,7 @@ void
 MainBase::SetProcessPriority() const
 {
   /** If wanted, set the priority of this process high or below normal. */
-  std::string processPriority = this->m_Configuration->GetCommandLineArgument("-priority");
+  std::string processPriority = m_Configuration->GetCommandLineArgument("-priority");
   if (processPriority == "high")
   {
 #if defined(_WIN32) && !defined(__CYGWIN__)
@@ -350,7 +350,7 @@ void
 MainBase::SetMaximumNumberOfThreads() const
 {
   /** Get the number of threads from the command line. */
-  std::string maximumNumberOfThreadsString = this->m_Configuration->GetCommandLineArgument("-threads");
+  std::string maximumNumberOfThreadsString = m_Configuration->GetCommandLineArgument("-threads");
 
   /** If supplied, set the maximum number of threads. */
   if (!maximumNumberOfThreadsString.empty())
