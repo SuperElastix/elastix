@@ -186,21 +186,21 @@ ElastixBase::BeforeAllBase()
    */
   if (!BaseComponent::IsElastixLibrary())
   {
-    m_FixedImageFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-f", returndummy, true, true);
-    m_MovingImageFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-m", returndummy, true, true);
+    m_FixedImageFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-f", returndummy, true, true);
+    m_MovingImageFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-m", returndummy, true, true);
   }
   /** Read the fixed and moving mask filenames. These are not obliged options,
    * so do not print any errors if they are not present.
    * Do print some info (second boolean = true).
    */
   int maskreturndummy = 0;
-  m_FixedMaskFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-fMask", maskreturndummy, false, true);
+  m_FixedMaskFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-fMask", maskreturndummy, false, true);
   if (maskreturndummy != 0)
   {
     log::info("-fMask    unspecified, so no fixed mask used");
   }
   maskreturndummy = 0;
-  m_MovingMaskFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-mMask", maskreturndummy, false, true);
+  m_MovingMaskFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-mMask", maskreturndummy, false, true);
   if (maskreturndummy != 0)
   {
     log::info("-mMask    unspecified, so no moving mask used");
@@ -324,7 +324,7 @@ ElastixBase::BeforeAllTransformixBase()
      * Save the result in the moving image file name container.
      */
     int inreturndummy = 0;
-    m_MovingImageFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-in", inreturndummy, false, true);
+    m_MovingImageFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-in", inreturndummy, false, true);
     if (inreturndummy != 0)
     {
       log::info("-in       unspecified, so no input image specified");
