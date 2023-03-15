@@ -542,9 +542,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   /** Print the current resolution. */
   log::info(std::ostringstream{} << "\nResolution: " << level);
 
+  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+
   /** Create a TransformParameter-file for the current resolution. */
   bool writeIterationInfo = true;
-  this->GetConfiguration()->ReadParameter(writeIterationInfo, "WriteIterationInfo", 0, false);
+  configuration.ReadParameter(writeIterationInfo, "WriteIterationInfo", 0, false);
   if (writeIterationInfo)
   {
     this->OpenIterationInfoFile();
@@ -594,14 +596,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
   CallInEachComponent(&BaseComponentType::AfterEachResolutionBase);
   CallInEachComponent(&BaseComponentType::AfterEachResolution);
 
+  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+
   /** Create a TransformParameter-file for the current resolution. */
   bool writeTransformParameterEachResolution = false;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     writeTransformParameterEachResolution, "WriteTransformParametersEachResolution", 0, false);
   if (writeTransformParameterEachResolution)
   {
-    const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
-
     /** Create the TransformParameters filename for this resolution. */
     std::ostringstream makeFileName;
     makeFileName << configuration.GetCommandLineArgument("-out") << "TransformParameters."
@@ -652,10 +654,11 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
   /** Write the iteration info of this iteration. */
   this->GetIterationInfo().WriteBufferedData();
 
+  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
-  this->GetConfiguration()->ReadParameter(
-    writeTansformParametersThisIteration, "WriteTransformParametersEachIteration", 0, false);
+  configuration.ReadParameter(writeTansformParametersThisIteration, "WriteTransformParametersEachIteration", 0, false);
   if (writeTansformParametersThisIteration)
   {
     /** Add zeros to the number of iterations, to make sure
@@ -682,8 +685,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
 
     /** Create the TransformParameters filename for this iteration. */
     std::ostringstream makeFileName;
-    makeFileName << this->GetConfiguration()->GetCommandLineArgument("-out") << "TransformParameters."
-                 << this->GetConfiguration()->GetElastixLevel() << ".R"
+    makeFileName << configuration.GetCommandLineArgument("-out") << "TransformParameters."
+                 << configuration.GetElastixLevel() << ".R"
                  << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".It"
                  << makeIterationString.str() << ".txt";
     std::string tpFileName = makeFileName.str();
@@ -716,14 +719,16 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   /** A white line. */
   elx::log::info("");
 
+  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+
   /** Create the final TransformParameters filename. */
   bool writeFinalTansformParameters = true;
-  this->GetConfiguration()->ReadParameter(writeFinalTansformParameters, "WriteFinalTransformParameters", 0, false);
+  configuration.ReadParameter(writeFinalTansformParameters, "WriteFinalTransformParameters", 0, false);
   if (writeFinalTansformParameters)
   {
     std::ostringstream makeFileName;
-    makeFileName << this->GetConfiguration()->GetCommandLineArgument("-out") << "TransformParameters."
-                 << this->GetConfiguration()->GetElastixLevel() << ".txt";
+    makeFileName << configuration.GetCommandLineArgument("-out") << "TransformParameters."
+                 << configuration.GetElastixLevel() << ".txt";
     std::string FileName = makeFileName.str();
 
     /** Create a final TransformParameterFile. */
