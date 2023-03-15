@@ -210,7 +210,7 @@ ElastixBase::BeforeAllBase()
    * This check has already been performed in elastix.cxx,
    * Here we do it again. MS: WHY?
    */
-  check = this->GetConfiguration()->GetCommandLineArgument("-out");
+  check = m_Configuration->GetCommandLineArgument("-out");
   if (check.empty())
   {
     log::error(std::ostringstream{} << "ERROR: No CommandLine option \"-out\" given!");
@@ -226,7 +226,7 @@ ElastixBase::BeforeAllBase()
       folder.append("/");
       folder = Conversion::ToNativePathNameSeparators(folder);
 
-      this->GetConfiguration()->SetCommandLineArgument("-out", folder);
+      m_Configuration->SetCommandLineArgument("-out", folder);
     }
     log::info(std::ostringstream{} << "-out      " << check);
   }
@@ -238,7 +238,7 @@ ElastixBase::BeforeAllBase()
   {
     std::ostringstream tempPname;
     tempPname << "-p(" << i << ")";
-    check = this->GetConfiguration()->GetCommandLineArgument(tempPname.str());
+    check = m_Configuration->GetCommandLineArgument(tempPname.str());
     if (check.empty())
     {
       loop = false;
@@ -252,7 +252,7 @@ ElastixBase::BeforeAllBase()
 
   /** Check for appearance of "-priority", if this is a Windows station. */
 #ifdef _WIN32
-  check = this->GetConfiguration()->GetCommandLineArgument("-priority");
+  check = m_Configuration->GetCommandLineArgument("-priority");
   if (check.empty())
   {
     log::info("-priority unspecified, so NORMAL process priority");
@@ -264,7 +264,7 @@ ElastixBase::BeforeAllBase()
 #endif
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  check = this->GetConfiguration()->GetCommandLineArgument("-threads");
+  check = m_Configuration->GetCommandLineArgument("-threads");
   if (check.empty())
   {
     log::info("-threads  unspecified, so all available threads are used");
@@ -275,7 +275,7 @@ ElastixBase::BeforeAllBase()
   }
 
   /** Check the very important UseDirectionCosines parameter. */
-  bool retudc = this->GetConfiguration()->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
+  bool retudc = m_Configuration->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
     log::warn(
@@ -291,7 +291,7 @@ ElastixBase::BeforeAllBase()
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
   using SeedType = RandomGeneratorType::IntegerType;
   unsigned int randomSeed = 121212;
-  this->GetConfiguration()->ReadParameter(randomSeed, "RandomSeed", 0, false);
+  m_Configuration->ReadParameter(randomSeed, "RandomSeed", 0, false);
   RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::GetInstance();
   randomGenerator->SetSeed(static_cast<SeedType>(randomSeed));
 
@@ -331,7 +331,7 @@ ElastixBase::BeforeAllTransformixBase()
     }
   }
   /** Check for appearance of "-out". */
-  std::string check = this->GetConfiguration()->GetCommandLineArgument("-out");
+  std::string check = m_Configuration->GetCommandLineArgument("-out");
   if (check.empty())
   {
     log::error(std::ostringstream{} << "ERROR: No CommandLine option \"-out\" given!");
@@ -342,13 +342,13 @@ ElastixBase::BeforeAllTransformixBase()
     /** Make sure that last character of -out equals a '/'. */
     if (check.back() != '/')
     {
-      this->GetConfiguration()->SetCommandLineArgument("-out", check + '/');
+      m_Configuration->SetCommandLineArgument("-out", check + '/');
     }
     log::info(std::ostringstream{} << "-out      " << check);
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  check = this->GetConfiguration()->GetCommandLineArgument("-threads");
+  check = m_Configuration->GetCommandLineArgument("-threads");
   if (check.empty())
   {
     log::info("-threads  unspecified, so all available threads are used");
@@ -360,11 +360,11 @@ ElastixBase::BeforeAllTransformixBase()
   if (!BaseComponent::IsElastixLibrary())
   {
     /** Print "-tp". */
-    check = this->GetConfiguration()->GetCommandLineArgument("-tp");
+    check = m_Configuration->GetCommandLineArgument("-tp");
     log::info(std::ostringstream{} << "-tp       " << check);
   }
   /** Check the very important UseDirectionCosines parameter. */
-  bool retudc = this->GetConfiguration()->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
+  bool retudc = m_Configuration->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
     log::warn(std::ostringstream{} << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
