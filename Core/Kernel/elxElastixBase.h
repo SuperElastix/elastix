@@ -53,15 +53,15 @@
  * These macros are undef'd at the end of this file
  */
 #define elxGetObjectMacro(_name, _type)                                                                                \
-  _type * Get##_name() const { return this->m_##_name.GetPointer(); }
+  _type * Get##_name() const { return m_##_name.GetPointer(); }
 // end elxGetObjectMacro
 
 #define elxSetObjectMacro(_name, _type)                                                                                \
   void Set##_name(_type * _arg)                                                                                        \
   {                                                                                                                    \
-    if (this->m_##_name != _arg)                                                                                       \
+    if (m_##_name != _arg)                                                                                             \
     {                                                                                                                  \
-      this->m_##_name = _arg;                                                                                          \
+      m_##_name = _arg;                                                                                                \
       this->itk::Object::Modified();                                                                                   \
     }                                                                                                                  \
   }
@@ -71,9 +71,9 @@
 #define elxGetNumberOfMacro(_name)                                                                                     \
   unsigned int GetNumberOf##_name##s() const                                                                           \
   {                                                                                                                    \
-    if (this->m_##_name##Container != nullptr)                                                                         \
+    if (m_##_name##Container != nullptr)                                                                               \
     {                                                                                                                  \
-      return this->m_##_name##Container->Size();                                                                       \
+      return m_##_name##Container->Size();                                                                             \
     }                                                                                                                  \
     return 0;                                                                                                          \
   }
@@ -187,7 +187,7 @@ public:
   DBIndexType
   GetDBIndex()
   {
-    return this->m_DBIndex;
+    return m_DBIndex;
   }
 
   /** Get the component containers.

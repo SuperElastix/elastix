@@ -157,9 +157,9 @@ void
 ElastixBase::SetDBIndex(DBIndexType _arg)
 {
   /** If m_DBIndex is not set, set it. */
-  if (this->m_DBIndex != _arg)
+  if (m_DBIndex != _arg)
   {
-    this->m_DBIndex = _arg;
+    m_DBIndex = _arg;
     this->itk::Object::Modified();
   }
 
@@ -186,25 +186,21 @@ ElastixBase::BeforeAllBase()
    */
   if (!BaseComponent::IsElastixLibrary())
   {
-    this->m_FixedImageFileNameContainer =
-      GenerateFileNameContainer(*(this->m_Configuration), "-f", returndummy, true, true);
-    this->m_MovingImageFileNameContainer =
-      GenerateFileNameContainer(*(this->m_Configuration), "-m", returndummy, true, true);
+    m_FixedImageFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-f", returndummy, true, true);
+    m_MovingImageFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-m", returndummy, true, true);
   }
   /** Read the fixed and moving mask filenames. These are not obliged options,
    * so do not print any errors if they are not present.
    * Do print some info (second boolean = true).
    */
   int maskreturndummy = 0;
-  this->m_FixedMaskFileNameContainer =
-    GenerateFileNameContainer(*(this->m_Configuration), "-fMask", maskreturndummy, false, true);
+  m_FixedMaskFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-fMask", maskreturndummy, false, true);
   if (maskreturndummy != 0)
   {
     log::info("-fMask    unspecified, so no fixed mask used");
   }
   maskreturndummy = 0;
-  this->m_MovingMaskFileNameContainer =
-    GenerateFileNameContainer(*(this->m_Configuration), "-mMask", maskreturndummy, false, true);
+  m_MovingMaskFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-mMask", maskreturndummy, false, true);
   if (maskreturndummy != 0)
   {
     log::info("-mMask    unspecified, so no moving mask used");
@@ -279,7 +275,7 @@ ElastixBase::BeforeAllBase()
   }
 
   /** Check the very important UseDirectionCosines parameter. */
-  bool retudc = this->GetConfiguration()->ReadParameter(this->m_UseDirectionCosines, "UseDirectionCosines", 0);
+  bool retudc = this->GetConfiguration()->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
     log::warn(
@@ -328,8 +324,7 @@ ElastixBase::BeforeAllTransformixBase()
      * Save the result in the moving image file name container.
      */
     int inreturndummy = 0;
-    this->m_MovingImageFileNameContainer =
-      GenerateFileNameContainer(*(this->m_Configuration), "-in", inreturndummy, false, true);
+    m_MovingImageFileNameContainer = GenerateFileNameContainer(*(m_Configuration), "-in", inreturndummy, false, true);
     if (inreturndummy != 0)
     {
       log::info("-in       unspecified, so no input image specified");
@@ -369,7 +364,7 @@ ElastixBase::BeforeAllTransformixBase()
     log::info(std::ostringstream{} << "-tp       " << check);
   }
   /** Check the very important UseDirectionCosines parameter. */
-  bool retudc = this->GetConfiguration()->ReadParameter(this->m_UseDirectionCosines, "UseDirectionCosines", 0);
+  bool retudc = this->GetConfiguration()->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
   if (!retudc)
   {
     log::warn(std::ostringstream{} << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
@@ -391,7 +386,7 @@ ElastixBase::GetResultImage(const unsigned int idx) const
 {
   if (idx < this->GetNumberOfResultImages())
   {
-    return this->m_ResultImageContainer->ElementAt(idx).GetPointer();
+    return m_ResultImageContainer->ElementAt(idx).GetPointer();
   }
 
   return nullptr;
@@ -419,7 +414,7 @@ ElastixBase::GetResultDeformationField(unsigned int idx) const
 {
   if (idx < this->GetNumberOfResultDeformationFields())
   {
-    return this->m_ResultDeformationFieldContainer->ElementAt(idx).GetPointer();
+    return m_ResultDeformationFieldContainer->ElementAt(idx).GetPointer();
   }
 
   return nullptr;
@@ -443,7 +438,7 @@ ElastixBase::SetResultDeformationField(DataObjectPointer result_deformationfield
 bool
 ElastixBase::GetUseDirectionCosines() const
 {
-  return this->m_UseDirectionCosines;
+  return m_UseDirectionCosines;
 }
 
 
@@ -454,7 +449,7 @@ ElastixBase::GetUseDirectionCosines() const
 void
 ElastixBase::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg)
 {
-  this->m_OriginalFixedImageDirection = arg;
+  m_OriginalFixedImageDirection = arg;
 }
 
 
@@ -465,7 +460,7 @@ ElastixBase::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType &
 const ElastixBase::FlatDirectionCosinesType &
 ElastixBase::GetOriginalFixedImageDirectionFlat() const
 {
-  return this->m_OriginalFixedImageDirection;
+  return m_OriginalFixedImageDirection;
 }
 
 
@@ -476,7 +471,7 @@ ElastixBase::GetOriginalFixedImageDirectionFlat() const
 itk::ParameterMapInterface::ParameterMapType
 ElastixBase::GetTransformParametersMap() const
 {
-  return this->m_TransformParametersMap;
+  return m_TransformParametersMap;
 } // end GetTransformParametersMap()
 
 
@@ -487,7 +482,7 @@ ElastixBase::GetTransformParametersMap() const
 void
 ElastixBase::SetConfigurations(const std::vector<ConfigurationPointer> & configurations)
 {
-  this->m_Configurations = configurations;
+  m_Configurations = configurations;
 }
 
 
@@ -498,7 +493,7 @@ ElastixBase::SetConfigurations(const std::vector<ConfigurationPointer> & configu
 ElastixBase::ConfigurationPointer
 ElastixBase::GetConfiguration(const size_t index) const
 {
-  return this->m_Configurations[index];
+  return m_Configurations[index];
 }
 
 
