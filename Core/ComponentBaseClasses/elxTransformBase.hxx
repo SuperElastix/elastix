@@ -358,39 +358,20 @@ TransformBase<TElastix>::ReadFromFile()
   }
   else
   {
-    // The value of "InitialTransformParametersFileName" is either an index
-    // (size_t) into the vector of configuration objects, or the file name of
-    // a transform parameters file. If it is an index, call
-    // ReadInitialTransformFromConfiguration, otherwise call ReadInitialTransformFromFile.
-
-    /** Get initial transform index number. */
-    std::istringstream to_size_t(fileName);
-    size_t             index;
-    to_size_t >> index;
-
-    if (to_size_t.eof() && !to_size_t.fail())
+    /** Check if the initial transform of this transform parameter file
+     * is not the same as this transform parameter file. Otherwise,
+     * we will have an infinite loop.
+     */
+    std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName);
+    std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
+    if (fullFileName1 == fullFileName2)
     {
-      /** We can safely read the initial transform. */
-      // Retrieve configuration object from internally stored vector of configuration objects.
-      this->ReadInitialTransformFromConfiguration(this->GetElastix()->GetConfiguration(index));
+      itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName is identical to the current "
+                           "TransformParameters filename! An infinite loop is not allowed.");
     }
-    else
-    {
-      /** Check if the initial transform of this transform parameter file
-       * is not the same as this transform parameter file. Otherwise,
-       * we will have an infinite loop.
-       */
-      std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName);
-      std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
-      if (fullFileName1 == fullFileName2)
-      {
-        itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName is identical to the current "
-                             "TransformParameters filename! An infinite loop is not allowed.");
-      }
 
-      /** We can safely read the initial transform. */
-      this->ReadInitialTransformFromFile(fileName.c_str());
-    }
+    /** We can safely read the initial transform. */
+    this->ReadInitialTransformFromFile(fileName.c_str());
   }
 
   /** Task 3 - Read from the configuration file how to combine the

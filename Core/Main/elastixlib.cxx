@@ -309,13 +309,6 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     /** Get the transformation parameter map. */
     this->m_TransformParametersList.push_back(elastixMain->GetTransformParametersMap());
 
-    /** Set initial transform to an index number instead of a parameter filename. */
-    if (i > 0)
-    {
-      std::ostringstream toString;
-      toString << (i - 1);
-      this->m_TransformParametersList[i]["InitialTransformParametersFileName"][0] = toString.str();
-    }
   } // end loop over registrations
 
   elx::log::info("-------------------------------------------------------------------------\n");
