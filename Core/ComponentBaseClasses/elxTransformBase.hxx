@@ -423,7 +423,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformPara
 template <class TElastix>
 void
 TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
-  const Configuration::Pointer configurationInitialTransform)
+  const Configuration::ConstPointer configurationInitialTransform)
 {
   /** Read the InitialTransform name. */
   ComponentDescriptionType initialTransformName = "AffineTransform";

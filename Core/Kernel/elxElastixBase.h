@@ -351,10 +351,10 @@ public:
 
   /** Set configuration vector. Library only. */
   void
-  SetConfigurations(const std::vector<ConfigurationPointer> & configurations);
+  SetConfigurations(const std::vector<Configuration::ConstPointer> & configurations);
 
   /** Return configuration from vector of configurations. Library only. */
-  ConfigurationPointer
+  Configuration::ConstPointer
   GetConfiguration(const size_t index) const;
 
   IterationInfo &
@@ -478,7 +478,7 @@ private:
   ConfigurationPointer m_Configuration{ nullptr };
 
   /** A vector of configuration objects, needed when transformix is used as library. */
-  std::vector<ConfigurationPointer> m_Configurations;
+  std::vector<Configuration::ConstPointer> m_Configurations;
 
   IterationInfo m_IterationInfo;
 

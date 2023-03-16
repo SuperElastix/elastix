@@ -129,25 +129,31 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const Parame
 void
 MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
 {
+  const auto numberOfInputMaps = inputMaps.size();
   m_Configurations.clear();
-  m_Configurations.resize(inputMaps.size());
+  m_Configurations.resize(numberOfInputMaps);
 
-  for (size_t i = 0; i < inputMaps.size(); ++i)
+  for (size_t i = 0; i < numberOfInputMaps; ++i)
   {
     /** Initialize the configuration object with the
      * command line parameters entered by the user.
      */
-    m_Configurations[i] = Configuration::New();
-    int dummy = m_Configurations[i]->Initialize(argmap, inputMaps[i]);
+    const auto configuration = Configuration::New();
+    int        dummy = configuration->Initialize(argmap, inputMaps[i]);
+    m_Configurations[i] = configuration;
     if (dummy)
     {
       log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "
                                       << i << ".");
     }
+
+    if ((i + 1) == numberOfInputMaps)
+    {
+      /** Copy last configuration object to m_Configuration. */
+      m_Configuration = configuration;
+    }
   }
 
-  /** Copy last configuration object to m_Configuration. */
-  m_Configuration = m_Configurations[inputMaps.size() - 1];
 } // end EnterCommandLineArguments()
 
 

@@ -480,7 +480,7 @@ ElastixBase::GetTransformParametersMap() const
  */
 
 void
-ElastixBase::SetConfigurations(const std::vector<ConfigurationPointer> & configurations)
+ElastixBase::SetConfigurations(const std::vector<Configuration::ConstPointer> & configurations)
 {
   m_Configurations = configurations;
 }
@@ -490,7 +490,7 @@ ElastixBase::SetConfigurations(const std::vector<ConfigurationPointer> & configu
  * ************** GetConfiguration *********************
  */
 
-ElastixBase::ConfigurationPointer
+Configuration::ConstPointer
 ElastixBase::GetConfiguration(const size_t index) const
 {
   return m_Configurations[index];

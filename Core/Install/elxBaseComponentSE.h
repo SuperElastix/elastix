@@ -119,7 +119,7 @@ public:
 
   /** Set the configuration. Added for transformix. */
   void
-  SetConfiguration(Configuration * _arg);
+  SetConfiguration(const Configuration * _arg);
 
   /** Get a pointer to the Registration component.
    * This is a convenience function, since the registration
@@ -137,9 +137,9 @@ protected:
   BaseComponentSE() = default;
   ~BaseComponentSE() override = default;
 
-  itk::WeakPointer<TElastix> m_Elastix{};
-  ConfigurationPointer       m_Configuration{};
-  RegistrationType *         m_Registration{};
+  itk::WeakPointer<TElastix>  m_Elastix{};
+  Configuration::ConstPointer m_Configuration{};
+  RegistrationType *          m_Registration{};
 
 private:
   virtual const itk::Object &
