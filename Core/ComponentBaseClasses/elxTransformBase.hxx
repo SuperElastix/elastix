@@ -336,8 +336,27 @@ TransformBase<TElastix>::ReadFromFile()
   std::string fileName = "NoInitialTransform";
   configuration.ReadParameter(fileName, "InitialTransformParametersFileName", 0);
 
+  const ElastixBase & elastixBase = Deref(Superclass::GetElastix());
+
   /** Call the function ReadInitialTransformFromFile. */
-  if (fileName != "NoInitialTransform")
+  if (fileName == "NoInitialTransform")
+  {
+    const auto numberOfConfigurations = elastixBase.GetNumberOfConfigurations();
+
+    if ((numberOfConfigurations > 1) && (&configuration != elastixBase.GetConfiguration(0)))
+    {
+      for (size_t index{ 1 }; index < numberOfConfigurations; ++index)
+      {
+        if (elastixBase.GetConfiguration(index) == &configuration)
+        {
+          // Use the previous configuration (at position index - 1) for the initial transform.
+          this->ReadInitialTransformFromConfiguration(elastixBase.GetConfiguration(index - 1));
+          break;
+        }
+      }
+    }
+  }
+  else
   {
     // The value of "InitialTransformParametersFileName" is either an index
     // (size_t) into the vector of configuration objects, or the file name of
