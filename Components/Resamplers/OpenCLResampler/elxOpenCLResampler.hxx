@@ -70,7 +70,6 @@ elastix::OpenCLResampler<TElastix>::OpenCLResampler()
   }
 
   this->m_UseOpenCL = true;
-  this->m_ShowProgress = false;
 
 } // end Constructor
 
