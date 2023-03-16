@@ -368,7 +368,7 @@ private:
   /** Function to read the initial transform parameters from the specified configuration object.
    */
   void
-  ReadInitialTransformFromConfiguration(const Configuration::Pointer);
+  ReadInitialTransformFromConfiguration(const Configuration::ConstPointer);
 
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.

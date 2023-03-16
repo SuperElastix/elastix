@@ -57,7 +57,7 @@ BaseComponentSE<TElastix>::SetElastix(TElastix * const _arg)
 
 template <class TElastix>
 void
-BaseComponentSE<TElastix>::SetConfiguration(Configuration * const _arg)
+BaseComponentSE<TElastix>::SetConfiguration(const Configuration * const _arg)
 {
   /** If this->m_Configuration is not set, then set it.*/
   if (this->m_Configuration != _arg)
