@@ -181,7 +181,7 @@ protected:
   // Version used when elastix is used as a library.
   void
   EnterCommandLineArgumentsWithTransformParameterMaps(const ArgumentMapType &               argmap,
-                                                      const std::vector<ParameterMapType> & inputMaps);
+                                                      const std::vector<ParameterMapType> & transformParameterMaps);
 
   /** A pointer to elastix as an itk::object. In run() this
    * pointer will be assigned to an ElastixTemplate<>.

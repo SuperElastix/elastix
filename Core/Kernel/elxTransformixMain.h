@@ -92,7 +92,9 @@ public:
 
   /** Run version for using transformix as library. */
   int
-  Run(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps, itk::TransformBase * = nullptr);
+  Run(const ArgumentMapType &               argmap,
+      const std::vector<ParameterMapType> & transformParameterMaps,
+      itk::TransformBase * = nullptr);
 
   /** Get and Set input- and outputImage. */
   virtual void
