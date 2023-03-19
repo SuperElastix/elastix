@@ -127,20 +127,21 @@ MainBase::EnterCommandLineArgumentsWithParameterMap(const ArgumentMapType & argm
  */
 
 void
-MainBase::EnterCommandLineArgumentsWithTransformParameterMaps(const ArgumentMapType &               argmap,
-                                                              const std::vector<ParameterMapType> & inputMaps)
+MainBase::EnterCommandLineArgumentsWithTransformParameterMaps(
+  const ArgumentMapType &               argmap,
+  const std::vector<ParameterMapType> & transformParameterMaps)
 {
-  const auto numberOfInputMaps = inputMaps.size();
+  const auto numberOfTransformParameterMaps = transformParameterMaps.size();
   m_Configurations.clear();
-  m_Configurations.resize(numberOfInputMaps);
+  m_Configurations.resize(numberOfTransformParameterMaps);
 
-  for (size_t i = 0; i < numberOfInputMaps; ++i)
+  for (size_t i = 0; i < numberOfTransformParameterMaps; ++i)
   {
     /** Initialize the configuration object with the
      * command line parameters entered by the user.
      */
     const auto configuration = Configuration::New();
-    int        dummy = configuration->Initialize(argmap, inputMaps[i]);
+    int        dummy = configuration->Initialize(argmap, transformParameterMaps[i]);
     m_Configurations[i] = configuration;
     if (dummy)
     {
@@ -148,7 +149,7 @@ MainBase::EnterCommandLineArgumentsWithTransformParameterMaps(const ArgumentMapT
                                       << i << ".");
     }
 
-    if ((i + 1) == numberOfInputMaps)
+    if ((i + 1) == numberOfTransformParameterMaps)
     {
       /** Copy last configuration object to m_Configuration. */
       m_Configuration = configuration;
