@@ -113,13 +113,9 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
 #endif
   auto & elastixBase = this->GetElastixBase();
 
-  if (BaseComponent::IsElastixLibrary())
-  {
-    elastixBase.SetConfigurations(this->m_Configurations);
-  }
-
   /** Set some information in the ElastixBase. */
   elastixBase.SetConfiguration(MainBase::GetConfiguration());
+  elastixBase.SetConfigurations(this->m_Configurations);
   elastixBase.SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. No default is specified for the Transform. */
