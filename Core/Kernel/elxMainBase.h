@@ -128,20 +128,6 @@ public:
   /** Returns the Index that is used in elx::ComponentDatabase. */
   itkGetConstMacro(DBIndex, DBIndexType);
 
-  /** Enter the command line parameters, which were given by the user,
-   * if elastix.exe is used to do a registration.
-   * The Configuration object will be initialized in this way.
-   */
-  virtual void
-  EnterCommandLineArguments(const ArgumentMapType & argmap);
-
-  virtual void
-  EnterCommandLineArguments(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
-
-  // Version used when elastix is used as a library.
-  virtual void
-  EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps);
-
   /** Start the registration
    * run() without command line parameters; it assumes that
    * EnterCommandLineParameters has been invoked already, or that
@@ -181,6 +167,20 @@ public:
 protected:
   MainBase();
   ~MainBase() override = 0;
+
+  /** Enter the command line parameters, which were given by the user,
+   * if elastix.exe is used to do a registration.
+   * The Configuration object will be initialized in this way.
+   */
+  void
+  EnterCommandLineArguments(const ArgumentMapType & argmap);
+
+  void
+  EnterCommandLineArguments(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
+
+  // Version used when elastix is used as a library.
+  void
+  EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps);
 
   /** A pointer to elastix as an itk::object. In run() this
    * pointer will be assigned to an ElastixTemplate<>.
