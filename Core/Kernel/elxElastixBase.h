@@ -149,7 +149,6 @@ public:
   using Superclass = BaseComponent;
 
   /** Typedefs used in this class. */
-  using ConfigurationPointer = Configuration::Pointer;
   using ObjectPointer = itk::Object::Pointer;
   using DataObjectPointer = itk::DataObject::Pointer; // for the images
   using ObjectContainerType = itk::VectorContainer<unsigned int, ObjectPointer>;
@@ -479,7 +478,7 @@ protected:
   GenerateDataObjectContainer(DataObjectPointer dataObject);
 
 private:
-  ConfigurationPointer m_Configuration{ nullptr };
+  Configuration::Pointer m_Configuration{ nullptr };
 
   /** A vector of configuration objects, needed when transformix is used as library. */
   std::vector<Configuration::ConstPointer> m_Configurations;

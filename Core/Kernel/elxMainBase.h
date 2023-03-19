@@ -63,7 +63,6 @@ public:
 
   /** elastix components. */
   using ArgumentMapType = Configuration::CommandLineArgumentMapType;
-  using ConfigurationPointer = Configuration::Pointer;
   using ObjectContainerType = ElastixBase::ObjectContainerType;
   using DataObjectContainerType = ElastixBase::DataObjectContainerType;
   using ObjectContainerPointer = ElastixBase::ObjectContainerPointer;
@@ -240,7 +239,7 @@ protected:
 
 private:
   /** The configuration object, containing the parameters and command-line arguments. */
-  ConfigurationPointer m_Configuration{ Configuration::New() };
+  Configuration::Pointer m_Configuration{ Configuration::New() };
 };
 
 } // end namespace elastix

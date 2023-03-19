@@ -56,9 +56,6 @@ public:
   /** Elastix typedef. */
   using ElastixType = TElastix;
 
-  /** Configuration pointer type. */
-  using ConfigurationPointer = Configuration::Pointer;
-
   /** RegistrationType; NB: this is the elx::RegistrationBase
    * not an itk::Object or something like that.
    */
