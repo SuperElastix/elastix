@@ -104,11 +104,11 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap)
 
 
 /**
- * *************** EnterCommandLineArguments *******************
+ * *************** EnterCommandLineArgumentsWithParameterMap *******************
  */
 
 void
-MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
+MainBase::EnterCommandLineArgumentsWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
@@ -119,15 +119,16 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const Parame
     log::error("ERROR: Something went wrong during initialization of the configuration object.");
   }
 
-} // end EnterCommandLineArguments()
+} // end EnterCommandLineArgumentsWithParameterMap()
 
 
 /**
- * *************** EnterCommandLineArguments *******************
+ * *************** EnterCommandLineArgumentsWithTransformParameterMaps *******************
  */
 
 void
-MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::vector<ParameterMapType> & inputMaps)
+MainBase::EnterCommandLineArgumentsWithTransformParameterMaps(const ArgumentMapType &               argmap,
+                                                              const std::vector<ParameterMapType> & inputMaps)
 {
   const auto numberOfInputMaps = inputMaps.size();
   m_Configurations.clear();
@@ -154,7 +155,7 @@ MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap, const std::v
     }
   }
 
-} // end EnterCommandLineArguments()
+} // end EnterCommandLineArgumentsWithTransformParameterMaps()
 
 
 /**
@@ -176,7 +177,7 @@ MainBase::Run(const ArgumentMapType & argmap)
 int
 MainBase::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
-  this->EnterCommandLineArguments(argmap, inputMap);
+  this->EnterCommandLineArgumentsWithParameterMap(argmap, inputMap);
   return this->Run();
 } // end Run()
 
