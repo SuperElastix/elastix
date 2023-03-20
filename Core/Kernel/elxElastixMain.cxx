@@ -106,6 +106,7 @@ ElastixMain::Run()
 
   /** Set some information in the ElastixBase. */
   elastixBase.SetConfiguration(MainBase::GetConfiguration());
+  elastixBase.SetTransformConfigurations(this->m_TransformConfigurations);
   elastixBase.SetDBIndex(this->m_DBIndex);
 
   /** Populate the component containers. ImageSampler is not mandatory.
@@ -206,6 +207,40 @@ ElastixMain::Run()
   return errorCode;
 
 } // end Run()
+
+int
+ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &               argmap,
+                                                  const ParameterMapType &              inputMap,
+                                                  const std::vector<ParameterMapType> & initialTransformParameterMaps)
+{
+  Configuration & configuration = Deref(MainBase::GetConfiguration());
+
+  if (configuration.Initialize(argmap, inputMap) != 0)
+  {
+    log::error("ERROR: Something went wrong during initialization of the configuration object.");
+  }
+
+  const auto numberOfTransformParameterMaps = initialTransformParameterMaps.size();
+  m_TransformConfigurations.clear();
+  m_TransformConfigurations.resize(numberOfTransformParameterMaps);
+
+  for (size_t i = 0; i < numberOfTransformParameterMaps; ++i)
+  {
+    /** Initialize the configuration object with the
+     * command line parameters entered by the user.
+     */
+    const auto configuration = Configuration::New();
+    int        dummy = configuration->Initialize(argmap, initialTransformParameterMaps[i]);
+    m_TransformConfigurations[i] = configuration;
+    if (dummy)
+    {
+      log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "
+                                      << i << ".");
+    }
+  }
+
+  return ElastixMain::Run();
+}
 
 
 /**
