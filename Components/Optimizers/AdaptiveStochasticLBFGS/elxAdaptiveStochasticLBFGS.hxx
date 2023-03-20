@@ -1328,10 +1328,13 @@ AdaptiveStochasticLBFGS<TElastix>::SampleGradients(const ParametersType & mu0,
     } // end for loop over metrics
   }   // end if NewSamplesEveryIteration.
 
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   /** Prepare for progress printing. */
-  const auto progressObserver = BaseComponent::IsElastixLibrary()
-                                  ? nullptr
-                                  : ProgressCommand::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements);
+  const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
+  const auto progressObserver = showProgressPercentage
+                                  ? ProgressCommand::CreateAndSetUpdateFrequency(this->m_NumberOfGradientMeasurements)
+                                  : nullptr;
   // elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
