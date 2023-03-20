@@ -201,6 +201,9 @@ public:
     this->SetInitialTransformParameterFileName("");
   }
 
+  /** Set initial transform parameter object. */
+  itkSetConstObjectMacro(InitialTransformParameterObject, elx::ParameterObject);
+
   /** Set/Get/Remove fixed point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
   itkGetConstMacro(FixedPointSetFileName, std::string);
@@ -311,7 +314,9 @@ private:
 
   SmartPointer<const elx::ElastixMain> m_ElastixMain{ nullptr };
 
-  std::string m_InitialTransformParameterFileName{};
+  std::string                        m_InitialTransformParameterFileName{};
+  elx::ParameterObject::ConstPointer m_InitialTransformParameterObject{};
+
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};
 

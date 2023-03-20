@@ -232,7 +232,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     unsigned int isError = 0;
     try
     {
-      isError = elastixMain->Run(argumentMap, parameterMap);
+      isError = m_InitialTransformParameterObject
+                  ? elastixMain->RunWithInitialTransformParameterMaps(
+                      argumentMap, parameterMap, m_InitialTransformParameterObject->GetParameterMap())
+                  : elastixMain->Run(argumentMap, parameterMap);
     }
     catch (const itk::ExceptionObject & e)
     {

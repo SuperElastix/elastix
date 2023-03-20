@@ -181,7 +181,24 @@ TransformBase<TElastix>::BeforeRegistrationBase()
   else
   {
     std::string fileName = configuration.GetCommandLineArgument("-t0");
-    if (!fileName.empty())
+    if (fileName.empty())
+    {
+      const ElastixBase & elastixBase = Deref(Superclass::GetElastix());
+
+      const auto numberOfConfigurations = elastixBase.GetNumberOfTransformConfigurations();
+
+      if ((numberOfConfigurations > 0) && (&configuration != elastixBase.GetTransformConfiguration(0)))
+      {
+        const Configuration::ConstPointer previousTransformConfiguration =
+          elastixBase.GetPreviousTransformConfiguration(configuration);
+        const Configuration::ConstPointer lastTransformConfiguration =
+          elastixBase.GetTransformConfiguration(numberOfConfigurations - 1);
+
+        this->ReadInitialTransformFromConfiguration(previousTransformConfiguration ? previousTransformConfiguration
+                                                                                   : lastTransformConfiguration);
+      }
+    }
+    else
     {
       if (itksys::SystemTools::FileExists(fileName.c_str()))
       {
