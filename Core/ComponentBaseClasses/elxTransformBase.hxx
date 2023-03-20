@@ -341,16 +341,16 @@ TransformBase<TElastix>::ReadFromFile()
   /** Call the function ReadInitialTransformFromFile. */
   if (fileName == "NoInitialTransform")
   {
-    const auto numberOfConfigurations = elastixBase.GetNumberOfConfigurations();
+    const auto numberOfConfigurations = elastixBase.GetNumberOfTransformConfigurations();
 
-    if ((numberOfConfigurations > 1) && (&configuration != elastixBase.GetConfiguration(0)))
+    if ((numberOfConfigurations > 1) && (&configuration != elastixBase.GetTransformConfiguration(0)))
     {
       for (size_t index{ 1 }; index < numberOfConfigurations; ++index)
       {
-        if (elastixBase.GetConfiguration(index) == &configuration)
+        if (elastixBase.GetTransformConfiguration(index) == &configuration)
         {
           // Use the previous configuration (at position index - 1) for the initial transform.
-          this->ReadInitialTransformFromConfiguration(elastixBase.GetConfiguration(index - 1));
+          this->ReadInitialTransformFromConfiguration(elastixBase.GetTransformConfiguration(index - 1));
           break;
         }
       }

@@ -132,8 +132,8 @@ MainBase::EnterCommandLineArgumentsWithTransformParameterMaps(
   const std::vector<ParameterMapType> & transformParameterMaps)
 {
   const auto numberOfTransformParameterMaps = transformParameterMaps.size();
-  m_Configurations.clear();
-  m_Configurations.resize(numberOfTransformParameterMaps);
+  m_TransformConfigurations.clear();
+  m_TransformConfigurations.resize(numberOfTransformParameterMaps);
 
   for (size_t i = 0; i < numberOfTransformParameterMaps; ++i)
   {
@@ -142,7 +142,7 @@ MainBase::EnterCommandLineArgumentsWithTransformParameterMaps(
      */
     const auto configuration = Configuration::New();
     int        dummy = configuration->Initialize(argmap, transformParameterMaps[i]);
-    m_Configurations[i] = configuration;
+    m_TransformConfigurations[i] = configuration;
     if (dummy)
     {
       log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "

@@ -189,7 +189,7 @@ protected:
   ObjectPointer m_Elastix{ nullptr };
 
   /** A vector of configuration objects, needed when transformix is used as library. */
-  std::vector<Configuration::ConstPointer> m_Configurations{};
+  std::vector<Configuration::ConstPointer> m_TransformConfigurations{};
 
   /** Description of the ImageTypes. */
   PixelTypeDescriptionType m_FixedImagePixelType{};
