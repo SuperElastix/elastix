@@ -476,13 +476,13 @@ ElastixBase::GetTransformParametersMap() const
 
 
 /**
- * ************** SetConfigurations *********************
+ * ************** SetTransformConfigurations *********************
  */
 
 void
-ElastixBase::SetConfigurations(const std::vector<Configuration::ConstPointer> & configurations)
+ElastixBase::SetTransformConfigurations(const std::vector<Configuration::ConstPointer> & configurations)
 {
-  m_Configurations = configurations;
+  m_TransformConfigurations = configurations;
 }
 
 
@@ -491,20 +491,20 @@ ElastixBase::SetConfigurations(const std::vector<Configuration::ConstPointer> & 
  */
 
 Configuration::ConstPointer
-ElastixBase::GetConfiguration(const size_t index) const
+ElastixBase::GetTransformConfiguration(const size_t index) const
 {
-  return m_Configurations[index];
+  return m_TransformConfigurations[index];
 }
 
 
 /**
- * ************** GetNumberOfConfigurations *********************
+ * ************** GetNumberOfTransformConfigurations *********************
  */
 
 size_t
-ElastixBase::GetNumberOfConfigurations() const
+ElastixBase::GetNumberOfTransformConfigurations() const
 {
-  return m_Configurations.size();
+  return m_TransformConfigurations.size();
 }
 
 
