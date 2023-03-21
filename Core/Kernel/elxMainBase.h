@@ -168,16 +168,6 @@ protected:
   MainBase();
   ~MainBase() override = 0;
 
-  /** Enter the command line parameters, which were given by the user,
-   * if elastix.exe is used to do a registration.
-   * The Configuration object will be initialized in this way.
-   */
-  void
-  EnterCommandLineArguments(const ArgumentMapType & argmap);
-
-  void
-  EnterCommandLineArgumentsWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
-
   /** A pointer to elastix as an itk::object. In run() this
    * pointer will be assigned to an ElastixTemplate<>.
    */
