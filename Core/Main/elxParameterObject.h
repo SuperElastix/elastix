@@ -60,12 +60,20 @@ public:
   void
   SetParameterMap(const ParameterMapVectorType & parameterMaps);
   void
+  SetParameterMaps(const ParameterMapVectorType & parameterMaps);
+  void
   AddParameterMap(const ParameterMapType & parameterMap);
   const ParameterMapType &
   GetParameterMap(const unsigned int index) const;
 
   const ParameterMapVectorType &
   GetParameterMap() const
+  {
+    return m_ParameterMaps;
+  }
+
+  const ParameterMapVectorType &
+  GetParameterMaps() const
   {
     return m_ParameterMaps;
   }

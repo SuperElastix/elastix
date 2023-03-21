@@ -66,6 +66,21 @@ ParameterObject::SetParameterMap(const ParameterMapVectorType & parameterMaps)
 
 
 /**
+ * ********************* SetParameterMaps *********************
+ */
+
+void
+ParameterObject::SetParameterMaps(const ParameterMapVectorType & parameterMaps)
+{
+  if (m_ParameterMaps != parameterMaps)
+  {
+    m_ParameterMaps = parameterMaps;
+    this->Modified();
+  }
+}
+
+
+/**
  * ********************* AddParameterMap *********************
  */
 
