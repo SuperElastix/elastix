@@ -84,52 +84,19 @@ MainBase::~MainBase()
 
 
 /**
- * *************** EnterCommandLineParameters *******************
- */
-
-void
-MainBase::EnterCommandLineArguments(const ArgumentMapType & argmap)
-{
-
-  /** Initialize the configuration object with the
-   * command line parameters entered by the user.
-   */
-  int dummy = m_Configuration->Initialize(argmap);
-  if (dummy)
-  {
-    log::error("ERROR: Something went wrong during initialization of the configuration object.");
-  }
-
-} // end EnterCommandLineParameters()
-
-
-/**
- * *************** EnterCommandLineArgumentsWithParameterMap *******************
- */
-
-void
-MainBase::EnterCommandLineArgumentsWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
-{
-  /** Initialize the configuration object with the
-   * command line parameters entered by the user.
-   */
-  int dummy = m_Configuration->Initialize(argmap, inputMap);
-  if (dummy)
-  {
-    log::error("ERROR: Something went wrong during initialization of the configuration object.");
-  }
-
-} // end EnterCommandLineArgumentsWithParameterMap()
-
-
-/**
  * **************************** Run *****************************
  */
 
 int
 MainBase::Run(const ArgumentMapType & argmap)
 {
-  this->EnterCommandLineArguments(argmap);
+  /** Initialize the configuration object with the
+   * command line parameters entered by the user.
+   */
+  if (m_Configuration->Initialize(argmap) != 0)
+  {
+    log::error("ERROR: Something went wrong during initialization of the configuration object.");
+  }
   return this->Run();
 } // end Run()
 
@@ -141,7 +108,14 @@ MainBase::Run(const ArgumentMapType & argmap)
 int
 MainBase::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
-  this->EnterCommandLineArgumentsWithParameterMap(argmap, inputMap);
+  /** Initialize the configuration object with the
+   * command line parameters entered by the user.
+   */
+  if (m_Configuration->Initialize(argmap, inputMap) != 0)
+  {
+    log::error("ERROR: Something went wrong during initialization of the configuration object.");
+  }
+
   return this->Run();
 } // end Run()
 
