@@ -306,4 +306,41 @@ TransformixMain::InitDBIndex()
 } // end InitDBIndex()
 
 
+/**
+ * *************** EnterCommandLineArgumentsWithTransformParameterMaps *******************
+ */
+
+void
+TransformixMain::EnterCommandLineArgumentsWithTransformParameterMaps(
+  const ArgumentMapType &               argmap,
+  const std::vector<ParameterMapType> & transformParameterMaps)
+{
+  const auto numberOfTransformParameterMaps = transformParameterMaps.size();
+  m_TransformConfigurations.clear();
+  m_TransformConfigurations.resize(numberOfTransformParameterMaps);
+
+  for (size_t i = 0; i < numberOfTransformParameterMaps; ++i)
+  {
+    /** Initialize the configuration object with the
+     * command line parameters entered by the user.
+     */
+    const auto configuration = Configuration::New();
+    int        dummy = configuration->Initialize(argmap, transformParameterMaps[i]);
+    m_TransformConfigurations[i] = configuration;
+    if (dummy)
+    {
+      log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "
+                                      << i << ".");
+    }
+
+    if ((i + 1) == numberOfTransformParameterMaps)
+    {
+      /** Copy last configuration object to m_Configuration. */
+      MainBase::SetConfiguration(configuration);
+    }
+  }
+
+} // end EnterCommandLineArgumentsWithTransformParameterMaps()
+
+
 } // end namespace elastix
