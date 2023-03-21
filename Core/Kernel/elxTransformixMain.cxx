@@ -174,30 +174,6 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
  */
 
 int
-TransformixMain::Run(const ArgumentMapType & argmap)
-{
-  this->EnterCommandLineArguments(argmap);
-  return this->Run();
-} // end Run()
-
-
-/**
- * **************************** Run *****************************
- */
-
-int
-TransformixMain::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
-{
-  this->EnterCommandLineArgumentsWithParameterMap(argmap, inputMap);
-  return this->Run();
-} // end Run()
-
-
-/**
- * **************************** Run *****************************
- */
-
-int
 TransformixMain::Run(const ArgumentMapType &               argmap,
                      const std::vector<ParameterMapType> & transformParameterMaps,
                      itk::TransformBase * const            transform)

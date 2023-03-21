@@ -79,16 +79,11 @@ public:
   /** Typedef that is used in the elastix dll version. */
   using Superclass::ParameterMapType;
 
+  using Superclass::Run;
+
   /** Overwrite Run() from base-class. */
   int
   Run() override;
-
-  /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
-  int
-  Run(const ArgumentMapType & argmap) override;
-
-  int
-  Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap) override;
 
   /** Run version for using transformix as library. */
   int
