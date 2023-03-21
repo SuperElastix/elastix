@@ -114,6 +114,11 @@ private:
   /** Does Run with an optionally specified Transform. */
   int
   RunWithTransform(itk::TransformBase *);
+
+  // Version used when transformix is used as a library.
+  void
+  EnterCommandLineArgumentsWithTransformParameterMaps(const ArgumentMapType &               argmap,
+                                                      const std::vector<ParameterMapType> & transformParameterMaps);
 };
 
 } // end namespace elastix
