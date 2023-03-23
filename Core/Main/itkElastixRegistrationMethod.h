@@ -201,6 +201,9 @@ public:
     this->SetInitialTransformParameterFileName("");
   }
 
+  /** Set initial combination transform. */
+  itkSetObjectMacro(InitialCombinationTransform, TransformType);
+
   /** Set initial transform parameter object. */
   itkSetConstObjectMacro(InitialTransformParameterObject, elx::ParameterObject);
 
@@ -314,8 +317,10 @@ private:
 
   SmartPointer<const elx::ElastixMain> m_ElastixMain{ nullptr };
 
+
   std::string                        m_InitialTransformParameterFileName{};
   elx::ParameterObject::ConstPointer m_InitialTransformParameterObject{};
+  SmartPointer<TransformType>        m_InitialCombinationTransform{};
 
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};

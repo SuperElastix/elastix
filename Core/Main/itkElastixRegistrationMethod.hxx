@@ -87,7 +87,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   DataObjectContainerPointer fixedMaskContainer = nullptr;
   DataObjectContainerPointer movingMaskContainer = nullptr;
   DataObjectContainerPointer resultImageContainer = nullptr;
-  ElastixMainObjectPointer   transform = nullptr;
+  ElastixMainObjectPointer   transform = m_InitialCombinationTransform;
   ParameterMapVectorType     transformParameterMapVector;
   FlatDirectionCosinesType   fixedImageOriginalDirection;
 
