@@ -498,6 +498,21 @@ ElastixBase::GetTransformConfiguration(const size_t index) const
 
 
 /**
+ * ************** GetPreviousTransformConfiguration *********************
+ */
+
+Configuration::ConstPointer
+ElastixBase::GetPreviousTransformConfiguration(const Configuration & configuration) const
+{
+  const auto begin = m_TransformConfigurations.cbegin();
+  const auto end = m_TransformConfigurations.cend();
+  const auto found = std::find(begin, end, &configuration);
+
+  return (found == begin || found == end) ? nullptr : *(found - 1);
+}
+
+
+/**
  * ************** GetNumberOfTransformConfigurations *********************
  */
 

@@ -356,6 +356,11 @@ public:
   Configuration::ConstPointer
   GetTransformConfiguration(const size_t index) const;
 
+  /** Returns the transformation configuration just before the specified one, or null. Returns null if the specified
+   * configuration does not have a previous one in the vector of transformation configurations. */
+  Configuration::ConstPointer
+  GetPreviousTransformConfiguration(const Configuration & configuration) const;
+
   /** Returns the number of configurations in the vector of transformation configurations. */
   size_t
   GetNumberOfTransformConfigurations() const;
