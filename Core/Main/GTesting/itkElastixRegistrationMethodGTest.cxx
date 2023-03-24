@@ -70,6 +70,14 @@ using DefaultConstructibleElastixRegistrationMethod =
 
 namespace
 {
+template <unsigned int VDimension>
+auto
+ConvertIndexToOffset(const itk::Index<VDimension> & index)
+{
+  return index - itk::Index<VDimension>{};
+};
+
+
 template <unsigned NDimension, unsigned NSplineOrder>
 void
 Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirectoryPath)
@@ -561,13 +569,11 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
                                                           { "Transform", "TranslationTransform" } }));
 
-  const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
-
   for (const auto index :
        itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
   {
     movingImage->FillBuffer(0);
-    FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
+    FillImageRegion(*movingImage, fixedImageRegionIndex + ConvertIndexToOffset(index), regionSize);
     registration.SetMovingImage(movingImage);
     registration.Update();
 
@@ -614,8 +620,6 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
                                                           { "Transform", "TranslationTransform" } }));
 
-  const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
-
   using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
 
   // Test both one and two transform parameter maps.
@@ -635,7 +639,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
          itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
     {
       movingImage->FillBuffer(0);
-      FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
+      FillImageRegion(*movingImage, fixedImageRegionIndex + ConvertIndexToOffset(index), regionSize);
       registration.SetMovingImage(movingImage);
       registration.Update();
 
@@ -672,8 +676,6 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  const auto toOffset = [](const IndexType & index) { return index - IndexType(); };
-
   const auto createRegistration = [fixedImage](const std::string & initialTransformParameterFileName) {
     const auto registration = CheckNew<RegistrationMethodType>();
     registration->SetFixedImage(fixedImage);
@@ -701,7 +703,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
          itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
     {
       movingImage->FillBuffer(0);
-      FillImageRegion(*movingImage, fixedImageRegionIndex + toOffset(index), regionSize);
+      FillImageRegion(*movingImage, fixedImageRegionIndex + ConvertIndexToOffset(index), regionSize);
 
       const auto updateAndRetrieveTransformParameterMap = [movingImage](RegistrationMethodType & registration) {
         registration.SetMovingImage(movingImage);
