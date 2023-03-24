@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.16.3)
 
 project(elastix)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 if(BUILD_SHARED_LIBS)
   message(FATAL_ERROR "Elastix does not support BUILD_SHARED_LIBS")
