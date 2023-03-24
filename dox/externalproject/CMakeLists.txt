@@ -23,7 +23,7 @@ include(${ELASTIX_CONFIG_TARGETS_FILE})
 # Build a small example executable.
 add_executable(elastix_translation_example ElastixTranslationExample.cxx)
 
-set_property(TARGET elastix_translation_example PROPERTY CXX_STANDARD 14)
+set_property(TARGET elastix_translation_example PROPERTY CXX_STANDARD 17)
 
 target_include_directories(elastix_translation_example
   PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
