@@ -65,9 +65,8 @@ using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
 
 
-template <typename TFixedImage, typename TMovingImage>
-using DefaultConstructibleElastixRegistrationMethod =
-  elx::DefaultConstruct<itk::ElastixRegistrationMethod<TFixedImage, TMovingImage>>;
+template <typename TImage>
+using ElastixRegistrationMethodType = itk::ElastixRegistrationMethod<TImage, TImage>;
 
 namespace
 {
@@ -98,7 +97,7 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
   constexpr auto expectedNumberOfFixedParameters = NDimension * (NDimension + 3);
   ASSERT_EQ(defaultFixedParameters.size(), expectedNumberOfFixedParameters);
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
@@ -170,7 +169,7 @@ static_assert(static_cast<int>(itk::ElastixLogLevel::Info) == static_cast<int>(e
 GTEST_TEST(itkElastixRegistrationMethod, LogLevel)
 {
   using ImageType = itk::Image<float>;
-  elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> elastixRegistrationMethod;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> elastixRegistrationMethod;
 
   ASSERT_EQ(elastixRegistrationMethod.GetLogLevel(), itk::ElastixLogLevel{});
 
@@ -191,7 +190,7 @@ GTEST_TEST(itkElastixRegistrationMethod, IsDefaultInitialized)
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
 
-  const elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> elastixRegistrationMethod;
+  const elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> elastixRegistrationMethod;
 
   EXPECT_EQ(elastixRegistrationMethod.GetInitialTransformParameterFileName(), std::string{});
   EXPECT_EQ(elastixRegistrationMethod.GetFixedPointSetFileName(), std::string{});
@@ -224,7 +223,7 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
   const auto movingImage = CreateImage<PixelType>(imageSize);
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
   registration.SetFixedImage(fixedImage);
   registration.SetMovingImage(movingImage);
@@ -264,7 +263,7 @@ GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
   for (const auto optimizer :
        { "AdaptiveStochasticGradientDescent", "FiniteDifferenceGradientDescent", "StandardGradientDescent" })
   {
-    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
     registration.SetFixedImage(fixedImage);
     registration.SetMovingImage(movingImage);
@@ -308,7 +307,7 @@ GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterO
 
   for (const bool automaticTransformInitialization : { false, true })
   {
-    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
     registration.SetFixedImage(fixedImage);
     registration.SetMovingImage(movingImage);
@@ -352,7 +351,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 
   for (const bool writeResultImage : { true, false })
   {
-    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
     registration.SetFixedImage(fixedImage);
     registration.SetMovingImage(movingImage);
@@ -427,7 +426,7 @@ GTEST_TEST(itkElastixRegistrationMethod, ResultImageName)
 
   for (const bool useCustomResultImageName : { true, false })
   {
-    DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
     const std::string outputSubdirectoryPath = getOutputSubdirectoryPath(useCustomResultImageName);
     itk::FileTools::CreateDirectory(outputSubdirectoryPath);
@@ -498,7 +497,7 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
     {
       movingImage->SetOrigin(movingImageOrigin);
 
-      DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+      elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
       registration.SetFixedImage(fixedImage);
       registration.SetMovingImage(movingImage);
@@ -557,7 +556,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
   registration.SetFixedImage(fixedImage);
   registration.SetInitialTransformParameterFileName(GetDataDirectoryPath() +
@@ -604,9 +603,9 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  elx::DefaultConstruct<elx::ParameterObject>                         parameterObject{};
-  elx::DefaultConstruct<elx::ParameterObject>                         transformParameterObject{};
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<elx::ParameterObject>                     parameterObject{};
+  elx::DefaultConstruct<elx::ParameterObject>                     transformParameterObject{};
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(fixedImage);
   registration.SetInitialTransformParameterObject(&transformParameterObject);
   registration.SetParameterObject(&parameterObject);
@@ -678,7 +677,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
 
-  using RegistrationMethodType = itk::ElastixRegistrationMethod<ImageType, ImageType>;
+  using RegistrationMethodType = ElastixRegistrationMethodType<ImageType>;
 
   const OffsetType initialTranslation{ { 1, -2 } };
   const auto       regionSize = SizeType::Filled(2);
@@ -765,7 +764,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
     itk::Transform<double, ImageDimension, ImageDimension>::Pointer itkTransform;
   };
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
 
@@ -817,7 +816,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetNumberOfTransforms)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
@@ -847,7 +846,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetNthTransform)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
@@ -884,7 +883,7 @@ GTEST_TEST(itkElastixRegistrationMethod, ConvertToItkTransform)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
@@ -909,7 +908,7 @@ GTEST_TEST(itkElastixRegistrationMethod, ConvertToItkTransform)
     for (unsigned int n{ 0 }; n < numberOfTransforms; ++n)
     {
       // TODO Check result
-      itk::ElastixRegistrationMethod<ImageType, ImageType>::ConvertToItkTransform(*registration.GetNthTransform(n));
+      ElastixRegistrationMethodType<ImageType>::ConvertToItkTransform(*registration.GetNthTransform(n));
     }
   }
 }
@@ -927,7 +926,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
     itk::Transform<double, ImageDimension, ImageDimension>::Pointer itkTransform;
   };
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
 
@@ -1057,7 +1056,7 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
   const auto fixedImage = CreateImage<PixelType>(imageSize);
   setPixelsOfSquareRegion(*fixedImage, fixedImageRegionIndex);
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(fixedImage);
   registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
                                                           { "AutomaticTransformInitialization", "false" },
@@ -1141,7 +1140,7 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
   registration.SetFixedImage(fixedImage);
   registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
