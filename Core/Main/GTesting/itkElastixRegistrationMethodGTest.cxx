@@ -572,18 +572,14 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
   for (const auto index :
        itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
   {
+    const auto actualTranslation = ConvertIndexToOffset(index);
     movingImage->FillBuffer(0);
-    FillImageRegion(*movingImage, fixedImageRegionIndex + ConvertIndexToOffset(index), regionSize);
+    FillImageRegion(*movingImage, fixedImageRegionIndex + actualTranslation, regionSize);
     registration.SetMovingImage(movingImage);
     registration.Update();
 
     const auto transformParameters = GetTransformParametersFromFilter(registration);
-    ASSERT_EQ(transformParameters.size(), ImageDimension);
-
-    for (unsigned i{}; i < ImageDimension; ++i)
-    {
-      EXPECT_EQ(std::round(transformParameters[i]), index[i] - initialTranslation[i]);
-    }
+    EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
   }
 }
 
@@ -638,18 +634,14 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
     for (const auto index :
          itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
     {
+      const auto actualTranslation = ConvertIndexToOffset(index);
       movingImage->FillBuffer(0);
-      FillImageRegion(*movingImage, fixedImageRegionIndex + ConvertIndexToOffset(index), regionSize);
+      FillImageRegion(*movingImage, fixedImageRegionIndex + actualTranslation, regionSize);
       registration.SetMovingImage(movingImage);
       registration.Update();
 
       const auto transformParameters = GetTransformParametersFromFilter(registration);
-      ASSERT_EQ(transformParameters.size(), ImageDimension);
-
-      for (unsigned i{}; i < ImageDimension; ++i)
-      {
-        EXPECT_EQ(std::round(transformParameters[i]), index[i] - initialTranslation[i]);
-      }
+      EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
     }
   }
 }
