@@ -49,6 +49,7 @@
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
+using elx::CoreMainGTestUtilities::ConvertStringsToVectorOfDouble;
 using elx::CoreMainGTestUtilities::ConvertToOffset;
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
@@ -603,45 +604,66 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  elx::DefaultConstruct<elx::ParameterObject> transformParameterObject{};
-
+  elx::DefaultConstruct<elx::ParameterObject>                         parameterObject{};
+  elx::DefaultConstruct<elx::ParameterObject>                         transformParameterObject{};
   DefaultConstructibleElastixRegistrationMethod<ImageType, ImageType> registration;
-
   registration.SetFixedImage(fixedImage);
   registration.SetInitialTransformParameterObject(&transformParameterObject);
-  registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
-                                                          { "ImageSampler", "Full" },
-                                                          { "MaximumNumberOfIterations", "2" },
-                                                          { "Metric", "AdvancedNormalizedCorrelation" },
-                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                          { "Transform", "TranslationTransform" } }));
+  registration.SetParameterObject(&parameterObject);
 
-  using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
+  const elx::ParameterObject::ParameterMapType parameterMap{ // Parameters in alphabetic order:
+                                                             { "ImageSampler", { "Full" } },
+                                                             { "MaximumNumberOfIterations", { "2" } },
+                                                             { "Metric", { "AdvancedNormalizedCorrelation" } },
+                                                             { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                                             { "Transform", { "TranslationTransform" } }
+  };
 
-  // Test both one and two transform parameter maps.
-  for (const auto & transformParameterMaps : { ParameterMapVectorType{ { { "NumberOfParameters", { "2" } },
-                                                                         { "Transform", { "TranslationTransform" } },
-                                                                         { "TransformParameters", { "1", "-2" } } } },
-                                               ParameterMapVectorType{ { { "NumberOfParameters", { "2" } },
-                                                                         { "Transform", { "TranslationTransform" } },
-                                                                         { "TransformParameters", { "1", "0" } } },
-                                                                       { { "NumberOfParameters", { "2" } },
-                                                                         { "Transform", { "TranslationTransform" } },
-                                                                         { "TransformParameters", { "0", "-2" } } } } })
+  for (const unsigned int numberOfParameterMaps : { 1, 2, 3 })
   {
-    transformParameterObject.SetParameterMaps(transformParameterMaps);
+    using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
 
-    for (const auto index :
-         itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+    parameterObject.SetParameterMaps(ParameterMapVectorType(numberOfParameterMaps, parameterMap));
+
+    // Test both one and two transform parameter maps.
+    for (const auto & transformParameterMaps :
+         { ParameterMapVectorType{ { { "NumberOfParameters", { "2" } },
+                                     { "Transform", { "TranslationTransform" } },
+                                     { "TransformParameters", { "1", "-2" } } } },
+           ParameterMapVectorType{ { { "NumberOfParameters", { "2" } },
+                                     { "Transform", { "TranslationTransform" } },
+                                     { "TransformParameters", { "1", "0" } } },
+                                   { { "NumberOfParameters", { "2" } },
+                                     { "Transform", { "TranslationTransform" } },
+                                     { "TransformParameters", { "0", "-2" } } } } })
     {
-      const auto actualTranslation = ConvertIndexToOffset(index);
-      movingImage->FillBuffer(0);
-      FillImageRegion(*movingImage, fixedImageRegionIndex + actualTranslation, regionSize);
-      registration.SetMovingImage(movingImage);
-      registration.Update();
+      transformParameterObject.SetParameterMaps(transformParameterMaps);
 
-      const auto transformParameters = GetTransformParametersFromFilter(registration);
-      EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
+      for (const auto index :
+           itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+      {
+        const auto actualTranslation = ConvertIndexToOffset(index);
+        movingImage->FillBuffer(0);
+        FillImageRegion(*movingImage, fixedImageRegionIndex + actualTranslation, regionSize);
+        registration.SetMovingImage(movingImage);
+        registration.Update();
+
+        const auto & transformParameterMaps =
+          DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMap();
+
+        ASSERT_EQ(transformParameterMaps.size(), numberOfParameterMaps);
+
+        for (unsigned int i{ 1 }; i < numberOfParameterMaps; ++i)
+        {
+          const auto transformParameters =
+            ConvertStringsToVectorOfDouble(transformParameterMaps[i].at("TransformParameters"));
+          EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), OffsetType{});
+        }
+
+        const auto transformParameters =
+          ConvertStringsToVectorOfDouble(transformParameterMaps.front().at("TransformParameters"));
+        EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
+      }
     }
   }
 }
