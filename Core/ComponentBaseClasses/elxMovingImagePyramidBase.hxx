@@ -100,7 +100,7 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
   const Configuration & configuration = Deref(Superclass::GetConfiguration());
 
   /** Read numberOfResolutions. */
-  unsigned int numberOfResolutions = 0;
+  unsigned int numberOfResolutions = 3;
   configuration.ReadParameter(numberOfResolutions, "NumberOfResolutions", 0, true);
   if (numberOfResolutions == 0)
   {
