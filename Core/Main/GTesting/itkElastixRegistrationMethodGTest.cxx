@@ -203,6 +203,49 @@ GTEST_TEST(itkElastixRegistrationMethod, IsDefaultInitialized)
 }
 
 
+// Tests that the value zero is rejected for the "NumberOfResolutions" parameter.
+GTEST_TEST(itkElastixRegistrationMethod, RejectZeroValueForNumberOfResolution)
+{
+  constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
+
+  elx::DefaultConstruct<elx::ParameterObject>                     parameterObject{};
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+
+  registration.SetFixedImage(CreateImage<PixelType>(imageSize));
+  registration.SetMovingImage(CreateImage<PixelType>(imageSize));
+  registration.SetParameterObject(&parameterObject);
+
+  elx::ParameterObject::ParameterMapType parameterMap{ // Parameters in alphabetic order:
+                                                       { "ImageSampler", { "Full" } },
+                                                       { "MaximumNumberOfIterations", { "2" } },
+                                                       { "Metric", { "AdvancedNormalizedCorrelation" } },
+                                                       { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                                       { "Transform", { "TranslationTransform" } }
+  };
+
+  parameterObject.SetParameterMap(parameterMap);
+
+  // OK: "NumberOfResolutions" is unspecified, so use its default value.
+  EXPECT_NO_THROW(registration.Update());
+
+  for (const unsigned int numberOfResolutions : { 1, 2 })
+  {
+    // OK: Use a value greater than zero.
+    parameterMap["NumberOfResolutions"] = { std::to_string(numberOfResolutions) };
+    parameterObject.SetParameterMap(parameterMap);
+    EXPECT_NO_THROW(registration.Update());
+  }
+
+  // Expected to be rejected: the value zero.
+  parameterMap["NumberOfResolutions"] = { "0" };
+  parameterObject.SetParameterMap(parameterMap);
+  EXPECT_THROW(registration.Update(), itk::ExceptionObject);
+}
+
+
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
 GTEST_TEST(itkElastixRegistrationMethod, Translation)
 {

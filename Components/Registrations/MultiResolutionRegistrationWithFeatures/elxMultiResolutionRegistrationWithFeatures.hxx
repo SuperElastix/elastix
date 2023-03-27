@@ -38,6 +38,10 @@ MultiResolutionRegistrationWithFeatures<TElastix>::BeforeRegistration()
   /** Set the number of resolutions. */
   unsigned int numberOfResolutions = 3;
   this->m_Configuration->ReadParameter(numberOfResolutions, "NumberOfResolutions", 0);
+  if (numberOfResolutions == 0)
+  {
+    itkExceptionMacro("The NumberOfResolutions parameter must have a non-zero value!");
+  }
   this->SetNumberOfLevels(numberOfResolutions);
 
   /** Set the FixedImageRegions to the buffered regions. */

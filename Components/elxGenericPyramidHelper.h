@@ -65,7 +65,7 @@ public:
     configuration.ReadParameter(numberOfResolutions, "NumberOfResolutions", 0, true);
     if (numberOfResolutions == 0)
     {
-      numberOfResolutions = 1;
+      itkGenericExceptionMacro("The NumberOfResolutions parameter must have a non-zero value!");
     }
 
     /** Create a default schedule. Set the numberOfLevels first. */

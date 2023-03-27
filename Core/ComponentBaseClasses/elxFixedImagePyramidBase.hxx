@@ -103,7 +103,7 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
   configuration.ReadParameter(numberOfResolutions, "NumberOfResolutions", 0, true);
   if (numberOfResolutions == 0)
   {
-    numberOfResolutions = 1;
+    itkExceptionMacro("The NumberOfResolutions parameter must have a non-zero value!");
   }
 
   /** Create a default schedule. Set the numberOfLevels first. */
