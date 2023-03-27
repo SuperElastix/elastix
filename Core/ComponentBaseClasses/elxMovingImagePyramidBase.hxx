@@ -104,9 +104,8 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
   configuration.ReadParameter(numberOfResolutions, "NumberOfResolutions", 0, true);
   if (numberOfResolutions == 0)
   {
-    log::error("ERROR: NumberOfResolutions not specified!");
+    itkExceptionMacro("The NumberOfResolutions parameter must have a non-zero value!");
   }
-  /** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
 
   /** Create a default schedule. Set the numberOfLevels first. */
   this->GetAsITKBaseType()->SetNumberOfLevels(numberOfResolutions);
