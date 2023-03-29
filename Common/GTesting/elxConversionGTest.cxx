@@ -18,6 +18,7 @@
 
 // First include the header file to be tested:
 #include "elxConversion.h"
+#include "elxDefaultConstruct.h"
 
 #include "itkParameterFileParser.h"
 #include "itkParameterMapInterface.h"
@@ -239,6 +240,29 @@ Expect_parameter_with_decimal_point_and_non_zero_trailing_chars_can_not_be_read_
     }
   }
 }
+
+
+template <typename TSignedInteger>
+void
+Expect_negative_parameter_value_can_not_be_read_as_unsigned()
+{
+  static_assert(std::is_signed<TSignedInteger>::value, "Must be a signed integer type!");
+
+  for (TSignedInteger integer : { std::numeric_limits<TSignedInteger>::min(), TSignedInteger{ -1 } })
+  {
+    const std::string parameterName("Key");
+    const std::string parameterStringValue = std::to_string(integer);
+
+    elx::DefaultConstruct<itk::ParameterMapInterface> parameterMapInterface;
+    parameterMapInterface.SetParameterMap({ { parameterName, { parameterStringValue } } });
+
+    std::make_unsigned_t<TSignedInteger> actualParameterValue{};
+    std::string                          errorMessage;
+    EXPECT_THROW(parameterMapInterface.ReadParameter(actualParameterValue, parameterName, 0, errorMessage),
+                 itk::ExceptionObject);
+  }
+}
+
 
 template <typename TFloatingPoint>
 void
@@ -590,4 +614,12 @@ GTEST_TEST(ParameterMapInterface, ParameterWithDecimalPointAndTrailingZerosCanBe
 GTEST_TEST(ParameterMapInterface, ParameterWithDecimalPointAndNonZeroTrailingCharsCanNotBeReadAsInteger)
 {
   Expect_parameter_with_decimal_point_and_non_zero_trailing_chars_can_not_be_read_as_integer<int>();
+}
+
+
+GTEST_TEST(ParameterMapInterface, NegativeParameterValueCannotNotBeReadAsUnsigned)
+{
+  Expect_negative_parameter_value_can_not_be_read_as_unsigned<int>();
+  Expect_negative_parameter_value_can_not_be_read_as_unsigned<std::int8_t>();
+  Expect_negative_parameter_value_can_not_be_read_as_unsigned<std::intmax_t>();
 }

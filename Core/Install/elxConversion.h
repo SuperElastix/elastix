@@ -177,6 +177,12 @@ public:
     // overloads.
     static_assert(sizeof(T) > 1, "This StringToValue<T> overload does not support (signed/unsigned) char!");
 
+    if (std::is_unsigned<T>::value && (!str.empty()) && (str.front() == '-'))
+    {
+      // An unsigned value should not start with a minus sign!
+      return false;
+    }
+
     auto inputStream = [&str] {
       const auto decimalPointPos = str.find_first_of('.');
       const bool hasDecimalPointAndTrailingZeros =
