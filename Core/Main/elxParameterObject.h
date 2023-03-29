@@ -57,16 +57,19 @@ public:
   SetParameterMap(const ParameterMapType & parameterMap);
   void
   SetParameterMap(const unsigned int index, const ParameterMapType & parameterMap);
-  void
+
+  [[deprecated("Instead of calling this overload, please call SetParameterMaps")]] void
   SetParameterMap(const ParameterMapVectorType & parameterMaps);
+
   void
   SetParameterMaps(const ParameterMapVectorType & parameterMaps);
+
   void
   AddParameterMap(const ParameterMapType & parameterMap);
   const ParameterMapType &
   GetParameterMap(const unsigned int index) const;
 
-  const ParameterMapVectorType &
+  [[deprecated("Instead of calling this member function, please call GetParameterMaps")]] const ParameterMapVectorType &
   GetParameterMap() const
   {
     return m_ParameterMaps;
