@@ -1130,7 +1130,7 @@ GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnZeroParameterMaps)
                                      { "Size", ConvertToParameterValues(imageSize) },
                                      { "Spacing", ParameterValuesType(ImageDimension, "1") } } };
 
-    transformParameterObject.SetParameterMap(parameterMaps);
+    transformParameterObject.SetParameterMaps(parameterMaps);
 
     elx::DefaultConstruct<itk::TransformixFilter<ImageType>> transformixFilter{};
     transformixFilter.SetMovingImage(&image);
@@ -1227,7 +1227,7 @@ GTEST_TEST(itkTransformixFilter, SetCompositeTransformOfTranslationAndScale)
   for (size_t numberOfParameterMaps{ 1 }; numberOfParameterMaps <= 3; ++numberOfParameterMaps)
   {
     elx::DefaultConstruct<elx::ParameterObject> transformParameterObject{};
-    transformParameterObject.SetParameterMap(ParameterMapVectorType(numberOfParameterMaps, transformParameterMap));
+    transformParameterObject.SetParameterMaps(ParameterMapVectorType(numberOfParameterMaps, transformParameterMap));
 
     elx::DefaultConstruct<itk::TransformixFilter<ImageType>> transformixFilter{};
     transformixFilter.SetMovingImage(inputImage);

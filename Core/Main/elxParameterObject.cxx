@@ -36,7 +36,7 @@ void
 ParameterObject::SetParameterMap(const ParameterMapType & parameterMap)
 {
   ParameterMapVectorType parameterMapVector = ParameterMapVectorType(1, parameterMap);
-  this->SetParameterMap(parameterMapVector);
+  this->SetParameterMaps(parameterMapVector);
 }
 
 /**
@@ -198,7 +198,7 @@ ParameterObject::RemoveParameter(const ParameterKeyType & key)
 void
 ParameterObject::ReadParameterFile(const ParameterFileNameType & parameterFileName)
 {
-  this->SetParameterMap(ParameterMapVectorType{ itk::ParameterFileParser::ReadParameterMap(parameterFileName) });
+  this->SetParameterMaps({ itk::ParameterFileParser::ReadParameterMap(parameterFileName) });
 }
 
 

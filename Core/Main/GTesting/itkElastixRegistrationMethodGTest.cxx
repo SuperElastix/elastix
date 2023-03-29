@@ -691,7 +691,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
         registration.Update();
 
         const auto & transformParameterMaps =
-          DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMap();
+          DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
 
         ASSERT_EQ(transformParameterMaps.size(), numberOfParameterMaps);
 
@@ -766,7 +766,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
         registration.Update();
         const elx::ParameterObject & transformParameterObject =
           DerefRawPointer(registration.GetTransformParameterObject());
-        const auto & transformParameterMaps = transformParameterObject.GetParameterMap();
+        const auto & transformParameterMaps = transformParameterObject.GetParameterMaps();
         EXPECT_EQ(transformParameterMaps.size(), 1);
         return Front(transformParameterMaps);
       };
