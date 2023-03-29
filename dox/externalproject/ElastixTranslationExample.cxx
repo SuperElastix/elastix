@@ -91,7 +91,7 @@ main()
     const auto * const transformParameterObject = filter->GetTransformParameterObject();
     assert(transformParameterObject != nullptr);
 
-    const auto & transformParameterMaps = transformParameterObject->GetParameterMap();
+    const auto & transformParameterMaps = transformParameterObject->GetParameterMaps();
     assert(!transformParameterMaps.empty());
 
     const auto & transformParameterMap = transformParameterMaps.front();

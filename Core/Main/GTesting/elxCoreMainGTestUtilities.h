@@ -255,7 +255,7 @@ std::vector<double>
 GetTransformParametersFromFilter(TFilter & filter)
 {
   const auto   transformParameterObject = filter.GetTransformParameterObject();
-  const auto & transformParameterMaps = DerefRawPointer(transformParameterObject).GetParameterMap();
+  const auto & transformParameterMaps = DerefRawPointer(transformParameterObject).GetParameterMaps();
   return GetTransformParametersFromMaps(transformParameterMaps);
 }
 

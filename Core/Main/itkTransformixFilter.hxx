@@ -160,7 +160,7 @@ TransformixFilter<TMovingImage>::GenerateData()
 
   // Get ParameterMap
   ParameterObjectPointer transformParameterObject = this->GetTransformParameterObject();
-  ParameterMapVectorType transformParameterMapVector = transformParameterObject->GetParameterMap();
+  ParameterMapVectorType transformParameterMapVector = transformParameterObject->GetParameterMaps();
 
   // Assert user did not set empty parameter map
   if (transformParameterMapVector.empty())

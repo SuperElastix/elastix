@@ -131,7 +131,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   // Set ParameterMap
   ParameterObjectPointer parameterObject =
     itkDynamicCastInDebugMode<elx::ParameterObject *>(this->ProcessObject::GetInput("ParameterObject"));
-  ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMap();
+  ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMaps();
 
   if (parameterMapVector.empty())
   {
@@ -234,7 +234,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     {
       isError = ((i == 0) && m_InitialTransformParameterObject)
                   ? elastixMain->RunWithInitialTransformParameterMaps(
-                      argumentMap, parameterMap, m_InitialTransformParameterObject->GetParameterMap())
+                      argumentMap, parameterMap, m_InitialTransformParameterObject->GetParameterMaps())
                   : elastixMain->Run(argumentMap, parameterMap);
     }
     catch (const itk::ExceptionObject & e)
@@ -285,7 +285,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
   // Save parameter map
   elx::ParameterObject::Pointer transformParameterObject = elx::ParameterObject::New();
-  transformParameterObject->SetParameterMap(transformParameterMapVector);
+  transformParameterObject->SetParameterMaps(transformParameterMapVector);
   this->SetNthOutput(1, transformParameterObject);
 }
 
