@@ -47,15 +47,15 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
    * \todo make it a cast to the fixed image type
    */
   using FixedImageType = typename ElastixType::FixedImageType;
-  FixedImageType * fixedImage = this->m_Elastix->GetFixedImage();
+  FixedImageType & fixedImage = Deref(this->m_Elastix->GetFixedImage());
   ITKBaseType &    resampleImageFilter = this->GetSelf();
 
   /** Set the region info to the same values as in the fixedImage. */
-  resampleImageFilter.SetSize(fixedImage->GetLargestPossibleRegion().GetSize());
-  resampleImageFilter.SetOutputStartIndex(fixedImage->GetLargestPossibleRegion().GetIndex());
-  resampleImageFilter.SetOutputOrigin(fixedImage->GetOrigin());
-  resampleImageFilter.SetOutputSpacing(fixedImage->GetSpacing());
-  resampleImageFilter.SetOutputDirection(fixedImage->GetDirection());
+  resampleImageFilter.SetSize(fixedImage.GetLargestPossibleRegion().GetSize());
+  resampleImageFilter.SetOutputStartIndex(fixedImage.GetLargestPossibleRegion().GetIndex());
+  resampleImageFilter.SetOutputOrigin(fixedImage.GetOrigin());
+  resampleImageFilter.SetOutputSpacing(fixedImage.GetSpacing());
+  resampleImageFilter.SetOutputDirection(fixedImage.GetDirection());
 
   const Configuration & configuration = Deref(Superclass::GetConfiguration());
 
