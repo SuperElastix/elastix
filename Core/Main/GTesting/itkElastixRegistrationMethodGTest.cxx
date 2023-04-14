@@ -16,10 +16,12 @@
  *
  *=========================================================================*/
 
-#define _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES // For M_PI.
 
 // First include the header file to be tested:
 #include <itkElastixRegistrationMethod.h>
+
+#include <itkTransformixFilter.h>
 
 #include "elxCoreMainGTestUtilities.h"
 #include "elxDefaultConstruct.h"
@@ -43,9 +45,16 @@
 #include <algorithm> // For transform
 #include <cmath>     // For M_PI
 #include <map>
+#include <random>
 #include <string>
 #include <utility> // For pair
 
+
+// Type aliases:
+using ParameterMapType = itk::ParameterFileParser::ParameterMapType;
+using ParameterType = ParameterMapType::value_type;
+using ParameterValuesType = itk::ParameterFileParser::ParameterValuesType;
+using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::CheckNew;
@@ -70,12 +79,310 @@ using ElastixRegistrationMethodType = itk::ElastixRegistrationMethod<TImage, TIm
 
 namespace
 {
+auto
+ParameterToCurlyBracedString(const ParameterMapType::value_type & parameter)
+{
+  std::string result = " { \"" + parameter.first + "\", {";
+  for (const auto & str : parameter.second)
+  {
+    if (&str != &(parameter.second.front()))
+    {
+      result += ", ";
+    }
+    result += " \"" + str + "\" ";
+  }
+
+  result += "} }";
+
+  return result;
+}
+
+
+const ParameterMapType defaultRegistrationParameterMap =
+  CreateParameterMap({ // Parameters in alphabetic order:
+                       ParameterType{ "ASGDParameterEstimationMethod", { "Original" } },
+                       ParameterType{ "AutomaticParameterEstimation", { "true" } },
+                       ParameterType{ "BSplineInterpolationOrder", { "1" } },
+                       ParameterType{ "CheckNumberOfSamples", { "false" } },
+                       ParameterType{ "FinalBSplineInterpolationOrder", { "3" } },
+                       ParameterType{ "FixedImagePyramid", { "FixedSmoothingImagePyramid" } },
+                       ParameterType{ "FixedInternalImagePixelType", { "float" } },
+                       ParameterType{ "HowToCombineTransforms", { "Compose" } },
+                       ParameterType{ "InitialTransformParametersFileName", { "NoInitialTransform" } },
+                       ParameterType{ "Interpolator", { "BSplineInterpolator" } },
+                       ParameterType{ "MaxBandCovSize", { "192" } },
+                       ParameterType{ "MaximumNumberOfSamplingAttempts", { "0" } },
+                       ParameterType{ "MaximumStepLength", { "1" } },
+                       ParameterType{ "MaximumStepLengthRatio", { "1" } },
+                       ParameterType{ "MovingImagePyramid", { "MovingSmoothingImagePyramid" } },
+                       ParameterType{ "MovingInternalImagePixelType", { "float" } },
+                       ParameterType{ "NewSamplesEveryIteration", { "false" } },
+                       ParameterType{ "NumberOfBandStructureSamples", { "10" } },
+                       ParameterType{ "NumberOfGradientMeasurements", { "0" } },
+                       ParameterType{ "NumberOfJacobianMeasurements", { "1000" } },
+                       ParameterType{ "NumberOfSamplesForExactGradient", { "100000" } },
+                       ParameterType{ "Registration", { "MultiResolutionRegistration" } },
+                       ParameterType{ "ResampleInterpolator", { "FinalBSplineInterpolator" } },
+                       ParameterType{ "Resampler", { "DefaultResampler" } },
+                       ParameterType{ "ShowExactMetricValue", { "false" } },
+                       ParameterType{ "SigmoidInitialTime", { "0" } },
+                       ParameterType{ "SigmoidScaleFactor", { "0.1" } },
+                       ParameterType{ "SP_a", { "0.602" } },
+                       ParameterType{ "SP_A", { "20" } },
+                       ParameterType{ "SP_alpha", { "0.602" } },
+                       ParameterType{ "SubtractMean", { "true" } },
+                       ParameterType{ "UseAdaptiveStepSizes", { "true" } },
+                       ParameterType{ "UseConstantStep", { "false" } },
+                       ParameterType{ "UseDirectionCosines", { "true" } },
+                       ParameterType{ "UseMultiThreadingForMetrics", { "true" } },
+                       ParameterType{ "WriteResultImage", { "true" } } });
+
+const ParameterMapType defaultTransformParameterMap = CreateParameterMap(
+  { // Parameters in alphabetic order:
+    ParameterType{ "BSplineTransformSplineOrder", { "3" } },
+    ParameterType{ "FinalBSplineInterpolationOrder", { "3" } },
+    ParameterType{ "FixedImagePyramid", { "FixedSmoothingImagePyramid" } },
+    ParameterType{ "FixedInternalImagePixelType", { "float" } },
+    ParameterType{ "GridDirection", elx::Conversion::ToVectorOfStrings(itk::Matrix<int, 2, 2>::GetIdentity()) },
+    ParameterType{ "GridIndex", ParameterValuesType(2, "0") },
+    ParameterType{ "GridOrigin", ParameterValuesType(2, "0") },
+    ParameterType{ "GridSize", ParameterValuesType(2, "1") },
+    ParameterType{ "GridSpacing", ParameterValuesType(2, "1") },
+    ParameterType{ "HowToCombineTransforms", { "Compose" } },
+    ParameterType{ "InitialTransformParametersFileName", { "NoInitialTransform" } },
+    ParameterType{ "Interpolator", { "BSplineInterpolator" } },
+    ParameterType{ "MovingImagePyramid", { "MovingSmoothingImagePyramid" } },
+    ParameterType{ "MovingInternalImagePixelType", { "float" } },
+    ParameterType{ "NewSamplesEveryIteration", { "false" } },
+    ParameterType{ "Registration", { "MultiResolutionRegistration" } },
+    ParameterType{ "ResampleInterpolator", { "FinalBSplineInterpolator" } },
+    ParameterType{ "Resampler", { "DefaultResampler" } },
+    ParameterType{ "UseCyclicTransform", { "false" } },
+    ParameterType{ "UseDirectionCosines", { "true" } } });
+
+
+auto
+DefaultTransformParameter(const ParameterMapType::value_type & parameter)
+{
+
+  EXPECT_EQ(defaultTransformParameterMap.count(parameter.first), 1)
+    << " parameter = " << ParameterToCurlyBracedString(parameter);
+  EXPECT_EQ(defaultTransformParameterMap.at(parameter.first), parameter.second);
+
+  return parameter;
+}
+
+auto
+NonDefaultTransformParameter(const ParameterMapType::value_type & parameter)
+{
+  const auto end = defaultTransformParameterMap.cend();
+  EXPECT_EQ(std::find(defaultTransformParameterMap.cbegin(), end, parameter), end);
+
+  if (const auto found = defaultTransformParameterMap.find(parameter.first); found != end)
+  {
+    EXPECT_NE(found->second, parameter.second);
+  }
+
+  return parameter;
+}
+
+auto
+DefaultRegistrationParameter(const ParameterMapType::value_type & parameter)
+{
+
+  EXPECT_EQ(defaultRegistrationParameterMap.count(parameter.first), 1)
+    << " parameter = " << ParameterToCurlyBracedString(parameter);
+  EXPECT_EQ(defaultRegistrationParameterMap.at(parameter.first), parameter.second);
+
+  return parameter;
+}
+
+auto
+NonDefaultRegistrationParameter(const ParameterMapType::value_type & parameter)
+{
+  const auto end = defaultRegistrationParameterMap.cend();
+  EXPECT_EQ(std::find(defaultRegistrationParameterMap.cbegin(), end, parameter), end);
+
+  if (const auto found = defaultRegistrationParameterMap.find(parameter.first); found != end)
+  {
+    EXPECT_NE(found->second, parameter.second);
+  }
+
+  return parameter;
+}
+
+
+// The image domain. ITK calls it the "geometry" of an image. ("The geometry of an image is defined by its position,
+// orientation, spacing, and extent", according to https://itk.org/Doxygen52/html/classitk_1_1ImageBase.html#details).
+// The elastix manual (elastix-5.1.0-manual.pdf, January 16, 2023) simply calls it "the
+// Size/Spacing/Origin/Index/Direction settings".
+template <unsigned int VDimension>
+struct ImageDomain
+{
+  using ImageBaseType = itk::ImageBase<VDimension>;
+
+  using DirectionType = typename ImageBaseType::DirectionType;
+  using IndexType = typename ImageBaseType::IndexType;
+  using SizeType = typename ImageBaseType::SizeType;
+  using SpacingType = typename ImageBaseType::SpacingType;
+  using PointType = typename ImageBaseType::PointType;
+
+  DirectionType direction{ DirectionType::GetIdentity() };
+  IndexType     index{};
+  SizeType      size{};
+  SpacingType   spacing{ itk::MakeFilled<SpacingType>(1.0) };
+  PointType     origin{};
+};
+
+
+template <unsigned int VDimension>
+void
+PutImageDomainIntoImageBase(itk::ImageBase<VDimension> & image, const ImageDomain<VDimension> & imageDomain)
+{
+  image.SetDirection(imageDomain.direction);
+  image.SetRegions({ imageDomain.index, imageDomain.size });
+  image.SetSpacing(imageDomain.spacing);
+  image.SetOrigin(imageDomain.origin);
+}
+
+
+template <unsigned int VDimension>
+ParameterMapType
+ConvertImageDomainToParameterMap(const ImageDomain<VDimension> & imageDomain)
+{
+  return {
+    { "Direction", elx::Conversion::ToVectorOfStrings(imageDomain.direction) },
+    { "Index", elx::Conversion::ToVectorOfStrings(imageDomain.index) },
+    { "Size", elx::Conversion::ToVectorOfStrings(imageDomain.size) },
+    { "Spacing", elx::Conversion::ToVectorOfStrings(imageDomain.spacing) },
+    { "Origin", elx::Conversion::ToVectorOfStrings(imageDomain.origin) },
+  };
+}
+
 template <unsigned int VDimension>
 auto
 ConvertIndexToOffset(const itk::Index<VDimension> & index)
 {
   return index - itk::Index<VDimension>{};
 };
+
+
+template <unsigned int VDimension>
+void
+Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransformParameterObject(
+  const ParameterMapVectorType &  transformParameterMaps,
+  const ImageDomain<VDimension> & fixedImageDomain,
+  const ImageDomain<VDimension> & movingImageDomain)
+{
+  ASSERT_FALSE(transformParameterMaps.empty());
+
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, VDimension>;
+
+  itk::Size<VDimension> movingImageSize;
+  std::iota(movingImageSize.begin(), movingImageSize.end(), 5U);
+
+  elx::DefaultConstruct<ImageType> fixedImage{};
+  PutImageDomainIntoImageBase(fixedImage, fixedImageDomain);
+  fixedImage.Allocate(true);
+
+  elx::DefaultConstruct<ImageType> movingImage{};
+  PutImageDomainIntoImageBase(movingImage, movingImageDomain);
+  movingImage.Allocate(true);
+  const itk::ImageBufferRange<ImageType> movingImageBufferRange(movingImage);
+
+  std::mt19937 randomNumberEngine{};
+
+  std::generate(movingImageBufferRange.begin(), movingImageBufferRange.end(), [&randomNumberEngine] {
+    return std::uniform_real_distribution<PixelType>{ PixelType{ 1 }, PixelType{ 2 } }(randomNumberEngine);
+  });
+
+  elx::DefaultConstruct<elx::ParameterObject> registrationParameterObject{};
+
+  // Parameter map of a registration that "does nothing".
+  const ParameterMapType registrationParameterMap = CreateParameterMap({
+    // Default parameters in alphabetic order:
+    DefaultRegistrationParameter({ "ASGDParameterEstimationMethod", { "Original" } }),
+    DefaultRegistrationParameter({ "AutomaticParameterEstimation", { "true" } }),
+    DefaultRegistrationParameter({ "BSplineInterpolationOrder", { "1" } }),
+    DefaultRegistrationParameter({ "CheckNumberOfSamples", { "false" } }),
+    DefaultRegistrationParameter({ "FinalBSplineInterpolationOrder", { "3" } }),
+    DefaultRegistrationParameter({ "FixedImagePyramid", { "FixedSmoothingImagePyramid" } }),
+    DefaultRegistrationParameter({ "FixedInternalImagePixelType", { "float" } }),
+    DefaultRegistrationParameter({ "HowToCombineTransforms", { "Compose" } }),
+    DefaultRegistrationParameter({ "InitialTransformParametersFileName", { "NoInitialTransform" } }),
+    DefaultRegistrationParameter({ "Interpolator", { "BSplineInterpolator" } }),
+    DefaultRegistrationParameter({ "MaxBandCovSize", { "192" } }),
+    DefaultRegistrationParameter({ "MaximumNumberOfSamplingAttempts", { "0" } }),
+    DefaultRegistrationParameter({ "MaximumStepLength", { "1" } }),
+    DefaultRegistrationParameter({ "MaximumStepLengthRatio", { "1" } }),
+    DefaultRegistrationParameter({ "MovingImagePyramid", { "MovingSmoothingImagePyramid" } }),
+    DefaultRegistrationParameter({ "MovingInternalImagePixelType", { "float" } }),
+    DefaultRegistrationParameter({ "NewSamplesEveryIteration", { "false" } }),
+    DefaultRegistrationParameter({ "NumberOfBandStructureSamples", { "10" } }),
+    DefaultRegistrationParameter({ "NumberOfGradientMeasurements", { "0" } }),
+    DefaultRegistrationParameter({ "NumberOfJacobianMeasurements", { "1000" } }),
+    DefaultRegistrationParameter({ "NumberOfSamplesForExactGradient", { "100000" } }),
+    DefaultRegistrationParameter({ "Registration", { "MultiResolutionRegistration" } }),
+    DefaultRegistrationParameter({ "ResampleInterpolator", { "FinalBSplineInterpolator" } }),
+    DefaultRegistrationParameter({ "Resampler", { "DefaultResampler" } }),
+    DefaultRegistrationParameter({ "ShowExactMetricValue", { "false" } }),
+    DefaultRegistrationParameter({ "SigmoidInitialTime", { "0" } }),
+    DefaultRegistrationParameter({ "SigmoidScaleFactor", { "0.1" } }),
+    DefaultRegistrationParameter({ "SP_a", { "0.602" } }),
+    DefaultRegistrationParameter({ "SP_A", { "20" } }),
+    DefaultRegistrationParameter({ "SP_alpha", { "0.602" } }),
+    DefaultRegistrationParameter({ "SubtractMean", { "true" } }),
+    DefaultRegistrationParameter({ "UseAdaptiveStepSizes", { "true" } }),
+    DefaultRegistrationParameter({ "UseConstantStep", { "false" } }),
+    DefaultRegistrationParameter({ "UseDirectionCosines", { "true" } }),
+    DefaultRegistrationParameter({ "UseMultiThreadingForMetrics", { "true" } }),
+    DefaultRegistrationParameter({ "WriteResultImage", { "true" } }),
+    // Non-default parameters in alphabetic order:
+    NonDefaultRegistrationParameter({ "AutomaticTransformInitialization", { "false" } }),
+    NonDefaultRegistrationParameter({ "ImageSampler", { "Full" } }), // required
+    NonDefaultRegistrationParameter({ "MaximumNumberOfIterations", { "0" } }),
+    NonDefaultRegistrationParameter({ "Metric", { "AdvancedNormalizedCorrelation" } }), // default ""
+    NonDefaultRegistrationParameter({ "NumberOfResolutions", { "1" } }),
+    NonDefaultRegistrationParameter({ "Optimizer", { "AdaptiveStochasticGradientDescent" } }), // default ""
+    NonDefaultRegistrationParameter({ "Transform", { "TranslationTransform" } }),              // default ""
+  });
+
+  registrationParameterObject.SetParameterMaps(
+    ParameterMapVectorType(transformParameterMaps.size(), registrationParameterMap));
+
+  elx::DefaultConstruct<elx::ParameterObject> transformParameterObject{};
+  elx::DefaultConstruct<elx::ParameterObject> transformixParameterObject{};
+
+  // Add the parameters that specify the fixed image domain to the last transformix parameter map.
+  auto transformixParameterMaps = transformParameterMaps;
+  transformixParameterMaps.back().merge(ConvertImageDomainToParameterMap(fixedImageDomain));
+
+  transformParameterObject.SetParameterMaps(transformParameterMaps);
+  transformixParameterObject.SetParameterMaps(transformixParameterMaps);
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  elx::DefaultConstruct<itk::TransformixFilter<ImageType>>        transformix{};
+
+  registration.SetParameterObject(&registrationParameterObject);
+  registration.SetInitialTransformParameterObject(&transformParameterObject);
+  transformix.SetTransformParameterObject(&transformixParameterObject);
+
+  registration.SetFixedImage(&fixedImage);
+  registration.SetMovingImage(&movingImage);
+  transformix.SetMovingImage(&movingImage);
+  registration.Update();
+
+  transformix.Update();
+
+  const auto & transformixOutput = DerefRawPointer(transformix.GetOutput());
+
+  // Sanity checks, checking that our test is non-trivial.
+  EXPECT_NE(transformixOutput, fixedImage);
+  EXPECT_NE(transformixOutput, movingImage);
+
+  const auto & actualRegistrationOutput = DerefRawPointer(registration.GetOutput());
+  EXPECT_EQ(actualRegistrationOutput, transformixOutput);
+}
 
 
 template <unsigned NDimension, unsigned NSplineOrder>
@@ -707,6 +1014,142 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
         EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
       }
     }
+  }
+}
+
+
+GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersusTransformix)
+{
+  {
+    std::mt19937 randomNumberEngine{};
+
+    const auto ImageDimension = 2U;
+
+    const auto randomSign = [&randomNumberEngine] { return (randomNumberEngine() % 2 == 0) ? -1.0 : 1.0; };
+
+    const std::array translationTransformParameters = {
+      randomSign() * (1.0 + std::uniform_real_distribution<>{}(randomNumberEngine)),
+      randomSign() * (1.0 + std::uniform_real_distribution<>{}(randomNumberEngine))
+    };
+
+    const elx::ParameterObject::ParameterMapType translationTransformParameterMap = CreateParameterMap(
+      { // Default parameters in alphabetic order:
+        DefaultTransformParameter({ "FinalBSplineInterpolationOrder", { "3" } }),
+        DefaultTransformParameter({ "FixedInternalImagePixelType", { "float" } }),
+        DefaultTransformParameter({ "HowToCombineTransforms", { "Compose" } }),
+        DefaultTransformParameter({ "InitialTransformParametersFileName", { "NoInitialTransform" } }),
+        DefaultTransformParameter({ "MovingInternalImagePixelType", { "float" } }),
+        DefaultTransformParameter({ "ResampleInterpolator", { "FinalBSplineInterpolator" } }),
+        DefaultTransformParameter({ "Resampler", { "DefaultResampler" } }),
+        // Non-default parameters in alphabetic order:
+        NonDefaultTransformParameter(
+          { "NumberOfParameters", { std::to_string(translationTransformParameters.size()) } }),
+        NonDefaultTransformParameter({ "Transform", { "TranslationTransform" } }),
+        NonDefaultTransformParameter(
+          { "TransformParameters", elx::Conversion::ToVectorOfStrings(translationTransformParameters) }) });
+
+    constexpr auto gridValueSize = 4U;
+
+    std::array<double, ImageDimension * itk::Math::UnsignedPower(gridValueSize, ImageDimension)>
+      bsplineTransformParameters;
+
+    std::generate(bsplineTransformParameters.begin(), bsplineTransformParameters.end(), [&randomNumberEngine] {
+      return std::uniform_real_distribution<>{ -1.0, 1.0 }(randomNumberEngine);
+    });
+
+    const elx::ParameterObject::ParameterMapType bsplineTransformParameterMap = CreateParameterMap(
+      { // Default parameters in alphabetic order:
+        DefaultTransformParameter({ "FinalBSplineInterpolationOrder", { "3" } }),
+        DefaultTransformParameter({ "FixedInternalImagePixelType", { "float" } }),
+        DefaultTransformParameter({ "HowToCombineTransforms", { "Compose" } }),
+        DefaultTransformParameter({ "InitialTransformParametersFileName", { "NoInitialTransform" } }),
+        DefaultTransformParameter({ "MovingInternalImagePixelType", { "float" } }),
+        DefaultTransformParameter({ "ResampleInterpolator", { "FinalBSplineInterpolator" } }),
+        DefaultTransformParameter({ "Resampler", { "DefaultResampler" } }),
+        DefaultTransformParameter({ "BSplineTransformSplineOrder", { "3" } }),
+        DefaultTransformParameter({ "UseCyclicTransform", { "false" } }),
+        DefaultTransformParameter({ "GridIndex", ParameterValuesType(ImageDimension, "0") }),
+        DefaultTransformParameter({ "GridSpacing", ParameterValuesType(ImageDimension, "1") }),
+        DefaultTransformParameter({ "GridOrigin", ParameterValuesType(ImageDimension, "0") }),
+        DefaultTransformParameter(
+          { "GridDirection",
+            elx::Conversion::ToVectorOfStrings(itk::Matrix<int, ImageDimension, ImageDimension>::GetIdentity()) }),
+        // Non-default parameters in alphabetic order:
+        NonDefaultTransformParameter({ "GridSize", ParameterValuesType(2, std::to_string(gridValueSize)) }),
+        NonDefaultTransformParameter({ "NumberOfParameters", { std::to_string(bsplineTransformParameters.size()) } }),
+        NonDefaultTransformParameter({ "Transform", { "BSplineTransform" } }),
+        NonDefaultTransformParameter(
+          { "TransformParameters", elx::Conversion::ToVectorOfStrings(bsplineTransformParameters) }) });
+
+    using ImageDomainType = ImageDomain<ImageDimension>;
+
+    // ITK's RecursiveSeparableImageFilter "requires a minimum of four pixels along the dimension to be processed", at
+    // https://github.com/InsightSoftwareConsortium/ITK/blob/v5.3.0/Modules/Filtering/ImageFilterBase/include/itkRecursiveSeparableImageFilter.hxx#L226
+    enum
+    {
+      smallImageSizeValue = 8
+    };
+
+    const ImageDomainType simpleImageDomain{ ImageDomainType::DirectionType::GetIdentity(),
+                                             ImageDomainType::IndexType{},
+                                             ImageDomainType::SizeType::Filled(smallImageSizeValue),
+                                             itk::MakeFilled<ImageDomainType::SpacingType>(1),
+                                             ImageDomainType::PointType{} };
+
+    const auto createRandomImageDomain = [&randomNumberEngine] {
+      const auto createRandomDirection = [&randomNumberEngine] {
+        const auto randomRotation = std::uniform_real_distribution<>{ -M_PI / 8, M_PI / 8 }(randomNumberEngine);
+        const auto cosRandomRotation = std::cos(randomRotation);
+        const auto sinRandomRotation = std::sin(randomRotation);
+        const itk::SpacePrecisionType randomDirectionMatrix[][2] = { { cosRandomRotation, sinRandomRotation },
+                                                                     { -sinRandomRotation, cosRandomRotation } };
+        return ImageDomainType::DirectionType{ randomDirectionMatrix };
+      };
+      const auto createRandomIndex = [&randomNumberEngine] {
+        ImageDomainType::IndexType randomIndex{};
+        std::generate(randomIndex.begin(), randomIndex.end(), [&randomNumberEngine] {
+          return std::uniform_int_distribution<itk::IndexValueType>{ -1, 2 }(randomNumberEngine);
+        });
+        return randomIndex;
+      };
+      const auto createRandomImageSize = [&randomNumberEngine] {
+        ImageDomainType::SizeType randomImageSize{};
+        std::generate(randomImageSize.begin(), randomImageSize.end(), [&randomNumberEngine] {
+          return std::uniform_int_distribution<itk::SizeValueType>{ smallImageSizeValue,
+                                                                    (3 * smallImageSizeValue) / 2 }(randomNumberEngine);
+        });
+        return randomImageSize;
+      };
+      const auto createRandomSpacing = [&randomNumberEngine] {
+        ImageDomainType::SpacingType randomSpacing{};
+        std::generate(randomSpacing.begin(), randomSpacing.end(), [&randomNumberEngine] {
+          return std::uniform_real_distribution<itk::SpacePrecisionType>{ 0.75, 1.5 }(randomNumberEngine);
+        });
+        return randomSpacing;
+      };
+      const auto createRandomPoint = [&randomNumberEngine] {
+        ImageDomainType::PointType randomPoint{};
+        std::generate(randomPoint.begin(), randomPoint.end(), [&randomNumberEngine] {
+          return std::uniform_real_distribution<itk::SpacePrecisionType>{ -2, 2 }(randomNumberEngine);
+        });
+        return randomPoint;
+      };
+
+      return ImageDomainType{ createRandomDirection(),
+                              createRandomIndex(),
+                              createRandomImageSize(),
+                              createRandomSpacing(),
+                              createRandomPoint() };
+    };
+
+    Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransformParameterObject(
+      { translationTransformParameterMap }, simpleImageDomain, simpleImageDomain);
+    Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransformParameterObject(
+      { translationTransformParameterMap }, createRandomImageDomain(), createRandomImageDomain());
+    Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransformParameterObject(
+      { translationTransformParameterMap, bsplineTransformParameterMap },
+      createRandomImageDomain(),
+      createRandomImageDomain());
   }
 }
 
