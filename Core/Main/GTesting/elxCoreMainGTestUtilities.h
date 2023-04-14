@@ -193,6 +193,19 @@ ConvertToOffset(const std::vector<double> & doubles)
 
 
 std::map<std::string, std::vector<std::string>> inline CreateParameterMap(
+  std::initializer_list<std::pair<std::string, std::vector<std::string>>> initializerList)
+{
+  std::map<std::string, std::vector<std::string>> result;
+
+  for (const auto & pair : initializerList)
+  {
+    EXPECT_TRUE(result.insert(pair).second);
+  }
+  return result;
+}
+
+
+std::map<std::string, std::vector<std::string>> inline CreateParameterMap(
   std::initializer_list<std::pair<std::string, std::string>> initializerList)
 {
   std::map<std::string, std::vector<std::string>> result;
