@@ -193,22 +193,25 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
                                  m_EnableOutput && m_LogToConsole,
                                  static_cast<elastix::log::level>(m_LogLevel));
 
+  const auto fixedImageDimensionString = std::to_string(fixedImageDimension);
+  const auto fixedImagePixelTypeString = elx::PixelTypeToString<typename TFixedImage::PixelType>();
+  const auto movingImageDimensionString = std::to_string(movingImageDimension);
+
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)
   {
     auto & parameterMap = parameterMapVector[i];
 
     // Set image dimension from input images (overrides user settings)
-    parameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(fixedImageDimension));
-    parameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
-    parameterMap["ResultImagePixelType"] =
-      ParameterValueVectorType(1, elx::PixelTypeToString<typename TFixedImage::PixelType>());
+    parameterMap["FixedImageDimension"] = { fixedImageDimensionString };
+    parameterMap["MovingImageDimension"] = { movingImageDimensionString };
+    parameterMap["ResultImagePixelType"] = { fixedImagePixelTypeString };
 
     // Initial transform parameter files are handled via arguments and enclosing loop, not
     // InitialTransformParametersFileName
     if (parameterMap.find("InitialTransformParametersFileName") != parameterMap.end())
     {
-      parameterMap["InitialTransformParametersFileName"] = ParameterValueVectorType(1, "NoInitialTransform");
+      parameterMap["InitialTransformParametersFileName"] = { "NoInitialTransform" };
     }
 
     // Create new instance of ElastixMain
