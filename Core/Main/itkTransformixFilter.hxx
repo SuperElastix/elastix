@@ -244,7 +244,9 @@ TransformixFilter<TMovingImage>::GenerateData()
     auto & transformParameterMap = transformParameterMapVector[i];
 
     transformParameterMap["FixedImageDimension"] = { movingImageDimensionString };
+    transformParameterMap["FixedInternalImagePixelType"] = { movingImagePixelTypeString };
     transformParameterMap["MovingImageDimension"] = { movingImageDimensionString };
+    transformParameterMap["MovingInternalImagePixelType"] = { movingImagePixelTypeString };
     transformParameterMap["ResultImagePixelType"] = { movingImagePixelTypeString };
   }
 
