@@ -235,15 +235,17 @@ TransformixFilter<TMovingImage>::GenerateData()
     }
   }
 
+  const auto movingImageDimensionString = std::to_string(movingImageDimension);
+  const auto movingImagePixelTypeString = elx::PixelTypeToString<typename TMovingImage::PixelType>();
+
   // Set pixel types from input image, override user settings
   for (unsigned int i = 0; i < transformParameterMapVector.size(); ++i)
   {
     auto & transformParameterMap = transformParameterMapVector[i];
 
-    transformParameterMap["FixedImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
-    transformParameterMap["MovingImageDimension"] = ParameterValueVectorType(1, std::to_string(movingImageDimension));
-    transformParameterMap["ResultImagePixelType"] =
-      ParameterValueVectorType(1, elx::PixelTypeToString<typename TMovingImage::PixelType>());
+    transformParameterMap["FixedImageDimension"] = { movingImageDimensionString };
+    transformParameterMap["MovingImageDimension"] = { movingImageDimensionString };
+    transformParameterMap["ResultImagePixelType"] = { movingImagePixelTypeString };
   }
 
   // Run transformix
