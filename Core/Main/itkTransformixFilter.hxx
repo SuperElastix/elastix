@@ -36,6 +36,8 @@
 #define itkTransformixFilter_hxx
 
 #include "itkTransformixFilter.h"
+
+#include "elxLibUtilities.h"
 #include "elxPixelTypeToString.h"
 #include "elxTransformBase.h"
 #include "elxTransformIO.h"
@@ -62,6 +64,8 @@ template <typename TMovingImage>
 void
 TransformixFilter<TMovingImage>::GenerateData()
 {
+  using elx::LibUtilities::SetParameterValueAndWarnOnOverride;
+
   // Force compiler to instantiate the image dimension, otherwise we may get
   //   Undefined symbols for architecture x86_64:
   //     "elastix::TransformixFilter<itk::Image<float, 2u> >::MovingImageDimension"
@@ -184,9 +188,12 @@ TransformixFilter<TMovingImage>::GenerateData()
 
       transformParameterMap["ITKTransformFixedParameters"] = convertToParameterValues(transform.GetFixedParameters());
       transformParameterMap["ITKTransformParameters"] = convertToParameterValues(transform.GetParameters());
-      transformParameterMap["ITKTransformType"] = { transform.GetTransformTypeAsString() };
-      transformParameterMap["Transform"] = { elx::TransformIO::ConvertITKNameOfClassToElastixClassName(
-        transform.GetNameOfClass()) };
+      SetParameterValueAndWarnOnOverride(
+        transformParameterMap, "ITKTransformType", transform.GetTransformTypeAsString());
+      SetParameterValueAndWarnOnOverride(
+        transformParameterMap,
+        "Transform",
+        elx::TransformIO::ConvertITKNameOfClassToElastixClassName(transform.GetNameOfClass()));
     };
     const auto compositeTransform =
       dynamic_cast<const CompositeTransform<double, MovingImageDimension> *>(&*m_Transform);
@@ -243,11 +250,13 @@ TransformixFilter<TMovingImage>::GenerateData()
   {
     auto & transformParameterMap = transformParameterMapVector[i];
 
-    transformParameterMap["FixedImageDimension"] = { movingImageDimensionString };
-    transformParameterMap["FixedInternalImagePixelType"] = { movingImagePixelTypeString };
-    transformParameterMap["MovingImageDimension"] = { movingImageDimensionString };
-    transformParameterMap["MovingInternalImagePixelType"] = { movingImagePixelTypeString };
-    transformParameterMap["ResultImagePixelType"] = { movingImagePixelTypeString };
+    SetParameterValueAndWarnOnOverride(transformParameterMap, "FixedImageDimension", movingImageDimensionString);
+    SetParameterValueAndWarnOnOverride(
+      transformParameterMap, "FixedInternalImagePixelType", movingImagePixelTypeString);
+    SetParameterValueAndWarnOnOverride(transformParameterMap, "MovingImageDimension", movingImageDimensionString);
+    SetParameterValueAndWarnOnOverride(
+      transformParameterMap, "MovingInternalImagePixelType", movingImagePixelTypeString);
+    SetParameterValueAndWarnOnOverride(transformParameterMap, "ResultImagePixelType", movingImagePixelTypeString);
   }
 
   // Run transformix
