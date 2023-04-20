@@ -199,6 +199,8 @@ target_link_libraries(elastix_exe ${ELASTIX_TARGET_LINK_LIBRARIES})
 # The library type (STATIC or SHARED) is determined by the parameter
 # BUILD_SHARED_LIBS.
 add_library(elastix_lib
+  Main/elxLibUtilities.cxx
+  Main/elxLibUtilities.h
   Main/elxParameterObject.cxx
   Main/elxParameterObject.h
   Main/elastixlib.cxx
@@ -234,6 +236,8 @@ target_link_libraries(transformix_exe ${ELASTIX_TARGET_LINK_LIBRARIES})
 # The library type (STATIC or SHARED) is determined by the parameter
 # BUILD_SHARED_LIBS.
 add_library(transformix_lib
+  Main/elxLibUtilities.cxx
+  Main/elxLibUtilities.h
   Main/elxParameterObject.cxx
   Main/elxParameterObject.h
   Main/transformixlib.cxx

@@ -38,6 +38,8 @@
 #include "elxPixelTypeToString.h"
 #include "itkElastixRegistrationMethod.h"
 
+#include "elxLibUtilities.h"
+
 #include <algorithm> // For find.
 #include <memory>    // For unique_ptr.
 
@@ -75,6 +77,8 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 {
+  using elx::LibUtilities::SetParameterValueAndWarnOnOverride;
+
   // Force compiler to instantiate the image dimensions, otherwise we may get
   //   Undefined symbols for architecture x86_64:
   //     "elx::ElastixRegistrationMethod<itk::Image<float, 2u> >::FixedImageDimension"
@@ -204,18 +208,15 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     auto & parameterMap = parameterMapVector[i];
 
     // Set image dimension and pixel type from input images (overrides user settings)
-    parameterMap["FixedImageDimension"] = { fixedImageDimensionString };
-    parameterMap["FixedInternalImagePixelType"] = { fixedImagePixelTypeString };
-    parameterMap["MovingImageDimension"] = { movingImageDimensionString };
-    parameterMap["MovingInternalImagePixelType"] = { movingImagePixelTypeString };
-    parameterMap["ResultImagePixelType"] = { fixedImagePixelTypeString };
+    SetParameterValueAndWarnOnOverride(parameterMap, "FixedImageDimension", fixedImageDimensionString);
+    SetParameterValueAndWarnOnOverride(parameterMap, "FixedInternalImagePixelType", fixedImagePixelTypeString);
+    SetParameterValueAndWarnOnOverride(parameterMap, "MovingImageDimension", movingImageDimensionString);
+    SetParameterValueAndWarnOnOverride(parameterMap, "MovingInternalImagePixelType", movingImagePixelTypeString);
+    SetParameterValueAndWarnOnOverride(parameterMap, "ResultImagePixelType", fixedImagePixelTypeString);
 
     // Initial transform parameter files are handled via arguments and enclosing loop, not
     // InitialTransformParametersFileName
-    if (parameterMap.find("InitialTransformParametersFileName") != parameterMap.end())
-    {
-      parameterMap["InitialTransformParametersFileName"] = { "NoInitialTransform" };
-    }
+    SetParameterValueAndWarnOnOverride(parameterMap, "InitialTransformParametersFileName", "NoInitialTransform");
 
     // Create new instance of ElastixMain
     const auto elastixMain = elx::ElastixMain::New();
