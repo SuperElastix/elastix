@@ -50,6 +50,13 @@ ElastixMain::~ElastixMain() = default;
 int
 ElastixMain::Run()
 {
+  return RunWithOptionalInitialCombinationTransform(nullptr);
+}
+
+
+int
+ElastixMain::RunWithOptionalInitialCombinationTransform(itk::TransformBase * const transform)
+{
 
   /** Set process properties. */
   this->SetProcessPriority();
@@ -135,7 +142,15 @@ ElastixMain::Run()
 
   elastixBase.SetResamplerContainer(this->CreateComponents("Resampler", "DefaultResampler", errorCode));
 
-  elastixBase.SetTransformContainer(this->CreateComponents("Transform", "", errorCode));
+  const auto transformContainer = this->CreateComponents("Transform", "", errorCode);
+
+  if (transform)
+  {
+    auto & container = Deref(transformContainer);
+    container.insert(container.begin(), transform);
+  }
+
+  elastixBase.SetTransformContainer(transformContainer);
 
   /** Check if all component could be created. */
   if (errorCode != 0)
@@ -240,6 +255,22 @@ ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &       
   }
 
   return ElastixMain::Run();
+}
+
+
+int
+ElastixMain::RunWithInitialCombinationTransform(const ArgumentMapType &  argmap,
+                                                const ParameterMapType & inputMap,
+                                                itk::TransformBase &     initialCombinationTransform)
+{
+  Configuration & configuration = Deref(MainBase::GetConfiguration());
+
+  if (configuration.Initialize(argmap, inputMap) != 0)
+  {
+    log::error("ERROR: Something went wrong during initialization of the configuration object.");
+  }
+
+  return ElastixMain::RunWithOptionalInitialCombinationTransform(&initialCombinationTransform);
 }
 
 

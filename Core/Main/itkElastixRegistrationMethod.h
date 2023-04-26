@@ -204,6 +204,10 @@ public:
   /** Set initial transform parameter object. */
   itkSetConstObjectMacro(InitialTransformParameterObject, elx::ParameterObject);
 
+  /** Set initial transform from a previous elastix run, for example
+   * `elastixRegistration2.SetInitialCombinationTransform(elastixRegistration1.GetCombinationTransform())` */
+  itkSetObjectMacro(InitialCombinationTransform, TransformType);
+
   /** Set/Get/Remove fixed point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
   itkGetConstMacro(FixedPointSetFileName, std::string);
@@ -333,6 +337,7 @@ private:
 
   std::string                        m_InitialTransformParameterFileName{};
   elx::ParameterObject::ConstPointer m_InitialTransformParameterObject{};
+  SmartPointer<TransformType>        m_InitialCombinationTransform;
 
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};

@@ -19,7 +19,7 @@
 #define elxElastixMain_h
 
 #include "elxMainBase.h"
-
+#include <itkTransformBase.h>
 
 namespace elastix
 {
@@ -149,6 +149,11 @@ public:
                                        const ParameterMapType &              inputMap,
                                        const std::vector<ParameterMapType> & initialTransformParameterMaps);
 
+  int
+  RunWithInitialCombinationTransform(const ArgumentMapType &  argmap,
+                                     const ParameterMapType & inputMap,
+                                     itk::TransformBase &     initialCombinationTransform);
+
   /** GetTransformParametersMap */
   virtual ParameterMapType
   GetTransformParametersMap() const;
@@ -186,6 +191,11 @@ protected:
   /** Helper function to obtain information from images on disk. */
   void
   GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const;
+
+private:
+  /** Does Run with an optionally specified initial cobination transform. */
+  int
+  RunWithOptionalInitialCombinationTransform(itk::TransformBase *);
 };
 
 } // end namespace elastix

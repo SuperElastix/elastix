@@ -849,6 +849,67 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
 }
 
 
+GTEST_TEST(itkElastixRegistrationMethod, InitialCombinationTransform)
+{
+  using PixelType = float;
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType initialTranslation{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + initialTranslation, regionSize);
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration1{};
+  registration1.SetFixedImage(fixedImage);
+  registration1.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                           { "AutomaticTransformInitialization", "false" },
+                                                           { "ImageSampler", "Full" },
+                                                           { "MaximumNumberOfIterations", "2" },
+                                                           { "Metric", "AdvancedNormalizedCorrelation" },
+                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                           { "Transform", "TranslationTransform" } }));
+  registration1.SetMovingImage(movingImage);
+  registration1.Update();
+
+  const auto & transformParameterObject1 = DerefRawPointer(registration1.GetTransformParameterObject());
+  const auto & transformParameterMaps1 = transformParameterObject1.GetParameterMaps();
+  EXPECT_EQ(transformParameterMaps1.size(), 1);
+
+  const auto transformParameters = GetTransformParametersFromFilter(registration1);
+  EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), initialTranslation);
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration2{};
+  registration2.SetLogToConsole(true);
+  registration2.SetFixedImage(fixedImage);
+  registration2.SetInitialCombinationTransform(registration1.GetCombinationTransform());
+  registration2.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                           { "AutomaticTransformInitialization", "false" },
+                                                           { "ImageSampler", "Full" },
+                                                           { "MaximumNumberOfIterations", "2" },
+                                                           { "Metric", "AdvancedNormalizedCorrelation" },
+                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                           { "Transform", "BSplineTransform" } }));
+  registration2.SetMovingImage(movingImage);
+  registration2.Update();
+
+  const auto & transformParameterObject2 = DerefRawPointer(registration2.GetTransformParameterObject());
+  const auto & transformParameterMaps2 = transformParameterObject2.GetParameterMaps();
+  EXPECT_EQ(transformParameterMaps2.size(), 1);
+  EXPECT_EQ(transformParameterMaps2, transformParameterMaps1);
+  // TODO  EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters2), initialTranslation);
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 {
   using PixelType = float;
