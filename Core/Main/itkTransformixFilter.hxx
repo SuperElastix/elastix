@@ -64,6 +64,8 @@ template <typename TMovingImage>
 void
 TransformixFilter<TMovingImage>::GenerateData()
 {
+  using elx::LibUtilities::CastToInternalPixelType;
+  using elx::LibUtilities::RetrievePixelTypeParameterValue;
   using elx::LibUtilities::SetParameterValueAndWarnOnOverride;
 
   // Force compiler to instantiate the image dimension, otherwise we may get
@@ -153,15 +155,6 @@ TransformixFilter<TMovingImage>::GenerateData()
   const auto transformixMain = elx::TransformixMain::New();
   m_TransformixMain = transformixMain;
 
-  // Setup transformix for warping input image if given
-  DataObjectContainerPointer inputImageContainer = nullptr;
-  if (!this->IsEmpty(this->GetMovingImage()))
-  {
-    inputImageContainer = DataObjectContainerType::New();
-    inputImageContainer->InsertElement(0, const_cast<InputImageType *>(this->GetMovingImage()));
-    transformixMain->SetInputImageContainer(inputImageContainer);
-  }
-
   // Get ParameterMap
   ParameterObjectPointer transformParameterObject = this->GetTransformParameterObject();
   ParameterMapVectorType transformParameterMapVector = transformParameterObject->GetParameterMaps();
@@ -170,6 +163,22 @@ TransformixFilter<TMovingImage>::GenerateData()
   if (transformParameterMapVector.empty())
   {
     itkExceptionMacro("Empty parameter map in parameter object.");
+  }
+
+  // Setup transformix for warping input image if given
+  DataObjectContainerPointer inputImageContainer = nullptr;
+
+  if (const auto movingImage = itkDynamicCastInDebugMode<TMovingImage *>(this->ProcessObject::GetInput("MovingImage"));
+      !Self::IsEmpty(movingImage))
+  {
+    // Note that the internal pixel type is only retrieved from the very first transform parameter map.
+    const auto internalPixelTypeString =
+      RetrievePixelTypeParameterValue(transformParameterMapVector.front(), "MovingInternalImagePixelType");
+    const auto internalImage = CastToInternalPixelType<TMovingImage>(movingImage, internalPixelTypeString);
+
+    inputImageContainer = DataObjectContainerType::New();
+    inputImageContainer->push_back(internalImage);
+    transformixMain->SetInputImageContainer(inputImageContainer);
   }
 
   if (m_Transform)
@@ -251,11 +260,7 @@ TransformixFilter<TMovingImage>::GenerateData()
     auto & transformParameterMap = transformParameterMapVector[i];
 
     SetParameterValueAndWarnOnOverride(transformParameterMap, "FixedImageDimension", movingImageDimensionString);
-    SetParameterValueAndWarnOnOverride(
-      transformParameterMap, "FixedInternalImagePixelType", movingImagePixelTypeString);
     SetParameterValueAndWarnOnOverride(transformParameterMap, "MovingImageDimension", movingImageDimensionString);
-    SetParameterValueAndWarnOnOverride(
-      transformParameterMap, "MovingInternalImagePixelType", movingImagePixelTypeString);
     SetParameterValueAndWarnOnOverride(transformParameterMap, "ResultImagePixelType", movingImagePixelTypeString);
   }
 

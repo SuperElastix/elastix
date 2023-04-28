@@ -307,6 +307,23 @@ private:
   void
   RemoveInputsOfType(const DataObjectIdentifierType & inputName);
 
+
+  /** Retrieves either the fixed or the moving input images. */
+  template <typename TImage>
+  std::vector<TImage *>
+  GetInputImages(const char * const inputTypeString)
+  {
+    std::vector<TImage *> images;
+    for (const auto & inputName : this->GetInputNames())
+    {
+      if (this->IsInputOfType(inputTypeString, inputName))
+      {
+        images.push_back(itkDynamicCastInDebugMode<TImage *>(this->ProcessObject::GetInput(inputName)));
+      }
+    }
+    return images;
+  }
+
   /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;
 
