@@ -77,6 +77,8 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 {
+  using elx::LibUtilities::CastToInternalPixelType;
+  using elx::LibUtilities::RetrievePixelTypeParameterValue;
   using elx::LibUtilities::SetParameterValueAndWarnOnOverride;
 
   // Force compiler to instantiate the image dimensions, otherwise we may get
@@ -86,8 +88,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   const unsigned int fixedImageDimension = FixedImageDimension;
   const unsigned int movingImageDimension = MovingImageDimension;
 
-  DataObjectContainerPointer fixedImageContainer = DataObjectContainerType::New();
-  DataObjectContainerPointer movingImageContainer = DataObjectContainerType::New();
   DataObjectContainerPointer fixedMaskContainer = nullptr;
   DataObjectContainerPointer movingMaskContainer = nullptr;
   DataObjectContainerPointer resultImageContainer = nullptr;
@@ -98,18 +98,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   // Split inputs into separate containers
   for (const auto & inputName : this->GetInputNames())
   {
-    if (this->IsInputOfType("FixedImage", inputName))
-    {
-      fixedImageContainer->push_back(this->ProcessObject::GetInput(inputName));
-      continue;
-    }
-
-    if (this->IsInputOfType("MovingImage", inputName))
-    {
-      movingImageContainer->push_back(this->ProcessObject::GetInput(inputName));
-      continue;
-    }
-
     if (this->IsInputOfType("FixedMask", inputName))
     {
       if (fixedMaskContainer.IsNull())
@@ -200,18 +188,46 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   const auto fixedImageDimensionString = std::to_string(fixedImageDimension);
   const auto fixedImagePixelTypeString = elx::PixelTypeToString<typename TFixedImage::PixelType>();
   const auto movingImageDimensionString = std::to_string(movingImageDimension);
-  const auto movingImagePixelTypeString = elx::PixelTypeToString<typename TMovingImage::PixelType>();
+
+  const std::vector<TFixedImage *>  fixedInputImages = GetInputImages<TFixedImage>("FixedImage");
+  const std::vector<TMovingImage *> movingInputImages = GetInputImages<TMovingImage>("MovingImage");
+
+  // Cache the containers of internal images, to avoid casting the input images to the same internal pixel type more
+  // than once, in the `for` loop below here.
+  std::map<std::string, itk::SmartPointer<DataObjectContainerType>> fixedInternalImageContainers;
+  std::map<std::string, itk::SmartPointer<DataObjectContainerType>> movingInternalImageContainers;
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)
   {
     auto & parameterMap = parameterMapVector[i];
 
-    // Set image dimension and pixel type from input images (overrides user settings)
+    // Lambda to create a FixedImageContainer or a MovingImageContainer.
+    const auto createImageContainer =
+      [](const auto & inputImages, const auto internalPixelTypeString, auto & imageContainers) {
+        if (const auto found = imageContainers.find(internalPixelTypeString); found == imageContainers.end())
+        {
+          const auto imageContainer = DataObjectContainerType::New();
+
+          for (const auto inputImage : inputImages)
+          {
+            const auto internalImage = CastToInternalPixelType<TFixedImage>(inputImage, internalPixelTypeString);
+            imageContainer->push_back(internalImage);
+          }
+          imageContainers[internalPixelTypeString] = imageContainer;
+          return imageContainer;
+        }
+        else
+        {
+          // There was an image container already for the specified internal pixel type. So just use that one!
+          return found->second;
+        }
+      };
+
+    // Set image dimension from input images (overrides user settings)
     SetParameterValueAndWarnOnOverride(parameterMap, "FixedImageDimension", fixedImageDimensionString);
-    SetParameterValueAndWarnOnOverride(parameterMap, "FixedInternalImagePixelType", fixedImagePixelTypeString);
     SetParameterValueAndWarnOnOverride(parameterMap, "MovingImageDimension", movingImageDimensionString);
-    SetParameterValueAndWarnOnOverride(parameterMap, "MovingInternalImagePixelType", movingImagePixelTypeString);
+
     SetParameterValueAndWarnOnOverride(parameterMap, "ResultImagePixelType", fixedImagePixelTypeString);
 
     // Initial transform parameter files are handled via arguments and enclosing loop, not
@@ -228,8 +244,14 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
     // Set stuff we get from a previous registration
     elastixMain->SetInitialTransform(transform);
-    elastixMain->SetFixedImageContainer(fixedImageContainer);
-    elastixMain->SetMovingImageContainer(movingImageContainer);
+    elastixMain->SetFixedImageContainer(
+      createImageContainer(fixedInputImages,
+                           RetrievePixelTypeParameterValue(parameterMap, "FixedInternalImagePixelType"),
+                           fixedInternalImageContainers));
+    elastixMain->SetMovingImageContainer(
+      createImageContainer(movingInputImages,
+                           RetrievePixelTypeParameterValue(parameterMap, "MovingInternalImagePixelType"),
+                           movingInternalImageContainers));
     elastixMain->SetFixedMaskContainer(fixedMaskContainer);
     elastixMain->SetMovingMaskContainer(movingMaskContainer);
     elastixMain->SetResultImageContainer(resultImageContainer);
@@ -256,8 +278,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
     // Get stuff in order to put it in the next registration
     transform = elastixMain->GetFinalTransform();
-    fixedImageContainer = elastixMain->GetFixedImageContainer();
-    movingImageContainer = elastixMain->GetMovingImageContainer();
     fixedMaskContainer = elastixMain->GetFixedMaskContainer();
     movingMaskContainer = elastixMain->GetMovingMaskContainer();
     resultImageContainer = elastixMain->GetResultImageContainer();

@@ -28,7 +28,6 @@ LibUtilities::SetParameterValueAndWarnOnOverride(ParameterMapType &  parameterMa
                                                  const std::string & parameterName,
                                                  const std::string & parameterValue)
 {
-
   if (const auto found = parameterMap.find(parameterName); found == parameterMap.end())
   {
     parameterMap[parameterName] = { parameterValue };
@@ -43,5 +42,23 @@ LibUtilities::SetParameterValueAndWarnOnOverride(ParameterMapType &  parameterMa
     }
   }
 }
+
+
+std::string
+LibUtilities::RetrievePixelTypeParameterValue(const ParameterMapType & parameterMap, const std::string & parameterName)
+{
+  if (const auto found = parameterMap.find(parameterName); found != parameterMap.end())
+  {
+    if (const auto & second = found->second; !second.empty())
+    {
+      if (const auto & front = second.front(); !front.empty())
+      {
+        return front;
+      }
+    }
+  }
+  return "float";
+}
+
 
 } // namespace elastix

@@ -27,6 +27,7 @@
 #include "elxDefaultConstruct.h"
 #include "elxTransformIO.h"
 #include "GTesting/elxGTestUtilities.h"
+#include "elxForEachSupportedImageType.h"
 
 #include <itkStackTransform.h>
 
@@ -66,13 +67,20 @@ using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
 using elx::CoreMainGTestUtilities::CheckNew;
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
+using elx::CoreMainGTestUtilities::CreateParameterObject;
+using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
 using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
 using elx::CoreMainGTestUtilities::GetNameOfTest;
+using elx::CoreMainGTestUtilities::GenerateRandomSign;
+using elx::CoreMainGTestUtilities::ImageDomain;
+using elx::CoreMainGTestUtilities::TypeHolder;
+using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::GTestUtilities::GeneratePseudoRandomParameters;
+using elx::GTestUtilities::MakeMergedMap;
 
 template <typename TMovingImage>
 using DefaultConstructibleTransformixFilter = elx::DefaultConstruct<itk::TransformixFilter<TMovingImage>>;
@@ -87,15 +95,6 @@ ConvertToItkVector(const T & arg)
   itk::Vector<double, T::Dimension> result;
   std::copy_n(arg.begin(), T::Dimension, result.begin());
   return result;
-}
-
-
-auto
-CreateParameterObject(const ParameterMapType & parameterMap)
-{
-  const auto parameterObject = CheckNew<elx::ParameterObject>();
-  parameterObject->SetParameterMap(parameterMap);
-  return parameterObject;
 }
 
 
@@ -416,6 +415,7 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
                       DerefRawPointer(resampleImageFilter->GetOutput()));
   }
 }
+
 
 } // namespace
 
@@ -1291,4 +1291,171 @@ GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImage)
   {
     EXPECT_EQ(matrix, expectedMatrix);
   }
+}
+
+
+// Checks a minimum size moving image having the same pixel type as any of the supported internal pixel types.
+GTEST_TEST(itkTransformixFilter, CheckMinimumMovingImageHavingInternalPixelType)
+{
+  elx::ForEachSupportedImageType([](const auto elxTypedef) {
+    using ElxTypedef = decltype(elxTypedef);
+    using ImageType = typename ElxTypedef::MovingImageType;
+    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+
+    using PixelType = typename ImageType::PixelType;
+    using SizeType = itk::Size<ImageDimension>;
+
+    const ImageDomain<ElxTypedef::MovingDimension> imageDomain(
+      itk::Size<ElxTypedef::MovingDimension>::Filled(minimumImageSizeValue));
+
+    elx::DefaultConstruct<ImageType> movingImage{};
+    imageDomain.ToImage(movingImage);
+    movingImage.Allocate(true);
+
+    // Some "extreme" values to test if each of them is preserved during the transformation.
+    const std::array pixelValues{ PixelType{},
+                                  PixelType{ 1 },
+                                  std::numeric_limits<PixelType>::lowest(),
+                                  std::numeric_limits<PixelType>::min(),
+                                  PixelType{ std::numeric_limits<PixelType>::max() - 1 },
+                                  std::numeric_limits<PixelType>::max() };
+    std::copy(pixelValues.cbegin(), pixelValues.cend(), itk::ImageBufferRange<ImageType>(movingImage).begin());
+
+    const ParameterMapType parameterMap = MakeMergedMap(
+      { // Parameters in alphabetic order:
+        { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+        { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+        { "ResampleInterpolator", { "FinalLinearInterpolator" } } },
+      imageDomain.AsParameterMap());
+
+    const elx::DefaultConstruct<itk::TranslationTransform<double, ImageType::ImageDimension>> identityTransform{};
+    elx::DefaultConstruct<itk::TransformixFilter<ImageType>>                                  transformixFilter{};
+
+    transformixFilter.SetMovingImage(&movingImage);
+    transformixFilter.SetTransform(&identityTransform);
+    transformixFilter.SetTransformParameterObject(CreateParameterObject(parameterMap));
+    transformixFilter.Update();
+
+    EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), movingImage);
+  });
+}
+
+
+// Checks a zero-filled moving image with a random domain, having the same pixel type as any of the supported internal
+// pixel types.
+GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainHavingInternalPixelType)
+{
+  std::mt19937 randomNumberEngine{};
+
+  elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
+    using ElxTypedef = decltype(elxTypedef);
+    using ImageType = typename ElxTypedef::MovingImageType;
+    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+
+    using PixelType = typename ImageType::PixelType;
+    using SizeType = itk::Size<ImageDimension>;
+
+    const auto imageDomain = CreateRandomImageDomain<ElxTypedef::MovingDimension>(randomNumberEngine);
+
+    elx::DefaultConstruct<ImageType> movingImage{};
+    imageDomain.ToImage(movingImage);
+    movingImage.Allocate(true);
+
+    const ParameterMapType parameterMap = MakeMergedMap(
+      { // Parameters in alphabetic order:
+        { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+        { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+        { "ResampleInterpolator", { "FinalLinearInterpolator" } } },
+      imageDomain.AsParameterMap());
+
+    const elx::DefaultConstruct<itk::TranslationTransform<double, ImageType::ImageDimension>> identityTransform{};
+    elx::DefaultConstruct<itk::TransformixFilter<ImageType>>                                  transformixFilter{};
+
+    transformixFilter.SetMovingImage(&movingImage);
+    transformixFilter.SetTransform(&identityTransform);
+    transformixFilter.SetTransformParameterObject(CreateParameterObject(parameterMap));
+    transformixFilter.Update();
+
+    EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), movingImage);
+  });
+}
+
+
+// Checks a minimum size moving image using any supported internal pixel type (which may be different from the input
+// pixel type).
+GTEST_TEST(itkTransformixFilter, CheckMinimumMovingImageUsingAnyInternalPixelType)
+{
+  const auto check = [](const auto inputPixelTypeHolder) {
+    elx::ForEachSupportedImageType([](const auto elxTypedef) {
+      using ElxTypedef = decltype(elxTypedef);
+      using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;
+      using InputImageType = itk::Image<InputPixelType, ElxTypedef::MovingDimension>;
+
+      const ImageDomain<ElxTypedef::MovingDimension> imageDomain(
+        itk::Size<ElxTypedef::MovingDimension>::Filled(minimumImageSizeValue));
+      const auto movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<InputPixelType>(imageDomain);
+
+      const ParameterMapType parameterMap = MakeMergedMap(
+        { // Parameters in alphabetic order:
+          { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+          { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+          { "ResampleInterpolator", { "FinalLinearInterpolator" } } },
+        imageDomain.AsParameterMap());
+
+      const elx::DefaultConstruct<itk::TranslationTransform<double, ElxTypedef::MovingDimension>> identityTransform{};
+      elx::DefaultConstruct<itk::TransformixFilter<InputImageType>>                               transformixFilter{};
+
+      transformixFilter.SetMovingImage(movingImage);
+      transformixFilter.SetTransform(&identityTransform);
+      transformixFilter.SetTransformParameterObject(CreateParameterObject(parameterMap));
+      transformixFilter.Update();
+
+      EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), DerefSmartPointer(movingImage));
+    });
+  };
+
+  check(TypeHolder<char>{});
+  check(TypeHolder<unsigned long>{});
+  check(TypeHolder<double>{});
+}
+
+// Checks a zero-filled moving image with a random domain, using any supported internal pixel type (which may be
+// different from the input pixel type).
+GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsingAnyInternalPixelType)
+{
+  std::mt19937 randomNumberEngine{};
+
+  const auto check = [&randomNumberEngine](const auto inputPixelTypeHolder) {
+    elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
+      using ElxTypedef = decltype(elxTypedef);
+      using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;
+      using InputImageType = itk::Image<InputPixelType, ElxTypedef::MovingDimension>;
+
+      const auto imageDomain = CreateRandomImageDomain<ElxTypedef::MovingDimension>(randomNumberEngine);
+      elx::DefaultConstruct<InputImageType> movingImage{};
+      imageDomain.ToImage(movingImage);
+      movingImage.Allocate(true);
+
+      const ParameterMapType parameterMap = MakeMergedMap(
+        { // Parameters in alphabetic order:
+          { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+          { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+          { "ResampleInterpolator", { "FinalLinearInterpolator" } } },
+        imageDomain.AsParameterMap());
+
+      const elx::DefaultConstruct<itk::TranslationTransform<double, ElxTypedef::MovingDimension>> identityTransform{};
+      elx::DefaultConstruct<itk::TransformixFilter<InputImageType>>                               transformixFilter{};
+
+      transformixFilter.SetMovingImage(&movingImage);
+      transformixFilter.SetTransform(&identityTransform);
+      transformixFilter.SetTransformParameterObject(CreateParameterObject(parameterMap));
+      transformixFilter.Update();
+
+      EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), movingImage);
+    });
+  };
+
+  check(TypeHolder<char>{});
+  check(TypeHolder<unsigned long>{});
+  check(TypeHolder<double>{});
 }

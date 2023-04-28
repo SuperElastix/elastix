@@ -37,6 +37,7 @@
 #include <iterator> // For begin and end.
 #include <map>
 #include <numeric> // For iota.
+#include <random>
 #include <string>
 #include <type_traits> // For is_pointer, is_same, and integral_constant.
 #include <vector>
@@ -49,6 +50,13 @@ namespace elastix
 {
 namespace CoreMainGTestUtilities
 {
+
+/// Eases passing a type as argument to a generic lambda.
+template <typename TNested>
+struct TypeHolder
+{
+  using Type = TNested;
+};
 
 /// Simple exception class, to be used by unit tests.
 class Exception : public std::exception
@@ -243,6 +251,14 @@ ParameterObject::Pointer inline CreateParameterObject(
 }
 
 
+ParameterObject::Pointer inline CreateParameterObject(const ParameterObject::ParameterMapType & parameterMap)
+{
+  const auto parameterObject = ParameterObject::New();
+  parameterObject->SetParameterMap(parameterMap);
+  return parameterObject;
+}
+
+
 inline std::vector<double>
 GetTransformParametersFromMaps(const std::vector<ParameterObject::ParameterMapType> & transformParameterMaps)
 {
@@ -275,6 +291,11 @@ GetTransformParametersFromFilter(TFilter & filter)
 }
 
 
+// ITK's RecursiveSeparableImageFilter "requires a minimum of four pixels along the dimension to be processed", at
+// https://github.com/InsightSoftwareConsortium/ITK/blob/v5.3.0/Modules/Filtering/ImageFilterBase/include/itkRecursiveSeparableImageFilter.hxx#L226
+constexpr itk::SizeValueType minimumImageSizeValue{ 4 };
+
+
 // The image domain. ITK calls it the "geometry" of an image. ("The geometry of an image is defined by its position,
 // orientation, spacing, and extent", according to https://itk.org/Doxygen52/html/classitk_1_1ImageBase.html#details).
 // The elastix manual (elastix-5.1.0-manual.pdf, January 16, 2023) simply calls it "the
@@ -302,6 +323,14 @@ struct ImageDomain
   // Explicit constructor
   explicit ImageDomain(const SizeType & size)
     : size(size)
+  {}
+
+  explicit ImageDomain(const ImageBaseType & image)
+    : direction(image.GetDirection())
+    , index(image.GetLargestPossibleRegion().GetIndex())
+    , size(image.GetLargestPossibleRegion().GetSize())
+    , spacing(image.GetSpacing())
+    , origin(image.GetOrigin())
   {}
 
   // Constructor, allowing to explicitly specify all the settings of the domain.
@@ -332,15 +361,102 @@ struct ImageDomain
   AsParameterMap() const
   {
     return {
+      // Parameters in alphabetic order:
       { "Direction", elx::Conversion::ToVectorOfStrings(direction) },
       { "Index", elx::Conversion::ToVectorOfStrings(index) },
+      { "Origin", elx::Conversion::ToVectorOfStrings(origin) },
       { "Size", elx::Conversion::ToVectorOfStrings(size) },
       { "Spacing", elx::Conversion::ToVectorOfStrings(spacing) },
-      { "Origin", elx::Conversion::ToVectorOfStrings(origin) },
     };
+  }
+
+  friend bool
+  operator==(const ImageDomain & lhs, const ImageDomain & rhs)
+  {
+    return lhs.direction == rhs.direction && lhs.index == rhs.index && lhs.size == rhs.size &&
+           lhs.spacing == rhs.spacing && lhs.origin == rhs.origin;
+  }
+
+  friend bool
+  operator!=(const ImageDomain & lhs, const ImageDomain & rhs)
+  {
+    return !(lhs == rhs);
   }
 };
 
+
+template <typename TRandomNumberEngine>
+int
+GenerateRandomSign(TRandomNumberEngine & randomNumberEngine)
+{
+  return (randomNumberEngine() % 2 == 0) ? -1 : 1;
+}
+
+
+template <unsigned int VImageDimension>
+auto
+CreateRandomImageDomain(std::mt19937 & randomNumberEngine)
+{
+  using ImageDomainType = ImageDomain<VImageDimension>;
+
+  const auto createRandomDirection = [&randomNumberEngine] {
+    using DirectionType = typename ImageDomainType::DirectionType;
+    auto randomDirection = DirectionType::GetIdentity();
+
+    // For now, just a single random rotation
+    const auto randomRotation = std::uniform_real_distribution<>{ -M_PI, M_PI }(randomNumberEngine);
+    const auto cosRandomRotation = std::cos(randomRotation);
+    const auto sinRandomRotation = std::sin(randomRotation);
+
+    randomDirection[0][0] = cosRandomRotation;
+    randomDirection[0][1] = sinRandomRotation;
+    randomDirection[1][0] = -sinRandomRotation;
+    randomDirection[1][1] = cosRandomRotation;
+
+    return randomDirection;
+  };
+  const auto createRandomIndex = [&randomNumberEngine] {
+    typename ImageDomainType::IndexType randomIndex{};
+    std::generate(randomIndex.begin(), randomIndex.end(), [&randomNumberEngine] {
+      return std::uniform_int_distribution<itk::IndexValueType>{
+        std::numeric_limits<itk::IndexValueType>::min() / 2, std::numeric_limits<itk::IndexValueType>::max() / 2
+      }(randomNumberEngine);
+    });
+    return randomIndex;
+  };
+  const auto createRandomSmallImageSize = [&randomNumberEngine] {
+    typename ImageDomainType::SizeType randomImageSize{};
+    std::generate(randomImageSize.begin(), randomImageSize.end(), [&randomNumberEngine] {
+      return std::uniform_int_distribution<itk::SizeValueType>{ minimumImageSizeValue,
+                                                                2 * minimumImageSizeValue }(randomNumberEngine);
+    });
+    return randomImageSize;
+  };
+  const auto createRandomSpacing = [&randomNumberEngine] {
+    typename ImageDomainType::SpacingType randomSpacing{};
+    std::generate(randomSpacing.begin(), randomSpacing.end(), [&randomNumberEngine] {
+      // Originally tried the maximum interval from std::numeric_limits<itk::SpacePrecisionType>::min() to
+      // std::numeric_limits<itk::SpacePrecisionType>::max(), but that caused errors during inverse matrix computation.
+      return std::uniform_real_distribution<itk::SpacePrecisionType>{ 0.1, 10.0 }(randomNumberEngine);
+    });
+    return randomSpacing;
+  };
+  const auto createRandomPoint = [&randomNumberEngine] {
+    typename ImageDomainType::PointType randomPoint{};
+    std::generate(randomPoint.begin(), randomPoint.end(), [&randomNumberEngine] {
+      return GenerateRandomSign(randomNumberEngine) * std::uniform_real_distribution<itk::SpacePrecisionType>{
+        itk::SpacePrecisionType{}, std::numeric_limits<itk::SpacePrecisionType>::max() / 2.0
+      }(randomNumberEngine);
+    });
+    return randomPoint;
+  };
+
+  return ImageDomainType{ createRandomDirection(),
+                          createRandomIndex(),
+                          createRandomSmallImageSize(),
+                          createRandomSpacing(),
+                          createRandomPoint() };
+}
 
 // Creates a test image, filled with zero.
 template <typename TPixel, unsigned VImageDimension>
@@ -357,15 +473,24 @@ CreateImage(const itk::Size<VImageDimension> & imageSize)
 // Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
 template <typename TPixel, unsigned VImageDimension>
 auto
-CreateImageFilledWithSequenceOfNaturalNumbers(const itk::Size<VImageDimension> & imageSize)
+CreateImageFilledWithSequenceOfNaturalNumbers(const ImageDomain<VImageDimension> & imageDomain)
 {
   using ImageType = itk::Image<TPixel, VImageDimension>;
   const auto image = ImageType::New();
-  image->SetRegions(imageSize);
+  imageDomain.ToImage(*image);
   image->Allocate();
   const itk::ImageBufferRange<ImageType> imageBufferRange{ *image };
   std::iota(imageBufferRange.begin(), imageBufferRange.end(), TPixel{ 1 });
   return image;
+}
+
+
+// Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
+template <typename TPixel, unsigned VImageDimension>
+auto
+CreateImageFilledWithSequenceOfNaturalNumbers(const itk::Size<VImageDimension> & imageSize)
+{
+  return CreateImageFilledWithSequenceOfNaturalNumbers<TPixel>(ImageDomain<VImageDimension>{ imageSize });
 }
 
 

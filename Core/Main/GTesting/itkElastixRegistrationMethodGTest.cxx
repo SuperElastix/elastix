@@ -23,8 +23,11 @@
 
 #include <itkTransformixFilter.h>
 
+#include "GTesting/elxGTestUtilities.h"
+
 #include "elxCoreMainGTestUtilities.h"
 #include "elxDefaultConstruct.h"
+#include "elxForEachSupportedImageType.h"
 #include "elxTransformIO.h"
 
 // ITK header file:
@@ -64,6 +67,7 @@ using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
+using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
 using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
@@ -73,6 +77,9 @@ using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
 using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
 using elx::CoreMainGTestUtilities::ImageDomain;
+using elx::CoreMainGTestUtilities::TypeHolder;
+using elx::CoreMainGTestUtilities::minimumImageSizeValue;
+using elx::GTestUtilities::MakeMergedMap;
 
 
 template <typename TImage>
@@ -80,6 +87,7 @@ using ElastixRegistrationMethodType = itk::ElastixRegistrationMethod<TImage, TIm
 
 namespace
 {
+
 auto
 ParameterToCurlyBracedString(const ParameterMapType::value_type & parameter)
 {
@@ -1606,4 +1614,208 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
     EXPECT_EQ(std::round(transformParameters[1]), 0.0);                        // translation X
     EXPECT_EQ(std::round(transformParameters[2]), 0.0);                        // translation Y
   }
+}
+
+
+// Checks a minimum size moving image having the same pixel type as any of the supported internal pixel types.
+GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageHavingInternalPixelType)
+{
+  elx::ForEachSupportedImageType([](const auto elxTypedef) {
+    using ElxTypedef = decltype(elxTypedef);
+    using ImageType = typename ElxTypedef::MovingImageType;
+    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+
+    using PixelType = typename ImageType::PixelType;
+
+    const auto imageSize = itk::Size<ElxTypedef::MovingDimension>::Filled(minimumImageSizeValue);
+    const ImageDomain<ElxTypedef::MovingDimension> imageDomain(imageSize);
+
+    elx::DefaultConstruct<ImageType> fixedImage{};
+    imageDomain.ToImage(fixedImage);
+    fixedImage.Allocate(true);
+
+    elx::DefaultConstruct<ImageType> movingImage{};
+    imageDomain.ToImage(movingImage);
+    movingImage.Allocate(true);
+
+    // Some "extreme" values to test if each of them is preserved during the transformation.
+    const std::array pixelValues{ PixelType{},
+                                  PixelType{ 1 },
+                                  std::numeric_limits<PixelType>::lowest(),
+                                  std::numeric_limits<PixelType>::min(),
+                                  PixelType{ std::numeric_limits<PixelType>::max() - 1 },
+                                  std::numeric_limits<PixelType>::max() };
+    std::copy(pixelValues.cbegin(), pixelValues.cend(), itk::ImageBufferRange<ImageType>(movingImage).begin());
+
+    // A dummy registration (that does not do any optimization).
+    elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> registration{};
+
+    registration.SetParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "AutomaticParameterEstimation", { "false" } },
+                              { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+                              { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+                              { "ImageSampler", "Full" },
+                              { "MaximumNumberOfIterations", "0" },
+                              { "Metric", "AdvancedNormalizedCorrelation" },
+                              { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                              { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                              { "Transform", "TranslationTransform" } }));
+    registration.SetFixedImage(&fixedImage);
+    registration.SetMovingImage(&movingImage);
+    registration.Update();
+
+    EXPECT_EQ(DerefRawPointer(registration.GetOutput()), movingImage);
+  });
+}
+
+
+// Checks a zero-filled moving image with a random domain, having the same pixel type as any of the supported internal
+// pixel types.
+GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDomainHavingInternalPixelType)
+{
+  std::mt19937 randomNumberEngine{};
+
+  elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
+    using ElxTypedef = decltype(elxTypedef);
+    using ImageType = typename ElxTypedef::MovingImageType;
+    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+
+    using PixelType = typename ImageType::PixelType;
+
+    auto imageDomain = CreateRandomImageDomain<ElxTypedef::MovingDimension>(randomNumberEngine);
+
+    // Reset index to avoid "FixedImageRegion does not overlap the fixed image buffered region" exceptions from
+    // itk::ImageToImageMetric::Initialize()
+    imageDomain.index = {};
+
+    // Create an image with values 1, 2, 3, ... N. We could have used arbitrary pixel values instead.
+    const auto fixedImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+    elx::DefaultConstruct<ImageType> movingImage{};
+    imageDomain.ToImage(movingImage);
+    movingImage.Allocate(true);
+
+    // A dummy registration (that does not do any optimization).
+    elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> registration{};
+
+    registration.SetParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "AutomaticParameterEstimation", { "false" } },
+                              { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+                              { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+                              { "ImageSampler", "Full" },
+                              { "MaximumNumberOfIterations", "0" },
+                              { "Metric", "AdvancedNormalizedCorrelation" },
+                              { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                              { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                              { "Transform", "TranslationTransform" } }));
+    registration.SetFixedImage(fixedImage);
+    registration.SetMovingImage(&movingImage);
+    registration.Update();
+
+    EXPECT_EQ(DerefRawPointer(registration.GetOutput()), movingImage);
+  });
+}
+
+
+// Checks a minimum size moving image using any supported internal pixel type (which may be different from the input
+// pixel type).
+GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageUsingAnyInternalPixelType)
+{
+  const auto check = [](const auto inputPixelTypeHolder) {
+    elx::ForEachSupportedImageType([](const auto elxTypedef) {
+      using ElxTypedef = decltype(elxTypedef);
+      using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;
+      using InputImageType = itk::Image<InputPixelType, ElxTypedef::MovingDimension>;
+
+      const ImageDomain<ElxTypedef::MovingDimension> imageDomain(
+        itk::Size<ElxTypedef::MovingDimension>::Filled(minimumImageSizeValue));
+
+      elx::DefaultConstruct<InputImageType> fixedImage{};
+      imageDomain.ToImage(fixedImage);
+      fixedImage.Allocate(true);
+
+      const auto movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<InputPixelType>(imageDomain);
+
+      // A dummy registration (that does not do any optimization).
+      elx::DefaultConstruct<itk::ElastixRegistrationMethod<InputImageType, InputImageType>> registration{};
+
+      registration.SetParameterObject(
+        CreateParameterObject({ // Parameters in alphabetic order:
+                                { "AutomaticParameterEstimation", { "false" } },
+                                { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+                                { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+                                { "ImageSampler", "Full" },
+                                { "MaximumNumberOfIterations", "0" },
+                                { "Metric", "AdvancedNormalizedCorrelation" },
+                                { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                                { "Transform", "TranslationTransform" } }));
+      registration.SetFixedImage(&fixedImage);
+      registration.SetMovingImage(movingImage);
+      registration.Update();
+
+      EXPECT_EQ(DerefRawPointer(registration.GetOutput()), DerefSmartPointer(movingImage));
+    });
+  };
+
+  check(TypeHolder<char>{});
+  check(TypeHolder<short>{});
+  check(TypeHolder<float>{});
+  check(TypeHolder<double>{});
+}
+
+
+// Checks a zero-filled moving image with a random domain, using any supported internal pixel type (which may be
+// different from the input pixel type).
+GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDomainUsingAnyInternalPixelType)
+{
+  std::mt19937 randomNumberEngine{};
+
+  const auto check = [&randomNumberEngine](const auto inputPixelTypeHolder) {
+    elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
+      using ElxTypedef = decltype(elxTypedef);
+      using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;
+      using InputImageType = itk::Image<InputPixelType, ElxTypedef::MovingDimension>;
+
+      auto imageDomain = CreateRandomImageDomain<ElxTypedef::MovingDimension>(randomNumberEngine);
+
+      // Reset index to avoid "FixedImageRegion does not overlap the fixed image buffered region" exceptions from
+      // itk::ImageToImageMetric::Initialize()
+      imageDomain.index = {};
+
+      // Create an image with values 1, 2, 3, ... N. We could have used arbitrary pixel values instead.
+      const auto fixedImage = CreateImageFilledWithSequenceOfNaturalNumbers<InputPixelType>(imageDomain);
+
+      elx::DefaultConstruct<InputImageType> movingImage{};
+      imageDomain.ToImage(movingImage);
+      movingImage.Allocate(true);
+
+      // A dummy registration (that does not do any optimization).
+      elx::DefaultConstruct<itk::ElastixRegistrationMethod<InputImageType, InputImageType>> registration{};
+
+      registration.SetParameterObject(
+        CreateParameterObject({ // Parameters in alphabetic order:
+                                { "AutomaticParameterEstimation", { "false" } },
+                                { "FixedInternalImagePixelType", { ElxTypedef::FixedPixelTypeString } },
+                                { "MovingInternalImagePixelType", { ElxTypedef::MovingPixelTypeString } },
+                                { "ImageSampler", "Full" },
+                                { "MaximumNumberOfIterations", "0" },
+                                { "Metric", "AdvancedNormalizedCorrelation" },
+                                { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                                { "Transform", "TranslationTransform" } }));
+      registration.SetFixedImage(fixedImage);
+      registration.SetMovingImage(&movingImage);
+      registration.Update();
+
+      EXPECT_EQ(DerefRawPointer(registration.GetOutput()), movingImage);
+    });
+  };
+
+  check(TypeHolder<char>{});
+  check(TypeHolder<short>{});
+  check(TypeHolder<float>{});
+  check(TypeHolder<double>{});
 }

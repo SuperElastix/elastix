@@ -46,6 +46,24 @@ ForEachSupportedImageType(const TFunction & func)
   ForEachSupportedImageType(func, std::make_index_sequence<elx::NrOfSupportedImageTypes>());
 }
 
+template <typename TFunction, std::size_t... VIndexSequence>
+bool
+ForEachSupportedImageTypeUntilTrue(const TFunction & func, const std::index_sequence<VIndexSequence...> &)
+{
+  // Expand the sequence by a fold expression of the form (func(n) || func(n - 1) || ... || func(1)).
+  return (func(elx::ElastixTypedef<VIndexSequence + 1>{}) || ...);
+}
+
+
+/** Runs a function `func(ElastixTypedef<VIndex>{})`, for each supported image type from "elxSupportedImageTypes.h",
+ * until the function returns true. */
+template <typename TFunction>
+bool
+ForEachSupportedImageTypeUntilTrue(const TFunction & func)
+{
+  return ForEachSupportedImageTypeUntilTrue(func, std::make_index_sequence<elx::NrOfSupportedImageTypes>());
+}
+
 } // namespace elastix
 
 
