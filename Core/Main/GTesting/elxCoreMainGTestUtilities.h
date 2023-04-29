@@ -21,8 +21,10 @@
 
 #include <elxBaseComponent.h> // For elx.
 #include <elxParameterObject.h>
+#include <elxConversion.h>
 
 #include <itkImage.h>
+#include <itkImageBase.h>
 #include <itkImageBufferRange.h>
 #include <itkImageRegionRange.h>
 #include <itkIndex.h>
@@ -271,6 +273,73 @@ GetTransformParametersFromFilter(TFilter & filter)
   const auto & transformParameterMaps = DerefRawPointer(transformParameterObject).GetParameterMaps();
   return GetTransformParametersFromMaps(transformParameterMaps);
 }
+
+
+// The image domain. ITK calls it the "geometry" of an image. ("The geometry of an image is defined by its position,
+// orientation, spacing, and extent", according to https://itk.org/Doxygen52/html/classitk_1_1ImageBase.html#details).
+// The elastix manual (elastix-5.1.0-manual.pdf, January 16, 2023) simply calls it "the
+// Size/Spacing/Origin/Index/Direction settings".
+template <unsigned int VDimension>
+struct ImageDomain
+{
+  using ImageBaseType = itk::ImageBase<VDimension>;
+
+  using DirectionType = typename ImageBaseType::DirectionType;
+  using IndexType = typename ImageBaseType::IndexType;
+  using SizeType = typename ImageBaseType::SizeType;
+  using SpacingType = typename ImageBaseType::SpacingType;
+  using PointType = typename ImageBaseType::PointType;
+
+  DirectionType direction{ DirectionType::GetIdentity() };
+  IndexType     index{};
+  SizeType      size{};
+  SpacingType   spacing{ itk::MakeFilled<SpacingType>(1.0) };
+  PointType     origin{};
+
+  // Default-constructor
+  ImageDomain() = default;
+
+  // Explicit constructor
+  explicit ImageDomain(const SizeType & size)
+    : size(size)
+  {}
+
+  // Constructor, allowing to explicitly specify all the settings of the domain.
+  ImageDomain(const DirectionType & direction,
+              const IndexType &     index,
+              const SizeType &      size,
+              const SpacingType &   spacing,
+              const PointType &     origin)
+    : direction(direction)
+    , index(index)
+    , size(size)
+    , spacing(spacing)
+    , origin(origin)
+  {}
+
+  // Puts the domain settings into the specified image.
+  void
+  ToImage(itk::ImageBase<VDimension> & image) const
+  {
+    image.SetDirection(direction);
+    image.SetRegions({ index, size });
+    image.SetSpacing(spacing);
+    image.SetOrigin(origin);
+  }
+
+  // Returns the data of this image domain as an elastix/transformix parameter map.
+  ParameterObject::ParameterMapType
+  AsParameterMap() const
+  {
+    return {
+      { "Direction", elx::Conversion::ToVectorOfStrings(direction) },
+      { "Index", elx::Conversion::ToVectorOfStrings(index) },
+      { "Size", elx::Conversion::ToVectorOfStrings(size) },
+      { "Spacing", elx::Conversion::ToVectorOfStrings(spacing) },
+      { "Origin", elx::Conversion::ToVectorOfStrings(origin) },
+    };
+  }
+};
 
 
 // Creates a test image, filled with zero.
