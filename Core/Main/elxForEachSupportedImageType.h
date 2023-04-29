@@ -31,19 +31,10 @@ template <typename TFunction, std::size_t... VIndexSequence>
 void
 ForEachSupportedImageType(const TFunction & func, const std::index_sequence<VIndexSequence...> &)
 {
-  struct Empty
-  {};
-
-  const auto supportImageTypeWithIndex = [&func](const auto index) {
-    // Use `index + 1` instead of `index`, because the indices from SupportedImageTypes start with 1, while the sequence
-    // returned by `std::make_index_sequence()` starts with zero.
-    func(elx::ElastixTypedef<index + 1>{});
-    return Empty{};
-  };
-
-  // Expand the "variadic template" index sequence by the initialization of a dummy array.
-  const Empty dummyArray[] = { supportImageTypeWithIndex(std::integral_constant<std::size_t, VIndexSequence>{})... };
-  (void)dummyArray;
+  // Expand the "variadic template" index sequence by a fold expression. Use `index + 1` instead of `index`, because the
+  // indices from SupportedImageTypes start with 1, while the sequence returned by `std::make_index_sequence()` starts
+  // with zero.
+  (func(elx::ElastixTypedef<VIndexSequence + 1>{}), ...);
 }
 
 
@@ -51,7 +42,6 @@ ForEachSupportedImageType(const TFunction & func, const std::index_sequence<VInd
 template <typename TFunction>
 void
 ForEachSupportedImageType(const TFunction & func)
-
 {
   ForEachSupportedImageType(func, std::make_index_sequence<elx::NrOfSupportedImageTypes>());
 }
