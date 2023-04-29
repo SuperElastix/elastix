@@ -72,6 +72,7 @@ using elx::CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
 using elx::CoreMainGTestUtilities::GetNameOfTest;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromFilter;
+using elx::CoreMainGTestUtilities::ImageDomain;
 
 
 template <typename TImage>
@@ -212,53 +213,6 @@ NonDefaultRegistrationParameter(const ParameterMapType::value_type & parameter)
 }
 
 
-// The image domain. ITK calls it the "geometry" of an image. ("The geometry of an image is defined by its position,
-// orientation, spacing, and extent", according to https://itk.org/Doxygen52/html/classitk_1_1ImageBase.html#details).
-// The elastix manual (elastix-5.1.0-manual.pdf, January 16, 2023) simply calls it "the
-// Size/Spacing/Origin/Index/Direction settings".
-template <unsigned int VDimension>
-struct ImageDomain
-{
-  using ImageBaseType = itk::ImageBase<VDimension>;
-
-  using DirectionType = typename ImageBaseType::DirectionType;
-  using IndexType = typename ImageBaseType::IndexType;
-  using SizeType = typename ImageBaseType::SizeType;
-  using SpacingType = typename ImageBaseType::SpacingType;
-  using PointType = typename ImageBaseType::PointType;
-
-  DirectionType direction{ DirectionType::GetIdentity() };
-  IndexType     index{};
-  SizeType      size{};
-  SpacingType   spacing{ itk::MakeFilled<SpacingType>(1.0) };
-  PointType     origin{};
-};
-
-
-template <unsigned int VDimension>
-void
-PutImageDomainIntoImageBase(itk::ImageBase<VDimension> & image, const ImageDomain<VDimension> & imageDomain)
-{
-  image.SetDirection(imageDomain.direction);
-  image.SetRegions({ imageDomain.index, imageDomain.size });
-  image.SetSpacing(imageDomain.spacing);
-  image.SetOrigin(imageDomain.origin);
-}
-
-
-template <unsigned int VDimension>
-ParameterMapType
-ConvertImageDomainToParameterMap(const ImageDomain<VDimension> & imageDomain)
-{
-  return {
-    { "Direction", elx::Conversion::ToVectorOfStrings(imageDomain.direction) },
-    { "Index", elx::Conversion::ToVectorOfStrings(imageDomain.index) },
-    { "Size", elx::Conversion::ToVectorOfStrings(imageDomain.size) },
-    { "Spacing", elx::Conversion::ToVectorOfStrings(imageDomain.spacing) },
-    { "Origin", elx::Conversion::ToVectorOfStrings(imageDomain.origin) },
-  };
-}
-
 template <unsigned int VDimension>
 auto
 ConvertIndexToOffset(const itk::Index<VDimension> & index)
@@ -283,11 +237,11 @@ Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransf
   std::iota(movingImageSize.begin(), movingImageSize.end(), 5U);
 
   elx::DefaultConstruct<ImageType> fixedImage{};
-  PutImageDomainIntoImageBase(fixedImage, fixedImageDomain);
+  fixedImageDomain.ToImage(fixedImage);
   fixedImage.Allocate(true);
 
   elx::DefaultConstruct<ImageType> movingImage{};
-  PutImageDomainIntoImageBase(movingImage, movingImageDomain);
+  movingImageDomain.ToImage(movingImage);
   movingImage.Allocate(true);
   const itk::ImageBufferRange<ImageType> movingImageBufferRange(movingImage);
 
@@ -356,7 +310,7 @@ Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransf
 
   // Add the parameters that specify the fixed image domain to the last transformix parameter map.
   auto transformixParameterMaps = transformParameterMaps;
-  transformixParameterMaps.back().merge(ConvertImageDomainToParameterMap(fixedImageDomain));
+  transformixParameterMaps.back().merge(fixedImageDomain.AsParameterMap());
 
   transformParameterObject.SetParameterMaps(transformParameterMaps);
   transformixParameterObject.SetParameterMaps(transformixParameterMaps);
@@ -1090,11 +1044,9 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
       smallImageSizeValue = 8
     };
 
-    const ImageDomainType simpleImageDomain{ ImageDomainType::DirectionType::GetIdentity(),
-                                             ImageDomainType::IndexType{},
-                                             ImageDomainType::SizeType::Filled(smallImageSizeValue),
-                                             itk::MakeFilled<ImageDomainType::SpacingType>(1),
-                                             ImageDomainType::PointType{} };
+    const ImageDomainType simpleImageDomain{
+      ImageDomainType::SizeType::Filled(smallImageSizeValue),
+    };
 
     const auto createRandomImageDomain = [&randomNumberEngine] {
       const auto createRandomDirection = [&randomNumberEngine] {
