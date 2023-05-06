@@ -141,8 +141,6 @@ add_library(elxCore STATIC
   ${ProgressCommandFiles}
 )
 
-set_source_files_properties(Kernel/elxlog.cxx PROPERTIES INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/ThirdParty/spdlog/include")
-
 elastix_export_target(elxCore)
 
 #---------------------------------------------------------------------
