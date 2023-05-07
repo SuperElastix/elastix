@@ -348,43 +348,42 @@ TransformBase<TElastix>::ReadFromFile()
   } // end if this->m_ReadWriteTransformParameters
 
   /** Task 2 - Get the InitialTransform. */
-
-  /** Get the InitialTransformName. */
-  std::string fileName = "NoInitialTransform";
-  configuration.ReadParameter(fileName, "InitialTransformParametersFileName", 0);
-
   const ElastixBase & elastixBase = Deref(Superclass::GetElastix());
 
-  /** Call the function ReadInitialTransformFromFile. */
-  if (fileName == "NoInitialTransform")
+  if (elastixBase.GetNumberOfTransformConfigurations() > 1)
   {
-    if (elastixBase.GetNumberOfTransformConfigurations() > 1)
-    {
-      const Configuration::ConstPointer previousTransformConfiguration =
-        elastixBase.GetPreviousTransformConfiguration(configuration);
+    const Configuration::ConstPointer previousTransformConfiguration =
+      elastixBase.GetPreviousTransformConfiguration(configuration);
 
-      if (previousTransformConfiguration)
-      {
-        this->ReadInitialTransformFromConfiguration(previousTransformConfiguration);
-      }
+    if (previousTransformConfiguration)
+    {
+      this->ReadInitialTransformFromConfiguration(previousTransformConfiguration);
     }
   }
   else
   {
-    /** Check if the initial transform of this transform parameter file
-     * is not the same as this transform parameter file. Otherwise,
-     * we will have an infinite loop.
-     */
-    std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName);
-    std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
-    if (fullFileName1 == fullFileName2)
-    {
-      itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName is identical to the current "
-                           "TransformParameters filename! An infinite loop is not allowed.");
-    }
+    /** Get the InitialTransformName. */
+    std::string fileName = "NoInitialTransform";
+    configuration.ReadParameter(fileName, "InitialTransformParametersFileName", 0);
 
-    /** We can safely read the initial transform. */
-    this->ReadInitialTransformFromFile(fileName.c_str());
+    /** Call the function ReadInitialTransformFromFile. */
+    if (fileName != "NoInitialTransform")
+    {
+      /** Check if the initial transform of this transform parameter file
+       * is not the same as this transform parameter file. Otherwise,
+       * we will have an infinite loop.
+       */
+      std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName);
+      std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
+      if (fullFileName1 == fullFileName2)
+      {
+        itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName is identical to the current "
+                             "TransformParameters filename! An infinite loop is not allowed.");
+      }
+
+      /** We can safely read the initial transform. */
+      this->ReadInitialTransformFromFile(fileName.c_str());
+    }
   }
 
   /** Task 3 - Read from the configuration file how to combine the
