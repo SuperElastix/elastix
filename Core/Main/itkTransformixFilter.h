@@ -55,15 +55,15 @@
 namespace itk
 {
 
-template <typename TMovingImage>
-class ITK_TEMPLATE_EXPORT TransformixFilter : public ImageSource<TMovingImage>
+template <typename TImage>
+class ITK_TEMPLATE_EXPORT TransformixFilter : public ImageSource<TImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(TransformixFilter);
 
   /** Standard ITK typedefs. */
   using Self = TransformixFilter;
-  using Superclass = ImageSource<TMovingImage>;
+  using Superclass = ImageSource<TImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -95,12 +95,12 @@ public:
   using typename Superclass::OutputImagePixelType;
 
   using OutputDeformationFieldType =
-    typename itk::Image<itk::Vector<float, TMovingImage::ImageDimension>, TMovingImage::ImageDimension>;
+    typename itk::Image<itk::Vector<float, TImage::ImageDimension>, TImage::ImageDimension>;
 
   using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
 
-  using InputImageType = TMovingImage;
-  itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);
+  using InputImageType = TImage;
+  itkStaticConstMacro(MovingImageDimension, unsigned int, TImage::ImageDimension);
 
   using MeshType = Mesh<OutputImagePixelType, MovingImageDimension>;
 
@@ -113,7 +113,7 @@ public:
 
   /** Set/Get/Add moving image. */
   virtual void
-  SetMovingImage(TMovingImage * inputImage);
+  SetMovingImage(TImage * inputImage);
   const InputImageType *
   GetMovingImage() const;
   virtual void
@@ -273,7 +273,7 @@ private:
    */
   using ProcessObject::RemoveInput;
 
-  using ElastixTransformBaseType = elx::TransformBase<elx::ElastixTemplate<TMovingImage, TMovingImage>>;
+  using ElastixTransformBaseType = elx::TransformBase<elx::ElastixTemplate<TImage, TImage>>;
 
   const ElastixTransformBaseType *
   GetFirstElastixTransformBase() const;
