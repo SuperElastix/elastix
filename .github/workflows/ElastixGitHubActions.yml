@@ -39,9 +39,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        # Place gabime/spdlog as submodule into the ThirdParty directory.
-        submodules: true    
     
     - name: Make directory structure
       run: |
