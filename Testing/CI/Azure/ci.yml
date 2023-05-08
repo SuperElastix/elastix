@@ -33,8 +33,6 @@ jobs:
       ITKv5:
         itk.version: $(ITKv5_VERSION)
   steps:
-  - checkout: self
-    submodules: true
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
@@ -90,8 +88,6 @@ jobs:
       ITKv5:
         itk.version: $(ITKv5_VERSION)
   steps:
-  - checkout: self
-    submodules: true
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
   - script: |
@@ -145,8 +141,6 @@ jobs:
       ITKv5:
         itk.version: $(ITKv5_VERSION)
   steps:
-  - checkout: self
-    submodules: true
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
