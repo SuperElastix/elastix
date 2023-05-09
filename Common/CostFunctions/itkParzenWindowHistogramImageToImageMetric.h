@@ -329,6 +329,13 @@ protected:
                        const KernelFunctionType * kernel,
                        ParzenValueContainerType & parzenValues) const;
 
+  /** Compute the Parzen values. Overload that places the values in the buffer, pointed to by the last argument. */
+  static void
+  EvaluateParzenValues(double                     parzenWindowTerm,
+                       OffsetValueType            parzenWindowIndex,
+                       const KernelFunctionType & kernel,
+                       PDFValueType *             parzenValues);
+
   /** Update the joint PDF with a pixel pair; on demand also updates the
    * pdf derivatives (if the Jacobian pointers are nonzero).
    */
