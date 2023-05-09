@@ -320,16 +320,8 @@ protected:
   /** Compute the Parzen values given an image value and a starting histogram index
    * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for
    * k = 0 ... kernelsize-1
-   * Returns the values in a ParzenValueContainer, which is supposed to have
-   * the right size already.
+   * Places the values in a buffer, which is supposed to have the right size already.
    */
-  void
-  EvaluateParzenValues(double                     parzenWindowTerm,
-                       OffsetValueType            parzenWindowIndex,
-                       const KernelFunctionType * kernel,
-                       ParzenValueContainerType & parzenValues) const;
-
-  /** Compute the Parzen values. Overload that places the values in the buffer, pointed to by the last argument. */
   static void
   EvaluateParzenValues(double                     parzenWindowTerm,
                        OffsetValueType            parzenWindowIndex,

@@ -515,18 +515,6 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::EvaluateParzenValues(
   double                     parzenWindowTerm,
   OffsetValueType            parzenWindowIndex,
-  const KernelFunctionType * kernel,
-  ParzenValueContainerType & parzenValues) const
-{
-  EvaluateParzenValues(parzenWindowTerm, parzenWindowIndex, *kernel, parzenValues.data_block());
-} // end EvaluateParzenValues()
-
-
-template <class TFixedImage, class TMovingImage>
-void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::EvaluateParzenValues(
-  double                     parzenWindowTerm,
-  OffsetValueType            parzenWindowIndex,
   const KernelFunctionType & kernel,
   PDFValueType * const       parzenValues)
 {
@@ -606,10 +594,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   {
     /** Compute the derivatives of the moving Parzen window. */
     ParzenValueContainerType derivativeMovingParzenValues(numberOfMovingParzenValues);
-    this->EvaluateParzenValues(movingImageParzenWindowTerm,
+    Self::EvaluateParzenValues(movingImageParzenWindowTerm,
                                movingImageParzenWindowIndex,
-                               this->m_DerivativeMovingKernel,
-                               derivativeMovingParzenValues);
+                               *m_DerivativeMovingKernel,
+                               derivativeMovingParzenValues.data_block());
 
     const double et = static_cast<double>(this->m_MovingImageBinSize);
 
@@ -842,8 +830,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   /** The lowest bin numbers affected by this pixel: */
   const OffsetValueType fixedImageParzenWindowIndex =
     static_cast<OffsetValueType>(std::floor(fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset));
-  this->EvaluateParzenValues(
-    fixedImageParzenWindowTerm, fixedImageParzenWindowIndex, this->m_FixedKernel, fixedParzenValues);
+  Self::EvaluateParzenValues(
+    fixedImageParzenWindowTerm, fixedImageParzenWindowIndex, *m_FixedKernel, fixedParzenValues.data_block());
 
   if (movingMaskValue > 1e-10)
   {
@@ -852,8 +840,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
       movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
     const OffsetValueType movingImageParzenWindowIndex =
       static_cast<OffsetValueType>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset));
-    this->EvaluateParzenValues(
-      movingImageParzenWindowTerm, movingImageParzenWindowIndex, this->m_MovingKernel, movingParzenValues);
+    Self::EvaluateParzenValues(
+      movingImageParzenWindowTerm, movingImageParzenWindowIndex, *m_MovingKernel, movingParzenValues.data_block());
 
     /** Position the JointPDFWindow (set the start index). */
     JointPDFIndexType pdfIndex;
@@ -925,8 +913,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
       const double movParzenWindowTermRight = movr / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexRight =
         static_cast<OffsetValueType>(std::floor(movParzenWindowTermRight + this->m_MovingParzenTermToIndexOffset));
-      this->EvaluateParzenValues(
-        movParzenWindowTermRight, movParzenWindowIndexRight, this->m_MovingKernel, movingParzenValues);
+      Self::EvaluateParzenValues(
+        movParzenWindowTermRight, movParzenWindowIndexRight, *m_MovingKernel, movingParzenValues.data_block());
 
       /** Initialize index in IncrementalJointPDFRight. */
       rindex[0] = mu;
@@ -957,8 +945,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
       const double movParzenWindowTermLeft = movl / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexLeft =
         static_cast<OffsetValueType>(std::floor(movParzenWindowTermLeft + this->m_MovingParzenTermToIndexOffset));
-      this->EvaluateParzenValues(
-        movParzenWindowTermLeft, movParzenWindowIndexLeft, this->m_MovingKernel, movingParzenValues);
+      Self::EvaluateParzenValues(
+        movParzenWindowTermLeft, movParzenWindowIndexLeft, *m_MovingKernel, movingParzenValues.data_block());
 
       /** Initialize index in IncrementalJointPDFLeft. */
       lindex[0] = mu;
