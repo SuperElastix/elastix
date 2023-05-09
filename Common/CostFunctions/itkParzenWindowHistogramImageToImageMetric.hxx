@@ -518,7 +518,19 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::EvaluateParz
   const KernelFunctionType * kernel,
   ParzenValueContainerType & parzenValues) const
 {
-  kernel->Evaluate(static_cast<double>(parzenWindowIndex) - parzenWindowTerm, parzenValues.data_block());
+  EvaluateParzenValues(parzenWindowTerm, parzenWindowIndex, *kernel, parzenValues.data_block());
+} // end EvaluateParzenValues()
+
+
+template <class TFixedImage, class TMovingImage>
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::EvaluateParzenValues(
+  double                     parzenWindowTerm,
+  OffsetValueType            parzenWindowIndex,
+  const KernelFunctionType & kernel,
+  PDFValueType * const       parzenValues)
+{
+  kernel.Evaluate(static_cast<double>(parzenWindowIndex) - parzenWindowTerm, parzenValues);
 } // end EvaluateParzenValues()
 
 
@@ -550,12 +562,19 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
     static_cast<OffsetValueType>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset));
 
   /** The Parzen values. */
-  ParzenValueContainerType fixedParzenValues(this->m_JointPDFWindow.GetSize()[1]);
-  ParzenValueContainerType movingParzenValues(this->m_JointPDFWindow.GetSize()[0]);
-  this->EvaluateParzenValues(
-    fixedImageParzenWindowTerm, fixedImageParzenWindowIndex, this->m_FixedKernel, fixedParzenValues);
-  this->EvaluateParzenValues(
-    movingImageParzenWindowTerm, movingImageParzenWindowIndex, this->m_MovingKernel, movingParzenValues);
+  const auto numberOfFixedParzenValues = m_JointPDFWindow.GetSize()[1];
+  const auto numberOfMovingParzenValues = m_JointPDFWindow.GetSize()[0];
+
+  // Create a buffer of Parzen values for both the fixed and the moving image.
+  const auto parzenValues = std::make_unique<PDFValueType[]>(numberOfFixedParzenValues + numberOfMovingParzenValues);
+
+  PDFValueType * const fixedParzenValues = parzenValues.get();
+  PDFValueType * const movingParzenValues = parzenValues.get() + numberOfFixedParzenValues;
+
+  Self::EvaluateParzenValues(
+    fixedImageParzenWindowTerm, fixedImageParzenWindowIndex, *m_FixedKernel, fixedParzenValues);
+  Self::EvaluateParzenValues(
+    movingImageParzenWindowTerm, movingImageParzenWindowIndex, *m_MovingKernel, movingParzenValues);
 
   /** Position the JointPDFWindow. */
   JointPDFIndexType pdfWindowIndex;
@@ -572,10 +591,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   if (!imageJacobian)
   {
     /** Loop over the Parzen window region and increment the values. */
-    for (unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f)
+    for (unsigned int f = 0; f < numberOfFixedParzenValues; ++f)
     {
       const double fv = fixedParzenValues[f];
-      for (unsigned int m = 0; m < movingParzenValues.GetSize(); ++m)
+      for (unsigned int m = 0; m < numberOfMovingParzenValues; ++m)
       {
         it.Value() += static_cast<PDFValueType>(fv * movingParzenValues[m]);
         ++it;
@@ -586,7 +605,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   else
   {
     /** Compute the derivatives of the moving Parzen window. */
-    ParzenValueContainerType derivativeMovingParzenValues(this->m_JointPDFWindow.GetSize()[0]);
+    ParzenValueContainerType derivativeMovingParzenValues(numberOfMovingParzenValues);
     this->EvaluateParzenValues(movingImageParzenWindowTerm,
                                movingImageParzenWindowIndex,
                                this->m_DerivativeMovingKernel,
@@ -597,11 +616,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
     /** Loop over the Parzen window region and increment the values
      * Also update the pdf derivatives.
      */
-    for (unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f)
+    for (unsigned int f = 0; f < numberOfFixedParzenValues; ++f)
     {
       const double fv = fixedParzenValues[f];
       const double fv_et = fv / et;
-      for (unsigned int m = 0; m < movingParzenValues.GetSize(); ++m)
+      for (unsigned int m = 0; m < numberOfMovingParzenValues; ++m)
       {
         it.Value() += static_cast<PDFValueType>(fv * movingParzenValues[m]);
         this->UpdateJointPDFDerivatives(it.GetIndex(), fv_et * derivativeMovingParzenValues[m], *imageJacobian, *nzji);

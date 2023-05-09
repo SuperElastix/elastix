@@ -765,25 +765,34 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Upda
   const int movingParzenWindowIndex =
     static_cast<int>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset));
 
+  const auto numberOfFixedParzenValues = Superclass::m_JointPDFWindow.GetSize()[1];
+  const auto numberOfDerivedMovingParzenValues = Superclass::m_JointPDFWindow.GetSize()[0];
+
+  // Create a buffer of Parzen values for both the fixed and the moving image.
+  const auto parzenValues =
+    std::make_unique<PDFValueType[]>(numberOfFixedParzenValues + numberOfDerivedMovingParzenValues);
+
   /** Compute the fixed Parzen values. */
-  ParzenValueContainerType fixedParzenValues(this->m_JointPDFWindow.GetSize()[1]);
-  this->EvaluateParzenValues(
-    fixedImageParzenWindowTerm, fixedParzenWindowIndex, this->m_FixedKernel, fixedParzenValues);
+  PDFValueType * const fixedParzenValues = parzenValues.get();
+  Superclass::EvaluateParzenValues(
+    fixedImageParzenWindowTerm, fixedParzenWindowIndex, *Superclass::m_FixedKernel, fixedParzenValues);
 
   /** Compute the derivatives of the moving Parzen window. */
-  ParzenValueContainerType derivativeMovingParzenValues(this->m_JointPDFWindow.GetSize()[0]);
-  this->EvaluateParzenValues(
-    movingImageParzenWindowTerm, movingParzenWindowIndex, this->m_DerivativeMovingKernel, derivativeMovingParzenValues);
+  PDFValueType * const derivativeMovingParzenValues = parzenValues.get() + numberOfFixedParzenValues;
+  Superclass::EvaluateParzenValues(movingImageParzenWindowTerm,
+                                   movingParzenWindowIndex,
+                                   *Superclass::m_DerivativeMovingKernel,
+                                   derivativeMovingParzenValues);
 
   /** Get the moving image bin size. */
   const double et = static_cast<double>(this->m_MovingImageBinSize);
 
   /** Loop over the Parzen window region and increment sum. */
   PDFValueType sum = 0.0;
-  for (unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f)
+  for (unsigned int f = 0; f < numberOfFixedParzenValues; ++f)
   {
     const double fv_et = fixedParzenValues[f] / et;
-    for (unsigned int m = 0; m < derivativeMovingParzenValues.GetSize(); ++m)
+    for (unsigned int m = 0; m < numberOfDerivedMovingParzenValues; ++m)
     {
       sum += this->m_PRatioArray[f + fixedParzenWindowIndex][m + movingParzenWindowIndex] * fv_et *
              derivativeMovingParzenValues[m];
