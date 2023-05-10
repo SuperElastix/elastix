@@ -510,7 +510,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   }     // end for i
 
   /** Take into account grid spacing and direction cosines. */
-  sj = sj * this->m_PointToIndexMatrix2;
+  sj *= this->m_PointToIndexMatrix2;
 
   /** Add contribution of spatial derivative of x. */
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
@@ -714,7 +714,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Take into account grid spacing and direction cosines */
   for (unsigned int i = 0; i < jsj.size(); ++i)
   {
-    jsj[i] = jsj[i] * this->m_PointToIndexMatrix2;
+    jsj[i] *= this->m_PointToIndexMatrix2;
   }
 
   /** Compute the nonzero Jacobian indices. */
@@ -838,7 +838,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   }   // end for i
 
   /** Take into account grid spacing and direction cosines. */
-  sj = sj * this->m_PointToIndexMatrix2;
+  sj *= this->m_PointToIndexMatrix2;
 
   /** Add contribution of spatial derivative of x. */
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
@@ -865,7 +865,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Take into account grid spacing and direction cosines */
   for (unsigned int i = 0; i < jsj.size(); ++i)
   {
-    jsj[i] = jsj[i] * this->m_PointToIndexMatrix2;
+    jsj[i] *= this->m_PointToIndexMatrix2;
   }
 
   /** Compute the nonzero Jacobian indices. */

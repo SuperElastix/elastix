@@ -351,7 +351,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   }   // end for i
 
   /** Take into account grid spacing and direction cosines. */
-  sj = sj * this->m_PointToIndexMatrix;
+  sj *= this->m_PointToIndexMatrix;
 
   /** Add identity. */
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
