@@ -659,9 +659,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   // we assume zero displacement and zero jsj.
   if (!this->InsideValidRegion(cindex))
   {
-    for (unsigned int i = 0; i < jsj.size(); ++i)
+    for (auto & matrix : jsj)
     {
-      jsj[i].Fill(0.0);
+      matrix.Fill(0.0);
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
     std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
@@ -712,9 +712,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   }
 
   /** Take into account grid spacing and direction cosines */
-  for (unsigned int i = 0; i < jsj.size(); ++i)
+  for (auto & matrix : jsj)
   {
-    jsj[i] *= this->m_PointToIndexMatrix2;
+    matrix *= this->m_PointToIndexMatrix2;
   }
 
   /** Compute the nonzero Jacobian indices. */
@@ -754,9 +754,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   if (!this->InsideValidRegion(cindex))
   {
     sj.SetIdentity();
-    for (unsigned int i = 0; i < jsj.size(); ++i)
+    for (auto & matrix : jsj)
     {
-      jsj[i].Fill(0.0);
+      matrix.Fill(0.0);
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
     std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
@@ -863,9 +863,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   }
 
   /** Take into account grid spacing and direction cosines */
-  for (unsigned int i = 0; i < jsj.size(); ++i)
+  for (auto & matrix : jsj)
   {
-    jsj[i] *= this->m_PointToIndexMatrix2;
+    matrix *= this->m_PointToIndexMatrix2;
   }
 
   /** Compute the nonzero Jacobian indices. */

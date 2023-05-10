@@ -917,9 +917,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   if (lidx == 0 || !m_Trans[lidx]->InsideValidRegion(cindex))
   {
     sj.SetIdentity();
-    for (unsigned int i = 0; i < jsj.size(); ++i)
+    for (auto & matrix : jsj)
     {
-      jsj[i].Fill(0.0);
+      matrix.Fill(0.0);
     }
     nonZeroJacobianIndices.resize(nnzji);
     std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
