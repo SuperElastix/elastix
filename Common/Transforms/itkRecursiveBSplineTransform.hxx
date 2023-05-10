@@ -264,7 +264,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
   }
 
   /** Take into account grid spacing and direction cosines. */
-  sj = sj * this->m_PointToIndexMatrix2;
+  sj *= this->m_PointToIndexMatrix2;
 
   /** Add the identity matrix, as this is a transformation, not displacement. */
   for (unsigned int j = 0; j < SpaceDimension; ++j)
