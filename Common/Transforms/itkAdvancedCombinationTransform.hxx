@@ -546,857 +546,14 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>::UpdateCombinationMethod()
 {
-  /** Update the m_SelectedTransformPointFunction and
-   * the m_SelectedGetJacobianFunction
-   */
-  if (m_CurrentTransform.IsNull())
-  {
-    m_SelectedTransformPointFunction = &Self::TransformPointNoCurrentTransform;
-    //     m_SelectedGetJacobianFunction
-    //       = &Self::GetJacobianNoCurrentTransform;
-    m_SelectedGetSparseJacobianFunction = &Self::GetJacobianNoCurrentTransform;
-    m_SelectedEvaluateJacobianWithImageGradientProductFunction =
-      &Self::EvaluateJacobianWithImageGradientProductNoCurrentTransform;
-    m_SelectedGetSpatialJacobianFunction = &Self::GetSpatialJacobianNoCurrentTransform;
-    m_SelectedGetSpatialHessianFunction = &Self::GetSpatialHessianNoCurrentTransform;
-    m_SelectedGetJacobianOfSpatialJacobianFunction = &Self::GetJacobianOfSpatialJacobianNoCurrentTransform;
-    m_SelectedGetJacobianOfSpatialJacobianFunction2 = &Self::GetJacobianOfSpatialJacobianNoCurrentTransform;
-    m_SelectedGetJacobianOfSpatialHessianFunction = &Self::GetJacobianOfSpatialHessianNoCurrentTransform;
-    m_SelectedGetJacobianOfSpatialHessianFunction2 = &Self::GetJacobianOfSpatialHessianNoCurrentTransform;
-  }
-  else if (m_InitialTransform.IsNull())
-  {
-    m_SelectedTransformPointFunction = &Self::TransformPointNoInitialTransform;
-    //     m_SelectedGetJacobianFunction
-    //       = &Self::GetJacobianNoInitialTransform;
-    m_SelectedGetSparseJacobianFunction = &Self::GetJacobianNoInitialTransform;
-    m_SelectedEvaluateJacobianWithImageGradientProductFunction =
-      &Self::EvaluateJacobianWithImageGradientProductNoInitialTransform;
-    m_SelectedGetSpatialJacobianFunction = &Self::GetSpatialJacobianNoInitialTransform;
-    m_SelectedGetSpatialHessianFunction = &Self::GetSpatialHessianNoInitialTransform;
-    m_SelectedGetJacobianOfSpatialJacobianFunction = &Self::GetJacobianOfSpatialJacobianNoInitialTransform;
-    m_SelectedGetJacobianOfSpatialJacobianFunction2 = &Self::GetJacobianOfSpatialJacobianNoInitialTransform;
-    m_SelectedGetJacobianOfSpatialHessianFunction = &Self::GetJacobianOfSpatialHessianNoInitialTransform;
-    m_SelectedGetJacobianOfSpatialHessianFunction2 = &Self::GetJacobianOfSpatialHessianNoInitialTransform;
-  }
-  else if (m_UseAddition)
-  {
-    m_SelectedTransformPointFunction = &Self::TransformPointUseAddition;
-    //     m_SelectedGetJacobianFunction
-    //       = &Self::GetJacobianUseAddition;
-    m_SelectedGetSparseJacobianFunction = &Self::GetJacobianUseAddition;
-    m_SelectedEvaluateJacobianWithImageGradientProductFunction =
-      &Self::EvaluateJacobianWithImageGradientProductUseAddition;
-    m_SelectedGetSpatialJacobianFunction = &Self::GetSpatialJacobianUseAddition;
-    m_SelectedGetSpatialHessianFunction = &Self::GetSpatialHessianUseAddition;
-    m_SelectedGetJacobianOfSpatialJacobianFunction = &Self::GetJacobianOfSpatialJacobianUseAddition;
-    m_SelectedGetJacobianOfSpatialJacobianFunction2 = &Self::GetJacobianOfSpatialJacobianUseAddition;
-    m_SelectedGetJacobianOfSpatialHessianFunction = &Self::GetJacobianOfSpatialHessianUseAddition;
-    m_SelectedGetJacobianOfSpatialHessianFunction2 = &Self::GetJacobianOfSpatialHessianUseAddition;
-  }
-  else
-  {
-    m_SelectedTransformPointFunction = &Self::TransformPointUseComposition;
-    //     m_SelectedGetJacobianFunction
-    //       = &Self::GetJacobianUseComposition;
-    m_SelectedGetSparseJacobianFunction = &Self::GetJacobianUseComposition;
-    m_SelectedEvaluateJacobianWithImageGradientProductFunction =
-      &Self::EvaluateJacobianWithImageGradientProductUseComposition;
-    m_SelectedGetSpatialJacobianFunction = &Self::GetSpatialJacobianUseComposition;
-    m_SelectedGetSpatialHessianFunction = &Self::GetSpatialHessianUseComposition;
-    m_SelectedGetJacobianOfSpatialJacobianFunction = &Self::GetJacobianOfSpatialJacobianUseComposition;
-    m_SelectedGetJacobianOfSpatialJacobianFunction2 = &Self::GetJacobianOfSpatialJacobianUseComposition;
-    m_SelectedGetJacobianOfSpatialHessianFunction = &Self::GetJacobianOfSpatialHessianUseComposition;
-    m_SelectedGetJacobianOfSpatialHessianFunction2 = &Self::GetJacobianOfSpatialHessianUseComposition;
-  }
+  m_SelectedMethod = m_CurrentTransform.IsNull()
+                       ? SelectedMethod::NoCurrentTransform
+                       : m_InitialTransform.IsNull()
+                           ? SelectedMethod::NoInitialTransform
+                           : m_UseAddition ? SelectedMethod::UseAddition : SelectedMethod::UseComposition;
 
 } // end UpdateCombinationMethod()
 
-
-/**
- *
- * ***********************************************************
- * ***** Functions that implement the:
- * ***** - TransformPoint()
- * ***** - GetJacobian()
- * ***** - EvaluateJacobianWithImageGradientProduct()
- * ***** - GetSpatialJacobian()
- * ***** - GetSpatialHessian()
- * ***** - GetJacobianOfSpatialJacobian()
- * ***** - GetJacobianOfSpatialHessian()
- * ***** for the four possible cases:
- * ***** - no initial transform: this is the same as using only one transform
- * ***** - no current transform: error, it should be set
- * ***** - use addition to combine transformations
- * ***** - use composition to combine transformations
- *
- * ***********************************************************
- *
- */
-
-/**
- * ************* TransformPointUseAddition **********************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-auto
-AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointUseAddition(const InputPointType & point) const
-  -> OutputPointType
-{
-  return m_CurrentTransform->TransformPoint(point) + (m_InitialTransform->TransformPoint(point) - point);
-
-} // end TransformPointUseAddition()
-
-
-/**
- * **************** TransformPointUseComposition *************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-auto
-AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointUseComposition(const InputPointType & point) const
-  -> OutputPointType
-{
-  return m_CurrentTransform->TransformPoint(m_InitialTransform->TransformPoint(point));
-
-} // end TransformPointUseComposition()
-
-
-/**
- * **************** TransformPointNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-auto
-AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointNoInitialTransform(
-  const InputPointType & point) const -> OutputPointType
-{
-  return m_CurrentTransform->TransformPoint(point);
-
-} // end TransformPointNoInitialTransform()
-
-
-/**
- * ******** TransformPointNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-auto
-AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointNoCurrentTransform(
-  const InputPointType & point) const -> OutputPointType
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end TransformPointNoCurrentTransform()
-
-
-/**
- * ************* GetJacobianUseAddition ***************************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianUseAddition(
-  const InputPointType &       inputPoint,
-  JacobianType &               j,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobian(inputPoint, j, nonZeroJacobianIndices);
-
-} // end GetJacobianUseAddition()
-
-
-/**
- * **************** GetJacobianUseComposition *************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianUseComposition(
-  const InputPointType &       inputPoint,
-  JacobianType &               j,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobian(m_InitialTransform->TransformPoint(inputPoint), j, nonZeroJacobianIndices);
-
-} // end GetJacobianUseComposition()
-
-
-/**
- * **************** GetJacobianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianNoInitialTransform(
-  const InputPointType &       inputPoint,
-  JacobianType &               j,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobian(inputPoint, j, nonZeroJacobianIndices);
-
-} // end GetJacobianNoInitialTransform()
-
-
-/**
- * ******** GetJacobianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianNoCurrentTransform(
-  const InputPointType &       itkNotUsed(inputPoint),
-  JacobianType &               itkNotUsed(j),
-  NonZeroJacobianIndicesType & itkNotUsed(nonZeroJacobianIndices)) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end GetJacobianNoCurrentTransform()
-
-
-/**
- * ************* EvaluateJacobianWithImageGradientProductUseAddition ***************************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImageGradientProductUseAddition(
-  const InputPointType &          inputPoint,
-  const MovingImageGradientType & movingImageGradient,
-  DerivativeType &                imageJacobian,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
-    inputPoint, movingImageGradient, imageJacobian, nonZeroJacobianIndices);
-
-} // end EvaluateJacobianWithImageGradientProductUseAddition()
-
-
-/**
- * **************** EvaluateJacobianWithImageGradientProductUseComposition *************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImageGradientProductUseComposition(
-  const InputPointType &          inputPoint,
-  const MovingImageGradientType & movingImageGradient,
-  DerivativeType &                imageJacobian,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
-    m_InitialTransform->TransformPoint(inputPoint), movingImageGradient, imageJacobian, nonZeroJacobianIndices);
-
-} // end EvaluateJacobianWithImageGradientProductUseComposition()
-
-
-/**
- * **************** EvaluateJacobianWithImageGradientProductNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImageGradientProductNoInitialTransform(
-  const InputPointType &          inputPoint,
-  const MovingImageGradientType & movingImageGradient,
-  DerivativeType &                imageJacobian,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
-    inputPoint, movingImageGradient, imageJacobian, nonZeroJacobianIndices);
-
-} // end EvaluateJacobianWithImageGradientProductNoInitialTransform()
-
-
-/**
- * ******** EvaluateJacobianWithImageGradientProductNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImageGradientProductNoCurrentTransform(
-  const InputPointType &          inputPoint,
-  const MovingImageGradientType & movingImageGradient,
-  DerivativeType &                imageJacobian,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end EvaluateJacobianWithImageGradientProductNoCurrentTransform()
-
-
-/**
- * ************* GetSpatialJacobianUseAddition ***************************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobianUseAddition(const InputPointType & inputPoint,
-                                                                                      SpatialJacobianType &  sj) const
-{
-  SpatialJacobianType sj0, sj1;
-  m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
-  m_CurrentTransform->GetSpatialJacobian(inputPoint, sj1);
-  sj = sj0 + sj1 - SpatialJacobianType::GetIdentity();
-
-} // end GetSpatialJacobianUseAddition()
-
-
-/**
- * **************** GetSpatialJacobianUseComposition *************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobianUseComposition(
-  const InputPointType & inputPoint,
-  SpatialJacobianType &  sj) const
-{
-  SpatialJacobianType sj0, sj1;
-  m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
-  m_CurrentTransform->GetSpatialJacobian(m_InitialTransform->TransformPoint(inputPoint), sj1);
-
-  sj = sj1 * sj0;
-
-} // end GetSpatialJacobianUseComposition()
-
-
-/**
- * **************** GetSpatialJacobianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobianNoInitialTransform(
-  const InputPointType & inputPoint,
-  SpatialJacobianType &  sj) const
-{
-  m_CurrentTransform->GetSpatialJacobian(inputPoint, sj);
-
-} // end GetSpatialJacobianNoInitialTransform()
-
-
-/**
- * ******** GetSpatialJacobianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobianNoCurrentTransform(
-  const InputPointType & itkNotUsed(inputPoint),
-  SpatialJacobianType &  itkNotUsed(sj)) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end GetSpatialJacobianNoCurrentTransform()
-
-
-/**
- * ******** GetSpatialHessianUseAddition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessianUseAddition(const InputPointType & inputPoint,
-                                                                                     SpatialHessianType &   sh) const
-{
-  SpatialHessianType sh0, sh1;
-  m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
-  m_CurrentTransform->GetSpatialHessian(inputPoint, sh1);
-
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    sh[i] = sh0[i] + sh1[i];
-  }
-
-} // end GetSpatialHessianUseAddition()
-
-
-/**
- * ******** GetSpatialHessianUseComposition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessianUseComposition(
-  const InputPointType & inputPoint,
-  SpatialHessianType &   sh) const
-{
-  /** Create intermediary variables for the internal transforms. */
-  SpatialJacobianType sj0, sj1;
-  SpatialHessianType  sh0, sh1;
-
-  /** Transform the input point. */
-  // \todo this has already been computed and it is expensive.
-  const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
-
-  /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
-   * internal transforms.
-   */
-  m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
-  m_CurrentTransform->GetSpatialJacobian(transformedPoint, sj1);
-  m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
-  m_CurrentTransform->GetSpatialHessian(transformedPoint, sh1);
-
-  typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
-  SpatialJacobianType                              sj0t(sj0tvnl);
-
-  /** Combine them in one overall spatial Hessian. */
-  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
-  {
-    sh[dim] = sj0t * (sh1[dim] * sj0);
-
-    for (unsigned int p = 0; p < SpaceDimension; ++p)
-    {
-      sh[dim] += (sh0[p] * sj1(dim, p));
-    }
-  }
-
-} // end GetSpatialHessianUseComposition()
-
-
-/**
- * ******** GetSpatialHessianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessianNoInitialTransform(
-  const InputPointType & inputPoint,
-  SpatialHessianType &   sh) const
-{
-  m_CurrentTransform->GetSpatialHessian(inputPoint, sh);
-
-} // end GetSpatialHessianNoInitialTransform()
-
-
-/**
- * ******** GetSpatialHessianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessianNoCurrentTransform(
-  const InputPointType & itkNotUsed(inputPoint),
-  SpatialHessianType &   itkNotUsed(sh)) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end GetSpatialHessianNoCurrentTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianUseAddition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianUseAddition(
-  const InputPointType &          inputPoint,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(inputPoint, jsj, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialJacobianUseAddition()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianUseAddition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianUseAddition(
-  const InputPointType &          inputPoint,
-  SpatialJacobianType &           sj,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(inputPoint, sj, jsj, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialJacobianUseAddition()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianUseComposition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianUseComposition(
-  const InputPointType &          inputPoint,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  SpatialJacobianType           sj0;
-  JacobianOfSpatialJacobianType jsj1;
-  m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(
-    m_InitialTransform->TransformPoint(inputPoint), jsj1, nonZeroJacobianIndices);
-
-  jsj.resize(nonZeroJacobianIndices.size());
-  for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
-  {
-    jsj[mu] = jsj1[mu] * sj0;
-  }
-
-} // end GetJacobianOfSpatialJacobianUseComposition()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianUseComposition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianUseComposition(
-  const InputPointType &          inputPoint,
-  SpatialJacobianType &           sj,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  SpatialJacobianType           sj0, sj1;
-  JacobianOfSpatialJacobianType jsj1;
-  m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(
-    m_InitialTransform->TransformPoint(inputPoint), sj1, jsj1, nonZeroJacobianIndices);
-
-  sj = sj1 * sj0;
-  jsj.resize(nonZeroJacobianIndices.size());
-  for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
-  {
-    jsj[mu] = jsj1[mu] * sj0;
-  }
-
-} // end GetJacobianOfSpatialJacobianUseComposition()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianNoInitialTransform(
-  const InputPointType &          inputPoint,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(inputPoint, jsj, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialJacobianNoInitialTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianNoInitialTransform(
-  const InputPointType &          inputPoint,
-  SpatialJacobianType &           sj,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(inputPoint, sj, jsj, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialJacobianNoInitialTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianNoCurrentTransform(
-  const InputPointType &          itkNotUsed(inputPoint),
-  JacobianOfSpatialJacobianType & itkNotUsed(jsj),
-  NonZeroJacobianIndicesType &    itkNotUsed(nonZeroJacobianIndices)) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end GetJacobianOfSpatialJacobianNoCurrentTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialJacobianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobianNoCurrentTransform(
-  const InputPointType &          itkNotUsed(inputPoint),
-  SpatialJacobianType &           itkNotUsed(sj),
-  JacobianOfSpatialJacobianType & itkNotUsed(jsj),
-  NonZeroJacobianIndicesType &    itkNotUsed(nonZeroJacobianIndices)) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end GetJacobianOfSpatialJacobianNoCurrentTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianUseAddition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianUseAddition(
-  const InputPointType &         inputPoint,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialHessian(inputPoint, jsh, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialHessianUseAddition()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianUseAddition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianUseAddition(
-  const InputPointType &         inputPoint,
-  SpatialHessianType &           sh,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialHessian(inputPoint, sh, jsh, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialHessianUseAddition()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianUseComposition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianUseComposition(
-  const InputPointType &         inputPoint,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
-{
-  /** Create intermediary variables for the internal transforms. */
-  SpatialJacobianType           sj0;
-  SpatialHessianType            sh0;
-  JacobianOfSpatialJacobianType jsj1;
-  JacobianOfSpatialHessianType  jsh1;
-
-  /** Transform the input point. */
-  // \todo: this has already been computed and it is expensive.
-  const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
-
-  /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
-   * internal transforms. */
-  m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
-  m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
-
-  /** Assume/demand that GetJacobianOfSpatialJacobian returns
-   * the same nonZeroJacobianIndices as the GetJacobianOfSpatialHessian. */
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(transformedPoint, jsj1, nonZeroJacobianIndices);
-  m_CurrentTransform->GetJacobianOfSpatialHessian(transformedPoint, jsh1, nonZeroJacobianIndices);
-
-  typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
-  SpatialJacobianType                              sj0t(sj0tvnl);
-
-  jsh.resize(nonZeroJacobianIndices.size());
-
-  /** Combine them in one overall Jacobian of spatial Hessian. */
-  for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
-  {
-    for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
-    {
-      jsh[mu][dim] = sj0t * (jsh1[mu][dim] * sj0);
-    }
-  }
-
-  if (m_InitialTransform->GetHasNonZeroSpatialHessian())
-  {
-    for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
-    {
-      for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
-      {
-        for (unsigned int p = 0; p < SpaceDimension; ++p)
-        {
-          jsh[mu][dim] += (sh0[p] * jsj1[mu](dim, p));
-        }
-      }
-    }
-  }
-
-} // end GetJacobianOfSpatialHessianUseComposition()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianUseComposition ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianUseComposition(
-  const InputPointType &         inputPoint,
-  SpatialHessianType &           sh,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
-{
-  /** Create intermediary variables for the internal transforms. */
-  SpatialJacobianType           sj0, sj1;
-  SpatialHessianType            sh0, sh1;
-  JacobianOfSpatialJacobianType jsj1;
-  JacobianOfSpatialHessianType  jsh1;
-
-  /** Transform the input point. */
-  // \todo this has already been computed and it is expensive.
-  const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
-
-  /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
-   * internal transforms.
-   */
-  m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
-  m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
-
-  /** Assume/demand that GetJacobianOfSpatialJacobian returns the same
-   * nonZeroJacobianIndices as the GetJacobianOfSpatialHessian.
-   */
-  m_CurrentTransform->GetJacobianOfSpatialJacobian(transformedPoint, sj1, jsj1, nonZeroJacobianIndices);
-  m_CurrentTransform->GetJacobianOfSpatialHessian(transformedPoint, sh1, jsh1, nonZeroJacobianIndices);
-
-  typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
-  SpatialJacobianType                              sj0t(sj0tvnl);
-  jsh.resize(nonZeroJacobianIndices.size());
-
-  /** Combine them in one overall Jacobian of spatial Hessian. */
-  for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
-  {
-    for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
-    {
-      jsh[mu][dim] = sj0t * (jsh1[mu][dim] * sj0);
-    }
-  }
-
-  if (m_InitialTransform->GetHasNonZeroSpatialHessian())
-  {
-    for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
-    {
-      for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
-      {
-        for (unsigned int p = 0; p < SpaceDimension; ++p)
-        {
-          jsh[mu][dim] += (sh0[p] * jsj1[mu](dim, p));
-        }
-      }
-    }
-  }
-
-  /** Combine them in one overall spatial Hessian. */
-  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
-  {
-    sh[dim] = sj0t * (sh1[dim] * sj0);
-  }
-
-  if (m_InitialTransform->GetHasNonZeroSpatialHessian())
-  {
-    for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
-    {
-      for (unsigned int p = 0; p < SpaceDimension; ++p)
-      {
-        sh[dim] += (sh0[p] * sj1(dim, p));
-      }
-    }
-  }
-
-} // end GetJacobianOfSpatialHessianUseComposition()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianNoInitialTransform(
-  const InputPointType &         inputPoint,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialHessian(inputPoint, jsh, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialHessianNoInitialTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianNoInitialTransform(
-  const InputPointType &         inputPoint,
-  SpatialHessianType &           sh,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
-{
-  m_CurrentTransform->GetJacobianOfSpatialHessian(inputPoint, sh, jsh, nonZeroJacobianIndices);
-
-} // end GetJacobianOfSpatialHessianNoInitialTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianNoCurrentTransform(
-  const InputPointType &         itkNotUsed(inputPoint),
-  JacobianOfSpatialHessianType & itkNotUsed(jsh),
-  NonZeroJacobianIndicesType &   itkNotUsed(nonZeroJacobianIndices)) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end GetJacobianOfSpatialHessianNoCurrentTransform()
-
-
-/**
- * ******** GetJacobianOfSpatialHessianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-void
-AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessianNoCurrentTransform(
-  const InputPointType &         itkNotUsed(inputPoint),
-  SpatialHessianType &           itkNotUsed(sh),
-  JacobianOfSpatialHessianType & itkNotUsed(jsh),
-  NonZeroJacobianIndicesType &   itkNotUsed(nonZeroJacobianIndices)) const
-{
-  /** Throw an exception. */
-  itkExceptionMacro(<< NoCurrentTransformSet);
-
-} // end GetJacobianOfSpatialHessianNoCurrentTransform()
-
-
-/**
- *
- * ***********************************************************
- * ***** Functions that point to the selected implementation.
- *
- * ***********************************************************
- *
- */
 
 /**
  * ****************** TransformPoint ****************************
@@ -1407,8 +564,26 @@ auto
 AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPoint(const InputPointType & point) const
   -> OutputPointType
 {
-  /** Call the selected TransformPoint. */
-  return (this->*m_SelectedTransformPointFunction)(point);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    {
+      return m_CurrentTransform->TransformPoint(point);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      return m_CurrentTransform->TransformPoint(m_InitialTransform->TransformPoint(point));
+    }
+    case SelectedMethod::UseAddition:
+    {
+      return m_CurrentTransform->TransformPoint(point) + (m_InitialTransform->TransformPoint(point) - point);
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end TransformPoint()
 
@@ -1424,8 +599,23 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobian(
   JacobianType &               j,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices) const
 {
-  /** Call the selected GetJacobian. */
-  return (this->*m_SelectedGetSparseJacobianFunction)(inputPoint, j, nonZeroJacobianIndices);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    case SelectedMethod::UseAddition:
+    {
+      return m_CurrentTransform->GetJacobian(inputPoint, j, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      return m_CurrentTransform->GetJacobian(m_InitialTransform->TransformPoint(inputPoint), j, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end GetJacobian()
 
@@ -1442,9 +632,25 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImag
   DerivativeType &                imageJacobian,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  /** Call the selected EvaluateJacobianWithImageGradientProduct. */
-  return (this->*m_SelectedEvaluateJacobianWithImageGradientProductFunction)(
-    inputPoint, movingImageGradient, imageJacobian, nonZeroJacobianIndices);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    case SelectedMethod::UseAddition:
+    {
+      return m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
+        inputPoint, movingImageGradient, imageJacobian, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      return m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
+        m_InitialTransform->TransformPoint(inputPoint), movingImageGradient, imageJacobian, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end EvaluateJacobianWithImageGradientProduct()
 
@@ -1458,8 +664,34 @@ void
 AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const InputPointType & inputPoint,
                                                                            SpatialJacobianType &  sj) const
 {
-  /** Call the selected GetSpatialJacobian. */
-  return (this->*m_SelectedGetSpatialJacobianFunction)(inputPoint, sj);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    {
+      return m_CurrentTransform->GetSpatialJacobian(inputPoint, sj);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      SpatialJacobianType sj0, sj1;
+      m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
+      m_CurrentTransform->GetSpatialJacobian(m_InitialTransform->TransformPoint(inputPoint), sj1);
+      sj = sj1 * sj0;
+      return;
+    }
+    case SelectedMethod::UseAddition:
+    {
+      SpatialJacobianType sj0, sj1;
+      m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
+      m_CurrentTransform->GetSpatialJacobian(inputPoint, sj1);
+      sj = sj0 + sj1 - SpatialJacobianType::GetIdentity();
+      return;
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end GetSpatialJacobian()
 
@@ -1473,8 +705,64 @@ void
 AdvancedCombinationTransform<TScalarType, NDimensions>::GetSpatialHessian(const InputPointType & inputPoint,
                                                                           SpatialHessianType &   sh) const
 {
-  /** Call the selected GetSpatialHessian. */
-  return (this->*m_SelectedGetSpatialHessianFunction)(inputPoint, sh);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    {
+      return m_CurrentTransform->GetSpatialHessian(inputPoint, sh);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      /** Create intermediary variables for the internal transforms. */
+      SpatialJacobianType sj0, sj1;
+      SpatialHessianType  sh0, sh1;
+
+      /** Transform the input point. */
+      // \todo this has already been computed and it is expensive.
+      const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
+
+      /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
+       * internal transforms.
+       */
+      m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
+      m_CurrentTransform->GetSpatialJacobian(transformedPoint, sj1);
+      m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
+      m_CurrentTransform->GetSpatialHessian(transformedPoint, sh1);
+
+      typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
+      SpatialJacobianType                              sj0t(sj0tvnl);
+
+      /** Combine them in one overall spatial Hessian. */
+      for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+      {
+        sh[dim] = sj0t * (sh1[dim] * sj0);
+
+        for (unsigned int p = 0; p < SpaceDimension; ++p)
+        {
+          sh[dim] += (sh0[p] * sj1(dim, p));
+        }
+      }
+      return;
+    }
+    case SelectedMethod::UseAddition:
+    {
+      SpatialHessianType sh0, sh1;
+      m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
+      m_CurrentTransform->GetSpatialHessian(inputPoint, sh1);
+
+      for (unsigned int i = 0; i < SpaceDimension; ++i)
+      {
+        sh[i] = sh0[i] + sh1[i];
+      }
+
+      return;
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end GetSpatialHessian()
 
@@ -1490,8 +778,34 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  /** Call the selected GetJacobianOfSpatialJacobian. */
-  return (this->*m_SelectedGetJacobianOfSpatialJacobianFunction)(inputPoint, jsj, nonZeroJacobianIndices);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    case SelectedMethod::UseAddition:
+    {
+      return m_CurrentTransform->GetJacobianOfSpatialJacobian(inputPoint, jsj, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      SpatialJacobianType           sj0;
+      JacobianOfSpatialJacobianType jsj1;
+      m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
+      m_CurrentTransform->GetJacobianOfSpatialJacobian(
+        m_InitialTransform->TransformPoint(inputPoint), jsj1, nonZeroJacobianIndices);
+
+      jsj.resize(nonZeroJacobianIndices.size());
+      for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+      {
+        jsj[mu] = jsj1[mu] * sj0;
+      }
+      return;
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end GetJacobianOfSpatialJacobian()
 
@@ -1508,8 +822,35 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  /** Call the selected GetJacobianOfSpatialJacobian. */
-  return (this->*m_SelectedGetJacobianOfSpatialJacobianFunction2)(inputPoint, sj, jsj, nonZeroJacobianIndices);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    case SelectedMethod::UseAddition:
+    {
+      return m_CurrentTransform->GetJacobianOfSpatialJacobian(inputPoint, sj, jsj, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      SpatialJacobianType           sj0, sj1;
+      JacobianOfSpatialJacobianType jsj1;
+      m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
+      m_CurrentTransform->GetJacobianOfSpatialJacobian(
+        m_InitialTransform->TransformPoint(inputPoint), sj1, jsj1, nonZeroJacobianIndices);
+
+      sj = sj1 * sj0;
+      jsj.resize(nonZeroJacobianIndices.size());
+      for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+      {
+        jsj[mu] = jsj1[mu] * sj0;
+      }
+      return;
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end GetJacobianOfSpatialJacobian()
 
@@ -1525,8 +866,70 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
 {
-  /** Call the selected GetJacobianOfSpatialHessian. */
-  return (this->*m_SelectedGetJacobianOfSpatialHessianFunction)(inputPoint, jsh, nonZeroJacobianIndices);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    case SelectedMethod::UseAddition:
+    {
+      return m_CurrentTransform->GetJacobianOfSpatialHessian(inputPoint, jsh, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      /** Create intermediary variables for the internal transforms. */
+      SpatialJacobianType           sj0;
+      SpatialHessianType            sh0;
+      JacobianOfSpatialJacobianType jsj1;
+      JacobianOfSpatialHessianType  jsh1;
+
+      /** Transform the input point. */
+      // \todo: this has already been computed and it is expensive.
+      const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
+
+      /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
+       * internal transforms. */
+      m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
+      m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
+
+      /** Assume/demand that GetJacobianOfSpatialJacobian returns
+       * the same nonZeroJacobianIndices as the GetJacobianOfSpatialHessian. */
+      m_CurrentTransform->GetJacobianOfSpatialJacobian(transformedPoint, jsj1, nonZeroJacobianIndices);
+      m_CurrentTransform->GetJacobianOfSpatialHessian(transformedPoint, jsh1, nonZeroJacobianIndices);
+
+      typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
+      SpatialJacobianType                              sj0t(sj0tvnl);
+
+      jsh.resize(nonZeroJacobianIndices.size());
+
+      /** Combine them in one overall Jacobian of spatial Hessian. */
+      for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+      {
+        for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+        {
+          jsh[mu][dim] = sj0t * (jsh1[mu][dim] * sj0);
+        }
+      }
+
+      if (m_InitialTransform->GetHasNonZeroSpatialHessian())
+      {
+        for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+        {
+          for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+          {
+            for (unsigned int p = 0; p < SpaceDimension; ++p)
+            {
+              jsh[mu][dim] += (sh0[p] * jsj1[mu](dim, p));
+            }
+          }
+        }
+      }
+      return;
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end GetJacobianOfSpatialHessian()
 
@@ -1543,8 +946,88 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const
 {
-  /** Call the selected GetJacobianOfSpatialHessian. */
-  return (this->*m_SelectedGetJacobianOfSpatialHessianFunction2)(inputPoint, sh, jsh, nonZeroJacobianIndices);
+  switch (m_SelectedMethod)
+  {
+    case SelectedMethod::NoInitialTransform:
+    case SelectedMethod::UseAddition:
+    {
+      return m_CurrentTransform->GetJacobianOfSpatialHessian(inputPoint, sh, jsh, nonZeroJacobianIndices);
+    }
+    case SelectedMethod::UseComposition:
+    {
+      /** Create intermediary variables for the internal transforms. */
+      SpatialJacobianType           sj0, sj1;
+      SpatialHessianType            sh0, sh1;
+      JacobianOfSpatialJacobianType jsj1;
+      JacobianOfSpatialHessianType  jsh1;
+
+      /** Transform the input point. */
+      // \todo this has already been computed and it is expensive.
+      const InputPointType transformedPoint = m_InitialTransform->TransformPoint(inputPoint);
+
+      /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
+       * internal transforms.
+       */
+      m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
+      m_InitialTransform->GetSpatialHessian(inputPoint, sh0);
+
+      /** Assume/demand that GetJacobianOfSpatialJacobian returns the same
+       * nonZeroJacobianIndices as the GetJacobianOfSpatialHessian.
+       */
+      m_CurrentTransform->GetJacobianOfSpatialJacobian(transformedPoint, sj1, jsj1, nonZeroJacobianIndices);
+      m_CurrentTransform->GetJacobianOfSpatialHessian(transformedPoint, sh1, jsh1, nonZeroJacobianIndices);
+
+      typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
+      SpatialJacobianType                              sj0t(sj0tvnl);
+      jsh.resize(nonZeroJacobianIndices.size());
+
+      /** Combine them in one overall Jacobian of spatial Hessian. */
+      for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+      {
+        for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+        {
+          jsh[mu][dim] = sj0t * (jsh1[mu][dim] * sj0);
+        }
+      }
+
+      if (m_InitialTransform->GetHasNonZeroSpatialHessian())
+      {
+        for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+        {
+          for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+          {
+            for (unsigned int p = 0; p < SpaceDimension; ++p)
+            {
+              jsh[mu][dim] += (sh0[p] * jsj1[mu](dim, p));
+            }
+          }
+        }
+      }
+
+      /** Combine them in one overall spatial Hessian. */
+      for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+      {
+        sh[dim] = sj0t * (sh1[dim] * sj0);
+      }
+
+      if (m_InitialTransform->GetHasNonZeroSpatialHessian())
+      {
+        for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+        {
+          for (unsigned int p = 0; p < SpaceDimension; ++p)
+          {
+            sh[dim] += (sh0[p] * sj1(dim, p));
+          }
+        }
+      }
+      return;
+    }
+    case SelectedMethod::NoCurrentTransform:
+    default:
+    {
+      itkExceptionMacro(<< NoCurrentTransformSet);
+    }
+  }
 
 } // end GetJacobianOfSpatialHessian()
 
