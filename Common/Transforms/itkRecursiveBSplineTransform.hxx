@@ -396,9 +396,9 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   // we assume zero displacement and zero jsj.
   if (!this->InsideValidRegion(cindex))
   {
-    for (unsigned int i = 0; i < jsj.size(); ++i)
+    for (auto & matrix : jsj)
     {
-      jsj[i].Fill(0.0);
+      matrix.Fill(0.0);
     }
     nonZeroJacobianIndices.resize(this->GetNumberOfNonZeroJacobianIndices());
     std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
