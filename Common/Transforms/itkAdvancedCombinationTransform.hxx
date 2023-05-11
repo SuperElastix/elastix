@@ -1034,16 +1034,15 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  SpatialJacobianType           sj0;
-  JacobianOfSpatialJacobianType jsj1;
+  SpatialJacobianType sj0;
   m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
   m_CurrentTransform->GetJacobianOfSpatialJacobian(
-    m_InitialTransform->TransformPoint(inputPoint), jsj1, nonZeroJacobianIndices);
+    m_InitialTransform->TransformPoint(inputPoint), jsj, nonZeroJacobianIndices);
 
   jsj.resize(nonZeroJacobianIndices.size());
-  for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+  for (auto & matrix : jsj)
   {
-    jsj[mu] = jsj1[mu] * sj0;
+    matrix *= sj0;
   }
 
 } // end GetJacobianOfSpatialJacobianUseComposition()
@@ -1061,17 +1060,16 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  SpatialJacobianType           sj0, sj1;
-  JacobianOfSpatialJacobianType jsj1;
+  SpatialJacobianType sj0, sj1;
   m_InitialTransform->GetSpatialJacobian(inputPoint, sj0);
   m_CurrentTransform->GetJacobianOfSpatialJacobian(
-    m_InitialTransform->TransformPoint(inputPoint), sj1, jsj1, nonZeroJacobianIndices);
+    m_InitialTransform->TransformPoint(inputPoint), sj1, jsj, nonZeroJacobianIndices);
 
   sj = sj1 * sj0;
   jsj.resize(nonZeroJacobianIndices.size());
-  for (unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu)
+  for (auto & matrix : jsj)
   {
-    jsj[mu] = jsj1[mu] * sj0;
+    matrix *= sj0;
   }
 
 } // end GetJacobianOfSpatialJacobianUseComposition()
