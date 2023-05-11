@@ -1459,3 +1459,33 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsing
   check(TypeHolder<unsigned long>{});
   check(TypeHolder<double>{});
 }
+
+
+// Tests that a TransformParameterObject from ElastixRegistrationMethod can be passed directly to TransformixFilter.
+GTEST_TEST(itkTransformixFilter, GetTransformParameterObjectFromRegistration)
+{
+  constexpr auto imageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, imageDimension>;
+
+  // Use minimum size images, to make the test run a little bit faster.
+  const auto imageSize = itk::Size<imageDimension>::Filled(minimumImageSizeValue);
+
+  // In order to keep the test simple, just fill both the fixed and moving image with 1, 2, 3, ...
+  const auto fixedImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+  const auto movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+
+  elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> registration{};
+  elx::DefaultConstruct<itk::TransformixFilter<ImageType>>                    transformixFilter{};
+
+  // Do a registration, using the default parameter maps of ElastixRegistrationMethod. May take some time!
+  registration.SetFixedImage(fixedImage);
+  registration.SetMovingImage(movingImage);
+  registration.Update();
+
+  transformixFilter.SetMovingImage(movingImage);
+  transformixFilter.SetTransformParameterObject(registration.GetTransformParameterObject());
+  transformixFilter.Update();
+
+  EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), DerefRawPointer(registration.GetOutput()));
+}
