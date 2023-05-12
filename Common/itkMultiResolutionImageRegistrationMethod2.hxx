@@ -162,11 +162,11 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
 
   this->m_InitialTransformParametersOfNextLevel = this->m_InitialTransformParameters;
 
-  if (this->m_InitialTransformParametersOfNextLevel.Size() != this->m_Transform->GetNumberOfParameters())
+  if (const auto numberOfInitialTransformParameters = this->m_InitialTransformParameters.size();
+      numberOfInitialTransformParameters != this->m_Transform->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Size mismatch between initial parameters ("
-                      << this->m_InitialTransformParametersOfNextLevel.Size() << ") and transform ("
-                      << this->m_Transform->GetNumberOfParameters() << ")");
+    itkExceptionMacro(<< "Size mismatch between initial parameters (" << numberOfInitialTransformParameters
+                      << ") and transform (" << this->m_Transform->GetNumberOfParameters() << ")");
   }
 
   // Sanity checks

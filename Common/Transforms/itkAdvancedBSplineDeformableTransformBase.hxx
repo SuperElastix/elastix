@@ -260,9 +260,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParameters(
 
   // check if the number of parameters match the
   // expected number of parameters
-  if (parameters.Size() != this->GetNumberOfParameters())
+  if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << parameters.size() << " and region size "
+    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
                       << this->m_GridRegion.GetNumberOfPixels());
   }
 
@@ -303,9 +303,10 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
       parameters[3 * NDimensions + (di * NDimensions + di)] = 1;
     }
   }
-  else if (passedParameters.Size() != NumberOfFixedParameters)
+  else if (const auto numberOfPassedParameters = passedParameters.size();
+           numberOfPassedParameters != NumberOfFixedParameters)
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << passedParameters.size()
+    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfPassedParameters
                       << " and number of fixed parameters " << NumberOfFixedParameters);
   }
   else
@@ -398,9 +399,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParametersB
 {
   // check if the number of parameters match the
   // expected number of parameters
-  if (parameters.Size() != this->GetNumberOfParameters())
+  if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << parameters.size() << " and region size "
+    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
                       << this->m_GridRegion.GetNumberOfPixels());
   }
 
