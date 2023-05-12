@@ -523,9 +523,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 {
   // check if the number of parameters match the
   // expected number of parameters
-  if (parameters.Size() != this->GetNumberOfParameters())
+  if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << parameters.size() << " and region size "
+    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
                       << this->GetNumberOfParameters());
   }
 
@@ -562,9 +562,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 {
   // check if the number of parameters match the
   // expected number of parameters
-  if (parameters.Size() != this->GetNumberOfParameters())
+  if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << parameters.size() << " and region size "
+    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
                       << this->GetNumberOfParameters());
   }
 
