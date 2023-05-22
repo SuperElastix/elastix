@@ -180,30 +180,34 @@ ElastixBase::BeforeAllBase()
   log::info("ELASTIX version: " ELASTIX_VERSION_STRING "\nCommand line options from ElastixBase:");
   std::string check = "";
 
-  /** Read the fixed and moving image filenames. These are obliged options,
-   * so print an error if they are not present.
-   * Print also some info (second boolean = true).
-   */
   if (!BaseComponent::IsElastixLibrary())
   {
+    // Note: The filenames of the input images and the masks are only relevant to the elastix executable, not the
+    // library.
+
+    /** Read the fixed and moving image filenames. These are obliged options,
+     * so print an error if they are not present.
+     * Print also some info (second boolean = true).
+     */
     m_FixedImageFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-f", returndummy, true, true);
     m_MovingImageFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-m", returndummy, true, true);
-  }
-  /** Read the fixed and moving mask filenames. These are not obliged options,
-   * so do not print any errors if they are not present.
-   * Do print some info (second boolean = true).
-   */
-  int maskreturndummy = 0;
-  m_FixedMaskFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-fMask", maskreturndummy, false, true);
-  if (maskreturndummy != 0)
-  {
-    log::info("-fMask    unspecified, so no fixed mask used");
-  }
-  maskreturndummy = 0;
-  m_MovingMaskFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-mMask", maskreturndummy, false, true);
-  if (maskreturndummy != 0)
-  {
-    log::info("-mMask    unspecified, so no moving mask used");
+
+    /** Read the fixed and moving mask filenames. These are not obliged options,
+     * so do not print any errors if they are not present.
+     * Do print some info (second boolean = true).
+     */
+    int maskreturndummy = 0;
+    m_FixedMaskFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-fMask", maskreturndummy, false, true);
+    if (maskreturndummy != 0)
+    {
+      log::info("-fMask    unspecified, so no fixed mask used");
+    }
+    maskreturndummy = 0;
+    m_MovingMaskFileNameContainer = GenerateFileNameContainer(*m_Configuration, "-mMask", maskreturndummy, false, true);
+    if (maskreturndummy != 0)
+    {
+      log::info("-mMask    unspecified, so no moving mask used");
+    }
   }
 
   /** Check for appearance of "-out".
