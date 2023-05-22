@@ -915,29 +915,32 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 
   const auto movingImage = CreateImage<PixelType>(imageSize);
 
-  elx::DefaultConstruct<elx::ParameterObject>                     parameterObject{};
-  elx::DefaultConstruct<elx::ParameterObject>                     transformParameterObject{};
+  elx::DefaultConstruct<elx::ParameterObject>                     registrationParameterObject{};
+  elx::DefaultConstruct<elx::ParameterObject>                     initialTransformParameterObject{};
   elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(fixedImage);
-  registration.SetInitialTransformParameterObject(&transformParameterObject);
-  registration.SetParameterObject(&parameterObject);
+  registration.SetInitialTransformParameterObject(&initialTransformParameterObject);
+  registration.SetParameterObject(&registrationParameterObject);
 
-  const elx::ParameterObject::ParameterMapType parameterMap{ // Parameters in alphabetic order:
-                                                             { "ImageSampler", { "Full" } },
-                                                             { "MaximumNumberOfIterations", { "2" } },
-                                                             { "Metric", { "AdvancedNormalizedCorrelation" } },
-                                                             { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
-                                                             { "Transform", { "TranslationTransform" } }
+  const elx::ParameterObject::ParameterMapType registrationParameterMap{
+    // Parameters in alphabetic order:
+    { "ImageSampler", { "Full" } },
+    { "MaximumNumberOfIterations", { "2" } },
+    { "Metric", { "AdvancedNormalizedCorrelation" } },
+    { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+    { "Transform", { "TranslationTransform" } }
   };
 
-  for (const unsigned int numberOfParameterMaps : { 1, 2, 3 })
+  for (const unsigned int numberOfRegistrationParameterMaps : { 1, 2, 3 })
   {
     using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
 
-    parameterObject.SetParameterMaps(ParameterMapVectorType(numberOfParameterMaps, parameterMap));
+    // Specify multiple (one or more) registration parameter maps.
+    registrationParameterObject.SetParameterMaps(
+      ParameterMapVectorType(numberOfRegistrationParameterMaps, registrationParameterMap));
 
-    // Test both one and two transform parameter maps.
-    for (const auto & transformParameterMaps :
+    // Test both one and two transform parameter maps (both specifying a (1, -2) translation in this case).
+    for (const auto & initialTransformParameterMaps :
          { ParameterMapVectorType{ { { "NumberOfParameters", { "2" } },
                                      { "Transform", { "TranslationTransform" } },
                                      { "TransformParameters", { "1", "-2" } } } },
@@ -948,8 +951,9 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
                                      { "Transform", { "TranslationTransform" } },
                                      { "TransformParameters", { "0", "-2" } } } } })
     {
-      transformParameterObject.SetParameterMaps(transformParameterMaps);
+      initialTransformParameterObject.SetParameterMaps(initialTransformParameterMaps);
 
+      // Do the test for a few possible translations.
       for (const auto index :
            itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
       {
@@ -962,15 +966,17 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
         const auto & transformParameterMaps =
           DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
 
-        ASSERT_EQ(transformParameterMaps.size(), numberOfParameterMaps);
+        ASSERT_EQ(transformParameterMaps.size(), numberOfRegistrationParameterMaps);
 
-        for (unsigned int i{ 1 }; i < numberOfParameterMaps; ++i)
+        // All registration parameter maps, except for the first one, should just have a zero-translation.
+        for (unsigned int i{ 1 }; i < numberOfRegistrationParameterMaps; ++i)
         {
           const auto transformParameters =
             ConvertStringsToVectorOfDouble(transformParameterMaps[i].at("TransformParameters"));
           EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), OffsetType{});
         }
 
+        // Together the initial translation and the first registration should have the actual image translation.
         const auto transformParameters =
           ConvertStringsToVectorOfDouble(transformParameterMaps.front().at("TransformParameters"));
         EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
