@@ -105,21 +105,40 @@ public:
   /* Read/Write parameter file or multiple parameter files to/from disk. */
   void
   ReadParameterFile(const ParameterFileNameType & parameterFileName);
-  void
+
+  [[deprecated("Instead of calling this overload, please call ReadParameterFiles")]] void
   ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector);
+
+  void
+  ReadParameterFiles(const ParameterFileNameVectorType & parameterFileNameVector);
+
   void
   AddParameterFile(const ParameterFileNameType & parameterFileName);
-  void
+
+  [[deprecated("Instead of calling this overload, please call WriteParameterFiles")]] void
   WriteParameterFile() const;
+
   static void
   WriteParameterFile(const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName);
   void
   WriteParameterFile(const ParameterFileNameType & parameterFileName) const;
-  void
+
+  [[deprecated("Instead of calling this overload, please call WriteParameterFiles")]] void
   WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const;
-  static void
+
+  [[deprecated("Instead of calling this overload, please call WriteParameterFiles")]] static void
   WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
                      const ParameterFileNameVectorType & parameterFileNameVector);
+
+  void
+  WriteParameterFiles() const;
+
+  void
+  WriteParameterFiles(const ParameterFileNameVectorType & parameterFileNameVector) const;
+
+  static void
+  WriteParameterFiles(const ParameterMapVectorType &      parameterMapVector,
+                      const ParameterFileNameVectorType & parameterFileNameVector);
 
   /* Get preconfigured parameter maps. */
   static const ParameterMapType
