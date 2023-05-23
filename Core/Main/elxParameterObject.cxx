@@ -202,12 +202,20 @@ ParameterObject::ReadParameterFile(const ParameterFileNameType & parameterFileNa
 }
 
 
+// Deprecated, superseded by ReadParameterFiles.
+void
+ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
+{
+  this->ReadParameterFiles(parameterFileNameVector);
+}
+
+
 /**
- * ********************* ReadParameterFile *********************
+ * ********************* ReadParameterFiles *********************
  */
 
 void
-ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
+ParameterObject::ReadParameterFiles(const ParameterFileNameVectorType & parameterFileNameVector)
 {
   if (parameterFileNameVector.empty())
   {
@@ -244,22 +252,13 @@ ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileNam
  */
 
 
+// Deprecated, superseded by WriteParameterFiles.
 void
 ParameterObject::WriteParameterFile() const
 {
-  ParameterFileNameVectorType parameterFileNameVector;
-  for (unsigned int i = 0; i < m_ParameterMaps.size(); ++i)
-  {
-    parameterFileNameVector.push_back("ParametersFile." + std::to_string(i) + ".txt");
-  }
-
-  Self::WriteParameterFile(m_ParameterMaps, parameterFileNameVector);
+  this->WriteParameterFiles();
 }
 
-
-/**
- * ********************* WriteParameterFile *********************
- */
 
 void
 ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
@@ -322,10 +321,6 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
 }
 
 
-/**
- * ********************* WriteParameterFile *********************
- */
-
 void
 ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileName) const
 {
@@ -336,22 +331,53 @@ ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileN
 
   if (m_ParameterMaps.size() > 1)
   {
-    itkExceptionMacro(
-      << "Error writing to disk: The number of parameter maps (" << m_ParameterMaps.size()
-      << ") does not match the number of provided filenames (1). Please provide a vector of filenames.");
+    itkExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << m_ParameterMaps.size()
+                      << ") does not match the number of provided filenames (1). Please call WriteParameterFiles "
+                         "instead, and provide a vector of filenames.");
   }
 
   this->WriteParameterFile(m_ParameterMaps[0], parameterFileName);
 }
 
 
-/**
- * ********************* WriteParameterFile *********************
- */
-
+// Deprecated, superseded by WriteParameterFiles.
 void
 ParameterObject::WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
                                     const ParameterFileNameVectorType & parameterFileNameVector)
+{
+  Self::WriteParameterFiles(parameterMapVector, parameterFileNameVector);
+}
+
+
+// Deprecated, superseded by WriteParameterFiles.
+void
+ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const
+{
+  this->WriteParameterFiles(parameterFileNameVector);
+}
+
+
+/**
+ * ********************* WriteParameterFiles *********************
+ */
+
+
+void
+ParameterObject::WriteParameterFiles() const
+{
+  ParameterFileNameVectorType parameterFileNameVector;
+  for (unsigned int i = 0; i < m_ParameterMaps.size(); ++i)
+  {
+    parameterFileNameVector.push_back("ParametersFile." + std::to_string(i) + ".txt");
+  }
+
+  Self::WriteParameterFiles(m_ParameterMaps, parameterFileNameVector);
+}
+
+
+void
+ParameterObject::WriteParameterFiles(const ParameterMapVectorType &      parameterMapVector,
+                                     const ParameterFileNameVectorType & parameterFileNameVector)
 {
   if (parameterMapVector.size() != parameterFileNameVector.size())
   {
@@ -375,15 +401,10 @@ ParameterObject::WriteParameterFile(const ParameterMapVectorType &      paramete
 }
 
 
-/**
- * ********************* WriteParameterFile *********************
- */
-
-
 void
-ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const
+ParameterObject::WriteParameterFiles(const ParameterFileNameVectorType & parameterFileNameVector) const
 {
-  Self::WriteParameterFile(m_ParameterMaps, parameterFileNameVector);
+  Self::WriteParameterFiles(m_ParameterMaps, parameterFileNameVector);
 }
 
 
