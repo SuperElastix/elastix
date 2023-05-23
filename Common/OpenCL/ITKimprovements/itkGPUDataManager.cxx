@@ -270,7 +270,6 @@ GPUDataManager::Update()
   if (m_IsGPUBufferDirty && m_IsCPUBufferDirty)
   {
     itkExceptionMacro("Cannot make up-to-date buffer because both CPU and GPU buffers are dirty");
-    return false;
   }
 
   this->UpdateGPUBuffer();
