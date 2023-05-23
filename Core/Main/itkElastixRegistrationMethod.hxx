@@ -85,10 +85,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   DataObjectContainerPointer movingMaskContainer = nullptr;
   DataObjectContainerPointer resultImageContainer = nullptr;
   ElastixMainObjectPointer   transform = nullptr;
-  ParameterMapVectorType     transformParameterMapVector = m_InitialTransformParameterObject
-                                                         ? m_InitialTransformParameterObject->GetParameterMaps()
-                                                         : ParameterMapVectorType{};
-  FlatDirectionCosinesType fixedImageOriginalDirection;
+  FlatDirectionCosinesType   fixedImageOriginalDirection;
 
   // Split inputs into separate containers
   for (const auto & inputName : this->GetInputNames())
@@ -177,14 +174,65 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
                                  m_EnableOutput && m_LogToConsole,
                                  static_cast<elastix::log::level>(m_LogLevel));
 
-  if (m_InitialTransformParameterObject && !m_OutputDirectory.empty())
+  const auto getInitialTransformParameterMaps = [this]() -> ParameterMapVectorType {
+    if (m_InitialTransformParameterObject)
+    {
+      return m_InitialTransformParameterObject->GetParameterMaps();
+    }
+
+    if (m_InitialTransform)
+    {
+      const auto transformToMap = [](const itk::TransformBase & transform) {
+        return ParameterMapType{
+          { "ITKTransformFixedParameters", elx::Conversion::ToVectorOfStrings(transform.GetFixedParameters()) },
+          { "ITKTransformParameters", elx::Conversion::ToVectorOfStrings(transform.GetParameters()) },
+          { "ITKTransformType", { transform.GetTransformTypeAsString() } },
+          { "Transform", { elx::TransformIO::ConvertITKNameOfClassToElastixClassName(transform.GetNameOfClass()) } }
+        };
+      };
+
+      const auto compositeTransform =
+        dynamic_cast<const CompositeTransform<double, MovingImageDimension> *>(&*m_InitialTransform);
+
+      if (compositeTransform)
+      {
+        const auto & transformQueue = compositeTransform->GetTransformQueue();
+
+        ParameterMapVectorType transformParameterMaps(transformQueue.size());
+
+        auto reverseIterator = transformParameterMaps.rbegin();
+
+        for (const auto & transform : transformQueue)
+        {
+          if (transform == nullptr)
+          {
+            itkGenericExceptionMacro("One of the subtransforms of the specified composite transform is null!");
+          }
+          *reverseIterator = transformToMap(*transform);
+          ++reverseIterator;
+        }
+        return transformParameterMaps;
+      }
+
+      // Assume in this case that it is just a single transform.
+      assert((dynamic_cast<const MultiTransform<double, MovingImageDimension> *>(&*m_InitialTransform)) == nullptr);
+
+      // For a single transform, there should be only a single transform parameter map.
+      return ParameterMapVectorType{ transformToMap(*m_InitialTransform) };
+    }
+    return {};
+  };
+
+  ParameterMapVectorType transformParameterMapVector = getInitialTransformParameterMaps();
+
+  if (!transformParameterMapVector.empty() && !m_OutputDirectory.empty())
   {
     std::string initialTransformParameterFileName = "NoInitialTransform";
 
     // Write InitialTransformParameters.0.txt, InitialTransformParameters.1.txt, InitialTransformParameters.2.txt, etc.
     unsigned i{};
 
-    for (auto transformParameterMap : m_InitialTransformParameterObject->GetParameterMaps())
+    for (auto transformParameterMap : transformParameterMapVector)
     {
       transformParameterMap["InitialTransformParameterFileName"] = { initialTransformParameterFileName };
 
@@ -273,10 +321,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     unsigned int isError = 0;
     try
     {
-      isError = ((i == 0) && m_InitialTransformParameterObject)
-                  ? elastixMain->RunWithInitialTransformParameterMaps(
-                      argumentMap, parameterMap, m_InitialTransformParameterObject->GetParameterMaps())
-                  : elastixMain->Run(argumentMap, parameterMap);
+      isError =
+        ((i == 0) && !transformParameterMapVector.empty())
+          ? elastixMain->RunWithInitialTransformParameterMaps(argumentMap, parameterMap, transformParameterMapVector)
+          : elastixMain->Run(argumentMap, parameterMap);
     }
     catch (const itk::ExceptionObject & e)
     {
@@ -733,6 +781,67 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetInput(DataObjectPointer
       break;
     default:
       this->ProcessObject::SetNthInput(index, input);
+  }
+}
+
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetInitialTransformParameterFileName(std::string fileName)
+{
+  if (fileName.empty())
+  {
+    ResetInitialTransformAndModified();
+  }
+  else
+  {
+    if (m_InitialTransformParameterFileName != fileName)
+    {
+      ResetInitialTransformWithoutModified();
+      m_InitialTransformParameterFileName = std::move(fileName);
+      this->Modified();
+    }
+  }
+}
+
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetInitialTransformParameterObject(
+  const elx::ParameterObject * const parameterObject)
+{
+  if (parameterObject)
+  {
+    if (m_InitialTransformParameterObject != parameterObject)
+    {
+      ResetInitialTransformWithoutModified();
+      m_InitialTransformParameterObject = parameterObject;
+      this->Modified();
+    }
+  }
+  else
+  {
+    ResetInitialTransformAndModified();
+  }
+}
+
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetInitialTransform(const TransformType * const transform)
+{
+  if (transform)
+  {
+    if (m_InitialTransform != transform)
+    {
+      ResetInitialTransformWithoutModified();
+      m_InitialTransform = transform;
+      this->Modified();
+    }
+  }
+  else
+  {
+    ResetInitialTransformAndModified();
   }
 }
 

@@ -193,7 +193,8 @@ public:
   GetInput(DataObjectPointerArraySizeType index) const;
 
   /** Set/Get/Remove initial transform parameter filename. */
-  itkSetMacro(InitialTransformParameterFileName, std::string);
+  void SetInitialTransformParameterFileName(std::string);
+
   itkGetConstMacro(InitialTransformParameterFileName, std::string);
   virtual void
   RemoveInitialTransformParameterFileName()
@@ -202,7 +203,12 @@ public:
   }
 
   /** Set initial transform parameter object. */
-  itkSetConstObjectMacro(InitialTransformParameterObject, elx::ParameterObject);
+  void
+  SetInitialTransformParameterObject(const elx::ParameterObject *);
+
+  /** Set the initial transformation by means of an ITK Transform. */
+  void
+  SetInitialTransform(const TransformType *);
 
   /** Set/Get/Remove fixed point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
@@ -324,6 +330,24 @@ private:
     return images;
   }
 
+  void
+  ResetInitialTransformWithoutModified()
+  {
+    m_InitialTransform = nullptr;
+    m_InitialTransformParameterFileName.clear();
+    m_InitialTransformParameterObject = nullptr;
+  }
+
+  void
+  ResetInitialTransformAndModified()
+  {
+    if (m_InitialTransform || m_InitialTransformParameterObject || !m_InitialTransformParameterFileName.empty())
+    {
+      ResetInitialTransformWithoutModified();
+      this->Modified();
+    }
+  }
+
   /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;
 
@@ -333,6 +357,7 @@ private:
 
   std::string                        m_InitialTransformParameterFileName{};
   elx::ParameterObject::ConstPointer m_InitialTransformParameterObject{};
+  SmartPointer<const TransformType>  m_InitialTransform{};
 
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};

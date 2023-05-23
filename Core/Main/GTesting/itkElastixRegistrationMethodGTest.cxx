@@ -497,6 +497,20 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
     }
   }
 }
+
+
+template <typename TParametersValueType, unsigned int VInputDimension, unsigned int VOutputDimension>
+itk::SizeValueType
+GetNumberOfTransforms(const itk::Transform<TParametersValueType, VInputDimension, VOutputDimension> & transform)
+{
+  if (const auto multiTransform =
+        dynamic_cast<const itk::MultiTransform<TParametersValueType, VInputDimension, VOutputDimension> *>(&transform))
+  {
+    return multiTransform->GetNumberOfTransforms();
+  }
+  return 1;
+};
+
 } // namespace
 
 
@@ -1029,6 +1043,109 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileWithInitia
     DerefSmartPointer(doDummyRegistration(
       GetDataDirectoryPath() + "/Translation(1,-2)/TransformParametersWithInitialTransformParameterFile.txt")),
     DerefSmartPointer(doDummyRegistration(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt")));
+}
+
+
+GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransform)
+{
+  using PixelType = float;
+  enum
+  {
+    ImageDimension = 2U
+  };
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType initialTranslation{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const SizeType   imageSize{ { 5, 6 } };
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  using TransformType = ElastixRegistrationMethodType<ImageType>::TransformType;
+
+  const TransformType::ConstPointer singleInitialTransform = [] {
+    const auto singleTransform = itk::TranslationTransform<double, ImageDimension>::New();
+    singleTransform->SetOffset(itk::MakeVector(1.0, -2.0));
+    return singleTransform;
+  }();
+
+  const TransformType::ConstPointer compositeInitialTransform = [] {
+    const auto translationTransformX = itk::TranslationTransform<double, ImageDimension>::New();
+    translationTransformX->SetOffset(itk::MakeVector(1.0, 0.0));
+    const auto translationTransformY = itk::TranslationTransform<double, ImageDimension>::New();
+    translationTransformY->SetOffset(itk::MakeVector(0.0, -2.0));
+
+    const auto compositeTransform = itk::CompositeTransform<double, ImageDimension>::New();
+    compositeTransform->AddTransform(translationTransformX);
+    compositeTransform->AddTransform(translationTransformY);
+    return compositeTransform;
+  }();
+
+  // Test both a single and a composite transform as initial transform.
+  for (const TransformType * const initialTransform : { singleInitialTransform, compositeInitialTransform })
+  {
+    const auto fixedImage = CreateImage<PixelType>(imageSize);
+    FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+    const auto movingImage = CreateImage<PixelType>(imageSize);
+
+    elx::DefaultConstruct<elx::ParameterObject>                     registrationParameterObject{};
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+    registration.SetFixedImage(fixedImage);
+    registration.SetInitialTransform(initialTransform);
+    registration.SetParameterObject(&registrationParameterObject);
+
+    const elx::ParameterObject::ParameterMapType registrationParameterMap{
+      // Parameters in alphabetic order:
+      { "ImageSampler", { "Full" } },
+      { "MaximumNumberOfIterations", { "2" } },
+      { "Metric", { "AdvancedNormalizedCorrelation" } },
+      { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+      { "Transform", { "TranslationTransform" } }
+    };
+
+    for (const unsigned int numberOfRegistrationParameterMaps : { 1, 2, 3 })
+    {
+      // Specify multiple (one or more) registration parameter maps.
+      registrationParameterObject.SetParameterMaps(
+        ParameterMapVectorType(numberOfRegistrationParameterMaps, registrationParameterMap));
+
+      const auto numberOfInitialTransformParameterMaps = GetNumberOfTransforms(*initialTransform);
+
+      // Do the test for a few possible translations.
+      for (const auto index :
+           itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+      {
+        const auto actualTranslation = ConvertIndexToOffset(index);
+        movingImage->FillBuffer(0);
+        FillImageRegion(*movingImage, fixedImageRegionIndex + actualTranslation, regionSize);
+        registration.SetMovingImage(movingImage);
+        registration.Update();
+
+        const auto & transformParameterMaps =
+          DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
+
+        ASSERT_EQ(transformParameterMaps.size(),
+                  numberOfInitialTransformParameterMaps + numberOfRegistrationParameterMaps);
+
+        // All transform parameter maps, except for the initial transformations and the transform parameter map of the
+        // first registration should just have a zero-translation.
+        for (auto i = numberOfInitialTransformParameterMaps + 1; i < numberOfRegistrationParameterMaps; ++i)
+        {
+          const auto transformParameters =
+            ConvertStringsToVectorOfDouble(transformParameterMaps[i].at("TransformParameters"));
+          EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), OffsetType{});
+        }
+
+        // Together the initial translation and the first registration should yield the actual image translation.
+        const auto transformParameters = ConvertStringsToVectorOfDouble(
+          transformParameterMaps[numberOfInitialTransformParameterMaps].at("TransformParameters"));
+        EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
+      }
+    }
+  }
 }
 
 
