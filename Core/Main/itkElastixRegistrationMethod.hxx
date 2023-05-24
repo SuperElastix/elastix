@@ -92,8 +92,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   DataObjectContainerPointer movingMaskContainer = nullptr;
   DataObjectContainerPointer resultImageContainer = nullptr;
   ElastixMainObjectPointer   transform = nullptr;
-  ParameterMapVectorType     transformParameterMapVector;
-  FlatDirectionCosinesType   fixedImageOriginalDirection;
+  ParameterMapVectorType     transformParameterMapVector = m_InitialTransformParameterObject
+                                                         ? m_InitialTransformParameterObject->GetParameterMaps()
+                                                         : ParameterMapVectorType{};
+  FlatDirectionCosinesType fixedImageOriginalDirection;
 
   // Split inputs into separate containers
   for (const auto & inputName : this->GetInputNames())
