@@ -347,6 +347,85 @@ Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransf
 }
 
 
+// Expects transformix to yield the same output image as an elastix registration, when transformix has the
+// "TransformParameterObject" taken from the elastix registration result.
+template <unsigned int VDimension>
+void
+Expect_equal_output_Transformix_SetTransformParameterObject_GetTransformParameterObject(
+  const ParameterMapVectorType &  initialTransformParameterMaps,
+  const ImageDomain<VDimension> & fixedImageDomain,
+  const ImageDomain<VDimension> & movingImageDomain)
+{
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, VDimension>;
+
+  std::mt19937 randomNumberEngine{};
+
+  const auto fillImageBufferRandomly = [&randomNumberEngine](ImageType & image) {
+    const itk::ImageBufferRange<ImageType> imageBufferRange(image);
+
+    std::generate(imageBufferRange.begin(), imageBufferRange.end(), [&randomNumberEngine] {
+      return std::uniform_real_distribution<PixelType>{ PixelType{ 1 }, PixelType{ 2 } }(randomNumberEngine);
+    });
+  };
+
+  itk::Size<VDimension> movingImageSize;
+  std::iota(movingImageSize.begin(), movingImageSize.end(), 5U);
+
+  elx::DefaultConstruct<ImageType> fixedImage{};
+  fixedImageDomain.ToImage(fixedImage);
+  fixedImage.Allocate(true);
+  fillImageBufferRandomly(fixedImage);
+
+  elx::DefaultConstruct<ImageType> movingImage{};
+  movingImageDomain.ToImage(movingImage);
+  movingImage.Allocate(true);
+  fillImageBufferRandomly(movingImage);
+
+  elx::DefaultConstruct<elx::ParameterObject> registrationParameterObject{};
+
+  const ParameterMapType registrationParameterMap = CreateParameterMap({
+    // Non-default parameters in alphabetic order:
+    NonDefaultRegistrationParameter({ "ImageSampler", { "Full" } }), // required
+    NonDefaultRegistrationParameter({ "MaximumNumberOfIterations", { "2" } }),
+    NonDefaultRegistrationParameter({ "Metric", { "AdvancedNormalizedCorrelation" } }), // default ""
+    NonDefaultRegistrationParameter({ "NumberOfResolutions", { "1" } }),
+    NonDefaultRegistrationParameter({ "Optimizer", { "AdaptiveStochasticGradientDescent" } }), // default ""
+    // RequiredRatioOfValidSamples as in the example in the elxMetricBase.h documentation. The FAQ even suggests 0.05:
+    // https://github.com/SuperElastix/elastix/wiki/FAQ/702a35cf0f5e0cf797b531fcbe3297ff9a9f3a18#i-am-getting-the-error-message-too-many-samples-map-outside-moving-image-buffer-what-does-that-mean
+    NonDefaultRegistrationParameter({ "RequiredRatioOfValidSamples", { "0.1" } }),
+    NonDefaultRegistrationParameter({ "Transform", { "BSplineTransform" } }), // default ""
+  });
+
+  registrationParameterObject.SetParameterMap(registrationParameterMap);
+
+  elx::DefaultConstruct<elx::ParameterObject> initialTransformParameterObject{};
+  initialTransformParameterObject.SetParameterMaps(initialTransformParameterMaps);
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  registration.SetParameterObject(&registrationParameterObject);
+  registration.SetInitialTransformParameterObject(&initialTransformParameterObject);
+  registration.SetFixedImage(&fixedImage);
+  registration.SetMovingImage(&movingImage);
+  registration.Update();
+
+  elx::DefaultConstruct<itk::TransformixFilter<ImageType>> transformix{};
+  transformix.SetTransformParameterObject(registration.GetTransformParameterObject());
+  transformix.SetMovingImage(&movingImage);
+  transformix.Update();
+
+  const auto & transformixOutput = DerefRawPointer(transformix.GetOutput());
+
+  // Sanity checks, checking that our test is non-trivial.
+  EXPECT_NE(movingImage, fixedImage);
+  EXPECT_NE(transformixOutput, fixedImage);
+  EXPECT_NE(transformixOutput, movingImage);
+
+  const auto & actualRegistrationOutput = DerefRawPointer(registration.GetOutput());
+  EXPECT_EQ(actualRegistrationOutput, transformixOutput);
+}
+
+
 template <unsigned NDimension, unsigned NSplineOrder>
 void
 Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirectoryPath)
@@ -951,6 +1030,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
                                      { "Transform", { "TranslationTransform" } },
                                      { "TransformParameters", { "0", "-2" } } } } })
     {
+      const auto numberOfInitialTransformParameterMaps = initialTransformParameterMaps.size();
       initialTransformParameterObject.SetParameterMaps(initialTransformParameterMaps);
 
       // Do the test for a few possible translations.
@@ -966,10 +1046,16 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
         const auto & transformParameterMaps =
           DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
 
-        ASSERT_EQ(transformParameterMaps.size(), numberOfRegistrationParameterMaps);
+        ASSERT_EQ(transformParameterMaps.size(),
+                  numberOfInitialTransformParameterMaps + numberOfRegistrationParameterMaps);
+
+        for (std::size_t i{}; i < numberOfInitialTransformParameterMaps; ++i)
+        {
+          EXPECT_EQ(transformParameterMaps[i], initialTransformParameterMaps[i]);
+        }
 
         // All registration parameter maps, except for the first one, should just have a zero-translation.
-        for (unsigned int i{ 1 }; i < numberOfRegistrationParameterMaps; ++i)
+        for (auto i = numberOfInitialTransformParameterMaps + 1; i < numberOfRegistrationParameterMaps; ++i)
         {
           const auto transformParameters =
             ConvertStringsToVectorOfDouble(transformParameterMaps[i].at("TransformParameters"));
@@ -977,8 +1063,8 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
         }
 
         // Together the initial translation and the first registration should have the actual image translation.
-        const auto transformParameters =
-          ConvertStringsToVectorOfDouble(transformParameterMaps.front().at("TransformParameters"));
+        const auto transformParameters = ConvertStringsToVectorOfDouble(
+          transformParameterMaps[numberOfInitialTransformParameterMaps].at("TransformParameters"));
         EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
       }
     }
@@ -1116,6 +1202,8 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
       { translationTransformParameterMap, bsplineTransformParameterMap },
       createRandomImageDomain(),
       createRandomImageDomain());
+    Expect_equal_output_Transformix_SetTransformParameterObject_GetTransformParameterObject(
+      { translationTransformParameterMap }, createRandomImageDomain(), createRandomImageDomain());
   }
 }
 
