@@ -1479,10 +1479,12 @@ GTEST_TEST(itkTransformixFilter, GetTransformParameterObjectFromRegistration)
   elx::DefaultConstruct<itk::TransformixFilter<ImageType>>                    transformixFilter{};
 
   // Do a registration, using the default parameter maps of ElastixRegistrationMethod. May take some time!
+  registration.LogToConsoleOn();
   registration.SetFixedImage(fixedImage);
   registration.SetMovingImage(movingImage);
   registration.Update();
 
+  transformixFilter.LogToConsoleOn();
   transformixFilter.SetMovingImage(movingImage);
   transformixFilter.SetTransformParameterObject(registration.GetTransformParameterObject());
   transformixFilter.Update();
