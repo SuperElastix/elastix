@@ -127,12 +127,7 @@ TransformixFilter<TImage>::GenerateData()
     itkExceptionMacro("Output directory \"" << m_OutputDirectory << "\" does not exist.")
   }
 
-  if (m_OutputDirectory.empty())
-  {
-    // There must be an "-out", this is checked later in the code
-    argumentMap.insert(ArgumentMapEntryType("-out", "output_path_not_set"));
-  }
-  else
+  if (!m_OutputDirectory.empty())
   {
     if (m_OutputDirectory.back() != '/' && m_OutputDirectory.back() != '\\')
     {

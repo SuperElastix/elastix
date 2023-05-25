@@ -211,16 +211,9 @@ ElastixBase::BeforeAllBase()
   }
 
   /** Check for appearance of "-out".
-   * This check has already been performed in elastix.cxx,
-   * Here we do it again. MS: WHY?
    */
   check = m_Configuration->GetCommandLineArgument("-out");
-  if (check.empty())
-  {
-    log::error(std::ostringstream{} << "ERROR: No CommandLine option \"-out\" given!");
-    returndummy |= 1;
-  }
-  else
+  if (!check.empty())
   {
     /** Make sure that last character of the output folder equals a '/' or '\'. */
     std::string folder(check);
@@ -336,12 +329,7 @@ ElastixBase::BeforeAllTransformixBase()
   }
   /** Check for appearance of "-out". */
   std::string check = m_Configuration->GetCommandLineArgument("-out");
-  if (check.empty())
-  {
-    log::error(std::ostringstream{} << "ERROR: No CommandLine option \"-out\" given!");
-    returndummy |= 1;
-  }
-  else
+  if (!check.empty())
   {
     /** Make sure that last character of -out equals a '/'. */
     if (check.back() != '/')

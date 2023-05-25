@@ -153,9 +153,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     {
       itkExceptionMacro("LogToFileOn() requires an output directory to be specified.")
     }
-
-    // There must be an "-out" as this is checked later in the code
-    argumentMap.insert(ArgumentMapEntryType("-out", "output_path_not_set"));
   }
   else
   {

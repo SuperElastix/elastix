@@ -179,8 +179,10 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
   this->m_Configuration->ReadParameter(
     writeResultMeshThisIteration, "WriteResultMeshAfterEachIteration", "", level, 0, false);
 
+  const std::string outputDirectoryPath = this->m_Configuration->GetCommandLineArgument("-out");
+
   /** Writing result mesh. */
-  if (writeResultMeshThisIteration)
+  if (writeResultMeshThisIteration && !outputDirectoryPath.empty())
   {
     std::string componentLabel(this->GetComponentLabel());
     std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
@@ -193,7 +195,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
     {
 
       std::ostringstream makeFileName;
-      makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "resultmesh" << ch << metricNumber << "."
+      makeFileName << outputDirectoryPath << "resultmesh" << ch << metricNumber << "."
                    << this->m_Configuration->GetElastixLevel() << ".R" << level << ".It" << std::setfill('0')
                    << std::setw(7) << iter << "." << resultMeshFormat;
 
@@ -227,8 +229,10 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
   this->m_Configuration->ReadParameter(
     writeResultMeshThisResolution, "WriteResultMeshAfterEachResolution", "", level, 0, false);
 
+  const std::string outputDirectoryPath = this->m_Configuration->GetCommandLineArgument("-out");
+
   /** Writing result mesh. */
-  if (writeResultMeshThisResolution)
+  if (writeResultMeshThisResolution && !outputDirectoryPath.empty())
   {
     std::string componentLabel(this->GetComponentLabel());
     std::string metricNumber = componentLabel.substr(6, 2); // strip "Metric" keep number
@@ -241,7 +245,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
     {
 
       std::ostringstream makeFileName;
-      makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "resultmesh" << ch << metricNumber << "."
+      makeFileName << outputDirectoryPath << "resultmesh" << ch << metricNumber << "."
                    << this->m_Configuration->GetElastixLevel() << ".R" << level << "." << resultMeshFormat;
 
       try

@@ -92,16 +92,18 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
   configuration.ReadParameter(
     writeResultImageThisResolution, "WriteResultImageAfterEachResolution", "", level, 0, false);
 
+  const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+
   /** Writing result image. */
-  if (writeResultImageThisResolution)
+  if (writeResultImageThisResolution && !outputDirectoryPath.empty())
   {
     /** Create a name for the final result. */
     const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
     std::string resultImageFormat = "mhd";
     configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
     std::ostringstream makeFileName;
-    makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.'
-                 << configuration.GetElastixLevel() << ".R" << level << "." << resultImageFormat;
+    makeFileName << outputDirectoryPath << resultImageName << '.' << configuration.GetElastixLevel() << ".R" << level
+                 << "." << resultImageFormat;
 
     /** Time the resampling. */
     itk::TimeProbe timer;
@@ -147,8 +149,10 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
   bool writeResultImageThisIteration = false;
   configuration.ReadParameter(writeResultImageThisIteration, "WriteResultImageAfterEachIteration", "", level, 0, false);
 
+  const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+
   /** Writing result image. */
-  if (writeResultImageThisIteration)
+  if (writeResultImageThisIteration && !outputDirectoryPath.empty())
   {
     /** Set the final transform parameters. */
     this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
@@ -158,9 +162,8 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     std::string resultImageFormat = "mhd";
     configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
     std::ostringstream makeFileName;
-    makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.'
-                 << configuration.GetElastixLevel() << ".R" << level << ".It" << std::setfill('0') << std::setw(7)
-                 << iter << "." << resultImageFormat;
+    makeFileName << outputDirectoryPath << resultImageName << '.' << configuration.GetElastixLevel() << ".R" << level
+                 << ".It" << std::setfill('0') << std::setw(7) << iter << "." << resultImageFormat;
 
     /** Apply the final transform, and save the result. */
     try
@@ -210,29 +213,28 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
     this->ReleaseMemory();
   }
 
-  /**
-   * Create the result image and put it in ResultImageContainer
-   * Only necessary when compiling elastix as a library!
-   */
-  if (isElastixLibrary)
+  /** Writing result image. */
+  if (writeResultImage == "true")
   {
-    if (writeResultImage == "true")
+    /**
+     * Create the result image and put it in ResultImageContainer
+     * Only necessary when compiling elastix as a library!
+     */
+    if (isElastixLibrary)
     {
       this->CreateItkResultImage();
     }
-  }
-  else
-  {
-    /** Writing result image. */
-    if (writeResultImage == "true")
+
+    if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+        !outputDirectoryPath.empty())
     {
       /** Create a name for the final result. */
       const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
       std::string resultImageFormat = "mhd";
       configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0);
       std::ostringstream makeFileName;
-      makeFileName << configuration.GetCommandLineArgument("-out") << resultImageName << '.'
-                   << configuration.GetElastixLevel() << "." << resultImageFormat;
+      makeFileName << outputDirectoryPath << resultImageName << '.' << configuration.GetElastixLevel() << "."
+                   << resultImageFormat;
 
       /** Time the resampling. */
       itk::TimeProbe timer;
@@ -256,13 +258,13 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       log::info(std::ostringstream{} << "  Applying final transform took "
                                      << Conversion::SecondsToDHMS(timer.GetMean(), 2));
     }
-    else
-    {
-      /** Do not apply the final transform. */
-      log::info(std::ostringstream{} << '\n'
-                                     << "Skipping applying final transform, no resulting output image generated.");
-    } // end if
   }
+  else
+  {
+    /** Do not apply the final transform. */
+    log::info(std::ostringstream{} << '\n'
+                                   << "Skipping applying final transform, no resulting output image generated.");
+  } // end if
 
 } // end AfterRegistrationBase()
 

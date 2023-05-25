@@ -624,6 +624,7 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
                                                           { "Metric", "AdvancedNormalizedCorrelation" },
                                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
                                                           { "Transform", "TranslationTransform" } }));
+  registration.LogToConsoleOn();
   registration.Update();
 
   const auto transformParameters = GetTransformParametersFromFilter(registration);

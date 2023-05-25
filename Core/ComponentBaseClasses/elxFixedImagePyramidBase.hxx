@@ -60,12 +60,14 @@ FixedImagePyramidBase<TElastix>::BeforeEachResolutionBase()
   std::string resultImageFormat = "mhd";
   configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
 
+  const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+
   /** Writing result image. */
-  if (writePyramidImage)
+  if (writePyramidImage && !outputDirectoryPath.empty())
   {
     /** Create a name for the final result. */
     std::ostringstream makeFileName;
-    makeFileName << configuration.GetCommandLineArgument("-out");
+    makeFileName << outputDirectoryPath;
     makeFileName << this->GetComponentLabel() << "." << configuration.GetElastixLevel() << ".R" << level << "."
                  << resultImageFormat;
 
