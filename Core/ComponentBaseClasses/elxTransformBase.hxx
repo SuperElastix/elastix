@@ -818,51 +818,55 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
 
   const Configuration & configuration = Deref(Superclass::GetConfiguration());
 
-  /** Create filename and file stream. */
-  const std::string outputPointsFileName = configuration.GetCommandLineArgument("-out") + "outputpoints.txt";
-  std::ofstream     outputPointsFile(outputPointsFileName);
-  outputPointsFile << std::showpoint << std::fixed;
-  log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
-
-  const auto writeToFile = [&outputPointsFile](const auto & rangeOfElements) {
-    for (const auto element : rangeOfElements)
-    {
-      outputPointsFile << element << ' ';
-    }
-  };
-
-  /** Print the results. */
-  for (unsigned int j = 0; j < nrofpoints; ++j)
+  if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+      !outputDirectoryPath.empty())
   {
-    /** The input index. */
-    outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
-    writeToFile(inputindexvec[j]);
+    /** Create filename and file stream. */
+    const std::string outputPointsFileName = outputDirectoryPath + "outputpoints.txt";
+    std::ofstream     outputPointsFile(outputPointsFileName);
+    outputPointsFile << std::showpoint << std::fixed;
+    log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
 
-    /** The input point. */
-    outputPointsFile << "]\t; InputPoint = [ ";
-    writeToFile(inputpointvec[j]);
+    const auto writeToFile = [&outputPointsFile](const auto & rangeOfElements) {
+      for (const auto element : rangeOfElements)
+      {
+        outputPointsFile << element << ' ';
+      }
+    };
 
-    /** The output index in fixed image. */
-    outputPointsFile << "]\t; OutputIndexFixed = [ ";
-    writeToFile(outputindexfixedvec[j]);
-
-    /** The output point. */
-    outputPointsFile << "]\t; OutputPoint = [ ";
-    writeToFile(outputpointvec[j]);
-
-    /** The output point minus the input point. */
-    outputPointsFile << "]\t; Deformation = [ ";
-    writeToFile(deformationvec[j]);
-
-    if (alsoMovingIndices)
+    /** Print the results. */
+    for (unsigned int j = 0; j < nrofpoints; ++j)
     {
-      /** The output index in moving image. */
-      outputPointsFile << "]\t; OutputIndexMoving = [ ";
-      writeToFile(outputindexmovingvec[j]);
-    }
+      /** The input index. */
+      outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
+      writeToFile(inputindexvec[j]);
 
-    outputPointsFile << "]" << std::endl;
-  } // end for nrofpoints
+      /** The input point. */
+      outputPointsFile << "]\t; InputPoint = [ ";
+      writeToFile(inputpointvec[j]);
+
+      /** The output index in fixed image. */
+      outputPointsFile << "]\t; OutputIndexFixed = [ ";
+      writeToFile(outputindexfixedvec[j]);
+
+      /** The output point. */
+      outputPointsFile << "]\t; OutputPoint = [ ";
+      writeToFile(outputpointvec[j]);
+
+      /** The output point minus the input point. */
+      outputPointsFile << "]\t; Deformation = [ ";
+      writeToFile(deformationvec[j]);
+
+      if (alsoMovingIndices)
+      {
+        /** The output index in moving image. */
+        outputPointsFile << "]\t; OutputIndexMoving = [ ";
+        writeToFile(outputindexmovingvec[j]);
+      }
+
+      outputPointsFile << "]" << std::endl;
+    } // end for nrofpoints
+  }
 
 } // end TransformPointsSomePoints()
 
@@ -924,17 +928,21 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
 
   const Configuration & configuration = Deref(Superclass::GetConfiguration());
 
-  /** Create filename and file stream. */
-  const std::string outputPointsFileName = configuration.GetCommandLineArgument("-out") + "outputpoints.vtk";
-  log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
+  if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+      !outputDirectoryPath.empty())
+  {
+    /** Create filename and file stream. */
+    const std::string outputPointsFileName = configuration.GetCommandLineArgument("-out") + "outputpoints.vtk";
+    log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
 
-  try
-  {
-    itk::WriteMesh(outputMesh, outputPointsFileName);
-  }
-  catch (const itk::ExceptionObject & err)
-  {
-    log::error(std::ostringstream{} << "  Error while saving points.\n" << err);
+    try
+    {
+      itk::WriteMesh(outputMesh, outputPointsFileName);
+    }
+    catch (const itk::ExceptionObject & err)
+    {
+      log::error(std::ostringstream{} << "  Error while saving points.\n" << err);
+    }
   }
 
 } // end TransformPointsSomePointsVTK()
@@ -956,7 +964,9 @@ TransformBase<TElastix>::TransformPointsAllPoints() const
   // put deformation field in container
   this->m_Elastix->SetResultDeformationField(deformationfield.GetPointer());
 
-  if (!BaseComponent::IsElastixLibrary())
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+
+  if (!configuration.GetCommandLineArgument("-out").empty())
   {
     WriteDeformationFieldImage(deformationfield);
   }
@@ -1129,25 +1139,30 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  std::ostringstream makeFileName;
-  makeFileName << configuration.GetCommandLineArgument("-out") << "spatialJacobian." << resultImageFormat;
 
-  /** Write outputImage to disk. */
-  log::info("  Computing and writing the spatial Jacobian determinant...");
-  try
+  if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+      !outputDirectoryPath.empty())
   {
-    itk::WriteImage(infoChanger->GetOutput(), makeFileName.str());
-  }
-  catch (itk::ExceptionObject & excp)
-  {
-    /** Add information to the exception. */
-    excp.SetLocation("TransformBase - ComputeSpatialJacobianDeterminantImage()");
-    std::string err_str = excp.GetDescription();
-    err_str += "\nError occurred while writing spatial Jacobian determinant image.\n";
-    excp.SetDescription(err_str);
+    std::ostringstream makeFileName;
+    makeFileName << outputDirectoryPath << "spatialJacobian." << resultImageFormat;
 
-    /** Pass the exception to an higher level. */
-    throw;
+    /** Write outputImage to disk. */
+    log::info("  Computing and writing the spatial Jacobian determinant...");
+    try
+    {
+      itk::WriteImage(infoChanger->GetOutput(), makeFileName.str());
+    }
+    catch (itk::ExceptionObject & excp)
+    {
+      /** Add information to the exception. */
+      excp.SetLocation("TransformBase - ComputeSpatialJacobianDeterminantImage()");
+      std::string err_str = excp.GetDescription();
+      err_str += "\nError occurred while writing spatial Jacobian determinant image.\n";
+      excp.SetDescription(err_str);
+
+      /** Pass the exception to an higher level. */
+      throw;
+    }
   }
 
 } // end ComputeAndWriteSpatialJacobianDeterminantImage()
@@ -1183,76 +1198,81 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-  std::ostringstream makeFileName;
-  makeFileName << configuration.GetCommandLineArgument("-out") << "fullSpatialJacobian." << resultImageFormat;
 
-  /** Write outputImage to disk. */
-  const auto jacWriter = itk::ImageFileWriter<SpatialJacobianMatrixImageType>::New();
-  jacWriter->SetInput(infoChanger->GetOutput());
-  jacWriter->SetFileName(makeFileName.str().c_str());
-
-  // This class is used for writing the fullSpatialJacobian image. It is a hack to ensure that a matrix image is seen as
-  // a vector image, which most IO classes understand.
-  class PixelTypeChangeCommand : public itk::Command
+  if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+      !outputDirectoryPath.empty())
   {
-  public:
-    ITK_DISALLOW_COPY_AND_MOVE(PixelTypeChangeCommand);
+    std::ostringstream makeFileName;
+    makeFileName << outputDirectoryPath << "fullSpatialJacobian." << resultImageFormat;
 
-    /** Standard class typedefs. */
-    using Self = PixelTypeChangeCommand;
-    using Pointer = itk::SmartPointer<Self>;
+    /** Write outputImage to disk. */
+    const auto jacWriter = itk::ImageFileWriter<SpatialJacobianMatrixImageType>::New();
+    jacWriter->SetInput(infoChanger->GetOutput());
+    jacWriter->SetFileName(makeFileName.str().c_str());
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro(PixelTypeChangeCommand, Command);
-
-    /** Method for creation through the object factory. */
-    itkNewMacro(Self);
-
-  private:
-    using PrivateJacobianImageType = SpatialJacobianMatrixImageType;
-
-    /** Set the pixel type to VECTOR */
-    void
-    Execute(itk::Object * caller, const itk::EventObject &) override
+    // This class is used for writing the fullSpatialJacobian image. It is a hack to ensure that a matrix image is seen
+    // as a vector image, which most IO classes understand.
+    class PixelTypeChangeCommand : public itk::Command
     {
-      const auto castcaller = dynamic_cast<itk::ImageFileWriter<PrivateJacobianImageType> *>(caller);
-      castcaller->GetModifiableImageIO()->SetPixelType(itk::CommonEnums::IOPixel::VECTOR);
+    public:
+      ITK_DISALLOW_COPY_AND_MOVE(PixelTypeChangeCommand);
+
+      /** Standard class typedefs. */
+      using Self = PixelTypeChangeCommand;
+      using Pointer = itk::SmartPointer<Self>;
+
+      /** Run-time type information (and related methods). */
+      itkTypeMacro(PixelTypeChangeCommand, Command);
+
+      /** Method for creation through the object factory. */
+      itkNewMacro(Self);
+
+    private:
+      using PrivateJacobianImageType = SpatialJacobianMatrixImageType;
+
+      /** Set the pixel type to VECTOR */
+      void
+      Execute(itk::Object * caller, const itk::EventObject &) override
+      {
+        const auto castcaller = dynamic_cast<itk::ImageFileWriter<PrivateJacobianImageType> *>(caller);
+        castcaller->GetModifiableImageIO()->SetPixelType(itk::CommonEnums::IOPixel::VECTOR);
+      }
+
+      void
+      Execute(const itk::Object * caller, const itk::EventObject & eventObject) override
+      {
+        // Call the non-const overload.
+        Self::Execute(const_cast<itk::Object *>(caller), eventObject);
+      }
+
+      PixelTypeChangeCommand() = default;
+      ~PixelTypeChangeCommand() override = default;
+    };
+
+    /** Hack to change the pixel type to vector. Not necessary for mhd. */
+    const auto jacStartWriteCommand = PixelTypeChangeCommand::New();
+    if (resultImageFormat != "mhd")
+    {
+      jacWriter->AddObserver(itk::StartEvent(), jacStartWriteCommand);
     }
 
-    void
-    Execute(const itk::Object * caller, const itk::EventObject & eventObject) override
+    /** Do the writing. */
+    log::info("  Computing and writing the spatial Jacobian...");
+    try
     {
-      // Call the non-const overload.
-      Self::Execute(const_cast<itk::Object *>(caller), eventObject);
+      jacWriter->Update();
     }
+    catch (itk::ExceptionObject & excp)
+    {
+      /** Add information to the exception. */
+      excp.SetLocation("TransformBase - ComputeSpatialJacobianMatrixImage()");
+      std::string err_str = excp.GetDescription();
+      err_str += "\nError occurred while writing spatial Jacobian image.\n";
+      excp.SetDescription(err_str);
 
-    PixelTypeChangeCommand() = default;
-    ~PixelTypeChangeCommand() override = default;
-  };
-
-  /** Hack to change the pixel type to vector. Not necessary for mhd. */
-  const auto jacStartWriteCommand = PixelTypeChangeCommand::New();
-  if (resultImageFormat != "mhd")
-  {
-    jacWriter->AddObserver(itk::StartEvent(), jacStartWriteCommand);
-  }
-
-  /** Do the writing. */
-  log::info("  Computing and writing the spatial Jacobian...");
-  try
-  {
-    jacWriter->Update();
-  }
-  catch (itk::ExceptionObject & excp)
-  {
-    /** Add information to the exception. */
-    excp.SetLocation("TransformBase - ComputeSpatialJacobianMatrixImage()");
-    std::string err_str = excp.GetDescription();
-    err_str += "\nError occurred while writing spatial Jacobian image.\n";
-    excp.SetDescription(err_str);
-
-    /** Pass the exception to an higher level. */
-    throw;
+      /** Pass the exception to an higher level. */
+      throw;
+    }
   }
 
 } // end ComputeAndWriteSpatialJacobianMatrixImage()

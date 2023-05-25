@@ -165,12 +165,6 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
       value.append("/");
     }
   }
-  else
-  {
-    /** Put command line parameters into parameterFileList. */
-    // there must be an "-out", this is checked later in code!!
-    value = "output_path_not_set";
-  }
 
   /** Save this information. */
   const auto outFolder = value;

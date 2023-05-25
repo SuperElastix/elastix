@@ -131,7 +131,7 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
     /** Put command line parameters into parameterFileList. */
     // there must be an "-out", this is checked later in code!!
     key = "-out";
-    value = "output_path_not_set";
+    value = "";
   }
 
   /** Save this information. */

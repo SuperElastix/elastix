@@ -602,12 +602,14 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
   bool writeTransformParameterEachResolution = false;
   configuration.ReadParameter(
     writeTransformParameterEachResolution, "WriteTransformParametersEachResolution", 0, false);
-  if (writeTransformParameterEachResolution)
+
+  const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+
+  if (writeTransformParameterEachResolution && !outputDirectoryPath.empty())
   {
     /** Create the TransformParameters filename for this resolution. */
     std::ostringstream makeFileName;
-    makeFileName << configuration.GetCommandLineArgument("-out") << "TransformParameters."
-                 << configuration.GetElastixLevel() << ".R"
+    makeFileName << outputDirectoryPath << "TransformParameters." << configuration.GetElastixLevel() << ".R"
                  << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";
     std::string fileName = makeFileName.str();
 
@@ -659,7 +661,10 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
   configuration.ReadParameter(writeTansformParametersThisIteration, "WriteTransformParametersEachIteration", 0, false);
-  if (writeTansformParametersThisIteration)
+
+  const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+
+  if (writeTansformParametersThisIteration && !outputDirectoryPath.empty())
   {
     /** Add zeros to the number of iterations, to make sure
      * it always consists of 7 digits.
@@ -685,8 +690,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
 
     /** Create the TransformParameters filename for this iteration. */
     std::ostringstream makeFileName;
-    makeFileName << configuration.GetCommandLineArgument("-out") << "TransformParameters."
-                 << configuration.GetElastixLevel() << ".R"
+    makeFileName << outputDirectoryPath << "TransformParameters." << configuration.GetElastixLevel() << ".R"
                  << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".It"
                  << makeIterationString.str() << ".txt";
     std::string tpFileName = makeFileName.str();
@@ -724,11 +728,13 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   /** Create the final TransformParameters filename. */
   bool writeFinalTansformParameters = true;
   configuration.ReadParameter(writeFinalTansformParameters, "WriteFinalTransformParameters", 0, false);
-  if (writeFinalTansformParameters)
+
+  const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+
+  if (writeFinalTansformParameters && !outputDirectoryPath.empty())
   {
     std::ostringstream makeFileName;
-    makeFileName << configuration.GetCommandLineArgument("-out") << "TransformParameters."
-                 << configuration.GetElastixLevel() << ".txt";
+    makeFileName << outputDirectoryPath << "TransformParameters." << configuration.GetElastixLevel() << ".txt";
     std::string FileName = makeFileName.str();
 
     /** Create a final TransformParameterFile. */
@@ -1030,22 +1036,26 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
 
   const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
 
-  /** Create the IterationInfo filename for this resolution. */
-  std::ostringstream makeFileName;
-  makeFileName << configuration.GetCommandLineArgument("-out") << "IterationInfo." << configuration.GetElastixLevel()
-               << ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";
-  std::string fileName = makeFileName.str();
+  if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+      !outputDirectoryPath.empty())
+  {
+    /** Create the IterationInfo filename for this resolution. */
+    std::ostringstream makeFileName;
+    makeFileName << outputDirectoryPath << "IterationInfo." << configuration.GetElastixLevel() << ".R"
+                 << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel() << ".txt";
+    std::string fileName = makeFileName.str();
 
-  /** Open the IterationInfoFile. */
-  this->m_IterationInfoFile.open(fileName.c_str());
-  if (!(this->m_IterationInfoFile.is_open()))
-  {
-    log::error(std::ostringstream{} << "ERROR: File \"" << fileName << "\" could not be opened!");
-  }
-  else
-  {
-    /** Add this file to the list of outputs of IterationInfo. */
-    this->GetIterationInfo().SetOutputFile(this->m_IterationInfoFile);
+    /** Open the IterationInfoFile. */
+    this->m_IterationInfoFile.open(fileName.c_str());
+    if (!(this->m_IterationInfoFile.is_open()))
+    {
+      log::error(std::ostringstream{} << "ERROR: File \"" << fileName << "\" could not be opened!");
+    }
+    else
+    {
+      /** Add this file to the list of outputs of IterationInfo. */
+      this->GetIterationInfo().SetOutputFile(this->m_IterationInfoFile);
+    }
   }
 
 } // end OpenIterationInfoFile()

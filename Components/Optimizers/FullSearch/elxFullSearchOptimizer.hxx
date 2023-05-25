@@ -160,13 +160,18 @@ FullSearch<TElastix>::BeforeEachResolution()
     this->m_OptimizationSurface->Allocate();
     /** \todo try/catch block around Allocate? */
 
-    /** Set the name of this image on disk. */
-    std::string resultImageFormat = "mhd";
-    configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
-    makeString.str("");
-    makeString << configuration.GetCommandLineArgument("-out") << "OptimizationSurface."
-               << configuration.GetElastixLevel() << ".R" << level << "." << resultImageFormat;
-    this->m_OptimizationSurface->SetOutputFileName(makeString.str().c_str());
+    if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+        !outputDirectoryPath.empty())
+    {
+      /** Set the name of this image on disk. */
+      std::string resultImageFormat = "mhd";
+      configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
+
+      makeString.str("");
+      makeString << outputDirectoryPath << "OptimizationSurface." << configuration.GetElastixLevel() << ".R" << level
+                 << "." << resultImageFormat;
+      this->m_OptimizationSurface->SetOutputFileName(makeString.str().c_str());
+    }
 
     log::info(std::ostringstream{} << "Total number of iterations needed in this resolution: "
                                    << this->GetNumberOfIterations() << ".");
@@ -239,7 +244,8 @@ FullSearch<TElastix>::AfterEachResolution()
   /** Write the optimization surface to disk */
   bool writeSurfaceEachResolution = false;
   configuration.ReadParameter(writeSurfaceEachResolution, "WriteOptimizationSurfaceEachResolution", 0, false);
-  if (writeSurfaceEachResolution)
+
+  if (writeSurfaceEachResolution && !configuration.GetCommandLineArgument("-out").empty())
   {
     try
     {
