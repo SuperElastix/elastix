@@ -1913,3 +1913,44 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
   check(TypeHolder<float>{});
   check(TypeHolder<double>{});
 }
+
+
+// Tests running a default registration while having called either SetLogToConsole(true) or SetLogToConsole(false).
+GTEST_TEST(itkElastixRegistrationMethod, SetLogToConsole)
+{
+  const auto createRegistration = [](const bool logToConsole) {
+    constexpr auto imageDimension = 2U;
+    using PixelType = float;
+    using ImageType = itk::Image<PixelType, imageDimension>;
+
+    // Use minimum size images, to make the test run a little bit faster.
+    const auto imageSize = itk::Size<imageDimension>::Filled(minimumImageSizeValue);
+
+    // In order to keep the test simple, just fill both the fixed and moving image with 1, 2, 3, ...
+    const auto fixedImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+    const auto movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+
+    const auto registration = CheckNew<itk::ElastixRegistrationMethod<ImageType, ImageType>>();
+
+    // Limit the number of iterations, just to reduce duration.
+    DerefRawPointer(registration->GetParameterObject()).SetParameter("MaximumNumberOfIterations", "3");
+
+    // Do a registration, using the default parameter maps of ElastixRegistrationMethod.
+    registration->SetLogToConsole(logToConsole);
+    registration->SetFixedImage(fixedImage);
+    registration->SetMovingImage(movingImage);
+    registration->Update();
+    return registration;
+  };
+
+  const auto registrationHavingLogToConsoleOn = createRegistration(true);
+  EXPECT_TRUE(registrationHavingLogToConsoleOn->GetLogToConsole());
+
+  const auto registrationHavingLogToConsoleOff = createRegistration(false);
+  EXPECT_FALSE(registrationHavingLogToConsoleOff->GetLogToConsole());
+
+  EXPECT_EQ(DerefRawPointer(registrationHavingLogToConsoleOn->GetOutput()),
+            DerefRawPointer(registrationHavingLogToConsoleOff->GetOutput()));
+  EXPECT_EQ(DerefRawPointer(registrationHavingLogToConsoleOn->GetParameterObject()).GetParameterMaps(),
+            DerefRawPointer(registrationHavingLogToConsoleOff->GetParameterObject()).GetParameterMaps());
+}

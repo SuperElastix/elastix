@@ -1459,3 +1459,46 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsing
   check(TypeHolder<unsigned long>{});
   check(TypeHolder<double>{});
 }
+
+
+// Tests doing a simple transformation while having called either SetLogToConsole(true) or SetLogToConsole(false).
+GTEST_TEST(itkTransformixFilter, SetLogToConsole)
+{
+  const auto createTransformixFilter = [](const bool logToConsole) {
+    constexpr auto imageDimension = 2U;
+    using PixelType = float;
+    using ImageType = itk::Image<PixelType, imageDimension>;
+
+    // Use minimum size images, to make the test run a little bit faster.
+    const auto imageSize = itk::Size<imageDimension>::Filled(minimumImageSizeValue);
+    // In order to keep the test simple, just fill both the fixed and moving image with 1, 2, 3, ...
+    const auto movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+    const auto transformixFilter = CheckNew<itk::TransformixFilter<ImageType>>();
+
+    transformixFilter->SetLogToConsole(logToConsole);
+    transformixFilter->SetMovingImage(movingImage);
+    transformixFilter->SetTransformParameterObject(
+      CreateParameterObject({ // Parameters in alphabetic order:
+                              { "Direction", CreateDefaultDirectionParameterValues<imageDimension>() },
+                              { "Index", ParameterValuesType(imageDimension, "0") },
+                              { "NumberOfParameters", { std::to_string(imageDimension) } },
+                              { "Origin", ParameterValuesType(imageDimension, "0") },
+                              { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+                              { "Size", ConvertToParameterValues(imageSize) },
+                              { "Transform", ParameterValuesType{ "TranslationTransform" } },
+                              { "TransformParameters", ParameterValuesType(imageDimension, "1") },
+                              { "Spacing", ParameterValuesType(imageDimension, "1") } }));
+    transformixFilter->Update();
+
+    return transformixFilter;
+  };
+
+  const auto transformixHavingLogToConsoleOn = createTransformixFilter(true);
+  EXPECT_TRUE(transformixHavingLogToConsoleOn->GetLogToConsole());
+
+  const auto transformixHavingLogToConsoleOff = createTransformixFilter(false);
+  EXPECT_FALSE(transformixHavingLogToConsoleOff->GetLogToConsole());
+
+  EXPECT_EQ(DerefRawPointer(transformixHavingLogToConsoleOn->GetOutput()),
+            DerefRawPointer(transformixHavingLogToConsoleOff->GetOutput()));
+}
