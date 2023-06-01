@@ -43,8 +43,8 @@ public:
   {
     using ElastixType = typename TPyramid::ElastixType;
 
-    constexpr bool isFixed = std::is_same<TPyramid, FixedGenericPyramid<ElastixType>>::value;
-    constexpr bool isMoving = std::is_same<TPyramid, MovingGenericPyramid<ElastixType>>::value;
+    constexpr bool isFixed = std::is_same_v<TPyramid, FixedGenericPyramid<ElastixType>>;
+    constexpr bool isMoving = std::is_same_v<TPyramid, MovingGenericPyramid<ElastixType>>;
 
     static_assert(isMoving != isFixed, "TPyramid must be either FixedGenericPyramid or MovingGenericPyramid!");
 

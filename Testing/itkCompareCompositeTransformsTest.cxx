@@ -39,7 +39,7 @@ template <typename TDerivedTransform>
 bool
 IsDerivedTransformOfType(const itk::SmartPointer<itk::Transform<ScalarType, Dimension, Dimension>> & ptr)
 {
-  static_assert(std::is_base_of<itk::Transform<ScalarType, Dimension, Dimension>, TDerivedTransform>::value,
+  static_assert(std::is_base_of_v<itk::Transform<ScalarType, Dimension, Dimension>, TDerivedTransform>,
                 "TDerivedTransform must be derived from itk::Transform!");
   return dynamic_cast<const TDerivedTransform *>(ptr.GetPointer()) != nullptr;
 }

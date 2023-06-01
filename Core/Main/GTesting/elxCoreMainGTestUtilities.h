@@ -90,7 +90,7 @@ template <typename TRawPointer>
 decltype(auto)
 DerefRawPointer(const TRawPointer ptr)
 {
-  static_assert(std::is_pointer<TRawPointer>::value, "For smart pointers, use DerefSmartPointer instead!");
+  static_assert(std::is_pointer_v<TRawPointer>, "For smart pointers, use DerefSmartPointer instead!");
 
   if (ptr == nullptr)
   {
@@ -104,7 +104,7 @@ template <typename TSmartPointer>
 decltype(auto)
 DerefSmartPointer(const TSmartPointer & ptr)
 {
-  static_assert(!std::is_pointer<TSmartPointer>::value, "For raw pointers, use DerefRawPointer instead!");
+  static_assert(!std::is_pointer_v<TSmartPointer>, "For raw pointers, use DerefRawPointer instead!");
 
   if (ptr == nullptr)
   {

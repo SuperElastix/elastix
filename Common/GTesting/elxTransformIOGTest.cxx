@@ -104,9 +104,9 @@ struct WithDimension
       using ItkCompositeTransformType = itk::CompositeTransform<double, NDimension>;
 
       static_assert(
-        std::is_base_of<itk::Transform<double, NDimension, NDimension>, TExpectedCorrespondingItkTransform>::value,
+        std::is_base_of_v<itk::Transform<double, NDimension, NDimension>, TExpectedCorrespondingItkTransform>,
         "TExpectedCorrespondingItkTransform should be derived from the expected `itk::Transform` specialization!");
-      static_assert(!std::is_base_of<ItkCompositeTransformType, TExpectedCorrespondingItkTransform>::value,
+      static_assert(!std::is_base_of_v<ItkCompositeTransformType, TExpectedCorrespondingItkTransform>,
                     "TExpectedCorrespondingItkTransform should not be derived from `itk::CompositeTransform`!");
 
       const auto elxTransform = CheckNew<ElastixTransformType>();
@@ -117,9 +117,8 @@ struct WithDimension
 
       const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
       ASSERT_NE(compositeTransform, nullptr);
-      static_assert(
-        std::is_same<const itk::SmartPointer<ItkCompositeTransformType>, decltype(compositeTransform)>::value,
-        "`ConvertToItkCompositeTransform` should have the expected `SmartPointer` return type!");
+      static_assert(std::is_same_v<const itk::SmartPointer<ItkCompositeTransformType>, decltype(compositeTransform)>,
+                    "`ConvertToItkCompositeTransform` should have the expected `SmartPointer` return type!");
 
       const auto & transformQueue = compositeTransform->GetTransformQueue();
       ASSERT_EQ(transformQueue.size(), 1);
@@ -593,7 +592,7 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
                                          2.0,
                                          NumericLimits::max() };
 
-  constexpr auto numberOfTestInputValues = std::extent<decltype(testInputValues)>::value;
+  constexpr auto numberOfTestInputValues = std::extent_v<decltype(testInputValues)>;
 
   // Use the test input values as coordinates.
   for (const auto index : itk::ZeroBasedIndexRange<Dimension>(itk::Size<Dimension>::Filled(numberOfTestInputValues)))
@@ -606,7 +605,7 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
     const auto expectedOutputPoint = itkTransform.TransformPoint(inputPoint);
     const auto actualOutputPoint = elxTransform->TransformPoint(inputPoint);
 
-    static_assert(std::is_same<decltype(actualOutputPoint), decltype(expectedOutputPoint)>::value,
+    static_assert(std::is_same_v<decltype(actualOutputPoint), decltype(expectedOutputPoint)>,
                   "elxTransform->TransformPoint must have the expected return type!");
 
     if (expectedOutputPoint != inputPoint)
