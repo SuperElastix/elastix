@@ -73,11 +73,11 @@ def main():
       f2 = open( outputFileName, 'w' );
       for oldline in f1 :
         newline = oldline;
-        if "InitialTransformParametersFileName" in oldline :
+        if ("InitialTransformParameterFileName" in oldline) or ("InitialTransformParametersFileName" in oldline):
           oldFileName = os.path.basename( oldline.split()[1][1:-2] );
           newFileName = os.path.join( "@ELASTIX_DATA_DIR@", oldFileName );
           if not "NoInitialTransform" in oldFileName :
-            newline = "(InitialTransformParametersFileName \"" + newFileName + "\")\n";
+            newline = "(InitialTransformParameterFileName \"" + newFileName + "\")\n";
         f2.write( newline );
       f1.close(); f2.close();
 
