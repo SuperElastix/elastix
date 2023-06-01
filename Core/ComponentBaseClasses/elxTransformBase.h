@@ -103,14 +103,16 @@ namespace elastix
  * The number of entries is stored the NumberOfParameters entry.
  * \transformparameter NumberOfParameters: the length of the transform parameter vector.\n
  * example <tt>(NumberOfParameters 722)</tt>\n
- * \transformparameter InitialTransformParametersFileName: The location/name of an initial
+ * \transformparameter InitialTransformParameterFileName: The location/name of an initial
  * transform that will be loaded when loading the current transform parameter file. Note
  * that transform parameter file can also contain an initial transform. Recursively all
  * transforms are thus automatically loaded when loading the last transform parameter file.\n
- * example <tt>(InitialTransformParametersFileName "./res/TransformParameters.0.txt")</tt>\n
+ * example <tt>(InitialTransformParameterFileName "./res/TransformParameters.0.txt")</tt>\n
  * The location is relative to the path from where elastix/transformix is started!\n
  * Default: "NoInitialTransform", which (obviously) means that there is no initial transform
  * to be loaded.
+ * \transformparameter InitialTransformParametersFileName: legacy parameter name, replaced with
+ * "InitialTransformParameterFileName", and deprecated from June 2023.
  *
  * The command line arguments used by this class are:
  * \commandlinearg -t0: optional argument for elastix for specifying an initial transform

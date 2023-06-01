@@ -117,7 +117,7 @@ const ParameterMapType defaultRegistrationParameterMap =
                        ParameterType{ "FixedImagePyramid", { "FixedSmoothingImagePyramid" } },
                        ParameterType{ "FixedInternalImagePixelType", { "float" } },
                        ParameterType{ "HowToCombineTransforms", { "Compose" } },
-                       ParameterType{ "InitialTransformParametersFileName", { "NoInitialTransform" } },
+                       ParameterType{ "InitialTransformParameterFileName", { "NoInitialTransform" } },
                        ParameterType{ "Interpolator", { "BSplineInterpolator" } },
                        ParameterType{ "MaxBandCovSize", { "192" } },
                        ParameterType{ "MaximumNumberOfSamplingAttempts", { "0" } },
@@ -158,7 +158,7 @@ const ParameterMapType defaultTransformParameterMap = CreateParameterMap(
     ParameterType{ "GridSize", ParameterValuesType(2, "1") },
     ParameterType{ "GridSpacing", ParameterValuesType(2, "1") },
     ParameterType{ "HowToCombineTransforms", { "Compose" } },
-    ParameterType{ "InitialTransformParametersFileName", { "NoInitialTransform" } },
+    ParameterType{ "InitialTransformParameterFileName", { "NoInitialTransform" } },
     ParameterType{ "Interpolator", { "BSplineInterpolator" } },
     ParameterType{ "MovingImagePyramid", { "MovingSmoothingImagePyramid" } },
     ParameterType{ "MovingInternalImagePixelType", { "float" } },
@@ -272,7 +272,7 @@ Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransf
     DefaultRegistrationParameter({ "FixedImagePyramid", { "FixedSmoothingImagePyramid" } }),
     DefaultRegistrationParameter({ "FixedInternalImagePixelType", { "float" } }),
     DefaultRegistrationParameter({ "HowToCombineTransforms", { "Compose" } }),
-    DefaultRegistrationParameter({ "InitialTransformParametersFileName", { "NoInitialTransform" } }),
+    DefaultRegistrationParameter({ "InitialTransformParameterFileName", { "NoInitialTransform" } }),
     DefaultRegistrationParameter({ "Interpolator", { "BSplineInterpolator" } }),
     DefaultRegistrationParameter({ "MaxBandCovSize", { "192" } }),
     DefaultRegistrationParameter({ "MaximumNumberOfSamplingAttempts", { "0" } }),
@@ -1092,7 +1092,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
         DefaultTransformParameter({ "FinalBSplineInterpolationOrder", { "3" } }),
         DefaultTransformParameter({ "FixedInternalImagePixelType", { "float" } }),
         DefaultTransformParameter({ "HowToCombineTransforms", { "Compose" } }),
-        DefaultTransformParameter({ "InitialTransformParametersFileName", { "NoInitialTransform" } }),
+        DefaultTransformParameter({ "InitialTransformParameterFileName", { "NoInitialTransform" } }),
         DefaultTransformParameter({ "MovingInternalImagePixelType", { "float" } }),
         DefaultTransformParameter({ "ResampleInterpolator", { "FinalBSplineInterpolator" } }),
         DefaultTransformParameter({ "Resampler", { "DefaultResampler" } }),
@@ -1117,7 +1117,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
         DefaultTransformParameter({ "FinalBSplineInterpolationOrder", { "3" } }),
         DefaultTransformParameter({ "FixedInternalImagePixelType", { "float" } }),
         DefaultTransformParameter({ "HowToCombineTransforms", { "Compose" } }),
-        DefaultTransformParameter({ "InitialTransformParametersFileName", { "NoInitialTransform" } }),
+        DefaultTransformParameter({ "InitialTransformParameterFileName", { "NoInitialTransform" } }),
         DefaultTransformParameter({ "MovingInternalImagePixelType", { "float" } }),
         DefaultTransformParameter({ "ResampleInterpolator", { "FinalBSplineInterpolator" } }),
         DefaultTransformParameter({ "Resampler", { "DefaultResampler" } }),
@@ -1278,7 +1278,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
         const auto found = transformParameterMap2.find(transformParameter.first);
         ASSERT_NE(found, transformParameterMap2.end());
 
-        if (transformParameter.first == "InitialTransformParametersFileName")
+        if (transformParameter.first == "InitialTransformParameterFileName")
         {
           ASSERT_NE(*found, transformParameter);
         }

@@ -189,7 +189,7 @@ CreateTransformixFilter(itk::Image<TPixel, VImageDimension> &                   
                             { "Direction", CreateDefaultDirectionParameterValues<VImageDimension>() },
                             { "HowToCombineTransforms", { howToCombineTransforms } },
                             { "Index", ParameterValuesType(VImageDimension, "0") },
-                            { "InitialTransformParametersFileName", { initialTransformParametersFileName } },
+                            { "InitialTransformParameterFileName", { initialTransformParametersFileName } },
                             { "Origin", ParameterValuesType(VImageDimension, "0") },
                             { "ResampleInterpolator", { "FinalLinearInterpolator" } },
                             { "Size", ConvertToParameterValues(image.GetBufferedRegion().GetSize()) },

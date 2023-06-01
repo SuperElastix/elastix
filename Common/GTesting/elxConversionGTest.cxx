@@ -58,7 +58,7 @@ const ParameterMapType parameterMap = { { "Direction", { "0", "0", "0", "0" } },
                                         { "FixedInternalImagePixelType", { "float" } },
                                         { "HowToCombineTransforms", { "Compose" } },
                                         { "Index", { "0", "0" } },
-                                        { "InitialTransformParametersFileName", { "NoInitialTransform" } },
+                                        { "InitialTransformParameterFileName", { "NoInitialTransform" } },
                                         { "MovingImageDimension", { "2" } },
                                         { "MovingInternalImagePixelType", { "float" } },
                                         { "NumberOfParameters", { "2" } },
@@ -74,7 +74,7 @@ const std::string parameterMapTextString = R"((Direction 0 0 0 0)
 (FixedInternalImagePixelType "float")
 (HowToCombineTransforms "Compose")
 (Index 0 0)
-(InitialTransformParametersFileName "NoInitialTransform")
+(InitialTransformParameterFileName "NoInitialTransform")
 (MovingImageDimension 2)
 (MovingInternalImagePixelType "float")
 (NumberOfParameters 2)

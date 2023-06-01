@@ -362,12 +362,27 @@ TransformBase<TElastix>::ReadFromFile()
   }
   else
   {
-    /** Get the InitialTransformName. */
-    std::string fileName = "NoInitialTransform";
-    configuration.ReadParameter(fileName, "InitialTransformParametersFileName", 0);
+    /** Get the name of the parameter file that specifies the initial transform. */
+
+    // Retrieve the parameter by its current (preferred) parameter name:
+    const auto initialTransformParameterFileName =
+      configuration.RetrieveParameterStringValue({}, "InitialTransformParameterFileName", 0, false);
+    // Retrieve the parameter by its old (deprecated) parameter name as well:
+    const auto initialTransformParametersFileName =
+      configuration.RetrieveParameterStringValue({}, "InitialTransformParametersFileName", 0, false);
+
+    if (!initialTransformParametersFileName.empty())
+    {
+      log::warn("WARNING: The parameter name \"InitialTransformParametersFileName\" is deprecated. Please use "
+                "\"InitialTransformParameterFileName\" (without letter 's') instead.");
+    }
+
+    // Prefer the value from the current parameter name, otherwise use the old parameter name.
+    const auto & fileName = initialTransformParameterFileName.empty() ? initialTransformParametersFileName
+                                                                      : initialTransformParameterFileName;
 
     /** Call the function ReadInitialTransformFromFile. */
-    if (fileName != "NoInitialTransform")
+    if (!fileName.empty() && fileName != "NoInitialTransform")
     {
       /** Check if the initial transform of this transform parameter file
        * is not the same as this transform parameter file. Otherwise,
@@ -377,7 +392,7 @@ TransformBase<TElastix>::ReadFromFile()
       std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
       if (fullFileName1 == fullFileName2)
       {
-        itkExceptionMacro(<< "ERROR: The InitialTransformParametersFileName is identical to the current "
+        itkExceptionMacro(<< "ERROR: The initial transform parameter filename is identical to the current "
                              "TransformParameters filename! An infinite loop is not allowed.");
       }
 
@@ -574,7 +589,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   /** Write the name of this transform. */
   parameterMap = { { "Transform", { this->elxGetClassName() } },
                    { "NumberOfParameters", { Conversion::ToString(param.GetSize()) } },
-                   { "InitialTransformParametersFileName", { this->GetInitialTransformParametersFileName() } },
+                   { "InitialTransformParameterFileName", { this->GetInitialTransformParametersFileName() } },
                    { "HowToCombineTransforms", { combinationMethod } },
                    { "FixedImageDimension", { Conversion::ToString(FixedImageDimension) } },
                    { "MovingImageDimension", { Conversion::ToString(MovingImageDimension) } },
