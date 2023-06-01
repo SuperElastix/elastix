@@ -271,7 +271,7 @@ struct WithDimension
         { "FixedInternalImagePixelType", { expectedInternalImagePixelType } },
         { "HowToCombineTransforms", { "Compose" } },
         { "Index", { ParameterValuesType(NDimension, expectedZero) } },
-        { "InitialTransformParametersFileName", { "NoInitialTransform" } },
+        { "InitialTransformParameterFileName", { "NoInitialTransform" } },
         { "MovingImageDimension", { expectedImageDimension } },
         { "MovingInternalImagePixelType", { expectedInternalImagePixelType } },
         { "NumberOfParameters", { expectedZero } },

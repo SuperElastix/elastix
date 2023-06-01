@@ -100,11 +100,13 @@ main(int argc, char * argv[])
 
   /** Check no initial transform. */
   std::string initialTransform = "";
-  config->ReadParameter(initialTransform, "InitialTransformParametersFileName", 0, dummyErrorMessage);
+  config->ReadParameter(initialTransform, "InitialTransformParameterFileName", 0, dummyErrorMessage) ||
+    config->ReadParameter(initialTransform, "InitialTransformParametersFileName", 0, dummyErrorMessage);
+
   if (initialTransform != "NoInitialTransform")
   {
     std::cerr << "ERROR: currently only a single non-concatenated transform is supported!\n"
-              << "  The parameter \"InitialTransformParametersFileName\" should read \"NoInitialTransform\"."
+              << "  The parameter \"InitialTransformParameterFileName\" should read \"NoInitialTransform\"."
               << std::endl;
     return EXIT_FAILURE;
   }
@@ -256,7 +258,7 @@ main(int argc, char * argv[])
   outputTPFile << transformParametersInv[numberOfParameters - 1] << ")" << std::endl;
 
   /** Write the name of the parameters-file of the initial transform. */
-  outputTPFile << "(InitialTransformParametersFileName \"NoInitialTransform\")" << std::endl;
+  outputTPFile << "(InitialTransformParameterFileName \"NoInitialTransform\")" << std::endl;
 
   /** Write the way Transforms are combined. */
   outputTPFile << "(HowToCombineTransforms \"" << combinationMethod << "\")" << std::endl;
