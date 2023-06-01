@@ -68,12 +68,6 @@ TransformixFilter<TImage>::GenerateData()
   using elx::LibUtilities::RetrievePixelTypeParameterValue;
   using elx::LibUtilities::SetParameterValueAndWarnOnOverride;
 
-  // Force compiler to instantiate the image dimension, otherwise we may get
-  //   Undefined symbols for architecture x86_64:
-  //     "elastix::TransformixFilter<itk::Image<float, 2u> >::MovingImageDimension"
-  // on some platforms.
-  const unsigned int movingImageDimension = MovingImageDimension;
-
   if (this->IsEmpty(this->GetMovingImage()) && m_FixedPointSetFileName.empty() && !m_ComputeSpatialJacobian &&
       !m_ComputeDeterminantOfSpatialJacobian && !m_ComputeDeformationField)
   {
@@ -246,7 +240,7 @@ TransformixFilter<TImage>::GenerateData()
     }
   }
 
-  const auto movingImageDimensionString = std::to_string(movingImageDimension);
+  const auto movingImageDimensionString = std::to_string(MovingImageDimension);
   const auto movingImagePixelTypeString = elx::PixelTypeToString<typename TImage::PixelType>();
 
   // Set pixel types from input image, override user settings

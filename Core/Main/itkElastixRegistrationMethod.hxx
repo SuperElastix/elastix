@@ -81,13 +81,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   using elx::LibUtilities::RetrievePixelTypeParameterValue;
   using elx::LibUtilities::SetParameterValueAndWarnOnOverride;
 
-  // Force compiler to instantiate the image dimensions, otherwise we may get
-  //   Undefined symbols for architecture x86_64:
-  //     "elx::ElastixRegistrationMethod<itk::Image<float, 2u> >::FixedImageDimension"
-  // on some platforms.
-  const unsigned int fixedImageDimension = FixedImageDimension;
-  const unsigned int movingImageDimension = MovingImageDimension;
-
   DataObjectContainerPointer fixedMaskContainer = nullptr;
   DataObjectContainerPointer movingMaskContainer = nullptr;
   DataObjectContainerPointer resultImageContainer = nullptr;
@@ -184,9 +177,9 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
                                  m_EnableOutput && m_LogToConsole,
                                  static_cast<elastix::log::level>(m_LogLevel));
 
-  const auto fixedImageDimensionString = std::to_string(fixedImageDimension);
+  const auto fixedImageDimensionString = std::to_string(FixedImageDimension);
   const auto fixedImagePixelTypeString = elx::PixelTypeToString<typename TFixedImage::PixelType>();
-  const auto movingImageDimensionString = std::to_string(movingImageDimension);
+  const auto movingImageDimensionString = std::to_string(MovingImageDimension);
 
   const std::vector<TFixedImage *>  fixedInputImages = GetInputImages<TFixedImage>("FixedImage");
   const std::vector<TMovingImage *> movingInputImages = GetInputImages<TMovingImage>("MovingImage");
