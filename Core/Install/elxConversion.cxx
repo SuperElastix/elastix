@@ -66,8 +66,7 @@ template <typename TFloatingPoint>
 bool
 StringToFloatingPointValue(const std::string & str, TFloatingPoint & value)
 {
-  static_assert(std::is_floating_point<TFloatingPoint>::value,
-                "This function template only supports floating point types.");
+  static_assert(std::is_floating_point_v<TFloatingPoint>, "This function template only supports floating point types.");
 
   using NumericLimits = std::numeric_limits<TFloatingPoint>;
 

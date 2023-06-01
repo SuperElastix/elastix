@@ -307,7 +307,7 @@ public:
   /*
   template< typename T,
   typename = typename std::enable_if<
-    std::is_scalar< T >::value || std::is_union< T >::value >::type >
+    std::is_scalar_v< T > || std::is_union_v< T > >::type >
   cl_int SetArg( const cl_uint index, const T value )
   {
     return clSetKernelArg( this->m_KernelId, index,

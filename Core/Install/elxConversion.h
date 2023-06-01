@@ -89,8 +89,8 @@ public:
   static std::string
   ToString(const TInteger integerValue)
   {
-    static_assert(std::is_integral<TInteger>::value, "An integer type expected!");
-    static_assert(!std::is_same<TInteger, bool>::value, "No bool expected!");
+    static_assert(std::is_integral_v<TInteger>, "An integer type expected!");
+    static_assert(!std::is_same_v<TInteger, bool>, "No bool expected!");
     return std::to_string(integerValue);
   }
 
@@ -171,13 +171,13 @@ public:
   StringToValue(const std::string & str, T & value)
   {
     // Conversion to bool is supported by another StringToValue overload.
-    static_assert(!std::is_same<T, bool>::value, "This StringToValue<T> overload does not support bool!");
+    static_assert(!std::is_same_v<T, bool>, "This StringToValue<T> overload does not support bool!");
 
     // 8-bits (signed/unsigned) char types are supported by other StringToValue
     // overloads.
     static_assert(sizeof(T) > 1, "This StringToValue<T> overload does not support (signed/unsigned) char!");
 
-    if (std::is_unsigned<T>::value && (!str.empty()) && (str.front() == '-'))
+    if (std::is_unsigned_v<T> && (!str.empty()) && (str.front() == '-'))
     {
       // An unsigned value should not start with a minus sign!
       return false;

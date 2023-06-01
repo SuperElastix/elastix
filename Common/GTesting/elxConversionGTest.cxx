@@ -246,7 +246,7 @@ template <typename TSignedInteger>
 void
 Expect_negative_parameter_value_can_not_be_read_as_unsigned()
 {
-  static_assert(std::is_signed<TSignedInteger>::value, "Must be a signed integer type!");
+  static_assert(std::is_signed_v<TSignedInteger>, "Must be a signed integer type!");
 
   for (TSignedInteger integer : { std::numeric_limits<TSignedInteger>::min(), TSignedInteger{ -1 } })
   {
@@ -268,8 +268,7 @@ template <typename TFloatingPoint>
 void
 Expect_lossless_round_trip_of_floating_point_parameter_values()
 {
-  static_assert(std::is_floating_point<TFloatingPoint>::value,
-                "This function is only meant to test floating point types!");
+  static_assert(std::is_floating_point_v<TFloatingPoint>, "This function is only meant to test floating point types!");
 
   using NumericLimits = std::numeric_limits<TFloatingPoint>;
 
