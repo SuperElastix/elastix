@@ -1,7 +1,7 @@
 (Transform "AffineTransform")
 (NumberOfParameters 12)
 (TransformParameters 1.036712 -0.007980 -0.008800 0.021786 1.054137 -0.008197 0.004715 0.003528 1.036974 -4.095423 -7.386937 35.655217)
-(InitialTransformParametersFileName "NoInitialTransform")
+(InitialTransformParameterFileName "NoInitialTransform")
 (HowToCombineTransforms "Compose")
 
 // Image specific
