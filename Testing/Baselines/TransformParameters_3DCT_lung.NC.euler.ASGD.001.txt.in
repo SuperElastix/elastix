@@ -1,7 +1,7 @@
 (Transform "EulerTransform")
 (NumberOfParameters 6)
 (TransformParameters 0.009456 -0.002044 -0.043565 -6.868766 -5.713796 39.343262)
-(InitialTransformParametersFileName "NoInitialTransform")
+(InitialTransformParameterFileName "NoInitialTransform")
 (HowToCombineTransforms "Compose")
 
 // Image specific

@@ -1,7 +1,7 @@
 (Transform "TranslationTransform")
 (NumberOfParameters 3)
 (TransformParameters -6.893321 -7.963786 39.342333)
-(InitialTransformParametersFileName "NoInitialTransform")
+(InitialTransformParameterFileName "NoInitialTransform")
 (HowToCombineTransforms "Compose")
 
 // Image specific
