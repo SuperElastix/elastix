@@ -222,10 +222,6 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
     SetParameterValueAndWarnOnOverride(parameterMap, "ResultImagePixelType", fixedImagePixelTypeString);
 
-    // Initial transform parameter files are handled via arguments and enclosing loop, not
-    // InitialTransformParametersFileName
-    SetParameterValueAndWarnOnOverride(parameterMap, "InitialTransformParametersFileName", "NoInitialTransform");
-
     // Create new instance of ElastixMain
     const auto elastixMain = elx::ElastixMain::New();
     m_ElastixMain = elastixMain;
