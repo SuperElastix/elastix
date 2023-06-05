@@ -61,7 +61,7 @@ struct OCLImageDims
 
 #define ITK_OPENCL_COMPARE(actual, expected)                                                                           \
   if (!itk::Compare(actual, expected, #actual, #expected, __FILE__, __LINE__))                                         \
-  itkGenericExceptionMacro(<< "Compared values are not the same")
+  itkGenericExceptionMacro("Compared values are not the same")
 
 namespace itk
 {

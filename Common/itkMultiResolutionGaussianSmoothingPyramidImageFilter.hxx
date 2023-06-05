@@ -56,7 +56,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::S
 {
   if (schedule.rows() != this->m_NumberOfLevels || schedule.columns() != ImageDimension)
   {
-    itkDebugMacro(<< "Schedule has wrong dimensions");
+    itkDebugMacro("Schedule has wrong dimensions");
     return;
   }
 
@@ -223,7 +223,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
 
   if (!inputPtr)
   {
-    itkExceptionMacro(<< "Input has not been set");
+    itkExceptionMacro("Input has not been set");
   }
 
   OutputImagePointer outputPtr;
@@ -267,7 +267,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
   TOutputImage * ptr = static_cast<TOutputImage *>(refOutput);
   if (!ptr)
   {
-    itkExceptionMacro(<< "Could not cast refOutput to TOutputImage*.");
+    itkExceptionMacro("Could not cast refOutput to TOutputImage*.");
   }
 
   unsigned int ilevel;
@@ -338,7 +338,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
 
   if (!image)
   {
-    itkExceptionMacro(<< "Input has not been set.");
+    itkExceptionMacro("Input has not been set.");
   }
 
   if (image)

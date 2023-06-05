@@ -170,7 +170,7 @@ template <class TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
-  itkDebugMacro(<< "Setting parameters " << parameters);
+  itkDebugMacro("Setting parameters " << parameters);
 
   // Set angle
   this->SetVarAngle(parameters[0]);
@@ -191,7 +191,7 @@ AdvancedRigid2DTransform<TScalarType>::SetParameters(const ParametersType & para
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<< "After setting parameters ");
+  itkDebugMacro("After setting parameters ");
 }
 
 
@@ -200,7 +200,7 @@ template <class TScalarType>
 auto
 AdvancedRigid2DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
-  itkDebugMacro(<< "Getting parameters ");
+  itkDebugMacro("Getting parameters ");
 
   // Get the angle
   this->m_Parameters[0] = m_Angle;
@@ -211,7 +211,7 @@ AdvancedRigid2DTransform<TScalarType>::GetParameters() const -> const Parameters
     this->m_Parameters[i + 1] = this->GetTranslation()[i];
   }
 
-  itkDebugMacro(<< "After getting parameters " << this->m_Parameters);
+  itkDebugMacro("After getting parameters " << this->m_Parameters);
 
   return this->m_Parameters;
 }

@@ -334,8 +334,8 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::GetBSplineGrid(unsi
   /** Check level. */
   if (level > this->m_NumberOfLevels - 1)
   {
-    itkExceptionMacro(<< "ERROR: Requesting resolution level " << level << ", but only " << this->m_NumberOfLevels
-                      << " levels exist.");
+    itkExceptionMacro("ERROR: Requesting resolution level " << level << ", but only " << this->m_NumberOfLevels
+                                                            << " levels exist.");
   }
 
   /** Return values. */

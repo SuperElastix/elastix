@@ -188,7 +188,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
   {
     if (this->GetFixedImageLimiter() == nullptr)
     {
-      itkExceptionMacro(<< "No fixed image limiter has been set!");
+      itkExceptionMacro("No fixed image limiter has been set!");
     }
 
     using ComputeFixedImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<FixedImageType>;
@@ -237,7 +237,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
   {
     if (this->GetMovingImageLimiter() == nullptr)
     {
-      itkExceptionMacro(<< "No moving image limiter has been set!");
+      itkExceptionMacro("No moving image limiter has been set!");
     }
 
     using ComputeMovingImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<MovingImageType>;
@@ -295,7 +295,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
     /** Check if the ImageSampler is set. */
     if (!this->m_ImageSampler)
     {
-      itkExceptionMacro(<< "ImageSampler is not present");
+      itkExceptionMacro("ImageSampler is not present");
     }
 
     /** Initialize the Image Sampler. */
@@ -436,7 +436,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform
   {
     this->m_AdvancedTransform = nullptr;
     itkDebugMacro("Transform is not Advanced");
-    itkExceptionMacro(<< "The AdvancedImageToImageMetric requires an AdvancedTransform");
+    itkExceptionMacro("The AdvancedImageToImageMetric requires an AdvancedTransform");
   }
   else
   {

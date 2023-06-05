@@ -63,11 +63,11 @@ GPUUnaryFunctorImageFilter<TInputImage, TOutputImage, TFunction, TParentImageFil
   // Perform the safe check
   if (inPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU InputImage is NULL. Filter unable to perform.");
   }
   if (otPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU OutputImage is NULL. Filter unable to perform.");
   }
 
   const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();

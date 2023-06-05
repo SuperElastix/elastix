@@ -68,7 +68,7 @@ ANNPriorityTreeSearch<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
     }
     else
     {
-      itkExceptionMacro(<< "ERROR: Tree is not generated.");
+      itkExceptionMacro("ERROR: Tree is not generated.");
     }
   }
   else

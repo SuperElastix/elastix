@@ -95,7 +95,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   }
   else
   {
-    itkExceptionMacro(<< "Unable to open meanVector file: " << meanVectorName);
+    itkExceptionMacro("Unable to open meanVector file: " << meanVectorName);
   }
   this->SetMeanVector(meanVector);
 
@@ -104,9 +104,9 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   {
     if (nrOfFixedPoints * Self::FixedPointSetDimension != meanVector->size() - Self::FixedPointSetDimension - 1)
     {
-      itkExceptionMacro(<< "ERROR: the number of elements in the meanVector (" << meanVector->size()
-                        << ") does not match the number of points of the fixed pointset (" << nrOfFixedPoints
-                        << ") times the point dimensionality (" << Self::FixedPointSetDimension
+      itkExceptionMacro("ERROR: the number of elements in the meanVector ("
+                        << meanVector->size() << ") does not match the number of points of the fixed pointset ("
+                        << nrOfFixedPoints << ") times the point dimensionality (" << Self::FixedPointSetDimension
                         << ") plus a Centroid of dimension " << Self::FixedPointSetDimension << " plus a size element");
     }
   }
@@ -114,9 +114,10 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   {
     if (nrOfFixedPoints * Self::FixedPointSetDimension != meanVector->size())
     {
-      itkExceptionMacro(<< "ERROR: the number of elements in the meanVector (" << meanVector->size()
-                        << ") does not match the number of points of the fixed pointset (" << nrOfFixedPoints
-                        << ") times the point dimensionality (" << Self::FixedPointSetDimension << ")");
+      itkExceptionMacro("ERROR: the number of elements in the meanVector ("
+                        << meanVector->size() << ") does not match the number of points of the fixed pointset ("
+                        << nrOfFixedPoints << ") times the point dimensionality (" << Self::FixedPointSetDimension
+                        << ")");
     }
   }
 
@@ -135,7 +136,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   }
   else
   {
-    itkExceptionMacro(<< "Unable to open covarianceMatrix file: " << covarianceMatrixName);
+    itkExceptionMacro("Unable to open covarianceMatrix file: " << covarianceMatrixName);
   }
   this->SetCovarianceMatrix(covarianceMatrix);
 
@@ -293,7 +294,7 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
   catch (const itk::ExceptionObject & err)
   {
     log::error(std::ostringstream{} << "  Error while opening " << landmarkFileName << '\n' << err);
-    itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
+    itkExceptionMacro("ERROR: unable to configure " << this->GetComponentLabel());
   }
 
   /** Some user-feedback. */

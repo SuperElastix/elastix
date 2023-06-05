@@ -110,8 +110,8 @@ public:
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
-                         "WeightedCombinationTransform");
+    itkExceptionMacro("TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
+                      "WeightedCombinationTransform");
   }
 
 
@@ -188,14 +188,14 @@ public:
   void
   GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const override
   {
-    itkExceptionMacro(<< "Not implemented for WeightedCombinationTransform");
+    itkExceptionMacro("Not implemented for WeightedCombinationTransform");
   }
 
 
   void
   GetSpatialHessian(const InputPointType & inputPoint, SpatialHessianType & sh) const override
   {
-    itkExceptionMacro(<< "Not implemented for WeightedCombinationTransform");
+    itkExceptionMacro("Not implemented for WeightedCombinationTransform");
   }
 
 
@@ -204,7 +204,7 @@ public:
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for WeightedCombinationTransform");
+    itkExceptionMacro("Not implemented for WeightedCombinationTransform");
   }
 
 
@@ -214,7 +214,7 @@ public:
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for WeightedCombinationTransform");
+    itkExceptionMacro("Not implemented for WeightedCombinationTransform");
   }
 
 
@@ -223,7 +223,7 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for WeightedCombinationTransform");
+    itkExceptionMacro("Not implemented for WeightedCombinationTransform");
   }
 
 
@@ -233,7 +233,7 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for WeightedCombinationTransform");
+    itkExceptionMacro("Not implemented for WeightedCombinationTransform");
   }
 
 

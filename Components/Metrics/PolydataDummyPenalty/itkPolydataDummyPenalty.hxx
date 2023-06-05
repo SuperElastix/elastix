@@ -47,12 +47,12 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 
   if (!this->m_Transform)
   {
-    itkExceptionMacro(<< "Transform is not present");
+    itkExceptionMacro("Transform is not present");
   }
 
   if (!this->m_FixedMeshContainer)
   {
-    itkExceptionMacro(<< "FixedMeshContainer is not present");
+    itkExceptionMacro("FixedMeshContainer is not present");
   }
 
   const FixedMeshContainerElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
@@ -110,7 +110,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParameters
   FixedMeshContainerConstPointer fixedMeshContainer = this->GetFixedMeshContainer();
   if (!fixedMeshContainer)
   {
-    itkExceptionMacro(<< "FixedMeshContainer mesh has not been assigned");
+    itkExceptionMacro("FixedMeshContainer mesh has not been assigned");
   }
 
   /** Initialize some variables */
@@ -168,7 +168,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(const Transf
   FixedMeshContainerConstPointer fixedMeshContainer = this->GetFixedMeshContainer();
   if (!fixedMeshContainer)
   {
-    itkExceptionMacro(<< "FixedMeshContainer mesh has not been assigned");
+    itkExceptionMacro("FixedMeshContainer mesh has not been assigned");
   }
 
   /** Initialize some variables */

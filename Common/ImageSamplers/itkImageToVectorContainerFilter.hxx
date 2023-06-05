@@ -186,7 +186,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
   splitRegion.SetIndex(splitIndex);
   splitRegion.SetSize(splitSize);
 
-  itkDebugMacro(<< "  Split Piece: " << splitRegion);
+  itkDebugMacro("  Split Piece: " << splitRegion);
 
   return maxThreadIdUsed + 1;
 

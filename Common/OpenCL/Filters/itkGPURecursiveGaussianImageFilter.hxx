@@ -67,7 +67,7 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPURecursiveGaussian
   }
   else
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from:\n" << GPUSource);
+    itkExceptionMacro("Kernel has not been loaded from:\n" << GPUSource);
   }
 }
 
@@ -77,7 +77,7 @@ template <typename TInputImage, typename TOutputImage>
 void
 GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 {
-  itkDebugMacro(<< "Calling GPURecursiveGaussianImageFilter::GPUGenerateData()");
+  itkDebugMacro("Calling GPURecursiveGaussianImageFilter::GPUGenerateData()");
 
   using GPUInputImage = typename GPUTraits<TInputImage>::Type;
   using GPUOutputImage = typename GPUTraits<TOutputImage>::Type;
@@ -88,11 +88,11 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // Perform the safe check
   if (inPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU InputImage is NULL. Filter unable to perform.");
   }
   if (otPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU OutputImage is NULL. Filter unable to perform.");
   }
 
   const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
@@ -102,7 +102,7 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // Check if GPU filter are able to perform for this image
   if (ln > this->m_DeviceLocalMemorySize)
   {
-    itkExceptionMacro(<< "GPURecursiveGaussianImageFilter unable to perform.");
+    itkExceptionMacro("GPURecursiveGaussianImageFilter unable to perform.");
   }
 
   int imgSize[TInputImage::ImageDimension];
@@ -229,7 +229,7 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
     break;
   }
 
-  itkDebugMacro(<< "GPURecursiveGaussianImageFilter::GPUGenerateData() finished");
+  itkDebugMacro("GPURecursiveGaussianImageFilter::GPUGenerateData() finished");
 }
 
 

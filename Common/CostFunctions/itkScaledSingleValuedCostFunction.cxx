@@ -48,7 +48,7 @@ ScaledSingleValuedCostFunction::GetValue(const ParametersType & parameters) cons
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   if (parameters.GetSize() != numberOfParameters)
   {
-    itkExceptionMacro(<< "Number of parameters is not like the unscaled cost function expects.");
+    itkExceptionMacro("Number of parameters is not like the unscaled cost function expects.");
   }
 
   MeasureType returnvalue = NumericTraits<MeasureType>::Zero;
@@ -86,7 +86,7 @@ ScaledSingleValuedCostFunction::GetDerivative(const ParametersType & parameters,
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   if (parameters.GetSize() != numberOfParameters)
   {
-    itkExceptionMacro(<< "Number of parameters is not like the unscaled cost function expects.");
+    itkExceptionMacro("Number of parameters is not like the unscaled cost function expects.");
   }
 
   if (this->m_UseScales)
@@ -130,7 +130,7 @@ ScaledSingleValuedCostFunction::GetValueAndDerivative(const ParametersType & par
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   if (parameters.GetSize() != numberOfParameters)
   {
-    itkExceptionMacro(<< "Number of parameters is not like the unscaled cost function expects.");
+    itkExceptionMacro("Number of parameters is not like the unscaled cost function expects.");
   }
 
   if (this->m_UseScales)
@@ -169,7 +169,7 @@ ScaledSingleValuedCostFunction::GetNumberOfParameters() const
 {
   if (this->m_UnscaledCostFunction.IsNull())
   {
-    itkExceptionMacro(<< "UnscaledCostFunction has not been set!");
+    itkExceptionMacro("UnscaledCostFunction has not been set!");
   }
   return this->m_UnscaledCostFunction->GetNumberOfParameters();
 
@@ -227,7 +227,7 @@ ScaledSingleValuedCostFunction::ConvertScaledToUnscaledParameters(ParametersType
     const ScalesType & scales = this->GetScales();
     if (scales.GetSize() != numberOfParameters)
     {
-      itkExceptionMacro(<< "Number of scales is not correct.");
+      itkExceptionMacro("Number of scales is not correct.");
     }
 
     for (unsigned int i = 0; i < numberOfParameters; ++i)
@@ -253,7 +253,7 @@ ScaledSingleValuedCostFunction::ConvertUnscaledToScaledParameters(ParametersType
     const ScalesType & scales = this->GetScales();
     if (scales.GetSize() != numberOfParameters)
     {
-      itkExceptionMacro(<< "Number of scales is not correct.");
+      itkExceptionMacro("Number of scales is not correct.");
     }
 
     for (unsigned int i = 0; i < numberOfParameters; ++i)

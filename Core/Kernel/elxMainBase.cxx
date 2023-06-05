@@ -131,7 +131,7 @@ MainBase::GetElastixBase() const
   const auto elastixBase = dynamic_cast<ElastixBase *>(m_Elastix.GetPointer());
   if (elastixBase == nullptr)
   {
-    itkExceptionMacro(<< "Probably GetElastixBase() is called before having called Run()");
+    itkExceptionMacro("Probably GetElastixBase() is called before having called Run()");
   }
 
   return *elastixBase;
@@ -152,7 +152,7 @@ MainBase::CreateComponent(const ComponentDescriptionType & name)
 
   if (component.IsNull())
   {
-    itkExceptionMacro(<< "The following component could not be created: " << name);
+    itkExceptionMacro("The following component could not be created: " << name);
   }
 
   return component;

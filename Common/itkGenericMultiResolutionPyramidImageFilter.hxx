@@ -185,7 +185,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 
   if (schedule.rows() != this->m_NumberOfLevels || schedule.columns() != ImageDimension)
   {
-    itkDebugMacro(<< "Smoothing schedule has wrong dimensions");
+    itkDebugMacro("Smoothing schedule has wrong dimensions");
     return;
   }
 
@@ -648,7 +648,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 
     if (!image)
     {
-      itkExceptionMacro(<< "Input has not been set.");
+      itkExceptionMacro("Input has not been set.");
     }
     else
     {

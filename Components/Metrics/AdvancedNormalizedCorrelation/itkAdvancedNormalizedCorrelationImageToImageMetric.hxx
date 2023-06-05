@@ -304,7 +304,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   MeasureType &                   value,
   DerivativeType &                derivative) const
 {
-  itkDebugMacro(<< "GetValueAndDerivative( " << parameters << " ) ");
+  itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
   using DerivativeValueType = typename DerivativeType::ValueType;
 

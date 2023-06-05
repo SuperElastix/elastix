@@ -135,9 +135,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     this->m_PreKernelManager->BuildProgramFromSourceCode(resamplePreSource.str(), defines.str());
   if (program.IsNull())
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from string:\n"
-                      << defines.str() << '\n'
-                      << resamplePreSource.str());
+    itkExceptionMacro("Kernel has not been loaded from string:\n" << defines.str() << '\n' << resamplePreSource.str());
   }
   this->m_FilterPreGPUKernelHandle = this->m_PreKernelManager->CreateKernel(program, "ResampleImageFilterPre");
 } // end Constructor
@@ -178,7 +176,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   std::string interpolatorSource;
   if (!interpolatorBase->GetSourceCode(interpolatorSource))
   {
-    itkExceptionMacro(<< "Unable to get interpolator source code.");
+    itkExceptionMacro("Unable to get interpolator source code.");
   }
 
   // Construct ResampleImageFilter Post code
@@ -201,7 +199,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     this->m_PostKernelManager->BuildProgramFromSourceCode(resamplePostSource.str(), defines);
   if (program.IsNull())
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from string:\n" << defines << '\n' << resamplePostSource.str());
+    itkExceptionMacro("Kernel has not been loaded from string:\n" << defines << '\n' << resamplePostSource.str());
   }
 
   if (this->m_InterpolatorIsBSpline)
@@ -214,7 +212,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     this->m_FilterPostGPUKernelHandle = this->m_PostKernelManager->CreateKernel(program, "ResampleImageFilterPost");
   }
 
-  itkDebugMacro(<< "GPUResampleImageFilter::SetInterpolator() finished");
+  itkDebugMacro("GPUResampleImageFilter::SetInterpolator() finished");
 } // end SetInterpolator()
 
 
@@ -231,7 +229,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   ExtrapolatorType * _arg)
 {
   // CPUSuperclass::SetExtrapolator( _arg );
-  itkWarningMacro(<< "Setting Extrapolator for GPUResampleImageFilter not supported yet.");
+  itkWarningMacro("Setting Extrapolator for GPUResampleImageFilter not supported yet.");
 } // end SetExtrapolator()
 
 
@@ -300,7 +298,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   std::string transformSource;
   if (!transformBase->GetSourceCode(transformSource))
   {
-    itkExceptionMacro(<< "Unable to get transform source code.");
+    itkExceptionMacro("Unable to get transform source code.");
   }
 
   // Construct ResampleImageFilter Loop code
@@ -337,7 +335,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     this->m_LoopKernelManager->BuildProgramFromSourceCode(resampleLoopSource.str(), defines);
   if (program.IsNull())
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from string:\n" << defines << '\n' << resampleLoopSource.str());
+    itkExceptionMacro("Kernel has not been loaded from string:\n" << defines << '\n' << resampleLoopSource.str());
   }
 
   // \todo: can we clean this up?
@@ -379,7 +377,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
       this->m_LoopKernelManager->CreateKernel(program, "ResampleImageFilterLoop_BSplineTransform");
   }
 
-  itkDebugMacro(<< "GPUResampleImageFilter::SetTransform() finished");
+  itkDebugMacro("GPUResampleImageFilter::SetTransform() finished");
 } // end SetTransform()
 
 
@@ -395,7 +393,7 @@ void
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
   GPUGenerateData()
 {
-  itkDebugMacro(<< "GPUResampleImageFilter::GPUGenerateData() called");
+  itkDebugMacro("GPUResampleImageFilter::GPUGenerateData() called");
 
   // Profiling
 #ifdef OPENCL_PROFILING
@@ -410,18 +408,18 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   // Perform safety checks
   if (inPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU InputImage is NULL. Filter unable to perform.");
   }
   if (outPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU OutputImage is NULL. Filter unable to perform.");
   }
 
   // Get the largest possible output region.
   const OutputImageRegionType outputLargestRegion = outPtr->GetLargestPossibleRegion();
   if (outputLargestRegion.GetNumberOfPixels() == 0)
   {
-    itkExceptionMacro(<< "GPUResampleImageFilter has not been properly initialized. Filter unable to perform.");
+    itkExceptionMacro("GPUResampleImageFilter has not been properly initialized. Filter unable to perform.");
   }
 
   // Define filter parameters:
@@ -677,7 +675,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
 
   eventList.WaitForFinished();
 
-  itkDebugMacro(<< "GPUResampleImageFilter::GPUGenerateData() finished");
+  itkDebugMacro("GPUResampleImageFilter::GPUGenerateData() finished");
 } // end GPUGenerateData()
 
 
@@ -693,7 +691,7 @@ void
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
   SetArgumentsForPreKernelManager(const typename GPUOutputImage::Pointer & outputImage)
 {
-  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager called");
+  itkDebugMacro("GPUResampleImageFilter::SetArgumentsForPreKernelManager called");
 
   // Get a handle to the pre kernel
   cl_uint        argidx = 0;
@@ -715,7 +713,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   OpenCLKernelToImageBridge<OutputImageType>::SetSize(
     preKernel, argidx++, outputImage->GetLargestPossibleRegion().GetSize());
 
-  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager() finished");
+  itkDebugMacro("GPUResampleImageFilter::SetArgumentsForPreKernelManager() finished");
 } // end SetArgumentsForPreKernelManager()
 
 
@@ -732,8 +730,8 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   SetArgumentsForLoopKernelManager(const typename GPUInputImage::Pointer &  input,
                                    const typename GPUOutputImage::Pointer & output)
 {
-  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForLoopKernelManager(" << input->GetNameOfClass() << ", "
-                << output->GetNameOfClass() << ") called");
+  itkDebugMacro("GPUResampleImageFilter::SetArgumentsForLoopKernelManager(" << input->GetNameOfClass() << ", "
+                                                                            << output->GetNameOfClass() << ") called");
 
   // Loop over all supported transform types
   typename TransformsHandle::const_iterator it = this->m_FilterLoopGPUKernelHandle.begin();
@@ -762,7 +760,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
       loopKernel, argidx++, output->GetLargestPossibleRegion().GetSize());
   }
 
-  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForLoopKernelManager() finished");
+  itkDebugMacro("GPUResampleImageFilter::SetArgumentsForLoopKernelManager() finished");
 } // end SetArgumentsForLoopKernelManager()
 
 
@@ -778,8 +776,7 @@ void
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
   SetTransformParametersForLoopKernelManager(const std::size_t transformIndex)
 {
-  itkDebugMacro(<< "GPUResampleImageFilter::SetTransformArgumentsForLoopKernelManager(" << transformIndex
-                << ") called");
+  itkDebugMacro("GPUResampleImageFilter::SetTransformArgumentsForLoopKernelManager(" << transformIndex << ") called");
 
   const GPUTransformTypeEnum transformType = this->GetTransformType(transformIndex);
 
@@ -811,7 +808,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     this->SetBSplineTransformCoefficientsToGPU(transformIndex);
   }
 
-  itkDebugMacro(<< "GPUResampleImageFilter::SetTransformArgumentsForLoopKernelManager() finished");
+  itkDebugMacro("GPUResampleImageFilter::SetTransformArgumentsForLoopKernelManager() finished");
 } // end SetTransformArgumentsForLoopKernelManager()
 
 
@@ -827,7 +824,7 @@ void
 GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
   SetBSplineTransformCoefficientsToGPU(const std::size_t transformIndex)
 {
-  itkDebugMacro(<< "GPUResampleImageFilter::SetBSplineTransformCoefficientsToGPU(" << transformIndex << ") called");
+  itkDebugMacro("GPUResampleImageFilter::SetBSplineTransformCoefficientsToGPU(" << transformIndex << ") called");
 
   // Typedefs
   using GPUBSplineTransformType = GPUBSplineBaseTransform<InterpolatorPrecisionType, InputImageDimension>;
@@ -879,7 +876,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
                                                    false);
   }
 
-  itkDebugMacro(<< "GPUResampleImageFilter::SetBSplineTransformCoefficientsToGPU() finished");
+  itkDebugMacro("GPUResampleImageFilter::SetBSplineTransformCoefficientsToGPU() finished");
 } // end SetBSplineTransformCoefficientsToGPU()
 
 
@@ -896,8 +893,8 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   SetArgumentsForPostKernelManager(const typename GPUInputImage::Pointer &  input,
                                    const typename GPUOutputImage::Pointer & output)
 {
-  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPostKernelManager(" << input->GetNameOfClass() << ", "
-                << output->GetNameOfClass() << ") called");
+  itkDebugMacro("GPUResampleImageFilter::SetArgumentsForPostKernelManager(" << input->GetNameOfClass() << ", "
+                                                                            << output->GetNameOfClass() << ") called");
 
   // Get a handle to the post kernel
   OpenCLKernel & postKernel = this->m_PostKernelManager->GetKernel(this->m_FilterPostGPUKernelHandle);
@@ -959,7 +956,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   this->m_PostKernelManager->SetKernelArgWithImage(
     this->m_FilterPostGPUKernelHandle, argidx++, this->m_InterpolatorBase->GetParametersDataManager());
 
-  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPostKernelManager() finished");
+  itkDebugMacro("GPUResampleImageFilter::SetArgumentsForPostKernelManager() finished");
 } // end SetArgumentsForPostKernelManager()
 
 
@@ -1171,7 +1168,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
 
   if (!GPUBSplineTransformBase)
   {
-    itkExceptionMacro(<< "Could not get coefficients from GPU BSpline transform.");
+    itkExceptionMacro("Could not get coefficients from GPU BSpline transform.");
   }
 
   return GPUBSplineTransformBase;

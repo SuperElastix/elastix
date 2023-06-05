@@ -180,7 +180,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
     {
       if (this->m_NormalizedShapeModel == true)
       {
-        itkExceptionMacro(<< "ShapeModelCalculation option 1 is only implemented for NormalizedShapeModel = false");
+        itkExceptionMacro("ShapeModelCalculation option 1 is only implemented for NormalizedShapeModel = false");
       }
 
       PCACovarianceType                pcaCovariance(*this->m_CovarianceMatrix);
@@ -244,7 +244,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
     {
       if (this->m_NormalizedShapeModel == false)
       {
-        itkExceptionMacro(<< "ShapeModelCalculation option 2 is only implemented for NormalizedShapeModel = true");
+        itkExceptionMacro("ShapeModelCalculation option 2 is only implemented for NormalizedShapeModel = true");
       }
 
       bool pcaNeedsUpdate = false;
@@ -350,7 +350,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
   FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
   if (!fixedPointSet)
   {
-    itkExceptionMacro(<< "Fixed point set has not been assigned");
+    itkExceptionMacro("Fixed point set has not been assigned");
   }
 
   /** Initialize some variables */
@@ -450,7 +450,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
   FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
   if (!fixedPointSet)
   {
-    itkExceptionMacro(<< "Fixed point set has not been assigned");
+    itkExceptionMacro("Fixed point set has not been assigned");
   }
 
   /** Initialize some variables */

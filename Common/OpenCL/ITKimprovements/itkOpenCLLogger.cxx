@@ -103,7 +103,7 @@ OpenCLLogger::Initialize()
   this->m_FileStream = new std::ofstream(logFileName.c_str(), std::ios::out);
   if (this->m_FileStream->fail())
   {
-    itkExceptionMacro(<< "Unable to open file: " << logFileName);
+    itkExceptionMacro("Unable to open file: " << logFileName);
     delete this->m_FileStream;
     this->m_FileStream = nullptr;
     this->m_Created = false;

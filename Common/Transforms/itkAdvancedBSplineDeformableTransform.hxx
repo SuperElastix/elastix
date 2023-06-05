@@ -195,7 +195,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   /** Check if the coefficient image has been set. */
   if (!this->m_CoefficientImages[0])
   {
-    itkWarningMacro(<< "B-spline coefficients have not been set");
+    itkWarningMacro("B-spline coefficients have not been set");
     return point;
   }
 
@@ -302,7 +302,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Sanity check. */
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   /** Convert the physical point to a continuous index, which
@@ -645,7 +645,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   jsj.resize(this->GetNumberOfNonZeroJacobianIndices());
@@ -739,7 +739,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   jsj.resize(this->GetNumberOfNonZeroJacobianIndices());
@@ -889,7 +889,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   jsh.resize(this->GetNumberOfNonZeroJacobianIndices());
@@ -1001,7 +1001,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   jsh.resize(this->GetNumberOfNonZeroJacobianIndices());

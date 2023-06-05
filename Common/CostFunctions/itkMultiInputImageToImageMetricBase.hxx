@@ -178,13 +178,13 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInte
     if (testPtr)
     {
       this->m_BSplineInterpolatorVector[i] = testPtr;
-      itkDebugMacro(<< "Interpolator " << i << " is B-spline.");
+      itkDebugMacro("Interpolator " << i << " is B-spline.");
     }
     else
     {
       this->m_InterpolatorsAreBSpline = false;
-      itkDebugMacro(<< "Interpolator " << i << " is NOT B-spline.");
-      itkExceptionMacro(<< "Interpolator " << i << " is NOT B-spline.");
+      itkDebugMacro("Interpolator " << i << " is NOT B-spline.");
+      itkExceptionMacro("Interpolator " << i << " is NOT B-spline.");
     }
   } // end for-loop
 
@@ -233,7 +233,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::InitializeImageSamp
     /** Check if the ImageSampler is set. */
     if (!this->m_ImageSampler)
     {
-      itkExceptionMacro(<< "ImageSampler is not present");
+      itkExceptionMacro("ImageSampler is not present");
     }
 
     /** Initialize the Image Sampler: set the fixed images. */

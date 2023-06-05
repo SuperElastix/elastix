@@ -56,7 +56,7 @@ BinaryANNTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
     }
     else
     {
-      itkExceptionMacro(<< "ERROR: The tree is not of type BinaryANNTreeBase.");
+      itkExceptionMacro("ERROR: The tree is not of type BinaryANNTreeBase.");
     }
   }
   else

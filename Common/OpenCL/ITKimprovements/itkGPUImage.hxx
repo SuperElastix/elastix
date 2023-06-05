@@ -306,8 +306,8 @@ GPUImage<TPixel, VImageDimension>::Graft(const DataObject * data)
     else
     {
       // pointer could not be cast back down
-      itkExceptionMacro(<< "itk::GPUImage::Graft() cannot cast " << typeid(data).name() << " to "
-                        << typeid(const GPUImageDataManagerType *).name());
+      itkExceptionMacro("itk::GPUImage::Graft() cannot cast " << typeid(data).name() << " to "
+                                                              << typeid(const GPUImageDataManagerType *).name());
     }
   }
 }

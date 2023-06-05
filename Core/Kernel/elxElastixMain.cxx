@@ -550,7 +550,7 @@ ElastixMain::GetImageInformationFromFile(const std::string & filename, ImageDime
     {
       /** Extra check. In principal, ITK the testreader should already have thrown an exception
        * if it was not possible to create the ImageIO object */
-      itkExceptionMacro(<< "ERROR: ImageIO object was not created, but no exception was thrown.");
+      itkExceptionMacro("ERROR: ImageIO object was not created, but no exception was thrown.");
     }
     imageDimension = testImageIO->GetNumberOfDimensions();
   } // end if

@@ -522,9 +522,9 @@ ResamplerBase<TElastix>::CreateItkResultImage()
 
   if (resultImage.IsNull())
   {
-    itkExceptionMacro(<< "Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned "
-                         "char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", "
-                         "\"unsigned long\", \"float\" or \"double\" but was \""
+    itkExceptionMacro("Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned "
+                      "char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", "
+                      "\"unsigned long\", \"float\" or \"double\" but was \""
                       << resultImagePixelType << "\".");
   }
 

@@ -63,7 +63,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(Insta
     mv = MeasurementVectorType(this->m_InternalContainer[id], this->GetMeasurementVectorSize(), false);
     return;
   }
-  itkExceptionMacro(<< "The requested index is larger than the container size.");
+  itkExceptionMacro("The requested index is larger than the container size.");
 
 } // end GetMeasurementVector()
 
@@ -83,7 +83,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(Insta
       MeasurementVectorType(this->m_InternalContainer[id], this->GetMeasurementVectorSize(), false);
     return this->m_TemporaryMeasurementVector;
   }
-  itkExceptionMacro(<< "The requested index is larger than the container size.");
+  itkExceptionMacro("The requested index is larger than the container size.");
 
   /** dummy return; */
   return this->m_TemporaryMeasurementVector;

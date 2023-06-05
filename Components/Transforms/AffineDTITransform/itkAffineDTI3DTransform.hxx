@@ -99,7 +99,7 @@ template <class TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
-  itkDebugMacro(<< "Setting parameters " << parameters);
+  itkDebugMacro("Setting parameters " << parameters);
 
   this->m_Angle[0] = parameters[0];
   this->m_Angle[1] = parameters[1];
@@ -124,7 +124,7 @@ AffineDTI3DTransform<TScalarType>::SetParameters(const ParametersType & paramete
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<< "After setting parameters ");
+  itkDebugMacro("After setting parameters ");
 }
 
 
@@ -168,7 +168,7 @@ void
 AffineDTI3DTransform<TScalarType>::ComputeMatrixParameters()
 {
   // let's hope we don't need it :)
-  itkExceptionMacro(<< "This function has not been implemented yet!");
+  itkExceptionMacro("This function has not been implemented yet!");
   this->ComputeMatrix();
 }
 

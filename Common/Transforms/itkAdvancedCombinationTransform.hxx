@@ -110,8 +110,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetNthTransform(SizeValu
   const SizeValueType numTransforms = GetNumberOfTransforms();
   if (n > numTransforms - 1)
   {
-    itkExceptionMacro(<< "The AdvancedCombinationTransform contains " << numTransforms
-                      << " transforms. Unable to retrieve Nth current transform with index " << n);
+    itkExceptionMacro("The AdvancedCombinationTransform contains "
+                      << numTransforms << " transforms. Unable to retrieve Nth current transform with index " << n);
   }
 
   TransformTypePointer               nthTransform;
@@ -357,7 +357,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetInverse(Self * invers
      * the initial and the current transforms are defined.
      */
 
-    itkExceptionMacro(<< "ERROR: not implemented");
+    itkExceptionMacro("ERROR: not implemented");
 
     //     /** Try create the inverse of the initial transform. */
     //     InitialTransformPointer inverseT0 = InitialTransformType::New();

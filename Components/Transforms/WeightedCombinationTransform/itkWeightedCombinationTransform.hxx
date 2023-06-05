@@ -60,7 +60,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
   this->m_SumOfWeights = param.sum();
   if (this->m_SumOfWeights < 1e-10 && this->m_NormalizeWeights)
   {
-    itkExceptionMacro(<< "Sum of weights for WeightedCombinationTransform is smaller than 0.");
+    itkExceptionMacro("Sum of weights for WeightedCombinationTransform is smaller than 0.");
   }
 
   // Precompute the nonzerojacobianindices vector

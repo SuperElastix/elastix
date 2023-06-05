@@ -106,7 +106,7 @@ public:
         return TBSplineDeformableTransform<TScalarType, NDimensions, 3>::New();
       }
     }
-    itkGenericExceptionMacro(<< "ERROR: The provided spline order (" << splineOrder << ") is not supported.");
+    itkGenericExceptionMacro("ERROR: The provided spline order (" << splineOrder << ") is not supported.");
   }
 
 
@@ -263,7 +263,7 @@ public:
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(<< "Method not applicable for deformable transform.");
+    itkExceptionMacro("Method not applicable for deformable transform.");
   }
 
 
@@ -273,7 +273,7 @@ public:
   OutputVnlVectorType
   TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(<< "Method not applicable for deformable transform. ");
+    itkExceptionMacro("Method not applicable for deformable transform. ");
   }
 
 
@@ -283,7 +283,7 @@ public:
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "Method not applicable for deformable transform. ");
+    itkExceptionMacro("Method not applicable for deformable transform. ");
   }
 
 

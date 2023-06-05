@@ -84,7 +84,7 @@ ANNkDTree<TListSample>::SetSplittingRule(const std::string & rule)
   }
   else
   {
-    itkWarningMacro(<< "WARNING: No such spliting rule.");
+    itkWarningMacro("WARNING: No such spliting rule.");
   }
 
 } // end SetSplittingRule()

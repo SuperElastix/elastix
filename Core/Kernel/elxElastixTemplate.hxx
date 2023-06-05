@@ -32,8 +32,8 @@
     {                                                                                                                  \
       std::string par = "";                                                                                            \
       Deref(ElastixBase::GetConfiguration()).ReadParameter(par, #_name, i, false);                                     \
-      itkExceptionMacro(<< "ERROR: entry " << i << " of " << #_name << " reads \"" << par                              \
-                        << "\", which is not of type " << #_name << "BaseType.");                                      \
+      itkExceptionMacro("ERROR: entry " << i << " of " << #_name << " reads \"" << par << "\", which is not of type "  \
+                                        << #_name << "BaseType.");                                                     \
     }
 // end elxCheckAndSetComponentMacro
 

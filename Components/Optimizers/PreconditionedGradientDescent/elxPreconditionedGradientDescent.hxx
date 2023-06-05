@@ -381,8 +381,8 @@ PreconditionedGradientDescent<TElastix>::SetSelfHessian()
 
   if (metricWithSelfHessian == 0)
   {
-    itkExceptionMacro(<< "The PreconditionedGradientDescent optimizer can only be used with metrics that derive from "
-                         "the AdvancedImageToImage metric!");
+    itkExceptionMacro("The PreconditionedGradientDescent optimizer can only be used with metrics that derive from "
+                      "the AdvancedImageToImage metric!");
   }
 
   log::info("Computing SelfHessian.");

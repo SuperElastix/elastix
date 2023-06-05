@@ -150,7 +150,7 @@ MultiResolutionRegistration<TElastix>::SetComponents()
     else
     {
       log::error("No ImageSampler has been specified.");
-      itkExceptionMacro(<< "The metric requires an ImageSampler, but it is not available!");
+      itkExceptionMacro("The metric requires an ImageSampler, but it is not available!");
     }
   }
 

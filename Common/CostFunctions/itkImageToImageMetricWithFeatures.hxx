@@ -54,12 +54,12 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
     /** Check if all the fixed feature images are set. */
     if (!this->m_FixedFeatureImages[i])
     {
-      itkExceptionMacro(<< "ERROR: fixed feature image " << i << " is not set.");
+      itkExceptionMacro("ERROR: fixed feature image " << i << " is not set.");
     }
     /** Check if all the fixed feature interpolators are set. */
     if (!this->m_FixedFeatureInterpolators[i])
     {
-      itkExceptionMacro(<< "ERROR: fixed feature interpolator " << i << " is not set.");
+      itkExceptionMacro("ERROR: fixed feature interpolator " << i << " is not set.");
     }
     /** Connect the feature image to the interpolator. */
     this->m_FixedFeatureInterpolators[i]->SetInputImage(this->m_FixedFeatureImages[i]);
@@ -71,12 +71,12 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
     /** Check if all the moving feature images are set. */
     if (!this->m_MovingFeatureImages[i])
     {
-      itkExceptionMacro(<< "ERROR: moving feature image " << i << " is not set.");
+      itkExceptionMacro("ERROR: moving feature image " << i << " is not set.");
     }
     /** Check if all the moving feature interpolators are set. */
     if (!this->m_MovingFeatureInterpolators[i])
     {
-      itkExceptionMacro(<< "ERROR: moving feature interpolator " << i << " is not set.");
+      itkExceptionMacro("ERROR: moving feature interpolator " << i << " is not set.");
     }
     /** Connect the feature image to the interpolator. */
     this->m_MovingFeatureInterpolators[i]->SetInputImage(this->m_MovingFeatureImages[i]);
@@ -316,12 +316,12 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
     {
       this->m_FeatureInterpolatorsIsBSpline[i] = true;
       this->m_MovingFeatureBSplineInterpolators[i] = testPtr;
-      itkDebugMacro(<< "Interpolator " << i << " is B-spline.");
+      itkDebugMacro("Interpolator " << i << " is B-spline.");
     }
     else
     {
-      itkDebugMacro(<< "Interpolator " << i << " is NOT B-spline.");
-      itkExceptionMacro(<< "Interpolator " << i << " is NOT B-spline.");
+      itkDebugMacro("Interpolator " << i << " is NOT B-spline.");
+      itkExceptionMacro("Interpolator " << i << " is NOT B-spline.");
     }
   } // end for-loop
 

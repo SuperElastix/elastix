@@ -576,7 +576,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   /** Check if at least one (image)metric is provided */
   if (this->GetNumberOfMetrics() == 0)
   {
-    itkExceptionMacro(<< "At least one metric should be set!");
+    itkExceptionMacro("At least one metric should be set!");
   }
 
   /** Call Initialize for all metrics. */
@@ -585,7 +585,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     SingleValuedCostFunctionType * costfunc = this->GetMetric(i);
     if (!costfunc)
     {
-      itkExceptionMacro(<< "Metric " << i << " has not been set!");
+      itkExceptionMacro("Metric " << i << " has not been set!");
     }
     ImageMetricType *    testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(i));
     PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(i));

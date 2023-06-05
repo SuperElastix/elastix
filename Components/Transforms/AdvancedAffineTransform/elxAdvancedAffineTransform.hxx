@@ -108,7 +108,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
     if (itkFixedParameterValues == nullptr)
     {
       log::error("ERROR: No center of rotation is specified in the transform parameter file");
-      itkExceptionMacro(<< "Transform parameter file is corrupt.")
+      itkExceptionMacro("Transform parameter file is corrupt.")
     }
   }
 
@@ -268,8 +268,8 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
       if (SpaceDimension < 3)
       {
         /** Check if dimension is 3D or higher. **/
-        itkExceptionMacro(<< "ERROR: The GeometryTop intialization method does not make sense for 2D images. Use only "
-                             "for 3D or higher dimensional images.");
+        itkExceptionMacro("ERROR: The GeometryTop intialization method does not make sense for 2D images. Use only "
+                          "for 3D or higher dimensional images.");
       }
 
       transformInitializer->GeometryTopOn();
@@ -420,7 +420,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
+      itkExceptionMacro("ERROR: The Scales-option in the parameter-file has not been set properly.");
     }
 
   } // end else: no automaticScalesEstimation

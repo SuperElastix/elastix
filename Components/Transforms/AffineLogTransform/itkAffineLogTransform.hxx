@@ -69,7 +69,7 @@ template <class TScalarType, unsigned int Dimension>
 void
 AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType & parameters)
 {
-  itkDebugMacro(<< "Setting parameters " << parameters);
+  itkDebugMacro("Setting parameters " << parameters);
   unsigned int k = 0; // Dummy loop index
 
   MatrixType exponentMatrix;
@@ -104,7 +104,7 @@ AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType &
   // parameters and cannot know if the parameters have changed.
 
   this->Modified();
-  itkDebugMacro(<< "After setting parameters ");
+  itkDebugMacro("After setting parameters ");
 }
 
 

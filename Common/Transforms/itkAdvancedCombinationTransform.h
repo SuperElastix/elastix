@@ -185,8 +185,8 @@ public:
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
-                         "AdvancedCombinationTransform");
+    itkExceptionMacro("TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
+                      "AdvancedCombinationTransform");
   }
 
 

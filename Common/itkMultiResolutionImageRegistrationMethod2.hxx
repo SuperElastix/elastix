@@ -97,22 +97,22 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::Initialize()
   // Sanity checks
   if (!this->m_Metric)
   {
-    itkExceptionMacro(<< "Metric is not present");
+    itkExceptionMacro("Metric is not present");
   }
 
   if (!this->m_Optimizer)
   {
-    itkExceptionMacro(<< "Optimizer is not present");
+    itkExceptionMacro("Optimizer is not present");
   }
 
   if (!this->m_Transform)
   {
-    itkExceptionMacro(<< "Transform is not present");
+    itkExceptionMacro("Transform is not present");
   }
 
   if (!this->m_Interpolator)
   {
-    itkExceptionMacro(<< "Interpolator is not present");
+    itkExceptionMacro("Interpolator is not present");
   }
 
   // Setup the metric
@@ -157,7 +157,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
 {
   if (!this->m_Transform)
   {
-    itkExceptionMacro(<< "Transform is not present");
+    itkExceptionMacro("Transform is not present");
   }
 
   this->m_InitialTransformParametersOfNextLevel = this->m_InitialTransformParameters;
@@ -165,29 +165,30 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
   if (const auto numberOfInitialTransformParameters = this->m_InitialTransformParameters.size();
       numberOfInitialTransformParameters != this->m_Transform->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Size mismatch between initial parameters (" << numberOfInitialTransformParameters
-                      << ") and transform (" << this->m_Transform->GetNumberOfParameters() << ")");
+    itkExceptionMacro("Size mismatch between initial parameters ("
+                      << numberOfInitialTransformParameters << ") and transform ("
+                      << this->m_Transform->GetNumberOfParameters() << ")");
   }
 
   // Sanity checks
   if (!this->m_FixedImage)
   {
-    itkExceptionMacro(<< "FixedImage is not present");
+    itkExceptionMacro("FixedImage is not present");
   }
 
   if (!this->m_MovingImage)
   {
-    itkExceptionMacro(<< "MovingImage is not present");
+    itkExceptionMacro("MovingImage is not present");
   }
 
   if (!this->m_FixedImagePyramid)
   {
-    itkExceptionMacro(<< "Fixed image pyramid is not present");
+    itkExceptionMacro("Fixed image pyramid is not present");
   }
 
   if (!this->m_MovingImagePyramid)
   {
-    itkExceptionMacro(<< "Moving image pyramid is not present");
+    itkExceptionMacro("Moving image pyramid is not present");
   }
 
   // Setup the fixed image pyramid

@@ -54,7 +54,7 @@ template <class TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
-  itkDebugMacro(<< "Setting parameters " << parameters);
+  itkDebugMacro("Setting parameters " << parameters);
 
   // Set scale
   this->SetVarScale(parameters[0]);
@@ -77,7 +77,7 @@ AdvancedSimilarity2DTransform<TScalarType>::SetParameters(const ParametersType &
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<< "After setting parameters ");
+  itkDebugMacro("After setting parameters ");
 }
 
 
@@ -86,7 +86,7 @@ template <class TScalarType>
 auto
 AdvancedSimilarity2DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
-  itkDebugMacro(<< "Getting parameters ");
+  itkDebugMacro("Getting parameters ");
 
   this->m_Parameters[0] = this->GetScale();
   this->m_Parameters[1] = this->GetAngle();
@@ -98,7 +98,7 @@ AdvancedSimilarity2DTransform<TScalarType>::GetParameters() const -> const Param
     this->m_Parameters[i + 2] = translation[i];
   }
 
-  itkDebugMacro(<< "After getting parameters " << this->m_Parameters);
+  itkDebugMacro("After getting parameters " << this->m_Parameters);
 
   return this->m_Parameters;
 }

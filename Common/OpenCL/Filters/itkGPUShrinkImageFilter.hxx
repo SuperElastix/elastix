@@ -53,7 +53,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUShrinkImageFilter()
   }
   else
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from:\n" << GPUSource);
+    itkExceptionMacro("Kernel has not been loaded from:\n" << GPUSource);
   }
 } // end Constructor()
 
@@ -66,7 +66,7 @@ template <typename TInputImage, typename TOutputImage>
 void
 GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 {
-  itkDebugMacro(<< "Calling GPUShrinkImageFilter::GPUGenerateData()");
+  itkDebugMacro("Calling GPUShrinkImageFilter::GPUGenerateData()");
 
   using GPUInputImage = typename GPUTraits<TInputImage>::Type;
   using GPUOutputImage = typename GPUTraits<TOutputImage>::Type;
@@ -77,11 +77,11 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // Perform the safe check
   if (inPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU InputImage is NULL. Filter unable to perform.");
   }
   if (otPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU OutputImage is NULL. Filter unable to perform.");
   }
 
   // Convert the factor for convenient multiplication
@@ -187,7 +187,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 
   event.WaitForFinished();
 
-  itkDebugMacro(<< "GPUShrinkImageFilter::GPUGenerateData() finished");
+  itkDebugMacro("GPUShrinkImageFilter::GPUGenerateData() finished");
 } // end GPUGenerateData()
 
 

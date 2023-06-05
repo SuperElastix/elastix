@@ -148,7 +148,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
   /** Check. */
   if (numberOfRegions != numberOfInputs && numberOfRegions != 1)
   {
-    itkExceptionMacro(<< "ERROR: The number of regions should be 1 or the number of inputs.");
+    itkExceptionMacro("ERROR: The number of regions should be 1 or the number of inputs.");
   }
 
   using DirectionType = typename InputImageType::DirectionType;
@@ -160,7 +160,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
     DirectionType diri = this->GetInput(i)->GetDirection();
     if (diri != dir0)
     {
-      itkExceptionMacro(<< "ERROR: All input images should have the same direction cosines matrix.");
+      itkExceptionMacro("ERROR: All input images should have the same direction cosines matrix.");
     }
   }
 

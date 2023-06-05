@@ -116,7 +116,7 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutpu
 {
   if (!graft)
   {
-    itkExceptionMacro(<< "Requested to graft output that is a NULL pointer");
+    itkExceptionMacro("Requested to graft output that is a NULL pointer");
   }
 
   using GPUOutputImage = typename itk::GPUTraits<TOutputImage>::Type;
@@ -138,8 +138,8 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutpu
   else
   {
     // pointer could not be cast back down
-    itkExceptionMacro(<< "itk::GPUImageToImageFilter::GraftOutput() cannot cast " << typeid(graft).name() << " to "
-                      << typeid(GPUOutputImage *).name());
+    itkExceptionMacro("itk::GPUImageToImageFilter::GraftOutput() cannot cast " << typeid(graft).name() << " to "
+                                                                               << typeid(GPUOutputImage *).name());
   }
 }
 
@@ -152,7 +152,7 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutpu
 {
   if (!graft)
   {
-    itkExceptionMacro(<< "Requested to graft output that is a NULL pointer");
+    itkExceptionMacro("Requested to graft output that is a NULL pointer");
   }
 
   using GPUOutputImage = typename itk::GPUTraits<TOutputImage>::Type;
@@ -174,8 +174,8 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GraftOutpu
   else
   {
     // pointer could not be cast back down
-    itkExceptionMacro(<< "itk::GPUImageToImageFilter::GraftOutput() cannot cast " << typeid(graft).name() << " to "
-                      << typeid(GPUOutputImage *).name());
+    itkExceptionMacro("itk::GPUImageToImageFilter::GraftOutput() cannot cast " << typeid(graft).name() << " to "
+                                                                               << typeid(GPUOutputImage *).name());
   }
 }
 

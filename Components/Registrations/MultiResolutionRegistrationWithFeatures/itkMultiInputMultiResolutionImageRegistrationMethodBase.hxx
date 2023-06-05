@@ -230,7 +230,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
   }
   else
   {
-    itkExceptionMacro(<< "ERROR: This registration method expects a MultiInputImageToImageMetric");
+    itkExceptionMacro("ERROR: This registration method expects a MultiInputImageToImageMetric");
   }
 
 } // end SetMetric()
@@ -439,14 +439,14 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
   /** Check the transform and set the initial parameters. */
   if (this->GetTransform() == nullptr)
   {
-    itkExceptionMacro(<< "Transform is not present");
+    itkExceptionMacro("Transform is not present");
   }
 
   this->SetInitialTransformParametersOfNextLevel(this->GetInitialTransformParameters());
 
   if (this->GetInitialTransformParametersOfNextLevel().Size() != this->GetTransform()->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Size mismatch between initial parameter and transform");
+    itkExceptionMacro("Size mismatch between initial parameter and transform");
   }
 
   /** Prepare the fixed and moving pyramids. */
@@ -592,19 +592,19 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
   /** Check if at least one of the following are provided. */
   if (this->GetFixedImage() == nullptr)
   {
-    itkExceptionMacro(<< "FixedImage is not present");
+    itkExceptionMacro("FixedImage is not present");
   }
   if (this->GetMovingImage() == nullptr)
   {
-    itkExceptionMacro(<< "MovingImage is not present");
+    itkExceptionMacro("MovingImage is not present");
   }
   if (this->GetFixedImagePyramid() == nullptr)
   {
-    itkExceptionMacro(<< "Fixed image pyramid is not present");
+    itkExceptionMacro("Fixed image pyramid is not present");
   }
   if (this->GetMovingImagePyramid() == nullptr)
   {
-    itkExceptionMacro(<< "Moving image pyramid is not present");
+    itkExceptionMacro("Moving image pyramid is not present");
   }
 
   /** Check if the number if fixed/moving pyramids >= nr of fixed/moving images,
@@ -612,15 +612,15 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
    */
   if (this->GetNumberOfFixedImagePyramids() < this->GetNumberOfFixedImages())
   {
-    itkExceptionMacro(<< "The number of fixed image pyramids should be >= the number of fixed images");
+    itkExceptionMacro("The number of fixed image pyramids should be >= the number of fixed images");
   }
   if (this->GetNumberOfMovingImagePyramids() < this->GetNumberOfMovingImages())
   {
-    itkExceptionMacro(<< "The number of moving image pyramids should be >= the number of moving images");
+    itkExceptionMacro("The number of moving image pyramids should be >= the number of moving images");
   }
   if (this->GetNumberOfFixedImageRegions() != this->GetNumberOfFixedImages())
   {
-    itkExceptionMacro(<< "The number of fixed image regions should equal the number of fixed image");
+    itkExceptionMacro("The number of fixed image regions should equal the number of fixed image");
   }
 
 } // end CheckPyramids()
@@ -637,25 +637,25 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
   /** check if at least one of the following is present. */
   if (this->GetMetric() == nullptr)
   {
-    itkExceptionMacro(<< "Metric is not present");
+    itkExceptionMacro("Metric is not present");
   }
   if (this->GetOptimizer() == nullptr)
   {
-    itkExceptionMacro(<< "Optimizer is not present");
+    itkExceptionMacro("Optimizer is not present");
   }
   if (this->GetTransform() == nullptr)
   {
-    itkExceptionMacro(<< "Transform is not present");
+    itkExceptionMacro("Transform is not present");
   }
   if (this->GetInterpolator() == nullptr)
   {
-    itkExceptionMacro(<< "Interpolator is not present");
+    itkExceptionMacro("Interpolator is not present");
   }
 
   /** nrofinterpolators >= nrofpyramids? */
   if (this->GetNumberOfMovingImagePyramids() > this->GetNumberOfInterpolators())
   {
-    itkExceptionMacro(<< "NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!");
+    itkExceptionMacro("NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!");
   }
 
 } // end CheckOnInitialize()

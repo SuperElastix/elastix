@@ -72,8 +72,8 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   }
   else
   {
-    itkExceptionMacro(<< "ERROR: the NormalizedGradientCorrelationImageToImageMetric is currently only suitable for "
-                         "2D-3D registration.\n"
+    itkExceptionMacro("ERROR: the NormalizedGradientCorrelationImageToImageMetric is currently only suitable for "
+                      "2D-3D registration.\n"
                       << "  Therefore it expects an interpolator of type RayCastInterpolator.");
   }
   this->m_TransformMovingImageFilter->SetInterpolator(this->m_Interpolator);

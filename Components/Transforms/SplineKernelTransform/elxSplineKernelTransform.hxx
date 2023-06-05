@@ -165,7 +165,7 @@ SplineKernelTransform<TElastix>::BeforeRegistration()
   if (!knownType)
   {
     log::error(std::ostringstream{} << "ERROR: The kernel type " << kernelType << " is not supported.");
-    itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
+    itkExceptionMacro("ERROR: unable to configure " << this->GetComponentLabel());
   }
 
   /** Interpolating or approximating spline. */
@@ -301,7 +301,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   catch (const itk::ExceptionObject & err)
   {
     log::error(std::ostringstream{} << "  Error while opening landmark file.\n" << err);
-    itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
+    itkExceptionMacro("ERROR: unable to configure " << this->GetComponentLabel());
   }
 
   /** Some user-feedback. */
@@ -388,7 +388,7 @@ SplineKernelTransform<TElastix>::ReadFromFile()
   else
   {
     log::error("ERROR: the SplineKernelType is not given in the transform parameter file.");
-    itkExceptionMacro(<< "ERROR: unable to configure transform.");
+    itkExceptionMacro("ERROR: unable to configure transform.");
   }
 
   /** Interpolating or approximating spline. */
@@ -413,7 +413,7 @@ SplineKernelTransform<TElastix>::ReadFromFile()
   if (!retfil)
   {
     log::error("ERROR: the FixedImageLandmarks are not given in the transform parameter file.");
-    itkExceptionMacro(<< "ERROR: unable to configure transform.");
+    itkExceptionMacro("ERROR: unable to configure transform.");
   }
 
   /** Convert to fixedParameters type and set in transform. */

@@ -75,8 +75,8 @@ protected:
     const auto numberOfFixedParameters = fixedParameters.size();
     if (numberOfFixedParameters < NumberOfFixedParameters)
     {
-      itkExceptionMacro(<< "The number of FixedParameters (" << numberOfFixedParameters << ") should be at least "
-                        << NumberOfFixedParameters);
+      itkExceptionMacro("The number of FixedParameters (" << numberOfFixedParameters << ") should be at least "
+                                                          << NumberOfFixedParameters);
     }
     const auto lastFixedParameter = fixedParameters.back();
     if (lastFixedParameter >= 1 && lastFixedParameter <= 3 &&
@@ -86,7 +86,7 @@ protected:
     }
     else
     {
-      itkExceptionMacro(<< "The last FixedParameters (" << lastFixedParameter << ") should be a valid spline order.");
+      itkExceptionMacro("The last FixedParameters (" << lastFixedParameter << ") should be a valid spline order.");
     }
 
     if (Superclass::m_FixedParameters != fixedParameters)

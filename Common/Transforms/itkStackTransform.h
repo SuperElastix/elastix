@@ -120,8 +120,8 @@ public:
     const auto numberOfFixedParameters = fixedParameters.size();
     if (numberOfFixedParameters < NumberOfGeneralFixedParametersOfStack)
     {
-      itkExceptionMacro(<< "The number of FixedParameters (" << numberOfFixedParameters << ") should be at least "
-                        << NumberOfGeneralFixedParametersOfStack);
+      itkExceptionMacro("The number of FixedParameters (" << numberOfFixedParameters << ") should be at least "
+                                                          << NumberOfGeneralFixedParametersOfStack);
     }
 
     if (Superclass::m_FixedParameters != fixedParameters)
@@ -257,8 +257,8 @@ protected:
     }
     else
     {
-      itkExceptionMacro(<< "The FixedParameters element (" << numberOfSubTransforms
-                        << ") should be a valid number (the number of subtransforms).");
+      itkExceptionMacro("The FixedParameters element (" << numberOfSubTransforms
+                                                        << ") should be a valid number (the number of subtransforms).");
     }
 
     for (auto & subTransform : m_SubTransformContainer)

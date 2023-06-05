@@ -33,17 +33,17 @@
 
 //! This macro is used to print out debug message to the current message handler
 //! in instance methods
-//! itkOpenCLDebugMacro(<< "Debug message" << this->SomeVariable);
+//! itkOpenCLDebugMacro("Debug message" << this->SomeVariable);
 #define itkOpenCLDebugMacro(x) itkOpenCLDebugWithObjectMacro(this, x)
 
 //! This macro is used to print out warning message to the current message
 //! handler in instance methods
-//! itkOpenCLWarningMacro(<< "Warning message" << this->SomeVariable);
+//! itkOpenCLWarningMacro("Warning message" << this->SomeVariable);
 #define itkOpenCLWarningMacro(x) itkOpenCLWarningWithObjectMacro(this, x)
 
 //! This macro is used to print out error message to the current message handler
 //! in instance methods
-//! itkOpenCLErrorMacro(<< "Error message" << this->SomeVariable);
+//! itkOpenCLErrorMacro("Error message" << this->SomeVariable);
 #define itkOpenCLErrorMacro(x) itkOpenCLErrorWithObjectMacro(this, x)
 
 //! This macro is used to print out debug message to the current message handler

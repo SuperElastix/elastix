@@ -72,7 +72,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
   /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
   if (!transformIsBSpline)
   {
-    itkExceptionMacro(<< "ERROR: this metric expects a B-spline transform.");
+    itkExceptionMacro("ERROR: this metric expects a B-spline transform.");
   }
 
   /** Initialize BSplineKnotImage. */

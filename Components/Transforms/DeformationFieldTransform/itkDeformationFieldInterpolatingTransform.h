@@ -102,7 +102,7 @@ public:
   void
   SetParameters(const ParametersType &) override
   {
-    itkExceptionMacro(<< "ERROR: SetParameters() is not implemented for DeformationFieldInterpolatingTransform.\n"
+    itkExceptionMacro("ERROR: SetParameters() is not implemented for DeformationFieldInterpolatingTransform.\n"
                       << "Use SetDeformationField() instead.\n"
                       << "Note that this transform is NOT suited for image registration.\n"
                       << "Just use it as an (initial) fixed transform that is not optimized.");
@@ -152,8 +152,8 @@ public:
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
-                         "DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("TransformCovariantVector(const InputCovariantVectorType &) is not implemented for "
+                      "DeformationFieldInterpolatingTransform");
   }
 
 
@@ -186,21 +186,21 @@ public:
               JacobianType &               j,
               NonZeroJacobianIndicesType & nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
   void
   GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const override
   {
-    itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
   void
   GetSpatialHessian(const InputPointType & inputPoint, SpatialHessianType & sh) const override
   {
-    itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
@@ -209,7 +209,7 @@ public:
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
@@ -219,7 +219,7 @@ public:
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
@@ -228,7 +228,7 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
@@ -238,7 +238,7 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for DeformationFieldInterpolatingTransform");
+    itkExceptionMacro("Not implemented for DeformationFieldInterpolatingTransform");
   }
 
 

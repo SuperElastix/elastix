@@ -37,19 +37,19 @@ MultiResolutionImageRegistrationMethodWithFeatures<TFixedImage, TMovingImage>::C
   /** Check if at least one of the following are provided. */
   if (this->GetFixedImage() == nullptr)
   {
-    itkExceptionMacro(<< "FixedImage is not present");
+    itkExceptionMacro("FixedImage is not present");
   }
   if (this->GetMovingImage() == nullptr)
   {
-    itkExceptionMacro(<< "MovingImage is not present");
+    itkExceptionMacro("MovingImage is not present");
   }
   if (this->GetFixedImagePyramid() == nullptr)
   {
-    itkExceptionMacro(<< "Fixed image pyramid is not present");
+    itkExceptionMacro("Fixed image pyramid is not present");
   }
   if (this->GetMovingImagePyramid() == nullptr)
   {
-    itkExceptionMacro(<< "Moving image pyramid is not present");
+    itkExceptionMacro("Moving image pyramid is not present");
   }
 
   /** Check if the number if fixed/moving pyramids == nr of fixed/moving images,
@@ -57,15 +57,15 @@ MultiResolutionImageRegistrationMethodWithFeatures<TFixedImage, TMovingImage>::C
    */
   if (this->GetNumberOfFixedImagePyramids() != this->GetNumberOfFixedImages())
   {
-    itkExceptionMacro(<< "The number of fixed image pyramids should equal the number of fixed images");
+    itkExceptionMacro("The number of fixed image pyramids should equal the number of fixed images");
   }
   if (this->GetNumberOfMovingImagePyramids() != this->GetNumberOfMovingImages())
   {
-    itkExceptionMacro(<< "The number of moving image pyramids should equal the number of moving images");
+    itkExceptionMacro("The number of moving image pyramids should equal the number of moving images");
   }
   if (this->GetNumberOfFixedImageRegions() != this->GetNumberOfFixedImages())
   {
-    itkExceptionMacro(<< "The number of fixed image regions should equal the number of fixed image");
+    itkExceptionMacro("The number of fixed image regions should equal the number of fixed image");
   }
 
 } // end CheckPyramids()

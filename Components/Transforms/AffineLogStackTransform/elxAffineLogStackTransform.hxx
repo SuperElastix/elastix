@@ -117,7 +117,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile()
     if (!pointRead)
     {
       log::error("ERROR: No center of rotation is specified in the transform parameter file");
-      itkExceptionMacro(<< "Transform parameter file is corrupt.")
+      itkExceptionMacro("Transform parameter file is corrupt.")
     }
 
     this->InitializeAffineLogTransform();
@@ -388,7 +388,7 @@ AffineLogStackTransform<TElastix>::SetScales()
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
+      itkExceptionMacro("ERROR: The Scales-option in the parameter-file has not been set properly.");
     }
 
   } // end else: no automaticScalesEstimation

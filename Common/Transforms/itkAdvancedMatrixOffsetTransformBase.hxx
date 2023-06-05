@@ -309,7 +309,8 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 {
   if (parameters.Size() < (NOutputDimensions * NInputDimensions + NOutputDimensions))
   {
-    itkExceptionMacro(<< "Error setting parameters: parameters array size (" << parameters.Size()
+    itkExceptionMacro("Error setting parameters: parameters array size ("
+                      << parameters.Size()
                       << ") is less than expected  (NInputDimensions * NOutputDimensions + NOutputDimensions)  ("
                       << NInputDimensions << " * " << NOutputDimensions << " + " << NOutputDimensions << " = "
                       << NInputDimensions * NOutputDimensions + NOutputDimensions << ")");

@@ -61,7 +61,7 @@ ANNbdTree<TListSample>::SetShrinkingRule(const std::string & rule)
   }
   else
   {
-    itkWarningMacro(<< "WARNING: No such shrinking rule.");
+    itkWarningMacro("WARNING: No such shrinking rule.");
   }
 
 } // end SetShrinkingRule()

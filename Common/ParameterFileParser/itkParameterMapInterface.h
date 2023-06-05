@@ -404,8 +404,9 @@ public:
       else
       {
         const auto entry_nr = &str - found->second.data();
-        itkExceptionMacro(<< "Failed to cast parameter \"" << parameterName << "\" entry number " << entry_nr
-                          << " value \"" << str << "\" to type \"" << typeid(T).name() << "\"!");
+        itkExceptionMacro("Failed to cast parameter \"" << parameterName << "\" entry number " << entry_nr
+                                                        << " value \"" << str << "\" to type \"" << typeid(T).name()
+                                                        << "\"!");
       }
     }
     return std::make_unique<std::vector<T>>(std::move(result));

@@ -356,8 +356,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKe
       this->m_FixedKernel = BSplineKernelFunction2<3>::New();
       break;
     default:
-      itkExceptionMacro(<< "The following FixedKernelBSplineOrder is not implemented: "
-                        << this->m_FixedKernelBSplineOrder);
+      itkExceptionMacro(
+        "The following FixedKernelBSplineOrder is not implemented: " << this->m_FixedKernelBSplineOrder);
   } // end switch FixedKernelBSplineOrder
 
   switch (this->m_MovingKernelBSplineOrder)
@@ -384,8 +384,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKe
       this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction2<3>::New();
       break;
     default:
-      itkExceptionMacro(<< "The following MovingKernelBSplineOrder is not implemented: "
-                        << this->m_MovingKernelBSplineOrder);
+      itkExceptionMacro(
+        "The following MovingKernelBSplineOrder is not implemented: " << this->m_MovingKernelBSplineOrder);
   } // end switch MovingKernelBSplineOrder
 
   /** The region of support of the Parzen window determines which bins

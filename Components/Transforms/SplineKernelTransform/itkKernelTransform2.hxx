@@ -100,7 +100,7 @@ template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::SetSourceLandmarks(PointSetType * landmarks)
 {
-  itkDebugMacro(<< "setting SourceLandmarks to " << landmarks);
+  itkDebugMacro("setting SourceLandmarks to " << landmarks);
   if (this->m_SourceLandmarks != landmarks)
   {
     this->m_SourceLandmarks = landmarks;
@@ -156,7 +156,7 @@ template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeG(const InputVectorType &, GMatrixType &) const
 {
-  itkExceptionMacro(<< "ComputeG() should be reimplemented in the subclass !!");
+  itkExceptionMacro("ComputeG() should be reimplemented in the subclass !!");
 } // end ComputeG()
 
 
@@ -282,7 +282,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeWMatrix()
   }
   else
   {
-    itkExceptionMacro(<< "ERROR: invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
+    itkExceptionMacro("ERROR: invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
   }
 
   /** Reorganize W. */
@@ -318,7 +318,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeLInverse()
   }
   else
   {
-    itkExceptionMacro(<< "ERROR: invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
+    itkExceptionMacro("ERROR: invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
   }
 
 } // end ComputeLInverse()

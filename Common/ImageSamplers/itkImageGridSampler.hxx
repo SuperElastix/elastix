@@ -219,7 +219,7 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
   /** This function assumes that the input has been set. */
   if (!this->GetInput())
   {
-    itkExceptionMacro(<< "ERROR: only call the function SetNumberOfSamples() after the input has been set.");
+    itkExceptionMacro("ERROR: only call the function SetNumberOfSamples() after the input has been set.");
   }
 
   /** Compute an isotropic grid spacing (in voxels),

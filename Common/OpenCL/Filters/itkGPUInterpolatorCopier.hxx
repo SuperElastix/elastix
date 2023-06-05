@@ -55,7 +55,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 {
   if (!this->m_InputInterpolator)
   {
-    itkExceptionMacro(<< "Input Interpolator has not been connected");
+    itkExceptionMacro("Input Interpolator has not been connected");
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified
@@ -165,7 +165,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 
     if (this->m_Output.IsNull())
     {
-      itkExceptionMacro(<< "GPUInterpolatorCopier was unable to copy interpolator from: " << this->m_InputInterpolator);
+      itkExceptionMacro("GPUInterpolatorCopier was unable to copy interpolator from: " << this->m_InputInterpolator);
     }
   }
 }

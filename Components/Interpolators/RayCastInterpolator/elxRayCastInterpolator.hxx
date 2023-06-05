@@ -35,12 +35,12 @@ RayCastInterpolator<TElastix>::BeforeAll()
   // Check if 2D-3D
   if (this->m_Elastix->GetFixedImage()->GetImageDimension() != 3)
   {
-    itkExceptionMacro(<< "The RayCastInterpolator expects the fixed image to be 3D.");
+    itkExceptionMacro("The RayCastInterpolator expects the fixed image to be 3D.");
     return 1;
   }
   if (this->m_Elastix->GetMovingImage()->GetImageDimension() != 3)
   {
-    itkExceptionMacro(<< "The RayCastInterpolator expects the moving image to be 3D.");
+    itkExceptionMacro("The RayCastInterpolator expects the moving image to be 3D.");
     return 1;
   }
 
