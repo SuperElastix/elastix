@@ -39,11 +39,11 @@ main()
     {
       if (context->GetDefaultDevice().HasCompiler())
       {
-        itkGenericExceptionMacro(<< "Could not compile the OpenCL test program");
+        itkGenericExceptionMacro("Could not compile the OpenCL test program");
       }
       else
       {
-        itkGenericExceptionMacro(<< "OpenCL implementation does not have a compiler");
+        itkGenericExceptionMacro("OpenCL implementation does not have a compiler");
       }
     }
     context->Release();
@@ -58,11 +58,11 @@ main()
     {
       if (context->GetDefaultDevice().HasCompiler())
       {
-        itkGenericExceptionMacro(<< "Could not compile the OpenCL test program");
+        itkGenericExceptionMacro("Could not compile the OpenCL test program");
       }
       else
       {
-        itkGenericExceptionMacro(<< "OpenCL implementation does not have a compiler");
+        itkGenericExceptionMacro("OpenCL implementation does not have a compiler");
       }
     }
     context->Release();

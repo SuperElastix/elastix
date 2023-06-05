@@ -265,7 +265,7 @@ public:
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(<< "Method not applicable for deformable transform.");
+    itkExceptionMacro("Method not applicable for deformable transform.");
     return OutputVectorType();
   }
 
@@ -276,7 +276,7 @@ public:
   OutputVnlVectorType
   TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(<< "Method not applicable for deformable transform. ");
+    itkExceptionMacro("Method not applicable for deformable transform. ");
     return OutputVnlVectorType();
   }
 
@@ -287,7 +287,7 @@ public:
   OutputCovariantVectorType
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
-    itkExceptionMacro(<< "Method not applicable for deformable transform. ");
+    itkExceptionMacro("Method not applicable for deformable transform. ");
     return OutputCovariantVectorType();
   }
 
@@ -408,8 +408,8 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "ERROR: GetJacobianOfSpatialHessian() not yet implemented in the "
-                         "MultiBSplineDeformableTransformWithNormal class.");
+    itkExceptionMacro("ERROR: GetJacobianOfSpatialHessian() not yet implemented in the "
+                      "MultiBSplineDeformableTransformWithNormal class.");
   }
 
 

@@ -64,7 +64,7 @@ void
 AdvancedVersorRigid3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
 
-  itkDebugMacro(<< "Setting parameters " << parameters);
+  itkDebugMacro("Setting parameters " << parameters);
 
   // Transfer the versor part
 
@@ -91,7 +91,7 @@ AdvancedVersorRigid3DTransform<TScalarType>::SetParameters(const ParametersType 
   this->SetVarVersor(newVersor);
   this->ComputeMatrix();
 
-  itkDebugMacro(<< "Versor is now " << this->GetVersor());
+  itkDebugMacro("Versor is now " << this->GetVersor());
 
   // Transfer the translation part
   TranslationType newTranslation;
@@ -105,7 +105,7 @@ AdvancedVersorRigid3DTransform<TScalarType>::SetParameters(const ParametersType 
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<< "After setting parameters ");
+  itkDebugMacro("After setting parameters ");
 }
 
 
@@ -122,7 +122,7 @@ template <class TScalarType>
 auto
 AdvancedVersorRigid3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
-  itkDebugMacro(<< "Getting parameters ");
+  itkDebugMacro("Getting parameters ");
 
   this->m_Parameters[0] = this->GetVersor().GetX();
   this->m_Parameters[1] = this->GetVersor().GetY();
@@ -133,7 +133,7 @@ AdvancedVersorRigid3DTransform<TScalarType>::GetParameters() const -> const Para
   this->m_Parameters[4] = this->GetTranslation()[1];
   this->m_Parameters[5] = this->GetTranslation()[2];
 
-  itkDebugMacro(<< "After getting parameters " << this->m_Parameters);
+  itkDebugMacro("After getting parameters " << this->m_Parameters);
 
   return this->m_Parameters;
 }

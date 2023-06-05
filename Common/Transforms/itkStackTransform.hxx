@@ -35,8 +35,8 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(
   // Here we check if the number of parameters is #subtransforms * #parameters per subtransform.
   if (param.GetSize() != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Number of parameters does not match the number of subtransforms * the number of parameters "
-                         "per subtransform.");
+    itkExceptionMacro("Number of parameters does not match the number of subtransforms * the number of parameters "
+                      "per subtransform.");
   }
 
   // Set separate subtransform parameters

@@ -52,7 +52,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::GetParametersDataManager(co
     }
     else
     {
-      itkExceptionMacro(<< "Could not get GPU transform base.");
+      itkExceptionMacro("Could not get GPU transform base.");
     }
   }
 }

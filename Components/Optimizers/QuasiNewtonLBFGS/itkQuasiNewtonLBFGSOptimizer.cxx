@@ -330,7 +330,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(const ParametersType searchDir,
   {
     this->m_StopCondition = LineSearchError;
     this->StopOptimization();
-    itkExceptionMacro(<< "No line search optimizer set");
+    itkExceptionMacro("No line search optimizer set");
   }
 
   LSO->SetCostFunction(this->m_ScaledCostFunction);

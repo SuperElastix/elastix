@@ -96,7 +96,7 @@ RandomCoordinateSampler<TElastix>::BeforeEachResolution()
     {
       if (sampleRegionSize[i] > (fixedImageSize[i] - 1) * fixedImageSpacing[i])
       {
-        itkExceptionMacro(<< "ERROR: in your parameter file you selected\n"
+        itkExceptionMacro("ERROR: in your parameter file you selected\n"
                           << "  SampleRegionSize[ " << i << " ] = " << sampleRegionSize[i]
                           << " mm,\n  while the fixed image size at dim = " << i << " is " << fixedImageSize[i]
                           << " voxels or " << fixedImageSize[i] * fixedImageSpacing[i] << " mm.\n"

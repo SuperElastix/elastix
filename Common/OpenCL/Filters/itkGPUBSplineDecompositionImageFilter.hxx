@@ -72,7 +72,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUBSplineDecompo
   }
   else
   {
-    itkExceptionMacro(<< "Kernel has not been loaded from:\n" << GPUSource);
+    itkExceptionMacro("Kernel has not been loaded from:\n" << GPUSource);
   }
 } // end Constructor()
 
@@ -85,7 +85,7 @@ template <typename TInputImage, typename TOutputImage>
 void
 GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 {
-  itkDebugMacro(<< "Calling GPUBSplineDecompositionImageFilter::GPUGenerateData()");
+  itkDebugMacro("Calling GPUBSplineDecompositionImageFilter::GPUGenerateData()");
 
   using GPUInputImage = typename GPUTraits<TInputImage>::Type;
   using GPUOutputImage = typename GPUTraits<TOutputImage>::Type;
@@ -96,11 +96,11 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // Perform the safe check
   if (inPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU InputImage is NULL. Filter unable to perform.");
   }
   if (otPtr.IsNull())
   {
-    itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro("The GPU OutputImage is NULL. Filter unable to perform.");
   }
 
   const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
@@ -118,7 +118,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // Check if GPU filter are able to perform for this image
   if (maxLength > this->m_DeviceLocalMemorySize)
   {
-    itkExceptionMacro(<< "GPUBSplineDecompositionImageFilter unable to perform.");
+    itkExceptionMacro("GPUBSplineDecompositionImageFilter unable to perform.");
   }
 
   // Cast here, see the same call in this->CopyImageToImage() of
@@ -239,7 +239,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 
   eventList.WaitForFinished();
 
-  itkDebugMacro(<< "GPUBSplineDecompositionImageFilter::GPUGenerateData() finished");
+  itkDebugMacro("GPUBSplineDecompositionImageFilter::GPUGenerateData() finished");
 } // end GPUGenerateData()
 
 

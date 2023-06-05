@@ -424,7 +424,7 @@ AdvancedImageMomentsCalculator<TImage>::GetTotalMass() const -> ScalarType
 {
   if (!m_Valid)
   {
-    itkExceptionMacro(<< "GetTotalMass() invoked, but the moments have not been computed. Call Compute() first.");
+    itkExceptionMacro("GetTotalMass() invoked, but the moments have not been computed. Call Compute() first.");
   }
   return m_M0;
 }
@@ -437,7 +437,7 @@ AdvancedImageMomentsCalculator<TImage>::GetFirstMoments() const -> VectorType
 {
   if (!m_Valid)
   {
-    itkExceptionMacro(<< "GetFirstMoments() invoked, but the moments have not been computed. Call Compute() first.");
+    itkExceptionMacro("GetFirstMoments() invoked, but the moments have not been computed. Call Compute() first.");
   }
   return m_M1;
 }
@@ -450,7 +450,7 @@ AdvancedImageMomentsCalculator<TImage>::GetSecondMoments() const -> MatrixType
 {
   if (!m_Valid)
   {
-    itkExceptionMacro(<< "GetSecondMoments() invoked, but the moments have not been computed. Call Compute() first.");
+    itkExceptionMacro("GetSecondMoments() invoked, but the moments have not been computed. Call Compute() first.");
   }
   return m_M2;
 }
@@ -463,7 +463,7 @@ AdvancedImageMomentsCalculator<TImage>::GetCenterOfGravity() const -> VectorType
 {
   if (!m_Valid)
   {
-    itkExceptionMacro(<< "GetCenterOfGravity() invoked, but the moments have not been computed. Call Compute() first.");
+    itkExceptionMacro("GetCenterOfGravity() invoked, but the moments have not been computed. Call Compute() first.");
   }
   return m_Cg;
 }
@@ -476,7 +476,7 @@ AdvancedImageMomentsCalculator<TImage>::GetCentralMoments() const -> MatrixType
 {
   if (!m_Valid)
   {
-    itkExceptionMacro(<< "GetCentralMoments() invoked, but the moments have not been computed. Call Compute() first.");
+    itkExceptionMacro("GetCentralMoments() invoked, but the moments have not been computed. Call Compute() first.");
   }
   return m_Cm;
 }
@@ -503,7 +503,7 @@ AdvancedImageMomentsCalculator<TImage>::GetPrincipalAxes() const -> MatrixType
 {
   if (!m_Valid)
   {
-    itkExceptionMacro(<< "GetPrincipalAxes() invoked, but the moments have not been computed. Call Compute() first.");
+    itkExceptionMacro("GetPrincipalAxes() invoked, but the moments have not been computed. Call Compute() first.");
   }
   return m_Pa;
 }
@@ -590,8 +590,8 @@ AdvancedImageMomentsCalculator<TInputImage>::SampleImage(ImageSampleContainerPoi
 
   if (nrofsamples == 0)
   {
-    itkExceptionMacro(<< "No valid voxels (0/" << this->m_NumberOfSamplesForCenteredTransformInitialization
-                      << ") found to estimate the AutomaticTransformInitialization parameters.");
+    itkExceptionMacro("No valid voxels (0/" << this->m_NumberOfSamplesForCenteredTransformInitialization
+                                            << ") found to estimate the AutomaticTransformInitialization parameters.");
   }
 } // end SampleImage()
 

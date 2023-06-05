@@ -331,7 +331,8 @@ ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileN
 
   if (m_ParameterMaps.size() > 1)
   {
-    itkExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << m_ParameterMaps.size()
+    itkExceptionMacro("Error writing to disk: The number of parameter maps ("
+                      << m_ParameterMaps.size()
                       << ") does not match the number of provided filenames (1). Please call WriteParameterFiles "
                          "instead, and provide a vector of filenames.");
   }
@@ -381,9 +382,9 @@ ParameterObject::WriteParameterFiles(const ParameterMapVectorType &      paramet
 {
   if (parameterMapVector.size() != parameterFileNameVector.size())
   {
-    itkGenericExceptionMacro(<< "Error writing to disk: The number of parameter maps (" << parameterMapVector.size()
-                             << ") does not match the number of provided filenames (" << parameterFileNameVector.size()
-                             << ").");
+    itkGenericExceptionMacro("Error writing to disk: The number of parameter maps ("
+                             << parameterMapVector.size() << ") does not match the number of provided filenames ("
+                             << parameterFileNameVector.size() << ").");
   }
 
   // Add initial transform parameter file names. Do not touch the first one,

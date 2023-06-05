@@ -49,7 +49,7 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::SetTransf
 {
   if (!this->m_Transform)
   {
-    itkExceptionMacro(<< "Transform has not been assigned");
+    itkExceptionMacro("Transform has not been assigned");
   }
   this->m_Transform->SetParameters(parameters);
 
@@ -66,17 +66,17 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::Initializ
 {
   if (!this->m_Transform)
   {
-    itkExceptionMacro(<< "Transform is not present");
+    itkExceptionMacro("Transform is not present");
   }
 
   if (!this->m_MovingPointSet)
   {
-    itkExceptionMacro(<< "MovingPointSet is not present");
+    itkExceptionMacro("MovingPointSet is not present");
   }
 
   if (!this->m_FixedPointSet)
   {
-    itkExceptionMacro(<< "FixedPointSet is not present");
+    itkExceptionMacro("FixedPointSet is not present");
   }
 
   // If the PointSet is provided by a source, update the source.

@@ -58,7 +58,7 @@ MultiBSplineTransformWithNormal<TElastix>::InitializeBSplineTransform()
   }
   else
   {
-    itkExceptionMacro(<< "ERROR: The provided spline order is not supported.");
+    itkExceptionMacro("ERROR: The provided spline order is not supported.");
     return 1;
   }
 
@@ -92,7 +92,7 @@ MultiBSplineTransformWithNormal<TElastix>::BeforeAll()
   {
     log::error(std::ostringstream{} << "ERROR: The MultiBSplineTransformWithNormal need a -labels command line option"
                                     << " that indicates where to find the sliding objects segmentation.");
-    itkExceptionMacro(<< "ERROR: Missing -labels argument!");
+    itkExceptionMacro("ERROR: Missing -labels argument!");
   }
 
   return InitializeBSplineTransform();
@@ -229,8 +229,8 @@ MultiBSplineTransformWithNormal<TElastix>::PreComputeGridInformation()
   /** Throw an exception if both methods are used. */
   if (count1 > 0 && count2 > 0)
   {
-    itkExceptionMacro(<< "ERROR: You can not specify both \"FinalGridSpacingInVoxels\""
-                         " and \"FinalGridSpacingInPhysicalUnits\" in the parameter file.");
+    itkExceptionMacro("ERROR: You can not specify both \"FinalGridSpacingInVoxels\""
+                      " and \"FinalGridSpacingInPhysicalUnits\" in the parameter file.");
   }
 
   /** Declare variables and set defaults. */
@@ -305,7 +305,7 @@ MultiBSplineTransformWithNormal<TElastix>::PreComputeGridInformation()
     log::error(std::ostringstream{}
                << "ERROR: Invalid GridSpacingSchedule! The number of entries behind the GridSpacingSchedule "
                   "option should equal the numberOfResolutions, or the numberOfResolutions * ImageDimension.");
-    itkExceptionMacro(<< "ERROR: Invalid GridSpacingSchedule!");
+    itkExceptionMacro("ERROR: Invalid GridSpacingSchedule!");
   }
 
   /** Set the grid schedule and final grid spacing in the schedule computer. */
@@ -651,7 +651,7 @@ MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int
       log::error(std::ostringstream{} << "ERROR: you specified a PassiveEdgeWidth of " << edgeWidth
                                       << ", while the total grid size in dimension " << i << " is only " << gridsize[i]
                                       << ".");
-      itkExceptionMacro(<< "ERROR: the PassiveEdgeWidth is too large!");
+      itkExceptionMacro("ERROR: the PassiveEdgeWidth is too large!");
     }
     insetgridindex[i] = gridindex[i] + edgeWidth;
   }

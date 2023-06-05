@@ -85,7 +85,7 @@ public:
     /** Check if the coefficient image has been set. */
     if (!this->m_CoefficientImages[0])
     {
-      itkWarningMacro(<< "B-spline coefficients have not been set");
+      itkWarningMacro("B-spline coefficients have not been set");
       for (unsigned int j = 0; j < SpaceDimension; ++j)
       {
         outputPoint[j] = transformedPoint[j];

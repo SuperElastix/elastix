@@ -59,7 +59,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
                                                                                      double &               maxJJ,
                                                                                      std::string            methods)
 {
-  itkExceptionMacro(<< "ERROR: do not call");
+  itkExceptionMacro("ERROR: do not call");
 } // end Compute()
 
 
@@ -75,7 +75,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   double &               maxJJ,
   std::string            methods)
 {
-  itkExceptionMacro(<< "ERROR: do not call");
+  itkExceptionMacro("ERROR: do not call");
 } // end ComputeDistributionTermsUsingSearchDir()
 
 

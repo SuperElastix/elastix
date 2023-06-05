@@ -196,14 +196,14 @@ public:
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVectorType &) is not implemented for KernelTransform");
+    itkExceptionMacro("TransformVector(const InputVectorType &) is not implemented for KernelTransform");
   }
 
 
   OutputVnlVectorType
   TransformVector(const InputVnlVectorType &) const override
   {
-    itkExceptionMacro(<< "TransformVector(const InputVnlVectorType &) is not implemented for KernelTransform");
+    itkExceptionMacro("TransformVector(const InputVnlVectorType &) is not implemented for KernelTransform");
   }
 
 
@@ -305,14 +305,14 @@ public:
   void
   GetSpatialJacobian(const InputPointType & inputPoint, SpatialJacobianType & sj) const override
   {
-    itkExceptionMacro(<< "Not implemented for KernelTransform2");
+    itkExceptionMacro("Not implemented for KernelTransform2");
   }
 
 
   void
   GetSpatialHessian(const InputPointType & inputPoint, SpatialHessianType & sh) const override
   {
-    itkExceptionMacro(<< "Not implemented for KernelTransform2");
+    itkExceptionMacro("Not implemented for KernelTransform2");
   }
 
 
@@ -321,7 +321,7 @@ public:
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for KernelTransform2");
+    itkExceptionMacro("Not implemented for KernelTransform2");
   }
 
 
@@ -331,7 +331,7 @@ public:
                                JacobianOfSpatialJacobianType & jsj,
                                NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for KernelTransform2");
+    itkExceptionMacro("Not implemented for KernelTransform2");
   }
 
 
@@ -340,7 +340,7 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for KernelTransform2");
+    itkExceptionMacro("Not implemented for KernelTransform2");
   }
 
 
@@ -350,7 +350,7 @@ public:
                               JacobianOfSpatialHessianType & jsh,
                               NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
   {
-    itkExceptionMacro(<< "Not implemented for KernelTransform2");
+    itkExceptionMacro("Not implemented for KernelTransform2");
   }
 
 

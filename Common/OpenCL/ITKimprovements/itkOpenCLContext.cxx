@@ -186,7 +186,7 @@ OpenCLContext::Create(const OpenCLDevice::DeviceType type)
   d->is_created = (d->id != 0);
   if (!d->is_created)
   {
-    itkOpenCLWarningMacro(<< "OpenCLContext::Create(type:" << int(type) << "):" << this->GetErrorName(d->last_error));
+    itkOpenCLWarningMacro("OpenCLContext::Create(type:" << int(type) << "):" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -223,7 +223,7 @@ OpenCLContext::Create(const std::list<OpenCLDevice> & devices)
   d->is_created = (d->id != 0);
   if (!d->is_created)
   {
-    itkOpenCLWarningMacro(<< "OpenCLContext::Create:" << this->GetErrorName(d->last_error));
+    itkOpenCLWarningMacro("OpenCLContext::Create:" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -271,7 +271,7 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
         }
         else
         {
-          itkGenericExceptionMacro(<< "Unable to create OpenCLContext with method MultipleMaximumFlopsDevices.");
+          itkGenericExceptionMacro("Unable to create OpenCLContext with method MultipleMaximumFlopsDevices.");
         }
       }
     }
@@ -286,7 +286,7 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
 #  elif OPENCL_USE_INTEL_CPU
     device = OpenCLDevice::GetMaximumFlopsDeviceByVendor(OpenCLDevice::CPU, OpenCLPlatform::Intel);
 #  else
-    itkGenericExceptionMacro(<< "Unknown Intel OpenCL platform.");
+    itkGenericExceptionMacro("Unknown Intel OpenCL platform.");
 #  endif
 
     // NVidia platform
@@ -299,12 +299,12 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
 #  elif OPENCL_USE_AMD_CPU
     device = OpenCLDevice::GetMaximumFlopsDeviceByVendor(OpenCLDevice::CPU, OpenCLPlatform::AMD);
 #  else
-    itkGenericExceptionMacro(<< "Unknown AMD OpenCL platform.");
+    itkGenericExceptionMacro("Unknown AMD OpenCL platform.");
 #  endif
 
     // Unknown platform
 #else
-    itkGenericExceptionMacro(<< "Not supported OpenCL platform by OpenCLContext.");
+    itkGenericExceptionMacro("Not supported OpenCL platform by OpenCLContext.");
 #endif
 
     std::list<OpenCLDevice> devices;
@@ -321,7 +321,7 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
 #  elif OPENCL_USE_INTEL_CPU
     devices = OpenCLDevice::GetDevices(OpenCLDevice::CPU, OpenCLPlatform::Intel);
 #  else
-    itkGenericExceptionMacro(<< "Unknown Intel OpenCL platform.");
+    itkGenericExceptionMacro("Unknown Intel OpenCL platform.");
 #  endif
 
     // NVidia platform
@@ -334,12 +334,12 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
 #  elif OPENCL_USE_AMD_CPU
     devices = OpenCLDevice::GetDevices(OpenCLDevice::CPU, OpenCLPlatform::AMD);
 #  else
-    itkGenericExceptionMacro(<< "Unknown AMD OpenCL platform.");
+    itkGenericExceptionMacro("Unknown AMD OpenCL platform.");
 #  endif
 
     // Unknown platform
 #else
-    itkGenericExceptionMacro(<< "Not supported OpenCL platform by OpenCLContext.");
+    itkGenericExceptionMacro("Not supported OpenCL platform by OpenCLContext.");
 #endif
     this->CreateContext(devices, d);
   }
@@ -374,7 +374,7 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
         }
         else
         {
-          itkGenericExceptionMacro(<< "Unable to create OpenCLContext with method MultipleMaximumFlopsDevices.");
+          itkGenericExceptionMacro("Unable to create OpenCLContext with method MultipleMaximumFlopsDevices.");
         }
       }
     }
@@ -384,8 +384,7 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
   d->is_created = (d->id != 0);
   if (!d->is_created)
   {
-    itkOpenCLWarningMacro(<< "OpenCLContext::Create(method:" << int(method)
-                          << "):" << this->GetErrorName(d->last_error));
+    itkOpenCLWarningMacro("OpenCLContext::Create(method:" << int(method) << "):" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -412,8 +411,8 @@ OpenCLContext::Create(const OpenCLPlatform & platfrom, const OpenCLDevice::Devic
   d->is_created = (d->id != 0);
   if (!d->is_created)
   {
-    itkOpenCLWarningMacro(<< "OpenCLContext::Create(platfrom id:" << platfrom.GetPlatformId()
-                          << "):" << this->GetErrorName(d->last_error));
+    itkOpenCLWarningMacro("OpenCLContext::Create(platfrom id:" << platfrom.GetPlatformId()
+                                                               << "):" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -444,7 +443,7 @@ OpenCLContext::Create()
   platform = OpenCLPlatform::GetPlatform(OpenCLPlatform::Intel);
   this->CreateContext(platform, OpenCLDevice::CPU, d);
 #  else
-  itkGenericExceptionMacro(<< "Unknown Intel OpenCL platform.");
+  itkGenericExceptionMacro("Unknown Intel OpenCL platform.");
 #  endif
 
   // NVidia platform
@@ -460,19 +459,19 @@ OpenCLContext::Create()
   platform = OpenCLPlatform::GetPlatform(OpenCLPlatform::AMD);
   this->CreateContext(platform, OpenCLDevice::CPU, d);
 #  else
-  itkGenericExceptionMacro(<< "Unknown AMD OpenCL platform.");
+  itkGenericExceptionMacro("Unknown AMD OpenCL platform.");
 #  endif
 
   // Unknown platform
 #else
-  itkGenericExceptionMacro(<< "Not supported OpenCL platform by OpenCLContext.");
+  itkGenericExceptionMacro("Not supported OpenCL platform by OpenCLContext.");
 #endif
 
   // Check if OpenCL context has been created
   d->is_created = (d->id != 0);
   if (!d->is_created)
   {
-    itkOpenCLWarningMacro(<< "OpenCLContext::Create():" << this->GetErrorName(d->last_error));
+    itkOpenCLWarningMacro("OpenCLContext::Create():" << this->GetErrorName(d->last_error));
   }
   else
   {
@@ -799,7 +798,7 @@ OpenCLContext::GetDefaultCommandQueue()
 
     if (!queue)
     {
-      itkOpenCLWarningMacro(<< "OpenCLContext::GetDefaultCommandQueue:" << this->GetErrorName(d->last_error));
+      itkOpenCLWarningMacro("OpenCLContext::GetDefaultCommandQueue:" << this->GetErrorName(d->last_error));
       return OpenCLCommandQueue();
     }
     d->default_command_queue = OpenCLCommandQueue(this, queue);
@@ -958,7 +957,7 @@ OpenCLContext::CreateImageDevice(const OpenCLImageFormat &        format,
   cl_mem mem = nullptr;
   if (size.GetDimension() == 1)
   {
-    itkGenericExceptionMacro(<< "OpenCLContext::CreateImageDevice() not supported for 1D.");
+    itkGenericExceptionMacro("OpenCLContext::CreateImageDevice() not supported for 1D.");
   }
   else if (size.GetDimension() == 2)
   {
@@ -1014,7 +1013,7 @@ OpenCLContext::CreateImageHost(const OpenCLImageFormat &        format,
   cl_mem mem = nullptr;
   if (size.GetDimension() == 1)
   {
-    itkGenericExceptionMacro(<< "OpenCLContext::CreateImageHost() not supported for 1D.");
+    itkGenericExceptionMacro("OpenCLContext::CreateImageHost() not supported for 1D.");
   }
   else if (size.GetDimension() == 2)
   {
@@ -1062,7 +1061,7 @@ OpenCLContext::CreateImageCopy(const OpenCLImageFormat &        format,
   cl_mem mem = nullptr;
   if (size.GetDimension() == 1)
   {
-    itkGenericExceptionMacro(<< "OpenCLContext::CreateImageCopy() not supported for 1D.");
+    itkGenericExceptionMacro("OpenCLContext::CreateImageCopy() not supported for 1D.");
   }
   else if (size.GetDimension() == 2)
   {
@@ -1096,7 +1095,7 @@ OpenCLContext::CreateProgramFromSourceCode(const std::string & sourceCode,
 {
   if (sourceCode.empty())
   {
-    itkOpenCLWarningMacro(<< "The source code is empty for the OpenCL program.");
+    itkOpenCLWarningMacro("The source code is empty for the OpenCL program.");
     return OpenCLProgram();
   }
 
@@ -1126,7 +1125,7 @@ OpenCLContext::CreateProgramFromSourceCode(const std::string & sourceCode,
 
   if (oclSourceSize == 0)
   {
-    itkOpenCLWarningMacro(<< "Cannot build OpenCL brogram from empty source.");
+    itkOpenCLWarningMacro("Cannot build OpenCL brogram from empty source.");
     return OpenCLProgram();
   }
 
@@ -1140,13 +1139,13 @@ OpenCLContext::CreateProgramFromSourceCode(const std::string & sourceCode,
     std::ofstream debugfile(fileName.c_str());
     if (debugfile.is_open() == false)
     {
-      itkOpenCLWarningMacro(<< "Cannot create OpenCL debug source file: " << fileName);
+      itkOpenCLWarningMacro("Cannot create OpenCL debug source file: " << fileName);
       return OpenCLProgram();
     }
     debugfile << oclSource;
     debugfile.close();
 
-    itkOpenCLWarningMacro(<< "For Debugging your OpenCL kernel use:\n" << fileName);
+    itkOpenCLWarningMacro("For Debugging your OpenCL kernel use:\n" << fileName);
   }
 
   std::cout << "Creating OpenCL program from source." << std::endl;
@@ -1169,7 +1168,7 @@ OpenCLContext::CreateProgramFromSourceFile(const std::string & filename,
 {
   if (filename.empty())
   {
-    itkOpenCLWarningMacro(<< "The filename must be specified.");
+    itkOpenCLWarningMacro("The filename must be specified.");
     return OpenCLProgram();
   }
 
@@ -1177,7 +1176,7 @@ OpenCLContext::CreateProgramFromSourceFile(const std::string & filename,
   std::ifstream inputFile(filename.c_str(), std::ifstream::in | std::ifstream::binary);
   if (inputFile.is_open() == false)
   {
-    itkOpenCLWarningMacro(<< "Cannot open OpenCL source file: " << filename);
+    itkOpenCLWarningMacro("Cannot open OpenCL source file: " << filename);
     return OpenCLProgram();
   }
 
@@ -1205,7 +1204,7 @@ OpenCLContext::CreateProgramFromSourceFile(const std::string & filename,
 
   if (oclSourceSize == 0)
   {
-    itkOpenCLWarningMacro(<< "Cannot build OpenCL source file: " << filename << " is empty.");
+    itkOpenCLWarningMacro("Cannot build OpenCL source file: " << filename << " is empty.");
     return OpenCLProgram();
   }
 
@@ -1224,13 +1223,13 @@ OpenCLContext::CreateProgramFromSourceFile(const std::string & filename,
     std::ofstream debugfile(fileName.c_str());
     if (debugfile.is_open() == false)
     {
-      itkOpenCLWarningMacro(<< "Cannot create OpenCL debug source file: " << fileName);
+      itkOpenCLWarningMacro("Cannot create OpenCL debug source file: " << fileName);
       return OpenCLProgram();
     }
     debugfile << oclSource;
     debugfile.close();
 
-    itkOpenCLWarningMacro(<< "For Debugging your OpenCL kernel use:\n" << fileName << " , not original .cl file.");
+    itkOpenCLWarningMacro("For Debugging your OpenCL kernel use:\n" << fileName << " , not original .cl file.");
   }
 
   std::cout << "Creating OpenCL program from : " << fileName << std::endl;
@@ -1249,7 +1248,7 @@ OpenCLContext::CreateOpenCLProgram(const std::string & filename,
 {
   if (source.empty())
   {
-    itkOpenCLWarningMacro(<< "The source is empty for the OpenCL program in filename: '" << filename << "'");
+    itkOpenCLWarningMacro("The source is empty for the OpenCL program in filename: '" << filename << "'");
     return OpenCLProgram();
   }
 

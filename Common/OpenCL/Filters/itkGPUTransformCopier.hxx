@@ -61,7 +61,7 @@ GPUTransformCopier<TTypeList, NDimensions, TTransform, TOutputTransformPrecision
 {
   if (!this->m_InputTransform)
   {
-    itkExceptionMacro(<< "Input Transform has not been connected");
+    itkExceptionMacro("Input Transform has not been connected");
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified
@@ -80,7 +80,7 @@ GPUTransformCopier<TTypeList, NDimensions, TTransform, TOutputTransformPrecision
     const bool copyResult = this->CopyTransform(this->m_InputTransform, this->m_Output);
     if (!copyResult || this->m_Output.IsNull())
     {
-      itkExceptionMacro(<< "GPUTransformCopier was unable to copy transform from: " << this->m_InputTransform);
+      itkExceptionMacro("GPUTransformCopier was unable to copy transform from: " << this->m_InputTransform);
     }
   }
 }

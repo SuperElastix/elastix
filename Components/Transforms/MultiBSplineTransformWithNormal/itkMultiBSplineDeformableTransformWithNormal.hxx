@@ -185,7 +185,7 @@ struct UpdateLocalBases_impl
   static void
   Do(ImageBaseType *, ImageVectorType *)
   {
-    itkGenericExceptionMacro(<< "MultiBSplineDeformableTransformWithNormal only works with 3D image for the moment");
+    itkGenericExceptionMacro("MultiBSplineDeformableTransformWithNormal only works with 3D image for the moment");
   }
 };
 
@@ -462,8 +462,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
   else
   {
-    itkExceptionMacro(<< "Input parameters for the spline haven't been set ! Set them using the SetParameters or "
-                         "SetCoefficientImage method first.");
+    itkExceptionMacro("Input parameters for the spline haven't been set ! Set them using the SetParameters or "
+                      "SetCoefficientImage method first.");
   }
 }
 
@@ -525,8 +525,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // expected number of parameters
   if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
-                      << this->GetNumberOfParameters());
+    itkExceptionMacro("Mismatched between parameters size " << numberOfParameters << " and region size "
+                                                            << this->GetNumberOfParameters());
   }
 
   // Clean up buffered parameters
@@ -564,8 +564,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // expected number of parameters
   if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
-                      << this->GetNumberOfParameters());
+    itkExceptionMacro("Mismatched between parameters size " << numberOfParameters << " and region size "
+                                                            << this->GetNumberOfParameters());
   }
 
   // copy it
@@ -591,8 +591,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
    */
   if (nullptr == this->m_InputParametersPointer)
   {
-    itkExceptionMacro(<< "Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps "
-                         "SetCoefficientImages() has been called causing the NULL pointer.");
+    itkExceptionMacro("Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps "
+                      "SetCoefficientImages() has been called causing the NULL pointer.");
   }
 
   return (*this->m_InputParametersPointer);
@@ -711,7 +711,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   int lidx = 0;
@@ -801,7 +801,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   int lidx = 0;
@@ -837,7 +837,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   int lidx = 0;
@@ -874,8 +874,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
 {
-  itkExceptionMacro(<< "ERROR: GetJacobianOfSpatialJacobian() not yet implemented in the "
-                       "MultiBSplineDeformableTransformWithNormal class.");
+  itkExceptionMacro("ERROR: GetJacobianOfSpatialJacobian() not yet implemented in the "
+                    "MultiBSplineDeformableTransformWithNormal class.");
 } // end GetJacobianOfSpatialJacobian()
 
 
@@ -903,7 +903,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   int lidx = 0;
@@ -1001,7 +1001,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   int lidx = 0;

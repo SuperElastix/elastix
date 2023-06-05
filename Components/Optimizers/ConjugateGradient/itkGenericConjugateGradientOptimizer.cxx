@@ -281,7 +281,7 @@ GenericConjugateGradientOptimizer::LineSearch(const ParametersType searchDir,
   {
     this->m_StopCondition = LineSearchError;
     this->StopOptimization();
-    itkExceptionMacro(<< "No line search optimizer set");
+    itkExceptionMacro("No line search optimizer set");
   }
 
   LSO->SetCostFunction(this->m_ScaledCostFunction);
@@ -510,7 +510,7 @@ GenericConjugateGradientOptimizer::SetBetaDefinition(const BetaDefinitionType & 
   {
     if (this->m_BetaDefinitionMap.count(arg) != 1)
     {
-      itkExceptionMacro(<< "Undefined beta: " << arg);
+      itkExceptionMacro("Undefined beta: " << arg);
     }
     this->m_BetaDefinition = arg;
     this->Modified();

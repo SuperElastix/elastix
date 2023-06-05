@@ -161,7 +161,7 @@ private:
                                         OutputType &                value,
                                         CovariantVectorType &       deriv) const
   {
-    itkExceptionMacro(<< "ERROR: EvaluateValueAndDerivativeAtContinuousIndex() is not implemented for this dimension ("
+    itkExceptionMacro("ERROR: EvaluateValueAndDerivativeAtContinuousIndex() is not implemented for this dimension ("
                       << ImageDimension << ").");
   }
 };

@@ -329,8 +329,8 @@ MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
         if (this->GetElastix()->GetElxFixedImagePyramidBase(i))
         {
           log::error(std::ostringstream{} << "ERROR: An ImageSamper for metric " << i << " must be provided!");
-          itkExceptionMacro(<< "Not enough ImageSamplers provided!\nProvide an ImageSampler for metric " << i
-                            << ", like:\n  (ImageSampler \"Random\" ... \"Random\")");
+          itkExceptionMacro("Not enough ImageSamplers provided!\nProvide an ImageSampler for metric "
+                            << i << ", like:\n  (ImageSampler \"Random\" ... \"Random\")");
         }
 
         /** Try the zeroth image sampler for each metric. */
@@ -342,7 +342,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
         else
         {
           log::error("ERROR: No ImageSampler has been specified.");
-          itkExceptionMacro(<< "One of the metrics requires an ImageSampler, but it is not available!");
+          itkExceptionMacro("One of the metrics requires an ImageSampler, but it is not available!");
         }
       }
 

@@ -228,7 +228,7 @@ public:
   ComputeJacobianWithRespectToParameters(const InputPointType & itkNotUsed(p),
                                          JacobianType &         itkNotUsed(j)) const override
   {
-    itkExceptionMacro(<< "This ITK4 function is currently not used in elastix.");
+    itkExceptionMacro("This ITK4 function is currently not used in elastix.");
   }
 
 

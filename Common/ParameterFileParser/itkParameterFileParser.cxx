@@ -343,7 +343,7 @@ ParameterFileParser::ReadParameterFile()
   /** Check if it opened. */
   if (!parameterFile.is_open())
   {
-    itkExceptionMacro(<< "ERROR: could not open " << this->m_ParameterFileName << " for reading.");
+    itkExceptionMacro("ERROR: could not open " << this->m_ParameterFileName << " for reading.");
   }
 
   ReadParameterMapFromInputStream(m_ParameterMap, parameterFile);
@@ -367,7 +367,7 @@ ParameterFileParser::ReturnParameterFileAsString()
   /** Check if it opened. */
   if (!parameterFile.is_open())
   {
-    itkExceptionMacro(<< "ERROR: could not open " << this->m_ParameterFileName << " for reading.");
+    itkExceptionMacro("ERROR: could not open " << this->m_ParameterFileName << " for reading.");
   }
 
   /** Loop over the parameter file, line by line. */

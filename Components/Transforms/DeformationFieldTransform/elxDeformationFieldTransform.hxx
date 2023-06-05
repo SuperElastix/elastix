@@ -70,7 +70,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   if (fileName.empty())
   {
     log::error("ERROR: the entry (DeformationFieldFileName \"...\") is missing in the transform parameter file!");
-    itkExceptionMacro(<< "Error while reading transform parameter file!");
+    itkExceptionMacro("Error while reading transform parameter file!");
   }
 
   /** Possibly overrule the direction cosines. */
@@ -123,7 +123,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
     log::error(
       std::ostringstream{} << "Error while reading DeformationFieldInterpolationOrder from the parameter file\n"
                            << "DeformationFieldInterpolationOrder can only be 0 or 1!");
-    itkExceptionMacro(<< "Invalid deformation field interpolation order selected!");
+    itkExceptionMacro("Invalid deformation field interpolation order selected!");
   }
   this->m_DeformationFieldInterpolatingTransform->SetDeformationFieldInterpolator(interpolator);
 

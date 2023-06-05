@@ -292,7 +292,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants()
   this->m_EffectiveMu = 1.0 / this->m_RecombinationWeights.squared_magnitude();
   if (this->m_EffectiveMu >= lambdad)
   {
-    itkExceptionMacro(<< "The RecombinationWeights have unreasonable values!");
+    itkExceptionMacro("The RecombinationWeights have unreasonable values!");
   }
   /** alias: */
   const double mueff = this->m_EffectiveMu;
@@ -801,7 +801,7 @@ CMAEvolutionStrategyOptimizer::UpdateBD()
   returncode = eigenAnalysis.ComputeEigenValuesAndVectors(this->m_C, this->m_D, this->m_B);
   if (returncode != 0)
   {
-    itkExceptionMacro(<< "EigenAnalysis failed while computing eigenvalue nr: " << returncode);
+    itkExceptionMacro("EigenAnalysis failed while computing eigenvalue nr: " << returncode);
   }
 
   /** itk eigen analysis returns eigen vectors in rows... */

@@ -89,7 +89,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 
   if (det == 0.0)
   {
-    itkExceptionMacro(<< "Attempting to set a matrix with a zero determinant");
+    itkExceptionMacro("Attempting to set a matrix with a zero determinant");
   }
 
   //
@@ -105,7 +105,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
   //
   if (s <= 0.0)
   {
-    itkExceptionMacro(<< "Attempting to set a matrix with a negative trace");
+    itkExceptionMacro("Attempting to set a matrix with a negative trace");
   }
 
   MatrixType testForOrthogonal = matrix;
@@ -114,7 +114,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
   const double tolerance = 1e-10;
   if (!this->MatrixIsOrthogonal(testForOrthogonal, tolerance))
   {
-    itkExceptionMacro(<< "Attempting to set a non-orthogonal matrix (after removing scaling)");
+    itkExceptionMacro("Attempting to set a non-orthogonal matrix (after removing scaling)");
   }
 
   using Baseclass = AdvancedMatrixOffsetTransformBase<TScalarType, 3>;
@@ -129,7 +129,7 @@ void
 AdvancedSimilarity3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
 
-  itkDebugMacro(<< "Setting parameters " << parameters);
+  itkDebugMacro("Setting parameters " << parameters);
 
   // Transfer the versor part
 
@@ -157,7 +157,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetParameters(const ParametersType &
   m_Scale = parameters[6]; // must be set before calling ComputeMatrix();
   this->ComputeMatrix();
 
-  itkDebugMacro(<< "Versor is now " << this->GetVersor());
+  itkDebugMacro("Versor is now " << this->GetVersor());
 
   // Transfer the translation part
   TranslationType newTranslation;
@@ -171,7 +171,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetParameters(const ParametersType &
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<< "After setting parameters ");
+  itkDebugMacro("After setting parameters ");
 }
 
 
@@ -189,7 +189,7 @@ template <class TScalarType>
 auto
 AdvancedSimilarity3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
-  itkDebugMacro(<< "Getting parameters ");
+  itkDebugMacro("Getting parameters ");
 
   this->m_Parameters[0] = this->GetVersor().GetX();
   this->m_Parameters[1] = this->GetVersor().GetY();
@@ -202,7 +202,7 @@ AdvancedSimilarity3DTransform<TScalarType>::GetParameters() const -> const Param
 
   this->m_Parameters[6] = this->GetScale();
 
-  itkDebugMacro(<< "After getting parameters " << this->m_Parameters);
+  itkDebugMacro("After getting parameters " << this->m_Parameters);
 
   return this->m_Parameters;
 }

@@ -37,7 +37,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
   /** Check if the coefficient image has been set. */
   if (!this->m_CoefficientImages[0])
   {
-    itkWarningMacro(<< "B-spline coefficients have not been set");
+    itkWarningMacro("B-spline coefficients have not been set");
     return point;
   }
 
@@ -382,7 +382,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   jsj.resize(this->GetNumberOfNonZeroJacobianIndices());
@@ -465,7 +465,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   // SetParameters or SetParametersByValue
   if (this->m_InputParametersPointer == nullptr)
   {
-    itkExceptionMacro(<< "Cannot compute Jacobian: parameters not set");
+    itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
 
   jsh.resize(this->GetNumberOfNonZeroJacobianIndices());

@@ -183,7 +183,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
     {
       log::error("ERROR: No MovingSegmentation filename specified.");
       /** Create and throw an exception. */
-      itkExceptionMacro(<< "ERROR: No MovingSegmentation filename specified.");
+      itkExceptionMacro("ERROR: No MovingSegmentation filename specified.");
     }
   }
 
@@ -207,7 +207,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
     {
       log::error("ERROR: No FixedSegmentation filename specified.");
       /** Create and throw an exception. */
-      itkExceptionMacro(<< "ERROR: No FixedSegmentation filename specified.");
+      itkExceptionMacro("ERROR: No FixedSegmentation filename specified.");
     }
   }
 
@@ -317,7 +317,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
                                     << "either a threshold or a segmentation, make a choice!");
 
     /** Create and throw an exception. */
-    itkExceptionMacro(<< "ERROR: Difficulty determining how to create the GrayValueImage. Check your parameter file.");
+    itkExceptionMacro("ERROR: Difficulty determining how to create the GrayValueImage. Check your parameter file.");
   }
 
   /** Set the interpolator. */

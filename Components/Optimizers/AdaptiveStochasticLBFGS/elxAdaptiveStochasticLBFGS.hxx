@@ -934,7 +934,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
+    itkExceptionMacro("ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
@@ -1073,7 +1073,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
+    itkExceptionMacro("ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
@@ -1185,7 +1185,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
+    itkExceptionMacro("ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */

@@ -73,7 +73,7 @@ GPUAdvancedCombinationTransformCopier<TTypeList,
 {
   if (!this->m_InputTransform)
   {
-    itkExceptionMacro(<< "ERROR: m_InputTransform not set");
+    itkExceptionMacro("ERROR: m_InputTransform not set");
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified
@@ -106,8 +106,8 @@ GPUAdvancedCombinationTransformCopier<TTypeList,
     const bool copySucceeded = this->CopyToCurrentTransform(currentTransformCPU, currentTransformGPU);
     if (!copySucceeded)
     {
-      itkExceptionMacro(<< "ERROR: GPUAdvancedCombinationTransformCopier was unable to copy transform from: "
-                        << this->m_InputTransform);
+      itkExceptionMacro(
+        "ERROR: GPUAdvancedCombinationTransformCopier was unable to copy transform from: " << this->m_InputTransform);
     }
 
     // skip next step when last transform

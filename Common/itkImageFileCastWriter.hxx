@@ -56,7 +56,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
 {
   const InputImageType * input = this->GetInput();
 
-  itkDebugMacro(<< "Writing file: " << this->GetFileName());
+  itkDebugMacro("Writing file: " << this->GetFileName());
 
   // Make sure that the image is the right type and no more than
   // four components.

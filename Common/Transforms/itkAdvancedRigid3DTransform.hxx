@@ -83,7 +83,7 @@ AdvancedRigid3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
   const double tolerance = 1e-10;
   if (!this->MatrixIsOrthogonal(matrix, tolerance))
   {
-    itkExceptionMacro(<< "Attempting to set a non-orthogonal rotation matrix");
+    itkExceptionMacro("Attempting to set a non-orthogonal rotation matrix");
   }
 
   this->Superclass::SetMatrix(matrix);
@@ -119,7 +119,7 @@ AdvancedRigid3DTransform<TScalarType>::SetParameters(const ParametersType & para
   const double tolerance = 1e-10;
   if (!this->MatrixIsOrthogonal(matrix, tolerance))
   {
-    itkExceptionMacro(<< "Attempting to set a non-orthogonal rotation matrix");
+    itkExceptionMacro("Attempting to set a non-orthogonal rotation matrix");
   }
 
   this->SetVarMatrix(matrix);

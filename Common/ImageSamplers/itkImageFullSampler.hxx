@@ -72,7 +72,7 @@ ImageFullSampler<TInputImage>::GenerateData()
     }
     catch (...)
     {
-      itkExceptionMacro(<< "ERROR: failed to allocate memory for the sample container.");
+      itkExceptionMacro("ERROR: failed to allocate memory for the sample container.");
     }
 
     /** Simply loop over the image and store all samples in the container. */
@@ -164,7 +164,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     }
     catch (...)
     {
-      itkExceptionMacro(<< "ERROR: failed to allocate memory for the sample container.");
+      itkExceptionMacro("ERROR: failed to allocate memory for the sample container.");
     }
 
     /** Simply loop over the image and store all samples in the container. */

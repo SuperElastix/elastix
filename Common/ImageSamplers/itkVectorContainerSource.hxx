@@ -105,14 +105,14 @@ VectorContainerSource<TOutputVectorContainer>::GraftNthOutput(unsigned int idx, 
   /** Check idx. */
   if (idx >= this->GetNumberOfOutputs())
   {
-    itkExceptionMacro(<< "Requested to graft output " << idx << " but this filter only has "
-                      << this->GetNumberOfOutputs() << " Outputs.");
+    itkExceptionMacro("Requested to graft output " << idx << " but this filter only has " << this->GetNumberOfOutputs()
+                                                   << " Outputs.");
   }
 
   /** Check graft. */
   if (!graft)
   {
-    itkExceptionMacro(<< "Requested to graft output that is a NULL pointer");
+    itkExceptionMacro("Requested to graft output that is a NULL pointer");
   }
 
   /** Get a pointer to the output. */

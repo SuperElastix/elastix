@@ -126,8 +126,8 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
   /** Check. */
   if (nrOfFixedPoints != nrOfMovingPoints)
   {
-    itkExceptionMacro(<< "ERROR: the number of points in the fixed pointset (" << nrOfFixedPoints
-                      << ") does not match that of the moving pointset (" << nrOfMovingPoints
+    itkExceptionMacro("ERROR: the number of points in the fixed pointset ("
+                      << nrOfFixedPoints << ") does not match that of the moving pointset (" << nrOfMovingPoints
                       << "). The points do not correspond. ");
   }
 
@@ -163,7 +163,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   catch (const itk::ExceptionObject & err)
   {
     log::error(std::ostringstream{} << "  Error while opening " << landmarkFileName << '\n' << err);
-    itkExceptionMacro(<< "ERROR: unable to configure " << this->GetComponentLabel());
+    itkExceptionMacro("ERROR: unable to configure " << this->GetComponentLabel());
   }
 
   /** Some user-feedback. */

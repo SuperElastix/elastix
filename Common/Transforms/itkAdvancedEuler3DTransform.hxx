@@ -54,7 +54,7 @@ template <class TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
-  itkDebugMacro(<< "Setting parameters " << parameters);
+  itkDebugMacro("Setting parameters " << parameters);
 
   // Set angles with parameters
   m_AngleX = parameters[0];
@@ -74,7 +74,7 @@ AdvancedEuler3DTransform<TScalarType>::SetParameters(const ParametersType & para
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<< "After setting parameters ");
+  itkDebugMacro("After setting parameters ");
 }
 
 

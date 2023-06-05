@@ -161,7 +161,7 @@ ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
   /** Check if input image was set. */
   if (this->GetNumberOfInputs() == 0)
   {
-    itkExceptionMacro(<< "ERROR: Input image not set");
+    itkExceptionMacro("ERROR: Input image not set");
   }
 
   /** Get a pointer to the input image. */
@@ -356,7 +356,7 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
      */
     if (!cropped)
     {
-      itkExceptionMacro(<< "ERROR: the bounding box of the mask lies entirely out of the InputImageRegion!");
+      itkExceptionMacro("ERROR: the bounding box of the mask lies entirely out of the InputImageRegion!");
     }
   }
 

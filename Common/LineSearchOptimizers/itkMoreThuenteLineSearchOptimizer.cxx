@@ -192,34 +192,34 @@ MoreThuenteLineSearchOptimizer::CheckSettings()
 {
   if (this->GetCostFunction() == nullptr)
   {
-    itkExceptionMacro(<< "CostFunction has not been set!");
+    itkExceptionMacro("CostFunction has not been set!");
   }
 
   const unsigned int numberOfParameters = this->GetCostFunction()->GetNumberOfParameters();
 
   if (this->GetInitialPosition().GetSize() != numberOfParameters)
   {
-    itkExceptionMacro(<< "InitialPosition has incorrect dimension!");
+    itkExceptionMacro("InitialPosition has incorrect dimension!");
   }
 
   if (this->GetLineSearchDirection().GetSize() != numberOfParameters)
   {
-    itkExceptionMacro(<< "LineSearchDirection has incorrect dimension!");
+    itkExceptionMacro("LineSearchDirection has incorrect dimension!");
   }
 
   if (this->GetMinimumStepLength() <= 0.0)
   {
-    itkExceptionMacro(<< "MinimumStepLength must be higher than zero!");
+    itkExceptionMacro("MinimumStepLength must be higher than zero!");
   }
 
   if (this->GetMinimumStepLength() > this->GetMaximumStepLength())
   {
-    itkExceptionMacro(<< "MinimumStepLength must be smaller than MaximumStepLength!");
+    itkExceptionMacro("MinimumStepLength must be smaller than MaximumStepLength!");
   }
 
   if (this->GetGradientTolerance() < this->GetValueTolerance())
   {
-    itkExceptionMacro(<< "GradientTolerance must be greater than ValueTolerance!");
+    itkExceptionMacro("GradientTolerance must be greater than ValueTolerance!");
   }
   return 0;
 

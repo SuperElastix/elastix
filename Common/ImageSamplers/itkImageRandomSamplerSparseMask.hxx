@@ -37,7 +37,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   /** Sanity check. */
   if (mask.IsNull())
   {
-    itkExceptionMacro(<< "ERROR: do not call this function when no mask is supplied.");
+    itkExceptionMacro("ERROR: do not call this function when no mask is supplied.");
   }
 
   /** Get handles to the input image and output sample container. */

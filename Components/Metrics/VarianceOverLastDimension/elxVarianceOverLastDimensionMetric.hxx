@@ -68,7 +68,7 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration()
 
   if (!dcValid)
   {
-    itkExceptionMacro(<< "\nERROR: the direction cosines matrix of the fixed image is invalid!\n\n"
+    itkExceptionMacro("\nERROR: the direction cosines matrix of the fixed image is invalid!\n\n"
                       << "  The VarianceOverLastDimensionMetric expects the last dimension to represent\n"
                       << "  time and therefore requires a direction cosines matrix of the form:\n"
                       << "       [ . . 0 ]\n"

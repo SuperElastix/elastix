@@ -267,13 +267,13 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Ini
   /** Check if the kNN trees are set. We only need to check the fixed tree. */
   if (!this->m_BinaryKNNTreeFixed)
   {
-    itkExceptionMacro(<< "ERROR: The kNN tree is not set. ");
+    itkExceptionMacro("ERROR: The kNN tree is not set. ");
   }
 
   /** Check if the kNN tree searchers are set. We only need to check the fixed searcher. */
   if (!this->m_BinaryKNNTreeSearcherFixed)
   {
-    itkExceptionMacro(<< "ERROR: The kNN tree searcher is not set. ");
+    itkExceptionMacro("ERROR: The kNN tree searcher is not set. ");
   }
 
 } // end Initialize()

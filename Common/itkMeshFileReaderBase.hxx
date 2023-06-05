@@ -36,7 +36,7 @@ MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation()
 {
   OutputMeshPointer output = this->GetOutput();
 
-  itkDebugMacro(<< "Reading file for GenerateOutputInformation(): " << m_FileName);
+  itkDebugMacro("Reading file for GenerateOutputInformation(): " << m_FileName);
 
   /** Check to see if we can read the file given the name or prefix */
   if (m_FileName.empty())

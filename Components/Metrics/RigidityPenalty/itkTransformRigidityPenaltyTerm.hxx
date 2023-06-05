@@ -135,7 +135,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
   /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
   if (!transformIsBSpline)
   {
-    itkExceptionMacro(<< "ERROR: this metric expects a B-spline transform.");
+    itkExceptionMacro("ERROR: this metric expects a B-spline transform.");
   }
 
   /** Allocate the RigidityCoefficientImage, so that it matches the B-spline grid.
@@ -479,7 +479,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   /** Sanity check. */
   if (ImageDimension != 2 && ImageDimension != 3)
   {
-    itkExceptionMacro(<< "ERROR: This filter is only implemented for dimension 2 and 3.");
+    itkExceptionMacro("ERROR: This filter is only implemented for dimension 2 and 3.");
   }
 
   /** Get a handle to the B-spline coefficient images. */
@@ -922,7 +922,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   /** Sanity check. */
   if (ImageDimension != 2 && ImageDimension != 3)
   {
-    itkExceptionMacro(<< "ERROR: This filter is only implemented for dimension 2 and 3.");
+    itkExceptionMacro("ERROR: This filter is only implemented for dimension 2 and 3.");
   }
 
   /** Get a handle to the B-spline coefficient images. */
@@ -2150,7 +2150,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Create1DOperator(
   else
   {
     /** Throw an exception. */
-    itkExceptionMacro(<< "Can not create this type of operator.");
+    itkExceptionMacro("Can not create this type of operator.");
   }
 
 } // end Create1DOperator()
@@ -2317,7 +2317,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
     if (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
-      itkExceptionMacro(<< "This type of operator (FC) is not appropriate in 2D.");
+      itkExceptionMacro("This type of operator (FC) is not appropriate in 2D.");
     }
     else if (ImageDimension == 3)
     {
@@ -2458,7 +2458,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
     if (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
-      itkExceptionMacro(<< "This type of operator (FF) is not appropriate in 2D.");
+      itkExceptionMacro("This type of operator (FF) is not appropriate in 2D.");
     }
     else if (ImageDimension == 3)
     {
@@ -2550,7 +2550,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
     if (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
-      itkExceptionMacro(<< "This type of operator (FH) is not appropriate in 2D.");
+      itkExceptionMacro("This type of operator (FH) is not appropriate in 2D.");
     }
     else if (ImageDimension == 3)
     {
@@ -2592,7 +2592,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
     if (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
-      itkExceptionMacro(<< "This type of operator (FI) is not appropriate in 2D.");
+      itkExceptionMacro("This type of operator (FI) is not appropriate in 2D.");
     }
     else if (ImageDimension == 3)
     {
@@ -2632,7 +2632,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   else
   {
     /** Throw an exception. */
-    itkExceptionMacro(<< "Can not create this type of operator.");
+    itkExceptionMacro("Can not create this type of operator.");
   }
 
 } // end CreateNDOperator()

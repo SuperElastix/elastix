@@ -531,7 +531,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: VoxelWiseASGD expects the metric to be of type AdvancedImageToImageMetric!");
+    itkExceptionMacro("ERROR: VoxelWiseASGD expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Getting pointers to the samplers. */

@@ -529,8 +529,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
 
   if (nrofsamples == 0)
   {
-    itkExceptionMacro(<< "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
-                      << ") found to estimate the AdaptiveStochasticGradientDescent parameters.");
+    itkExceptionMacro("No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
+                                            << ") found to estimate the AdaptiveStochasticGradientDescent parameters.");
   }
 
 } // end SampleFixedImageForJacobianTerms()

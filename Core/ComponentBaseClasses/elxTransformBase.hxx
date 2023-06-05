@@ -206,7 +206,7 @@ TransformBase<TElastix>::BeforeRegistrationBase()
       }
       else
       {
-        itkExceptionMacro(<< "ERROR: the file " << fileName << " does not exist!");
+        itkExceptionMacro("ERROR: the file " << fileName << " does not exist!");
       }
     }
   }
@@ -392,8 +392,8 @@ TransformBase<TElastix>::ReadFromFile()
       std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
       if (fullFileName1 == fullFileName2)
       {
-        itkExceptionMacro(<< "ERROR: The initial transform parameter filename is identical to the current "
-                             "TransformParameters filename! An infinite loop is not allowed.");
+        itkExceptionMacro("ERROR: The InitialTransformParameterFileName is identical to the current "
+                          "TransformParameters filename! An infinite loop is not allowed.");
       }
 
       /** We can safely read the initial transform. */
@@ -435,7 +435,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformPara
 
   if (configurationInitialTransform->Initialize({ { "-tp", transformParametersFileName } }) != 0)
   {
-    itkGenericExceptionMacro(<< "ERROR: Reading initial transform parameters failed: " << transformParametersFileName);
+    itkGenericExceptionMacro("ERROR: Reading initial transform parameters failed: " << transformParametersFileName);
   }
 
   this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
@@ -646,7 +646,7 @@ TransformBase<TElastix>::TransformPoints() const
   /** For backwards compatibility def = ipp. */
   if (!def.empty() && !ipp.empty())
   {
-    itkExceptionMacro(<< "ERROR: Can not use both \"-def\" and \"-ipp\"!\n"
+    itkExceptionMacro("ERROR: Can not use both \"-def\" and \"-ipp\"!\n"
                       << "  \"-ipp\" is deprecated, use only \"-def\".\n");
   }
   else if (def.empty() && !ipp.empty())
@@ -1370,7 +1370,7 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
   if (nrofsamples == 0)
   {
     /** \todo: should we demand a minimum number (~100) of voxels? */
-    itkExceptionMacro(<< "No valid voxels found to estimate the scales.");
+    itkExceptionMacro("No valid voxels found to estimate the scales.");
   }
 
   /** initialize */
@@ -1457,7 +1457,7 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
   if (nrofsamples == 0)
   {
     /** \todo: should we demand a minimum number (~100) of voxels? */
-    itkExceptionMacro(<< "No valid voxels found to estimate the scales.");
+    itkExceptionMacro("No valid voxels found to estimate the scales.");
   }
 
   /** Read fixed coordinates and get Jacobian. */

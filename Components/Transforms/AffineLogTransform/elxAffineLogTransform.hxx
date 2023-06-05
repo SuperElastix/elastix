@@ -77,7 +77,7 @@ AffineLogTransformElastix<TElastix>::ReadFromFile()
   if (!pointRead)
   {
     log::error("ERROR: No center of rotation is specified in the transform parameter file");
-    itkExceptionMacro(<< "Transform parameter file is corrupt.");
+    itkExceptionMacro("Transform parameter file is corrupt.");
   }
 
   /** Set the center in this Transform. */
@@ -305,7 +305,7 @@ AffineLogTransformElastix<TElastix>::SetScales()
      * An error is thrown, because using erroneous scales in the optimizer
      * can give unpredictable results.
      */
-    itkExceptionMacro(<< "ERROR: The Scales-option in the parameter-file has not been set properly.");
+    itkExceptionMacro("ERROR: The Scales-option in the parameter-file has not been set properly.");
   }
 
   log::info(std::ostringstream{} << "Scales for transform parameters are: " << newscales);

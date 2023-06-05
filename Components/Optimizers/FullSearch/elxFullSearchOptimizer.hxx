@@ -178,7 +178,7 @@ FullSearch<TElastix>::BeforeEachResolution()
   }
   else
   {
-    itkExceptionMacro(<< "ERROR: elastix found an error in the search space definition, and is quiting.");
+    itkExceptionMacro("ERROR: elastix found an error in the search space definition, and is quiting.");
   }
 
 } // end BeforeEachResolution()

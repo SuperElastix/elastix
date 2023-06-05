@@ -146,7 +146,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
 {
   if (!image)
   {
-    itkExceptionMacro(<< "Cannot use a null image reference");
+    itkExceptionMacro("Cannot use a null image reference");
   }
 
   this->SetOutputOrigin(image->GetOrigin());
@@ -168,7 +168,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::BeforeT
 {
   if (!this->m_Transform)
   {
-    itkExceptionMacro(<< "Transform not set");
+    itkExceptionMacro("Transform not set");
   }
 
   // Check whether we can use a fast path for resampling. Fast path

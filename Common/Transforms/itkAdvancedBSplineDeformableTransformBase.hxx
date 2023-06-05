@@ -246,8 +246,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetIdentity()
   }
   else
   {
-    itkExceptionMacro(<< "Input parameters for the spline haven't been set ! Set them using the SetParameters or "
-                         "SetCoefficientImage method first.");
+    itkExceptionMacro("Input parameters for the spline haven't been set ! Set them using the SetParameters or "
+                      "SetCoefficientImage method first.");
   }
 }
 
@@ -262,8 +262,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParameters(
   // expected number of parameters
   if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
-                      << this->m_GridRegion.GetNumberOfPixels());
+    itkExceptionMacro("Mismatched between parameters size " << numberOfParameters << " and region size "
+                                                            << this->m_GridRegion.GetNumberOfPixels());
   }
 
   // Clean up buffered parameters
@@ -306,8 +306,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
   else if (const auto numberOfPassedParameters = passedParameters.size();
            numberOfPassedParameters != NumberOfFixedParameters)
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfPassedParameters
-                      << " and number of fixed parameters " << NumberOfFixedParameters);
+    itkExceptionMacro("Mismatched between parameters size "
+                      << numberOfPassedParameters << " and number of fixed parameters " << NumberOfFixedParameters);
   }
   else
   {
@@ -401,8 +401,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParametersB
   // expected number of parameters
   if (const auto numberOfParameters = parameters.size(); numberOfParameters != this->GetNumberOfParameters())
   {
-    itkExceptionMacro(<< "Mismatched between parameters size " << numberOfParameters << " and region size "
-                      << this->m_GridRegion.GetNumberOfPixels());
+    itkExceptionMacro("Mismatched between parameters size " << numberOfParameters << " and region size "
+                                                            << this->m_GridRegion.GetNumberOfPixels());
   }
 
   // copy it
@@ -428,8 +428,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(
    */
   if (nullptr == this->m_InputParametersPointer)
   {
-    itkExceptionMacro(<< "Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps "
-                         "SetCoefficientImages() has been called causing the NULL pointer.");
+    itkExceptionMacro("Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps "
+                      "SetCoefficientImages() has been called causing the NULL pointer.");
   }
 
   return (*this->m_InputParametersPointer);

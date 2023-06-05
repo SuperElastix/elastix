@@ -139,7 +139,7 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
   typename MaskType::ConstPointer mask = this->GetMask();
   if (mask.IsNotNull())
   {
-    itkExceptionMacro(<< "ERROR: do not call this function when a mask is supplied.");
+    itkExceptionMacro("ERROR: do not call this function when a mask is supplied.");
   }
 
   /** Get handle to the input image. */

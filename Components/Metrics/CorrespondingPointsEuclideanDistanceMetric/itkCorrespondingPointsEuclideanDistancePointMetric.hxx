@@ -45,13 +45,13 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
   if (!fixedPointSet)
   {
-    itkExceptionMacro(<< "Fixed point set has not been assigned");
+    itkExceptionMacro("Fixed point set has not been assigned");
   }
 
   MovingPointSetConstPointer movingPointSet = this->GetMovingPointSet();
   if (!movingPointSet)
   {
-    itkExceptionMacro(<< "Moving point set has not been assigned");
+    itkExceptionMacro("Moving point set has not been assigned");
   }
 
   /** Initialize some variables. */
@@ -145,13 +145,13 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
   if (!fixedPointSet)
   {
-    itkExceptionMacro(<< "Fixed point set has not been assigned");
+    itkExceptionMacro("Fixed point set has not been assigned");
   }
 
   MovingPointSetConstPointer movingPointSet = this->GetMovingPointSet();
   if (!movingPointSet)
   {
-    itkExceptionMacro(<< "Moving point set has not been assigned");
+    itkExceptionMacro("Moving point set has not been assigned");
   }
 
   /** Initialize some variables */

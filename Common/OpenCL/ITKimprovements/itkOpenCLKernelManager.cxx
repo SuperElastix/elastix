@@ -64,8 +64,8 @@ OpenCLKernelManager::CreateKernel(const OpenCLProgram & program, const std::stri
   // Check the program
   if (program.IsNull())
   {
-    itkOpenCLWarningMacro(<< "OpenCL kernel '" << name << "' has not been created.Provided program is null. Returned "
-                          << createResult);
+    itkOpenCLWarningMacro("OpenCL kernel '" << name << "' has not been created.Provided program is null. Returned "
+                                            << createResult);
     return createResult;
   }
 
@@ -73,7 +73,7 @@ OpenCLKernelManager::CreateKernel(const OpenCLProgram & program, const std::stri
   OpenCLKernel kernel = program.CreateKernel(name);
   if (kernel.IsNull())
   {
-    itkOpenCLWarningMacro(<< "Fail to create OpenCL kernel '" << name << "'. Returned " << createResult);
+    itkOpenCLWarningMacro("Fail to create OpenCL kernel '" << name << "'. Returned " << createResult);
     return createResult;
   }
 

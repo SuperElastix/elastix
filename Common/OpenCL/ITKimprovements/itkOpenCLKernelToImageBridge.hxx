@@ -138,8 +138,8 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
 
   if (imageMetaDataManager.IsNull())
   {
-    itkGenericExceptionMacro(<< "The data manager is NULL."
-                                "Unable to set ITK image meta data to the kernel.");
+    itkGenericExceptionMacro("The data manager is NULL."
+                             "Unable to set ITK image meta data to the kernel.");
   }
 
   // Set image base

@@ -789,8 +789,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: AdaptiveStochasticVarianceReducedGradient expects the metric to be of type "
-                         "AdvancedImageToImageMetric!");
+    itkExceptionMacro("ERROR: AdaptiveStochasticVarianceReducedGradient expects the metric to be of type "
+                      "AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
@@ -929,8 +929,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
-    itkExceptionMacro(<< "ERROR: AdaptiveStochasticVarianceReducedGradient expects the metric to be of type "
-                         "AdvancedImageToImageMetric!");
+    itkExceptionMacro("ERROR: AdaptiveStochasticVarianceReducedGradient expects the metric to be of type "
+                      "AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
