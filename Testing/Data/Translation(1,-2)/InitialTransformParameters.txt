@@ -1,0 +1,4 @@
+(InitialTransformParameterFileName "NoInitialTransform")
+(NumberOfParameters 2)
+(Transform "TranslationTransform")
+(TransformParameters 1 0)

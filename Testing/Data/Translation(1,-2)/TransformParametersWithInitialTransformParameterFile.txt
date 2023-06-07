@@ -1,0 +1,4 @@
+(InitialTransformParameterFileName "InitialTransformParameters.txt")
+(NumberOfParameters 2)
+(Transform "TranslationTransform")
+(TransformParameters 0 -2)

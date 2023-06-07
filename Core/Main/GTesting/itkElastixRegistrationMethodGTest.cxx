@@ -976,6 +976,62 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 }
 
 
+GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileWithInitialTransformParameterFile)
+{
+  using PixelType = float;
+  enum
+  {
+    ImageDimension = 2U
+  };
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+
+  const auto doDummyRegistration =
+    [](const std::string & initialTransformParameterFileName) -> itk::SmartPointer<ImageType> {
+    const ImageType::SizeType imageSize{ { 5, 6 } };
+
+    std::mt19937 randomNumberEngine{};
+
+    const auto fillImageBufferRandomly = [&randomNumberEngine](ImageType & image) {
+      const itk::ImageBufferRange<ImageType> imageBufferRange(image);
+
+      std::generate(imageBufferRange.begin(), imageBufferRange.end(), [&randomNumberEngine] {
+        return std::uniform_real_distribution<PixelType>{ PixelType{ 1 }, PixelType{ 2 } }(randomNumberEngine);
+      });
+    };
+
+    elx::DefaultConstruct<ImageType> fixedImage{};
+    fixedImage.SetRegions(imageSize);
+    fixedImage.Allocate(true);
+    fillImageBufferRandomly(fixedImage);
+
+    elx::DefaultConstruct<ImageType> movingImage{};
+    movingImage.SetRegions(imageSize);
+    movingImage.Allocate(true);
+    fillImageBufferRandomly(movingImage);
+
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+    registration.SetFixedImage(&fixedImage);
+    registration.SetMovingImage(&movingImage);
+    registration.SetInitialTransformParameterFileName(initialTransformParameterFileName);
+
+    registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                            { "AutomaticTransformInitialization", "false" },
+                                                            { "ImageSampler", "Full" },
+                                                            { "MaximumNumberOfIterations", "0" },
+                                                            { "Metric", "AdvancedNormalizedCorrelation" },
+                                                            { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                            { "Transform", "TranslationTransform" } }));
+    registration.Update();
+    return registration.GetOutput();
+  };
+
+  EXPECT_EQ(
+    DerefSmartPointer(doDummyRegistration(
+      GetDataDirectoryPath() + "/Translation(1,-2)/TransformParametersWithInitialTransformParameterFile.txt")),
+    DerefSmartPointer(doDummyRegistration(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt")));
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 {
   using PixelType = float;
