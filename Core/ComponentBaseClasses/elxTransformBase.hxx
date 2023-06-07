@@ -388,16 +388,43 @@ TransformBase<TElastix>::ReadFromFile()
        * is not the same as this transform parameter file. Otherwise,
        * we will have an infinite loop.
        */
-      std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(fileName);
-      std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(configuration.GetParameterFileName());
-      if (fullFileName1 == fullFileName2)
+
+      const std::string configurationParameterFileName = configuration.GetParameterFileName();
+
+      if (itksys::SystemTools::CollapseFullPath(fileName) ==
+          itksys::SystemTools::CollapseFullPath(configurationParameterFileName))
       {
         itkExceptionMacro("ERROR: The InitialTransformParameterFileName is identical to the current "
                           "TransformParameters filename! An infinite loop is not allowed.");
       }
 
       /** We can safely read the initial transform. */
-      this->ReadInitialTransformFromFile(fileName.c_str());
+
+      // Find the last separator (slash or backslash) in the current transform parameter file path.
+      const auto lastConfigurationParameterFilePathSeparator = configurationParameterFileName.find_last_of("\\/");
+      const char firstFileNameLetter = fileName.front();
+
+      if (const bool isAbsoluteFilePath{ firstFileNameLetter == '\\' || firstFileNameLetter == '/' ||
+                                         (firstFileNameLetter > 0 && std::isalpha(firstFileNameLetter) &&
+                                          fileName.size() > 1 && fileName[1] == ':') };
+          isAbsoluteFilePath || (lastConfigurationParameterFilePathSeparator == std::string::npos) ||
+          itksys::SystemTools::FileExists(fileName))
+      {
+        // The file name is an absolute path, or the current transform parameter file name does not have any separator,
+        // or the file exists in the current working directory. So use it!
+        this->ReadInitialTransformFromFile(fileName.c_str());
+      }
+      else
+      {
+        // The file name of the initial transform is a relative path, so now assume that it is relative to the current
+        // transform parameter file (the current configuration). Try to read the initial transform from the same
+        // directory as the current transform, by concatenating the current configuration file path up to that last
+        // separator with the string specified by "InitialTransformParameterFileName".
+        this->ReadInitialTransformFromFile(
+          configurationParameterFileName.substr(0, lastConfigurationParameterFilePathSeparator + 1)
+            .append(fileName)
+            .c_str());
+      }
     }
   }
 
