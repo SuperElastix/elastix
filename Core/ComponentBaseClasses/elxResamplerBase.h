@@ -209,7 +209,7 @@ private:
 
   /** Function to write the result output image to a file. */
   void
-  WriteResultImage(OutputImageType * imageimage, const char * filename, const bool showProgress);
+  WriteResultImage(OutputImageType * imageimage, const std::string & filename, const bool showProgress);
 
   /** Release memory. */
   void
