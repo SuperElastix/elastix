@@ -978,7 +978,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
    * This will be needed when another transform will use this transform
    * as an initial transform (see the WriteToFile method)
    */
-  this->SetTransformParametersFileName(this->GetConfiguration()->GetCommandLineArgument("-tp").c_str());
+  this->SetTransformParametersFileName(this->GetConfiguration()->GetCommandLineArgument("-tp"));
 
 } // end ReadFromFile()
 
