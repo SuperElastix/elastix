@@ -177,6 +177,25 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
                                  m_EnableOutput && m_LogToConsole,
                                  static_cast<elastix::log::level>(m_LogLevel));
 
+  if (m_InitialTransformParameterObject && !m_OutputDirectory.empty())
+  {
+    // Write InitialTransformParameters.0.txt, InitialTransformParameters.1.txt, InitialTransformParameters.2.txt, etc.
+    std::string initialTransformParameterFileName = "NoInitialTransform";
+    unsigned    i{};
+
+    for (auto transformParameterMap : m_InitialTransformParameterObject->GetParameterMaps())
+    {
+      transformParameterMap["InitialTransformParameterFileName"] = { initialTransformParameterFileName };
+
+      const auto transformParameterFileName = "InitialTransformParameters." + std::to_string(i) + ".txt";
+      elx::ParameterObject::WriteParameterFile(transformParameterMap, m_OutputDirectory + transformParameterFileName);
+      initialTransformParameterFileName = transformParameterFileName;
+      ++i;
+    }
+
+    argumentMap["-tp"] = initialTransformParameterFileName;
+  }
+
   const auto fixedImageDimensionString = std::to_string(FixedImageDimension);
   const auto fixedImagePixelTypeString = elx::PixelTypeToString<typename TFixedImage::PixelType>();
   const auto movingImageDimensionString = std::to_string(MovingImageDimension);
