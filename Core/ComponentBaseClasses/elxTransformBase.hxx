@@ -202,7 +202,7 @@ TransformBase<TElastix>::BeforeRegistrationBase()
     {
       if (itksys::SystemTools::FileExists(fileName))
       {
-        this->ReadInitialTransformFromFile(fileName.c_str());
+        this->ReadInitialTransformFromFile(fileName);
       }
       else
       {
@@ -412,7 +412,7 @@ TransformBase<TElastix>::ReadFromFile()
       {
         // The file name is an absolute path, or the current transform parameter file name does not have any separator,
         // or the file exists in the current working directory. So use it!
-        this->ReadInitialTransformFromFile(fileName.c_str());
+        this->ReadInitialTransformFromFile(fileName);
       }
       else
       {
@@ -421,9 +421,7 @@ TransformBase<TElastix>::ReadFromFile()
         // directory as the current transform, by concatenating the current configuration file path up to that last
         // separator with the string specified by "InitialTransformParameterFileName".
         this->ReadInitialTransformFromFile(
-          configurationParameterFileName.substr(0, lastConfigurationParameterFilePathSeparator + 1)
-            .append(fileName)
-            .c_str());
+          configurationParameterFileName.substr(0, lastConfigurationParameterFilePathSeparator + 1) + fileName);
       }
     }
   }
@@ -454,7 +452,7 @@ TransformBase<TElastix>::ReadFromFile()
 
 template <class TElastix>
 void
-TransformBase<TElastix>::ReadInitialTransformFromFile(const char * transformParametersFileName)
+TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transformParametersFileName)
 {
   /** Create a new configuration, which will be initialized with
    * the transformParameterFileName. */
