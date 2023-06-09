@@ -443,7 +443,7 @@ TransformBase<TElastix>::ReadFromFile()
    * This will be needed when another transform will use this transform
    * as an initial transform (see the WriteToFile method)
    */
-  this->SetTransformParametersFileName(configuration.GetCommandLineArgument("-tp").c_str());
+  this->SetTransformParametersFileName(configuration.GetCommandLineArgument("-tp"));
 
 } // end ReadFromFile()
 
@@ -1325,21 +1325,14 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
 
 template <class TElastix>
 void
-TransformBase<TElastix>::SetTransformParametersFileName(const char * filename)
+TransformBase<TElastix>::SetTransformParametersFileName(const std::string & filename)
 {
   /** Copied from itkSetStringMacro. */
-  if (filename && (filename == this->m_TransformParametersFileName))
+  if (filename == this->m_TransformParametersFileName)
   {
     return;
   }
-  if (filename)
-  {
-    this->m_TransformParametersFileName = filename;
-  }
-  else
-  {
-    this->m_TransformParametersFileName = "";
-  }
+  this->m_TransformParametersFileName = filename;
   this->GetAsITKBaseType()->Modified();
 
 } // end SetTransformParametersFileName()

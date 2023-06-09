@@ -225,7 +225,7 @@ public:
 
   /** Set the TransformParametersFileName. */
   void
-  SetTransformParametersFileName(const char * filename);
+  SetTransformParametersFileName(const std::string & filename);
 
   /** Function to read transform-parameters from a file. */
   virtual void
