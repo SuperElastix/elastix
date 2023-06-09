@@ -346,7 +346,9 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, cons
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::WriteResultImage(OutputImageType * image, const char * filename, const bool showProgress)
+ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
+                                          const std::string & filename,
+                                          const bool          showProgress)
 {
   ITKBaseType & resampleImageFilter = this->GetSelf();
 
