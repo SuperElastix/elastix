@@ -212,7 +212,7 @@ MissingStructurePenalty<TElastix>::AfterEachIteration()
 
       try
       {
-        this->WriteResultMesh(makeFileName.str().c_str(), meshId);
+        this->WriteResultMesh(makeFileName.str(), meshId);
       }
       catch (const itk::ExceptionObject & excp)
       {
@@ -261,7 +261,7 @@ MissingStructurePenalty<TElastix>::AfterEachResolution()
 
       try
       {
-        this->WriteResultMesh(makeFileName.str().c_str(), meshId);
+        this->WriteResultMesh(makeFileName.str(), meshId);
       }
       catch (const itk::ExceptionObject & excp)
       {
@@ -309,7 +309,7 @@ MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, ty
 
 template <class TElastix>
 void
-MissingStructurePenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
+MissingStructurePenalty<TElastix>::WriteResultMesh(const std::string & filename, MeshIdType meshId)
 {
   /** Setup the pipeline. */
 

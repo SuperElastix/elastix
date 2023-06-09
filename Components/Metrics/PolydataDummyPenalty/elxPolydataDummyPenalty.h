@@ -182,7 +182,7 @@ public:
   ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh);
 
   void
-  WriteResultMesh(const char * filename, MeshIdType meshId);
+  WriteResultMesh(const std::string & filename, MeshIdType meshId);
 
   unsigned int
   ReadTransformixPoints(const std::string & filename, typename MeshType::Pointer & mesh);
