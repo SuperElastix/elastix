@@ -201,7 +201,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
 
       try
       {
-        this->WriteResultMesh(makeFileName.str().c_str(), meshId);
+        this->WriteResultMesh(makeFileName.str(), meshId);
       }
       catch (const itk::ExceptionObject & excp)
       {
@@ -250,7 +250,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
 
       try
       {
-        this->WriteResultMesh(makeFileName.str().c_str(), meshId);
+        this->WriteResultMesh(makeFileName.str(), meshId);
       }
       catch (const itk::ExceptionObject & excp)
       {
@@ -300,7 +300,7 @@ PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typen
 
 template <class TElastix>
 void
-PolydataDummyPenalty<TElastix>::WriteResultMesh(const char * filename, MeshIdType meshId)
+PolydataDummyPenalty<TElastix>::WriteResultMesh(const std::string & filename, MeshIdType meshId)
 {
   /** Set the points of the latest transformation. */
   const MappedMeshContainerPointer mappedMeshContainer = this->GetModifiableMappedMeshContainer();
