@@ -200,7 +200,7 @@ TransformBase<TElastix>::BeforeRegistrationBase()
     }
     else
     {
-      if (itksys::SystemTools::FileExists(fileName.c_str()))
+      if (itksys::SystemTools::FileExists(fileName))
       {
         this->ReadInitialTransformFromFile(fileName.c_str());
       }
@@ -684,8 +684,7 @@ TransformBase<TElastix>::TransformPoints() const
   /** If there is an input point-file? */
   if (!def.empty() && def != "all")
   {
-    if (itksys::SystemTools::StringEndsWith(def.c_str(), ".vtk") ||
-        itksys::SystemTools::StringEndsWith(def.c_str(), ".VTK"))
+    if (itksys::SystemTools::StringEndsWith(def, ".vtk") || itksys::SystemTools::StringEndsWith(def, ".VTK"))
     {
       log::info("  The transform is evaluated on some points, specified in a VTK input point file.");
       this->TransformPointsSomePointsVTK(def);
@@ -742,7 +741,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
 
   /** Construct an ipp-file reader. */
   const auto ippReader = itk::TransformixInputPointFileReader<PointSetType>::New();
-  ippReader->SetFileName(filename.c_str());
+  ippReader->SetFileName(filename);
 
   /** Read the input points. */
   log::info(std::ostringstream{} << "  Reading input point file: " << filename);
@@ -936,7 +935,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
 
   /** Read the input points. */
   const auto meshReader = itk::MeshFileReader<MeshType>::New();
-  meshReader->SetFileName(filename.c_str());
+  meshReader->SetFileName(filename);
   log::info(std::ostringstream{} << "  Reading input point file: " << filename);
   try
   {
@@ -1250,7 +1249,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
     /** Write outputImage to disk. */
     const auto jacWriter = itk::ImageFileWriter<SpatialJacobianMatrixImageType>::New();
     jacWriter->SetInput(infoChanger->GetOutput());
-    jacWriter->SetFileName(makeFileName.str().c_str());
+    jacWriter->SetFileName(makeFileName.str());
 
     // This class is used for writing the fullSpatialJacobian image. It is a hack to ensure that a matrix image is seen
     // as a vector image, which most IO classes understand.

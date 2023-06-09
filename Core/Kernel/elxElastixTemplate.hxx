@@ -1046,7 +1046,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
     std::string fileName = makeFileName.str();
 
     /** Open the IterationInfoFile. */
-    this->m_IterationInfoFile.open(fileName.c_str());
+    this->m_IterationInfoFile.open(fileName);
     if (!(this->m_IterationInfoFile.is_open()))
     {
       log::error(std::ostringstream{} << "ERROR: File \"" << fileName << "\" could not be opened!");

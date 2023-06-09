@@ -67,8 +67,7 @@ ImageFullSampler<TInputImage>::GenerateData()
       std::string message = "std: ";
       message += excp.what();
       message += "\nERROR: failed to allocate memory for the sample container.";
-      const char * message2 = message.c_str();
-      itkExceptionMacro(<< message2);
+      itkExceptionMacro(<< message);
     }
     catch (...)
     {
@@ -159,8 +158,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
       std::string message = "std: ";
       message += excp.what();
       message += "\nERROR: failed to allocate memory for the sample container.";
-      const char * message2 = message.c_str();
-      itkExceptionMacro(<< message2);
+      itkExceptionMacro(<< message);
     }
     catch (...)
     {

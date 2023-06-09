@@ -154,7 +154,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
 
   /** Read the landmarks. */
   auto reader = itk::TransformixInputPointFileReader<PointSetType>::New();
-  reader->SetFileName(landmarkFileName.c_str());
+  reader->SetFileName(landmarkFileName);
   log::info(std::ostringstream{} << "  Reading landmark file: " << landmarkFileName);
   try
   {

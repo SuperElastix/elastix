@@ -257,7 +257,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
   {
     /** In this case we have to read in the m_MovingSegmentationImage. */
     this->m_MovingSegmentationReader = GrayValueImageReaderType::New();
-    this->m_MovingSegmentationReader->SetFileName(m_MovingSegmentationFileName.c_str());
+    this->m_MovingSegmentationReader->SetFileName(m_MovingSegmentationFileName);
     this->m_MovingSegmentationImage = m_MovingSegmentationReader->GetOutput();
 
     /** Read the MovingSegmentation. */
@@ -281,7 +281,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
     {
       /** In this case we have to read in the m_FixedSegmentationImage. */
       this->m_FixedSegmentationReader = GrayValueImageReaderType::New();
-      this->m_FixedSegmentationReader->SetFileName(m_FixedSegmentationFileName.c_str());
+      this->m_FixedSegmentationReader->SetFileName(m_FixedSegmentationFileName);
       this->m_FixedSegmentationImage = m_FixedSegmentationReader->GetOutput();
 
       /** Read the FixedSegmentation. */
@@ -851,7 +851,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
 
   /** Read in the deformationField image. */
   auto vectorReader = VectorReaderType::New();
-  vectorReader->SetFileName(fileName.c_str());
+  vectorReader->SetFileName(fileName);
 
   /** Do the reading. */
   try

@@ -160,12 +160,12 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   if (!p.empty() && tp.empty())
   {
     /** elastix called Initialize(). */
-    this->SetParameterFileName(p.c_str());
+    this->SetParameterFileName(p);
   }
   else if (p.empty() && !tp.empty())
   {
     /** transformix called Initialize(). */
-    this->SetParameterFileName(tp.c_str());
+    this->SetParameterFileName(tp);
   }
   else if (p.empty() && tp.empty())
   {

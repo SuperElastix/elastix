@@ -283,7 +283,7 @@ MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, ty
 {
   /** Read the input mesh. */
   auto meshReader = itk::MeshFileReader<MeshType>::New();
-  meshReader->SetFileName(meshFileName.c_str());
+  meshReader->SetFileName(meshFileName);
   log::info(std::ostringstream{} << "  Reading input mesh file: " << meshFileName);
   try
   {
@@ -411,7 +411,7 @@ the sequence of points to form a 2d connected polydata contour.
 
   /** Construct an ipp-file reader. */
   auto ippReader = itk::TransformixInputPointFileReader<PointSetType>::New();
-  ippReader->SetFileName(filename.c_str());
+  ippReader->SetFileName(filename);
 
   /** Read the input points. */
   log::info(std::ostringstream{} << "  Reading input point file: " << filename);
