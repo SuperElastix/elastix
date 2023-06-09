@@ -113,7 +113,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
     log::info("Applying transform this resolution ...");
     try
     {
-      this->ResampleAndWriteResultImage(makeFileName.str().c_str(), true);
+      this->ResampleAndWriteResultImage(makeFileName.str(), true);
     }
     catch (const itk::ExceptionObject & excp)
     {
@@ -168,7 +168,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
     /** Apply the final transform, and save the result. */
     try
     {
-      this->ResampleAndWriteResultImage(makeFileName.str().c_str(), false);
+      this->ResampleAndWriteResultImage(makeFileName.str(), false);
     }
     catch (const itk::ExceptionObject & excp)
     {
@@ -246,7 +246,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
       log::info("\nApplying final transform ...");
       try
       {
-        this->ResampleAndWriteResultImage(makeFileName.str().c_str(), true);
+        this->ResampleAndWriteResultImage(makeFileName.str(), true);
       }
       catch (const itk::ExceptionObject & excp)
       {
@@ -297,7 +297,7 @@ ResamplerBase<TElastix>::SetComponents()
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::ResampleAndWriteResultImage(const char * filename, const bool showProgress)
+ResamplerBase<TElastix>::ResampleAndWriteResultImage(const std::string & filename, const bool showProgress)
 {
   ITKBaseType & resampleImageFilter = this->GetSelf();
 
