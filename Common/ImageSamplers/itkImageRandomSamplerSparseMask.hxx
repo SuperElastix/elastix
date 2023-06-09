@@ -74,8 +74,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
                  "requires a lot of memory. Consider using the ImageRandomSampler "
                  "instead.";
     }
-    const char * message2 = message.c_str();
-    itkExceptionMacro(<< message2);
+    itkExceptionMacro(<< message);
   }
 
   /** If desired we exercise a multi-threaded version. */

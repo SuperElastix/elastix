@@ -140,14 +140,14 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
   /** Attempt to save the arguments in the ArgumentMap. */
   if (argMap.count(key) == 0)
   {
-    argMap.insert(ArgumentMapEntryType(key.c_str(), value.c_str()));
+    argMap.insert(ArgumentMapEntryType(key, value));
   }
   else if (performCout)
   {
     /** Duplicate arguments. */
     std::cerr << "WARNING!\n"
-              << "Argument " << key.c_str() << "is only required once.\n"
-              << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
+              << "Argument " << key << "is only required once.\n"
+              << "Arguments " << key << " " << value << "are ignored" << std::endl;
   }
 
   if (performLogging)

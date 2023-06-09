@@ -85,7 +85,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   std::string                meanVectorName = this->GetConfiguration()->GetCommandLineArgument("-mean");
   std::ifstream              datafile;
   vnl_vector<double> * const meanVector = new vnl_vector<double>();
-  datafile.open(meanVectorName.c_str());
+  datafile.open(meanVectorName);
   if (datafile.is_open())
   {
     meanVector->read_ascii(datafile);
@@ -126,7 +126,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
 
   vnl_matrix<double> * const covarianceMatrix = new vnl_matrix<double>();
 
-  datafile.open(covarianceMatrixName.c_str());
+  datafile.open(covarianceMatrixName);
   if (datafile.is_open())
   {
     covarianceMatrix->read_ascii(datafile);
@@ -145,7 +145,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
 
   vnl_matrix<double> * const eigenVectors = new vnl_matrix<double>();
 
-  datafile.open(eigenVectorsName.c_str());
+  datafile.open(eigenVectorsName);
   if (datafile.is_open())
   {
     eigenVectors->read_ascii(datafile);
@@ -163,7 +163,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   /** Read eigenvalue vector filename. */
   std::string                eigenValuesName = this->GetConfiguration()->GetCommandLineArgument("-evalues");
   vnl_vector<double> * const eigenValues = new vnl_vector<double>();
-  datafile.open(eigenValuesName.c_str());
+  datafile.open(eigenValuesName);
   if (datafile.is_open())
   {
     eigenValues->read_ascii(datafile);
@@ -285,7 +285,7 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
 
   /** Read the landmarks. */
   auto reader = itk::TransformixInputPointFileReader<PointSetType>::New();
-  reader->SetFileName(landmarkFileName.c_str());
+  reader->SetFileName(landmarkFileName);
   log::info(std::ostringstream{} << "  Reading landmark file: " << landmarkFileName);
   try
   {
@@ -360,7 +360,7 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                
 
   /** Read the input points. */
   auto meshReader = MeshFileReader<MeshType>::New();
-  meshReader->SetFileName(ShapeFileName.c_str());
+  meshReader->SetFileName(ShapeFileName);
   log::info(std::ostringstream{} << "  Reading input point file: " << ShapeFileName);
   try
   {

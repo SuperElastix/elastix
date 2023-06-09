@@ -270,7 +270,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
 
   try
   {
-    parameterFile.open(parameterFileName.c_str(), std::ofstream::out);
+    parameterFile.open(parameterFileName, std::ofstream::out);
   }
   catch (const std::ios_base::failure & e)
   {

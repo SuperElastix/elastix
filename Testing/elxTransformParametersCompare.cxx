@@ -124,7 +124,7 @@ main(int argc, char ** argv)
   auto config = InterfaceType::New();
 
   /** Read test parameters. */
-  parameterFileParser->SetParameterFileName(testFileName.c_str());
+  parameterFileParser->SetParameterFileName(testFileName);
   try
   {
     parameterFileParser->ReadParameterFile();
@@ -143,7 +143,7 @@ main(int argc, char ** argv)
   config->ReadParameter(parametersTest, "TransformParameters", 0, numberOfParametersTest - 1, true, dummyErrorMessage);
 
   /** Read baseline parameters. */
-  parameterFileParser->SetParameterFileName(baselineFileName.c_str());
+  parameterFileParser->SetParameterFileName(baselineFileName);
   try
   {
     parameterFileParser->ReadParameterFile();

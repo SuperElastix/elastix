@@ -239,7 +239,7 @@ main(int argc, char * argv[])
   config->ReadParameter(useDirectionCosines, "UseDirectionCosines", 0, dummyErrorMessage);
 
   /** Open a file for writing. */
-  std::ofstream outputTPFile(outputTransformParametersName.c_str());
+  std::ofstream outputTPFile(outputTransformParametersName);
 
   /** The following is a modified copy of elx::TransformBase::WriteToFile(). */
 

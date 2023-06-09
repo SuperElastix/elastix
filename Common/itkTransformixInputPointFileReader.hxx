@@ -40,7 +40,7 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation()
   {
     this->m_Reader.close();
   }
-  this->m_Reader.open(this->m_FileName.c_str());
+  this->m_Reader.open(this->m_FileName);
 
   /** Read the first entry */
   std::string indexOrPoint;

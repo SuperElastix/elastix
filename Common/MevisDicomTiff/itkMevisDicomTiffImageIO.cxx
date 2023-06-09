@@ -198,7 +198,7 @@ MevisDicomTiffImageIO::CanReadFile(const char * filename)
   const std::string fn(filename);
   const std::string basename(itksys::SystemTools::GetFilenameWithoutLastExtension(fn));
   const std::string ext(itksys::SystemTools::GetFilenameLastExtension(fn));
-  std::string       pathname(itksys::SystemTools::GetFilenamePath(fn).c_str());
+  std::string       pathname(itksys::SystemTools::GetFilenamePath(fn));
 
   if (!pathname.empty())
   {
@@ -222,11 +222,11 @@ MevisDicomTiffImageIO::CanReadFile(const char * filename)
   const std::string dname = pathname + basename + ".dcm";
   const std::string Dname = pathname + basename + ".DCM";
 
-  const std::string d = itksys::SystemTools::ConvertToOutputPath(dname.c_str());
-  const std::string D = itksys::SystemTools::ConvertToOutputPath(Dname.c_str());
+  const std::string d = itksys::SystemTools::ConvertToOutputPath(dname);
+  const std::string D = itksys::SystemTools::ConvertToOutputPath(Dname);
 
-  std::ifstream f(d.c_str(), std::ios::in | std::ios::binary);
-  std::ifstream F(D.c_str(), std::ios::in | std::ios::binary);
+  std::ifstream f(d, std::ios::in | std::ios::binary);
+  std::ifstream F(D, std::ios::in | std::ios::binary);
 
   if (!f.is_open() && !F.is_open())
   {
@@ -251,10 +251,10 @@ MevisDicomTiffImageIO::CanReadFile(const char * filename)
   const std::string t3name = pathname + basename + ".TIF";
   const std::string t4name = pathname + basename + ".TIFF";
 
-  std::ifstream t1(t1name.c_str(), std::ios::in | std::ios::binary);
-  std::ifstream t2(t2name.c_str(), std::ios::in | std::ios::binary);
-  std::ifstream t3(t3name.c_str(), std::ios::in | std::ios::binary);
-  std::ifstream t4(t4name.c_str(), std::ios::in | std::ios::binary);
+  std::ifstream t1(t1name, std::ios::in | std::ios::binary);
+  std::ifstream t2(t2name, std::ios::in | std::ios::binary);
+  std::ifstream t3(t3name, std::ios::in | std::ios::binary);
+  std::ifstream t4(t4name, std::ios::in | std::ios::binary);
 
   if (!t1.is_open() && !t2.is_open() && !t3.is_open() && !t4.is_open())
   {
@@ -284,7 +284,7 @@ MevisDicomTiffImageIO::CanReadFile(const char * filename)
 
   // checking if dcm is valid dcm
   gdcm::Reader reader;
-  reader.SetFileName(m_DcmFileName.c_str());
+  reader.SetFileName(m_DcmFileName);
   if (!reader.Read())
   {
     itkDebugMacro("mevisIO:canreadfile(): error opening dcm file " << m_DcmFileName);
@@ -379,7 +379,7 @@ MevisDicomTiffImageIO::ReadImageInformation()
   //
   // We trust the dcm header information instead
   gdcm::ImageReader reader;
-  reader.SetFileName(m_DcmFileName.c_str());
+  reader.SetFileName(m_DcmFileName);
   reader.Read();
   const gdcm::DataSet header = reader.GetFile().GetDataSet();
 
@@ -1190,7 +1190,7 @@ MevisDicomTiffImageIO::CanWriteFile(const char * name)
   const std::string basename = itksys::SystemTools::GetFilenameWithoutLastExtension(fn);
   const std::string ext = itksys::SystemTools::GetFilenameLastExtension(fn);
 
-  std::string pathname = itksys::SystemTools::GetFilenamePath(fn).c_str();
+  std::string pathname = itksys::SystemTools::GetFilenamePath(fn);
 
   if (!pathname.empty())
   {
@@ -1255,7 +1255,7 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     itkExceptionMacro("mevisIO:write(): dcm/tiff writer only supports 2D/3D/4D");
   }
 
-  std::ofstream dcmfile(m_DcmFileName.c_str(), std::ios::out | std::ios::binary);
+  std::ofstream dcmfile(m_DcmFileName, std::ios::out | std::ios::binary);
   if (!dcmfile.is_open())
   {
     itkExceptionMacro("mevisIO:write(): error opening dcm file for writing " << m_DcmFileName);
@@ -1662,7 +1662,7 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
   }
   header.Replace(atio.GetAsDataElement());
 
-  writer.SetFileName(m_DcmFileName.c_str());
+  writer.SetFileName(m_DcmFileName);
   bool retwrite = false;
   try
   {
