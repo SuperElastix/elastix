@@ -247,7 +247,7 @@ public:
 
   /** Function to read the initial transform parameters from a file. */
   void
-  ReadInitialTransformFromFile(const char * transformParameterFileName);
+  ReadInitialTransformFromFile(const std::string & transformParameterFileName);
 
   /** Function to transform coordinates from fixed to moving image. */
   void

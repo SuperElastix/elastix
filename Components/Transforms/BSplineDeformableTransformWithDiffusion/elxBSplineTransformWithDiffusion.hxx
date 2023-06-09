@@ -949,7 +949,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
   /** Call the function ReadInitialTransformFromFile.*/
   if (!fileName.empty() && fileName != "NoInitialTransform")
   {
-    this->ReadInitialTransformFromFile(fileName.c_str());
+    this->ReadInitialTransformFromFile(fileName);
   }
 
   /** Task 3 - Read from the configuration file how to combine the
