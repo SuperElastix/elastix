@@ -425,12 +425,14 @@ private:
   std::string
   GetInitialTransformParametersFileName() const
   {
-    if (!this->GetInitialTransform())
+    const InitialTransformType * const initialTransform = this->GetInitialTransform();
+
+    if (!initialTransform)
     {
       return "NoInitialTransform";
     }
 
-    const Self * t0 = dynamic_cast<const Self *>(this->GetInitialTransform());
+    const auto t0 = dynamic_cast<const Self *>(initialTransform);
     return t0->GetTransformParametersFileName();
   }
 
