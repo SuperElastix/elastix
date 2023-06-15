@@ -303,10 +303,11 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
    * composition is used to combine the initial transform with the
    * the current (affine) transform.
    */
-  if (this->GetUseComposition() && this->Superclass1::GetInitialTransform() != nullptr)
+  if (const auto * const initialTransform = this->Superclass1::GetInitialTransform();
+      initialTransform != nullptr && this->GetUseComposition())
   {
     InputPointType transformedCenterOfRotationPoint =
-      this->Superclass1::GetInitialTransform()->TransformPoint(this->m_AffineTransform->GetCenter());
+      initialTransform->TransformPoint(this->m_AffineTransform->GetCenter());
     this->m_AffineTransform->SetCenter(transformedCenterOfRotationPoint);
   }
 

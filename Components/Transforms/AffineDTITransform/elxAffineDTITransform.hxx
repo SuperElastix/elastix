@@ -249,10 +249,11 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
    * composition is used to combine the initial transform with the
    * the current (euler) transform.
    */
-  if (this->GetUseComposition() && this->Superclass1::GetInitialTransform() != nullptr)
+  if (const auto * const initialTransform = this->Superclass1::GetInitialTransform();
+      initialTransform != nullptr && this->GetUseComposition())
   {
     InputPointType transformedCenterOfRotationPoint =
-      this->Superclass1::GetInitialTransform()->TransformPoint(this->m_AffineDTITransform->GetCenter());
+      initialTransform->TransformPoint(this->m_AffineDTITransform->GetCenter());
     this->m_AffineDTITransform->SetCenter(transformedCenterOfRotationPoint);
   }
 
