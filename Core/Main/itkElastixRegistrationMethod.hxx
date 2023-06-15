@@ -179,9 +179,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
   if (m_InitialTransformParameterObject && !m_OutputDirectory.empty())
   {
-    // Write InitialTransformParameters.0.txt, InitialTransformParameters.1.txt, InitialTransformParameters.2.txt, etc.
     std::string initialTransformParameterFileName = "NoInitialTransform";
-    unsigned    i{};
+
+    // Write InitialTransformParameters.0.txt, InitialTransformParameters.1.txt, InitialTransformParameters.2.txt, etc.
+    unsigned i{};
 
     for (auto transformParameterMap : m_InitialTransformParameterObject->GetParameterMaps())
     {
@@ -193,6 +194,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
       ++i;
     }
 
+    // Pass the last initial transform parameter file name to the argument map, in order to have it stored by
+    // elx::TransformBase::ReadFromFile(), so that it can be retrieved later by
+    // elx::TransformBase::GetInitialTransformParametersFileName(). Use "-tp", instead of "-t0", to avoid actual file
+    // reading of the initial transforms, as they are already in memory.
     argumentMap["-tp"] = initialTransformParameterFileName;
   }
 
