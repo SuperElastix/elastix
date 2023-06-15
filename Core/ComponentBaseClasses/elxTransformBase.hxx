@@ -437,8 +437,9 @@ TransformBase<TElastix>::ReadFromFile()
   this->GetAsITKBaseType()->SetUseComposition(howToCombineTransforms == "Compose");
 
   /** Task 4 - Remember the name of the TransformParametersFileName.
-   * This will be needed when another transform will use this transform
-   * as an initial transform (see the WriteToFile method)
+   * This will be needed when another transform will use this transform as an initial transform (see the WriteToFile
+   * method), which is relevant for transformix, as well as for elastix (specifically
+   * ElastixRegistrationMethod::GenerateData(), when InitialTransformParameterObject is specified).
    */
   this->SetTransformParametersFileName(configuration.GetCommandLineArgument("-tp"));
 
