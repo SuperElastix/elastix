@@ -355,14 +355,15 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   }
 
   /** Apply initial transform if necessary, for fixed image landmarks only. */
-  if (landmarksInFixedImage && this->GetUseComposition() && this->Superclass1::GetInitialTransform() != nullptr)
+  if (const auto * const initialTransform = this->Superclass1::GetInitialTransform();
+      initialTransform != nullptr && landmarksInFixedImage && this->GetUseComposition())
   {
     InputPointType inputPoint;
     inputPoint.Fill(0.0f);
     for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       landmarkPointSet->GetPoint(j, &inputPoint);
-      inputPoint = this->Superclass1::GetInitialTransform()->TransformPoint(inputPoint);
+      inputPoint = initialTransform->TransformPoint(inputPoint);
       landmarkPointSet->SetPoint(j, inputPoint);
     }
   }

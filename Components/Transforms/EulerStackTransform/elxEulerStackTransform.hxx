@@ -268,7 +268,8 @@ EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPoint
    * composition is used to combine the initial transform with the
    * the current (euler) transform.
    */
-  if (this->GetUseComposition() && this->Superclass1::GetInitialTransform() != nullptr)
+  if (const auto * const initialTransform = this->Superclass1::GetInitialTransform();
+      initialTransform != nullptr && this->GetUseComposition())
   {
     /** Transform point to voxel coordinates. */
     InputPointType fullDimensionCenterPoint;
@@ -298,8 +299,7 @@ EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPoint
         fullDimensionCenterIndex, fullDimensionCenterPoint);
 
       /** Transform point using initial transform. */
-      InputPointType transformedCenterOfRotationPoint =
-        this->Superclass1::GetInitialTransform()->TransformPoint(fullDimensionCenterPoint);
+      InputPointType transformedCenterOfRotationPoint = initialTransform->TransformPoint(fullDimensionCenterPoint);
 
       /** Add to averagePoint. */
       for (unsigned int d = 0; d < ReducedSpaceDimension; ++d)
