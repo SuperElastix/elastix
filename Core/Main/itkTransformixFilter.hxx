@@ -107,6 +107,11 @@ TransformixFilter<TImage>::GenerateData()
     argumentMap.insert(ArgumentMapEntryType("-def", m_FixedPointSetFileName));
   }
 
+  if (!m_TransformParameterFileName.empty())
+  {
+    argumentMap.insert(ArgumentMapEntryType("-tp", m_TransformParameterFileName));
+  }
+
   // Setup output directory
   // Only the input "MovingImage" does not require an output directory
   if ((m_ComputeSpatialJacobian || m_ComputeDeterminantOfSpatialJacobian || m_ComputeDeformationField ||
@@ -511,6 +516,20 @@ TransformixFilter<TImage>::GetTransformParameterObject() const -> const Paramete
     this->ProcessObject::GetInput("TransformParameterObject"));
 }
 
+
+template <typename TImage>
+void
+TransformixFilter<TImage>::SetTransformParameterFileName(std::string fileName)
+{
+  if (m_TransformParameterFileName != fileName)
+  {
+    const auto parameterObject = elx::ParameterObject::New();
+    parameterObject->AddParameterFile(fileName);
+    SetTransformParameterObject(parameterObject);
+    m_TransformParameterFileName = std::move(fileName);
+    this->Modified();
+  }
+}
 
 template <typename TImage>
 auto
