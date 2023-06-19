@@ -223,9 +223,9 @@ public:
   void
   SetInitialTransform(InitialTransformType * _arg);
 
-  /** Set the TransformParametersFileName. */
+  /** Set the TransformParameterFileName. */
   void
-  SetTransformParametersFileName(const std::string & filename);
+  SetTransformParameterFileName(const std::string & filename);
 
   /** Function to read transform-parameters from a file. */
   virtual void
@@ -394,8 +394,8 @@ private:
   const InitialTransformType *
   GetInitialTransform() const;
 
-  /** Get the TransformParametersFileName. */
-  itkGetStringMacro(TransformParametersFileName);
+  /** Get the TransformParameterFileName. */
+  itkGetStringMacro(TransformParameterFileName);
 
   /** Function to transform coordinates from fixed to moving image. */
   void
@@ -423,7 +423,7 @@ private:
   TransformPointsAllPoints() const;
 
   std::string
-  GetInitialTransformParametersFileName() const
+  GetInitialTransformParameterFileName() const
   {
     const InitialTransformType * const initialTransform = this->GetInitialTransform();
 
@@ -433,7 +433,7 @@ private:
     }
 
     const auto t0 = dynamic_cast<const Self *>(initialTransform);
-    return t0->GetTransformParametersFileName();
+    return t0->GetTransformParameterFileName();
   }
 
   virtual ParameterMapType
@@ -445,7 +445,7 @@ private:
   {}
 
   /** Member variables. */
-  std::string    m_TransformParametersFileName;
+  std::string    m_TransformParameterFileName;
   ParametersType m_TransformParameters;
   ParametersType m_FinalParameters;
 

@@ -974,11 +974,11 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
     }
   }
 
-  /** Task 4 - Remember the name of the TransformParametersFileName.
+  /** Task 4 - Remember the name of the TransformParameterFileName.
    * This will be needed when another transform will use this transform
    * as an initial transform (see the WriteToFile method)
    */
-  this->SetTransformParametersFileName(this->GetConfiguration()->GetCommandLineArgument("-tp"));
+  this->SetTransformParameterFileName(this->GetConfiguration()->GetCommandLineArgument("-tp"));
 
 } // end ReadFromFile()
 
