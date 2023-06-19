@@ -267,17 +267,17 @@ public:
   GetNumberOfTransforms() const;
 
   /** Returns the nth transformation, produced during the last Update(). */
-  SmartPointer<TransformType>
+  TransformType *
   GetNthTransform(const unsigned int n) const;
 
   /** Returns the combination transformation, produced during the last Update(). */
-  SmartPointer<TransformType>
+  TransformType *
   GetCombinationTransform() const;
 
   /** Converts the specified elastix Transform object to the corresponding ITK Transform object. Returns null if there
    * is no corresponding ITK Transform type. */
   static SmartPointer<TransformType>
-  ConvertToItkTransform(const TransformType &);
+  ConvertToItkTransform(const TransformType *);
 
 protected:
   ElastixRegistrationMethod();

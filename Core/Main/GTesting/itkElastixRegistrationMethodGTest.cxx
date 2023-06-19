@@ -1505,7 +1505,7 @@ GTEST_TEST(itkElastixRegistrationMethod, ConvertToItkTransform)
     for (unsigned int n{ 0 }; n < numberOfTransforms; ++n)
     {
       // TODO Check result
-      ElastixRegistrationMethodType<ImageType>::ConvertToItkTransform(*registration.GetNthTransform(n));
+      ElastixRegistrationMethodType<ImageType>::ConvertToItkTransform(registration.GetNthTransform(n));
     }
   }
 }
