@@ -436,12 +436,12 @@ TransformBase<TElastix>::ReadFromFile()
    */
   this->GetAsITKBaseType()->SetUseComposition(howToCombineTransforms == "Compose");
 
-  /** Task 4 - Remember the name of the TransformParametersFileName.
+  /** Task 4 - Remember the name of the TransformParameterFileName.
    * This will be needed when another transform will use this transform as an initial transform (see the WriteToFile
    * method), which is relevant for transformix, as well as for elastix (specifically
    * ElastixRegistrationMethod::GenerateData(), when InitialTransformParameterObject is specified).
    */
-  this->SetTransformParametersFileName(configuration.GetCommandLineArgument("-tp"));
+  this->SetTransformParameterFileName(configuration.GetCommandLineArgument("-tp"));
 
 } // end ReadFromFile()
 
@@ -452,15 +452,15 @@ TransformBase<TElastix>::ReadFromFile()
 
 template <class TElastix>
 void
-TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transformParametersFileName)
+TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transformParameterFileName)
 {
   /** Create a new configuration, which will be initialized with
    * the transformParameterFileName. */
   const auto configurationInitialTransform = Configuration::New();
 
-  if (configurationInitialTransform->Initialize({ { "-tp", transformParametersFileName } }) != 0)
+  if (configurationInitialTransform->Initialize({ { "-tp", transformParameterFileName } }) != 0)
   {
-    itkGenericExceptionMacro("ERROR: Reading initial transform parameters failed: " << transformParametersFileName);
+    itkGenericExceptionMacro("ERROR: Reading initial transform parameters failed: " << transformParameterFileName);
   }
 
   this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
@@ -491,7 +491,7 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
   /** Call the ReadFromFile method of the initialTransform. */
   if (elx_initialTransform != nullptr)
   {
-    // elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
+    // elx_initialTransform->SetTransformParameterFileName(transformParameterFileName);
     elx_initialTransform->SetElastix(this->GetElastix());
     elx_initialTransform->SetConfiguration(configurationInitialTransform);
     elx_initialTransform->ReadFromFile();
@@ -535,7 +535,7 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
     if (firstSingleTransform != nullptr)
     {
       const std::string transformFileName =
-        std::string(m_TransformParametersFileName, 0, m_TransformParametersFileName.rfind('.')) + '.' +
+        std::string(m_TransformParameterFileName, 0, m_TransformParameterFileName.rfind('.')) + '.' +
         itkTransformOutputFileNameExtension;
 
       const itk::TransformBase::ConstPointer itkTransform =
@@ -565,7 +565,7 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
     else
     {
       TransformIO::Write(*compositeTransform,
-                         std::string(m_TransformParametersFileName, 0, m_TransformParametersFileName.rfind('.')) +
+                         std::string(m_TransformParameterFileName, 0, m_TransformParameterFileName.rfind('.')) +
                            "-Composite." + itkTransformOutputFileNameExtension);
     }
   }
@@ -614,7 +614,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   /** Write the name of this transform. */
   parameterMap = { { "Transform", { this->elxGetClassName() } },
                    { "NumberOfParameters", { Conversion::ToString(param.GetSize()) } },
-                   { "InitialTransformParameterFileName", { this->GetInitialTransformParametersFileName() } },
+                   { "InitialTransformParameterFileName", { this->GetInitialTransformParameterFileName() } },
                    { "HowToCombineTransforms", { combinationMethod } },
                    { "FixedImageDimension", { Conversion::ToString(FixedImageDimension) } },
                    { "MovingImageDimension", { Conversion::ToString(MovingImageDimension) } },
@@ -1318,22 +1318,22 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
 
 
 /**
- * ************** SetTransformParametersFileName ****************
+ * ************** SetTransformParameterFileName ****************
  */
 
 template <class TElastix>
 void
-TransformBase<TElastix>::SetTransformParametersFileName(const std::string & filename)
+TransformBase<TElastix>::SetTransformParameterFileName(const std::string & filename)
 {
   /** Copied from itkSetStringMacro. */
-  if (filename == this->m_TransformParametersFileName)
+  if (filename == this->m_TransformParameterFileName)
   {
     return;
   }
-  this->m_TransformParametersFileName = filename;
+  this->m_TransformParameterFileName = filename;
   this->GetAsITKBaseType()->Modified();
 
-} // end SetTransformParametersFileName()
+} // end SetTransformParameterFileName()
 
 
 /**

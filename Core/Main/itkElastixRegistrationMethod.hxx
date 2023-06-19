@@ -196,7 +196,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 
     // Pass the last initial transform parameter file name to the argument map, in order to have it stored by
     // elx::TransformBase::ReadFromFile(), so that it can be retrieved later by
-    // elx::TransformBase::GetInitialTransformParametersFileName(). Use "-tp", instead of "-t0", to avoid actual file
+    // elx::TransformBase::GetInitialTransformParameterFileName(). Use "-tp", instead of "-t0", to avoid actual file
     // reading of the initial transforms, as they are already in memory.
     argumentMap["-tp"] = initialTransformParameterFileName;
   }

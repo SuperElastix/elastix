@@ -779,7 +779,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
   this->m_CurrentTransformParameterFileName = fileName;
 
   /** Set it in the Transform, for later use. */
-  this->GetElxTransformBase()->SetTransformParametersFileName(fileName);
+  this->GetElxTransformBase()->SetTransformParameterFileName(fileName);
 
   /** Separate clearly in log-file. */
   if (toLog)
