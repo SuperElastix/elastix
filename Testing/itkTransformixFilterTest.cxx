@@ -38,7 +38,7 @@ main(int argc, char * argv[])
     return 1;
   }
   const char * movingImageFile = argv[1];
-  const char * transformParametersFile = argv[2];
+  const char * transformParameterFile = argv[2];
   const char * transformedImageFile = argv[3];
 
   /** Other typedef. */
@@ -47,7 +47,7 @@ main(int argc, char * argv[])
   auto movingImage = itk::ReadImage<ImageType>(movingImageFile);
 
   auto parameterObject = elastix::ParameterObject::New();
-  parameterObject->ReadParameterFile(transformParametersFile);
+  parameterObject->ReadParameterFile(transformParameterFile);
   parameterObject->Print(std::cout);
 
   using TransformixType = itk::TransformixFilter<ImageType>;
