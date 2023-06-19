@@ -129,6 +129,9 @@ public:
   const DataObject *
   GetInput(DataObjectPointerArraySizeType index) const;
 
+  void SetTransformParameterFileName(std::string);
+  itkGetConstMacro(TransformParameterFileName, std::string);
+
   /** Set/Get/Remove fixed point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
   itkGetConstMacro(FixedPointSetFileName, std::string);
@@ -280,6 +283,7 @@ private:
 
   SmartPointer<const elx::TransformixMain> m_TransformixMain{ nullptr };
 
+  std::string m_TransformParameterFileName{};
   std::string m_FixedPointSetFileName{};
   bool        m_ComputeSpatialJacobian{ false };
   bool        m_ComputeDeterminantOfSpatialJacobian{ false };

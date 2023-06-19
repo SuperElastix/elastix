@@ -311,6 +311,15 @@ TransformixMain::EnterCommandLineArgumentsWithTransformParameterMaps(
 
     if ((i + 1) == numberOfTransformParameterMaps)
     {
+      // Remember the transform parameter file name from the argument map (if any).
+      if (const auto foundTransformParameterFileName = argmap.find("-tp");
+          foundTransformParameterFileName != argmap.end())
+      {
+        // The path of the transform parameter file may be used later by TransformBase::ReadFromFile(), when it has an
+        // initial transform parameter file whose file name is specified relative to this path.
+        configuration->SetParameterFileName(foundTransformParameterFileName->second);
+      }
+
       /** Copy last configuration object to m_Configuration. */
       MainBase::SetConfiguration(configuration);
     }
