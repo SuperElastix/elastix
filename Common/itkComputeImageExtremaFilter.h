@@ -129,7 +129,9 @@ private:
   PixelType                      m_ThreadMin{ 1 };
   PixelType                      m_ThreadMax{ 1 };
 
+#ifndef __wasi__
   std::mutex m_Mutex{};
+#endif
 }; // end of class
 } // end namespace itk
 
