@@ -32,8 +32,10 @@
 
 #include <itkTransformBase.h>
 #include <itkTransformFactoryBase.h>
+#ifndef __wasm32__
 #include <itkTransformFileReader.h>
 #include <itkTransformFileWriter.h>
+#endif
 
 #include <cassert>
 #include <string>
@@ -192,6 +194,11 @@ elastix::TransformIO::ConvertItkTransformBaseToSingleItkTransform(const itk::Tra
 void
 elastix::TransformIO::Write(const itk::Object & itkTransform, const std::string & fileName)
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  throw std::runtime_error(message);
+#else
   try
   {
     const auto writer = itk::TransformFileWriter::New();
@@ -204,12 +211,20 @@ elastix::TransformIO::Write(const itk::Object & itkTransform, const std::string 
   {
     log::error(std::ostringstream{} << "Error trying to write " << fileName << ":\n" << stdException.what());
   }
+#endif
 }
 
 
 itk::SmartPointer<itk::TransformBase>
 elastix::TransformIO::Read(const std::string & fileName)
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  throw std::runtime_error(message);
+  return nullptr;
+#else
+
   const auto reader = itk::TransformFileReader::New();
 
   reader->SetFileName(fileName);
@@ -222,6 +237,7 @@ elastix::TransformIO::Read(const std::string & fileName)
   assert(transformList->size() <= 1);
 
   return transformList->empty() ? nullptr : transformList->front();
+#endif
 }
 
 

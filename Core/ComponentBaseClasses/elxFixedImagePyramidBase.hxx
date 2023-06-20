@@ -178,12 +178,17 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
 
   /** Do the writing. */
   log::to_stdout("  Writing fixed pyramid image ...");
+#ifndef __wasm32__
   try
   {
-    itk::WriteCastedImage(*(this->GetAsITKBaseType()->GetOutput(level)), filename, resultImagePixelType, doCompression);
+ itk::WriteCastedImage(*(this->GetAsITKBaseType()->GetOutput(level)), filename, resultImagePixelType, doCompression);
   }
   catch (itk::ExceptionObject & excp)
   {
+#else
+// Always throw -- do not include support code or access filesystem with wasm
+    itk::ExceptionObject excp;
+#endif
     /** Add information to the exception. */
     excp.SetLocation("FixedImagePyramidBase - BeforeEachResolutionBase()");
     std::string err_str = excp.GetDescription();
@@ -191,8 +196,12 @@ FixedImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
+#ifndef __wasm32__
     throw;
   }
+#else
+    throw excp;
+#endif
 
 } // end WritePyramidImage()
 
