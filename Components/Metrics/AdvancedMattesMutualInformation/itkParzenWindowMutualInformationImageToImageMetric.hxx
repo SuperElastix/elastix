@@ -626,7 +626,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
   temp->m_Metric->ThreadedComputeDerivativeLowMemory(threadId);
 
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end ComputeDerivativeLowMemoryThreaderCallback()
 

@@ -830,7 +830,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
     temp->st_DerivativePointer[j] = (derivativeF - sfm_smm * derivativeM) * invertedDenominator;
   }
 
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end AccumulateDerivativesThreaderCallback()
 

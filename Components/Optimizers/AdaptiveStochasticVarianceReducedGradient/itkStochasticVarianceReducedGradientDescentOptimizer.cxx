@@ -314,7 +314,7 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStepThreaderCallbac
   /** Call the real implementation. */
   temp->t_Optimizer->ThreadedAdvanceOneStep(threadID, *(temp->t_NewPosition));
 
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end AdvanceOneStepThreaderCallback()
 
