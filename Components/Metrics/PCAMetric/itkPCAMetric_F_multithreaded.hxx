@@ -886,7 +886,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetSamplesThreaderCallback(void * arg)
 
   temp->m_Metric->ThreadedGetSamples(threadId);
 
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // GetSamplesThreaderCallback()
 
@@ -1088,7 +1088,7 @@ PCAMetric<TFixedImage, TMovingImage>::ComputeDerivativeThreaderCallback(void * a
 
   temp->m_Metric->ThreadedComputeDerivative(threadId);
 
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end omputeDerivativeThreaderCallback()
 

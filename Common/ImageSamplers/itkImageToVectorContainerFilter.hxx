@@ -281,7 +281,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallb
   //   few threads idle.
   //   }
 
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end ThreaderCallback()
 

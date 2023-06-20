@@ -313,7 +313,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeThreaderCallbac
   /** Call the real implementation. */
   temp->st_Self->ThreadedCompute(threadID);
 
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end ComputeThreaderCallback()
 
