@@ -468,6 +468,40 @@ GTEST_TEST(itkTransformixFilter, Translation2D)
 }
 
 
+// Tests translating a small (5x6) binary image, using a TransformParameterFileName.
+GTEST_TEST(itkTransformixFilter, Translation2DTransformParameterFileName)
+{
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+
+  const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
+  const auto                        regionSize = SizeType::Filled(2);
+  const SizeType                    imageSize{ { 5, 6 } };
+  const itk::Index<ImageDimension>  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = ImageType::New();
+  fixedImage->SetRegions(imageSize);
+  fixedImage->Allocate(true);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = ImageType::New();
+  movingImage->SetRegions(imageSize);
+  movingImage->Allocate(true);
+  FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
+
+  DefaultConstructibleTransformixFilter<ImageType> filter;
+
+  filter.SetMovingImage(movingImage);
+  filter.SetTransformParameterFileName(GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters-Size-5x6.txt");
+  filter.Update();
+
+
+  const auto transformedImage = filter.GetOutput();
+  ExpectEqualImages(*transformedImage, *fixedImage);
+}
+
+
 // Tests translating a mesh of two points.
 GTEST_TEST(itkTransformixFilter, MeshTranslation2D)
 {
