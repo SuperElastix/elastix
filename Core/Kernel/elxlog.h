@@ -18,6 +18,7 @@
 #ifndef elxlog_h
 #define elxlog_h
 
+#include <cstdint> // For uint8_t.
 #include <string>
 #include <sstream>
 
@@ -30,7 +31,7 @@ namespace elastix
 class log
 {
 public:
-  enum class level : uint8_t
+  enum class level : std::uint8_t
   {
     info,
     warn,
