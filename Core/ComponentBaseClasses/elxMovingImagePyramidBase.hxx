@@ -21,7 +21,10 @@
 
 #include "elxMovingImagePyramidBase.h"
 #include "elxDeref.h"
+
+#ifndef __wasm32__
 #include "itkImageFileCastWriter.h"
+#endif
 
 namespace elastix
 {

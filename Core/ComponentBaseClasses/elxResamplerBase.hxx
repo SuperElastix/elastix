@@ -22,7 +22,6 @@
 #include "elxConversion.h"
 #include "elxDeref.h"
 
-#include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkTimeProbe.h"
