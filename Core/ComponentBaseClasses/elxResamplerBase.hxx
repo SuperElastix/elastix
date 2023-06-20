@@ -395,12 +395,17 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
   {
     log::to_stdout("\n  Writing image ...");
   }
+#ifndef __wasm32__
   try
   {
-    itk::WriteCastedImage(*(infoChanger->GetOutput()), filename, resultImagePixelType, doCompression);
+   itk::WriteCastedImage(*(infoChanger->GetOutput()), filename, resultImagePixelType, doCompression);
   }
   catch (itk::ExceptionObject & excp)
   {
+#else
+// Always throw -- do not include support code or access filesystem with wasm
+    itk::ExceptionObject excp;
+#endif
     /** Add information to the exception. */
     excp.SetLocation("ResamplerBase - AfterRegistrationBase()");
     std::string err_str = excp.GetDescription();
@@ -408,8 +413,12 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
     excp.SetDescription(err_str);
 
     /** Pass the exception to an higher level. */
+#ifndef __wasm32__
     throw;
   }
+#else
+    throw excp;
+#endif
 } // end WriteResultImage()
 
 

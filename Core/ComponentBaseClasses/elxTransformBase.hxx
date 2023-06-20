@@ -38,8 +38,10 @@
 #include "itkContinuousIndex.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkMesh.h"
+#ifndef __wasm32__
 #include "itkMeshFileReader.h"
 #include "itkMeshFileWriter.h"
+#endif
 #include "itkCommonEnums.h"
 
 #include <cassert>
@@ -924,6 +926,11 @@ template <class TElastix>
 void
 TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filename) const
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  itkExceptionMacro(<< message);
+#else
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
   using DummyIPPPixelType = float;
   using MeshTraitsType =
@@ -982,7 +989,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
       log::error(std::ostringstream{} << "  Error while saving points.\n" << err);
     }
   }
-
+#endif
 } // end TransformPointsSomePointsVTK()
 
 

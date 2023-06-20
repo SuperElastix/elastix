@@ -23,9 +23,6 @@
 
 //#include "elxMetricBase.h"
 
-#include "itkMeshFileReader.h"
-#include "itkMeshFileWriter.h"
-
 namespace elastix
 {
 /**

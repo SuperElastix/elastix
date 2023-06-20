@@ -21,9 +21,6 @@
 #include "elxIncludes.h"
 #include "itkMissingStructurePenalty.h"
 
-#include "itkMeshFileReader.h"
-#include "itkMeshFileWriter.h"
-
 namespace elastix
 {
 

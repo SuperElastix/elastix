@@ -23,9 +23,11 @@
 #include "elxInstallAllComponents.h"
 
 // ITKFactoryRegistration headers:
+#ifndef __wasm32__
 #include <itkImageIOFactoryRegisterManager.h>
 #include <itkMeshIOFactoryRegisterManager.h>
 #include <itkTransformIOFactoryRegisterManager.h>
+#endif
 
 #include <iostream>
 #include <string>
@@ -133,6 +135,7 @@ ComponentLoader::InstallSupportedImageTypes()
 int
 ComponentLoader::LoadComponents()
 {
+#ifndef __wasm32__
   // Retrieve those IOFactoryRegisterManager instances, just to ensure that they are really constructed.
   const volatile auto ioFactoryRegisterManagerInstances =
     std::make_tuple(itk::ImageIOFactoryRegisterManagerInstance,
@@ -165,6 +168,7 @@ ComponentLoader::LoadComponents()
   }
 
   log::info("InstallingComponents was successful.\n");
+#endif
 
   return 0;
 

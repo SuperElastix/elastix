@@ -21,6 +21,11 @@
 #include "elxMissingStructurePenalty.h"
 #include "itkTimeProbe.h"
 
+#ifndef __wasm32__
+#include "itkMeshFileReader.h"
+#include "itkMeshFileWriter.h"
+#endif
+
 namespace elastix
 {
 
@@ -145,6 +150,11 @@ MissingStructurePenalty<TElastix>::BeforeRegistration()
     fmeshArgument << ch << metricNumber;
     std::string                fixedMeshName = this->GetConfiguration()->GetCommandLineArgument(fmeshArgument.str());
     typename MeshType::Pointer fixedMesh; // default-constructed (null)
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  itkExceptionMacro(<< message);
+#else
     if (itksys::SystemTools::GetFilenameLastExtension(fixedMeshName) == ".txt")
     {
       this->ReadTransformixPoints(fixedMeshName, fixedMesh);
@@ -153,6 +163,7 @@ MissingStructurePenalty<TElastix>::BeforeRegistration()
     {
       this->ReadMesh(fixedMeshName, fixedMesh);
     }
+#endif
 
     meshPointerContainer->SetElement(meshNumber, fixedMesh.GetPointer());
   }
@@ -281,6 +292,12 @@ template <class TElastix>
 unsigned int
 MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  itkExceptionMacro(<< message);
+  return 0;
+#else
   /** Read the input mesh. */
   auto meshReader = itk::MeshFileReader<MeshType>::New();
   meshReader->SetFileName(meshFileName);
@@ -300,6 +317,7 @@ MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, ty
   log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   return nrofpoints;
+#endif
 } // end ReadMesh()
 
 
@@ -311,6 +329,11 @@ template <class TElastix>
 void
 MissingStructurePenalty<TElastix>::WriteResultMesh(const std::string & filename, MeshIdType meshId)
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  itkExceptionMacro(<< message);
+#else
   /** Setup the pipeline. */
 
   /** Set the points of the latest transformation. */
@@ -376,7 +399,7 @@ MissingStructurePenalty<TElastix>::WriteResultMesh(const std::string & filename,
     // restore celldata as undefined
     mappedMesh->SetCellData(nullptr);
   }
-
+#endif
 } // end WriteResultMesh()
 
 
@@ -389,6 +412,12 @@ unsigned int
 MissingStructurePenalty<TElastix>::ReadTransformixPoints(const std::string &          filename,
                                                          typename MeshType::Pointer & mesh) // const
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  itkExceptionMacro(<< message);
+  return 0;
+#else
   /*
   FB: Majority of the code is copied from elxTransformBase.hxx: TransformPointsSomePoints()
 Function to read 2d structures by reading elastix point files (transformix format) and connecting
@@ -528,6 +557,7 @@ the sequence of points to form a 2d connected polydata contour.
     }
   }
   return nrofpoints;
+#endif
 } // end ReadTransformixPoints()
 
 

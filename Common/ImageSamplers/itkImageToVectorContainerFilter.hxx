@@ -18,8 +18,6 @@
 #ifndef itkImageToVectorContainerFilter_hxx
 #define itkImageToVectorContainerFilter_hxx
 
-#include "itkImageToVectorContainerFilter.h"
-
 #include "itkMath.h"
 
 namespace itk
