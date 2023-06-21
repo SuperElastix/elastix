@@ -360,7 +360,7 @@ private:
     typename FixedImageType::DirectionType originalDirection;
     const bool                             retdc = this->m_Elastix->GetOriginalFixedImageDirection(originalDirection);
     infoChanger->SetOutputDirection(originalDirection);
-    infoChanger->SetChangeDirection(retdc & !this->m_Elastix->GetUseDirectionCosines());
+    infoChanger->SetChangeDirection(retdc && !this->m_Elastix->GetUseDirectionCosines());
     infoChanger->SetInput(image);
 
     return infoChanger;
