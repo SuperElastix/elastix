@@ -1077,20 +1077,19 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
     const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
 
     /** Try to read direction cosines from (transform-)parameter file. */
-    bool                    retdc = true;
     FixedImageDirectionType directionRead = direction;
     for (unsigned int i = 0; i < FixedDimension; ++i)
     {
       for (unsigned int j = 0; j < FixedDimension; ++j)
       {
-        retdc &= configuration.ReadParameter(directionRead(j, i), "Direction", i * FixedDimension + j, false);
+        if (!configuration.ReadParameter(directionRead(j, i), "Direction", i * FixedDimension + j, false))
+        {
+          return false;
+        }
       }
     }
-    if (retdc)
-    {
-      direction = directionRead;
-    }
-    return retdc;
+    direction = directionRead;
+    return true;
   }
 
   /** Only trust this when the fixed image exists. */
