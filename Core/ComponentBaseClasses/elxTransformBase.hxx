@@ -1043,7 +1043,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   typename FixedImageType::DirectionType originalDirection;
   bool                                   retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
-  infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
+  infoChanger->SetChangeDirection(retdc && !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(defGenerator->GetOutput());
 
   const Configuration & configuration = Deref(Superclass::GetConfiguration());

@@ -388,7 +388,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
   DirectionType originalDirection;
   bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
-  infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
+  infoChanger->SetChangeDirection(retdc && !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(image);
 
   /** Do the writing. */
@@ -476,7 +476,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   DirectionType originalDirection;
   bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection(originalDirection);
   infoChanger->SetOutputDirection(originalDirection);
-  infoChanger->SetChangeDirection(retdc & !this->GetElastix()->GetUseDirectionCosines());
+  infoChanger->SetChangeDirection(retdc && !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(resampleImageFilter.GetOutput());
 
   /** cast the image to the correct output image Type */
