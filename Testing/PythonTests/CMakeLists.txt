@@ -16,7 +16,7 @@
 #
 # =========================================================================
 
-if(python_executable)
+if(python_executable AND ELASTIX_BUILD_EXECUTABLE)
   add_test(NAME TransformixTest COMMAND ${python_executable}
     "${CMAKE_CURRENT_LIST_DIR}/transformix_test.py")
   set_tests_properties(TransformixTest PROPERTIES ENVIRONMENT
