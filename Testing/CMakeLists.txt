@@ -278,144 +278,146 @@ endmacro()
 
 # Main elastix_run add_test macro
 macro(elx_add_run_test testbasename howtocompare)
-  # Create output directory
-  set(testname elastix_run_${testbasename})
-  set(output_dir ${TestOutputDir}/${testname})
-  file(MAKE_DIRECTORY ${output_dir})
+  if(ELASTIX_BUILD_EXECUTABLE)
+    # Create output directory
+    set(testname elastix_run_${testbasename})
+    set(output_dir ${TestOutputDir}/${testname})
+    file(MAKE_DIRECTORY ${output_dir})
 
-  # ${ARGN} may be the elastix command line arguments, but also
-  # an optional baseline value followed by those arguments.
-  set(baseline ${ARGV2})
-  set(elastixargs ${ARGN})
-  string(SUBSTRING ${baseline} 0 1 firstelement)
-  string(COMPARE EQUAL ${firstelement} "-" firstelementisdash)
-  if(NOT ${firstelementisdash})
-    list(REMOVE_AT elastixargs 0)
-  endif()
+    # ${ARGN} may be the elastix command line arguments, but also
+    # an optional baseline value followed by those arguments.
+    set(baseline ${ARGV2})
+    set(elastixargs ${ARGN})
+    string(SUBSTRING ${baseline} 0 1 firstelement)
+    string(COMPARE EQUAL ${firstelement} "-" firstelementisdash)
+    if(NOT ${firstelementisdash})
+      list(REMOVE_AT elastixargs 0)
+    endif()
 
-  # Number of -p's to deduce result.?.mhd
-  list_count("${ARGN}" "-p" countp)
-  math(EXPR countp "${countp} - 1")
+    # Number of -p's to deduce result.?.mhd
+    list_count("${ARGN}" "-p" countp)
+    math(EXPR countp "${countp} - 1")
 
-  # Run elastix, but only in release mode
-  # Set maximum test length to 10 minutes
-  add_test(NAME ${testname}_OUTPUT
-    CONFIGURATIONS Release
-    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
-    ${elastixargs} -out ${output_dir})
-  set_tests_properties(${testname}_OUTPUT
-    PROPERTIES TIMEOUT 600)
+    # Run elastix, but only in release mode
+    # Set maximum test length to 10 minutes
+    add_test(NAME ${testname}_OUTPUT
+      CONFIGURATIONS Release
+      COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+      ${elastixargs} -out ${output_dir})
+    set_tests_properties(${testname}_OUTPUT
+      PROPERTIES TIMEOUT 600)
 
-  # To compare against a baseline TransformParameters file
-  # Baselines have been generated on LKEB, PCMarius, Win10, 64 bit, VS2015
-  set(baselineTP ${TestOutputDir}/TransformParameters_${testbasename}.txt)
-  set(testTP ${output_dir}/TransformParameters.${countp}.txt)
+    # To compare against a baseline TransformParameters file
+    # Baselines have been generated on LKEB, PCMarius, Win10, 64 bit, VS2015
+    set(baselineTP ${TestOutputDir}/TransformParameters_${testbasename}.txt)
+    set(testTP ${output_dir}/TransformParameters.${countp}.txt)
 
-  # Temporary hack to get some failing tests working
-  # These three tests give different results on different platforms
-  # They all seem to be using ASGD and B-splines and (N)MI
-  if(specializedTransformParameterSystem)
-    if(( SITE STREQUAL "LKEB-ELDB91") OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan"))
-      if(${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
-        OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001")
-        set(baselineTP ${TestOutputDir}/TransformParameters_${SITE}_${testbasename}.txt)
+    # Temporary hack to get some failing tests working
+    # These three tests give different results on different platforms
+    # They all seem to be using ASGD and B-splines and (N)MI
+    if(specializedTransformParameterSystem)
+      if(( SITE STREQUAL "LKEB-ELDB91") OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan"))
+        if(${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
+          OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001")
+          set(baselineTP ${TestOutputDir}/TransformParameters_${SITE}_${testbasename}.txt)
+        endif()
       endif()
     endif()
-  endif()
 
-  # Thread tests should use the original TransformParameters file as a baseline
-  string(FIND ${testbasename} "Threads" found)
-  if(NOT found EQUAL -1)
-    string(REGEX REPLACE "(-Threads[0-9]+)" "" baselineTP ${baselineTP})
-  endif()
+    # Thread tests should use the original TransformParameters file as a baseline
+    string(FIND ${testbasename} "Threads" found)
+    if(NOT found EQUAL -1)
+      string(REGEX REPLACE "(-Threads[0-9]+)" "" baselineTP ${baselineTP})
+    endif()
 
-  # Check which tests have to be run
-  string(REGEX MATCHALL "[a-zA-Z]+;|[a-zA-Z]+$" compareaslist "${howtocompare}")
-  list(FIND compareaslist "IMAGE"       compare_image)
-  list(FIND compareaslist "METRICVALUE" compare_metricvalue)
-  list(FIND compareaslist "PARAMETERS"  compare_tp)
-  list(FIND compareaslist "CHECKSUM"    compare_checksum)
-  list(FIND compareaslist "OVERLAP"     compare_overlap)
-  list(FIND compareaslist "LANDMARKS"   compare_landmarks)
+    # Check which tests have to be run
+    string(REGEX MATCHALL "[a-zA-Z]+;|[a-zA-Z]+$" compareaslist "${howtocompare}")
+    list(FIND compareaslist "IMAGE"       compare_image)
+    list(FIND compareaslist "METRICVALUE" compare_metricvalue)
+    list(FIND compareaslist "PARAMETERS"  compare_tp)
+    list(FIND compareaslist "CHECKSUM"    compare_checksum)
+    list(FIND compareaslist "OVERLAP"     compare_overlap)
+    list(FIND compareaslist "LANDMARKS"   compare_landmarks)
 
-  # Compare elastix output image with baseline image
-  if(NOT ${compare_image} EQUAL -1)
-    add_test(NAME ${testname}_COMPARE_IM
-      CONFIGURATIONS Release
-      COMMAND elxImageCompare
-      -base ${baseline}
-      -test ${output_dir}/result.${countp}.mhd
-      -t 5 -a 50)
-    set_tests_properties(${testname}_COMPARE_IM
-      PROPERTIES DEPENDS  ${testname}_OUTPUT)
-  endif()
-
-  # Compare elastix output from IterationInfo with a baseline string
-  if(NOT ${compare_metricvalue} EQUAL -1)
-    # Only run when python was found
-    if(python_executable)
-      # Add comparison test, checking the final metric value and more
-      add_test(NAME ${testname}_COMPARE_METRIC
+    # Compare elastix output image with baseline image
+    if(NOT ${compare_image} EQUAL -1)
+      add_test(NAME ${testname}_COMPARE_IM
         CONFIGURATIONS Release
-        COMMAND ${python_executable} ${pythonfinalmetric}
-        -b ${baseline} -d ${output_dir})
-      set_tests_properties(${testname}_COMPARE_METRIC
+        COMMAND elxImageCompare
+        -base ${baseline}
+        -test ${output_dir}/result.${countp}.mhd
+        -t 5 -a 50)
+      set_tests_properties(${testname}_COMPARE_IM
         PROPERTIES DEPENDS  ${testname}_OUTPUT)
     endif()
-  endif()
 
-  # Compare elastix output using checksum
-  if(NOT ${compare_checksum} EQUAL -1)
-    # Only run when python was found and if this is a known system
-    if(python_executable AND knownChecksumSystem)
-      # Add comparison test, checking the registration checksum
-      add_test(NAME ${testname}_COMPARE_CHECKSUM
+    # Compare elastix output from IterationInfo with a baseline string
+    if(NOT ${compare_metricvalue} EQUAL -1)
+      # Only run when python was found
+      if(python_executable)
+        # Add comparison test, checking the final metric value and more
+        add_test(NAME ${testname}_COMPARE_METRIC
+          CONFIGURATIONS Release
+          COMMAND ${python_executable} ${pythonfinalmetric}
+          -b ${baseline} -d ${output_dir})
+        set_tests_properties(${testname}_COMPARE_METRIC
+          PROPERTIES DEPENDS  ${testname}_OUTPUT)
+      endif()
+    endif()
+
+    # Compare elastix output using checksum
+    if(NOT ${compare_checksum} EQUAL -1)
+      # Only run when python was found and if this is a known system
+      if(python_executable AND knownChecksumSystem)
+        # Add comparison test, checking the registration checksum
+        add_test(NAME ${testname}_COMPARE_CHECKSUM
+          CONFIGURATIONS Release
+          COMMAND ${python_executable} ${pythonchecksum}
+          -f ${checksumBaselineFile} -d ${output_dir} -v)
+        set_tests_properties(${testname}_COMPARE_CHECKSUM
+          PROPERTIES DEPENDS  ${testname}_OUTPUT)
+      endif()
+    endif()
+
+    # Compare elastix output using segmentation overlap
+    if(NOT ${compare_overlap} EQUAL -1)
+      # Only run when python was found
+      if(python_executable)
+        add_test(NAME ${testname}_COMPARE_OVERLAP
+          CONFIGURATIONS Release
+          COMMAND ${python_executable} ${pythonoverlap}
+          -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha
+          -p $<TARGET_FILE:elxComputeOverlap>)
+        set_tests_properties(${testname}_COMPARE_OVERLAP
+          PROPERTIES DEPENDS  ${testname}_OUTPUT)
+      endif()
+    endif()
+
+    # Compare elastix output using landmark distance
+    if(NOT ${compare_landmarks} EQUAL -1)
+      # Only run when python was found
+      if(python_executable)
+        add_test(NAME ${testname}_COMPARE_LANDMARKS
+          CONFIGURATIONS Release
+          COMMAND ${python_executable} ${pythonlandmarks}
+          -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0
+          -p $<TARGET_FILE:transformix_exe>)
+        set_tests_properties(${testname}_COMPARE_LANDMARKS
+          PROPERTIES DEPENDS  ${testname}_OUTPUT)
+      endif()
+    endif()
+
+    # Compare elastix output using transform parameters comparison
+    if(NOT ${compare_tp} EQUAL -1)
+      add_test(NAME ${testname}_COMPARE_TP
         CONFIGURATIONS Release
-        COMMAND ${python_executable} ${pythonchecksum}
-        -f ${checksumBaselineFile} -d ${output_dir} -v)
-      set_tests_properties(${testname}_COMPARE_CHECKSUM
+        COMMAND elxTransformParametersCompare
+        -base ${baselineTP}
+        -test ${testTP}
+        -a 1e-3)
+      set_tests_properties(${testname}_COMPARE_TP
         PROPERTIES DEPENDS  ${testname}_OUTPUT)
     endif()
-  endif()
-
-  # Compare elastix output using segmentation overlap
-  if(NOT ${compare_overlap} EQUAL -1)
-    # Only run when python was found
-    if(python_executable)
-      add_test(NAME ${testname}_COMPARE_OVERLAP
-        CONFIGURATIONS Release
-        COMMAND ${python_executable} ${pythonoverlap}
-        -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha
-        -p $<TARGET_FILE:elxComputeOverlap>)
-      set_tests_properties(${testname}_COMPARE_OVERLAP
-        PROPERTIES DEPENDS  ${testname}_OUTPUT)
-    endif()
-  endif()
-
-  # Compare elastix output using landmark distance
-  if(NOT ${compare_landmarks} EQUAL -1)
-    # Only run when python was found
-    if(python_executable)
-      add_test(NAME ${testname}_COMPARE_LANDMARKS
-        CONFIGURATIONS Release
-        COMMAND ${python_executable} ${pythonlandmarks}
-        -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0
-        -p $<TARGET_FILE:transformix_exe>)
-      set_tests_properties(${testname}_COMPARE_LANDMARKS
-        PROPERTIES DEPENDS  ${testname}_OUTPUT)
-    endif()
-  endif()
-
-  # Compare elastix output using transform parameters comparison
-  if(NOT ${compare_tp} EQUAL -1)
-    add_test(NAME ${testname}_COMPARE_TP
-      CONFIGURATIONS Release
-      COMMAND elxTransformParametersCompare
-      -base ${baselineTP}
-      -test ${testTP}
-      -a 1e-3)
-    set_tests_properties(${testname}_COMPARE_TP
-      PROPERTIES DEPENDS  ${testname}_OUTPUT)
   endif()
 endmacro()
 
@@ -445,15 +447,17 @@ set_property(TARGET elxInvertTransform PROPERTY FOLDER "tests/Executable")
 # Add tests
 
 # Add a test, having spaces in the output directory path.
-file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest")
-file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces")
-file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
-add_test(NAME OutputDirectoryPathContainingSpacesTest
-  COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
-  -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd" 
-  -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
-  -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
-  -out "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
+if(ELASTIX_BUILD_EXECUTABLE)
+  file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest")
+  file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces")
+  file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
+  add_test(NAME OutputDirectoryPathContainingSpacesTest
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+    -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd" 
+    -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
+    -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
+    -out "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
+endif()
 
 # Add a test for inverting an affine transform
 # Add a test for comparing the inverse against the ground truth
@@ -990,10 +994,12 @@ elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001d # manual estimation and no adapt
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt)
 
-# Test transformix to check memory problem
-trx_add_test(TransformixMemoryTest
-  -in ${TestDataDir}/3DCT_lung_baseline_small.mha
-  -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt)
+if(${ELASTIX_BUILD_EXECUTABLE})
+  # Test transformix to check memory problem
+  trx_add_test(TransformixMemoryTest
+    -in ${TestDataDir}/3DCT_lung_baseline_small.mha
+    -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt)
+endif()
 
 elx_add_test(TransformixFilterTest "" "Transformix"
   ${TestDataDir}/3DCT_lung_baseline_small.mha
