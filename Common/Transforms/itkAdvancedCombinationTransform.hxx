@@ -74,27 +74,22 @@ template <typename TScalarType, unsigned int NDimensions>
 SizeValueType
 AdvancedCombinationTransform<TScalarType, NDimensions>::GetNumberOfTransforms() const
 {
-  SizeValueType                num = 0;
-  CurrentTransformConstPointer currentTransform = GetCurrentTransform();
-
-  if (currentTransform.IsNotNull())
+  if (GetCurrentTransform())
   {
-    InitialTransformConstPointer initialTransform = GetInitialTransform();
-    if (initialTransform.IsNotNull())
+    if (const InitialTransformConstPointer initialTransform = GetInitialTransform())
     {
-      const Self * initialTransformCasted = dynamic_cast<const Self *>(initialTransform.GetPointer());
-      if (initialTransformCasted)
+      if (const auto initialTransformCasted = dynamic_cast<const Self *>(initialTransform.GetPointer()))
       {
-        num += initialTransformCasted->GetNumberOfTransforms() + 1;
+        return initialTransformCasted->GetNumberOfTransforms() + 1;
       }
     }
     else
     {
-      ++num;
+      return 1;
     }
   }
 
-  return num;
+  return 0;
 } // end GetNumberOfTransforms()
 
 
