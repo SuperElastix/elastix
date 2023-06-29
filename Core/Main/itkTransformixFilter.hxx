@@ -180,17 +180,9 @@ TransformixFilter<TImage>::GenerateData()
     // Adjust the local transformParameterMap according to this m_Transform.
 
     const auto transformToMap = [](const itk::TransformBase & transform, auto & transformParameterMap) {
-      const auto convertToParameterValues = [](const itk::OptimizerParameters<double> & optimizerParameters) {
-        ParameterValueVectorType parameterValues(optimizerParameters.size());
-        std::transform(optimizerParameters.begin(),
-                       optimizerParameters.end(),
-                       parameterValues.begin(),
-                       itk::NumberToString<double>{});
-        return parameterValues;
-      };
-
-      transformParameterMap["ITKTransformFixedParameters"] = convertToParameterValues(transform.GetFixedParameters());
-      transformParameterMap["ITKTransformParameters"] = convertToParameterValues(transform.GetParameters());
+      transformParameterMap["ITKTransformFixedParameters"] =
+        elx::Conversion::ToVectorOfStrings(transform.GetFixedParameters());
+      transformParameterMap["ITKTransformParameters"] = elx::Conversion::ToVectorOfStrings(transform.GetParameters());
       SetParameterValueAndWarnOnOverride(
         transformParameterMap, "ITKTransformType", transform.GetTransformTypeAsString());
       SetParameterValueAndWarnOnOverride(
