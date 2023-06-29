@@ -170,9 +170,9 @@ TransformBase<TElastix>::BeforeRegistrationBase()
    * No need to cast to InitialAdvancedTransformType, since InitialAdvancedTransformType
    * inherits from InitialTransformType.
    */
-  if (itk::Object * const object = this->m_Elastix->GetInitialTransform(); object)
+  if (itk::Object * const object = this->m_Elastix->GetInitialTransform())
   {
-    if (auto * const initialTransform = dynamic_cast<InitialTransformType *>(object); initialTransform)
+    if (auto * const initialTransform = dynamic_cast<InitialTransformType *>(object))
     {
       this->SetInitialTransform(initialTransform);
     }
