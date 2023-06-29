@@ -1355,12 +1355,6 @@ GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
 
-  struct NameAndItkTransform
-  {
-    const char *                                                    name;
-    itk::Transform<double, ImageDimension, ImageDimension>::Pointer itkTransform;
-  };
-
   elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
@@ -1377,15 +1371,17 @@ GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
       rootOutputDirectoryPath + "/" + (useInitialTransform ? "InitialTranslation(1,-2)" : "NoInitialTransform");
     itk::FileTools::CreateDirectory(outputSubdirectoryPath);
 
-    for (const auto nameAndItkTransform :
-         { NameAndItkTransform{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
-           NameAndItkTransform{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
-           NameAndItkTransform{ "EulerTransform", itk::Euler2DTransform<>::New() },
-           NameAndItkTransform{ "RecursiveBSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
-           NameAndItkTransform{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
-           NameAndItkTransform{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
+    using PairType = std::pair<const char *, itk::Transform<double, ImageDimension, ImageDimension>::Pointer>;
+
+    for (const auto [transformName, itkTransform] :
+         { PairType{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
+           PairType{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
+           PairType{ "EulerTransform", itk::Euler2DTransform<>::New() },
+           PairType{ "RecursiveBSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
+           PairType{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
+           PairType{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
     {
-      const auto & expectedItkTransform = *(nameAndItkTransform.itkTransform);
+      const auto & expectedItkTransform = *itkTransform;
       const auto   expectedNumberOfFixedParameters = expectedItkTransform.GetFixedParameters().size();
 
       registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
@@ -1394,7 +1390,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
                                                               { "MaximumNumberOfIterations", "0" },
                                                               { "Metric", "AdvancedNormalizedCorrelation" },
                                                               { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                                              { "Transform", nameAndItkTransform.name } }));
+                                                              { "Transform", transformName } }));
       registration.Update();
 
       using CompositeTransformType = itk::CompositeTransform<double, ImageDimension>;
@@ -1517,12 +1513,6 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
 
-  struct NameAndItkTransform
-  {
-    const char *                                                    name;
-    itk::Transform<double, ImageDimension, ImageDimension>::Pointer itkTransform;
-  };
-
   elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(image);
   registration.SetMovingImage(image);
@@ -1539,18 +1529,19 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
       rootOutputDirectoryPath + "/" + (useInitialTransform ? "InitialTranslation(1,-2)" : "NoInitialTransform");
     itk::FileTools::CreateDirectory(outputSubdirectoryPath);
 
-    for (const auto nameAndItkTransform :
-         { NameAndItkTransform{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
-           NameAndItkTransform{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
-           NameAndItkTransform{ "EulerTransform", itk::Euler2DTransform<>::New() },
-           NameAndItkTransform{ "RecursiveBSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
-           NameAndItkTransform{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
-           NameAndItkTransform{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
+    using PairType = std::pair<const char *, itk::Transform<double, ImageDimension, ImageDimension>::Pointer>;
+
+    for (const auto [transformName, itkTransform] :
+         { PairType{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
+           PairType{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
+           PairType{ "EulerTransform", itk::Euler2DTransform<>::New() },
+           PairType{ "RecursiveBSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
+           PairType{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
+           PairType{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
     {
       for (const std::string fileNameExtension : { "", "h5", "tfm" })
       {
-        const std::string outputDirectoryPath =
-          outputSubdirectoryPath + "/" + nameAndItkTransform.name + fileNameExtension;
+        const std::string outputDirectoryPath = outputSubdirectoryPath + "/" + transformName + fileNameExtension;
         itk::FileTools::CreateDirectory(outputDirectoryPath);
 
         registration.SetOutputDirectory(outputDirectoryPath);
@@ -1563,13 +1554,13 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
                                   { "MaximumNumberOfIterations", "0" },
                                   { "Metric", "AdvancedNormalizedCorrelation" },
                                   { "Optimizer", "AdaptiveStochasticGradientDescent" },
-                                  { "Transform", nameAndItkTransform.name },
+                                  { "Transform", transformName },
                                   { "WriteITKCompositeTransform", "true" } }));
         registration.Update();
 
         if (!fileNameExtension.empty())
         {
-          const auto & expectedItkTransform = *(nameAndItkTransform.itkTransform);
+          const auto & expectedItkTransform = *itkTransform;
           const auto   expectedNumberOfFixedParameters = expectedItkTransform.GetFixedParameters().size();
 
           const itk::TransformBase::ConstPointer singleTransform =
