@@ -139,6 +139,7 @@ ComponentLoader::LoadComponents()
                     itk::MeshIOFactoryRegisterManagerInstance,
                     itk::TransformIOFactoryRegisterManagerInstance);
   (void)ioFactoryRegisterManagerInstances;
+#endif
 
   int installReturnCode = 0;
 
@@ -165,7 +166,6 @@ ComponentLoader::LoadComponents()
   }
 
   log::info("InstallingComponents was successful.\n");
-#endif
 
   return 0;
 
