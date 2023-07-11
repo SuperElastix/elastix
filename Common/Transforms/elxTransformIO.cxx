@@ -171,15 +171,20 @@ elastix::TransformIO::ConvertItkTransformBaseToSingleItkTransform(const itk::Tra
 
   const auto instanceName = className + "_double_" + std::to_string(elxTransform.GetInputSpaceDimension()) + '_' +
                             std::to_string(elxTransform.GetOutputSpaceDimension()) + optionalSplineOrderPostfix;
-  const auto instance = itk::ObjectFactoryBase::CreateInstance(instanceName.c_str());
-  const auto itkTransform = dynamic_cast<itk::TransformBase *>(instance.GetPointer());
-  if (itkTransform == nullptr)
+  if (const auto instance = itk::ObjectFactoryBase::CreateInstance(instanceName.c_str()))
   {
-    return nullptr;
+    // itk::ObjectFactoryBase::CreateInstance appears to return an object that has ReferenceCount == 2.
+    assert(instance->GetReferenceCount() == 2);
+    instance->UnRegister();
+
+    if (const auto itkTransform = dynamic_cast<itk::TransformBase *>(instance.GetPointer()))
+    {
+      itkTransform->SetFixedParameters(elxTransform.GetFixedParameters());
+      itkTransform->SetParameters(elxTransform.GetParameters());
+      return itkTransform;
+    }
   }
-  itkTransform->SetFixedParameters(elxTransform.GetFixedParameters());
-  itkTransform->SetParameters(elxTransform.GetParameters());
-  return itkTransform;
+  return nullptr;
 }
 
 
