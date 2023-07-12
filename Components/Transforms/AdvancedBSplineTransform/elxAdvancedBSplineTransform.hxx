@@ -445,12 +445,12 @@ AdvancedBSplineTransform<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-AdvancedBSplineTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+AdvancedBSplineTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto gridRegion = m_BSplineTransform->GetGridRegion();
 
@@ -462,7 +462,7 @@ AdvancedBSplineTransform<TElastix>::CreateDerivedTransformParametersMap() const 
            { "BSplineTransformSplineOrder", { Conversion::ToString(m_SplineOrder) } },
            { "UseCyclicTransform", { Conversion::ToString(m_Cyclic) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

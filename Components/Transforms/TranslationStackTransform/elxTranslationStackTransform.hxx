@@ -150,12 +150,12 @@ TranslationStackTransform<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CustomizeTransformParametersMap ************************
+ * ************************* CustomizeTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-TranslationStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+TranslationStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_StackTransform;
 
@@ -163,7 +163,7 @@ TranslationStackTransform<TElastix>::CreateDerivedTransformParametersMap() const
            { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },
            { "NumberOfSubTransforms", { Conversion::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
 
-} // end CustomizeTransformParametersMap()
+} // end CustomizeTransformParameterMap()
 
 
 } // end namespace elastix

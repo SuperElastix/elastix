@@ -101,7 +101,7 @@ public:
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(ParameterMapType & parameterMap) const;
+  CreateTransformParameterMap(ParameterMapType & parameterMap) const;
 
 protected:
   /** The constructor. */
@@ -113,7 +113,7 @@ private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
 
   virtual ParameterMapType
-  CreateDerivedTransformParametersMap() const
+  CreateDerivedTransformParameterMap() const
   {
     return {};
   }

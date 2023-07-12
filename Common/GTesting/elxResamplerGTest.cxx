@@ -64,7 +64,7 @@ struct WithDimension
     using ResamplerType = TResamplerTemplate<ElastixType<NDimension>>;
 
     static void
-    Test_CreateTransformParametersMap_for_default_resampler(const ParameterMapType & expectedDerivedParameterMap)
+    Test_CreateTransformParameterMap_for_default_resampler(const ParameterMapType & expectedDerivedParameterMap)
     {
       SCOPED_TRACE(std::string("Function = ")
                      .append(__func__)
@@ -80,7 +80,7 @@ struct WithDimension
       resampler.SetElastix(elastixObject);
 
       ParameterMapType actualParameterMap;
-      resampler.CreateTransformParametersMap(actualParameterMap);
+      resampler.CreateTransformParameterMap(actualParameterMap);
 
       const ParameterMapType expectedBaseParameterMap = { { "Resampler", { resampler.elxGetClassName() } },
                                                           { "DefaultPixelValue", { "0" } },
@@ -95,11 +95,11 @@ struct WithDimension
 
 
   static void
-  Test_CreateTransformParametersMap_for_default_resampler()
+  Test_CreateTransformParameterMap_for_default_resampler()
   {
-    WithResampler<elx::DefaultResampler>::Test_CreateTransformParametersMap_for_default_resampler({});
+    WithResampler<elx::DefaultResampler>::Test_CreateTransformParameterMap_for_default_resampler({});
 #ifdef ELASTIX_USE_OPENCL
-    WithResampler<elx::OpenCLResampler>::Test_CreateTransformParametersMap_for_default_resampler(
+    WithResampler<elx::OpenCLResampler>::Test_CreateTransformParameterMap_for_default_resampler(
       { { "OpenCLResamplerUseOpenCL", { "true" } } });
 #endif
   }
@@ -108,8 +108,8 @@ struct WithDimension
 } // namespace
 
 
-GTEST_TEST(Resampler, CreateTransformParametersMapForDefaultResampler)
+GTEST_TEST(Resampler, CreateTransformParameterMapForDefaultResampler)
 {
-  WithDimension<2>::Test_CreateTransformParametersMap_for_default_resampler();
-  WithDimension<3>::Test_CreateTransformParametersMap_for_default_resampler();
+  WithDimension<2>::Test_CreateTransformParameterMap_for_default_resampler();
+  WithDimension<3>::Test_CreateTransformParameterMap_for_default_resampler();
 }

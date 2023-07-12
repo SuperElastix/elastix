@@ -178,7 +178,7 @@ public:
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(ParameterMapType & parameterMap) const;
+  CreateTransformParameterMap(ParameterMapType & parameterMap) const;
 
   /** Function to perform resample and write the result output image to a file. */
   void
@@ -202,7 +202,7 @@ private:
   elxDeclarePureVirtualGetSelfMacro(ITKBaseType);
 
   virtual ParameterMapType
-  CreateDerivedTransformParametersMap() const
+  CreateDerivedTransformParameterMap() const
   {
     return {};
   }

@@ -146,18 +146,18 @@ RayCastResampleInterpolator<TElastix>::ReadFromFile()
 
 
 /**
- * ******************* CreateDerivedTransformParametersMap ******************************
+ * ******************* CreateDerivedTransformParameterMap ******************************
  */
 
 template <class TElastix>
 auto
-RayCastResampleInterpolator<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+RayCastResampleInterpolator<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   return { { "FocalPoint", Conversion::ToVectorOfStrings(this->GetFocalPoint()) },
            { "PreParameters", Conversion::ToVectorOfStrings(this->m_PreTransform->GetParameters()) },
            { "Threshold", { Conversion::ToString(this->GetThreshold()) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 } // end namespace elastix
 

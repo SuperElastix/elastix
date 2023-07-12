@@ -234,7 +234,7 @@ struct WithDimension
 
 
     static void
-    Test_CreateTransformParametersMap_for_default_transform(const ParameterMapType & expectedDerivedParameterMap)
+    Test_CreateTransformParameterMap_for_default_transform(const ParameterMapType & expectedDerivedParameterMap)
     {
       SCOPED_TRACE(std::string("Function = ")
                      .append(__func__)
@@ -258,7 +258,7 @@ struct WithDimension
       elxTransform->SetReadWriteTransformParameters(true);
 
       ParameterMapType actualParameterMap;
-      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>{}, actualParameterMap);
+      elxTransform->CreateTransformParameterMap(itk::OptimizerParameters<double>{}, actualParameterMap);
 
       const std::string expectedImageDimension{ char{ '0' + NDimension } };
       const std::string expectedInternalImagePixelType = "float";
@@ -288,7 +288,7 @@ struct WithDimension
     }
 
     static void
-    Test_CreateTransformParametersMap_double_precision()
+    Test_CreateTransformParameterMap_double_precision()
     {
       // Use 0.3333333333333333... as test value.
       constexpr auto testValue = 1.0 / 3.0;
@@ -315,7 +315,7 @@ struct WithDimension
 
       ParameterMapType parameterMap;
 
-      elxTransform->CreateTransformParametersMap(itk::OptimizerParameters<double>(2U, testValue), parameterMap);
+      elxTransform->CreateTransformParameterMap(itk::OptimizerParameters<double>(2U, testValue), parameterMap);
 
       for (const auto key : { "TransformParameters", "Origin", "Spacing" })
       {
@@ -329,7 +329,7 @@ struct WithDimension
     }
 
     static void
-    Test_CreateTransformParametersMap_SetUseAddition()
+    Test_CreateTransformParameterMap_SetUseAddition()
     {
       const auto elxTransform = CheckNew<ElastixTransformType>();
 
@@ -342,7 +342,7 @@ struct WithDimension
 
       const auto expectHowToCombineTransforms = [&elxTransform](const char * const expectedParameterValue) {
         ParameterMapType parameterMap;
-        elxTransform->CreateTransformParametersMap({}, parameterMap);
+        elxTransform->CreateTransformParameterMap({}, parameterMap);
 
         const auto found = parameterMap.find("HowToCombineTransforms");
         ASSERT_NE(found, end(parameterMap));
@@ -382,7 +382,7 @@ struct WithDimension
   }
 
   static void
-  Test_CreateTransformParametersMap_for_default_transform()
+  Test_CreateTransformParameterMap_for_default_transform()
   {
     // Converts the specified string to an std::vector<std::string>. Each vector element contains a character of the
     // specified string.
@@ -418,9 +418,9 @@ struct WithDimension
 
     using namespace elx;
 
-    WithElastixTransform<AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<AdvancedAffineTransformElastix>::Test_CreateTransformParameterMap_for_default_transform(
       { { "CenterOfRotationPoint", expectedZeros } });
-    WithElastixTransform<AdvancedBSplineTransform>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<AdvancedBSplineTransform>::Test_CreateTransformParameterMap_for_default_transform(
       { { "BSplineTransformSplineOrder", { "3" } },
         { "GridDirection", expectedGridDirection },
         { "GridIndex", expectedZeros },
@@ -428,45 +428,45 @@ struct WithDimension
         { "GridSize", expectedZeros },
         { "GridSpacing", expectedOnes },
         { "UseCyclicTransform", { "false" } } });
-    WithElastixTransform<AffineDTITransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<AffineDTITransformElastix>::Test_CreateTransformParameterMap_for_default_transform(
       { { "CenterOfRotationPoint", expectedZeros }, { "MatrixTranslation", expectedMatrixTranslation } });
-    WithElastixTransform<AffineLogStackTransform>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<AffineLogStackTransform>::Test_CreateTransformParameterMap_for_default_transform(
       { { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
         { "NumberOfSubTransforms", { expectedZero } },
         { "StackOrigin", { expectedZero } },
         { "StackSpacing", { expectedOne } } });
-    WithElastixTransform<AffineLogTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<AffineLogTransformElastix>::Test_CreateTransformParameterMap_for_default_transform(
       { { "CenterOfRotationPoint", expectedZeros }, { "MatrixTranslation", expectedMatrixTranslation } });
 
     const auto skippedTest = [] {
       // Appears to crash when internally calling GetSubTransform(0) while m_SubTransformContainer is still empty.
-      WithElastixTransform<BSplineStackTransform>::Test_CreateTransformParametersMap_for_default_transform({});
+      WithElastixTransform<BSplineStackTransform>::Test_CreateTransformParameterMap_for_default_transform({});
     };
     (void)skippedTest;
 
-    WithElastixTransform<BSplineTransformWithDiffusion>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<BSplineTransformWithDiffusion>::Test_CreateTransformParameterMap_for_default_transform(
       { { "DeformationFieldFileName", { expectedDeformationFieldFileName } },
         { "GridIndex", expectedZeros },
         { "GridOrigin", expectedZeros },
         { "GridSize", expectedZeros },
         { "GridSpacing", expectedOnes } });
-    WithElastixTransform<DeformationFieldTransform>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<DeformationFieldTransform>::Test_CreateTransformParameterMap_for_default_transform(
       { { "DeformationFieldFileName", { expectedDeformationFieldFileName } },
         { "DeformationFieldInterpolationOrder", { expectedZero } } });
-    WithElastixTransform<EulerStackTransform>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<EulerStackTransform>::Test_CreateTransformParameterMap_for_default_transform(
       { { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
         { "NumberOfSubTransforms", { expectedZero } },
         { "StackOrigin", { expectedZero } },
         { "StackSpacing", { expectedOne } } });
 
-    WithElastixTransform<EulerTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<EulerTransformElastix>::Test_CreateTransformParameterMap_for_default_transform(
       (NDimension == 3)
         ? ParameterMapType{ { "CenterOfRotationPoint", expectedZeros }, { "ComputeZYX", { expectedFalse } } }
         : ParameterMapType{ { "CenterOfRotationPoint", expectedZeros } });
 
     try
     {
-      WithElastixTransform<MultiBSplineTransformWithNormal>::Test_CreateTransformParametersMap_for_default_transform(
+      WithElastixTransform<MultiBSplineTransformWithNormal>::Test_CreateTransformParameterMap_for_default_transform(
         { { "GridIndex", expectedZeros },
           { "GridOrigin", expectedZeros },
           { "GridSize", expectedZeros },
@@ -474,7 +474,7 @@ struct WithDimension
           { "BSplineTransformSplineOrder", { "3" } },
           { "GridDirection", expectedGridDirection },
           { "MultiBSplineTransformWithNormalLabels", { itksys::SystemTools::GetCurrentWorkingDirectory() } } });
-      EXPECT_FALSE("MultiBSplineTransformWithNormal::CreateTransformParametersMap is expected to throw an exception!");
+      EXPECT_FALSE("MultiBSplineTransformWithNormal::CreateTransformParameterMap is expected to throw an exception!");
     }
     catch (const itk::ExceptionObject & exceptionObject)
     {
@@ -482,7 +482,7 @@ struct WithDimension
       EXPECT_NE(std::strstr(exceptionObject.GetDescription(), "ERROR: Missing -labels argument!"), nullptr);
     }
 
-    WithElastixTransform<RecursiveBSplineTransform>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<RecursiveBSplineTransform>::Test_CreateTransformParameterMap_for_default_transform(
       { { "BSplineTransformSplineOrder", { "3" } },
         { "GridDirection", expectedGridDirection },
         { "GridIndex", expectedZeros },
@@ -490,19 +490,19 @@ struct WithDimension
         { "GridSize", expectedZeros },
         { "GridSpacing", expectedOnes },
         { "UseCyclicTransform", { expectedFalse } } });
-    WithElastixTransform<SimilarityTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<SimilarityTransformElastix>::Test_CreateTransformParameterMap_for_default_transform(
       { { "CenterOfRotationPoint", expectedZeros } });
-    WithElastixTransform<SplineKernelTransform>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<SplineKernelTransform>::Test_CreateTransformParameterMap_for_default_transform(
       { { "FixedImageLandmarks", {} },
         { "SplineKernelType", { "unknown" } },
         { "SplinePoissonRatio", { "0.3" } },
         { "SplineRelaxationFactor", { expectedZero } } });
-    WithElastixTransform<TranslationStackTransform>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<TranslationStackTransform>::Test_CreateTransformParameterMap_for_default_transform(
       { { "NumberOfSubTransforms", { expectedZero } },
         { "StackOrigin", { expectedZero } },
         { "StackSpacing", { expectedOne } } });
-    WithElastixTransform<TranslationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform({});
-    WithElastixTransform<WeightedCombinationTransformElastix>::Test_CreateTransformParametersMap_for_default_transform(
+    WithElastixTransform<TranslationTransformElastix>::Test_CreateTransformParameterMap_for_default_transform({});
+    WithElastixTransform<WeightedCombinationTransformElastix>::Test_CreateTransformParameterMap_for_default_transform(
       { { "NormalizeCombinationWeights", { expectedFalse } }, { "SubTransforms", {} } });
   }
 };
@@ -830,20 +830,20 @@ GTEST_TEST(TransformIO, CopyParametersToCorrespondingItkTransform)
 }
 
 
-GTEST_TEST(Transform, CreateTransformParametersMapForDefaultTransform)
+GTEST_TEST(Transform, CreateTransformParameterMapForDefaultTransform)
 {
-  WithDimension<2>::Test_CreateTransformParametersMap_for_default_transform();
-  WithDimension<3>::Test_CreateTransformParametersMap_for_default_transform();
+  WithDimension<2>::Test_CreateTransformParameterMap_for_default_transform();
+  WithDimension<3>::Test_CreateTransformParameterMap_for_default_transform();
 }
 
 
-GTEST_TEST(Transform, CreateTransformParametersMapDoublePrecision)
+GTEST_TEST(Transform, CreateTransformParameterMapDoublePrecision)
 {
   // Checks two different transform types, just to be sure.
   WithDimension<2>::WithElastixTransform<
-    elx::AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_double_precision();
+    elx::AdvancedAffineTransformElastix>::Test_CreateTransformParameterMap_double_precision();
   WithDimension<3>::WithElastixTransform<
-    elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_double_precision();
+    elx::TranslationTransformElastix>::Test_CreateTransformParameterMap_double_precision();
 }
 
 
@@ -851,9 +851,9 @@ GTEST_TEST(Transform, CreateTransformParametersSetUseAddition)
 {
   // Checks two different transform types, just to be sure.
   WithDimension<2>::WithElastixTransform<
-    elx::AdvancedAffineTransformElastix>::Test_CreateTransformParametersMap_SetUseAddition();
+    elx::AdvancedAffineTransformElastix>::Test_CreateTransformParameterMap_SetUseAddition();
   WithDimension<3>::WithElastixTransform<
-    elx::TranslationTransformElastix>::Test_CreateTransformParametersMap_SetUseAddition();
+    elx::TranslationTransformElastix>::Test_CreateTransformParameterMap_SetUseAddition();
 }
 
 

@@ -106,12 +106,12 @@ EulerTransformElastix<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-EulerTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+EulerTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   ParameterMapType parameterMap{ { "CenterOfRotationPoint",
                                    Conversion::ToVectorOfStrings(m_EulerTransform->GetCenter()) } };
@@ -124,7 +124,7 @@ EulerTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> 
 
   return parameterMap;
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

@@ -301,7 +301,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
                                         << ConvertSecondsToDHMS(timer.GetMean(), 1) << ".\n");
 
     /** Get the transformation parameter map. */
-    this->m_TransformParametersList.push_back(elastixMain->GetTransformParametersMap());
+    this->m_TransformParametersList.push_back(elastixMain->GetTransformParameterMap());
 
   } // end loop over registrations
 

@@ -115,19 +115,19 @@ WeightedCombinationTransformElastix<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CustomizeTransformParametersMap ************************
+ * ************************* CustomizeTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_WeightedCombinationTransform;
 
   return { { "NormalizeCombinationWeights", { Conversion::ToString(itkTransform.GetNormalizeWeights()) } },
            { "SubTransforms", m_SubTransformFileNames } };
 
-} // end CustomizeTransformParametersMap()
+} // end CustomizeTransformParameterMap()
 
 
 /**

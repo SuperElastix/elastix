@@ -524,7 +524,7 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
 
   ParameterMapType parameterMap;
 
-  this->CreateTransformParametersMap(param, parameterMap, itkTransformOutputFileNameExtension.empty());
+  this->CreateTransformParameterMap(param, parameterMap, itkTransformOutputFileNameExtension.empty());
 
   const auto & self = GetSelf();
 
@@ -578,14 +578,14 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
 
 
 /**
- * ******************* CreateTransformParametersMap ******************************
+ * ******************* CreateTransformParameterMap ******************************
  */
 
 template <class TElastix>
 void
-TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & param,
-                                                      ParameterMapType &     parameterMap,
-                                                      const bool             includeDerivedTransformParameters) const
+TransformBase<TElastix>::CreateTransformParameterMap(const ParametersType & param,
+                                                     ParameterMapType &     parameterMap,
+                                                     const bool             includeDerivedTransformParameters) const
 {
   const Configuration & configuration = Deref(Superclass::GetConfiguration());
 
@@ -637,7 +637,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
   if (includeDerivedTransformParameters)
   {
     // Derived transform classes may add some extra parameters
-    for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
+    for (auto & keyAndValue : this->CreateDerivedTransformParameterMap())
     {
       const auto & key = keyAndValue.first;
       assert(parameterMap.count(key) == 0);
@@ -645,7 +645,7 @@ TransformBase<TElastix>::CreateTransformParametersMap(const ParametersType & par
     }
   }
 
-} // end CreateTransformParametersMap()
+} // end CreateTransformParameterMap()
 
 
 /**

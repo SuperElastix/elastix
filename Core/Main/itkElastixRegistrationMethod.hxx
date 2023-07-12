@@ -295,7 +295,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     resultImageContainer = elastixMain->GetResultImageContainer();
     fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
 
-    transformParameterMapVector.push_back(elastixMain->GetTransformParametersMap());
+    transformParameterMapVector.push_back(elastixMain->GetTransformParameterMap());
 
     // TODO: Fix elastix corrupting default pixel value parameter
     transformParameterMapVector.back()["DefaultPixelValue"] = parameterMap["DefaultPixelValue"];

@@ -140,12 +140,12 @@ AffineLogStackTransform<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-AffineLogStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+AffineLogStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_StackTransform;
 
@@ -154,7 +154,7 @@ AffineLogStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -
            { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },
            { "NumberOfSubTransforms", { Conversion::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

@@ -228,7 +228,7 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap() const override;
+  CreateDerivedTransformParameterMap() const override;
 
   const SimilarityTransformPointer m_SimilarityTransform{ SimilarityTransformType::New() };
 };

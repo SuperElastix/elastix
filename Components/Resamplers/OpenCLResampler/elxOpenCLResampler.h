@@ -157,7 +157,7 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) resampler type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap() const override;
+  CreateDerivedTransformParameterMap() const override;
 
   /** Helper method to report switching to CPU mode. */
   void

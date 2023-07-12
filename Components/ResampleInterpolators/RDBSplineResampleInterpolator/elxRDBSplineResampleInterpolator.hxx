@@ -87,16 +87,16 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile()
 
 
 /**
- * ******************* CreateDerivedTransformParametersMap ******************************
+ * ******************* CreateDerivedTransformParameterMap ******************************
  */
 
 template <class TElastix>
 auto
-ReducedDimensionBSplineResampleInterpolator<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+ReducedDimensionBSplineResampleInterpolator<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   return { { "FinalBSplineInterpolationOrder", { Conversion::ToString(this->GetSplineOrder()) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 } // end namespace elastix

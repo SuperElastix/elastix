@@ -93,12 +93,12 @@ AffineLogTransformElastix<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-AffineLogTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+AffineLogTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_AffineLogTransform;
 
@@ -107,7 +107,7 @@ AffineLogTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const
              Conversion::ConcatenateVectors(Conversion::ToVectorOfStrings(itkTransform.GetMatrix()),
                                             Conversion::ToVectorOfStrings(itkTransform.GetTranslation())) } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

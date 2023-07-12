@@ -65,7 +65,7 @@ struct WithDimension
     using InterpolatorType = TInterpolatorTemplate<ElastixType<NDimension>>;
 
     static void
-    Test_CreateTransformParametersMap_for_default_interpolator(const ParameterMapType & expectedDerivedParameterMap)
+    Test_CreateTransformParameterMap_for_default_interpolator(const ParameterMapType & expectedDerivedParameterMap)
     {
       SCOPED_TRACE(std::string("Function = ")
                      .append(__func__)
@@ -76,7 +76,7 @@ struct WithDimension
       const elx::ResampleInterpolatorBase<ElastixType<NDimension>> & interpolator = *newInterpolator;
 
       ParameterMapType actualParameterMap;
-      interpolator.CreateTransformParametersMap(actualParameterMap);
+      interpolator.CreateTransformParameterMap(actualParameterMap);
 
       const ParameterMapType expectedBaseParameterMap = { { "ResampleInterpolator",
                                                             { interpolator.elxGetClassName() } } };
@@ -88,24 +88,24 @@ struct WithDimension
 
 
   static void
-  Test_CreateTransformParametersMap_for_default_interpolator()
+  Test_CreateTransformParameterMap_for_default_interpolator()
   {
     using namespace elx;
 
     const std::string expectedFinalBSplineInterpolationOrderKey = "FinalBSplineInterpolationOrder";
     const std::string expectedZero = "0";
 
-    WithInterpolator<BSplineResampleInterpolator>::Test_CreateTransformParametersMap_for_default_interpolator(
+    WithInterpolator<BSplineResampleInterpolator>::Test_CreateTransformParameterMap_for_default_interpolator(
       { { expectedFinalBSplineInterpolationOrderKey, { "3" } } });
-    WithInterpolator<BSplineResampleInterpolatorFloat>::Test_CreateTransformParametersMap_for_default_interpolator(
+    WithInterpolator<BSplineResampleInterpolatorFloat>::Test_CreateTransformParameterMap_for_default_interpolator(
       { { expectedFinalBSplineInterpolationOrderKey, { "3" } } });
-    WithInterpolator<LinearResampleInterpolator>::Test_CreateTransformParametersMap_for_default_interpolator({});
-    WithInterpolator<NearestNeighborResampleInterpolator>::Test_CreateTransformParametersMap_for_default_interpolator(
+    WithInterpolator<LinearResampleInterpolator>::Test_CreateTransformParameterMap_for_default_interpolator({});
+    WithInterpolator<NearestNeighborResampleInterpolator>::Test_CreateTransformParameterMap_for_default_interpolator(
       {});
 
     const auto skippedTest = [expectedZero] {
       // Note: The following crashes when trying to retrieve "PreParameters" by `m_PreTransform->GetParameters()`.
-      WithInterpolator<RayCastResampleInterpolator>::Test_CreateTransformParametersMap_for_default_interpolator(
+      WithInterpolator<RayCastResampleInterpolator>::Test_CreateTransformParameterMap_for_default_interpolator(
         { { "FocalPoint", ParameterValuesType(NDimension, expectedZero) },
           { "PreParameters", { expectedZero } },
           { "Threshold", { expectedZero } } });
@@ -113,7 +113,7 @@ struct WithDimension
     (void)skippedTest;
 
     WithInterpolator<ReducedDimensionBSplineResampleInterpolator>::
-      Test_CreateTransformParametersMap_for_default_interpolator(
+      Test_CreateTransformParameterMap_for_default_interpolator(
         { { expectedFinalBSplineInterpolationOrderKey, { "1" } } });
   }
 };
@@ -121,8 +121,8 @@ struct WithDimension
 } // namespace
 
 
-GTEST_TEST(ResampleInterpolator, CreateTransformParametersMapForDefaultInterpolator)
+GTEST_TEST(ResampleInterpolator, CreateTransformParameterMapForDefaultInterpolator)
 {
-  WithDimension<2>::Test_CreateTransformParametersMap_for_default_interpolator();
-  WithDimension<3>::Test_CreateTransformParametersMap_for_default_interpolator();
+  WithDimension<2>::Test_CreateTransformParameterMap_for_default_interpolator();
+  WithDimension<3>::Test_CreateTransformParameterMap_for_default_interpolator();
 }

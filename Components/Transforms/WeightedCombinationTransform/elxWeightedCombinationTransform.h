@@ -209,7 +209,7 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) transform type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap() const override;
+  CreateDerivedTransformParameterMap() const override;
 };
 
 } // end namespace elastix

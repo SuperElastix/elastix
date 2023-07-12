@@ -190,7 +190,7 @@ ElastixMain::Run()
   this->m_FinalTransform = elastixBase.GetFinalTransform();
 
   /** Get the transformation parameter map */
-  this->m_TransformParametersMap = elastixBase.GetTransformParametersMap();
+  this->m_TransformParameterMap = elastixBase.GetTransformParameterMap();
 
   /** Store the images in ElastixMain. */
   this->SetFixedImageContainer(elastixBase.GetFixedImageContainer());
@@ -510,14 +510,14 @@ ElastixMain::GetOriginalFixedImageDirectionFlat() const
 
 
 /**
- * ******************** GetTransformParametersMap ********************
+ * ******************** GetTransformParameterMap ********************
  */
 
 ElastixMain::ParameterMapType
-ElastixMain::GetTransformParametersMap() const
+ElastixMain::GetTransformParameterMap() const
 {
-  return this->m_TransformParametersMap;
-} // end GetTransformParametersMap()
+  return this->m_TransformParameterMap;
+} // end GetTransformParameterMap()
 
 
 /**

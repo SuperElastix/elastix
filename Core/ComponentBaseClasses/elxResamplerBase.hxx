@@ -640,7 +640,7 @@ void
 ResamplerBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
   ParameterMapType parameterMap;
-  Self::CreateTransformParametersMap(parameterMap);
+  Self::CreateTransformParameterMap(parameterMap);
 
   /** Write resampler specific things. */
   transformationParameterInfo << ("\n// Resampler specific\n" + Conversion::ParameterMapToString(parameterMap));
@@ -649,12 +649,12 @@ ResamplerBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo)
 
 
 /**
- * ******************* CreateTransformParametersMap ******************************
+ * ******************* CreateTransformParameterMap ******************************
  */
 
 template <class TElastix>
 void
-ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType & parameterMap) const
+ResamplerBase<TElastix>::CreateTransformParameterMap(ParameterMapType & parameterMap) const
 {
   /** Store the name of this transform. */
   parameterMap["Resampler"] = { this->elxGetClassName() };
@@ -680,14 +680,14 @@ ResamplerBase<TElastix>::CreateTransformParametersMap(ParameterMapType & paramet
   parameterMap["CompressResultImage"] = { doCompression };
 
   // Derived classes may add some extra parameters
-  for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
+  for (auto & keyAndValue : this->CreateDerivedTransformParameterMap())
   {
     const auto & key = keyAndValue.first;
     assert(parameterMap.count(key) == 0);
     parameterMap[key] = std::move(keyAndValue.second);
   }
 
-} // end CreateTransformParametersMap()
+} // end CreateTransformParameterMap()
 
 
 /**

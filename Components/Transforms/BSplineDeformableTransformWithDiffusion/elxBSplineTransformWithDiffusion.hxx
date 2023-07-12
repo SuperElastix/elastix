@@ -1014,12 +1014,12 @@ BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile() const
 
 
 /**
- * ************************* CustomizeTransformParametersMap ************************
+ * ************************* CustomizeTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_BSplineTransform;
   const auto   gridRegion = itkTransform.GetGridRegion();
@@ -1033,7 +1033,7 @@ BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParametersMap() c
            { "GridSpacing", Conversion::ToVectorOfStrings(itkTransform.GetGridSpacing()) },
            { "GridOrigin", Conversion::ToVectorOfStrings(itkTransform.GetGridOrigin()) } };
 
-} // end CustomizeTransformParametersMap()
+} // end CustomizeTransformParameterMap()
 
 
 /**

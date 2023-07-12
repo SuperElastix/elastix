@@ -173,12 +173,12 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
 
 
 /**
- * ************************* CustomizeTransformParametersMap ************************
+ * ************************* CustomizeTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+DeformationFieldTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const std::string interpolatorName =
     m_DeformationFieldInterpolatingTransform->GetDeformationFieldInterpolator()->GetNameOfClass();
@@ -187,7 +187,7 @@ DeformationFieldTransform<TElastix>::CreateDerivedTransformParametersMap() const
   return { { "DeformationFieldFileName", { TransformIO::MakeDeformationFieldFileName(*this) } },
            { "DeformationFieldInterpolationOrder", { Conversion::ToString(interpolationOrder) } } };
 
-} // end CustomizeTransformParametersMap()
+} // end CustomizeTransformParameterMap()
 
 
 } // end namespace elastix
