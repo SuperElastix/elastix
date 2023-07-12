@@ -342,11 +342,11 @@ public:
 
   /** Creates transformation parameters map. */
   virtual void
-  CreateTransformParametersMap() = 0;
+  CreateTransformParameterMap() = 0;
 
   /** Gets transformation parameters map. */
   ParameterMapType
-  GetTransformParametersMap() const;
+  GetTransformParameterMap() const;
 
   /** Set configuration vector. Library only. */
   void
@@ -403,7 +403,7 @@ protected:
   unsigned int m_IterationCounter{};
 
   /** Stores transformation parameters map. */
-  ParameterMapType m_TransformParametersMap;
+  ParameterMapType m_TransformParameterMap;
 
   std::ofstream m_IterationInfoFile;
 

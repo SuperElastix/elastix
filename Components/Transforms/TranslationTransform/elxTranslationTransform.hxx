@@ -104,17 +104,17 @@ TranslationTransformElastix<TElastix>::InitializeTransform()
 
 
 /**
- * ************************* CustomizeTransformParametersMap ************************
+ * ************************* CustomizeTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-TranslationTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+TranslationTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   // This transform type has no specific extra parameters.
   return {};
 
-} // end CustomizeTransformParametersMap()
+} // end CustomizeTransformParameterMap()
 
 
 } // end namespace elastix

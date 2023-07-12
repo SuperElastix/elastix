@@ -598,12 +598,12 @@ BSplineStackTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-BSplineStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+BSplineStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   ReducedDimensionBSplineTransformBasePointer firstSubTransform =
     dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(this->m_StackTransform->GetSubTransform(0).GetPointer());
@@ -620,7 +620,7 @@ BSplineStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> 
            { "StackOrigin", { Conversion::ToString(m_StackTransform->GetStackOrigin()) } },
            { "NumberOfSubTransforms", { Conversion::ToString(m_StackTransform->GetNumberOfSubTransforms()) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 } // end namespace elastix

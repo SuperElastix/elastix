@@ -233,9 +233,9 @@ public:
 
   /** Function to create transform-parameters map. */
   void
-  CreateTransformParametersMap(const ParametersType & param,
-                               ParameterMapType &     parameterMap,
-                               const bool             includeDerivedTransformParameters = true) const;
+  CreateTransformParameterMap(const ParametersType & param,
+                              ParameterMapType &     parameterMap,
+                              const bool             includeDerivedTransformParameters = true) const;
 
   /** Function to write transform-parameters to a file. */
   void
@@ -437,7 +437,7 @@ private:
   }
 
   virtual ParameterMapType
-  CreateDerivedTransformParametersMap() const = 0;
+  CreateDerivedTransformParameterMap() const = 0;
 
   /** Allows a derived transform class to write its data to file, by overriding this member function. */
   virtual void

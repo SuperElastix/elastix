@@ -744,7 +744,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   if (BaseComponent::IsElastixLibrary())
   {
     /** Get the transform parameters. */
-    this->CreateTransformParametersMap(); // only relevant for dll!
+    this->CreateTransformParameterMap(); // only relevant for dll!
   }
 
   timer.Stop();
@@ -821,19 +821,19 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
 
 
 /**
- * ************** CreateTransformParametersMap ******************
+ * ************** CreateTransformParameterMap ******************
  */
 
 template <class TFixedImage, class TMovingImage>
 void
-ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParametersMap()
+ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterMap()
 {
-  this->GetElxTransformBase()->CreateTransformParametersMap(
-    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(), this->m_TransformParametersMap);
-  this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap(this->m_TransformParametersMap);
-  this->GetElxResamplerBase()->CreateTransformParametersMap(this->m_TransformParametersMap);
+  this->GetElxTransformBase()->CreateTransformParameterMap(
+    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(), this->m_TransformParameterMap);
+  this->GetElxResampleInterpolatorBase()->CreateTransformParameterMap(this->m_TransformParameterMap);
+  this->GetElxResamplerBase()->CreateTransformParameterMap(this->m_TransformParameterMap);
 
-} // end CreateTransformParametersMap()
+} // end CreateTransformParameterMap()
 
 
 /**

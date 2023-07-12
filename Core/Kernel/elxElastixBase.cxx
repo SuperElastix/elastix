@@ -457,14 +457,14 @@ ElastixBase::GetOriginalFixedImageDirectionFlat() const
 
 
 /**
- * ************** GetTransformParametersMap *****************
+ * ************** GetTransformParameterMap *****************
  */
 
 itk::ParameterMapInterface::ParameterMapType
-ElastixBase::GetTransformParametersMap() const
+ElastixBase::GetTransformParameterMap() const
 {
-  return m_TransformParametersMap;
-} // end GetTransformParametersMap()
+  return m_TransformParameterMap;
+} // end GetTransformParameterMap()
 
 
 /**

@@ -72,16 +72,16 @@ BSplineResampleInterpolatorFloat<TElastix>::ReadFromFile()
 
 
 /**
- * ******************* CreateDerivedTransformParametersMap ******************************
+ * ******************* CreateDerivedTransformParameterMap ******************************
  */
 
 template <class TElastix>
 auto
-BSplineResampleInterpolatorFloat<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+BSplineResampleInterpolatorFloat<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   return { { "FinalBSplineInterpolationOrder", { Conversion::ToString(this->GetSplineOrder()) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 } // end namespace elastix

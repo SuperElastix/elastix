@@ -95,12 +95,12 @@ AffineDTITransformElastix<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-AffineDTITransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+AffineDTITransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_AffineDTITransform;
 
@@ -109,7 +109,7 @@ AffineDTITransformElastix<TElastix>::CreateDerivedTransformParametersMap() const
              Conversion::ConcatenateVectors(Conversion::ToVectorOfStrings(itkTransform.GetMatrix()),
                                             Conversion::ToVectorOfStrings(itkTransform.GetTranslation())) } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

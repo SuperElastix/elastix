@@ -123,7 +123,7 @@ private:
 
   /** Creates a map of the parameters specific for this (derived) interpolator type. */
   ParameterMapType
-  CreateDerivedTransformParametersMap() const override;
+  CreateDerivedTransformParameterMap() const override;
 
   EulerTransformPointer       m_PreTransform;
   TransformParametersType     m_PreParameters;

@@ -122,16 +122,16 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   return { { "CenterOfRotationPoint", Conversion::ToVectorOfStrings(m_AffineTransform->GetCenter()) } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

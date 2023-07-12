@@ -47,7 +47,7 @@ void
 ResampleInterpolatorBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
   ParameterMapType parameterMap;
-  this->CreateTransformParametersMap(parameterMap);
+  this->CreateTransformParameterMap(parameterMap);
 
   /** Write ResampleInterpolator specific things. */
   transformationParameterInfo << ("\n// ResampleInterpolator specific\n" +
@@ -57,25 +57,25 @@ ResampleInterpolatorBase<TElastix>::WriteToFile(std::ostream & transformationPar
 
 
 /**
- * ******************* CreateTransformParametersMap ****************
+ * ******************* CreateTransformParameterMap ****************
  */
 
 template <class TElastix>
 void
-ResampleInterpolatorBase<TElastix>::CreateTransformParametersMap(ParameterMapType & parameterMap) const
+ResampleInterpolatorBase<TElastix>::CreateTransformParameterMap(ParameterMapType & parameterMap) const
 {
   /** Store the name of this transform. */
   parameterMap["ResampleInterpolator"] = { this->elxGetClassName() };
 
   // Derived classes may add some extra parameters
-  for (auto & keyAndValue : this->CreateDerivedTransformParametersMap())
+  for (auto & keyAndValue : this->CreateDerivedTransformParameterMap())
   {
     const auto & key = keyAndValue.first;
     assert(parameterMap.count(key) == 0);
     parameterMap[key] = std::move(keyAndValue.second);
   }
 
-} // end CreateTransformParametersMap()
+} // end CreateTransformParameterMap()
 
 
 } // end namespace elastix

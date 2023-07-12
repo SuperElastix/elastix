@@ -292,16 +292,16 @@ OpenCLResampler<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-OpenCLResampler<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+OpenCLResampler<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   return { { "OpenCLResamplerUseOpenCL", { Conversion::ToString(this->m_UseOpenCL) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

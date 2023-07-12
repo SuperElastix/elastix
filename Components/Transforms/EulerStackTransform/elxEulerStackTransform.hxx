@@ -138,12 +138,12 @@ EulerStackTransform<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CreateDerivedTransformParametersMap ************************
+ * ************************* CreateDerivedTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+EulerStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_StackTransform;
 
@@ -152,7 +152,7 @@ EulerStackTransform<TElastix>::CreateDerivedTransformParametersMap() const -> Pa
            { "StackOrigin", { Conversion::ToString(itkTransform.GetStackOrigin()) } },
            { "NumberOfSubTransforms", { Conversion::ToString(itkTransform.GetNumberOfSubTransforms()) } } };
 
-} // end CreateDerivedTransformParametersMap()
+} // end CreateDerivedTransformParameterMap()
 
 
 /**

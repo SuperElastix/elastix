@@ -436,12 +436,12 @@ SplineKernelTransform<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CustomizeTransformParametersMap ************************
+ * ************************* CustomizeTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-SplineKernelTransform<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+SplineKernelTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   auto & itkTransform = *m_KernelTransform;
 
@@ -450,7 +450,7 @@ SplineKernelTransform<TElastix>::CreateDerivedTransformParametersMap() const -> 
            { "SplineRelaxationFactor", { Conversion::ToString(itkTransform.GetStiffness()) } },
            { "FixedImageLandmarks", Conversion::ToVectorOfStrings(itkTransform.GetFixedParameters()) } };
 
-} // end CustomizeTransformParametersMap()
+} // end CustomizeTransformParameterMap()
 
 
 } // end namespace elastix

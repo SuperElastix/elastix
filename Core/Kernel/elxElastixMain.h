@@ -149,9 +149,9 @@ public:
                                        const ParameterMapType &              inputMap,
                                        const std::vector<ParameterMapType> & initialTransformParameterMaps);
 
-  /** GetTransformParametersMap */
+  /** GetTransformParameterMap */
   virtual ParameterMapType
-  GetTransformParametersMap() const;
+  GetTransformParameterMap() const;
 
 protected:
   ElastixMain();
@@ -172,7 +172,7 @@ protected:
   /** Transformation parameters map containing parameters that is the
    *  result of registration.
    */
-  ParameterMapType m_TransformParametersMap{};
+  ParameterMapType m_TransformParameterMap{};
 
   FlatDirectionCosinesType m_OriginalFixedImageDirection{};
 

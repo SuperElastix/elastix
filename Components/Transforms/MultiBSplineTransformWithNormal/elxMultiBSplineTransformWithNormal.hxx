@@ -580,12 +580,12 @@ MultiBSplineTransformWithNormal<TElastix>::ReadFromFile()
 
 
 /**
- * ************************* CustomizeTransformParametersMap ************************
+ * ************************* CustomizeTransformParameterMap ************************
  */
 
 template <class TElastix>
 auto
-MultiBSplineTransformWithNormal<TElastix>::CreateDerivedTransformParametersMap() const -> ParameterMapType
+MultiBSplineTransformWithNormal<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   const auto & itkTransform = *m_MultiBSplineTransformWithNormal;
   const auto   gridRegion = itkTransform.GetGridRegion();
@@ -598,7 +598,7 @@ MultiBSplineTransformWithNormal<TElastix>::CreateDerivedTransformParametersMap()
            { "BSplineTransformSplineOrder", { Conversion::ToString(m_SplineOrder) } },
            { "MultiBSplineTransformWithNormalLabels", { itksys::SystemTools::CollapseFullPath(m_LabelsPath) } } };
 
-} // end CustomizeTransformParametersMap()
+} // end CustomizeTransformParameterMap()
 
 
 /**

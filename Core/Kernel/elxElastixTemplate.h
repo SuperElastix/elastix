@@ -267,9 +267,9 @@ private:
   void
   CreateTransformParameterFile(const std::string & FileName, const bool ToLog);
 
-  /** CreateTransformParametersMap. */
+  /** CreateTransformParameterMap. */
   void
-  CreateTransformParametersMap() override;
+  CreateTransformParameterMap() override;
 
   /** Open the IterationInfoFile, where the table with iteration info is written to. */
   void
