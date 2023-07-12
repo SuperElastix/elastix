@@ -17,6 +17,7 @@
  *=========================================================================*/
 
 #include "elxParameterObject.h"
+#include "elxConversion.h"
 
 #include "itkParameterFileParser.h"
 
@@ -279,31 +280,7 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
 
   try
   {
-    ParameterMapConstIterator parameterMapIterator = parameterMap.begin();
-    ParameterMapConstIterator parameterMapIteratorEnd = parameterMap.end();
-    while (parameterMapIterator != parameterMapIteratorEnd)
-    {
-      parameterFile << "(" << parameterMapIterator->first;
-
-      ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
-      for (unsigned int i = 0; i < parameterMapValueVector.size(); ++i)
-      {
-        std::istringstream stream(parameterMapValueVector[i]);
-        float              number;
-        stream >> number;
-        if (stream.fail() || stream.bad())
-        {
-          parameterFile << " \"" << parameterMapValueVector[i] << "\"";
-        }
-        else
-        {
-          parameterFile << " " << number;
-        }
-      }
-
-      parameterFile << ")" << std::endl;
-      ++parameterMapIterator;
-    }
+    parameterFile << Conversion::ParameterMapToString(parameterMap);
   }
   catch (const std::ios_base::failure & e)
   {
