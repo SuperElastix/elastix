@@ -242,23 +242,23 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
     configurationSubTransform->ReadParameter(subTransformName, "Transform", 0);
 
     /** Create a SubTransform. */
-    const PtrToCreator creator =
-      ElastixMain::GetComponentDatabase().GetCreator(subTransformName, this->m_Elastix->GetDBIndex());
-    const itk::Object::Pointer subTransform = (creator == nullptr) ? nullptr : creator();
-
-    /** Cast to TransformBase */
-    Superclass2 * elx_subTransform = dynamic_cast<Superclass2 *>(subTransform.GetPointer());
-
-    /** Call the ReadFromFile method of the elx_subTransform. */
-    if (elx_subTransform)
+    if (const PtrToCreator creator =
+          ElastixMain::GetComponentDatabase().GetCreator(subTransformName, this->m_Elastix->GetDBIndex()))
     {
-      elx_subTransform->SetElastix(this->GetElastix());
-      elx_subTransform->SetConfiguration(configurationSubTransform);
-      elx_subTransform->ReadFromFile();
+      if (const itk::Object::Pointer subTransform = creator())
+      {
+        /** Cast to TransformBase and Call the ReadFromFile method of the elx_subTransform. */
+        if (Superclass2 * elx_subTransform = dynamic_cast<Superclass2 *>(subTransform.GetPointer()))
+        {
+          elx_subTransform->SetElastix(this->GetElastix());
+          elx_subTransform->SetConfiguration(configurationSubTransform);
+          elx_subTransform->ReadFromFile();
 
-      /** Set in vector of subTransforms. */
-      SubTransformType * testPointer = dynamic_cast<SubTransformType *>(subTransform.GetPointer());
-      subTransforms[i] = testPointer;
+          /** Set in vector of subTransforms. */
+          SubTransformType * testPointer = dynamic_cast<SubTransformType *>(subTransform.GetPointer());
+          subTransforms[i] = testPointer;
+        }
+      }
     }
 
     /** Check if no errors occurred: */
