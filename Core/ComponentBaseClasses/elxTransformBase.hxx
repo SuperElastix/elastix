@@ -482,25 +482,24 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
   configurationInitialTransform->ReadParameter(initialTransformName, "Transform", 0);
 
   /** Create an InitialTransform. */
-  const PtrToCreator testcreator =
-    ElastixMain::GetComponentDatabase().GetCreator(initialTransformName, this->m_Elastix->GetDBIndex());
-  const itk::Object::Pointer initialTransform = (testcreator == nullptr) ? nullptr : testcreator();
-
-  const auto elx_initialTransform = dynamic_cast<Self *>(initialTransform.GetPointer());
-
-  /** Call the ReadFromFile method of the initialTransform. */
-  if (elx_initialTransform != nullptr)
+  if (const PtrToCreator testcreator =
+        ElastixMain::GetComponentDatabase().GetCreator(initialTransformName, this->m_Elastix->GetDBIndex()))
   {
-    // elx_initialTransform->SetTransformParameterFileName(transformParameterFileName);
-    elx_initialTransform->SetElastix(this->GetElastix());
-    elx_initialTransform->SetConfiguration(configurationInitialTransform);
-    elx_initialTransform->ReadFromFile();
+    const itk::Object::Pointer initialTransform = testcreator();
 
-    /** Set initial transform. */
-    const auto testPointer = dynamic_cast<InitialTransformType *>(initialTransform.GetPointer());
-    if (testPointer != nullptr)
+    /** Call the ReadFromFile method of the initialTransform. */
+    if (const auto elx_initialTransform = dynamic_cast<Self *>(initialTransform.GetPointer()))
     {
-      this->SetInitialTransform(testPointer);
+      // elx_initialTransform->SetTransformParameterFileName(transformParameterFileName);
+      elx_initialTransform->SetElastix(this->GetElastix());
+      elx_initialTransform->SetConfiguration(configurationInitialTransform);
+      elx_initialTransform->ReadFromFile();
+
+      /** Set initial transform. */
+      if (const auto testPointer = dynamic_cast<InitialTransformType *>(initialTransform.GetPointer()))
+      {
+        this->SetInitialTransform(testPointer);
+      }
     }
   }
 

@@ -147,15 +147,15 @@ MainBase::ObjectPointer
 MainBase::CreateComponent(const ComponentDescriptionType & name)
 {
   /** A pointer to the New() function. */
-  const PtrToCreator  creator = GetComponentDatabase().GetCreator(name, m_DBIndex);
-  const ObjectPointer component = (creator == nullptr) ? nullptr : creator();
-
-  if (component.IsNull())
+  if (const PtrToCreator creator = GetComponentDatabase().GetCreator(name, m_DBIndex))
   {
-    itkExceptionMacro("The following component could not be created: " << name);
+    if (const ObjectPointer component = creator())
+    {
+      return component;
+    }
   }
 
-  return component;
+  itkExceptionMacro("The following component could not be created: " << name);
 
 } // end CreateComponent()
 
