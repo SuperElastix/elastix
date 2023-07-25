@@ -26,6 +26,7 @@
 #include <itkImageIOFactoryRegisterManager.h>
 #include <itkMeshIOFactoryRegisterManager.h>
 #include <itkTransformIOFactoryRegisterManager.h>
+#include <itkMultiThreaderBase.h>
 
 #include <iostream>
 #include <string>
@@ -139,6 +140,8 @@ ComponentLoader::LoadComponents()
                     itk::MeshIOFactoryRegisterManagerInstance,
                     itk::TransformIOFactoryRegisterManagerInstance);
   (void)ioFactoryRegisterManagerInstances;
+
+  itk::MultiThreaderBase::SetGlobalDefaultThreader(itk::MultiThreaderBase::ThreaderEnum::Pool);
 
   int installReturnCode = 0;
 
