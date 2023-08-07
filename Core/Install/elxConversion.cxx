@@ -190,6 +190,20 @@ Conversion::SecondsToDHMS(const double totalSeconds, const unsigned int precisio
 
 
 /**
+ ******************* ObjectPtrToString ****************************
+ */
+
+std::string
+Conversion::ObjectPtrToString(const itk::Object * const objectPtr)
+{
+  const void * const voidPtr{ objectPtr };
+  std::ostringstream outputStringStream{};
+  outputStringStream << voidPtr;
+  return outputStringStream.str();
+}
+
+
+/**
  * ****************** ToOptimizerParameters ****************************
  */
 
@@ -402,5 +416,14 @@ Conversion::StringToValue(const std::string & str, bool & value)
   return false;
 }
 
+
+bool
+Conversion::StringToValue(const std::string & str, const itk::Object *& value)
+{
+  void *     voidPtr{};
+  const bool hasSucceeded = StringToValue<void *>(str, voidPtr);
+  value = static_cast<itk::Object *>(voidPtr);
+  return hasSucceeded;
+}
 
 } // end namespace elastix
