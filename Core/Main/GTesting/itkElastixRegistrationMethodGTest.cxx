@@ -1246,6 +1246,86 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 }
 
 
+GTEST_TEST(itkElastixRegistrationMethod, SetExternalTransformAsInitialTransform)
+{
+  constexpr unsigned int ImageDimension{ 2 };
+
+  using PixelType = float;
+  using SizeType = itk::Size<ImageDimension>;
+  const SizeType imageSize{ { 5, 6 } };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using TransformixFilterType = itk::TransformixFilter<ImageType>;
+
+  const ImageDomain<ImageDimension> imageDomain(imageSize);
+
+  elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> itkTransform;
+  itkTransform.SetOffset(itk::MakeVector(1.0, -2.0));
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType initialTranslation{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  elx::DefaultConstruct<elx::ParameterObject>                     registrationParameterObject{};
+  elx::DefaultConstruct<elx::ParameterObject>                     initialTransformParameterObject{};
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  registration.SetFixedImage(fixedImage);
+  registration.SetInitialTransformParameterObject(&initialTransformParameterObject);
+  registration.SetParameterObject(&registrationParameterObject);
+  registration.SetLogToConsole(true);
+
+  const elx::ParameterObject::ParameterMapType registrationParameterMap{
+    // Parameters in alphabetic order:
+    { "ImageSampler", { "Full" } },
+    { "MaximumNumberOfIterations", { "2" } },
+    { "Metric", { "AdvancedNormalizedCorrelation" } },
+    { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+    { "Transform", { "TranslationTransform" } }
+  };
+
+  registrationParameterObject.SetParameterMap(registrationParameterMap);
+
+  const ParameterMapType initialTransformParameterMap{ { "NumberOfParameters", { "0" } },
+                                                       { "Transform", { "ExternalTransform" } },
+                                                       { "TransformAddress",
+                                                         { elx::Conversion::ObjectPtrToString(&itkTransform) } } };
+  initialTransformParameterObject.SetParameterMap(initialTransformParameterMap);
+
+  // Do the test for a few possible translations.
+  for (const auto index :
+       itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+  {
+    const auto actualTranslation = ConvertIndexToOffset(index);
+    movingImage->FillBuffer(0);
+    FillImageRegion(*movingImage, fixedImageRegionIndex + actualTranslation, regionSize);
+    registration.SetMovingImage(movingImage);
+    registration.Update();
+
+    const auto & transformParameterMaps =
+      DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
+
+    ASSERT_EQ(transformParameterMaps.size(), 2);
+
+    EXPECT_EQ(transformParameterMaps.front(), initialTransformParameterMap);
+
+    // Together the initial translation and the first registration should have the actual image translation.
+    const auto transformParameters =
+      ConvertStringsToVectorOfDouble(transformParameterMaps.back().at("TransformParameters"));
+    EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
+  }
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersusTransformix)
 {
   {

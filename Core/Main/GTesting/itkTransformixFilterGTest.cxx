@@ -1493,3 +1493,36 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsing
   check(TypeHolder<unsigned long>{});
   check(TypeHolder<double>{});
 }
+
+
+GTEST_TEST(itkTransformixFilter, ExternalTransform)
+{
+  constexpr unsigned int ImageDimension{ 2 };
+
+  using PixelType = float;
+  using SizeType = itk::Size<ImageDimension>;
+  const SizeType imageSize{ { 5, 6 } };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using TransformixFilterType = itk::TransformixFilter<ImageType>;
+
+  const ImageDomain<ImageDimension> imageDomain(imageSize);
+  const auto                        movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> itkTransform;
+  itkTransform.SetOffset(itk::MakeVector(1.0, -2.0));
+
+  elx::DefaultConstruct<TransformixFilterType> transformixFilter{};
+  transformixFilter.SetMovingImage(movingImage);
+  transformixFilter.SetTransformParameterObject(CreateParameterObject(MakeMergedMap(
+    { // Parameters in alphabetic order:
+      { "ResampleInterpolator", { "FinalLinearInterpolator" } },
+      { "Transform", ParameterValuesType{ "ExternalTransform" } },
+      { "TransformAddress", { elx::Conversion::ObjectPtrToString(&itkTransform) } } },
+    imageDomain.AsParameterMap())));
+  transformixFilter.Update();
+
+  const auto resampleImageFilter = CreateResampleImageFilter(*movingImage, itkTransform);
+
+  EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), DerefRawPointer(resampleImageFilter->GetOutput()));
+}
