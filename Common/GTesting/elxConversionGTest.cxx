@@ -444,6 +444,23 @@ GTEST_TEST(Conversion, ToString)
 }
 
 
+// Tests that conversion of itk::Object pointers to string and back is lossless.
+GTEST_TEST(Conversion, LosslessRoundTripOfObjectPointers)
+{
+  const auto expectLosslessRoundTrip = [](const itk::Object * const ptr) {
+    const itk::Object * actualPtr{};
+    EXPECT_TRUE(Conversion::StringToValue(Conversion::ObjectPtrToString(ptr), actualPtr));
+    EXPECT_EQ(actualPtr, ptr);
+  };
+
+  expectLosslessRoundTrip(nullptr);
+  expectLosslessRoundTrip(itk::Object::New());
+
+  const elx::DefaultConstruct<itk::Object> localVariable{};
+  expectLosslessRoundTrip(&localVariable);
+}
+
+
 GTEST_TEST(Conversion, ToVectorOfStrings)
 {
   using VectorOfStrings = std::vector<std::string>;

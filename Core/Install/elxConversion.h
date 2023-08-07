@@ -60,6 +60,9 @@ public:
     return arg ? "true" : "false";
   }
 
+  /** Converts a raw itk::Object pointer to a text string. */
+  static std::string
+  ObjectPtrToString(const itk::Object *);
 
   /** Converts the specified `std::vector` to an OptimizerParameters object. */
   static itk::OptimizerParameters<double>
@@ -226,6 +229,11 @@ public:
   /** Overload to cast a string to a bool. Returns true when casting was successful and false otherwise. */
   static bool
   StringToValue(const std::string & str, bool & value);
+
+  /** Overload to cast a string to an itk::Object pointer. Returns true when casting was successful and false otherwise.
+   */
+  static bool
+  StringToValue(const std::string & str, const itk::Object *& value);
 };
 
 } // end namespace elastix
