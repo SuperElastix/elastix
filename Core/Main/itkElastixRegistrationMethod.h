@@ -210,6 +210,10 @@ public:
   void
   SetInitialTransform(const TransformType *);
 
+  /** Set the initial transformation by means of an external ITK Transform. */
+  void
+  SetExternalInitialTransform(const TransformType *);
+
   /** Set/Get/Remove fixed point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
   itkGetConstMacro(FixedPointSetFileName, std::string);
@@ -336,12 +340,14 @@ private:
     m_InitialTransform = nullptr;
     m_InitialTransformParameterFileName.clear();
     m_InitialTransformParameterObject = nullptr;
+    m_ExternalInitialTransform = nullptr;
   }
 
   void
   ResetInitialTransformAndModified()
   {
-    if (m_InitialTransform || m_InitialTransformParameterObject || !m_InitialTransformParameterFileName.empty())
+    if (m_InitialTransform || m_InitialTransformParameterObject || m_ExternalInitialTransform ||
+        !m_InitialTransformParameterFileName.empty())
     {
       ResetInitialTransformWithoutModified();
       this->Modified();
@@ -358,6 +364,7 @@ private:
   std::string                        m_InitialTransformParameterFileName{};
   elx::ParameterObject::ConstPointer m_InitialTransformParameterObject{};
   SmartPointer<const TransformType>  m_InitialTransform{};
+  SmartPointer<const TransformType>  m_ExternalInitialTransform{};
 
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};
