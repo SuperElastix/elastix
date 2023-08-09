@@ -34,6 +34,7 @@
 #include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
 #include <itkCompositeTransform.h>
+#include <itkDisplacementFieldTransform.h>
 #include <itkEuler2DTransform.h>
 #include <itkImage.h>
 #include <itkIndexRange.h>
@@ -1300,6 +1301,96 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalTransformAsInitialTransform)
                                                        { "TransformAddress",
                                                          { elx::Conversion::ObjectPtrToString(&itkTransform) } } };
   initialTransformParameterObject.SetParameterMap(initialTransformParameterMap);
+
+  // Do the test for a few possible translations.
+  for (const auto index :
+       itk::ImageRegionIndexRange<ImageDimension>(itk::ImageRegion<ImageDimension>({ 0, -2 }, { 2, 3 })))
+  {
+    const auto actualTranslation = ConvertIndexToOffset(index);
+    movingImage->FillBuffer(0);
+    FillImageRegion(*movingImage, fixedImageRegionIndex + actualTranslation, regionSize);
+    registration.SetMovingImage(movingImage);
+    registration.Update();
+
+    const auto & transformParameterMaps =
+      DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
+
+    ASSERT_EQ(transformParameterMaps.size(), 2);
+
+    EXPECT_EQ(transformParameterMaps.front(), initialTransformParameterMap);
+
+    // Together the initial translation and the first registration should have the actual image translation.
+    const auto transformParameters =
+      ConvertStringsToVectorOfDouble(transformParameterMaps.back().at("TransformParameters"));
+    EXPECT_EQ(initialTranslation + ConvertToOffset<ImageDimension>(transformParameters), actualTranslation);
+  }
+}
+
+
+GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransform)
+{
+  constexpr unsigned int ImageDimension{ 2 };
+
+  using PixelType = float;
+  using SizeType = itk::Size<ImageDimension>;
+  const SizeType imageSize{ { 5, 6 } };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using TransformixFilterType = itk::TransformixFilter<ImageType>;
+
+  const ImageDomain<ImageDimension> imageDomain(imageSize);
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType initialTranslation{ { 1, -2 } };
+  const auto       regionSize = SizeType::Filled(2);
+  const IndexType  fixedImageRegionIndex{ { 1, 3 } };
+
+  elx::DefaultConstruct<itk::DisplacementFieldTransform<double, ImageDimension>> itkTransform{};
+  const auto displacementField = itk::Image<itk::Vector<double, ImageDimension>, ImageDimension>::New();
+
+  displacementField->SetRegions(imageSize);
+  displacementField->Allocate(true);
+  itkTransform.SetDisplacementField(displacementField);
+
+  const itk::ImageBufferRange displacementFieldImageBufferRange{ *displacementField };
+  std::fill_n(displacementFieldImageBufferRange.begin(),
+              displacementFieldImageBufferRange.size(),
+              // C++17 note: for itk::Vector (ITK 5.3.0) template argument deduction (CTAD) cannot be used here! The
+              // template arguments of `itk::Vector{ std::array{ 1.0, -2.0 } }` are deduced to `std::array<double, 2>,
+              // 3` by both GNU 9.4.0 and MacOS11/Xcode_13.2.1/MacOSX12.1 Clang.
+              itk::Vector<double, ImageDimension>{ std::array{ 1.0, -2.0 } });
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
+
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  elx::DefaultConstruct<elx::ParameterObject>                     registrationParameterObject{};
+  elx::DefaultConstruct<elx::ParameterObject>                     initialTransformParameterObject{};
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  registration.SetFixedImage(fixedImage);
+  registration.SetExternalInitialTransform(&itkTransform);
+  registration.SetParameterObject(&registrationParameterObject);
+
+  const elx::ParameterObject::ParameterMapType registrationParameterMap{
+    // Parameters in alphabetic order:
+    { "ImageSampler", { "Full" } },
+    { "MaximumNumberOfIterations", { "2" } },
+    { "Metric", { "AdvancedNormalizedCorrelation" } },
+    { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+    { "Transform", { "TranslationTransform" } }
+  };
+
+  registrationParameterObject.SetParameterMap(registrationParameterMap);
+
+  const ParameterMapType initialTransformParameterMap{ { "NumberOfParameters", { "0" } },
+                                                       { "Transform", { "ExternalTransform" } },
+                                                       { "TransformAddress",
+                                                         { elx::Conversion::ObjectPtrToString(&itkTransform) } } };
 
   // Do the test for a few possible translations.
   for (const auto index :

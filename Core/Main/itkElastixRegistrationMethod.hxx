@@ -220,6 +220,13 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
       // For a single transform, there should be only a single transform parameter map.
       return ParameterMapVectorType{ transformToMap(*m_InitialTransform) };
     }
+    if (m_ExternalInitialTransform)
+    {
+      return ParameterMapVectorType{ ParameterMapType{
+        { "NumberOfParameters", { "0" } },
+        { "Transform", { "ExternalTransform" } },
+        { "TransformAddress", { elx::Conversion::ObjectPtrToString(m_ExternalInitialTransform) } } } };
+    }
     return {};
   };
 
@@ -836,6 +843,26 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetInitialTransform(const 
     {
       ResetInitialTransformWithoutModified();
       m_InitialTransform = transform;
+      this->Modified();
+    }
+  }
+  else
+  {
+    ResetInitialTransformAndModified();
+  }
+}
+
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetExternalInitialTransform(const TransformType * const transform)
+{
+  if (transform)
+  {
+    if (m_ExternalInitialTransform != transform)
+    {
+      ResetInitialTransformWithoutModified();
+      m_ExternalInitialTransform = transform;
       this->Modified();
     }
   }
