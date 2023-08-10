@@ -933,8 +933,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfTransforms() co
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsigned int n) const
-  -> SmartPointer<TransformType>
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsigned int n) const -> TransformType *
 {
   const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
 
@@ -956,7 +955,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsi
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetCombinationTransform() const -> SmartPointer<TransformType>
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetCombinationTransform() const -> TransformType *
 {
   const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
 
