@@ -1417,6 +1417,82 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransform)
 }
 
 
+GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndOutputDirectory)
+{
+  const std::string outputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
+  itk::FileTools::CreateDirectory(outputDirectoryPath);
+
+  enum
+  {
+    ImageDimension = 2
+  };
+
+  using PixelType = float;
+  using SizeType = itk::Size<ImageDimension>;
+  const SizeType imageSize{ { 5, 6 } };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+
+  const auto displacementField = itk::Image<itk::Vector<double, ImageDimension>, ImageDimension>::New();
+
+  displacementField->SetRegions(imageSize);
+  displacementField->Allocate(true);
+
+  std::mt19937 randomNumberEngine{};
+
+  // Generate a rather arbitrary displacement field.
+  const itk::ImageBufferRange displacementFieldImageBufferRange{ *displacementField };
+  std::generate_n(
+    displacementFieldImageBufferRange.begin(), displacementFieldImageBufferRange.size(), [&randomNumberEngine] {
+      itk::Vector<double, ImageDimension> displacementVector{};
+
+      std::generate_n(displacementVector.begin(), ImageDimension, [&randomNumberEngine] {
+        return std::uniform_int_distribution<>{ -1, 1 }(randomNumberEngine);
+      });
+      return displacementVector;
+    });
+
+  elx::DefaultConstruct<itk::DisplacementFieldTransform<double, ImageDimension>> itkTransform{};
+  itkTransform.SetDisplacementField(displacementField);
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  const elx::ParameterObject::ParameterMapType registrationParameterMap{
+    // Parameters in alphabetic order:
+    { "ImageSampler", { "Full" } },
+    { "MaximumNumberOfIterations", { "2" } },
+    { "Metric", { "AdvancedNormalizedCorrelation" } },
+    { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+    { "Transform", { "TranslationTransform" } }
+  };
+
+  elx::DefaultConstruct<elx::ParameterObject> registrationParameterObject{};
+  registrationParameterObject.SetParameterMap(registrationParameterMap);
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  registration.SetFixedImage(fixedImage);
+  registration.SetMovingImage(movingImage);
+  registration.SetExternalInitialTransform(&itkTransform);
+  registration.SetOutputDirectory(outputDirectoryPath);
+  registration.SetParameterObject(&registrationParameterObject);
+  registration.Update();
+
+  // Read back the initial transform that should have been written by registration.Update().
+  const auto reader = itk::TransformFileReader::New();
+  reader->SetFileName(outputDirectoryPath + "/InitialTransform.0.tfm");
+  reader->Update();
+
+  // Check that the read transform is equal to the initially specified ITK transform.
+  const auto & readTransformList = DerefRawPointer(reader->GetTransformList());
+  ASSERT_EQ(readTransformList.size(), 1);
+  const auto & readTransform = DerefSmartPointer(readTransformList.front());
+  EXPECT_EQ(readTransform.GetParameters(), itkTransform.GetParameters());
+  EXPECT_EQ(readTransform.GetFixedParameters(), itkTransform.GetFixedParameters());
+  EXPECT_EQ(readTransform.GetTransformTypeAsString(), itkTransform.GetTransformTypeAsString());
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersusTransformix)
 {
   {
