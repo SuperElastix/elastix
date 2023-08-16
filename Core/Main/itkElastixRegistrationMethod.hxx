@@ -40,6 +40,8 @@
 
 #include "elxLibUtilities.h"
 
+#include <itkTransformFileWriter.h>
+
 #include <algorithm> // For find.
 #include <memory>    // For unique_ptr.
 
@@ -239,9 +241,45 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     // Write InitialTransformParameters.0.txt, InitialTransformParameters.1.txt, InitialTransformParameters.2.txt, etc.
     unsigned i{};
 
+    const auto & firstParameterMap = parameterMapVector.front();
+    const auto   outputFileNameExtensionFound = firstParameterMap.find("ITKTransformOutputFileNameExtension");
+
+    // Use the ITK TFM file format by default, when writing external transforms.
+    const std::string outputFileNameExtension =
+      (outputFileNameExtensionFound == firstParameterMap.end() || outputFileNameExtensionFound->second.empty())
+        ? "tfm"
+        : outputFileNameExtensionFound->second.front();
+
     for (auto transformParameterMap : transformParameterMapVector)
     {
       transformParameterMap["InitialTransformParameterFileName"] = { initialTransformParameterFileName };
+
+      if (const auto transformFound = transformParameterMap.find("Transform");
+          transformFound != transformParameterMap.end() &&
+          transformFound->second == ParameterValueVectorType{ "ExternalTransform" })
+      {
+        const Object * externalTransform{};
+
+        // Retrieve the pointer to the external transform (its address).
+        if (const auto transformAddressFound = transformParameterMap.find("TransformAddress");
+            transformAddressFound != transformParameterMap.end() && !transformAddressFound->second.empty() &&
+            !transformAddressFound->second.front().empty() &&
+            elx::Conversion::StringToValue(transformAddressFound->second.front(), externalTransform))
+        {
+          const auto transformFileName = "InitialTransform." + std::to_string(i) + '.' + outputFileNameExtension;
+
+          // Write the external transform to file.
+          const auto writer = itk::TransformFileWriter::New();
+          writer->SetInput(externalTransform);
+          writer->SetFileName(m_OutputDirectory + transformFileName);
+          writer->Update();
+
+          // Store the name of the written transform file.
+          transformFound->second = { "File" };
+          transformParameterMap["TransformFileName"] = { transformFileName };
+          transformParameterMap.erase("TransformAddress");
+        }
+      }
 
       const auto transformParameterFileName = "InitialTransformParameters." + std::to_string(i) + ".txt";
       elx::ParameterObject::WriteParameterFile(transformParameterMap, m_OutputDirectory + transformParameterFileName);
