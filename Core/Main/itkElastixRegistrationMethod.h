@@ -359,12 +359,12 @@ private:
 
   using ElastixTransformBaseType = elx::TransformBase<elx::ElastixTemplate<TFixedImage, TMovingImage>>;
 
-  SmartPointer<const elx::ElastixMain> m_ElastixMain{ nullptr };
+  SmartPointer<const elx::ElastixMain> m_ElastixMain{};
 
-  std::string                        m_InitialTransformParameterFileName{};
-  elx::ParameterObject::ConstPointer m_InitialTransformParameterObject{};
-  SmartPointer<const TransformType>  m_InitialTransform{};
-  SmartPointer<const TransformType>  m_ExternalInitialTransform{};
+  std::string                              m_InitialTransformParameterFileName{};
+  SmartPointer<const elx::ParameterObject> m_InitialTransformParameterObject{};
+  SmartPointer<const TransformType>        m_InitialTransform{};
+  SmartPointer<const TransformType>        m_ExternalInitialTransform{};
 
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};

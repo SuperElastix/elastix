@@ -281,7 +281,7 @@ private:
   const ElastixTransformBaseType *
   GetFirstElastixTransformBase() const;
 
-  SmartPointer<const elx::TransformixMain> m_TransformixMain{ nullptr };
+  SmartPointer<const elx::TransformixMain> m_TransformixMain{};
 
   std::string m_TransformParameterFileName{};
   std::string m_FixedPointSetFileName{};
@@ -298,10 +298,10 @@ private:
 
   ElastixLogLevel m_LogLevel{};
 
-  typename MeshType::ConstPointer m_InputMesh{ nullptr };
-  typename MeshType::Pointer      m_OutputMesh{ nullptr };
+  SmartPointer<const MeshType> m_InputMesh{};
+  SmartPointer<MeshType>       m_OutputMesh{};
 
-  TransformBase::ConstPointer m_Transform{};
+  SmartPointer<const TransformBase> m_Transform{};
 
   SmartPointer<TransformType> m_CombinationTransform;
 };
