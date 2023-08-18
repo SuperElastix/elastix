@@ -237,6 +237,18 @@ TransformixFilter<TImage>::GenerateData()
     }
   }
 
+  if (m_ExternalTransform)
+  {
+    // External transforms should use "ResampleInterpolator" and the output image domain specification
+    // (Size/Spacing/Origin/Index/Direction) of the last transform parameter map.
+    auto transformParameterMap = std::move(transformParameterMapVector.back());
+    SetParameterValueAndWarnOnOverride(transformParameterMap, "Transform", "ExternalTransform");
+    SetParameterValueAndWarnOnOverride(
+      transformParameterMap, "TransformAddress", elx::Conversion::ObjectPtrToString(m_ExternalTransform));
+    transformParameterMapVector.clear();
+    transformParameterMapVector.push_back(std::move(transformParameterMap));
+  }
+
   const auto movingImageDimensionString = std::to_string(MovingImageDimension);
   const auto movingImagePixelTypeString = elx::PixelTypeToString<typename TImage::PixelType>();
 
@@ -602,6 +614,50 @@ TransformixFilter<TImage>::RemoveLogFileName()
 {
   m_LogFileName = "";
   this->LogToFileOff();
+}
+
+
+template <typename TImage>
+void
+TransformixFilter<TImage>::SetTransform(const TransformBase * const transform)
+{
+  if (transform)
+  {
+    if (m_Transform != transform)
+    {
+      m_ExternalTransform = nullptr;
+      m_Transform = transform;
+      this->Modified();
+    }
+  }
+  else
+  {
+    m_ExternalTransform = nullptr;
+    m_Transform = nullptr;
+    this->Modified();
+  }
+}
+
+
+template <typename TImage>
+void
+TransformixFilter<TImage>::SetExternalTransform(TransformType * const transform)
+{
+  if (transform)
+  {
+    if (m_ExternalTransform != transform)
+    {
+      m_Transform = nullptr;
+      m_ExternalTransform = transform;
+      this->Modified();
+    }
+  }
+  else
+  {
+    m_ExternalTransform = nullptr;
+    m_Transform = nullptr;
+    this->Modified();
+  }
 }
 
 
