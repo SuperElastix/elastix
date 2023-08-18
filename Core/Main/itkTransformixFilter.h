@@ -229,10 +229,19 @@ public:
     return m_OutputMesh;
   }
 
-  /** Sets the transformation. If null, the transformation is entirely specified by the transform
-   * parameter object that is set by SetTransformParameterObject. Otherwise, the transformation is specified by this
-   * transform object, with additional information from the specified transform parameter object. */
-  itkSetConstObjectMacro(Transform, TransformBase);
+  /** Sets the transformation. If null, the transformation is entirely specified by the transform parameter object that
+   * is set by SetTransformParameterObject. Otherwise, the transformation is specified by this transform object, with
+   * additional information from the specified transform parameter object. Will override a possible previous call to
+   * SetExternalTransform. */
+  void
+  SetTransform(const TransformBase *);
+
+  /** Set the transformation by means of an external ITK Transform. If null, the transformation is entirely specified by
+   * the transform parameter object that is set by SetTransformParameterObject. Otherwise, the transformation is
+   * specified by this transform object, with additional information from the specified transform parameter object. Will
+   * override a possible previous call to SetTransform. */
+  void
+  SetExternalTransform(TransformType *);
 
   itkSetObjectMacro(CombinationTransform, TransformType);
 
@@ -302,6 +311,7 @@ private:
   SmartPointer<MeshType>       m_OutputMesh{};
 
   SmartPointer<const TransformBase> m_Transform{};
+  SmartPointer<TransformType>       m_ExternalTransform{};
 
   SmartPointer<TransformType> m_CombinationTransform;
 };

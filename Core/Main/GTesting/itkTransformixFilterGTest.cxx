@@ -36,6 +36,7 @@
 #include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
 #include <itkCompositeTransform.h>
+#include <itkDisplacementFieldTransform.h>
 #include <itkEuler2DTransform.h>
 #include <itkEuler3DTransform.h>
 #include <itkFileTools.h>
@@ -1520,6 +1521,56 @@ GTEST_TEST(itkTransformixFilter, ExternalTransform)
       { "Transform", ParameterValuesType{ "ExternalTransform" } },
       { "TransformAddress", { elx::Conversion::ObjectPtrToString(&itkTransform) } } },
     imageDomain.AsParameterMap())));
+  transformixFilter.Update();
+
+  const auto resampleImageFilter = CreateResampleImageFilter(*movingImage, itkTransform);
+
+  EXPECT_EQ(DerefRawPointer(transformixFilter.GetOutput()), DerefRawPointer(resampleImageFilter->GetOutput()));
+}
+
+GTEST_TEST(itkTransformixFilter, SetExternalTransform)
+{
+  enum
+  {
+    ImageDimension = 2
+  };
+  using PixelType = float;
+  using SizeType = itk::Size<ImageDimension>;
+  const SizeType imageSize{ { 5, 6 } };
+
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using TransformixFilterType = itk::TransformixFilter<ImageType>;
+
+  const ImageDomain<ImageDimension> imageDomain(imageSize);
+  const auto                        movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  const auto displacementField = itk::Image<itk::Vector<double, ImageDimension>, ImageDimension>::New();
+
+  displacementField->SetRegions(imageSize);
+  displacementField->Allocate(true);
+
+  std::mt19937 randomNumberEngine{};
+
+  // Generate a rather arbitrary displacement field.
+  const itk::ImageBufferRange displacementFieldImageBufferRange{ *displacementField };
+  std::generate_n(
+    displacementFieldImageBufferRange.begin(), displacementFieldImageBufferRange.size(), [&randomNumberEngine] {
+      itk::Vector<double, ImageDimension> displacementVector{};
+
+      std::generate_n(displacementVector.begin(), ImageDimension, [&randomNumberEngine] {
+        return std::uniform_int_distribution<>{ -1, 1 }(randomNumberEngine);
+      });
+      return displacementVector;
+    });
+
+  elx::DefaultConstruct<itk::DisplacementFieldTransform<double, ImageDimension>> itkTransform{};
+  itkTransform.SetDisplacementField(displacementField);
+
+  elx::DefaultConstruct<TransformixFilterType> transformixFilter{};
+  transformixFilter.SetMovingImage(movingImage);
+  transformixFilter.SetExternalTransform(&itkTransform);
+  transformixFilter.SetTransformParameterObject(CreateParameterObject(
+    MakeMergedMap({ { "ResampleInterpolator", { "FinalLinearInterpolator" } } }, imageDomain.AsParameterMap())));
   transformixFilter.Update();
 
   const auto resampleImageFilter = CreateResampleImageFilter(*movingImage, itkTransform);
