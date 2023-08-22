@@ -19,6 +19,7 @@
 #define elxTransformIO_h
 
 #include "itkAdvancedCombinationTransform.h"
+#include "ExternalTransform/elxAdvancedTransformAdapter.h"
 
 #include <itkCompositeTransform.h>
 #include <itkTransform.h>
@@ -127,6 +128,10 @@ public:
     using CombinationTransformType = itk::AdvancedCombinationTransform<double, NDimension>;
     assert(dynamic_cast<const CombinationTransformType *>(&elxTransform) == nullptr);
 
+    if (const auto transformAdapter = dynamic_cast<const AdvancedTransformAdapter<double, NDimension> *>(&elxTransform))
+    {
+      return transformAdapter->GetModifiableExternalTransform();
+    }
     return dynamic_cast<itk::Transform<double, NDimension, NDimension> *>(
       ConvertItkTransformBaseToSingleItkTransform(elxTransform).GetPointer());
   }
