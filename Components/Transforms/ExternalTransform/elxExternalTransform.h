@@ -102,7 +102,7 @@ private:
   ParameterMapType
   CreateDerivedTransformParameterMap() const override;
 
-  using AdvancedTransformAdapterType = AdvancedTransformAdapter<CoordRepType, Superclass2::FixedImageDimension, float>;
+  using AdvancedTransformAdapterType = AdvancedTransformAdapter<CoordRepType, Superclass2::FixedImageDimension>;
 
   /** The transform that is set as current transform in the CombinationTransform */
   const itk::SmartPointer<AdvancedTransformAdapterType> m_AdvancedTransformAdapter{
