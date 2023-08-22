@@ -194,7 +194,7 @@ Conversion::SecondsToDHMS(const double totalSeconds, const unsigned int precisio
  */
 
 std::string
-Conversion::ObjectPtrToString(const itk::Object * const objectPtr)
+Conversion::ObjectPtrToString(itk::Object * const objectPtr)
 {
   const void * const voidPtr{ objectPtr };
   std::ostringstream outputStringStream{};
@@ -418,7 +418,7 @@ Conversion::StringToValue(const std::string & str, bool & value)
 
 
 bool
-Conversion::StringToValue(const std::string & str, const itk::Object *& value)
+Conversion::StringToValue(const std::string & str, itk::Object *& value)
 {
   void *     voidPtr{};
   const bool hasSucceeded = StringToValue<void *>(str, voidPtr);
