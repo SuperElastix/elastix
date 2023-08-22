@@ -258,7 +258,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
           transformFound != transformParameterMap.end() &&
           transformFound->second == ParameterValueVectorType{ "ExternalTransform" })
       {
-        const Object * externalTransform{};
+        Object * externalTransform{};
 
         // Retrieve the pointer to the external transform (its address).
         if (const auto transformAddressFound = transformParameterMap.find("TransformAddress");
@@ -893,7 +893,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetInitialTransform(const 
 
 template <typename TFixedImage, typename TMovingImage>
 void
-ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetExternalInitialTransform(const TransformType * const transform)
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetExternalInitialTransform(TransformType * const transform)
 {
   if (transform)
   {

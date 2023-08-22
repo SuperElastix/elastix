@@ -187,8 +187,14 @@ public:
   }
 
   using typename Superclass::TransformType;
-  itkSetObjectMacro(ExternalTransform, const TransformType);
-  itkGetConstObjectMacro(ExternalTransform, TransformType);
+  itkSetObjectMacro(ExternalTransform, TransformType);
+
+  /** \note `GetModifiableExternalTransform()` is `const`, because it does not affect the adapter itself. */
+  TransformType *
+  GetModifiableExternalTransform() const
+  {
+    return m_ExternalTransform.GetPointer();
+  }
 
 protected:
   /** Default-constructor. */
@@ -218,7 +224,7 @@ protected:
 private:
   static constexpr const char * unimplementedOverrideMessage = "Not implemented for AdvancedTransformAdapter";
 
-  itk::SmartPointer<const TransformType> m_ExternalTransform{};
+  itk::SmartPointer<TransformType> m_ExternalTransform{};
 };
 
 } // namespace elastix

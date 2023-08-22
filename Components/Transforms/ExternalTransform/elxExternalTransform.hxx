@@ -47,10 +47,9 @@ ExternalTransform<TElastix>::ReadFromFile()
 
   const Configuration & configuration = Deref(Superclass2::GetConfiguration());
 
-  if (const auto objectPtr =
-        configuration.RetrieveParameterValue<const itk::Object *>(nullptr, "TransformAddress", 0, false))
+  if (const auto objectPtr = configuration.RetrieveParameterValue<itk::Object *>(nullptr, "TransformAddress", 0, false))
   {
-    if (const auto transform = dynamic_cast<const typename AdvancedTransformAdapterType::TransformType *>(objectPtr))
+    if (const auto transform = dynamic_cast<typename AdvancedTransformAdapterType::TransformType *>(objectPtr))
     {
       m_AdvancedTransformAdapter->SetExternalTransform(transform);
     }
@@ -75,7 +74,7 @@ auto
 ExternalTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
   return { { "TransformAddress",
-             { Conversion::ObjectPtrToString(m_AdvancedTransformAdapter->GetExternalTransform()) } } };
+             { Conversion::ObjectPtrToString(m_AdvancedTransformAdapter->GetModifiableExternalTransform()) } } };
 }
 
 } // namespace elastix
