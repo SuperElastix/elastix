@@ -1493,6 +1493,47 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndOutputDir
 }
 
 
+// Tests that the CombinationTransform produced by a registration using an external initial transform can be converted
+// to an ITK CompositeTransform. Tests that this CompositeTransform has a pointer to the initial transform as its "back
+// transform".
+GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndConvertToItkTransform)
+{
+  constexpr auto ImageDimension = 2u;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
+
+  elx::DefaultConstruct<itk::DisplacementFieldTransform<double, ImageDimension>> externalTransform{};
+  externalTransform.SetDisplacementField(CreateImage<itk::Vector<double, ImageDimension>, ImageDimension>(imageSize));
+
+  elx::DefaultConstruct<elx::ParameterObject> registrationParameterObject{};
+  registrationParameterObject.SetParameterMap(
+    ParameterMapType{ // Parameters in alphabetic order:
+                      { "ImageSampler", { "Full" } },
+                      { "MaximumNumberOfIterations", { "2" } },
+                      { "Metric", { "AdvancedNormalizedCorrelation" } },
+                      { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                      { "Transform", { "TranslationTransform" } } });
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  registration.SetFixedImage(CreateImage<PixelType>(imageSize));
+  registration.SetMovingImage(CreateImage<PixelType>(imageSize));
+  registration.SetParameterObject(&registrationParameterObject);
+  registration.SetExternalInitialTransform(&externalTransform);
+  registration.Update();
+
+  const auto combinationTransform = registration.GetCombinationTransform();
+  const auto convertedTransform =
+    ElastixRegistrationMethodType<ImageType>::ConvertToItkTransform(DerefRawPointer(combinationTransform));
+
+  const auto & compositeTransform =
+    DerefRawPointer(dynamic_cast<itk::CompositeTransform<double, ImageDimension> *>(convertedTransform.GetPointer()));
+  ASSERT_EQ(compositeTransform.GetNumberOfTransforms(), 2);
+  EXPECT_NE(compositeTransform.GetFrontTransform(), &externalTransform);
+  EXPECT_EQ(compositeTransform.GetBackTransform(), &externalTransform);
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersusTransformix)
 {
   {
