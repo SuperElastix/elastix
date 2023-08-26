@@ -2370,3 +2370,34 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
   check(TypeHolder<float>{});
   check(TypeHolder<double>{});
 }
+
+
+// Checks that InitialTransform and ExternalInitialTransform are mutually exclusive.
+GTEST_TEST(itkElastixRegistrationMethod, SetAndGetInitialTransform)
+{
+  constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+
+  elx::DefaultConstruct<itk::DisplacementFieldTransform<double, ImageDimension>> displacementFieldTransform{};
+  const elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> translationTransform{};
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  EXPECT_EQ(registration.GetInitialTransform(), nullptr);
+  EXPECT_EQ(registration.GetExternalInitialTransform(), nullptr);
+
+  registration.SetInitialTransform(&translationTransform);
+  EXPECT_EQ(registration.GetInitialTransform(), &translationTransform);
+  EXPECT_EQ(registration.GetExternalInitialTransform(), nullptr);
+
+  registration.SetExternalInitialTransform(&displacementFieldTransform);
+  EXPECT_EQ(registration.GetInitialTransform(), nullptr);
+  EXPECT_EQ(registration.GetExternalInitialTransform(), &displacementFieldTransform);
+
+  registration.SetInitialTransform(nullptr);
+  EXPECT_EQ(registration.GetInitialTransform(), nullptr);
+  EXPECT_EQ(registration.GetExternalInitialTransform(), nullptr);
+
+  registration.SetExternalInitialTransform(nullptr);
+  EXPECT_EQ(registration.GetInitialTransform(), nullptr);
+  EXPECT_EQ(registration.GetExternalInitialTransform(), nullptr);
+}
