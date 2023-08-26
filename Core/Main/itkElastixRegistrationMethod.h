@@ -206,9 +206,25 @@ public:
   void
   SetInitialTransformParameterObject(const elx::ParameterObject *);
 
+  /** Returns the previously specified initial ITK Transform. Only allows const access to the transform. */
+  const TransformType *
+  GetInitialTransform() const
+  {
+    return m_InitialTransform;
+  }
+
   /** Set the initial transformation by means of an ITK Transform. */
   void
   SetInitialTransform(const TransformType *);
+
+  /** Returns the previously specified external ITK Transform. Note that it allows full access to the transform, even
+   * when having const-only access to this ElastixRegistrationMethod, because the transform is external to the
+   * ElastixRegistrationMethod object. */
+  TransformType *
+  GetExternalInitialTransform() const
+  {
+    return m_ExternalInitialTransform;
+  }
 
   /** Set the initial transformation by means of an external ITK Transform. */
   void
