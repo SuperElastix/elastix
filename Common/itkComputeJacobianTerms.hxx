@@ -105,75 +105,76 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   CovarianceMatrixType jactjac(sizejacind, sizejacind);
   jactjac.Fill(0.0);
 
-  using DifHistType = std::vector<unsigned int>;
   using FreqPairType = std::pair<unsigned int, unsigned int>;
   using DifHist2Type = std::vector<FreqPairType>;
   DifHist2Type difHist2;
 
-  /** DifHist is a histogram of absolute parameterNrDifferences that
-   * occur in the nonzerojacobianindex vectors.
-   * DifHist2 is another way of storing the histogram, as a vector
-   * of pairs. pair.first = Frequency, pair.second = parameterNrDifference.
-   * This is useful for sorting.
-   */
-  DifHistType difHist(numberOfParameters, 0);
-
-  /** Try to guess the band structure of the covariance matrix.
-   * A 'band' is a series of elements cov(p,q) with constant q-p.
-   * In the loop below, on a few positions in the image the Jacobian
-   * is computed. The nonzerojacobianindices are inspected to figure out
-   * which values of q-p occur often. This is done by making a histogram.
-   * The histogram is then sorted and the most occurring bands
-   * are determined. The covariance elements in these bands will not
-   * be stored in the sparse matrix structure 'cov', but in the band
-   * matrix 'bandcov', which is much faster.
-   * Only after the bandcov and cov have been filled (by looping over
-   * all Jacobian measurements in the sample container, the bandcov
-   * matrix is injected in the cov matrix, for easy further calculations,
-   * and the bandcov matrix is deleted.
-   */
-  unsigned int onezero = 0;
-  for (unsigned int s = 0; s < this->m_NumberOfBandStructureSamples; ++s)
   {
-    /** Semi-randomly get some samples from the sample container. */
-    const unsigned int samplenr = (s + 1) * nrofsamples / (this->m_NumberOfBandStructureSamples + 2 + onezero);
-    onezero = 1 - onezero; // introduces semi-randomness
+    /** DifHist is a histogram of absolute parameterNrDifferences that
+     * occur in the nonzerojacobianindex vectors.
+     * DifHist2 is another way of storing the histogram, as a vector
+     * of pairs. pair.first = Frequency, pair.second = parameterNrDifference.
+     * This is useful for sorting.
+     */
+    using DifHistType = std::vector<unsigned int>;
+    DifHistType difHist(numberOfParameters);
 
-    /** Read fixed coordinates and get Jacobian J_j. */
-    const FixedImagePointType & point = sampleContainer->GetElement(samplenr).m_ImageCoordinates;
-    this->m_Transform->GetJacobian(point, jacj, jacind);
-
-    /** Skip invalid Jacobians in the beginning, if any. */
-    if (sizejacind > 1)
+    /** Try to guess the band structure of the covariance matrix.
+     * A 'band' is a series of elements cov(p,q) with constant q-p.
+     * In the loop below, on a few positions in the image the Jacobian
+     * is computed. The nonzerojacobianindices are inspected to figure out
+     * which values of q-p occur often. This is done by making a histogram.
+     * The histogram is then sorted and the most occurring bands
+     * are determined. The covariance elements in these bands will not
+     * be stored in the sparse matrix structure 'cov', but in the band
+     * matrix 'bandcov', which is much faster.
+     * Only after the bandcov and cov have been filled (by looping over
+     * all Jacobian measurements in the sample container, the bandcov
+     * matrix is injected in the cov matrix, for easy further calculations,
+     * and the bandcov matrix is deleted.
+     */
+    unsigned int onezero = 0;
+    for (unsigned int s = 0; s < this->m_NumberOfBandStructureSamples; ++s)
     {
-      if (jacind[0] == jacind[1])
+      /** Semi-randomly get some samples from the sample container. */
+      const unsigned int samplenr = (s + 1) * nrofsamples / (this->m_NumberOfBandStructureSamples + 2 + onezero);
+      onezero = 1 - onezero; // introduces semi-randomness
+
+      /** Read fixed coordinates and get Jacobian J_j. */
+      const FixedImagePointType & point = sampleContainer->GetElement(samplenr).m_ImageCoordinates;
+      this->m_Transform->GetJacobian(point, jacj, jacind);
+
+      /** Skip invalid Jacobians in the beginning, if any. */
+      if (sizejacind > 1)
       {
-        continue;
+        if (jacind[0] == jacind[1])
+        {
+          continue;
+        }
+      }
+
+      /** Fill the histogram of parameter nr differences. */
+      for (unsigned int i = 0; i < sizejacind; ++i)
+      {
+        const int jacindi = static_cast<int>(jacind[i]);
+        for (unsigned int j = i; j < sizejacind; ++j)
+        {
+          const int jacindj = static_cast<int>(jacind[j]);
+          difHist[static_cast<unsigned int>(std::abs(jacindj - jacindi))]++;
+        }
       }
     }
 
-    /** Fill the histogram of parameter nr differences. */
-    for (unsigned int i = 0; i < sizejacind; ++i)
+    /** Copy the nonzero elements of the difHist to a vector pairs. */
+    for (unsigned int p = 0; p < numberOfParameters; ++p)
     {
-      const int jacindi = static_cast<int>(jacind[i]);
-      for (unsigned int j = i; j < sizejacind; ++j)
+      const unsigned int freq = difHist[p];
+      if (freq != 0)
       {
-        const int jacindj = static_cast<int>(jacind[j]);
-        difHist[static_cast<unsigned int>(std::abs(jacindj - jacindi))]++;
+        difHist2.push_back(FreqPairType(freq, p));
       }
     }
-  }
-
-  /** Copy the nonzero elements of the difHist to a vector pairs. */
-  for (unsigned int p = 0; p < numberOfParameters; ++p)
-  {
-    const unsigned int freq = difHist[p];
-    if (freq != 0)
-    {
-      difHist2.push_back(FreqPairType(freq, p));
-    }
-  }
-  difHist.resize(0);
+  } // End of scope of difHist.
 
   /** Compute the number of bands. */
   const unsigned int bandcovsize = std::min(this->m_MaxBandCovSize, static_cast<unsigned int>(difHist2.size()));
