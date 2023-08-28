@@ -24,7 +24,7 @@
 #include "itkImageRandomSamplerBase.h"
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkImageFullSampler.h"
-#include "itkPlatformMultiThreader.h"
+#include "itkMultiThreaderBase.h"
 
 #include <vector>
 
@@ -139,7 +139,7 @@ protected:
   ~ComputeDisplacementDistribution() override = default;
 
   /** Typedefs for multi-threading. */
-  using ThreaderType = itk::PlatformMultiThreader;
+  using ThreaderType = itk::MultiThreaderBase;
   using ThreadInfoType = ThreaderType::WorkUnitInfo;
 
   typename FixedImageType::ConstPointer   m_FixedImage{};
