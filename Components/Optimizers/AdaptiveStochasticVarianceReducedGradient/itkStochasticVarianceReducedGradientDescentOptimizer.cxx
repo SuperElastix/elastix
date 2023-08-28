@@ -281,17 +281,15 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStep()
   else
   {
     /** Fill the threader parameter struct with information. */
-    MultiThreaderParameterType * temp = new MultiThreaderParameterType;
-    temp->t_NewPosition = &newPosition;
-    temp->t_Optimizer = this;
+    MultiThreaderParameterType temp;
+    temp.t_NewPosition = &newPosition;
+    temp.t_Optimizer = this;
 
     /** Call multi-threaded AdvanceOneStep(). */
     auto local_threader = ThreaderType::New();
     local_threader->SetNumberOfWorkUnits(this->m_Threader->GetNumberOfWorkUnits());
-    local_threader->SetSingleMethod(AdvanceOneStepThreaderCallback, temp);
+    local_threader->SetSingleMethod(AdvanceOneStepThreaderCallback, &temp);
     local_threader->SingleMethodExecute();
-
-    delete temp;
   }
 
   this->InvokeEvent(IterationEvent());

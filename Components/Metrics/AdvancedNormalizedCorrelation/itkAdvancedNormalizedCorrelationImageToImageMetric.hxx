@@ -723,19 +723,17 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   }
   else if (true) // force !this->m_UseOpenMP ) // multi-threaded using ITK threads
   {
-    MultiThreaderAccumulateDerivativeType * temp = new MultiThreaderAccumulateDerivativeType;
+    MultiThreaderAccumulateDerivativeType temp;
 
-    temp->st_Metric = const_cast<Self *>(this);
-    temp->st_sf_N = sf / N;
-    temp->st_sm_N = sm / N;
-    temp->st_sfm_smm = sfm / smm;
-    temp->st_InvertedDenominator = 1.0 / denom;
-    temp->st_DerivativePointer = derivative.begin();
+    temp.st_Metric = const_cast<Self *>(this);
+    temp.st_sf_N = sf / N;
+    temp.st_sm_N = sm / N;
+    temp.st_sfm_smm = sfm / smm;
+    temp.st_InvertedDenominator = 1.0 / denom;
+    temp.st_DerivativePointer = derivative.begin();
 
-    this->m_Threader->SetSingleMethod(AccumulateDerivativesThreaderCallback, temp);
+    this->m_Threader->SetSingleMethod(AccumulateDerivativesThreaderCallback, &temp);
     this->m_Threader->SingleMethodExecute();
-
-    delete temp;
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
