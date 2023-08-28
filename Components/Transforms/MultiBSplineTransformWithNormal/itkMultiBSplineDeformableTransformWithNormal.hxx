@@ -47,7 +47,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   this->m_Trans.resize(1);
   // keep transform 0 to store parameters that are not kept here (GridSize, ...)
   this->m_Trans[0] = TransformType::New();
-  this->m_Para.resize(0);
+  this->m_Para.clear();
   this->m_LastJacobian = -1;
   this->m_LocalBases = ImageBaseType::New();
 
@@ -694,7 +694,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   if (this->GetNumberOfParameters() == 0)
   {
     jacobian.SetSize(SpaceDimension, 0);
-    nonZeroJacobianIndices.resize(0);
+    nonZeroJacobianIndices.clear();
     return;
   }
 
@@ -889,8 +889,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 {
   if (this->GetNumberOfParameters() == 0)
   {
-    jsj.resize(0);
-    nonZeroJacobianIndices.resize(0);
+    jsj.clear();
+    nonZeroJacobianIndices.clear();
     return;
   }
 
@@ -987,8 +987,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 {
   if (this->GetNumberOfParameters() == 0)
   {
-    jsh.resize(0);
-    nonZeroJacobianIndices.resize(0);
+    jsh.clear();
+    nonZeroJacobianIndices.clear();
     return;
   }
 

@@ -52,7 +52,7 @@ ImageRandomSamplerBase<TInputImage>::BeforeThreadedGenerateData()
   // \todo: should probably be global?
 
   /** Clear the random number list. */
-  this->m_RandomNumberList.resize(0);
+  this->m_RandomNumberList.clear();
   this->m_RandomNumberList.reserve(this->m_NumberOfSamples);
 
   /** Fill the list with random numbers. */

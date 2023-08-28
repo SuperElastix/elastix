@@ -107,7 +107,7 @@ void
 ImageRandomSamplerSparseMask<TInputImage>::BeforeThreadedGenerateData()
 {
   /** Clear the random number list. */
-  this->m_RandomNumberList.resize(0);
+  this->m_RandomNumberList.clear();
   this->m_RandomNumberList.reserve(this->m_NumberOfSamples);
 
   /** Get a handle to the full sampler output size. */

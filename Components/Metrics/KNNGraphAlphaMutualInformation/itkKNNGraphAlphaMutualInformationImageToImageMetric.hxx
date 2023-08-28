@@ -741,9 +741,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
 {
   /** Initialize. */
   this->m_NumberOfPixelsCounted = 0;
-  jacobianContainer.resize(0);
-  jacobianIndicesContainer.resize(0);
-  spatialDerivativesContainer.resize(0);
+  jacobianContainer.clear();
+  jacobianIndicesContainer.clear();
+  spatialDerivativesContainer.clear();
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
