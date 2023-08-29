@@ -52,10 +52,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
    * Term 4: maxJCJ, see (54)
    */
 
-  using CovarianceValueType = double;
-  using CovarianceMatrixType = itk::Array2D<CovarianceValueType>;
-  using DiagCovarianceMatrixType = vnl_diag_matrix<CovarianceValueType>;
-
   /** Initialize. */
   TrC = TrCC = maxJJ = maxJCJ = 0.0;
 
@@ -82,8 +78,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   unsigned int                                     samplenr = 0;
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
-  NumberOfParametersType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType           jacj(outdim, sizejacind);
+  const NumberOfParametersType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
+  JacobianType                 jacj(outdim, sizejacind);
   jacj.Fill(0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
   jacind[0] = 0;
@@ -93,14 +89,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   }
   NonZeroJacobianIndicesType prevjacind = jacind;
 
-  /** Initialize covariance matrix. Sparse, diagonal, and band form. */
-  vnl_sparse_matrix<CovarianceValueType> cov(numberOfParameters, numberOfParameters);
-  DiagCovarianceMatrixType               diagcov(numberOfParameters, 0.0);
-  CovarianceMatrixType                   bandcov;
-
-  /** For temporary storage of J'J. */
-  CovarianceMatrixType jactjac(sizejacind, sizejacind);
-  jactjac.Fill(0.0);
 
   using FreqPairType = std::pair<unsigned int, unsigned int>;
   using DifHist2Type = std::vector<FreqPairType>;
@@ -193,8 +181,20 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
     bandcovMap2[b] = difHist2It->second;
   }
 
+  using CovarianceValueType = double;
+  using CovarianceMatrixType = itk::Array2D<CovarianceValueType>;
+  using DiagCovarianceMatrixType = vnl_diag_matrix<CovarianceValueType>;
+
+  /** Initialize covariance matrix. Sparse, diagonal, and band form. */
+  vnl_sparse_matrix<CovarianceValueType> cov(numberOfParameters, numberOfParameters);
+  DiagCovarianceMatrixType               diagcov(numberOfParameters, 0.0);
+
+  /** For temporary storage of J'J. */
+  CovarianceMatrixType jactjac(sizejacind, sizejacind);
+  jactjac.Fill(0.0);
+
   /** Initialize band matrix. */
-  bandcov = CovarianceMatrixType(numberOfParameters, bandcovsize);
+  CovarianceMatrixType bandcov(numberOfParameters, bandcovsize);
   bandcov.Fill(0.0);
 
   /**
