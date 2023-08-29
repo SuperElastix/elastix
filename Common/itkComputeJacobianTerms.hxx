@@ -55,7 +55,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   using CovarianceValueType = double;
   using CovarianceMatrixType = itk::Array2D<CovarianceValueType>;
   using SparseCovarianceMatrixType = vnl_sparse_matrix<CovarianceValueType>;
-  using SparseRowType = SparseCovarianceMatrixType::row;
   using NonZeroJacobianIndicesExpandedType = itk::Array<SizeValueType>;
   using DiagCovarianceMatrixType = vnl_diag_matrix<CovarianceValueType>;
 
@@ -439,31 +438,23 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
      */
     for (unsigned int pi = 0; pi < sizejacind; ++pi)
     {
-      const unsigned int p = jacind[pi];
-      if (!cov.empty_row(p))
+      /** Loop over row of the sparse cov matrix. */
+      for (const auto & covRowEntry : cov.get_row(jacind[pi]))
       {
-        SparseRowType &                  covrowp = cov.get_row(p);
-        typename SparseRowType::iterator covrowpit;
+        const unsigned int q = covRowEntry.first;
+        const unsigned int qi = jacindExpanded[q];
 
-        /** Loop over row p of the sparse cov matrix. */
-        for (covrowpit = covrowp.begin(); covrowpit != covrowp.end(); ++covrowpit)
+        if (qi < sizejacind)
         {
-          const unsigned int q = covrowpit->first;
-          const unsigned int qi = jacindExpanded[q];
-
-          if (qi < sizejacind)
+          /** If found, update the jacjC matrix. */
+          const CovarianceValueType covElement = covRowEntry.second;
+          for (unsigned int dx = 0; dx < outdim; ++dx)
           {
-            /** If found, update the jacjC matrix. */
-            const CovarianceValueType covElement = covrowpit->second;
-            for (unsigned int dx = 0; dx < outdim; ++dx)
-            {
-              jacjcov[dx][pi] += jacj[dx][qi] * covElement;
-            } // dx
-          }   // if qi < sizejacind
-        }     // for covrow
-
-      } // if not empty row
-    }   // pi
+            jacjcov[dx][pi] += jacj[dx][qi] * covElement;
+          } // dx
+        }   // if qi < sizejacind
+      }     // for covrow
+    }       // pi
 
     /** J_j C J_j^T  = jacjCjacj.
      * But note that we actually compute J_j cov' J_j^T
