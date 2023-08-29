@@ -47,7 +47,6 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   this->m_Trans.resize(1);
   // keep transform 0 to store parameters that are not kept here (GridSize, ...)
   this->m_Trans[0] = TransformType::New();
-  this->m_Para.clear();
   this->m_LastJacobian = -1;
   this->m_LocalBases = ImageBaseType::New();
 

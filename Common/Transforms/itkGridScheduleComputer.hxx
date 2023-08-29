@@ -37,11 +37,6 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::GridScheduleCompute
 {
   this->m_BSplineOrder = 3;
   this->m_InitialTransform = nullptr;
-  this->m_GridSpacings.clear();
-  this->m_GridOrigins.clear();
-  this->m_GridDirections.clear();
-  this->m_GridRegions.clear();
-  this->m_GridSpacingFactors.clear();
   this->m_UpsamplingFactor = 2.0;
 
   this->m_ImageOrigin.Fill(0.0);
