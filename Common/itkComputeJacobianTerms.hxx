@@ -54,8 +54,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
 
   using CovarianceValueType = double;
   using CovarianceMatrixType = itk::Array2D<CovarianceValueType>;
-  using SparseCovarianceMatrixType = vnl_sparse_matrix<CovarianceValueType>;
-  using NonZeroJacobianIndicesExpandedType = itk::Array<SizeValueType>;
   using DiagCovarianceMatrixType = vnl_diag_matrix<CovarianceValueType>;
 
   /** Initialize. */
@@ -96,9 +94,9 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   NonZeroJacobianIndicesType prevjacind = jacind;
 
   /** Initialize covariance matrix. Sparse, diagonal, and band form. */
-  SparseCovarianceMatrixType cov(numberOfParameters, numberOfParameters);
-  DiagCovarianceMatrixType   diagcov(numberOfParameters, 0.0);
-  CovarianceMatrixType       bandcov;
+  vnl_sparse_matrix<CovarianceValueType> cov(numberOfParameters, numberOfParameters);
+  DiagCovarianceMatrixType               diagcov(numberOfParameters, 0.0);
+  CovarianceMatrixType                   bandcov;
 
   /** For temporary storage of J'J. */
   CovarianceMatrixType jactjac(sizejacind, sizejacind);
@@ -379,13 +377,13 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   maxJCJ = 0.0;
   const double sqrt2 = std::sqrt(static_cast<double>(2.0));
 
-  JacobianType                       jacjjacj(outdim, outdim);
-  JacobianType                       jacjcov(outdim, sizejacind);
-  DiagCovarianceMatrixType           diagcovsparse(sizejacind);
-  JacobianType                       jacjdiagcov(outdim, sizejacind);
-  JacobianType                       jacjdiagcovjacj(outdim, outdim);
-  JacobianType                       jacjcovjacj(outdim, outdim);
-  NonZeroJacobianIndicesExpandedType jacindExpanded(numberOfParameters);
+  JacobianType              jacjjacj(outdim, outdim);
+  JacobianType              jacjcov(outdim, sizejacind);
+  DiagCovarianceMatrixType  diagcovsparse(sizejacind);
+  JacobianType              jacjdiagcov(outdim, sizejacind);
+  JacobianType              jacjdiagcovjacj(outdim, outdim);
+  JacobianType              jacjcovjacj(outdim, outdim);
+  itk::Array<SizeValueType> jacindExpanded(numberOfParameters);
 
   samplenr = 0;
   for (iter = begin; iter != end; ++iter)
