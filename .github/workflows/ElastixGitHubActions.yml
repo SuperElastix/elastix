@@ -18,21 +18,21 @@ jobs:
           - os: ubuntu-20.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            itk-git-tag: "v5.3.0"
+            itk-git-tag: "ImageRandomIteratorWithIndex-should-not-assign-it-constructor"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.1.so"
             ANNLib2: "libANNlib-5.1.so.1"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            itk-git-tag: "v5.3.0"
+            itk-git-tag: "ImageRandomIteratorWithIndex-should-not-assign-it-constructor"
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.1.dll"
             vcvars64: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-11
             c-compiler: "clang"  
             cxx-compiler: "clang++"
-            itk-git-tag: "v5.3.0"
+            itk-git-tag: "ImageRandomIteratorWithIndex-should-not-assign-it-constructor"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.1.1.dylib"
             ANNLib2: "libANNlib-5.1.dylib"
@@ -74,7 +74,7 @@ jobs:
     - name: Download ITK
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        git clone https://github.com/InsightSoftwareConsortium/ITK.git ITK-source
+        git clone https://github.com/N-Dekker/ITK.git ITK-source
         cd ITK-source
         git checkout ${{ matrix.itk-git-tag }}
    

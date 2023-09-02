@@ -1,6 +1,6 @@
 variables:
   ITKv5_VERSION: v5.3.0
-  ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
+  ITK_GIT_URL: https://github.com/N-Dekker/ITK
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
@@ -31,7 +31,7 @@ jobs:
   strategy:
     matrix:
       ITKv5:
-        itk.version: $(ITKv5_VERSION)
+        itk.version: ImageRandomIteratorWithIndex-should-not-assign-it-constructor
   steps:
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
@@ -86,7 +86,7 @@ jobs:
   strategy:
     matrix:
       ITKv5:
-        itk.version: $(ITKv5_VERSION)
+        itk.version: ImageRandomIteratorWithIndex-should-not-assign-it-constructor
   steps:
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
@@ -139,7 +139,7 @@ jobs:
   strategy:
     matrix:
       ITKv5:
-        itk.version: $(ITKv5_VERSION)
+        itk.version: ImageRandomIteratorWithIndex-should-not-assign-it-constructor
   steps:
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
