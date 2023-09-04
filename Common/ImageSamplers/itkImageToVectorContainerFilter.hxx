@@ -268,7 +268,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallb
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
   typename TInputImage::RegionType splitRegion;
-  unsigned int                     total = str->Filter->SplitRequestedRegion(threadId, threadCount, splitRegion);
+  unsigned int total = str->Filter->SplitRequestedRegion(threadCount - threadId - 1, threadCount, splitRegion);
 
   if (threadId < total)
   {
