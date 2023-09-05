@@ -154,7 +154,7 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
   }
 
   /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread = this->m_ThreaderSampleContainer[threadId];
+  ImageSampleContainerPointer & sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
   sampleContainerThisThread->resize(chunkSize);
 
   /** Fill the local sample container. */

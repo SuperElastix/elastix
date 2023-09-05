@@ -173,11 +173,11 @@ ImageRandomCoordinateSampler<TInputImage>::BeforeThreadedGenerateData()
   }
 
   /** Initialize variables needed for threads. */
-  this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
+  Superclass::m_ThreaderSampleContainer.clear();
+  Superclass::m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
   for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
-    this->m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
+    Superclass::m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
   }
 
 } // end BeforeThreadedGenerateData()
@@ -210,8 +210,7 @@ ImageRandomCoordinateSampler<TInputImage>::ThreadedGenerateData(const InputImage
   }
 
   /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[threadId];
+  ImageSampleContainerPointer & sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
   sampleContainerThisThread->resize(chunkSize);
 
   /** Fill the local sample container. */

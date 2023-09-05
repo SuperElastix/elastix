@@ -134,8 +134,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
   /** Get handles to the input image, mask and the output. */
   InputImageConstPointer          inputImage = this->GetInput();
   typename MaskType::ConstPointer mask = this->GetMask();
-  ImageSampleContainerPointer &   sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[threadId];
+  ImageSampleContainerPointer &   sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
 
   /** Set up a region iterator within the user specified image region. */
   using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
