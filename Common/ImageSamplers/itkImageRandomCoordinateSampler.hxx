@@ -212,16 +212,12 @@ ImageRandomCoordinateSampler<TInputImage>::ThreadedGenerateData(const InputImage
   /** Get a reference to the output and reserve memory for it. */
   ImageSampleContainerPointer & sampleContainerThisThread // & ???
     = this->m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->Reserve(chunkSize);
-
-  /** Setup an iterator over the sampleContainerThisThread. */
-  typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
+  sampleContainerThisThread->resize(chunkSize);
 
   /** Fill the local sample container. */
   InputImageContinuousIndexType sampleCIndex;
   unsigned long                 sampleId = sampleStart;
-  for (iter = sampleContainerThisThread->Begin(); iter != end; ++iter)
+  for (auto & sample : *sampleContainerThisThread)
   {
     /** Create a random point out of InputImageDimension random numbers. */
     for (unsigned int j = 0; j < InputImageDimension; ++j, sampleId++)
@@ -230,8 +226,8 @@ ImageRandomCoordinateSampler<TInputImage>::ThreadedGenerateData(const InputImage
     }
 
     /** Make a reference to the current sample in the container. */
-    InputImagePointType &  samplePoint = iter->Value().m_ImageCoordinates;
-    ImageSampleValueType & sampleValue = iter->Value().m_ImageValue;
+    InputImagePointType &  samplePoint = sample.m_ImageCoordinates;
+    ImageSampleValueType & sampleValue = sample.m_ImageValue;
 
     /** Convert to point */
     inputImage->TransformContinuousIndexToPhysicalPoint(sampleCIndex, samplePoint);

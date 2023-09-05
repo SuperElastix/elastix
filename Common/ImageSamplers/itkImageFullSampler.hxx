@@ -151,7 +151,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
      */
     try
     {
-      sampleContainerThisThread->Reserve(chunkSize);
+      sampleContainerThisThread->resize(chunkSize);
     }
     catch (const std::exception & excp)
     {
@@ -180,7 +180,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container. */
-      sampleContainerThisThread->SetElement(ind, tempSample);
+      (*sampleContainerThisThread)[ind] = tempSample;
 
     } // end for
   }   // end if no mask

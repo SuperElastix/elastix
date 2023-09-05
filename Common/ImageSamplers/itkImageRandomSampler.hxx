@@ -155,17 +155,13 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
 
   /** Get a reference to the output and reserve memory for it. */
   ImageSampleContainerPointer & sampleContainerThisThread = this->m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->Reserve(chunkSize);
-
-  /** Setup an iterator over the sampleContainerThisThread. */
-  typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
+  sampleContainerThisThread->resize(chunkSize);
 
   /** Fill the local sample container. */
   unsigned long       sampleId = sampleStart;
   InputImageSizeType  regionSize = this->GetCroppedInputImageRegion().GetSize();
   InputImageIndexType regionIndex = this->GetCroppedInputImageRegion().GetIndex();
-  for (iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++)
+  for (auto & sample : *sampleContainerThisThread)
   {
     unsigned long randomPosition = static_cast<unsigned long>(this->m_RandomNumberList[sampleId]);
 
@@ -182,11 +178,12 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
     }
 
     /** Transform index to the physical coordinates and put it in the sample. */
-    inputImage->TransformIndexToPhysicalPoint(positionIndex, iter->Value().m_ImageCoordinates);
+    inputImage->TransformIndexToPhysicalPoint(positionIndex, sample.m_ImageCoordinates);
 
     /** Get the value and put it in the sample. */
-    iter->Value().m_ImageValue = static_cast<ImageSampleValueType>(inputImage->GetPixel(positionIndex));
+    sample.m_ImageValue = static_cast<ImageSampleValueType>(inputImage->GetPixel(positionIndex));
 
+    ++sampleId;
   } // end for loop
 
 } // end ThreadedGenerateData()

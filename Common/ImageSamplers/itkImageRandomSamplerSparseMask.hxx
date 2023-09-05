@@ -152,18 +152,15 @@ ImageRandomSamplerSparseMask<TInputImage>::ThreadedGenerateData(const InputImage
 
   /** Get a reference to the output and reserve memory for it. */
   ImageSampleContainerPointer & sampleContainerThisThread = this->m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->Reserve(chunkSize);
-
-  /** Setup an iterator over the sampleContainerThisThread. */
-  typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
+  sampleContainerThisThread->resize(chunkSize);
 
   /** Take random samples from the allValidSamples-container. */
   unsigned long sampleId = sampleStart;
-  for (iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++)
+  for (auto & sample : *sampleContainerThisThread)
   {
     unsigned long randomIndex = static_cast<unsigned long>(this->m_RandomNumberList[sampleId]);
-    iter->Value() = allValidSamples->ElementAt(randomIndex);
+    sample = allValidSamples->ElementAt(randomIndex);
+    ++sampleId;
   }
 
 } // end ThreadedGenerateData()
