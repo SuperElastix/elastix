@@ -154,14 +154,14 @@ ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType
   }
 
   /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->resize(chunkSize);
+  std::vector<ImageSampleType> & sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
+  sampleContainerThisThread.resize(chunkSize);
 
   /** Fill the local sample container. */
   unsigned long       sampleId = sampleStart;
   InputImageSizeType  regionSize = this->GetCroppedInputImageRegion().GetSize();
   InputImageIndexType regionIndex = this->GetCroppedInputImageRegion().GetIndex();
-  for (auto & sample : *sampleContainerThisThread)
+  for (auto & sample : sampleContainerThisThread)
   {
     unsigned long randomPosition = static_cast<unsigned long>(this->m_RandomNumberList[sampleId]);
 

@@ -222,8 +222,8 @@ protected:
   AfterThreadedGenerateData() override;
 
   /***/
-  unsigned long                            m_NumberOfSamples{ 0 };
-  std::vector<ImageSampleContainerPointer> m_ThreaderSampleContainer{};
+  unsigned long                             m_NumberOfSamples{ 0 };
+  std::vector<std::vector<ImageSampleType>> m_ThreaderSampleContainer{};
 
   // tmp?
   bool m_UseMultiThread{ false };

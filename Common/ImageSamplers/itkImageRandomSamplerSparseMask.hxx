@@ -123,10 +123,6 @@ ImageRandomSamplerSparseMask<TInputImage>::BeforeThreadedGenerateData()
   /** Initialize variables needed for threads. */
   Superclass::m_ThreaderSampleContainer.clear();
   Superclass::m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
-  {
-    Superclass::m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
-  }
 
 } // end BeforeThreadedGenerateData()
 
@@ -151,12 +147,12 @@ ImageRandomSamplerSparseMask<TInputImage>::ThreadedGenerateData(const InputImage
   }
 
   /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->resize(chunkSize);
+  std::vector<ImageSampleType> & sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
+  sampleContainerThisThread.resize(chunkSize);
 
   /** Take random samples from the allValidSamples-container. */
   unsigned long sampleId = sampleStart;
-  for (auto & sample : *sampleContainerThisThread)
+  for (auto & sample : sampleContainerThisThread)
   {
     unsigned long randomIndex = static_cast<unsigned long>(this->m_RandomNumberList[sampleId]);
     sample = allValidSamples->ElementAt(randomIndex);

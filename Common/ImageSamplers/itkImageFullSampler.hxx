@@ -134,7 +134,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
   /** Get handles to the input image, mask and the output. */
   InputImageConstPointer          inputImage = this->GetInput();
   typename MaskType::ConstPointer mask = this->GetMask();
-  ImageSampleContainerPointer &   sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
+  std::vector<ImageSampleType> &  sampleContainerThisThread = Superclass::m_ThreaderSampleContainer[threadId];
 
   /** Set up a region iterator within the user specified image region. */
   using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
@@ -150,7 +150,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
      */
     try
     {
-      sampleContainerThisThread->resize(chunkSize);
+      sampleContainerThisThread.resize(chunkSize);
     }
     catch (const std::exception & excp)
     {
@@ -179,7 +179,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container. */
-      (*sampleContainerThisThread)[ind] = tempSample;
+      sampleContainerThisThread[ind] = tempSample;
 
     } // end for
   }   // end if no mask
@@ -203,7 +203,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
         tempSample.m_ImageValue = iter.Get();
 
         /**  Store in container. */
-        sampleContainerThisThread->push_back(tempSample);
+        sampleContainerThisThread.push_back(tempSample);
 
       } // end if
     }   // end for
