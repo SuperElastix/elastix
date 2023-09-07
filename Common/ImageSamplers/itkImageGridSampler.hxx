@@ -108,19 +108,19 @@ ImageGridSampler<TInputImage>::GenerateData()
         {
           for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
           {
-            ImageSampleType tempsample;
+            ImageSampleType tempSample;
 
             // Get sampled fixed image value.
-            tempsample.m_ImageValue = inputImage->GetPixel(index);
+            tempSample.m_ImageValue = inputImage->GetPixel(index);
 
             // Translate index to point.
-            inputImage->TransformIndexToPhysicalPoint(index, tempsample.m_ImageCoordinates);
+            inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
             // Jump to next position on grid.
             index[0] += this->m_SampleGridSpacing[0];
 
             // Store sample in container.
-            sampleContainer->push_back(tempsample);
+            sampleContainer->push_back(tempSample);
 
           } // end x
           index[0] = sampleGridIndex[0];
@@ -154,18 +154,18 @@ ImageGridSampler<TInputImage>::GenerateData()
         {
           for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
           {
-            ImageSampleType tempsample;
+            ImageSampleType tempSample;
 
             // Translate index to point.
-            inputImage->TransformIndexToPhysicalPoint(index, tempsample.m_ImageCoordinates);
+            inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
-            if (mask->IsInsideInWorldSpace(tempsample.m_ImageCoordinates))
+            if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
             {
               // Get sampled fixed image value.
-              tempsample.m_ImageValue = inputImage->GetPixel(index);
+              tempSample.m_ImageValue = inputImage->GetPixel(index);
 
               // Store sample in container.
-              sampleContainer->push_back(tempsample);
+              sampleContainer->push_back(tempSample);
 
             } // end if in mask
               // Jump to next position on grid
