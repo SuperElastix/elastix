@@ -46,7 +46,7 @@ ImageFullSampler<TInputImage>::GenerateData()
   typename MaskType::ConstPointer            mask = this->GetMask();
 
   /** Clear the container. */
-  sampleContainer->Initialize();
+  sampleContainer->clear();
 
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
@@ -61,7 +61,7 @@ ImageFullSampler<TInputImage>::GenerateData()
      */
     try
     {
-      sampleContainer->Reserve(croppedInputImageRegion.GetNumberOfPixels());
+      sampleContainer->reserve(croppedInputImageRegion.GetNumberOfPixels());
     }
     catch (const std::exception & excp)
     {
@@ -77,8 +77,7 @@ ImageFullSampler<TInputImage>::GenerateData()
 
     /** Simply loop over the image and store all samples in the container. */
     ImageSampleType tempSample;
-    unsigned long   ind = 0;
-    for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter, ++ind)
+    for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
     {
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
@@ -90,7 +89,7 @@ ImageFullSampler<TInputImage>::GenerateData()
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container */
-      sampleContainer->SetElement(ind, tempSample);
+      sampleContainer->push_back(tempSample);
 
     } // end for
   }   // end if no mask
@@ -151,7 +150,8 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
      */
     try
     {
-      sampleContainerThisThread->Reserve(chunkSize);
+      sampleContainerThisThread->clear();
+      sampleContainerThisThread->reserve(chunkSize);
     }
     catch (const std::exception & excp)
     {
@@ -167,8 +167,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
 
     /** Simply loop over the image and store all samples in the container. */
     ImageSampleType tempSample;
-    unsigned long   ind = 0;
-    for (InputImageIterator iter(inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter, ++ind)
+    for (InputImageIterator iter(inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
     {
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
@@ -180,7 +179,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container. */
-      sampleContainerThisThread->SetElement(ind, tempSample);
+      sampleContainerThisThread->push_back(tempSample);
 
     } // end for
   }   // end if no mask
