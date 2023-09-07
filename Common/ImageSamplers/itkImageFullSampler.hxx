@@ -48,9 +48,11 @@ ImageFullSampler<TInputImage>::GenerateData()
   /** Clear the container. */
   sampleContainer->Initialize();
 
+  const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
+
   /** Set up a region iterator within the user specified image region. */
   using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
-  InputImageIterator iter(inputImage, this->GetCroppedInputImageRegion());
+  InputImageIterator iter(inputImage, croppedInputImageRegion);
 
   /** Fill the sample container. */
   if (mask.IsNull())
@@ -60,7 +62,7 @@ ImageFullSampler<TInputImage>::GenerateData()
      */
     try
     {
-      sampleContainer->Reserve(this->GetCroppedInputImageRegion().GetNumberOfPixels());
+      sampleContainer->Reserve(croppedInputImageRegion.GetNumberOfPixels());
     }
     catch (const std::exception & excp)
     {

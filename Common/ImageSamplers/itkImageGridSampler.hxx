@@ -61,11 +61,13 @@ ImageGridSampler<TInputImage>::GenerateData()
   /** Take into account the possibility of a smaller bounding box around the mask */
   this->SetNumberOfSamples(this->m_RequestedNumberOfSamples);
 
+  const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
+
   /** Determine the grid. */
   SampleGridIndexType        index;
   SampleGridSizeType         sampleGridSize;
-  SampleGridIndexType        sampleGridIndex = this->GetCroppedInputImageRegion().GetIndex();
-  const InputImageSizeType & inputImageSize = this->GetCroppedInputImageRegion().GetSize();
+  SampleGridIndexType        sampleGridIndex = croppedInputImageRegion.GetIndex();
+  const InputImageSizeType & inputImageSize = croppedInputImageRegion.GetSize();
   unsigned long              numberOfSamplesOnGrid = 1;
   for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {

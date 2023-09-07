@@ -48,11 +48,13 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   /** Set up the interpolator. */
   interpolator->SetInputImage(inputImage); // only once?
 
+  const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
+
   /** Convert inputImageRegion to bounding box in physical space. */
   InputImageSizeType unitSize;
   unitSize.Fill(1);
-  InputImageIndexType           smallestIndex = this->GetCroppedInputImageRegion().GetIndex();
-  InputImageIndexType           largestIndex = smallestIndex + this->GetCroppedInputImageRegion().GetSize() - unitSize;
+  InputImageIndexType           smallestIndex = croppedInputImageRegion.GetIndex();
+  InputImageIndexType           largestIndex = smallestIndex + croppedInputImageRegion.GetSize() - unitSize;
   InputImageContinuousIndexType smallestImageContIndex(smallestIndex);
   InputImageContinuousIndexType largestImageContIndex(largestIndex);
   InputImageContinuousIndexType smallestContIndex;
@@ -152,11 +154,13 @@ ImageRandomCoordinateSampler<TInputImage>::BeforeThreadedGenerateData()
   this->m_RandomNumberList.clear();
   this->m_RandomNumberList.reserve(this->m_NumberOfSamples * InputImageDimension);
 
+  const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
+
   /** Convert inputImageRegion to bounding box in physical space. */
   InputImageSizeType unitSize;
   unitSize.Fill(1);
-  InputImageIndexType           smallestIndex = this->GetCroppedInputImageRegion().GetIndex();
-  InputImageIndexType           largestIndex = smallestIndex + this->GetCroppedInputImageRegion().GetSize() - unitSize;
+  InputImageIndexType           smallestIndex = croppedInputImageRegion.GetIndex();
+  InputImageIndexType           largestIndex = smallestIndex + croppedInputImageRegion.GetSize() - unitSize;
   InputImageContinuousIndexType smallestImageCIndex(smallestIndex);
   InputImageContinuousIndexType largestImageCIndex(largestIndex);
   InputImageContinuousIndexType smallestCIndex, largestCIndex, randomCIndex;
