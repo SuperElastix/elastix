@@ -76,9 +76,10 @@ ImageFullSampler<TInputImage>::GenerateData()
     }
 
     /** Simply loop over the image and store all samples in the container. */
-    ImageSampleType tempSample;
     for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
     {
+      ImageSampleType tempSample;
+
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
 
@@ -98,9 +99,10 @@ ImageFullSampler<TInputImage>::GenerateData()
     mask->UpdateSource();
 
     /** Loop over the image and check if the points falls within the mask. */
-    ImageSampleType tempSample;
     for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
     {
+      ImageSampleType tempSample;
+
       /** Get sampled index. */
       InputImageIndexType index = iter.GetIndex();
 
@@ -166,9 +168,10 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     }
 
     /** Simply loop over the image and store all samples in the container. */
-    ImageSampleType tempSample;
     for (InputImageIterator iter(inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
     {
+      ImageSampleType tempSample;
+
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
 
@@ -188,9 +191,10 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     mask->UpdateSource();
 
     /** Loop over the image and check if the points falls within the mask. */
-    ImageSampleType tempSample;
     for (InputImageIterator iter(inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
     {
+      ImageSampleType tempSample;
+
       /** Get sampled index. */
       InputImageIndexType index = iter.GetIndex();
 
