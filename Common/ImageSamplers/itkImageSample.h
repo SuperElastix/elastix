@@ -28,16 +28,13 @@ namespace itk
  * \brief A class that defines an image sample, which is
  * the coordinates of a point and its value.
  *
+ * Its constructors, assignment operators, and destructor are implicitly defaulted, following the C++ "Rule of Zero".
  */
 
 template <class TImage>
 class ITK_TEMPLATE_EXPORT ImageSample
 {
 public:
-  // ImageSample():m_ImageValue(0.0){};
-  ImageSample() = default;
-  ~ImageSample() = default;
-
   /** Typedef's. */
   using ImageType = TImage;
   using PointType = typename ImageType::PointType;
