@@ -55,8 +55,10 @@ ImageGridSampler<TInputImage>::GenerateData()
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
   typename MaskType::ConstPointer            mask = this->GetMask();
 
-  /** Clear the container. */
-  sampleContainer->Initialize();
+  // Take capacity from the output container, and clear it.
+  std::vector<ImageSampleType> sampleVector;
+  sampleContainer->swap(sampleVector);
+  sampleVector.clear();
 
   /** Take into account the possibility of a smaller bounding box around the mask */
   this->SetNumberOfSamples(this->m_RequestedNumberOfSamples);
@@ -120,7 +122,7 @@ ImageGridSampler<TInputImage>::GenerateData()
             index[0] += this->m_SampleGridSpacing[0];
 
             // Store sample in container.
-            sampleContainer->push_back(tempSample);
+            sampleVector.push_back(tempSample);
 
           } // end x
           index[0] = sampleGridIndex[0];
@@ -165,7 +167,7 @@ ImageGridSampler<TInputImage>::GenerateData()
               tempSample.m_ImageValue = inputImage->GetPixel(index);
 
               // Store sample in container.
-              sampleContainer->push_back(tempSample);
+              sampleVector.push_back(tempSample);
 
             } // end if in mask
               // Jump to next position on grid
@@ -189,6 +191,9 @@ ImageGridSampler<TInputImage>::GenerateData()
       }
     } // end t
   }   // else (if mask exists)
+
+  // Move the samples from the vector into the output container.
+  sampleContainer->swap(sampleVector);
 
 } // end GenerateData()
 
