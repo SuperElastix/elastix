@@ -44,8 +44,10 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   InputImageConstPointer      inputImage = this->GetInput();
   ImageSampleContainerPointer sampleContainer = this->GetOutput();
 
-  /** Clear the container. */
-  sampleContainer->Initialize();
+  // Take capacity from the output container, and clear it.
+  std::vector<ImageSampleType> sampleVector;
+  sampleContainer->swap(sampleVector);
+  sampleVector.clear();
 
   /** Make sure the internal full sampler is up-to-date. */
   this->m_InternalFullSampler->SetInput(inputImage);
@@ -92,8 +94,11 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   for (unsigned int i = 0; i < this->GetNumberOfSamples(); ++i)
   {
     unsigned long randomIndex = this->m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1);
-    sampleContainer->push_back(allValidSamples->ElementAt(randomIndex));
+    sampleVector.push_back(allValidSamples->ElementAt(randomIndex));
   }
+
+  // Move the samples from the vector into the output container.
+  sampleContainer->swap(sampleVector);
 
 } // end GenerateData()
 

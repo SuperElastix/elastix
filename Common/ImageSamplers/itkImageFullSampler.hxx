@@ -45,8 +45,10 @@ ImageFullSampler<TInputImage>::GenerateData()
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
   typename MaskType::ConstPointer            mask = this->GetMask();
 
-  /** Clear the container. */
-  sampleContainer->clear();
+  // Take capacity from the output container, and clear it.
+  std::vector<ImageSampleType> sampleVector;
+  sampleContainer->swap(sampleVector);
+  sampleVector.clear();
 
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
@@ -61,7 +63,7 @@ ImageFullSampler<TInputImage>::GenerateData()
      */
     try
     {
-      sampleContainer->reserve(croppedInputImageRegion.GetNumberOfPixels());
+      sampleVector.reserve(croppedInputImageRegion.GetNumberOfPixels());
     }
     catch (const std::exception & excp)
     {
@@ -90,7 +92,7 @@ ImageFullSampler<TInputImage>::GenerateData()
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container */
-      sampleContainer->push_back(tempSample);
+      sampleVector.push_back(tempSample);
 
     } // end for
   }   // end if no mask
@@ -115,11 +117,14 @@ ImageFullSampler<TInputImage>::GenerateData()
         tempSample.m_ImageValue = iter.Get();
 
         /** Store in container. */
-        sampleContainer->push_back(tempSample);
+        sampleVector.push_back(tempSample);
 
       } // end if
     }   // end for
   }     // end else (if mask exists)
+
+  // Move the samples from the vector into the output container.
+  sampleContainer->swap(sampleVector);
 
 } // end GenerateData()
 
@@ -139,6 +144,11 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
   ImageSampleContainerPointer &   sampleContainerThisThread // & ???
     = this->m_ThreaderSampleContainer[threadId];
 
+  // Take capacity from the container of this thread, and clear it.
+  std::vector<ImageSampleType> sampleVector;
+  sampleContainerThisThread->swap(sampleVector);
+  sampleVector.clear();
+
   /** Set up a region iterator within the user specified image region. */
   using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
   // InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
@@ -152,8 +162,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
      */
     try
     {
-      sampleContainerThisThread->clear();
-      sampleContainerThisThread->reserve(chunkSize);
+      sampleVector.reserve(chunkSize);
     }
     catch (const std::exception & excp)
     {
@@ -182,7 +191,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container. */
-      sampleContainerThisThread->push_back(tempSample);
+      sampleVector.push_back(tempSample);
 
     } // end for
   }   // end if no mask
@@ -207,11 +216,14 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
         tempSample.m_ImageValue = iter.Get();
 
         /**  Store in container. */
-        sampleContainerThisThread->push_back(tempSample);
+        sampleVector.push_back(tempSample);
 
       } // end if
     }   // end for
   }     // end else (if mask exists)
+
+  // Move the samples from the vector into the container for this thread.
+  sampleContainerThisThread->swap(sampleVector);
 
 } // end ThreadedGenerateData()
 
