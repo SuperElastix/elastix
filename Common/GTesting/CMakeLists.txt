@@ -10,6 +10,11 @@ add_executable(CommonGTest
   itkImageGridSamplerGTest.cxx
   itkParameterMapInterfaceTest.cxx
   )
+
+target_compile_definitions(CommonGTest PRIVATE
+  _USE_MATH_DEFINES # For M_PI.
+)
+
 target_link_libraries(CommonGTest
   GTest::GTest GTest::Main
   ${ITK_LIBRARIES}

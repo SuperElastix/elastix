@@ -16,8 +16,6 @@
  *
  *=========================================================================*/
 
-#define _USE_MATH_DEFINES // For M_PI.
-
 // First include the header file to be tested:
 #include <itkElastixRegistrationMethod.h>
 
