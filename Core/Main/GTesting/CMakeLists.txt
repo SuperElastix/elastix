@@ -6,6 +6,10 @@ add_executable(ElastixLibGTest
   itkTransformixFilterGTest.cxx
 )
 
+target_compile_definitions(ElastixLibGTest PRIVATE
+  _USE_MATH_DEFINES # For M_PI.
+)
+
 target_link_libraries(ElastixLibGTest
   GTest::GTest
   GTest::Main
