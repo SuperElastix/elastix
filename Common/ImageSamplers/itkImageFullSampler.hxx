@@ -21,6 +21,8 @@
 #include "itkImageFullSampler.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkImageBufferRange.h"
+#include "itkIndexRange.h"
 
 namespace itk
 {
@@ -40,6 +42,10 @@ ImageFullSampler<TInputImage>::GenerateData()
     return Superclass::GenerateData();
   }
 
+  using PointType = typename TInputImage::PointType;
+  using CoordRepType = typename PointType::CoordRepType;
+  using RealType = typename ImageSampleType::RealType;
+
   /** Get handles to the input image, output sample container, and the mask. */
   InputImageConstPointer                     inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
@@ -51,6 +57,7 @@ ImageFullSampler<TInputImage>::GenerateData()
   sampleVector.clear();
 
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
+  const auto numberOfPixels = croppedInputImageRegion.GetNumberOfPixels();
 
   /** Set up a region iterator within the user specified image region. */
   using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
@@ -63,7 +70,7 @@ ImageFullSampler<TInputImage>::GenerateData()
      */
     try
     {
-      sampleVector.reserve(croppedInputImageRegion.GetNumberOfPixels());
+      sampleVector.reserve(numberOfPixels);
     }
     catch (const std::exception & excp)
     {
@@ -77,25 +84,41 @@ ImageFullSampler<TInputImage>::GenerateData()
       itkExceptionMacro("ERROR: failed to allocate memory for the sample container.");
     }
 
-    /** Simply loop over the image and store all samples in the container. */
-    for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
+    if (croppedInputImageRegion == inputImage->GetBufferedRegion())
     {
-      ImageSampleType tempSample;
+      auto imageBufferIterator = itk::ImageBufferRange(*inputImage).cbegin();
+      auto indexIterator = itk::ImageRegionIndexRange<InputImageDimension>(croppedInputImageRegion).cbegin();
 
-      /** Get sampled index */
-      InputImageIndexType index = iter.GetIndex();
+      for (auto i = numberOfPixels; i > 0; --i)
+      {
+        const auto point = inputImage->template TransformIndexToPhysicalPoint<CoordRepType>(*indexIterator);
+        sampleVector.push_back(ImageSampleType{ point, static_cast<RealType>(*imageBufferIterator) });
+        ++indexIterator;
+        ++imageBufferIterator;
+      }
+    }
+    else
+    {
+      /** Simply loop over the image and store all samples in the container. */
+      for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
+      {
+        ImageSampleType tempSample;
 
-      /** Translate index to point */
-      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+        /** Get sampled index */
+        InputImageIndexType index = iter.GetIndex();
 
-      /** Get sampled image value */
-      tempSample.m_ImageValue = iter.Get();
+        /** Translate index to point */
+        inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
-      /** Store in container */
-      sampleVector.push_back(tempSample);
+        /** Get sampled image value */
+        tempSample.m_ImageValue = iter.Get();
 
-    } // end for
-  }   // end if no mask
+        /** Store in container */
+        sampleVector.push_back(tempSample);
+
+      } // end for
+    }
+  } // end if no mask
   else
   {
     mask->UpdateSource();
