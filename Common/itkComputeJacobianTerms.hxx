@@ -25,6 +25,8 @@
 #include <vnl/vnl_diag_matrix.h>
 #include <vnl/vnl_sparse_matrix.h>
 
+#include <elxlog.h>
+
 namespace itk
 {
 
@@ -519,6 +521,57 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
 
   /** Finalize progress information. */
   // progressObserver->PrintProgress( 1.0 );
+  std::size_t numberOfEntries{};
+  std::size_t numberOfZeros{};
+  std::size_t numberOfEmptyRows{};
+  std::size_t numberOfRowsFilledWithZero{};
+  std::size_t maxNumberOfEntriesPerRow{};
+  std::size_t minNumberOfEntriesPerRow{ cov.columns() };
+
+  for (auto i = cov.rows(); i > 0; --i)
+  {
+    const auto & rw = cov.get_row(i - 1);
+    numberOfEntries += rw.size();
+
+    if (rw.empty())
+    {
+      ++numberOfEmptyRows;
+    }
+    else
+    {
+      minNumberOfEntriesPerRow = std::min(minNumberOfEntriesPerRow, rw.size());
+
+      if (std::all_of(rw.begin(), rw.end(), [](const auto entry) { return entry.second == 0; }))
+      {
+        ++numberOfRowsFilledWithZero;
+      }
+    }
+
+    maxNumberOfEntriesPerRow = std::max(maxNumberOfEntriesPerRow, rw.size());
+    for (const auto entry : rw)
+    {
+      if (entry.second == 0.0)
+      {
+        ++numberOfZeros;
+      }
+    }
+  }
+
+  const auto maxTotalNumber = cov.rows() * cov.cols();
+  elastix::log::to_stdout("Num rows x columns:\t" + std::to_string(cov.rows()) + " x " + std::to_string(cov.cols()) +
+                          " = " + std::to_string(maxTotalNumber));
+  elastix::log::to_stdout("Num empty rows:\t" + std::to_string(numberOfEmptyRows) + " (" +
+                          std::to_string((100.0 * numberOfEmptyRows) / cov.rows()) + "%)");
+  elastix::log::to_stdout("Num rows filled with zero:\t" + std::to_string(numberOfRowsFilledWithZero) + " (" +
+                          std::to_string((100.0 * numberOfRowsFilledWithZero) / cov.rows()) + "%)");
+  elastix::log::to_stdout("Lowest number of filled columns per row:\t" + std::to_string(minNumberOfEntriesPerRow) +
+                          " (" + std::to_string((100.0 * minNumberOfEntriesPerRow) / cov.columns()) + "%)");
+  elastix::log::to_stdout("Highest number of filled columns per row:\t" + std::to_string(maxNumberOfEntriesPerRow) +
+                          " (" + std::to_string((100.0 * maxNumberOfEntriesPerRow) / cov.columns()) + "%)");
+  elastix::log::to_stdout("\tNum filled entries:\t" + std::to_string(numberOfEntries) + " (" +
+                          std::to_string((100.0 * numberOfEntries) / maxTotalNumber) + "%)");
+  elastix::log::to_stdout("\tNum zero-filled entries:\t" + std::to_string(numberOfZeros) + " (" +
+                          std::to_string((100.0 * numberOfZeros) / numberOfEntries) + "%)");
 
 } // end Compute()
 
