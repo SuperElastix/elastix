@@ -38,9 +38,9 @@
 #include "elxPixelTypeToString.h"
 #include "itkElastixRegistrationMethod.h"
 
+#include "elxDeref.h"
 #include "elxLibUtilities.h"
-
-#include <itkTransformFileWriter.h>
+#include "elxTransformIO.h"
 
 #include <algorithm> // For find.
 #include <memory>    // For unique_ptr.
@@ -269,10 +269,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
           const auto transformFileName = "InitialTransform." + std::to_string(i) + '.' + outputFileNameExtension;
 
           // Write the external transform to file.
-          const auto writer = itk::TransformFileWriter::New();
-          writer->SetInput(externalTransform);
-          writer->SetFileName(m_OutputDirectory + transformFileName);
-          writer->Update();
+          elx::TransformIO::Write(elx::Deref(externalTransform), m_OutputDirectory + transformFileName);
 
           // Store the name of the written transform file.
           transformFound->second = { "File" };

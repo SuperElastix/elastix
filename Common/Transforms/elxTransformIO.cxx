@@ -189,7 +189,7 @@ elastix::TransformIO::ConvertItkTransformBaseToSingleItkTransform(const itk::Tra
 
 
 void
-elastix::TransformIO::Write(const itk::TransformBase & itkTransform, const std::string & fileName)
+elastix::TransformIO::Write(const itk::Object & itkTransform, const std::string & fileName)
 {
   try
   {

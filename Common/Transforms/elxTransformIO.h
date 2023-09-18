@@ -137,8 +137,12 @@ public:
   }
 
 
+  /// Writes the specified transform to file.
+  /// \note The transform parameter type is a reference to `itk::Object`, rather than `itk::TransformBase`, to support
+  /// the use case of `ElastixRegistrationMethod::GenerateData()`, which uses an `itk::Object` pointer to an external
+  /// transform.
   static void
-  Write(const itk::TransformBase & itkTransform, const std::string & fileName);
+  Write(const itk::Object & itkTransform, const std::string & fileName);
 
   static itk::TransformBase::Pointer
   Read(const std::string & fileName);
