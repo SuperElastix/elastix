@@ -132,7 +132,7 @@ public:
   STLContainerType &
   CastToSTLContainer()
   {
-    return dynamic_cast<STLContainerType &>(*this);
+    return *this;
   }
 
 
@@ -140,7 +140,7 @@ public:
   const STLContainerType &
   CastToSTLConstContainer() const
   {
-    return dynamic_cast<const STLContainerType &>(*this);
+    return *this;
   }
 
 
