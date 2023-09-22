@@ -72,7 +72,7 @@ namespace itk
 template <typename TElementIdentifier, typename TElement>
 class ITK_TEMPLATE_EXPORT VectorDataContainer
   : public DataObject
-  , public std::vector<TElement>
+  , private std::vector<TElement>
 {
 public:
   /** Standard class typedefs. */
@@ -143,6 +143,51 @@ public:
     return *this;
   }
 
+  using STLContainerType::begin;
+  using STLContainerType::end;
+  using STLContainerType::rbegin;
+  using STLContainerType::rend;
+  using STLContainerType::cbegin;
+  using STLContainerType::cend;
+  using STLContainerType::crbegin;
+  using STLContainerType::crend;
+
+  using STLContainerType::size;
+  using STLContainerType::max_size;
+  using STLContainerType::resize;
+  using STLContainerType::capacity;
+  using STLContainerType::empty;
+  using STLContainerType::reserve;
+  using STLContainerType::shrink_to_fit;
+
+  using STLContainerType::operator[];
+  using STLContainerType::at;
+  using STLContainerType::front;
+  using STLContainerType::back;
+
+  using STLContainerType::assign;
+  using STLContainerType::push_back;
+  using STLContainerType::pop_back;
+  using STLContainerType::insert;
+  using STLContainerType::erase;
+  using STLContainerType::swap;
+  using STLContainerType::clear;
+
+  using STLContainerType::get_allocator;
+
+  using typename STLContainerType::reference;
+  using typename STLContainerType::const_reference;
+  using typename STLContainerType::iterator;
+  using typename STLContainerType::const_iterator;
+  // already declared before
+  // using STLContainerType::size_type;
+  using typename STLContainerType::difference_type;
+  using typename STLContainerType::value_type;
+  using typename STLContainerType::allocator_type;
+  using typename STLContainerType::pointer;
+  using typename STLContainerType::const_pointer;
+  using typename STLContainerType::reverse_iterator;
+  using typename STLContainerType::const_reverse_iterator;
 
   using Iterator = typename VectorContainer<TElementIdentifier, TElement>::Iterator;
   using ConstIterator = typename VectorContainer<TElementIdentifier, TElement>::ConstIterator;
