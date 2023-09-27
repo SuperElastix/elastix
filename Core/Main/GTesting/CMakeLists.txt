@@ -4,6 +4,7 @@ add_executable(ElastixLibGTest
   ElastixLibGTest.cxx
   itkElastixRegistrationMethodGTest.cxx
   itkTransformixFilterGTest.cxx
+  ParameterObjectGTest.cxx
 )
 
 target_compile_definitions(ElastixLibGTest PRIVATE
