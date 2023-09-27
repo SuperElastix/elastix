@@ -979,17 +979,8 @@ template <typename TFixedImage, typename TMovingImage>
 unsigned int
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfTransforms() const
 {
-  const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
-
-  if ((transformContainer == nullptr) || transformContainer->empty())
-  {
-    return 0;
-  }
-
-  const auto * const elxTransformBase =
-    dynamic_cast<ElastixTransformBaseType *>(transformContainer->front().GetPointer());
-
-  return (elxTransformBase == nullptr) ? 0 : elxTransformBase->GetAsITKBaseType()->GetNumberOfTransforms();
+  const auto advancedCombinationTransform = GetAdvancedCombinationTransform();
+  return advancedCombinationTransform ? advancedCombinationTransform->GetNumberOfTransforms() : 0;
 }
 
 
@@ -997,21 +988,30 @@ template <typename TFixedImage, typename TMovingImage>
 auto
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNthTransform(const unsigned int n) const -> TransformType *
 {
-  const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
+  const auto advancedCombinationTransform = GetAdvancedCombinationTransform();
+  return advancedCombinationTransform ? advancedCombinationTransform->GetNthTransform(n) : nullptr;
+}
 
-  if ((transformContainer == nullptr) || transformContainer->empty())
+
+template <typename TFixedImage, typename TMovingImage>
+auto
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetAdvancedCombinationTransform() const
+  -> AdvancedCombinationTransformType *
+{
   {
+    if (m_ElastixMain)
+    {
+      if (const auto transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
+          (transformContainer != nullptr) && !transformContainer->empty())
+      {
+        if (const auto firstTransform = transformContainer->front().GetPointer())
+        {
+          return static_cast<AdvancedCombinationTransformType *>(firstTransform);
+        }
+      }
+    }
     return nullptr;
   }
-
-  const auto * const elxTransformBase =
-    dynamic_cast<ElastixTransformBaseType *>(transformContainer->front().GetPointer());
-
-  if (elxTransformBase == nullptr)
-  {
-    return nullptr;
-  }
-  return elxTransformBase->GetAsITKBaseType()->GetNthTransform(n);
 }
 
 
@@ -1019,20 +1019,7 @@ template <typename TFixedImage, typename TMovingImage>
 auto
 ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetCombinationTransform() const -> TransformType *
 {
-  const auto * const transformContainer = m_ElastixMain->GetElastixBase().GetTransformContainer();
-
-  if ((transformContainer == nullptr) || transformContainer->empty())
-  {
-    return nullptr;
-  }
-
-  auto * const elxTransformBase = dynamic_cast<ElastixTransformBaseType *>(transformContainer->front().GetPointer());
-
-  if (elxTransformBase == nullptr)
-  {
-    return nullptr;
-  }
-  return elxTransformBase->GetAsITKBaseType();
+  return GetAdvancedCombinationTransform();
 }
 
 

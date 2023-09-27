@@ -2306,6 +2306,9 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageUsingAnyInternal
       registration.Update();
 
       EXPECT_EQ(DerefRawPointer(registration.GetOutput()), DerefSmartPointer(movingImage));
+      EXPECT_EQ(registration.GetNumberOfTransforms(), 1);
+      EXPECT_NE(registration.GetNthTransform(0), nullptr);
+      EXPECT_NE(registration.GetCombinationTransform(), nullptr);
     });
   };
 
