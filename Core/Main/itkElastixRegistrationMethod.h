@@ -36,10 +36,12 @@
 #define itkElastixRegistrationMethod_h
 
 #include "itkImageSource.h"
+#include "itkAdvancedCombinationTransform.h"
 #include "itkElastixLogLevel.h"
 
 #include "elxElastixMain.h"
 #include "elxElastixTemplate.h"
+#include "elxElastixBase.h"
 #include "elxTransformBase.h"
 #include "elxParameterObject.h"
 
@@ -373,7 +375,11 @@ private:
   /** Private using-declaration, just to avoid GCC compilation warnings: '...' was hidden [-Woverloaded-virtual] */
   using Superclass::SetInput;
 
-  using ElastixTransformBaseType = elx::TransformBase<elx::ElastixTemplate<TFixedImage, TMovingImage>>;
+  using AdvancedCombinationTransformType =
+    AdvancedCombinationTransform<elx::ElastixBase::CoordRepType, FixedImageDimension>;
+
+  AdvancedCombinationTransformType *
+  GetAdvancedCombinationTransform() const;
 
   SmartPointer<const elx::ElastixMain> m_ElastixMain{};
 
