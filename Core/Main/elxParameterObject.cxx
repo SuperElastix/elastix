@@ -364,6 +364,11 @@ ParameterObject::WriteParameterFiles(const ParameterMapVectorType &      paramet
                              << parameterFileNameVector.size() << ").");
   }
 
+  if (!parameterMapVector.empty())
+  {
+    Self::WriteParameterFile(parameterMapVector.front(), parameterFileNameVector.front());
+  }
+
   // Add initial transform parameter file names. Do not touch the first one,
   // since it may have one already
   for (unsigned int i = 1; i < parameterMapVector.size(); ++i)
