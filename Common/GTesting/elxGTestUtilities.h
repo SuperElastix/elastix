@@ -18,6 +18,9 @@
 #ifndef elxGTestUtilities_h
 #define elxGTestUtilities_h
 
+#include <elxConfiguration.h>
+#include <elxElastixBase.h>
+
 #include <itkOptimizerParameters.h>
 #include <itkPoint.h>
 #include <itkSize.h>
