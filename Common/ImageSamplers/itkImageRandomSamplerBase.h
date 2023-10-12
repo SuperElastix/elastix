@@ -105,6 +105,10 @@ protected:
   /** The destructor. */
   ~ImageRandomSamplerBase() override = default;
 
+  /** Generates the list of random numbers. */
+  void
+  GenerateRandomNumberList();
+
   /** Multi-threaded function that does the work. */
   void
   BeforeThreadedGenerateData() override;

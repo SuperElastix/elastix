@@ -87,3 +87,25 @@ GTEST_TEST(ImageRandomSampler, SetSeedMakesRandomizationDeterministic)
     EXPECT_EQ(generateSamples(), generateSamples());
   }
 }
+
+
+GTEST_TEST(ImageRandomSampler, HasSameOutputWhenUsingMultiThread)
+{
+  using PixelType = int;
+  using ImageType = itk::Image<PixelType>;
+  using SamplerType = itk::ImageRandomSampler<ImageType>;
+
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
+
+  const auto generateSamples = [image](const bool useMultiThread) {
+    elx::DefaultConstruct<SamplerType> sampler{};
+    sampler.SetUseMultiThread(useMultiThread);
+    sampler.SetSeed(1);
+    sampler.SetInput(image);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  EXPECT_EQ(generateSamples(true), generateSamples(false));
+}

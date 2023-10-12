@@ -22,6 +22,8 @@
 
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
+#include "elxDeref.h"
+#include <cassert>
 
 namespace itk
 {
@@ -34,17 +36,38 @@ template <class TInputImage>
 void
 ImageRandomSampler<TInputImage>::GenerateData()
 {
+  /** Get handles to the input image, output sample container. */
+  InputImageConstPointer                     inputImage = this->GetInput();
+  typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
+
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   typename MaskType::ConstPointer mask = this->GetMask();
   if (mask.IsNull() && this->m_UseMultiThread)
   {
-    /** Calls ThreadedGenerateData(). */
-    return Superclass::GenerateData();
-  }
+    Superclass::GenerateRandomNumberList();
+    const auto & randomNumberList = Superclass::m_RandomNumberList;
+    auto &       samples = elastix::Deref(sampleContainer).CastToSTLContainer();
+    samples.resize(randomNumberList.size());
 
-  /** Get handles to the input image, output sample container. */
-  InputImageConstPointer                     inputImage = this->GetInput();
-  typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
+    m_UserData.m_RandomNumberList = &randomNumberList;
+    m_UserData.m_Samples = &samples;
+    m_UserData.m_InputImage = inputImage;
+
+    const InputImageRegionType region = this->GetCroppedInputImageRegion();
+
+    m_UserData.m_RegionIndex = region.GetIndex();
+    m_UserData.m_RegionSize = region.GetSize();
+
+
+    auto & randomVariateGenerator = elastix::Deref(Statistics::MersenneTwisterRandomVariateGenerator::GetInstance());
+    randomVariateGenerator.SetSeed(randomVariateGenerator.GetNextSeed());
+
+    MultiThreaderBase * const multiThreader = this->ProcessObject::GetMultiThreader();
+    multiThreader->SetSingleMethod(&Self::ThreaderCallback, &m_UserData);
+    multiThreader->SingleMethodExecute();
+
+    return;
+  }
 
   /** Reserve memory for the output. */
   sampleContainer->Reserve(this->GetNumberOfSamples());
@@ -132,69 +155,64 @@ ImageRandomSampler<TInputImage>::GenerateData()
 } // end GenerateData()
 
 
-/**
- * ******************* ThreadedGenerateData *******************
- */
-
 template <class TInputImage>
-void
-ImageRandomSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &, ThreadIdType threadId)
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+ImageRandomSampler<TInputImage>::ThreaderCallback(void * const arg)
 {
-  /** Sanity check. */
-  typename MaskType::ConstPointer mask = this->GetMask();
-  if (mask.IsNotNull())
+  assert(arg);
+  const auto & info = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
+
+  assert(info.UserData);
+  auto & userData = *static_cast<UserData *>(info.UserData);
+
+  assert(userData.m_RandomNumberList);
+  const auto & randomNumberList = *(userData.m_RandomNumberList);
+
+  assert(userData.m_Samples);
+  auto & samples = *(userData.m_Samples);
+
+  const auto totalNumberOfSamples = samples.size();
+  assert(totalNumberOfSamples == randomNumberList.size());
+
+  const auto numberOfSamplesPerWorkUnit = totalNumberOfSamples / info.NumberOfWorkUnits;
+  const auto remainderNumberOfSamples = totalNumberOfSamples % info.NumberOfWorkUnits;
+
+  const auto offset =
+    info.WorkUnitID * numberOfSamplesPerWorkUnit + std::min<size_t>(info.WorkUnitID, remainderNumberOfSamples);
+  const auto   beginOfRandomNumbers = randomNumberList.data() + offset;
+  const auto   beginOfSamples = samples.data() + offset;
+  const auto & inputImage = *(userData.m_InputImage);
+
+  const InputImageSizeType  regionSize = userData.m_RegionSize;
+  const InputImageIndexType regionIndex = userData.m_RegionIndex;
+
+  const size_t n{ numberOfSamplesPerWorkUnit + (info.WorkUnitID < remainderNumberOfSamples ? 1 : 0) };
+
+  for (size_t i = 0; i < n; ++i)
   {
-    itkExceptionMacro("ERROR: do not call this function when a mask is supplied.");
-  }
-
-  /** Get handle to the input image. */
-  InputImageConstPointer inputImage = this->GetInput();
-
-  /** Figure out which samples to process. */
-  unsigned long chunkSize = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
-  unsigned long sampleStart = threadId * chunkSize;
-  if (threadId == this->GetNumberOfWorkUnits() - 1)
-  {
-    chunkSize = this->GetNumberOfSamples() - ((this->GetNumberOfWorkUnits() - 1) * chunkSize);
-  }
-
-  /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread = this->m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->Reserve(chunkSize);
-
-  /** Setup an iterator over the sampleContainerThisThread. */
-  typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
-
-  /** Fill the local sample container. */
-  unsigned long       sampleId = sampleStart;
-  InputImageSizeType  regionSize = this->GetCroppedInputImageRegion().GetSize();
-  InputImageIndexType regionIndex = this->GetCroppedInputImageRegion().GetIndex();
-  for (iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++)
-  {
-    unsigned long randomPosition = static_cast<unsigned long>(this->m_RandomNumberList[sampleId]);
+    auto   randomPosition = static_cast<size_t>(beginOfRandomNumbers[i]);
+    auto & sample = beginOfSamples[i];
 
     /** Translate randomPosition to an index, copied from ImageRandomConstIteratorWithIndex. */
-    unsigned long       residual;
     InputImageIndexType positionIndex;
+
     for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
     {
-      const unsigned long sizeInThisDimension = regionSize[dim];
-      residual = randomPosition % sizeInThisDimension;
-      positionIndex[dim] = residual + regionIndex[dim];
+      const auto sizeInThisDimension = regionSize[dim];
+      const auto residual = randomPosition % sizeInThisDimension;
+      positionIndex[dim] = static_cast<IndexValueType>(residual) + regionIndex[dim];
       randomPosition -= residual;
       randomPosition /= sizeInThisDimension;
     }
 
     /** Transform index to the physical coordinates and put it in the sample. */
-    inputImage->TransformIndexToPhysicalPoint(positionIndex, iter->Value().m_ImageCoordinates);
+    inputImage.TransformIndexToPhysicalPoint(positionIndex, sample.m_ImageCoordinates);
 
     /** Get the value and put it in the sample. */
-    iter->Value().m_ImageValue = static_cast<ImageSampleValueType>(inputImage->GetPixel(positionIndex));
-
-  } // end for loop
-
-} // end ThreadedGenerateData()
+    sample.m_ImageValue = static_cast<ImageSampleValueType>(inputImage.GetPixel(positionIndex));
+  }
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
+}
 
 
 } // end namespace itk
