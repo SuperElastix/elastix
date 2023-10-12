@@ -86,8 +86,22 @@ protected:
   void
   GenerateData() override;
 
-  void
-  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
+private:
+  struct UserData
+  {
+    ITK_DISALLOW_COPY_AND_ASSIGN(UserData);
+
+    const std::vector<double> *    m_RandomNumberList{};
+    std::vector<ImageSampleType> * m_Samples{};
+    const InputImageType *         m_InputImage{};
+    InputImageIndexType            m_RegionIndex{};
+    InputImageSizeType             m_RegionSize{};
+  };
+
+  UserData m_UserData{};
+
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ThreaderCallback(void * arg);
 };
 
 } // end namespace itk
