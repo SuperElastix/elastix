@@ -19,6 +19,7 @@
 #define itkImageSample_h
 
 #include "itkNumericTraits.h"
+#include "itkMath.h"
 
 namespace itk
 {
@@ -44,6 +45,18 @@ public:
   /** Member variables. */
   PointType m_ImageCoordinates;
   RealType  m_ImageValue;
+
+  friend bool
+  operator==(const ImageSample & lhs, const ImageSample & rhs)
+  {
+    return lhs.m_ImageCoordinates == rhs.m_ImageCoordinates && Math::ExactlyEquals(lhs.m_ImageValue, rhs.m_ImageValue);
+  }
+
+  friend bool
+  operator!=(const ImageSample & lhs, const ImageSample & rhs)
+  {
+    return !(lhs == rhs);
+  }
 };
 
 } // end namespace itk
