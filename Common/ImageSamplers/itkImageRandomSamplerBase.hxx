@@ -39,17 +39,20 @@ ImageRandomSamplerBase<TInputImage>::ImageRandomSamplerBase()
 
 
 /**
- * ******************* BeforeThreadedGenerateData *******************
+ * ******************* GenerateRandomNumberList *******************
  */
 
 template <class TInputImage>
 void
-ImageRandomSamplerBase<TInputImage>::BeforeThreadedGenerateData()
+ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 {
   /** Create a random number generator. Also used in the ImageRandomConstIteratorWithIndex. */
-  using GeneratorPointer = typename Statistics::MersenneTwisterRandomVariateGenerator::Pointer;
-  GeneratorPointer localGenerator = Statistics::MersenneTwisterRandomVariateGenerator::GetInstance();
-  // \todo: should probably be global?
+  const auto localGenerator = Statistics::MersenneTwisterRandomVariateGenerator::New();
+
+  if (m_OptionalSeed)
+  {
+    localGenerator->SetSeed(*m_OptionalSeed);
+  }
 
   /** Clear the random number list. */
   this->m_RandomNumberList.clear();
@@ -64,6 +67,17 @@ ImageRandomSamplerBase<TInputImage>::BeforeThreadedGenerateData()
     this->m_RandomNumberList.push_back(randomPosition);
   }
   localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
+}
+
+/**
+ * ******************* BeforeThreadedGenerateData *******************
+ */
+
+template <class TInputImage>
+void
+ImageRandomSamplerBase<TInputImage>::BeforeThreadedGenerateData()
+{
+  GenerateRandomNumberList();
 
   /** Initialize variables needed for threads. */
   Superclass::BeforeThreadedGenerateData();
