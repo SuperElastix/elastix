@@ -41,10 +41,9 @@ GTEST_TEST(ImageRandomSampler, CheckImageValuesOfSamples)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
 
-  // Use a fixed seed, in order to have a reproducible sampler output.
-  DerefSmartPointer(itk::Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
-
   elx::DefaultConstruct<SamplerType> sampler{};
+
+  sampler.SetSeed(1);
 
   const size_t numberOfSamples{ 3 };
   sampler.SetNumberOfSamples(numberOfSamples);
@@ -56,10 +55,35 @@ GTEST_TEST(ImageRandomSampler, CheckImageValuesOfSamples)
   ASSERT_EQ(samples.size(), numberOfSamples);
 
   // The image values that appeared during the development of the test.
-  const std::array<PixelType, numberOfSamples> expectedImageValues = { 3, 1, 15 };
+  const std::array<PixelType, numberOfSamples> expectedImageValues = { 16, 12, 15 };
 
   for (size_t i{}; i < numberOfSamples; ++i)
   {
     EXPECT_EQ(samples[i].m_ImageValue, expectedImageValues[i]);
+  }
+}
+
+
+GTEST_TEST(ImageRandomSampler, SetSeedMakesRandomizationDeterministic)
+{
+  using PixelType = int;
+  using ImageType = itk::Image<PixelType>;
+  using SamplerType = itk::ImageRandomSampler<ImageType>;
+
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
+
+  for (const SamplerType::SeedIntegerType initialSeed : { 0, 1 })
+  {
+    const auto generateSamples = [initialSeed, image] {
+      elx::DefaultConstruct<SamplerType> sampler{};
+      sampler.SetSeed(initialSeed);
+      sampler.SetInput(image);
+      sampler.Update();
+      return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    };
+
+    // Do the same test twice, to check that the result remains the same.
+    EXPECT_EQ(generateSamples(), generateSamples());
   }
 }

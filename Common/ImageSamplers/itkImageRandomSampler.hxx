@@ -52,6 +52,11 @@ ImageRandomSampler<TInputImage>::GenerateData()
   /** Setup a random iterator over the input image. */
   using RandomIteratorType = ImageRandomConstIteratorWithIndex<InputImageType>;
   RandomIteratorType randIter(inputImage, this->GetCroppedInputImageRegion());
+
+  if (const auto optionalSeed = Superclass::GetOptionalSeed())
+  {
+    randIter.ReinitializeSeed(*optionalSeed);
+  }
   randIter.GoToBegin();
 
   /** Setup an iterator over the output, which is of ImageSampleContainerType. */

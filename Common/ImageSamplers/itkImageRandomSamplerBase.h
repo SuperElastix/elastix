@@ -19,6 +19,8 @@
 #define itkImageRandomSamplerBase_h
 
 #include "itkImageSamplerBase.h"
+#include <itkMersenneTwisterRandomVariateGenerator.h>
+#include <optional>
 
 namespace itk
 {
@@ -64,6 +66,35 @@ public:
   using typename Superclass::ImageSampleContainerPointer;
   using typename Superclass::MaskType;
 
+  using SeedIntegerType = Statistics::MersenneTwisterRandomVariateGenerator::IntegerType;
+
+  /** Allows setting the randomization seed. Optional: when the argument does not have a seed value, an arbitrary seed
+   * may be used for randomization (which is the default behavior). */
+  void
+  SetOptionalSeed(const std::optional<SeedIntegerType> arg)
+  {
+    if (arg != m_OptionalSeed)
+    {
+      m_OptionalSeed = arg;
+      this->Modified();
+    }
+  }
+
+  /** Sets the randomization seed as specified. */
+  void
+  SetSeed(const SeedIntegerType arg)
+  {
+    SetOptionalSeed(std::make_optional(arg));
+  }
+
+
+  /** Retrieves the optional user specified randomization seed. */
+  [[nodiscard]] std::optional<SeedIntegerType>
+  GetOptionalSeed() const
+  {
+    return m_OptionalSeed;
+  };
+
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
@@ -84,6 +115,9 @@ protected:
 
   /** Member variable used when threading. */
   std::vector<double> m_RandomNumberList{};
+
+private:
+  std::optional<SeedIntegerType> m_OptionalSeed{};
 };
 
 } // end namespace itk
