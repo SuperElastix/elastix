@@ -73,11 +73,11 @@ GTEST_TEST(ImageRandomSampler, SetSeedMakesRandomizationDeterministic)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
 
-  for (const SamplerType::SeedIntegerType initialSeed : { 0, 1 })
+  for (const SamplerType::SeedIntegerType seed : { 0, 1 })
   {
-    const auto generateSamples = [initialSeed, image] {
+    const auto generateSamples = [seed, image] {
       elx::DefaultConstruct<SamplerType> sampler{};
-      sampler.SetSeed(initialSeed);
+      sampler.SetSeed(seed);
       sampler.SetInput(image);
       sampler.Update();
       return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
