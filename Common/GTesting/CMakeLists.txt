@@ -9,6 +9,7 @@ add_executable(CommonGTest
   itkComputeImageExtremaFilterGTest.cxx
   itkImageFullSamplerGTest.cxx
   itkImageGridSamplerGTest.cxx
+  itkImageRandomCoordinateSamplerGTest.cxx
   itkImageRandomSamplerGTest.cxx
   itkImageSamplerGTest
   itkParameterMapInterfaceTest.cxx
