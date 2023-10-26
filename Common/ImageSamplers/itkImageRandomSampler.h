@@ -19,6 +19,7 @@
 #define itkImageRandomSampler_h
 
 #include "itkImageRandomSamplerBase.h"
+#include <optional>
 
 namespace itk
 {
@@ -91,14 +92,25 @@ private:
   {
     ITK_DISALLOW_COPY_AND_ASSIGN(UserData);
 
-    const std::vector<double> *    m_RandomNumberList{};
-    std::vector<ImageSampleType> * m_Samples{};
-    const InputImageType *         m_InputImage{};
+    UserData(const std::vector<double> &    randomNumberList,
+             std::vector<ImageSampleType> & samples,
+             const InputImageType &         inputImage,
+             const InputImageRegionType &   region)
+      : m_RandomNumberList(randomNumberList)
+      , m_Samples(samples)
+      , m_InputImage(inputImage)
+      , m_RegionIndex(region.GetIndex())
+      , m_RegionSize(region.GetSize())
+    {}
+
+    const std::vector<double> &    m_RandomNumberList;
+    std::vector<ImageSampleType> & m_Samples;
+    const InputImageType &         m_InputImage;
     InputImageIndexType            m_RegionIndex{};
     InputImageSizeType             m_RegionSize{};
   };
 
-  UserData m_UserData{};
+  std::optional<UserData> m_OptionalUserData{};
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);

@@ -49,20 +49,14 @@ ImageRandomSampler<TInputImage>::GenerateData()
     auto &       samples = elastix::Deref(sampleContainer).CastToSTLContainer();
     samples.resize(randomNumberList.size());
 
-    m_UserData.m_RandomNumberList = &randomNumberList;
-    m_UserData.m_Samples = &samples;
-    m_UserData.m_InputImage = inputImage;
-
-    const InputImageRegionType region = this->GetCroppedInputImageRegion();
-
-    m_UserData.m_RegionIndex = region.GetIndex();
-    m_UserData.m_RegionSize = region.GetSize();
+    m_OptionalUserData.emplace(
+      randomNumberList, samples, elastix::Deref(inputImage), this->GetCroppedInputImageRegion());
 
     auto & randomVariateGenerator = elastix::Deref(Statistics::MersenneTwisterRandomVariateGenerator::GetInstance());
     randomVariateGenerator.SetSeed(randomVariateGenerator.GetNextSeed());
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
-    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &m_UserData);
+    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
     multiThreader.SingleMethodExecute();
     return;
   }
@@ -163,11 +157,8 @@ ImageRandomSampler<TInputImage>::ThreaderCallback(void * const arg)
   assert(info.UserData);
   auto & userData = *static_cast<UserData *>(info.UserData);
 
-  assert(userData.m_RandomNumberList);
-  const auto & randomNumberList = *(userData.m_RandomNumberList);
-
-  assert(userData.m_Samples);
-  auto & samples = *(userData.m_Samples);
+  const auto & randomNumberList = userData.m_RandomNumberList;
+  auto &       samples = userData.m_Samples;
 
   const auto totalNumberOfSamples = samples.size();
   assert(totalNumberOfSamples == randomNumberList.size());
@@ -179,7 +170,7 @@ ImageRandomSampler<TInputImage>::ThreaderCallback(void * const arg)
     info.WorkUnitID * numberOfSamplesPerWorkUnit + std::min<size_t>(info.WorkUnitID, remainderNumberOfSamples);
   const auto   beginOfRandomNumbers = randomNumberList.data() + offset;
   const auto   beginOfSamples = samples.data() + offset;
-  const auto & inputImage = *(userData.m_InputImage);
+  const auto & inputImage = userData.m_InputImage;
 
   const InputImageSizeType  regionSize = userData.m_RegionSize;
   const InputImageIndexType regionIndex = userData.m_RegionIndex;
