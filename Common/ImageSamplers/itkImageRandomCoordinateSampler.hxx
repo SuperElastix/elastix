@@ -19,6 +19,7 @@
 #define itkImageRandomCoordinateSampler_hxx
 
 #include "itkImageRandomCoordinateSampler.h"
+#include "elxDeref.h"
 #include <vnl/vnl_math.h>
 
 namespace itk
@@ -32,14 +33,6 @@ template <class TInputImage>
 void
 ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 {
-  /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
-  typename MaskType::ConstPointer mask = this->GetMask();
-  if (mask.IsNull() && this->m_UseMultiThread)
-  {
-    /** Calls ThreadedGenerateData(). */
-    return Superclass::GenerateData();
-  }
-
   /** Get handles to the input image, output sample container, and interpolator. */
   InputImageConstPointer                     inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
@@ -60,6 +53,37 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   InputImageContinuousIndexType smallestContIndex;
   InputImageContinuousIndexType largestContIndex;
   this->GenerateSampleRegion(smallestImageContIndex, largestImageContIndex, smallestContIndex, largestContIndex);
+
+  /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
+  typename MaskType::ConstPointer mask = this->GetMask();
+  if (mask.IsNull() && this->m_UseMultiThread)
+  {
+    auto & samples = elastix::Deref(sampleContainer).CastToSTLContainer();
+    samples.resize(this->Superclass::m_NumberOfSamples);
+
+    /** Clear the random number list. */
+    this->m_RandomNumberList.clear();
+    this->m_RandomNumberList.reserve(this->m_NumberOfSamples * InputImageDimension);
+
+    /** Fill the list with random numbers. */
+    for (unsigned long i = 0; i < this->m_NumberOfSamples; ++i)
+    {
+      InputImageContinuousIndexType randomCIndex;
+
+      this->GenerateRandomCoordinate(smallestContIndex, largestContIndex, randomCIndex);
+      for (unsigned int j = 0; j < InputImageDimension; ++j)
+      {
+        this->m_RandomNumberList.push_back(randomCIndex[j]);
+      }
+    }
+
+    m_OptionalUserData.emplace(this->Superclass::m_RandomNumberList, samples, *inputImage, *interpolator);
+
+    MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
+    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
+    multiThreader.SingleMethodExecute();
+    return;
+  }
 
   /** Reserve memory for the output. */
   sampleContainer->Reserve(this->GetNumberOfSamples());
@@ -139,113 +163,59 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 
 
 /**
- * ******************* BeforeThreadedGenerateData *******************
+ * ******************* ThreaderCallback *******************
  */
 
 template <class TInputImage>
-void
-ImageRandomCoordinateSampler<TInputImage>::BeforeThreadedGenerateData()
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+ImageRandomCoordinateSampler<TInputImage>::ThreaderCallback(void * const arg)
 {
-  /** Set up the interpolator. */
-  typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();
-  interpolator->SetInputImage(this->GetInput()); // only once per resolution?
+  assert(arg);
+  const auto & info = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
 
-  /** Clear the random number list. */
-  this->m_RandomNumberList.clear();
-  this->m_RandomNumberList.reserve(this->m_NumberOfSamples * InputImageDimension);
+  assert(info.UserData);
+  auto & userData = *static_cast<UserData *>(info.UserData);
 
-  const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
+  const auto & randomNumberList = userData.m_RandomNumberList;
+  auto &       samples = userData.m_Samples;
+  const auto & interpolator = userData.m_Interpolator;
 
-  /** Convert inputImageRegion to bounding box in physical space. */
-  InputImageSizeType unitSize;
-  unitSize.Fill(1);
-  InputImageIndexType           smallestIndex = croppedInputImageRegion.GetIndex();
-  InputImageIndexType           largestIndex = smallestIndex + croppedInputImageRegion.GetSize() - unitSize;
-  InputImageContinuousIndexType smallestImageCIndex(smallestIndex);
-  InputImageContinuousIndexType largestImageCIndex(largestIndex);
-  InputImageContinuousIndexType smallestCIndex, largestCIndex, randomCIndex;
-  this->GenerateSampleRegion(smallestImageCIndex, largestImageCIndex, smallestCIndex, largestCIndex);
+  const auto totalNumberOfSamples = samples.size();
+  assert((totalNumberOfSamples * InputImageDimension) == randomNumberList.size());
 
-  /** Fill the list with random numbers. */
-  for (unsigned long i = 0; i < this->m_NumberOfSamples; ++i)
+  const auto numberOfSamplesPerWorkUnit = totalNumberOfSamples / info.NumberOfWorkUnits;
+  const auto remainderNumberOfSamples = totalNumberOfSamples % info.NumberOfWorkUnits;
+
+  const auto offset =
+    info.WorkUnitID * numberOfSamplesPerWorkUnit + std::min<size_t>(info.WorkUnitID, remainderNumberOfSamples);
+  const auto beginOfRandomNumbers = randomNumberList.data() + InputImageDimension * offset;
+  const auto beginOfSamples = samples.data() + offset;
+
+  const auto & inputImage = userData.m_InputImage;
+
+  const size_t n{ numberOfSamplesPerWorkUnit + (info.WorkUnitID < remainderNumberOfSamples ? 1 : 0) };
+
+  for (size_t i = 0; i < n; ++i)
   {
-    this->GenerateRandomCoordinate(smallestCIndex, largestCIndex, randomCIndex);
+    auto &                        sample = beginOfSamples[i];
+    InputImageContinuousIndexType sampleCIndex;
+
+    /** Create a random point out of InputImageDimension random numbers. */
     for (unsigned int j = 0; j < InputImageDimension; ++j)
     {
-      this->m_RandomNumberList.push_back(randomCIndex[j]);
+      sampleCIndex[j] = beginOfRandomNumbers[InputImageDimension * i + j];
     }
-  }
-
-  /** Initialize variables needed for threads. */
-  this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
-  {
-    this->m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
-  }
-
-} // end BeforeThreadedGenerateData()
-
-
-/**
- * ******************* ThreadedGenerateData *******************
- */
-
-template <class TInputImage>
-void
-ImageRandomCoordinateSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &, ThreadIdType threadId)
-{
-  /** Sanity check. */
-  typename MaskType::ConstPointer mask = this->GetMask();
-  if (mask.IsNotNull())
-  {
-    itkExceptionMacro("ERROR: do not call this function when a mask is supplied.");
-  }
-
-  /** Get handle to the input image. */
-  InputImageConstPointer inputImage = this->GetInput();
-
-  /** Figure out which samples to process. */
-  unsigned long chunkSize = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
-  unsigned long sampleStart = threadId * chunkSize * InputImageDimension;
-  if (threadId == this->GetNumberOfWorkUnits() - 1)
-  {
-    chunkSize = this->GetNumberOfSamples() - ((this->GetNumberOfWorkUnits() - 1) * chunkSize);
-  }
-
-  /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->Reserve(chunkSize);
-
-  /** Setup an iterator over the sampleContainerThisThread. */
-  typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
-
-  /** Fill the local sample container. */
-  InputImageContinuousIndexType sampleCIndex;
-  unsigned long                 sampleId = sampleStart;
-  for (iter = sampleContainerThisThread->Begin(); iter != end; ++iter)
-  {
-    /** Create a random point out of InputImageDimension random numbers. */
-    for (unsigned int j = 0; j < InputImageDimension; ++j, sampleId++)
-    {
-      sampleCIndex[j] = this->m_RandomNumberList[sampleId];
-    }
-
-    /** Make a reference to the current sample in the container. */
-    InputImagePointType &  samplePoint = iter->Value().m_ImageCoordinates;
-    ImageSampleValueType & sampleValue = iter->Value().m_ImageValue;
 
     /** Convert to point */
-    inputImage->TransformContinuousIndexToPhysicalPoint(sampleCIndex, samplePoint);
+    inputImage.TransformContinuousIndexToPhysicalPoint(sampleCIndex, sample.m_ImageCoordinates);
 
-    /** Compute the value at the contindex. */
-    sampleValue = static_cast<ImageSampleValueType>(this->m_Interpolator->EvaluateAtContinuousIndex(sampleCIndex));
+    /** Compute the value at the continuous index. */
+    sample.m_ImageValue = static_cast<ImageSampleValueType>(interpolator.EvaluateAtContinuousIndex(sampleCIndex));
 
   } // end for loop
 
-} // end ThreadedGenerateData()
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
+}
 
 
 /**

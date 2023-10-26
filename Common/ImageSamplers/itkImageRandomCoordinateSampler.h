@@ -23,6 +23,8 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
+#include <optional>
+
 namespace itk
 {
 
@@ -119,13 +121,6 @@ protected:
   void
   GenerateData() override;
 
-  /** Multi-threaded functionality that does the work. */
-  void
-  BeforeThreadedGenerateData() override;
-
-  void
-  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
-
   /** Generate a point randomly in a bounding box. */
   virtual void
   GenerateRandomCoordinate(const InputImageContinuousIndexType & smallestContIndex,
@@ -153,6 +148,31 @@ protected:
                        InputImageContinuousIndexType &       largestContIndex);
 
 private:
+  struct UserData
+  {
+    ITK_DISALLOW_COPY_AND_ASSIGN(UserData);
+
+    UserData(const std::vector<double> &    randomNumberList,
+             std::vector<ImageSampleType> & samples,
+             const InputImageType &         inputImage,
+             const InterpolatorType &       interpolator)
+      : m_RandomNumberList(randomNumberList)
+      , m_Samples(samples)
+      , m_InputImage(inputImage)
+      , m_Interpolator(interpolator)
+    {}
+
+    const std::vector<double> &    m_RandomNumberList{};
+    std::vector<ImageSampleType> & m_Samples{};
+    const InputImageType &         m_InputImage{};
+    const InterpolatorType &       m_Interpolator{};
+  };
+
+  std::optional<UserData> m_OptionalUserData{};
+
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ThreaderCallback(void * arg);
+
   bool m_UseRandomSampleRegion{ false };
 };
 
