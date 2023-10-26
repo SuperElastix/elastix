@@ -91,3 +91,26 @@ GTEST_TEST(ImageRandomCoordinateSampler, SetSeedMakesRandomizationDeterministic)
     EXPECT_EQ(generateSamples(), generateSamples());
   }
 }
+
+
+GTEST_TEST(ImageRandomCoordinateSampler, HasSameOutputWhenUsingMultiThread)
+{
+  using PixelType = int;
+  using ImageType = itk::Image<PixelType>;
+  using SamplerType = itk::ImageRandomCoordinateSampler<ImageType>;
+
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
+
+  const auto generateSamples = [image](const bool useMultiThread) {
+    DerefSmartPointer(itk::Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
+
+    elx::DefaultConstruct<SamplerType> sampler{};
+    sampler.SetUseMultiThread(useMultiThread);
+    sampler.SetInput(image);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  EXPECT_EQ(generateSamples(true), generateSamples(false));
+}
