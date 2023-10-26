@@ -52,8 +52,9 @@ ImageRandomSampler<TInputImage>::GenerateData()
     m_OptionalUserData.emplace(
       randomNumberList, samples, elastix::Deref(inputImage), this->GetCroppedInputImageRegion());
 
-    auto & randomVariateGenerator = elastix::Deref(Statistics::MersenneTwisterRandomVariateGenerator::GetInstance());
-    randomVariateGenerator.SetSeed(randomVariateGenerator.GetNextSeed());
+    using Statistics::MersenneTwisterRandomVariateGenerator;
+    elastix::Deref(MersenneTwisterRandomVariateGenerator::GetInstance())
+      .SetSeed(MersenneTwisterRandomVariateGenerator::GetNextSeed());
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
     multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
