@@ -58,14 +58,12 @@ ImageRandomSampler<TInputImage>::GenerateData()
     m_UserData.m_RegionIndex = region.GetIndex();
     m_UserData.m_RegionSize = region.GetSize();
 
-
     auto & randomVariateGenerator = elastix::Deref(Statistics::MersenneTwisterRandomVariateGenerator::GetInstance());
     randomVariateGenerator.SetSeed(randomVariateGenerator.GetNextSeed());
 
-    MultiThreaderBase * const multiThreader = this->ProcessObject::GetMultiThreader();
-    multiThreader->SetSingleMethod(&Self::ThreaderCallback, &m_UserData);
-    multiThreader->SingleMethodExecute();
-
+    MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
+    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &m_UserData);
+    multiThreader.SingleMethodExecute();
     return;
   }
 
