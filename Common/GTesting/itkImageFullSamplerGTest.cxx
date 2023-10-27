@@ -54,3 +54,25 @@ GTEST_TEST(ImageFullSampler, OutputHasSameSequenceOfPixelValuesAsInput)
     EXPECT_EQ(output[i].m_ImageValue, imageBufferRange[i]);
   }
 }
+
+GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingMultiThread)
+{
+  using PixelType = int;
+  constexpr auto Dimension = 2U;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using SamplerType = itk::ImageFullSampler<ImageType>;
+
+  std::mt19937 randomNumberEngine{};
+  const auto   imageDomain = CreateRandomImageDomain<Dimension>(randomNumberEngine);
+  const auto   image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  const auto generateSamples = [image](const bool useMultiThread) {
+    elx::DefaultConstruct<SamplerType> sampler{};
+    sampler.SetUseMultiThread(useMultiThread);
+    sampler.SetInput(image);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  EXPECT_EQ(generateSamples(true), generateSamples(false));
+}
