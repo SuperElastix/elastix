@@ -150,7 +150,7 @@ protected:
 private:
   struct UserData
   {
-    ITK_DISALLOW_COPY_AND_ASSIGN(UserData);
+    ITK_DISALLOW_COPY_AND_MOVE(UserData);
 
     UserData(const std::vector<double> &    randomNumberList,
              std::vector<ImageSampleType> & samples,
