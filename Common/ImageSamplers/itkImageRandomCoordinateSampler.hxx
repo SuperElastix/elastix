@@ -44,13 +44,13 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
   /** Convert inputImageRegion to bounding box in physical space. */
-  const auto                    unitSize = InputImageSizeType::Filled(1);
-  InputImageIndexType           smallestIndex = croppedInputImageRegion.GetIndex();
-  InputImageIndexType           largestIndex = smallestIndex + croppedInputImageRegion.GetSize() - unitSize;
-  InputImageContinuousIndexType smallestImageContIndex(smallestIndex);
-  InputImageContinuousIndexType largestImageContIndex(largestIndex);
-  InputImageContinuousIndexType smallestContIndex;
-  InputImageContinuousIndexType largestContIndex;
+  const auto                          unitSize = InputImageSizeType::Filled(1);
+  const InputImageIndexType           smallestIndex = croppedInputImageRegion.GetIndex();
+  const InputImageIndexType           largestIndex = smallestIndex + croppedInputImageRegion.GetSize() - unitSize;
+  const InputImageContinuousIndexType smallestImageContIndex(smallestIndex);
+  const InputImageContinuousIndexType largestImageContIndex(largestIndex);
+  InputImageContinuousIndexType       smallestContIndex;
+  InputImageContinuousIndexType       largestContIndex;
   this->GenerateSampleRegion(smallestImageContIndex, largestImageContIndex, smallestContIndex, largestContIndex);
 
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
