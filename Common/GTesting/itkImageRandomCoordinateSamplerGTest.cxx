@@ -28,9 +28,10 @@ using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 
+using itk::Statistics::MersenneTwisterRandomVariateGenerator;
+
 #include <gtest/gtest.h>
 #include <array>
-
 
 GTEST_TEST(ImageRandomCoordinateSampler, CheckImageValuesOfSamples)
 {
@@ -39,7 +40,7 @@ GTEST_TEST(ImageRandomCoordinateSampler, CheckImageValuesOfSamples)
   using SamplerType = itk::ImageRandomCoordinateSampler<ImageType>;
 
   // Use a fixed seed, in order to have a reproducible sampler output.
-  DerefSmartPointer(itk::Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
+  DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
 
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
@@ -81,7 +82,7 @@ GTEST_TEST(ImageRandomCoordinateSampler, SetSeedMakesRandomizationDeterministic)
     const auto generateSamples = [seed, image] {
       elx::DefaultConstruct<SamplerType> sampler{};
 
-      DerefSmartPointer(itk::Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(seed);
+      DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(seed);
       sampler.SetInput(image);
       sampler.Update();
       return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
@@ -103,7 +104,7 @@ GTEST_TEST(ImageRandomCoordinateSampler, HasSameOutputWhenUsingMultiThread)
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
 
   const auto generateSamples = [image](const bool useMultiThread) {
-    DerefSmartPointer(itk::Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
+    DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
 
     elx::DefaultConstruct<SamplerType> sampler{};
     sampler.SetUseMultiThread(useMultiThread);
