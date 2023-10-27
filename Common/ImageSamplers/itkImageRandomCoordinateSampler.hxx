@@ -44,8 +44,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
   /** Convert inputImageRegion to bounding box in physical space. */
-  InputImageSizeType unitSize;
-  unitSize.Fill(1);
+  const auto                    unitSize = InputImageSizeType::Filled(1);
   InputImageIndexType           smallestIndex = croppedInputImageRegion.GetIndex();
   InputImageIndexType           largestIndex = smallestIndex + croppedInputImageRegion.GetSize() - unitSize;
   InputImageContinuousIndexType smallestImageContIndex(smallestIndex);

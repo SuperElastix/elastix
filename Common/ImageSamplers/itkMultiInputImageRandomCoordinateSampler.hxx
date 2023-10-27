@@ -174,8 +174,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
    * but possibly different origin/spacing.
    * \todo: test this really carefully!
    */
-  InputImageSizeType unitSize;
-  unitSize.Fill(1);
+  const auto unitSize = InputImageSizeType::Filled(1);
   for (unsigned int i = 0; i < numberOfRegions; ++i)
   {
     /** Get the outer indices. */
