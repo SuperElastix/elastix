@@ -20,16 +20,19 @@
 #include "itkImageRandomSampler.h"
 #include "elxDefaultConstruct.h"
 #include "GTesting/elxCoreMainGTestUtilities.h"
-#include <itkImage.h>
-#include "itkMersenneTwisterRandomVariateGenerator.h"
 
+// ITK header files:
+#include <itkImage.h>
+#include <itkMersenneTwisterRandomVariateGenerator.h>
+
+#include <gtest/gtest.h>
+#include <array>
+
+// Using-declarations:
 using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
-
-#include <gtest/gtest.h>
-#include <array>
 
 
 GTEST_TEST(ImageRandomSampler, CheckImageValuesOfSamples)
