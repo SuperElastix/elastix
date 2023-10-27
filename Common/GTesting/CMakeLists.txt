@@ -11,7 +11,7 @@ add_executable(CommonGTest
   itkImageGridSamplerGTest.cxx
   itkImageRandomCoordinateSamplerGTest.cxx
   itkImageRandomSamplerGTest.cxx
-  itkImageSamplerGTest
+  itkImageSamplerGTest.cxx
   itkParameterMapInterfaceTest.cxx
   )
 
