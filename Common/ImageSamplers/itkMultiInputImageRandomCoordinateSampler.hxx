@@ -178,8 +178,8 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
   for (unsigned int i = 0; i < numberOfRegions; ++i)
   {
     /** Get the outer indices. */
-    InputImageIndexType smallestIndex = this->GetInputImageRegion(i).GetIndex();
-    InputImageIndexType largestIndex = smallestIndex + this->GetInputImageRegion(i).GetSize() - unitSize;
+    const InputImageIndexType smallestIndex = this->GetInputImageRegion(i).GetIndex();
+    const InputImageIndexType largestIndex = smallestIndex + this->GetInputImageRegion(i).GetSize() - unitSize;
 
     /** Convert to points */
     InputImagePointType smallestImagePoint;
