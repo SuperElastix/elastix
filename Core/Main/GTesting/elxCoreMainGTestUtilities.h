@@ -458,6 +458,7 @@ CreateRandomImageDomain(std::mt19937 & randomNumberEngine)
                           createRandomPoint() };
 }
 
+
 // Creates a test image, filled with zero.
 template <typename TPixel, unsigned VImageDimension>
 auto
@@ -465,6 +466,17 @@ CreateImage(const itk::Size<VImageDimension> & imageSize)
 {
   const auto image = itk::Image<TPixel, VImageDimension>::New();
   image->SetRegions(imageSize);
+  image->Allocate(true);
+  return image;
+}
+
+// Creates a test image, filled with zero.
+template <typename TPixel, unsigned VImageDimension>
+auto
+CreateImage(const ImageDomain<VImageDimension> & imageDomain)
+{
+  const auto image = itk::Image<TPixel, VImageDimension>::New();
+  imageDomain.ToImage(*image);
   image->Allocate(true);
   return image;
 }
