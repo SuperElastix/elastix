@@ -21,12 +21,16 @@
 #include "GTesting/elxCoreMainGTestUtilities.h"
 #include "elxDefaultConstruct.h"
 #include <itkImage.h>
+#include <itkImageMaskSpatialObject.h>
 #include <gtest/gtest.h>
 
 
+using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
 using elx::CoreMainGTestUtilities::DerefRawPointer;
+using elx::CoreMainGTestUtilities::ImageDomain;
+
 
 GTEST_TEST(ImageFullSampler, OutputHasSameSequenceOfPixelValuesAsInput)
 {
@@ -70,6 +74,46 @@ GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingMultiThread)
     elx::DefaultConstruct<SamplerType> sampler{};
     sampler.SetUseMultiThread(useMultiThread);
     sampler.SetInput(image);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  EXPECT_EQ(generateSamples(true), generateSamples(false));
+}
+
+
+// Tests that the sampler produces the same output when using a mask that is fully filled with ones as when using no
+// mask at all.
+GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingFullyFilledMask)
+{
+  using PixelType = int;
+  enum
+  {
+    Dimension = 2U
+  };
+  using SamplerType = itk::ImageFullSampler<itk::Image<PixelType, Dimension>>;
+
+  const ImageDomain<Dimension> imageDomain(itk::Size<Dimension>::Filled(4));
+  const auto                   image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  const auto generateSamples = [image](const bool useMask) {
+    elx::DefaultConstruct<SamplerType> sampler{};
+
+    sampler.SetInput(image);
+
+    if (useMask)
+    {
+      using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
+      const auto maskImage = CreateImage<MaskSpatialObjectType::PixelType>(ImageDomain(*image));
+      maskImage->FillBuffer(1);
+
+      const auto maskSpatialObject = MaskSpatialObjectType::New();
+      maskSpatialObject->SetImage(maskImage);
+      maskSpatialObject->Update();
+
+      sampler.SetMask(maskSpatialObject);
+    }
+
     sampler.Update();
     return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
   };
