@@ -19,6 +19,7 @@
 #define elxRandomSampler_hxx
 
 #include "elxRandomSampler.h"
+#include "elxDeref.h"
 
 namespace elastix
 {
@@ -31,12 +32,13 @@ template <class TElastix>
 void
 RandomSampler<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   const unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Set the NumberOfSpatialSamples. */
   unsigned long numberOfSpatialSamples = 5000;
-  this->GetConfiguration()->ReadParameter(
-    numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
 
   this->SetNumberOfSamples(numberOfSpatialSamples);
 

@@ -20,6 +20,7 @@
 #define elxGridSampler_hxx
 
 #include "elxGridSampler.h"
+#include "elxDeref.h"
 
 namespace elastix
 {
@@ -32,6 +33,8 @@ template <class TElastix>
 void
 GridSampler<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   GridSpacingType gridspacing;
@@ -41,7 +44,7 @@ GridSampler<TElastix>::BeforeEachResolution()
   for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {
     spacing_dim = 2;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       spacing_dim, "SampleGridSpacing", this->GetComponentLabel(), level * InputImageDimension + dim, -1);
     gridspacing[dim] = static_cast<SampleGridSpacingValueType>(spacing_dim);
   }
