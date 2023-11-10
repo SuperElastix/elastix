@@ -36,6 +36,7 @@ using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::FillImageRegion;
+using elx::CoreMainGTestUtilities::ImageDomain;
 using itk::Statistics::MersenneTwisterRandomVariateGenerator;
 
 
@@ -77,5 +78,47 @@ GTEST_TEST(ImageRandomSamplerSparseMask, CheckImageValuesOfSamples)
   for (size_t i{}; i < numberOfSamples; ++i)
   {
     EXPECT_EQ(samples[i].m_ImageValue, expectedImageValues[i]);
+  }
+}
+
+
+GTEST_TEST(ImageRandomSamplerSparseMask, SetSeedMakesRandomizationDeterministic)
+{
+  using PixelType = int;
+  constexpr auto Dimension = 2;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using SamplerType = itk::ImageRandomSamplerSparseMask<ImageType>;
+  using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
+
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
+
+  const auto maskImage = CreateImage<MaskSpatialObjectType::PixelType>(ImageDomain(*image));
+  FillImageRegion(*maskImage, itk::Index<Dimension>::Filled(1), ImageType::SizeType::Filled(minimumImageSizeValue - 1));
+
+  const auto maskSpatialObject = MaskSpatialObjectType::New();
+  maskSpatialObject->SetImage(maskImage);
+  maskSpatialObject->Update();
+
+  for (const SamplerType::SeedIntegerType seed : { 0, 1 })
+  {
+    const auto generateSamples = [seed, image, maskSpatialObject] {
+      elx::DefaultConstruct<SamplerType> sampler{};
+
+      DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(seed);
+      sampler.SetInput(image);
+      sampler.SetMask(maskSpatialObject);
+      sampler.Update();
+      return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    };
+
+    const auto samples = generateSamples();
+
+    // The test would be trivial (uninteresting) if there were no samples. Note that itk::ImageSamplerBase does
+    // zero-initialize m_NumberOfSamples, but itk::ImageRandomSamplerBase does m_NumberOfSamples = 1000 afterwards.
+    EXPECT_FALSE(samples.empty());
+
+    // Do the same test another time, to check that the result remains the same.
+    EXPECT_EQ(generateSamples(), samples);
   }
 }
