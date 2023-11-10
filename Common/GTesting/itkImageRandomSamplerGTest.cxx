@@ -86,8 +86,14 @@ GTEST_TEST(ImageRandomSampler, SetSeedMakesRandomizationDeterministic)
       return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
     };
 
-    // Do the same test twice, to check that the result remains the same.
-    EXPECT_EQ(generateSamples(), generateSamples());
+    const auto samples = generateSamples();
+
+    // The test would be trivial (uninteresting) if there were no samples. Note that itk::ImageSamplerBase does
+    // zero-initialize m_NumberOfSamples, but itk::ImageRandomSamplerBase does m_NumberOfSamples = 1000 afterwards.
+    EXPECT_FALSE(samples.empty());
+
+    // Do the same test another time, to check that the result remains the same.
+    EXPECT_EQ(generateSamples(), samples);
   }
 }
 
