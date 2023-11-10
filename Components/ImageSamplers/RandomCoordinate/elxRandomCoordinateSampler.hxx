@@ -19,6 +19,7 @@
 #define elxRandomCoordinateSampler_hxx
 
 #include "elxRandomCoordinateSampler.h"
+#include "elxDeref.h"
 #include "itkLinearInterpolateImageFunction.h"
 
 namespace elastix
@@ -32,18 +33,18 @@ template <class TElastix>
 void
 RandomCoordinateSampler<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Set the NumberOfSpatialSamples. */
   unsigned long numberOfSpatialSamples = 5000;
-  this->GetConfiguration()->ReadParameter(
-    numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfSpatialSamples, "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0);
   this->SetNumberOfSamples(numberOfSpatialSamples);
 
   /** Set up the fixed image interpolator and set the SplineOrder, default value = 1. */
   unsigned int splineOrder = 1;
-  this->GetConfiguration()->ReadParameter(
-    splineOrder, "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(splineOrder, "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0);
   if (splineOrder == 1)
   {
     using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>;
@@ -59,8 +60,7 @@ RandomCoordinateSampler<TElastix>::BeforeEachResolution()
 
   /** Set the UseRandomSampleRegion bool. */
   bool useRandomSampleRegion = false;
-  this->GetConfiguration()->ReadParameter(
-    useRandomSampleRegion, "UseRandomSampleRegion", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useRandomSampleRegion, "UseRandomSampleRegion", this->GetComponentLabel(), level, 0);
   this->SetUseRandomSampleRegion(useRandomSampleRegion);
 
   /** Set the SampleRegionSize. */
@@ -87,7 +87,7 @@ RandomCoordinateSampler<TElastix>::BeforeEachResolution()
     /** Read and check user's choice. */
     for (unsigned int i = 0; i < InputImageDimension; ++i)
     {
-      this->GetConfiguration()->ReadParameter(
+      configuration.ReadParameter(
         sampleRegionSize[i], "SampleRegionSize", this->GetComponentLabel(), level * InputImageDimension + i, 0);
     }
     this->SetSampleRegionSize(sampleRegionSize);
