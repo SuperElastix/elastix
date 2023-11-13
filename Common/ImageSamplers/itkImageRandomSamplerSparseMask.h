@@ -21,6 +21,7 @@
 #include "itkImageRandomSamplerBase.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageFullSampler.h"
+#include <optional>
 
 namespace itk
 {
@@ -94,15 +95,32 @@ protected:
   void
   GenerateData() override;
 
-  /** Multi-threaded functionality that does the work. */
-  void
-  BeforeThreadedGenerateData() override;
-
-  void
-  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
-
   RandomGeneratorPointer     m_RandomGenerator{ RandomGeneratorType::GetInstance() };
   InternalFullSamplerPointer m_InternalFullSampler{ InternalFullSamplerType::New() };
+
+private:
+  struct UserData
+  {
+    ITK_DISALLOW_COPY_AND_MOVE(UserData);
+
+    UserData(const std::vector<ImageSampleType> & allValidSamples,
+             const std::vector<size_t> &          randomIndices,
+             std::vector<ImageSampleType> &       samples)
+      : m_AllValidSamples(allValidSamples)
+      , m_RandomIndices(randomIndices)
+      , m_Samples(samples)
+    {}
+
+    const std::vector<ImageSampleType> & m_AllValidSamples;
+    const std::vector<size_t> &          m_RandomIndices;
+    std::vector<ImageSampleType> &       m_Samples;
+  };
+
+  std::vector<size_t>     m_RandomIndices{};
+  std::optional<UserData> m_OptionalUserData{};
+
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ThreaderCallback(void * arg);
 };
 
 } // end namespace itk

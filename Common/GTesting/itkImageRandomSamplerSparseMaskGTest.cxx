@@ -122,3 +122,35 @@ GTEST_TEST(ImageRandomSamplerSparseMask, SetSeedMakesRandomizationDeterministic)
     EXPECT_EQ(generateSamples(), samples);
   }
 }
+
+
+GTEST_TEST(ImageRandomSamplerSparseMask, HasSameOutputWhenUsingMultiThread)
+{
+  using PixelType = int;
+  constexpr auto Dimension = 2;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using SamplerType = itk::ImageRandomSamplerSparseMask<ImageType>;
+  using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
+
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
+
+  const auto maskImage = CreateImage<MaskSpatialObjectType::PixelType>(ImageDomain(*image));
+  FillImageRegion(*maskImage, itk::Index<Dimension>::Filled(1), ImageType::SizeType::Filled(minimumImageSizeValue - 1));
+
+  const auto maskSpatialObject = MaskSpatialObjectType::New();
+  maskSpatialObject->SetImage(maskImage);
+  maskSpatialObject->Update();
+
+  const auto generateSamples = [image, maskSpatialObject](const bool useMultiThread) {
+    DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
+    elx::DefaultConstruct<SamplerType> sampler{};
+    sampler.SetUseMultiThread(useMultiThread);
+    sampler.SetInput(image);
+    sampler.SetMask(maskSpatialObject);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  EXPECT_EQ(generateSamples(true), generateSamples(false));
+}
