@@ -19,6 +19,7 @@
 #define itkImageRandomSamplerSparseMask_hxx
 
 #include "itkImageRandomSamplerSparseMask.h"
+#include "elxDeref.h"
 
 namespace itk
 {
@@ -53,6 +54,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   this->m_InternalFullSampler->SetInput(inputImage);
   this->m_InternalFullSampler->SetMask(mask);
   this->m_InternalFullSampler->SetInputImageRegion(this->GetCroppedInputImageRegion());
+  this->m_InternalFullSampler->SetUseMultiThread(Superclass::m_UseMultiThread);
 
   /** Use try/catch, since the full sampler may crash, due to insufficient memory. */
   try
@@ -79,16 +81,32 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
     itkExceptionMacro(<< message);
   }
 
-  /** If desired we exercise a multi-threaded version. */
-  if (this->m_UseMultiThread)
-  {
-    /** Calls ThreadedGenerateData(). */
-    return Superclass::GenerateData();
-  }
-
   /** Get a handle to the full sampler output. */
   typename ImageSampleContainerType::Pointer allValidSamples = this->m_InternalFullSampler->GetOutput();
   unsigned long                              numberOfValidSamples = allValidSamples->Size();
+
+
+  /** If desired we exercise a multi-threaded version. */
+  if (this->m_UseMultiThread)
+  {
+    m_RandomIndices.clear();
+    m_RandomIndices.reserve(Superclass::m_NumberOfSamples);
+
+    for (unsigned int i = 0; i < Superclass::m_NumberOfSamples; ++i)
+    {
+      m_RandomIndices.push_back(m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1));
+    }
+
+    auto & samples = elastix::Deref(sampleContainer).CastToSTLContainer();
+    samples.resize(m_RandomIndices.size());
+
+    m_OptionalUserData.emplace(elastix::Deref(allValidSamples).CastToSTLConstContainer(), m_RandomIndices, samples);
+
+    MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
+    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
+    multiThreader.SingleMethodExecute();
+    return;
+  }
 
   /** Take random samples from the allValidSamples-container. */
   for (unsigned int i = 0; i < this->GetNumberOfSamples(); ++i)
@@ -103,75 +121,39 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 } // end GenerateData()
 
 
-/**
- * ******************* BeforeThreadedGenerateData *******************
- */
-
 template <class TInputImage>
-void
-ImageRandomSamplerSparseMask<TInputImage>::BeforeThreadedGenerateData()
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+ImageRandomSamplerSparseMask<TInputImage>::ThreaderCallback(void * const arg)
 {
-  /** Clear the random number list. */
-  this->m_RandomNumberList.clear();
-  this->m_RandomNumberList.reserve(this->m_NumberOfSamples);
+  assert(arg);
+  const auto & info = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
 
-  /** Get a handle to the full sampler output size. */
-  const unsigned long numberOfValidSamples = this->m_InternalFullSampler->GetOutput()->Size();
+  assert(info.UserData);
+  auto & userData = *static_cast<UserData *>(info.UserData);
 
-  /** Fill the list with random numbers. */
-  for (unsigned int i = 0; i < this->GetNumberOfSamples(); ++i)
+  const auto & randomIndices = userData.m_RandomIndices;
+  auto &       samples = userData.m_Samples;
+
+  const auto totalNumberOfSamples = samples.size();
+  assert(totalNumberOfSamples == randomIndices.size());
+
+  const auto numberOfSamplesPerWorkUnit = totalNumberOfSamples / info.NumberOfWorkUnits;
+  const auto remainderNumberOfSamples = totalNumberOfSamples % info.NumberOfWorkUnits;
+
+  const auto offset =
+    info.WorkUnitID * numberOfSamplesPerWorkUnit + std::min<size_t>(info.WorkUnitID, remainderNumberOfSamples);
+  const auto   beginOfRandomIndices = randomIndices.data() + offset;
+  const auto   beginOfSamples = samples.data() + offset;
+  const auto & allValidSamples = userData.m_AllValidSamples;
+
+  const size_t n{ numberOfSamplesPerWorkUnit + (info.WorkUnitID < remainderNumberOfSamples ? 1 : 0) };
+
+  for (size_t i = 0; i < n; ++i)
   {
-    unsigned long randomIndex = this->m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1);
-    this->m_RandomNumberList.push_back(randomIndex);
+    beginOfSamples[i] = allValidSamples[beginOfRandomIndices[i]];
   }
-
-  /** Initialize variables needed for threads. */
-  this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
-  {
-    this->m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
-  }
-
-} // end BeforeThreadedGenerateData()
-
-
-/**
- * ******************* ThreadedGenerateData *******************
- */
-
-template <class TInputImage>
-void
-ImageRandomSamplerSparseMask<TInputImage>::ThreadedGenerateData(const InputImageRegionType &, ThreadIdType threadId)
-{
-  /** Get a handle to the full sampler output. */
-  typename ImageSampleContainerType::Pointer allValidSamples = this->m_InternalFullSampler->GetOutput();
-
-  /** Figure out which samples to process. */
-  unsigned long chunkSize = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
-  unsigned long sampleStart = threadId * chunkSize;
-  if (threadId == this->GetNumberOfWorkUnits() - 1)
-  {
-    chunkSize = this->GetNumberOfSamples() - ((this->GetNumberOfWorkUnits() - 1) * chunkSize);
-  }
-
-  /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread = this->m_ThreaderSampleContainer[threadId];
-  sampleContainerThisThread->Reserve(chunkSize);
-
-  /** Setup an iterator over the sampleContainerThisThread. */
-  typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
-
-  /** Take random samples from the allValidSamples-container. */
-  unsigned long sampleId = sampleStart;
-  for (iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++)
-  {
-    unsigned long randomIndex = static_cast<unsigned long>(this->m_RandomNumberList[sampleId]);
-    iter->Value() = allValidSamples->ElementAt(randomIndex);
-  }
-
-} // end ThreadedGenerateData()
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
+}
 
 
 /**
