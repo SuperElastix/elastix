@@ -58,10 +58,10 @@ jobs:
           ITK-source
         key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }} 
         
-    - name: Set up Python 3.7
+    - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: 3.7
+        python-version: 3.8
 
     - name: Install build dependencies
       run: |
