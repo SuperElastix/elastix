@@ -87,13 +87,12 @@ public:
     SetOptionalSeed(std::make_optional(arg));
   }
 
-
   /** Retrieves the optional user specified randomization seed. */
   [[nodiscard]] std::optional<SeedIntegerType>
   GetOptionalSeed() const
   {
     return m_OptionalSeed;
-  };
+  }
 
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
