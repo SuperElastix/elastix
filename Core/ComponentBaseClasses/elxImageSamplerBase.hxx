@@ -56,13 +56,13 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
 
   /** Temporary?: Use the multi-threaded version or not. */
   std::string useMultiThread = configuration.GetCommandLineArgument("-mts"); // mts: multi-threaded samplers
-  if (useMultiThread == "true")
+  if (useMultiThread == "false")
   {
-    this->GetAsITKBaseType()->SetUseMultiThread(true);
+    this->GetAsITKBaseType()->SetUseMultiThread(false);
   }
   else
   {
-    this->GetAsITKBaseType()->SetUseMultiThread(false);
+    this->GetAsITKBaseType()->SetUseMultiThread(true);
   }
 
 } // end BeforeEachResolutionBase()
