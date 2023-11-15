@@ -152,23 +152,24 @@ private:
   {
     ITK_DISALLOW_COPY_AND_MOVE(UserData);
 
-    UserData(const std::vector<double> &    randomNumberList,
-             const InputImageType &         inputImage,
-             const InterpolatorType &       interpolator,
-             std::vector<ImageSampleType> & samples)
-      : m_RandomNumberList(randomNumberList)
+    UserData(const std::vector<InputImageContinuousIndexType> & randomCoordinates,
+             const InputImageType &                             inputImage,
+             const InterpolatorType &                           interpolator,
+             std::vector<ImageSampleType> &                     samples)
+      : m_RandomCoordinates(randomCoordinates)
       , m_InputImage(inputImage)
       , m_Interpolator(interpolator)
       , m_Samples(samples)
     {}
 
-    const std::vector<double> &    m_RandomNumberList;
-    const InputImageType &         m_InputImage;
-    const InterpolatorType &       m_Interpolator;
-    std::vector<ImageSampleType> & m_Samples;
+    const std::vector<InputImageContinuousIndexType> & m_RandomCoordinates;
+    const InputImageType &                             m_InputImage;
+    const InterpolatorType &                           m_Interpolator;
+    std::vector<ImageSampleType> &                     m_Samples;
   };
 
-  std::optional<UserData> m_OptionalUserData{};
+  std::vector<InputImageContinuousIndexType> m_RandomCoordinates{};
+  std::optional<UserData>                    m_OptionalUserData{};
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);

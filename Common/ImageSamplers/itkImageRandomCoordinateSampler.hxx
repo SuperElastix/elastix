@@ -61,8 +61,8 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
     samples.resize(this->Superclass::m_NumberOfSamples);
 
     /** Clear the random number list. */
-    this->m_RandomNumberList.clear();
-    this->m_RandomNumberList.reserve(this->m_NumberOfSamples * InputImageDimension);
+    m_RandomCoordinates.clear();
+    m_RandomCoordinates.reserve(this->m_NumberOfSamples);
 
     /** Fill the list with random numbers. */
     for (unsigned long i = 0; i < this->m_NumberOfSamples; ++i)
@@ -70,13 +70,10 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
       InputImageContinuousIndexType randomCIndex;
 
       this->GenerateRandomCoordinate(smallestContIndex, largestContIndex, randomCIndex);
-      for (unsigned int j = 0; j < InputImageDimension; ++j)
-      {
-        this->m_RandomNumberList.push_back(randomCIndex[j]);
-      }
+      m_RandomCoordinates.push_back(randomCIndex);
     }
 
-    m_OptionalUserData.emplace(this->Superclass::m_RandomNumberList, *inputImage, *interpolator, samples);
+    m_OptionalUserData.emplace(m_RandomCoordinates, *inputImage, *interpolator, samples);
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
     multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
@@ -175,19 +172,19 @@ ImageRandomCoordinateSampler<TInputImage>::ThreaderCallback(void * const arg)
   assert(info.UserData);
   auto & userData = *static_cast<UserData *>(info.UserData);
 
-  const auto & randomNumberList = userData.m_RandomNumberList;
+  const auto & randomCoordinates = userData.m_RandomCoordinates;
   auto &       samples = userData.m_Samples;
   const auto & interpolator = userData.m_Interpolator;
 
   const auto totalNumberOfSamples = samples.size();
-  assert((totalNumberOfSamples * InputImageDimension) == randomNumberList.size());
+  assert(totalNumberOfSamples == randomCoordinates.size());
 
   const auto numberOfSamplesPerWorkUnit = totalNumberOfSamples / info.NumberOfWorkUnits;
   const auto remainderNumberOfSamples = totalNumberOfSamples % info.NumberOfWorkUnits;
 
   const auto offset =
     info.WorkUnitID * numberOfSamplesPerWorkUnit + std::min<size_t>(info.WorkUnitID, remainderNumberOfSamples);
-  const auto beginOfRandomNumbers = randomNumberList.data() + InputImageDimension * offset;
+  const auto beginOfRandomCoordinates = randomCoordinates.data() + offset;
   const auto beginOfSamples = samples.data() + offset;
 
   const auto & inputImage = userData.m_InputImage;
@@ -196,14 +193,8 @@ ImageRandomCoordinateSampler<TInputImage>::ThreaderCallback(void * const arg)
 
   for (size_t i = 0; i < n; ++i)
   {
-    auto &                        sample = beginOfSamples[i];
-    InputImageContinuousIndexType sampleCIndex;
-
-    /** Create a random point out of InputImageDimension random numbers. */
-    for (unsigned int j = 0; j < InputImageDimension; ++j)
-    {
-      sampleCIndex[j] = beginOfRandomNumbers[InputImageDimension * i + j];
-    }
+    auto &                              sample = beginOfSamples[i];
+    const InputImageContinuousIndexType sampleCIndex = beginOfRandomCoordinates[i];
 
     /** Convert to point */
     inputImage.TransformContinuousIndexToPhysicalPoint(sampleCIndex, sample.m_ImageCoordinates);
