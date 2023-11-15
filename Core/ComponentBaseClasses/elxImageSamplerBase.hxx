@@ -53,18 +53,6 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
                                      << "but the selected ImageSampler is not suited for that.");
     }
   }
-
-  /** Temporary?: Use the multi-threaded version or not. */
-  std::string useMultiThread = configuration.GetCommandLineArgument("-mts"); // mts: multi-threaded samplers
-  if (useMultiThread == "true")
-  {
-    this->GetAsITKBaseType()->SetUseMultiThread(true);
-  }
-  else
-  {
-    this->GetAsITKBaseType()->SetUseMultiThread(false);
-  }
-
 } // end BeforeEachResolutionBase()
 
 
