@@ -162,10 +162,10 @@ private:
       , m_Interpolator(interpolator)
     {}
 
-    const std::vector<double> &    m_RandomNumberList{};
-    std::vector<ImageSampleType> & m_Samples{};
-    const InputImageType &         m_InputImage{};
-    const InterpolatorType &       m_Interpolator{};
+    const std::vector<double> &    m_RandomNumberList;
+    std::vector<ImageSampleType> & m_Samples;
+    const InputImageType &         m_InputImage;
+    const InterpolatorType &       m_Interpolator;
   };
 
   std::optional<UserData> m_OptionalUserData{};
