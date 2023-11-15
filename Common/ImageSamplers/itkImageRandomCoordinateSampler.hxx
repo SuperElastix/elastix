@@ -76,7 +76,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
       }
     }
 
-    m_OptionalUserData.emplace(this->Superclass::m_RandomNumberList, samples, *inputImage, *interpolator);
+    m_OptionalUserData.emplace(this->Superclass::m_RandomNumberList, *inputImage, *interpolator, samples);
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
     multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
