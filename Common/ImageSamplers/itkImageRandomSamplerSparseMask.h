@@ -83,7 +83,7 @@ protected:
   using InternalFullSamplerPointer = typename InternalFullSamplerType::Pointer;
 
   /** The constructor. */
-  ImageRandomSamplerSparseMask() = default;
+  ImageRandomSamplerSparseMask() { Superclass::m_UseMultiThread = true; }
   /** The destructor. */
   ~ImageRandomSamplerSparseMask() override = default;
 

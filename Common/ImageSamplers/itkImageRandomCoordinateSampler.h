@@ -108,7 +108,7 @@ protected:
   using InputImageContinuousIndexType = typename InterpolatorType::ContinuousIndexType;
 
   /** The constructor. */
-  ImageRandomCoordinateSampler() = default;
+  ImageRandomCoordinateSampler() { Superclass::m_UseMultiThread = true; }
 
   /** The destructor. */
   ~ImageRandomCoordinateSampler() override = default;

@@ -92,7 +92,7 @@ public:
 
 protected:
   /** The constructor. */
-  ImageFullSampler() = default;
+  ImageFullSampler() { Superclass::m_UseMultiThread = true; }
   /** The destructor. */
   ~ImageFullSampler() override = default;
 
