@@ -50,7 +50,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
     samples.resize(randomNumberList.size());
 
     m_OptionalUserData.emplace(
-      randomNumberList, samples, elastix::Deref(inputImage), this->GetCroppedInputImageRegion());
+      randomNumberList, elastix::Deref(inputImage), this->GetCroppedInputImageRegion(), samples);
 
     using Statistics::MersenneTwisterRandomVariateGenerator;
     elastix::Deref(MersenneTwisterRandomVariateGenerator::GetInstance())
