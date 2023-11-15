@@ -44,8 +44,8 @@ ImageRandomSampler<TInputImage>::GenerateData()
   typename MaskType::ConstPointer mask = this->GetMask();
   if (mask.IsNull() && Superclass::m_UseMultiThread)
   {
-    Superclass::GenerateRandomNumberList();
-    const auto & randomNumberList = Superclass::m_RandomNumberList;
+    GenerateRandomNumberList();
+    const auto & randomNumberList = m_RandomNumberList;
     auto &       samples = elastix::Deref(sampleContainer).CastToSTLContainer();
     samples.resize(randomNumberList.size());
 
@@ -69,9 +69,9 @@ ImageRandomSampler<TInputImage>::GenerateData()
   using RandomIteratorType = ImageRandomConstIteratorWithIndex<InputImageType>;
   RandomIteratorType randIter(inputImage, this->GetCroppedInputImageRegion());
 
-  if (const auto optionalSeed = Superclass::GetOptionalSeed())
+  if (m_OptionalSeed)
   {
-    randIter.ReinitializeSeed(*optionalSeed);
+    randIter.ReinitializeSeed(*m_OptionalSeed);
   }
   randIter.GoToBegin();
 
@@ -204,6 +204,37 @@ ImageRandomSampler<TInputImage>::ThreaderCallback(void * const arg)
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 }
 
+
+/**
+ * ******************* GenerateRandomNumberList *******************
+ */
+
+template <class TInputImage>
+void
+ImageRandomSampler<TInputImage>::GenerateRandomNumberList()
+{
+  /** Create a random number generator. Also used in the ImageRandomConstIteratorWithIndex. */
+  const auto localGenerator = Statistics::MersenneTwisterRandomVariateGenerator::New();
+
+  if (m_OptionalSeed)
+  {
+    localGenerator->SetSeed(*m_OptionalSeed);
+  }
+
+  /** Clear the random number list. */
+  m_RandomNumberList.clear();
+  m_RandomNumberList.reserve(Superclass::m_NumberOfSamples);
+
+  /** Fill the list with random numbers. */
+  const double numPixels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
+  localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
+  for (unsigned long i = 0; i < Superclass::m_NumberOfSamples; ++i)
+  {
+    const double randomPosition = localGenerator->GetVariateWithOpenRange(numPixels - 0.5);
+    m_RandomNumberList.push_back(randomPosition);
+  }
+  localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
+}
 
 } // end namespace itk
 

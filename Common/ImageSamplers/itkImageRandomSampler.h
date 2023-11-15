@@ -77,6 +77,34 @@ public:
   using InputImageIndexType = typename InputImageType::IndexType;
   using InputImagePointType = typename InputImageType::PointType;
 
+  using SeedIntegerType = Statistics::MersenneTwisterRandomVariateGenerator::IntegerType;
+
+  /** Allows setting the randomization seed. Optional: when the argument does not have a seed value, an arbitrary seed
+   * may be used for randomization (which is the default behavior). */
+  void
+  SetOptionalSeed(const std::optional<SeedIntegerType> arg)
+  {
+    if (arg != m_OptionalSeed)
+    {
+      m_OptionalSeed = arg;
+      this->Modified();
+    }
+  }
+
+  /** Sets the randomization seed as specified. */
+  void
+  SetSeed(const SeedIntegerType arg)
+  {
+    SetOptionalSeed(std::make_optional(arg));
+  }
+
+  /** Retrieves the optional user specified randomization seed. */
+  [[nodiscard]] std::optional<SeedIntegerType>
+  GetOptionalSeed() const
+  {
+    return m_OptionalSeed;
+  }
+
 protected:
   /** The constructor. */
   ImageRandomSampler() = default;
@@ -88,6 +116,10 @@ protected:
   GenerateData() override;
 
 private:
+  /** Generates the list of random numbers. */
+  void
+  GenerateRandomNumberList();
+
   struct UserData
   {
     ITK_DISALLOW_COPY_AND_MOVE(UserData);
@@ -114,6 +146,11 @@ private:
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);
+
+  /** Member variable used when threading. */
+  std::vector<double> m_RandomNumberList{};
+
+  std::optional<SeedIntegerType> m_OptionalSeed{};
 };
 
 } // end namespace itk

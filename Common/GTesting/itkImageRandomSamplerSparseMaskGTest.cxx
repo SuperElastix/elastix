@@ -100,7 +100,7 @@ GTEST_TEST(ImageRandomSamplerSparseMask, SetSeedMakesRandomizationDeterministic)
   maskSpatialObject->SetImage(maskImage);
   maskSpatialObject->Update();
 
-  for (const SamplerType::SeedIntegerType seed : { 0, 1 })
+  for (const MersenneTwisterRandomVariateGenerator::IntegerType seed : { 0, 1 })
   {
     const auto generateSamples = [seed, image, maskSpatialObject] {
       elx::DefaultConstruct<SamplerType> sampler{};
