@@ -79,7 +79,7 @@ public:
 
 protected:
   /** The constructor. */
-  ImageRandomSampler() = default;
+  ImageRandomSampler() { Superclass::m_UseMultiThread = true; }
   /** The destructor. */
   ~ImageRandomSampler() override = default;
 
