@@ -87,7 +87,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 
 
   /** If desired we exercise a multi-threaded version. */
-  if (this->m_UseMultiThread)
+  if (Superclass::m_UseMultiThread)
   {
     m_RandomIndices.clear();
     m_RandomIndices.reserve(Superclass::m_NumberOfSamples);

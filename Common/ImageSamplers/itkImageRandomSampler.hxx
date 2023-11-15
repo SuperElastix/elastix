@@ -42,7 +42,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
 
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   typename MaskType::ConstPointer mask = this->GetMask();
-  if (mask.IsNull() && this->m_UseMultiThread)
+  if (mask.IsNull() && Superclass::m_UseMultiThread)
   {
     Superclass::GenerateRandomNumberList();
     const auto & randomNumberList = Superclass::m_RandomNumberList;
