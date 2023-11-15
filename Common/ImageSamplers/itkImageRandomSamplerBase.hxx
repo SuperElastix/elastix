@@ -70,22 +70,6 @@ ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 }
 
 /**
- * ******************* BeforeThreadedGenerateData *******************
- */
-
-template <class TInputImage>
-void
-ImageRandomSamplerBase<TInputImage>::BeforeThreadedGenerateData()
-{
-  GenerateRandomNumberList();
-
-  /** Initialize variables needed for threads. */
-  Superclass::BeforeThreadedGenerateData();
-
-} // end BeforeThreadedGenerateData()
-
-
-/**
  * ******************* PrintSelf *******************
  */
 
