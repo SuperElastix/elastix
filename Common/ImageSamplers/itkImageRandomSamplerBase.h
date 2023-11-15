@@ -109,10 +109,6 @@ protected:
   void
   GenerateRandomNumberList();
 
-  /** Multi-threaded function that does the work. */
-  void
-  BeforeThreadedGenerateData() override;
-
   /** PrintSelf. */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
