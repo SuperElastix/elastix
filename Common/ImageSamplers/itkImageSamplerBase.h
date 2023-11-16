@@ -226,7 +226,7 @@ protected:
   std::vector<ImageSampleContainerPointer> m_ThreaderSampleContainer{};
 
   // tmp?
-  bool m_UseMultiThread{ false };
+  bool m_UseMultiThread{ true };
 
 private:
   /** Member variables. */
