@@ -26,6 +26,19 @@ namespace elastix
 {
 
 /**
+ * ******************* BeforeRegistrationBase ******************
+ */
+
+template <class TElastix>
+void
+ImageSamplerBase<TElastix>::BeforeRegistrationBase()
+{
+  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  ITKBaseType &         sampler = GetSelf();
+  sampler.SetUseMultiThread(configuration.RetrieveParameterValue(true, "UseMultiThreadingForSamplers", 0, false));
+}
+
+/**
  * ******************* BeforeEachResolutionBase ******************
  */
 

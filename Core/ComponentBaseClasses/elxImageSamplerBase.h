@@ -36,6 +36,13 @@ namespace elastix
  *
  * This class contains all the common functionality for ImageSamplers.
  *
+ * The parameter used in this class is:
+ * \parameter UseMultiThreadingForSamplers: Flag that can set to "true" or "false".
+ *    If "true" the sampler may use multi-threading (at least if multi-threading is implemented for the selected
+ *    sampler). If "false", it will run single-threaded. This flag will not affect the output of the samplers.\n
+ *    example: <tt>(UseMultiThreadingForSamplers "false")</tt> \n
+ *    Default is "true".
+ *
  * \ingroup ImageSamplers
  * \ingroup ComponentBaseClasses
  */
@@ -78,6 +85,9 @@ public:
     return &(this->GetSelf());
   }
 
+  /** Retrieves parameters from the configuration, before doing registration. */
+  void
+  BeforeRegistrationBase() override;
 
   /** Execute stuff before each resolution:
    * \li Give a warning when NewSamplesEveryIteration is specified,
