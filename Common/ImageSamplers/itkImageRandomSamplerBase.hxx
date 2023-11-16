@@ -66,7 +66,6 @@ ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
     const double randomPosition = localGenerator->GetVariateWithOpenRange(numPixels - 0.5);
     this->m_RandomNumberList.push_back(randomPosition);
   }
-  localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
 }
 
 /**
