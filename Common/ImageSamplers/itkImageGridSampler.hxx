@@ -21,6 +21,7 @@
 #include "itkImageGridSampler.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include <cassert>
 
 namespace itk
 {
@@ -101,6 +102,8 @@ ImageGridSampler<TInputImage>::GenerateData()
 
   if (mask.IsNull())
   {
+    sampleVector.reserve(numberOfSamplesOnGrid);
+
     /** Ugly loop over the grid. */
     for (unsigned int t = 0; t < dim_t; ++t)
     {
@@ -141,6 +144,8 @@ ImageGridSampler<TInputImage>::GenerateData()
         index[3] += this->m_SampleGridSpacing[3];
       }
     } // end t
+
+    assert(sampleVector.size() == numberOfSamplesOnGrid);
 
   } // end if no mask
   else
