@@ -21,6 +21,8 @@
 #include "itkImageGridSampler.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
+
+#include <algorithm> // For accumulate.
 #include <cassert>
 
 namespace itk
@@ -71,7 +73,6 @@ ImageGridSampler<TInputImage>::GenerateData()
   SampleGridSizeType         sampleGridSize;
   SampleGridIndexType        sampleGridIndex = croppedInputImageRegion.GetIndex();
   const InputImageSizeType & inputImageSize = croppedInputImageRegion.GetSize();
-  unsigned long              numberOfSamplesOnGrid = 1;
   for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {
     /** The number of sample point along one dimension. */
@@ -82,9 +83,6 @@ ImageGridSampler<TInputImage>::GenerateData()
      */
     sampleGridIndex[dim] +=
       (inputImageSize[dim] - ((sampleGridSize[dim] - 1) * this->GetSampleGridSpacing()[dim] + 1)) / 2;
-
-    /** Update the number of samples on the grid. */
-    numberOfSamplesOnGrid *= sampleGridSize[dim];
   }
 
   /** Prepare for looping over the grid. */
@@ -102,6 +100,10 @@ ImageGridSampler<TInputImage>::GenerateData()
 
   if (mask.IsNull())
   {
+    /** Calculate the number of samples on the grid. */
+    const std::size_t numberOfSamplesOnGrid =
+      std::accumulate(sampleGridSize.cbegin(), sampleGridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
+
     sampleVector.reserve(numberOfSamplesOnGrid);
 
     /** Ugly loop over the grid. */
