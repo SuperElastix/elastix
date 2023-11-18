@@ -37,7 +37,7 @@ GridSampler<TElastix>::BeforeEachResolution()
 
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  GridSpacingType gridspacing;
+  GridSpacingType gridSpacing;
 
   /** Read the desired grid spacing of the samples. */
   unsigned int spacing_dim;
@@ -46,9 +46,9 @@ GridSampler<TElastix>::BeforeEachResolution()
     spacing_dim = 2;
     configuration.ReadParameter(
       spacing_dim, "SampleGridSpacing", this->GetComponentLabel(), level * InputImageDimension + dim, -1);
-    gridspacing[dim] = static_cast<SampleGridSpacingValueType>(spacing_dim);
+    gridSpacing[dim] = static_cast<SampleGridSpacingValueType>(spacing_dim);
   }
-  this->SetSampleGridSpacing(gridspacing);
+  this->SetSampleGridSpacing(gridSpacing);
 
 } // end BeforeEachResolution()
 
