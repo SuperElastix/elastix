@@ -76,13 +76,13 @@ ImageGridSampler<TInputImage>::GenerateData()
   for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {
     /** The number of sample point along one dimension. */
-    sampleGridSize[dim] = 1 + ((inputImageSize[dim] - 1) / this->GetSampleGridSpacing()[dim]);
+    sampleGridSize[dim] = 1 + ((inputImageSize[dim] - 1) / this->m_SampleGridSpacing[dim]);
 
     /** The position of the first sample along this dimension is
      * chosen to center the grid nicely on the input image region.
      */
     sampleGridIndex[dim] +=
-      (inputImageSize[dim] - ((sampleGridSize[dim] - 1) * this->GetSampleGridSpacing()[dim] + 1)) / 2;
+      (inputImageSize[dim] - ((sampleGridSize[dim] - 1) * this->m_SampleGridSpacing[dim] + 1)) / 2;
   }
 
   /** Prepare for looping over the grid. */
@@ -257,7 +257,7 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
    */
   SampleGridSpacingType gridspacings;
   gridspacings.Fill(gridspacing);
-  if (this->GetSampleGridSpacing() != gridspacings)
+  if (this->m_SampleGridSpacing != gridspacings)
   {
     this->m_SampleGridSpacing = gridspacings;
     this->Modified();
