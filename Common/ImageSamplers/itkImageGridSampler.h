@@ -149,6 +149,7 @@ protected:
   void
   GenerateData() override;
 
+private:
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing{ itk::MakeFilled<SampleGridSpacingType>(1) };
 
