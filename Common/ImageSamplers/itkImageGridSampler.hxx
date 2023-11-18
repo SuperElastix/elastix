@@ -37,9 +37,9 @@ void
 ImageGridSampler<TInputImage>::SetSampleGridSpacing(const SampleGridSpacingType & arg)
 {
   this->SetNumberOfSamples(0);
-  if (this->m_SampleGridSpacing != arg)
+  if (m_SampleGridSpacing != arg)
   {
-    this->m_SampleGridSpacing = arg;
+    m_SampleGridSpacing = arg;
     this->Modified();
   }
 } // end SetSampleGridSpacing()
@@ -64,7 +64,7 @@ ImageGridSampler<TInputImage>::GenerateData()
   sampleVector.clear();
 
   /** Take into account the possibility of a smaller bounding box around the mask */
-  this->SetNumberOfSamples(this->m_RequestedNumberOfSamples);
+  this->SetNumberOfSamples(m_RequestedNumberOfSamples);
 
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
@@ -76,13 +76,12 @@ ImageGridSampler<TInputImage>::GenerateData()
   for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {
     /** The number of sample point along one dimension. */
-    sampleGridSize[dim] = 1 + ((inputImageSize[dim] - 1) / this->m_SampleGridSpacing[dim]);
+    sampleGridSize[dim] = 1 + ((inputImageSize[dim] - 1) / m_SampleGridSpacing[dim]);
 
     /** The position of the first sample along this dimension is
      * chosen to center the grid nicely on the input image region.
      */
-    sampleGridIndex[dim] +=
-      (inputImageSize[dim] - ((sampleGridSize[dim] - 1) * this->m_SampleGridSpacing[dim] + 1)) / 2;
+    sampleGridIndex[dim] += (inputImageSize[dim] - ((sampleGridSize[dim] - 1) * m_SampleGridSpacing[dim] + 1)) / 2;
   }
 
   /** Prepare for looping over the grid. */
@@ -124,26 +123,26 @@ ImageGridSampler<TInputImage>::GenerateData()
             inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
             // Jump to next position on grid.
-            index[0] += this->m_SampleGridSpacing[0];
+            index[0] += m_SampleGridSpacing[0];
 
             // Store sample in container.
             sampleVector.push_back(tempSample);
 
           } // end x
           index[0] = sampleGridIndex[0];
-          index[1] += this->m_SampleGridSpacing[1];
+          index[1] += m_SampleGridSpacing[1];
 
         } // end y
         if (InputImageDimension > 2)
         {
           index[1] = sampleGridIndex[1];
-          index[2] += this->m_SampleGridSpacing[2];
+          index[2] += m_SampleGridSpacing[2];
         }
       } // end z
       if (InputImageDimension > 3)
       {
         index[2] = sampleGridIndex[2];
-        index[3] += this->m_SampleGridSpacing[3];
+        index[3] += m_SampleGridSpacing[3];
       }
     } // end t
 
@@ -178,23 +177,23 @@ ImageGridSampler<TInputImage>::GenerateData()
 
             } // end if in mask
               // Jump to next position on grid
-            index[0] += this->m_SampleGridSpacing[0];
+            index[0] += m_SampleGridSpacing[0];
 
           } // end x
           index[0] = sampleGridIndex[0];
-          index[1] += this->m_SampleGridSpacing[1];
+          index[1] += m_SampleGridSpacing[1];
 
         } // end y
         if (InputImageDimension > 2)
         {
           index[1] = sampleGridIndex[1];
-          index[2] += this->m_SampleGridSpacing[2];
+          index[2] += m_SampleGridSpacing[2];
         }
       } // end z
       if (InputImageDimension > 3)
       {
         index[2] = sampleGridIndex[2];
-        index[3] += this->m_SampleGridSpacing[3];
+        index[3] += m_SampleGridSpacing[3];
       }
     } // end t
   }   // else (if mask exists)
@@ -214,9 +213,9 @@ void
 ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
 {
   /** Store what the user wanted. */
-  if (this->m_RequestedNumberOfSamples != nrofsamples)
+  if (m_RequestedNumberOfSamples != nrofsamples)
   {
-    this->m_RequestedNumberOfSamples = nrofsamples;
+    m_RequestedNumberOfSamples = nrofsamples;
     this->Modified();
   }
 
@@ -257,9 +256,9 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
    */
   SampleGridSpacingType gridspacings;
   gridspacings.Fill(gridspacing);
-  if (this->m_SampleGridSpacing != gridspacings)
+  if (m_SampleGridSpacing != gridspacings)
   {
-    this->m_SampleGridSpacing = gridspacings;
+    m_SampleGridSpacing = gridspacings;
     this->Modified();
   }
 
@@ -276,8 +275,8 @@ ImageGridSampler<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
 
-  os << "SampleGridSpacing: " << this->m_SampleGridSpacing << std::endl;
-  os << "RequestedNumberOfSamples: " << this->m_RequestedNumberOfSamples << std::endl;
+  os << "SampleGridSpacing: " << m_SampleGridSpacing << std::endl;
+  os << "RequestedNumberOfSamples: " << m_RequestedNumberOfSamples << std::endl;
 
 } // end PrintSelf()
 
