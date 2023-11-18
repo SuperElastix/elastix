@@ -246,19 +246,19 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
 
   /** Compute the grid spacing. */
   const double indimd = static_cast<double>(InputImageDimension);
-  int          gridspacing = static_cast<int>( // no unsigned int version of rnd, max
+  int          gridSpacing = static_cast<int>( // no unsigned int version of rnd, max
     Math::Round<double>(std::pow(fraction, 1.0 / indimd)));
-  gridspacing = std::max(1, gridspacing);
+  gridSpacing = std::max(1, gridSpacing);
 
-  /** Set gridspacings for all dimensions
+  /** Set gridSpacings for all dimensions
    * Do not use the SetSampleGridSpacing function because it calls
    * SetNumberOfSamples(0) internally.
    */
-  SampleGridSpacingType gridspacings;
-  gridspacings.Fill(gridspacing);
-  if (m_SampleGridSpacing != gridspacings)
+  SampleGridSpacingType gridSpacings;
+  gridSpacings.Fill(gridSpacing);
+  if (m_SampleGridSpacing != gridSpacings)
   {
-    m_SampleGridSpacing = gridspacings;
+    m_SampleGridSpacing = gridSpacings;
     this->Modified();
   }
 
