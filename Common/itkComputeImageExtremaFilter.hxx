@@ -176,7 +176,9 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(con
     } // end for
   }   // end if
 
+#ifndef __wasi__
   std::lock_guard<std::mutex> mutexHolder(m_Mutex);
+#endif
   m_ThreadSum += sum;
   m_SumOfSquares += sumOfSquares;
   m_Count += count;
@@ -227,7 +229,9 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageMask(const Regi
     ++it;
   } // end while
 
+#ifndef __wasi__
   std::lock_guard<std::mutex> mutexHolder(m_Mutex);
+#endif
   m_ThreadSum += sum;
   m_SumOfSquares += sumOfSquares;
   m_Count += count;

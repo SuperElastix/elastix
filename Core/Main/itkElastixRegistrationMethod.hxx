@@ -268,6 +268,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
         {
           const auto transformFileName = "InitialTransform." + std::to_string(i) + '.' + outputFileNameExtension;
 
+#ifndef __wasm32__
           // Write the external transform to file.
           elx::TransformIO::Write(elx::Deref(externalTransform), m_OutputDirectory + transformFileName);
 
@@ -275,6 +276,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
           transformFound->second = { "File" };
           transformParameterMap["TransformFileName"] = { transformFileName };
           transformParameterMap.erase("TransformAddress");
+#endif
         }
       }
 

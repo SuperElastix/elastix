@@ -20,6 +20,11 @@
 
 #include <typeinfo>
 
+#ifndef __wasm32__
+#include "itkMeshFileReader.h"
+#include "itkMeshFileWriter.h"
+#endif
+
 namespace elastix
 {
 
@@ -270,6 +275,12 @@ template <class TElastix>
 unsigned int
 PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  itkExceptionMacro(<< message);
+  return 0;
+#else
   /** Read the input mesh. */
   auto meshReader = itk::MeshFileReader<MeshType>::New();
   meshReader->SetFileName(meshFileName);
@@ -291,6 +302,7 @@ PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typen
   log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   return nrofpoints;
+#endif
 } // end ReadMesh()
 
 
@@ -302,6 +314,11 @@ template <class TElastix>
 void
 PolydataDummyPenalty<TElastix>::WriteResultMesh(const std::string & filename, MeshIdType meshId)
 {
+#ifdef __wasm32__
+  const std::string message = "File IO not supported in WebAssembly builds.";
+  log::error(message);
+  itkExceptionMacro(<< message);
+#else
   /** Set the points of the latest transformation. */
   const MappedMeshContainerPointer mappedMeshContainer = this->GetModifiableMappedMeshContainer();
   FixedMeshPointer                 mappedMesh = mappedMeshContainer->ElementAt(meshId);
@@ -360,7 +377,7 @@ PolydataDummyPenalty<TElastix>::WriteResultMesh(const std::string & filename, Me
   {
     mappedMesh->SetCellData(nullptr);
   }
-
+#endif
 } // end WriteResultMesh()
 
 

@@ -22,7 +22,9 @@
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#ifndef __wasi__
 #include <mutex>
+#endif
 
 namespace elastix
 {
@@ -50,7 +52,9 @@ public:
   void
   to_file(const std::string & message)
   {
+#ifndef __wasi__
     const std::lock_guard<std::mutex> lock(m_file_mutex);
+#endif
 
     if (!m_data.log_filename.empty())
     {
@@ -66,7 +70,9 @@ public:
   void
   to_stdout(const std::string & message)
   {
+#ifndef __wasi__
     const std::lock_guard<std::mutex> lock(m_stdout_mutex);
+#endif
     std::cout << message << std::endl;
   }
 
@@ -115,8 +121,10 @@ private:
 
   data m_data{};
 
+#ifndef __wasi__
   std::mutex m_file_mutex{};
   std::mutex m_stdout_mutex{};
+#endif
 };
 
 
