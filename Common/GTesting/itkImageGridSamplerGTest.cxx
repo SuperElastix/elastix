@@ -18,20 +18,53 @@
 
 // First include the header file to be tested:
 #include "itkImageGridSampler.h"
+#include "itkImageFullSampler.h"
 #include "elxDefaultConstruct.h"
 #include <itkImage.h>
 
 #include <gtest/gtest.h>
 
+#include "GTesting/elxCoreMainGTestUtilities.h"
+
+
 // The class to be tested.
 using itk::ImageGridSampler;
+
+using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
+using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
+using elx::CoreMainGTestUtilities::DerefRawPointer;
 
 
 GTEST_TEST(ImageGridSampler, DefaultConstructFillsSampleGridSpacingWithOne)
 {
   using ImageType = itk::Image<int>;
-  using ImageGridSamplerType = itk::ImageGridSampler<ImageType>;
-  const elastix::DefaultConstruct<ImageGridSamplerType> imageGridSampler{};
+  using SamplerType = ImageGridSampler<ImageType>;
+  const elx::DefaultConstruct<SamplerType> sampler{};
 
-  EXPECT_EQ(imageGridSampler.GetSampleGridSpacing(), itk::MakeFilled<ImageGridSamplerType::SampleGridSpacingType>(1));
+  EXPECT_EQ(sampler.GetSampleGridSpacing(), itk::MakeFilled<SamplerType::SampleGridSpacingType>(1));
+}
+
+
+// Tests that ImageGridSampler has the same output as ImageFullSampler, by default (when having the default
+// SampleGridSpacing).
+GTEST_TEST(ImageGridSampler, HasSameOutputAsFullSamplerByDefault)
+{
+  using PixelType = int;
+  constexpr auto Dimension = 2U;
+  using ImageType = itk::Image<PixelType, Dimension>;
+
+  std::mt19937 randomNumberEngine{};
+  const auto   imageDomain = CreateRandomImageDomain<Dimension>(randomNumberEngine);
+  const auto   image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  const auto generateSamples = [image](auto && sampler) {
+    sampler.SetInput(image);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  const auto samples = generateSamples(elx::DefaultConstruct<ImageGridSampler<ImageType>>{});
+
+  EXPECT_EQ(samples.size(), itk::ImageBufferRange{ *image }.size());
+  EXPECT_EQ(samples, generateSamples(elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>{}));
 }
