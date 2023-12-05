@@ -34,12 +34,12 @@ void
 ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container, and interpolator. */
-  InputImageConstPointer                     inputImage = this->GetInput();
-  typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  typename InterpolatorType::Pointer         interpolator = this->GetModifiableInterpolator();
+  const InputImageType &             inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType &         sampleContainer = elastix::Deref(this->GetOutput());
+  typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();
 
   /** Set up the interpolator. */
-  interpolator->SetInputImage(inputImage); // only once?
+  interpolator->SetInputImage(&inputImage); // only once?
 
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
@@ -57,7 +57,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   typename MaskType::ConstPointer mask = this->GetMask();
   if (mask.IsNull() && Superclass::m_UseMultiThread)
   {
-    auto & samples = elastix::Deref(sampleContainer).CastToSTLContainer();
+    auto & samples = sampleContainer.CastToSTLContainer();
     samples.resize(this->Superclass::m_NumberOfSamples);
 
     /** Clear the random number list. */
@@ -73,7 +73,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
       m_RandomCoordinates.push_back(randomCIndex);
     }
 
-    m_OptionalUserData.emplace(m_RandomCoordinates, *inputImage, *interpolator, samples);
+    m_OptionalUserData.emplace(m_RandomCoordinates, inputImage, *interpolator, samples);
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
     multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
@@ -82,18 +82,18 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   }
 
   /** Reserve memory for the output. */
-  sampleContainer->Reserve(this->GetNumberOfSamples());
+  sampleContainer.Reserve(this->GetNumberOfSamples());
 
   /** Setup an iterator over the output, which is of ImageSampleContainerType. */
   typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator end = sampleContainer.End();
 
   InputImageContinuousIndexType sampleContIndex;
   /** Fill the sample container. */
   if (mask.IsNull())
   {
     /** Start looping over the sample container. */
-    for (iter = sampleContainer->Begin(); iter != end; ++iter)
+    for (iter = sampleContainer.Begin(); iter != end; ++iter)
     {
       /** Make a reference to the current sample in the container. */
       InputImagePointType &  samplePoint = iter->Value().m_ImageCoordinates;
@@ -103,7 +103,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
       this->GenerateRandomCoordinate(smallestContIndex, largestContIndex, sampleContIndex);
 
       /** Convert to point */
-      inputImage->TransformContinuousIndexToPhysicalPoint(sampleContIndex, samplePoint);
+      inputImage.TransformContinuousIndexToPhysicalPoint(sampleContIndex, samplePoint);
 
       /** Compute the value at the continuous index. */
       sampleValue = static_cast<ImageSampleValueType>(this->m_Interpolator->EvaluateAtContinuousIndex(sampleContIndex));
@@ -121,7 +121,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
     unsigned long maximumNumberOfSamplesToTry = 10 * this->GetNumberOfSamples();
 
     /** Start looping over the sample container */
-    for (iter = sampleContainer->Begin(); iter != end; ++iter)
+    for (iter = sampleContainer.Begin(); iter != end; ++iter)
     {
       /** Make a reference to the current sample in the container. */
       InputImagePointType &  samplePoint = iter->Value().m_ImageCoordinates;
@@ -135,17 +135,17 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
         if (numberOfSamplesTried > maximumNumberOfSamplesToTry)
         {
           /** Squeeze the sample container to the size that is still valid. */
-          typename ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
-          typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
+          typename ImageSampleContainerType::iterator stlnow = sampleContainer.begin();
+          typename ImageSampleContainerType::iterator stlend = sampleContainer.end();
           stlnow += iter.Index();
-          sampleContainer->erase(stlnow, stlend);
+          sampleContainer.erase(stlnow, stlend);
           itkExceptionMacro(
             << "Could not find enough image samples within reasonable time. Probably the mask is too small");
         }
 
         /** Generate a point in the input image region. */
         this->GenerateRandomCoordinate(smallestContIndex, largestContIndex, sampleContIndex);
-        inputImage->TransformContinuousIndexToPhysicalPoint(sampleContIndex, samplePoint);
+        inputImage.TransformContinuousIndexToPhysicalPoint(sampleContIndex, samplePoint);
 
       } while (!interpolator->IsInsideBuffer(sampleContIndex) || !mask->IsInsideInWorldSpace(samplePoint));
 

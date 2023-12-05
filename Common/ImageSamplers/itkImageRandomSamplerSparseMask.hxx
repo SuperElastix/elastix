@@ -42,16 +42,16 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   }
 
   /** Get handles to the input image and output sample container. */
-  InputImageConstPointer      inputImage = this->GetInput();
-  ImageSampleContainerPointer sampleContainer = this->GetOutput();
+  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
 
   // Take capacity from the output container, and clear it.
   std::vector<ImageSampleType> sampleVector;
-  sampleContainer->swap(sampleVector);
+  sampleContainer.swap(sampleVector);
   sampleVector.clear();
 
   /** Make sure the internal full sampler is up-to-date. */
-  this->m_InternalFullSampler->SetInput(inputImage);
+  this->m_InternalFullSampler->SetInput(&inputImage);
   this->m_InternalFullSampler->SetMask(mask);
   this->m_InternalFullSampler->SetInputImageRegion(this->GetCroppedInputImageRegion());
   this->m_InternalFullSampler->SetUseMultiThread(Superclass::m_UseMultiThread);
@@ -82,8 +82,8 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   }
 
   /** Get a handle to the full sampler output. */
-  typename ImageSampleContainerType::Pointer allValidSamples = this->m_InternalFullSampler->GetOutput();
-  unsigned long                              numberOfValidSamples = allValidSamples->Size();
+  const ImageSampleContainerType & allValidSamples = elastix::Deref(this->m_InternalFullSampler->GetOutput());
+  unsigned long                    numberOfValidSamples = allValidSamples.Size();
 
 
   /** If desired we exercise a multi-threaded version. */
@@ -97,10 +97,10 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
       m_RandomIndices.push_back(m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1));
     }
 
-    auto & samples = elastix::Deref(sampleContainer).CastToSTLContainer();
+    auto & samples = sampleContainer.CastToSTLContainer();
     samples.resize(m_RandomIndices.size());
 
-    m_OptionalUserData.emplace(elastix::Deref(allValidSamples).CastToSTLConstContainer(), m_RandomIndices, samples);
+    m_OptionalUserData.emplace(allValidSamples.CastToSTLConstContainer(), m_RandomIndices, samples);
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
     multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
@@ -112,11 +112,11 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   for (unsigned int i = 0; i < this->GetNumberOfSamples(); ++i)
   {
     unsigned long randomIndex = this->m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1);
-    sampleVector.push_back(allValidSamples->ElementAt(randomIndex));
+    sampleVector.push_back(allValidSamples.ElementAt(randomIndex));
   }
 
   // Move the samples from the vector into the output container.
-  sampleContainer->swap(sampleVector);
+  sampleContainer.swap(sampleVector);
 
 } // end GenerateData()
 
