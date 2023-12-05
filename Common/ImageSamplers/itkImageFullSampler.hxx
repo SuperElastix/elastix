@@ -21,6 +21,7 @@
 #include "itkImageFullSampler.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "elxDeref.h"
 
 namespace itk
 {
@@ -41,13 +42,13 @@ ImageFullSampler<TInputImage>::GenerateData()
   }
 
   /** Get handles to the input image, output sample container, and the mask. */
-  InputImageConstPointer                     inputImage = this->GetInput();
-  typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  typename MaskType::ConstPointer            mask = this->GetMask();
+  const InputImageType &          inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType &      sampleContainer = elastix::Deref(this->GetOutput());
+  typename MaskType::ConstPointer mask = this->GetMask();
 
   // Take capacity from the output container, and clear it.
   std::vector<ImageSampleType> sampleVector;
-  sampleContainer->swap(sampleVector);
+  sampleContainer.swap(sampleVector);
   sampleVector.clear();
 
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
@@ -78,7 +79,7 @@ ImageFullSampler<TInputImage>::GenerateData()
     }
 
     /** Simply loop over the image and store all samples in the container. */
-    for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
+    for (InputImageIterator iter(&inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
     {
       ImageSampleType tempSample;
 
@@ -86,7 +87,7 @@ ImageFullSampler<TInputImage>::GenerateData()
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point */
-      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
       /** Get sampled image value */
       tempSample.m_ImageValue = iter.Get();
@@ -101,7 +102,7 @@ ImageFullSampler<TInputImage>::GenerateData()
     mask->UpdateSource();
 
     /** Loop over the image and check if the points falls within the mask. */
-    for (InputImageIterator iter(inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
+    for (InputImageIterator iter(&inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
     {
       ImageSampleType tempSample;
 
@@ -109,7 +110,7 @@ ImageFullSampler<TInputImage>::GenerateData()
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point. */
-      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
       if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
       {
@@ -124,7 +125,7 @@ ImageFullSampler<TInputImage>::GenerateData()
   }     // end else (if mask exists)
 
   // Move the samples from the vector into the output container.
-  sampleContainer->swap(sampleVector);
+  sampleContainer.swap(sampleVector);
 
 } // end GenerateData()
 
@@ -139,7 +140,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
                                                     ThreadIdType                 threadId)
 {
   /** Get handles to the input image, mask and the output. */
-  InputImageConstPointer          inputImage = this->GetInput();
+  const InputImageType &          inputImage = elastix::Deref(this->GetInput());
   typename MaskType::ConstPointer mask = this->GetMask();
   ImageSampleContainerPointer &   sampleContainerThisThread // & ???
     = this->m_ThreaderSampleContainer[threadId];
@@ -177,7 +178,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     }
 
     /** Simply loop over the image and store all samples in the container. */
-    for (InputImageIterator iter(inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
+    for (InputImageIterator iter(&inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
     {
       ImageSampleType tempSample;
 
@@ -185,7 +186,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point */
-      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
       /** Get sampled image value */
       tempSample.m_ImageValue = iter.Get();
@@ -200,7 +201,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     mask->UpdateSource();
 
     /** Loop over the image and check if the points falls within the mask. */
-    for (InputImageIterator iter(inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
+    for (InputImageIterator iter(&inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
     {
       ImageSampleType tempSample;
 
@@ -208,7 +209,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point. */
-      inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
       if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
       {

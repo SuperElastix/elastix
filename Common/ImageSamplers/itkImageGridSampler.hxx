@@ -21,6 +21,7 @@
 #include "itkImageGridSampler.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "elxDeref.h"
 
 #include <algorithm> // For accumulate.
 #include <cassert>
@@ -54,13 +55,13 @@ void
 ImageGridSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container, and the mask. */
-  InputImageConstPointer                     inputImage = this->GetInput();
-  typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  typename MaskType::ConstPointer            mask = this->GetMask();
+  const InputImageType &          inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType &      sampleContainer = elastix::Deref(this->GetOutput());
+  typename MaskType::ConstPointer mask = this->GetMask();
 
   // Take capacity from the output container, and clear it.
   std::vector<ImageSampleType> sampleVector;
-  sampleContainer->swap(sampleVector);
+  sampleContainer.swap(sampleVector);
   sampleVector.clear();
 
   /** Take into account the possibility of a smaller bounding box around the mask */
@@ -106,10 +107,10 @@ ImageGridSampler<TInputImage>::GenerateData()
             ImageSampleType tempSample;
 
             // Get sampled fixed image value.
-            tempSample.m_ImageValue = inputImage->GetPixel(index);
+            tempSample.m_ImageValue = inputImage.GetPixel(index);
 
             // Translate index to point.
-            inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
             // Store sample in container.
             sampleVector.push_back(tempSample);
@@ -143,12 +144,12 @@ ImageGridSampler<TInputImage>::GenerateData()
             ImageSampleType tempSample;
 
             // Translate index to point.
-            inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
             if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
             {
               // Get sampled fixed image value.
-              tempSample.m_ImageValue = inputImage->GetPixel(index);
+              tempSample.m_ImageValue = inputImage.GetPixel(index);
 
               // Store sample in container.
               sampleVector.push_back(tempSample);
@@ -167,7 +168,7 @@ ImageGridSampler<TInputImage>::GenerateData()
   } // else (if mask exists)
 
   // Move the samples from the vector into the output container.
-  sampleContainer->swap(sampleVector);
+  sampleContainer.swap(sampleVector);
 
 } // end GenerateData()
 

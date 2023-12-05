@@ -19,6 +19,7 @@
 #define itkImageSamplerBase_hxx
 
 #include "itkImageSamplerBase.h"
+#include "elxDeref.h"
 
 namespace itk
 {
@@ -164,8 +165,8 @@ ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
     itkExceptionMacro("ERROR: Input image not set");
   }
 
-  /** Get a pointer to the input image. */
-  InputImagePointer inputImage = const_cast<InputImageType *>(this->GetInput());
+  /** Get a non-const reference to the input image. */
+  auto & inputImage = const_cast<InputImageType &>(elastix::Deref(this->GetInput()));
 
   /** Get and set the region. */
   if (this->GetInputImageRegion().GetNumberOfPixels() != 0)
@@ -173,9 +174,9 @@ ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
     InputImageRegionType inputRequestedRegion = this->GetInputImageRegion();
 
     /** Crop the input requested region at the input's largest possible region. */
-    if (inputRequestedRegion.Crop(inputImage->GetLargestPossibleRegion()))
+    if (inputRequestedRegion.Crop(inputImage.GetLargestPossibleRegion()))
     {
-      inputImage->SetRequestedRegion(inputRequestedRegion);
+      inputImage.SetRequestedRegion(inputRequestedRegion);
     }
     else
     {
@@ -184,25 +185,25 @@ ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
        */
 
       /** Store what we tried to request (prior to trying to crop). */
-      inputImage->SetRequestedRegion(inputRequestedRegion);
+      inputImage.SetRequestedRegion(inputRequestedRegion);
 
       /** Build an exception. */
       InvalidRequestedRegionError e(__FILE__, __LINE__);
       e.SetLocation(ITK_LOCATION);
       e.SetDescription("Requested region is (at least partially) outside the largest possible region.");
-      e.SetDataObject(inputImage);
+      e.SetDataObject(&inputImage);
       throw e;
     }
   }
   else
   {
-    inputImage->SetRequestedRegion(inputImage->GetLargestPossibleRegion());
-    this->SetInputImageRegion(inputImage->GetLargestPossibleRegion());
+    inputImage.SetRequestedRegion(inputImage.GetLargestPossibleRegion());
+    this->SetInputImageRegion(inputImage.GetLargestPossibleRegion());
   }
 
   /** Crop the region of the inputImage to the bounding box of the mask. */
   this->CropInputImageRegion();
-  inputImage->SetRequestedRegion(this->m_CroppedInputImageRegion);
+  inputImage.SetRequestedRegion(this->m_CroppedInputImageRegion);
 
 } // end GenerateInputRequestedRegion()
 
@@ -398,15 +399,15 @@ ImageSamplerBase<TInputImage>::AfterThreadedGenerateData()
   }
 
   /** Get handle to the output sample container. */
-  typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  sampleContainer->clear();
-  sampleContainer->reserve(this->m_NumberOfSamples);
+  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
+  sampleContainer.clear();
+  sampleContainer.reserve(this->m_NumberOfSamples);
 
   /** Combine the results of all threads. */
   for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
-    sampleContainer->insert(
-      sampleContainer->end(), this->m_ThreaderSampleContainer[i]->begin(), this->m_ThreaderSampleContainer[i]->end());
+    sampleContainer.insert(
+      sampleContainer.end(), this->m_ThreaderSampleContainer[i]->begin(), this->m_ThreaderSampleContainer[i]->end());
   }
 
 } // end AfterThreadedGenerateData()
