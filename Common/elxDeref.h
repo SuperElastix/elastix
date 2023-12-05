@@ -24,9 +24,9 @@
 namespace elastix
 {
 /// Dereferences the specified pointer. Throws an `itk::ExceptionObject` when the pointer is null.
-template <typename TPointer>
-decltype(auto)
-Deref(const TPointer ptr)
+template <typename T>
+T &
+Deref(T * const ptr)
 {
   if (ptr == nullptr)
   {
