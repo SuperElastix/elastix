@@ -21,6 +21,7 @@
 #include "itkImageToVectorContainerFilter.h"
 
 #include "itkMath.h"
+#include "elxDeref.h"
 
 namespace itk
 {
@@ -139,8 +140,8 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
   InputImageRegionType & splitRegion)
 {
   // Get the input pointer
-  const InputImageType *                 inputPtr = this->GetInput();
-  const typename TInputImage::SizeType & requestedRegionSize = inputPtr->GetRequestedRegion().GetSize();
+  const InputImageType &                 inputImage = elastix::Deref(this->GetInput());
+  const typename TInputImage::SizeType & requestedRegionSize = inputImage.GetRequestedRegion().GetSize();
   // \todo: requested region -> this->GetCroppedInputImageRegion()
 
   int                             splitAxis;
@@ -148,12 +149,12 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
   typename TInputImage::SizeType  splitSize;
 
   // Initialize the splitRegion to the output requested region
-  splitRegion = inputPtr->GetRequestedRegion();
+  splitRegion = inputImage.GetRequestedRegion();
   splitIndex = splitRegion.GetIndex();
   splitSize = splitRegion.GetSize();
 
   // split on the outermost dimension available
-  splitAxis = inputPtr->GetImageDimension() - 1;
+  splitAxis = inputImage.GetImageDimension() - 1;
   while (requestedRegionSize[splitAxis] == 1)
   {
     --splitAxis;
