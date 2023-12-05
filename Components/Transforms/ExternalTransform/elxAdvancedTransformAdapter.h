@@ -98,14 +98,14 @@ public:
   const ParametersType &
   GetFixedParameters() const override
   {
-    return Deref(m_ExternalTransform).GetFixedParameters();
+    return Deref(m_ExternalTransform.GetPointer()).GetFixedParameters();
   }
 
   /** Transform a point. */
   OutputPointType
   TransformPoint(const InputPointType & point) const override
   {
-    return Deref(m_ExternalTransform).TransformPoint(point);
+    return Deref(m_ExternalTransform.GetPointer()).TransformPoint(point);
   }
 
   /** These vector transforms are not implemented for this transform. */
@@ -130,7 +130,7 @@ public:
   bool
   IsLinear() const override
   {
-    return Deref(m_ExternalTransform).IsLinear();
+    return Deref(m_ExternalTransform.GetPointer()).IsLinear();
   }
 
   /** Must be provided. */
