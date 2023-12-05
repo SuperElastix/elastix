@@ -69,7 +69,6 @@ ImageGridSampler<TInputImage>::GenerateData()
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
   /** Determine the grid. */
-  SampleGridIndexType        index;
   SampleGridSizeType         sampleGridSize;
   SampleGridIndexType        sampleGridIndex = croppedInputImageRegion.GetIndex();
   const InputImageSizeType & inputImageSize = croppedInputImageRegion.GetSize();
@@ -85,17 +84,7 @@ ImageGridSampler<TInputImage>::GenerateData()
   }
 
   /** Prepare for looping over the grid. */
-  unsigned int dim_z = 1;
-  unsigned int dim_t = 1;
-  if (InputImageDimension > 2)
-  {
-    dim_z = sampleGridSize[2];
-    if (InputImageDimension > 3)
-    {
-      dim_t = sampleGridSize[3];
-    }
-  }
-  index = sampleGridIndex;
+  SampleGridIndexType index = sampleGridIndex;
 
   if (mask.IsNull())
   {
@@ -106,9 +95,9 @@ ImageGridSampler<TInputImage>::GenerateData()
     sampleVector.reserve(numberOfSamplesOnGrid);
 
     /** Ugly loop over the grid. */
-    for (unsigned int t = 0; t < dim_t; ++t)
+    for (unsigned int t = 0; t < GetGridSizeValue<3>(sampleGridSize); ++t)
     {
-      for (unsigned int z = 0; z < dim_z; ++z)
+      for (unsigned int z = 0; z < GetGridSizeValue<2>(sampleGridSize); ++z)
       {
         for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
         {
@@ -122,29 +111,18 @@ ImageGridSampler<TInputImage>::GenerateData()
             // Translate index to point.
             inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
-            // Jump to next position on grid.
-            index[0] += m_SampleGridSpacing[0];
-
             // Store sample in container.
             sampleVector.push_back(tempSample);
 
-          } // end x
-          index[0] = sampleGridIndex[0];
-          index[1] += m_SampleGridSpacing[1];
-
-        } // end y
-        if (InputImageDimension > 2)
-        {
-          index[1] = sampleGridIndex[1];
-          index[2] += m_SampleGridSpacing[2];
+            // Jump to next position on grid.
+            index[0] += m_SampleGridSpacing[0];
+          }
+          JumpToNextGridPosition<1>(index, sampleGridIndex);
         }
-      } // end z
-      if (InputImageDimension > 3)
-      {
-        index[2] = sampleGridIndex[2];
-        index[3] += m_SampleGridSpacing[3];
+        JumpToNextGridPosition<2>(index, sampleGridIndex);
       }
-    } // end t
+      JumpToNextGridPosition<3>(index, sampleGridIndex);
+    }
 
     assert(sampleVector.size() == numberOfSamplesOnGrid);
 
@@ -154,9 +132,9 @@ ImageGridSampler<TInputImage>::GenerateData()
     mask->UpdateSource();
 
     /* Ugly loop over the grid; checks also if a sample falls within the mask. */
-    for (unsigned int t = 0; t < dim_t; ++t)
+    for (unsigned int t = 0; t < GetGridSizeValue<3>(sampleGridSize); ++t)
     {
-      for (unsigned int z = 0; z < dim_z; ++z)
+      for (unsigned int z = 0; z < GetGridSizeValue<2>(sampleGridSize); ++z)
       {
         for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
         {
@@ -176,27 +154,17 @@ ImageGridSampler<TInputImage>::GenerateData()
               sampleVector.push_back(tempSample);
 
             } // end if in mask
-              // Jump to next position on grid
+
+            // Jump to next position on grid
             index[0] += m_SampleGridSpacing[0];
-
-          } // end x
-          index[0] = sampleGridIndex[0];
-          index[1] += m_SampleGridSpacing[1];
-
-        } // end y
-        if (InputImageDimension > 2)
-        {
-          index[1] = sampleGridIndex[1];
-          index[2] += m_SampleGridSpacing[2];
+          }
+          JumpToNextGridPosition<1>(index, sampleGridIndex);
         }
-      } // end z
-      if (InputImageDimension > 3)
-      {
-        index[2] = sampleGridIndex[2];
-        index[3] += m_SampleGridSpacing[3];
+        JumpToNextGridPosition<2>(index, sampleGridIndex);
       }
-    } // end t
-  }   // else (if mask exists)
+      JumpToNextGridPosition<3>(index, sampleGridIndex);
+    }
+  } // else (if mask exists)
 
   // Move the samples from the vector into the output container.
   sampleContainer->swap(sampleVector);

@@ -150,6 +150,36 @@ protected:
   GenerateData() override;
 
 private:
+  /** Retrieves the sample grid size along the axis, specified by VIndex */
+  template <unsigned int VIndex>
+  static unsigned int
+  GetGridSizeValue(const SampleGridSizeType & sampleGridSize)
+  {
+    if constexpr (VIndex < InputImageDimension)
+    {
+      return sampleGridSize[VIndex];
+    }
+    else
+    {
+      return 1;
+    }
+  }
+
+  /** Jumps to the next grid position along the axis, specified by VIndex */
+  template <unsigned int VIndex>
+  void
+  JumpToNextGridPosition(SampleGridIndexType & index, const SampleGridIndexType & sampleGridIndex) const
+  {
+    static_assert(VIndex > 0);
+
+    if constexpr (VIndex < InputImageDimension)
+    {
+      index[VIndex - 1] = sampleGridIndex[VIndex - 1];
+      index[VIndex] += m_SampleGridSpacing[VIndex];
+    }
+  }
+
+
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing{ itk::MakeFilled<SampleGridSpacingType>(1) };
 
