@@ -102,12 +102,14 @@ ImageGridSampler<TInputImage>::GenerateData()
       {
         for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
         {
+          const InputImagePixelType * const pixel = &(inputImage.GetPixel(index));
+
           for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
           {
             ImageSampleType tempSample;
 
             // Get sampled fixed image value.
-            tempSample.m_ImageValue = inputImage.GetPixel(index);
+            tempSample.m_ImageValue = pixel[x];
 
             // Translate index to point.
             inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
@@ -139,6 +141,8 @@ ImageGridSampler<TInputImage>::GenerateData()
       {
         for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
         {
+          const InputImagePixelType * const pixel = &(inputImage.GetPixel(index));
+
           for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
           {
             ImageSampleType tempSample;
@@ -149,7 +153,7 @@ ImageGridSampler<TInputImage>::GenerateData()
             if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
             {
               // Get sampled fixed image value.
-              tempSample.m_ImageValue = inputImage.GetPixel(index);
+              tempSample.m_ImageValue = pixel[x];
 
               // Store sample in container.
               sampleVector.push_back(tempSample);
