@@ -268,14 +268,17 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallb
   assert(workUnitInfo.UserData);
   const auto & str = *static_cast<const ThreadStruct *>(workUnitInfo.UserData);
 
+  assert(str.Filter);
+  Self & filter = *(str.Filter);
+
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
   typename TInputImage::RegionType splitRegion;
-  unsigned int                     total = str.Filter->SplitRequestedRegion(threadId, threadCount, splitRegion);
+  unsigned int                     total = filter.SplitRequestedRegion(threadId, threadCount, splitRegion);
 
   if (threadId < total)
   {
-    str.Filter->ThreadedGenerateData(splitRegion, threadId);
+    filter.ThreadedGenerateData(splitRegion, threadId);
   }
   // else
   //   {
