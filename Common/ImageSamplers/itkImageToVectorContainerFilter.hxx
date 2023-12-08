@@ -261,7 +261,7 @@ ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallback(void * arg)
 {
   assert(arg);
-  const auto &   workUnitInfo = *static_cast<const PlatformMultiThreader::WorkUnitInfo *>(arg);
+  const auto &   workUnitInfo = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
   ThreadStruct * str;
   ThreadIdType   threadId = workUnitInfo.WorkUnitID;
   ThreadIdType   threadCount = workUnitInfo.NumberOfWorkUnits;
