@@ -261,9 +261,9 @@ ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallback(void * arg)
 {
   assert(arg);
-  const auto & workUnitInfo = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
-  ThreadIdType threadId = workUnitInfo.WorkUnitID;
-  ThreadIdType threadCount = workUnitInfo.NumberOfWorkUnits;
+  const auto &       workUnitInfo = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
+  const ThreadIdType threadId = workUnitInfo.WorkUnitID;
+  const ThreadIdType threadCount = workUnitInfo.NumberOfWorkUnits;
 
   assert(workUnitInfo.UserData);
   const auto & str = *static_cast<const ThreadStruct *>(workUnitInfo.UserData);
@@ -274,7 +274,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallb
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
   typename TInputImage::RegionType splitRegion;
-  unsigned int                     total = filter.SplitRequestedRegion(threadId, threadCount, splitRegion);
+  const unsigned int               total = filter.SplitRequestedRegion(threadId, threadCount, splitRegion);
 
   if (threadId < total)
   {
