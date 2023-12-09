@@ -181,15 +181,16 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
-  /** Split the output's RequestedRegion into "numberOfSplits" pieces, returning
+  /** Split the input region into "numberOfSplits" pieces, returning
    * region "i" as "splitRegion". This method is called "numberOfSplits" times. The
    * regions must not overlap. The method returns the number of pieces that
-   * the routine is capable of splitting the output RequestedRegion,
+   * the routine is capable of splitting the input region,
    * i.e. return value is less than or equal to "numberOfSplits". */
-  unsigned int
-  SplitRequestedRegion(const ThreadIdType &   threadId,
-                       const ThreadIdType &   numberOfSplits,
-                       InputImageRegionType & splitRegion);
+  static unsigned int
+  SplitRegion(const InputImageRegionType & inputRegion,
+              const ThreadIdType &         threadId,
+              const ThreadIdType &         numberOfSplits,
+              InputImageRegionType &       splitRegion);
 };
 
 } // end namespace itk
