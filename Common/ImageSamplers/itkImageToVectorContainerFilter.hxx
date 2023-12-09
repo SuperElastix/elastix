@@ -150,7 +150,7 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
   typename TInputImage::SizeType  splitSize = splitRegion.GetSize();
 
   // split on the outermost dimension available
-  int splitAxis = inputImage.GetImageDimension() - 1;
+  int splitAxis = TInputImage::ImageDimension - 1;
   while (requestedRegionSize[splitAxis] == 1)
   {
     --splitAxis;
