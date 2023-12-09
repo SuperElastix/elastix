@@ -180,6 +180,8 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
+  InputImageRegionType m_CroppedInputImageRegion{};
+
 private:
   /** Split the input region into "numberOfSplits" pieces, returning
    * region "i" as "splitRegion". This method is called "numberOfSplits" times. The

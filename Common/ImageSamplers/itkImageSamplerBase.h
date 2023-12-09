@@ -237,7 +237,6 @@ private:
   InputImageRegionVectorType m_InputImageRegionVector{};
   unsigned int               m_NumberOfInputImageRegions{ 0 };
 
-  InputImageRegionType m_CroppedInputImageRegion{};
   InputImageRegionType m_DummyInputImageRegion{};
 };
 
