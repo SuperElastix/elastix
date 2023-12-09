@@ -158,16 +158,6 @@ public:
   AfterThreadedGenerateData()
   {}
 
-  /** Split the output's RequestedRegion into "numberOfSplits" pieces, returning
-   * region "i" as "splitRegion". This method is called "numberOfSplits" times. The
-   * regions must not overlap. The method returns the number of pieces that
-   * the routine is capable of splitting the output RequestedRegion,
-   * i.e. return value is less than or equal to "numberOfSplits". */
-  virtual unsigned int
-  SplitRequestedRegion(const ThreadIdType &   threadId,
-                       const ThreadIdType &   numberOfSplits,
-                       InputImageRegionType & splitRegion);
-
   /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
    * library will call this routine for each thread, which will delegate the
    * control to ThreadedGenerateData(). */
@@ -189,6 +179,17 @@ protected:
   /** PrintSelf. */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
+
+private:
+  /** Split the output's RequestedRegion into "numberOfSplits" pieces, returning
+   * region "i" as "splitRegion". This method is called "numberOfSplits" times. The
+   * regions must not overlap. The method returns the number of pieces that
+   * the routine is capable of splitting the output RequestedRegion,
+   * i.e. return value is less than or equal to "numberOfSplits". */
+  unsigned int
+  SplitRequestedRegion(const ThreadIdType &   threadId,
+                       const ThreadIdType &   numberOfSplits,
+                       InputImageRegionType & splitRegion);
 };
 
 } // end namespace itk
