@@ -163,8 +163,8 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
 
   // determine the actual number of pieces that will be generated
   const typename TInputImage::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
-  const unsigned int valuesPerThread = Math::Ceil<unsigned int>(range / (double)numberOfSplits);
-  const unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>(range / (double)valuesPerThread) - 1;
+  const unsigned int valuesPerThread = Math::Ceil<unsigned int>(range / static_cast<double>(numberOfSplits));
+  const unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>(range / static_cast<double>(valuesPerThread)) - 1;
 
   // Split the region
   if (threadId < maxThreadIdUsed)
