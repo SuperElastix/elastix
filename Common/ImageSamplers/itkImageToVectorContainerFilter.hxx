@@ -144,17 +144,13 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
   const typename TInputImage::SizeType & requestedRegionSize = inputImage.GetRequestedRegion().GetSize();
   // \todo: requested region -> this->GetCroppedInputImageRegion()
 
-  int                             splitAxis;
-  typename TInputImage::IndexType splitIndex;
-  typename TInputImage::SizeType  splitSize;
-
   // Initialize the splitRegion to the output requested region
   splitRegion = inputImage.GetRequestedRegion();
-  splitIndex = splitRegion.GetIndex();
-  splitSize = splitRegion.GetSize();
+  typename TInputImage::IndexType splitIndex = splitRegion.GetIndex();
+  typename TInputImage::SizeType  splitSize = splitRegion.GetSize();
 
   // split on the outermost dimension available
-  splitAxis = inputImage.GetImageDimension() - 1;
+  int splitAxis = inputImage.GetImageDimension() - 1;
   while (requestedRegionSize[splitAxis] == 1)
   {
     --splitAxis;
