@@ -134,35 +134,29 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::PrintSelf(std
 
 template <class TInputImage, class TOutputVectorContainer>
 unsigned int
-ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequestedRegion(
-  const ThreadIdType &   threadId,
-  const ThreadIdType &   numberOfSplits,
-  InputImageRegionType & splitRegion)
+ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRegion(const InputImageRegionType & inputRegion,
+                                                                               const ThreadIdType &         threadId,
+                                                                               const ThreadIdType &   numberOfSplits,
+                                                                               InputImageRegionType & splitRegion)
 {
-  // Get the input pointer
-  const InputImageType &                 inputImage = elastix::Deref(this->GetInput());
-  const typename TInputImage::SizeType & requestedRegionSize = inputImage.GetRequestedRegion().GetSize();
-  // \todo: requested region -> this->GetCroppedInputImageRegion()
+  const typename TInputImage::SizeType & inputRegionSize = inputRegion.GetSize();
 
-  // Initialize the splitRegion to the output requested region
-  splitRegion = inputImage.GetRequestedRegion();
-  typename TInputImage::IndexType splitIndex = splitRegion.GetIndex();
-  typename TInputImage::SizeType  splitSize = splitRegion.GetSize();
+  typename TInputImage::IndexType splitIndex = inputRegion.GetIndex();
+  typename TInputImage::SizeType  splitSize = inputRegionSize;
 
   // split on the outermost dimension available
   int splitAxis = TInputImage::ImageDimension - 1;
-  while (requestedRegionSize[splitAxis] == 1)
+  while (inputRegionSize[splitAxis] == 1)
   {
     --splitAxis;
     if (splitAxis < 0)
     { // cannot split
-      itkDebugMacro("  Cannot Split");
       return 1;
     }
   }
 
   // determine the actual number of pieces that will be generated
-  const typename TInputImage::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
+  const typename TInputImage::SizeType::SizeValueType range = inputRegionSize[splitAxis];
   const unsigned int valuesPerThread = Math::Ceil<unsigned int>(range / static_cast<double>(numberOfSplits));
   const unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>(range / static_cast<double>(valuesPerThread)) - 1;
 
@@ -183,11 +177,9 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::SplitRequeste
   splitRegion.SetIndex(splitIndex);
   splitRegion.SetSize(splitSize);
 
-  itkDebugMacro("  Split Piece: " << splitRegion);
-
   return maxThreadIdUsed + 1;
 
-} // end SplitRequestedRegion()
+} // end SplitRegion()
 
 
 /**
@@ -269,8 +261,9 @@ ImageToVectorContainerFilter<TInputImage, TOutputVectorContainer>::ThreaderCallb
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
+  // \todo: requested region -> this->GetCroppedInputImageRegion()
   typename TInputImage::RegionType splitRegion;
-  const unsigned int               total = filter.SplitRequestedRegion(threadId, threadCount, splitRegion);
+  const unsigned int total = SplitRegion(filter.GetInput()->GetRequestedRegion(), threadId, threadCount, splitRegion);
 
   if (threadId < total)
   {
