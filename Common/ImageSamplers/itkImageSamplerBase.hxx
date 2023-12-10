@@ -20,6 +20,9 @@
 
 #include "itkImageSamplerBase.h"
 #include "elxDeref.h"
+#include <cassert>
+#include <numeric> // For accumulate.
+
 
 namespace itk
 {
@@ -388,11 +391,11 @@ void
 ImageSamplerBase<TInputImage>::AfterThreadedGenerateData()
 {
   /** Get the combined number of samples. */
-  m_NumberOfSamples = 0;
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
-  {
-    m_NumberOfSamples += m_ThreaderSampleVectors[i].size();
-  }
+  m_NumberOfSamples = std::accumulate(
+    m_ThreaderSampleVectors.cbegin(),
+    m_ThreaderSampleVectors.cend(),
+    size_t{},
+    [](const size_t sum, const auto & threaderSampleVector) { return sum + threaderSampleVector.size(); });
 
   /** Get handle to the output sample container. */
   ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
@@ -400,10 +403,12 @@ ImageSamplerBase<TInputImage>::AfterThreadedGenerateData()
   sampleContainer.reserve(m_NumberOfSamples);
 
   /** Combine the results of all threads. */
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
+  for (const auto & threaderSampleVector : m_ThreaderSampleVectors)
   {
-    sampleContainer.insert(sampleContainer.end(), m_ThreaderSampleVectors[i].begin(), m_ThreaderSampleVectors[i].end());
+    sampleContainer.insert(sampleContainer.end(), threaderSampleVector.cbegin(), threaderSampleVector.cend());
   }
+
+  assert(sampleContainer.size() == m_NumberOfSamples);
 
 } // end AfterThreadedGenerateData()
 
