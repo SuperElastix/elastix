@@ -373,12 +373,8 @@ void
 ImageSamplerBase<TInputImage>::BeforeThreadedGenerateData()
 {
   /** Initialize variables needed for threads. */
-  m_ThreaderSampleContainer.clear();
-  m_ThreaderSampleContainer.resize(this->GetNumberOfWorkUnits());
-  for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
-  {
-    m_ThreaderSampleContainer[i] = ImageSampleContainerType::New();
-  }
+  m_ThreaderSampleVectors.clear();
+  m_ThreaderSampleVectors.resize(this->GetNumberOfWorkUnits());
 
 } // end BeforeThreadedGenerateData()
 
@@ -395,7 +391,7 @@ ImageSamplerBase<TInputImage>::AfterThreadedGenerateData()
   m_NumberOfSamples = 0;
   for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
-    m_NumberOfSamples += m_ThreaderSampleContainer[i]->Size();
+    m_NumberOfSamples += m_ThreaderSampleVectors[i].size();
   }
 
   /** Get handle to the output sample container. */
@@ -406,8 +402,7 @@ ImageSamplerBase<TInputImage>::AfterThreadedGenerateData()
   /** Combine the results of all threads. */
   for (std::size_t i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
-    sampleContainer.insert(
-      sampleContainer.end(), m_ThreaderSampleContainer[i]->begin(), m_ThreaderSampleContainer[i]->end());
+    sampleContainer.insert(sampleContainer.end(), m_ThreaderSampleVectors[i].begin(), m_ThreaderSampleVectors[i].end());
   }
 
 } // end AfterThreadedGenerateData()
