@@ -142,12 +142,11 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
   /** Get handles to the input image, mask and the output. */
   const InputImageType &          inputImage = elastix::Deref(this->GetInput());
   typename MaskType::ConstPointer mask = this->GetMask();
-  ImageSampleContainerPointer &   sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[threadId];
+  std::vector<ImageSampleType> &  sampleVectorOfThisThread = Superclass::m_ThreaderSampleVectors[threadId];
 
-  // Take capacity from the container of this thread, and clear it.
-  std::vector<ImageSampleType> sampleVector;
-  sampleContainerThisThread->swap(sampleVector);
+  // Take capacity from the vector of this thread, and clear both.
+  std::vector<ImageSampleType> sampleVector = std::move(sampleVectorOfThisThread);
+  sampleVectorOfThisThread.clear();
   sampleVector.clear();
 
   /** Set up a region iterator within the user specified image region. */
@@ -223,8 +222,8 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
     }   // end for
   }     // end else (if mask exists)
 
-  // Move the samples from the vector into the container for this thread.
-  sampleContainerThisThread->swap(sampleVector);
+  // Move the samples from the local vector into the vector for this thread.
+  sampleVectorOfThisThread = std::move(sampleVector);
 
 } // end ThreadedGenerateData()
 
