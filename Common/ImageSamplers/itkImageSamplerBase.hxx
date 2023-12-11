@@ -666,9 +666,8 @@ ImageSamplerBase<TInputImage>::ThreaderCallback(void * arg)
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
-  // \todo: requested region -> this->GetCroppedInputImageRegion()
   typename TInputImage::RegionType splitRegion;
-  const unsigned int total = SplitRegion(sampler.GetInput()->GetRequestedRegion(), threadId, threadCount, splitRegion);
+  const unsigned int total = SplitRegion(sampler.m_CroppedInputImageRegion, threadId, threadCount, splitRegion);
 
   if (threadId < total)
   {
