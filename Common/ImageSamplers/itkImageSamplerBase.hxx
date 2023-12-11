@@ -607,7 +607,7 @@ ImageSamplerBase<TInputImage>::GenerateData()
 
   // Set up the multithreaded processing
   ThreadStruct str;
-  str.Filter = this;
+  str.Sampler = this;
 
   this->GetMultiThreader()->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
   this->GetMultiThreader()->SetSingleMethod(this->ThreaderCallback, &str);
@@ -661,18 +661,18 @@ ImageSamplerBase<TInputImage>::ThreaderCallback(void * arg)
   assert(workUnitInfo.UserData);
   const auto & str = *static_cast<const ThreadStruct *>(workUnitInfo.UserData);
 
-  assert(str.Filter);
-  Self & filter = *(str.Filter);
+  assert(str.Sampler);
+  Self & sampler = *(str.Sampler);
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
   // \todo: requested region -> this->GetCroppedInputImageRegion()
   typename TInputImage::RegionType splitRegion;
-  const unsigned int total = SplitRegion(filter.GetInput()->GetRequestedRegion(), threadId, threadCount, splitRegion);
+  const unsigned int total = SplitRegion(sampler.GetInput()->GetRequestedRegion(), threadId, threadCount, splitRegion);
 
   if (threadId < total)
   {
-    filter.ThreadedGenerateData(splitRegion, threadId);
+    sampler.ThreadedGenerateData(splitRegion, threadId);
   }
   // else
   //   {
