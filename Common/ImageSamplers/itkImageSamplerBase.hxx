@@ -20,6 +20,7 @@
 
 #include "itkImageSamplerBase.h"
 #include "elxDeref.h"
+#include <itkMultiThreaderBase.h>
 #include <cassert>
 #include <numeric> // For accumulate.
 
@@ -442,6 +443,247 @@ ImageSamplerBase<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 
 } // end PrintSelf()
 
+
+/**
+ * ******************* Constructor *******************
+ */
+
+template <class TInputImage>
+ImageSamplerBase<TInputImage>::ImageSamplerBase()
+{
+  this->ProcessObject::SetNumberOfRequiredInputs(1);
+
+  OutputVectorContainerPointer output = dynamic_cast<OutputVectorContainerType *>(this->MakeOutput(0).GetPointer());
+
+  this->ProcessObject::SetNumberOfRequiredOutputs(1);
+  this->ProcessObject::SetNthOutput(0, output.GetPointer());
+
+} // end Constructor
+
+
+/**
+ * ******************* MakeOutput *******************
+ */
+
+template <class TInputImage>
+DataObject::Pointer
+ImageSamplerBase<TInputImage>::MakeOutput(unsigned int itkNotUsed(idx))
+{
+  OutputVectorContainerPointer outputVectorContainer = OutputVectorContainerType::New();
+  return dynamic_cast<DataObject *>(outputVectorContainer.GetPointer());
+} // end MakeOutput()
+
+
+/**
+ * ******************* SetInput *******************
+ */
+
+template <class TInputImage>
+void
+ImageSamplerBase<TInputImage>::SetInput(unsigned int idx, const InputImageType * input)
+{
+  // process object is not const-correct, the const_cast
+  // is required here.
+  this->ProcessObject::SetNthInput(idx, const_cast<InputImageType *>(input));
+} // end SetInput()
+
+
+/**
+ * ******************* SetInput *******************
+ */
+
+template <class TInputImage>
+void
+ImageSamplerBase<TInputImage>::SetInput(const InputImageType * input)
+{
+  this->ProcessObject::SetNthInput(0, const_cast<InputImageType *>(input));
+} // end SetInput()
+
+
+/**
+ * ******************* GetInput *******************
+ */
+
+template <class TInputImage>
+auto
+ImageSamplerBase<TInputImage>::GetInput() -> const InputImageType *
+{
+  return dynamic_cast<const InputImageType *>(this->ProcessObject::GetInput(0));
+} // end GetInput()
+
+/**
+ * ******************* GetInput *******************
+ */
+
+template <class TInputImage>
+auto
+ImageSamplerBase<TInputImage>::GetInput(unsigned int idx) -> const InputImageType *
+{
+  return dynamic_cast<const InputImageType *>(this->ProcessObject::GetInput(idx));
+} // end GetInput()
+
+/**
+ * ******************* GetOutput *******************
+ */
+
+template <class TInputImage>
+auto
+ImageSamplerBase<TInputImage>::GetOutput() -> OutputVectorContainerType *
+{
+  return dynamic_cast<OutputVectorContainerType *>(this->ProcessObject::GetOutput(0));
+} // end GetOutput()
+
+
+/**
+ * ******************* SplitRequestedRegion *******************
+ */
+
+template <class TInputImage>
+unsigned int
+ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputRegion,
+                                           const ThreadIdType &         threadId,
+                                           const ThreadIdType &         numberOfSplits,
+                                           InputImageRegionType &       splitRegion)
+{
+  const typename TInputImage::SizeType & inputRegionSize = inputRegion.GetSize();
+
+  typename TInputImage::IndexType splitIndex = inputRegion.GetIndex();
+  typename TInputImage::SizeType  splitSize = inputRegionSize;
+
+  // split on the outermost dimension available
+  int splitAxis = TInputImage::ImageDimension - 1;
+  while (inputRegionSize[splitAxis] == 1)
+  {
+    --splitAxis;
+    if (splitAxis < 0)
+    { // cannot split
+      return 1;
+    }
+  }
+
+  // determine the actual number of pieces that will be generated
+  const typename TInputImage::SizeType::SizeValueType range = inputRegionSize[splitAxis];
+  const unsigned int valuesPerThread = Math::Ceil<unsigned int>(range / static_cast<double>(numberOfSplits));
+  const unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>(range / static_cast<double>(valuesPerThread)) - 1;
+
+  // Split the region
+  if (threadId < maxThreadIdUsed)
+  {
+    splitIndex[splitAxis] += threadId * valuesPerThread;
+    splitSize[splitAxis] = valuesPerThread;
+  }
+  if (threadId == maxThreadIdUsed)
+  {
+    splitIndex[splitAxis] += threadId * valuesPerThread;
+    // last thread needs to process the "rest" dimension being split
+    splitSize[splitAxis] = splitSize[splitAxis] - threadId * valuesPerThread;
+  }
+
+  // set the split region ivars
+  splitRegion.SetIndex(splitIndex);
+  splitRegion.SetSize(splitSize);
+
+  return maxThreadIdUsed + 1;
+
+} // end SplitRegion()
+
+
+/**
+ * ******************* GenerateData *******************
+ */
+
+template <class TInputImage>
+void
+ImageSamplerBase<TInputImage>::GenerateData()
+{
+  // Call a method that can be overriden by a subclass to allocate
+  // memory for the filter's outputs
+  // this->AllocateOutputs();
+
+  // Call a method that can be overridden by a subclass to perform
+  // some calculations prior to splitting the main computations into
+  // separate threads
+  this->BeforeThreadedGenerateData();
+
+  // Set up the multithreaded processing
+  ThreadStruct str;
+  str.Filter = this;
+
+  this->GetMultiThreader()->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
+  this->GetMultiThreader()->SetSingleMethod(this->ThreaderCallback, &str);
+
+  // multithread the execution
+  this->GetMultiThreader()->SingleMethodExecute();
+
+  // Call a method that can be overridden by a subclass to perform
+  // some calculations after all the threads have completed
+  this->AfterThreadedGenerateData();
+
+} // end GenerateData()
+
+
+/**
+ * ******************* ThreadedGenerateData *******************
+ */
+
+template <class TInputImage>
+void
+ImageSamplerBase<TInputImage>::ThreadedGenerateData(const InputImageRegionType &, ThreadIdType)
+{
+  // The following code is equivalent to:
+  // itkExceptionMacro("subclass should override this method!!!");
+  // The ExceptionMacro is not used because gcc warns that a
+  // 'noreturn' function does return
+  std::ostringstream message;
+  message << "itk::ERROR: " << this->GetNameOfClass() << "(" << this << "): Subclass should override this method!!!";
+  ExceptionObject e_(__FILE__, __LINE__, message.str().c_str(), ITK_LOCATION);
+  throw e_;
+
+} // end ThreadedGenerateData()
+
+
+/**
+ * ******************* ThreaderCallback *******************
+ */
+
+// Callback routine used by the threading library. This routine just calls
+// the ThreadedGenerateData method after setting the correct region for this
+// thread.
+template <class TInputImage>
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+ImageSamplerBase<TInputImage>::ThreaderCallback(void * arg)
+{
+  assert(arg);
+  const auto &       workUnitInfo = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
+  const ThreadIdType threadId = workUnitInfo.WorkUnitID;
+  const ThreadIdType threadCount = workUnitInfo.NumberOfWorkUnits;
+
+  assert(workUnitInfo.UserData);
+  const auto & str = *static_cast<const ThreadStruct *>(workUnitInfo.UserData);
+
+  assert(str.Filter);
+  Self & filter = *(str.Filter);
+
+  // execute the actual method with appropriate output region
+  // first find out how many pieces extent can be split into.
+  // \todo: requested region -> this->GetCroppedInputImageRegion()
+  typename TInputImage::RegionType splitRegion;
+  const unsigned int total = SplitRegion(filter.GetInput()->GetRequestedRegion(), threadId, threadCount, splitRegion);
+
+  if (threadId < total)
+  {
+    filter.ThreadedGenerateData(splitRegion, threadId);
+  }
+  // else
+  //   {
+  //   otherwise don't use this thread. Sometimes the threads dont
+  //   break up very well and it is just as efficient to leave a
+  //   few threads idle.
+  //   }
+
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
+
+} // end ThreaderCallback()
 
 } // end namespace itk
 

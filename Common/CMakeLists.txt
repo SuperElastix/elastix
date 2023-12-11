@@ -172,8 +172,6 @@ set(ImageSamplersFiles
   ImageSamplers/itkImageSample.h
   ImageSamplers/itkImageSamplerBase.h
   ImageSamplers/itkImageSamplerBase.hxx
-  ImageSamplers/itkImageToVectorContainerFilter.h
-  ImageSamplers/itkImageToVectorContainerFilter.hxx
   ImageSamplers/itkMultiInputImageRandomCoordinateSampler.h
   ImageSamplers/itkMultiInputImageRandomCoordinateSampler.hxx
   ImageSamplers/itkVectorContainerSource.h
