@@ -261,7 +261,7 @@ public:
   /** Internal structure used for passing image data into the threading library */
   struct ThreadStruct //?
   {
-    Pointer Filter;
+    Pointer Sampler;
   };
 
 protected:
