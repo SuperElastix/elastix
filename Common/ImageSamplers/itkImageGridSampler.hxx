@@ -55,9 +55,8 @@ void
 ImageGridSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container, and the mask. */
-  const InputImageType &          inputImage = elastix::Deref(this->GetInput());
-  ImageSampleContainerType &      sampleContainer = elastix::Deref(this->GetOutput());
-  typename MaskType::ConstPointer mask = this->GetMask();
+  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
 
   // Take capacity from the output container, and clear it.
   std::vector<ImageSampleType> sampleVector;
@@ -87,7 +86,45 @@ ImageGridSampler<TInputImage>::GenerateData()
   /** Prepare for looping over the grid. */
   SampleGridIndexType index = gridIndex;
 
-  if (mask.IsNull())
+  if (const MaskType * const mask = this->Superclass::GetMask())
+  {
+    mask->UpdateSource();
+
+    /* Ugly loop over the grid; checks also if a sample falls within the mask. */
+    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSize); ++t)
+    {
+      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSize); ++z)
+      {
+        for (unsigned int y = 0; y < gridSize[1]; ++y)
+        {
+          for (unsigned int x = 0; x < gridSize[0]; ++x)
+          {
+            ImageSampleType tempSample;
+
+            // Translate index to point.
+            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+
+            if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
+            {
+              // Get sampled fixed image value.
+              tempSample.m_ImageValue = inputImage.GetPixel(index);
+
+              // Store sample in container.
+              sampleVector.push_back(tempSample);
+
+            } // end if in mask
+
+            // Jump to next position on grid.
+            index[0] += m_SampleGridSpacing[0];
+          }
+          JumpToNextGridPosition<1>(index, gridIndex);
+        }
+        JumpToNextGridPosition<2>(index, gridIndex);
+      }
+      JumpToNextGridPosition<3>(index, gridIndex);
+    }
+  } // end (if mask exists)
+  else
   {
     /** Calculate the number of samples on the grid. */
     const std::size_t numberOfSamplesOnGrid =
@@ -127,45 +164,7 @@ ImageGridSampler<TInputImage>::GenerateData()
 
     assert(sampleVector.size() == numberOfSamplesOnGrid);
 
-  } // end if no mask
-  else
-  {
-    mask->UpdateSource();
-
-    /* Ugly loop over the grid; checks also if a sample falls within the mask. */
-    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSize); ++t)
-    {
-      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSize); ++z)
-      {
-        for (unsigned int y = 0; y < gridSize[1]; ++y)
-        {
-          for (unsigned int x = 0; x < gridSize[0]; ++x)
-          {
-            ImageSampleType tempSample;
-
-            // Translate index to point.
-            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
-
-            if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
-            {
-              // Get sampled fixed image value.
-              tempSample.m_ImageValue = inputImage.GetPixel(index);
-
-              // Store sample in container.
-              sampleVector.push_back(tempSample);
-
-            } // end if in mask
-
-            // Jump to next position on grid
-            index[0] += m_SampleGridSpacing[0];
-          }
-          JumpToNextGridPosition<1>(index, gridIndex);
-        }
-        JumpToNextGridPosition<2>(index, gridIndex);
-      }
-      JumpToNextGridPosition<3>(index, gridIndex);
-    }
-  } // else (if mask exists)
+  } // end (else)
 
   // Move the samples from the vector into the output container.
   sampleContainer.swap(sampleVector);
