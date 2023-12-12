@@ -153,11 +153,11 @@ private:
   /** Retrieves the sample grid size along the axis, specified by VIndex */
   template <unsigned int VIndex>
   static unsigned int
-  GetGridSizeValue(const SampleGridSizeType & sampleGridSize)
+  GetGridSizeValue(const SampleGridSizeType & gridSize)
   {
     if constexpr (VIndex < InputImageDimension)
     {
-      return sampleGridSize[VIndex];
+      return gridSize[VIndex];
     }
     else
     {
@@ -168,13 +168,13 @@ private:
   /** Jumps to the next grid position along the axis, specified by VIndex */
   template <unsigned int VIndex>
   void
-  JumpToNextGridPosition(SampleGridIndexType & index, const SampleGridIndexType & sampleGridIndex) const
+  JumpToNextGridPosition(SampleGridIndexType & index, const SampleGridIndexType & gridIndex) const
   {
     static_assert(VIndex > 0);
 
     if constexpr (VIndex < InputImageDimension)
     {
-      index[VIndex - 1] = sampleGridIndex[VIndex - 1];
+      index[VIndex - 1] = gridIndex[VIndex - 1];
       index[VIndex] += m_SampleGridSpacing[VIndex];
     }
   }

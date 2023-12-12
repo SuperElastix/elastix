@@ -70,39 +70,39 @@ ImageGridSampler<TInputImage>::GenerateData()
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
   /** Determine the grid. */
-  SampleGridSizeType         sampleGridSize;
-  SampleGridIndexType        sampleGridIndex = croppedInputImageRegion.GetIndex();
+  SampleGridSizeType         gridSize;
+  SampleGridIndexType        gridIndex = croppedInputImageRegion.GetIndex();
   const InputImageSizeType & inputImageSize = croppedInputImageRegion.GetSize();
   for (unsigned int dim = 0; dim < InputImageDimension; ++dim)
   {
     /** The number of sample point along one dimension. */
-    sampleGridSize[dim] = 1 + ((inputImageSize[dim] - 1) / m_SampleGridSpacing[dim]);
+    gridSize[dim] = 1 + ((inputImageSize[dim] - 1) / m_SampleGridSpacing[dim]);
 
     /** The position of the first sample along this dimension is
      * chosen to center the grid nicely on the input image region.
      */
-    sampleGridIndex[dim] += (inputImageSize[dim] - ((sampleGridSize[dim] - 1) * m_SampleGridSpacing[dim] + 1)) / 2;
+    gridIndex[dim] += (inputImageSize[dim] - ((gridSize[dim] - 1) * m_SampleGridSpacing[dim] + 1)) / 2;
   }
 
   /** Prepare for looping over the grid. */
-  SampleGridIndexType index = sampleGridIndex;
+  SampleGridIndexType index = gridIndex;
 
   if (mask.IsNull())
   {
     /** Calculate the number of samples on the grid. */
     const std::size_t numberOfSamplesOnGrid =
-      std::accumulate(sampleGridSize.cbegin(), sampleGridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
+      std::accumulate(gridSize.cbegin(), gridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
 
     sampleVector.reserve(numberOfSamplesOnGrid);
 
     /** Ugly loop over the grid. */
-    for (unsigned int t = 0; t < GetGridSizeValue<3>(sampleGridSize); ++t)
+    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSize); ++t)
     {
-      for (unsigned int z = 0; z < GetGridSizeValue<2>(sampleGridSize); ++z)
+      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSize); ++z)
       {
-        for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
+        for (unsigned int y = 0; y < gridSize[1]; ++y)
         {
-          for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
+          for (unsigned int x = 0; x < gridSize[0]; ++x)
           {
             ImageSampleType tempSample;
 
@@ -118,11 +118,11 @@ ImageGridSampler<TInputImage>::GenerateData()
             // Jump to next position on grid.
             index[0] += m_SampleGridSpacing[0];
           }
-          JumpToNextGridPosition<1>(index, sampleGridIndex);
+          JumpToNextGridPosition<1>(index, gridIndex);
         }
-        JumpToNextGridPosition<2>(index, sampleGridIndex);
+        JumpToNextGridPosition<2>(index, gridIndex);
       }
-      JumpToNextGridPosition<3>(index, sampleGridIndex);
+      JumpToNextGridPosition<3>(index, gridIndex);
     }
 
     assert(sampleVector.size() == numberOfSamplesOnGrid);
@@ -133,13 +133,13 @@ ImageGridSampler<TInputImage>::GenerateData()
     mask->UpdateSource();
 
     /* Ugly loop over the grid; checks also if a sample falls within the mask. */
-    for (unsigned int t = 0; t < GetGridSizeValue<3>(sampleGridSize); ++t)
+    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSize); ++t)
     {
-      for (unsigned int z = 0; z < GetGridSizeValue<2>(sampleGridSize); ++z)
+      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSize); ++z)
       {
-        for (unsigned int y = 0; y < sampleGridSize[1]; ++y)
+        for (unsigned int y = 0; y < gridSize[1]; ++y)
         {
-          for (unsigned int x = 0; x < sampleGridSize[0]; ++x)
+          for (unsigned int x = 0; x < gridSize[0]; ++x)
           {
             ImageSampleType tempSample;
 
@@ -159,11 +159,11 @@ ImageGridSampler<TInputImage>::GenerateData()
             // Jump to next position on grid
             index[0] += m_SampleGridSpacing[0];
           }
-          JumpToNextGridPosition<1>(index, sampleGridIndex);
+          JumpToNextGridPosition<1>(index, gridIndex);
         }
-        JumpToNextGridPosition<2>(index, sampleGridIndex);
+        JumpToNextGridPosition<2>(index, gridIndex);
       }
-      JumpToNextGridPosition<3>(index, sampleGridIndex);
+      JumpToNextGridPosition<3>(index, gridIndex);
     }
   } // else (if mask exists)
 
